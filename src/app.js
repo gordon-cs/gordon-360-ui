@@ -1,22 +1,23 @@
 import React, { Component } from 'react';
-import gordonSealWhite from './gordon-seal-white.svg';
-import './app.css';
+import {
+  BrowserRouter as Router,
+  Route,
+} from 'react-router-dom';
+
+import PoC from './poc';
+import Home from './home';
+import EditActivity from './edit-activity';
 
 export default class App extends Component {
   render() {
     return (
-      <div className="app">
-        <header className="app-header">
-          <img src={gordonSealWhite} className="app-logo" alt="logo" />
-          <h1 className="app-title">Gordon 360 React Proof of Concept</h1>
-        </header>
-        <p className="app-intro">
-          Follow the links below for more information.
-        </p>
-        <ul>
-          <li><a href="">Edit Activity Page</a></li>
-        </ul>
-      </div>
+      <Router>
+        <div>
+          <Route exact path="/" component={PoC} />
+          <Route path="/home" component={Home} />
+          <Route path="/activity/:activityId/edit" component={EditActivity} />
+        </div>
+      </Router>
     );
   }
 }
