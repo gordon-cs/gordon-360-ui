@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "bootstrap": "4.0.0-beta",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-router-dom": "4.2.2",
-    "react-scripts": "1.0.14"
+    "react-scripts": "1.0.14",
+    "reactstrap": "5.0.0-alpha.3"
   },
   "devDependencies": {
     "eslint": "4.8.0",

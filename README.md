@@ -20,3 +20,10 @@ The following extensions are recommended for any editor used to develop this pro
 If you are using VS Code, you can use the following keyboard shortcut to run the app:
 - macOS: <kbd>⌘</kdb><kbd>⇧</kdb><kbd>B</kdb>
 - Windows: <kbd>Ctrl</kdb>+<kbd>⇧</kdb>+<kbd>B</kdb>
+
+## Libraries
+Links to the homepages of libraries used in this project, listed here for easy reference.
+- [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
+Provides easy routing, allowing transitions between views with back button support and URL management.
+- [reactstrap](https://reactstrap.github.io/)
+Bootstrap 4 implemented in React components. Though [React Bootstrap](https://react-bootstrap.github.io/) is more widely used and has a more mature API, it only supports Bootstrap 3. Bootstrap 4 brings significant improvements, so it is worthwhile to go with reactstrap, a younger library, to be able to take advantage of those improvements.
