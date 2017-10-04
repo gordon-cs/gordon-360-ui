@@ -1,0 +1,4 @@
+{
+  // Show ruler at 100 characters to help visualize linter line-length rule
+  "editor.rulers": [100]
+}

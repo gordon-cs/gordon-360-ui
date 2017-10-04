@@ -17,9 +17,11 @@ The following extensions are recommended for any editor used to develop this pro
 - [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) ensures that indentation style, line endings, and file endings are consistent across editors and operating systems
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) checks JavaScript syntax and style, reducing bugs and improving consistency across a development team
 
-If you are using VS Code, you can use the following keyboard shortcut to run the app:
+If you are using VS Code, you can use the following keyboard shortcuts to run the app:
 - macOS: <kbd>⌘</kdb><kbd>⇧</kdb><kbd>B</kdb>
 - Windows: <kbd>Ctrl</kdb>+<kbd>⇧</kdb>+<kbd>B</kdb>
+
+VS Code users will also see a ruler at the 100 character mark, helping the developer to avoid linter warnings by keeping lines under 100 characters long.  
 
 ## Libraries
 Links to the homepages of libraries used in this project, listed here for easy reference.
