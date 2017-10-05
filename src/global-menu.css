@@ -1,0 +1,7 @@
+.global-menu,
+.show > .global-menu.btn-secondary.dropdown-toggle,
+.global-menu:hover {
+  background-color: transparent;
+  border-color: transparent;
+  color: #000000;
+}

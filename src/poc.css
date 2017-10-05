@@ -21,19 +21,10 @@
   font-size: large;
 }
 
-ul {
+.poc-links {
   width: 33%;
   margin: 0 auto;
   text-align: left;
   list-style: none;
   font-size: 2rem;
-}
-a {
-  text-decoration: none;
-  color: #00aeef;
-}
-a:active,
-a:focus,
-a:hover {
-  color: #00bdec;
 }

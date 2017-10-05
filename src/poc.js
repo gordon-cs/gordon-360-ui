@@ -15,7 +15,7 @@ export default class PoC extends Component {
         <p className="app-intro">
           Follow the links below to see recreated pages from Gordon 360.
         </p>
-        <ul>
+        <ul className="poc-links">
           <li><Link to="/home">Home</Link></li>
           <li><Link to="/activity/1/edit">Edit Activity Page</Link></li>
         </ul>

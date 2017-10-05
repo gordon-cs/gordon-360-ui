@@ -18,8 +18,8 @@ The following extensions are recommended for any editor used to develop this pro
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) checks JavaScript syntax and style, reducing bugs and improving consistency across a development team
 
 If you are using VS Code, you can use the following keyboard shortcuts to run the app:
-- macOS: <kbd>⌘</kdb><kbd>⇧</kdb><kbd>B</kdb>
-- Windows: <kbd>Ctrl</kdb>+<kbd>⇧</kdb>+<kbd>B</kdb>
+- macOS: <kbd>⌘</kbd><kbd>⇧</kbd><kbd>B</kbd>
+- Windows: <kbd>Ctrl</kbd>+<kbd>⇧</kbd>+<kbd>B</kbd>
 
 VS Code users will also see a ruler at the 100 character mark, helping the developer to avoid linter warnings by keeping lines under 100 characters long.  
 
@@ -29,3 +29,5 @@ Links to the homepages of libraries used in this project, listed here for easy r
 Provides easy routing, allowing transitions between views with back button support and URL management.
 - [reactstrap](https://reactstrap.github.io/)
 Bootstrap 4 implemented in React components. Though [React Bootstrap](https://react-bootstrap.github.io/) is more widely used and has a more mature API, it only supports Bootstrap 3. Bootstrap 4 brings significant improvements, so it is worthwhile to go with reactstrap, a younger library, to be able to take advantage of those improvements.
+- [classnames](https://github.com/JedWatson/classnames)
+A simple JavaScript utility for conditionally joining classNames together. See [Usage with React.js](https://github.com/JedWatson/classnames#usage-with-reactjs) for an explanation of why this library is useful with JSX.
