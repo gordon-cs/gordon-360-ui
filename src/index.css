@@ -2,6 +2,11 @@ body {
   max-width: 100%;
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: "Gotham SSm 7r", "Gotham SSm A", "Gotham SSm B", sans-serif;
+  letter-spacing: 1px;
   background-color: #ebeaea;
+}
+a:hover {
+  color: #DE571F;
+  text-decoration: none;
 }

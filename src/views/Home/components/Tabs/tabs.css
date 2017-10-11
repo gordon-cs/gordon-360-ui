@@ -1,0 +1,28 @@
+.gordon-tabs .nav {
+}
+.gordon-tabs .nav-item {
+  color: #ffffff;
+  flex: 1;
+}
+.gordon-tabs .nav-link {
+  height: 100px;
+  line-height: 90px;
+  vertical-align: middle;
+  text-align: center;
+  background-color: #014983;
+  font-weight: 700;
+  font-size: 1.2rem;
+  border: 0;
+  border-radius: 0;
+}
+.gordon-tabs .nav-link.active {
+  background-color: #00aeef;
+  color: #ffffff;
+}
+.gordon-tabs h4 {
+  color: #00aeef;
+}
+.gordon-tabs .tab-content {
+  background-color: #ffffff;
+  padding: 2rem;
+}

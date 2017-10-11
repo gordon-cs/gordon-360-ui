@@ -11,6 +11,8 @@ import {
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 
+import './tabs.css';
+
 export default class GordonTabs extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +32,7 @@ export default class GordonTabs extends Component {
   }
   render() {
     return (
-      <div>
+      <div className="gordon-tabs">
         <Nav tabs>
           <NavItem>
             <NavLink

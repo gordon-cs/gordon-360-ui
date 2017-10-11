@@ -1,0 +1,27 @@
+.gordon-nav.navbar,
+.gordon-nav .navbar-nav {
+  width: 100%;
+}
+.gordon-nav .navbar-nav {
+  justify-content: center;
+}
+.gordon-nav .nav-item {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.gordon-nav .nav-item a {
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0 2rem;
+  text-transform: uppercase;
+  color: #00aeef;
+}
+.gordon-nav .nav-item:hover a {
+  color: #DE571F;
+}
+/* Bootstrap Fixes */
+/* Make cursor change to a hand when hovering over clickable elements */
+.nav-item:hover,
+.btn:hover {
+  cursor: pointer;
+}

@@ -6,7 +6,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-import gordonLogoHorizBlack from './gordon-logo-horiz-black.svg';
+import gordonLogoHorizBlack from './gordon-logo-horiz-black.png';
 import './header.css';
 import GordonGlobalMenu from './components/GlobalMenu';
 import GordonNav from './components/Nav';
@@ -15,21 +15,26 @@ export default class GordonHeader extends Component {
   render() {
     return (
       <header>
-        <Container fluid>
+        <Container className="gordon-header" fluid>
           <Row className="header-top">
             <Col>
               <Link to="/">
-                <img src={gordonLogoHorizBlack} alt="Gordon logo" height="35" width="140" />
+                <img className="logo" src={gordonLogoHorizBlack} alt="Gordon logo" height="31" width="123" />
               </Link>
             </Col>
-            <Col>
+            <Col className="app-title d-none d-sm-block">
               Gordon 360
             </Col>
-            <Col>
-              <GordonGlobalMenu />
+            <Col className="d-none d-sm-block">
+              <div className="global-menu-container">
+                <GordonGlobalMenu />
+              </div>
+            </Col>
+            <Col className="d-sm-none">
+              <GordonNav />
             </Col>
           </Row>
-          <Row>
+          <Row className="d-none d-sm-block">
             <GordonNav />
           </Row>
         </Container>

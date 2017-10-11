@@ -8,6 +8,8 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
+import './nav.css';
+
 export default class GordonNav extends Component {
   constructor(props) {
     super(props);
@@ -24,10 +26,10 @@ export default class GordonNav extends Component {
   }
   render() {
     return (
-      <Navbar color="faded" light expand="md">
+      <Navbar className="gordon-nav" color="faded" light expand="sm" sticky>
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
-          <Nav className="ml-auto" navbar>
+          <Nav navbar>
             <NavItem>
               <Link to="/">My Home</Link>
             </NavItem>
