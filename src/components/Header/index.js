@@ -1,25 +1,15 @@
 import React, { Component } from 'react';
 import {
-  ButtonDropdown,
   Col,
-  Collapse,
   Container,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Nav,
-  Navbar,
-  NavbarToggler,
-  NavItem,
-  NavLink,
   Row,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 import gordonLogoHorizBlack from './gordon-logo-horiz-black.svg';
 import './header.css';
-import GordonGlobalMenu from './global-menu';
-import GordonNav from './nav';
+import GordonGlobalMenu from './components/GlobalMenu';
+import GordonNav from './components/Nav';
 
 export default class GordonHeader extends Component {
   render() {

@@ -6,12 +6,12 @@ import {
   Row,
 } from 'reactstrap';
 
-import chapelEventsForUser from './mocks/events-chapel-user-session.json';
-import daysLeft from './mocks/sessions-days-left.json';
+import chapelEventsForUser from './events-chapel-user-session.json';
+import daysLeft from './sessions-days-left.json';
 
 import './home.css';
-import GordonCarousel from './carousel';
-import GordonTabs from './tabs';
+import GordonCarousel from '../../components/Carousel';
+import GordonTabs from './components/Tabs';
 
 export default class Home extends Component {
   render() {

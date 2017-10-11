@@ -4,10 +4,10 @@ import {
   Route,
 } from 'react-router-dom';
 
-import EditActivity from './edit-activity';
-import GordonHeader from './header';
-import Home from './home';
-import PoC from './poc';
+import ActivityEdit from './views/ActivityEdit';
+import GordonHeader from './components/Header';
+import Home from './views/Home';
+import PoC from './views/PoC';
 
 export default class App extends Component {
   render() {
@@ -18,7 +18,7 @@ export default class App extends Component {
           <main>
             <Route exact path="/" component={PoC} />
             <Route path="/home" component={Home} />
-            <Route path="/activity/:activityId/edit" component={EditActivity} />
+            <Route path="/activity/:activityId/edit" component={ActivityEdit} />
           </main>
         </section>
       </Router>
