@@ -9,7 +9,6 @@ import {
 import chapelEventsForUser from './events-chapel-user-session.json';
 import daysLeft from './sessions-days-left.json';
 
-import './home.css';
 import GordonCarousel from '../../components/Carousel';
 import GordonTabs from './components/Tabs';
 
@@ -24,7 +23,12 @@ export default class Home extends Component {
                 <h3>Days Left in Semester</h3>
                 {daysLeft[0]} of {daysLeft[1]}
               </figcaption>
-              <Progress className="progress-indicator" value={daysLeft[0]} max={daysLeft[1]} />
+              <Progress
+                className="progress-indicator"
+                color="primary"
+                value={daysLeft[0]}
+                max={daysLeft[1]}
+              />
             </figure>
             <figure>
               <figcaption>
@@ -33,6 +37,7 @@ export default class Home extends Component {
               </figcaption>
               <Progress
                 className="progress-indicator"
+                color="primary"
                 value={chapelEventsForUser.length}
                 max={chapelEventsForUser[0].Required || chapelEventsForUser.length}
               />

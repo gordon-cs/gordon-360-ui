@@ -1,0 +1,24 @@
+@import "./vars";
+
+/**
+ * Set custom values for Boostrap variables
+ *
+ * Note: variable overrides must come before importing Boostrap
+ *
+ * See https://getbootstrap.com/docs/4.0/getting-started/theming/ for more information.
+ */
+
+ $theme-colors: (
+  "primary": $cyan,
+  "secondary": $navy,
+  "success": $dark-green,
+  "info": $green,
+  "warning": $orange,
+  "danger": $red,
+  "light": $light-gray,
+  "dark": $dark-gray,
+);
+
+$body-bg: $light-gray;
+
+@import "node_modules/bootstrap/scss/bootstrap";
