@@ -1,0 +1,20 @@
+@import "../../vars";
+
+.activity-edit-container {
+  padding: 2rem;
+  background: $white;
+}
+.activity-edit-upload {
+  margin: 0 auto;
+  border: 2px dashed $dark-gray;
+  height: 200px;
+}
+.activity-edit-upload-description {
+  text-align: center;
+  margin-bottom: 0;
+  vertical-align: middle;
+  line-height: 200px;
+}
+.activity-edit-upload:hover {
+  cursor: pointer;
+}
