@@ -26,7 +26,7 @@ export default class GordonNav extends Component {
   }
   render() {
     return (
-      <Navbar className="gordon-nav" color="faded" light expand="sm" sticky>
+      <Navbar className="gordon-nav" color="faded" light expand="sm">
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav navbar>
