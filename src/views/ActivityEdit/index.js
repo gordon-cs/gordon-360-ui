@@ -14,7 +14,28 @@ import {
 import './activity-edit.css';
 import GordonButton from '../../components/Button';
 
+const getUploadContents = (image) => {
+  if (image) {
+    return (<img className="activity-edit-upload-preview" src={image.preview} alt="" />);
+  }
+  return (
+    <p className="activity-edit-upload-description">
+      Drop files here or click to select files
+    </p>
+  );
+};
+
 export default class ActivityEdit extends Component {
+  constructor() {
+    super();
+    this.state = {
+      image: null,
+    };
+    this.onDrop = this.onDrop.bind(this);
+  }
+  onDrop([image]) {
+    this.setState({ image });
+  }
   render() {
     return (
       <Container>
@@ -30,10 +51,9 @@ export default class ActivityEdit extends Component {
                 className="activity-edit-upload"
                 accept="image/png,image/jpg,image/jpeg,image/bmp,image/gif"
                 multiple={false}
+                onDrop={this.onDrop}
               >
-                <p className="activity-edit-upload-description">
-                  Drop files here or click to select files
-                </p>
+                { getUploadContents(this.state.image) }
               </Dropzone>
               <FormText>
                 Preferred image size: 320x320px

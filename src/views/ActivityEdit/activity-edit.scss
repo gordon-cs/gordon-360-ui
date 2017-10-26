@@ -6,8 +6,10 @@
 }
 .activity-edit-upload {
   margin: 0 auto;
-  border: 2px dashed $dark-gray;
+  outline: 2px dashed $dark-gray;
   height: 200px;
+  text-align: center;
+  padding: 1px;
 }
 .activity-edit-upload-description {
   text-align: center;
@@ -17,4 +19,8 @@
 }
 .activity-edit-upload:hover {
   cursor: pointer;
+}
+.activity-edit-upload-preview {
+  max-height: 100%;
+  max-width: 100%;
 }
