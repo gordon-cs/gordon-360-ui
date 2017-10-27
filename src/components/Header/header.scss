@@ -1,9 +1,11 @@
+@import "../../vars";
+
 .gordon-header {
-  border-bottom: 2px solid #cccccb;
+  border-bottom: 2px solid $mid-gray;
   margin-bottom: 1rem;
 }
 .gordon-header .header-top {
-  background-color: #cccccb;
+  background-color: $mid-gray;
   align-items: center;
 }
 .gordon-header .logo {

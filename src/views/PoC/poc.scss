@@ -1,3 +1,5 @@
+@import "../../vars";
+
 .app {
   text-align: center;
 }
@@ -7,10 +9,10 @@
 }
 
 .app-header {
-  background-color: #014983;
+  background-color: $navy;
   height: 200px;
   padding: 20px;
-  color: white;
+  color: $white;
 }
 
 .app-title {

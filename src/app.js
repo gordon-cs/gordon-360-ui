@@ -4,6 +4,8 @@ import {
   Route,
 } from 'react-router-dom';
 
+import './app.css';
+
 import ActivityEdit from './views/ActivityEdit';
 import GordonHeader from './components/Header';
 import Home from './views/Home';

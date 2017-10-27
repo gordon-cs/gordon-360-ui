@@ -1,3 +1,5 @@
+@import "../../../../vars";
+
 .gordon-nav.navbar,
 .gordon-nav .navbar-nav {
   width: 100%;
@@ -14,10 +16,10 @@
   font-size: 0.9rem;
   padding: 0 2rem;
   text-transform: uppercase;
-  color: #00aeef;
+  color: $cyan;
 }
 .gordon-nav .nav-item:hover a {
-  color: #DE571F;
+  color: $orange;
 }
 /* Bootstrap Fixes */
 /* Make cursor change to a hand when hovering over clickable elements */
