@@ -15,9 +15,9 @@ export default class App extends Component {
   render() {
     return (
       <Router>
-        <section>
+        <section className="app-wrapper">
           <GordonHeader />
-          <main>
+          <main className="app-main">
             <Route exact path="/" component={PoC} />
             <Route path="/home" component={Home} />
             <Route path="/activity/:activityId/edit" component={ActivityEdit} />
