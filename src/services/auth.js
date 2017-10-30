@@ -103,7 +103,21 @@ const checkToken = () => {
   return refreshToken();
 };
 
+/**
+ * Check if current session is authenticated
+ * @return {Promise.<boolean>}
+ */
+const isAuthenticated = () => {
+  try {
+    storage.get('auth');
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 export {
   authenticate,
   checkToken,
+  isAuthenticated,
 };

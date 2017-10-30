@@ -13,6 +13,7 @@ import {
 import { Link } from 'react-router-dom';
 
 import './nav.css';
+import { isAuthenticated } from '../../../../services/auth';
 
 export default class GordonNav extends Component {
   constructor(props) {
@@ -89,9 +90,8 @@ export default class GordonNav extends Component {
   }
 
   render() {
-    const authenticated = true;
     return (
-      this.rendernav(authenticated)
+      this.rendernav(isAuthenticated())
     );
   }
 }
