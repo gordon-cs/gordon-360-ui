@@ -28,16 +28,27 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
 
 - [ ] CL&W credits
   - number of CL&W credits, total number of CL&W credits needed, and graph showing progress
+  - components
+    - `StatClwCredits`
+  - unknowns
+    - what is the best charting library to use with React?
 - [ ] days left in semester
   - number of days left in semester and graph showing progress
+  - components
+    - `StatDaysLeftInSemester`
+  - unknowns
+    - what is the best charting library to use with React?
 - [ ] carousel
   - rotating images, text, and calls to action
   - intended for use as advertising space in the future
-- [ ] tabs
+  - components
+    - `BannerCarousel`
+- [x] ~~tabs~~
   - informational tabs explaining the purpose of Gordon 360
   - improvements
     - are these tabs necessary on the home page of the application?
       - it seems like they belong on the "about" page
+      - solution for now is to remove them entirely
 
 ## Activities
 
@@ -45,6 +56,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
   - [existing page](https://360.gordon.edu/#/all-activities)
   - a grid of all activities
   - components
+    - `Activities`
     - `ActivityCard`: photo and name of an activity, click to view the activity profile
   - improvements
     - preserve original image ratios instead of stretching or squishing to conform to a square container
@@ -52,23 +64,41 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
   - [existing page](https://360.gordon.edu/#/specific-activity/201709/AJMISS)
   - information about a specific activity
   - buttons to subscribe to or join activity
+  - components
+    - `ActivityProfile`
+- [ ] edit activity
+  - edit activity details (if the current user is a leader of the activity)
+  - components
+    - `ActivityEdit`
+    - `UploadImage`
 - [ ] join activity
   - [existing page](https://360.gordon.edu/#/add-membership/201709/AJG)
+  - components
+    - `ActivityJoin`
   - improvements
-    - implement as a modal over the activity profile instead of an entirely separate page
-- [ ] my involvements
+    - implement as a modal over the activity profile instead of as a separate page
+- [ ] ~~my involvements~~ my activities
   - [existing page](https://360.gordon.edu/#/my-involvements)
   - list of activities the current user is involved in
   - an accordion list for each session that expands to show activities for that session
   - clicking an activity in the list brings the user to that activity's profile
+  - from "experience transcript" page:
+    - show user's role in each activity
+    - show how many semesters user was involved in activity
+    - show "download transcript" button
+  - components
+    - `UserActivities`
   - improvements
     - rename to "my activities"
-- [ ] experience transcript
+    - combine with "experience transcript" page
+  - unknowns
+    - what libary to use for PDF download/printing
+- [ ] ~~experience transcript~~ (merged with "my activities")
   - [existing page](https://360.gordon.edu/#/transcript)
   - button to download PDF of activities the current user has been involved in
   - table showing involvements and how long they lasted
   - improvements
-    - can this be merged with the "my involvements" page?
+    - merge with the "my involvements"/"my activities" page
       - it displays almost the same information but in a slightly different format
       - the "download transcript" button would make sense on the "my involvements" page
 
@@ -82,34 +112,67 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
   - option to show CL&W credit events only
   - search events
   - clicking on an event shows event details in a popup window
-- [ ] CL&W credit events
+  - components
+    - `Events`
+    - `EventsList`: list of events, includes filters
+    - `EventItem`: a single item in `EventsList`
+    - `EventDetails`: popup window from clicking on an `EventItem`
+- [ ] ~~CL&W credit events~~ (merged with "events")
   - [existing page](https://360.gordon.edu/#/chapel-credits)
   - list of all future events offering CL&W credit
   - chapel credit progress for current user
   - option to show only attended events
   - search events
   - clicking on an event shows event details in a popup window
+  - improvements
+    - merge with "events" page
+      - the "events" page does all the same things as this page except for displaying CL&W credits (which are displayed on the home page) and showing events the user has attended
 
 ## People
 
 - [ ] people search
   - search for anyone in the Gordon database by name
+  - components
+    - `PeopleSearch`
 - [ ] user profiles
   - [existing page](https://360.gordon.edu/#/profile/henry.hao)
   - information about a specific user
-- [ ] current user profile
-  - view and edit information about the current user
   - change cell phone number visibility
+  - change profile picture visibility
   - edit social media links
   - edit visibility of activities
   - update profile picture
   - view membership requests and their statuses
+  - components
+    - `UserProfile`
+    - `UserSummary`
+      - display photo, name, title, and social media links
+      - on current user's profile, allow editing social media links and updating profile picture
+      - should be an unstyled component that can be used on profile pages and in search results (big or small)
+    - `UserProfileHeader`: styled version of `UserSummary` that takes up top part of user profile page
+    - `UploadImage`
+    - `UserMembershipRequests`: display activity membership requests and their statuses
+    - `UserActivities`: display activities and allow user to toggle their visibility
+- [ ] upload image
+  - select, crop, and upload an image to a URL
+  - should be a modal
+  - components
+    - `UploadImage`
+  - improvements
+    - use a file selection library that allows drag and drop and can do custom validation
+      - solution: use Dropzone.js
+  - unknowns
+    - what is the best library for cropping an image before uploading?
 
 ## Static Pages
 
 - [ ] about
   - [existing page](https://360.gordon.edu/#/about)
   - static page
+  - components
+    - `About`
 - [ ] help
   - [existing page](https://360.gordon.edu/#/help)
   - static page
+  - components
+    - `Help`
