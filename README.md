@@ -1,4 +1,4 @@
-Gordon 360 React Proof of Concept
+Gordon 360 User Interface
 ---------------------------------
 
 # Getting Started
