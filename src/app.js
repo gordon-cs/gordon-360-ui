@@ -9,7 +9,6 @@ import './app.css';
 import ActivityEdit from './views/ActivityEdit';
 import GordonHeader from './components/Header';
 import Home from './views/Home';
-import PoC from './views/PoC';
 
 export default class App extends Component {
   render() {
@@ -18,8 +17,7 @@ export default class App extends Component {
         <section className="app-wrapper">
           <GordonHeader />
           <main className="app-main">
-            <Route exact path="/" component={PoC} />
-            <Route path="/home" component={Home} />
+            <Route path="/" component={Home} />
             <Route path="/activity/:activityId/edit" component={ActivityEdit} />
           </main>
         </section>
