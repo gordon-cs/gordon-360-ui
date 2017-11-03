@@ -9,9 +9,6 @@ import {
 import chapelEventsForUser from './events-chapel-user-session.json';
 import daysLeft from './sessions-days-left.json';
 
-import GordonCarousel from '../../components/Carousel';
-import GordonTabs from './components/Tabs';
-
 export default class Home extends Component {
   render() {
     return (
