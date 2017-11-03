@@ -7,6 +7,7 @@ import {
 import GordonNavLinks from './components/UnauthenticatedNav';
 import GordonLogin from './components/AuthenticatedNav';
 import './nav.css';
+import { isAuthenticated } from '../../../../services/auth';
 
 export default class GordonNav extends Component {
   constructor(props) {
@@ -22,9 +23,9 @@ export default class GordonNav extends Component {
     });
   }
 
-  navMenue(authenticated) {
+  navMenue() {
     const nav = null;
-    if (authenticated) {
+    if (isAuthenticated) {
       this.nav = <GordonNavLinks />;
     } else {
       this.nav = <GordonLogin />;
