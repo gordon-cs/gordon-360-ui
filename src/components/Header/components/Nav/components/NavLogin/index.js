@@ -7,25 +7,10 @@ import {
   Input,
   Button,
 } from 'reactstrap';
-import '../nav.css';
 
-export default class GordonLogin extends Component {
-  constructor(props) {
-    super(props);
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      isOpen: false,
-    };
-  }
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-  }
-
+export default class GordonNavLogin extends Component {
   render() {
     return (
-
       <Nav navbar>
         <NavItem>
           <InputGroup>
@@ -36,14 +21,12 @@ export default class GordonLogin extends Component {
         <NavItem>
           <InputGroup>
             <Input placeholder="Password" />
-            <InputGroupAddon>@gordon.edu</InputGroupAddon>
           </InputGroup>
         </NavItem>
         <NavItem>
           <Button color="primary">Login</Button>
         </NavItem>
       </Nav>
-
     );
   }
 }

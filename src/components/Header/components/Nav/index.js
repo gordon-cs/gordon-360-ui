@@ -4,8 +4,8 @@ import {
   Navbar,
   NavbarToggler,
 } from 'reactstrap';
-import GordonNavLinks from './components/UnauthenticatedNav';
-import GordonLogin from './components/AuthenticatedNav';
+import GordonNavLinks from './components/NavLinks';
+import GordonNavLogin from './components/NavLogin';
 import './nav.css';
 import { isAuthenticated } from '../../../../services/auth';
 
@@ -22,26 +22,21 @@ export default class GordonNav extends Component {
       isOpen: !this.state.isOpen,
     });
   }
-
-  navMenue() {
-    const nav = null;
-    if (isAuthenticated) {
-      this.nav = <GordonNavLinks />;
-    } else {
-      this.nav = <GordonLogin />;
-    }
-    return (nav);
-  }
-
   render() {
+    let nav;
+    if (isAuthenticated) {
+      nav = <GordonNavLinks />;
+    } else {
+      nav = <GordonNavLogin />;
+    }
+
     return (
       <Navbar className="gordon-nav" color="faded" light expand="sm">
         <NavbarToggler onClick={this.toggle} />
         <Collapse isOpen={this.state.isOpen} navbar>
-          <navMenue />
+          { nav }
         </Collapse>
       </Navbar>
-      // this.rendernav(authenticated)
     );
   }
 }
