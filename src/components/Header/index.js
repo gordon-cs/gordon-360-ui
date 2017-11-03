@@ -1,44 +1,51 @@
+import { withStyles } from 'material-ui/styles';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import IconButton from 'material-ui/IconButton';
+import MenuIcon from 'material-ui-icons/Menu';
+import PropTypes from 'prop-types';
+
 import React, { Component } from 'react';
-import {
-  Col,
-  Container,
-  Row,
-} from 'reactstrap';
-import { Link } from 'react-router-dom';
 
-import gordonLogoHorizBlack from './gordon-logo-horiz-black.png';
-import './header.css';
 import GordonGlobalMenu from './components/GlobalMenu';
-import GordonNav from './components/Nav';
 
-export default class GordonHeader extends Component {
+const styles = () => ({
+  root: {
+    width: '100%',
+  },
+  flex: {
+    flex: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+});
+
+class GordonHeader extends Component {
   render() {
+    const { classes } = this.props;
     return (
-      <header>
-        <Container className="gordon-header" fluid>
-          <Row className="header-top">
-            <Col>
-              <Link to="/">
-                <img className="logo" src={gordonLogoHorizBlack} alt="Gordon logo" height="31" width="123" />
-              </Link>
-            </Col>
-            <Col className="app-title d-none d-sm-block">
+      <header className={classes.root}>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton className={classes.menuButton} color="contrast" aria-label="Menu">
+              <MenuIcon />
+            </IconButton>
+            <Typography type="title" color="inherit" className={classes.flex}>
               Gordon 360
-            </Col>
-            <Col className="d-none d-sm-block">
-              <div className="global-menu-container">
-                <GordonGlobalMenu />
-              </div>
-            </Col>
-            <Col className="d-sm-none">
-              <GordonNav />
-            </Col>
-          </Row>
-          <Row className="d-none d-sm-block">
-            <GordonNav />
-          </Row>
-        </Container>
+            </Typography>
+            <GordonGlobalMenu />
+          </Toolbar>
+        </AppBar>
       </header>
     );
   }
 }
+
+GordonHeader.propTypes = {
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+};
+
+export default withStyles(styles)(GordonHeader);
