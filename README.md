@@ -31,10 +31,11 @@ VS Code users will also see a ruler at the 100 character mark, helping the devel
 Links to the homepages of libraries used in this project, listed here for easy reference.
 - [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
 Provides easy routing, allowing transitions between views with back button support and URL management.
-- [reactstrap](https://reactstrap.github.io/)
-Bootstrap 4 implemented in React components. Though [React Bootstrap](https://react-bootstrap.github.io/) is more widely used and has a more mature API, it only supports Bootstrap 3. Bootstrap 4 brings significant improvements, so it is worthwhile to go with reactstrap, a younger library, to be able to take advantage of those improvements.
 - [classnames](https://github.com/JedWatson/classnames)
 A simple JavaScript utility for conditionally joining classNames together. See [Usage with React.js](https://github.com/JedWatson/classnames#usage-with-reactjs) for an explanation of why this library is useful with JSX.
+- [Material-UI](https://material-ui-next.com)
+Material-UI is a widely-used React implementation of Google's Material Design. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
+*Note*: this project currently uses `material-ui@next`, which is a beta version of the library. The library is approaching a 1.0.0 release, so the beta version is more similar to that release than the current stable version is.
 
 # Development
 ## File Organization
