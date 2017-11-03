@@ -9,6 +9,13 @@ import storage from './storage';
 const base = process.env.REACT_APP_API_URL;
 
 /**
+ * @global
+ * @typedef Auth
+ * @property {String} token Bearer token for use in `Authorization` header
+ * @property {String} expires Date that token expires
+ */
+
+/**
  * Get a date/time that a token expires
  * @param {Number} secondsFromNow How many seconds until expiration
  * @return {Date} Expiration date/time of the token
@@ -66,9 +73,20 @@ const refreshToken = () => {
 };
 
 /**
- * Check if token is expired; refresh if necessary
- * @return {Promise.<undefined|boolean>} Returns a promise that resolves when token is refreshed
- * or immediately with `false` if token does not exist or is not expired
+ * Check if auth is expired
+ * @param {Auth} auth
+ * @return {boolean}
+ */
+const isAuthExpired = (auth) => {
+  const now = new Date();
+  const expires = new Date(auth.expires);
+  return now < expires;
+};
+
+/**
+ * Check if token is valid; refresh if necessary
+ * @return {Promise.<undefined|boolean>} Returns a promise that resolves when token is refreshed,
+ * or immediately with `false` if token does not exist, or immediately with `true` if token is valid
  */
 const checkToken = () => {
   let auth;
@@ -78,15 +96,28 @@ const checkToken = () => {
     return Promise.resolve(false);
   }
 
-  const now = new Date();
-  const expires = new Date(auth.expires);
-  if (now < expires) {
-    return Promise.resolve(false);
+  if (!isAuthExpired(auth)) {
+    return Promise.resolve(true);
   }
+
   return refreshToken();
+};
+
+/**
+ * Check if current session is authenticated
+ * @return {Promise.<boolean>}
+ */
+const isAuthenticated = () => {
+  try {
+    storage.get('auth');
+    return true;
+  } catch (err) {
+    return false;
+  }
 };
 
 export {
   authenticate,
   checkToken,
+  isAuthenticated,
 };
