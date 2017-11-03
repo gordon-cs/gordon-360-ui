@@ -20,7 +20,7 @@ export default class App extends Component {
           <section className="app-wrapper">
             <GordonHeader />
             <main className="app-main">
-              <Route path="/" component={Home} />
+              <Route exact path="/" component={Home} />
               <Route path="/activity/:activityId/edit" component={ActivityEdit} />
             </main>
           </section>
