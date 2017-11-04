@@ -1,3 +1,5 @@
+@import './vars';
+
 body {
   max-width: 100%;
   margin: 0;
@@ -5,6 +7,24 @@ body {
   font-family: "Gotham SSm 7r", "Gotham SSm A", "Gotham SSm B", sans-serif;
   letter-spacing: 1px;
 }
+// Disable link underline
+a,
 a:hover {
   text-decoration: none;
+}
+.app-wrapper {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.app-main {
+  width: 100%;
+  padding: 3rem;
+  height: calc(100% - 56px);
+  margin-top: 56px; // height of app bar
+}
+@media (min-width: $break-sm) {
+  height: calc(100% - 64px);
+  margin-top: 64px;
 }

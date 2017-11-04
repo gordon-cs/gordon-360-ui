@@ -1,23 +1,29 @@
-$cyan: #00aeef;
-$cyan-hover: #00bdec;
-$navy: #014983;
-$navy-hover: #0159A0;
-$orange: #DE571F;
-$orange-hover: #E2794C;
-$green: #b2bb1c;
-$green-hover: #bcc61e;
-$dark-green: #086d38;
-$dark-green-hover: #0a7a3d;
-$red: #b53228;
-$red-hover: #d83c30;
-$yellow: #FDB913;
-$yellow-hover: #fdc233;
-$gray: #31342B;
-$black: #31342b;
-$black-hover: #5A5D55;
-$white: #ffffff;
+/*
+ * Application variables for use in any component .scss file
+ * To use (for example, from `src/components/Header/header.scss`):
+ * @import '../../vars';
+ *
+ * Ensure that the relative path (i.e. `../../`, etc.) is correct when importing from a nested
+ * component.
+ *
+ * For use in a .js file, see `src/theme.js`.
+ */
 
-$brown-gray: #31342B;
-$light-gray: #EBEAEA;
-$mid-gray: #cccccb;
-$dark-gray: #252525;
+$primaryBlue: #014983;
+$primaryCyan: #00AEEF;
+
+$secondaryGreen: #B2BB1C;
+$secondaryYellow: #FDB913;
+$secondaryOrange: #DE571F;
+$secondaryRed: #B53228;
+
+$neutralLightGray: #EBEAEA;
+$neutralGray: #CCCCCB;
+$neutralDarkGray: #31342B;
+
+// Material-UI breakpoints as Sass variables for use in custom styles
+$break-xs: 360px;
+$break-sm: 600px;
+$break-md: 960px;
+$break-lg: 1280px;
+$break-xl: 1920px;

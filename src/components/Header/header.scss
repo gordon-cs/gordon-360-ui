@@ -1,22 +1,33 @@
-@import "../../vars";
+@import '../../vars';
+
+$drawerWidth: 240px;
 
 .gordon-header {
-  border-bottom: 2px solid $mid-gray;
+  position: absolute;
+  width: 100%;
   margin-bottom: 1rem;
-}
-.gordon-header .header-top {
-  background-color: $mid-gray;
-  align-items: center;
-}
-.gordon-header .logo {
-  margin: 11px;
-}
-.gordon-header .app-title {
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 1rem;
-}
-.gordon-header .global-menu-container {
-  text-align: right;
-  padding-right: 2rem;
+  .app-bar {
+    position: absolute;
+  }
+  @media (min-width: $break-md) {
+    .app-bar {
+      margin-left: $drawerWidth;
+      width: calc(100% - #{$drawerWidth});
+    }
+  }
+  .menu-button {
+    margin-left: -12px;
+    margin-right: 20px;
+  }
+  @media (min-width: $break-md) {
+    .menu-button {
+      display: none;
+    }
+  }
+  .title {
+    flex: 1;
+  }
+  .global-menu-container {
+    margin-right: -12px;
+  }
 }

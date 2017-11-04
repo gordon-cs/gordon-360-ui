@@ -4,8 +4,6 @@ import MoreVertIcon from 'material-ui-icons/MoreVert';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import './global-menu.css';
-
 export default class GordonGlobalMenu extends Component {
   constructor(props) {
     super(props);
@@ -31,14 +29,14 @@ export default class GordonGlobalMenu extends Component {
         <IconButton
           color="contrast"
           aria-label="More"
-          aria-owns={open ? 'long-menu' : null}
+          aria-owns={open ? 'global-menu' : null}
           aria-haspopup="true"
           onClick={this.onClick}
         >
           <MoreVertIcon />
         </IconButton>
         <Menu
-          id="long-menu"
+          id="global-menu"
           anchorEl={this.state.anchorEl}
           open={open}
           onRequestClose={this.onClose}

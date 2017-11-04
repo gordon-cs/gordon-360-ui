@@ -1,4 +1,3 @@
-import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -8,35 +7,29 @@ import PropTypes from 'prop-types';
 
 import React, { Component } from 'react';
 
+import './header.css';
 import GordonGlobalMenu from './components/GlobalMenu';
 
-const styles = () => ({
-  root: {
-    width: '100%',
-  },
-  flex: {
-    flex: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-});
-
-class GordonHeader extends Component {
+export default class GordonHeader extends Component {
   render() {
-    const { classes } = this.props;
     return (
-      <header className={classes.root}>
-        <AppBar position="static">
+      <header className="gordon-header">
+        <AppBar className="app-bar" position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="contrast" aria-label="Menu">
+            <IconButton
+              className="menu-button"
+              color="contrast"
+              aria-label="open drawer"
+              onClick={this.props.onDrawerToggle}
+            >
               <MenuIcon />
             </IconButton>
-            <Typography type="title" color="inherit" className={classes.flex}>
+            <Typography className="title" type="title" color="inherit">
               Gordon 360
             </Typography>
-            <GordonGlobalMenu />
+            <div className="global-menu-container">
+              <GordonGlobalMenu />
+            </div>
           </Toolbar>
         </AppBar>
       </header>
@@ -45,7 +38,5 @@ class GordonHeader extends Component {
 }
 
 GordonHeader.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  onDrawerToggle: PropTypes.func.isRequired,
 };
-
-export default withStyles(styles)(GordonHeader);

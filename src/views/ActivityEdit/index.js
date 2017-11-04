@@ -2,8 +2,6 @@ import Button from 'material-ui/Button';
 import Dropzone from 'react-dropzone';
 import React, { Component } from 'react';
 
-import './activity-edit.css';
-
 const getUploadContents = (image) => {
   if (image) {
     return (<img className="activity-edit-upload-preview" src={image.preview} alt="" />);

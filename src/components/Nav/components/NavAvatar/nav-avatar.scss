@@ -1,0 +1,21 @@
+@import '../../../../vars';
+
+.gordon-nav-avatar {
+  margin: 0;
+  padding: 1rem;
+  width: 100%;
+  .image {
+    height: 4rem;
+    width: 4rem;
+    margin-bottom: 1rem;
+    background-color: $primaryCyan;
+  }
+  // Override button centering content
+  &.button {
+    justify-content: start;
+  }
+  // Override button changing text to uppercase
+  .text {
+    text-transform: initial;
+  }
+}

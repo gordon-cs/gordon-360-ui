@@ -1,0 +1,15 @@
+@import '../../vars';
+
+.gordon-nav {
+  @media (min-width: $break-md) {
+    .drawer {
+      width: 240px;
+      position: relative;
+    }
+  }
+}
+
+// Requires different class name because temporary drawer is rendered at document top level
+.gordon-nav-drawer {
+  width: 250px;
+}

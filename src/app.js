@@ -9,16 +9,30 @@ import {
 import './app.css';
 import ActivityEdit from './views/ActivityEdit';
 import GordonHeader from './components/Header';
+import GordonNav from './components/Nav';
 import Home from './views/Home';
 import theme from './theme';
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onDrawerToggle = this.onDrawerToggle.bind(this);
+
+    this.state = {
+      drawerOpen: false,
+    };
+  }
+  onDrawerToggle() {
+    this.setState({ drawerOpen: !this.state.drawerOpen });
+  }
   render() {
     return (
       <MuiThemeProvider theme={theme}>
         <Router>
           <section className="app-wrapper">
-            <GordonHeader />
+            <GordonHeader onDrawerToggle={this.onDrawerToggle} />
+            <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
             <main className="app-main">
               <Route exact path="/" component={Home} />
               <Route path="/activity/:activityId/edit" component={ActivityEdit} />
