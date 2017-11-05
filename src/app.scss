@@ -12,6 +12,10 @@ a,
 a:hover {
   text-decoration: none;
 }
+// Keep link color the same after visiting it
+a:visited {
+  color: initial;
+}
 .app-wrapper {
   position: relative;
   display: flex;
