@@ -13,3 +13,8 @@
 .gordon-nav-drawer {
   width: 250px;
 }
+
+.gordon-nav .drawer,
+.gordon-nav-drawer {
+  background-color: $neutralLightGray !important; // Must be `important` to override on mobile
+}
