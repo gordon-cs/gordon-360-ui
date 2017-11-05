@@ -1,44 +1,42 @@
-import React, { Component } from 'react';
-import {
-  Col,
-  Container,
-  Row,
-} from 'reactstrap';
-import { Link } from 'react-router-dom';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import IconButton from 'material-ui/IconButton';
+import MenuIcon from 'material-ui-icons/Menu';
+import PropTypes from 'prop-types';
 
-import gordonLogoHorizBlack from './gordon-logo-horiz-black.png';
+import React, { Component } from 'react';
+
 import './header.css';
 import GordonGlobalMenu from './components/GlobalMenu';
-import GordonNav from './components/Nav';
 
 export default class GordonHeader extends Component {
   render() {
     return (
-      <header>
-        <Container className="gordon-header" fluid>
-          <Row className="header-top">
-            <Col>
-              <Link to="/">
-                <img className="logo" src={gordonLogoHorizBlack} alt="Gordon logo" height="31" width="123" />
-              </Link>
-            </Col>
-            <Col className="app-title d-none d-sm-block">
+      <header className="gordon-header">
+        <AppBar className="app-bar" position="static">
+          <Toolbar>
+            <IconButton
+              className="menu-button"
+              color="contrast"
+              aria-label="open drawer"
+              onClick={this.props.onDrawerToggle}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography className="title" type="title" color="inherit">
               Gordon 360
-            </Col>
-            <Col className="d-none d-sm-block">
-              <div className="global-menu-container">
-                <GordonGlobalMenu />
-              </div>
-            </Col>
-            <Col className="d-sm-none">
-              <GordonNav />
-            </Col>
-          </Row>
-          <Row className="d-none d-sm-block">
-            <GordonNav />
-          </Row>
-        </Container>
+            </Typography>
+            <div className="global-menu-container">
+              <GordonGlobalMenu />
+            </div>
+          </Toolbar>
+        </AppBar>
       </header>
     );
   }
 }
+
+GordonHeader.propTypes = {
+  onDrawerToggle: PropTypes.func.isRequired,
+};

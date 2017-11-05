@@ -1,47 +1,50 @@
+import IconButton from 'material-ui/IconButton';
+import Menu, { MenuItem } from 'material-ui/Menu';
+import MoreVertIcon from 'material-ui-icons/MoreVert';
 import React, { Component } from 'react';
-import {
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'reactstrap';
 import { Link } from 'react-router-dom';
-
-import './global-menu.css';
 
 export default class GordonGlobalMenu extends Component {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
+    this.onClick = this.onClick.bind(this);
+    this.onClose = this.onClose.bind(this);
 
     this.state = {
-      dropdownOpen: false,
-      firstName: 'Test',
-      lastName: 'User',
-      userName: 'test.user',
+      anchorEl: null,
     };
   }
-
-  toggle() {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen,
-    });
+  onClick(event) {
+    this.setState({ anchorEl: event.currentTarget });
   }
-
+  onClose() {
+    this.setState({ anchorEl: null });
+  }
   render() {
+    const open = Boolean(this.state.anchorEl);
+
     return (
-      <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-        <DropdownToggle caret size="sm" className="global-menu">
-          {this.state.firstName} {this.state.lastName}
-        </DropdownToggle>
-        <DropdownMenu>
-          <DropdownItem><Link to="/help">Help</Link></DropdownItem>
-          <DropdownItem><Link to={`/profile/${this.state.userName}`}>Profile</Link></DropdownItem>
-          <DropdownItem divider />
-          <DropdownItem><Link to="">Logout</Link></DropdownItem>
-        </DropdownMenu>
-      </ButtonDropdown>
+      <div>
+        <IconButton
+          color="contrast"
+          aria-label="More"
+          aria-owns={open ? 'global-menu' : null}
+          aria-haspopup="true"
+          onClick={this.onClick}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="global-menu"
+          anchorEl={this.state.anchorEl}
+          open={open}
+          onRequestClose={this.onClose}
+        >
+          <MenuItem onClick={this.onClose}><Link to="/help">Help</Link></MenuItem>
+          <MenuItem onClick={this.onClose}><Link to="">Logout</Link></MenuItem>
+        </Menu>
+      </div>
     );
   }
 }
