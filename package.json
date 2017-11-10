@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "bootstrap": "4.0.0-beta",
     "classnames": "2.2.5",
     "material-ui": "1.0.0-beta.19",
     "material-ui-icons": "1.0.0-beta.17",
