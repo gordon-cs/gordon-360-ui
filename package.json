@@ -30,6 +30,6 @@
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint --ext .jsx --ext .js ."
+    "lint": "eslint --ext .js src"
   }
 }
