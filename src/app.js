@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 
 import './app.css';
+import ActivitiesAll from './views/ActivitiesAll';
 import ActivityEdit from './views/ActivityEdit';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
@@ -35,6 +36,7 @@ export default class App extends Component {
             <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
             <main className="app-main">
               <Route exact path="/" component={Home} />
+              <Route path="/activities" component={ActivitiesAll} />
               <Route path="/activity/:activityId/edit" component={ActivityEdit} />
             </main>
           </section>
