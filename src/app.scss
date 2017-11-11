@@ -24,11 +24,19 @@ a:visited {
 }
 .app-main {
   width: 100%;
-  padding: 3rem;
   height: calc(100% - 56px);
   margin-top: 56px; // height of app bar
+  padding: 2rem 0.5rem;
 }
 @media (min-width: $break-sm) {
-  height: calc(100% - 64px);
-  margin-top: 64px;
+  .app-main {
+    height: calc(100% - 64px);
+    margin-top: 64px;
+  }
+}
+@media (min-width: $break-md) {
+  .app-main {
+    padding: 2rem;
+    margin-left: $drawer-width-md;
+  }
 }
