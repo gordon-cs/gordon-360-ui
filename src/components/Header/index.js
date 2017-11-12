@@ -13,7 +13,7 @@ import GordonGlobalMenu from './components/GlobalMenu';
 export default class GordonHeader extends Component {
   render() {
     return (
-      <header className="gordon-header">
+      <section className="gordon-header">
         <AppBar className="app-bar" position="static">
           <Toolbar>
             <IconButton
@@ -32,7 +32,7 @@ export default class GordonHeader extends Component {
             </div>
           </Toolbar>
         </AppBar>
-      </header>
+      </section>
     );
   }
 }
