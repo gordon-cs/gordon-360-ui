@@ -4,7 +4,7 @@
     "CHDate": "2017-09-27T10:25:00",
     "CHTime": "1970-01-01T10:25:00",
     "CHTermCD": "17FA",
-    "Required": 0,
+    "Required": 30,
     "Event_Name": "Chapel",
     "Event_Title": "Chapel: Tom Haugen",
     "Event_Type_Name": "Chapel/Worship",

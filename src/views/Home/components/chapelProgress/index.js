@@ -5,22 +5,14 @@ import { gordonColors } from '../../../../theme';
 
 export default class ChapelProgress extends Component {
   render() {
-    let required = chapelEventsForUser[0].Required;
-    let eventsPercent = 0;
+    const required = chapelEventsForUser[0].Required;
     // console.log(chapelEvents);
     const numEvents = chapelEventsForUser.length;
-    if (chapelEventsForUser.length >= 1) {
-      eventsPercent = Math.round((numEvents * 100) / required);
-    } else {
-      required = 0;
-      eventsPercent = 0;
-    }
-    const percentRemaining = 100 - eventsPercent;
     const Data = {
       datasets: [{
-        data: [eventsPercent, percentRemaining], backgroundColor: [gordonColors.primary.blue] }],
+        data: [numEvents, required], backgroundColor: [gordonColors.primary.blue] }],
     };
-    console.log(eventsPercent);
+    console.log(numEvents);
     return (
       <Doughnut data={Data} />
     );
