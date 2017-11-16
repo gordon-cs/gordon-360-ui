@@ -142,8 +142,18 @@ const isAuthenticated = () => {
   }
 };
 
+/**
+ * Sign a user out
+ * @description Removes token and credentials from `localStorage`.
+ */
+const signOut = () => {
+  storage.remove('auth');
+  storage.remove('credentials');
+};
+
 export {
   authenticate,
   checkToken,
   isAuthenticated,
+  signOut,
 };

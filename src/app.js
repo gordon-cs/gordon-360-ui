@@ -21,7 +21,7 @@ export default class App extends Component {
     super(props);
 
     this.onDrawerToggle = this.onDrawerToggle.bind(this);
-    this.onLogIn = this.onLogIn.bind(this);
+    this.onAuthChange = this.onAuthChange.bind(this);
 
     this.state = {
       drawerOpen: false,
@@ -30,14 +30,14 @@ export default class App extends Component {
   onDrawerToggle() {
     this.setState({ drawerOpen: !this.state.drawerOpen });
   }
-  onLogIn() {
+  onAuthChange() {
     // Force this component to re-render, login view -> main app view
     this.forceUpdate();
   }
   render() {
     let content = (
       <section className="app-wrapper">
-        <GordonHeader onDrawerToggle={this.onDrawerToggle} />
+        <GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
         <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
         <main className="app-main">
           <Route exact path="/" component={Home} />
@@ -48,7 +48,7 @@ export default class App extends Component {
     );
 
     if (!isAuthenticated()) {
-      content = <Login onLogIn={this.onLogIn} />;
+      content = <Login onLogIn={this.onAuthChange} />;
     }
 
     return (

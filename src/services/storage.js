@@ -37,7 +37,14 @@ const get = (key) => {
   return value;
 };
 
+/**
+ * Remove a value stored locally
+ * @param {String} key Where value is stored
+ */
+const remove = key => localStorage.removeItem(key);
+
 export default {
   get,
+  remove,
   store,
 };
