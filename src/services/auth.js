@@ -27,6 +27,21 @@ const getExpiration = (secondsFromNow) => {
 };
 
 /**
+ * Handle an authentication error
+ * @param {Error} err An authentication error
+ * @throws {Error} An error that can be shown to users (`error.message`)
+ */
+const handleError = (err) => {
+  // eslint-disable-next-line
+  console.error('Could not authenticate user:', err);
+  if (err.error && err.error_description) {
+    throw new Error(err.error_description);
+  } else {
+    throw new Error('Something went wrong! Please contact CTS for help.');
+  }
+};
+
+/**
  * Get auth for user from backend
  * @param {String} username Username in firstname.lastname format
  * @param {String} password User's password
@@ -41,10 +56,19 @@ const getAuth = (username, password) => {
   });
   const request = new Request(`${base}token`, { method: 'post', headers, body });
 
-  return fetch(request).then(res => res.json()).then(data => ({
+  return fetch(request)
+    .then((res) => {
+      const json = res.json();
+      if (!res.ok) {
+        return json.then(data => Promise.reject(data));
+      }
+      return json;
+    })
+    .then(data => ({
     token: data.access_token,
     expires: getExpiration(data.expires_in),
-  }));
+    }))
+    .catch(handleError);
 };
 
 /**
@@ -56,8 +80,7 @@ const getAuth = (username, password) => {
  */
 const authenticate = (username, password) => getAuth(username, password)
   .then(auth => storage.store('auth', auth))
-  .then(() => storage.store('credentials', { username, password }))
-  .catch(err => console.error('Could not authenticate user:', err));
+  .then(() => storage.store('credentials', { username, password }));
 
 /**
  * Refresh stored token with stored credentials
