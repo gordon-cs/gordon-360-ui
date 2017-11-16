@@ -65,8 +65,8 @@ const getAuth = (username, password) => {
       return json;
     })
     .then(data => ({
-    token: data.access_token,
-    expires: getExpiration(data.expires_in),
+      token: data.access_token,
+      expires: getExpiration(data.expires_in),
     }))
     .catch(handleError);
 };
@@ -132,8 +132,11 @@ const checkToken = () => {
  */
 const isAuthenticated = () => {
   try {
-    storage.get('auth');
-    return true;
+    // Check that auth exists
+    const auth = storage.get('auth');
+
+    // Check that auth contains a token
+    return auth.token && auth.token.length > 0;
   } catch (err) {
     return false;
   }
