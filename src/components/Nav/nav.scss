@@ -3,15 +3,15 @@
 .gordon-nav {
   @media (min-width: $break-md) {
     .drawer {
-      width: 240px;
-      position: relative;
+      width: $drawer-width-md;
+      position: fixed;
     }
   }
 }
 
 // Requires different class name because temporary drawer is rendered at document top level
 .gordon-nav-drawer {
-  width: 250px;
+  width: $drawer-width-xs;
 }
 
 .gordon-nav .drawer,
