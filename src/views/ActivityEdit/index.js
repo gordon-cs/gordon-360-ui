@@ -29,8 +29,10 @@ export default class ActivityEdit extends Component {
       <section>
         <h1>Edit Activity</h1>
         <form>
-          <label htmlFor="editActivityWebsite">Website</label>
-          <input id="editActivityWebsite" type="text" />
+          <label htmlFor="editActivityWebsite">
+            Website
+            <input id="editActivityWebsite" type="text" />
+          </label>
           <Dropzone
             className="activity-edit-upload"
             accept="image/png,image/jpg,image/jpeg,image/bmp,image/gif"
@@ -45,10 +47,14 @@ export default class ActivityEdit extends Component {
             Accepted file types: PNG, JPG, JPEG, BMP, GIF
           </p>
           <br />
-          <label htmlFor="editActivityDescription">Description</label>
-          <input type="textarea" id="editActivityDescription" />
-          <label htmlFor="editActivityJoining">Special Information for Joining</label>
-          <input type="textarea" id="editActivityJoining" />
+          <label htmlFor="editActivityDescription">
+            Description
+            <input type="textarea" id="editActivityDescription" />
+          </label>
+          <label htmlFor="editActivityJoining">
+            Special Information for Joining
+            <input type="textarea" id="editActivityJoining" />
+          </label>
           <Button>cancel</Button>
           <Button color="primary" type="submit">submit changes</Button>
         </form>
