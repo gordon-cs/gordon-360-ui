@@ -39,14 +39,6 @@ export default class GordonNavLinks extends Component {
             <ListItemText primary="Events" />
           </ListItem>
         </Link>
-        <Link to="/about" onClick={this.props.onLinkClick}>
-          <ListItem button>
-            <ListItemIcon>
-              <InfoIcon />
-            </ListItemIcon>
-            <ListItemText primary="About" />
-          </ListItem>
-        </Link>
       </List>
     );
   }
