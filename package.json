@@ -34,5 +34,15 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js src"
+  },
+  "proxy": {
+    "/api": {
+      "target": "https://360ApiTrain.gordon.edu/",
+      "changeOrigin": true
+    },
+    "/token": {
+      "target": "https://360ApiTrain.gordon.edu/",
+      "changeOrigin": true
+    }
   }
 }
