@@ -13,7 +13,7 @@ import GordonGlobalMenu from './components/GlobalMenu';
 export default class GordonHeader extends Component {
   render() {
     return (
-      <header className="gordon-header">
+      <section className="gordon-header">
         <AppBar className="app-bar" position="static">
           <Toolbar>
             <IconButton
@@ -28,15 +28,16 @@ export default class GordonHeader extends Component {
               Gordon 360
             </Typography>
             <div className="global-menu-container">
-              <GordonGlobalMenu />
+              <GordonGlobalMenu onSignOut={this.props.onSignOut} />
             </div>
           </Toolbar>
         </AppBar>
-      </header>
+      </section>
     );
   }
 }
 
 GordonHeader.propTypes = {
   onDrawerToggle: PropTypes.func.isRequired,
+  onSignOut: PropTypes.func.isRequired,
 };
