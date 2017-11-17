@@ -12,19 +12,23 @@ import storage from './storage';
  * @param {String} sessionCode Identifier for a session
  * @return {Promise.<User[]>}
  */
-
-// "/events/chapel/" + id_name + "/" + termCode
-const getAttendedEvents = (username, termCode, sessionCode) =>
-  http.get(`events/chapel/${username}/${termCode}/${sessionCode}`);
+const getAttendedEvents = (username, termCode) =>
+  http.get(`events/chapel/${username}/${termCode}`);
 
 const getChapelCredits = async () => {
-  const { SessionCode: sessionCode } = await session.getCurrent();
   const { username } = storage.get('credentials');
-  const termCode = '17FA';
-  const attendedEvents = await getAttendedEvents(username, termCode, sessionCode);
+  const termCode = session.getTermCode();
+  const attendedEvents = await getAttendedEvents(username, termCode);
+
+  // Get required number of CL&W credits for the student, defaulting to zero
+  let required = 0;
+  if (attendedEvents.length > 0) {
+    ([{ Required: required }] = attendedEvents);
+  }
+
   return {
     current: attendedEvents.length,
-    required: attendedEvents[0].required,
+    required,
   };
 };
 
