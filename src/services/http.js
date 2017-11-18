@@ -23,18 +23,15 @@ const base = process.env.REACT_APP_API_URL;
  * @return {Headers}
  */
 const makeHeaders = () => {
-  let token;
-
   try {
     const auth = storage.get('auth');
-    token = auth.token;
+    const { token } = auth;
+    return new Headers({
+      Authorization: `Bearer ${token}`,
+    });
   } catch (err) {
-    console.error('User is not authenticated.');
+    throw new Error('User is not authenticated.');
   }
-
-  return new Headers({
-    Authorization: `Bearer ${token}`,
-  });
 };
 
 /**
@@ -56,7 +53,7 @@ const makeRequest = (url, method, body) => new Request(`${base}api/${url}`, {
  * @return {object|array} Body of response
  */
 const parseResponse = res => res.json()
-  .catch(() => console.error(`Got non-JSON response from request to ${res.url}`));
+  .catch(() => { throw new Error(`Got non-JSON response from request to ${res.url}`); });
 
 /**
  * Get
