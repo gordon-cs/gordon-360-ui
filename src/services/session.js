@@ -28,6 +28,12 @@ const getAll = () => http.get('sessions').then(sessions => sessions.reverse());
 const getCurrent = () => http.get('sessions/current');
 
 /**
+ * Get days left in the term
+ * @return {Promise.<Session>}
+ */
+const getDaysLeft = () => http.get('sessions/daysLeft');
+
+/**
  * Get current term code
  * @return {Promise.<String>}
  */
@@ -53,5 +59,6 @@ const getTermCode = () => {
 export default {
   getAll,
   getCurrent,
+  getDaysLeft,
   getTermCode,
 };

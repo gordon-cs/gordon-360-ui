@@ -4,6 +4,7 @@ import Card, { CardContent } from 'material-ui/Card';
 
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
+import GordonLoader from '../../../../components/Loader';
 
 export default class ChapelPsrogress extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class ChapelPsrogress extends Component {
     this.loadChapel = this.loadChapel.bind(this);
 
     this.state = {
+      loading: true,
       chapelCredits: {},
     };
   }
@@ -20,27 +22,35 @@ export default class ChapelPsrogress extends Component {
   }
   async loadChapel() {
     const chapelCredits = await user.getChapelCredits();
+    this.setState({ loading: false });
     this.setState({ chapelCredits });
   }
   render() {
+    let content;
     // console.log(chapelEvents);
-    const remaining = (this.state.chapelCredits.current);
+    const numEvents = (this.state.chapelCredits.current);
     // console.log(this.state.chapelCredits);
-    const numEvents = this.state.chapelCredits.required;
+    const remaining = this.state.chapelCredits.required - numEvents;
     const Data = {
       datasets: [{ data: [numEvents, remaining], backgroundColor: [gordonColors.primary.blue] }],
     };
+    if (this.state.loading === true) {
+      content = <GordonLoader />;
+    } else {
+      content = (
+        <Card>
+          <CardContent>
+            <figure>
+              <figcaption>
+                <h3>Chapel Progress</h3>
+              </figcaption>
+            </figure>
+            <Doughnut data={Data} />
+          </CardContent >
+        </Card>);
+    }
     return (
-      <Card>
-        <CardContent>
-          <figure>
-            <figcaption>
-              <h3>Chapel Progress</h3>
-            </figcaption>
-          </figure>
-          <Doughnut data={Data} />
-        </CardContent >
-      </Card>
+      content
     );
   }
 }
