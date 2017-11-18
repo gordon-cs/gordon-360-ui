@@ -28,7 +28,7 @@ export default class GordonHeader extends Component {
               Gordon 360
             </Typography>
             <div className="global-menu-container">
-              <GordonGlobalMenu />
+              <GordonGlobalMenu onSignOut={this.props.onSignOut} />
             </div>
           </Toolbar>
         </AppBar>
@@ -39,4 +39,5 @@ export default class GordonHeader extends Component {
 
 GordonHeader.propTypes = {
   onDrawerToggle: PropTypes.func.isRequired,
+  onSignOut: PropTypes.func.isRequired,
 };
