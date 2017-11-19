@@ -15,24 +15,27 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
 
 ## Application
 
-- [ ] toolbar
+- [x] toolbar
   - name of application, global menu, and people search
-- [ ] navigation
+- [x] navigation
   - links to different views, user name and profile photo
-- [ ] login
+- [x] login
   - login with username and password before accessing the application
   - auth service can take a username and password and use it to save a token
   - error handling for bad username and password combinations will need to be added to the auth service
+- [ ] user profile preview in navigation drawer (in progress @adamvig)
+  - show user profile photo, name, and email address
+  - name and email address can be decoded from the authentication token (JWT)
 
 ## Home
 
-- [ ] CL&W credits
+- [ ] CL&W credits (in progress @mFelgate)
   - number of CL&W credits, total number of CL&W credits needed, and graph showing progress
   - components
     - `StatClwCredits`
   - unknowns
     - what is the best charting library to use with React?
-- [ ] days left in semester
+- [ ] days left in semester (in progress @mFelgate)
   - number of days left in semester and graph showing progress
   - components
     - `StatDaysLeftInSemester`
@@ -43,7 +46,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
   - intended for use as advertising space in the future
   - components
     - `BannerCarousel`
-- [x] ~~tabs~~
+- ~~tabs~~
   - informational tabs explaining the purpose of Gordon 360
   - improvements
     - are these tabs necessary on the home page of the application?
@@ -52,7 +55,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
 
 ## Activities
 
-- [ ] all activities
+- [x] all activities
   - [existing page](https://360.gordon.edu/#/all-activities)
   - a grid of all activities
   - components
@@ -64,9 +67,11 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
   - [existing page](https://360.gordon.edu/#/specific-activity/201709/AJMISS)
   - information about a specific activity
   - buttons to subscribe to or join activity
+  - allow editing the different parts of the profile inline instead of having a separate edit page
   - components
     - `ActivityProfile`
-- [ ] edit activity
+    - `UploadImage`
+- ~~edit activity~~ (merged with activity profile)
   - edit activity details (if the current user is a leader of the activity)
   - components
     - `ActivityEdit`
@@ -93,7 +98,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
     - combine with "experience transcript" page
   - unknowns
     - what libary to use for PDF download/printing
-- [ ] ~~experience transcript~~ (merged with "my activities")
+- ~~experience transcript~~ (merged with "my activities")
   - [existing page](https://360.gordon.edu/#/transcript)
   - button to download PDF of activities the current user has been involved in
   - table showing involvements and how long they lasted
@@ -117,7 +122,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
     - `EventsList`: list of events, includes filters
     - `EventItem`: a single item in `EventsList`
     - `EventDetails`: popup window from clicking on an `EventItem`
-- [ ] ~~CL&W credit events~~ (merged with "events")
+- ~~CL&W credit events~~ (merged with "events")
   - [existing page](https://360.gordon.edu/#/chapel-credits)
   - list of all future events offering CL&W credit
   - chapel credit progress for current user
@@ -134,7 +139,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
   - search for anyone in the Gordon database by name
   - components
     - `PeopleSearch`
-- [ ] user profiles
+- [ ] user profile
   - [existing page](https://360.gordon.edu/#/profile/henry.hao)
   - information about a specific user
   - change cell phone number visibility
@@ -166,12 +171,12 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
 
 ## Static Pages
 
-- [ ] about
+- [x] about
   - [existing page](https://360.gordon.edu/#/about)
   - static page
   - components
     - `About`
-- [ ] help
+- [ ] help (in progress @RFStauffer)
   - [existing page](https://360.gordon.edu/#/help)
   - static page
   - components
