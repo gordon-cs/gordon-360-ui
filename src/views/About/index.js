@@ -1,23 +1,23 @@
+import Typography from 'material-ui/Typography';
 import React, { Component } from 'react';
 
-import Typography from 'material-ui/Typography';
 import './about.css';
 
 export default class About extends Component {
   render() {
     return (
-      <div className="container page-title about-container about">
-        <p className="highlight">
+      <div>
+        <p>
           <Typography type="Headline" gutterBottom>
-        Conceived and built at Gordon College, by students for students.
-         Everyone should be involved in something at College. Its
-        what makes College your own Experience.</Typography></p>
-        <div className="about-content">
+          Conceived and built at Gordon College, by students for students.
+          Everyone should be involved in something at College. Its
+          what makes College your own Experience.</Typography>
+        </p>
+        <div>
           <div>
-            <h4 className="titletext">
-              <Typography type="title" gutterBottom>
-            Gordon’s 360 Mobile Activities Platform: The Scottie Faire in
-             your hand.</Typography></h4>
+            <Typography type="title" gutterBottom>
+             Gordon’s 360 Mobile Activities Platform: The Scottie Faire in
+             your hand.</Typography>
             <ul>
               <Typography type="body2" gutterBottom>
                 <li>Mobile-friendly, responsive web portal</li>
@@ -32,10 +32,9 @@ export default class About extends Component {
             </ul>
           </div>
           <div>
-            <h4 className="titletext">
-              <Typography type="title" gutterBottom>
-                Institutional Benefits
-              </Typography></h4>
+            <Typography type="title" gutterBottom>
+              Institutional Benefits
+            </Typography>
             <ul>
               <Typography type="body2" gutterBottom>
                 <li>In-house Student Record relationship</li>
@@ -47,17 +46,14 @@ export default class About extends Component {
             </ul>
           </div>
         </div>
-        <div className="about-content">
-          <h3 className="titletext">
-            <Typography type="title" gutterBottom>
+        <div>
+          <Typography type="title" gutterBottom>
                 Origins
-            </Typography></h3>
+          </Typography>
           <div>
-            <h4>
-              <Typography type="subheading" gutterBottom>
+            <Typography type="subheading" gutterBottom>
                 Concept and Imagineering
-              </Typography>
-            </h4>
+            </Typography>
             <p>
               <Typography type="body2" gutterBottom>
               Carissa Church ’18 and Grace Crook ‘18
@@ -66,11 +62,9 @@ export default class About extends Component {
             </p>
           </div>
           <div>
-            <h4>
-              <Typography type="subheading" gutterBottom>
+            <Typography type="subheading" gutterBottom>
                 Incubation Team
-              </Typography>
-            </h4>
+            </Typography>
             <p>
               <Typography type="body2" gutterBottom>
               Ezeanyinabia ‘Eze’ Anyanwu ’17, Adam Bartholomew ’17, and James Kempf ‘17
@@ -79,11 +73,9 @@ export default class About extends Component {
             </p>
           </div>
           <div>
-            <h4>
-              <Typography type="subheading" gutterBottom>
+            <Typography type="subheading" gutterBottom>
               Product Deployment and Support
-              </Typography>
-            </h4>
+            </Typography>
             <p>
               <Typography type="body2" gutterBottom>
               Emmanuel Roussel ‘17 and Stephanie Powers &apos;17
@@ -92,13 +84,13 @@ export default class About extends Component {
             </p>
           </div>
           <div>
-            <h4>
-              <Typography type="subheading" gutterBottom>
+            <Typography type="subheading" gutterBottom>
               Software Development Team, 2016/2017
-              </Typography>
-            </h4>
+            </Typography>
             <p>
               <Typography type="body2" gutterBottom>
+              Bradley Boutcher &apos;18, Matthew Felgate &apos;18, Jenny Kim &apos;19, Sam Nguyen
+              &apos;19, Joseph Ross
               Ross and Chris Qiao &apos;17
                 <br />Dr. Russ Tuck, Dr. Jonathan Senning, Summer Practicum in Computer Science
                 program
@@ -107,11 +99,9 @@ export default class About extends Component {
             </p>
           </div>
           <div>
-            <h4>
-              <Typography type="subheading" gutterBottom>
+            <Typography type="subheading" gutterBottom>
               Software Development Team, 2017/2018
-              </Typography>
-            </h4>
+            </Typography>
             <p>
               <Typography type="body2" gutterBottom>
               Addison Abbot &apos;20, Matt Felgate &apos;18, and Rebekah Stauffer &apos;19
@@ -119,11 +109,9 @@ export default class About extends Component {
             </p>
           </div>
           <div>
-            <h4>
-              <Typography type="subheading" gutterBottom>
+            <Typography type="subheading" gutterBottom>
               Beneficient Philanthropes
-              </Typography>
-            </h4>
+            </Typography>
             <p>
               <Typography type="body2" gutterBottom>
               To the visionary benefactors who support the Summer Practicum in Computer Science
@@ -137,12 +125,10 @@ export default class About extends Component {
             </p>
           </div>
           <div>
-            <h5>
-              <Typography type="caption" gutterBottom>
-              Found a bug? Report to
-                <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug" target="_top"> CTS</a>
-              </Typography>
-            </h5>
+            <Typography type="caption" gutterBottom>
+              Found a bug?
+              <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug"> Report to CTS</a>
+            </Typography>
           </div>
         </div>
       </div>
