@@ -41,7 +41,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
     - `StatDaysLeftInSemester`
   - unknowns
     - what is the best charting library to use with React?
-- [ ] carousel
+- [ ] carousel (in progress @ajabbot)
   - rotating images, text, and calls to action
   - intended for use as advertising space in the future
   - components
