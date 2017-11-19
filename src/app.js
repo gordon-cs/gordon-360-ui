@@ -1,4 +1,3 @@
-
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import React, { Component } from 'react';
 import {
@@ -7,6 +6,7 @@ import {
 } from 'react-router-dom';
 
 import './app.css';
+import About from './views/About';
 import ActivitiesAll from './views/ActivitiesAll';
 import ActivityEdit from './views/ActivityEdit';
 import { isAuthenticated } from './services/auth';
@@ -41,6 +41,7 @@ export default class App extends Component {
         <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
         <main className="app-main">
           <Route exact path="/" component={Home} />
+          <Route exact path="/about" component={About} />
           <Route path="/activities" component={ActivitiesAll} />
           <Route path="/activity/:activityId/edit" component={ActivityEdit} />
         </main>
