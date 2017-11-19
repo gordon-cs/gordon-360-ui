@@ -76,8 +76,7 @@ export default class About extends Component {
         <p>
           <Typography type="body2" gutterBottom>
               Bradley Boutcher &apos;18, Matthew Felgate &apos;18, Jenny Kim &apos;19, Sam Nguyen
-              &apos;19, Joseph Ross
-              Ross and Chris Qiao &apos;17
+              &apos;19, Joseph Ross and Chris Qiao &apos;17
             <br />Dr. Russ Tuck, Dr. Jonathan Senning, Summer Practicum in Computer Science
                 program
               (2017)
