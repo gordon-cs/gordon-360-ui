@@ -63,7 +63,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
     - `ActivityCard`: photo and name of an activity, click to view the activity profile
   - improvements
     - preserve original image ratios instead of stretching or squishing to conform to a square container
-- [ ] activity profile
+- [ ] activity profile (in progress @RFStauffer)
   - [existing page](https://360.gordon.edu/#/specific-activity/201709/AJMISS)
   - information about a specific activity
   - buttons to subscribe to or join activity
@@ -176,7 +176,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
   - static page
   - components
     - `About`
-- [ ] help (in progress @RFStauffer)
+- [x] help
   - [existing page](https://360.gordon.edu/#/help)
   - static page
   - components
