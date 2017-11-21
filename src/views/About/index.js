@@ -10,12 +10,12 @@ export default class About extends Component {
         <p>
           <Typography type="Headline" gutterBottom>
           Conceived and built at Gordon College, by students for students.
-          Everyone should be involved in something at College. Its
+          Everyone should be involved in something at College. It’s
           what makes College your own Experience.</Typography>
         </p>
         <Typography type="title" gutterBottom>
              Gordon’s 360 Mobile Activities Platform: The Scottie Faire in
-             your hand.</Typography>
+             your hand</Typography>
         <ul>
           <Typography type="body2" gutterBottom>
             <li>Mobile-friendly, responsive web portal</li>
@@ -67,7 +67,7 @@ export default class About extends Component {
         <p>
           <Typography type="body2" gutterBottom>
               Emmanuel Roussel ‘17 and Stephanie Powers &apos;17
-            <br /> Chris Hansen; Jason Whitehouse ’99, Information Systems Group
+            <br /> Chris Hansen, Jason Whitehouse ’99, Information Systems Group
           </Typography>
         </p>
         <Typography type="subheading" gutterBottom>
@@ -76,7 +76,7 @@ export default class About extends Component {
         <p>
           <Typography type="body2" gutterBottom>
               Bradley Boutcher &apos;18, Matthew Felgate &apos;18, Jenny Kim &apos;19, Sam Nguyen
-              &apos;19, Joseph Ross and Chris Qiao &apos;17
+              &apos;19, Joseph Ross, and Chris Qiao &apos;17
             <br />Dr. Russ Tuck, Dr. Jonathan Senning, Summer Practicum in Computer Science
                 program
               (2017)
@@ -97,7 +97,7 @@ export default class About extends Component {
           <Typography type="body2" gutterBottom>
               To the visionary benefactors who support the Summer Practicum in Computer Science
               program at Gordon College, thank you!
-            <br /> And to Dr. D. Michael Lindsay, President; Jennifer Jukanovich ’94, Vice
+            <br /> And to Dr. D. Michael Lindsay, President, and Jennifer Jukanovich ’94, Vice
               President for Student Life, thank you for
               the opportunity to apply our learning in a creative, practical way!
             <br /> And to our mentors and coaches in development and deployment, thank you for

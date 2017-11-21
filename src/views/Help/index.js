@@ -26,7 +26,7 @@ export default class Help extends Component {
               to Current Academic Session.
             </li>
             <li><strong>Transcript</strong> – Unofficial Experience Transcript, listing Leadership and
-              Membership activity for each Session. Great for building resumé’s,
+              Membership activity for each Session. Great for building resumés,
               cover letters, and interview conversations. The Official Gordon
               Experience Transcript is certified by request (coming 2017-18!),
               and will be part of the Gordon College Experience Portfolio
@@ -92,8 +92,8 @@ export default class Help extends Component {
               rosters. Recommended for Leader and Advisors, can be used for anyone.
               These are public and appear as a detail for the Official Transcript!
             </li>
-            <li><strong>Web link</strong> – Link to an Activity Group’s web page for more information</li>
-            <li>Description – Recommended 1-2 sentence Activity Group description,
+            <li><strong>Web link</strong> – Link to an Activity Group’s web page for more information.</li>
+            <li><strong>Description</strong> – Recommended 1-2 sentence Activity Group description,
               and place for updating Meeting Times and Locations for Activity Seekers,
               Subscribers and Members.
             </li>
@@ -128,13 +128,13 @@ export default class Help extends Component {
               ADD members and guests, too, and some may do this to help maintain
               their team roster.
             </li>
-            <li><strong>What’s the advantage to Subscribing to a group?</strong>
+            <li><strong>What’s the advantage to Subscribing to a group? </strong>
               Some groups may have their own social network presence, but since the
               360.gordon.edu platform creates group rosters of members and guests,
               Leader can use the tool to communicate directly with Guests and Members
               only.
             </li>
-            <li><strong>What’s the advantage to Membership in a group?</strong>
+            <li><strong>What’s the advantage to Membership in a group? </strong>
               Membership allows you to see other members in the group, and Membership
               for that academic session is automatically added to the “Memberships”
               section of your Experience Transcript.
@@ -144,10 +144,10 @@ export default class Help extends Component {
               of a session. You can come and go over the semester, and your Membership
               will move to your official Transcript only at the end of the semester.
             </li>
-            <li><strong>What if I am in a group I don’t want to be part of?</strong>
+            <li><strong>What if I am in a group I don’t want to be part of? </strong>
               No problem. Contact the group leaders or advisor.
             </li>
-            <li><strong>I’m an alumnum. Why do I not see the join button anymore?</strong>
+            <li><strong>I’m an alumnum. Why do I not see the join button anymore? </strong>
               Sorry, but alumni cannot join new groups. You could still subscribe to groups to receive emails!
             </li>
           </Typography>
