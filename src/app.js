@@ -15,6 +15,7 @@ import GordonNav from './components/Nav';
 import Home from './views/Home';
 import Login from './views/Login';
 import theme from './theme';
+import Help from './views/Help';
 
 export default class App extends Component {
   constructor(props) {
@@ -44,6 +45,7 @@ export default class App extends Component {
           <Route exact path="/about" component={About} />
           <Route path="/activities" component={ActivitiesAll} />
           <Route path="/activity/:activityId/edit" component={ActivityEdit} />
+          <Route path="/help" component={Help} />
         </main>
       </section>
     );
