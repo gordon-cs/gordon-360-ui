@@ -10,8 +10,7 @@ html {
 
 body,
 html,
-#root,
-.app-wrapper {
+#root {
   height: 100%;
 }
 body {
@@ -37,14 +36,15 @@ a:visited {
 }
 .app-main {
   width: 100%;
-  height: calc(100% - 56px);
-  margin-top: 56px; // height of app bar
+  height: calc(100vh - #{$header-height-xs});
+  margin-top: $header-height-xs;
   padding: 1rem 0.5rem;
+  overflow-y: auto;
 }
 @media (min-width: $break-sm) {
   .app-main {
-    height: calc(100% - 64px);
-    margin-top: 64px;
+    height: calc(100vh - #{$header-height-sm});
+    margin-top: $header-height-sm;
   }
 }
 @media (min-width: $break-md) {
