@@ -4,11 +4,30 @@ import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import PropTypes from 'prop-types';
-
 import React, { Component } from 'react';
+import DocumentTitle from 'react-document-title';
+import { Route } from 'react-router-dom';
 
 import './header.css';
 import GordonGlobalMenu from './components/GlobalMenu';
+import routes from '../../routes';
+
+const getRouteName = (route) => {
+  if (route.name) {
+    return () => (
+      <span>
+        <DocumentTitle title={`${route.name} | Gordon 360`} />
+        { route.name }
+      </span>
+    );
+  }
+  return () => (
+    <span>
+      <DocumentTitle title="Gordon 360" />
+      Gordon 360
+    </span>
+  );
+};
 
 export default class GordonHeader extends Component {
   render() {
@@ -25,7 +44,14 @@ export default class GordonHeader extends Component {
               <MenuIcon />
             </IconButton>
             <Typography className="title" type="title" color="inherit">
-              Gordon 360
+              {routes.map(route => (
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  exact={route.exact}
+                  component={getRouteName(route)}
+                />
+              ))}
             </Typography>
             <div className="global-menu-container">
               <GordonGlobalMenu onSignOut={this.props.onSignOut} />
