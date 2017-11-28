@@ -6,6 +6,10 @@ import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
 import GordonLoader from '../../../../components/Loader';
 
+import { authenticate } from '../../../../services/auth';
+
+authenticate('matthew.felgate', 'Platapus11');
+
 export default class ChapelPsrogress extends Component {
   constructor(props) {
     super(props);
@@ -28,11 +32,18 @@ export default class ChapelPsrogress extends Component {
   render() {
     let content;
     // console.log(chapelEvents);
-    const numEvents = (this.state.chapelCredits.current);
+    const { current, required } = (this.state.chapelCredits);
     // console.log(this.state.chapelCredits);
-    const remaining = this.state.chapelCredits.required - numEvents;
+    const remaining = required - current;
     const Data = {
-      datasets: [{ data: [numEvents, remaining], backgroundColor: [gordonColors.primary.blue] }],
+      datasets: [{
+        data: [current, remaining],
+        backgroundColor: [gordonColors.primary.blue],
+      }],
+      labels: [
+        'Chapel Events Attended',
+        'Events Remaining',
+      ],
     };
     if (this.state.loading === true) {
       content = <GordonLoader />;
@@ -43,6 +54,7 @@ export default class ChapelPsrogress extends Component {
             <figure>
               <figcaption>
                 <h3>Chapel Progress</h3>
+                <h4>{current}/{required} Attended Chapels Events</h4>
               </figcaption>
             </figure>
             <Doughnut data={Data} />

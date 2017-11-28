@@ -9,6 +9,7 @@ import {
 import './app.css';
 import ActivitiesAll from './views/ActivitiesAll';
 import ActivityEdit from './views/ActivityEdit';
+// import EventList from './views/EventList';
 import { isAuthenticated } from './services/auth';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
@@ -42,6 +43,7 @@ export default class App extends Component {
         <main className="app-main">
           <Route exact path="/" component={Home} />
           <Route path="/activities" component={ActivitiesAll} />
+          <Route path="/events" />
           <Route path="/activity/:activityId/edit" component={ActivityEdit} />
         </main>
       </section>
