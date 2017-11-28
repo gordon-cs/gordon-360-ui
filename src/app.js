@@ -6,16 +6,12 @@ import {
 } from 'react-router-dom';
 
 import './app.css';
-import About from './views/About';
-import ActivitiesAll from './views/ActivitiesAll';
-import ActivityEdit from './views/ActivityEdit';
 import { isAuthenticated } from './services/auth';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
-import Home from './views/Home';
 import Login from './views/Login';
 import theme from './theme';
-import Help from './views/Help';
+import routes from './routes';
 
 export default class App extends Component {
   constructor(props) {
@@ -41,11 +37,14 @@ export default class App extends Component {
         <GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
         <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
         <main className="app-main">
-          <Route exact path="/" component={Home} />
-          <Route exact path="/about" component={About} />
-          <Route path="/activities" component={ActivitiesAll} />
-          <Route path="/activity/:activityId/edit" component={ActivityEdit} />
-          <Route path="/help" component={Help} />
+          {routes.map(route => (
+            <Route
+              key={route.path}
+              path={route.path}
+              exact={route.exact}
+              component={route.component}
+            />
+          ))}
         </main>
       </section>
     );
