@@ -30,14 +30,14 @@ export default class DaysLeft extends Component {
     let content;
     const daysleft = this.state.daysLeft[0];
     const pastDays = this.state.daysLeft[1] - daysleft;
-    const Data = {
+    const data = {
       datasets: [{ data: [pastDays, daysleft], backgroundColor: [gordonColors.primary.blue] }],
       labels: [
         'Days Finished',
         'Days Remaining',
       ],
     };
-    const Options = {
+    const options = {
       options: {
         legend: {
           display: false,
@@ -47,22 +47,21 @@ export default class DaysLeft extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      content = (
-        <Card>
-          <CardContent>
-            <figure>
-              <figcaption>
-                <h3>Days Left in Semester</h3>
-                <h4>{daysleft} Days Remaining</h4>
-              </figcaption>
-              <Doughnut data={Data} options={Options} />
-            </figure>
-          </CardContent >
-        </Card>);
+      content = <Doughnut data={data} options={options} />;
     }
 
     return (
-      content
+      <Card>
+        <CardContent>
+          <figure>
+            <figcaption>
+              <h3>Days Left in Semester</h3>
+              <h4>{daysleft} Days Remaining</h4>
+            </figcaption>
+            {content}
+          </figure>
+        </CardContent >
+      </Card>
     );
   }
 }

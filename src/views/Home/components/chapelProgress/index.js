@@ -29,7 +29,7 @@ export default class ChapelPsrogress extends Component {
     let content;
     const { current, required } = (this.state.chapelCredits);
     const remaining = required - current;
-    const Data = {
+    const data = {
       datasets: [{
         data: [current, remaining],
         backgroundColor: [gordonColors.primary.blue],
@@ -42,21 +42,20 @@ export default class ChapelPsrogress extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      content = (
-        <Card>
-          <CardContent>
-            <figure>
-              <figcaption>
-                <h3>Chapel Progress</h3>
-                <h4>{current}/{required} Attended Chapels Events</h4>
-              </figcaption>
-            </figure>
-            <Doughnut data={Data} />
-          </CardContent >
-        </Card>);
+      content = <Doughnut data={data} />;
     }
     return (
-      content
+      <Card>
+        <CardContent>
+          <figure>
+            <figcaption>
+              <h3>Chapel Progress</h3>
+              <h4>{current}/{required} Attended Chapels Events</h4>
+            </figcaption>
+            {content}
+          </figure>
+        </CardContent >
+      </Card>
     );
   }
 }
