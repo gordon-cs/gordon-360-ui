@@ -24,6 +24,7 @@ The following extensions are recommended for any code editor used to develop thi
 - [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) ensures that indentation style, line endings, and file endings are consistent across editors and operating systems
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) for JavaScript (`.js` files)
 - [Markdownlint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint) for Markdown (`.md` files)
+- [Sass Lint](https://marketplace.visualstudio.com/items?itemName=glen-84.sass-lint) for Sass (`.scss` files)
 
 If you are using VS Code, you can use the following keyboard shortcuts to run the app:
 

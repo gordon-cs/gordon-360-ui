@@ -1,25 +1,30 @@
 @import '../../vars';
 
 .gordon-login {
-  background-color: $neutralLightGray;
+  background-color: $neutral-light-gray;
   height: 100%;
-  padding: 0.5rem;
+  padding: .5rem;
   text-align: center;
+
   .container {
-    border: 2px solid $primaryBlue;
-    background-color: $primaryBlue;
+    background-color: $primary-blue;
+    border: 2px solid $primary-blue;
   }
+
   img {
     margin: 1rem;
   }
+
   form {
+    background-color: $neutral-light-gray;
     padding: 2rem;
-    background-color: $neutralLightGray;
   }
+
   .input {
     // @hack to patch this bug: https://github.com/callemall/material-ui/issues/9163
     height: 21.5px;
   }
+
   .submit-button {
     margin-top: 1.5rem;
   }

@@ -3,16 +3,18 @@
 .gordon-activity-grid {
   .activity {
     text-align: center; // Center images when the tile is wider than the image
+
     .tile-bar {
+      background: transparentize($neutral-dark-gray, .3); // Make titles more readable over image background
       height: 64px; // Make space for a two-line title
-      background: transparentize($neutralDarkGray, 0.3); // Make titles more readable over image background
     }
+
     .title {
-      height: 48px; // Limit to two lines of the title
-      display: flex;
       align-items: flex-end;
-      white-space: initial; // Allow title to wrap onto a second line
+      display: flex;
+      height: 48px; // Limit to two lines of the title
       text-align: left;
+      white-space: initial; // Allow title to wrap onto a second line
     }
   }
 }
