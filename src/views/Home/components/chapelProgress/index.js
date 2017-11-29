@@ -6,10 +6,6 @@ import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
 import GordonLoader from '../../../../components/Loader';
 
-import { authenticate } from '../../../../services/auth';
-
-authenticate('matthew.felgate', 'Platapus11');
-
 export default class ChapelPsrogress extends Component {
   constructor(props) {
     super(props);
