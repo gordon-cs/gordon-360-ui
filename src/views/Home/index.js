@@ -1,7 +1,7 @@
 import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
 import DaysLeft from './components/DaysLeft';
-import ChapelProgress from './components/chapelProgress';
+import ChapelProgress from './components/ChapelProgress';
 
 export default class Home extends Component {
   render() {
