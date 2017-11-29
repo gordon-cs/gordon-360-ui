@@ -1,4 +1,3 @@
-
 /**
  * User
  *
@@ -9,13 +8,17 @@ import session from './session';
 import storage from './storage';
 
 /**
- * Get all activities for a session, sorted alphabetically by description
+ * Get events attended by the user
  * @param {String} sessionCode Identifier for a session
- * @return {Promise.<User[]>}
+ * @return {Promise.<attendedEvents[]>}
  */
 const getAttendedEvents = (username, termCode) =>
   http.get(`events/chapel/${username}/${termCode}`);
 
+  /**
+ * return the number of cl&w credits aquired, and number of credits required.
+ * @return {Promise.<User[]>}
+ */
 const getChapelCredits = async () => {
   const { username } = storage.get('credentials');
   const termCode = session.getTermCode();

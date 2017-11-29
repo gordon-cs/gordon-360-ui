@@ -27,9 +27,7 @@ export default class ChapelPsrogress extends Component {
   }
   render() {
     let content;
-    // console.log(chapelEvents);
     const { current, required } = (this.state.chapelCredits);
-    // console.log(this.state.chapelCredits);
     const remaining = required - current;
     const Data = {
       datasets: [{

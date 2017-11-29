@@ -29,7 +29,7 @@ const getCurrent = () => http.get('sessions/current');
 
 /**
  * Get days left in the term
- * @return {Promise.<Session>}
+ * @return {Promise.<DaysLeft[]>}
  */
 const getDaysLeft = () => http.get('sessions/daysLeft');
 

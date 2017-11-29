@@ -6,7 +6,6 @@ import { gordonColors } from '../../../../theme';
 import session from '../../../../services/session';
 import GordonLoader from '../../../../components/Loader';
 
-
 export default class DaysLeft extends Component {
   constructor(props) {
     super(props);
@@ -56,8 +55,8 @@ export default class DaysLeft extends Component {
                 <h3>Days Left in Semester</h3>
                 <h4>{daysleft} Days Remaining</h4>
               </figcaption>
+              <Doughnut data={Data} options={Options} />
             </figure>
-            <Doughnut data={Data} options={Options} />
           </CardContent >
         </Card>);
     }

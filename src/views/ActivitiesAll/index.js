@@ -12,7 +12,6 @@ import session from '../../services/session';
 import GordonActivityGrid from './components/ActivityGrid';
 import GordonLoader from '../../components/Loader';
 
-
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
     super(props);
