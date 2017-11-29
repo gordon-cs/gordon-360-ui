@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Card, { CardContent } from 'material-ui/Card';
+import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import { Doughnut, defaults } from 'react-chartjs-2';
 
 import { gordonColors } from '../../../../theme';
@@ -10,7 +10,7 @@ export default class DaysLeft extends Component {
   constructor(props) {
     super(props);
 
-    this.getDaysLeft = this.getDaysLeft.bind(this);
+    this.loadDaysLeft = this.loadDaysLeft.bind(this);
 
     this.state = {
       daysLeft: [],
@@ -18,16 +18,17 @@ export default class DaysLeft extends Component {
     };
   }
   componentWillMount() {
-    this.getDaysLeft();
+    this.loadDaysLeft();
   }
-  async getDaysLeft() {
+  async loadDaysLeft() {
+    this.setState({ loading: true });
     const daysLeft = await session.getDaysLeft();
-    this.setState({ daysLeft });
-    this.setState({ loading: false });
+    this.setState({ loading: false, daysLeft });
   }
   render() {
     defaults.global.legend.display = false;
     let content;
+    let subheader;
     const daysleft = this.state.daysLeft[0];
     const pastDays = this.state.daysLeft[1] - daysleft;
     const data = {
@@ -48,18 +49,17 @@ export default class DaysLeft extends Component {
       content = <GordonLoader />;
     } else {
       content = <Doughnut data={data} options={options} />;
+      subheader = `${daysleft} Days Remaining`;
     }
 
     return (
       <Card>
         <CardContent>
-          <figure>
-            <figcaption>
-              <h3>Days Left in Semester</h3>
-              <h4>{daysleft} Days Remaining</h4>
-            </figcaption>
-            {content}
-          </figure>
+          <CardHeader
+            title="Days Left in Semester"
+            subheader={subheader}
+          />
+          {content}
         </CardContent >
       </Card>
     );

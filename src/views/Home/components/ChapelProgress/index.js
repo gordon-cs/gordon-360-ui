@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import Card, { CardContent } from 'material-ui/Card';
+import Card, { CardContent, CardHeader } from 'material-ui/Card';
 
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
 import GordonLoader from '../../../../components/Loader';
 
-export default class ChapelPsrogress extends Component {
+export default class ChapelProgress extends Component {
   constructor(props) {
     super(props);
 
@@ -21,12 +21,13 @@ export default class ChapelPsrogress extends Component {
     this.loadChapel();
   }
   async loadChapel() {
+    this.setState({ loading: true });
     const chapelCredits = await user.getChapelCredits();
-    this.setState({ loading: false });
-    this.setState({ chapelCredits });
+    this.setState({ loading: false, chapelCredits });
   }
   render() {
     let content;
+    let subheader;
     const { current, required } = (this.state.chapelCredits);
     const remaining = required - current;
     const data = {
@@ -35,25 +36,28 @@ export default class ChapelPsrogress extends Component {
         backgroundColor: [gordonColors.primary.blue],
       }],
       labels: [
-        'Chapel Events Attended',
-        'Events Remaining',
+        'CL&W Credits',
+        'CL&W Credits Remaining',
       ],
     };
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
       content = <Doughnut data={data} />;
+      if (current === 1) {
+        subheader = `${current} CL&W`;
+      } else {
+        subheader = `${current} CL&W's`;
+      }
     }
     return (
       <Card>
         <CardContent>
-          <figure>
-            <figcaption>
-              <h3>Chapel Progress</h3>
-              <h4>{current}/{required} Attended Chapels Events</h4>
-            </figcaption>
-            {content}
-          </figure>
+          <CardHeader
+            title="Chapel Progress"
+            subheader={subheader}
+          />
+          {content}
         </CardContent >
       </Card>
     );
