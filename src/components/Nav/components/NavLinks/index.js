@@ -6,7 +6,6 @@ import List, {
 import HomeIcon from 'material-ui-icons/Home';
 import LocalActivityIcon from 'material-ui-icons/LocalActivity';
 import EventIcon from 'material-ui-icons/Event';
-import InfoIcon from 'material-ui-icons/Info';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -37,14 +36,6 @@ export default class GordonNavLinks extends Component {
               <EventIcon />
             </ListItemIcon>
             <ListItemText primary="Events" />
-          </ListItem>
-        </Link>
-        <Link to="/about" onClick={this.props.onLinkClick}>
-          <ListItem button>
-            <ListItemIcon>
-              <InfoIcon />
-            </ListItemIcon>
-            <ListItemText primary="About" />
           </ListItem>
         </Link>
       </List>

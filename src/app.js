@@ -1,4 +1,3 @@
-
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import React, { Component } from 'react';
 import {
@@ -7,15 +6,12 @@ import {
 } from 'react-router-dom';
 
 import './app.css';
-import ActivitiesAll from './views/ActivitiesAll';
-import ActivityEdit from './views/ActivityEdit';
-// import EventList from './views/EventList';
 import { isAuthenticated } from './services/auth';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
-import Home from './views/Home';
 import Login from './views/Login';
 import theme from './theme';
+import routes from './routes';
 
 export default class App extends Component {
   constructor(props) {
@@ -41,10 +37,14 @@ export default class App extends Component {
         <GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
         <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
         <main className="app-main">
-          <Route exact path="/" component={Home} />
-          <Route path="/activities" component={ActivitiesAll} />
-          <Route path="/events" />
-          <Route path="/activity/:activityId/edit" component={ActivityEdit} />
+          {routes.map(route => (
+            <Route
+              key={route.path}
+              path={route.path}
+              exact={route.exact}
+              component={route.component}
+            />
+          ))}
         </main>
       </section>
     );
