@@ -35,7 +35,7 @@ const getDaysLeft = () => http.get('sessions/daysLeft');
 
 /**
  * Get current term code
- * @return {Promise.<String>}
+ * @return {String}
  */
 const getTermCode = () => {
   const now = new Date();
