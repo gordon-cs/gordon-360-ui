@@ -4,7 +4,6 @@ import ActivityEdit from './views/ActivityEdit';
 import Home from './views/Home';
 import Help from './views/Help';
 
-
 export default [
   {
     name: 'Home',

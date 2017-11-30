@@ -8,9 +8,17 @@ import session from './session';
 import storage from './storage';
 
 /**
+ * @global
+ * @typedef User
+ * @property {int} current user's current cl&w credits
+ * @property {int} required user's required cl&w credits
+ */
+
+/**
  * Get events attended by the user
- * @param {String} sessionCode Identifier for a session
- * @return {Promise.<attendedEvents[]>}
+ * @param {String} termCode code for the semester
+ * @param {String} username username of the user
+ * @return {Promise.<attendedEvents>}
  */
 const getAttendedEvents = (username, termCode) =>
   http.get(`events/chapel/${username}/${termCode}`);
