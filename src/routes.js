@@ -3,7 +3,7 @@ import ActivitiesAll from './views/ActivitiesAll';
 import ActivityEdit from './views/ActivityEdit';
 import Home from './views/Home';
 import Help from './views/Help';
-import Events from './views/EventList';
+import Events from './views/Events';
 
 export default [
   {
