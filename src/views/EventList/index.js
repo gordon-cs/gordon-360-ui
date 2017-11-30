@@ -3,9 +3,6 @@ import List, { ListItem } from 'material-ui/List';
 
 import event from './../../services/event';
 import GordonLoader from '../../components/Loader';
-import { authenticate } from './../../services/auth';
-
-authenticate('matthew.felgate', 'Platapus11');
 
 export default class EventList extends Component {
   constructor(props) {
