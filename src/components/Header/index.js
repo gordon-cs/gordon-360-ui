@@ -6,7 +6,7 @@ import MenuIcon from 'material-ui-icons/Menu';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import './header.css';
 import GordonGlobalMenu from './components/GlobalMenu';
@@ -44,14 +44,16 @@ export default class GordonHeader extends Component {
               <MenuIcon />
             </IconButton>
             <Typography className="title" type="title" color="inherit">
-              {routes.map(route => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  exact={route.exact}
-                  component={getRouteName(route)}
-                />
-              ))}
+              <Switch>
+                {routes.map(route => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    exact={route.exact}
+                    component={getRouteName(route)}
+                  />
+                ))}
+              </Switch>
             </Typography>
             <div className="global-menu-container">
               <GordonGlobalMenu onSignOut={this.props.onSignOut} />
