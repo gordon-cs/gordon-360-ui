@@ -17,13 +17,13 @@ import http from './http';
 
 /**
  * Get sessions
- * @return {Promise.<Session[]>}
+ * @return {Promise.<Session[]>} List of sessions
  */
 const getAll = () => http.get('sessions').then(sessions => sessions.reverse());
 
 /**
  * Get current session
- * @return {Promise.<Session>}
+ * @return {Promise.<Session>} Current session
  */
 const getCurrent = () => http.get('sessions/current');
 
