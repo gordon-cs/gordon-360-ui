@@ -25,7 +25,7 @@ import http from './http';
 /**
  * Get all activities for a session, sorted alphabetically by description
  * @param {String} sessionCode Identifier for a session
- * @return {Promise.<Activity[]>}
+ * @return {Promise.<Activity[]>} List of activities
  */
 const getAll = sessionCode => http.get(`activities/session/${sessionCode}`)
   .then(activities => sortBy(activities, activity => activity.ActivityDescription));
@@ -33,7 +33,7 @@ const getAll = sessionCode => http.get(`activities/session/${sessionCode}`)
 /**
  * Get all activity types for a session
  * @param {String} sessionCode Identifier for a session
- * @return {Promise.<String[]>}
+ * @return {Promise.<String[]>} List of activity types for a session
  */
 const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/types`);
 

@@ -13,7 +13,7 @@
  * @param {String} key Where to store the value
  * @param {any} value Data to store
  */
-const store = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+const store = (key, value) => { localStorage.setItem(key, JSON.stringify(value)); };
 
 /**
  * Get a value stored locally
@@ -41,7 +41,7 @@ const get = (key) => {
  * Remove a value stored locally
  * @param {String} key Where value is stored
  */
-const remove = key => localStorage.removeItem(key);
+const remove = (key) => { localStorage.removeItem(key); };
 
 export default {
   get,

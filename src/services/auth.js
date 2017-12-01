@@ -45,7 +45,7 @@ const handleError = (err) => {
  * Get auth for user from backend
  * @param {String} username Username in firstname.lastname format
  * @param {String} password User's password
- * @return {Auth}
+ * @return {Auth} Authentication for use on API requests
  */
 const getAuth = (username, password) => {
   const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
@@ -76,7 +76,7 @@ const getAuth = (username, password) => {
  * for refreshing the token when it expires.
  * @param {String} username Username in firstname.lastname format
  * @param {String} password User's password
- * @return {Promise.<undefined>}
+ * @return {Promise.<undefined>} Resolved when token is refreshed
  */
 const authenticate = (username, password) => getAuth(username, password)
   .then(auth => storage.store('auth', auth))
@@ -97,8 +97,8 @@ const refreshToken = () => {
 
 /**
  * Check if auth is expired
- * @param {Auth} auth
- * @return {boolean}
+ * @param {Auth} auth API authentication
+ * @return {boolean} Whether auth is expired or not
  */
 const isAuthExpired = (auth) => {
   const now = new Date();
@@ -128,7 +128,7 @@ const checkToken = () => {
 
 /**
  * Check if current session is authenticated
- * @return {Promise.<boolean>}
+ * @return {Promise.<boolean>} Whether session is authenticated or not
  */
 const isAuthenticated = () => {
   try {
