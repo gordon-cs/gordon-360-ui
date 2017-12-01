@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Route,
+  Switch,
 } from 'react-router-dom';
 
 import './app.css';
@@ -37,14 +38,16 @@ export default class App extends Component {
         <GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
         <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
         <main className="app-main">
-          {routes.map(route => (
-            <Route
-              key={route.path}
-              path={route.path}
-              exact={route.exact}
-              component={route.component}
-            />
-          ))}
+          <Switch>
+            {routes.map(route => (
+              <Route
+                key={route.path}
+                path={route.path}
+                exact={route.exact}
+                component={route.component}
+              />
+            ))}
+          </Switch>
         </main>
       </section>
     );
