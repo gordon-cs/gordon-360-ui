@@ -1,0 +1,7 @@
+@import '../../../../vars';
+
+.gordon-nav-links {
+  .active > li {
+    background: $neutral-gray;
+  }
+}

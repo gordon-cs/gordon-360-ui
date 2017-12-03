@@ -20,7 +20,7 @@ const base = process.env.REACT_APP_API_URL;
 /**
  * Make a headers object for use with the API
  * @description Provides the correct authorization for API requests.
- * @return {Headers}
+ * @return {Headers} A headers object
  */
 const makeHeaders = () => {
   try {
@@ -39,7 +39,7 @@ const makeHeaders = () => {
  * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
  * @param {String} method HTTP method
  * @param {object|array} body data to send with request
- * @return {Request}
+ * @return {Request} A request object
  */
 const makeRequest = (url, method, body) => new Request(`${base}api/${url}`, {
   method,

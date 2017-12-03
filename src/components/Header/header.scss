@@ -1,19 +1,21 @@
 @import '../../vars';
 
-$drawerWidth: 240px;
+$drawer-width: 240px;
 
 .gordon-header {
   position: absolute;
   width: 100%;
+
   .app-bar {
     position: absolute;
   }
   @media (min-width: $break-md) {
     .app-bar {
-      margin-left: $drawerWidth;
-      width: calc(100% - #{$drawerWidth});
+      margin-left: $drawer-width;
+      width: calc(100% - #{$drawer-width});
     }
   }
+
   .menu-button {
     margin-left: -12px;
     margin-right: 20px;
@@ -23,9 +25,11 @@ $drawerWidth: 240px;
       display: none;
     }
   }
+
   .title {
     flex: 1;
   }
+
   .global-menu-container {
     margin-right: -12px;
   }

@@ -5,6 +5,7 @@
   "dependencies": {
     "chart.js": "2.7.1",
     "classnames": "^2.2.5",
+    "history": "4.7.2",
     "lodash": "4.17.4",
     "material-ui": "^1.0.0-beta.20",
     "material-ui-icons": "^1.0.0-beta.17",
@@ -16,6 +17,7 @@
     "react-document-title": "2.0.3",
     "react-dom": "^16.1.0",
     "react-dropzone": "^4.2.1",
+    "react-ga": "2.3.5",
     "react-router-dom": "^4.2.2"
   },
   "devDependencies": {
@@ -24,16 +26,20 @@
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
-    "react-scripts": "^1.0.17"
+    "husky": "0.14.3",
+    "markdownlint-cli": "0.5.0",
+    "react-scripts": "^1.0.17",
+    "sass-lint": "1.12.1"
   },
   "scripts": {
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
     "start-js": "react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
+    "start": "npm-run-all --parallel watch-css start-js",
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
+<<<<<<< HEAD
     "lint": "eslint --ext .js src"
   },
   "proxy": {
@@ -45,5 +51,12 @@
       "target": "https://360ApiTrain.gordon.edu/",
       "changeOrigin": true
     }
+=======
+    "lint": "npm-run-all --parallel --aggregate-output --silent lint-js lint-md lint-scss",
+    "lint-js": "eslint --ext .js src",
+    "lint-md": "markdownlint *.md",
+    "lint-scss": "sass-lint 'src/**/*.scss' --verbose --max-warnings 0",
+    "precommit": "npm run lint"
+>>>>>>> master
   }
 }
