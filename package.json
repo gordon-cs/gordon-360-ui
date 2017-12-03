@@ -39,11 +39,20 @@
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-
     "lint": "npm-run-all --parallel --aggregate-output --silent lint-js lint-md lint-scss",
     "lint-js": "eslint --ext .js src",
     "lint-md": "markdownlint *.md",
     "lint-scss": "sass-lint 'src/**/*.scss' --verbose --max-warnings 0",
     "precommit": "npm run lint"
+  },
+  "proxy": {
+    "/api": {
+      "target": "https://360ApiTrain.gordon.edu/",
+      "changeOrigin": true
+    },
+    "/token": {
+      "target": "https://360ApiTrain.gordon.edu/",
+      "changeOrigin": true
+    }
   }
 }
