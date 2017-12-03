@@ -49,7 +49,7 @@ export default class DaysLeft extends Component {
       content = <GordonLoader />;
     } else {
       content = <Doughnut data={data} options={options} />;
-      subheader = `${daysleft} Days Remaining`;
+      subheader = `${daysleft} Days Left`;
     }
 
     return (
