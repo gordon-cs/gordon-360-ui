@@ -3,6 +3,7 @@ import ActivitiesAll from './views/ActivitiesAll';
 import ActivityEdit from './views/ActivityEdit';
 import Home from './views/Home';
 import Help from './views/Help';
+import Orientation from './views/Orientation';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 export default [
@@ -31,5 +32,10 @@ export default [
     name: 'Help',
     path: '/help',
     component: Help,
+  },
+  {
+    name: 'Orientation',
+    path: '/orient',
+    component: Orientation,
   },
 ];
