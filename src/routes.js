@@ -4,6 +4,7 @@ import ActivityEdit from './views/ActivityEdit';
 import Home from './views/Home';
 import Help from './views/Help';
 
+// Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 export default [
   {
     name: 'Home',
@@ -17,14 +18,14 @@ export default [
     component: About,
   },
   {
-    name: 'Activities',
-    path: '/activities',
-    component: ActivitiesAll,
-  },
-  {
     name: 'Edit Activity',
     path: '/activity/:activityId/edit',
     component: ActivityEdit,
+  },
+  {
+    name: 'Activities',
+    path: '/activities',
+    component: ActivitiesAll,
   },
   {
     name: 'Help',

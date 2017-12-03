@@ -1,25 +1,24 @@
-/*
- * Application variables for use in any component .scss file
- * To use (for example, from `src/components/Header/header.scss`):
- * @import '../../vars';
- *
- * Ensure that the relative path (i.e. `../../`, etc.) is correct when importing from a nested
- * component.
- *
- * For use in a .js file, see `src/theme.js`.
- */
+// Application variables for use in any component .scss file
+// To use (for example, from `src/components/Header/header.scss`):
+// @import '../../vars';
 
-$primaryBlue: #014983;
-$primaryCyan: #00AEEF;
+// Ensure that the relative path (i.e. `../../`, etc.) is correct when importing from a nested
+// component.
 
-$secondaryGreen: #B2BB1C;
-$secondaryYellow: #FDB913;
-$secondaryOrange: #DE571F;
-$secondaryRed: #B53228;
+// For use in a .js file, see `src/theme.js`.
 
-$neutralLightGray: #EBEAEA;
-$neutralGray: #CCCCCB;
-$neutralDarkGray: #31342B;
+$primary-blue: #014983;
+$primary-cyan: #00aeef;
+
+$secondary-green: #b2bb1c;
+$secondary-yellow: #fdb913;
+$secondary-orange: #de571f;
+$secondary-red: #b53228;
+
+$neutral-white: #fff;
+$neutral-light-gray: #ebeaea;
+$neutral-gray: #cccccb;
+$neutral-dark-gray: #31342b;
 
 // Material-UI breakpoints as Sass variables for use in custom styles
 $break-xs: 360px;

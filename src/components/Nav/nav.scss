@@ -3,8 +3,8 @@
 .gordon-nav {
   @media (min-width: $break-md) {
     .drawer {
-      width: $drawer-width-md;
       position: fixed;
+      width: $drawer-width-md;
     }
   }
 }
@@ -14,7 +14,8 @@
   width: $drawer-width-xs;
 }
 
-.gordon-nav .drawer,
+.gordon-nav .drawer, // sass-lint:disable-line force-element-nesting
 .gordon-nav-drawer {
-  background-color: $neutralLightGray !important; // Must be `important` to override on mobile
+  // sass-lint:disable-block no-important
+  background-color: $neutral-light-gray !important; // Must be `important` to override on mobile
 }

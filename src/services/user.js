@@ -28,25 +28,25 @@ import storage from './storage';
  * @property {Object} Occurrences An array with the locations, start, and end times of future events
  * @property {String} Organization Organization hosting the event
  * @property {Number} Required Required chapel for the student
+*/
 
 /**
  * Get events attended by the user
  * @param {String} username username of the user
  * @param {String} termCode code for the semester
- * @return {Promise.<attendedEvents>}
+ * @return {Promise.<attendedEvents[]>} An object of all CL&W events attended by the user
  */
 const getAttendedEvents = (username, termCode) =>
   http.get(`events/chapel/${username}/${termCode}`);
 
-  /**
+/**
  * return the number of cl&w credits aquired, and number of credits required.
- * @return {Promise.<CLWCredits[]>}
+ * @return {Promise.<CLWCredits>} An Object of their current and requiered number of CL&W events,
  */
 const getChapelCredits = async () => {
   const { username } = storage.get('credentials');
   const termCode = session.getTermCode();
   const attendedEvents = await getAttendedEvents(username, termCode);
-  console.log(attendedEvents);
 
   // Get required number of CL&W credits for the student, defaulting to zero
   let required = 0;
