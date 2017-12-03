@@ -28,7 +28,7 @@ export default class ChapelProgress extends Component {
   render() {
     let content;
     let subheader;
-    const { current, required } = (this.state.chapelCredits);
+    const { current, required } = this.state.chapelCredits;
     const remaining = required - current;
     const data = {
       datasets: [{
@@ -45,16 +45,16 @@ export default class ChapelProgress extends Component {
     } else {
       content = <Doughnut data={data} />;
       if (current === 1) {
-        subheader = `${current} CL&W`;
+        subheader = `${current} CL&W credits`;
       } else {
-        subheader = `${current} CL&W's`;
+        subheader = `${current} CL&W credit's`;
       }
     }
     return (
       <Card>
         <CardContent>
           <CardHeader
-            title="Chapel Progress"
+            title="CL&W Credits"
             subheader={subheader}
           />
           {content}
