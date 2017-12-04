@@ -34,7 +34,7 @@ import storage from './storage';
  * Get events attended by the user
  * @param {String} username username of the user
  * @param {String} termCode code for the semester
- * @return {Promise.<AttendedEvents[]>} An object of all CL&W events attended by the user
+ * @return {Promise.<AttendedEvent[]>} An object of all CL&W events attended by the user
  */
 const getAttendedEvents = (username, termCode) =>
   http.get(`events/chapel/${username}/${termCode}`);
