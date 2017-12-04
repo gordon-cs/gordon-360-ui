@@ -1,7 +1,7 @@
 /**
  * User
  *
- * @module User
+ * @module user
  */
 import http from './http';
 import session from './session';
@@ -25,7 +25,7 @@ import storage from './storage';
  * @property {String} Event_Name The generic name of the event
  * @property {String} Event_Title Specific title of the event
  * @property {String} Event_Type_Name Term code of the event
- * @property {Object} Occurrences An array with the locations, start, and end times of future events
+ * @property {Array} Occurrences An array with the locations, start, and end times of future events
  * @property {String} Organization Organization hosting the event
  * @property {Number} Required Required chapel for the student
 */
