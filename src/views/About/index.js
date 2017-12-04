@@ -7,7 +7,7 @@ export default class About extends Component {
   render() {
     return (
       <section>
-        <Typography type="Headline" gutterBottom>
+        <Typography type="headline" gutterBottom>
           Conceived and built at Gordon College, by students for students.
           Everyone should be involved in something at College. It’s
           what makes College your own Experience.
@@ -15,29 +15,25 @@ export default class About extends Component {
         <Typography type="title" gutterBottom>
           Gordon’s 360 Mobile Activities Platform: The Scottie Faire in your hand
         </Typography>
-        <Typography type="body1" paragraph>
-          <ul>
-            <li>Mobile-friendly, responsive web portal</li>
-            <li>Promotional access to student Involvement and leadership</li>
-            <li>Academic session-based Campus Activities and Leadership Experiences</li>
-            <li>Subscriber email feeds</li>
-            <li>Membership affinity connections</li>
-            <li>Student leader and Advisor Activity self-management</li>
-            <li>Rosters and administrative records</li>
-            <li>Student Membership and Leadership Experience Transcript</li>
-          </ul>
+        <Typography type="body1" gutterBottom component="ul">
+          <li>Mobile-friendly, responsive web portal</li>
+          <li>Promotional access to student Involvement and leadership</li>
+          <li>Academic session-based Campus Activities and Leadership Experiences</li>
+          <li>Subscriber email feeds</li>
+          <li>Membership affinity connections</li>
+          <li>Student leader and Advisor Activity self-management</li>
+          <li>Rosters and administrative records</li>
+          <li>Student Membership and Leadership Experience Transcript</li>
         </Typography>
         <Typography type="title" gutterBottom>
           Institutional Benefits
         </Typography>
-        <Typography type="body1" paragraph>
-          <ul>
-            <li>In-house Student Record relationship</li>
-            <li>Official “Gordon Experience Transcript” with unofficial portal view</li>
-            <li>Academic Advising resource</li>
-            <li>Leadership and Involvement advising resource</li>
-            <li>Institutional reporting</li>
-          </ul>
+        <Typography type="body1" gutterBottom component="ul">
+          <li>In-house Student Record relationship</li>
+          <li>Official “Gordon Experience Transcript” with unofficial portal view</li>
+          <li>Academic Advising resource</li>
+          <li>Leadership and Involvement advising resource</li>
+          <li>Institutional reporting</li>
         </Typography>
         <Typography type="title" gutterBottom>
           Origins
