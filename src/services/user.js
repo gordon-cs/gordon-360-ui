@@ -216,14 +216,14 @@ const getChapelCredits = async () => {
   const termCode = session.getTermCode();
   const attendedEvents = await getAttendedEvents(username, termCode);
 
-  // Get required number of CL&W credits for the student, defaulting to zero
-  let required = 0;
+  // Get required number of CL&W credits for the user, defaulting to thirty
+  let required = 30;
   if (attendedEvents.length > 0) {
     ([{ Required: required }] = attendedEvents);
   }
 
   return {
-    current: attendedEvents.length,
+    current: attendedEvents.length || 0,
     required,
   };
 };

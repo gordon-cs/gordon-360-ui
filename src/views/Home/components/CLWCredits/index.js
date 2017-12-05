@@ -54,9 +54,9 @@ export default class ChapelProgress extends Component {
       };
       content = <Doughnut data={data} />;
       if (current === 1) {
-        subheader = `${current} CL&W credit`;
+        subheader = `${current} CL&W Credit`;
       } else {
-        subheader = `${current} CL&W credits`;
+        subheader = `${current} CL&W Credits`;
       }
     }
     return (

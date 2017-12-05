@@ -2,17 +2,17 @@ import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
 
 import DaysLeft from './components/DaysLeft';
-import ChapelProgress from './components/ChapelProgress';
+import CLWCredits from './components/CLWCredits';
 
 export default class Home extends Component {
   render() {
     return (
       <Grid container justify="center">
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={5}>
           <DaysLeft />
         </Grid>
-        <Grid item xs={12} md={3}>
-          <ChapelProgress />
+        <Grid item xs={12} md={5}>
+          <CLWCredits />
         </Grid>
       </Grid>
     );
