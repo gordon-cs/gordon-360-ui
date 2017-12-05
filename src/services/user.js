@@ -6,6 +6,7 @@
 
 import jwtDecode from 'jwt-decode';
 
+import { AuthError } from './error';
 import http from './http';
 import session from './session';
 import storage from './storage';
@@ -174,27 +175,6 @@ const getAttendedEvents = (username, termCode) =>
   http.get(`events/chapel/${username}/${termCode}`);
 
 /**
- * return the number of cl&w credits aquired, and number of credits required.
- * @return {Promise.<CLWCredits>} An Object of their current and requiered number of CL&W events,
- */
-const getChapelCredits = async () => {
-  const { username } = storage.get('credentials');
-  const termCode = session.getTermCode();
-  const attendedEvents = await getAttendedEvents(username, termCode);
-
-  // Get required number of CL&W credits for the student, defaulting to zero
-  let required = 0;
-  if (attendedEvents.length > 0) {
-    ([{ Required: required }] = attendedEvents);
-  }
-
-  return {
-    current: attendedEvents.length,
-    required,
-  };
-};
-
-/**
  * Get image for a given user or the current user if `username` is not provided
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<String>} Image as a Base64-encoded string
@@ -215,16 +195,37 @@ const getLocalInfo = () => {
   let token;
 
   try {
-    ({ token } = storage.get('auth'));
+    token = storage.get('token');
   } catch (err) {
-    throw new Error('Could not get local auth');
+    throw new AuthError('Could not get local auth');
   }
 
   try {
     return jwtDecode(token);
   } catch (err) {
-    throw new Error(`Saved token ${token} could not be parsed`);
+    throw new AuthError(`Saved token "${token}" could not be parsed`);
   }
+};
+
+/**
+ * Get the number of cl&w credits aquired, and number of credits required.
+ * @return {Promise.<CLWCredits>} An Object of their current and requiered number of CL&W events,
+ */
+const getChapelCredits = async () => {
+  const { user_name: username } = getLocalInfo();
+  const termCode = session.getTermCode();
+  const attendedEvents = await getAttendedEvents(username, termCode);
+
+  // Get required number of CL&W credits for the student, defaulting to zero
+  let required = 0;
+  if (attendedEvents.length > 0) {
+    ([{ Required: required }] = attendedEvents);
+  }
+
+  return {
+    current: attendedEvents.length,
+    required,
+  };
 };
 
 /**
