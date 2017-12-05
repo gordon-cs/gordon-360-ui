@@ -38,6 +38,8 @@ import http from './http';
 
 const getAllEvents = () => http.get('events/25Live/All');
 
+const getAllCLAWEvents = () => http.get('/events/25Live/CLAW');
+
 function sortByTime(a, b) {
   if (a.Occurrences[0][0] < b.Occurrences[0][0]) {
     return -1;
@@ -47,6 +49,21 @@ function sortByTime(a, b) {
   }
   return 0;
 }
+
+const getCLWEvents = async () => {
+  const allEvents = await getAllCLAWEvents();
+  const chapelEvents = [];
+  const date = new Date().getTime();
+  allEvents.sort(sortByTime);
+  for (let i = 0; i < allEvents.length; i += 1) {
+    const startDate = new Date(allEvents[i].Occurrences[0][0]).getTime();
+
+    if (startDate > date) {
+      chapelEvents.push(allEvents[i]);
+    }
+  }
+  return chapelEvents.sort(sortByTime);
+};
 
 const getFutureEvents = async () => {
   const allEvents = await getAllEvents();
@@ -66,4 +83,5 @@ const getFutureEvents = async () => {
 export default {
   getAllEvents,
   getFutureEvents,
+  getCLWEvents,
 };

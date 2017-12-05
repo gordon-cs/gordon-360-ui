@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import List from 'material-ui/List';
-// import Typography from 'material-ui/Typography';
+import Grid from 'material-ui/Grid';
+import TextField from 'material-ui/TextField';
 
 import event from './../../services/event';
 import EventItem from './components/EventItem';
@@ -12,6 +13,7 @@ export default class Events extends Component {
 
     this.state = {
       events: [],
+      search: '',
       loading: true,
     };
   }
@@ -33,6 +35,16 @@ export default class Events extends Component {
     }
     return (
       <section>
+        <Grid item xs={12} md={12} lg={6}>
+          <TextField
+            id="search"
+            label="Search"
+            value={this.state.search}
+            onChange={null}
+            margin="none"
+            fullWidth
+          />
+        </Grid>
         <List>
           { content }
         </List>

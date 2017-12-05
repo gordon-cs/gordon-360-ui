@@ -9,7 +9,7 @@ export default class GordonEventItem extends Component {
   render() {
     const { event } = this.props;
 
-    let time = new Date();
+    let time;
     if (event.Occurrences[0] && event.Occurrences[0][0]) {
       time = DateTime.fromISO(event.Occurrences[0][0]).toFormat('LLL dd yy');
     }
@@ -19,11 +19,16 @@ export default class GordonEventItem extends Component {
     } else {
       title = event.Event_Title;
     }
-
+    let subInfo;
+    if (event.Occurrences[0] && event.Occurrences[0][2]) {
+      subInfo = `${time}, ${event.Occurrences[0][2]}`;
+    } else {
+      subInfo = `${time}`;
+    }
     return (
       <div>
         <ListItem>
-          <ListItemText primary={title} secondary={time} />
+          <ListItemText primary={title} secondary={subInfo} />
         </ListItem>
         <Divider />
       </div>
