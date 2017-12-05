@@ -1,27 +1,32 @@
-import { ListItem } from 'material-ui/List';
-import Typography from 'material-ui/Typography';
+import { ListItem, ListItemText } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { DateTime } from 'luxon';
 
 
 export default class GordonEventItem extends Component {
   render() {
     const { event } = this.props;
 
-    let location;
-    if (event.Occurrences[0] && event.Occurrences[0][2]) {
-      location = (
-        <Typography type="subheading">
-          { event.Occurrences[0][2] }
-        </Typography>
-      );
+    let time = new Date();
+    if (event.Occurrences[0] && event.Occurrences[0][0]) {
+      time = DateTime.fromISO(event.Occurrences[0][0]).toFormat('LLL dd yy');
+    }
+    let title;
+    if (event.Event_Title === '') {
+      title = event.Event_Name;
+    } else {
+      title = event.Event_Title;
     }
 
     return (
-      <ListItem>
-        <Typography type="title">{event.Event_Title}</Typography>
-        { location }
-      </ListItem>
+      <div>
+        <ListItem>
+          <ListItemText primary={title} secondary={time} />
+        </ListItem>
+        <Divider />
+      </div>
     );
   }
 }

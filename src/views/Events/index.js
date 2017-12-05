@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import List from 'material-ui/List';
-import Typography from 'material-ui/Typography';
+// import Typography from 'material-ui/Typography';
 
 import event from './../../services/event';
 import EventItem from './components/EventItem';
@@ -20,7 +20,7 @@ export default class Events extends Component {
   }
   async loadEvents() {
     this.setState({ loading: true });
-    const events = await event.getAllEvents();
+    const events = await event.getFutureEvents();
     this.setState({ events, loading: false });
   }
   render() {

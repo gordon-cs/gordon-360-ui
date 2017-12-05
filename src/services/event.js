@@ -33,10 +33,37 @@ import http from './http';
 
 /**
  * Get all events
- * @return {Promise.<Event[]>}
+ * @return {Promise.<Event[]>} returns all the events
  */
+
 const getAllEvents = () => http.get('events/25Live/All');
+
+function sortByTime(a, b) {
+  if (a.Occurrences[0][0] < b.Occurrences[0][0]) {
+    return -1;
+  }
+  if (a.Occurrences[0][0] > b.Occurrences[0][0]) {
+    return 1;
+  }
+  return 0;
+}
+
+const getFutureEvents = async () => {
+  const allEvents = await getAllEvents();
+  const futureEvents = [];
+  const date = new Date().getTime();
+  allEvents.sort(sortByTime);
+  for (let i = 0; i < allEvents.length; i += 1) {
+    const startDate = new Date(allEvents[i].Occurrences[0][0]).getTime();
+
+    if (startDate > date) {
+      futureEvents.push(allEvents[i]);
+    }
+  }
+  return futureEvents.sort(sortByTime);
+};
 
 export default {
   getAllEvents,
+  getFutureEvents,
 };
