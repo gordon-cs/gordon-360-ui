@@ -13,6 +13,7 @@ export default class ChapelProgress extends Component {
     this.loadChapel = this.loadChapel.bind(this);
 
     this.state = {
+      error: null,
       loading: true,
       chapelCredits: {},
     };
@@ -22,27 +23,35 @@ export default class ChapelProgress extends Component {
   }
   async loadChapel() {
     this.setState({ loading: true });
-    const chapelCredits = await user.getChapelCredits();
-    this.setState({ loading: false, chapelCredits });
+    try {
+      const chapelCredits = await user.getChapelCredits();
+      this.setState({ loading: false, chapelCredits });
+    } catch (error) {
+      this.setState({ error });
+    }
   }
   render() {
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
     let content;
     let subheader;
-    const { current, required } = this.state.chapelCredits;
-    const remaining = required - current;
-    const data = {
-      datasets: [{
-        data: [current, remaining],
-        backgroundColor: [gordonColors.primary.blue],
-      }],
-      labels: [
-        'CL&W Credits',
-        'CL&W Credits Remaining',
-      ],
-    };
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
+      const { current, required } = this.state.chapelCredits;
+      const remaining = required - current;
+      const data = {
+        datasets: [{
+          data: [current, remaining],
+          backgroundColor: [gordonColors.primary.blue],
+        }],
+        labels: [
+          'CL&W Credits',
+          'CL&W Credits Remaining',
+        ],
+      };
       content = <Doughnut data={data} />;
       if (current === 1) {
         subheader = `${current} CL&W credit`;

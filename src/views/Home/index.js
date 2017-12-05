@@ -1,5 +1,6 @@
 import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
+
 import DaysLeft from './components/DaysLeft';
 import ChapelProgress from './components/ChapelProgress';
 
