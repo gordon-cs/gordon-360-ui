@@ -58,14 +58,14 @@ export default class DaysLeft extends Component {
         },
       };
       content = <Doughnut data={data} options={options} />;
-      subheader = `${daysleft} Days Left`;
+      subheader = `${daysleft} Days Left in Semester`;
     }
 
     return (
       <Card>
         <CardContent>
           <CardHeader
-            title="Days Left in Semester"
+            title="Days Left"
             subheader={subheader}
           />
           {content}
