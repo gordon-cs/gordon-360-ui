@@ -23,11 +23,11 @@ export default class GordonError extends Component {
           </Typography>
           <br />
           <Typography color="error" type="title">
-            { this.props.error.error.toString() }
+            { this.props.error.toString() }
           </Typography>
           <pre>
             <Typography color="error" type="subheading">
-              { this.props.error.errorInfo.componentStack }
+              { this.props.errorInfo.componentStack }
             </Typography>
           </pre>
         </Grid>
@@ -37,10 +37,8 @@ export default class GordonError extends Component {
 }
 
 GordonError.propTypes = {
-  error: PropTypes.shape({
-    error: PropTypes.error,
-    errorInfo: PropTypes.shape({
-      componentStack: PropTypes.string,
-    }),
+  error: PropTypes.instanceOf(Error).isRequired,
+  errorInfo: PropTypes.shape({
+    componentStack: PropTypes.string.isRequired,
   }).isRequired,
 };

@@ -16,6 +16,16 @@ import http from './http';
  */
 
 /**
+ * @global
+ * @typedef {Number[]} DaysLeft Contains days left and days completed
+ * @example
+ * [
+ *   17,  // 17 days remaining
+ *   113  // 113 days completed
+ * ]
+ */
+
+/**
  * Get sessions
  * @return {Promise.<Session[]>} List of sessions
  */
@@ -28,14 +38,14 @@ const getAll = () => http.get('sessions').then(sessions => sessions.reverse());
 const getCurrent = () => http.get('sessions/current');
 
 /**
- * Get days left in the term
- * @return {Promise.<DaysLeft[]>}
+ * Get days left in the session
+ * @return {Promise.<DaysLeft>} Days left in session
  */
 const getDaysLeft = () => http.get('sessions/daysLeft');
 
 /**
  * Get current term code
- * @return {String}
+ * @return {String} Term code, ex: '17SP'
  */
 const getTermCode = () => {
   const now = new Date();
