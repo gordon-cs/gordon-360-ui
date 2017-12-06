@@ -13,7 +13,7 @@ html {
 
 body,
 html,
-body > div {
+#root {  // sass-lint:disable-line no-ids
   height: 100%;
 }
 
