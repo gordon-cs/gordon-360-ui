@@ -8,6 +8,7 @@
     "history": "^4.7.2",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
+    "luxon": "^0.2.6",
     "material-ui": "^1.0.0-beta.22",
     "material-ui-icons": "^1.0.0-beta.17",
     "node-sass-chokidar": "^0.0.3",
