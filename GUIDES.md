@@ -1,5 +1,36 @@
 # Guides
 
+## Dependencies
+
+### Installing Dependencies
+
+If you are adding a dependency to the project, you must use either `--save` or `--save-dev` with `npm install`. This will save the dependency and its current version to `package.json`, which means it will be installed automatically when `npm install` is run.
+
+- If you are installing a dependency that will be used in development, such as a build tool, linter, or documentation tool, use `npm install --save-dev nameOfPackage`. This will save the dependency to the `devDependencies` property of `package.json`.
+- If you are installing a production dependency, such as a charting library, a date formatting library, or a utility like Lodash, use `npm install --save nameOfPackage`. This will save the dependency to the `dependencies` property of `package.json`.
+
+To remove a dependency, use `npm rm nameOfPackage`.
+
+### Updating Dependencies
+
+To see which depencies are out of date, run `npm outdated`.
+
+To update all depedencies to their latest allowed versions (as specified by the semver range in `package.json`), run `npm update --save --dev`. This command will save the latest versions of all production and development dependencies to `package.json` as the new minimum version. Read more about `npm update` [here](https://docs.npmjs.com/cli/update).
+
+### Semantic Versioning
+
+[Semantic versioning](https://semver.org/) is a method of versioning software. From their website:
+
+> Given a version number MAJOR.MINOR.PATCH, increment the:
+>
+> - MAJOR version when you make incompatible API changes,
+> - MINOR version when you add functionality in a backwards-compatible manner, and
+> - PATCH version when you make backwards-compatible bug fixes.
+>
+> Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
+
+npm uses semantic versioning ranges to specify a range of acceptable versions. For example, `^2.1.3` means "any minor or patch release with the major version `2`". In other words, where `x` represents a version number that can change, this range means `2.x.x`.
+
 ## File Organization
 
 The source files for the app are in `./src`. The other top-level folders are as follows:
