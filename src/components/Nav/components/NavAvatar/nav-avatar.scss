@@ -5,10 +5,22 @@
   padding: 1rem;
   width: 100%;
 
-  .image {
+  .label {
+    display: inline;
+  }
+
+  .placeholder {
     background-color: $primary-cyan;
     height: 4rem;
+  }
+
+  .image {
+    height: auto;
+  }
+
+  .avatar {
     margin-bottom: 1rem;
+    max-height: 4rem;
     width: 4rem;
   }
 
