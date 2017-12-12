@@ -42,7 +42,7 @@ export default class GordonCarousel extends Component {
       content = <GordonLoader />;
     } else {
       content = (
-        <Carousel showThumbs={false} autoPlay={true} infiniteLoop transitionTime={1500}>
+        <Carousel showThumbs={false} autoPlay={true} infiniteLoop transitionTime={1000}>
           {this.state.carouselContent.map(slide => (
             <div>
               <img src={slide.ImagePath} alt={slide.AltTag} />
