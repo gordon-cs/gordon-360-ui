@@ -40,7 +40,7 @@ class ActivityProfile extends Component {
       activityStatus,
       sessionInfo] = await Promise.all([
       activity.get(activityCode),
-      activity.getAdvisors(activityCode, sessionCode),
+      // activity.getAdvisors(activityCode, sessionCode),
       activity.getFollowersNum(activityCode, sessionCode),
       activity.getGroupAdmins(activityCode, sessionCode),
       activity.getMembersNum(activityCode, sessionCode),
@@ -70,7 +70,9 @@ class ActivityProfile extends Component {
       const members = this.state.activityMembers;
       const { SessionDescription: sessionDescription } = this.state.sessionInfo;
       let admins;
+      let groupContacts;
       if (this.state.activityGroupAdmins.length > 0) {
+        groupContacts = <Typography type="body1">Group Contacts:</Typography>;
         admins = this.state.activityGroupAdmins
           .map(activityGroupAdmins => (
             <li key={activityGroupAdmins.FirstName}>
@@ -111,7 +113,7 @@ class ActivityProfile extends Component {
             Session: {sessionDescription}
           </Typography>
           <Typography type="body1">
-            Group Contacts: {admins}
+            {groupContacts} {admins}
           </Typography>
           <Typography type="body1">
             {description}
