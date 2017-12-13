@@ -34,7 +34,7 @@ class GordonActivityGrid extends Component {
       content = this.props.activities
         .map(activity => (
           <GridListTile key={activity.ActivityCode} className="activity">
-            <Link to={`/activities/${this.props.sessionCode}/${activity.ActivityCode}`}>
+            <Link to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}>
 
               <img src={activity.ActivityImagePath} alt={activity.ActivityDescription} />
 

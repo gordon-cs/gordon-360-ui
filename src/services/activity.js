@@ -23,12 +23,59 @@ import http from './http';
  */
 
 /**
+ * Get an activity
+ * @param {String} activityCode Identifier for an activity
+ * @return {Promise.<Activity>} Activity
+ */
+const get = activityCode => http.get(`activities/${activityCode}`);
+
+/**
+ * Get advisors for an activity
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @returns {[]} List of advisors
+ */
+const getAdvisors = (activityCode, sessionCode) => http.get(`emails/activity/${activityCode}/advisors/session/${sessionCode}`);
+
+/**
  * Get all activities for a session, sorted alphabetically by description
  * @param {String} sessionCode Identifier for a session
  * @return {Promise.<Activity[]>} List of activities
  */
 const getAll = sessionCode => http.get(`activities/session/${sessionCode}`)
   .then(activities => sortBy(activities, activity => activity.ActivityDescription));
+
+/**
+ * Get number of followers of an activity
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @returns {int} Number of followers
+ */
+const getFollowersNum = (activityCode, sessionCode) => http.get(`memberships/activity/${activityCode}/followers/${sessionCode}`);
+
+/**
+ * Get group administrators for an activity
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @returns {[]} List of group administrators
+ */
+const getGroupAdmins = (activityCode, sessionCode) => http.get(`emails/activity/${activityCode}/group-admin/session/${sessionCode}`);
+
+/**
+ * Get number of members of an activity
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @returns {int} Number of members
+ */
+const getMembersNum = (activityCode, sessionCode) => http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
+
+/**
+ * Get the status of an activity
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @returns {String} Status
+ */
+const getStatus = (activityCode, sessionCode) => http.get(`activities/${sessionCode}/${activityCode}/status`);
 
 /**
  * Get all activity types for a session
@@ -61,7 +108,13 @@ const filter = (activities = [], typeDescription, search = '') => {
 };
 
 export default {
+  get,
+  getAdvisors,
   getAll,
+  getFollowersNum,
+  getGroupAdmins,
+  getMembersNum,
+  getStatus,
   getTypes,
   filter,
 };
