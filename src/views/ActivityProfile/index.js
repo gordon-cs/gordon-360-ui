@@ -79,20 +79,27 @@ class ActivityProfile extends Component {
         );
         admins = this.state.activityGroupAdmins
           .map(activityGroupAdmins => (
-            <List className="gordon-activity-profile" dense disablePadding>
-              <li key={activityGroupAdmins.FirstName}>
-                &emsp;{activityGroupAdmins.FirstName} {activityGroupAdmins.LastName}
-                <IconButton
-                  classes={({ root: 'email-button' })}
-                  color="primary"
-                  href={`mailto:${activityGroupAdmins.Email}`}
-                  padding={0}
-                >
-                  <Email
+            <List
+              className="gordon-activity-profile"
+              dense
+              disablePadding
+              key={activityGroupAdmins.Email}
+            >
+              <li>
+                <Typography type="body1">
+                  &emsp;{activityGroupAdmins.FirstName} {activityGroupAdmins.LastName}
+                  <IconButton
+                    classes={({ root: 'email-button' })}
                     color="primary"
-                    style={{ width: 16, height: 16 }}
-                  />
-                </IconButton>
+                    href={`mailto:${activityGroupAdmins.Email}`}
+                    padding={0}
+                  >
+                    <Email
+                      color="primary"
+                      style={{ width: 16, height: 16 }}
+                    />
+                  </IconButton>
+                </Typography>
               </li>
             </List>
           ));
@@ -110,7 +117,7 @@ class ActivityProfile extends Component {
       let website;
       if (activityURL.length !== 0) {
         website = (
-          <Typography>
+          <Typography type="body1">
             <strong>Website: </strong>
             <a href={activityURL}> {activityURL}</a>
           </Typography>
@@ -129,15 +136,9 @@ class ActivityProfile extends Component {
           <Typography type="body1">
             <strong>Session: </strong>{sessionDescription}
           </Typography>
-          <Typography type="body1">
-            {description}
-          </Typography>
-          <Typography type="body1">
-            {website}
-          </Typography>
-          <Typography type="body1">
-            {groupContacts} {admins}
-          </Typography>
+          {description}
+          {website}
+          {groupContacts} {admins}
           <Typography type="body1">
             <strong>Current Activity Roster: </strong>
             {members} Members and {followers} followers
