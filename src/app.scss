@@ -1,4 +1,4 @@
-@import './vars';
+@import "./vars";
 
 // https://www.paulirish.com/2012/box-sizing-border-box-ftw/
 html {
@@ -13,12 +13,12 @@ html {
 
 body,
 html,
-#root {  // sass-lint:disable-line no-ids
+#root {
   height: 100%;
 }
 
 body {
-  font-family: 'Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  font-family: "Gotham SSm 7r", "Gotham SSm A", "Gotham SSm B", sans-serif;
   letter-spacing: 1px;
   margin: 0;
   max-width: 100%;
@@ -37,7 +37,6 @@ a {
   &:visited {
     // Keep link color the same after visiting it
     color: initial;
-
   }
 }
 
@@ -51,7 +50,7 @@ a {
   height: calc(100vh - #{$header-height-xs});
   margin-top: $header-height-xs;
   overflow-y: auto;
-  padding: 1rem .5rem;
+  padding: 1rem 0.5rem;
   width: 100%;
 }
 @media (min-width: $break-sm) {
