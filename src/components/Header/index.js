@@ -12,12 +12,12 @@ import './header.css';
 import GordonGlobalMenu from './components/GlobalMenu';
 import routes from '../../routes';
 
-const getRouteName = (route) => {
+const getRouteName = route => {
   if (route.name) {
     return () => (
       <span>
         <DocumentTitle title={`${route.name} | Gordon 360`} />
-        { route.name }
+        {route.name}
       </span>
     );
   }

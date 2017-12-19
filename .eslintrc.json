@@ -1,16 +1,6 @@
 {
-  "extends": "airbnb",
-  "env": {
-    "browser": true,
-    "mocha": true
-  },
+  "extends": "react-app",
   "rules": {
-    "react/prefer-stateless-function": "off",
-    "react/jsx-filename-extension": "off",
-    "jsx-a11y/anchor-is-valid": [ "error", {
-      "components": [ "Link" ],
-      "specialLink": [ "to" ]
-    }],
     "valid-jsdoc": [ "error", {
       "requireReturn": false,
       "requireReturnType": true

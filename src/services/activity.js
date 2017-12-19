@@ -27,8 +27,10 @@ import http from './http';
  * @param {String} sessionCode Identifier for a session
  * @return {Promise.<Activity[]>} List of activities
  */
-const getAll = sessionCode => http.get(`activities/session/${sessionCode}`)
-  .then(activities => sortBy(activities, activity => activity.ActivityDescription));
+const getAll = sessionCode =>
+  http
+    .get(`activities/session/${sessionCode}`)
+    .then(activities => sortBy(activities, activity => activity.ActivityDescription));
 
 /**
  * Get all activity types for a session
@@ -47,14 +49,15 @@ const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/type
 const filter = (activities = [], typeDescription, search = '') => {
   let filteredActivities = activities;
   if (typeDescription) {
-    filteredActivities = filteredActivities
-      .filter(activity => activity.ActivityTypeDescription === typeDescription);
+    filteredActivities = filteredActivities.filter(
+      activity => activity.ActivityTypeDescription === typeDescription,
+    );
   }
 
   if (search !== '') {
-    filteredActivities = filteredActivities
-      .filter(({ ActivityDescription: description }) =>
-        description.toLowerCase().includes(search.toLowerCase()));
+    filteredActivities = filteredActivities.filter(({ ActivityDescription: description }) =>
+      description.toLowerCase().includes(search.toLowerCase()),
+    );
   }
 
   return filteredActivities;
