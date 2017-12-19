@@ -144,3 +144,20 @@ To declare variables that should not be checked in to version control, create a 
 These files are loaded by the scripts that run the development server and build the application. Variables in these files are available globally in the app as `process.env.REACT_APP_VARIABLE_NAME` (assuming one of the `.env` files contains the line `REACT_APP_VARIABLE_NAME=some-value`).
 
 Environment variables must be declared in all caps, must use snake case, and must begin with `REACT_APP_` (ex: `REACT_APP_API_URL` or `REACT_APP_PASSWORD`). Any environment variables that do not begin with `REACT_APP_` will be ignored.
+
+## Deployment
+
+The deployment script `./scripts/deploy.sh` requires several environment variables to be defined in the Travis CI environment. These variables are documented at the top of the deployment script.
+
+The script deploys to either staging or production based on the branch it is running from. The `develop` branch deploys to staging, while the `master` branch deploys to production.
+
+`develop` is the default branch on the repository, so all branches should be based on it and should merge back into it. Changes merged into `develop` will automatically deploy to the staging environment.
+
+### Deploying to Production
+
+1. On the [repository's home page on GitHub](https://github.com/gordon-cs/gordon-360-ui), click "New pull request."
+1. Change the "base" branch of the pull request to `master`. The "compare" branch should be set to `develop` by default.
+1. Enter a title starting with "RELEASE:" (optional, but useful for quickly finding releases in the Git history) and containing a brief summary of the changes that the release brings.
+1. Add reviewers. The pull request must be approved before it can be merged.
+1. Click "Create pull request."
+1. When the pull request is approved, merge it. This will trigger a build that will automatically deploy `master` to production.

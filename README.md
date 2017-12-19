@@ -15,6 +15,10 @@ To run the app for the first time, run the following commands:
 
 The app will open in a browser at <http://localhost:3000>.
 
+## Documentation
+
+The contents of `GUIDES.md` and the generated JSDoc for files in `./src/services` are hosted at <https://gordon-cs.github.io/gordon-360-ui/>.
+
 ### Editor Recommendations
 
 [Visual Studio Code](https://code.visualstudio.com/) is the recommended editor for this project. This editor is a lightweight IDE that has excellent support for JavaScript and other web languages. It also has a built-in terminal, Git integration, a debugger, and a rich extension ecosystem.
