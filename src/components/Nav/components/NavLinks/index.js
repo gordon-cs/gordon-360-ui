@@ -1,8 +1,4 @@
-import List, {
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from 'material-ui/List';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import HomeIcon from 'material-ui-icons/Home';
 import LocalActivityIcon from 'material-ui-icons/LocalActivity';
 import EventIcon from 'material-ui-icons/Event';

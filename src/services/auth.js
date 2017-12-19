@@ -4,8 +4,8 @@
  * @module auth
  */
 
-import { parseResponse } from "./http";
-import storage from "./storage";
+import { parseResponse } from './http';
+import storage from './storage';
 
 const base = process.env.REACT_APP_API_URL;
 
@@ -15,11 +15,11 @@ const base = process.env.REACT_APP_API_URL;
  * @throws {Error} An error that can be shown to users (`error.message`)
  */
 const handleError = err => {
-  console.error("Could not authenticate user:", err);
+  console.error('Could not authenticate user:', err);
   if (err.error && err.error_description) {
     throw new Error(err.error_description);
   } else {
-    throw new Error("Something went wrong! Please contact CTS for help.");
+    throw new Error('Something went wrong! Please contact CTS for help.');
   }
 };
 
@@ -30,13 +30,13 @@ const handleError = err => {
  * @return {String} Token for use on API requests
  */
 const getAuth = (username, password) => {
-  const headers = new Headers({ "Content-Type": "application/x-www-form-urlencoded" });
+  const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
   const body = new URLSearchParams({
     username,
     password,
-    grant_type: "password"
+    grant_type: 'password',
   });
-  const request = new Request(`${base}token`, { method: "post", headers, body });
+  const request = new Request(`${base}token`, { method: 'post', headers, body });
 
   return fetch(request)
     .then(parseResponse)
@@ -52,7 +52,7 @@ const getAuth = (username, password) => {
  * @return {Promise.<undefined>} Resolved when token is refreshed
  */
 const authenticate = (username, password) =>
-  getAuth(username, password).then(token => storage.store("token", token));
+  getAuth(username, password).then(token => storage.store('token', token));
 
 /**
  * Check if current session is authenticated
@@ -62,7 +62,7 @@ const authenticate = (username, password) =>
 const isAuthenticated = () => {
   try {
     // Check that auth exists
-    const token = storage.get("token");
+    const token = storage.get('token');
 
     // Check that auth contains a token
     return token && token.length > 0;
@@ -76,7 +76,7 @@ const isAuthenticated = () => {
  * @description Removes token from storage.
  */
 const signOut = () => {
-  storage.remove("token");
+  storage.remove('token');
 };
 
 export { authenticate, isAuthenticated, signOut };

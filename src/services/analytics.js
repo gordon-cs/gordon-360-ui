@@ -10,7 +10,7 @@ import ReactGA from 'react-ga';
  * Track an error
  * @param {String} description Error description
  */
-const onError = (description) => {
+const onError = description => {
   ReactGA.exception({ description });
 };
 

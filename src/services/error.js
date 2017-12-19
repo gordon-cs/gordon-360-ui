@@ -44,8 +44,4 @@ const createError = (err, res) => {
   return err;
 };
 
-export {
-  AuthError,
-  createError,
-  NotFoundError,
-};
+export { AuthError, createError, NotFoundError };
