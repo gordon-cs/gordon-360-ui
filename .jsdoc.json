@@ -1,0 +1,13 @@
+{
+  "opts": {
+    "destination": "docs"
+  },
+  "plugins": ["plugins/markdown"],
+  "readme": "GUIDES.md",
+  "source": {
+    "include": [
+      "src/services",
+      "GUIDES.md"
+    ]
+  }
+}
