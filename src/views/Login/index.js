@@ -5,6 +5,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import DocumentTitle from 'react-document-title';
 
 import './login.css';
 import { authenticate } from '../../services/auth';
@@ -42,6 +43,7 @@ export default class Login extends Component {
   render() {
     return (
       <Grid className="gordon-login" container alignItems="center" justify="center" spacing={0}>
+        <DocumentTitle title="Login | Gordon 360" />
         <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
           <img src={GordonLogoVerticalWhite} alt="Gordon 360" />
           <form onSubmit={this.logIn}>

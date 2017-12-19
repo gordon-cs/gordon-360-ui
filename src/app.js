@@ -5,10 +5,11 @@ import { Router, Route, Switch } from 'react-router-dom';
 
 import './app.css';
 import analytics from './services/analytics';
-import { isAuthenticated } from './services/auth';
+import { isAuthenticated, signOut } from './services/auth';
 import GordonError from './components/Error';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
+import { AuthError } from './services/error';
 import Login from './views/Login';
 import theme from './theme';
 import routes from './routes';
@@ -30,6 +31,7 @@ export default class App extends Component {
 
     this.state = {
       error: null,
+      errorInfo: null,
       drawerOpen: false,
     };
   }
@@ -44,7 +46,8 @@ export default class App extends Component {
     if (process.env.NODE_ENV === 'production') {
       analytics.onError(`${error.toString()} ${errorInfo.componentStack}`);
     }
-    this.setState({ error: { error, errorInfo } });
+
+    this.setState({ error, errorInfo });
   }
   render() {
     let content = (
@@ -66,12 +69,11 @@ export default class App extends Component {
       </section>
     );
 
-    if (!isAuthenticated()) {
+    if (!isAuthenticated() || this.state.error instanceof AuthError) {
+      signOut();
       content = <Login onLogIn={this.onAuthChange} />;
     } else if (this.state.error) {
-      content = (
-        <GordonError error={this.state.error} />
-      );
+      content = <GordonError error={this.state.error} errorInfo={this.state.errorInfo} />;
     }
 
     return (

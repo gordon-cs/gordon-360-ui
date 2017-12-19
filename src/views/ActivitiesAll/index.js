@@ -22,6 +22,7 @@ export default class GordonActivitiesAll extends Component {
     this.state = {
       activities: [],
       allActivities: [],
+      error: null,
       loading: true,
       search: '',
       session: '',
@@ -31,17 +32,32 @@ export default class GordonActivitiesAll extends Component {
     };
   }
   async componentWillMount() {
-    const { SessionCode: sessionCode } = await session.getCurrent();
-    this.setState({ session: sessionCode });
+    this.setState({ loading: true });
 
-    await Promise.all([
-      activity.getAll(sessionCode)
-        .then(activities => this.setState({ activities, allActivities: activities })),
-      activity.getTypes(sessionCode).then(types => this.setState({ types })),
-      session.getAll().then(sessions => this.setState({ sessions })),
-    ]);
+    try {
+      const { SessionCode: sessionCode } = await session.getCurrent();
+      this.setState({ session: sessionCode });
 
-    this.setState({ loading: false });
+      const [
+        activities,
+        types,
+        sessions,
+      ] = await Promise.all([
+        activity.getAll(sessionCode),
+        activity.getTypes(sessionCode),
+        session.getAll(),
+      ]);
+
+      this.setState({
+        activities,
+        allActivities: activities,
+        loading: false,
+        sessions,
+        types,
+      });
+    } catch (error) {
+      this.setState({ error });
+    }
   }
   async changeSession(event) {
     await this.setState({ session: event.target.value, loading: true });
@@ -61,6 +77,10 @@ export default class GordonActivitiesAll extends Component {
     };
   }
   render() {
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
