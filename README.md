@@ -53,3 +53,7 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
   Material-UI is a widely-used React implementation of Google's Material Design. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
   _Note_: this project currently uses `material-ui@next`, which is a beta version of the library. The library is approaching a 1.0.0 release, so the beta version is more similar to that release than the current stable version is.
+
+* [Downshift](https://github.com/paypal/downshift)
+
+  Downshift is a component that can be used for building autocomplete components. We use it because it is used in one of the Material-UI autocomplete examples, showing that it integrates well with Material-UI components.

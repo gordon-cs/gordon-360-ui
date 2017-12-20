@@ -34,7 +34,7 @@ export default class GordonGlobalMenu extends Component {
     const open = Boolean(this.state.anchorEl);
 
     return (
-      <div>
+      <span>
         <IconButton
           color="contrast"
           aria-label="More"
@@ -58,7 +58,7 @@ export default class GordonGlobalMenu extends Component {
             <Link to="/about">About</Link>
           </MenuItem>
         </Menu>
-      </div>
+      </span>
     );
   }
 }
