@@ -23,19 +23,19 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
   * login with username and password before accessing the application
   * auth service can take a username and password and use it to save a token
   * error handling for bad username and password combinations will need to be added to the auth service
-* [ ] user profile preview in navigation drawer (in progress @adamvig)
+* [x] user profile preview in navigation drawer
   * show user profile photo, name, and email address
   * name and email address can be decoded from the authentication token (JWT)
 
 ## Home
 
-* [ ] CL&W credits (in progress @mFelgate)
+* [x] CL&W credits
   * number of CL&W credits, total number of CL&W credits needed, and graph showing progress
   * components
     * `StatClwCredits`
   * unknowns
     * what is the best charting library to use with React?
-* [ ] days left in semester (in progress @mFelgate)
+* [x] days left in semester
   * number of days left in semester and graph showing progress
   * components
     * `StatDaysLeftInSemester`
@@ -109,7 +109,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
 
 ## Events
 
-* [ ] events
+* [ ] events (in progress @mFelgate)
   * [existing page](https://360.gordon.edu/#/all-events)
   * list of all future Gordon events
   * filter by event type
@@ -135,7 +135,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
 
 ## People
 
-* [ ] people search
+* [x] people search
   * search for anyone in the Gordon database by name
   * components
     * `PeopleSearch`
