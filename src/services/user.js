@@ -33,7 +33,7 @@ import storage from './storage';
  * end time, and location
  * @property {String} Organization Organization hosting the event
  * @property {Number} Required Required CL&W credits for the user
-*/
+ */
 
 /**
  * @global
@@ -171,15 +171,14 @@ import storage from './storage';
  * @param {String} termCode code for the semester
  * @return {Promise.<AttendedEvent[]>} An object of all CL&W events attended by the user
  */
-const getAttendedEvents = (username, termCode) =>
-  http.get(`events/chapel/${username}/${termCode}`);
+const getAttendedEvents = (username, termCode) => http.get(`events/chapel/${username}/${termCode}`);
 
 /**
  * Get image for a given user or the current user if `username` is not provided
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<String>} Image as a Base64-encoded string
  */
-const getImage = (username) => {
+const getImage = username => {
   if (username) {
     return http.get(`profiles/Image/${username}`);
   }
@@ -219,7 +218,7 @@ const getChapelCredits = async () => {
   // Get required number of CL&W credits for the user, defaulting to thirty
   let required = 30;
   if (attendedEvents.length > 0) {
-    ([{ Required: required }] = attendedEvents);
+    [{ Required: required }] = attendedEvents;
   }
 
   return {
@@ -233,7 +232,7 @@ const getChapelCredits = async () => {
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<StaffProfileInfo|StudentProfileInfo>} Profile info
  */
-const getProfileInfo = (username) => {
+const getProfileInfo = username => {
   if (username) {
     return http.get(`profiles/${username}`);
   }

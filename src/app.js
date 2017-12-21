@@ -5,7 +5,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 
 import './app.css';
 import analytics from './services/analytics';
-import { isAuthenticated } from './services/auth';
+import { isAuthenticated, signOut } from './services/auth';
 import GordonError from './components/Error';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
@@ -70,6 +70,7 @@ export default class App extends Component {
     );
 
     if (!isAuthenticated() || this.state.error instanceof AuthError) {
+      signOut();
       content = <Login onLogIn={this.onAuthChange} />;
     } else if (this.state.error) {
       content = <GordonError error={this.state.error} errorInfo={this.state.errorInfo} />;
@@ -77,9 +78,7 @@ export default class App extends Component {
 
     return (
       <MuiThemeProvider theme={theme}>
-        <Router history={this.history}>
-          { content }
-        </Router>
+        <Router history={this.history}>{content}</Router>
       </MuiThemeProvider>
     );
   }

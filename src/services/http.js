@@ -32,11 +32,12 @@ const makeHeaders = () => {
  * @param {object|array} body data to send with request
  * @return {Request} A request object
  */
-const createRequest = (url, method, body) => new Request(`${base}api/${url}`, {
-  method,
-  body,
-  headers: makeHeaders(),
-});
+const createRequest = (url, method, body) =>
+  new Request(`${base}api/${url}`, {
+    method,
+    body,
+    headers: makeHeaders(),
+  });
 
 /**
  * Parse an HTTP response
@@ -44,9 +45,10 @@ const createRequest = (url, method, body) => new Request(`${base}api/${url}`, {
  * @return {Promise.<Object|Array|String|Number>} Resolves with response body; rejects on non-2xx
  * response code
  */
-export const parseResponse = (res) => {
+export const parseResponse = res => {
   // Attempt to parse body of response
-  const json = res.json()
+  const json = res
+    .json()
     // Handle error if response body is not valid JSON
     .catch(err => Promise.reject(createError(err, res)));
 
@@ -64,8 +66,8 @@ export const parseResponse = (res) => {
  * @param {object|array} body data to send with request
  * @return {Promise.<Object>} Response body
  */
-const makeRequest = (url, method, body) => fetch(createRequest(url, method, body))
-  .then(parseResponse);
+const makeRequest = (url, method, body) =>
+  fetch(createRequest(url, method, body)).then(parseResponse);
 
 /**
  * Get

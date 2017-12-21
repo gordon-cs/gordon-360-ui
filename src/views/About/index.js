@@ -8,9 +8,8 @@ export default class About extends Component {
     return (
       <section>
         <Typography type="headline" gutterBottom>
-          Conceived and built at Gordon College, by students for students.
-          Everyone should be involved in something at College. It’s
-          what makes College your own Experience.
+          Conceived and built at Gordon College, by students for students. Everyone should be
+          involved in something at College. It’s what makes College your own Experience.
         </Typography>
         <Typography type="title" gutterBottom>
           Gordon’s 360 Mobile Activities Platform: The Scottie Faire in your hand
@@ -42,25 +41,25 @@ export default class About extends Component {
           Concept and Imagineering
         </Typography>
         <Typography type="body1" paragraph>
-            Carissa Church ’18 and Grace Crook ‘18
+          Carissa Church ’18 and Grace Crook ‘18
           <br />Chris Carlson ’87, Student Life
         </Typography>
         <Typography type="subheading" gutterBottom>
           Incubation Team
         </Typography>
         <Typography type="body1" paragraph>
-            Ezeanyinabia ‘Eze’ Anyanwu ’17, Adam Bartholomew ’17, and James Kempf ‘17
+          Ezeanyinabia ‘Eze’ Anyanwu ’17, Adam Bartholomew ’17, and James Kempf ‘17
           <br /> Dr. Russ Tuck, Summer Practicum in Computer Science program (2016)
         </Typography>
         <Typography type="subheading" gutterBottom>
-              Product Deployment and Support
+          Product Deployment and Support
         </Typography>
         <Typography type="body1" paragraph>
-            Emmanuel Roussel ‘17 and Stephanie Powers &apos;17
+          Emmanuel Roussel ‘17 and Stephanie Powers &apos;17
           <br /> Chris Hansen, Jason Whitehouse ’99, Information Systems Group
         </Typography>
         <Typography type="subheading" gutterBottom>
-              Software Development Team, 2016/2017
+          Software Development Team, 2016/2017
         </Typography>
         <Typography type="body1" paragraph>
           Bradley Boutcher &apos;18, Matthew Felgate &apos;18, Jenny Kim &apos;19, Sam Nguyen
@@ -78,13 +77,13 @@ export default class About extends Component {
           Beneficient Philanthropes
         </Typography>
         <Typography type="body1" paragraph>
-            To the visionary benefactors who support the Summer Practicum in Computer Science
-            program at Gordon College, thank you!
+          To the visionary benefactors who support the Summer Practicum in Computer Science program
+          at Gordon College, thank you!
           <br /> And to Dr. D. Michael Lindsay, President, and Jennifer Jukanovich ’94, Vice
-            President for Student Life, thank you for
-            the opportunity to apply our learning in a creative, practical way!
-          <br /> And to our mentors and coaches in development and deployment, thank you for
-              your guidance and encouragement to try new things.
+          President for Student Life, thank you for the opportunity to apply our learning in a
+          creative, practical way!
+          <br /> And to our mentors and coaches in development and deployment, thank you for your
+          guidance and encouragement to try new things.
         </Typography>
         <Typography type="caption" gutterBottom>
           Found a bug?
