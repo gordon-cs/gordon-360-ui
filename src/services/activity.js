@@ -33,7 +33,7 @@ const get = activityCode => http.get(`activities/${activityCode}`);
  * Get advisors for an activity
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
- * @returns {[]} List of advisors
+ * @returns {Person[]} List of advisors
  */
 const getAdvisors = (activityCode, sessionCode) => http.get(`emails/activity/${activityCode}/advisors/session/${sessionCode}`);
 
@@ -49,7 +49,7 @@ const getAll = sessionCode => http.get(`activities/session/${sessionCode}`)
  * Get number of followers of an activity
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
- * @returns {int} Number of followers
+ * @returns {Number} Number of followers
  */
 const getFollowersNum = (activityCode, sessionCode) => http.get(`memberships/activity/${activityCode}/followers/${sessionCode}`);
 
@@ -57,7 +57,7 @@ const getFollowersNum = (activityCode, sessionCode) => http.get(`memberships/act
  * Get group administrators for an activity
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
- * @returns {[]} List of group administrators
+ * @returns {Person[]} List of group administrators
  */
 const getGroupAdmins = (activityCode, sessionCode) => http.get(`emails/activity/${activityCode}/group-admin/session/${sessionCode}`);
 
@@ -65,7 +65,7 @@ const getGroupAdmins = (activityCode, sessionCode) => http.get(`emails/activity/
  * Get number of members of an activity
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
- * @returns {int} Number of members
+ * @returns {Number} Number of members
  */
 const getMembersNum = (activityCode, sessionCode) => http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
 

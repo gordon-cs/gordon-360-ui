@@ -3,7 +3,7 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Email from 'material-ui-icons/Email';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
-import List from 'material-ui/List';
+import List, { ListItem } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -20,7 +20,7 @@ class ActivityProfile extends Component {
 
     this.state = {
       activityInfo: null,
-      // activityAdvisors: [],
+      activityAdvisors: [],
       activityFollowers: 0,
       activityGroupAdmins: [],
       activityMembers: 0,
@@ -33,14 +33,14 @@ class ActivityProfile extends Component {
     this.setState({ loading: true });
     const { sessionCode, activityCode } = this.props.match.params;
     const [activityInfo,
-      // activityAdvisors,
+      activityAdvisors,
       activityFollowers,
       activityGroupAdmins,
       activityMembers,
       activityStatus,
       sessionInfo] = await Promise.all([
       activity.get(activityCode),
-      // activity.getAdvisors(activityCode, sessionCode),
+      activity.getAdvisors(activityCode, sessionCode),
       activity.getFollowersNum(activityCode, sessionCode),
       activity.getGroupAdmins(activityCode, sessionCode),
       activity.getMembersNum(activityCode, sessionCode),
@@ -50,7 +50,7 @@ class ActivityProfile extends Component {
 
     this.setState({
       activityInfo,
-      // activityAdvisors,
+      activityAdvisors,
       activityFollowers,
       activityGroupAdmins,
       activityMembers,
@@ -64,45 +64,76 @@ class ActivityProfile extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      const { ActivityDescription: activityDescription } = this.state.activityInfo;
-      const { ActivityImagePath: activityImagePath } = this.state.activityInfo;
+      const {
+        ActivityDescription: activityDescription,
+        ActivityImagePath: activityImagePath,
+      } = this.state.activityInfo;
       const followers = this.state.activityFollowers;
       const members = this.state.activityMembers;
       const { SessionDescription: sessionDescription } = this.state.sessionInfo;
-      let admins;
       let groupContacts;
       if (this.state.activityGroupAdmins.length > 0) {
         groupContacts = (
-          <Typography type="body1">
-            <strong>Group Contacts:</strong>
-          </Typography>
-        );
-        admins = this.state.activityGroupAdmins
-          .map(activityGroupAdmins => (
-            <List
-              className="gordon-activity-profile"
-              dense
-              disablePadding
-              key={activityGroupAdmins.Email}
-            >
-              <li>
-                <Typography type="body1">
-                  &emsp;{activityGroupAdmins.FirstName} {activityGroupAdmins.LastName}
-                  <IconButton
-                    classes={({ root: 'email-button' })}
-                    color="primary"
-                    href={`mailto:${activityGroupAdmins.Email}`}
-                    padding={0}
-                  >
-                    <Email
-                      color="primary"
-                      style={{ width: 16, height: 16 }}
-                    />
-                  </IconButton>
-                </Typography>
-              </li>
+          <section className="gordon-activity-profile">
+            <Typography type="body1">
+              <strong>Group Contacts:</strong>
+            </Typography>
+            <List dense disablePadding>
+              {this.state.activityGroupAdmins
+                .map(activityGroupAdmin => (
+                  <div>
+                    <ListItem className="contacts" key={activityGroupAdmin.Email}>
+                      <IconButton
+                        classes={({ root: 'email-button' })}
+                        color="primary"
+                        href={`mailto:${activityGroupAdmin.Email}`}
+                        padding={0}
+                      >
+                        <Email
+                          color="primary"
+                          style={{ width: 16, height: 16 }}
+                        />
+                      </IconButton>
+                      <Typography>
+                        &emsp;{activityGroupAdmin.FirstName} {activityGroupAdmin.LastName}
+                      </Typography>
+                    </ListItem>
+                  </div>
+                ))}
             </List>
-          ));
+          </section>
+        );
+      }
+      let advisors;
+      if (this.state.activityAdvisors.length > 0) {
+        advisors = (
+          <section className="gordon-activity-profile">
+            <Typography type="body1">
+              <strong>Advisors:</strong>
+            </Typography>
+            <List dense disablePadding>
+              {this.state.activityAdvisors
+                .map(activityAdvisor => (
+                  <ListItem className="contacts" key={activityAdvisor.Email}>
+                    <IconButton
+                      classes={({ root: 'email-button' })}
+                      color="primary"
+                      href={`mailto:${activityAdvisor.Email}`}
+                      padding={0}
+                    >
+                      <Email
+                        color="primary"
+                        style={{ width: 16, height: 16 }}
+                      />
+                    </IconButton>
+                    <Typography>
+                      &emsp;{activityAdvisor.FirstName} {activityAdvisor.LastName}
+                    </Typography>
+                  </ListItem>
+                ))}
+            </List>
+          </section>
+        );
       }
       const { ActivityBlurb: activityBlurb } = this.state.activityInfo;
       let description;
@@ -131,14 +162,15 @@ class ActivityProfile extends Component {
         <section className="gordon-activity-profile">
           <Typography align="center" type="display1">{activityDescription}</Typography>
           <Grid align="center" className="activity-image" item>
-            <img alt={activity.activityDescription} src={activityImagePath} />
+            <img alt={activity.activityDescription} src={activityImagePath} className="img" />
           </Grid>
           <Typography type="body1">
             <strong>Session: </strong>{sessionDescription}
           </Typography>
           {description}
           {website}
-          {groupContacts} {admins}
+          {groupContacts}
+          {advisors}
           <Typography type="body1">
             <strong>Current Activity Roster: </strong>
             {members} Members and {followers} followers
@@ -156,7 +188,7 @@ class ActivityProfile extends Component {
     return (
       <section>
         <Card>
-          <CardContent className="gordon-activity-profile">
+          <CardContent>
             {content}
           </CardContent>
         </Card>

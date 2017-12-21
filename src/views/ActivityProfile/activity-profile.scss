@@ -4,17 +4,18 @@
   .activity-image {
     margin-top: 25px;
     margin-bottom: 25px;
+
+    .img {
+      max-width: 100%;
+    }
   }
 
   .email-button {
     height: 24px;
     width: 24px;
   }
-}
 
-strong {
-  font-size: 15px;
-  font-weight: bold;
-  margin-top: 20px;
+  .contacts {
+    padding: 0 0 0 0;
+  }
 }
-
