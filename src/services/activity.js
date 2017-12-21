@@ -23,6 +23,14 @@ import http from './http';
  */
 
 /**
+ * @global
+ * @typedef Person
+ * @property {String} FirstName First name
+ * @property {String} LastName Last name
+ * @property {Stirng} Email Email address
+ */
+
+/**
  * Get an activity
  * @param {String} activityCode Identifier for an activity
  * @return {Promise.<Activity>} Activity
