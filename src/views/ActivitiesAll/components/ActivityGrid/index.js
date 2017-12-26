@@ -33,7 +33,7 @@ class GordonActivityGrid extends Component {
     if (Array.isArray(this.props.activities) && this.props.activities.length > 0) {
       content = this.props.activities.map(activity => (
         <GridListTile key={activity.ActivityCode} className="activity">
-          <Link to={`/activities/${this.props.sessionCode}/${activity.ActivityCode}`}>
+          <Link to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}>
             <img src={activity.ActivityImagePath} alt={activity.ActivityDescription} />
 
             <GridListTileBar
