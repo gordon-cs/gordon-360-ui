@@ -75,7 +75,7 @@ export default class Events extends Component {
     return (
       <section>
         <Grid container>
-          <Grid item xs={8} md={10} lg={10}>
+          <Grid item xs={8} md={10} lg={5}>
             <TextField
               id="search"
               label="Search"
@@ -90,7 +90,7 @@ export default class Events extends Component {
               Filters
             </Button>
           </Grid>
-          <Grid item xs={11} md={12} lg={12}>
+          <Grid item xs={11} md={12} lg={5}>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <FormGroup row>
                 <FormControlLabel
@@ -190,7 +190,7 @@ export default class Events extends Component {
               </FormGroup >
             </Collapse>
           </Grid>
-          <Grid item xs={12} md={12} lg={12}>
+          <Grid item xs={12} md={12} lg={5}>
             <List>
               { content }
             </List>
