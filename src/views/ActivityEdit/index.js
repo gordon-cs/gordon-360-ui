@@ -2,14 +2,12 @@ import Button from 'material-ui/Button';
 import Dropzone from 'react-dropzone';
 import React, { Component } from 'react';
 
-const getUploadContents = (image) => {
+const getUploadContents = image => {
   if (image) {
-    return (<img className="activity-edit-upload-preview" src={image.preview} alt="" />);
+    return <img className="activity-edit-upload-preview" src={image.preview} alt="" />;
   }
   return (
-    <p className="activity-edit-upload-description">
-      Drop files here or click to select files
-    </p>
+    <p className="activity-edit-upload-description">Drop files here or click to select files</p>
   );
 };
 
@@ -56,7 +54,9 @@ export default class ActivityEdit extends Component {
             <input type="textarea" id="editActivityJoining" />
           </label>
           <Button>cancel</Button>
-          <Button color="primary" type="submit">submit changes</Button>
+          <Button color="primary" type="submit">
+            submit changes
+          </Button>
         </form>
       </section>
     );

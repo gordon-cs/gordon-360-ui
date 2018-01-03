@@ -1,0 +1,37 @@
+@import '../../../../vars';
+
+.gordon-people-search {
+  .people-search-dropdown {
+    position: fixed;
+    max-height: 90%;
+    overflow-y: auto;
+  }
+
+  .people-search-suggestion {
+    display: block;
+  }
+
+  .people-search-input {
+    color: inherit;
+  }
+
+  .people-search-inkbar {
+    &::after {
+      background-color: $neutral-white;
+    }
+  }
+
+  .people-search-underline {
+    &::before {
+      background-color: $neutral-white;
+    }
+
+    &:hover {
+      &:not(.people-search-disabled) {
+        &::before {
+          background-color: $neutral-white;
+        }
+      }
+    }
+  }
+}

@@ -38,11 +38,7 @@ export default class GordonActivitiesAll extends Component {
       const { SessionCode: sessionCode } = await session.getCurrent();
       this.setState({ session: sessionCode });
 
-      const [
-        activities,
-        types,
-        sessions,
-      ] = await Promise.all([
+      const [activities, types, sessions] = await Promise.all([
         activity.getAll(sessionCode),
         activity.getTypes(sessionCode),
         session.getAll(),
@@ -70,7 +66,7 @@ export default class GordonActivitiesAll extends Component {
     });
   }
   filter(name) {
-    return async (event) => {
+    return async event => {
       await this.setState({ [name]: event.target.value });
       const { allActivities, type, search } = this.state;
       await this.setState({ activities: activity.filter(allActivities, type, search) });
@@ -85,27 +81,23 @@ export default class GordonActivitiesAll extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      content = (<GordonActivityGrid
-        activities={this.state.activities}
-        sessionCode={this.state.session}
-      />);
+      content = (
+        <GordonActivityGrid activities={this.state.activities} sessionCode={this.state.session} />
+      );
     }
 
-    const sessionOptions = this.state.sessions.map(({
-      SessionDescription: description,
-      SessionCode: code,
-    }) => (
-      <MenuItem
-        label={description}
-        value={code}
-        key={code}
-      >
-        {description}
-      </MenuItem>
-    ));
+    const sessionOptions = this.state.sessions.map(
+      ({ SessionDescription: description, SessionCode: code }) => (
+        <MenuItem label={description} value={code} key={code}>
+          {description}
+        </MenuItem>
+      ),
+    );
 
     const typeOptions = this.state.types.map(type => (
-      <MenuItem value={type} key={type}>{type}</MenuItem>
+      <MenuItem value={type} key={type}>
+        {type}
+      </MenuItem>
     ));
 
     return (
@@ -119,7 +111,7 @@ export default class GordonActivitiesAll extends Component {
                 onChange={this.changeSession}
                 input={<Input id="activity-session" />}
               >
-                { sessionOptions }
+                {sessionOptions}
               </Select>
             </FormControl>
           </Grid>
@@ -131,8 +123,10 @@ export default class GordonActivitiesAll extends Component {
                 onChange={this.filter('type')}
                 input={<Input id="activity-type" />}
               >
-                <MenuItem label="All" value=""><em>All</em></MenuItem>
-                { typeOptions }
+                <MenuItem label="All" value="">
+                  <em>All</em>
+                </MenuItem>
+                {typeOptions}
               </Select>
             </FormControl>
           </Grid>
@@ -147,7 +141,7 @@ export default class GordonActivitiesAll extends Component {
             />
           </Grid>
         </Grid>
-        { content }
+        {content}
       </section>
     );
   }

@@ -1,4 +1,19 @@
 {
   // Show ruler at 100 characters to help visualize linter line-length rule
-  "editor.rulers": [100]
+  "editor.rulers": [
+    100
+  ],
+  // Format code every time it is saved
+  "[javascript]": {
+    // "editor.formatOnSave": true
+  },
+  "[json]": {
+    // "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    // "editor.formatOnSave": true
+  },
+  "[scss]": {
+    // "editor.formatOnSave": true
+  }
 }

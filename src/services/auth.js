@@ -14,8 +14,7 @@ const base = process.env.REACT_APP_API_URL;
  * @param {Error} err An authentication error
  * @throws {Error} An error that can be shown to users (`error.message`)
  */
-const handleError = (err) => {
-  // eslint-disable-next-line
+const handleError = err => {
   console.error('Could not authenticate user:', err);
   if (err.error && err.error_description) {
     throw new Error(err.error_description);
@@ -52,8 +51,8 @@ const getAuth = (username, password) => {
  * @param {String} password User's password
  * @return {Promise.<undefined>} Resolved when token is refreshed
  */
-const authenticate = (username, password) => getAuth(username, password)
-  .then(token => storage.store('token', token));
+const authenticate = (username, password) =>
+  getAuth(username, password).then(token => storage.store('token', token));
 
 /**
  * Check if current session is authenticated
@@ -80,8 +79,4 @@ const signOut = () => {
   storage.remove('token');
 };
 
-export {
-  authenticate,
-  isAuthenticated,
-  signOut,
-};
+export { authenticate, isAuthenticated, signOut };

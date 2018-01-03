@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 import './activity-grid.css';
 
-const gridListCols = (width) => {
+const gridListCols = width => {
   switch (width) {
     default:
       return 2;
@@ -31,23 +31,21 @@ class GordonActivityGrid extends Component {
     );
 
     if (Array.isArray(this.props.activities) && this.props.activities.length > 0) {
-      content = this.props.activities
-        .map(activity => (
-          <GridListTile key={activity.ActivityCode} className="activity">
-            <Link to={`/activities/${this.props.sessionCode}/${activity.ActivityCode}`}>
+      content = this.props.activities.map(activity => (
+        <GridListTile key={activity.ActivityCode} className="activity">
+          <Link to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}>
+            <img src={activity.ActivityImagePath} alt={activity.ActivityDescription} />
 
-              <img src={activity.ActivityImagePath} alt={activity.ActivityDescription} />
-
-              <GridListTileBar
-                className="tile-bar"
-                classes={{
-                  title: 'title',
-                }}
-                title={activity.ActivityDescription}
-              />
-            </Link>
-          </GridListTile>
-        ));
+            <GridListTileBar
+              className="tile-bar"
+              classes={{
+                title: 'title',
+              }}
+              title={activity.ActivityDescription}
+            />
+          </Link>
+        </GridListTile>
+      ));
     }
 
     return (
@@ -63,12 +61,14 @@ class GordonActivityGrid extends Component {
 }
 
 GordonActivityGrid.propTypes = {
-  activities: PropTypes.arrayOf(PropTypes.shape({
-    ActivityCode: PropTypes.string,
-    ActivityDescription: PropTypes.string,
-    ActivityImagePath: PropTypes.string,
-    ActivityType: PropTypes.string,
-  })).isRequired,
+  activities: PropTypes.arrayOf(
+    PropTypes.shape({
+      ActivityCode: PropTypes.string,
+      ActivityDescription: PropTypes.string,
+      ActivityImagePath: PropTypes.string,
+      ActivityType: PropTypes.string,
+    }),
+  ).isRequired,
   sessionCode: PropTypes.string.isRequired,
   width: PropTypes.string.isRequired,
 };

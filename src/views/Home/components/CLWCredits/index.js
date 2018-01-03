@@ -43,14 +43,13 @@ export default class ChapelProgress extends Component {
       const { current, required } = this.state.chapelCredits;
       const remaining = required - current;
       const data = {
-        datasets: [{
-          data: [current, remaining],
-          backgroundColor: [gordonColors.primary.blue],
-        }],
-        labels: [
-          'CL&W Credits',
-          'CL&W Credits Remaining',
+        datasets: [
+          {
+            data: [current, remaining],
+            backgroundColor: [gordonColors.primary.blue],
+          },
         ],
+        labels: ['CL&W Credits', 'CL&W Credits Remaining'],
       };
       content = <Doughnut data={data} />;
       if (current === 1) {
@@ -62,12 +61,9 @@ export default class ChapelProgress extends Component {
     return (
       <Card>
         <CardContent>
-          <CardHeader
-            title="CL&W Credits"
-            subheader={subheader}
-          />
+          <CardHeader title="CL&W Credits" subheader={subheader} />
           {content}
-        </CardContent >
+        </CardContent>
       </Card>
     );
   }
