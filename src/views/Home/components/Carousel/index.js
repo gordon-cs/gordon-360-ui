@@ -37,7 +37,6 @@ export default class GordonCarousel extends Component {
     }
 
     let content;
-    //let subheader;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
