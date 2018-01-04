@@ -1,4 +1,4 @@
-import Card, { CardContent, CardHeader } from 'material-ui/Card';
+import Card, { CardContent } from 'material-ui/Card';
 import React, { Component } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 
@@ -37,7 +37,7 @@ export default class GordonCarousel extends Component {
     }
 
     let content;
-    let subheader;
+    //let subheader;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
