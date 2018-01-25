@@ -39,7 +39,7 @@ export default class Events extends Component {
     this.loadEvents();
   }
   filterEvents(name) {
-    return async (event) => {
+    return async event => {
       this.setState({ loading: true });
       await this.setState({ [name]: event.target.checked });
       const events = await gordonEvent.getFilteredEvents(this.state);
@@ -50,7 +50,7 @@ export default class Events extends Component {
     this.setState({ open: !this.state.open });
   }
   search(name) {
-    return async (event) => {
+    return async event => {
       await this.setState({
         [name]: event.target.value,
       });
@@ -69,12 +69,13 @@ export default class Events extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else if (this.state.events) {
-      content = this.state.filteredEvents
-        .map(currEvent => <EventItem event={currEvent} key={currEvent.Event_ID} />);
+      content = this.state.filteredEvents.map(currEvent => (
+        <EventItem event={currEvent} key={currEvent.Event_ID} />
+      ));
     }
     return (
       <section>
-        <Grid container>
+        <Grid container justify="center">
           <Grid item xs={8} md={10} lg={5}>
             <TextField
               id="search"
@@ -85,12 +86,12 @@ export default class Events extends Component {
               fullWidth
             />
           </Grid>
-          <Grid item xs={4} md={2} lg={2}>
+          <Grid item xs={4} md={2} lg={3}>
             <Button raised color="primary" onClick={this.handleExpandClick}>
               Filters
             </Button>
           </Grid>
-          <Grid item xs={11} md={12} lg={5}>
+          <Grid item xs={11} md={12} lg={8}>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <FormGroup row>
                 <FormControlLabel
@@ -99,7 +100,7 @@ export default class Events extends Component {
                       checked={this.state.academics}
                       onChange={this.filterEvents('academics')}
                     />
-                }
+                  }
                   label="Academics"
                 />
                 <FormControlLabel
@@ -108,16 +109,13 @@ export default class Events extends Component {
                       checked={this.state.admissions}
                       onChange={this.filterEvents('admissions')}
                     />
-                 }
+                  }
                   label="Admissions"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox
-                      checked={this.state.art}
-                      onChange={this.filterEvents('art')}
-                    />
-                 }
+                    <Checkbox checked={this.state.art} onChange={this.filterEvents('art')} />
+                  }
                   label="Arts"
                 />
                 <FormControlLabel
@@ -126,16 +124,13 @@ export default class Events extends Component {
                       checked={this.state.calendar}
                       onChange={this.filterEvents('calendar')}
                     />
-                 }
+                  }
                   label="Calendar Events"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox
-                      checked={this.state.cec}
-                      onChange={this.filterEvents('cec')}
-                    />
-                 }
+                    <Checkbox checked={this.state.cec} onChange={this.filterEvents('cec')} />
+                  }
                   label="CEC"
                 />
                 <FormControlLabel
@@ -144,7 +139,7 @@ export default class Events extends Component {
                       checked={this.state.chapelOffice}
                       onChange={this.filterEvents('chapelOffice')}
                     />
-                 }
+                  }
                   label="Chapel Office"
                 />
                 <FormControlLabel
@@ -153,25 +148,19 @@ export default class Events extends Component {
                       checked={this.state.studentLife}
                       onChange={this.filterEvents('studentLife')}
                     />
-                 }
+                  }
                   label="Student Life"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox
-                      checked={this.state.fair}
-                      onChange={this.filterEvents('fair')}
-                    />
-                 }
+                    <Checkbox checked={this.state.fair} onChange={this.filterEvents('fair')} />
+                  }
                   label="Fair or Expos"
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox
-                      checked={this.state.sports}
-                      onChange={this.filterEvents('Sports')}
-                    />
-                 }
+                    <Checkbox checked={this.state.sports} onChange={this.filterEvents('Sports')} />
+                  }
                   label="Athletics"
                 />
               </FormGroup>
@@ -184,16 +173,14 @@ export default class Events extends Component {
                       onChange={this.filterEvents('chapelCredits')}
                       aria-label="chapelCredits"
                     />
-                        }
+                  }
                   label="CL&W"
                 />
-              </FormGroup >
+              </FormGroup>
             </Collapse>
           </Grid>
-          <Grid item xs={12} md={12} lg={5}>
-            <List>
-              { content }
-            </List>
+          <Grid item xs={12} md={12} lg={8}>
+            <List>{content}</List>
           </Grid>
         </Grid>
       </section>
