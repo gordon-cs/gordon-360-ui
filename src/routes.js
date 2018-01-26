@@ -5,6 +5,7 @@ import ActivityProfile from './views/ActivityProfile';
 import Home from './views/Home';
 import Help from './views/Help';
 import Events from './views/Events';
+import Profile from './views/Profile';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 export default [
@@ -43,5 +44,10 @@ export default [
     name: 'Events',
     path: '/events',
     component: Events,
+  },
+  {
+    name: 'Profile',
+    path: '/profile',
+    component: Profile,
   },
 ];

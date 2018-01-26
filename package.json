@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "base64toblob": "0.0.2",
     "chart.js": "^2.7.1",
     "classnames": "^2.2.5",
     "downshift": "1.22.3",

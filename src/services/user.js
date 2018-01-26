@@ -165,6 +165,43 @@ import storage from './storage';
  * @property {String} PersonType Type of person
  */
 
+function formatName(profile) {
+  profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
+  return profile;
+}
+
+function setClass(profile) {
+  if (profile.PersonType === 'stu') {
+    switch (profile.Class) {
+      case '1':
+        profile.Class = 'Freshman';
+        break;
+      case '2':
+        profile.Class = 'Sophmore';
+        break;
+      case '3':
+        profile.Class = 'Junior';
+        break;
+      case '4':
+        profile.Class = 'Senior';
+        break;
+      case '5':
+        profile.Class = 'Graduate Student';
+        break;
+      case '6':
+        profile.Class = 'Undergraduate Conferred';
+        break;
+      case '7':
+        profile.Class = 'Graduate Conferred';
+        break;
+      default:
+        profile.Class = 'Student';
+    }
+  }
+
+  return profile;
+}
+
 /**
  * Get events attended by the user
  * @param {String} username username of the user
@@ -232,12 +269,21 @@ const getChapelCredits = async () => {
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<StaffProfileInfo|StudentProfileInfo>} Profile info
  */
-const getProfileInfo = username => {
+const getProfile = username => {
+  let profile;
   if (username) {
-    return http.get(`profiles/${username}`);
+    profile = http.get(`profiles/${username}`);
+  } else {
+    profile = http.get('profiles');
   }
+  return profile;
+};
 
-  return http.get('profiles');
+const getProfileInfo = async () => {
+  let profile = await getProfile();
+  formatName(profile);
+  setClass(profile);
+  return profile;
 };
 
 export default {
