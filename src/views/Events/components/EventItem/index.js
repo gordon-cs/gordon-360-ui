@@ -1,8 +1,8 @@
-
 // import { ListItem, ListItemText } from 'material-ui/List';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import Button from 'material-ui/Button';
 import React, { Component } from 'react';
 import Card, { CardContent, CardActions } from 'material-ui/Card';
 import Collapse from 'material-ui/transitions/Collapse';
@@ -22,7 +22,7 @@ export default class GordonEventItem extends Component {
   }
   render() {
     const { event } = this.props;
-    const subheader = `${event.date}, ${event.timeRange}`;
+    const subheader = `${event.dateTime}`;
 
     // let content;
     // if (event.Occurrences.length > 1) {
@@ -34,41 +34,21 @@ export default class GordonEventItem extends Component {
     //     ));
     // }
     return (
-      <section>
-        <Card >
+      <section hover>
+        <Card onClick={this.handleExpandClick} dense color="primary">
           <CardContent>
-            <CardActions>
-              <Typography>
-                {event.title}
-              </Typography>
-              <IconButton
-                onClick={this.handleExpandClick}
-                aria-expanded={this.state.open}
-                aria-label="Show more"
-              >
-                <ExpandMoreIcon />
-              </IconButton>
-            </CardActions>
-            <Typography type="caption">
-              {subheader}
-            </Typography>
-            <Typography type="caption" >
-              {event.location}
-            </Typography>
+            <Typography>{event.title}</Typography>
+            <Typography type="caption">{subheader}</Typography>
+            <Typography type="caption">{event.location}</Typography>
           </CardContent>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography>
-                Discription
-              </Typography>
-              <Typography type="caption">
-                {event.Description}
-              </Typography>
+              <Typography>Description</Typography>
+              <Typography type="caption">{event.Description}</Typography>
               {/* {content} */}
             </CardContent>
           </Collapse>
         </Card>
-
       </section>
     );
   }
