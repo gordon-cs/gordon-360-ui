@@ -161,7 +161,7 @@ export default class Events extends Component {
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={this.state.sports} onChange={this.filterEvents('Sports')} />
+                    <Checkbox checked={this.state.sports} onChange={this.filterEvents('sports')} />
                   }
                   label="Athletics"
                 />

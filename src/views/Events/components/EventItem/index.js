@@ -34,8 +34,8 @@ export default class GordonEventItem extends Component {
     //     ));
     // }
     return (
-      <section hover>
-        <Card onClick={this.handleExpandClick} dense color="primary">
+      <section>
+        <Card hover="true" onClick={this.handleExpandClick} dense color="primary">
           <CardContent>
             <Typography>{event.title}</Typography>
             <Typography type="caption">{subheader}</Typography>
