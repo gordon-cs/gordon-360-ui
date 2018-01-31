@@ -8,8 +8,6 @@ import Button from 'material-ui/Button';
 import Collapse from 'material-ui/transitions/Collapse';
 import Divider from 'material-ui/Divider';
 import Switch from 'material-ui/Switch';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
-import Card from 'material-ui/Card';
 
 import gordonEvent from './../../services/event';
 import EventItem from './components/EventItem';
@@ -183,28 +181,6 @@ export default class Events extends Component {
           </Grid>
           <Grid item xs={12} md={10} lg={8}>
             {content}
-            {/* <Card >
-              <Table >
-                <TableHead>
-                  <TableRow>   
-                    <TableCell>Event Title</TableCell>
-                    <TableCell >Date & Time</TableCell>
-                    <TableCell >Location</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.state.filteredEvents.map(n => {
-                    return (
-                      <TableRow key={n.id}>
-                        <TableCell>{n.title}</TableCell>
-                        <TableCell >{n.dateTime}</TableCell>
-                        <TableCell >{n.location}</TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </Card> */}
           </Grid>
         </Grid>
       </section>
