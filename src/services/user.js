@@ -169,7 +169,22 @@ function formatName(profile) {
   profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
   return profile;
 }
-
+function setOnOffCampus(data) {
+  switch (data.OnOffCampus) {
+    case 'O':
+      data.OnOffCampus = 'Off Campus';
+      break;
+    case 'A':
+      data.OnOffCampus = 'Away';
+      break;
+    case 'D':
+      'Deferred';
+      data.OnOffCampus = '';
+    default:
+      data.OnOffCampus = 'On Campus';
+  }
+  return data;
+}
 function setClass(profile) {
   if (profile.PersonType === 'stu') {
     switch (profile.Class) {
@@ -278,15 +293,21 @@ const getProfile = username => {
   }
   return profile;
 };
-
+const getMemberships = id => {
+  let activities;
+  activities = http.get(`/memberships/student/${id}`);
+  return activities;
+};
 const getProfileInfo = async () => {
   let profile = await getProfile();
   formatName(profile);
   setClass(profile);
+  setOnOffCampus(profile);
   return profile;
 };
 
 export default {
+  getMemberships,
   getAttendedEvents,
   getChapelCredits,
   getImage,
