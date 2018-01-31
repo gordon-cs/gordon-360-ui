@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import List from 'material-ui/List';
 import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
 import { FormGroup, FormControlLabel } from 'material-ui/Form';
