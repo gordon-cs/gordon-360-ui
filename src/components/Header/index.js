@@ -10,14 +10,15 @@ import { Route, Switch } from 'react-router-dom';
 
 import './header.css';
 import GordonGlobalMenu from './components/GlobalMenu';
+import GordonPeopleSearch from './components/PeopleSearch';
 import routes from '../../routes';
 
-const getRouteName = (route) => {
+const getRouteName = route => {
   if (route.name) {
     return () => (
       <span>
         <DocumentTitle title={`${route.name} | Gordon 360`} />
-        { route.name }
+        {route.name}
       </span>
     );
   }
@@ -55,7 +56,8 @@ export default class GordonHeader extends Component {
                 ))}
               </Switch>
             </Typography>
-            <div className="global-menu-container">
+            <div className="right-side-container">
+              <GordonPeopleSearch />
               <GordonGlobalMenu onSignOut={this.props.onSignOut} />
             </div>
           </Toolbar>

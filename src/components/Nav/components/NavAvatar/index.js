@@ -29,10 +29,7 @@ class GordonNavAvatar extends Component {
   async componentWillMount() {
     const { name, user_name: username } = user.getLocalInfo();
     this.setState({ name, username });
-    const [
-      { Email: email },
-      { def: defaultImage, pref: preferredImage },
-    ] = await Promise.all([
+    const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
       await user.getProfileInfo(),
       await user.getImage(),
     ]);
@@ -55,12 +52,15 @@ class GordonNavAvatar extends Component {
 
     let avatar = <Avatar className="avatar placeholder">{this.getInitials()}</Avatar>;
     if (this.state.image) {
-      avatar = <Avatar className="avatar image" src={`data:image/jpg;base64,${this.state.image}`} />;
+      avatar = (
+        <Avatar className="avatar image" src={`data:image/jpg;base64,${this.state.image}`} />
+      );
     }
 
     // Link component to be used with Button component
-    const buttonLink = ({ ...props }) =>
-      <Link {...props} to={`/profile/${this.state.username}`} onClick={this.props.onLinkClick} />;
+    const buttonLink = ({ ...props }) => (
+      <Link {...props} to={`/profile/${this.state.username}`} onClick={this.props.onLinkClick} />
+    );
 
     return (
       <Button
