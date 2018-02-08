@@ -14,9 +14,23 @@ export default class Orientation extends Component {
 
   handleExpandClick = () => {
     this.setState({ expanded: !this.state.expanded });
-  }
+  };
 
   render() {
+    let idPhotoAvatar;
+    let idPhotoSubheader;
+    let financialHoldAvatar = 'yellow-avatar';
+    let tasksComplete = Math.round(Math.random() * 100);
+    let tasksTotal = Math.round(Math.random() * 100);
+    if (tasksTotal < tasksComplete) tasksComplete = tasksTotal;
+
+    if (Math.round(Math.random()) === 0) {
+      idPhotoAvatar = 'green-avatar';
+      idPhotoSubheader = 'Completed!';
+    } else {
+      idPhotoAvatar = 'red-avatar';
+      idPhotoSubheader = 'Not received';
+    }
 
     return (
       <Grid container justify="center">
@@ -24,12 +38,12 @@ export default class Orientation extends Component {
           <figure>
             <figcaption>
               <h3>Tasks Complete</h3>
-              {3} of {5}
+              {tasksComplete} of {tasksTotal}
             </figcaption>
             <LinearProgress
               className="orientation-progress"
               mode="determinate"
-              value={60}
+              value={tasksComplete / tasksTotal * 100}
             />
           </figure>
         </Grid>
@@ -37,11 +51,9 @@ export default class Orientation extends Component {
           <Card>
             <CardContent>
               <CardHeader
-                avatar={
-                  <Avatar className="green-avatar" />
-                }
+                avatar={<Avatar className={idPhotoAvatar} />}
                 title="ID Photo Received"
-                subheader="Completed!"
+                subheader={idPhotoSubheader}
               />
             </CardContent>
             <CardActions>
@@ -55,8 +67,8 @@ export default class Orientation extends Component {
             </CardActions>
             <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
               <CardContent>
-                "This is a placeholder string that will be replaced by information about the
-                item that needs to be completed."
+                "This is a placeholder string that will be replaced by information about the item
+                that needs to be completed."
               </CardContent>
             </Collapse>
           </Card>
@@ -65,9 +77,7 @@ export default class Orientation extends Component {
           <Card>
             <CardContent>
               <CardHeader
-                avatar={
-                  <Avatar className="yellow-avatar" />
-                }
+                avatar={<Avatar className={financialHoldAvatar} />}
                 title="Financial Hold"
                 subheader="In Progress"
               />
@@ -82,9 +92,7 @@ export default class Orientation extends Component {
               </IconButton>
             </CardActions>
             <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-              <CardContent>
-                "More placeholder text."
-              </CardContent>
+              <CardContent>"More placeholder text."</CardContent>
             </Collapse>
           </Card>
         </Grid>
@@ -92,4 +100,3 @@ export default class Orientation extends Component {
     );
   }
 }
-
