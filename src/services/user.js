@@ -286,20 +286,41 @@ const getChapelCredits = async () => {
  */
 const getProfile = username => {
   let profile;
+  console.log(username);
   if (username) {
     profile = http.get(`profiles/${username}`);
   } else {
+    console.log('hey');
     profile = http.get('profiles');
   }
   return profile;
 };
-const getMemberships = id => {
-  let activities;
-  activities = http.get(`/memberships/student/${id}`);
-  return activities;
+
+function toggleMobilePhonePrivacy() {
+  let profile = getProfileInfo();
+  let currentPrivacy = profile.IsMobilePhonePrivate;
+  let newPrivacy = currentPrivacy ? 'N' : 'Y';
+  let setPrivacy = async function(value) {
+    return http
+      .put('profiles/mobile_privacy/' + value, value)
+      .then(res => {})
+      .catch(reason => {
+        //TODO handle error
+      });
+  };
+
+  setPrivacy(newPrivacy);
+}
+
+const getMemberships = async id => {
+  let memberships;
+  memberships = await http.get(`memberships/student/${id}`);
+  console.log(memberships);
+  return memberships;
 };
-const getProfileInfo = async () => {
-  let profile = await getProfile();
+const getProfileInfo = async username => {
+  let profile = await getProfile(username);
+  console.log(profile);
   formatName(profile);
   setClass(profile);
   setOnOffCampus(profile);
@@ -307,6 +328,7 @@ const getProfileInfo = async () => {
 };
 
 export default {
+  toggleMobilePhonePrivacy,
   getMemberships,
   getAttendedEvents,
   getChapelCredits,

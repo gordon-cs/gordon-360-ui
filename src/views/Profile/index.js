@@ -2,39 +2,47 @@ import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
 import Divider from 'material-ui/Divider/Divider';
 import Card, { CardMedia, CardContent, CardHeader } from 'material-ui/Card';
-import Modal from 'material-ui/Modal';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 
-import { gordonColors } from './../../theme';
-import activity from '../../services/activity';
 import user from './../../services/user';
+import { gordonColors } from '../../theme';
+import Activities from './Components/ActivityList';
 import GordonLoader from './../../components/Loader';
 
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
+    this.handleExpandClick = this.handleExpandClick.bind(this);
+
     this.state = {
+      unsername: String,
+      button: String,
       image: null,
       loading: true,
       profile: {},
-      activities: {},
-      memberships: {},
+      activities: [],
     };
   }
-  componentWillMount() {
-    this.loadProfile();
+  handleExpandClick() {
+    this.changePrivacy();
+    user.toggleMobilePhonePrivacy();
   }
-  async getActivities(activities) {
-    let memberships = [];
-    for (let i = 0; i < activities.length; i++) {
-      let membership = await activity.getSpecificActivity(activities[i].ActivityCode);
-      memberships[i] = membership;
+
+  changePrivacy() {
+    if (this.state.button === 'Make Public') {
+      this.setState({ button: 'Make Private' });
+    } else {
+      this.setState({ button: 'Make Public' });
     }
-    this.setState({ memberships });
+  }
+
+  componentWillMount() {
+    const { username } = this.props.match.params.username;
+    this.loadProfile();
   }
   async loadProfile() {
     this.setState({ loading: true });
@@ -44,113 +52,123 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
-
-      const image = preferredImage || defaultImage;
-      this.setState({ image });
-
       const activities = await user.getMemberships(profile.ID);
-      this.setState({ activities });
-
-      this.getActivities(this.state.activities);
+      const image = preferredImage || defaultImage;
+      this.setState({ image, loading: false, activities });
     } catch (error) {
       this.setState({ error });
     }
+    if (this.state.profile.IsMobilePhonePrivate === 0) {
+      this.setState({ button: 'Make Private' });
+    } else {
+      this.setState({ button: 'Make Public' });
+    }
   }
   render() {
-    console.log(this.state.memberships);
-    console.log(this.state.activities[2]);
+    console.log(this.state.profile);
 
     const style = {
       width: '100%',
     };
+    const button = {
+      background: gordonColors.primary.cyan,
+      color: 'white',
+    };
 
-    // const content = this.state.activities.map(currEvent => (
-    //   <EventItem event={currEvent} key={currEvent.Event_ID} />
-    // ));
+    let activityList;
+    if (!this.state.activities) {
+      activityList = <GordonLoader />;
+    } else {
+      activityList = this.state.activities.map(activity => (
+        <Activities Activity={activity} key={activity.MembershipID} />
+      ));
+    }
 
-    return (
-      <div>
-        <Grid container>
-          <Grid item xs={12} sm={10} md={6} lg={4}>
-            <Card>
-              <CardContent>
-                <Grid container justify="center">
-                  <Grid item xs={12} sm={6} md={6} lg={4}>
-                    <CardHeader
-                      title={this.state.profile.fullName}
-                      subheader={this.state.profile.Class}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6} lg={4}>
-                    <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
-                  </Grid>
+    let content = (
+      <Grid container>
+        <Grid item xs={12} sm={10} md={6} lg={6}>
+          <Card>
+            <CardContent>
+              <Grid container justify="center">
+                <Grid item xs={12} sm={6} md={6} lg={4}>
+                  <CardHeader
+                    title={this.state.profile.fullName}
+                    subheader={this.state.profile.Class}
+                  />
                 </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={4} md={6}>
-            <Card>
-              <CardContent>
-                <CardHeader title="Home Address" />
-                <List>
-                  <ListItem>
-                    <Typography>
-                      Home Town: {this.state.profile.HomeCity}, {this.state.profile.HomeState}
-                    </Typography>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Typography>Street Number: {this.state.profile.HomeStreet2}</Typography>
-                  </ListItem>
-                  <Divider />
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <Card>
-              <CardContent>
-                <CardHeader title="Personal Information" />
-                <List>
-                  <ListItem>
-                    <Typography>Major: {this.state.profile.Major1Description}</Typography>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Typography>Student ID: {this.state.profile.ID}</Typography>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Typography>Email: {this.state.profile.Email}</Typography>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Typography>On/Off Campus: {this.state.profile.Email}</Typography>
-                  </ListItem>
-                  <Divider />
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={6}>
-            <Card>
-              <CardContent>
-                <CardHeader title="Activities" />
-                <List>
-                  <ListItem>
-                    <Typography>{this.state.memberships.ActivityDescription}</Typography>
-                  </ListItem>
-                  <Divider />
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
+                <Grid item xs={12} sm={6} md={6} lg={4}>
+                  <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
         </Grid>
-      </div>
+        <Grid item xs={12} sm={4} md={6} lg={6}>
+          <Card>
+            <CardContent>
+              <CardHeader title="Home Address" />
+              <List>
+                <Divider />
+                <ListItem>
+                  <Typography>Street Number: {this.state.profile.HomeStreet2}</Typography>
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <Typography>
+                    Home Town: {this.state.profile.HomeCity}, {this.state.profile.HomeState}
+                  </Typography>
+                </ListItem>
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6} md={6} lg={6}>
+          <Card>
+            <CardContent>
+              <CardHeader title="Personal Information" />
+              <List>
+                <ListItem>
+                  <Typography>Major: {this.state.profile.Major1Description}</Typography>
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <Grid item xs={6} sm={7} md={8} lg={10}>
+                    <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
+                  </Grid>
+                  <Grid item xs={6} sm={5} md={4} lg={1}>
+                    <Button onClick={this.handleExpandClick} raised style={button}>
+                      {this.state.button}
+                    </Button>
+                  </Grid>
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <Typography>Student ID: {this.state.profile.ID}</Typography>
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <Typography>Email: {this.state.profile.Email}</Typography>
+                </ListItem>
+                <Divider />
+                <ListItem>
+                  <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
+                </ListItem>
+                <Divider />
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={10} md={6} lg={6}>
+          <Card>
+            <CardContent>
+              <CardHeader title="Activities" />
+              <List>{activityList}</List>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     );
+
+    return <div>{content}</div>;
   }
 }

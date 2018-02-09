@@ -47,7 +47,7 @@ export default [
   },
   {
     name: 'Profile',
-    path: '/profile',
+    path: '/profile/:username',
     component: Profile,
   },
 ];

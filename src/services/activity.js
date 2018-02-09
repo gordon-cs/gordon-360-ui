@@ -100,10 +100,10 @@ const getStatus = (activityCode, sessionCode) =>
 const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/types`);
 /**
  * Get group administrators for an activity
- * @param {String} activityCode Identifier for an activity
+ * @param {String} ActivityCode Identifier for an activity
  * @returns {Avtivity} the Activity of a activity code
  */
-const getSpecificActivity = activityCode => http.get(`/activities/${activityCode}`);
+const getSpecificActivity = async ActivityCode => http.get(`/activities/${ActivityCode}`);
 
 /**
  * Filter a list of activities by type and description

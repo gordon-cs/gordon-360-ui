@@ -1,4 +1,3 @@
-
 // import { ListItem, ListItemText } from 'material-ui/List';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
@@ -35,40 +34,20 @@ export default class GordonEventItem extends Component {
     // }
     return (
       <section>
-        <Card >
+        <Card onClick={this.handleExpandClick}>
           <CardContent>
-            <CardActions>
-              <Typography>
-                {event.title}
-              </Typography>
-              <IconButton
-                onClick={this.handleExpandClick}
-                aria-expanded={this.state.open}
-                aria-label="Show more"
-              >
-                <ExpandMoreIcon />
-              </IconButton>
-            </CardActions>
-            <Typography type="caption">
-              {subheader}
-            </Typography>
-            <Typography type="caption" >
-              {event.location}
-            </Typography>
+            <Typography>{event.title}</Typography>
+            <Typography type="caption">{subheader}</Typography>
+            <Typography type="caption">{event.location}</Typography>
           </CardContent>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography>
-                Discription
-              </Typography>
-              <Typography type="caption">
-                {event.Description}
-              </Typography>
+              <Typography>Discription</Typography>
+              <Typography type="caption">{event.Description}</Typography>
               {/* {content} */}
             </CardContent>
           </Collapse>
         </Card>
-
       </section>
     );
   }
