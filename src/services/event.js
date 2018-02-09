@@ -202,11 +202,8 @@ const getFilteredEvents = async filters => {
       // search through the event title
       if (filteredEvents[i].title.toLowerCase().includes(filters.search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
-        // search through the datezZ
-      } else if (filteredEvents[i].timeRange.toLowerCase().includes(filters.search.toLowerCase())) {
-        shownEvents.push(filteredEvents[i]);
-        // search through the event times
-      } else if (filteredEvents[i].date.toLowerCase().includes(filters.search.toLowerCase())) {
+        // search through the date
+      } else if (filteredEvents[i].dateTime.toLowerCase().includes(filters.search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
         // search through the location
       } else if (filteredEvents[i].location.toLowerCase().includes(filters.search.toLowerCase())) {
