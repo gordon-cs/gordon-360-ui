@@ -1,7 +1,7 @@
 import Grid from 'material-ui/Grid';
 import React, { Component } from 'react';
 import Divider from 'material-ui/Divider/Divider';
-import Card, { CardMedia, CardContent, CardHeader } from 'material-ui/Card';
+import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import List from 'material-ui/List/List';
