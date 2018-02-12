@@ -1,17 +1,19 @@
 import Button from 'material-ui/Button';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Email from 'material-ui-icons/Email';
 import Grid from 'material-ui/Grid';
-import IconButton from 'material-ui/IconButton';
-import List, { ListItem } from 'material-ui/List';
+import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import activity from '../../services/activity';
+import membership from '../../services/membership';
 import './activity-profile.css';
+import Advisors from './components/Advisors';
 import GordonLoader from '../../components/Loader';
+import GroupContacts from './components/GroupContacts';
+import Membership from './components/Membership';
 import session from '../../services/session';
 
 class ActivityProfile extends Component {
@@ -23,7 +25,8 @@ class ActivityProfile extends Component {
       activityAdvisors: [],
       activityFollowers: 0,
       activityGroupAdmins: [],
-      activityMembers: 0,
+      activityMembersNum: 0,
+      activityMembers: [],
       activityStatus: null,
       sessionInfo: null,
     };
@@ -32,18 +35,23 @@ class ActivityProfile extends Component {
   async componentWillMount() {
     this.setState({ loading: true });
     const { sessionCode, activityCode } = this.props.match.params;
-    const [activityInfo,
+    const [
+      activityInfo,
       activityAdvisors,
       activityFollowers,
       activityGroupAdmins,
+      activityMembersNum,
       activityMembers,
       activityStatus,
-      sessionInfo] = await Promise.all([
+      sessionInfo,
+    ] = await Promise.all([
       activity.get(activityCode),
       activity.getAdvisors(activityCode, sessionCode),
-      activity.getFollowersNum(activityCode, sessionCode),
+      membership.getFollowersNum(activityCode, sessionCode),
       activity.getGroupAdmins(activityCode, sessionCode),
-      activity.getMembersNum(activityCode, sessionCode),
+      membership.getMembersNum(activityCode, sessionCode),
+      membership.getAll(activityCode),
+      // membership.get(activityCode, sessionCode),
       activity.getStatus(activityCode, sessionCode),
       session.get(sessionCode),
     ]);
@@ -53,6 +61,7 @@ class ActivityProfile extends Component {
       activityAdvisors,
       activityFollowers,
       activityGroupAdmins,
+      activityMembersNum,
       activityMembers,
       activityStatus,
       sessionInfo,
@@ -60,6 +69,10 @@ class ActivityProfile extends Component {
     });
   }
   render() {
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
@@ -69,78 +82,17 @@ class ActivityProfile extends Component {
         ActivityImagePath: activityImagePath,
       } = this.state.activityInfo;
       const followers = this.state.activityFollowers;
-      const members = this.state.activityMembers;
+      const membersNum = this.state.activityMembersNum;
       const { SessionDescription: sessionDescription } = this.state.sessionInfo;
-      let groupContacts;
-      if (this.state.activityGroupAdmins.length > 0) {
-        groupContacts = (
-          <section className="gordon-activity-profile">
-            <Typography type="body1">
-              <strong>Group Contacts:</strong>
-            </Typography>
-            <List dense disablePadding>
-              {this.state.activityGroupAdmins
-                .map(activityGroupAdmin => (
-                  <div>
-                    <ListItem className="contacts" key={activityGroupAdmin.Email}>
-                      <IconButton
-                        classes={({ root: 'email-button' })}
-                        color="primary"
-                        href={`mailto:${activityGroupAdmin.Email}`}
-                        padding={0}
-                      >
-                        <Email
-                          color="primary"
-                          style={{ width: 16, height: 16 }}
-                        />
-                      </IconButton>
-                      <Typography>
-                        &emsp;{activityGroupAdmin.FirstName} {activityGroupAdmin.LastName}
-                      </Typography>
-                    </ListItem>
-                  </div>
-                ))}
-            </List>
-          </section>
-        );
-      }
-      let advisors;
-      if (this.state.activityAdvisors.length > 0) {
-        advisors = (
-          <section className="gordon-activity-profile">
-            <Typography type="body1">
-              <strong>Advisors:</strong>
-            </Typography>
-            <List dense disablePadding>
-              {this.state.activityAdvisors
-                .map(activityAdvisor => (
-                  <ListItem className="contacts" key={activityAdvisor.Email}>
-                    <IconButton
-                      classes={({ root: 'email-button' })}
-                      color="primary"
-                      href={`mailto:${activityAdvisor.Email}`}
-                      padding={0}
-                    >
-                      <Email
-                        color="primary"
-                        style={{ width: 16, height: 16 }}
-                      />
-                    </IconButton>
-                    <Typography>
-                      &emsp;{activityAdvisor.FirstName} {activityAdvisor.LastName}
-                    </Typography>
-                  </ListItem>
-                ))}
-            </List>
-          </section>
-        );
-      }
+      let groupContacts = <GroupContacts groupAdmin={this.state.activityGroupAdmins} />;
+      let advisors = <Advisors advisors={this.state.activityAdvisors} />;
       const { ActivityBlurb: activityBlurb } = this.state.activityInfo;
       let description;
       if (activityBlurb.length !== 0) {
         description = (
           <Typography type="body1">
-            <strong>Description: </strong>{activityBlurb}
+            <strong>Description: </strong>
+            {activityBlurb}
           </Typography>
         );
       }
@@ -154,18 +106,22 @@ class ActivityProfile extends Component {
           </Typography>
         );
       }
+      let membership = <Membership members={this.state.activityMembers} />;
       let disableButtons;
       if (this.state.activityStatus === 'CLOSED') {
         disableButtons = true;
       }
       content = (
         <section className="gordon-activity-profile">
-          <Typography align="center" type="display1">{activityDescription}</Typography>
+          <Typography align="center" type="display1">
+            {activityDescription}
+          </Typography>
           <Grid align="center" className="activity-image" item>
             <img alt={activity.activityDescription} src={activityImagePath} className="img" />
           </Grid>
           <Typography type="body1">
-            <strong>Session: </strong>{sessionDescription}
+            <strong>Session: </strong>
+            {sessionDescription}
           </Typography>
           {description}
           {website}
@@ -173,12 +129,17 @@ class ActivityProfile extends Component {
           {advisors}
           <Typography type="body1">
             <strong>Current Activity Roster: </strong>
-            {members} Members and {followers} followers
+            {membersNum} Members and {followers} followers
           </Typography>
+          {membership}
           <div>
             <CardActions>
-              <Button color="primary" disabled={disableButtons} raised>Subscribe</Button>
-              <Button color="primary" disabled={disableButtons} raised>Join</Button>
+              <Button color="primary" disabled={disableButtons} raised>
+                Subscribe
+              </Button>
+              <Button color="primary" disabled={disableButtons} raised>
+                Join
+              </Button>
             </CardActions>
           </div>
         </section>
@@ -188,9 +149,7 @@ class ActivityProfile extends Component {
     return (
       <section>
         <Card>
-          <CardContent>
-            {content}
-          </CardContent>
+          <CardContent>{content}</CardContent>
         </Card>
       </section>
     );

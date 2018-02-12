@@ -57,15 +57,6 @@ const getAll = sessionCode =>
     .then(activities => sortBy(activities, activity => activity.ActivityDescription));
 
 /**
- * Get number of followers of an activity
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @returns {Number} Number of followers
- */
-const getFollowersNum = (activityCode, sessionCode) =>
-  http.get(`memberships/activity/${activityCode}/followers/${sessionCode}`);
-
-/**
  * Get group administrators for an activity
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
@@ -73,15 +64,6 @@ const getFollowersNum = (activityCode, sessionCode) =>
  */
 const getGroupAdmins = (activityCode, sessionCode) =>
   http.get(`emails/activity/${activityCode}/group-admin/session/${sessionCode}`);
-
-/**
- * Get number of members of an activity
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @returns {Number} Number of members
- */
-const getMembersNum = (activityCode, sessionCode) =>
-  http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
 
 /**
  * Get the status of an activity
@@ -127,9 +109,7 @@ export default {
   get,
   getAdvisors,
   getAll,
-  getFollowersNum,
   getGroupAdmins,
-  getMembersNum,
   getStatus,
   getTypes,
   filter,
