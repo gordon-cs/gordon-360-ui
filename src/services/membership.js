@@ -36,22 +36,27 @@ import http from './http';
  * @return {Member[]} List of members in given session
  */
 const get = (activityCode, sessionCode) => {
-  let allMembership = http.get(`memberships/activity/${activityCode}`);
-  console.log(allMembership);
-  let currentSessionMembership;
-  allMembership.forEach(element => {
-    for (var i = 0; i < allMembership.length; i++) {
-      if (allMembership[i].SessionCode === sessionCode) {
-        currentSessionMembership.push(allMembership[i]);
-        console.log('in if');
-      }
-      console.log(i + ' = i');
-    }
+  let allMembership = http.get(`memberships/activity/${activityCode}`).then(function(result) {
+    return filterCurrent(result, sessionCode);
   });
-  console.log(currentSessionMembership);
-  return currentSessionMembership;
+  return allMembership;
 };
 
+/**
+ * Filters members for current session
+ * @param {Member[]} memberArray List of all members in an activity
+ * @param {String} sessionCode Identifier for a session
+ * @return {Member[]} List of filtered members for given session
+ */
+const filterCurrent = (memberArray, sessionCode) => {
+  let currentSessionMembership = [];
+  for (var i = 0; i < memberArray.length; i++) {
+    if (memberArray[i].SessionCode === sessionCode) {
+      currentSessionMembership.push(memberArray[i]);
+    }
+  }
+  return currentSessionMembership;
+};
 /**
  * Get all memberships
  * @param {String} activityCode Identifier for an activity

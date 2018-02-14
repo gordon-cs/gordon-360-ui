@@ -50,8 +50,8 @@ class ActivityProfile extends Component {
       membership.getFollowersNum(activityCode, sessionCode),
       activity.getGroupAdmins(activityCode, sessionCode),
       membership.getMembersNum(activityCode, sessionCode),
-      membership.getAll(activityCode),
-      // membership.get(activityCode, sessionCode),
+      // membership.getAll(activityCode),
+      membership.get(activityCode, sessionCode),
       activity.getStatus(activityCode, sessionCode),
       session.get(sessionCode),
     ]);
