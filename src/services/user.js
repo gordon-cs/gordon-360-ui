@@ -178,8 +178,8 @@ function setOnOffCampus(data) {
       data.OnOffCampus = 'Away';
       break;
     case 'D':
-      'Deferred';
       data.OnOffCampus = '';
+      break;
     default:
       data.OnOffCampus = 'On Campus';
   }

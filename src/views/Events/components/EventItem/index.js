@@ -1,11 +1,9 @@
 // import { ListItem, ListItemText } from 'material-ui/List';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import React, { Component } from 'react';
-import Card, { CardContent, CardActions } from 'material-ui/Card';
+import Card, { CardContent } from 'material-ui/Card';
 import Collapse from 'material-ui/transitions/Collapse';
-import IconButton from 'material-ui/IconButton';
 import './event-item.css';
 
 export default class GordonEventItem extends Component {

@@ -148,7 +148,7 @@ export default class Profile extends Component {
                         >
                           <img src={require('./image.png')} alt="" style={style} />
                         </Dropzone>
-                        {preview && <img src={preview} alt="image preview" />}
+                        {preview && <img src={preview} alt="preview" />}
                       </DialogContent>
                       <DialogActions>
                         <Button onClick={this.handleClose} raised style={button}>
