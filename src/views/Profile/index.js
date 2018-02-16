@@ -7,7 +7,6 @@ import Typography from 'material-ui/Typography';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Dropzone from 'react-dropzone';
-import DropzoneComponent from 'react-dropzone-component';
 import Dialog, {
   DialogTitle,
   DialogActions,
