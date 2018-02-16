@@ -2,10 +2,7 @@ import Grid from 'material-ui/Grid';
 import PropTypes from 'prop-types';
 import Divider from 'material-ui/Divider/Divider';
 import React, { Component } from 'react';
-import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
-import List from 'material-ui/List/List';
-import ListItem from 'material-ui/List/ListItem';
 
 export default class Activities extends Component {
   constructor(props) {
@@ -23,7 +20,7 @@ export default class Activities extends Component {
       width: '90%',
     };
 
-    let content = (
+    return (
       <div>
         <Grid container>
           <Grid item xs={10} sm={10} md={10} lg={10}>
@@ -38,7 +35,6 @@ export default class Activities extends Component {
         <Divider />
       </div>
     );
-    return content;
   }
 }
 
