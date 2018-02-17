@@ -32,13 +32,15 @@ class ActivityProfile extends Component {
   async componentWillMount() {
     this.setState({ loading: true });
     const { sessionCode, activityCode } = this.props.match.params;
-    const [activityInfo,
+    const [
+      activityInfo,
       activityAdvisors,
       activityFollowers,
       activityGroupAdmins,
       activityMembers,
       activityStatus,
-      sessionInfo] = await Promise.all([
+      sessionInfo,
+    ] = await Promise.all([
       activity.get(activityCode),
       activity.getAdvisors(activityCode, sessionCode),
       activity.getFollowersNum(activityCode, sessionCode),
@@ -47,6 +49,7 @@ class ActivityProfile extends Component {
       activity.getStatus(activityCode, sessionCode),
       session.get(sessionCode),
     ]);
+    console.log(this.props);
 
     this.setState({
       activityInfo,
@@ -79,27 +82,23 @@ class ActivityProfile extends Component {
               <strong>Group Contacts:</strong>
             </Typography>
             <List dense disablePadding>
-              {this.state.activityGroupAdmins
-                .map(activityGroupAdmin => (
-                  <div>
-                    <ListItem className="contacts" key={activityGroupAdmin.Email}>
-                      <IconButton
-                        classes={({ root: 'email-button' })}
-                        color="primary"
-                        href={`mailto:${activityGroupAdmin.Email}`}
-                        padding={0}
-                      >
-                        <Email
-                          color="primary"
-                          style={{ width: 16, height: 16 }}
-                        />
-                      </IconButton>
-                      <Typography>
-                        &emsp;{activityGroupAdmin.FirstName} {activityGroupAdmin.LastName}
-                      </Typography>
-                    </ListItem>
-                  </div>
-                ))}
+              {this.state.activityGroupAdmins.map(activityGroupAdmin => (
+                <div>
+                  <ListItem className="contacts" key={activityGroupAdmin.Email}>
+                    <IconButton
+                      classes={{ root: 'email-button' }}
+                      color="primary"
+                      href={`mailto:${activityGroupAdmin.Email}`}
+                      padding={0}
+                    >
+                      <Email color="primary" style={{ width: 16, height: 16 }} />
+                    </IconButton>
+                    <Typography>
+                      &emsp;{activityGroupAdmin.FirstName} {activityGroupAdmin.LastName}
+                    </Typography>
+                  </ListItem>
+                </div>
+              ))}
             </List>
           </section>
         );
@@ -112,25 +111,21 @@ class ActivityProfile extends Component {
               <strong>Advisors:</strong>
             </Typography>
             <List dense disablePadding>
-              {this.state.activityAdvisors
-                .map(activityAdvisor => (
-                  <ListItem className="contacts" key={activityAdvisor.Email}>
-                    <IconButton
-                      classes={({ root: 'email-button' })}
-                      color="primary"
-                      href={`mailto:${activityAdvisor.Email}`}
-                      padding={0}
-                    >
-                      <Email
-                        color="primary"
-                        style={{ width: 16, height: 16 }}
-                      />
-                    </IconButton>
-                    <Typography>
-                      &emsp;{activityAdvisor.FirstName} {activityAdvisor.LastName}
-                    </Typography>
-                  </ListItem>
-                ))}
+              {this.state.activityAdvisors.map(activityAdvisor => (
+                <ListItem className="contacts" key={activityAdvisor.Email}>
+                  <IconButton
+                    classes={{ root: 'email-button' }}
+                    color="primary"
+                    href={`mailto:${activityAdvisor.Email}`}
+                    padding={0}
+                  >
+                    <Email color="primary" style={{ width: 16, height: 16 }} />
+                  </IconButton>
+                  <Typography>
+                    &emsp;{activityAdvisor.FirstName} {activityAdvisor.LastName}
+                  </Typography>
+                </ListItem>
+              ))}
             </List>
           </section>
         );
@@ -140,7 +135,8 @@ class ActivityProfile extends Component {
       if (activityBlurb.length !== 0) {
         description = (
           <Typography type="body1">
-            <strong>Description: </strong>{activityBlurb}
+            <strong>Description: </strong>
+            {activityBlurb}
           </Typography>
         );
       }
@@ -160,12 +156,15 @@ class ActivityProfile extends Component {
       }
       content = (
         <section className="gordon-activity-profile">
-          <Typography align="center" type="display1">{activityDescription}</Typography>
+          <Typography align="center" type="display1">
+            {activityDescription}
+          </Typography>
           <Grid align="center" className="activity-image" item>
             <img alt={activity.activityDescription} src={activityImagePath} className="img" />
           </Grid>
           <Typography type="body1">
-            <strong>Session: </strong>{sessionDescription}
+            <strong>Session: </strong>
+            {sessionDescription}
           </Typography>
           {description}
           {website}
@@ -177,8 +176,12 @@ class ActivityProfile extends Component {
           </Typography>
           <div>
             <CardActions>
-              <Button color="primary" disabled={disableButtons} raised>Subscribe</Button>
-              <Button color="primary" disabled={disableButtons} raised>Join</Button>
+              <Button color="primary" disabled={disableButtons} raised>
+                Subscribe
+              </Button>
+              <Button color="primary" disabled={disableButtons} raised>
+                Join
+              </Button>
             </CardActions>
           </div>
         </section>
@@ -188,9 +191,7 @@ class ActivityProfile extends Component {
     return (
       <section>
         <Card>
-          <CardContent>
-            {content}
-          </CardContent>
+          <CardContent>{content}</CardContent>
         </Card>
       </section>
     );

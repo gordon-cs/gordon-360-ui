@@ -6,6 +6,7 @@
 import { DateTime } from 'luxon';
 import http from './http';
 
+
 /**
  * The first element is the start time of the event, the second element is the end time of the
  * event, and the third element is the location of the event.
@@ -47,14 +48,14 @@ function formatevent(event) {
     beginTime = DateTime.fromISO(event.Occurrences[0][0]).toFormat('t');
     endTime = DateTime.fromISO(event.Occurrences[0][1]).toFormat('t');
   }
-  const timeRange = `${beginTime}-${endTime}`;
+  const timeRange = ` from ${beginTime} to ${endTime}`;
   event.timeRange = timeRange;
 
   let date;
   if (event.Occurrences[0] && event.Occurrences[0][0]) {
     date = DateTime.fromISO(event.Occurrences[0][0]).toFormat('LLL d, yyyy');
   }
-  event.dateTime = date + ' | ' + timeRange;
+  event.date = date;
 
   let title;
   if (event.Event_Title === '') {
@@ -76,35 +77,19 @@ function formatevent(event) {
     if (event.Description === '' || event.Description.substring(0, 4) === '<res') {
       event.Description = 'No description available';
     }
-    event.Description = event.Description.replace(/&(#[0-9]+|[a-zA-Z]+);/g, ' ').replace(
-      /<\/?[^>]+(>|$)/g,
-      ' ',
-    );
+    event.Description = event.Description.replace(/&(#[0-9]+|[a-zA-Z]+);/g, ' ').replace(/<\/?[^>]+(>|$)/g, ' ');
   }
   return event;
 }
 function filterbyCatagory(filters, allEvents) {
   let filteredEvents = [];
-  if (
-    filters.chapelOffice ||
-    filters.art ||
-    filters.cec ||
-    filters.calendar ||
-    filters.admissions ||
-    filters.sports ||
-    filters.studentLife ||
-    filters.fair ||
-    filters.academics
-  ) {
+  if (filters.chapelOffice || filters.art || filters.cec || filters.calendar
+    || filters.admissions || filters.sports || filters.studentLife
+    || filters.fair || filters.academics) {
     for (let i = 0; i < allEvents.length; i++) {
       if (filters.chapelOffice && allEvents[i].Organization === 'Chapel Office') {
         filteredEvents.push(allEvents[i]);
-      } else if (
-        filters.art &&
-        (allEvents[i].Organization === 'Music Department' ||
-          allEvents[i].Organization === 'Theatre' ||
-          allEvents[i].Organization === 'Art Department')
-      ) {
+      } else if (filters.art && (allEvents[i].Organization === 'Music Department' || allEvents[i].Organization === 'Theatre' || allEvents[i].Organization === 'Art Department')) {
         filteredEvents.push(allEvents[i]);
       } else if (filters.cec && allEvents[i].Organization === 'Campus Events Council (CEC)') {
         filteredEvents.push(allEvents[i]);
@@ -116,18 +101,9 @@ function filterbyCatagory(filters, allEvents) {
         filteredEvents.push(allEvents[i]);
       } else if (filters.studentLife && allEvents[i].Organization === 'Office of Student Life') {
         filteredEvents.push(allEvents[i]);
-      } else if (
-        filters.fair &&
-        (allEvents[i].Event_Type_Name === 'Festival' ||
-          allEvents[i].Event_Type_Name === 'Exhibition' ||
-          allEvents[i].Event_Type_Name === 'Fair/Expo')
-      ) {
+      } else if (filters.fair && (allEvents[i].Event_Type_Name === 'Festival' || allEvents[i].Event_Type_Name === 'Exhibition' || allEvents[i].Event_Type_Name === 'Fair/Expo')) {
         filteredEvents.push(allEvents[i]);
-      } else if (
-        filters.academics &&
-        (allEvents[i].Event_Type_Name === 'Research Project' ||
-          allEvents[i].Event_Type_Name === 'Lecture/Speaker/Forum')
-      ) {
+      } else if (filters.academics && (allEvents[i].Event_Type_Name === 'Research Project' || allEvents[i].Event_Type_Name === 'Lecture/Speaker/Forum')) {
         filteredEvents.push(allEvents[i]);
       }
     }
@@ -178,7 +154,7 @@ const getFutureEvents = async () => {
   }
   return futureEvents.sort(sortByTime);
 };
-const getFilteredEvents = async filters => {
+const getFilteredEvents = async (filters) => {
   const allEvents = filters.events;
   let filteredEvents = [];
   let shownEvents = [];
@@ -202,8 +178,11 @@ const getFilteredEvents = async filters => {
       // search through the event title
       if (filteredEvents[i].title.toLowerCase().includes(filters.search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
-        // search through the date
-      } else if (filteredEvents[i].dateTime.toLowerCase().includes(filters.search.toLowerCase())) {
+        // search through the datezZ
+      } else if (filteredEvents[i].timeRange.toLowerCase().includes(filters.search.toLowerCase())) {
+        shownEvents.push(filteredEvents[i]);
+        // search through the event times
+      } else if (filteredEvents[i].date.toLowerCase().includes(filters.search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
         // search through the location
       } else if (filteredEvents[i].location.toLowerCase().includes(filters.search.toLowerCase())) {
