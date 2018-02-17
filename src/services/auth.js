@@ -26,7 +26,8 @@ const handleError = err => {
 /**
  * Get token for user from backend
  * @param {String} username Username in firstname.lastname format
- * @param {String} password User's password
+ * @param {String} password User's
+ *
  * @return {String} Token for use on API requests
  */
 const getAuth = (username, password) => {
