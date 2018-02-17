@@ -286,11 +286,9 @@ const getChapelCredits = async () => {
  */
 const getProfile = username => {
   let profile;
-  console.log(username);
   if (username) {
     profile = http.get(`profiles/${username}`);
   } else {
-    console.log('hey');
     profile = http.get('profiles');
   }
   return profile;
@@ -315,12 +313,10 @@ function toggleMobilePhonePrivacy() {
 const getMemberships = async id => {
   let memberships;
   memberships = await http.get(`memberships/student/${id}`);
-  console.log(memberships);
   return memberships;
 };
 const getProfileInfo = async username => {
   let profile = await getProfile(username);
-  console.log(profile);
   formatName(profile);
   setClass(profile);
   setOnOffCampus(profile);
