@@ -58,7 +58,7 @@ a {
   .app-main {
     height: calc(100vh - #{$header-height-sm});
     margin-top: $header-height-sm;
-    margin-left: 220px;
+    margin-left: 0;
   }
 }
 @media (min-width: $break-md) {

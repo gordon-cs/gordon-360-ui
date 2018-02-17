@@ -35,7 +35,7 @@ export default class GordonNav extends Component {
             {drawer}
           </Drawer>
         </Hidden>
-        <Hidden smDown implementation="css">
+        <Hidden mdDown implementation="css">
           <Drawer
             type="permanent"
             open
