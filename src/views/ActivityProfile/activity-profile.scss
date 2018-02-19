@@ -19,7 +19,14 @@
     padding: 0 0 0 0;
   }
 
-  .table {
-    max-width: 100%;
+  .leave {
+    padding: 0 0 0 0;
+    background-color: $secondary-red;
+    font-weight: bold;
+    color: $neutral-white;
+  }
+
+  .col {
+    flex: 33%;
   }
 }

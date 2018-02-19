@@ -30,6 +30,13 @@ import http from './http';
  */
 
 /**
+ * Create a new membership
+ * @param {String} studentID Identifier for stduent
+ * @return {Promise<any>} Response
+ */
+const addMembership = studentID => http.post(`memberships/${studentID}`);
+
+/**
  * Get specific membership for the activity and given session code
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
@@ -90,10 +97,19 @@ const getFollowersNum = (activityCode, sessionCode) =>
 const getMembersNum = (activityCode, sessionCode) =>
   http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
 
+/**
+ * Get a student's list of memberships
+ * @param {String} studentID Student ID
+ * @return {Member[]} Array of the given student's memberships
+ */
+const getStudentMembership = studentID => http.get(`memberships/student/${studentID}`);
+
 export default {
+  addMembership,
   get,
   getAll,
   getAllGroupAdmins,
   getFollowersNum,
   getMembersNum,
+  getStudentMembership,
 };

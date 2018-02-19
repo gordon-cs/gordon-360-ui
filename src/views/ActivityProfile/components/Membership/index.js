@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
-import Typography from 'material-ui/Typography';
 
 import GordonLoader from '../../../../components/Loader';
+import '../../activity-profile.css';
+import MemberDetail from './components/MemberDetail';
+// import membership from '../../../../services/membership';
 
 export default class Membership extends Component {
   constructor(props) {
@@ -10,8 +11,10 @@ export default class Membership extends Component {
 
     this.state = {
       activityMembers: [],
+      open: false,
     };
   }
+
   componentWillMount() {
     this.loadMembers();
   }
@@ -28,33 +31,16 @@ export default class Membership extends Component {
     if (this.state.error) {
       throw this.state.error;
     }
-
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
       if (members.length > 0) {
         content = (
-          <section className="gordon-activity-profile">
-            <Table className="table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>FIRST NAME</TableCell>
-                  <TableCell>LAST NAME</TableCell>
-                  <TableCell>PARTICIPATION</TableCell>
-                  <TableCell> </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {members.map(member => (
-                  <TableRow key={member.MembershipID}>
-                    <TableCell>{member.FirstName}</TableCell>
-                    <TableCell>{member.LastName}</TableCell>
-                    <TableCell>{member.ParticipationDescription}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <section>
+            {members.map(groupMember => (
+              <MemberDetail member={groupMember} key={groupMember.MembershipID} />
+            ))}
           </section>
         );
       }

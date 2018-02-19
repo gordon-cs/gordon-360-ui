@@ -1,7 +1,6 @@
 import Button from 'material-ui/Button';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -13,6 +12,7 @@ import './activity-profile.css';
 import Advisors from './components/Advisors';
 import GordonLoader from '../../components/Loader';
 import GroupContacts from './components/GroupContacts';
+import Join from './components/Join';
 import Membership from './components/Membership';
 import session from '../../services/session';
 
@@ -50,7 +50,6 @@ class ActivityProfile extends Component {
       membership.getFollowersNum(activityCode, sessionCode),
       activity.getGroupAdmins(activityCode, sessionCode),
       membership.getMembersNum(activityCode, sessionCode),
-      // membership.getAll(activityCode),
       membership.get(activityCode, sessionCode),
       activity.getStatus(activityCode, sessionCode),
       session.get(sessionCode),
@@ -113,44 +112,49 @@ class ActivityProfile extends Component {
       }
       content = (
         <section className="gordon-activity-profile">
-          <Typography align="center" type="display1">
-            {activityDescription}
-          </Typography>
-          <Grid align="center" className="activity-image" item>
-            <img alt={activity.activityDescription} src={activityImagePath} className="img" />
-          </Grid>
-          <Typography type="body1">
-            <strong>Session: </strong>
-            {sessionDescription}
-          </Typography>
-          {description}
-          {website}
-          {groupContacts}
-          {advisors}
-          <Typography type="body1">
-            <strong>Current Activity Roster: </strong>
-            {membersNum} Members and {followers} followers
-          </Typography>
-          {membership}
-          <div>
-            <CardActions>
-              <Button color="primary" disabled={disableButtons} raised>
-                Subscribe
-              </Button>
-              <Button color="primary" disabled={disableButtons} raised>
-                Join
-              </Button>
-            </CardActions>
-          </div>
+          <Card>
+            <CardContent>
+              <Typography align="center" type="display1">
+                {activityDescription}
+              </Typography>
+              <Grid align="center" className="activity-image" item>
+                <img alt={activity.activityDescription} src={activityImagePath} className="img" />
+              </Grid>
+              <Typography type="body1">
+                <strong>Session: </strong>
+                {sessionDescription}
+              </Typography>
+              {description}
+              {website}
+              {groupContacts}
+              {advisors}
+              <Typography type="body1">
+                <strong>Current Activity Roster: </strong>
+                {membersNum} Members and {followers} followers
+              </Typography>
+              {membership}
+              <div>
+                <CardActions>
+                  <Button color="primary" disabled={disableButtons} raised>
+                    Subscribe
+                  </Button>
+                  <Button color="primary" disabled={disableButtons} onClick={Join} raised>
+                    Join
+                  </Button>
+                </CardActions>
+              </div>
+            </CardContent>
+          </Card>
         </section>
       );
     }
 
     return (
       <section>
-        <Card>
+        {content}
+        {/* <Card>
           <CardContent>{content}</CardContent>
-        </Card>
+        </Card> */}
       </section>
     );
   }
