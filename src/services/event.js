@@ -47,14 +47,14 @@ function formatevent(event) {
     beginTime = DateTime.fromISO(event.Occurrences[0][0]).toFormat('t');
     endTime = DateTime.fromISO(event.Occurrences[0][1]).toFormat('t');
   }
-  const timeRange = `${beginTime}-${endTime}`;
+  const timeRange = ` from ${beginTime} to ${endTime}`;
   event.timeRange = timeRange;
 
   let date;
   if (event.Occurrences[0] && event.Occurrences[0][0]) {
     date = DateTime.fromISO(event.Occurrences[0][0]).toFormat('LLL d, yyyy');
   }
-  event.dateTime = date + ' | ' + timeRange;
+  event.date = date;
 
   let title;
   if (event.Event_Title === '') {
@@ -202,8 +202,11 @@ const getFilteredEvents = async filters => {
       // search through the event title
       if (filteredEvents[i].title.toLowerCase().includes(filters.search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
-        // search through the date
-      } else if (filteredEvents[i].dateTime.toLowerCase().includes(filters.search.toLowerCase())) {
+        // search through the datezZ
+      } else if (filteredEvents[i].timeRange.toLowerCase().includes(filters.search.toLowerCase())) {
+        shownEvents.push(filteredEvents[i]);
+        // search through the event times
+      } else if (filteredEvents[i].date.toLowerCase().includes(filters.search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
         // search through the location
       } else if (filteredEvents[i].location.toLowerCase().includes(filters.search.toLowerCase())) {

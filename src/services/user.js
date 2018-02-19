@@ -165,6 +165,58 @@ import storage from './storage';
  * @property {String} PersonType Type of person
  */
 
+function formatName(profile) {
+  profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
+  return profile;
+}
+function setOnOffCampus(data) {
+  switch (data.OnOffCampus) {
+    case 'O':
+      data.OnOffCampus = 'Off Campus';
+      break;
+    case 'A':
+      data.OnOffCampus = 'Away';
+      break;
+    case 'D':
+      data.OnOffCampus = '';
+      break;
+    default:
+      data.OnOffCampus = 'On Campus';
+  }
+  return data;
+}
+function setClass(profile) {
+  if (profile.PersonType === 'stu') {
+    switch (profile.Class) {
+      case '1':
+        profile.Class = 'Freshman';
+        break;
+      case '2':
+        profile.Class = 'Sophmore';
+        break;
+      case '3':
+        profile.Class = 'Junior';
+        break;
+      case '4':
+        profile.Class = 'Senior';
+        break;
+      case '5':
+        profile.Class = 'Graduate Student';
+        break;
+      case '6':
+        profile.Class = 'Undergraduate Conferred';
+        break;
+      case '7':
+        profile.Class = 'Graduate Conferred';
+        break;
+      default:
+        profile.Class = 'Student';
+    }
+  }
+
+  return profile;
+}
+
 /**
  * Get events attended by the user
  * @param {String} username username of the user
@@ -232,15 +284,48 @@ const getChapelCredits = async () => {
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<StaffProfileInfo|StudentProfileInfo>} Profile info
  */
-const getProfileInfo = username => {
+const getProfile = username => {
+  let profile;
   if (username) {
-    return http.get(`profiles/${username}`);
+    profile = http.get(`profiles/${username}`);
+  } else {
+    profile = http.get('profiles');
   }
+  return profile;
+};
 
-  return http.get('profiles');
+function toggleMobilePhonePrivacy() {
+  let profile = getProfileInfo();
+  let currentPrivacy = profile.IsMobilePhonePrivate;
+  let newPrivacy = currentPrivacy ? 'N' : 'Y';
+  let setPrivacy = async function(value) {
+    return http
+      .put('profiles/mobile_privacy/' + value, value)
+      .then(res => {})
+      .catch(reason => {
+        //TODO handle error
+      });
+  };
+
+  setPrivacy(newPrivacy);
+}
+
+const getMemberships = async id => {
+  let memberships;
+  memberships = await http.get(`memberships/student/${id}`);
+  return memberships;
+};
+const getProfileInfo = async username => {
+  let profile = await getProfile(username);
+  formatName(profile);
+  setClass(profile);
+  setOnOffCampus(profile);
+  return profile;
 };
 
 export default {
+  toggleMobilePhonePrivacy,
+  getMemberships,
   getAttendedEvents,
   getChapelCredits,
   getImage,

@@ -54,6 +54,7 @@ class ActivityProfile extends Component {
       activity.getStatus(activityCode, sessionCode),
       session.get(sessionCode),
     ]);
+    console.log(this.props);
 
     this.setState({
       activityInfo,

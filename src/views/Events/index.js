@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import List from 'material-ui/List';
 import Grid from 'material-ui/Grid';
 import TextField from 'material-ui/TextField';
 import { FormGroup, FormControlLabel } from 'material-ui/Form';
@@ -75,7 +76,7 @@ export default class Events extends Component {
     return (
       <section>
         <Grid container justify="center">
-          <Grid item xs={8} md={8} lg={5}>
+          <Grid item xs={8} md={10} lg={5}>
             <TextField
               id="search"
               label="Search"
@@ -90,7 +91,7 @@ export default class Events extends Component {
               Filters
             </Button>
           </Grid>
-          <Grid item xs={11} md={10} lg={8}>
+          <Grid item xs={11} md={12} lg={8}>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <FormGroup row>
                 <FormControlLabel
@@ -158,7 +159,7 @@ export default class Events extends Component {
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={this.state.sports} onChange={this.filterEvents('sports')} />
+                    <Checkbox checked={this.state.sports} onChange={this.filterEvents('Sports')} />
                   }
                   label="Athletics"
                 />
@@ -178,8 +179,8 @@ export default class Events extends Component {
               </FormGroup>
             </Collapse>
           </Grid>
-          <Grid item xs={12} md={10} lg={8}>
-            {content}
+          <Grid item xs={12} md={12} lg={8}>
+            <List>{content}</List>
           </Grid>
         </Grid>
       </section>
