@@ -5,7 +5,7 @@ import Collapse from 'material-ui/transitions/Collapse';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 
-import '../../../../activity-profile.css';
+import { gordonColors } from '../../../../../../theme';
 import user from '../../../../../../services/user';
 
 export default class MemberDetail extends Component {
@@ -30,6 +30,11 @@ export default class MemberDetail extends Component {
   }
 
   render() {
+    const leaveButton = {
+      background: gordonColors.secondary.red,
+      color: 'white',
+    };
+
     return (
       <Card>
         <CardContent onClick={this.handleExpandClick}>
@@ -41,7 +46,7 @@ export default class MemberDetail extends Component {
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <CardContent padding={0}>
             <CardActions padding={0}>
-              <Button className="leave" raised>
+              <Button style={leaveButton} raised>
                 LEAVE
               </Button>
             </CardActions>

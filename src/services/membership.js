@@ -43,7 +43,7 @@ const addMembership = studentID => http.post(`memberships/${studentID}`);
  * @return {Member[]} List of members in given session
  */
 const get = (activityCode, sessionCode) => {
-  let allMembership = http.get(`memberships/activity/${activityCode}`).then(function(result) {
+  let allMembership = getAll(activityCode).then(function(result) {
     return filterCurrent(result, sessionCode);
   });
   return allMembership;
@@ -102,7 +102,7 @@ const getMembersNum = (activityCode, sessionCode) =>
  * @param {String} studentID Student ID
  * @return {Member[]} Array of the given student's memberships
  */
-const getStudentMembership = studentID => http.get(`memberships/student/${studentID}`);
+const getIndividualMembership = studentID => http.get(`memberships/student/${studentID}`);
 
 export default {
   addMembership,
@@ -111,5 +111,5 @@ export default {
   getAllGroupAdmins,
   getFollowersNum,
   getMembersNum,
-  getStudentMembership,
+  getIndividualMembership,
 };

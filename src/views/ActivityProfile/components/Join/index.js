@@ -1,4 +1,4 @@
-import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog';
+import { DialogContent, DialogTitle } from 'material-ui/Dialog';
 import { FormControl } from 'material-ui/Form';
 import { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
@@ -13,39 +13,32 @@ export default class Join extends Component {
     super(props);
 
     this.state = {
-      ParticipationDescription: '',
-      TitleComment: null,
+      activityDescription: null,
     };
-
-    // handleChange = event => {
-    //   this.setState([event.target.name]: event.target.value });
   }
+
   render() {
+    const { activityDescription } = this.props;
     let content = (
-      <section>
-        <Dialog>
-          <DialogTitle>Join</DialogTitle>
-          <DialogContent>
-            <Typography>Participation</Typography>
-            <FormControl>
-              <InputLabel>Please select</InputLabel>
-              <Select
-                value=""
-                // onChange={this.handleChange}
-              />
-              <MenuItem value="">
-                {' '}
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value="Advisor" />
-              <MenuItem value="Guest" />
-              <MenuItem value="Leader" />
-              <MenuItem value="Member" />
-            </FormControl>
-            <FormControl />
-          </DialogContent>
-        </Dialog>
-      </section>
+      <DialogContent>
+        <Typography>Participation</Typography>
+        <FormControl>
+          <InputLabel>Please select</InputLabel>
+          <Select
+            value=""
+            // onChange={this.handleChange}
+          />
+          <MenuItem value="">
+            {' '}
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value="Advisor" />
+          <MenuItem value="Guest" />
+          <MenuItem value="Leader" />
+          <MenuItem value="Member" />
+        </FormControl>
+        <FormControl />
+      </DialogContent>
     );
     return { content };
   }

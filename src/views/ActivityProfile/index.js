@@ -1,10 +1,20 @@
 import Button from 'material-ui/Button';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from 'material-ui/Dialog';
 import Grid from 'material-ui/Grid';
-import Typography from 'material-ui/Typography';
+// import { FormControl } from 'material-ui/Form';
+import { InputLabel } from 'material-ui/Input';
+import { MenuItem } from 'material-ui/Menu';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import Select from 'material-ui/Select';
+import Typography from 'material-ui/Typography';
 
 import activity from '../../services/activity';
 import membership from '../../services/membership';
@@ -12,13 +22,15 @@ import './activity-profile.css';
 import Advisors from './components/Advisors';
 import GordonLoader from '../../components/Loader';
 import GroupContacts from './components/GroupContacts';
-import Join from './components/Join';
 import Membership from './components/Membership';
 import session from '../../services/session';
 
 class ActivityProfile extends Component {
   constructor(props) {
     super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+    this.onClose = this.onClose.bind(this);
 
     this.state = {
       activityInfo: null,
@@ -54,7 +66,6 @@ class ActivityProfile extends Component {
       activity.getStatus(activityCode, sessionCode),
       session.get(sessionCode),
     ]);
-    console.log(this.props);
 
     this.setState({
       activityInfo,
@@ -66,8 +77,21 @@ class ActivityProfile extends Component {
       activityStatus,
       sessionInfo,
       loading: false,
+      open: false,
     });
   }
+
+  handleClick() {
+    this.setState({ open: true });
+  }
+
+  onClose() {
+    this.setState({ open: false });
+  }
+
+  // handleChange(event) {
+  //   this.setState({ [event.target.name]: event.target.value });
+  // }
   render() {
     if (this.state.error) {
       throw this.state.error;
@@ -139,11 +163,41 @@ class ActivityProfile extends Component {
                   <Button color="primary" disabled={disableButtons} raised>
                     Subscribe
                   </Button>
-                  <Button color="primary" disabled={disableButtons} onClick={Join} raised>
+                  <Button
+                    color="primary"
+                    disabled={disableButtons}
+                    onClick={this.handleClick}
+                    raised
+                  >
                     Join
                   </Button>
+                  <Dialog open={this.state.open} keepMounted>
+                    <DialogTitle>Join {activityDescription}</DialogTitle>
+                    <Grid container justify="center">
+                      <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Typography>Participation</Typography>
+                        <InputLabel>Please select</InputLabel>
+                        <Select value="" onChange={this.handleChange}>
+                          <MenuItem value="">
+                            {' '}
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="Advisor" />
+                          <MenuItem value="Guest" />
+                          <MenuItem value="Leader" />
+                          <MenuItem value="Member" />
+                        </Select>
+                      </Grid>
+                      <Grid item xs={12} sm={12}>
+                        <Button color="primary" onClick={this.onClose} raised>
+                          Cancel
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Dialog>
                 </CardActions>
               </div>
+              {/* {join} */}
             </CardContent>
           </Card>
         </section>
