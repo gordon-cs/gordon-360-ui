@@ -9,6 +9,7 @@ import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
 import { gordonColors } from '../../theme';
 import Activities from './Components/ActivityList';
+import user from './../../services/user';
 import GordonLoader from './../../components/Loader';
 import './transcript.css';
 
@@ -17,11 +18,33 @@ export default class Transcript extends Component {
     super(props);
     this.state = {
       activities: [],
+      loading: true,
     };
+  }
+
+  handleDownload() {
+    window.print();
+  }
+
+  componentWillMount() {
+    this.loadTranscript();
+  }
+  async loadTranscript() {
+    this.setState({ loading: true });
+    try {
+      const profile = await user.getProfileInfo();
+      const activities = await user.getMemberships(profile.ID);
+      this.setState({ loading: false, activities });
+      console.log('loadTranscript: ' + activities);
+    } catch (error) {
+      this.setState({ error });
+      console.log('error');
+    }
   }
 
   render(props) {
     let activityList;
+    console.log('Transcript: ' + this.state.activities);
     if (!this.state.activities) {
       activityList = <GordonLoader />;
     } else {
@@ -56,7 +79,7 @@ export default class Transcript extends Component {
           <Paper elevation="10">
             <CardContent>
               <Grid item xs={12}>
-                <Button raised style={button} justify="center">
+                <Button raised style={button} justify="center" onClick={this.handleDownload}>
                   Download Transcript
                 </Button>
               </Grid>
@@ -74,13 +97,13 @@ export default class Transcript extends Component {
                         <ListItemText primary="Activity" />
                       </ListItem>
                       <ListItem>
-                        <ListItemText primary="Sample Club" />
+                        <ListItemText primary={activityList[0]} />
                       </ListItem>
                       <ListItem>
-                        <ListItemText primary="Sample Club 2" />
+                        <ListItemText primary={activityList[1]} />
                       </ListItem>
                       <ListItem>
-                        <ListItemText primary="Sample Club 3" />
+                        <ListItemText primary={activityList[2]} />
                       </ListItem>
                     </List>
                   </Grid>
@@ -101,7 +124,11 @@ export default class Transcript extends Component {
                     </List>
                   </Grid>
                   <Grid item xs={4}>
-                    <List>Activities: {activityList}</List>
+                    <List>
+                      <ListItem>
+                        <ListItemText primary="Total Semesters" />
+                      </ListItem>
+                    </List>
                   </Grid>
                 </Grid>
               </Grid>
