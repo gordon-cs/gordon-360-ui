@@ -1,19 +1,15 @@
 import Button from 'material-ui/Button';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from 'material-ui/Dialog';
+import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog';
 import Grid from 'material-ui/Grid';
-// import { FormControl } from 'material-ui/Form';
-import { InputLabel } from 'material-ui/Input';
+import { FormControl } from 'material-ui/Form';
+// import Input, { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import Select from 'material-ui/Select';
+import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 
 import activity from '../../services/activity';
@@ -31,6 +27,7 @@ class ActivityProfile extends Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.onClose = this.onClose.bind(this);
+    this.handleChange = this.handleChange.bind(this);
 
     this.state = {
       activityInfo: null,
@@ -41,6 +38,7 @@ class ActivityProfile extends Component {
       activityMembers: [],
       activityStatus: null,
       sessionInfo: null,
+      participationLevel: null,
     };
   }
 
@@ -78,6 +76,8 @@ class ActivityProfile extends Component {
       sessionInfo,
       loading: false,
       open: false,
+      participationLevel: '',
+      titleComment: '',
     });
   }
 
@@ -86,12 +86,21 @@ class ActivityProfile extends Component {
   }
 
   onClose() {
-    this.setState({ open: false });
+    this.setState({ open: false, participationLevel: '', titleComment: '' });
   }
 
-  // handleChange(event) {
-  //   this.setState({ [event.target.name]: event.target.value });
-  // }
+  handleChange = event => {
+    this.setState({ participationLevel: event.target.value });
+    // console.log("event ")
+    // console.log(event.target.value)
+    // console.log(this.state.participationLevel) // Returns nothing
+    // console.log("Call handleChange()");
+  };
+
+  handleText = event => {
+    this.setState({ titleComment: event.target.value });
+  };
+
   render() {
     if (this.state.error) {
       throw this.state.error;
@@ -130,11 +139,20 @@ class ActivityProfile extends Component {
           </Typography>
         );
       }
-      let membership = <Membership members={this.state.activityMembers} />;
+      let membership = (
+        <Membership
+          members={this.state.activityMembers}
+          sessionCode={this.state.sessionInfo.SessionCode}
+          activityCode={this.state.activityInfo.ActivityCode}
+        />
+      );
       let disableButtons;
       if (this.state.activityStatus === 'CLOSED') {
         disableButtons = true;
       }
+      const formControl = {
+        padding: 10,
+      };
       content = (
         <section className="gordon-activity-profile">
           <Card>
@@ -171,29 +189,46 @@ class ActivityProfile extends Component {
                   >
                     Join
                   </Button>
-                  <Dialog open={this.state.open} keepMounted>
-                    <DialogTitle>Join {activityDescription}</DialogTitle>
-                    <Grid container justify="center">
-                      <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <Typography>Participation</Typography>
-                        <InputLabel>Please select</InputLabel>
-                        <Select value="" onChange={this.handleChange}>
-                          <MenuItem value="">
-                            {' '}
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value="Advisor" />
-                          <MenuItem value="Guest" />
-                          <MenuItem value="Leader" />
-                          <MenuItem value="Member" />
-                        </Select>
+                  <Dialog open={this.state.open} keepMounted align="center">
+                    <DialogContent>
+                      <Grid container align="center" padding={6}>
+                        <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
+                          <DialogTitle>Join {activityDescription}</DialogTitle>
+                          <Typography>Participation (Required)</Typography>
+                          <Grid item padding={6} align="center">
+                            <FormControl fullWidth style={formControl}>
+                              <Select
+                                value={this.state.participationLevel}
+                                onChange={this.handleChange}
+                                displayEmpty
+                              >
+                                <MenuItem value="">
+                                  <em>None</em>
+                                </MenuItem>
+                                <MenuItem value="Advisor">Advisor</MenuItem>
+                                <MenuItem value="Guest">Guest</MenuItem>
+                                <MenuItem value="Leader">Leader</MenuItem>
+                                <MenuItem value="Member">Member</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item align="center">
+                            <Typography>Title/Comment: (Optional)</Typography>
+                            <TextField fullWidth onChange={this.handleText} style={formControl} />
+                          </Grid>
+                          <Grid item style={formControl}>
+                            <Button color="primary" raised>
+                              REQUEST MEMBERSHIP
+                            </Button>
+                          </Grid>
+                          <Grid item xs={12} sm={12} style={formControl}>
+                            <Button color="primary" onClick={this.onClose} raised>
+                              CANCEL
+                            </Button>
+                          </Grid>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={12} sm={12}>
-                        <Button color="primary" onClick={this.onClose} raised>
-                          Cancel
-                        </Button>
-                      </Grid>
-                    </Grid>
+                    </DialogContent>
                   </Dialog>
                 </CardActions>
               </div>

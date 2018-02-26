@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Collapse from 'material-ui/transitions/Collapse';
+// import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Checkbox from 'material-ui/Checkbox';
+// import Collapse from 'material-ui/transitions/Collapse';
+import ExpansionPanel, {
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+} from 'material-ui/ExpansionPanel';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import { FormControlLabel } from 'material-ui/Form';
+import Grid from 'material-ui/Grid';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 
@@ -13,10 +21,21 @@ export default class MemberDetail extends Component {
     super(props);
     this.state = {
       open: false,
+      admin: true,
+      checkedA: true,
     };
-    this.handleExpandClick = this.handleExpandClick.bind(this);
+    // this.setState({open: this.handleExpandClick()})
+    this.handleChange = this.handleChange.bind(this);
   }
-  handleExpandClick() {
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.checked });
+  };
+
+  render() {
+    const leaveButton = {
+      background: gordonColors.secondary.red,
+      color: 'white',
+    };
     const { id } = user.getLocalInfo();
     let showLeaveButton = false;
     if (this.props.member.IDNumber.toString() === id) {
@@ -24,35 +43,84 @@ export default class MemberDetail extends Component {
     } else {
       showLeaveButton = false;
     }
+    let leave;
     if (showLeaveButton) {
-      this.setState({ open: !this.state.open });
+      leave = (
+        <Button style={leaveButton} raised>
+          LEAVE
+        </Button>
+      );
+    } else {
+      leave = (
+        <Typography>You do not have permission to see any details about this member</Typography>
+      );
     }
-  }
-
-  render() {
-    const leaveButton = {
-      background: gordonColors.secondary.red,
-      color: 'white',
-    };
-
+    if (this.state.admin) {
+      leave = (
+        <Grid container>
+          <Grid item>
+            <Button color="primary" raised>
+              Edit
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button style={leaveButton} raised>
+              Remove
+            </Button>
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.checkedA}
+                  onChange={this.handleChange('checkedA')}
+                  value="checkedA"
+                  color="primary"
+                />
+              }
+              label="Group Admin"
+            />
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Typography>TITLE/COMMENT:</Typography>
+          </Grid>
+        </Grid>
+      );
+    }
     return (
-      <Card>
-        <CardContent onClick={this.handleExpandClick}>
-          <Typography>
-            {this.props.member.FirstName} {this.props.member.LastName}
-          </Typography>
-          <Typography>{this.props.member.ParticipationDescription} </Typography>
-        </CardContent>
-        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-          <CardContent padding={0}>
-            <CardActions padding={0}>
-              <Button style={leaveButton} raised>
-                LEAVE
-              </Button>
-            </CardActions>
-          </CardContent>
-        </Collapse>
-      </Card>
+      // <Card>
+      //   <CardContent onClick={this.handleExpandClick}>
+      //     <Typography>
+      //       {this.props.member.FirstName} {this.props.member.LastName}
+      //     </Typography>
+      //     <Typography>{this.props.member.ParticipationDescription} </Typography>
+      //   </CardContent>
+      //   <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+      //     <CardContent padding={0}>
+      //       <CardActions padding={0}>
+      //         <Button style={leaveButton} raised>
+      //           LEAVE
+      //         </Button>
+      //       </CardActions>
+      //     </CardContent>
+      //   </Collapse>
+      // </Card>
+      <ExpansionPanel defaultExpanded={showLeaveButton || this.state.admin}>
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          <Grid container>
+            <Grid item xs={8} sm={9} md={10}>
+              <Typography>
+                {' '}
+                {this.props.member.FirstName} {this.props.member.LastName}
+              </Typography>
+            </Grid>
+            <Grid item xs={4} sm={3} md={2}>
+              <Typography>{this.props.member.ParticipationDescription} </Typography>
+            </Grid>
+          </Grid>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>{leave}</ExpansionPanelDetails>
+      </ExpansionPanel>
     );
   }
 }
