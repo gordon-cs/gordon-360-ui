@@ -92,43 +92,16 @@ export default class Transcript extends Component {
               <Grid item xs={12}>
                 <Grid container spacing={0}>
                   <Grid item xs={4}>
-                    <List>
-                      <ListItem>
-                        <ListItemText primary="Activity" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary={activityList[0]} />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary={activityList[1]} />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary={activityList[2]} />
-                      </ListItem>
-                    </List>
+                    <div style={divStyle}> Activity </div>
                   </Grid>
                   <Grid item xs={4}>
-                    <List>
-                      <ListItem>
-                        <ListItemText primary="Membership Type" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Member" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Leader" />
-                      </ListItem>
-                      <ListItem>
-                        <ListItemText primary="Member" />
-                      </ListItem>
-                    </List>
+                    <div style={divStyle}> Participation </div>
                   </Grid>
                   <Grid item xs={4}>
-                    <List>
-                      <ListItem>
-                        <ListItemText primary="Total Semesters" />
-                      </ListItem>
-                    </List>
+                    <div style={divStyle}> Total Semesters </div>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {activityList}
                   </Grid>
                 </Grid>
               </Grid>

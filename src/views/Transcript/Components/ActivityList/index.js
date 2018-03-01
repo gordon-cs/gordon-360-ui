@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Divider from 'material-ui/Divider/Divider';
 import React, { Component } from 'react';
 import Typography from 'material-ui/Typography';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
 export default class Activities extends Component {
   constructor(props) {
@@ -22,17 +23,29 @@ export default class Activities extends Component {
 
     return (
       <div>
-        <Grid container>
-          <Grid item xs={10} sm={10} md={10} lg={10}>
-            <Typography>{Activity.ActivityDescription}</Typography>
-            <Typography>{Activity.SessionDescription}</Typography>
-            <Typography>{Activity.ParticipationDescription}</Typography>
+        <Grid container spacing={0}>
+          <Grid item xs={4}>
+            <List>
+              <ListItem>
+                <ListItemText primary={Activity.ActivityDescription} />
+              </ListItem>
+            </List>
           </Grid>
-          <Grid item xs={2} sm={2} md={2} lg={2}>
-            <img src={Activity.ActivityImagePath} alt="" style={style} />
+          <Grid item xs={4}>
+            <List>
+              <ListItem>
+                <ListItemText primary={Activity.ParticipationDescription} />
+              </ListItem>
+            </List>
+          </Grid>
+          <Grid item xs={4}>
+            <List>
+              <ListItem>
+                <ListItemText primary={Activity.SessionDescription} />
+              </ListItem>
+            </List>
           </Grid>
         </Grid>
-        <Divider />
       </div>
     );
   }
