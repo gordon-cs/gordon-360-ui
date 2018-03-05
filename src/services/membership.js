@@ -31,10 +31,10 @@ import http from './http';
 
 /**
  * Create a new membership
- * @param {String} studentID Identifier for stduent
+ * @param {*} data Data passed in
  * @return {Promise<any>} Response
  */
-const addMembership = studentID => http.post(`memberships/${studentID}`);
+const addMembership = data => http.post(`memberships`, data);
 
 /**
  * Get specific membership for the activity and given session code
@@ -108,25 +108,32 @@ const getIndividualMembership = userID =>
   });
 
 /**
+ * Remove given member from membership table
+ * @param {Member} member The member to remove
+ */
+const remove = member => {
+  http.deleteAsync(`memberships/${member.MembershipID}`, this);
+};
+
+/**
+ * Request membership
+ * @param {*} data Data passed in
+ */
+const requestMembership = data => {
+  http.post(`request`, data);
+};
+/**
  * Search to see if user with given id is in given activtiy and session
  * @param {String} id User id
  * @param {String} sessionCode Identifier for session
  * @param {String} activityCode Identifier for activity
  * @return {boolean} True if user is a member of given activity and session, false if not a member
  */
-const search = async (id, sessionCode, activityCode) => {
-  // let isMember = false;
-  let found = await http.get(`memberships/student/${id}`).then(function(result) {
-    console.log('Search array with parameters');
-    console.log(result);
-    // let len;
-    // array.then(function(result) { console.log(result.length); len = result.length; return result});
-    console.log(result.length);
+const search = (id, sessionCode, activityCode) => {
+  let found = http.get(`memberships/student/${id}`).then(function(result) {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
-        console.log('First if statement');
         if (result[i].SessionCode === sessionCode) {
-          console.log('iteration: ' + i);
           return true;
         }
       }
@@ -143,5 +150,7 @@ export default {
   getFollowersNum,
   getMembersNum,
   getIndividualMembership,
+  remove,
+  requestMembership,
   search,
 };

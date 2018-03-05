@@ -10,22 +10,21 @@ export default class Membership extends Component {
   constructor(props) {
     super(props);
 
+    this.searchUser = this.searchUser.bind(this);
+
     this.state = {
       activityMembers: [],
       open: false,
       mode: '',
       sessionCode: null,
       activityCode: null,
-      // userMembership: [],
-      // userId: null,
+      isMember: false,
+      id: '',
     };
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     this.loadMembers();
-    this.searchUser();
-    // const userMembership = membership.getIndividualMembership();
-    // this.setState(userMembership);
   }
 
   searchUser(id, sessionCode, activityCode) {
@@ -36,13 +35,21 @@ export default class Membership extends Component {
     this.setState({ loading: true });
     try {
       this.setState({ loading: false });
+      const id = await user.getLocalInfo().id;
+      this.setState({ id });
+      const isMember = await membership.search(
+        this.state.id,
+        this.props.sessionCode,
+        this.props.activityCode,
+      );
+      this.setState({ isMember });
     } catch (error) {
       this.setState({ error });
     }
   }
 
   render() {
-    const { members, sessionCode, activityCode } = this.props;
+    const { members } = this.props;
     if (this.state.error) {
       throw this.state.error;
     }
@@ -50,18 +57,7 @@ export default class Membership extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      const id = user.getLocalInfo().id;
-      console.log('Before' + id);
-      // console.log(this.searchUser(id, sessionCode, activityCode))
-      // console.log(membership.search(id, sessionCode, activityCode));
-      let isMemberPromise = this.searchUser(id, sessionCode, activityCode);
-      console.log('AFter search isMember: ');
-      console.log(isMemberPromise);
-      // isMemberPromise.then(function(result) {
-      // console.log(result)
-      if (members.length > 0) {
-        // Add result once working
-        console.log('content =');
+      if (this.state.isMember) {
         content = (
           <section>
             {members.map(groupMember => (
@@ -70,7 +66,6 @@ export default class Membership extends Component {
           </section>
         );
       }
-      // });
     }
     return <section>{content}</section>;
   }

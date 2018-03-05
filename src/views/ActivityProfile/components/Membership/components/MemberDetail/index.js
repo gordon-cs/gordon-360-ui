@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
-// import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Checkbox from 'material-ui/Checkbox';
-// import Collapse from 'material-ui/transitions/Collapse';
 import ExpansionPanel, {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
@@ -21,10 +19,9 @@ export default class MemberDetail extends Component {
     super(props);
     this.state = {
       open: false,
-      admin: true,
+      admin: false,
       checkedA: true,
     };
-    // this.setState({open: this.handleExpandClick()})
     this.handleChange = this.handleChange.bind(this);
   }
   handleChange = name => event => {
@@ -88,23 +85,6 @@ export default class MemberDetail extends Component {
       );
     }
     return (
-      // <Card>
-      //   <CardContent onClick={this.handleExpandClick}>
-      //     <Typography>
-      //       {this.props.member.FirstName} {this.props.member.LastName}
-      //     </Typography>
-      //     <Typography>{this.props.member.ParticipationDescription} </Typography>
-      //   </CardContent>
-      //   <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-      //     <CardContent padding={0}>
-      //       <CardActions padding={0}>
-      //         <Button style={leaveButton} raised>
-      //           LEAVE
-      //         </Button>
-      //       </CardActions>
-      //     </CardContent>
-      //   </Collapse>
-      // </Card>
       <ExpansionPanel defaultExpanded={showLeaveButton || this.state.admin}>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <Grid container>

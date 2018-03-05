@@ -20,6 +20,7 @@ import GordonLoader from '../../components/Loader';
 import GroupContacts from './components/GroupContacts';
 import Membership from './components/Membership';
 import session from '../../services/session';
+import user from '../../services/user';
 
 class ActivityProfile extends Component {
   constructor(props) {
@@ -28,6 +29,7 @@ class ActivityProfile extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.onClose = this.onClose.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.onSubscribe = this.onSubscribe.bind(this);
 
     this.state = {
       activityInfo: null,
@@ -100,6 +102,33 @@ class ActivityProfile extends Component {
   handleText = event => {
     this.setState({ titleComment: event.target.value });
   };
+
+  onRequest() {
+    let data = {
+      SESS_CDE: this.props.sessionCode,
+      ACT_CDE: this.props.activityCode,
+      ID_NUM: user.getLocalInfo().id,
+      PART_CDE: this.state.participationLevel,
+      DATE_SENT: new Date().toLocalString(),
+      COMMENT_TXT: this.state.titleComment,
+      STATUS: 'Pending',
+    };
+    membership.requestMembership(data);
+    console.log('Request sent');
+  }
+
+  onSubscribe() {
+    let data = {
+      ACT_CDE: this.state.activityInfo.ActivityCode,
+      SESS_CDE: this.state.sessionInfo.SessionCode,
+      ID_NUM: user.getLocalInfo().id,
+      PART_CDE: 'GUEST',
+      BEGIN_DTE: this.state.sessionInfo.BEGIN_DTE,
+      COMMENT_TXT: 'Basic Follower',
+      GRP_ADMIN: false,
+    };
+    membership.addMembership(data);
+  }
 
   render() {
     if (this.state.error) {
@@ -205,10 +234,10 @@ class ActivityProfile extends Component {
                                 <MenuItem value="">
                                   <em>None</em>
                                 </MenuItem>
-                                <MenuItem value="Advisor">Advisor</MenuItem>
-                                <MenuItem value="Guest">Guest</MenuItem>
-                                <MenuItem value="Leader">Leader</MenuItem>
-                                <MenuItem value="Member">Member</MenuItem>
+                                <MenuItem value="ADV">Advisor</MenuItem>
+                                <MenuItem value="GUEST">Guest</MenuItem>
+                                <MenuItem value="LEAD">Leader</MenuItem>
+                                <MenuItem value="MEMBR">Member</MenuItem>
                               </Select>
                             </FormControl>
                           </Grid>
@@ -217,7 +246,7 @@ class ActivityProfile extends Component {
                             <TextField fullWidth onChange={this.handleText} style={formControl} />
                           </Grid>
                           <Grid item style={formControl}>
-                            <Button color="primary" raised>
+                            <Button color="primary" onClick={this.onRequest} raised>
                               REQUEST MEMBERSHIP
                             </Button>
                           </Grid>
