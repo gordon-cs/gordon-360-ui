@@ -19,9 +19,10 @@ export default class MemberDetail extends Component {
     super(props);
     this.state = {
       open: false,
-      admin: false,
-      checkedA: true,
+      admin: true,
+      groupAdmin: true,
     };
+    this.setState({ groupAdmin: this.props.groupAdmin });
     this.handleChange = this.handleChange.bind(this);
   }
   handleChange = name => event => {
@@ -69,9 +70,8 @@ export default class MemberDetail extends Component {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={this.state.checkedA}
-                  onChange={this.handleChange('checkedA')}
-                  value="checkedA"
+                  checked={this.props.groupAdmin}
+                  onChange={this.handleChange('groupAdmin')}
                   color="primary"
                 />
               }
