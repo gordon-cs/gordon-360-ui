@@ -30,10 +30,10 @@ export default class Membership extends Component {
       activityMembers: [],
       open: false,
       mode: '',
-      sessionCode: null,
-      activityCode: null,
-      activityDescription: null,
-      participationLevel: null,
+      sessionCode: '',
+      activityCode: '',
+      activityDescription: '',
+      participationLevel: '',
       titleComment: '',
       isMember: false,
       id: '',
@@ -61,26 +61,28 @@ export default class Membership extends Component {
   }
 
   onRequest() {
+    let date = new Date();
     let data = {
       SESS_CDE: this.props.sessionCode,
       ACT_CDE: this.props.activityCode,
       ID_NUM: user.getLocalInfo().id,
       PART_CDE: this.state.participationLevel,
-      DATE_SENT: new Date().toLocalString(),
+      DATE_SENT: date.toLocaleString(),
       COMMENT_TXT: this.state.titleComment,
       STATUS: 'Pending',
     };
     membership.requestMembership(data);
+    this.onClose();
     console.log('Request sent');
   }
 
   onSubscribe() {
     let data = {
-      ACT_CDE: this.state.activityInfo.ActivityCode,
+      ACT_CDE: this.state.activityCode,
       SESS_CDE: this.state.sessionInfo.SessionCode,
       ID_NUM: user.getLocalInfo().id,
       PART_CDE: 'GUEST',
-      BEGIN_DTE: this.state.sessionInfo.BEGIN_DTE,
+      BEGIN_DTE: this.state.sessionInfo.SessionBeginDate,
       COMMENT_TXT: 'Basic Follower',
       GRP_ADMIN: false,
     };

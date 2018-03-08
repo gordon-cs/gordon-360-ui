@@ -22,9 +22,13 @@ export default class MemberDetail extends Component {
       admin: true,
       groupAdmin: true,
     };
-    this.setState({ groupAdmin: this.props.groupAdmin });
     this.handleChange = this.handleChange.bind(this);
   }
+
+  async componentWillMount() {
+    this.setState({ groupAdmin: this.props.groupAdmin });
+  }
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
@@ -70,7 +74,7 @@ export default class MemberDetail extends Component {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={this.props.groupAdmin}
+                  checked={this.state.groupAdmin}
                   onChange={this.handleChange('groupAdmin')}
                   color="primary"
                 />

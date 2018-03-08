@@ -120,8 +120,10 @@ const remove = member => {
  * @param {*} data Data passed in
  */
 const requestMembership = data => {
-  http.post(`request`, data);
+  console.log(data);
+  http.post(`requests`, data);
 };
+
 /**
  * Search to see if user with given id is in given activtiy and session
  * @param {String} id User id
