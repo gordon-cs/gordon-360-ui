@@ -107,7 +107,7 @@ class ActivityProfile extends Component {
       let membership = (
         <Membership
           members={this.state.activityMembers}
-          sessionCode={this.state.sessionInfo.SessionCode}
+          sessionInfo={this.state.sessionInfo}
           activityCode={this.state.activityInfo.ActivityCode}
           activityDescription={this.state.activityInfo.ActivityDescription}
         />

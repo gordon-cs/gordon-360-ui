@@ -30,7 +30,7 @@ export default class Membership extends Component {
       activityMembers: [],
       open: false,
       mode: '',
-      sessionCode: '',
+      sessionInfo: null,
       activityCode: '',
       activityDescription: '',
       participationLevel: '',
@@ -101,13 +101,14 @@ export default class Membership extends Component {
       this.setState({ id });
       const isMember = await membership.search(
         this.state.id,
-        this.props.sessionCode,
+        this.props.sessionInfo.SessionCode,
         this.props.activityCode,
       );
       this.setState({ isMember });
       this.setState({
         activityDescription: this.props.activityDescription,
         participationLevel: '',
+        sessionInfo: this.props.sessionInfo,
         titleComment: '',
       });
     } catch (error) {
@@ -137,6 +138,7 @@ export default class Membership extends Component {
                 key={groupMember.MembershipID}
               />
             ))}
+            <Typography>* FERPA protected student</Typography>
           </section>
         );
       } else {
