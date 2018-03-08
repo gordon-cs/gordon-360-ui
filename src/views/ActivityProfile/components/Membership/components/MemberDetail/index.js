@@ -23,9 +23,11 @@ export default class MemberDetail extends Component {
     super(props);
     this.state = {
       openEdit: false,
+      alertLeave: false,
       admin: true,
       groupAdmin: true,
       participationLevel: '',
+      alertRemove: false,
       titleComment: '',
     };
     this.handleChange = this.handleChange.bind(this);
@@ -33,6 +35,8 @@ export default class MemberDetail extends Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleText = this.handleText.bind(this);
     this.onClose = this.onClose.bind(this);
+    this.onLeave = this.onLeave.bind(this);
+    this.onRemove = this.onRemove.bind(this);
   }
 
   async componentWillMount() {
@@ -64,10 +68,20 @@ export default class MemberDetail extends Component {
 
   onClose() {
     this.setState({
+      alertLeave: false,
+      alertRemove: false,
       openEdit: false,
       participationLevel: this.props.member.ParticipationDescription,
       titleComment: '',
     });
+  }
+
+  onLeave() {
+    this.setState({ alertLeave: true });
+  }
+
+  onRemove() {
+    this.setState({ alertRemove: true });
   }
 
   render() {
@@ -86,9 +100,30 @@ export default class MemberDetail extends Component {
     let leave;
     if (showLeaveButton) {
       leave = (
-        <Button style={leaveButton} raised>
-          LEAVE
-        </Button>
+        <Grid container>
+          <Grid item>
+            <Button style={leaveButton} onClick={this.onLeave} raised>
+              LEAVE
+            </Button>
+            <Dialog open={this.state.alertLeave} keepMounted align="center">
+              <DialogTitle>Are you sure you want to leave the activity?</DialogTitle>
+              <DialogContent>
+                <Grid container>
+                  <Grid item>
+                    <Button color="primary" onClick={this.onClose} raised>
+                      No, stay
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button raised style={leaveButton}>
+                      Yes, leave
+                    </Button>
+                  </Grid>
+                </Grid>
+              </DialogContent>
+            </Dialog>
+          </Grid>
+        </Grid>
       );
     } else {
       leave = (
@@ -110,12 +145,14 @@ export default class MemberDetail extends Component {
               Edit
             </Button>
             <Dialog open={this.state.openEdit} keepMounted align="center">
+              <DialogTitle>
+                Edit {this.props.member.FirstName} {this.props.member.LastName} ({
+                  this.props.member.ParticipationDescription
+                })
+              </DialogTitle>
               <DialogContent>
                 <Grid container align="center" padding={6}>
                   <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
-                    <DialogTitle>
-                      Edit {this.props.member.FirstName} {this.props.member.LastName}
-                    </DialogTitle>
                     <Typography>Participation (Required)</Typography>
                     <Grid item padding={6} align="center">
                       <FormControl fullWidth style={formControl}>
@@ -156,9 +193,30 @@ export default class MemberDetail extends Component {
             </Dialog>
           </Grid>
           <Grid item>
-            <Button style={leaveButton} raised>
+            <Button style={leaveButton} onClick={this.onRemove} raised>
               Remove
             </Button>
+            <Dialog open={this.state.alertRemove} keepMounted align="center">
+              <DialogTitle>
+                Are you sure you want to remove {this.props.member.FirstName}{' '}
+                {this.props.member.LastName} (
+                {this.props.member.ParticipationDescription}) from this activity?
+              </DialogTitle>
+              <DialogContent>
+                <Grid container>
+                  <Grid item xs={6} sm={6} md={6} lg={6}>
+                    <Button color="primary" raised>
+                      OK
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6} sm={6} md={6} lg={6}>
+                    <Button onClick={this.onClose} raised>
+                      CANCEL
+                    </Button>
+                  </Grid>
+                </Grid>
+              </DialogContent>
+            </Dialog>
           </Grid>
           <Grid item>
             <FormControlLabel
