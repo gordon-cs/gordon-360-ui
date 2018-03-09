@@ -43,6 +43,7 @@ export default class MemberDetail extends Component {
     this.setState({
       groupAdmin: this.props.groupAdmin,
       participationLevel: this.props.member.ParticipationDescription,
+      titleComment: this.props.Description,
     });
   }
 

@@ -112,16 +112,18 @@ const getIndividualMembership = userID =>
  * @param {Member} member The member to remove
  */
 const remove = member => {
-  http.deleteAsync(`memberships/${member.MembershipID}`, this);
+  http.del(`memberships/${member.MembershipID}`, this);
 };
 
 /**
  * Request membership
- * @param {*} data Data passed in
+ * @param {Object} data Data passed in
  */
 const requestMembership = data => {
   console.log(data);
-  http.post(`requests`, data);
+  http.post(`requests`, data).catch(reason => {
+    console.log(reason);
+  });
 };
 
 /**

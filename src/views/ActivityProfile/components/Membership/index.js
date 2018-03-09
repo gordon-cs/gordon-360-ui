@@ -63,17 +63,18 @@ export default class Membership extends Component {
   onRequest() {
     let date = new Date();
     let data = {
-      SESS_CDE: this.props.sessionCode,
+      SESS_CDE: this.state.sessionInfo.SessionCode,
       ACT_CDE: this.props.activityCode,
       ID_NUM: user.getLocalInfo().id,
       PART_CDE: this.state.participationLevel,
-      DATE_SENT: date.toLocaleString(),
+      DATE_SENT: '2018-03-09 17:00:15.000',
       COMMENT_TXT: this.state.titleComment,
       STATUS: 'Pending',
     };
-    membership.requestMembership(data);
+    // console.log(date)
     this.onClose();
     console.log('Request sent');
+    membership.requestMembership(data);
   }
 
   onSubscribe() {
