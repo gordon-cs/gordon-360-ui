@@ -2,8 +2,7 @@ import Grid from 'material-ui/Grid';
 import PropTypes from 'prop-types';
 import Divider from 'material-ui/Divider/Divider';
 import React, { Component } from 'react';
-import Typography from 'material-ui/Typography';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import List, { ListItem, ListItemText } from 'material-ui/List';
 
 export default class Activities extends Component {
   constructor(props) {
@@ -17,9 +16,6 @@ export default class Activities extends Component {
   async loadProfile() {}
   render() {
     const { Activity } = this.props;
-    const style = {
-      width: '90%',
-    };
 
     return (
       <div>
@@ -30,6 +26,7 @@ export default class Activities extends Component {
                 <ListItemText primary={Activity.ActivityDescription} />
               </ListItem>
             </List>
+            <Divider />
           </Grid>
           <Grid item xs={4}>
             <List>
@@ -37,6 +34,7 @@ export default class Activities extends Component {
                 <ListItemText primary={Activity.ParticipationDescription} />
               </ListItem>
             </List>
+            <Divider />
           </Grid>
           <Grid item xs={4}>
             <List>
@@ -44,6 +42,7 @@ export default class Activities extends Component {
                 <ListItemText primary={Activity.SessionDescription} />
               </ListItem>
             </List>
+            <Divider />
           </Grid>
         </Grid>
       </div>

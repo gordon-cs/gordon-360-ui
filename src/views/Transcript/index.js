@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent, CardHeader } from 'material-ui/Card';
+import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import Divider from 'material-ui/Divider/Divider';
 
 import { gordonColors } from '../../theme';
+import session from '../../services/session';
 import Activities from './Components/ActivityList';
 import user from './../../services/user';
 import GordonLoader from './../../components/Loader';
@@ -19,6 +17,8 @@ export default class Transcript extends Component {
     this.state = {
       activities: [],
       loading: true,
+      currentSession: {},
+      profile: {},
     };
   }
 
@@ -32,9 +32,10 @@ export default class Transcript extends Component {
   async loadTranscript() {
     this.setState({ loading: true });
     try {
+      const currentSession = await session.getCurrent();
       const profile = await user.getProfileInfo();
       const activities = await user.getMemberships(profile.ID);
-      this.setState({ loading: false, activities });
+      this.setState({ loading: false, activities, currentSession, profile });
       console.log('loadTranscript: ' + activities);
     } catch (error) {
       this.setState({ error });
@@ -66,7 +67,7 @@ export default class Transcript extends Component {
     };
 
     return (
-      <div>
+      <div class>
         <Grid
           className="transcript"
           alignItems="center"
@@ -76,29 +77,32 @@ export default class Transcript extends Component {
           md={8}
           lg={8}
         >
-          <Paper elevation="10">
+          <Card elevation="10">
             <CardContent>
               <Grid item xs={12}>
                 <Button raised style={button} justify="center" onClick={this.handleDownload}>
                   Download Transcript
                 </Button>
               </Grid>
-              <Grid item xs={12} margin="normal">
-                <div style={divStyle}> Experience Transcript </div>
+              <Grid item xs={12} margin="normal" class="print">
+                <div style={divStyle}> Experience Transcript - {this.state.profile.fullName} </div>
               </Grid>
-              <Grid item xs={12}>
-                <div> Spring 17-18 Academic Year </div>
+              <Grid item xs={12} class="print">
+                <div> {this.state.currentSession.SessionDescription} </div>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} class="print">
                 <Grid container spacing={0}>
                   <Grid item xs={4}>
                     <div style={divStyle}> Activity </div>
+                    <Divider />
                   </Grid>
                   <Grid item xs={4}>
                     <div style={divStyle}> Participation </div>
+                    <Divider />
                   </Grid>
                   <Grid item xs={4}>
                     <div style={divStyle}> Total Semesters </div>
+                    <Divider />
                   </Grid>
                   <Grid item xs={12}>
                     {activityList}
@@ -106,7 +110,7 @@ export default class Transcript extends Component {
                 </Grid>
               </Grid>
             </CardContent>
-          </Paper>
+          </Card>
         </Grid>
       </div>
     );

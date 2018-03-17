@@ -15,3 +15,24 @@
 .transcript {
   text-align: center;
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print * {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .no-print {
+    visibility: hidden;
+  }
+
+  // @page {
+  //   margin: 0;
+  //        }
+}
