@@ -30,23 +30,50 @@ import http from './http';
  */
 
 /**
+ * @param {Object} data Data passed in
+ * @return {Promise<any>} Response
+ */
+const addAdmin = data => {
+  return http.post(`admins`, data);
+};
+
+/**
  * Create a new membership
  * @param {*} data Data passed in
  * @return {Promise<any>} Response
  */
-const addMembership = data => http.post(`memberships`, data);
+function addMembership(data) {
+  console.log(data);
+  return http.post(`memberships`, data).catch(reason => {
+    console.log(reason);
+  });
+}
 
 /**
- * Get specific membership for the activity and given session code
- * @param {String} activityCode Identifier for an activity
+ * Check if user is Admin of activity
+ * @param {String} id ID of user
  * @param {String} sessionCode Identifier for a session
- * @return {Member[]} List of members in given session
+ * @param {String} activityCode Identifier for an activity
+ * @return {boolean} True if given id is a group admin, else false
  */
-const get = (activityCode, sessionCode) => {
-  let allMembership = getAll(activityCode).then(function(result) {
-    return filterCurrent(result, sessionCode);
-  });
-  return allMembership;
+const checkAdmin = (id, sessionCode, activityCode) => {
+  let isGroupAdmin = http
+    .get(`memberships/activity/${activityCode}/group-admin`)
+    .then(function(result) {
+      for (var i = 0; i < result.length; i++) {
+        if (result[i].ActivityCode === activityCode) {
+          if (result[i].SessionCode === sessionCode) {
+            if (result[i].IDNumber === parseInt(id, 10)) {
+              console.log('true');
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    });
+  console.log(isGroupAdmin);
+  return isGroupAdmin;
 };
 
 /**
@@ -64,6 +91,20 @@ const filterCurrent = (memberArray, sessionCode) => {
   }
   return currentSessionMembership;
 };
+
+/**
+ * Get specific membership for the activity and given session code
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @return {Member[]} List of members in given session
+ */
+const get = (activityCode, sessionCode) => {
+  let allMembership = getAll(activityCode).then(function(result) {
+    return filterCurrent(result, sessionCode);
+  });
+  return allMembership;
+};
+
 /**
  * Get all memberships
  * @param {String} activityCode Identifier for an activity
@@ -110,21 +151,32 @@ const getIndividualMembership = userID =>
 /**
  * Remove given member from membership table
  * @param {Member} member The member to remove
+ * @return {Promise.<Object>} Response body
  */
 const remove = member => {
-  http.del(`memberships/${member.MembershipID}`, this);
+  return http.del(`memberships/${member.MembershipID}`);
+};
+
+/**
+ * Remove admin with given id
+ * @param {String} id Id of Admin
+ * @return {Promise.<Object>} Response body
+ */
+const removeAdmin = id => {
+  return http.del(`admin/${id}`);
 };
 
 /**
  * Request membership
  * @param {Object} data Data passed in
+ * @return {Object} jason response
  */
-const requestMembership = data => {
+function requestMembership(data) {
   console.log(data);
-  http.post(`requests`, data).catch(reason => {
+  return http.post(`requests`, data).catch(reason => {
     console.log(reason);
   });
-};
+}
 
 /**
  * Search to see if user with given id is in given activtiy and session
@@ -146,8 +198,11 @@ const search = (id, sessionCode, activityCode) => {
   });
   return found;
 };
+
 export default {
+  addAdmin,
   addMembership,
+  checkAdmin,
   get,
   getAll,
   getAllGroupAdmins,
@@ -155,6 +210,7 @@ export default {
   getMembersNum,
   getIndividualMembership,
   remove,
+  removeAdmin,
   requestMembership,
   search,
 };

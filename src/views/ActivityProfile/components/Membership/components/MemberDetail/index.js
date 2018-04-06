@@ -17,6 +17,7 @@ import Typography from 'material-ui/Typography';
 
 import { gordonColors } from '../../../../../../theme';
 import user from '../../../../../../services/user';
+import membership from '../../../../../../services/membership';
 
 export default class MemberDetail extends Component {
   constructor(props) {
@@ -41,6 +42,7 @@ export default class MemberDetail extends Component {
 
   async componentWillMount() {
     this.setState({
+      admin: this.props.admin,
       groupAdmin: this.props.groupAdmin,
       participationLevel: this.props.member.ParticipationDescription,
       titleComment: this.props.Description,
@@ -49,6 +51,8 @@ export default class MemberDetail extends Component {
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
+    // membership.addAdmin();
+    this.forceUpdate();
   };
 
   handleClick() {
@@ -59,8 +63,8 @@ export default class MemberDetail extends Component {
     this.setState({ participationLevel: event.target.value });
   };
 
-  handleText = event => {
-    this.setState({ titleComment: event.target.value });
+  handleText = name => event => {
+    this.setState({ [name]: event.target.value });
   };
 
   onChange = event => {
@@ -79,6 +83,10 @@ export default class MemberDetail extends Component {
 
   onLeave() {
     this.setState({ alertLeave: true });
+  }
+
+  confirmLeave() {
+    membership.remove(this);
   }
 
   onRemove() {
@@ -106,17 +114,22 @@ export default class MemberDetail extends Component {
             <Button style={leaveButton} onClick={this.onLeave} raised>
               LEAVE
             </Button>
-            <Dialog open={this.state.alertLeave} keepMounted align="center">
+            <Dialog
+              open={this.state.alertLeave}
+              keepMounted
+              align="center"
+              onBackdropClick={this.onClose}
+            >
               <DialogTitle>Are you sure you want to leave the activity?</DialogTitle>
               <DialogContent>
                 <Grid container>
-                  <Grid item>
+                  <Grid item xs={6} sm={6} md={6} lg={6}>
                     <Button color="primary" onClick={this.onClose} raised>
                       No, stay
                     </Button>
                   </Grid>
-                  <Grid item>
-                    <Button raised style={leaveButton}>
+                  <Grid item xs={6} sm={6} md={6} lg={6}>
+                    <Button raised onClick={this.confirmLeave} style={leaveButton}>
                       Yes, leave
                     </Button>
                   </Grid>
@@ -173,7 +186,7 @@ export default class MemberDetail extends Component {
                       <Typography>Title/Comment: (Optional)</Typography>
                       <TextField
                         fullWidth
-                        onChange={this.handleText}
+                        onChange={this.handleText('titleComment')}
                         style={formControl}
                         value={this.state.titleComment}
                       />

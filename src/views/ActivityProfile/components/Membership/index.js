@@ -24,7 +24,6 @@ export default class Membership extends Component {
     this.onClose = this.onClose.bind(this);
     this.onRequest = this.onRequest.bind(this);
     this.onSubscribe = this.onSubscribe.bind(this);
-    this.searchUser = this.searchUser.bind(this);
 
     this.state = {
       activityMembers: [],
@@ -35,6 +34,7 @@ export default class Membership extends Component {
       activityDescription: '',
       participationLevel: '',
       titleComment: '',
+      isAdmin: false,
       isMember: false,
       id: '',
     };
@@ -61,43 +61,39 @@ export default class Membership extends Component {
   }
 
   onRequest() {
-    let date = new Date();
+    // let date = new Date();
     let data = {
-      SESS_CDE: this.state.sessionInfo.SessionCode,
       ACT_CDE: this.props.activityCode,
+      SESS_CDE: this.state.sessionInfo.SessionCode,
       ID_NUM: user.getLocalInfo().id,
       PART_CDE: this.state.participationLevel,
-      DATE_SENT: '2018-03-09 17:00:15.000',
+      DATE_SENT: '2018-04-06 23:00:00.000',
       COMMENT_TXT: this.state.titleComment,
-      STATUS: 'Pending',
+      APPROVED: 'Pending',
     };
     // console.log(date)
-    this.onClose();
     console.log('Request sent');
     membership.requestMembership(data);
+    this.onClose();
   }
 
   onSubscribe() {
     let data = {
-      ACT_CDE: this.state.activityCode,
+      ACT_CDE: this.props.activityCode,
       SESS_CDE: this.state.sessionInfo.SessionCode,
       ID_NUM: user.getLocalInfo().id,
       PART_CDE: 'GUEST',
-      BEGIN_DTE: this.state.sessionInfo.SessionBeginDate,
+      // "BEGIN_DTE": this.state.sessionInfo.SessionBeginDate,
       COMMENT_TXT: 'Basic Follower',
       GRP_ADMIN: false,
     };
+    console.log('Subscription sent');
     membership.addMembership(data);
-  }
-
-  searchUser(id, sessionCode, activityCode) {
-    return membership.search(id, sessionCode, activityCode);
   }
 
   async loadMembers() {
     this.setState({ loading: true });
     try {
-      this.setState({ loading: false });
       const id = await user.getLocalInfo().id;
       this.setState({ id });
       const isMember = await membership.search(
@@ -106,12 +102,19 @@ export default class Membership extends Component {
         this.props.activityCode,
       );
       this.setState({ isMember });
+      const isAdmin = await membership.checkAdmin(
+        this.state.id,
+        this.props.sessionInfo.SessionCode,
+        this.props.activityCode,
+      );
+      this.setState({ isAdmin });
       this.setState({
         activityDescription: this.props.activityDescription,
         participationLevel: '',
         sessionInfo: this.props.sessionInfo,
         titleComment: '',
       });
+      this.setState({ loading: false });
     } catch (error) {
       this.setState({ error });
     }
@@ -135,6 +138,7 @@ export default class Membership extends Component {
             {members.map(groupMember => (
               <MemberDetail
                 member={groupMember}
+                admin={false}
                 groupAdmin={groupMember.GroupAdmin}
                 key={groupMember.MembershipID}
               />
@@ -145,7 +149,7 @@ export default class Membership extends Component {
       } else {
         content = (
           <CardActions>
-            <Button color="primary" raised>
+            <Button color="primary" onClick={this.onSubscribe} raised>
               Subscribe
             </Button>
             <Button color="primary" onClick={this.handleClick} raised>

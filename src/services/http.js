@@ -47,6 +47,7 @@ const createRequest = (url, method, body) =>
  */
 export const parseResponse = res => {
   // Attempt to parse body of response
+  console.log(res);
   const json = res
     .json()
     // Handle error if response body is not valid JSON
