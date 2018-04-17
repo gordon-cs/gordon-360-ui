@@ -31,6 +31,7 @@ export default class MemberDetail extends Component {
       alertRemove: false,
       titleComment: '',
     };
+    this.confirmLeave = this.confirmLeave.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
@@ -49,10 +50,13 @@ export default class MemberDetail extends Component {
     });
   }
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.checked });
-    // membership.addAdmin();
-    this.forceUpdate();
+  handleChange = name => {
+    return event => {
+      this.setState({ [name]: event.target.checked });
+      console.log(this.props.member.MembershipID);
+      membership.toggleGroupAdmin(this.props.member.MembershipID);
+      // this.forceUpdate(); // Not working
+    };
   };
 
   handleClick() {
@@ -71,6 +75,7 @@ export default class MemberDetail extends Component {
     this.setState({ participationLevel: event.target.value });
   };
 
+  // Closes dialog boxes and resets as if no changes were made
   onClose() {
     this.setState({
       alertLeave: false,
@@ -81,14 +86,18 @@ export default class MemberDetail extends Component {
     });
   }
 
+  // Opens dialog box asking if certain user wants to leave
   onLeave() {
     this.setState({ alertLeave: true });
   }
 
+  // Called when user confirms removal
   confirmLeave() {
-    membership.remove(this);
+    membership.remove(this.props.member.MembershipID);
+    this.onClose();
   }
 
+  // Opens dialog box asking if certain admin wants to remove member
   onRemove() {
     this.setState({ alertRemove: true });
   }
@@ -219,7 +228,7 @@ export default class MemberDetail extends Component {
               <DialogContent>
                 <Grid container>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button color="primary" raised>
+                    <Button color="primary" onClick={this.confirmLeave} raised>
                       OK
                     </Button>
                   </Grid>

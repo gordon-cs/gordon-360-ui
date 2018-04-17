@@ -30,14 +30,6 @@ import http from './http';
  */
 
 /**
- * @param {Object} data Data passed in
- * @return {Promise<any>} Response
- */
-const addAdmin = data => {
-  return http.post(`admins`, data);
-};
-
-/**
  * Create a new membership
  * @param {*} data Data passed in
  * @return {Promise<any>} Response
@@ -139,7 +131,7 @@ const getMembersNum = (activityCode, sessionCode) =>
   http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
 
 /**
- * Get a student's list of memberships
+ * Get a given user's list of memberships
  * @param {String} userID ID of user
  * @return {Member[]} Array of the given student's memberships
  */
@@ -149,27 +141,18 @@ const getIndividualMembership = userID =>
   });
 
 /**
- * Remove given member from membership table
- * @param {Member} member The member to remove
+ * Remove given membershipID from membership table (Example of successful delete)
+ * @param {String} membershipID The membershipID to remove
  * @return {Promise.<Object>} Response body
  */
-const remove = member => {
-  return http.del(`memberships/${member.MembershipID}`);
-};
-
-/**
- * Remove admin with given id
- * @param {String} id Id of Admin
- * @return {Promise.<Object>} Response body
- */
-const removeAdmin = id => {
-  return http.del(`admin/${id}`);
+const remove = membershipID => {
+  return http.del(`memberships/${membershipID}`);
 };
 
 /**
  * Request membership
  * @param {Object} data Data passed in
- * @return {Object} jason response
+ * @return {Promise<Object>} Response body
  */
 function requestMembership(data) {
   console.log(data);
@@ -199,8 +182,16 @@ const search = (id, sessionCode, activityCode) => {
   return found;
 };
 
+/**
+ * Toggle whether or not a member with given membershipID is a groupAdmin
+ * @param {Object} membershipID MembershipID of user to edit groupAdmin status
+ * @return {Promise<any>} Response
+ */
+const toggleGroupAdmin = membershipID => {
+  return http.put(`memberships/${membershipID}/group-admin`);
+};
+
 export default {
-  addAdmin,
   addMembership,
   checkAdmin,
   get,
@@ -210,7 +201,7 @@ export default {
   getMembersNum,
   getIndividualMembership,
   remove,
-  removeAdmin,
   requestMembership,
   search,
+  toggleGroupAdmin,
 };

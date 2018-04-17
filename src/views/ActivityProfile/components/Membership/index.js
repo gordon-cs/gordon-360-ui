@@ -138,7 +138,7 @@ export default class Membership extends Component {
             {members.map(groupMember => (
               <MemberDetail
                 member={groupMember}
-                admin={false}
+                admin={this.state.isAdmin}
                 groupAdmin={groupMember.GroupAdmin}
                 key={groupMember.MembershipID}
               />
