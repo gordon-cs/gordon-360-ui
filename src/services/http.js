@@ -19,6 +19,7 @@ const makeHeaders = () => {
     const token = storage.get('token');
     return new Headers({
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     });
   } catch (err) {
     throw new Error('Token is not available');
@@ -91,7 +92,7 @@ const put = (url, body) => makeRequest(url, 'put', body);
  * @param {object|array} body data to send with request
  * @return {Promise.<Object>} Response body
  */
-const post = (url, body) => makeRequest(url, 'post', body);
+const post = (url, body) => makeRequest(url, 'post', JSON.stringify(body));
 
 /**
  * Delete

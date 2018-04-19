@@ -25,7 +25,7 @@ export default class MemberDetail extends Component {
     this.state = {
       openEdit: false,
       alertLeave: false,
-      admin: true,
+      admin: false,
       groupAdmin: true,
       participationLevel: '',
       alertRemove: false,

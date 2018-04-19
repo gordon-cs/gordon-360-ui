@@ -61,17 +61,16 @@ export default class Membership extends Component {
   }
 
   onRequest() {
-    // let date = new Date();
+    let date = new Date();
     let data = {
       ACT_CDE: this.props.activityCode,
       SESS_CDE: this.state.sessionInfo.SessionCode,
       ID_NUM: user.getLocalInfo().id,
       PART_CDE: this.state.participationLevel,
-      DATE_SENT: '2018-04-06 23:00:00.000',
+      DATE_SENT: date.toLocaleString(),
       COMMENT_TXT: this.state.titleComment,
       APPROVED: 'Pending',
     };
-    // console.log(date)
     console.log('Request sent');
     membership.requestMembership(data);
     this.onClose();
@@ -87,6 +86,7 @@ export default class Membership extends Component {
       COMMENT_TXT: 'Basic Follower',
       GRP_ADMIN: false,
     };
+
     console.log('Subscription sent');
     membership.addMembership(data);
   }
