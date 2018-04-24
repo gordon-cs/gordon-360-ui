@@ -24,6 +24,7 @@ export default class Membership extends Component {
     this.onClose = this.onClose.bind(this);
     this.onRequest = this.onRequest.bind(this);
     this.onSubscribe = this.onSubscribe.bind(this);
+    this.onUnsubscribe = this.onUnsubscribe.bind(this);
 
     this.state = {
       activityMembers: [],
@@ -32,10 +33,10 @@ export default class Membership extends Component {
       sessionInfo: null,
       activityCode: '',
       activityDescription: '',
-      participationLevel: '',
+      participationCode: '',
       titleComment: '',
       isAdmin: false,
-      isMember: false,
+      participationDetail: [],
       id: '',
     };
   }
@@ -45,7 +46,7 @@ export default class Membership extends Component {
   }
 
   handleChange = event => {
-    this.setState({ participationLevel: event.target.value });
+    this.setState({ participationCode: event.target.value });
   };
 
   handleClick() {
@@ -57,7 +58,7 @@ export default class Membership extends Component {
   };
 
   onClose() {
-    this.setState({ open: false, participationLevel: '', titleComment: '' });
+    this.setState({ open: false, participationCode: '', titleComment: '' });
   }
 
   onRequest() {
@@ -66,7 +67,7 @@ export default class Membership extends Component {
       ACT_CDE: this.props.activityCode,
       SESS_CDE: this.state.sessionInfo.SessionCode,
       ID_NUM: user.getLocalInfo().id,
-      PART_CDE: this.state.participationLevel,
+      PART_CDE: this.state.participationCode,
       DATE_SENT: date.toLocaleString(),
       COMMENT_TXT: this.state.titleComment,
       APPROVED: 'Pending',
@@ -82,7 +83,6 @@ export default class Membership extends Component {
       SESS_CDE: this.state.sessionInfo.SessionCode,
       ID_NUM: user.getLocalInfo().id,
       PART_CDE: 'GUEST',
-      // "BEGIN_DTE": this.state.sessionInfo.SessionBeginDate,
       COMMENT_TXT: 'Basic Follower',
       GRP_ADMIN: false,
     };
@@ -91,17 +91,23 @@ export default class Membership extends Component {
     membership.addMembership(data);
   }
 
+  onUnsubscribe() {
+    let membershipID = this.state.participationDetail[2];
+    membership.remove(membershipID);
+    this.setState({ participationDetail: [false, false, null] });
+  }
+
   async loadMembers() {
     this.setState({ loading: true });
     try {
       const id = await user.getLocalInfo().id;
       this.setState({ id });
-      const isMember = await membership.search(
+      const participationDetail = await membership.search(
         this.state.id,
         this.props.sessionInfo.SessionCode,
         this.props.activityCode,
       );
-      this.setState({ isMember });
+      this.setState({ participationDetail });
       const isAdmin = await membership.checkAdmin(
         this.state.id,
         this.props.sessionInfo.SessionCode,
@@ -110,7 +116,7 @@ export default class Membership extends Component {
       this.setState({ isAdmin });
       this.setState({
         activityDescription: this.props.activityDescription,
-        participationLevel: '',
+        participationCode: '',
         sessionInfo: this.props.sessionInfo,
         titleComment: '',
       });
@@ -126,13 +132,14 @@ export default class Membership extends Component {
       throw this.state.error;
     }
     let content;
+    let subscribeButton;
     const formControl = {
       padding: 10,
     };
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      if (this.state.isMember) {
+      if (this.state.participationDetail[0] && !this.state.participationDetail[1]) {
         content = (
           <section>
             {members.map(groupMember => (
@@ -147,11 +154,22 @@ export default class Membership extends Component {
           </section>
         );
       } else {
-        content = (
-          <CardActions>
+        if (this.state.participationDetail[0] && this.state.participationDetail[1]) {
+          subscribeButton = (
+            <Button color="primary" onClick={this.onUnsubscribe} raised>
+              Unsubscribe
+            </Button>
+          );
+        } else {
+          subscribeButton = (
             <Button color="primary" onClick={this.onSubscribe} raised>
               Subscribe
             </Button>
+          );
+        }
+        content = (
+          <CardActions>
+            {subscribeButton}
             <Button color="primary" onClick={this.handleClick} raised>
               Join
             </Button>
@@ -164,7 +182,7 @@ export default class Membership extends Component {
                     <Grid item padding={6} align="center">
                       <FormControl fullWidth style={formControl}>
                         <Select
-                          value={this.state.participationLevel}
+                          value={this.state.participationCode}
                           onChange={this.handleChange}
                           displayEmpty
                         >

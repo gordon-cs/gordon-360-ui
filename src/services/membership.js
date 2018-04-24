@@ -9,24 +9,24 @@ import http from './http';
 /**
  * @global
  * @typedef Member
- * @property {Number} AccountPrivate
- * @property {String} ActivityCode
- * @property {String} ActivityDescription
- * @property {String} ActivityImage
- * @property {String} ActivityImagePath
- * @property {String} Description
- * @property {String} EndDate
- * @property {String} FirstName
- * @property {String} GroupAdmin
- * @property {Number} IDNumber
- * @property {String} LastName
- * @property {Number} MembershipID
- * @property {String} Participation
- * @property {String} ParticipationDescription
- * @property {String} Privacy
- * @property {String} SessionCode
- * @property {String} SessionDescription
- * @property {String} StartDate
+ * @property {Number} AccountPrivate 0 if false, 1 if private
+ * @property {String} ActivityCode Identifier for activity
+ * @property {String} ActivityDescription Activity Title
+ * @property {String} ActivityImage Often null
+ * @property {String} ActivityImagePath URL path for activity image
+ * @property {String} Description Comment text for membership
+ * @property {String} EndDate Often null
+ * @property {String} FirstName First Name
+ * @property {boolean} GroupAdmin Boolean if Group Admin or not
+ * @property {Number} IDNumber User id
+ * @property {String} LastName Last Name
+ * @property {Number} MembershipID Membership ID
+ * @property {String} Participation Participation Code or abbreviation
+ * @property {String} ParticipationDescription Participation description
+ * @property {String} Privacy 0 if not private, 1 if private, sometimes null
+ * @property {String} SessionCode Identifier for session
+ * @property {String} SessionDescription Session description
+ * @property {String} StartDate Beginning date of session
  */
 
 /**
@@ -35,7 +35,6 @@ import http from './http';
  * @return {Promise<any>} Response
  */
 function addMembership(data) {
-  console.log(data);
   return http.post(`memberships`, data).catch(reason => {
     console.log(reason);
   });
@@ -56,7 +55,6 @@ const checkAdmin = (id, sessionCode, activityCode) => {
         if (result[i].ActivityCode === activityCode) {
           if (result[i].SessionCode === sessionCode) {
             if (result[i].IDNumber === parseInt(id, 10)) {
-              console.log('true');
               return true;
             }
           }
@@ -64,7 +62,6 @@ const checkAdmin = (id, sessionCode, activityCode) => {
       }
       return false;
     });
-  console.log(isGroupAdmin);
   return isGroupAdmin;
 };
 
@@ -113,7 +110,7 @@ const getAllGroupAdmins = activityCode =>
   http.get(`memberships/activity/${activityCode}/group-admin`);
 
 /**
- * Get number of followers of an activity
+ * Get number of followers (guests) of an activity
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
  * @returns {Number} Number of followers
@@ -162,33 +159,38 @@ function requestMembership(data) {
 }
 
 /**
- * Search to see if user with given id is in given activtiy and session
+ * Search to see details of user with given id relating to given activtiy and session
  * @param {String} id User id
  * @param {String} sessionCode Identifier for session
  * @param {String} activityCode Identifier for activity
- * @return {boolean} True if user is a member of given activity and session, false if not a member
+ * @return {Array[]} 3 elements: boolean if in specific activity and session, boolean if guest,
+ *                  and membershipID if in specific activity and session
  */
 const search = (id, sessionCode, activityCode) => {
   let found = http.get(`memberships/student/${id}`).then(function(result) {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
         if (result[i].SessionCode === sessionCode) {
-          return true;
+          if (result[i].Participation === 'GUEST') {
+            return [true, true, result[i].MembershipID];
+          }
+          return [true, false, result[i].MembershipIDnull];
         }
       }
     }
-    return false;
+    return [false, false, null];
   });
   return found;
 };
 
 /**
- * Toggle whether or not a member with given membershipID is a groupAdmin
+ * Toggle whether or not a member with given membershipID is a groupAdmin (Example of succesful put)
  * @param {Object} membershipID MembershipID of user to edit groupAdmin status
+ * @param {Object} data Data passed in
  * @return {Promise<any>} Response
  */
-const toggleGroupAdmin = membershipID => {
-  return http.put(`memberships/${membershipID}/group-admin`);
+const toggleGroupAdmin = (membershipID, data) => {
+  return http.put(`memberships/${membershipID}/group-admin`, data);
 };
 
 export default {

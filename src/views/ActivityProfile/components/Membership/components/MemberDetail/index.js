@@ -53,8 +53,14 @@ export default class MemberDetail extends Component {
   handleChange = name => {
     return event => {
       this.setState({ [name]: event.target.checked });
-      console.log(this.props.member.MembershipID);
-      membership.toggleGroupAdmin(this.props.member.MembershipID);
+      let data = {
+        Membership_ID: this.props.member.MembershipID,
+        ACT_CDE: this.props.member.ActivityCode,
+        SESS_CDE: this.props.member.SessionCode,
+        ID_NUM: this.props.member.IDNumber,
+        PART_CDE: this.props.member.Participation,
+      };
+      membership.toggleGroupAdmin(this.props.member.MembershipID, data);
       // this.forceUpdate(); // Not working
     };
   };
@@ -114,7 +120,6 @@ export default class MemberDetail extends Component {
     } else {
       showLeaveButton = false;
     }
-
     let leave;
     if (showLeaveButton) {
       leave = (
