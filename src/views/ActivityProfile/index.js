@@ -130,6 +130,10 @@ class ActivityProfile extends Component {
               {website}
               {groupContacts}
               {advisors}
+              <Typography>
+                <strong>Special Information for Joining: </strong>
+                {this.state.activityInfo.ActivityJoinInfo}
+              </Typography>
               <Typography type="body1">
                 <strong>Current Activity Roster: </strong>
                 {membersNum} Member(s) and {followers} follower(s)

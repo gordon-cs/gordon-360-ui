@@ -31,7 +31,7 @@ import http from './http';
 
 /**
  * Create a new membership
- * @param {*} data Data passed in
+ * @param {Object} data Data passed in
  * @return {Promise<any>} Response
  */
 function addMembership(data) {
@@ -108,6 +108,16 @@ const getAll = activityCode => http.get(`memberships/activity/${activityCode}`);
  */
 const getAllGroupAdmins = activityCode =>
   http.get(`memberships/activity/${activityCode}/group-admin`);
+
+/**
+ * Get email account details of given email
+ * @param {String} email Email
+ * @return {Object} Email details
+ */
+const getEmailAccount = email => {
+  console.log(Promise.resolve(http.get(`accounts/email/${email}/`)));
+  return Promise.resolve(http.get(`accounts/email/${email}/`));
+};
 
 /**
  * Get number of followers (guests) of an activity
@@ -199,6 +209,7 @@ export default {
   get,
   getAll,
   getAllGroupAdmins,
+  getEmailAccount,
   getFollowersNum,
   getMembersNum,
   getIndividualMembership,
