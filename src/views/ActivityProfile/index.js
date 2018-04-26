@@ -138,9 +138,9 @@ class ActivityProfile extends Component {
                 <strong>Current Activity Roster: </strong>
                 {membersNum} Member(s) and {followers} follower(s)
               </Typography>
-              {membership}
             </CardContent>
           </Card>
+          {membership}
         </section>
       );
     }

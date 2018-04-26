@@ -1,5 +1,5 @@
 import Button from 'material-ui/Button';
-import { CardActions } from 'material-ui/Card';
+import Card, { CardActions } from 'material-ui/Card';
 import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog';
 import Grid from 'material-ui/Grid';
 import { FormControl } from 'material-ui/Form';
@@ -15,6 +15,7 @@ import MemberDetail from './components/MemberDetail';
 import membership from '../../../../services/membership';
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
+import { CardContent } from 'material-ui';
 
 export default class Membership extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ export default class Membership extends Component {
     this.onUnsubscribe = this.onUnsubscribe.bind(this);
 
     this.state = {
-      activityMembers: [],
+      // activityMembers: [],
       openAddMember: false,
       openJoin: false,
       mode: '',
@@ -42,7 +43,8 @@ export default class Membership extends Component {
       isAdmin: false,
       participationDetail: [],
       id: '',
-      email: '',
+      addEmail: '',
+      addGordonID: '',
     };
   }
 
@@ -79,18 +81,14 @@ export default class Membership extends Component {
     });
   }
 
-  onAddMember() {
-    // let addMemberGordonID;
-    // try {
-    //   addMemberGordonID = membership.getEmailAccount(this.state.email).GordonID;
-    // }
-    // catch (error) {
-    //   this.setState({ error });
-    // };
+  async onAddMember() {
+    let addID = await membership.getEmailAccount(this.state.addEmail).then(function(result) {
+      return result.GordonID;
+    });
     let data = {
       ACT_CDE: this.props.activityCode,
       SESS_CDE: this.state.sessionInfo.SessionCode,
-      ID_NUM: '50117703',
+      ID_NUM: addID,
       PART_CDE: this.state.participationCode,
       COMMENT_TXT: this.state.titleComment,
       GRP_ADMIN: false,
@@ -184,70 +182,79 @@ export default class Membership extends Component {
     if (this.state.isAdmin) {
       adminButtons = (
         <section>
-          <Grid container>
-            <Grid item xs={6} sm={4} md={4} lg={4}>
-              <Button color="primary" onClick={this.handleAddMemberClick} raised>
-                Add member
-              </Button>
-            </Grid>
-            <Dialog open={this.state.openAddMember} keepMounted align="center">
-              <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
-              <DialogContent>
-                <Grid container align="center" padding={6}>
-                  <Grid item xs={12} padding={6} align="center">
-                    <Typography>Student Email</Typography>
-                    <TextField fullWidth style={formControl} onChange={this.handleText('email')} />
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
-                    <Typography>Participation (Required)</Typography>
-                    <Grid item padding={6} align="center">
-                      <FormControl fullWidth style={formControl}>
-                        <Select
-                          value={this.state.participationCode}
-                          onChange={this.handleSelect('participationCode')}
-                          displayEmpty
-                        >
-                          <MenuItem value="ADV">Advisor</MenuItem>
-                          <MenuItem value="GUEST">Guest</MenuItem>
-                          <MenuItem value="LEAD">Leader</MenuItem>
-                          <MenuItem value="MEMBR">Member</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item align="center">
-                      <Typography>Title/Comment: (Optional)</Typography>
-                      <TextField
-                        fullWidth
-                        onChange={this.handleText('titleComment')}
-                        style={formControl}
-                        value={this.state.titleComment}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12} sm={6} style={formControl}>
-                    <Button color="primary" onClick={this.onAddMember} raised>
-                      Add member
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={6} style={formControl}>
-                    <Button color="primary" onClick={this.onClose} raised>
-                      CANCEL
-                    </Button>
-                  </Grid>
+          <Card>
+            <CardContent>
+              <Grid container>
+                <Grid item xs={6} sm={4} md={4} lg={4}>
+                  <Button color="primary" onClick={this.handleAddMemberClick} raised>
+                    Add member
+                  </Button>
                 </Grid>
-              </DialogContent>
-            </Dialog>
-            <Grid item xs={6} sm={4} md={4} lg={4}>
-              <Button color="primary" disabled raised>
-                Edit activity
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={4} md={4} lg={4}>
-              <Button raised disabled style={removeButton}>
-                Remove image
-              </Button>
-            </Grid>
-          </Grid>
+                <Dialog open={this.state.openAddMember} keepMounted align="center">
+                  <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
+                  <DialogContent>
+                    <Grid container align="center" padding={6}>
+                      <Grid item xs={12} padding={6} align="center">
+                        <Typography>Student Email</Typography>
+                        <TextField
+                          autoFocus
+                          fullWidth
+                          style={formControl}
+                          onChange={this.handleText('addEmail')}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
+                        <Typography>Participation (Required)</Typography>
+                        <Grid item padding={6} align="center">
+                          <FormControl fullWidth style={formControl}>
+                            <Select
+                              value={this.state.participationCode}
+                              onChange={this.handleSelect('participationCode')}
+                              displayEmpty
+                            >
+                              <MenuItem value="ADV">Advisor</MenuItem>
+                              <MenuItem value="GUEST">Guest</MenuItem>
+                              <MenuItem value="LEAD">Leader</MenuItem>
+                              <MenuItem value="MEMBR">Member</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                        <Grid item align="center">
+                          <Typography>Title/Comment: (Optional)</Typography>
+                          <TextField
+                            fullWidth
+                            onChange={this.handleText('titleComment')}
+                            style={formControl}
+                            value={this.state.titleComment}
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={12} sm={6} style={formControl}>
+                        <Button color="primary" onClick={this.onAddMember} raised>
+                          Add member
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12} sm={6} style={formControl}>
+                        <Button color="primary" onClick={this.onClose} raised>
+                          CANCEL
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </DialogContent>
+                </Dialog>
+                <Grid item xs={6} sm={4} md={4} lg={4}>
+                  <Button color="primary" disabled raised>
+                    Edit activity
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={4} md={4} lg={4}>
+                  <Button raised disabled style={removeButton}>
+                    Remove image
+                  </Button>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
         </section>
       );
     }

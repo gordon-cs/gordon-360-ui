@@ -114,9 +114,9 @@ const getAllGroupAdmins = activityCode =>
  * @param {String} email Email
  * @return {Object} Email details
  */
-const getEmailAccount = email => {
-  console.log(Promise.resolve(http.get(`accounts/email/${email}/`)));
-  return Promise.resolve(http.get(`accounts/email/${email}/`));
+const getEmailAccount = async email => {
+  // console.log(http.get(`accounts/email/${email}/`));
+  return await http.get(`accounts/email/${email}/`);
 };
 
 /**
