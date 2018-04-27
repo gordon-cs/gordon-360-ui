@@ -324,7 +324,12 @@ export default class Membership extends Component {
                     </Grid>
                     <Grid item align="center">
                       <Typography>Title/Comment: (Optional)</Typography>
-                      <TextField fullWidth onChange={this.handleText} style={formControl} />
+                      <TextField
+                        fullWidth
+                        displayEmpty
+                        onChange={this.handleText}
+                        style={formControl}
+                      />
                     </Grid>
                     <Grid item style={formControl}>
                       <Button color="primary" onClick={this.onRequest} raised>

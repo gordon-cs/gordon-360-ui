@@ -27,7 +27,8 @@ export default class MemberDetail extends Component {
       alertLeave: false,
       admin: false,
       groupAdmin: true,
-      participationLevel: '',
+      participationDescription: '',
+      participation: '',
       alertRemove: false,
       titleComment: '',
     };
@@ -37,6 +38,7 @@ export default class MemberDetail extends Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleText = this.handleText.bind(this);
     this.onClose = this.onClose.bind(this);
+    this.onEditMember = this.onEditMember.bind(this);
     this.onLeave = this.onLeave.bind(this);
     this.onRemove = this.onRemove.bind(this);
   }
@@ -45,8 +47,9 @@ export default class MemberDetail extends Component {
     this.setState({
       admin: this.props.admin,
       groupAdmin: this.props.groupAdmin,
-      participationLevel: this.props.member.ParticipationDescription,
-      titleComment: this.props.Description,
+      participationDescription: this.props.member.ParticipationDescription,
+      participation: this.props.member.Participation,
+      titleComment: this.props.member.Description,
     });
   }
 
@@ -54,7 +57,7 @@ export default class MemberDetail extends Component {
     return event => {
       this.setState({ [name]: event.target.checked });
       let data = {
-        Membership_ID: this.props.member.MembershipID,
+        MEMBERSHIP_ID: this.props.member.MembershipID,
         ACT_CDE: this.props.member.ActivityCode,
         SESS_CDE: this.props.member.SessionCode,
         ID_NUM: this.props.member.IDNumber,
@@ -69,16 +72,26 @@ export default class MemberDetail extends Component {
     this.setState({ openEdit: true });
   }
 
-  handleSelect = name => event => {
-    this.setState({ participationLevel: event.target.value });
+  // Updates participation level dropdown
+  handleSelect = event => {
+    this.setState({ participationDescription: event.target.value });
+    switch (event.target.value) {
+      case 'Member':
+        this.setState({ participation: 'MEMBR' });
+        break;
+      case 'Leader':
+        this.setState({ participation: 'LEAD' });
+        break;
+      case 'Advisor':
+        this.setState({ participation: 'ADV' });
+        break;
+      default:
+        this.setState({ participation: 'GUEST' });
+    }
   };
 
   handleText = name => event => {
     this.setState({ [name]: event.target.value });
-  };
-
-  onChange = event => {
-    this.setState({ participationLevel: event.target.value });
   };
 
   // Closes dialog boxes and resets as if no changes were made
@@ -87,9 +100,22 @@ export default class MemberDetail extends Component {
       alertLeave: false,
       alertRemove: false,
       openEdit: false,
-      participationLevel: this.props.member.ParticipationDescription,
+      participationDescription: this.props.member.ParticipationDescription,
       titleComment: '',
     });
+  }
+
+  // Edits membership
+  onEditMember() {
+    let data = {
+      MEMBERSHIP_ID: this.props.member.MembershipID,
+      ACT_CDE: this.props.member.ActivityCode,
+      SESS_CDE: this.props.member.SessionCode,
+      ID_NUM: this.props.member.IDNumber,
+      PART_CDE: this.state.participation,
+    };
+    console.log(data);
+    membership.editMembership(this.props.member.MembershipID, data);
   }
 
   // Opens dialog box asking if certain user wants to leave
@@ -163,7 +189,7 @@ export default class MemberDetail extends Component {
     };
     if (this.state.admin) {
       let disabled = false;
-      if (this.state.participationLevel === 'Guest') {
+      if (this.state.participationDescription === 'Guest') {
         disabled = true;
       }
       leave = (
@@ -185,8 +211,8 @@ export default class MemberDetail extends Component {
                     <Grid item padding={6} align="center">
                       <FormControl fullWidth style={formControl}>
                         <Select
-                          value={this.state.participationLevel}
-                          onChange={this.handleSelect('participationLevel')}
+                          value={this.state.participationDescription}
+                          onChange={this.handleSelect}
                           renderValue={value => `${value}`}
                         >
                           <MenuItem value="Advisor">Advisor</MenuItem>
@@ -206,7 +232,7 @@ export default class MemberDetail extends Component {
                       />
                     </Grid>
                     <Grid item style={formControl}>
-                      <Button color="primary" raised>
+                      <Button color="primary" onClick={this.onEditMember} raised>
                         SUBMIT CHANGES
                       </Button>
                     </Grid>
@@ -260,7 +286,8 @@ export default class MemberDetail extends Component {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography>TITLE/COMMENT:</Typography>
+            <Typography>TITLE/COMMENT: </Typography>
+            {this.state.titleComment}
           </Grid>
         </Grid>
       );

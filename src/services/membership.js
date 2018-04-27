@@ -66,6 +66,16 @@ const checkAdmin = (id, sessionCode, activityCode) => {
 };
 
 /**
+ * Edit membership with given membership id
+ * @param {String} id Membership id
+ * @param {Object} data Data passed in
+ * @return {Promise.<Object>} Response body
+ */
+const editMembership = (id, data) => {
+  return http.put(`memberships/${id}`, data);
+};
+
+/**
  * Filters members for current session
  * @param {Member[]} memberArray List of all members in an activity
  * @param {String} sessionCode Identifier for a session
@@ -115,7 +125,6 @@ const getAllGroupAdmins = activityCode =>
  * @return {Object} Email details
  */
 const getEmailAccount = async email => {
-  // console.log(http.get(`accounts/email/${email}/`));
   return await http.get(`accounts/email/${email}/`);
 };
 
@@ -162,7 +171,6 @@ const remove = membershipID => {
  * @return {Promise<Object>} Response body
  */
 function requestMembership(data) {
-  console.log(data);
   return http.post(`requests`, data).catch(reason => {
     console.log(reason);
   });
@@ -206,6 +214,7 @@ const toggleGroupAdmin = (membershipID, data) => {
 export default {
   addMembership,
   checkAdmin,
+  editMembership,
   get,
   getAll,
   getAllGroupAdmins,
