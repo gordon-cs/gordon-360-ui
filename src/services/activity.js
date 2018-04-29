@@ -31,6 +31,15 @@ import http from './http';
  */
 
 /**
+ * Edit activity
+ * @param {String} activityCode Identifier for an activity
+ * @param {Object} data Data passed in
+ * @return {Promise.<Object>} Response body
+ */
+const editActivity = (activityCode, data) => {
+  return http.put(`activities/${activityCode}`, data);
+};
+/**
  * Get an activity
  * @param {String} activityCode Identifier for an activity
  * @return {Promise.<Activity>} Activity
@@ -112,6 +121,7 @@ const filter = (activities = [], typeDescription, search = '') => {
 };
 
 export default {
+  editActivity,
   get,
   getSpecificActivity,
   getAdvisors,

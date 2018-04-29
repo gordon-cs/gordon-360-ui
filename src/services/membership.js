@@ -157,6 +157,25 @@ const getIndividualMembership = userID =>
   });
 
 /**
+ * Get requests for specific activity and filtered by session code
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @return {Array} List of requests for activity and session
+ */
+const getRequests = (activityCode, sessionCode) => {
+  return http.get(`requests/activity/${activityCode}`); //.then(function(result) {
+  //   let requestsArray;
+  //   for (var i = 0; i < result.length; i++) {
+  //     if (result[i].SessionCode === sessionCode) {
+  //       requestsArray.push(result[i]);
+  //     }
+  //   }
+  //   console.log(requestsArray)
+  //   return requestsArray;
+  // });
+};
+
+/**
  * Remove given membershipID from membership table (Example of successful delete)
  * @param {String} membershipID The membershipID to remove
  * @return {Promise.<Object>} Response body
@@ -181,7 +200,7 @@ function requestMembership(data) {
  * @param {String} id User id
  * @param {String} sessionCode Identifier for session
  * @param {String} activityCode Identifier for activity
- * @return {Array[]} 3 elements: boolean if in specific activity and session, boolean if guest,
+ * @return {Array} 3 elements: boolean if in specific activity and session, boolean if guest,
  *                  and membershipID if in specific activity and session
  */
 const search = (id, sessionCode, activityCode) => {
@@ -222,6 +241,7 @@ export default {
   getFollowersNum,
   getMembersNum,
   getIndividualMembership,
+  getRequests,
   remove,
   requestMembership,
   search,

@@ -13,7 +13,6 @@ import GordonLoader from '../../../../components/Loader';
 import '../../activity-profile.css';
 import MemberDetail from './components/MemberDetail';
 import membership from '../../../../services/membership';
-import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
 import { CardContent } from 'material-ui';
 
@@ -31,7 +30,6 @@ export default class Membership extends Component {
     this.onUnsubscribe = this.onUnsubscribe.bind(this);
 
     this.state = {
-      // activityMembers: [],
       openAddMember: false,
       openJoin: false,
       mode: '',
@@ -40,11 +38,12 @@ export default class Membership extends Component {
       activityDescription: '',
       participationCode: '',
       titleComment: '',
-      isAdmin: false,
+      isAdmin: this.props.isAdmin,
       participationDetail: [],
-      id: '',
+      id: this.props.id,
       addEmail: '',
       addGordonID: '',
+      requests: [],
     };
   }
 
@@ -146,18 +145,15 @@ export default class Membership extends Component {
         this.props.activityCode,
       );
       this.setState({ participationDetail });
-      const isAdmin = await membership.checkAdmin(
-        this.state.id,
-        this.props.sessionInfo.SessionCode,
-        this.props.activityCode,
-      );
-      this.setState({ isAdmin });
       this.setState({
         activityDescription: this.props.activityDescription,
         participationCode: '',
         sessionInfo: this.props.sessionInfo,
-        titleComment: '', //TODO Membership Description
+        titleComment: '', //TODO Membership Description change when editing
       });
+      const requests = await membership.getRequests(this.props.activityCode);
+      this.setState({ requests });
+      console.log(requests);
       this.setState({ loading: false });
     } catch (error) {
       this.setState({ error });
@@ -172,10 +168,6 @@ export default class Membership extends Component {
     let content;
     let subscribeButton;
     let adminButtons;
-    const removeButton = {
-      background: gordonColors.secondary.red,
-      color: 'white',
-    };
     const formControl = {
       padding: 10,
     };
@@ -242,15 +234,8 @@ export default class Membership extends Component {
                     </Grid>
                   </DialogContent>
                 </Dialog>
-                <Grid item xs={6} sm={4} md={4} lg={4}>
-                  <Button color="primary" disabled raised>
-                    Edit activity
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={4} md={4} lg={4}>
-                  <Button raised disabled style={removeButton}>
-                    Remove image
-                  </Button>
+                <Grid item xs={12}>
+                  <Typography>Membership Requests</Typography>
                 </Grid>
               </Grid>
             </CardContent>
@@ -294,58 +279,60 @@ export default class Membership extends Component {
           );
         }
         content = (
-          <CardActions>
-            {subscribeButton}
-            <Button color="primary" onClick={this.handleClick} raised>
-              Join
-            </Button>
-            <Dialog open={this.state.openJoin} keepMounted align="center">
-              <DialogContent>
-                <Grid container align="center" padding={6}>
-                  <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
-                    <DialogTitle>Join {this.state.activityDescription}</DialogTitle>
-                    <Typography>Participation (Required)</Typography>
-                    <Grid item padding={6} align="center">
-                      <FormControl fullWidth style={formControl}>
-                        <Select
-                          value={this.state.participationCode}
-                          onChange={this.handleChange}
-                          displayEmpty
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value="ADV">Advisor</MenuItem>
-                          <MenuItem value="GUEST">Guest</MenuItem>
-                          <MenuItem value="LEAD">Leader</MenuItem>
-                          <MenuItem value="MEMBR">Member</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item align="center">
-                      <Typography>Title/Comment: (Optional)</Typography>
-                      <TextField
-                        fullWidth
-                        displayEmpty
-                        onChange={this.handleText}
-                        style={formControl}
-                      />
-                    </Grid>
-                    <Grid item style={formControl}>
-                      <Button color="primary" onClick={this.onRequest} raised>
-                        REQUEST MEMBERSHIP
-                      </Button>
-                    </Grid>
-                    <Grid item xs={12} sm={12} style={formControl}>
-                      <Button color="primary" onClick={this.onClose} raised>
-                        CANCEL
-                      </Button>
+          <Card>
+            <CardActions>
+              {subscribeButton}
+              <Button color="primary" onClick={this.handleClick} raised>
+                Join
+              </Button>
+              <Dialog open={this.state.openJoin} keepMounted align="center">
+                <DialogContent>
+                  <Grid container align="center" padding={6}>
+                    <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
+                      <DialogTitle>Join {this.state.activityDescription}</DialogTitle>
+                      <Typography>Participation (Required)</Typography>
+                      <Grid item padding={6} align="center">
+                        <FormControl fullWidth style={formControl}>
+                          <Select
+                            value={this.state.participationCode}
+                            onChange={this.handleChange}
+                            displayEmpty
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value="ADV">Advisor</MenuItem>
+                            <MenuItem value="GUEST">Guest</MenuItem>
+                            <MenuItem value="LEAD">Leader</MenuItem>
+                            <MenuItem value="MEMBR">Member</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item align="center">
+                        <Typography>Title/Comment: (Optional)</Typography>
+                        <TextField
+                          fullWidth
+                          defaultValue=""
+                          onChange={this.handleText}
+                          style={formControl}
+                        />
+                      </Grid>
+                      <Grid item style={formControl}>
+                        <Button color="primary" onClick={this.onRequest} raised>
+                          REQUEST MEMBERSHIP
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12} sm={12} style={formControl}>
+                        <Button color="primary" onClick={this.onClose} raised>
+                          CANCEL
+                        </Button>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </DialogContent>
-            </Dialog>
-          </CardActions>
+                </DialogContent>
+              </Dialog>
+            </CardActions>
+          </Card>
         );
       }
     }
