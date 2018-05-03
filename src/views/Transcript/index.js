@@ -18,6 +18,7 @@ export default class Transcript extends Component {
       activities: [],
       loading: true,
       currentSession: {},
+      allSession: [],
       profile: {},
     };
   }
@@ -32,7 +33,11 @@ export default class Transcript extends Component {
   async loadTranscript() {
     this.setState({ loading: true });
     try {
+      const allSession = await session.getAll();
+      console.log('all sessions: ' + allSession);
+
       const currentSession = await session.getCurrent();
+
       const profile = await user.getProfileInfo();
       const activities = await user.getMemberships(profile.ID);
       this.setState({ loading: false, activities, currentSession, profile });
@@ -88,22 +93,7 @@ export default class Transcript extends Component {
                 <div style={divStyle}> Experience Transcript - {this.state.profile.fullName} </div>
               </Grid>
               <Grid item xs={12} class="print">
-                <div> {this.state.currentSession.SessionDescription} </div>
-              </Grid>
-              <Grid item xs={12} class="print">
                 <Grid container spacing={0}>
-                  <Grid item xs={4}>
-                    <div style={divStyle}> Activity </div>
-                    <Divider />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <div style={divStyle}> Participation </div>
-                    <Divider />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <div style={divStyle}> Total Semesters </div>
-                    <Divider />
-                  </Grid>
                   <Grid item xs={12}>
                     {activityList}
                   </Grid>

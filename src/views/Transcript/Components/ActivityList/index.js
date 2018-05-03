@@ -1,8 +1,10 @@
 import Grid from 'material-ui/Grid';
 import PropTypes from 'prop-types';
 import Divider from 'material-ui/Divider/Divider';
+import Button from 'material-ui/Button';
 import React, { Component } from 'react';
 import List, { ListItem, ListItemText } from 'material-ui/List';
+import { GridList } from 'material-ui';
 
 export default class Activities extends Component {
   constructor(props) {
@@ -13,12 +15,13 @@ export default class Activities extends Component {
   componentWillMount() {
     this.loadProfile();
   }
+
   async loadProfile() {}
   render() {
     const { Activity } = this.props;
 
-    return (
-      <div>
+    let content = (
+      <Grid item xs={12}>
         <Grid container spacing={0}>
           <Grid item xs={4}>
             <List>
@@ -45,6 +48,35 @@ export default class Activities extends Component {
             <Divider />
           </Grid>
         </Grid>
+      </Grid>
+    );
+
+    return (
+      <div>
+        <Grid>{Activity.SessionDescription}</Grid>
+        <Grid item xs={12}>
+          <Grid container spacing={0}>
+            <Grid item xs={4}>
+              <List>
+                <ListItem>Activity</ListItem>
+              </List>
+              <Divider />
+            </Grid>
+            <Grid item xs={4}>
+              <List>
+                <ListItem>Participation</ListItem>
+              </List>
+              <Divider />
+            </Grid>
+            <Grid item xs={4}>
+              <List>
+                <ListItem>-</ListItem>
+              </List>
+              <Divider />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid>{content}</Grid>
       </div>
     );
   }
