@@ -26,18 +26,21 @@ export default class MemberDetail extends Component {
       openEdit: false,
       alertLeave: false,
       admin: false,
-      groupAdmin: true,
+      groupAdmin: false,
       participationDescription: '',
       participation: '',
       alertRemove: false,
       titleComment: '',
+      isRequest: false,
     };
     this.confirmLeave = this.confirmLeave.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleText = this.handleText.bind(this);
+    this.onApprove = this.onApprove.bind(this);
     this.onClose = this.onClose.bind(this);
+    this.onDeny = this.onDeny.bind(this);
     this.onEditMember = this.onEditMember.bind(this);
     this.onLeave = this.onLeave.bind(this);
     this.onRemove = this.onRemove.bind(this);
@@ -50,6 +53,7 @@ export default class MemberDetail extends Component {
       participationDescription: this.props.member.ParticipationDescription,
       participation: this.props.member.Participation,
       titleComment: this.props.member.Description,
+      isRequest: this.props.isRequest,
     });
   }
 
@@ -94,6 +98,20 @@ export default class MemberDetail extends Component {
     this.setState({ [name]: event.target.value });
   };
 
+  // Approves request
+  onApprove() {
+    console.log('this: ');
+    console.log(this.props.member.RequestID);
+    membership.approveRequest(this.props.member.RequestID);
+    console.log('Approve successful');
+  }
+
+  // Denies request
+  onDeny() {
+    membership.denyRequest(this.props.member.RequestID);
+    console.log('Deny successful');
+  }
+
   // Closes dialog boxes and resets as if no changes were made
   onClose() {
     this.setState({
@@ -135,7 +153,7 @@ export default class MemberDetail extends Component {
   }
 
   render() {
-    const leaveButton = {
+    const redButton = {
       background: gordonColors.secondary.red,
       color: 'white',
     };
@@ -146,12 +164,12 @@ export default class MemberDetail extends Component {
     } else {
       showLeaveButton = false;
     }
-    let leave;
+    let options;
     if (showLeaveButton) {
-      leave = (
+      options = (
         <Grid container>
           <Grid item>
-            <Button style={leaveButton} onClick={this.onLeave} raised>
+            <Button style={redButton} onClick={this.onLeave} raised>
               LEAVE
             </Button>
             <Dialog
@@ -169,7 +187,7 @@ export default class MemberDetail extends Component {
                     </Button>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button raised onClick={this.confirmLeave} style={leaveButton}>
+                    <Button raised onClick={this.confirmLeave} style={redButton}>
                       Yes, leave
                     </Button>
                   </Grid>
@@ -180,117 +198,139 @@ export default class MemberDetail extends Component {
         </Grid>
       );
     } else {
-      leave = (
+      options = (
         <Typography>You do not have permission to see any details about this member</Typography>
       );
     }
     const formControl = {
       padding: 10,
     };
+    const greenButton = {
+      background: gordonColors.secondary.green,
+      color: 'white',
+    };
     if (this.state.admin) {
       let disabled = false;
       if (this.state.participationDescription === 'Guest') {
         disabled = true;
+        // Can't make guests an admin
       }
-      leave = (
-        <Grid container>
-          <Grid item>
-            <Button color="primary" onClick={this.handleClick} raised>
-              Edit
-            </Button>
-            <Dialog open={this.state.openEdit} keepMounted align="center">
-              <DialogTitle>
-                Edit {this.props.member.FirstName} {this.props.member.LastName} ({
-                  this.props.member.ParticipationDescription
-                })
-              </DialogTitle>
-              <DialogContent>
-                <Grid container align="center" padding={6}>
-                  <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
-                    <Typography>Participation (Required)</Typography>
-                    <Grid item padding={6} align="center">
-                      <FormControl fullWidth style={formControl}>
-                        <Select
-                          value={this.state.participationDescription}
-                          onChange={this.handleSelect}
-                          renderValue={value => `${value}`}
-                        >
-                          <MenuItem value="Advisor">Advisor</MenuItem>
-                          <MenuItem value="Guest">Guest</MenuItem>
-                          <MenuItem value="Leader">Leader</MenuItem>
-                          <MenuItem value="Member">Member</MenuItem>
-                        </Select>
-                      </FormControl>
+      if (this.state.isRequest) {
+        options = (
+          <Grid container>
+            <Grid item xs={6} sm={6} md={6} lg={6} padding={6}>
+              <Button style={greenButton} onClick={this.onApprove} raised>
+                Approve
+              </Button>
+            </Grid>
+            <Grid item xs={6} sm={6} md={6} lg={6} padding={6}>
+              <Button style={redButton} onClick={this.onDeny} raised>
+                Deny
+              </Button>
+            </Grid>
+          </Grid>
+        );
+      } else {
+        options = (
+          <Grid container>
+            <Grid item>
+              <Button color="primary" onClick={this.handleClick} raised>
+                Edit
+              </Button>
+              <Dialog open={this.state.openEdit} keepMounted align="center">
+                <DialogTitle>
+                  Edit {this.props.member.FirstName} {this.props.member.LastName} ({
+                    this.props.member.ParticipationDescription
+                  })
+                </DialogTitle>
+                <DialogContent>
+                  <Grid container align="center" padding={6}>
+                    <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
+                      <Typography>Participation (Required)</Typography>
+                      <Grid item padding={6} align="center">
+                        <FormControl fullWidth style={formControl}>
+                          <Select
+                            value={this.state.participationDescription}
+                            onChange={this.handleSelect}
+                            renderValue={value => `${value}`}
+                          >
+                            <MenuItem value="Advisor">Advisor</MenuItem>
+                            <MenuItem value="Guest">Guest</MenuItem>
+                            <MenuItem value="Leader">Leader</MenuItem>
+                            <MenuItem value="Member">Member</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item align="center">
+                        <Typography>Title/Comment: (Optional)</Typography>
+                        <TextField
+                          fullWidth
+                          onChange={this.handleText('titleComment')}
+                          style={formControl}
+                          value={this.state.titleComment}
+                        />
+                      </Grid>
+                      <Grid item style={formControl}>
+                        <Button color="primary" onClick={this.onEditMember} raised>
+                          SUBMIT CHANGES
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12} sm={12} style={formControl}>
+                        <Button color="primary" onClick={this.onClose} raised>
+                          CANCEL
+                        </Button>
+                      </Grid>
                     </Grid>
-                    <Grid item align="center">
-                      <Typography>Title/Comment: (Optional)</Typography>
-                      <TextField
-                        fullWidth
-                        onChange={this.handleText('titleComment')}
-                        style={formControl}
-                        value={this.state.titleComment}
-                      />
-                    </Grid>
-                    <Grid item style={formControl}>
-                      <Button color="primary" onClick={this.onEditMember} raised>
-                        SUBMIT CHANGES
+                  </Grid>
+                </DialogContent>
+              </Dialog>
+            </Grid>
+            <Grid item>
+              <Button style={redButton} onClick={this.onRemove} raised>
+                Remove
+              </Button>
+              <Dialog open={this.state.alertRemove} keepMounted align="center">
+                <DialogTitle>
+                  Are you sure you want to remove {this.props.member.FirstName}{' '}
+                  {this.props.member.LastName} (
+                  {this.props.member.ParticipationDescription}) from this activity?
+                </DialogTitle>
+                <DialogContent>
+                  <Grid container>
+                    <Grid item xs={6} sm={6} md={6} lg={6}>
+                      <Button color="primary" onClick={this.confirmLeave} raised>
+                        OK
                       </Button>
                     </Grid>
-                    <Grid item xs={12} sm={12} style={formControl}>
-                      <Button color="primary" onClick={this.onClose} raised>
+                    <Grid item xs={6} sm={6} md={6} lg={6}>
+                      <Button onClick={this.onClose} raised>
                         CANCEL
                       </Button>
                     </Grid>
                   </Grid>
-                </Grid>
-              </DialogContent>
-            </Dialog>
+                </DialogContent>
+              </Dialog>
+            </Grid>
+            <Grid item>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.groupAdmin}
+                    color="primary"
+                    disabled={disabled}
+                    onChange={this.handleChange('groupAdmin')}
+                  />
+                }
+                label="Group Admin"
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Typography>TITLE/COMMENT: </Typography>
+              {this.state.titleComment}
+            </Grid>
           </Grid>
-          <Grid item>
-            <Button style={leaveButton} onClick={this.onRemove} raised>
-              Remove
-            </Button>
-            <Dialog open={this.state.alertRemove} keepMounted align="center">
-              <DialogTitle>
-                Are you sure you want to remove {this.props.member.FirstName}{' '}
-                {this.props.member.LastName} (
-                {this.props.member.ParticipationDescription}) from this activity?
-              </DialogTitle>
-              <DialogContent>
-                <Grid container>
-                  <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button color="primary" onClick={this.confirmLeave} raised>
-                      OK
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button onClick={this.onClose} raised>
-                      CANCEL
-                    </Button>
-                  </Grid>
-                </Grid>
-              </DialogContent>
-            </Dialog>
-          </Grid>
-          <Grid item>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.groupAdmin}
-                  color="primary"
-                  disabled={disabled}
-                  onChange={this.handleChange('groupAdmin')}
-                />
-              }
-              label="Group Admin"
-            />
-          </Grid>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography>TITLE/COMMENT: </Typography>
-            {this.state.titleComment}
-          </Grid>
-        </Grid>
-      );
+        );
+      }
     }
     return (
       <ExpansionPanel defaultExpanded={showLeaveButton || this.state.admin}>
@@ -306,7 +346,7 @@ export default class MemberDetail extends Component {
             </Grid>
           </Grid>
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails>{leave}</ExpansionPanelDetails>
+        <ExpansionPanelDetails>{options}</ExpansionPanelDetails>
       </ExpansionPanel>
     );
   }

@@ -151,9 +151,11 @@ export default class Membership extends Component {
         sessionInfo: this.props.sessionInfo,
         titleComment: '', //TODO Membership Description change when editing
       });
-      const requests = await membership.getRequests(this.props.activityCode);
+      const requests = await membership.getRequests(
+        this.props.activityCode,
+        this.props.sessionInfo.SessionCode,
+      );
       this.setState({ requests });
-      console.log(requests);
       this.setState({ loading: false });
     } catch (error) {
       this.setState({ error });
@@ -171,6 +173,10 @@ export default class Membership extends Component {
     const formControl = {
       padding: 10,
     };
+    let noRequests;
+    if (this.state.requests.length === 0) {
+      noRequests = <Typography>There are no pending requests</Typography>;
+    }
     if (this.state.isAdmin) {
       adminButtons = (
         <section>
@@ -235,7 +241,16 @@ export default class Membership extends Component {
                   </DialogContent>
                 </Dialog>
                 <Grid item xs={12}>
-                  <Typography>Membership Requests</Typography>
+                  <Typography type="headline">Membership Requests</Typography>
+                  {this.state.requests.map(request => (
+                    <MemberDetail
+                      admin={this.state.isAdmin}
+                      member={request}
+                      isRequest={true}
+                      key={this.state.requests.RequestID}
+                    />
+                  ))}
+                  {noRequests}
                 </Grid>
               </Grid>
             </CardContent>

@@ -41,6 +41,15 @@ function addMembership(data) {
 }
 
 /**
+ * Approve request
+ * @param {String} requestID Request object
+ * @return {Promise<any>} Response
+ */
+const approveRequest = requestID => {
+  return http.post(`requests/${requestID}/approve`);
+};
+
+/**
  * Check if user is Admin of activity
  * @param {String} id ID of user
  * @param {String} sessionCode Identifier for a session
@@ -63,6 +72,15 @@ const checkAdmin = (id, sessionCode, activityCode) => {
       return false;
     });
   return isGroupAdmin;
+};
+
+/**
+ * Deny request
+ * @param {String} requestID Request object
+ * @return {Promise<any>} Response
+ */
+const denyRequest = requestID => {
+  return http.post(`requests/${requestID}/deny`);
 };
 
 /**
@@ -163,16 +181,29 @@ const getIndividualMembership = userID =>
  * @return {Array} List of requests for activity and session
  */
 const getRequests = (activityCode, sessionCode) => {
-  return http.get(`requests/activity/${activityCode}`); //.then(function(result) {
-  //   let requestsArray;
-  //   for (var i = 0; i < result.length; i++) {
-  //     if (result[i].SessionCode === sessionCode) {
-  //       requestsArray.push(result[i]);
-  //     }
-  //   }
-  //   console.log(requestsArray)
-  //   return requestsArray;
-  // });
+  let allRequests = http.get(`requests/activity/${activityCode}`).then(function(result) {
+    return filterCurrentRequests(result, sessionCode);
+  });
+  return allRequests;
+};
+
+/**
+ * Filters only penidng requests for an activity
+ * @param {[]} requestsArray List of all the requests for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @return {[]} Filtered requests
+ */
+const filterCurrentRequests = (requestsArray, sessionCode) => {
+  let filteredRequestsArray = [];
+  for (var i = 0; i < requestsArray.length; i++) {
+    if (
+      requestsArray[i].SessionCode === sessionCode &&
+      requestsArray[i].RequestApproved === 'Pending'
+    ) {
+      filteredRequestsArray.push(requestsArray[i]);
+    }
+  }
+  return filteredRequestsArray;
 };
 
 /**
@@ -232,7 +263,9 @@ const toggleGroupAdmin = (membershipID, data) => {
 
 export default {
   addMembership,
+  approveRequest,
   checkAdmin,
+  denyRequest,
   editMembership,
   get,
   getAll,
