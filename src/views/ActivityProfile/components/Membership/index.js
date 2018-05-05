@@ -327,7 +327,7 @@ export default class Membership extends Component {
                         <Typography>Title/Comment: (Optional)</Typography>
                         <TextField
                           fullWidth
-                          defaultValue=""
+                          defaualtValue=""
                           onChange={this.handleText}
                           style={formControl}
                         />

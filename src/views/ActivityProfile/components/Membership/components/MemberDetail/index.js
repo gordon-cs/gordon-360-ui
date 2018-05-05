@@ -119,7 +119,7 @@ export default class MemberDetail extends Component {
       alertRemove: false,
       openEdit: false,
       participationDescription: this.props.member.ParticipationDescription,
-      titleComment: '',
+      titleComment: this.props.member.Description,
     });
   }
 
@@ -131,9 +131,11 @@ export default class MemberDetail extends Component {
       SESS_CDE: this.props.member.SessionCode,
       ID_NUM: this.props.member.IDNumber,
       PART_CDE: this.state.participation,
+      COMMENT_TXT: this.state.titleComment,
     };
     console.log(data);
     membership.editMembership(this.props.member.MembershipID, data);
+    this.onClose();
   }
 
   // Opens dialog box asking if certain user wants to leave
@@ -252,7 +254,6 @@ export default class MemberDetail extends Component {
                           <Select
                             value={this.state.participationDescription}
                             onChange={this.handleSelect}
-                            renderValue={value => `${value}`}
                           >
                             <MenuItem value="Advisor">Advisor</MenuItem>
                             <MenuItem value="Guest">Guest</MenuItem>
@@ -267,7 +268,7 @@ export default class MemberDetail extends Component {
                           fullWidth
                           onChange={this.handleText('titleComment')}
                           style={formControl}
-                          value={this.state.titleComment}
+                          defaultValue={this.props.member.Description}
                         />
                       </Grid>
                       <Grid item style={formControl}>
@@ -326,7 +327,7 @@ export default class MemberDetail extends Component {
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={12}>
               <Typography>TITLE/COMMENT: </Typography>
-              {this.state.titleComment}
+              {this.props.member.Description}
             </Grid>
           </Grid>
         );

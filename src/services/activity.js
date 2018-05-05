@@ -120,6 +120,15 @@ const filter = (activities = [], typeDescription, search = '') => {
   return filteredActivities;
 };
 
+/**
+ * Resets image to default image
+ * @param {String} activityCode Identifier for an activity
+ * @return {Promis<any>} Response body
+ */
+const resetImage = activityCode => {
+  return http.post(`activities/${activityCode}/image/reset`, null);
+};
+
 export default {
   editActivity,
   get,
@@ -130,4 +139,5 @@ export default {
   getStatus,
   getTypes,
   filter,
+  resetImage,
 };
