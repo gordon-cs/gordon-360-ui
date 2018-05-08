@@ -39,7 +39,7 @@ export default class Transcript extends Component {
       const currentSession = await session.getCurrent();
 
       const profile = await user.getProfileInfo();
-      const activities = await user.getMemberships(profile.ID);
+      const activities = await user.getTranscriptInfo(profile.ID);
       this.setState({ loading: false, activities, currentSession, profile });
       console.log('loadTranscript: ' + activities);
     } catch (error) {

@@ -5,6 +5,8 @@ import Button from 'material-ui/Button';
 import React, { Component } from 'react';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import { GridList } from 'material-ui';
+//import { Typography, typography } from 'material-ui/styles';
+import Typography from 'material-ui/Typography';
 
 export default class Activities extends Component {
   constructor(props) {
@@ -21,32 +23,22 @@ export default class Activities extends Component {
     const { Activity } = this.props;
 
     let content = (
-      <Grid item xs={12}>
-        <Grid container spacing={0}>
-          <Grid item xs={4}>
-            <List>
-              <ListItem>
-                <ListItemText primary={Activity.ActivityDescription} />
-              </ListItem>
-            </List>
-            <Divider />
-          </Grid>
-          <Grid item xs={4}>
-            <List>
-              <ListItem>
-                <ListItemText primary={Activity.ParticipationDescription} />
-              </ListItem>
-            </List>
-            <Divider />
-          </Grid>
-          <Grid item xs={4}>
-            <List>
-              <ListItem>
-                <ListItemText primary={Activity.SessionDescription} />
-              </ListItem>
-            </List>
-            <Divider />
-          </Grid>
+      <Grid container>
+        <Grid item xs={6}>
+          <List>
+            <ListItem>
+              <Typography> {Activity.ActivityDescription} </Typography>
+            </ListItem>
+          </List>
+          <Divider />
+        </Grid>
+        <Grid item xs={6}>
+          <List>
+            <ListItem>
+              <Typography> {Activity.ParticipationDescription} </Typography>
+            </ListItem>
+          </List>
+          <Divider />
         </Grid>
       </Grid>
     );
@@ -55,22 +47,16 @@ export default class Activities extends Component {
       <div>
         <Grid>{Activity.SessionDescription}</Grid>
         <Grid item xs={12}>
-          <Grid container spacing={0}>
-            <Grid item xs={4}>
+          <Grid container>
+            <Grid item xs={6}>
               <List>
                 <ListItem>Activity</ListItem>
               </List>
               <Divider />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <List>
                 <ListItem>Participation</ListItem>
-              </List>
-              <Divider />
-            </Grid>
-            <Grid item xs={4}>
-              <List>
-                <ListItem>-</ListItem>
               </List>
               <Divider />
             </Grid>

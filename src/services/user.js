@@ -315,6 +315,46 @@ const getMemberships = async id => {
   memberships = await http.get(`memberships/student/${id}`);
   return memberships;
 };
+
+const getTranscriptInfo = async id => {
+  let transcriptInfo = await getMemberships(id);
+  console.log(transcriptInfo);
+  transcriptInfo.activities = [0];
+  let k = 0;
+  let second = 1;
+  let i = 0;
+  for (let first = 0; first < transcriptInfo.length; first++) {
+    if (transcriptInfo[first].SessionCode !== transcriptInfo[second].SessionCode) {
+      if (k === first) {
+        let obj = [];
+        obj.push(transcriptInfo[k].ActivityDescription);
+        transcriptInfo.activities.push(obj);
+        k++;
+      } else {
+        let obj = [];
+        while (k != first) {
+          obj.push(transcriptInfo[k].ActivityDescription);
+          k++;
+        }
+        transcriptInfo.activities.push(obj);
+      }
+    }
+    first++;
+    i++;
+    second++;
+  }
+  if (k < i) {
+    let obj = [];
+    while (k != i) {
+      obj.push(transcriptInfo[k].ActivityDescription);
+      k++;
+    }
+    transcriptInfo.activities.push(obj);
+  }
+  console.log(transcriptInfo);
+  return transcriptInfo;
+};
+
 const getProfileInfo = async username => {
   let profile = await getProfile(username);
   formatName(profile);
@@ -331,4 +371,5 @@ export default {
   getImage,
   getLocalInfo,
   getProfileInfo,
+  getTranscriptInfo,
 };
