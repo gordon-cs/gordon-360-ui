@@ -68,7 +68,7 @@ export default class MemberDetail extends Component {
         PART_CDE: this.props.member.Participation,
       };
       membership.toggleGroupAdmin(this.props.member.MembershipID, data);
-      // this.forceUpdate(); // Not working
+      this.refresh(); // Sometimes fails (Can't make handleChange async)
     };
   };
 
@@ -99,17 +99,19 @@ export default class MemberDetail extends Component {
   };
 
   // Approves request
-  onApprove() {
+  async onApprove() {
     console.log('this: ');
     console.log(this.props.member.RequestID);
-    membership.approveRequest(this.props.member.RequestID);
+    await membership.approveRequest(this.props.member.RequestID);
     console.log('Approve successful');
+    this.refresh();
   }
 
   // Denies request
-  onDeny() {
-    membership.denyRequest(this.props.member.RequestID);
+  async onDeny() {
+    await membership.denyRequest(this.props.member.RequestID);
     console.log('Deny successful');
+    this.refresh();
   }
 
   // Closes dialog boxes and resets as if no changes were made
@@ -124,7 +126,7 @@ export default class MemberDetail extends Component {
   }
 
   // Edits membership
-  onEditMember() {
+  async onEditMember() {
     let data = {
       MEMBERSHIP_ID: this.props.member.MembershipID,
       ACT_CDE: this.props.member.ActivityCode,
@@ -134,8 +136,9 @@ export default class MemberDetail extends Component {
       COMMENT_TXT: this.state.titleComment,
     };
     console.log(data);
-    membership.editMembership(this.props.member.MembershipID, data);
+    await membership.editMembership(this.props.member.MembershipID, data);
     this.onClose();
+    this.refresh();
   }
 
   // Opens dialog box asking if certain user wants to leave
@@ -144,9 +147,10 @@ export default class MemberDetail extends Component {
   }
 
   // Called when user confirms removal
-  confirmLeave() {
-    membership.remove(this.props.member.MembershipID);
+  async confirmLeave() {
+    await membership.remove(this.props.member.MembershipID);
     this.onClose();
+    this.refresh();
   }
 
   // Opens dialog box asking if certain admin wants to remove member
@@ -154,14 +158,18 @@ export default class MemberDetail extends Component {
     this.setState({ alertRemove: true });
   }
 
+  refresh() {
+    window.location.reload();
+  }
+
   render() {
     const redButton = {
       background: gordonColors.secondary.red,
       color: 'white',
     };
-    const { id } = user.getLocalInfo();
     let showLeaveButton = false;
-    if (this.props.member.IDNumber.toString() === id) {
+    // TODO if not a guest
+    if (this.props.member.IDNumber.toString() === user.getLocalInfo().id) {
       showLeaveButton = true;
     } else {
       showLeaveButton = false;
@@ -213,9 +221,12 @@ export default class MemberDetail extends Component {
     };
     if (this.state.admin) {
       let disabled = false;
-      if (this.state.participationDescription === 'Guest') {
+      if (
+        this.state.participationDescription === 'Guest' ||
+        this.state.participationDescription === 'Member'
+      ) {
         disabled = true;
-        // Can't make guests an admin
+        // Can't make guests or members a group admin
       }
       if (this.state.isRequest) {
         options = (
@@ -241,9 +252,8 @@ export default class MemberDetail extends Component {
               </Button>
               <Dialog open={this.state.openEdit} keepMounted align="center">
                 <DialogTitle>
-                  Edit {this.props.member.FirstName} {this.props.member.LastName} ({
-                    this.props.member.ParticipationDescription
-                  })
+                  Edit {this.props.member.FirstName} {this.props.member.LastName} (
+                  {this.props.member.ParticipationDescription})
                 </DialogTitle>
                 <DialogContent>
                   <Grid container align="center" padding={6}>
@@ -358,11 +368,11 @@ MemberDetail.propTypes = {
     AccountPrivate: PropTypes.number,
     ActivityCode: PropTypes.string.isRequired,
     ActivityDescription: PropTypes.string.isRequired,
-    ActivityImagePath: PropTypes.string.isRequired,
+    ActivityImagePath: PropTypes.string,
     Description: PropTypes.string,
     EndDate: PropTypes.string,
     FirstName: PropTypes.string.isRequired,
-    GroupAdmin: PropTypes.bool.isRequired,
+    GroupAdmin: PropTypes.bool,
     IDNumber: PropTypes.number,
     LastName: PropTypes.string.isRequired,
     MembershipID: PropTypes.number,
@@ -371,6 +381,6 @@ MemberDetail.propTypes = {
     Privacy: PropTypes.string,
     SessionCode: PropTypes.string.isRequired,
     SessionDescription: PropTypes.string.isRequired,
-    StartDate: PropTypes.string.isRequired,
+    StartDate: PropTypes.string,
   }).isRequired,
 };

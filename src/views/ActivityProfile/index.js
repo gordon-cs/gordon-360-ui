@@ -47,10 +47,7 @@ class ActivityProfile extends Component {
       isAdmin: false,
       openEditActivity: false,
       openRemoveImage: false,
-      name: 'HI',
-      // activityJoinInfo: 'Join info',
-      // activityURL: 'Website',
-      // activityBlurb: 'Description,',
+      reRender: false,
     };
   }
 
@@ -63,7 +60,7 @@ class ActivityProfile extends Component {
       activityFollowers,
       activityGroupAdmins,
       activityMembersNum,
-      activityMembers,
+      // activityMembers,
       activityStatus,
       sessionInfo,
       id,
@@ -74,7 +71,7 @@ class ActivityProfile extends Component {
       membership.getFollowersNum(activityCode, sessionCode),
       activity.getGroupAdmins(activityCode, sessionCode),
       membership.getMembersNum(activityCode, sessionCode),
-      membership.get(activityCode, sessionCode),
+      // membership.get(activityCode, sessionCode),
       activity.getStatus(activityCode, sessionCode),
       session.get(sessionCode),
       user.getLocalInfo().id,
@@ -87,7 +84,7 @@ class ActivityProfile extends Component {
       activityFollowers,
       activityGroupAdmins,
       activityMembersNum,
-      activityMembers,
+      // activityMembers,
       activityStatus,
       sessionInfo,
       loading: false,
@@ -100,6 +97,20 @@ class ActivityProfile extends Component {
       tempActivityJoinInfo: activityInfo.ActivityJoinInfo,
       tempActivityURL: activityInfo.ActivityURL,
     });
+
+    let participationDetail = await membership.search(
+      this.state.id,
+      this.state.sessionInfo.SessionCode,
+      this.state.activityInfo.ActivityCode,
+    );
+    if (participationDetail[0]) {
+      // Only if the user is in the activity can this get called
+      const activityMembers = await membership.get(
+        this.state.activityInfo.ActivityCode,
+        this.state.sessionInfo.SessionCode,
+      );
+      this.setState({ activityMembers });
+    }
   }
 
   handleChange = name => event => {
@@ -115,23 +126,24 @@ class ActivityProfile extends Component {
   }
 
   // Called when user submits changes to activity
-  onEditActivity() {
+  async onEditActivity() {
     let data = {
       ACT_CDE: this.state.activityInfo.ActivityCode,
       ACT_URL: this.state.tempActivityURL,
       ACT_BLURB: this.state.tempActivityBlurb,
       ACT_JOIN_INFO: this.state.tempActivityJoinInfo,
     };
-    console.log(data);
+    await activity.editActivity(this.state.activityInfo.ActivityCode, data);
     this.onClose();
-    activity.editActivity(this.state.activityInfo.ActivityCode, data);
+    this.refresh();
   }
 
   // Called when confirm remove image
-  onRemoveImage() {
+  async onRemoveImage() {
     console.log('acitve');
-    activity.resetImage(this.state.activityInfo.ActivityCode);
+    await activity.resetImage(this.state.activityInfo.ActivityCode);
     this.onClose();
+    this.refresh();
   }
 
   onClose() {
@@ -141,116 +153,113 @@ class ActivityProfile extends Component {
     });
   }
 
+  refresh() {
+    window.location.reload();
+  }
+
   render() {
     if (this.state.error) {
       throw this.state.error;
-    }
-    let editActivity;
-    const redButton = {
-      background: gordonColors.secondary.red,
-      color: 'white',
-    };
-    if (this.state.isAdmin) {
-      const {
-        ActivityDescription: activityDescription,
-        ActivityBlurb: activityBlurb,
-        ActivityJoinInfo: activityJoinInfo,
-        ActivityURL: activityURL,
-      } = this.state.activityInfo;
-      editActivity = (
-        <section align="center" padding={6}>
-          <CardContent>
-            <Button color="primary" onClick={this.handleEditActivity} raised>
-              Edit Activity
-            </Button>
-          </CardContent>
-          <Dialog open={this.state.openEditActivity}>
-            <DialogTitle> Edit {activityDescription}</DialogTitle>
-            <DialogContent>
-              <Grid container align="center">
-                <Grid item xs={12} sm={4} md={4} lg={4}>
-                  <Button raised onClick={this.alertRemoveImage} style={redButton}>
-                    Remove image
-                  </Button>
-                </Grid>
-                <Dialog open={this.state.openRemoveImage} keepMounted align="center">
-                  <DialogTitle>Are you sure you want to remove image?</DialogTitle>
-                  <DialogContent>
-                    <Grid container>
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
-                        <Button color="primary" onClick={this.onRemoveImage} raised>
-                          OK
-                        </Button>
-                      </Grid>
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
-                        <Button onClick={this.onClose} raised>
-                          CANCEL
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </DialogContent>
-                </Dialog>
-                <Grid item xs={12} align="center" padding={6}>
-                  <Typography>Description</Typography>
-                  <Input
-                    fullWidth
-                    multiline
-                    rows={4}
-                    // name="Description"
-                    defaultValue={activityBlurb}
-                    onChange={this.handleChange('tempActivityBlurb')}
-                  />
-                </Grid>
-                <Grid item xs={12} align="center" padding={6}>
-                  <Typography>Special Information for Joining</Typography>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows={4}
-                    // name="JoinInfo"
-                    defaultValue={activityJoinInfo}
-                    onChange={this.handleChange('tempActivityJoinInfo')}
-                  />
-                </Grid>
-                <Grid item xs={12} align="center" padding={6}>
-                  <Typography>Website</Typography>
-                  <TextField
-                    fullWidth
-                    // name="Website"
-                    defaultValue={activityURL}
-                    onChange={this.handleChange('tempActivityURL')}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={6} lg={6} padding={6}>
-                  <Button color="primary" onClick={this.onEditActivity} raised>
-                    Submit changes
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6} md={6} lg={6} padding={6}>
-                  <Button color="primary" onClick={this.onClose} raised>
-                    Cancel
-                  </Button>
-                </Grid>
-              </Grid>
-            </DialogContent>
-          </Dialog>
-        </section>
-      );
     }
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
+      let editActivity;
+      const redButton = {
+        background: gordonColors.secondary.red,
+        color: 'white',
+      };
       const {
         ActivityDescription: activityDescription,
+        ActivityBlurb: activityBlurb,
+        ActivityJoinInfo: activityJoinInfo,
+        ActivityURL: activityURL,
         ActivityImagePath: activityImagePath,
       } = this.state.activityInfo;
+      if (this.state.isAdmin) {
+        editActivity = (
+          <section align="center" padding={6}>
+            <CardContent>
+              <Button color="primary" onClick={this.handleEditActivity} raised>
+                Edit Activity
+              </Button>
+            </CardContent>
+            <Dialog open={this.state.openEditActivity}>
+              <DialogTitle> Edit {activityDescription}</DialogTitle>
+              <DialogContent>
+                <Grid container align="center">
+                  <Grid item xs={12} sm={4} md={4} lg={4}>
+                    <Button raised onClick={this.alertRemoveImage} style={redButton}>
+                      Remove image
+                    </Button>
+                  </Grid>
+                  <Dialog open={this.state.openRemoveImage} keepMounted align="center">
+                    <DialogTitle>Are you sure you want to remove image?</DialogTitle>
+                    <DialogContent>
+                      <Grid container>
+                        <Grid item xs={6} sm={6} md={6} lg={6}>
+                          <Button color="primary" onClick={this.onRemoveImage} raised>
+                            OK
+                          </Button>
+                        </Grid>
+                        <Grid item xs={6} sm={6} md={6} lg={6}>
+                          <Button onClick={this.onClose} raised>
+                            CANCEL
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </DialogContent>
+                  </Dialog>
+                  <Grid item xs={12} align="center" padding={6}>
+                    <Typography>Description</Typography>
+                    <Input
+                      fullWidth
+                      multiline
+                      rows={4}
+                      defaultValue={activityBlurb}
+                      onChange={this.handleChange('tempActivityBlurb')}
+                    />
+                  </Grid>
+                  <Grid item xs={12} align="center" padding={6}>
+                    <Typography>Special Information for Joining</Typography>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={4}
+                      defaultValue={activityJoinInfo}
+                      onChange={this.handleChange('tempActivityJoinInfo')}
+                    />
+                  </Grid>
+                  <Grid item xs={12} align="center" padding={6}>
+                    <Typography>Website</Typography>
+                    <TextField
+                      fullWidth
+                      defaultValue={activityURL}
+                      onChange={this.handleChange('tempActivityURL')}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={6} lg={6} padding={6}>
+                    <Button color="primary" onClick={this.onEditActivity} raised>
+                      Submit changes
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={6} lg={6} padding={6}>
+                    <Button color="primary" onClick={this.onClose} raised>
+                      Cancel
+                    </Button>
+                  </Grid>
+                </Grid>
+              </DialogContent>
+            </Dialog>
+          </section>
+        );
+      }
       const followers = this.state.activityFollowers;
       const membersNum = this.state.activityMembersNum;
       const { SessionDescription: sessionDescription } = this.state.sessionInfo;
       let groupContacts = <GroupContacts groupAdmin={this.state.activityGroupAdmins} />;
       let advisors = <Advisors advisors={this.state.activityAdvisors} />;
-      const { ActivityBlurb: activityBlurb } = this.state.activityInfo;
       let description;
       if (activityBlurb.length !== 0) {
         description = (
@@ -260,7 +269,6 @@ class ActivityProfile extends Component {
           </Typography>
         );
       }
-      const { ActivityURL: activityURL } = this.state.activityInfo;
       let website;
       if (activityURL.length !== 0) {
         website = (

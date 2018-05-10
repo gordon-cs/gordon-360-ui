@@ -94,8 +94,9 @@ export default class Membership extends Component {
     };
     console.log('Member added');
     console.log(data);
-    membership.addMembership(data);
+    await membership.addMembership(data);
     this.onClose();
+    this.refresh();
   }
 
   onRequest() {
@@ -114,7 +115,7 @@ export default class Membership extends Component {
     this.onClose();
   }
 
-  onSubscribe() {
+  async onSubscribe() {
     let data = {
       ACT_CDE: this.props.activityCode,
       SESS_CDE: this.state.sessionInfo.SessionCode,
@@ -125,13 +126,15 @@ export default class Membership extends Component {
     };
     console.log(data);
     console.log('Subscription sent');
-    membership.addMembership(data);
+    await membership.addMembership(data);
+    this.refresh();
   }
 
-  onUnsubscribe() {
+  async onUnsubscribe() {
     let membershipID = this.state.participationDetail[2];
-    membership.remove(membershipID);
+    await membership.remove(membershipID);
     this.setState({ participationDetail: [false, false, null] });
+    this.refresh();
   }
 
   async loadMembers() {
@@ -149,123 +152,144 @@ export default class Membership extends Component {
         activityDescription: this.props.activityDescription,
         participationCode: '',
         sessionInfo: this.props.sessionInfo,
-        titleComment: '', //TODO Membership Description change when editing
+        titleComment: '',
       });
-      const requests = await membership.getRequests(
-        this.props.activityCode,
-        this.props.sessionInfo.SessionCode,
-      );
-      this.setState({ requests });
+      if (this.state.isAdmin) {
+        const requests = await membership.getRequests(
+          this.props.activityCode,
+          this.props.sessionInfo.SessionCode,
+        );
+        this.setState({ requests });
+      }
       this.setState({ loading: false });
     } catch (error) {
       this.setState({ error });
     }
   }
 
+  refresh() {
+    window.location.reload();
+  }
+
   render() {
-    const { members } = this.props;
     if (this.state.error) {
       throw this.state.error;
     }
-    let content;
-    let subscribeButton;
-    let adminButtons;
+    const { members } = this.props;
     const formControl = {
       padding: 10,
     };
+    let content;
+    let subscribeButton;
+    let adminView;
     let noRequests;
-    if (this.state.requests.length === 0) {
-      noRequests = <Typography>There are no pending requests</Typography>;
-    }
-    if (this.state.isAdmin) {
-      adminButtons = (
-        <section>
-          <Card>
-            <CardContent>
-              <Grid container>
-                <Grid item xs={6} sm={4} md={4} lg={4}>
-                  <Button color="primary" onClick={this.handleAddMemberClick} raised>
-                    Add member
-                  </Button>
-                </Grid>
-                <Dialog open={this.state.openAddMember} keepMounted align="center">
-                  <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
-                  <DialogContent>
-                    <Grid container align="center" padding={6}>
-                      <Grid item xs={12} padding={6} align="center">
-                        <Typography>Student Email</Typography>
-                        <TextField
-                          autoFocus
-                          fullWidth
-                          style={formControl}
-                          onChange={this.handleText('addEmail')}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
-                        <Typography>Participation (Required)</Typography>
-                        <Grid item padding={6} align="center">
-                          <FormControl fullWidth style={formControl}>
-                            <Select
-                              value={this.state.participationCode}
-                              onChange={this.handleSelect('participationCode')}
-                              displayEmpty
-                            >
-                              <MenuItem value="ADV">Advisor</MenuItem>
-                              <MenuItem value="GUEST">Guest</MenuItem>
-                              <MenuItem value="LEAD">Leader</MenuItem>
-                              <MenuItem value="MEMBR">Member</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                        <Grid item align="center">
-                          <Typography>Title/Comment: (Optional)</Typography>
-                          <TextField
-                            fullWidth
-                            onChange={this.handleText('titleComment')}
-                            style={formControl}
-                            value={this.state.titleComment}
-                          />
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={12} sm={6} style={formControl}>
-                        <Button color="primary" onClick={this.onAddMember} raised>
-                          Add member
-                        </Button>
-                      </Grid>
-                      <Grid item xs={12} sm={6} style={formControl}>
-                        <Button color="primary" onClick={this.onClose} raised>
-                          CANCEL
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </DialogContent>
-                </Dialog>
-                <Grid item xs={12}>
-                  <Typography type="headline">Membership Requests</Typography>
-                  {this.state.requests.map(request => (
-                    <MemberDetail
-                      admin={this.state.isAdmin}
-                      member={request}
-                      isRequest={true}
-                      key={this.state.requests.RequestID}
-                    />
-                  ))}
-                  {noRequests}
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </section>
-      );
-    }
+    let confirmRoster;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      if (this.state.participationDetail[0] && !this.state.participationDetail[1]) {
-        // User is a member and not a guest
+      if (this.state.participationDetail[0] && this.state.participationDetail[1] !== 'Guest') {
+        // User is in activity and not a guest
+
+        if (this.state.isAdmin) {
+          if (this.state.requests.length === 0) {
+            noRequests = <Typography>There are no pending requests</Typography>;
+          }
+          if (this.state.participationDetail[1] === 'Advisor') {
+            confirmRoster = (
+              <Button color="primary" disabled raised>
+                Confirm roster
+              </Button>
+            );
+          }
+          adminView = (
+            <section>
+              <Card>
+                <CardContent>
+                  <Grid container>
+                    <Grid item xs={6} sm={4} md={4} lg={4}>
+                      <Button color="primary" onClick={this.handleAddMemberClick} raised>
+                        Add member
+                      </Button>
+                    </Grid>
+                    <Dialog open={this.state.openAddMember} keepMounted align="center">
+                      <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
+                      <DialogContent>
+                        <Grid container align="center" padding={6}>
+                          <Grid item xs={12} padding={6} align="center">
+                            <Typography>Student Email</Typography>
+                            <TextField
+                              autoFocus
+                              fullWidth
+                              style={formControl}
+                              onChange={this.handleText('addEmail')}
+                            />
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
+                            <Typography>Participation (Required)</Typography>
+                            <Grid item padding={6} align="center">
+                              <FormControl fullWidth style={formControl}>
+                                <Select
+                                  value={this.state.participationCode}
+                                  onChange={this.handleSelect('participationCode')}
+                                  displayEmpty
+                                >
+                                  <MenuItem value="ADV">Advisor</MenuItem>
+                                  <MenuItem value="GUEST">Guest</MenuItem>
+                                  <MenuItem value="LEAD">Leader</MenuItem>
+                                  <MenuItem value="MEMBR">Member</MenuItem>
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                            <Grid item align="center">
+                              <Typography>Title/Comment: (Optional)</Typography>
+                              <TextField
+                                fullWidth
+                                onChange={this.handleText('titleComment')}
+                                style={formControl}
+                                value={this.state.titleComment}
+                              />
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} sm={6} style={formControl}>
+                            <Button color="primary" onClick={this.onAddMember} raised>
+                              Add member
+                            </Button>
+                          </Grid>
+                          <Grid item xs={12} sm={6} style={formControl}>
+                            <Button color="primary" onClick={this.onClose} raised>
+                              CANCEL
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </DialogContent>
+                    </Dialog>
+                    <Grid item xs={12}>
+                      <Typography type="headline">Membership Requests</Typography>
+                      {this.state.requests.map(request => (
+                        <MemberDetail
+                          admin={this.state.isAdmin}
+                          member={request}
+                          isRequest={true}
+                          key={this.state.requests.RequestID}
+                        />
+                      ))}
+                      {noRequests}
+                    </Grid>
+                    <Grid item>{confirmRoster}</Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </section>
+          );
+        }
         content = (
           <section>
-            {adminButtons}
+            {adminView}
+            <Card>
+              <CardContent>
+                <Typography>* FERPA protected student</Typography>
+              </CardContent>
+            </Card>
             {members.map(groupMember => (
               <MemberDetail
                 member={groupMember}
@@ -274,19 +298,19 @@ export default class Membership extends Component {
                 key={groupMember.MembershipID}
               />
             ))}
-            <Typography>* FERPA protected student</Typography>
           </section>
         );
       } else {
-        if (this.state.participationDetail[0] && this.state.participationDetail[1]) {
-          // User is a member and a guest
+        // User is not in the activity or is a guest
+        if (this.state.participationDetail[1] === 'Guest') {
+          // User is a guest
           subscribeButton = (
             <Button color="primary" onClick={this.onUnsubscribe} raised>
               Unsubscribe
             </Button>
           );
         } else {
-          // User is not a member
+          // User is not in the activity
           subscribeButton = (
             <Button color="primary" onClick={this.onSubscribe} raised>
               Subscribe
@@ -327,7 +351,7 @@ export default class Membership extends Component {
                         <Typography>Title/Comment: (Optional)</Typography>
                         <TextField
                           fullWidth
-                          defaualtValue=""
+                          defaultValue=""
                           onChange={this.handleText}
                           style={formControl}
                         />

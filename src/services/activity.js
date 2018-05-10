@@ -36,8 +36,8 @@ import http from './http';
  * @param {Object} data Data passed in
  * @return {Promise.<Object>} Response body
  */
-const editActivity = (activityCode, data) => {
-  return http.put(`activities/${activityCode}`, data);
+const editActivity = async (activityCode, data) => {
+  return await http.put(`activities/${activityCode}`, data);
 };
 /**
  * Get an activity
@@ -125,8 +125,8 @@ const filter = (activities = [], typeDescription, search = '') => {
  * @param {String} activityCode Identifier for an activity
  * @return {Promis<any>} Response body
  */
-const resetImage = activityCode => {
-  return http.post(`activities/${activityCode}/image/reset`, null);
+const resetImage = async activityCode => {
+  return await http.post(`activities/${activityCode}/image/reset`, null);
 };
 
 export default {

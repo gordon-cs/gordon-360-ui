@@ -57,20 +57,18 @@ const approveRequest = requestID => {
  * @return {boolean} True if given id is a group admin, else false
  */
 const checkAdmin = (id, sessionCode, activityCode) => {
-  let isGroupAdmin = http
-    .get(`memberships/activity/${activityCode}/group-admin`)
-    .then(function(result) {
-      for (var i = 0; i < result.length; i++) {
-        if (result[i].ActivityCode === activityCode) {
-          if (result[i].SessionCode === sessionCode) {
-            if (result[i].IDNumber === parseInt(id, 10)) {
-              return true;
-            }
+  let isGroupAdmin = getAllGroupAdmins(activityCode).then(function(result) {
+    for (var i = 0; i < result.length; i++) {
+      if (result[i].ActivityCode === activityCode) {
+        if (result[i].SessionCode === sessionCode) {
+          if (result[i].IDNumber === parseInt(id, 10)) {
+            return true;
           }
         }
       }
-      return false;
-    });
+    }
+    return false;
+  });
   return isGroupAdmin;
 };
 
@@ -239,14 +237,11 @@ const search = (id, sessionCode, activityCode) => {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
         if (result[i].SessionCode === sessionCode) {
-          if (result[i].Participation === 'GUEST') {
-            return [true, true, result[i].MembershipID];
-          }
-          return [true, false, result[i].MembershipIDnull];
+          return [true, result[i].ParticipationDescription, result[i].MembershipID];
         }
       }
     }
-    return [false, false, null];
+    return [false, null, null];
   });
   return found;
 };
@@ -257,8 +252,8 @@ const search = (id, sessionCode, activityCode) => {
  * @param {Object} data Data passed in
  * @return {Promise<any>} Response
  */
-const toggleGroupAdmin = (membershipID, data) => {
-  return http.put(`memberships/${membershipID}/group-admin`, data);
+const toggleGroupAdmin = async (membershipID, data) => {
+  return await http.put(`memberships/${membershipID}/group-admin`, data);
 };
 
 export default {
