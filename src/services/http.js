@@ -19,6 +19,7 @@ const makeHeaders = () => {
     const token = storage.get('token');
     return new Headers({
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json', // Accepts JSON data
     });
   } catch (err) {
     throw new Error('Token is not available');
@@ -32,11 +33,12 @@ const makeHeaders = () => {
  * @param {object|array} body data to send with request
  * @return {Request} A request object
  */
-const createRequest = (url, method, body) => new Request(`${base}api/${url}`, {
-  method,
-  body,
-  headers: makeHeaders(),
-});
+const createRequest = (url, method, body) =>
+  new Request(`${base}api/${url}`, {
+    method,
+    body,
+    headers: makeHeaders(),
+  });
 
 /**
  * Parse an HTTP response
@@ -44,9 +46,10 @@ const createRequest = (url, method, body) => new Request(`${base}api/${url}`, {
  * @return {Promise.<Object|Array|String|Number>} Resolves with response body; rejects on non-2xx
  * response code
  */
-export const parseResponse = (res) => {
+export const parseResponse = res => {
   // Attempt to parse body of response
-  const json = res.json()
+  const json = res
+    .json()
     // Handle error if response body is not valid JSON
     .catch(err => Promise.reject(createError(err, res)));
 
@@ -64,8 +67,8 @@ export const parseResponse = (res) => {
  * @param {object|array} body data to send with request
  * @return {Promise.<Object>} Response body
  */
-const makeRequest = (url, method, body) => fetch(createRequest(url, method, body))
-  .then(parseResponse);
+const makeRequest = (url, method, body) =>
+  fetch(createRequest(url, method, body)).then(parseResponse);
 
 /**
  * Get
@@ -80,15 +83,15 @@ const get = url => makeRequest(url, 'get');
  * @param {object|array} body data to send with request
  * @return {Promise.<Object>} Response body
  */
-const put = (url, body) => makeRequest(url, 'put', body);
+const put = (url, body) => makeRequest(url, 'put', JSON.stringify(body));
 
 /**
  * Post
  * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
- * @param {object|array} body data to send with request
+ * @param {object|array} body data to send with request, needs to be JSON object
  * @return {Promise.<Object>} Response body
  */
-const post = (url, body) => makeRequest(url, 'post', body);
+const post = (url, body) => makeRequest(url, 'post', JSON.stringify(body));
 
 /**
  * Delete

@@ -26,7 +26,7 @@ export default class Login extends Component {
     };
   }
   handleChange(prop) {
-    return (event) => {
+    return event => {
       this.setState({ [prop]: event.target.value });
     };
   }
@@ -78,7 +78,7 @@ export default class Login extends Component {
               }}
             />
             <Typography className="error" type="body1" color="error">
-              { this.state.error }
+              {this.state.error}
             </Typography>
             <section className="button-wrapper">
               <Button
@@ -88,8 +88,8 @@ export default class Login extends Component {
                 color="primary"
                 disabled={!this.state.username || !this.state.password || this.state.loading}
               >
-                { !this.state.loading && 'Log in' }
-                { this.state.loading && <CircularProgress size={24} /> }
+                {!this.state.loading && 'Log in'}
+                {this.state.loading && <CircularProgress size={24} />}
               </Button>
             </section>
           </form>

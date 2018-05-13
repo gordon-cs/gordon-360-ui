@@ -1,13 +1,23 @@
 # Guides
 
+## Code Style
+
+This project uses [Prettier](https://prettier.io/), an "opinionated code formatter," to automatically format JavaScript, JSON, Sass, and Markdown files according to a common style.
+
+The advantage of using a code formatter is consistency between developers. Using ESLint with a strict style guide is one approach to consistency, but it still requires developer effort to fix code according to the ESLint rules. Prettier takes care of this without any effort from the developers.
+
+Prettier is used as a pre commit hook in this repository. This means that it will automatically format any staged code before it is committed. It can also be used as an [extension for your editor](https://prettier.io/docs/en/editors.html). This repository includes a setup for VS Code: when the extension is installed, files will be formatted automatically every time they are saved.
+
+ESLint and Stylelint are used in conjunction with Prettier to catch syntax errors, but not to check code style - that is taken care of solely by Prettier.
+
 ## Dependencies
 
 ### Installing Dependencies
 
 If you are adding a dependency to the project, you must use either `--save` or `--save-dev` with `npm install`. This will save the dependency and its current version to `package.json`, which means it will be installed automatically when `npm install` is run.
 
-- If you are installing a dependency that will be used in development, such as a build tool, linter, or documentation tool, use `npm install --save-dev nameOfPackage`. This will save the dependency to the `devDependencies` property of `package.json`.
-- If you are installing a production dependency, such as a charting library, a date formatting library, or a utility like Lodash, use `npm install --save nameOfPackage`. This will save the dependency to the `dependencies` property of `package.json`.
+* If you are installing a dependency that will be used in development, such as a build tool, linter, or documentation tool, use `npm install --save-dev nameOfPackage`. This will save the dependency to the `devDependencies` property of `package.json`.
+* If you are installing a production dependency, such as a charting library, a date formatting library, or a utility like Lodash, use `npm install --save nameOfPackage`. This will save the dependency to the `dependencies` property of `package.json`.
 
 To remove a dependency, use `npm rm nameOfPackage`.
 
@@ -23,9 +33,9 @@ To update all depedencies to their latest allowed versions (as specified by the 
 
 > Given a version number MAJOR.MINOR.PATCH, increment the:
 >
-> - MAJOR version when you make incompatible API changes,
-> - MINOR version when you add functionality in a backwards-compatible manner, and
-> - PATCH version when you make backwards-compatible bug fixes.
+> * MAJOR version when you make incompatible API changes,
+> * MINOR version when you add functionality in a backwards-compatible manner, and
+> * PATCH version when you make backwards-compatible bug fixes.
 >
 > Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
 
@@ -35,10 +45,10 @@ npm uses semantic versioning ranges to specify a range of acceptable versions. F
 
 The source files for the app are in `./src`. The other top-level folders are as follows:
 
-- `.vscode` contains configuration for Visual Studio Code
-- `build` contains the built application; not tracked by Git
-- `node_modules` contains dependencies installed by `npm`; not tracked by Git
-- `public` contains assets that should not be processed by Webpack. Only files inside `public` can be used from `public/index.html`.
+* `.vscode` contains configuration for Visual Studio Code
+* `build` contains the built application; not tracked by Git
+* `node_modules` contains dependencies installed by `npm`; not tracked by Git
+* `public` contains assets that should not be processed by Webpack. Only files inside `public` can be used from `public/index.html`.
 
 The structure of the `src` directory is as follows:
 
@@ -137,7 +147,7 @@ Similar to component folders, a view folder can have its own `components` folder
 
 ## Environment Variables
 
-Environment-specific variables are located in the root directory of the project in the files `.env` and `.env.production`.  `.env` contains variables for local development and testing. `.env.production` contains overrides of those variables specific to the production environments (360 and 360Train).
+Environment-specific variables are located in the root directory of the project in the files `.env` and `.env.production`. `.env` contains variables for local development and testing. `.env.production` contains overrides of those variables specific to the production environments (360 and 360Train).
 
 To declare variables that should not be checked in to version control, create a file in the root directory called `.env.local`. This file will be ignored by git.
 

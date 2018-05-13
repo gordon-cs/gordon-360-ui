@@ -78,9 +78,7 @@ export default class App extends Component {
 
     return (
       <MuiThemeProvider theme={theme}>
-        <Router history={this.history}>
-          { content }
-        </Router>
+        <Router history={this.history}>{content}</Router>
       </MuiThemeProvider>
     );
   }
