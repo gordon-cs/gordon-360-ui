@@ -31,6 +31,15 @@ import http from './http';
  */
 
 /**
+ * Close out an activity, like confirm final roster
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @return {Promise<any>} Response body
+ */
+const closeActivity = async (activityCode, sessionCode) => {
+  return await http.put(`activities/${activityCode}/session/${sessionCode}/close`, null);
+};
+/**
  * Edit activity
  * @param {String} activityCode Identifier for an activity
  * @param {Object} data Data passed in
@@ -121,6 +130,16 @@ const filter = (activities = [], typeDescription, search = '') => {
 };
 
 /**
+ * Reopen a closed activity
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @return {Promise<any>} Response body
+ */
+const reopenActivity = async (activityCode, sessionCode) => {
+  return await http.put(`activities/${activityCode}/session/${sessionCode}/open`, null);
+};
+
+/**
  * Resets image to default image
  * @param {String} activityCode Identifier for an activity
  * @return {Promis<any>} Response body
@@ -130,6 +149,7 @@ const resetImage = async activityCode => {
 };
 
 export default {
+  closeActivity,
   editActivity,
   get,
   getSpecificActivity,
@@ -139,5 +159,6 @@ export default {
   getStatus,
   getTypes,
   filter,
+  reopenActivity,
   resetImage,
 };

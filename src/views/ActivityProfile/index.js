@@ -12,12 +12,12 @@ import Typography from 'material-ui/Typography';
 import activity from '../../services/activity';
 import './activity-profile.css';
 import Advisors from './components/Advisors';
-import { gordonColors } from '../../theme';
 import GroupContacts from './components/GroupContacts';
 import GordonLoader from '../../components/Loader';
 import Membership from './components/Membership';
 import membership from '../../services/membership';
 import session from '../../services/session';
+import { gordonColors } from '../../theme';
 import user from '../../services/user';
 
 class ActivityProfile extends Component {
@@ -26,7 +26,7 @@ class ActivityProfile extends Component {
 
     this.alertRemoveImage = this.alertRemoveImage.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleEditActivity = this.handleEditActivity.bind(this);
+    this.openEditActivityDialog = this.openEditActivityDialog.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onEditActivity = this.onEditActivity.bind(this);
     this.onRemoveImage = this.onRemoveImage.bind(this);
@@ -38,16 +38,15 @@ class ActivityProfile extends Component {
       activityGroupAdmins: [],
       activityMembersNum: 0,
       activityMembers: [],
-      activityStatus: null,
+      activityStatus: '',
       sessionInfo: null,
-      id: '',
-      tempActivityBlurb: '',
-      tempActivityJoinInfo: '',
-      tempActivityURL: '',
-      isAdmin: false,
+      id: '', // User's id
+      tempActivityBlurb: '', // For editing activity
+      tempActivityJoinInfo: '', // For editing activity
+      tempActivityURL: '', // For editing activity
+      isAdmin: false, // Boolean for current user
       openEditActivity: false,
       openRemoveImage: false,
-      reRender: false,
     };
   }
 
@@ -60,7 +59,6 @@ class ActivityProfile extends Component {
       activityFollowers,
       activityGroupAdmins,
       activityMembersNum,
-      // activityMembers,
       activityStatus,
       sessionInfo,
       id,
@@ -71,7 +69,6 @@ class ActivityProfile extends Component {
       membership.getFollowersNum(activityCode, sessionCode),
       activity.getGroupAdmins(activityCode, sessionCode),
       membership.getMembersNum(activityCode, sessionCode),
-      // membership.get(activityCode, sessionCode),
       activity.getStatus(activityCode, sessionCode),
       session.get(sessionCode),
       user.getLocalInfo().id,
@@ -84,7 +81,6 @@ class ActivityProfile extends Component {
       activityFollowers,
       activityGroupAdmins,
       activityMembersNum,
-      // activityMembers,
       activityStatus,
       sessionInfo,
       loading: false,
@@ -104,7 +100,7 @@ class ActivityProfile extends Component {
       this.state.activityInfo.ActivityCode,
     );
     if (participationDetail[0]) {
-      // Only if the user is in the activity can this get called
+      // Only if the user is in the activity can this get called, else Unauthorized error
       const activityMembers = await membership.get(
         this.state.activityInfo.ActivityCode,
         this.state.sessionInfo.SessionCode,
@@ -117,7 +113,7 @@ class ActivityProfile extends Component {
     this.setState({ [name]: event.target.value });
   };
 
-  handleEditActivity() {
+  openEditActivityDialog() {
     this.setState({ openEditActivity: true });
   }
 
@@ -125,7 +121,7 @@ class ActivityProfile extends Component {
     this.setState({ openRemoveImage: true });
   }
 
-  // Called when user submits changes to activity
+  // Called when user submits changes to activity from edit activity dialog box
   async onEditActivity() {
     let data = {
       ACT_CDE: this.state.activityInfo.ActivityCode,
@@ -138,9 +134,8 @@ class ActivityProfile extends Component {
     this.refresh();
   }
 
-  // Called when confirm remove image
+  // Called when confirm remove image from the alert remove image dialog box
   async onRemoveImage() {
-    console.log('acitve');
     await activity.resetImage(this.state.activityInfo.ActivityCode);
     this.onClose();
     this.refresh();
@@ -181,7 +176,7 @@ class ActivityProfile extends Component {
         editActivity = (
           <section align="center" padding={6}>
             <CardContent>
-              <Button color="primary" onClick={this.handleEditActivity} raised>
+              <Button color="primary" onClick={this.openEditActivityDialog} raised>
                 Edit Activity
               </Button>
             </CardContent>
@@ -255,11 +250,7 @@ class ActivityProfile extends Component {
           </section>
         );
       }
-      const followers = this.state.activityFollowers;
-      const membersNum = this.state.activityMembersNum;
       const { SessionDescription: sessionDescription } = this.state.sessionInfo;
-      let groupContacts = <GroupContacts groupAdmin={this.state.activityGroupAdmins} />;
-      let advisors = <Advisors advisors={this.state.activityAdvisors} />;
       let description;
       if (activityBlurb.length !== 0) {
         description = (
@@ -278,6 +269,10 @@ class ActivityProfile extends Component {
           </Typography>
         );
       }
+      let groupContacts = <GroupContacts groupAdmin={this.state.activityGroupAdmins} />;
+      let advisors = <Advisors advisors={this.state.activityAdvisors} />;
+      const followersNum = this.state.activityFollowers;
+      const membersNum = this.state.activityMembersNum;
       let membership = (
         <Membership
           members={this.state.activityMembers}
@@ -287,6 +282,7 @@ class ActivityProfile extends Component {
           participationDetail={this.state.participationDetail}
           id={this.state.id}
           isAdmin={this.state.isAdmin}
+          status={this.state.activityStatus}
         />
       );
       content = (
@@ -314,7 +310,7 @@ class ActivityProfile extends Component {
               </Typography>
               <Typography type="body1">
                 <strong>Current Activity Roster: </strong>
-                {membersNum} Member(s) and {followers} follower(s)
+                {membersNum} Member(s) and {followersNum} follower(s)
               </Typography>
             </CardContent>
           </Card>

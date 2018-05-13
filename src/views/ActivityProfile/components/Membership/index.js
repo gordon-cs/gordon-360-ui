@@ -1,5 +1,5 @@
 import Button from 'material-ui/Button';
-import Card, { CardActions } from 'material-ui/Card';
+import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog';
 import Grid from 'material-ui/Grid';
 import { FormControl } from 'material-ui/Form';
@@ -9,22 +9,25 @@ import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 import React, { Component } from 'react';
 
-import GordonLoader from '../../../../components/Loader';
+import activity from '../../../../services/activity';
 import '../../activity-profile.css';
+import GordonLoader from '../../../../components/Loader';
 import MemberDetail from './components/MemberDetail';
 import membership from '../../../../services/membership';
+import RequestDetail from './components/RequestDetail';
 import user from '../../../../services/user';
-import { CardContent } from 'material-ui';
 
 export default class Membership extends Component {
   constructor(props) {
     super(props);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleAddMemberClick = this.handleAddMemberClick.bind(this);
+    this.handleSelectParticipationLevel = this.handleSelectParticipationLevel.bind(this);
+    this.openJoinDialog = this.openJoinDialog.bind(this);
+    this.openAddMemberDialog = this.openAddMemberDialog.bind(this);
     this.onAddMember = this.onAddMember.bind(this);
+    this.onConfirmRoster = this.onConfirmRoster.bind(this);
     this.onClose = this.onClose.bind(this);
+    this.onReopenActivity = this.onReopenActivity.bind(this);
     this.onRequest = this.onRequest.bind(this);
     this.onSubscribe = this.onSubscribe.bind(this);
     this.onUnsubscribe = this.onUnsubscribe.bind(this);
@@ -32,7 +35,7 @@ export default class Membership extends Component {
     this.state = {
       openAddMember: false,
       openJoin: false,
-      mode: '',
+      status: this.props.status,
       sessionInfo: null,
       activityCode: '',
       activityDescription: '',
@@ -51,25 +54,35 @@ export default class Membership extends Component {
     this.loadMembers();
   }
 
-  handleChange = event => {
+  handleSelectParticipationLevel = event => {
     this.setState({ participationCode: event.target.value });
   };
 
-  handleAddMemberClick() {
+  openAddMemberDialog() {
     this.setState({ openAddMember: true });
   }
 
-  handleClick() {
+  openJoinDialog() {
     this.setState({ openJoin: true });
   }
-
-  handleSelect = name => event => {
-    this.setState({ participationCode: event.target.value });
-  };
 
   handleText = name => event => {
     this.setState({ [name]: event.target.value });
   };
+
+  // Called when Confirm Roster button clicked
+  async onConfirmRoster() {
+    console.log(this.props.activityCode);
+    await activity.closeActivity(this.props.activityCode, this.state.sessionInfo.SessionCode);
+    this.refresh();
+  }
+
+  // Called when Reopen Activity button clicked
+  async onReopenActivity() {
+    console.log(this.props.activityCode);
+    await activity.reopenActivity(this.props.activityCode, this.state.sessionInfo.SessionCode);
+    this.refresh();
+  }
 
   onClose() {
     this.setState({
@@ -80,6 +93,7 @@ export default class Membership extends Component {
     });
   }
 
+  // Called when submitting new member details from Add Member dialog box
   async onAddMember() {
     let addID = await membership.getEmailAccount(this.state.addEmail).then(function(result) {
       return result.GordonID;
@@ -92,13 +106,12 @@ export default class Membership extends Component {
       COMMENT_TXT: this.state.titleComment,
       GRP_ADMIN: false,
     };
-    console.log('Member added');
-    console.log(data);
     await membership.addMembership(data);
     this.onClose();
     this.refresh();
   }
 
+  // Called when submitting request details from Join dialog box
   onRequest() {
     let date = new Date();
     let data = {
@@ -110,11 +123,11 @@ export default class Membership extends Component {
       COMMENT_TXT: this.state.titleComment,
       APPROVED: 'Pending',
     };
-    console.log('Request sent');
     membership.requestMembership(data);
     this.onClose();
   }
 
+  // Called when Subscribe button clicked
   async onSubscribe() {
     let data = {
       ACT_CDE: this.props.activityCode,
@@ -124,12 +137,11 @@ export default class Membership extends Component {
       COMMENT_TXT: 'Basic Follower',
       GRP_ADMIN: false,
     };
-    console.log(data);
-    console.log('Subscription sent');
     await membership.addMembership(data);
     this.refresh();
   }
 
+  // Called when Unsubscribe button clicked
   async onUnsubscribe() {
     let membershipID = this.state.participationDetail[2];
     await membership.remove(membershipID);
@@ -140,28 +152,31 @@ export default class Membership extends Component {
   async loadMembers() {
     this.setState({ loading: true });
     try {
-      const id = await user.getLocalInfo().id;
-      this.setState({ id });
-      const participationDetail = await membership.search(
-        this.state.id,
-        this.props.sessionInfo.SessionCode,
-        this.props.activityCode,
-      );
-      this.setState({ participationDetail });
+      const [id, participationDetail] = await Promise.all([
+        user.getLocalInfo().id,
+        membership.search(
+          this.state.id,
+          this.props.sessionInfo.SessionCode,
+          this.props.activityCode,
+        ),
+      ]);
       this.setState({
+        id,
+        participationDetail,
         activityDescription: this.props.activityDescription,
         participationCode: '',
         sessionInfo: this.props.sessionInfo,
         titleComment: '',
+        loading: false,
       });
       if (this.state.isAdmin) {
+        // Not necessary, but good security to have
         const requests = await membership.getRequests(
           this.props.activityCode,
           this.props.sessionInfo.SessionCode,
         );
         this.setState({ requests });
       }
-      this.setState({ loading: false });
     } catch (error) {
       this.setState({ error });
     }
@@ -171,19 +186,43 @@ export default class Membership extends Component {
     window.location.reload();
   }
 
+  // Compare members initially by last name, then by first name, A-Z
+  compareFunction(a, b) {
+    if (a.LastName.toUpperCase() < b.LastName.toUpperCase()) {
+      return -1;
+    }
+    if (a.LastName.toUpperCase() > b.LastName.toUpperCase()) {
+      return 1;
+    }
+    if (a.FirstName.toUpperCase() < b.FirstName.toUpperCase()) {
+      return -1;
+    }
+    if (a.FirstName.toUpperCase() > b.FirstName.toUpperCase()) {
+      return 1;
+    }
+    return 0;
+  }
+
   render() {
     if (this.state.error) {
       throw this.state.error;
     }
-    const { members } = this.props;
     const formControl = {
       padding: 10,
     };
     let content;
-    let subscribeButton;
-    let adminView;
-    let noRequests;
+    let requestList;
     let confirmRoster;
+    let adminView;
+    const { members } = this.props;
+    members.sort((a, b) => this.compareFunction(a, b));
+    let subscribeButton;
+    let isActivityClosed;
+    if (this.state.status === 'CLOSED') {
+      isActivityClosed = true;
+    } else {
+      isActivityClosed = false;
+    }
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
@@ -192,14 +231,26 @@ export default class Membership extends Component {
 
         if (this.state.isAdmin) {
           if (this.state.requests.length === 0) {
-            noRequests = <Typography>There are no pending requests</Typography>;
+            requestList = <Typography>There are no pending requests</Typography>;
+          } else {
+            requestList = this.state.requests.map(request => (
+              <RequestDetail member={request} key={request.RequestID} />
+            ));
           }
           if (this.state.participationDetail[1] === 'Advisor') {
-            confirmRoster = (
-              <Button color="primary" disabled raised>
-                Confirm roster
-              </Button>
-            );
+            if (this.state.status === 'OPEN') {
+              confirmRoster = (
+                <Button color="primary" onClick={this.onConfirmRoster} raised>
+                  Confirm final roster
+                </Button>
+              );
+            } else {
+              confirmRoster = (
+                <Button color="primary" onClick={this.onReopenActivity} raised>
+                  Reopen roster
+                </Button>
+              );
+            }
           }
           adminView = (
             <section>
@@ -207,7 +258,12 @@ export default class Membership extends Component {
                 <CardContent>
                   <Grid container>
                     <Grid item xs={6} sm={4} md={4} lg={4}>
-                      <Button color="primary" onClick={this.handleAddMemberClick} raised>
+                      <Button
+                        color="primary"
+                        disabled={isActivityClosed}
+                        onClick={this.openAddMemberDialog}
+                        raised
+                      >
                         Add member
                       </Button>
                     </Grid>
@@ -230,7 +286,7 @@ export default class Membership extends Component {
                               <FormControl fullWidth style={formControl}>
                                 <Select
                                   value={this.state.participationCode}
-                                  onChange={this.handleSelect('participationCode')}
+                                  onChange={this.handleSelectParticipationLevel}
                                   displayEmpty
                                 >
                                   <MenuItem value="ADV">Advisor</MenuItem>
@@ -265,15 +321,7 @@ export default class Membership extends Component {
                     </Dialog>
                     <Grid item xs={12}>
                       <Typography type="headline">Membership Requests</Typography>
-                      {this.state.requests.map(request => (
-                        <MemberDetail
-                          admin={this.state.isAdmin}
-                          member={request}
-                          isRequest={true}
-                          key={this.state.requests.RequestID}
-                        />
-                      ))}
-                      {noRequests}
+                      {requestList}
                     </Grid>
                     <Grid item>{confirmRoster}</Grid>
                   </Grid>
@@ -312,7 +360,7 @@ export default class Membership extends Component {
         } else {
           // User is not in the activity
           subscribeButton = (
-            <Button color="primary" onClick={this.onSubscribe} raised>
+            <Button color="primary" disabled={isActivityClosed} onClick={this.onSubscribe} raised>
               Subscribe
             </Button>
           );
@@ -321,7 +369,12 @@ export default class Membership extends Component {
           <Card>
             <CardActions>
               {subscribeButton}
-              <Button color="primary" onClick={this.handleClick} raised>
+              <Button
+                color="primary"
+                disabled={isActivityClosed}
+                onClick={this.openJoinDialog}
+                raised
+              >
                 Join
               </Button>
               <Dialog open={this.state.openJoin} keepMounted align="center">
@@ -334,7 +387,7 @@ export default class Membership extends Component {
                         <FormControl fullWidth style={formControl}>
                           <Select
                             value={this.state.participationCode}
-                            onChange={this.handleChange}
+                            onChange={this.handleSelectParticipationLevel}
                             displayEmpty
                           >
                             <MenuItem value="">
@@ -352,7 +405,7 @@ export default class Membership extends Component {
                         <TextField
                           fullWidth
                           defaultValue=""
-                          onChange={this.handleText}
+                          onChange={this.handleText('titleComment')}
                           style={formControl}
                         />
                       </Grid>

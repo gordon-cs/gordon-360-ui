@@ -30,6 +30,24 @@ import http from './http';
  */
 
 /**
+ * @global
+ * @typedef Request
+ * @property {String} ActivityCode Identifier for activity
+ * @property {String} ActivityDescription Activity Title
+ * @property {String} CommentText Comment or text
+ * @property {String} DateSent Date sent
+ * @property {String} FirstName First Name
+ * @property {Number} IDNumber User id
+ * @property {String} LastName Last Name
+ * @property {String} Participation Particpation Code or abbreviation
+ * @property {String} ParticipationDescription Participation description
+ * @property {String} RequestApproved Status of request: Pending, Approved, or Denied
+ * @property {Number} RequestID Request ID
+ * @property {String} SessionCode Identifier for session
+ * @property {String} SessionDescription Session description
+ */
+
+/**
  * Create a new membership
  * @param {Object} data Data passed in
  * @return {Promise<any>} Response
@@ -176,7 +194,7 @@ const getIndividualMembership = userID =>
  * Get requests for specific activity and filtered by session code
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
- * @return {Array} List of requests for activity and session
+ * @return {Request[]} List of requests for activity and session
  */
 const getRequests = (activityCode, sessionCode) => {
   let allRequests = http.get(`requests/activity/${activityCode}`).then(function(result) {
@@ -187,9 +205,9 @@ const getRequests = (activityCode, sessionCode) => {
 
 /**
  * Filters only penidng requests for an activity
- * @param {[]} requestsArray List of all the requests for an activity
+ * @param {Request[]} requestsArray List of all the requests for an activity
  * @param {String} sessionCode Identifier for a session
- * @return {[]} Filtered requests
+ * @return {Request[]} Filtered requests
  */
 const filterCurrentRequests = (requestsArray, sessionCode) => {
   let filteredRequestsArray = [];
