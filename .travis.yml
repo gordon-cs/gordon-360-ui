@@ -1,7 +1,7 @@
 # Run build using latest stable Node.js release
 language: node_js
 node_js:
-  - "node"
+  - 9.11.1
 
 # Use the Trusty environment with sudo access so that external dependencies can be installed
 # For more info: https://docs.travis-ci.com/user/reference/trusty/
