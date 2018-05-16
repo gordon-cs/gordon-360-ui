@@ -167,7 +167,6 @@ export default class Membership extends Component {
         participationCode: '',
         sessionInfo: this.props.sessionInfo,
         titleComment: '',
-        loading: false,
       });
       if (this.state.isAdmin) {
         // Not necessary, but good security to have
@@ -175,8 +174,12 @@ export default class Membership extends Component {
           this.props.activityCode,
           this.props.sessionInfo.SessionCode,
         );
-        this.setState({ requests });
+        this.setState({
+          requests,
+          loading: false,
+        });
       }
+      this.setState({ loading: false });
     } catch (error) {
       this.setState({ error });
     }
@@ -213,6 +216,7 @@ export default class Membership extends Component {
     let content;
     let requestList;
     let confirmRoster;
+    let ferpaAsterisks;
     let adminView;
     const { members } = this.props;
     members.sort((a, b) => this.compareFunction(a, b));
@@ -251,6 +255,13 @@ export default class Membership extends Component {
                 </Button>
               );
             }
+            ferpaAsterisks = (
+              <Card>
+                <CardContent>
+                  <Typography>* FERPA protected student</Typography>
+                </CardContent>
+              </Card>
+            );
           }
           adminView = (
             <section>
@@ -327,17 +338,13 @@ export default class Membership extends Component {
                   </Grid>
                 </CardContent>
               </Card>
+              {ferpaAsterisks}
             </section>
           );
         }
         content = (
           <section>
             {adminView}
-            <Card>
-              <CardContent>
-                <Typography>* FERPA protected student</Typography>
-              </CardContent>
-            </Card>
             {members.map(groupMember => (
               <MemberDetail
                 member={groupMember}

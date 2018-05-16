@@ -31,7 +31,6 @@ export default class MemberDetail extends Component {
       participation: '',
       alertRemove: false,
       titleComment: '',
-      // isRequest: false,
     };
     this.confirmLeave = this.confirmLeave.bind(this);
     this.handleToggleGroupAdmin = this.handleToggleGroupAdmin.bind(this);
@@ -51,7 +50,6 @@ export default class MemberDetail extends Component {
       participationDescription: this.props.member.ParticipationDescription,
       participation: this.props.member.Participation,
       titleComment: this.props.member.Description,
-      isRequest: this.props.isRequest,
     });
   }
 

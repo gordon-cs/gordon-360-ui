@@ -83,7 +83,6 @@ class ActivityProfile extends Component {
       activityMembersNum,
       activityStatus,
       sessionInfo,
-      loading: false,
       id,
       isAdmin,
     });
@@ -107,6 +106,7 @@ class ActivityProfile extends Component {
       );
       this.setState({ activityMembers });
     }
+    this.setState({ loading: false });
   }
 
   handleChange = name => event => {
