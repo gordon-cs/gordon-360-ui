@@ -98,8 +98,9 @@ class ActivityProfile extends Component {
       this.state.sessionInfo.SessionCode,
       this.state.activityInfo.ActivityCode,
     );
-    if (participationDetail[0]) {
-      // Only if the user is in the activity can this get called, else Unauthorized error
+    if (participationDetail[0] && participationDetail[1] !== 'Guest') {
+      // Only if the user is in the activity and not a guest can this get called
+      // else Unauthorized error
       const activityMembers = await membership.get(
         this.state.activityInfo.ActivityCode,
         this.state.sessionInfo.SessionCode,

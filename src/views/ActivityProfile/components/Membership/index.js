@@ -125,6 +125,7 @@ export default class Membership extends Component {
     };
     membership.requestMembership(data);
     this.onClose();
+    this.refresh();
   }
 
   // Called when Subscribe button clicked
