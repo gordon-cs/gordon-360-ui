@@ -45,7 +45,7 @@ export default class Activities extends Component {
 
     return (
       <div>
-        <Grid>{Activity.SessionDescription}</Grid>
+        <Grid class="SessionDescription">{Activity.SessionDescription}</Grid>
         <Grid item xs={12}>
           <Grid container>
             <Grid item xs={6}>
