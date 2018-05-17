@@ -72,18 +72,13 @@ export default class Transcript extends Component {
     };
 
     return (
-      <div class>
-        <Grid
-          className="transcript"
-          alignItems="center"
-          justify="center"
-          xs={12}
-          sm={12}
-          md={8}
-          lg={8}
-        >
+      <Grid container className="transcript" alignItems="center" justify="center">
+        <Grid xs={12} sm={12} md={8} lg={8}>
           <Card elevation="10">
             <CardContent>
+              <Grid item xs={12} class="print-only">
+                <img src={require('./logo.png')} />
+              </Grid>
               <Grid item xs={12}>
                 <Button raised style={button} justify="center" onClick={this.handleDownload}>
                   Download Transcript
@@ -102,7 +97,7 @@ export default class Transcript extends Component {
             </CardContent>
           </Card>
         </Grid>
-      </div>
+      </Grid>
     );
   }
 }
