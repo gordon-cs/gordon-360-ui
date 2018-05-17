@@ -1,0 +1,25 @@
+@import '../../vars';
+
+.gordon-activity-profile {
+  .activity-image {
+    margin-top: 25px;
+    margin-bottom: 25px;
+
+    .img {
+      max-width: 100%;
+    }
+  }
+
+  .email-button {
+    height: 24px;
+    width: 24px;
+  }
+
+  .contacts {
+    padding: 0 0 0 0;
+  }
+
+  .col {
+    flex: 33%;
+  }
+}

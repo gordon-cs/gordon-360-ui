@@ -5,7 +5,10 @@
     text-align: center; // Center images when the tile is wider than the image
 
     .tile-bar {
-      background: transparentize($neutral-dark-gray, .3); // Make titles more readable over image background
+      background: transparentize(
+        $neutral-dark-gray,
+        0.3
+      ); // Make titles more readable over image background
       height: 64px; // Make space for a two-line title
     }
 

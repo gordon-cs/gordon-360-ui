@@ -26,6 +26,13 @@ import http from './http';
  */
 
 /**
+ * Get a session
+ * @param {String} sessionCode Identifier for a session
+ * @return {Promise.<Session>} Session
+ */
+const get = sessionCode => http.get(`sessions/${sessionCode}`);
+
+/**
  * Get sessions
  * @return {Promise.<Session[]>} List of sessions
  */
@@ -67,6 +74,7 @@ const getTermCode = () => {
 };
 
 export default {
+  get,
   getAll,
   getCurrent,
   getDaysLeft,
