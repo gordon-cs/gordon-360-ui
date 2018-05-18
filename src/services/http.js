@@ -19,6 +19,7 @@ const makeHeaders = () => {
     const token = storage.get('token');
     return new Headers({
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json', // Accepts JSON data
     });
   } catch (err) {
     throw new Error('Token is not available');
@@ -82,15 +83,15 @@ const get = url => makeRequest(url, 'get');
  * @param {object|array} body data to send with request
  * @return {Promise.<Object>} Response body
  */
-const put = (url, body) => makeRequest(url, 'put', body);
+const put = (url, body) => makeRequest(url, 'put', JSON.stringify(body));
 
 /**
  * Post
  * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
- * @param {object|array} body data to send with request
+ * @param {object|array} body data to send with request, needs to be JSON object
  * @return {Promise.<Object>} Response body
  */
-const post = (url, body) => makeRequest(url, 'post', body);
+const post = (url, body) => makeRequest(url, 'post', JSON.stringify(body));
 
 /**
  * Delete
