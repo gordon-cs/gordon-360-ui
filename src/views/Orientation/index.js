@@ -1,3 +1,12 @@
+/*
+ * Orientation Roadmap
+ * Initially Written Fall of 2017 by Nicholas Miller and Anna Pelletier
+ *
+ * This file controls the Orientation Roadmap page. It uses data from the 360 API to generate
+ * the page. It's split into two major parts- the data checks, and the page HTML.
+ *
+ */
+
 import Grid from 'material-ui/Grid';
 import Card, { CardContent, CardHeader, CardActions } from 'material-ui/Card';
 import React, { Component } from 'react';
@@ -17,20 +26,55 @@ export default class Orientation extends Component {
   };
 
   render() {
+    // Data Checks
+
     let idPhotoAvatar;
     let idPhotoSubheader;
-    let financialHoldAvatar = 'yellow-avatar';
-    let tasksComplete = Math.round(Math.random() * 100);
-    let tasksTotal = Math.round(Math.random() * 100);
+    let idPhotoBody;
+    let residenceSurveyAvatar;
+    let residenceSurveySubheader;
+    let residenceSurveyBody;
+    let tasksComplete = 0;
+    let tasksTotal = 2;
     if (tasksTotal < tasksComplete) tasksComplete = tasksTotal;
 
-    if (Math.round(Math.random()) === 0) {
+    // ID Photo not uploaded
+    if (false) {
       idPhotoAvatar = 'green-avatar';
       idPhotoSubheader = 'Completed!';
-    } else {
+      idPhotoBody = "We’ve received your ID photo. An ID/Access/Meal Plan card will be prepared for your arrival this semester." +
+      " It will be available at Check In at your residence, or picked up at Gordon College Police.";
+      tasksComplete ++
+    } else { // ID Photo uploaded
       idPhotoAvatar = 'red-avatar';
       idPhotoSubheader = 'Not received';
+      idPhotoBody = "Email a square-format headshot photo of yourself to IDCard.CTS@gordon.edu." +
+      " Your facial features should be clear and unobstructed." +
+      " No hats, sunglasses, collections of friends, pets, or silly disguises."
     }
+
+    // Housing Assignment made
+    if (true) {
+      residenceSurveyAvatar = 'green-avatar';
+      residenceSurveySubheader = 'Completed!';
+      residenceSurveyBody = "Your housing assignment has been made!"
+      tasksComplete ++;
+    } else if(false) { // Residence Survey completed, Housing Assignment not made
+      residenceSurveyAvatar = 'yellow-avatar';
+      residenceSurveySubheader = 'In Progress';
+      residenceSurveyBody = "We’ve received your Housing Information Questionnaire," +
+      " and the Housing Director will be working to accommodate your housing request." +
+      " Assignments will be confirmed by Gordon email starting in mid-summer." +
+      " Contact Housing@gordon.edu if you need to update your information, or if you have a question."
+    } else { // Residence Survey not completed
+      residenceSurveyAvatar = 'red-avatar';
+      residenceSurveySubheader = 'Not received';
+      residenceSurveyBody = "Complete the Housing Information Questionnaire." +
+      " This provides information to the Housing Director about your on-campus housing," +
+      " or your request to be a commuting student.";
+    }
+
+    // Page HTML
 
     return (
       <Grid container justify="center">
@@ -67,8 +111,7 @@ export default class Orientation extends Component {
             </CardActions>
             <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
               <CardContent>
-                "This is a placeholder string that will be replaced by information about the item
-                that needs to be completed."
+                {idPhotoBody}
               </CardContent>
             </Collapse>
           </Card>
@@ -77,9 +120,9 @@ export default class Orientation extends Component {
           <Card>
             <CardContent>
               <CardHeader
-                avatar={<Avatar className={financialHoldAvatar} />}
+                avatar={<Avatar className={residenceSurveyAvatar} />}
                 title="Financial Hold"
-                subheader="In Progress"
+                subheader={residenceSurveySubheader}
               />
             </CardContent>
             <CardActions>
@@ -92,7 +135,9 @@ export default class Orientation extends Component {
               </IconButton>
             </CardActions>
             <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-              <CardContent>"More placeholder text."</CardContent>
+              <CardContent>
+              {residenceSurveyBody}
+              </CardContent>
             </Collapse>
           </Card>
         </Grid>
