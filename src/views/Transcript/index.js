@@ -3,6 +3,7 @@ import Button from 'material-ui/Button';
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
 import Divider from 'material-ui/Divider/Divider';
+import Typography from 'material-ui/Typography';
 
 import { gordonColors } from '../../theme';
 import session from '../../services/session';
@@ -48,7 +49,7 @@ export default class Transcript extends Component {
     }
   }
 
-  render(props) {
+  render() {
     let activityList;
     console.log('Transcript: ' + this.state.activities);
     if (!this.state.activities) {
@@ -84,8 +85,12 @@ export default class Transcript extends Component {
                   Download Transcript
                 </Button>
               </Grid>
-              <Grid item xs={12} margin="normal" class="print">
-                <div style={divStyle}> Experience Transcript - {this.state.profile.fullName} </div>
+              <Grid item xs={12} margin="normal">
+                <div style={divStyle}>
+                  <Typography type="headline">
+                    <b> Experience Transcript - {this.state.profile.fullName} </b>
+                  </Typography>
+                </div>
               </Grid>
               <Grid item xs={12} class="print">
                 <Grid container spacing={0}>

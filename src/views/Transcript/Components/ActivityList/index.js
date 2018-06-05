@@ -4,22 +4,27 @@ import Divider from 'material-ui/Divider/Divider';
 import Button from 'material-ui/Button';
 import React, { Component } from 'react';
 import List, { ListItem, ListItemText } from 'material-ui/List';
-import { GridList } from 'material-ui';
-//import { Typography, typography } from 'material-ui/styles';
+import { GridList, Subheader } from 'material-ui';
+import session from '../../../../services/session';
 import Typography from 'material-ui/Typography';
 
 export default class Activities extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
-  }
-  componentWillMount() {
-    this.loadProfile();
+    this.state = { prevSession: '' };
   }
 
-  async loadProfile() {}
-  render() {
+  componentWillMount() {
+    //this.savePrevSession();
+  }
+
+  savePrevSession() {
+    const { Activity } = this.props;
+    this.setState({ prevSession: Activity.SessionDescription });
+  }
+
+  getContent = () => {
     const { Activity } = this.props;
 
     let content = (
@@ -43,26 +48,82 @@ export default class Activities extends Component {
       </Grid>
     );
 
-    return (
+    return content;
+  };
+
+  getHeading = () => {
+    const { Activity } = this.props;
+    let heading = (
       <div>
-        <Grid class="SessionDescription">{Activity.SessionDescription}</Grid>
-        <Grid item xs={12}>
-          <Grid container>
-            <Grid item xs={6}>
-              <List>
-                <ListItem>Activity</ListItem>
-              </List>
-              <Divider />
-            </Grid>
-            <Grid item xs={6}>
-              <List>
-                <ListItem>Participation</ListItem>
-              </List>
-              <Divider />
-            </Grid>
+        <Grid container>
+          <Grid item xs={12}>
+            <Typography type="title">
+              {' '}
+              <b> {Activity.SessionDescription} </b>{' '}
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <List>
+              <ListItem>
+                {' '}
+                <b> Activity </b>{' '}
+              </ListItem>
+            </List>
+            <Divider />
+          </Grid>
+          <Grid item xs={6}>
+            <List>
+              <ListItem>
+                {' '}
+                <b> Participation </b>{' '}
+              </ListItem>
+            </List>
+            <Divider />
           </Grid>
         </Grid>
-        <Grid>{content}</Grid>
+        <Grid />
+      </div>
+    );
+
+    return heading;
+  };
+
+  createTable = () => {
+    const { Activity } = this.props;
+    const currSession = Activity.SessionDescription.toString();
+
+    if (this.state.prevSession != Activity.SessionDescription) {
+      let table = (
+        <div>
+          <Grid container>
+            <Grid item>
+              {this.getHeading()}
+              {this.getContent()}
+            </Grid>
+          </Grid>
+        </div>
+      );
+      this.savePrevSession();
+
+      return table;
+    } else {
+      let table = (
+        <div>
+          <Grid container>
+            <Grid item>{this.getContent()}</Grid>
+          </Grid>
+        </div>
+      );
+      this.savePrevSession();
+      return table;
+    }
+  };
+
+  render() {
+    return (
+      <div>
+        {this.getHeading()}
+        {this.getContent()}
       </div>
     );
   }
@@ -70,12 +131,8 @@ export default class Activities extends Component {
 
 Activities.propTypes = {
   Activity: PropTypes.shape({
-    ActivityDescription: PropTypes.string.isRequired,
-    ActivityImagePath: PropTypes.string.isRequired,
     SessionDescription: PropTypes.string.isRequired,
-    ActivityCode: PropTypes.string,
-    Participation: PropTypes.string,
-    ParticipationDescription: PropTypes.string,
-    GroupAdmin: PropTypes.bool,
+    ParticipationDescription: PropTypes.string.isRequired,
+    PreviousSession: PropTypes.string.isRequired,
   }).isRequired,
 };
