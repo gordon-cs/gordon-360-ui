@@ -57,3 +57,14 @@ Links to the homepages of libraries used in this project, listed here for easy r
 * [Downshift](https://github.com/paypal/downshift)
 
   Downshift is a component that can be used for building autocomplete components. We use it because it is used in one of the Material-UI autocomplete examples, showing that it integrates well with Material-UI components.
+  
+### Connect Local Back End to React
+  
+  Once the back end is running, locate the ".env.production" file on the front end. Inside, it should look this this:
+   REACT_APP_API_URL=https://360Api.gordon.edu/
+   
+  Change it to your local host that you are running the back end in, for example, if you used port 7777, it will look like:
+  REACT_APP_API_URL=https://localhost:7777/
+
+  
+  
