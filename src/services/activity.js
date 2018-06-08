@@ -53,7 +53,7 @@ const editActivity = async (activityCode, data) => {
  * @param {String} activityCode Identifier for an activity
  * @return {Promise.<Activity>} Activity
  */
-const getActivity = activityCode => http.get(`activities/${activityCode}`);
+const get = activityCode => http.get(`activities/${activityCode}`);
 
 /**
  * Get advisors for an activity
@@ -145,7 +145,7 @@ const resetImage = async activityCode => {
 export default {
   closeActivity,
   editActivity,
-  getActivity,
+  get,
   getAdvisors,
   getAll,
   getGroupAdmins,
