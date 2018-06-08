@@ -55,9 +55,7 @@ export default class Transcript extends Component {
     if (!this.state.activities) {
       activityList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(activity => (
-        <Activities Activity={activity} key={activity.MembershipID} />
-      ));
+      activityList = this.state.activities.map(activity => <Activities Activity={activity} />);
     }
 
     const button = {

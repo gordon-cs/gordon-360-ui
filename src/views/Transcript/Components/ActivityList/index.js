@@ -11,17 +11,10 @@ import Typography from 'material-ui/Typography';
 export default class Activities extends Component {
   constructor(props) {
     super(props);
-
-    this.state = { prevSession: '' };
   }
 
   componentWillMount() {
     //this.savePrevSession();
-  }
-
-  savePrevSession() {
-    const { Activity } = this.props;
-    this.setState({ prevSession: Activity.SessionDescription });
   }
 
   getContent = () => {
@@ -35,7 +28,6 @@ export default class Activities extends Component {
               <Typography> {Activity.ActivityDescription} </Typography>
             </ListItem>
           </List>
-          <Divider />
         </Grid>
         <Grid item xs={6}>
           <List>
@@ -43,7 +35,6 @@ export default class Activities extends Component {
               <Typography> {Activity.ParticipationDescription} </Typography>
             </ListItem>
           </List>
-          <Divider />
         </Grid>
       </Grid>
     );
@@ -69,7 +60,6 @@ export default class Activities extends Component {
                 <b> Activity </b>{' '}
               </ListItem>
             </List>
-            <Divider />
           </Grid>
           <Grid item xs={6}>
             <List>
@@ -78,12 +68,17 @@ export default class Activities extends Component {
                 <b> Participation </b>{' '}
               </ListItem>
             </List>
-            <Divider />
           </Grid>
         </Grid>
         <Grid />
       </div>
     );
+
+    // let previousSession = ""
+    // if(previousSession != Activity.SessionDescription){
+    //   previousSession = Activity.SessionDescription;
+    //   return "";
+    // }
 
     return heading;
   };
@@ -92,31 +87,18 @@ export default class Activities extends Component {
     const { Activity } = this.props;
     const currSession = Activity.SessionDescription.toString();
 
-    if (this.state.prevSession != Activity.SessionDescription) {
-      let table = (
-        <div>
-          <Grid container>
-            <Grid item>
-              {this.getHeading()}
-              {this.getContent()}
-            </Grid>
+    let table = (
+      <div>
+        <Grid container>
+          <Grid item>
+            {this.getHeading()}
+            {this.getContent()}
           </Grid>
-        </div>
-      );
-      this.savePrevSession();
+        </Grid>
+      </div>
+    );
 
-      return table;
-    } else {
-      let table = (
-        <div>
-          <Grid container>
-            <Grid item>{this.getContent()}</Grid>
-          </Grid>
-        </div>
-      );
-      this.savePrevSession();
-      return table;
-    }
+    return table;
   };
 
   render() {
@@ -124,6 +106,7 @@ export default class Activities extends Component {
       <div>
         {this.getHeading()}
         {this.getContent()}
+        <Divider />
       </div>
     );
   }
