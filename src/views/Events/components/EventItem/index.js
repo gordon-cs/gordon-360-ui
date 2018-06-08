@@ -2,8 +2,14 @@
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import React, { Component } from 'react';
+import Grid from 'material-ui/Grid';
 import Card, { CardContent } from 'material-ui/Card';
 import Collapse from 'material-ui/transitions/Collapse';
+import ExpandMore from 'material-ui-icons/ExpandMore';
+import ExpansionPanel, {
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+} from 'material-ui/ExpansionPanel';
 import './event-item.css';
 
 export default class GordonEventItem extends Component {
@@ -33,11 +39,20 @@ export default class GordonEventItem extends Component {
     return (
       <section>
         <Card onClick={this.handleExpandClick}>
-          <CardContent>
-            <Typography>{event.title}</Typography>
-            <Typography type="caption">{subheader}</Typography>
-            <Typography type="caption">{event.location}</Typography>
-          </CardContent>
+          <Grid container>
+            <Grid item xs={8} sm={9} md={10}>
+              <CardContent>
+                <Typography>{event.title}</Typography>
+                <Typography type="caption">{subheader}</Typography>
+                <Typography type="caption">{event.location}</Typography>
+              </CardContent>
+            </Grid>
+            <Grid item xs={4} sm={3} md={2}>
+              <CardContent>
+                <ExpandMore />
+              </CardContent>
+            </Grid>
+          </Grid>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>
               <Typography>Discription</Typography>
