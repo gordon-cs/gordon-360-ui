@@ -57,3 +57,10 @@ Links to the homepages of libraries used in this project, listed here for easy r
 * [Downshift](https://github.com/paypal/downshift)
 
   Downshift is a component that can be used for building autocomplete components. We use it because it is used in one of the Material-UI autocomplete examples, showing that it integrates well with Material-UI components.
+
+### First-time Setup
+
+* After setting up the backend as documented in [Project Raymond](http://localhost:3000/static/js/C:/Users/Nathaniel.Rudenberg/Documents/gordon-360-ui/src/views/About/about.css).
+
+* Open `package.json` and scroll to the bottom.
+  * In the `proxy` key, there are two subkeys: `/api` and `/token`. Change the `target` line in both of these to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the text to say `"target": "https://localhost:5000/"`.
