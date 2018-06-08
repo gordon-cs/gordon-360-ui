@@ -53,7 +53,7 @@ const editActivity = async (activityCode, data) => {
  * @param {String} activityCode Identifier for an activity
  * @return {Promise.<Activity>} Activity
  */
-const get = activityCode => http.get(`activities/${activityCode}`);
+const getActivity = activityCode => http.get(`activities/${activityCode}`);
 
 /**
  * Get advisors for an activity
@@ -98,12 +98,6 @@ const getStatus = (activityCode, sessionCode) =>
  * @return {Promise.<String[]>} List of activity types for a session
  */
 const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/types`);
-/**
- * Get group administrators for an activity
- * @param {String} ActivityCode Identifier for an activity
- * @returns {Avtivity} the Activity of a activity code
- */
-const getSpecificActivity = async ActivityCode => http.get(`/activities/${ActivityCode}`);
 
 /**
  * Filter a list of activities by type and description
@@ -151,8 +145,7 @@ const resetImage = async activityCode => {
 export default {
   closeActivity,
   editActivity,
-  get,
-  getSpecificActivity,
+  getActivity,
   getAdvisors,
   getAll,
   getGroupAdmins,
