@@ -60,10 +60,10 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
 ### Connect Local Backend To React
 
-* After setting up the backend as documented in [Project Raymond](http://localhost:3000/static/js/C:/Users/Nathaniel.Rudenberg/Documents/gordon-360-ui/src/views/About/about.css).
+* After setting up the backend as documented in [Project Raymond](http://localhost:3000/static/js/C:/Users/Nathaniel.Rudenberg/Documents/gordon-360-ui/src/views/About/about.css):
 
-* Open `package.json` and scroll to the bottom.
+  * Open `package.json` and scroll to the bottom.
 
-  * In the `proxy` key, there are two subkeys: `/api` and `/token`. Change the `target` line in both of these to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the text to say `"target": "http://localhost:5555/"` in both subkeys.
+    * In the `proxy` key, there are two subkeys: `/api` and `/token`. Change the `target` line in both of these to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the text to say `"target": "http://localhost:5555/"` in both subkeys.
 
-* Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file.
+  * Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file.
