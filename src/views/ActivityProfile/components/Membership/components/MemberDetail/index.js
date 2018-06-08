@@ -104,7 +104,7 @@ export default class MemberDetail extends Component {
     });
   }
 
-  // Called when updated deatils submitted in Edit Membership dialog box
+  // Called when updated details submitted in Edit Membership dialog box
   async onEditMember() {
     let data = {
       MEMBERSHIP_ID: this.props.member.MembershipID,

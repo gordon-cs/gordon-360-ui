@@ -55,7 +55,7 @@ export default class GordonEventItem extends Component {
           </Grid>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography>Discription</Typography>
+              <Typography>Description</Typography>
               <Typography type="caption">{event.Description}</Typography>
               {/* {content} */}
             </CardContent>
