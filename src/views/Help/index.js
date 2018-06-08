@@ -14,6 +14,7 @@ export default class Help extends Component {
           <li>Firstname.Lastname or Gordon email address</li>
           <li>Normal Gordon password</li>
         </Typography>
+        <br />
         <Typography type="title" gutterBottom>
           Site Navigation
         </Typography>
@@ -46,6 +47,7 @@ export default class Help extends Component {
             the Official Transcript (be clever, but appropriate!).
           </li>
         </Typography>
+        <br />
         <Typography type="title" gutterBottom>
           User Levels
         </Typography>
@@ -75,6 +77,7 @@ export default class Help extends Component {
             manage Activities they are not a Leader or Advisor for.
           </li>
         </Typography>
+        <br />
         <Typography type="title" gutterBottom>
           Management/Editing Functions
         </Typography>
@@ -115,6 +118,7 @@ export default class Help extends Component {
             Image loaded.
           </li>
         </Typography>
+        <br />
         <Typography type="title" gutterBottom>
           Troubleshooting/Issues
         </Typography>
@@ -124,6 +128,7 @@ export default class Help extends Component {
             peculiar behaviors.
           </li>
         </Typography>
+        <br />
         <Typography type="title" gutterBottom>
           Platforms
         </Typography>
@@ -133,6 +138,7 @@ export default class Help extends Component {
             on Android and iPhone default browsers.
           </li>
         </Typography>
+        <br />
         <Typography type="title" gutterBottom>
           FAQ
         </Typography>
