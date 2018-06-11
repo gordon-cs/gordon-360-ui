@@ -76,7 +76,7 @@ export default class Events extends Component {
     return (
       <section>
         <Grid container justify="center">
-          <Grid container alignItems="baseline">
+          <Grid container alignItems="baseline" justify="center">
             <Grid item xs={8} md={10} lg={5}>
               <TextField
                 id="search"
