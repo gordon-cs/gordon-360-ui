@@ -21,6 +21,7 @@ export default class Transcript extends Component {
       currentSession: {},
       allSession: [],
       profile: {},
+      activityPrevSession: '',
     };
   }
 
@@ -31,6 +32,7 @@ export default class Transcript extends Component {
   componentWillMount() {
     this.loadTranscript();
   }
+
   async loadTranscript() {
     this.setState({ loading: true });
     try {
@@ -49,13 +51,24 @@ export default class Transcript extends Component {
     }
   }
 
+  savePrevSession(session) {
+    this.setState({ activityPrevSession: session });
+  }
+
   render() {
     let activityList;
+
     console.log('Transcript: ' + this.state.activities);
     if (!this.state.activities) {
       activityList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(activity => <Activities Activity={activity} />);
+      activityList = this.state.activities.map(activity => (
+        <Activities
+          Activity={activity}
+          savePrevSession={this.savePrevSession}
+          prevSession={this.state.activityPrevSession}
+        />
+      ));
     }
 
     const button = {
