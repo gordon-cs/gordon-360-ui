@@ -41,7 +41,7 @@ export default class ChapelProgress extends Component {
       content = <GordonLoader />;
     } else {
       const { current, required } = this.state.chapelCredits;
-      const remaining = required - current;
+      const remaining = current > required ? 0 : required - current;
       const data = {
         datasets: [
           {
