@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import Grid from 'material-ui/Grid';
 import Card, { CardContent } from 'material-ui/Card';
 import Collapse from 'material-ui/transitions/Collapse';
-import ExpandMore from 'material-ui-icons/ExpandMore';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ExpansionPanel, {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
@@ -38,29 +38,26 @@ export default class GordonEventItem extends Component {
     // }
     return (
       <section>
-        <Card onClick={this.handleExpandClick}>
-          <Grid container>
-            <Grid item xs={8} sm={9} md={10}>
-              <CardContent>
+        <ExpansionPanel defaultExpanded={false}>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Grid container>
+              <Grid item xs={8} sm={9} md={10}>
                 <Typography>{event.title}</Typography>
                 <Typography type="caption">{subheader}</Typography>
                 <Typography type="caption">{event.location}</Typography>
-              </CardContent>
+              </Grid>
             </Grid>
-            <Grid item xs={4} sm={3} md={2}>
-              <CardContent>
-                <ExpandMore />
-              </CardContent>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Grid container>
+              <Grid item xs={10} sm={11} md={12}>
+                <Typography>Description</Typography>
+                <Typography type="caption">{event.Description}</Typography>
+                {/* {content} */}
+              </Grid>
             </Grid>
-          </Grid>
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography>Description</Typography>
-              <Typography type="caption">{event.Description}</Typography>
-              {/* {content} */}
-            </CardContent>
-          </Collapse>
-        </Card>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
       </section>
     );
   }
