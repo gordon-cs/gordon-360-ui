@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import React, { Component } from 'react';
 import Grid from 'material-ui/Grid';
-import Card, { CardContent } from 'material-ui/Card';
-import Collapse from 'material-ui/transitions/Collapse';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ExpansionPanel, {
   ExpansionPanelDetails,
