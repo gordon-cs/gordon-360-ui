@@ -2,12 +2,14 @@
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import React, { Component } from 'react';
+import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ExpansionPanel, {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
 } from 'material-ui/ExpansionPanel';
+// import AddToCalendar from 'react-add-to-calendar';
 import './event-item.css';
 
 export default class GordonEventItem extends Component {
@@ -34,6 +36,7 @@ export default class GordonEventItem extends Component {
     //       </ListItem>
     //     ));
     // }
+
     return (
       <section>
         <ExpansionPanel defaultExpanded={false}>
@@ -48,10 +51,17 @@ export default class GordonEventItem extends Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container>
-              <Grid item xs={10} sm={11} md={12}>
+              <Grid item xs={8} sm={9} md={10}>
                 <Typography>Description</Typography>
                 <Typography type="caption">{event.Description}</Typography>
                 {/* {content} */}
+              </Grid>
+              <Grid item sm={4} md={2}>
+                {/* This button is not functional yet */}
+                {/* TODO: Add calendar integration */}
+                <Button raised color="primary">
+                  Add to Calendar
+                </Button>
               </Grid>
             </Grid>
           </ExpansionPanelDetails>
