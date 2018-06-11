@@ -20,8 +20,8 @@ export default class Help extends Component {
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
           <li>
-            <strong>My Activities</strong> &ndash; List of Current and Past Leadership or Memberships. If
-            blank, go to All Activities to get connected.
+            <strong>My Activities</strong> &ndash; List of Current and Past Leadership or
+            Memberships. If blank, go to All Activities to get connected.
           </li>
           <li>
             <strong>All Activities</strong> &ndash; List of all Current Activities for this Academic
@@ -30,21 +30,21 @@ export default class Help extends Component {
             Session.
           </li>
           <li>
-            <strong>Transcript</strong> &ndash; Unofficial Experience Transcript, listing Leadership and
-            Membership activity for each Session. Great for building resum&eacute;s, cover letters, and
-            interview conversations. The Official Gordon Experience Transcript is certified by
-            request (coming 2017-18!), and will be part of the Gordon College Experience Portfolio
-            (coming 2018-19, or sooner!).
+            <strong>Transcript</strong> &ndash; Unofficial Experience Transcript, listing Leadership
+            and Membership activity for each Session. Great for building resum&eacute;s, cover
+            letters, and interview conversations. The Official Gordon Experience Transcript is
+            certified by request (coming 2017-18!), and will be part of the Gordon College
+            Experience Portfolio (coming 2018-19, or sooner!).
           </li>
           <li>
             <strong>Profile</strong> &ndash; Managing your profile, and managing any advising or
             leadership functions for assigned groups.
           </li>
           <li>
-            <strong>Profile Red Dot</strong> &ndash; You have Subscriber or Membership requests for one or
-            more of the groups you Lead or Advise! Process these to add new Subscribers, Members,
-            and to assign them a membership type and a &ldquo;Title&rdquo; if appropriate. Titles will appear on
-            the Official Transcript (be clever, but appropriate!).
+            <strong>Profile Red Dot</strong> &ndash; You have Subscriber or Membership requests for
+            one or more of the groups you Lead or Advise! Process these to add new Subscribers,
+            Members, and to assign them a membership type and a &ldquo;Title&rdquo; if appropriate.
+            Titles will appear on the Official Transcript (be clever, but appropriate!).
           </li>
         </Typography>
         <br />
@@ -53,12 +53,12 @@ export default class Help extends Component {
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
           <li>
-            <strong>Subscriber</strong> &ndash; Guest mode, can follow Activity Group and receive Group
-            Email. Does not appear on Transcript view.
+            <strong>Subscriber</strong> &ndash; Guest mode, can follow Activity Group and receive
+            Group Email. Does not appear on Transcript view.
           </li>
           <li>
-            <strong>Member</strong> &ndash; Members appear on the roster and can see other Members and
-            Subscribers (Guests). Members receive Group Emails and have their role recorded in
+            <strong>Member</strong> &ndash; Members appear on the roster and can see other Members
+            and Subscribers (Guests). Members receive Group Emails and have their role recorded in
             Memberships on the Experience Transcript, with a Title, if added.
           </li>
           <li>
@@ -68,13 +68,13 @@ export default class Help extends Component {
             appears on Transcript view and Official Transcript, with Title.
           </li>
           <li>
-            <strong>Advisor</strong> &ndash; Faculty or Staff Advisor have the same privileges as Leaders.
-            Recommend giving an Advisor a Title for the Roster.
+            <strong>Advisor</strong> &ndash; Faculty or Staff Advisor have the same privileges as
+            Leaders. Recommend giving an Advisor a Title for the Roster.
           </li>
           <li>
-            <strong>Super-Advisor</strong> &ndash; Administrative role for program and department staff
-            responsible for multiple Activities. Same privileges as Leader and Advisor, plus, can
-            manage Activities they are not a Leader or Advisor for.
+            <strong>Super-Advisor</strong> &ndash; Administrative role for program and department
+            staff responsible for multiple Activities. Same privileges as Leader and Advisor, plus,
+            can manage Activities they are not a Leader or Advisor for.
           </li>
         </Typography>
         <br />
@@ -83,20 +83,21 @@ export default class Help extends Component {
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
           <li>
-            <strong>Group Email</strong> &ndash; Leaders/Advisors can email the full roster of Members,
-            plus any Subscribers to your Communications feed. Allows direct connection emails.
+            <strong>Group Email</strong> &ndash; Leaders/Advisors can email the full roster of
+            Members, plus any Subscribers to your Communications feed. Allows direct connection
+            emails.
           </li>
           <li>
-            <strong>Subscriber</strong> &ndash; Subscribes to the Email Feed from your Leader or Advisor
-            &ldquo;Email Group&rdquo; function. Subscribers cannot see Members on the Roster, but can see Group
-            Information.
+            <strong>Subscriber</strong> &ndash; Subscribes to the Email Feed from your Leader or
+            Advisor &ldquo;Email Group&rdquo; function. Subscribers cannot see Members on the
+            Roster, but can see Group Information.
           </li>
           <li>
-            <strong>Managing Requests</strong> &ndash; To receive a Subscriber or Membership request, go
-            to your Profile page, or open the Activity you Lead/Advise. New requests appear at the
-            bottom of the roster. To modify a request to a different user level, use the dropdown
-            menu (Advisor, Guest, Leader, Member) to assign a different level. Add an appropriate
-            Title for Leaders and Advisors. You can add a Title to other users, too.
+            <strong>Managing Requests</strong> &ndash; To receive a Subscriber or Membership
+            request, go to your Profile page, or open the Activity you Lead/Advise. New requests
+            appear at the bottom of the roster. To modify a request to a different user level, use
+            the dropdown menu (Advisor, Guest, Leader, Member) to assign a different level. Add an
+            appropriate Title for Leaders and Advisors. You can add a Title to other users, too.
           </li>
           <li>
             <strong>Title/Comment</strong> &ndash; Short but descriptive job or role title that will
@@ -105,12 +106,13 @@ export default class Help extends Component {
             as a detail for the Official Transcript!
           </li>
           <li>
-            <strong>Web link</strong> &ndash; Link to an Activity Group&apos;s web page for more information.
+            <strong>Web link</strong> &ndash; Link to an Activity Group&apos;s web page for more
+            information.
           </li>
           <li>
-            <strong>Description</strong> &ndash; Recommended 1-2 sentence Activity Group description, and
-            place for updating Meeting Times and Locations for Activity Seekers, Subscribers and
-            Members.
+            <strong>Description</strong> &ndash; Recommended 1-2 sentence Activity Group
+            description, and place for updating Meeting Times and Locations for Activity Seekers,
+            Subscribers and Members.
           </li>
           <li>
             <strong>Image</strong> &ndash; 72DPI, no larger than 320x320 pixels and 100KB or less.
@@ -158,8 +160,8 @@ export default class Help extends Component {
           <li>
             <strong>What&apos;s the advantage to Membership in a group? </strong>
             Membership allows you to see other members in the group, and Membership for that
-            academic session is automatically added to the &ldquo;Memberships&rdquo; section of your Experience
-            Transcript.
+            academic session is automatically added to the &ldquo;Memberships&rdquo; section of your
+            Experience Transcript.
           </li>
           <li>
             <strong>What if I leave a group?</strong> Subscribership and Membership are fluid during
@@ -172,7 +174,9 @@ export default class Help extends Component {
             No problem. Contact the group leaders or advisor.
           </li>
           <li>
-            <strong>I&apos;m an alumna or alumnus. Why do I not see the join button anymore? </strong>
+            <strong>
+              I&apos;m an alumna or alumnus. Why do I not see the join button anymore?{' '}
+            </strong>
             Sorry, but alumni cannot join new groups. You could still subscribe to groups to receive
             emails!
           </li>
