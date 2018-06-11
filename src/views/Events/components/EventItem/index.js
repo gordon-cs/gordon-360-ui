@@ -2,8 +2,12 @@
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import React, { Component } from 'react';
-import Card, { CardContent } from 'material-ui/Card';
-import Collapse from 'material-ui/transitions/Collapse';
+import Grid from 'material-ui/Grid';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import ExpansionPanel, {
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+} from 'material-ui/ExpansionPanel';
 import './event-item.css';
 
 export default class GordonEventItem extends Component {
@@ -32,20 +36,26 @@ export default class GordonEventItem extends Component {
     // }
     return (
       <section>
-        <Card onClick={this.handleExpandClick}>
-          <CardContent>
-            <Typography>{event.title}</Typography>
-            <Typography type="caption">{subheader}</Typography>
-            <Typography type="caption">{event.location}</Typography>
-          </CardContent>
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography>Description</Typography>
-              <Typography type="caption">{event.Description}</Typography>
-              {/* {content} */}
-            </CardContent>
-          </Collapse>
-        </Card>
+        <ExpansionPanel defaultExpanded={false}>
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <Grid container>
+              <Grid item xs={8} sm={9} md={10}>
+                <Typography>{event.title}</Typography>
+                <Typography type="caption">{subheader}</Typography>
+                <Typography type="caption">{event.location}</Typography>
+              </Grid>
+            </Grid>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Grid container>
+              <Grid item xs={10} sm={11} md={12}>
+                <Typography>Description</Typography>
+                <Typography type="caption">{event.Description}</Typography>
+                {/* {content} */}
+              </Grid>
+            </Grid>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
       </section>
     );
   }

@@ -52,7 +52,8 @@ export default class About extends Component {
             <strong>Incubation Team</strong>
           </Typography>
           <Typography type="body1" paragraph>
-            Ezeanyinabia &lsquo;Eze&rsquo; Anyanwu &apos;17, Adam Bartholomew &apos;17, and James Kempf &apos;17
+            Ezeanyinabia &lsquo;Eze&rsquo; Anyanwu &apos;17, Adam Bartholomew &apos;17, and James
+            Kempf &apos;17
             <br /> Dr.&nbsp;Russ Tuck, Summer Practicum in Computer Science (2016)
           </Typography>
           <Typography type="subheading" gutterBottom>
@@ -69,7 +70,8 @@ export default class About extends Component {
             Bradley Boutcher &apos;18, Matthew Felgate &apos;18, Jenny Kim &apos;19, Sam Nguyen
             &apos;19, Chris Qiao &apos;17, and Joseph Ross
             <br />
-            Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning, Summer Practicum in Computer Science (2017)
+            Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning, Summer Practicum in Computer Science
+            (2017)
           </Typography>
           <Typography type="subheading" gutterBottom>
             <strong>Software Development Team, 2017/2018</strong>
@@ -83,9 +85,9 @@ export default class About extends Component {
           <Typography type="body1" paragraph>
             To the visionary benefactors who support the Summer Practicum in Computer Science
             program at Gordon College, thank you!
-            <br /> And to Dr.&nbsp;D.&nbsp;Michael Lindsay, President, and Jennifer Jukanovich &apos;94, Vice
-            President for Student Life, thank you for the opportunity to apply our learning in a
-            creative, practical way!
+            <br /> And to Dr.&nbsp;D.&nbsp;Michael Lindsay, President, and Jennifer Jukanovich
+            &apos;94, Vice President for Student Life, thank you for the opportunity to apply our
+            learning in a creative, practical way!
             <br /> And to our mentors and coaches in development and deployment, thank you for your
             guidance and encouragement to try new things.
           </Typography>
