@@ -41,7 +41,7 @@ export default class DaysLeft extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      const daysleft = this.state.daysLeft[0] < 0 ? 0 : this.state.daysLeft;
+      const daysleft = this.state.daysLeft[0];
       const pastDays = this.state.daysLeft[1] - daysleft;
       const data = {
         datasets: [{ data: [pastDays, daysleft], backgroundColor: [gordonColors.primary.blue] }],
