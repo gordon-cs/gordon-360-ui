@@ -24,7 +24,9 @@ export default class Activities extends Component {
       <div>
         <Grid container>
           <Grid item xs={10} sm={10} md={10} lg={10}>
-            <Typography>{Activity.ActivityDescription}</Typography>
+            <Typography>
+              <b>{Activity.ActivityDescription}</b>
+            </Typography>
             <Typography>{Activity.SessionDescription}</Typography>
             <Typography>{Activity.ParticipationDescription}</Typography>
           </Grid>
