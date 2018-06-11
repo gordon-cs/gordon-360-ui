@@ -17,11 +17,11 @@ import http from './http';
 
 /**
  * @global
- * @typedef {Number[]} DaysLeft Contains days left and days completed
+ * @typedef {Number[]} DaysLeft Contains days left and total days in current semester
  * @example
  * [
  *   17,  // 17 days remaining
- *   113  // 113 days completed
+ *   113  // 123 days total
  * ]
  */
 
