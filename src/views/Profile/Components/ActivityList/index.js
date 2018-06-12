@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Divider from 'material-ui/Divider/Divider';
 import React, { Component } from 'react';
 import Typography from 'material-ui/Typography';
+import { Link } from 'react-router-dom';
 
 export default class Activities extends Component {
   constructor(props) {
@@ -16,24 +17,29 @@ export default class Activities extends Component {
   async loadProfile() {}
   render() {
     const { Activity } = this.props;
-    const style = {
+    const imgStyle = {
       width: '90%',
+    };
+    const textStyle = {
+      textIndent: '12pt',
     };
 
     return (
       <div>
-        <Grid container>
-          <Grid item xs={10} sm={10} md={10} lg={10}>
-            <Typography>
-              <b>{Activity.ActivityDescription}</b>
-            </Typography>
-            <Typography>{Activity.SessionDescription}</Typography>
-            <Typography>{Activity.ParticipationDescription}</Typography>
+        <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
+          <Grid container alignItems="center">
+            <Grid item xs={10} sm={10} md={10} lg={10} style={textStyle}>
+              <Typography>
+                <b>{Activity.ActivityDescription}</b>
+              </Typography>
+              <Typography>{Activity.SessionDescription}</Typography>
+              <Typography>{Activity.ParticipationDescription}</Typography>
+            </Grid>
+            <Grid item xs={2} sm={2} md={2} lg={2}>
+              <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
+            </Grid>
           </Grid>
-          <Grid item xs={2} sm={2} md={2} lg={2}>
-            <img src={Activity.ActivityImagePath} alt="" style={style} />
-          </Grid>
-        </Grid>
+        </Link>
         <Divider />
       </div>
     );
