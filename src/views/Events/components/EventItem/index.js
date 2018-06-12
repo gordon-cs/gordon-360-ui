@@ -1,23 +1,56 @@
 // import { ListItem, ListItemText } from 'material-ui/List';
 import PropTypes from 'prop-types';
+import GoogleIcon from 'react-icons/lib/fa/google';
+import MicrosoftIcon from 'react-icons/lib/fa/windows';
+import AppleIcon from 'react-icons/lib/fa/apple';
+import ListItemIcon, { ListItemText } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import React, { Component } from 'react';
+import MenuItem from 'material-ui/Menu/MenuItem';
+import MenuList from 'material-ui/Menu/MenuList';
+import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ExpansionPanel, {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
 } from 'material-ui/ExpansionPanel';
+import Collapse from 'material-ui/transitions/Collapse';
 import './event-item.css';
 
+const styles = {
+  menu: {
+    marginTop: '2px',
+    marginBottom: '8px',
+    marginLeft: '8px',
+    marginRight: '8px',
+    backgroundColor: 'white',
+    webkitBoxShadow: '0px 2px 8px 0px rgba(0,0,0,0.25)',
+    mozBoxShadow: '0px 2px 8px 0px rgba(0,0,0,0.25)',
+    boxShadow: '0px 2px 8px 0px rgba(0,0,0,0.25)',
+  },
+
+  grid: {
+    padding: '8px',
+  },
+};
 export default class GordonEventItem extends Component {
   constructor(props) {
     super(props);
 
     this.handleExpandClick = this.handleExpandClick.bind(this);
+    this.toggleCalendarMenu = this.toggleCalendarMenu.bind(this);
 
-    this.state = { open: false };
+    this.state = {
+      open: false,
+      showCalendarMenu: false,
+    };
   }
+
+  toggleCalendarMenu() {
+    this.setState({ showCalendarMenu: !this.state.showCalendarMenu });
+  }
+
   handleExpandClick() {
     this.setState({ open: !this.state.open });
   }
@@ -34,6 +67,7 @@ export default class GordonEventItem extends Component {
     //       </ListItem>
     //     ));
     // }
+
     return (
       <section>
         <ExpansionPanel defaultExpanded={false}>
@@ -48,10 +82,44 @@ export default class GordonEventItem extends Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container>
-              <Grid item xs={10} sm={11} md={12}>
+              <Grid item xs={8} sm={9} md={10}>
                 <Typography>Description</Typography>
                 <Typography type="caption">{event.Description}</Typography>
                 {/* {content} */}
+              </Grid>
+              <Grid item sm={4} md={2} style={styles.grid}>
+                {/* This button is not functional yet */}
+                {/* TODO: Add calendar integration */}
+                <Button raised color="primary" onClick={this.toggleCalendarMenu}>
+                  Add to Calendar
+                </Button>
+                <Collapse
+                  in={this.state.showCalendarMenu}
+                  timeout="auto"
+                  unmountOnExit
+                  color="primary"
+                >
+                  <MenuList style={styles.menu} role="menu">
+                    <MenuItem onClick={this.toggleCalendarMenu}>
+                      <ListItemIcon>
+                        <GoogleIcon />
+                      </ListItemIcon>
+                      <ListItemText inset primary="Google" />
+                    </MenuItem>
+                    <MenuItem onClick={this.toggleCalendarMenu}>
+                      <ListItemIcon>
+                        <MicrosoftIcon />
+                      </ListItemIcon>
+                      <ListItemText inset primary="Outlook" />
+                    </MenuItem>
+                    <MenuItem onClick={this.toggleCalendarMenu}>
+                      <ListItemIcon>
+                        <AppleIcon />
+                      </ListItemIcon>
+                      <ListItemText inset primary="iCloud" />
+                    </MenuItem>
+                  </MenuList>
+                </Collapse>
               </Grid>
             </Grid>
           </ExpansionPanelDetails>
