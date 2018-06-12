@@ -5,14 +5,22 @@ import './about.css';
 
 export default class About extends Component {
   render() {
+    const style = {
+      color: '#014983',
+    };
+
     return (
       <section>
+        <br />
+        <hr style={style} />
         <Typography type="headline" gutterBottom>
           Conceived and built at Gordon College, by students for students. Everyone should be
           involved in something at College. It&apos;s what makes College your own Experience.
         </Typography>
+        <hr style={style} />
         <br />
-        <Typography type="title" gutterBottom>
+
+        <Typography type="display1" gutterBottom style={style}>
           Gordon&apos;s 360 Mobile Activities Platform: The Scottie Faire in your hand
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
@@ -26,7 +34,7 @@ export default class About extends Component {
           <li>Student Membership and Leadership Experience Transcript</li>
         </Typography>
         <br />
-        <Typography type="title" gutterBottom>
+        <Typography type="display1" gutterBottom style={style}>
           Institutional Benefits
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
@@ -37,7 +45,7 @@ export default class About extends Component {
           <li>Institutional reporting</li>
         </Typography>
         <br />
-        <Typography type="title" gutterBottom>
+        <Typography type="display1" gutterBottom style={style}>
           Origins
         </Typography>
         <div class="indent">

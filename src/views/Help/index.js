@@ -5,9 +5,13 @@ import './help.css';
 
 export default class Help extends Component {
   render() {
+    const style = {
+      color: '#014983',
+    };
+
     return (
       <section>
-        <Typography type="title" gutterBottom>
+        <Typography type="display1" gutterBottom style={style}>
           Login
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
@@ -15,7 +19,7 @@ export default class Help extends Component {
           <li>Normal Gordon password</li>
         </Typography>
         <br />
-        <Typography type="title" gutterBottom>
+        <Typography type="display1" gutterBottom style={style}>
           Site Navigation
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
@@ -48,7 +52,7 @@ export default class Help extends Component {
           </li>
         </Typography>
         <br />
-        <Typography type="title" gutterBottom>
+        <Typography type="display1" gutterBottom style={style}>
           User Levels
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
@@ -78,7 +82,7 @@ export default class Help extends Component {
           </li>
         </Typography>
         <br />
-        <Typography type="title" gutterBottom>
+        <Typography type="display1" gutterBottom style={style}>
           Management/Editing Functions
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
@@ -121,7 +125,7 @@ export default class Help extends Component {
           </li>
         </Typography>
         <br />
-        <Typography type="title" gutterBottom>
+        <Typography type="display1" gutterBottom style={style}>
           Troubleshooting/Issues
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
@@ -131,7 +135,7 @@ export default class Help extends Component {
           </li>
         </Typography>
         <br />
-        <Typography type="title" gutterBottom>
+        <Typography type="display1" gutterBottom style={style}>
           Platforms
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
@@ -141,7 +145,7 @@ export default class Help extends Component {
           </li>
         </Typography>
         <br />
-        <Typography type="title" gutterBottom>
+        <Typography type="display1" gutterBottom style={style}>
           FAQ
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
