@@ -18,11 +18,9 @@ export default class Transcript extends Component {
     this.state = {
       activities: [],
       loading: true,
-      currentSession: {},
-      allSession: [],
       profile: {},
-      activityPrevSession: '',
     };
+    this.tempSessionVal = '';
   }
 
   handleDownload() {
@@ -36,39 +34,34 @@ export default class Transcript extends Component {
   async loadTranscript() {
     this.setState({ loading: true });
     try {
-      const allSession = await session.getAll();
-      console.log('all sessions: ' + allSession);
-
       const currentSession = await session.getCurrent();
 
       const profile = await user.getProfileInfo();
       const activities = await user.getTranscriptInfo(profile.ID);
       this.setState({ loading: false, activities, currentSession, profile });
-      console.log('loadTranscript: ' + activities);
     } catch (error) {
       this.setState({ error });
       console.log('error');
     }
   }
 
-  savePrevSession(session) {
-    this.setState({ activityPrevSession: session });
-  }
+  sessionComparitor = activity => {
+    let isUniqueSession = true;
+
+    if (activity.SessionDescription === this.tempSessionVal) {
+      isUniqueSession = false;
+    } else isUniqueSession = true;
+    this.tempSessionVal = activity.SessionDescription;
+    return <Activities isUnique={isUniqueSession} Activity={activity} />;
+  };
 
   render() {
     let activityList;
 
-    console.log('Transcript: ' + this.state.activities);
     if (!this.state.activities) {
       activityList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(activity => (
-        <Activities
-          Activity={activity}
-          savePrevSession={this.savePrevSession}
-          prevSession={this.state.activityPrevSession}
-        />
-      ));
+      activityList = this.state.activities.map(this.sessionComparitor);
     }
 
     const button = {

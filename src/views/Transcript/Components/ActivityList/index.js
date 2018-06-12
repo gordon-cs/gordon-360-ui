@@ -1,11 +1,8 @@
 import Grid from 'material-ui/Grid';
 import PropTypes from 'prop-types';
 import Divider from 'material-ui/Divider/Divider';
-import Button from 'material-ui/Button';
 import React, { Component } from 'react';
-import List, { ListItem, ListItemText } from 'material-ui/List';
-import { GridList, Subheader } from 'material-ui';
-import session from '../../../../services/session';
+import List, { ListItem } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 
 export default class Activities extends Component {
@@ -73,20 +70,13 @@ export default class Activities extends Component {
         <Grid />
       </div>
     );
-
-    // let previousSession = ""
-    // if(previousSession != Activity.SessionDescription){
-    //   previousSession = Activity.SessionDescription;
-    //   return "";
-    // }
-
+    if (!this.props.isUnique) {
+      return '';
+    }
     return heading;
   };
 
   createTable = () => {
-    const { Activity } = this.props;
-    const currSession = Activity.SessionDescription.toString();
-
     let table = (
       <div>
         <Grid container>
@@ -112,10 +102,10 @@ export default class Activities extends Component {
   }
 }
 
-Activities.propTypes = {
-  Activity: PropTypes.shape({
-    SessionDescription: PropTypes.string.isRequired,
-    ParticipationDescription: PropTypes.string.isRequired,
-    PreviousSession: PropTypes.string.isRequired,
-  }).isRequired,
-};
+// Activities.propTypes = {
+//   Activity: PropTypes.shape({
+//     SessionDescription: PropTypes.string.isRequired,
+//     ParticipationDescription: PropTypes.string.isRequired,
+//   }).isRequired,
+//   isUnique: PropTypes.bool.isRequired,
+// };
