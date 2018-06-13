@@ -116,7 +116,7 @@ export default class GordonEventItem extends Component {
                       </ListItemIcon>
                       <ListItemText inset primary="Outlook" />
                     </MenuItem>
-                    <MenuItem onClick={this.toggleCalendarMenu}>
+                    <MenuItem onClick={this.toggleCalendarMenu} disabled>
                       <ListItemIcon>
                         <AppleIcon style={styles.calendarLogo} />
                       </ListItemIcon>
