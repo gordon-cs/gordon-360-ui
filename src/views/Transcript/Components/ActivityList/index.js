@@ -4,6 +4,7 @@ import Divider from 'material-ui/Divider/Divider';
 import React, { Component } from 'react';
 import List, { ListItem } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
+import './activityList.css';
 
 export default class Activities extends Component {
   constructor(props) {
@@ -21,16 +22,12 @@ export default class Activities extends Component {
       <Grid container>
         <Grid item xs={6}>
           <List>
-            <ListItem>
-              <Typography> {Activity.ActivityDescription} </Typography>
-            </ListItem>
+            <Typography className="text"> {Activity.ActivityDescription} </Typography>
           </List>
         </Grid>
         <Grid item xs={6}>
           <List>
-            <ListItem>
-              <Typography> {Activity.ParticipationDescription} </Typography>
-            </ListItem>
+            <Typography className="text"> {Activity.ParticipationDescription} </Typography>
           </List>
         </Grid>
       </Grid>
@@ -43,35 +40,35 @@ export default class Activities extends Component {
     const { Activity } = this.props;
     let heading = (
       <div>
-        <Grid container>
+        <Grid container className="heading">
           <Grid item xs={12}>
             <Typography type="title">
-              {' '}
-              <b> {Activity.SessionDescription} </b>{' '}
+              <b> {Activity.SessionDescription} </b>
             </Typography>
           </Grid>
           <Grid item xs={6}>
             <List>
-              <ListItem>
-                {' '}
-                <b> Activity </b>{' '}
-              </ListItem>
+              <b> Activity </b>
             </List>
           </Grid>
           <Grid item xs={6}>
             <List>
-              <ListItem>
-                {' '}
-                <b> Participation </b>{' '}
-              </ListItem>
+              <b> Participation </b>
             </List>
           </Grid>
         </Grid>
+        <div className="divider">
+          <Divider />
+        </div>
         <Grid />
       </div>
     );
     if (!this.props.isUnique) {
-      return '';
+      return (
+        <div className="divider">
+          <Divider light={true} />
+        </div>
+      );
     }
     return heading;
   };
@@ -96,7 +93,6 @@ export default class Activities extends Component {
       <div>
         {this.getHeading()}
         {this.getContent()}
-        <Divider />
       </div>
     );
   }

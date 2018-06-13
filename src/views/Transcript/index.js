@@ -72,16 +72,12 @@ export default class Transcript extends Component {
       fullWidth: true,
     };
 
-    const divStyle = {
-      padding: '20px',
-    };
-
     return (
       <Grid container className="transcript" alignItems="center" justify="center">
-        <Grid xs={12} sm={12} md={8} lg={8}>
+        <Grid xs={12} sm={12} md={8} lg={6}>
           <Card elevation="10">
             <CardContent>
-              <Grid item xs={12} class="print-only">
+              <Grid item xs={12} className="print-only">
                 <img src={require('./logo.png')} />
               </Grid>
               <Grid item xs={12}>
@@ -89,8 +85,8 @@ export default class Transcript extends Component {
                   Download Transcript
                 </Button>
               </Grid>
-              <Grid item xs={12} margin="normal">
-                <div style={divStyle}>
+              <Grid item xs={12} margin="normal" className="heading">
+                <div>
                   <Typography type="headline">
                     <b> Experience Transcript - {this.state.profile.fullName} </b>
                   </Typography>
