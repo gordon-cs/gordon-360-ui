@@ -169,30 +169,6 @@ export default class Profile extends Component {
             </Card>
           </Grid>
 
-          {/* <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Card>
-              <CardContent>
-                <CardHeader title="Home Address" />
-
-                <List>
-                  <Divider />
-
-                  <ListItem>
-                    <Typography>Street Number: {this.state.profile.HomeStreet2}</Typography>
-                  </ListItem>
-
-                  <Divider />
-
-                  <ListItem>
-                    <Typography>
-                      Home Town: {this.state.profile.HomeCity}, {this.state.profile.HomeState}
-                    </Typography>
-                  </ListItem>
-                </List>
-              </CardContent>
-            </Card>
-          </Grid> */}
-
           <Grid item xs={12} sm={12} md={6} lg={6}>
             <Card>
               <CardContent>
