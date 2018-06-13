@@ -33,6 +33,10 @@ const styles = {
   grid: {
     padding: '8px',
   },
+
+  calendarLogo: {
+    marginBottom: '2pt',
+  },
 };
 export default class GordonEventItem extends Component {
   constructor(props) {
@@ -102,19 +106,19 @@ export default class GordonEventItem extends Component {
                   <MenuList style={styles.menu} role="menu">
                     <MenuItem onClick={this.toggleCalendarMenu}>
                       <ListItemIcon>
-                        <GoogleIcon />
+                        <GoogleIcon style={styles.calendarLogo} />
                       </ListItemIcon>
                       <ListItemText inset primary="Google" />
                     </MenuItem>
                     <MenuItem onClick={this.toggleCalendarMenu}>
                       <ListItemIcon>
-                        <MicrosoftIcon />
+                        <MicrosoftIcon style={styles.calendarLogo} />
                       </ListItemIcon>
                       <ListItemText inset primary="Outlook" />
                     </MenuItem>
                     <MenuItem onClick={this.toggleCalendarMenu}>
                       <ListItemIcon>
-                        <AppleIcon />
+                        <AppleIcon style={styles.calendarLogo} />
                       </ListItemIcon>
                       <ListItemText inset primary="iCloud" />
                     </MenuItem>
