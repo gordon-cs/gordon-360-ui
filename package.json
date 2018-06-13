@@ -7,7 +7,6 @@
     "chart.js": "^2.7.1",
     "classnames": "^2.2.5",
     "downshift": "1.22.3",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
     "history": "^4.7.2",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
@@ -21,6 +20,7 @@
     "react-dom": "^16.2.0",
     "react-dropzone": "^4.2.7",
     "react-ga": "^2.3.5",
+    "react-icons": "^2.2.7",
     "react-responsive-carousel": "^3.1.30",
     "react-router-dom": "^4.2.2"
   },

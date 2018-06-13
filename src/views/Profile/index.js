@@ -26,7 +26,7 @@ export default class Profile extends Component {
     this.handleExpandClick = this.handleExpandClick.bind(this);
 
     this.state = {
-      unsername: String,
+      username: String,
       button: String,
       image: null,
       preview: null,

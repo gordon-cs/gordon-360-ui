@@ -31,6 +31,24 @@ import http from './http';
  */
 
 /**
+ * Close out an activity, like confirm final roster
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @return {Promise<any>} Response body
+ */
+const closeActivity = async (activityCode, sessionCode) => {
+  return await http.put(`activities/${activityCode}/session/${sessionCode}/close`, null);
+};
+/**
+ * Edit activity
+ * @param {String} activityCode Identifier for an activity
+ * @param {Object} data Data passed in
+ * @return {Promise.<Object>} Response body
+ */
+const editActivity = async (activityCode, data) => {
+  return await http.put(`activities/${activityCode}`, data);
+};
+/**
  * Get an activity
  * @param {String} activityCode Identifier for an activity
  * @return {Promise.<Activity>} Activity
@@ -57,15 +75,6 @@ const getAll = sessionCode =>
     .then(activities => sortBy(activities, activity => activity.ActivityDescription));
 
 /**
- * Get number of followers of an activity
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @returns {Number} Number of followers
- */
-const getFollowersNum = (activityCode, sessionCode) =>
-  http.get(`memberships/activity/${activityCode}/followers/${sessionCode}`);
-
-/**
  * Get group administrators for an activity
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
@@ -73,15 +82,6 @@ const getFollowersNum = (activityCode, sessionCode) =>
  */
 const getGroupAdmins = (activityCode, sessionCode) =>
   http.get(`emails/activity/${activityCode}/group-admin/session/${sessionCode}`);
-
-/**
- * Get number of members of an activity
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @returns {Number} Number of members
- */
-const getMembersNum = (activityCode, sessionCode) =>
-  http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
 
 /**
  * Get the status of an activity
@@ -98,12 +98,6 @@ const getStatus = (activityCode, sessionCode) =>
  * @return {Promise.<String[]>} List of activity types for a session
  */
 const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/types`);
-/**
- * Get group administrators for an activity
- * @param {String} ActivityCode Identifier for an activity
- * @returns {Avtivity} the Activity of a activity code
- */
-const getSpecificActivity = async ActivityCode => http.get(`/activities/${ActivityCode}`);
 
 /**
  * Filter a list of activities by type and description
@@ -129,15 +123,35 @@ const filter = (activities = [], typeDescription, search = '') => {
   return filteredActivities;
 };
 
+/**
+ * Reopen a closed activity
+ * @param {String} activityCode Identifier for an activity
+ * @param {String} sessionCode Identifier for a session
+ * @return {Promise<any>} Response body
+ */
+const reopenActivity = async (activityCode, sessionCode) => {
+  return await http.put(`activities/${activityCode}/session/${sessionCode}/open`, null);
+};
+
+/**
+ * Resets image to default image
+ * @param {String} activityCode Identifier for an activity
+ * @return {Promis<any>} Response body
+ */
+const resetImage = async activityCode => {
+  return await http.post(`activities/${activityCode}/image/reset`, null);
+};
+
 export default {
+  closeActivity,
+  editActivity,
   get,
-  getSpecificActivity,
   getAdvisors,
   getAll,
-  getFollowersNum,
   getGroupAdmins,
-  getMembersNum,
   getStatus,
   getTypes,
   filter,
+  reopenActivity,
+  resetImage,
 };

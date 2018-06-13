@@ -31,6 +31,9 @@ const handleError = err => {
  * @return {String} Token for use on API requests
  */
 const getAuth = (username, password) => {
+  if (username.includes('@gordon.edu')) username = username.replace('@gordon.edu', '');
+  else if (username.includes('Gordon.edu')) username = username.replace('@Gordon.edu', '');
+
   const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
   const body = new URLSearchParams({
     username,
