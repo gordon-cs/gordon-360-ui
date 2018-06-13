@@ -1,5 +1,4 @@
 import Grid from 'material-ui/Grid';
-import PropTypes from 'prop-types';
 import Divider from 'material-ui/Divider/Divider';
 import React, { Component } from 'react';
 import List, { ListItem } from 'material-ui/List';
@@ -10,31 +9,6 @@ export default class Activities extends Component {
   constructor(props) {
     super(props);
   }
-
-  componentWillMount() {
-    //this.savePrevSession();
-  }
-
-  getContent = () => {
-    const { Activity } = this.props;
-
-    let content = (
-      <Grid container>
-        <Grid item xs={6}>
-          <List>
-            <Typography className="text"> {Activity.ActivityDescription} </Typography>
-          </List>
-        </Grid>
-        <Grid item xs={6}>
-          <List>
-            <Typography className="text"> {Activity.ParticipationDescription} </Typography>
-          </List>
-        </Grid>
-      </Grid>
-    );
-
-    return content;
-  };
 
   getHeading = () => {
     const { Activity } = this.props;
@@ -73,19 +47,25 @@ export default class Activities extends Component {
     return heading;
   };
 
-  createTable = () => {
-    let table = (
-      <div>
-        <Grid container>
-          <Grid item>
-            {this.getHeading()}
-            {this.getContent()}
-          </Grid>
+  getContent = () => {
+    const { Activity } = this.props;
+
+    let content = (
+      <Grid container>
+        <Grid item xs={6}>
+          <List>
+            <Typography className="text"> {Activity.ActivityDescription} </Typography>
+          </List>
         </Grid>
-      </div>
+        <Grid item xs={6}>
+          <List>
+            <Typography className="text"> {Activity.ParticipationDescription} </Typography>
+          </List>
+        </Grid>
+      </Grid>
     );
 
-    return table;
+    return content;
   };
 
   render() {
@@ -97,11 +77,3 @@ export default class Activities extends Component {
     );
   }
 }
-
-// Activities.propTypes = {
-//   Activity: PropTypes.shape({
-//     SessionDescription: PropTypes.string.isRequired,
-//     ParticipationDescription: PropTypes.string.isRequired,
-//   }).isRequired,
-//   isUnique: PropTypes.bool.isRequired,
-// };

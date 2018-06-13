@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Button from 'material-ui/Button';
 import Card, { CardContent } from 'material-ui/Card';
 import Grid from 'material-ui/Grid';
-import Divider from 'material-ui/Divider/Divider';
 import Typography from 'material-ui/Typography';
 
 import { gordonColors } from '../../theme';
@@ -45,6 +44,7 @@ export default class Transcript extends Component {
     }
   }
 
+  //Compares each activity from TranscriptInfo to determine how to group by session
   sessionComparitor = activity => {
     let isUniqueSession = true;
 
