@@ -93,7 +93,9 @@ export default class Profile extends Component {
     const { preview } = this.state;
 
     const style = {
-      width: '100%',
+      img: {
+        width: '50%',
+      },
     };
     const button = {
       background: gordonColors.primary.cyan,
@@ -122,7 +124,11 @@ export default class Profile extends Component {
               <CardContent>
                 <Grid container justify="center">
                   <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
+                    <img
+                      src={`data:image/jpg;base64,${this.state.image}`}
+                      alt=""
+                      style={style.img}
+                    />
                   </Grid>
 
                   <Grid item xs={6} sm={6} md={6} lg={4}>
