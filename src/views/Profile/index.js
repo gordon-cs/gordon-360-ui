@@ -6,6 +6,13 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
+
+import FacebookIcon from 'react-icons/lib/fa/facebook';
+import TwitterIcon from 'react-icons/lib/fa/twitter';
+import LinkedInIcon from 'react-icons/lib/fa/linkedin';
+import InstagramIcon from 'react-icons/lib/fa/instagram';
+import ListItemIcon, { ListItemText } from 'material-ui/List';
+
 import Dropzone from 'react-dropzone';
 import Dialog, {
   DialogTitle,
@@ -13,6 +20,7 @@ import Dialog, {
   DialogContentText,
   DialogContent,
 } from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
@@ -34,9 +42,41 @@ export default class Profile extends Component {
       profile: {},
       activities: [],
       files: [],
-      open: false,
+      photoDialogOpen: false,
+      socialLinksDialogOpen: false,
+
+      facebookLink: '',
+      linkedInLink: '',
+      twitterLink: '',
+      instagramLink: '',
+
+      facebookDBInput: '',
+      linkedInDBInput: '',
+      twitterDBInput: '',
+      instagramDBInput: '',
     };
   }
+
+  handleExpandClick() {
+    this.changePrivacy();
+    user.toggleMobilePhonePrivacy();
+  }
+
+  handlePhotoDialogOpen = () => {
+    this.setState({ photoDialogOpen: true });
+  };
+
+  handleSocialLinksDialogOpen = () => {
+    this.setState({ socialLinksDialogOpen: true });
+  };
+
+  handlePhotoDialogClose = () => {
+    this.setState({ photoDialogOpen: false });
+  };
+
+  handleSocialLinksDialogClose = () => {
+    this.setState({ socialLinksDialogOpen: false });
+  };
 
   handleExpandClick() {
     this.changePrivacy();
@@ -69,6 +109,7 @@ export default class Profile extends Component {
     // const { username } = this.props.match.params.username;
     this.loadProfile();
   }
+
   async loadProfile() {
     this.setState({ loading: true });
     try {
@@ -89,6 +130,7 @@ export default class Profile extends Component {
       this.setState({ button: 'Make Public' });
     }
   }
+
   render() {
     const { preview } = this.state;
 
@@ -117,10 +159,14 @@ export default class Profile extends Component {
     return (
       <div>
         <Grid container>
-          <Grid item xs={12} sm={12} md={6} lg={6}>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
             <Card>
               <CardContent>
                 <Grid container justify="center">
+                  <Grid item xs={6} sm={6} md={6} lg={4}>
+                    <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
+                  </Grid>
+
                   <Grid item xs={6} sm={6} md={6} lg={4}>
                     <CardHeader
                       title={this.state.profile.fullName}
@@ -160,68 +206,155 @@ export default class Profile extends Component {
                       </DialogActions>
                     </Dialog>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
+
+                  <List>
+                    <Divider />
+                    <ListItem>
+                      <Typography>Facebook: </Typography>
+                    </ListItem>
+                    <Divider />
+                    <Divider />
+                    <ListItem>
+                      <Typography>Twitter: </Typography>
+                    </ListItem>
+                    <Divider />
+                    <Divider />
+                    <ListItem>
+                      <Typography>LinkedIn: </Typography>
+                    </ListItem>
+                    <Divider />
+                    <Divider />
+                    <ListItem>
+                      <Typography>Instagram: </Typography>
+                    </ListItem>
+                    <Divider />
+                  </List>
+
+                  <Grid item xs={3} sm={5} md={5} lg={7}>
+                    <Button onClick={this.handleSocialLinksDialogOpen} raised style={button}>
+                      Edit your social media links
+                    </Button>
+                    <Dialog
+                      open={this.state.socialLinksDialogOpen}
+                      keepMounted
+                      onClose={this.handleSocialLinksDialogClose}
+                      aria-labelledby="alert-dialog-slide-title"
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      {/*TODO: make each of these forms into a separate component
+                    get them to get their data onto the link part on the profile page*/}
+                      <DialogTitle id="simple-dialog-title">
+                        Edit your social media links
+                      </DialogTitle>
+                      <DialogContent>
+                        <DialogContentText>
+                          <Grid container spacing={8} alignItems="flex-end">
+                            <Grid item>
+                              <FacebookIcon alignItems="center" />
+                              <TextField
+                                id="facebookInput"
+                                label="Facebook link"
+                                //onChangeText={facebookDBInput=> this.setState({this.state.facebookLink})}
+                              />
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            <TwitterIcon alignItems="center" />
+                            <TextField id="twitterInput" label="Twitter link" />
+                          </Grid>
+                          <Grid item>
+                            <LinkedInIcon alignItems="center" />
+                            <TextField id="LinkedInInput" label="LinkedIn link" />
+                          </Grid>
+                          <Grid item>
+                            <InstagramIcon alignItems="center" />
+                            <TextField id="instagramInput" label="Instagram link" />
+                          </Grid>
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={this.handleSocialLinksDialogClose} raised style={button}>
+                          Cancel
+                        </Button>
+                        <Button onClick={this.handleSocialLinksDialogClose} raised style={button}>
+                          Submit
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                   </Grid>
                 </Grid>
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Card>
-              <CardContent>
-                <CardHeader title="Home Address" />
-                <List>
-                  <Divider />
-                  <ListItem>
-                    <Typography>Street Number: {this.state.profile.HomeStreet2}</Typography>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Typography>
-                      Home Town: {this.state.profile.HomeCity}, {this.state.profile.HomeState}
-                    </Typography>
-                  </ListItem>
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
+
           <Grid item xs={12} sm={12} md={6} lg={6}>
             <Card>
               <CardContent>
                 <CardHeader title="Personal Information" />
+
                 <List>
                   <ListItem>
                     <Typography>Major: {this.state.profile.Major1Description}</Typography>
                   </ListItem>
+
                   <Divider />
+
                   <ListItem>
                     <Grid item xs={6} sm={7} md={8} lg={10}>
                       <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
                     </Grid>
+
                     <Grid item xs={6} sm={5} md={4} lg={1}>
                       <Button onClick={this.handleExpandClick} raised style={button}>
                         {this.state.button}
                       </Button>
                     </Grid>
                   </ListItem>
+
                   <Divider />
+
                   <ListItem>
                     <Typography>Student ID: {this.state.profile.ID}</Typography>
                   </ListItem>
+
                   <Divider />
+
                   <ListItem>
                     <Typography>Email: {this.state.profile.Email}</Typography>
                   </ListItem>
+
                   <Divider />
+
                   <ListItem>
                     <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
                   </ListItem>
+
+                  <Divider />
+                </List>
+
+                <CardHeader title="Home Address" />
+
+                <List>
+                  <Divider />
+
+                  <ListItem>
+                    <Typography>Street Number: {this.state.profile.HomeStreet2}</Typography>
+                  </ListItem>
+
+                  <Divider />
+
+                  <ListItem>
+                    <Typography>
+                      Home Town: {this.state.profile.HomeCity}, {this.state.profile.HomeState}
+                    </Typography>
+                  </ListItem>
+
                   <Divider />
                 </List>
               </CardContent>
             </Card>
           </Grid>
+
           <Grid item xs={12} sm={12} md={6} lg={6}>
             <Card>
               <CardContent>
