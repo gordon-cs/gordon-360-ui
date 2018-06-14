@@ -1,15 +1,11 @@
 import Grid from 'material-ui/Grid';
 import Divider from 'material-ui/Divider/Divider';
 import React, { Component } from 'react';
-import List, { ListItem } from 'material-ui/List';
+import List from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import './activityList.css';
 
 export default class Activities extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   getHeading = () => {
     const { Activity } = this.props;
     let heading = (

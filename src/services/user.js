@@ -332,7 +332,7 @@ const getTranscriptInfo = async id => {
         k++;
       } else {
         let obj = [];
-        while (k != first) {
+        while (k !== first) {
           obj.push(transcriptInfo[k].ActivityDescription);
           k++;
         }
@@ -345,7 +345,7 @@ const getTranscriptInfo = async id => {
   }
   if (k < i) {
     let obj = [];
-    while (k != i) {
+    while (k !== i) {
       obj.push(transcriptInfo[k].ActivityDescription);
       k++;
     }

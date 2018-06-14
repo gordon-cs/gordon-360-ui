@@ -78,7 +78,7 @@ export default class Transcript extends Component {
           <Card elevation="10">
             <CardContent>
               <Grid item xs={12} className="print-only">
-                <img src={require('./logo.png')} />
+                <img src={require('./logo.png')} alt="" />
               </Grid>
               <Grid item xs={12}>
                 <Button raised style={button} justify="center" onClick={this.handleDownload}>
