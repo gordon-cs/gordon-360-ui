@@ -316,7 +316,7 @@ const getMemberships = async id => {
   return memberships;
 };
 
-//sorts items passed by session code
+//compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
 function compareBySession(a, b) {
   const sessA = a.SessionCode;
   const sessB = b.SessionCode;
@@ -330,7 +330,9 @@ function compareBySession(a, b) {
   return comparison;
 }
 
-//returns an array of membership objects sorted by session code
+//returns an array of membership objects from backend server,
+//using asynchronous http.get request (via getMemberships function)
+//sorts by SessionCode
 const getTranscriptInfo = async id => {
   let transcriptInfo = await getMemberships(id);
   transcriptInfo.sort(compareBySession);

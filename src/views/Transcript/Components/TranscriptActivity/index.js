@@ -5,7 +5,7 @@ import List from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import './transcriptActivity.css';
 
-//This components is a child of the Transcript component. Seperates Headings from content in order
+//This component is a child of the Transcript component. Separates Headings from content in order
 //that activities be grouped by session. Returns a formatted table grid of activites to be displayed
 //by the Transcript component
 //Activity object and isUnique bool passed as props from Transcript

@@ -22,9 +22,9 @@ export default class Transcript extends Component {
       loading: true,
       profile: {},
     };
-    //Variable used by SessionComparitor to determine when activies in the list are part of a new session
+    //Variable used by groupActivityBySession to determine when activies in the list are part of a new session
     //Necessary in order to remember session info about previous item in list while looping though
-    this.tempSessionVal = '';
+    this.prevSessionVal = '';
   }
 
   handleDownload() {
@@ -49,19 +49,19 @@ export default class Transcript extends Component {
     }
   }
 
-  //Compares activity from activityList to previous activity' session to to determine how to group
+  //Compares activity from activityList to previous activity' session to to determine how to group.
   //isUnique value is passed as a prop, along with Activity object, to TranscriptActivity Component
-  //Returns TranscriptActivity component which is passed into activityList
-  sessionComparitor = activity => {
+  //Returns TranscriptActivity component which should be passed into activityList
+  groupActivityBySession = activity => {
     //bool to keep track of when an zctivity is part of a new session, passed to TranscriptActivity
     let isUniqueSession = true;
 
-    if (activity.SessionDescription === this.tempSessionVal) {
+    if (activity.SessionDescription === this.prevSessionVal) {
       isUniqueSession = false;
     } else {
       isUniqueSession = true;
     }
-    this.tempSessionVal = activity.SessionDescription;
+    this.prevSessionVal = activity.SessionDescription;
     return <Activity isUnique={isUniqueSession} Activity={activity} />;
   };
 
@@ -71,7 +71,7 @@ export default class Transcript extends Component {
     if (!this.state.activities) {
       activityList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(this.sessionComparitor);
+      activityList = this.state.activities.map(this.groupActivityBySession);
     }
 
     const button = {
