@@ -19,6 +19,10 @@ import { gordonColors } from '../../theme';
 import Activities from './Components/ActivityList';
 import GordonLoader from './../../components/Loader';
 
+import Cropper from 'react-cropper';
+
+const CROP_DIM = 200; // pixels
+
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -35,6 +39,7 @@ export default class Profile extends Component {
       activities: [],
       files: [],
       open: false,
+      cropperData: { cropBoxDim: null, aspectRatio: null },
     };
   }
 
@@ -47,8 +52,18 @@ export default class Profile extends Component {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
+  handleCloseSubmit = () => {
+    var imageNoHeader = this.state.preview.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+    this.setState({ image: imageNoHeader });
+    this.setState({ open: false, preview: null });
+  };
+
+  handleCloseCancel = () => {
+    this.setState({ open: false, preview: null });
+  };
+
+  handleResetImage = () => {
+    // API Call!
   };
 
   changePrivacy() {
@@ -58,17 +73,26 @@ export default class Profile extends Component {
       this.setState({ button: 'Make Public' });
     }
   }
-  onDrop(preview) {
-    this.setState({ preview });
-    console.log(preview);
+
+  onDropAccepted(fileList) {
+    var previewImageFile = fileList[0];
+    var reader = new FileReader();
+    reader.onload = function() {
+      var dataURL = reader.result.toString();
+      this.setState({ preview: dataURL });
+    }.bind(this);
+    reader.readAsDataURL(previewImageFile);
   }
-  rand() {
-    return Math.round(Math.random() * 20) - 10;
+
+  onDropRejected() {
+    alert('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
   }
+
   componentWillMount() {
     // const { username } = this.props.match.params.username;
     this.loadProfile();
   }
+
   async loadProfile() {
     this.setState({ loading: true });
     try {
@@ -89,6 +113,7 @@ export default class Profile extends Component {
       this.setState({ button: 'Make Public' });
     }
   }
+
   render() {
     const { preview } = this.state;
 
@@ -139,23 +164,64 @@ export default class Profile extends Component {
                       <DialogTitle id="simple-dialog-title">Update Profile Picture</DialogTitle>
                       <DialogContent>
                         <DialogContentText>
-                          Drag and Drop Picture, or Click to Browse Your Files
+                          Drag & Drop Picture, or Click to Browse Files
                         </DialogContentText>
-                        <Dropzone
-                          onDrop={this.onDrop.bind(this)}
-                          accept="image/jpeg,image/jpg,image/tiff,image/gif,image/png"
-                          style={photoUploader}
-                        >
-                          <img src={require('./image.png')} alt="" style={style} />
-                        </Dropzone>
-                        {preview && <img src={preview} alt="preview" />}
+                        <DialogContentText>
+                          <br />
+                        </DialogContentText>
+                        {!preview && (
+                          <Dropzone
+                            onDropAccepted={this.onDropAccepted.bind(this)}
+                            onDropRejected={this.onDropRejected.bind(this)}
+                            accept="image/jpeg,image/jpg,image/png"
+                            style={photoUploader}
+                          >
+                            <Grid container justify="center">
+                              <img
+                                src={require('./image.png')}
+                                alt=""
+                                style={{ 'max-width': '100%' }}
+                              />
+                            </Grid>
+                          </Dropzone>
+                        )}
+                        {preview && (
+                          <Grid container justify="center">
+                            <img src={preview} alt="preview" style={{ 'max-width': '100%' }} />
+                          </Grid>
+                        )}
+                        {preview && (
+                          <Grid container justify="center">
+                            <Grid item>
+                              <Button onClick={() => {}} raised style={button}>
+                                Crop
+                              </Button>
+                            </Grid>
+                            <Grid item>
+                              <Button
+                                onClick={() => this.setState({ preview: null })}
+                                raised
+                                style={button}
+                              >
+                                Choose Image
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        )}
                       </DialogContent>
                       <DialogActions>
-                        <Button onClick={this.handleClose} raised style={button}>
-                          Cancel
+                        <Button
+                          onClick={this.handleResetImage}
+                          raised
+                          style={{ background: 'tomato', color: 'white' }}
+                        >
+                          Reset Image
                         </Button>
-                        <Button onClick={this.handleClose} raised style={button}>
+                        <Button onClick={this.handleCloseSubmit} raised style={button}>
                           Submit
+                        </Button>
+                        <Button onClick={this.handleCloseCancel} raised style={button}>
+                          Cancel
                         </Button>
                       </DialogActions>
                     </Dialog>
