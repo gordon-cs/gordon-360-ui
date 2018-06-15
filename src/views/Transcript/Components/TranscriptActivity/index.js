@@ -3,9 +3,14 @@ import Divider from 'material-ui/Divider/Divider';
 import React, { Component } from 'react';
 import List from 'material-ui/List';
 import Typography from 'material-ui/Typography';
-import './activityList.css';
+import './transcriptActivity.css';
 
-export default class Activities extends Component {
+//This components is a child of the Transcript component. Seperates Headings from content in order
+//that activities be grouped by session. Returns a formatted table grid of activites to be displayed
+//by the Transcript component
+//Activity object and isUnique bool passed as props from Transcript
+
+export default class Activity extends Component {
   getHeading = () => {
     const { Activity } = this.props;
     let heading = (

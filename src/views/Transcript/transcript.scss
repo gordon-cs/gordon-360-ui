@@ -1,7 +1,9 @@
+//@media screen is css that is in effect when views on a display, @media print takes effect when
+//in a print view (eg after hittig Download Transcript). Allows logo to only show when printing
+
 .transcript {
   text-align: center;
 }
-
 .heading {
   padding: '20px';
 }
@@ -17,14 +19,6 @@
   .print * {
     visibility: visible;
     overflow: visible;
-  }
-  #section-to-print {
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
-  .logo {
-    visibility: hidden;
   }
   .print-only * {
     visibility: visible;

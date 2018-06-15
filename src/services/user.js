@@ -316,42 +316,24 @@ const getMemberships = async id => {
   return memberships;
 };
 
+//sorts items passed by session code
+function compareBySession(a, b) {
+  const sessA = a.SessionCode;
+  const sessB = b.SessionCode;
+
+  let comparison = 0;
+  if (sessA > sessB) {
+    comparison = 1;
+  } else if (sessA < sessB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+//returns an array of membership objects sorted by session code
 const getTranscriptInfo = async id => {
   let transcriptInfo = await getMemberships(id);
-  console.log(transcriptInfo);
-  transcriptInfo.activities = [0];
-  let k = 0;
-  let second = 1;
-  let i = 0;
-  for (let first = 0; first < transcriptInfo.length; first++) {
-    if (transcriptInfo[first].SessionCode !== transcriptInfo[second].SessionCode) {
-      if (k === first) {
-        let obj = [];
-        obj.push(transcriptInfo[k].ActivityDescription);
-        transcriptInfo.activities.push(obj);
-        k++;
-      } else {
-        let obj = [];
-        while (k !== first) {
-          obj.push(transcriptInfo[k].ActivityDescription);
-          k++;
-        }
-        transcriptInfo.activities.push(obj);
-      }
-    }
-    first++;
-    i++;
-    second++;
-  }
-  if (k < i) {
-    let obj = [];
-    while (k !== i) {
-      obj.push(transcriptInfo[k].ActivityDescription);
-      k++;
-    }
-    transcriptInfo.activities.push(obj);
-  }
-  console.log(transcriptInfo);
+  transcriptInfo.sort(compareBySession);
   return transcriptInfo;
 };
 

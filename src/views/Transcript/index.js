@@ -6,10 +6,13 @@ import Typography from 'material-ui/Typography';
 
 import { gordonColors } from '../../theme';
 import session from '../../services/session';
-import Activities from './Components/ActivityList';
+import Activity from './Components/TranscriptActivity';
 import user from './../../services/user';
 import GordonLoader from './../../components/Loader';
 import './transcript.css';
+
+//This component creates the overall interface for the transcript (card, heading, download button),
+//and contains a ActivityList object for displaying the content
 
 export default class Transcript extends Component {
   constructor(props) {
@@ -19,6 +22,8 @@ export default class Transcript extends Component {
       loading: true,
       profile: {},
     };
+    //Variable used by SessionComparitor to determine when activies in the list are part of a new session
+    //Necessary in order to remember session info about previous item in list while looping though
     this.tempSessionVal = '';
   }
 
@@ -44,15 +49,20 @@ export default class Transcript extends Component {
     }
   }
 
-  //Compares each activity from TranscriptInfo to determine how to group by session
+  //Compares activity from activityList to previous activity' session to to determine how to group
+  //isUnique value is passed as a prop, along with Activity object, to TranscriptActivity Component
+  //Returns TranscriptActivity component which is passed into activityList
   sessionComparitor = activity => {
+    //bool to keep track of when an zctivity is part of a new session, passed to TranscriptActivity
     let isUniqueSession = true;
 
     if (activity.SessionDescription === this.tempSessionVal) {
       isUniqueSession = false;
-    } else isUniqueSession = true;
+    } else {
+      isUniqueSession = true;
+    }
     this.tempSessionVal = activity.SessionDescription;
-    return <Activities isUnique={isUniqueSession} Activity={activity} />;
+    return <Activity isUnique={isUniqueSession} Activity={activity} />;
   };
 
   render() {
@@ -65,7 +75,7 @@ export default class Transcript extends Component {
     }
 
     const button = {
-      background: gordonColors.primary.cyan, //'#014983',
+      background: gordonColors.primary.cyan,
       color: 'white',
       justifyContent: 'center',
       alignItems: 'center',
