@@ -20,6 +20,7 @@ import Activities from './Components/ActivityList';
 import GordonLoader from './../../components/Loader';
 
 import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
 
 const CROP_DIM = 200; // pixels
 
@@ -53,9 +54,11 @@ export default class Profile extends Component {
   };
 
   handleCloseSubmit = () => {
-    var imageNoHeader = this.state.preview.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-    this.setState({ image: imageNoHeader });
-    this.setState({ open: false, preview: null });
+    if (this.state.preview) {
+      var imageNoHeader = this.state.preview.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+      this.setState({ image: imageNoHeader });
+      this.setState({ open: false, preview: null });
+    }
   };
 
   handleCloseCancel = () => {
@@ -79,13 +82,30 @@ export default class Profile extends Component {
     var reader = new FileReader();
     reader.onload = function() {
       var dataURL = reader.result.toString();
-      this.setState({ preview: dataURL });
+      var i = new Image();
+      i.onload = function() {
+        var aRatio = i.width / i.height;
+        this.setState({ cropperData: { aspectRatio: aRatio } });
+        this.setState({ preview: dataURL });
+      }.bind(this);
+      i.src = dataURL;
     }.bind(this);
     reader.readAsDataURL(previewImageFile);
   }
 
   onDropRejected() {
     alert('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
+  }
+
+  onCrop() {
+    console.log(this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL('image/jpeg'));
+  }
+
+  onCropperZoom(event) {
+    if (event.detail.ratio > 1) {
+      event.preventDefault();
+      this.refs.cropper.zoomTo(1);
+    }
   }
 
   componentWillMount() {
@@ -187,13 +207,28 @@ export default class Profile extends Component {
                         )}
                         {preview && (
                           <Grid container justify="center">
-                            <img src={preview} alt="preview" style={{ 'max-width': '100%' }} />
+                            <Cropper
+                              ref="cropper"
+                              src={preview}
+                              style={{
+                                width: 400,
+                                height: 400 * 1 / this.state.cropperData.aspectRatio,
+                              }}
+                              autoCropArea={1}
+                              viewMode={3}
+                              aspectRatio={1}
+                              highlight={false}
+                              background={false}
+                              zoom={this.onCropperZoom.bind(this)}
+                              zoomable={false}
+                            />
                           </Grid>
                         )}
+                        {preview && <br />}
                         {preview && (
                           <Grid container justify="center">
                             <Grid item>
-                              <Button onClick={() => {}} raised style={button}>
+                              <Button onClick={this.onCrop.bind(this)} raised style={button}>
                                 Crop
                               </Button>
                             </Grid>
@@ -227,7 +262,11 @@ export default class Profile extends Component {
                     </Dialog>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
+                    <img
+                      src={`data:image/jpg;base64,${this.state.image}`}
+                      alt=""
+                      style={{ 'max-width': '100%' }}
+                    />
                   </Grid>
                 </Grid>
               </CardContent>
