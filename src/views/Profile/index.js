@@ -94,7 +94,7 @@ export default class Profile extends Component {
 
     const style = {
       img: {
-        width: '50%',
+        width: '75%',
       },
     };
     const button = {
