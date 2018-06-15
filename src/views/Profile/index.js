@@ -84,9 +84,15 @@ export default class Profile extends Component {
       var dataURL = reader.result.toString();
       var i = new Image();
       i.onload = function() {
-        var aRatio = i.width / i.height;
-        this.setState({ cropperData: { aspectRatio: aRatio } });
-        this.setState({ preview: dataURL });
+        if (i.width < CROP_DIM || i.height < CROP_DIM) {
+          alert(
+            'Sorry, your image is too small! Image dimensions must be at least 200 x 200 pixels.',
+          );
+        } else {
+          var aRatio = i.width / i.height;
+          this.setState({ cropperData: { aspectRatio: aRatio } });
+          this.setState({ preview: dataURL });
+        }
       }.bind(this);
       i.src = dataURL;
     }.bind(this);
@@ -180,6 +186,7 @@ export default class Profile extends Component {
                       onClose={this.handleClose}
                       aria-labelledby="alert-dialog-slide-title"
                       aria-describedby="alert-dialog-slide-description"
+                      maxWidth="false"
                     >
                       <DialogTitle id="simple-dialog-title">Update Profile Picture</DialogTitle>
                       <DialogContent>
@@ -211,8 +218,14 @@ export default class Profile extends Component {
                               ref="cropper"
                               src={preview}
                               style={{
-                                width: 400,
-                                height: 400 * 1 / this.state.cropperData.aspectRatio,
+                                'max-width':
+                                  window.innerWidth * (window.innerWidth < 800 ? 0.75 : 0.5),
+                                'max-height':
+                                  window.innerWidth *
+                                  (window.innerWidth < 800 ? 0.75 : 0.5) *
+                                  1 /
+                                  this.state.cropperData.aspectRatio,
+                                justify: 'center',
                               }}
                               autoCropArea={1}
                               viewMode={3}
@@ -250,7 +263,7 @@ export default class Profile extends Component {
                           raised
                           style={{ background: 'tomato', color: 'white' }}
                         >
-                          Reset Image
+                          Reset
                         </Button>
                         <Button onClick={this.handleCloseSubmit} raised style={button}>
                           Submit
