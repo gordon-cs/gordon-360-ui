@@ -55,7 +55,8 @@ export default class Profile extends Component {
 
   handleCloseSubmit = () => {
     if (this.state.preview) {
-      var imageNoHeader = this.state.preview.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+      var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({ image: imageNoHeader });
       this.setState({ open: false, preview: null });
     }
@@ -77,6 +78,20 @@ export default class Profile extends Component {
     }
   }
 
+  maxCropPreviewWidth() {
+    const breakpointWidth = 800;
+    const smallScreenRatio = 0.75;
+    const largeScreenRatio = 0.5;
+    return (
+      window.innerWidth *
+      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio)
+    );
+  }
+
+  minCropBoxDim(imgWidth, dispWidth) {
+    return CROP_DIM * dispWidth / imgWidth;
+  }
+
   onDropAccepted(fileList) {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
@@ -90,7 +105,10 @@ export default class Profile extends Component {
           );
         } else {
           var aRatio = i.width / i.height;
-          this.setState({ cropperData: { aspectRatio: aRatio } });
+          var displayWidth =
+            this.maxCropPreviewWidth() > i.width ? i.width : this.maxCropPreviewWidth();
+          var cropDim = this.minCropBoxDim(i.width, displayWidth);
+          this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
           this.setState({ preview: dataURL });
         }
       }.bind(this);
@@ -101,10 +119,6 @@ export default class Profile extends Component {
 
   onDropRejected() {
     alert('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
-  }
-
-  onCrop() {
-    console.log(this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL('image/jpeg'));
   }
 
   onCropperZoom(event) {
@@ -191,7 +205,7 @@ export default class Profile extends Component {
                       <DialogTitle id="simple-dialog-title">Update Profile Picture</DialogTitle>
                       <DialogContent>
                         <DialogContentText>
-                          Drag & Drop Picture, or Click to Browse Files
+                          Drag &amp; Drop Picture, or Click to Browse Files
                         </DialogContentText>
                         <DialogContentText>
                           <br />
@@ -218,11 +232,9 @@ export default class Profile extends Component {
                               ref="cropper"
                               src={preview}
                               style={{
-                                'max-width':
-                                  window.innerWidth * (window.innerWidth < 800 ? 0.75 : 0.5),
+                                'max-width': this.maxCropPreviewWidth(),
                                 'max-height':
-                                  window.innerWidth *
-                                  (window.innerWidth < 800 ? 0.75 : 0.5) *
+                                  this.maxCropPreviewWidth() *
                                   1 /
                                   this.state.cropperData.aspectRatio,
                                 justify: 'center',
@@ -234,6 +246,9 @@ export default class Profile extends Component {
                               background={false}
                               zoom={this.onCropperZoom.bind(this)}
                               zoomable={false}
+                              dragMode={'none'}
+                              minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                              minCropBoxHeight={this.state.cropperData.cropBoxDim}
                             />
                           </Grid>
                         )}
@@ -241,17 +256,12 @@ export default class Profile extends Component {
                         {preview && (
                           <Grid container justify="center">
                             <Grid item>
-                              <Button onClick={this.onCrop.bind(this)} raised style={button}>
-                                Crop
-                              </Button>
-                            </Grid>
-                            <Grid item>
                               <Button
                                 onClick={() => this.setState({ preview: null })}
                                 raised
                                 style={button}
                               >
-                                Choose Image
+                                Choose Another Image
                               </Button>
                             </Grid>
                           </Grid>
