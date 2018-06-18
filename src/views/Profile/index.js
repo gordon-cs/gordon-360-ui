@@ -304,13 +304,6 @@ export default class MyProfile extends Component {
                       </DialogActions>
                     </Dialog>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <img
-                      src={`data:image/jpg;base64,${this.state.image}`}
-                      alt=""
-                      style={{ 'max-width': '100%' }}
-                    />
-                  </Grid>
                 </Grid>
               </CardContent>
             </Card>
