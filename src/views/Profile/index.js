@@ -19,6 +19,11 @@ import { gordonColors } from '../../theme';
 import Activities from './Components/ActivityList';
 import GordonLoader from './../../components/Loader';
 
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
+
+const CROP_DIM = 200; // pixels
+
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -35,6 +40,7 @@ export default class Profile extends Component {
       activities: [],
       files: [],
       open: false,
+      cropperData: { cropBoxDim: null, aspectRatio: null },
     };
   }
 
@@ -47,8 +53,23 @@ export default class Profile extends Component {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
+  handleCloseSubmit = () => {
+    if (this.state.preview) {
+      var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+      this.setState({ image: imageNoHeader });
+      // API Call and reload user image in navbar or refresh page
+      this.setState({ open: false, preview: null });
+    }
+  };
+
+  handleCloseCancel = () => {
+    this.setState({ open: false, preview: null });
+  };
+
+  handleResetImage = () => {
+    // API Call!
+    this.setState({ open: false, preview: null });
   };
 
   changePrivacy() {
@@ -58,17 +79,62 @@ export default class Profile extends Component {
       this.setState({ button: 'Make Public' });
     }
   }
-  onDrop(preview) {
-    this.setState({ preview });
-    console.log(preview);
+
+  maxCropPreviewWidth() {
+    const breakpointWidth = 800;
+    const smallScreenRatio = 0.75;
+    const largeScreenRatio = 0.5;
+    return (
+      window.innerWidth *
+      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio)
+    );
   }
-  rand() {
-    return Math.round(Math.random() * 20) - 10;
+
+  minCropBoxDim(imgWidth, dispWidth) {
+    return CROP_DIM * dispWidth / imgWidth;
   }
+
+  onDropAccepted(fileList) {
+    var previewImageFile = fileList[0];
+    var reader = new FileReader();
+    reader.onload = function() {
+      var dataURL = reader.result.toString();
+      var i = new Image();
+      i.onload = function() {
+        if (i.width < CROP_DIM || i.height < CROP_DIM) {
+          alert(
+            'Sorry, your image is too small! Image dimensions must be at least 200 x 200 pixels.',
+          );
+        } else {
+          var aRatio = i.width / i.height;
+          var displayWidth =
+            this.maxCropPreviewWidth() > i.width ? i.width : this.maxCropPreviewWidth();
+          var cropDim = this.minCropBoxDim(i.width, displayWidth);
+          this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
+          this.setState({ preview: dataURL });
+        }
+      }.bind(this);
+      i.src = dataURL;
+    }.bind(this);
+    reader.readAsDataURL(previewImageFile);
+  }
+
+  onDropRejected() {
+    alert('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
+  }
+
+  onCropperZoom(event) {
+    if (event.detail.ratio > 1) {
+      event.preventDefault();
+      this.refs.cropper.zoomTo(1);
+    }
+  }
+
   componentWillMount() {
     // const { username } = this.props.match.params.username;
     this.loadProfile();
   }
+
   async loadProfile() {
     this.setState({ loading: true });
     try {
@@ -89,6 +155,7 @@ export default class Profile extends Component {
       this.setState({ button: 'Make Public' });
     }
   }
+
   render() {
     const { preview } = this.state;
 
@@ -153,30 +220,96 @@ export default class Profile extends Component {
                       onClose={this.handleClose}
                       aria-labelledby="alert-dialog-slide-title"
                       aria-describedby="alert-dialog-slide-description"
+                      maxWidth="false"
                     >
                       <DialogTitle id="simple-dialog-title">Update Profile Picture</DialogTitle>
                       <DialogContent>
                         <DialogContentText>
-                          Drag and Drop Picture, or Click to Browse Your Files
+                          Drag &amp; Drop Picture, or Click to Browse Files
                         </DialogContentText>
-                        <Dropzone
-                          onDrop={this.onDrop.bind(this)}
-                          accept="image/jpeg,image/jpg,image/tiff,image/gif,image/png"
-                          style={photoUploader}
-                        >
-                          <img src={require('./image.png')} alt="" style={style} />
-                        </Dropzone>
-                        {preview && <img src={preview} alt="preview" />}
+                        <DialogContentText>
+                          <br />
+                        </DialogContentText>
+                        {!preview && (
+                          <Dropzone
+                            onDropAccepted={this.onDropAccepted.bind(this)}
+                            onDropRejected={this.onDropRejected.bind(this)}
+                            accept="image/jpeg,image/jpg,image/png"
+                            style={photoUploader}
+                          >
+                            <Grid container justify="center">
+                              <img
+                                src={require('./image.png')}
+                                alt=""
+                                style={{ 'max-width': '100%' }}
+                              />
+                            </Grid>
+                          </Dropzone>
+                        )}
+                        {preview && (
+                          <Grid container justify="center">
+                            <Cropper
+                              ref="cropper"
+                              src={preview}
+                              style={{
+                                'max-width': this.maxCropPreviewWidth(),
+                                'max-height':
+                                  this.maxCropPreviewWidth() *
+                                  1 /
+                                  this.state.cropperData.aspectRatio,
+                                justify: 'center',
+                              }}
+                              autoCropArea={1}
+                              viewMode={3}
+                              aspectRatio={1}
+                              highlight={false}
+                              background={false}
+                              zoom={this.onCropperZoom.bind(this)}
+                              zoomable={false}
+                              dragMode={'none'}
+                              minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                              minCropBoxHeight={this.state.cropperData.cropBoxDim}
+                            />
+                          </Grid>
+                        )}
+                        {preview && <br />}
+                        {preview && (
+                          <Grid container justify="center">
+                            <Grid item>
+                              <Button
+                                onClick={() => this.setState({ preview: null })}
+                                raised
+                                style={style.button}
+                              >
+                                Choose Another Image
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        )}
                       </DialogContent>
                       <DialogActions>
-                        <Button onClick={this.handleClose} raised style={style.button}>
-                          Cancel
+                        <Button
+                          onClick={this.handleResetImage}
+                          raised
+                          style={{ background: 'tomato', color: 'white' }}
+                        >
+                          Reset
                         </Button>
-                        <Button onClick={this.handleClose} raised style={style.button}>
+                        <Button onClick={this.handleCloseSubmit} raised style={style.button}>
                           Submit
+                        </Button>
+                        <Button onClick={this.handleCloseCancel} raised style={style.button}>
+                          Cancel
                         </Button>
                       </DialogActions>
                     </Dialog>
+                  </Grid>
+                  <Grid item xs={6} sm={6} md={6} lg={4}>
+                    <img
+                      src={`data:image/jpg;base64,${this.state.image}`}
+                      alt=""
+                      style={{ 'max-width': '100%' }}
+                    />
                   </Grid>
                 </Grid>
               </CardContent>
