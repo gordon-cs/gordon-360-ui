@@ -279,7 +279,7 @@ export default class Profile extends Component {
                               <Button
                                 onClick={() => this.setState({ preview: null })}
                                 raised
-                                style={button}
+                                style={style.button}
                               >
                                 Choose Another Image
                               </Button>
