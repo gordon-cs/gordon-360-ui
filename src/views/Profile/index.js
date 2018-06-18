@@ -96,11 +96,19 @@ export default class Profile extends Component {
       img: {
         maxWidth: '100%',
       },
+
+      centerGridContainer: {
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+      },
+
+      button: {
+        background: gordonColors.primary.cyan,
+        color: 'white',
+      },
     };
-    const button = {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    };
+
     const photoUploader = {
       padding: '20px',
       justifyContent: 'center',
@@ -118,8 +126,8 @@ export default class Profile extends Component {
 
     return (
       <div>
-        <Grid container>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Grid container justify="center">
+          <Grid item xs={12} lg={10}>
             <Card>
               <CardContent>
                 <Grid container justify="center">
@@ -136,7 +144,7 @@ export default class Profile extends Component {
                       title={this.state.profile.fullName}
                       subheader={this.state.profile.Class}
                     />
-                    <Button onClick={this.handleOpen} raised style={button}>
+                    <Button onClick={this.handleOpen} raised style={style.button}>
                       Update Photo
                     </Button>
                     <Dialog
@@ -161,10 +169,10 @@ export default class Profile extends Component {
                         {preview && <img src={preview} alt="preview" />}
                       </DialogContent>
                       <DialogActions>
-                        <Button onClick={this.handleClose} raised style={button}>
+                        <Button onClick={this.handleClose} raised style={style.button}>
                           Cancel
                         </Button>
-                        <Button onClick={this.handleClose} raised style={button}>
+                        <Button onClick={this.handleClose} raised style={style.button}>
                           Submit
                         </Button>
                       </DialogActions>
@@ -175,81 +183,85 @@ export default class Profile extends Component {
             </Card>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Card>
-              <CardContent>
-                <CardHeader title="Personal Information" />
+          <Grid item xs={12} lg={10}>
+            <Grid container>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
+                <Card>
+                  <CardContent>
+                    <CardHeader title="Personal Information" />
 
-                <List>
-                  <ListItem>
-                    <Typography>Major: {this.state.profile.Major1Description}</Typography>
-                  </ListItem>
+                    <List>
+                      <ListItem>
+                        <Typography>Major: {this.state.profile.Major1Description}</Typography>
+                      </ListItem>
 
-                  <Divider />
+                      <Divider />
 
-                  <ListItem>
-                    <Grid item xs={6} sm={7} md={8} lg={10}>
-                      <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
-                    </Grid>
+                      <ListItem>
+                        <Grid item xs={6} sm={7} md={8} lg={10}>
+                          <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
+                        </Grid>
 
-                    <Grid item xs={6} sm={5} md={4} lg={1}>
-                      <Button onClick={this.handleExpandClick} raised style={button}>
-                        {this.state.button}
-                      </Button>
-                    </Grid>
-                  </ListItem>
+                        <Grid item xs={6} sm={5} md={4} lg={1}>
+                          <Button onClick={this.handleExpandClick} raised style={style.button}>
+                            {this.state.button}
+                          </Button>
+                        </Grid>
+                      </ListItem>
 
-                  <Divider />
+                      <Divider />
 
-                  <ListItem>
-                    <Typography>Student ID: {this.state.profile.ID}</Typography>
-                  </ListItem>
+                      <ListItem>
+                        <Typography>Student ID: {this.state.profile.ID}</Typography>
+                      </ListItem>
 
-                  <Divider />
+                      <Divider />
 
-                  <ListItem>
-                    <Typography>Email: {this.state.profile.Email}</Typography>
-                  </ListItem>
+                      <ListItem>
+                        <Typography>Email: {this.state.profile.Email}</Typography>
+                      </ListItem>
 
-                  <Divider />
+                      <Divider />
 
-                  <ListItem>
-                    <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
-                  </ListItem>
+                      <ListItem>
+                        <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
+                      </ListItem>
 
-                  <Divider />
-                </List>
+                      <Divider />
+                    </List>
 
-                <CardHeader title="Home Address" />
+                    <CardHeader title="Home Address" />
 
-                <List>
-                  <Divider />
+                    <List>
+                      <Divider />
 
-                  <ListItem>
-                    <Typography>Street Number: {this.state.profile.HomeStreet2}</Typography>
-                  </ListItem>
+                      <ListItem>
+                        <Typography>Street Number: {this.state.profile.HomeStreet2}</Typography>
+                      </ListItem>
 
-                  <Divider />
+                      <Divider />
 
-                  <ListItem>
-                    <Typography>
-                      Home Town: {this.state.profile.HomeCity}, {this.state.profile.HomeState}
-                    </Typography>
-                  </ListItem>
+                      <ListItem>
+                        <Typography>
+                          Home Town: {this.state.profile.HomeCity}, {this.state.profile.HomeState}
+                        </Typography>
+                      </ListItem>
 
-                  <Divider />
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
+                      <Divider />
+                    </List>
+                  </CardContent>
+                </Card>
+              </Grid>
 
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Card>
-              <CardContent>
-                <CardHeader title="Activities" />
-                <List>{activityList}</List>
-              </CardContent>
-            </Card>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
+                <Card>
+                  <CardContent>
+                    <CardHeader title="Activities" />
+                    <List>{activityList}</List>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </div>
