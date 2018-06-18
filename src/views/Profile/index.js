@@ -7,12 +7,6 @@ import Typography from 'material-ui/Typography';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 
-import FacebookIcon from 'react-icons/lib/fa/facebook';
-import TwitterIcon from 'react-icons/lib/fa/twitter';
-import LinkedInIcon from 'react-icons/lib/fa/linkedin';
-import InstagramIcon from 'react-icons/lib/fa/instagram';
-import ListItemIcon, { ListItemText } from 'material-ui/List';
-
 import Dropzone from 'react-dropzone';
 import Dialog, {
   DialogTitle,
@@ -20,11 +14,11 @@ import Dialog, {
   DialogContentText,
   DialogContent,
 } from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import Activities from './Components/ActivityList';
+import LinksDialog from './Components/LinksDialog';
 import GordonLoader from './../../components/Loader';
 
 export default class Profile extends Component {
@@ -32,6 +26,7 @@ export default class Profile extends Component {
     super(props);
 
     this.handleExpandClick = this.handleExpandClick.bind(this);
+    this.onLinksChange = this.onLinksChange.bind(this);
 
     this.state = {
       username: String,
@@ -44,16 +39,10 @@ export default class Profile extends Component {
       files: [],
       photoDialogOpen: false,
       socialLinksDialogOpen: false,
-
       facebookLink: '',
       linkedInLink: '',
       twitterLink: '',
       instagramLink: '',
-
-      facebookDBInput: '',
-      linkedInDBInput: '',
-      twitterDBInput: '',
-      instagramDBInput: '',
     };
   }
 
@@ -77,11 +66,6 @@ export default class Profile extends Component {
   handleSocialLinksDialogClose = () => {
     this.setState({ socialLinksDialogOpen: false });
   };
-
-  handleExpandClick() {
-    this.changePrivacy();
-    user.toggleMobilePhonePrivacy();
-  }
 
   handleOpen = () => {
     this.setState({ open: true });
@@ -131,6 +115,25 @@ export default class Profile extends Component {
     }
   }
 
+  onLinksChange(fb, tw, li, ig) {
+    if (fb !== this.state.facebookLink && fb !== '') {
+      this.setState({ facebookLink: fb });
+      user.enterSocialLink('facebook', fb);
+    }
+    if (tw !== this.state.twitterLink && tw !== '') {
+      this.setState({ twitterLink: tw });
+      user.enterSocialLink('twitter', tw);
+    }
+    if (li !== this.state.linkedInLink && li !== '') {
+      this.setState({ linkedInLink: li });
+      user.enterSocialLink('linkedin', li);
+    }
+    if (ig !== this.state.instagramLink && ig !== '') {
+      this.setState({ instagramLink: ig });
+      user.enterSocialLink('instagram', ig);
+    }
+  }
+
   render() {
     const { preview } = this.state;
 
@@ -146,6 +149,13 @@ export default class Profile extends Component {
       justifyContent: 'center',
       alignItems: 'center',
     };
+
+    let linksDialog = (
+      <LinksDialog
+        onLinksChange={this.onLinksChange}
+        handleSocialLinksDialogClose={this.handleSocialLinksDialogClose}
+      />
+    );
 
     let activityList;
     if (!this.state.activities) {
@@ -210,22 +220,30 @@ export default class Profile extends Component {
                   <List>
                     <Divider />
                     <ListItem>
-                      <Typography>Facebook: </Typography>
+                      <Typography>
+                        Facebook: {this.state.facebookLink} | {this.state.profile.facebook}
+                      </Typography>
                     </ListItem>
                     <Divider />
                     <Divider />
                     <ListItem>
-                      <Typography>Twitter: </Typography>
+                      <Typography>
+                        Twitter: {this.state.twitterLink} | {this.state.profile.twitter}
+                      </Typography>
                     </ListItem>
                     <Divider />
                     <Divider />
                     <ListItem>
-                      <Typography>LinkedIn: </Typography>
+                      <Typography>
+                        LinkedIn: {this.state.linkedInLink} | {this.state.profile.linkedIn}
+                      </Typography>
                     </ListItem>
                     <Divider />
                     <Divider />
                     <ListItem>
-                      <Typography>Instagram: </Typography>
+                      <Typography>
+                        Instagram: {this.state.instagramLink} | {this.state.profile.instagram}
+                      </Typography>
                     </ListItem>
                     <Divider />
                   </List>
@@ -246,40 +264,15 @@ export default class Profile extends Component {
                       <DialogTitle id="simple-dialog-title">
                         Edit your social media links
                       </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          <Grid container spacing={8} alignItems="flex-end">
-                            <Grid item>
-                              <FacebookIcon alignItems="center" />
-                              <TextField
-                                id="facebookInput"
-                                label="Facebook link"
-                                //onChangeText={facebookDBInput=> this.setState({this.state.facebookLink})}
-                              />
-                            </Grid>
-                          </Grid>
-                          <Grid item>
-                            <TwitterIcon alignItems="center" />
-                            <TextField id="twitterInput" label="Twitter link" />
-                          </Grid>
-                          <Grid item>
-                            <LinkedInIcon alignItems="center" />
-                            <TextField id="LinkedInInput" label="LinkedIn link" />
-                          </Grid>
-                          <Grid item>
-                            <InstagramIcon alignItems="center" />
-                            <TextField id="instagramInput" label="Instagram link" />
-                          </Grid>
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={this.handleSocialLinksDialogClose} raised style={button}>
+                      <DialogContent>{linksDialog}</DialogContent>
+                      {/* <DialogActions>
+                       <Button onClick={this.handleSocialLinksDialogClose} raised style={button} align="left">
                           Cancel
                         </Button>
                         <Button onClick={this.handleSocialLinksDialogClose} raised style={button}>
                           Submit
-                        </Button>
-                      </DialogActions>
+                      </Button>
+                      </DialogActions>*/}
                     </Dialog>
                   </Grid>
                 </Grid>

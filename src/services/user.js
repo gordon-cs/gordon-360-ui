@@ -315,6 +315,7 @@ const getMemberships = async id => {
   memberships = await http.get(`memberships/student/${id}`);
   return memberships;
 };
+
 const getProfileInfo = async username => {
   let profile = await getProfile(username);
   formatName(profile);
@@ -322,6 +323,43 @@ const getProfileInfo = async username => {
   setOnOffCampus(profile);
   return profile;
 };
+
+function enterSocialLink(type, link) {
+  let url;
+  let linkToSend;
+  //Get link ready to send to API
+
+  switch (type) {
+    case 'facebook':
+      linkToSend = link.substring(25);
+      break;
+    case 'twitter':
+      linkToSend = link.substring(20);
+      if (linkToSend.indexOf('?') > 0) {
+        linkToSend = linkToSend.slice(0, linkToSend.indexOf('?'));
+      }
+      break;
+    case 'linkedin':
+      linkToSend = link.substring(28);
+      if (linkToSend.slice(-1) === '/') {
+        linkToSend = linkToSend.slice(0, -1);
+      }
+      break;
+    case 'instagram':
+      linkToSend = link.substring(26);
+      break;
+  }
+
+  linkToSend = encodeURIComponent(linkToSend);
+
+  url = {
+    [type]: linkToSend,
+  };
+
+  return http.put('/profiles/' + type, url, this).catch(() => {
+    alert("Something's wrong with the put I think... ");
+  });
+}
 
 export default {
   toggleMobilePhonePrivacy,
@@ -331,4 +369,5 @@ export default {
   getImage,
   getLocalInfo,
   getProfileInfo,
+  enterSocialLink,
 };
