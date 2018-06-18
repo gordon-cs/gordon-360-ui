@@ -157,9 +157,6 @@ export default class Profile extends Component {
   render() {
     const { preview } = this.state;
 
-    const style = {
-      width: '100%',
-    };
     const button = {
       background: gordonColors.primary.cyan,
       color: 'white',
