@@ -8,6 +8,7 @@ import analytics from './services/analytics';
 import { isAuthenticated, signOut } from './services/auth';
 import GordonError from './components/Error';
 import GordonHeader from './components/Header';
+import GordonToolbar from './components/Toolbar';
 import GordonNav from './components/Nav';
 import { AuthError } from './services/error';
 import Login from './views/Login';
@@ -53,6 +54,7 @@ export default class App extends Component {
     let content = (
       <section className="app-wrapper">
         <GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
+        <GordonToolbar />
         <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
         <main className="app-main">
           <Switch>

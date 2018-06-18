@@ -2,9 +2,8 @@
 
 $drawer-width: 240px;
 
-.gordon-header {
+.gordon-toolbar {
   position: absolute;
-  margin-top: 47pt;
   width: 100%;
 
   .app-bar {
@@ -17,23 +16,8 @@ $drawer-width: 240px;
     }
   }
 
-  .menu-button {
-    margin-left: -12px;
-  }
-  @media (min-width: $break-md) {
-    .menu-button {
-      display: none;
-    }
-  }
-
   .title {
     flex: 1;
     margin-right: 10px;
-  }
-
-  .right-side-container {
-    align-items: center;
-    display: flex;
-    margin-right: -12px;
   }
 }
