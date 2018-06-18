@@ -58,6 +58,7 @@ export default class Profile extends Component {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({ image: imageNoHeader });
+      // API Call and reload user image in navbar or refresh page
       this.setState({ open: false, preview: null });
     }
   };
@@ -68,6 +69,7 @@ export default class Profile extends Component {
 
   handleResetImage = () => {
     // API Call!
+    this.setState({ open: false, preview: null });
   };
 
   changePrivacy() {
