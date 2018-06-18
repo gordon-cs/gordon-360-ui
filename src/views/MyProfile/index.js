@@ -24,7 +24,7 @@ import 'cropperjs/dist/cropper.css';
 
 const CROP_DIM = 200; // pixels
 
-export default class Profile extends Component {
+export default class MyProfile extends Component {
   constructor(props) {
     super(props);
 

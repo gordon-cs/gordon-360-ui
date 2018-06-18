@@ -6,6 +6,7 @@
     "base64toblob": "0.0.2",
     "chart.js": "^2.7.1",
     "classnames": "^2.2.5",
+    "cropperjs": "^1.4.0",
     "downshift": "1.22.3",
     "history": "^4.7.2",
     "jwt-decode": "^2.2.0",
