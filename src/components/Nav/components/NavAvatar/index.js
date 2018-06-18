@@ -59,7 +59,7 @@ class GordonNavAvatar extends Component {
 
     // Link component to be used with Button component
     const buttonLink = ({ ...props }) => (
-      <Link {...props} to={`/profile/${this.state.username}`} onClick={this.props.onLinkClick} />
+      <Link {...props} to={`/myprofile/${this.state.username}`} onClick={this.props.onLinkClick} />
     );
 
     return (
