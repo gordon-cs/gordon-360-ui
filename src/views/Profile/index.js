@@ -128,7 +128,7 @@ export default class Profile extends Component {
       <div>
         <Grid container justify="center">
           <Grid item xs={12} lg={10}>
-            <Card>
+            <Card id="print">
               <CardContent>
                 <Grid container justify="center">
                   <Grid item xs={6} sm={6} md={6} lg={4}>
