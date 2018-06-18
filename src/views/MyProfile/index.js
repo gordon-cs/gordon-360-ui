@@ -19,7 +19,7 @@ import { gordonColors } from '../../theme';
 import Activities from './Components/ActivityList';
 import GordonLoader from './../../components/Loader';
 
-export default class Profile extends Component {
+export default class MyProfile extends Component {
   constructor(props) {
     super(props);
 
