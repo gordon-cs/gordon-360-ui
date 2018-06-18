@@ -102,7 +102,7 @@ export default class GordonActivitiesAll extends Component {
 
     return (
       <section className="activities-all">
-        <Grid container className="activities-filter">
+        <Grid container className="activities-filter" style={{ marginTop: '71pt' }}>
           <Grid item xs={12} md={6} lg={3}>
             <FormControl fullWidth>
               <InputLabel htmlFor="activity-session">Session</InputLabel>

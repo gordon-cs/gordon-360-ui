@@ -193,7 +193,7 @@ export default class Profile extends Component {
 
     return (
       <div>
-        <Grid container justify="center">
+        <Grid container justify="center" style={{ marginTop: '71pt' }}>
           <Grid item xs={12} lg={10}>
             <Card id="print">
               <CardContent>
