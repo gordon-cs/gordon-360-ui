@@ -315,6 +315,30 @@ const getMemberships = async id => {
   memberships = await http.get(`memberships/student/${id}`);
   return memberships;
 };
+
+//compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
+function compareBySession(a, b) {
+  const sessA = a.SessionCode;
+  const sessB = b.SessionCode;
+
+  let comparison = 0;
+  if (sessA > sessB) {
+    comparison = 1;
+  } else if (sessA < sessB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+//returns an array of membership objects from backend server,
+//using asynchronous http.get request (via getMemberships function)
+//sorts by SessionCode
+const getTranscriptInfo = async id => {
+  let transcriptInfo = await getMemberships(id);
+  transcriptInfo.sort(compareBySession);
+  return transcriptInfo;
+};
+
 const getProfileInfo = async username => {
   let profile = await getProfile(username);
   formatName(profile);
@@ -331,4 +355,5 @@ export default {
   getImage,
   getLocalInfo,
   getProfileInfo,
+  getTranscriptInfo,
 };
