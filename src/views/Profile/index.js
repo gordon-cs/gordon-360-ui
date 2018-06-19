@@ -53,9 +53,14 @@ export default class Profile extends Component {
   };
 
   handleCloseSubmit = () => {
-    var imageNoHeader = this.state.preview.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-    this.setState({ image: imageNoHeader });
-    this.setState({ open: false, preview: null });
+    if (this.state.preview != null) {
+      console.log('preview \n' + this.state.preview);
+      user.postImage(this.state.preview);
+      var imageNoHeader = this.state.preview.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+      this.setState({ image: imageNoHeader });
+      this.setState({ open: false, preview: null });
+      window.didProfilePicUpdate = true;
+    }
   };
 
   handleCloseCancel = () => {
@@ -63,7 +68,9 @@ export default class Profile extends Component {
   };
 
   handleResetImage = () => {
-    // API Call!
+    user.resetImage();
+    this.loadProfile();
+    window.didProfilePicUpdate = true;
   };
 
   changePrivacy() {
@@ -164,7 +171,7 @@ export default class Profile extends Component {
                       <DialogTitle id="simple-dialog-title">Update Profile Picture</DialogTitle>
                       <DialogContent>
                         <DialogContentText>
-                          Drag & Drop Picture, or Click to Browse Files
+                          Drag &amp; Drop Picture, or Click to Browse Files
                         </DialogContentText>
                         <DialogContentText>
                           <br />
@@ -203,7 +210,7 @@ export default class Profile extends Component {
                                 raised
                                 style={button}
                               >
-                                Choose Image
+                                Choose Another Image
                               </Button>
                             </Grid>
                           </Grid>
