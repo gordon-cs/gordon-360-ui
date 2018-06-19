@@ -325,10 +325,12 @@ const getProfileInfo = async username => {
 };
 
 function enterSocialLink(type, link) {
+  console.log('enterSocialLinks- type: ' + type);
+  console.log('enterSocialLinks- link: ' + link);
   let url;
   let linkToSend;
   //Get link ready to send to API
-
+  //Remove domain names
   switch (type) {
     case 'facebook':
       linkToSend = link.substring(25);
@@ -349,15 +351,16 @@ function enterSocialLink(type, link) {
       linkToSend = link.substring(26);
       break;
   }
-
+  console.log('enterSocialLinks- linkToSend: ' + linkToSend);
   linkToSend = encodeURIComponent(linkToSend);
 
   url = {
     [type]: linkToSend,
   };
+  //Send put request
 
-  return http.put('/profiles/' + type, url, this).catch(() => {
-    alert("Something's wrong with the put I think... ");
+  return http.put('profiles/' + type, url).catch(() => {
+    console.log('put requested');
   });
 }
 

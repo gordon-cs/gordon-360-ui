@@ -6,6 +6,7 @@ import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
+import { Link } from 'react-router-dom';
 
 import Dropzone from 'react-dropzone';
 import Dialog, {
@@ -20,6 +21,11 @@ import { gordonColors } from '../../theme';
 import Activities from './Components/ActivityList';
 import LinksDialog from './Components/LinksDialog';
 import GordonLoader from './../../components/Loader';
+
+import FacebookIcon from 'react-icons/lib/fa/facebook';
+import TwitterIcon from 'react-icons/lib/fa/twitter';
+import LinkedInIcon from 'react-icons/lib/fa/linkedin';
+import InstagramIcon from 'react-icons/lib/fa/instagram';
 
 export default class Profile extends Component {
   constructor(props) {
@@ -116,19 +122,25 @@ export default class Profile extends Component {
   }
 
   onLinksChange(fb, tw, li, ig) {
-    if (fb !== this.state.facebookLink && fb !== '') {
+    console.log('onLinksChange- fb: ' + fb);
+    console.log('onLinksChange- tw: ' + tw);
+    console.log('onLinksChange- li: ' + li);
+    console.log('onLinksChange- ig: ' + ig);
+
+    //Update links that have changed
+    if (fb !== this.state.facebookLink) {
       this.setState({ facebookLink: fb });
       user.enterSocialLink('facebook', fb);
     }
-    if (tw !== this.state.twitterLink && tw !== '') {
+    if (tw !== this.state.twitterLink) {
       this.setState({ twitterLink: tw });
       user.enterSocialLink('twitter', tw);
     }
-    if (li !== this.state.linkedInLink && li !== '') {
+    if (li !== this.state.linkedInLink) {
       this.setState({ linkedInLink: li });
       user.enterSocialLink('linkedin', li);
     }
-    if (ig !== this.state.instagramLink && ig !== '') {
+    if (ig !== this.state.instagramLink) {
       this.setState({ instagramLink: ig });
       user.enterSocialLink('instagram', ig);
     }
@@ -221,28 +233,28 @@ export default class Profile extends Component {
                     <Divider />
                     <ListItem>
                       <Typography>
-                        Facebook: {this.state.facebookLink} | {this.state.profile.facebook}
+                        <FacebookIcon /> {this.state.facebookLink} {this.state.profile.facebook}
                       </Typography>
                     </ListItem>
                     <Divider />
                     <Divider />
                     <ListItem>
                       <Typography>
-                        Twitter: {this.state.twitterLink} | {this.state.profile.twitter}
+                        <TwitterIcon /> {this.state.twitterLink} {this.state.profile.twitter}
                       </Typography>
                     </ListItem>
                     <Divider />
                     <Divider />
                     <ListItem>
                       <Typography>
-                        LinkedIn: {this.state.linkedInLink} | {this.state.profile.linkedIn}
+                        <LinkedInIcon /> {this.state.linkedInLink} {this.state.profile.linkedIn}
                       </Typography>
                     </ListItem>
                     <Divider />
                     <Divider />
                     <ListItem>
                       <Typography>
-                        Instagram: {this.state.instagramLink} | {this.state.profile.instagram}
+                        <InstagramIcon /> {this.state.instagramLink} {this.state.profile.instagram}
                       </Typography>
                     </ListItem>
                     <Divider />
@@ -265,14 +277,6 @@ export default class Profile extends Component {
                         Edit your social media links
                       </DialogTitle>
                       <DialogContent>{linksDialog}</DialogContent>
-                      {/* <DialogActions>
-                       <Button onClick={this.handleSocialLinksDialogClose} raised style={button} align="left">
-                          Cancel
-                        </Button>
-                        <Button onClick={this.handleSocialLinksDialogClose} raised style={button}>
-                          Submit
-                      </Button>
-                      </DialogActions>*/}
                     </Dialog>
                   </Grid>
                 </Grid>

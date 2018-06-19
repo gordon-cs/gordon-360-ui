@@ -17,12 +17,10 @@ export default class LinksDialog extends React.Component {
     super(props);
 
     this.state = {
-      inputs: {
-        facebookInput: '',
-        twitterInput: '',
-        linkedinInput: '',
-        instagramInput: '',
-      },
+      facebookInput: '',
+      twitterInput: '',
+      linkedinInput: '',
+      instagramInput: '',
       formErrors: {
         facebookInput: '',
         twitterInput: '',
@@ -44,13 +42,14 @@ export default class LinksDialog extends React.Component {
     let liValid = this.state.liValid;
     let igValid = this.state.igValid;
 
+    // Require that content begins with appropriate domain name if not empty
     switch (fieldName) {
       case 'facebookInput':
         fbValid = value === '' || value.indexOf('https://www.facebook.com/') === 0;
         fieldValidationErrors.facebookInput = fbValid ? '' : 'Not a valid facebook link';
         break;
       case 'twitterInput':
-        twValid = value === '' || value.indexOf('https://www.twitter.com/') === 0;
+        twValid = value === '' || value.indexOf('https://twitter.com/') === 0;
         fieldValidationErrors.twitterInput = twValid ? '' : 'Not a valid twitter link';
         break;
       case 'linkedinInput':
@@ -104,6 +103,8 @@ export default class LinksDialog extends React.Component {
 
   handleClose = () => {
     this.props.handleSocialLinksDialogClose();
+
+    //reset invalid input upon cancel
 
     if (!this.state.fbValid) {
       this.setState({
