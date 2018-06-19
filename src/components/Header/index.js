@@ -7,6 +7,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
 import { Route, Switch } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import HomeIcon from 'material-ui-icons/Home';
+import LocalActivityIcon from 'material-ui-icons/LocalActivity';
+import EventIcon from 'material-ui-icons/Event';
+import DescriptionIcon from 'material-ui-icons/Description';
 
 import './header.css';
 import GordonGlobalMenu from './components/GlobalMenu';
@@ -56,6 +62,40 @@ export default class GordonHeader extends Component {
                 ))}
               </Switch>
             </Typography>
+
+            <NavLink exact to="/" onClick={this.props.onLinkClick} style={{ marginLeft: '50pt' }}>
+              <ListItem button>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+            </NavLink>
+            <NavLink exact to="/activities" onClick={this.props.onLinkClick}>
+              <ListItem button>
+                <ListItemIcon>
+                  <LocalActivityIcon />
+                </ListItemIcon>
+                <ListItemText primary="Activities" />
+              </ListItem>
+            </NavLink>
+            <NavLink exact to="/events" onClick={this.props.onLinkClick}>
+              <ListItem button>
+                <ListItemIcon>
+                  <EventIcon />
+                </ListItemIcon>
+                <ListItemText primary="Events" />
+              </ListItem>
+            </NavLink>
+            <NavLink exact to="/transcript" onClick={this.props.onLinkClick}>
+              <ListItem button>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText primary="Transcript" />
+              </ListItem>
+            </NavLink>
+
             <div className="right-side-container">
               <GordonPeopleSearch />
               <GordonGlobalMenu onSignOut={this.props.onSignOut} />
