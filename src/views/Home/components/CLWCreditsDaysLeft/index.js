@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Card, { CardContent, CardHeader } from 'material-ui/Card';
-import { Pie, defaults } from 'react-chartjs-2';
+import Typography from 'material-ui/Typography';
+import { Pie, Doughnut, defaults } from 'react-chartjs-2';
 
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
@@ -11,8 +12,7 @@ export default class CLWCreditsDaysLeft extends Component {
   constructor(props) {
     super(props);
 
-    this.loadDaysLeft = this.loadDaysLeft.bind(this);
-    this.loadChapelCredits = this.loadChapelCredits.bind(this);
+    this.loadData = this.loadData.bind(this);
 
     this.state = {
       daysLeft: [],
@@ -23,25 +23,17 @@ export default class CLWCreditsDaysLeft extends Component {
   }
 
   componentWillMount() {
-    this.loadDaysLeft();
-    this.loadChapelCredits();
+    this.loadData();
   }
 
-  async loadDaysLeft() {
+  async loadData() {
     this.setState({ loading: true });
     try {
-      const daysLeft = await session.getDaysLeft();
-      this.setState({ loading: false, daysLeft });
-    } catch (error) {
-      this.setState({ error });
-    }
-  }
-
-  async loadChapelCredits() {
-    this.setState({ loading: true });
-    try {
-      const chapelCredits = await user.getChapelCredits();
-      this.setState({ loading: false, chapelCredits });
+      const daysLeftPromise = session.getDaysLeft();
+      const chapelCreditsPromise = user.getChapelCredits();
+      const daysLeft = await daysLeftPromise;
+      const chapelCredits = await chapelCreditsPromise;
+      this.setState({ loading: false, daysLeft, chapelCredits });
     } catch (error) {
       this.setState({ error });
     }
@@ -62,44 +54,95 @@ export default class CLWCreditsDaysLeft extends Component {
       const pastDays = this.state.daysLeft[1] - daysLeft;
 
       const options = {
-        options: {
-          legend: {
-            display: false,
+        cutoutPercentage: 25,
+        tooltips: {
+          callbacks: {
+            label: function(item, data) {
+              return data.datasets[item.datasetIndex].label[item.index]
+                     + ": " + data.datasets[item.datasetIndex].data[item.index];
+            }
+          }
+        },
+        legend: {
+          display: true,
+          position: 'top',
+          reverse: false,
+          labels: {
+            generateLabels: function(chart) {
+              var data = chart.data;
+              if (data.legendEntries.length && data.datasets.length) {
+                return data.legendEntries.map(function(label, i) {
+                  var meta = chart.getDatasetMeta(0);
+                  var ds = data.datasets[0];
+                  var arc = meta.data[i];
+                  var custom = arc && arc.custom || {};
+                  var fill = custom.backgroundColor ? custom.backgroundColor : data.legendColors[i];
+                  var stroke = custom.borderColor ? custom.borderColor : ds.borderColor;
+                  var bw = custom.borderWidth ? custom.borderWidth : ds.borderWidth;
+
+                  return {
+                    text: label,
+                    fillStyle: fill,
+                    strokeStyle: stroke,
+                    lineWidth: bw,
+                    hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+
+                    // Extra data used for toggling the correct item
+                    index: i
+                  };
+                });
+              }
+              return [];
+            }
           },
-          cutoutPercentage: 25,
         },
       };
+
       const { current, required } = this.state.chapelCredits;
       const remaining = current > required ? 0 : required - current;
-      const datasets = {
-        labels: ['Finished', 'Remaining'],
+
+      const data = {
+        legendEntries: ['Days in Semester', 'CL&W Credits'],
+        legendColors: [gordonColors.primary.blue, gordonColors.primary.cyan],
         datasets: [
           {
-            label: 'Days Left',
-            data: [120, 182],
+            label: ['Days Finished', 'Days Remaining'],
+            data: [pastDays, daysLeft],
             backgroundColor: [gordonColors.primary.blue, gordonColors.neutral.lightGray],
           },
           {
-            label: 'CL&W Credits',
-            data: [10, 20],
+            label: ['CL&W Credits Earned', 'CL&W Credits Remaining'],
+            data: [current, remaining],
             backgroundColor: [gordonColors.primary.cyan, gordonColors.neutral.lightGray],
           },
         ],
       };
-      content = <Pie data={datasets} options={options} />;
-      subheader = `${daysLeft} Days Left in Semester`;
-      if (current === 1) {
-        subheader += ` and ${current} CL&W Credit`;
-      } else {
-        subheader += ` and ${current} CL&W Credits`;
-      }
+
+      content = (<div>
+                  <Typography type='body1' style={{color: 'gray', textAlign: 'center'}}>
+                    {`${daysLeft} Days Left in Semester`}
+                    <br/>
+                    {`${current} CL&W Credit` + ((current === 1) ? '' : 's') + ' Earned'}
+                  </Typography>
+                  <br/>
+                  <Doughnut data={data} options={options} />
+                </div>);
+                
+    //   subheader = (`${daysLeft} Days Left in Semester` `${current} CL&W Credits Earned`);
+    //   if (current === 1) {
+    //     subheader += `${current} CL&W Credit Earned`;
+    //   } else {
+    //     subheader += ` ${current} CL&W Credits Earned`;
+    //   }
     }
 
     return (
       <Card>
         <CardContent>
-          <CardHeader title="Days Left" subheader={subheader} />
+          <br/>
+          <Typography type='headline' style={{textAlign: 'center'}}>CL&W Credits</Typography>
           {content}
+          <br/>
         </CardContent>
       </Card>
     );
