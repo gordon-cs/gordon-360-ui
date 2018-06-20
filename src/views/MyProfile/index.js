@@ -16,7 +16,7 @@ import Dialog, {
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
-import Activities from './Components/ActivityList';
+import Activities from './../../components/ActivityList';
 import GordonLoader from './../../components/Loader';
 
 import Cropper from 'react-cropper';
