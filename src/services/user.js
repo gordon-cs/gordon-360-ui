@@ -185,6 +185,46 @@ function setOnOffCampus(data) {
   }
   return data;
 }
+function setMajorObject(data) {
+  data.Majors = [];
+  if (data.Major1Description) {
+    data.Majors.push(data.Major1Description);
+  }
+  if (data.Major2Description) {
+    data.Majors.push(data.Major2Description);
+  }
+  if (data.Major3Description) {
+    data.Majors.push(data.Major3Description);
+  }
+  return data;
+}
+function setMinorObject(data) {
+  data.Minors = [];
+  if (data.Minor1Description) {
+    data.Minors.push(data.Minor1Description);
+  }
+  if (data.Minor2Description) {
+    data.Minors.push(data.Minor2Description);
+  }
+  if (data.Minor3Description) {
+    data.Minors.push(data.Minor3Description);
+  }
+  return data;
+}
+function formatCountry(profile) {
+  if (profile.Country) {
+    profile.Country = profile.Country.replace(/\w\S*/g, function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+    if (profile.Country.includes(',')) {
+      profile.Country =
+        profile.Country.slice(profile.Country.indexOf(',') + 2) +
+        ' ' +
+        profile.Country.slice(0, profile.Country.indexOf(','));
+    }
+  }
+  return profile;
+}
 function setClass(profile) {
   if (profile.PersonType === 'stu') {
     switch (profile.Class) {
@@ -192,7 +232,7 @@ function setClass(profile) {
         profile.Class = 'Freshman';
         break;
       case '2':
-        profile.Class = 'Sophmore';
+        profile.Class = 'Sophomore';
         break;
       case '3':
         profile.Class = 'Junior';
@@ -230,12 +270,14 @@ const getAttendedEvents = (username, termCode) => http.get(`events/chapel/${user
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<String>} Image as a Base64-encoded string
  */
-const getImage = username => {
+const getImage = async username => {
+  let pic;
   if (username) {
-    return http.get(`profiles/Image/${username}`);
+    pic = await http.get(`profiles/Image/${username}/`);
+  } else {
+    pic = await http.get('profiles/Image');
   }
-
-  return http.get('profiles/Image');
+  return pic;
 };
 
 /**
@@ -332,7 +374,7 @@ const getChapelCredits = async () => {
 const getProfile = username => {
   let profile;
   if (username) {
-    profile = http.get(`profiles/${username}`);
+    profile = http.get(`profiles/${username}/`);
   } else {
     profile = http.get('profiles');
   }
@@ -351,13 +393,18 @@ function toggleMobilePhonePrivacy() {
         //TODO handle error
       });
   };
-
   setPrivacy(newPrivacy);
 }
 
 const getMemberships = async id => {
   let memberships;
   memberships = await http.get(`memberships/student/${id}`);
+  return memberships;
+};
+
+const getPublicMemberships = async username => {
+  let memberships;
+  memberships = await http.get(`/memberships/student/username/${username}/`);
   return memberships;
 };
 
@@ -388,7 +435,10 @@ const getProfileInfo = async username => {
   let profile = await getProfile(username);
   formatName(profile);
   setClass(profile);
+  setMajorObject(profile);
+  formatCountry(profile);
   setOnOffCampus(profile);
+  setMinorObject(profile);
   return profile;
 };
 
@@ -399,6 +449,7 @@ export default {
   getChapelCredits,
   getImage,
   getLocalInfo,
+  getPublicMemberships,
   getProfileInfo,
   resetImage,
   postImage,

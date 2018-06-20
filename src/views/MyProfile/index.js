@@ -24,7 +24,7 @@ import 'cropperjs/dist/cropper.css';
 
 const CROP_DIM = 200; // pixels
 
-export default class Profile extends Component {
+export default class MyProfile extends Component {
   constructor(props) {
     super(props);
 
@@ -54,7 +54,7 @@ export default class Profile extends Component {
   };
 
   handleCloseSubmit = () => {
-    if (this.state.preview != null) {
+    if (this.state.preview) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
       user.postImage(croppedImage);
       window.didProfilePicUpdate = true;
@@ -94,7 +94,7 @@ export default class Profile extends Component {
   }
 
   minCropBoxDim(imgWidth, dispWidth) {
-    return CROP_DIM * dispWidth / imgWidth;
+    return (CROP_DIM * dispWidth) / imgWidth;
   }
 
   onDropAccepted(fileList) {
@@ -257,8 +257,7 @@ export default class Profile extends Component {
                               style={{
                                 'max-width': this.maxCropPreviewWidth(),
                                 'max-height':
-                                  this.maxCropPreviewWidth() *
-                                  1 /
+                                  this.maxCropPreviewWidth() / 
                                   this.state.cropperData.aspectRatio,
                                 justify: 'center',
                               }}
