@@ -4,6 +4,7 @@ import ActivityEdit from './views/ActivityEdit';
 import ActivityProfile from './views/ActivityProfile';
 import Home from './views/Home';
 import Help from './views/Help';
+import Transcript from './views/Transcript';
 import Events from './views/Events';
 import Profile from './views/Profile';
 
@@ -39,6 +40,11 @@ export default [
     name: 'Help',
     path: '/help',
     component: Help,
+  },
+  {
+    name: 'Transcript',
+    path: '/transcript',
+    component: Transcript,
   },
   {
     name: 'Events',

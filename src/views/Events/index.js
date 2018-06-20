@@ -13,6 +13,12 @@ import gordonEvent from './../../services/event';
 import EventItem from './components/EventItem';
 import GordonLoader from '../../components/Loader';
 
+const styles = {
+  searchBar: {
+    margin: '0 auto',
+  },
+};
+
 export default class Events extends Component {
   constructor(props) {
     super(props);
@@ -76,23 +82,26 @@ export default class Events extends Component {
     return (
       <section>
         <Grid container justify="center">
-          <Grid container alignItems="baseline" justify="center">
-            <Grid item xs={8} md={10} lg={5}>
-              <TextField
-                id="search"
-                label="Search"
-                value={this.state.search}
-                onChange={this.search('search')}
-                margin="none"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={4} md={2} lg={3}>
-              <Button raised color="primary" onClick={this.handleExpandClick}>
-                Filters
-              </Button>
+          <Grid item xs={12} md={12} lg={8}>
+            <Grid container alignItems="baseline" style={styles.searchBar}>
+              <Grid item xs={8} sm={9} md={10} lg={10}>
+                <TextField
+                  id="search"
+                  label="Search"
+                  value={this.state.search}
+                  onChange={this.search('search')}
+                  margin="none"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={4} sm={3} md={2} lg={2}>
+                <Button raised color="primary" onClick={this.handleExpandClick}>
+                  Filters
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
+
           <Grid item xs={11} md={12} lg={8}>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <FormGroup row>

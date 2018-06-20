@@ -247,25 +247,16 @@ const resetImage = () => {
 
 /**
  * upload a photo to user's profile, which is then used as the preferred photo
- * @param {String} dataURI for the image being uploaded
+ * @param {String} dataURI of the image being uploaded
+ * @return {Response} response of http request
  */
-
 const postImage = dataURI => {
   let imageData = new FormData();
   let blob = dataURItoBlob(dataURI);
-
   let type = blob.type.replace('image/', '');
-  console.log(blob);
+  let headerOptions = {};
   imageData.append('canvasImage', blob, 'canvasImage.' + type);
-  let jsonObject = { contentType: false, processData: false };
-
-  for (const [key, value] of imageData.entries()) {
-    jsonObject[key] = value;
-  }
-
-  console.log(jsonObject);
-
-  return http.post('profiles/image', jsonObject);
+  return http.post('profiles/image', imageData, headerOptions);
 };
 
 // convert data to blob
@@ -369,6 +360,30 @@ const getMemberships = async id => {
   memberships = await http.get(`memberships/student/${id}`);
   return memberships;
 };
+
+//compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
+function compareBySession(a, b) {
+  const sessA = a.SessionCode;
+  const sessB = b.SessionCode;
+
+  let comparison = 0;
+  if (sessA > sessB) {
+    comparison = 1;
+  } else if (sessA < sessB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+//returns an array of membership objects from backend server,
+//using asynchronous http.get request (via getMemberships function)
+//sorts by SessionCode
+const getTranscriptInfo = async id => {
+  let transcriptInfo = await getMemberships(id);
+  transcriptInfo.sort(compareBySession);
+  return transcriptInfo;
+};
+
 const getProfileInfo = async username => {
   let profile = await getProfile(username);
   formatName(profile);
@@ -387,4 +402,5 @@ export default {
   getProfileInfo,
   resetImage,
   postImage,
+  getTranscriptInfo,
 };
