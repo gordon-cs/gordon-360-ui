@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Card, { CardContent, CardHeader } from 'material-ui/Card';
+import Card, { CardContent, /* CardHeader */ } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
-import { Pie, Doughnut, defaults } from 'react-chartjs-2';
+import { Doughnut, defaults } from 'react-chartjs-2';
 
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
@@ -46,7 +46,6 @@ export default class CLWCreditsDaysLeft extends Component {
 
     defaults.global.legend.display = false;
     let content;
-    let subheader;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
@@ -75,7 +74,7 @@ export default class CLWCreditsDaysLeft extends Component {
                   var meta = chart.getDatasetMeta(0);
                   var ds = data.datasets[0];
                   var arc = meta.data[i];
-                  var custom = arc && arc.custom || {};
+                  var custom = (arc && arc.custom) || {};
                   var fill = custom.backgroundColor ? custom.backgroundColor : data.legendColors[i];
                   var stroke = custom.borderColor ? custom.borderColor : ds.borderColor;
                   var bw = custom.borderWidth ? custom.borderWidth : ds.borderWidth;
@@ -93,8 +92,10 @@ export default class CLWCreditsDaysLeft extends Component {
                 });
               }
               return [];
-            }
+            },
           },
+          fullWidth: false,
+          onClick: (e) => e.stopPropagation(), // keep click on legend from toggling data visibility
         },
       };
 
@@ -102,7 +103,7 @@ export default class CLWCreditsDaysLeft extends Component {
       const remaining = current > required ? 0 : required - current;
 
       const data = {
-        legendEntries: ['Days in Semester', 'CL&W Credits'],
+        legendEntries: ['Days Finished', 'CL&W Credits'],
         legendColors: [gordonColors.primary.blue, gordonColors.primary.cyan],
         datasets: [
           {
@@ -128,19 +129,13 @@ export default class CLWCreditsDaysLeft extends Component {
                   <Doughnut data={data} options={options} />
                 </div>);
                 
-    //   subheader = (`${daysLeft} Days Left in Semester` `${current} CL&W Credits Earned`);
-    //   if (current === 1) {
-    //     subheader += `${current} CL&W Credit Earned`;
-    //   } else {
-    //     subheader += ` ${current} CL&W Credits Earned`;
-    //   }
     }
 
     return (
       <Card>
         <CardContent>
           <br/>
-          <Typography type='headline' style={{textAlign: 'center'}}>CL&W Credits</Typography>
+          <Typography type='headline' style={{textAlign: 'center'}}>Christian Life & Worship Credits</Typography>
           {content}
           <br/>
         </CardContent>
