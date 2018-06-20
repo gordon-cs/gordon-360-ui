@@ -12,6 +12,7 @@ import Minors from './../../components/MinorList';
 import Activities from './../../components/ActivityList';
 import GordonLoader from './../../components/Loader';
 
+//Public profile view
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -27,12 +28,7 @@ export default class Profile extends Component {
       open: false,
     };
   }
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps.match.params.username);
-    if (this.props.match.params.username !== nextProps.match.params.username) {
-      this.loadProfile(nextProps);
-    }
-  }
+
   componentWillMount() {
     this.loadProfile(this.props);
   }
@@ -41,7 +37,7 @@ export default class Profile extends Component {
     this.setState({ username: searchedUser.match.params.username });
     try {
       const profile = await user.getProfileInfo(searchedUser.match.params.username);
-      console.log(this.state.username);
+
       this.setState({ loading: false, profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(searchedUser.match.params.username),
@@ -72,7 +68,7 @@ export default class Profile extends Component {
       this.state.profile.Country === 'United States Of America' ||
       this.state.profile.Country === ''
     ) {
-      address = `Home Town: ${this.state.profile.HomeCity} ${this.state.profile.HomeState}`;
+      address = `${this.state.profile.HomeCity} ${this.state.profile.HomeState}`;
     } else {
       address = `${this.state.profile.Country}`;
     }
@@ -104,6 +100,10 @@ export default class Profile extends Component {
           <Divider />
           <ListItem>
             <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Typography>Home: {address}</Typography>
           </ListItem>
           <Divider />
         </List>
