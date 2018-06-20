@@ -1,33 +1,32 @@
 @import '../../../../vars';
 
-.gordon-nav-avatar {
-  margin: 0;
-  padding: 1rem;
+.gordon-nav-avatar-right-corner {
+  // padding: 1rem;
   width: 100%;
+  margin-right: -24px;
 
   .label {
     display: inline;
   }
 
-  .placeholder {
+  .nav-avatar-placeholder {
     background-color: $primary-cyan;
-    height: 4rem;
+    height: 3rem;
   }
 
-  .image {
+  .nav-avatar-image {
     height: auto;
   }
 
-  .avatar {
-    margin-bottom: 1rem;
-    max-height: 4rem;
-    width: 4rem;
+  .nav-avatar {
+    max-height: 3rem;
+    width: 3rem;
   }
 
   // Override button centering content
-  &.button {
-    justify-content: start;
-  }
+  // &.nav-avatar-button {
+  //   padding: 1rem;
+  // }
 
   // Override button changing text to uppercase
   .text {

@@ -193,7 +193,7 @@ export default class Profile extends Component {
 
     return (
       <div>
-        <Grid container justify="center" style={{ marginTop: '71pt' }}>
+        <Grid container justify="center">
           <Grid item xs={12} lg={10}>
             <Card id="print">
               <CardContent>
@@ -257,7 +257,7 @@ export default class Profile extends Component {
                                   this.maxCropPreviewWidth() *
                                   1 /
                                   this.state.cropperData.aspectRatio,
-                                justify: 'center',
+                                // justify: 'center',
                               }}
                               autoCropArea={1}
                               viewMode={3}

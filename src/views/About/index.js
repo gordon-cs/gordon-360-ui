@@ -10,7 +10,7 @@ export default class About extends Component {
     };
 
     return (
-      <section style={{ marginTop: '71pt' }}>
+      <section>
         <br />
         <hr style={style} />
         <Typography type="headline" gutterBottom>

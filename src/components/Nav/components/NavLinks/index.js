@@ -7,6 +7,8 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import PeopleIcon from 'material-ui-icons/People';
+
 import './nav-links.css';
 
 export default class GordonNavLinks extends Component {
@@ -43,6 +45,14 @@ export default class GordonNavLinks extends Component {
               <DescriptionIcon />
             </ListItemIcon>
             <ListItemText primary="Transcript" />
+          </ListItem>
+        </NavLink>
+        <NavLink exact to="/transcript" onClick={this.props.onLinkClick}>
+          <ListItem button>
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="People Search" />
           </ListItem>
         </NavLink>
       </List>

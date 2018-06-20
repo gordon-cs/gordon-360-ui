@@ -50,7 +50,7 @@ export default class GordonGlobalMenu extends Component {
           open={open}
           onRequestClose={this.onClose}
         >
-          <MenuItem onClick={this.onSignOut}>Sign out</MenuItem>
+          <MenuItem onClick={this.onSignOut}>Sign Out</MenuItem>
           <Link to="/help">
             <MenuItem onClick={this.onClose}>Help</MenuItem>
           </Link>

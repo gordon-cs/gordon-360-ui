@@ -13,10 +13,11 @@ import HomeIcon from 'material-ui-icons/Home';
 import LocalActivityIcon from 'material-ui-icons/LocalActivity';
 import EventIcon from 'material-ui-icons/Event';
 import DescriptionIcon from 'material-ui-icons/Description';
-
+import PeopleIcon from 'material-ui-icons/People';
 import './header.css';
 import GordonGlobalMenu from './components/GlobalMenu';
 import GordonPeopleSearch from './components/PeopleSearch';
+import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
 
 const getRouteName = route => {
@@ -36,6 +37,13 @@ const getRouteName = route => {
   );
 };
 
+const styles = {
+  icon: {
+    color: '#ffffff',
+    marginRight: '-9px',
+  },
+};
+
 export default class GordonHeader extends Component {
   render() {
     return (
@@ -50,6 +58,7 @@ export default class GordonHeader extends Component {
             >
               <MenuIcon />
             </IconButton>
+            <img src={require('./GordonSeal.png')} alt="Gordon College" />
             <Typography className="title" type="title" color="inherit">
               <Switch>
                 {routes.map(route => (
@@ -63,42 +72,87 @@ export default class GordonHeader extends Component {
               </Switch>
             </Typography>
 
-            <NavLink exact to="/" onClick={this.props.onLinkClick} style={{ marginLeft: '50pt' }}>
-              <ListItem button>
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary="Home" />
-              </ListItem>
-            </NavLink>
-            <NavLink exact to="/activities" onClick={this.props.onLinkClick}>
-              <ListItem button>
-                <ListItemIcon>
-                  <LocalActivityIcon />
-                </ListItemIcon>
-                <ListItemText primary="Activities" />
-              </ListItem>
-            </NavLink>
-            <NavLink exact to="/events" onClick={this.props.onLinkClick}>
-              <ListItem button>
-                <ListItemIcon>
-                  <EventIcon />
-                </ListItemIcon>
-                <ListItemText primary="Events" />
-              </ListItem>
-            </NavLink>
-            <NavLink exact to="/transcript" onClick={this.props.onLinkClick}>
-              <ListItem button>
-                <ListItemIcon>
-                  <DescriptionIcon />
-                </ListItemIcon>
-                <ListItemText primary="Transcript" />
-              </ListItem>
-            </NavLink>
-
+            <div className="center-container">
+              <NavLink exact to="/" onClick={this.props.onLinkClick}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <HomeIcon style={styles.icon} />
+                  </ListItemIcon>
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography type="header" style={{ color: '#ffffff' }}>
+                        Home
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </NavLink>
+              <NavLink exact to="/activities" onClick={this.props.onLinkClick}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <LocalActivityIcon style={styles.icon} />
+                  </ListItemIcon>
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography type="header" style={{ color: '#ffffff' }}>
+                        Involvements
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </NavLink>
+              <NavLink exact to="/events" onClick={this.props.onLinkClick}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <EventIcon style={styles.icon} />
+                  </ListItemIcon>
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography type="header" style={{ color: '#ffffff' }}>
+                        Events
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </NavLink>
+              <NavLink exact to="/transcript" onClick={this.props.onLinkClick}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <DescriptionIcon style={styles.icon} />
+                  </ListItemIcon>
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography type="header" style={{ color: '#ffffff' }}>
+                        Transcript
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </NavLink>
+              <NavLink exact to="/transcript" onClick={this.props.onLinkClick}>
+                <ListItem button>
+                  <ListItemIcon>
+                    <PeopleIcon style={styles.icon} />
+                  </ListItemIcon>
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography type="header" style={{ color: '#ffffff' }}>
+                        People
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </NavLink>
+            </div>
             <div className="right-side-container">
               <GordonPeopleSearch />
-              <GordonGlobalMenu onSignOut={this.props.onSignOut} />
+              {/* <GordonGlobalMenu onSignOut={this.props.onSignOut} /> */}
+              <GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />
             </div>
           </Toolbar>
         </AppBar>
