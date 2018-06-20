@@ -45,7 +45,7 @@ export default class Help extends Component {
             leadership functions for assigned groups.
           </li>
           <li>
-            <strong>My rofile Red Dot</strong> &ndash; You have Subscriber or Membership requests
+            <strong>My Profile Red Dot</strong> &ndash; You have Subscriber or Membership requests
             for one or more of the groups you Lead or Advise! Process these to add new Subscribers,
             Members, and to assign them a membership type and a &ldquo;Title&rdquo; if appropriate.
             Titles will appear on the Official Transcript (be clever, but appropriate!).

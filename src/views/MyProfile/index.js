@@ -16,7 +16,7 @@ import Dialog, {
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
-import Activities from './Components/ActivityList';
+import Activities from './../../components/ActivityList';
 import GordonLoader from './../../components/Loader';
 
 import Cropper from 'react-cropper';
@@ -91,7 +91,7 @@ export default class MyProfile extends Component {
   }
 
   minCropBoxDim(imgWidth, dispWidth) {
-    return CROP_DIM * dispWidth / imgWidth;
+    return (CROP_DIM * dispWidth) / imgWidth;
   }
 
   onDropAccepted(fileList) {
@@ -254,8 +254,7 @@ export default class MyProfile extends Component {
                               style={{
                                 'max-width': this.maxCropPreviewWidth(),
                                 'max-height':
-                                  this.maxCropPreviewWidth() *
-                                  1 /
+                                  (this.maxCropPreviewWidth() * 1) /
                                   this.state.cropperData.aspectRatio,
                                 justify: 'center',
                               }}
