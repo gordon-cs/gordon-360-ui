@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Card, { CardContent, /* CardHeader */ } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
+import Grid from 'material-ui/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
 
 import { gordonColors } from '../../../../theme';
@@ -54,8 +55,8 @@ export default class CLWCreditsDaysLeft extends Component {
 
       const options = {
         cutoutPercentage: 25,
-        tooltips: {
-          callbacks: {
+        tooltips: { // Allow different tooltips for different datasets within the same pie;
+          callbacks: { // Code taken from https://github.com/chartjs/Chart.js/issues/1417
             label: function(item, data) {
               return data.datasets[item.datasetIndex].label[item.index]
                      + ": " + data.datasets[item.datasetIndex].data[item.index];
@@ -67,8 +68,15 @@ export default class CLWCreditsDaysLeft extends Component {
           position: 'top',
           reverse: false,
           labels: {
+            padding: 20,
             generateLabels: function(chart) {
+              chart.legend.afterFit = function() { // Hack for bigger space between legend & chart
+                this.height = this.height + 10; // see http://stackoverflow.com/a/42957884/1779106 
+              };                                // and https://codepen.io/jordanwillis/pen/ZeOYdL
               var data = chart.data;
+              // Code below is for custom legend entries and is based on part of the source code for
+              // ChartJS, found here:
+              // https://github.com/chartjs/Chart.js/blob/master/src/controllers/controller.doughnut.js#L40-L68
               if (data.legendEntries.length && data.datasets.length) {
                 return data.legendEntries.map(function(label, i) {
                   var meta = chart.getDatasetMeta(0);
@@ -86,15 +94,13 @@ export default class CLWCreditsDaysLeft extends Component {
                     lineWidth: bw,
                     hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
 
-                    // Extra data used for toggling the correct item
-                    index: i
+                    index: i // Extra data used for toggling the correct item
                   };
                 });
               }
               return [];
             },
           },
-          fullWidth: false,
           onClick: (e) => e.stopPropagation(), // keep click on legend from toggling data visibility
         },
       };
@@ -120,24 +126,27 @@ export default class CLWCreditsDaysLeft extends Component {
       };
 
       content = (<div>
-                  <Typography type='body1' style={{color: 'gray', textAlign: 'center'}}>
-                    {`${daysLeft} Days Left in Semester`}
-                    <br/>
-                    {`${current} CL&W Credit` + ((current === 1) ? '' : 's') + ' Earned'}
-                  </Typography>
-                  <br/>
-                  <Doughnut data={data} options={options} />
+                  <Grid container justify='space-around' spacing={0} style={{paddingTop: 5, paddingBottom: 5}}>
+                    <Grid item>
+                      <Typography type='body1' style={{color: 'gray', textAlign: 'center'}}>
+                        {`${daysLeft} Days Left in Semester`}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography type='body1' style={{color: 'gray', textAlign: 'center'}}>
+                        {`${current} CL&W Credit` + ((current === 1) ? '' : 's') + ' Earned'}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Doughnut data={data} height={200} options={options} />
                 </div>);
-                
     }
 
     return (
       <Card>
         <CardContent>
-          <br/>
-          <Typography type='headline' style={{textAlign: 'center'}}>Christian Life & Worship Credits</Typography>
+          <Typography type='headline' style={{textAlign: 'center', paddingTop: 5 }}>Christian Life & Worship Credits</Typography>
           {content}
-          <br/>
         </CardContent>
       </Card>
     );
