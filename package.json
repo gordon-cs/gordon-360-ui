@@ -13,6 +13,7 @@
     "luxon": "^0.2.12",
     "material-ui": "^1.0.0-beta.22",
     "material-ui-icons": "^1.0.0-beta.17",
+    "material-ui-search-bar": "^0.4.2",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-chartjs-2": "^2.6.4",
@@ -75,11 +76,11 @@
   },
   "proxy": {
     "/api": {
-      "target": "https://360Api.gordon.edu",
+      "target": "https://360ApiTrain.gordon.edu",
       "changeOrigin": true
     },
     "/token": {
-      "target": "https://360Api.gordon.edu/",
+      "target": "https://360ApiTrain.gordon.edu/",
       "changeOrigin": true
     }
   }
