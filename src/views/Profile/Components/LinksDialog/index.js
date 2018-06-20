@@ -19,12 +19,12 @@ export default class LinksDialog extends React.Component {
     this.state = {
       facebookInput: '',
       twitterInput: '',
-      linkedinInput: '',
+      linkedInInput: '',
       instagramInput: '',
       formErrors: {
         facebookInput: '',
         twitterInput: '',
-        linkedinInput: '',
+        linkedInInput: '',
         instagramInput: '',
       },
       fbValid: true,
@@ -33,6 +33,26 @@ export default class LinksDialog extends React.Component {
       igValid: true,
       formValid: true,
     };
+  }
+
+  // Update local state as parent state changes
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.facebookLink !== this.props.facebookLink) {
+      this.setState({ facebookInput: nextProps.facebookLink });
+    }
+    if (nextProps.twitterLink !== this.props.twitterLink) {
+      this.setState({ twitterInput: nextProps.twitterLink });
+    }
+    if (nextProps.linkedInLink !== this.props.linkedInLink) {
+      if (this.props.linkedInLink === undefined) {
+        this.setState({ linkedInInput: '' });
+      } else {
+        this.setState({ linkedInInput: nextProps.linkedInLink });
+      }
+    }
+    if (nextProps.instagramLink !== this.props.instagramLink) {
+      this.setState({ instagramInput: nextProps.instagramLink });
+    }
   }
 
   validateField(fieldName, value) {
@@ -52,9 +72,9 @@ export default class LinksDialog extends React.Component {
         twValid = value === '' || value.indexOf('https://twitter.com/') === 0;
         fieldValidationErrors.twitterInput = twValid ? '' : 'Not a valid twitter link';
         break;
-      case 'linkedinInput':
+      case 'linkedInInput':
         liValid = value === '' || value.indexOf('https://www.linkedin.com/') === 0;
-        fieldValidationErrors.linkedinInput = liValid ? '' : 'Not a valid linkedIn link';
+        fieldValidationErrors.linkedInInput = liValid ? '' : 'Not a valid linkedIn link';
         break;
       case 'instagramInput':
         igValid = value === '' || value.indexOf('https://www.instagram.com/') === 0;
@@ -87,10 +107,10 @@ export default class LinksDialog extends React.Component {
 
     var fb = this.state.facebookInput;
     var tw = this.state.twitterInput;
-    var li = this.state.linkedinInput;
+    var li = this.state.linkedInInput;
     var ig = this.state.instagramInput;
 
-    this.props.onLinksChange(fb, tw, li, ig);
+    this.props.onDialogSubmit(fb, tw, li, ig);
     this.handleClose();
   };
 
@@ -104,30 +124,33 @@ export default class LinksDialog extends React.Component {
   handleClose = () => {
     this.props.handleSocialLinksDialogClose();
 
-    //reset invalid input upon cancel
-
-    if (!this.state.fbValid) {
+    // Reset changed fields
+    if (this.state.facebookInput !== this.props.facebookLink) {
       this.setState({
-        facebookInput: '',
+        facebookInput: this.props.facebookLink,
         fbValid: true,
+        formErrors: { facebookInput: '' },
       });
     }
-    if (!this.state.twValid) {
+    if (this.state.twitterInput !== this.props.twitterLink) {
       this.setState({
-        twitterInput: '',
+        twitterInput: this.props.twitterLink,
         twValid: true,
+        formErrors: { twitterInput: '' },
       });
     }
-    if (!this.state.liValid) {
+    if (this.state.linkedInInput !== this.props.linkedInLink) {
       this.setState({
-        linkedinInput: '',
+        linkedInInput: this.props.linkedInLink,
         liValid: true,
+        formErrors: { linkedInInput: '' },
       });
     }
-    if (!this.state.igValid) {
+    if (this.state.instagramInput !== this.props.instagramLink) {
       this.setState({
-        instagramInput: '',
+        instagramInput: this.props.instagramLink,
         igValid: true,
+        formErrors: { instagramInput: '' },
       });
     }
     this.setState({ formValid: true });
@@ -135,14 +158,19 @@ export default class LinksDialog extends React.Component {
 
   render() {
     const button = {
-      background: '#00AEEF',
+      background: '#00AEEF', //Gordon color: cyan. Couldn't figure out how to import themes file.
       color: 'white',
     };
 
     return (
       <DialogContent>
         <form onSubmit={this.handleSubmit}>
-          <Typography style={{ color: 'red' }}>{this.state.formErrors.facebookInput}</Typography>
+          <Typography style={{ color: 'red' }}>
+            {this.state.formErrors.facebookInput}
+            {this.state.formErrors.twitterInput}
+            {this.state.formErrors.linkedInInput}
+            {this.state.formErrors.instagramInput}
+          </Typography>
           <Grid item>
             <FacebookIcon alignItems="center" />
             <TextField
@@ -168,8 +196,8 @@ export default class LinksDialog extends React.Component {
             <TextField
               id="linkedInInput"
               label=" LinkedIn link"
-              value={this.state.linkedinInput}
-              onChange={this.handleChange('linkedinInput')}
+              value={this.state.linkedInInput}
+              onChange={this.handleChange('linkedInInput')}
               error={!this.state.liValid}
             />
           </Grid>

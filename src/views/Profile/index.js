@@ -32,7 +32,7 @@ export default class Profile extends Component {
     super(props);
 
     this.handleExpandClick = this.handleExpandClick.bind(this);
-    this.onLinksChange = this.onLinksChange.bind(this);
+    this.onDialogSubmit = this.onDialogSubmit.bind(this);
 
     this.state = {
       username: String,
@@ -90,7 +90,6 @@ export default class Profile extends Component {
   }
   onDrop(preview) {
     this.setState({ preview });
-    console.log(preview);
   }
   rand() {
     return Math.round(Math.random() * 20) - 10;
@@ -119,30 +118,46 @@ export default class Profile extends Component {
     } else {
       this.setState({ button: 'Make Public' });
     }
+    // Set state of social media links to database values after load.
+    // If not empty, add domain name back in for display and buttons.
+    this.setState({
+      facebookLink:
+        this.state.profile.Facebook === ''
+          ? ''
+          : 'https://www.facebook.com/' + this.state.profile.Facebook,
+      twitterLink:
+        this.state.profile.Twitter === ''
+          ? ''
+          : 'https://twitter.com/' + this.state.profile.Twitter,
+      linkedInLink:
+        this.state.profile.LinkedIn === ''
+          ? ''
+          : 'https://www.linkedin.com/in/' + this.state.profile.LinkedIn,
+      instagramLink:
+        this.state.profile.Instagram === ''
+          ? ''
+          : 'https://www.instagram.com/' + this.state.profile.Instagram,
+    });
   }
 
-  onLinksChange(fb, tw, li, ig) {
-    console.log('onLinksChange- fb: ' + fb);
-    console.log('onLinksChange- tw: ' + tw);
-    console.log('onLinksChange- li: ' + li);
-    console.log('onLinksChange- ig: ' + ig);
-
-    //Update links that have changed
+  onDialogSubmit(fb, tw, li, ig) {
+    // For links that have changed, update this.state
+    // and send change to database.
     if (fb !== this.state.facebookLink) {
       this.setState({ facebookLink: fb });
-      user.enterSocialLink('facebook', fb);
+      user.updateSocialLink('facebook', fb);
     }
     if (tw !== this.state.twitterLink) {
       this.setState({ twitterLink: tw });
-      user.enterSocialLink('twitter', tw);
+      user.updateSocialLink('twitter', tw);
     }
     if (li !== this.state.linkedInLink) {
       this.setState({ linkedInLink: li });
-      user.enterSocialLink('linkedin', li);
+      user.updateSocialLink('linkedin', li);
     }
     if (ig !== this.state.instagramLink) {
       this.setState({ instagramLink: ig });
-      user.enterSocialLink('instagram', ig);
+      user.updateSocialLink('instagram', ig);
     }
   }
 
@@ -164,8 +179,9 @@ export default class Profile extends Component {
 
     let linksDialog = (
       <LinksDialog
-        onLinksChange={this.onLinksChange}
+        onDialogSubmit={this.onDialogSubmit}
         handleSocialLinksDialogClose={this.handleSocialLinksDialogClose}
+        {...this.state}
       />
     );
 
@@ -178,6 +194,49 @@ export default class Profile extends Component {
       ));
     }
 
+    // Define what icon buttons will display
+    // (only the sites that have links in database)
+    let facebookButton;
+    let twitterButton;
+    let linkedInButton;
+    let instagramButton;
+    if (this.state.facebookLink !== '') {
+      facebookButton = (
+        <Grid item>
+          <Link to={this.state.facebookLink} target="_blank">
+            <FacebookIcon />
+          </Link>
+        </Grid>
+      );
+    }
+    if (this.state.twitterLink !== '') {
+      twitterButton = (
+        <Grid item>
+          <Link to={this.state.twitterLink} target="_blank">
+            <TwitterIcon />
+          </Link>
+        </Grid>
+      );
+    }
+    if (this.state.linkedInLink !== '') {
+      linkedInButton = (
+        <Grid item>
+          <Link to={this.state.linkedInLink} target="_blank">
+            <LinkedInIcon />
+          </Link>
+        </Grid>
+      );
+    }
+    if (this.state.instagramLink !== '') {
+      instagramButton = (
+        <Grid item>
+          <Link to={this.state.instagramLink} target="_blank">
+            <InstagramIcon />
+          </Link>
+        </Grid>
+      );
+    }
+
     return (
       <div>
         <Grid container>
@@ -188,15 +247,26 @@ export default class Profile extends Component {
                   <Grid item xs={6} sm={6} md={6} lg={4}>
                     <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
                   </Grid>
-
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <CardHeader
-                      title={this.state.profile.fullName}
-                      subheader={this.state.profile.Class}
-                    />
-                    <Button onClick={this.handleOpen} raised style={button}>
-                      Update Photo
-                    </Button>
+                  <Grid container direction="column" spacing={16} xs={6} sm={6} md={6} lg={4}>
+                    <Grid item>
+                      <CardHeader
+                        title={this.state.profile.fullName}
+                        subheader={this.state.profile.Class}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Grid container>
+                        {facebookButton}
+                        {twitterButton}
+                        {linkedInButton}
+                        {instagramButton}
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Button onClick={this.handleOpen} raised style={button}>
+                        Update Photo
+                      </Button>
+                    </Grid>
                     <Dialog
                       open={this.state.open}
                       keepMounted
@@ -227,57 +297,23 @@ export default class Profile extends Component {
                         </Button>
                       </DialogActions>
                     </Dialog>
-                  </Grid>
-
-                  <List>
-                    <Divider />
-                    <ListItem>
-                      <Typography>
-                        <FacebookIcon /> {this.state.facebookLink} {this.state.profile.facebook}
-                      </Typography>
-                    </ListItem>
-                    <Divider />
-                    <Divider />
-                    <ListItem>
-                      <Typography>
-                        <TwitterIcon /> {this.state.twitterLink} {this.state.profile.twitter}
-                      </Typography>
-                    </ListItem>
-                    <Divider />
-                    <Divider />
-                    <ListItem>
-                      <Typography>
-                        <LinkedInIcon /> {this.state.linkedInLink} {this.state.profile.linkedIn}
-                      </Typography>
-                    </ListItem>
-                    <Divider />
-                    <Divider />
-                    <ListItem>
-                      <Typography>
-                        <InstagramIcon /> {this.state.instagramLink} {this.state.profile.instagram}
-                      </Typography>
-                    </ListItem>
-                    <Divider />
-                  </List>
-
-                  <Grid item xs={3} sm={5} md={5} lg={7}>
-                    <Button onClick={this.handleSocialLinksDialogOpen} raised style={button}>
-                      Edit your social media links
-                    </Button>
-                    <Dialog
-                      open={this.state.socialLinksDialogOpen}
-                      keepMounted
-                      onClose={this.handleSocialLinksDialogClose}
-                      aria-labelledby="alert-dialog-slide-title"
-                      aria-describedby="alert-dialog-slide-description"
-                    >
-                      {/*TODO: make each of these forms into a separate component
-                    get them to get their data onto the link part on the profile page*/}
-                      <DialogTitle id="simple-dialog-title">
+                    <Grid item>
+                      <Button onClick={this.handleSocialLinksDialogOpen} raised style={button}>
                         Edit your social media links
-                      </DialogTitle>
-                      <DialogContent>{linksDialog}</DialogContent>
-                    </Dialog>
+                      </Button>
+                      <Dialog
+                        open={this.state.socialLinksDialogOpen}
+                        keepMounted
+                        onClose={this.handleSocialLinksDialogClose}
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                      >
+                        <DialogTitle id="simple-dialog-title">
+                          Edit your social media links
+                        </DialogTitle>
+                        <DialogContent>{linksDialog}</DialogContent>
+                      </Dialog>
+                    </Grid>
                   </Grid>
                 </Grid>
               </CardContent>

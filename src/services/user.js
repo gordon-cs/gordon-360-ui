@@ -324,11 +324,9 @@ const getProfileInfo = async username => {
   return profile;
 };
 
-function enterSocialLink(type, link) {
-  console.log('enterSocialLinks- type: ' + type);
-  console.log('enterSocialLinks- link: ' + link);
-  let url;
+function updateSocialLink(type, link) {
   let linkToSend;
+  let url;
   //Get link ready to send to API
   //Remove domain names
   switch (type) {
@@ -337,28 +335,20 @@ function enterSocialLink(type, link) {
       break;
     case 'twitter':
       linkToSend = link.substring(20);
-      if (linkToSend.indexOf('?') > 0) {
-        linkToSend = linkToSend.slice(0, linkToSend.indexOf('?'));
-      }
       break;
     case 'linkedin':
       linkToSend = link.substring(28);
-      if (linkToSend.slice(-1) === '/') {
-        linkToSend = linkToSend.slice(0, -1);
-      }
       break;
     case 'instagram':
       linkToSend = link.substring(26);
       break;
   }
-  console.log('enterSocialLinks- linkToSend: ' + linkToSend);
   linkToSend = encodeURIComponent(linkToSend);
 
   url = {
     [type]: linkToSend,
   };
   //Send put request
-
   return http.put('profiles/' + type, url).catch(() => {
     console.log('put requested');
   });
@@ -372,5 +362,5 @@ export default {
   getImage,
   getLocalInfo,
   getProfileInfo,
-  enterSocialLink,
+  updateSocialLink,
 };
