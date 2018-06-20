@@ -55,7 +55,6 @@ export default class Profile extends Component {
 
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
-      console.log('preview \n' + this.state.preview);
       user.postImage(this.state.preview);
       var imageNoHeader = this.state.preview.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({ image: imageNoHeader });
