@@ -55,10 +55,11 @@ export default class Profile extends Component {
 
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
-      user.postImage(this.state.preview);
-      var imageNoHeader = this.state.preview.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-      this.setState({ image: imageNoHeader });
+      var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      user.postImage(croppedImage);
       window.didProfilePicUpdate = true;
+      var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+      this.setState({ image: imageNoHeader });
       this.setState({ open: false, preview: null });
     }
   };
