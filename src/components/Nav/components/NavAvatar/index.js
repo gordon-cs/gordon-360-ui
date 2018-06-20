@@ -16,9 +16,7 @@ const styles = theme => ({
 class GordonNavAvatar extends Component {
   constructor(props) {
     super(props);
-
     this.getInitials = this.getInitials.bind(this);
-
     this.state = {
       email: null,
       image: null,
@@ -27,16 +25,31 @@ class GordonNavAvatar extends Component {
     };
   }
   async componentWillMount() {
+    this.loadAvatar();
+  }
+  componentDidMount() {
+    setInterval(this.checkPeer.bind(this), 1500);
+  }
+
+  async loadAvatar() {
     const { name, user_name: username } = user.getLocalInfo();
     this.setState({ name, username });
     const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
       await user.getProfileInfo(),
       await user.getImage(),
     ]);
-
     const image = preferredImage || defaultImage;
-
     this.setState({ email, image });
+  }
+  /**
+   * This method checks a peer component Profile
+   * and rerenders the avatar if the Profile picture is updated
+   */
+  checkPeer() {
+    if (window.didProfilePicUpdate) {
+      this.loadAvatar();
+      window.didProfilePicUpdate = false;
+    }
   }
   getInitials() {
     if (this.state.username) {

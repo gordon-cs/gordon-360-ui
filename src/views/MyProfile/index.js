@@ -56,9 +56,10 @@ export default class MyProfile extends Component {
   handleCloseSubmit = () => {
     if (this.state.preview) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      user.postImage(croppedImage);
+      window.didProfilePicUpdate = true;
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({ image: imageNoHeader });
-      // API Call and reload user image in navbar or refresh page
       this.setState({ open: false, preview: null });
     }
   };
@@ -68,7 +69,9 @@ export default class MyProfile extends Component {
   };
 
   handleResetImage = () => {
-    // API Call!
+    user.resetImage();
+    this.loadProfile();
+    window.didProfilePicUpdate = true;
     this.setState({ open: false, preview: null });
   };
 
@@ -254,7 +257,7 @@ export default class MyProfile extends Component {
                               style={{
                                 'max-width': this.maxCropPreviewWidth(),
                                 'max-height':
-                                  (this.maxCropPreviewWidth() * 1) /
+                                  this.maxCropPreviewWidth() / 
                                   this.state.cropperData.aspectRatio,
                                 justify: 'center',
                               }}
