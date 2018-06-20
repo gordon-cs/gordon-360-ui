@@ -170,6 +170,10 @@ export default class Profile extends Component {
           </ListItem>
           <Divider />
           {phone}
+          <ListItem>
+            <Typography>Home: {address}</Typography>
+          </ListItem>
+          <Divider />
         </List>
       );
     }
@@ -213,20 +217,7 @@ export default class Profile extends Component {
 
           <Grid item xs={12} sm={12} md={6} lg={6}>
             <Grid container>
-              <Grid item xs={12}>
-                <Card>
-                  <CardContent>
-                    <CardHeader title="Home Address" />
-                    <ListItem>
-                      <Typography>{address}</Typography>
-                    </ListItem>
-                    <Divider />
-                  </CardContent>
-                </Card>
-              </Grid>
-
               {office}
-
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
