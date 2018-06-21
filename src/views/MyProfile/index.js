@@ -21,18 +21,19 @@ import GordonLoader from './../../components/Loader';
 
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import { Switch } from 'material-ui';
 
 const CROP_DIM = 200; // pixels
 
-export default class MyProfile extends Component {
+export default class Profile extends Component {
   constructor(props) {
     super(props);
 
-    this.handleExpandClick = this.handleExpandClick.bind(this);
+    this.handleChangePrivacy = this.handleChangePrivacy.bind(this);
 
     this.state = {
       username: String,
-      button: String,
+      privacy: Number,
       image: null,
       preview: null,
       loading: true,
@@ -44,8 +45,7 @@ export default class MyProfile extends Component {
     };
   }
 
-  handleExpandClick() {
-    this.changePrivacy();
+  handleChangePrivacy() {
     user.toggleMobilePhonePrivacy();
   }
 
@@ -54,7 +54,7 @@ export default class MyProfile extends Component {
   };
 
   handleCloseSubmit = () => {
-    if (this.state.preview) {
+    if (this.state.preview != null) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
       user.postImage(croppedImage);
       window.didProfilePicUpdate = true;
@@ -75,14 +75,6 @@ export default class MyProfile extends Component {
     this.setState({ open: false, preview: null });
   };
 
-  changePrivacy() {
-    if (this.state.button === 'Make Public') {
-      this.setState({ button: 'Make Private' });
-    } else {
-      this.setState({ button: 'Make Public' });
-    }
-  }
-
   maxCropPreviewWidth() {
     const breakpointWidth = 800;
     const smallScreenRatio = 0.75;
@@ -94,7 +86,7 @@ export default class MyProfile extends Component {
   }
 
   minCropBoxDim(imgWidth, dispWidth) {
-    return (CROP_DIM * dispWidth) / imgWidth;
+    return CROP_DIM * dispWidth / imgWidth;
   }
 
   onDropAccepted(fileList) {
@@ -134,7 +126,6 @@ export default class MyProfile extends Component {
   }
 
   componentWillMount() {
-    // const { username } = this.props.match.params.username;
     this.loadProfile();
   }
 
@@ -142,6 +133,7 @@ export default class MyProfile extends Component {
     this.setState({ loading: true });
     try {
       const profile = await user.getProfileInfo();
+      this.setState({ privacy: profile.IsMobilePhonePrivate });
       this.setState({ loading: false, profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
@@ -151,11 +143,6 @@ export default class MyProfile extends Component {
       this.setState({ image, loading: false, activities });
     } catch (error) {
       this.setState({ error });
-    }
-    if (this.state.profile.IsMobilePhonePrivate === 0) {
-      this.setState({ button: 'Make Private' });
-    } else {
-      this.setState({ button: 'Make Public' });
     }
   }
 
@@ -257,7 +244,8 @@ export default class MyProfile extends Component {
                               style={{
                                 'max-width': this.maxCropPreviewWidth(),
                                 'max-height':
-                                  this.maxCropPreviewWidth() / 
+                                  this.maxCropPreviewWidth() *
+                                  1 /
                                   this.state.cropperData.aspectRatio,
                                 justify: 'center',
                               }}
@@ -326,14 +314,29 @@ export default class MyProfile extends Component {
                       <Divider />
 
                       <ListItem>
-                        <Grid item xs={6} sm={7} md={8} lg={10}>
-                          <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
+                        <Grid container xs={6} sm={6} md={6} lg={6}>
+                          <Grid item>
+                            <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
+                          </Grid>
                         </Grid>
-
-                        <Grid item xs={6} sm={5} md={4} lg={1}>
-                          <Button onClick={this.handleExpandClick} raised style={style.button}>
-                            {this.state.button}
-                          </Button>
+                        <Grid
+                          container
+                          alignItems="center"
+                          justify="flex-end"
+                          xs={8}
+                          sm={6}
+                          md={6}
+                          lg={6}
+                        >
+                          <Grid item>
+                            <Switch
+                              onClick={this.handleChangePrivacy}
+                              checked={!this.state.privacy}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
+                          </Grid>
                         </Grid>
                       </ListItem>
 
@@ -356,6 +359,9 @@ export default class MyProfile extends Component {
                       </ListItem>
 
                       <Divider />
+
+                      <Typography>On Campus Phone: {this.state.profile.OnCampusPhone}</Typography>
+                      <Typography>Department: {this.state.profile.Dept}</Typography>
                     </List>
 
                     <CardHeader title="Home Address" />
