@@ -36,13 +36,6 @@ const getRouteName = route => {
   );
 };
 
-const styles = {
-  icon: {
-    color: '#ffffff',
-    marginRight: '-9px',
-  },
-};
-
 export default class GordonHeader extends Component {
   state = {
     value: 0,
@@ -80,14 +73,7 @@ export default class GordonHeader extends Component {
             </Typography>
             <div className="center-container">
               <Tabs value={this.state.value} onChange={this.handleChange} fullWidth>
-                <Tab
-                  className="tab"
-                  label="Wrapping Label"
-                  icon={<HomeIcon />}
-                  label="Home"
-                  component={NavLink}
-                  to="/"
-                />
+                <Tab className="tab" icon={<HomeIcon />} label="Home" component={NavLink} to="/" />
                 <Tab
                   className="tab"
                   icon={<LocalActivityIcon />}
