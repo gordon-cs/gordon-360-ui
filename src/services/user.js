@@ -185,6 +185,46 @@ function setOnOffCampus(data) {
   }
   return data;
 }
+function setMajorObject(data) {
+  data.Majors = [];
+  if (data.Major1Description) {
+    data.Majors.push(data.Major1Description);
+  }
+  if (data.Major2Description) {
+    data.Majors.push(data.Major2Description);
+  }
+  if (data.Major3Description) {
+    data.Majors.push(data.Major3Description);
+  }
+  return data;
+}
+function setMinorObject(data) {
+  data.Minors = [];
+  if (data.Minor1Description) {
+    data.Minors.push(data.Minor1Description);
+  }
+  if (data.Minor2Description) {
+    data.Minors.push(data.Minor2Description);
+  }
+  if (data.Minor3Description) {
+    data.Minors.push(data.Minor3Description);
+  }
+  return data;
+}
+function formatCountry(profile) {
+  if (profile.Country) {
+    profile.Country = profile.Country.replace(/\w\S*/g, function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+    if (profile.Country.includes(',')) {
+      profile.Country =
+        profile.Country.slice(profile.Country.indexOf(',') + 2) +
+        ' ' +
+        profile.Country.slice(0, profile.Country.indexOf(','));
+    }
+  }
+  return profile;
+}
 function setClass(profile) {
   if (profile.PersonType === 'stu') {
     switch (profile.Class) {
@@ -192,7 +232,7 @@ function setClass(profile) {
         profile.Class = 'Freshman';
         break;
       case '2':
-        profile.Class = 'Sophmore';
+        profile.Class = 'Sophomore';
         break;
       case '3':
         profile.Class = 'Junior';
@@ -230,13 +270,60 @@ const getAttendedEvents = (username, termCode) => http.get(`events/chapel/${user
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<String>} Image as a Base64-encoded string
  */
-const getImage = username => {
+const getImage = async username => {
+  let pic;
   if (username) {
-    return http.get(`profiles/Image/${username}`);
+    pic = await http.get(`profiles/Image/${username}/`);
+  } else {
+    pic = await http.get('profiles/Image');
   }
-
-  return http.get('profiles/Image');
+  return pic;
 };
+
+/**
+ * Reset the current user's from preferred image to user's default image
+ */
+const resetImage = () => {
+  http.post('/profiles/image/reset', '');
+};
+
+/**
+ * upload a photo to user's profile, which is then used as the preferred photo
+ * @param {String} dataURI of the image being uploaded
+ * @return {Response} response of http request
+ */
+const postImage = dataURI => {
+  let imageData = new FormData();
+  let blob = dataURItoBlob(dataURI);
+  let type = blob.type.replace('image/', '');
+  let headerOptions = {};
+  imageData.append('canvasImage', blob, 'canvasImage.' + type);
+  return http.post('profiles/image', imageData, headerOptions);
+};
+
+// convert data to blob
+function dataURItoBlob(dataURI) {
+  // convert base64/URLEncoded data component to raw binary data held in a string
+  var byteString;
+  if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
+  else byteString = unescape(dataURI.split(',')[1]);
+
+  console.log(byteString);
+  // separate out the mime component
+  var mimeString = dataURI
+    .split(',')[0]
+    .split(':')[1]
+    .split(';')[0];
+
+  // write the bytes of the string to a typed array
+  var ia = new Uint8Array(byteString.length);
+  for (var i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  console.log([ia]);
+  console.log(mimeString);
+  return new Blob([ia], { type: mimeString });
+}
 
 /**
  * Get local info encoded in payload of token
@@ -287,7 +374,7 @@ const getChapelCredits = async () => {
 const getProfile = username => {
   let profile;
   if (username) {
-    profile = http.get(`profiles/${username}`);
+    profile = http.get(`profiles/${username}/`);
   } else {
     profile = http.get('profiles');
   }
@@ -306,7 +393,6 @@ function toggleMobilePhonePrivacy() {
         //TODO handle error
       });
   };
-
   setPrivacy(newPrivacy);
 }
 
@@ -316,11 +402,43 @@ const getMemberships = async id => {
   return memberships;
 };
 
+const getPublicMemberships = async username => {
+  let memberships;
+  memberships = await http.get(`/memberships/student/username/${username}/`);
+  return memberships;
+};
+
+//compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
+function compareBySession(a, b) {
+  const sessA = a.SessionCode;
+  const sessB = b.SessionCode;
+
+  let comparison = 0;
+  if (sessA > sessB) {
+    comparison = 1;
+  } else if (sessA < sessB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+//returns an array of membership objects from backend server,
+//using asynchronous http.get request (via getMemberships function)
+//sorts by SessionCode
+const getTranscriptInfo = async id => {
+  let transcriptInfo = await getMemberships(id);
+  transcriptInfo.sort(compareBySession);
+  return transcriptInfo;
+};
+
 const getProfileInfo = async username => {
   let profile = await getProfile(username);
   formatName(profile);
   setClass(profile);
+  setMajorObject(profile);
+  formatCountry(profile);
   setOnOffCampus(profile);
+  setMinorObject(profile);
   return profile;
 };
 
@@ -361,6 +479,10 @@ export default {
   getChapelCredits,
   getImage,
   getLocalInfo,
+  getPublicMemberships,
   getProfileInfo,
+  resetImage,
+  postImage,
+  getTranscriptInfo,
   updateSocialLink,
 };

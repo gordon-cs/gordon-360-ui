@@ -2,6 +2,7 @@ import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import HomeIcon from 'material-ui-icons/Home';
 import LocalActivityIcon from 'material-ui-icons/LocalActivity';
 import EventIcon from 'material-ui-icons/Event';
+import DescriptionIcon from 'material-ui-icons/Description';
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -34,6 +35,14 @@ export default class GordonNavLinks extends Component {
               <EventIcon />
             </ListItemIcon>
             <ListItemText primary="Events" />
+          </ListItem>
+        </NavLink>
+        <NavLink exact to="/transcript" onClick={this.props.onLinkClick}>
+          <ListItem button>
+            <ListItemIcon>
+              <DescriptionIcon />
+            </ListItemIcon>
+            <ListItemText primary="Transcript" />
           </ListItem>
         </NavLink>
       </List>

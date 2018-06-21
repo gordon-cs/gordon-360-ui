@@ -41,12 +41,12 @@ export default class Help extends Component {
             Experience Portfolio (coming 2018-19, or sooner!).
           </li>
           <li>
-            <strong>Profile</strong> &ndash; Managing your profile, and managing any advising or
+            <strong>My Profile</strong> &ndash; Managing your profile, and managing any advising or
             leadership functions for assigned groups.
           </li>
           <li>
-            <strong>Profile Red Dot</strong> &ndash; You have Subscriber or Membership requests for
-            one or more of the groups you Lead or Advise! Process these to add new Subscribers,
+            <strong>My Profile Red Dot</strong> &ndash; You have Subscriber or Membership requests
+            for one or more of the groups you Lead or Advise! Process these to add new Subscribers,
             Members, and to assign them a membership type and a &ldquo;Title&rdquo; if appropriate.
             Titles will appear on the Official Transcript (be clever, but appropriate!).
           </li>
@@ -98,7 +98,7 @@ export default class Help extends Component {
           </li>
           <li>
             <strong>Managing Requests</strong> &ndash; To receive a Subscriber or Membership
-            request, go to your Profile page, or open the Activity you Lead/Advise. New requests
+            request, go to your profile page, or open the Activity you Lead/Advise. New requests
             appear at the bottom of the roster. To modify a request to a different user level, use
             the dropdown menu (Advisor, Guest, Leader, Member) to assign a different level. Add an
             appropriate Title for Leaders and Advisors. You can add a Title to other users, too.
