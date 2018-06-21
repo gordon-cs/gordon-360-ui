@@ -30,18 +30,18 @@ export default class GordonNav extends Component {
       </div>
     );
 
-    let navCSS;
+    // let navCSS;
 
-    if (!this.state.isMobileDevice) {
-      navCSS = {
-        // display: 'none'
-      };
-    } else {
-      navCSS = null;
-    }
+    // if (!this.state.isMobileDevice) {
+    //   navCSS = {
+    //     display: 'none'
+    //   };
+    // } else {
+    //   navCSS = null;
+    // }
 
     return (
-      <section className="gordon-nav" style={navCSS}>
+      <section className="gordon-nav">
         <Hidden mdUp>
           <Drawer
             type="temporary"

@@ -103,13 +103,16 @@ export default class GordonNavAvatarRightCorner extends Component {
           open={open}
           onRequestClose={this.onClose}
         >
-          <MenuItem onClick={this.onSignOut}>Sign out</MenuItem>
+          <Link to="/myprofile/studenttest.360">
+            <MenuItem onClick={this.onClose}>My Profile</MenuItem>
+          </Link>
           <Link to="/help">
             <MenuItem onClick={this.onClose}>Help</MenuItem>
           </Link>
           <Link to="/about">
             <MenuItem onClick={this.onClose}>About</MenuItem>
           </Link>
+          <MenuItem onClick={this.onSignOut}>Sign out</MenuItem>
         </Menu>
       </section>
     );

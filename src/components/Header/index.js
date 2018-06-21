@@ -74,7 +74,7 @@ export default class GordonHeader extends Component {
 
             <div className="center-container">
               <NavLink exact to="/" onClick={this.props.onLinkClick}>
-                <ListItem button>
+                <ListItem button disableGutters>
                   <ListItemIcon>
                     <HomeIcon style={styles.icon} />
                   </ListItemIcon>
@@ -89,7 +89,7 @@ export default class GordonHeader extends Component {
                 </ListItem>
               </NavLink>
               <NavLink exact to="/activities" onClick={this.props.onLinkClick}>
-                <ListItem button>
+                <ListItem button disableGutters>
                   <ListItemIcon>
                     <LocalActivityIcon style={styles.icon} />
                   </ListItemIcon>
@@ -104,7 +104,7 @@ export default class GordonHeader extends Component {
                 </ListItem>
               </NavLink>
               <NavLink exact to="/events" onClick={this.props.onLinkClick}>
-                <ListItem button>
+                <ListItem button disableGutters>
                   <ListItemIcon>
                     <EventIcon style={styles.icon} />
                   </ListItemIcon>
@@ -119,7 +119,7 @@ export default class GordonHeader extends Component {
                 </ListItem>
               </NavLink>
               <NavLink exact to="/transcript" onClick={this.props.onLinkClick}>
-                <ListItem button>
+                <ListItem button disableGutters>
                   <ListItemIcon>
                     <DescriptionIcon style={styles.icon} />
                   </ListItemIcon>
@@ -134,7 +134,7 @@ export default class GordonHeader extends Component {
                 </ListItem>
               </NavLink>
               <NavLink exact to="/transcript" onClick={this.props.onLinkClick}>
-                <ListItem button>
+                <ListItem button disableGutters>
                   <ListItemIcon>
                     <PeopleIcon style={styles.icon} />
                   </ListItemIcon>
@@ -160,7 +160,6 @@ export default class GordonHeader extends Component {
     );
   }
 }
-
 GordonHeader.propTypes = {
   onDrawerToggle: PropTypes.func.isRequired,
   onSignOut: PropTypes.func.isRequired,

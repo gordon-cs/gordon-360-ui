@@ -52,7 +52,7 @@ export default class GordonNavLinks extends Component {
             <ListItemIcon>
               <PeopleIcon />
             </ListItemIcon>
-            <ListItemText primary="People Search" />
+            <ListItemText primary="People" />
           </ListItem>
         </NavLink>
       </List>

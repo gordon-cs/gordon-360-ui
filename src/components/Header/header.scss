@@ -5,6 +5,8 @@ $drawer-width: 240px;
 .gordon-header {
   position: absolute;
   width: 100%;
+  display: inline-flex;
+  justify-content: center;
 
   .app-bar {
     position: absolute;
@@ -25,6 +27,11 @@ $drawer-width: 240px;
     }
   }
 
+  .header-button {
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+
   .title {
     flex: 1;
     margin-right: 10px;
@@ -32,11 +39,19 @@ $drawer-width: 240px;
     font-weight: bold;
   }
 
-  .center-container {
-    flex: 5;
-    justify-content: center;
-    float: none;
-    display: flex;
+  @media (min-width: 0) {
+    .center-container {
+      display: none;
+    }
+  }
+
+  @media (min-width: $break-md) {
+    .center-container {
+      flex: 5;
+      justify-content: center;
+      float: none;
+      display: flex;
+    }
   }
 
   .right-side-container {
