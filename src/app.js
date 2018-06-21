@@ -49,6 +49,10 @@ export default class App extends Component {
 
     this.setState({ error, errorInfo });
   }
+  componentWillMount() {
+    //setting up a global variable very hacky
+    window.didProfilePicUpdate = false;
+  }
   render() {
     let content = (
       <section className="app-wrapper">
