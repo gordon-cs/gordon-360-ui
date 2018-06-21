@@ -4,6 +4,10 @@
   // padding: 1rem;
   width: 100%;
 
+  &:hover {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.5);
+  }
+
   .label {
     display: inline;
   }

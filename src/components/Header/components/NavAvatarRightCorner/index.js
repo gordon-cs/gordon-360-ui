@@ -1,5 +1,5 @@
 import Avatar from 'material-ui/Avatar';
-import Button from 'material-ui/Button';
+import IconButton from 'material-ui/IconButton';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Menu, { MenuItem } from 'material-ui/Menu';
@@ -84,7 +84,7 @@ export default class GordonNavAvatarRightCorner extends Component {
 
     return (
       <section>
-        <Button
+        <IconButton
           className="gordon-nav-avatar-right-corner"
           classes={{
             root: 'gordon-nav-avatar-right-corner nav-avatar-button',
@@ -96,14 +96,14 @@ export default class GordonNavAvatarRightCorner extends Component {
           onClick={this.onClick}
         >
           {avatar}
-        </Button>
+        </IconButton>
         <Menu
           id="nav-avatar-right-corner"
           anchorEl={this.state.anchorEl}
           open={open}
           onRequestClose={this.onClose}
         >
-          <Link to="/myprofile/studenttest.360">
+          <Link to="/myprofile/ ">
             <MenuItem onClick={this.onClose}>My Profile</MenuItem>
           </Link>
           <Link to="/help">
@@ -122,8 +122,3 @@ export default class GordonNavAvatarRightCorner extends Component {
 GordonNavAvatarRightCorner.propTypes = {
   onSignOut: PropTypes.func.isRequired,
 };
-
-// GordonToolbarNavAvatar.propTypes = {
-//   classes: PropTypes.objectOf(PropTypes.string).isRequired,
-//   onLinkClick: PropTypes.func.isRequired,
-// };
