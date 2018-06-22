@@ -10,7 +10,6 @@ import TextField from 'material-ui/TextField';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
-import user from '../../../../services/user';
 
 export default class LinksDialog extends React.Component {
   constructor(props) {
