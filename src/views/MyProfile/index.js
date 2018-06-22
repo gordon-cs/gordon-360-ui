@@ -344,9 +344,7 @@ export default class Profile extends Component {
                               style={{
                                 'max-width': this.maxCropPreviewWidth(),
                                 'max-height':
-                                  this.maxCropPreviewWidth() *
-                                  1 /
-                                  this.state.cropperData.aspectRatio,
+                                  this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
                                 justify: 'center',
                               }}
                               autoCropArea={1}

@@ -5,6 +5,7 @@
     .drawer {
       position: fixed;
       width: $drawer-width-md;
+      display: none;
     }
   }
 }
