@@ -59,10 +59,9 @@ export default class MyProfile extends Component {
     if (this.state.preview) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
       user.postImage(croppedImage);
-      window.didProfilePicUpdate = true;
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-      this.setState({ image: imageNoHeader });
-      this.setState({ open: false, preview: null });
+      this.setState({ image: imageNoHeader, open: false, preview: null });
+      window.didProfilePicUpdate = true;
     }
   };
 
@@ -72,9 +71,9 @@ export default class MyProfile extends Component {
 
   handleResetImage = () => {
     user.resetImage();
-    this.loadProfile();
     window.didProfilePicUpdate = true;
     this.setState({ open: false, preview: null });
+    this.loadProfile();
   };
 
   toggleImagePrivacy = () => {
@@ -91,13 +90,25 @@ export default class MyProfile extends Component {
   }
 
   maxCropPreviewWidth() {
-    const breakpointWidth = 800;
+    const breakpointWidth = 960;
     const smallScreenRatio = 0.75;
-    const largeScreenRatio = 0.5;
-    return (
-      window.innerWidth *
-      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio)
-    );
+    const largeScreenRatio = 0.525;
+    const maxHeightRatio = 0.5;
+    const aspect = this.state.cropperData.aspectRatio;
+    console.log(aspect);
+
+    var maxWidth = window.innerWidth *
+                   (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
+    var correspondingHeight = maxWidth / aspect;
+    var maxHeight = window.innerHeight * maxHeightRatio;
+    var correspondingWidth = maxHeight * aspect;
+
+    if (correspondingHeight > maxHeight) {
+      return correspondingWidth;
+    }
+    else {
+      return maxWidth;
+    }
   }
 
   minCropBoxDim(imgWidth, dispWidth) {
@@ -117,8 +128,9 @@ export default class MyProfile extends Component {
           );
         } else {
           var aRatio = i.width / i.height;
-          var displayWidth =
-            this.maxCropPreviewWidth() > i.width ? i.width : this.maxCropPreviewWidth();
+          this.setState({ cropperData: { aspectRatio: aRatio } });
+          var maxWidth = this.maxCropPreviewWidth();
+          var displayWidth = (maxWidth > i.width) ? i.width : maxWidth;
           var cropDim = this.minCropBoxDim(i.width, displayWidth);
           this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
           this.setState({ preview: dataURL });
@@ -149,7 +161,7 @@ export default class MyProfile extends Component {
     this.setState({ loading: true });
     try {
       const profile = await user.getProfileInfo();
-      this.setState({ loading: false, profile });
+      this.setState({ profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
@@ -267,7 +279,6 @@ export default class MyProfile extends Component {
                                 'max-height':
                                   this.maxCropPreviewWidth() / 
                                   this.state.cropperData.aspectRatio,
-                                justify: 'center',
                               }}
                               autoCropArea={1}
                               viewMode={3}
