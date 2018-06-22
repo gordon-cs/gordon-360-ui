@@ -181,6 +181,106 @@ export default class Profile extends Component {
       ));
     }
 
+    let address;
+    let homeStreet;
+    if (
+      this.state.profile.Country === 'United States Of America' ||
+      this.state.profile.Country === ''
+    ) {
+      address = `${this.state.profile.HomeCity},${this.state.profile.HomeState}`;
+      homeStreet = `${this.state.profile.HomeStreet2}`;
+    } else {
+      address = `${this.state.profile.Country}`;
+    }
+
+    if (this.state.profile.PersonType === 'fac') {
+      var Office = (
+        <CardContent>
+          <CardHeader title="Office Information" />
+          <List>
+            <ListItem>
+              <Typography>
+                Room: {this.state.profile.BuildingDescription}, {this.state.profile.OnCampusRoom}
+              </Typography>
+            </ListItem>
+            <Divider />
+            <ListItem>
+              <Typography>Office Phone: {this.state.profile.OnCampusPhone}</Typography>
+            </ListItem>
+            <Divider />
+
+            <ListItem>
+              <Typography>Office Hours: {this.state.profile.office_hours}</Typography>
+            </ListItem>
+          </List>
+        </CardContent>
+      );
+
+      var PersonalInfo = (
+        <List>
+          <ListItem>
+            <Typography>Department: {this.state.profile.OnCampusDepartment}</Typography>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Typography>Email: {this.state.profile.Email}</Typography>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Typography>Phone: {this.state.profile.HomePhone}</Typography>
+          </ListItem>
+          <Divider />
+        </List>
+      );
+    }
+    if (this.state.profile.PersonType === 'stu') {
+      var PersonalInfo = (
+        <List>
+          <ListItem>
+            <Typography>Major: {this.state.profile.Major1Description}</Typography>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Grid container xs={6} sm={6} md={6} lg={6}>
+              <Grid item>
+                <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container alignItems="center" justify="flex-end" xs={8} sm={6} md={6} lg={6}>
+              <Grid item>
+                <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
+              </Grid>
+              <Grid item>
+                <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Typography>Student ID: {this.state.profile.ID}</Typography>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Typography>Email: {this.state.profile.Email}</Typography>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
+          </ListItem>
+
+          <Divider />
+        </List>
+      );
+    }
+
     return (
       <div>
         <Grid container justify="center">
@@ -306,84 +406,24 @@ export default class Profile extends Component {
                   <CardContent>
                     <CardHeader title="Personal Information" />
 
-                    <List>
-                      <ListItem>
-                        <Typography>Major: {this.state.profile.Major1Description}</Typography>
-                      </ListItem>
-
-                      <Divider />
-
-                      <ListItem>
-                        <Grid container xs={6} sm={6} md={6} lg={6}>
-                          <Grid item>
-                            <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
-                          </Grid>
-                        </Grid>
-                        <Grid
-                          container
-                          alignItems="center"
-                          justify="flex-end"
-                          xs={8}
-                          sm={6}
-                          md={6}
-                          lg={6}
-                        >
-                          <Grid item>
-                            <Switch
-                              onClick={this.handleChangePrivacy}
-                              checked={!this.state.privacy}
-                            />
-                          </Grid>
-                          <Grid item>
-                            <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
-                          </Grid>
-                        </Grid>
-                      </ListItem>
-
-                      <Divider />
-
-                      <ListItem>
-                        <Typography>Student ID: {this.state.profile.ID}</Typography>
-                      </ListItem>
-
-                      <Divider />
-
-                      <ListItem>
-                        <Typography>Email: {this.state.profile.Email}</Typography>
-                      </ListItem>
-
-                      <Divider />
-
-                      <ListItem>
-                        <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
-                      </ListItem>
-
-                      <Divider />
-
-                      <Typography>On Campus Phone: {this.state.profile.OnCampusPhone}</Typography>
-                      <Typography>Department: {this.state.profile.Dept}</Typography>
-                    </List>
+                    {PersonalInfo}
 
                     <CardHeader title="Home Address" />
-
                     <List>
-                      <Divider />
-
                       <ListItem>
-                        <Typography>Street Number: {this.state.profile.HomeStreet2}</Typography>
+                        <Typography>Home: {address}</Typography>
                       </ListItem>
-
                       <Divider />
-
-                      <ListItem>
-                        <Typography>
-                          Home Town: {this.state.profile.HomeCity}, {this.state.profile.HomeState}
-                        </Typography>
-                      </ListItem>
+                      {homeStreet && (
+                        <ListItem>
+                          <Typography>Street: {this.state.profile.HomeStreet2}</Typography>
+                        </ListItem>
+                      )}
 
                       <Divider />
                     </List>
                   </CardContent>
+                  {Office}
                 </Card>
               </Grid>
 
