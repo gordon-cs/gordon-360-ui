@@ -63,7 +63,8 @@ a {
 }
 @media (min-width: $break-md) {
   .app-main {
-    margin-left: $drawer-width-md;
+    height: calc(100vh - #{$header-height-md});
+    margin-top: $header-height-md;
     padding: 1rem;
   }
 }
