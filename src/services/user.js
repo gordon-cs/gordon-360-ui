@@ -258,12 +258,13 @@ function setClass(profile) {
 }
 
 /**
- * Get events attended by the user
+ * Get chapel events attended by the user
  * @param {String} username username of the user
  * @param {String} termCode code for the semester
  * @return {Promise.<AttendedEvent[]>} An object of all CL&W events attended by the user
  */
-const getAttendedEvents = (username, termCode) => http.get(`events/chapel/${username}/${termCode}`);
+const getAttendedChapelEvents = (username, termCode) =>
+  http.get(`events/chapel/${username}/${termCode}`);
 
 /**
  * Get image for a given user or the current user if `username` is not provided
@@ -352,7 +353,7 @@ const getLocalInfo = () => {
 const getChapelCredits = async () => {
   const { user_name: username } = getLocalInfo();
   const termCode = session.getTermCode();
-  const attendedEvents = await getAttendedEvents(username, termCode);
+  const attendedEvents = await getAttendedChapelEvents(username, termCode);
 
   // Get required number of CL&W credits for the user, defaulting to thirty
   let required = 30;
@@ -445,7 +446,7 @@ const getProfileInfo = async username => {
 export default {
   toggleMobilePhonePrivacy,
   getMemberships,
-  getAttendedEvents,
+  getAttendedChapelEvents,
   getChapelCredits,
   getImage,
   getLocalInfo,
