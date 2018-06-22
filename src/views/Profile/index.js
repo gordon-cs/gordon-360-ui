@@ -56,7 +56,7 @@ export default class Profile extends Component {
       console.log('error');
     }
     // Set state of social media links to database values after load.
-    // If not empty, add domain name back in for buttons.
+    // If not empty or null, add domain name back in for buttons.
     this.setState({
       facebookLink:
         this.state.profile.Facebook === null || this.state.profile.Facebook === ''
@@ -78,8 +78,6 @@ export default class Profile extends Component {
   }
 
   render() {
-    console.log('Database: ' + this.state.profile.Facebook);
-
     const style = {
       width: '100%',
     };
