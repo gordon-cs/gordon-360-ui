@@ -319,6 +319,7 @@ function dataURItoBlob(dataURI) {
   for (var i = 0; i < byteString.length; i++) {
     ia[i] = byteString.charCodeAt(i);
   }
+
   return new Blob([ia], { type: mimeString });
 }
 
