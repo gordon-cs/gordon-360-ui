@@ -1,26 +1,27 @@
 import Typography from 'material-ui/Typography';
 import React, { Component } from 'react';
+import { gordonColors } from '../../theme';
 
 import './about.css';
 
 export default class About extends Component {
   render() {
-    const style = {
-      color: '#014983',
+    const blue = {
+      color: gordonColors.primary.blue,
     };
 
     return (
       <section>
         <br />
-        <hr style={style} />
+        <hr style={blue} />
         <Typography type="headline" gutterBottom>
           Conceived and built at Gordon College, by students for students. Everyone should be
           involved in something at College. It&apos;s what makes College your own Experience.
         </Typography>
-        <hr style={style} />
+        <hr style={{ blue }} />
         <br />
 
-        <Typography type="display1" gutterBottom style={style}>
+        <Typography type="display1" gutterBottom style={blue}>
           Gordon&apos;s 360 Mobile Activities Platform: The Scottie Faire in your hand
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
@@ -34,7 +35,7 @@ export default class About extends Component {
           <li>Student Membership and Leadership Experience Transcript</li>
         </Typography>
         <br />
-        <Typography type="display1" gutterBottom style={style}>
+        <Typography type="display1" gutterBottom style={blue}>
           Institutional Benefits
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
@@ -45,7 +46,7 @@ export default class About extends Component {
           <li>Institutional reporting</li>
         </Typography>
         <br />
-        <Typography type="display1" gutterBottom style={style}>
+        <Typography type="display1" gutterBottom style={blue}>
           Origins
         </Typography>
         <div class="indent">
