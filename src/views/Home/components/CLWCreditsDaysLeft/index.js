@@ -9,6 +9,8 @@ import user from '../../../../services/user';
 import session from '../../../../services/session';
 import GordonLoader from '../../../../components/Loader';
 
+import './CLWChart.css';
+
 export default class CLWCreditsDaysLeft extends Component {
   constructor(props) {
     super(props);
@@ -63,46 +65,7 @@ export default class CLWCreditsDaysLeft extends Component {
             }
           }
         },
-        legend: {
-          display: true,
-          position: 'top',
-          reverse: false,
-          labels: {
-            padding: 20,
-            generateLabels: function(chart) {
-              chart.legend.afterFit = function() { // Hack for bigger space between legend & chart
-                this.height = this.height + 10; // see http://stackoverflow.com/a/42957884/1779106 
-              };                                // and https://codepen.io/jordanwillis/pen/ZeOYdL
-              var data = chart.data;
-              // Code below is for custom legend entries and is based on part of the source code for
-              // ChartJS, found here:
-              // https://github.com/chartjs/Chart.js/blob/master/src/controllers/controller.doughnut.js#L40-L68
-              if (data.legendEntries.length && data.datasets.length) {
-                return data.legendEntries.map(function(label, i) {
-                  var meta = chart.getDatasetMeta(0);
-                  var ds = data.datasets[0];
-                  var arc = meta.data[i];
-                  var custom = (arc && arc.custom) || {};
-                  var fill = custom.backgroundColor ? custom.backgroundColor : data.legendColors[i];
-                  var stroke = custom.borderColor ? custom.borderColor : ds.borderColor;
-                  var bw = custom.borderWidth ? custom.borderWidth : ds.borderWidth;
-
-                  return {
-                    text: label,
-                    fillStyle: fill,
-                    strokeStyle: stroke,
-                    lineWidth: bw,
-                    hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
-
-                    index: i // Extra data used for toggling the correct item
-                  };
-                });
-              }
-              return [];
-            },
-          },
-          onClick: (e) => e.stopPropagation(), // keep click on legend from toggling data visibility
-        },
+        legend: false,
       };
 
       const { current, required } = this.state.chapelCredits;
@@ -138,7 +101,21 @@ export default class CLWCreditsDaysLeft extends Component {
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Doughnut data={data} height={200} options={options} />
+                  <Grid container justify='center'>
+                    <Grid item>
+                      <div class='legend'>
+                        <div class='entry'>
+                          <span class='entry-label' style={{background: gordonColors.primary.blue}}></span>
+                          <span class='entry-text'>Days Finished</span>
+                        </div>
+                        <div class='entry'>
+                          <span class='entry-label' style={{background: gordonColors.primary.cyan}}></span>
+                          <span class='entry-text'>CL&W Credits</span>
+                        </div>
+                      </div>
+                    </Grid>
+                  </Grid>
+                  <Doughnut data={data} height={175} options={options} />
                 </div>);
     }
 
