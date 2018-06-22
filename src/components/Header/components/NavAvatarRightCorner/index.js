@@ -70,6 +70,8 @@ export default class GordonNavAvatarRightCorner extends Component {
 
     // const { classes } = this.props;
 
+    let username = this.state.username;
+    let myProfileLink = '/myprofile/' + username;
     let avatar = (
       <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>
     );
@@ -98,12 +100,12 @@ export default class GordonNavAvatarRightCorner extends Component {
           {avatar}
         </IconButton>
         <Menu
-          id="nav-avatar-right-corner"
+          // id="nav-avatar-right-corners"
           anchorEl={this.state.anchorEl}
           open={open}
           onRequestClose={this.onClose}
         >
-          <Link to="/myprofile/ ">
+          <Link to={myProfileLink}>
             <MenuItem onClick={this.onClose}>My Profile</MenuItem>
           </Link>
           <Link to="/help">
