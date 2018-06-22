@@ -5,14 +5,21 @@ $drawer-width: 240px;
 .gordon-header {
   position: absolute;
   width: 100%;
+  display: inline-flex;
+  justify-content: center;
 
   .app-bar {
     position: absolute;
   }
-  @media (min-width: $break-md) {
-    .app-bar {
-      margin-left: $drawer-width;
-      width: calc(100% - #{$drawer-width});
+
+  .tab {
+    color: white;
+    text-transform: capitalize;
+    min-width: 90px;
+  }
+  @media (min-width: $break-lg) {
+    .tab {
+      min-width: 160px;
     }
   }
 
@@ -25,14 +32,36 @@ $drawer-width: 240px;
     }
   }
 
+  .header-button {
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+
   .title {
     flex: 1;
     margin-right: 10px;
+    margin-left: 34px;
+    font-weight: bold;
+  }
+
+  @media (min-width: 0) {
+    .center-container {
+      display: none;
+    }
+  }
+
+  @media (min-width: $break-md) {
+    .center-container {
+      flex: 8;
+      justify-content: center;
+      // float: none;
+      display: flex;
+    }
   }
 
   .right-side-container {
     align-items: center;
     display: flex;
-    margin-right: -12px;
+    margin-left: 12px;
   }
 }
