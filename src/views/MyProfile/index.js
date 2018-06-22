@@ -309,20 +309,20 @@ export default class MyProfile extends Component {
                         )}
                       </DialogContent>
                       <DialogActions>
-                      <Tooltip id='tooltip-hide' 
+                        <Tooltip id='tooltip-hide' 
                         title={(this.state.isImagePublic) ? 
                                'Only faculty and police will see your photo' : 
                                'Make photo visible to other students'}
-                      >
+                        >
                           <Button
                             onClick={this.toggleImagePrivacy.bind(this)}
                             raised
-                            style={{ background: 'orange', color: 'white' }}
+                            style={style.button}
                           >
                             {(this.state.isImagePublic) ? 'Hide' : 'Show'}
                           </Button>
                         </Tooltip>
-                        <Tooltip id='tooltip-submit' title='Restore your original ID photo'>
+                        <Tooltip id='tooltip-reset' title='Restore your original ID photo'>
                           <Button
                             onClick={this.handleResetImage}
                             raised
@@ -331,18 +331,18 @@ export default class MyProfile extends Component {
                             Reset
                           </Button>
                         </Tooltip>
-                        <Tooltip id='tooltip-crop' title='Crop to current region and submit'>
+                        <Button onClick={this.handleCloseCancel} raised style={style.button}>
+                          Cancel
+                        </Button>
+                        <Tooltip id='tooltip-submit' title='Crop to current region and submit'>
                           <Button onClick={this.handleCloseSubmit} raised 
                             disabled={!this.state.preview} style={(this.state.preview) ? 
-                                                        {background: 'limegreen', color: 'white'} : 
-                                                        {background: 'gray', color: 'white'}}
+                                                        style.button : 
+                                                        {background: 'darkgray', color: 'white'}}
                           >
                             Submit
                           </Button>
                         </Tooltip>
-                        <Button onClick={this.handleCloseCancel} raised style={style.button}>
-                          Cancel
-                        </Button>
                       </DialogActions>
                     </Dialog>
                   </Grid>
