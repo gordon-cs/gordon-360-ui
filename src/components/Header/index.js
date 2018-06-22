@@ -72,7 +72,7 @@ export default class GordonHeader extends Component {
               </Switch>
             </Typography>
             <div className="center-container">
-              <Tabs value={this.state.value} onChange={this.handleChange} fullWidth>
+              <Tabs centered value={this.state.value} onChange={this.handleChange}>
                 <Tab className="tab" icon={<HomeIcon />} label="Home" component={NavLink} to="/" />
                 <Tab
                   className="tab"
