@@ -23,10 +23,10 @@ export default class Minors extends Component {
       <div>
         <ListItem>
           <Grid container justify="center">
-            <Grid item xs={8}>
+            <Grid item xs={3} sm={6} md={6}>
               <Typography>Minors(s):</Typography>
             </Grid>
-            <Grid item xs={4} justify="right">
+            <Grid item xs={9} sm={5} md={5} justify="right">
               {content}
             </Grid>
           </Grid>

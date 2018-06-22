@@ -11,6 +11,7 @@ import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
 import Activities from './../../components/ActivityList';
 import GordonLoader from './../../components/Loader';
+import { typography } from 'material-ui/styles';
 
 //Public profile view
 export default class Profile extends Component {
@@ -87,23 +88,47 @@ export default class Profile extends Component {
           <Majors majors={this.state.profile.Majors} />
           {minors}
           <ListItem>
-            <Typography>Class: {this.state.profile.Class}</Typography>
+            <Grid container justify="center">
+              <Grid item xs={3} sm={6} md={3}>
+                <Typography>Phone:</Typography>
+              </Grid>
+              <Grid item xs={9} sm={5} md={9} justify="right">
+                <Typography>{this.state.profile.MobilePhone}</Typography>
+              </Grid>
+            </Grid>
           </ListItem>
           <Divider />
           <ListItem>
-            <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
+            <Grid container justify="center">
+              <Grid item xs={2} sm={6} md={2}>
+                <Typography>Email:</Typography>
+              </Grid>
+              <Grid item xs={10} sm={5} md={10} justify="right">
+                <Typography>{this.state.profile.Email}</Typography>
+              </Grid>
+            </Grid>
           </ListItem>
           <Divider />
           <ListItem>
-            <Typography>Email: {this.state.profile.Email}</Typography>
+            <Grid container justify="center">
+              <Grid item xs={3} sm={6} md={3}>
+                <Typography>Campus:</Typography>
+              </Grid>
+              <Grid item xs={9} sm={5} md={9} justify="right">
+                <Typography>{this.state.profile.OnOffCampus}</Typography>
+              </Grid>
+            </Grid>
           </ListItem>
           <Divider />
           <ListItem>
-            <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <Typography>Home: {address}</Typography>
+            <Grid container justify="center">
+              <Grid item xs={2} sm={6} md={6}>
+                <Typography>Home:</Typography>
+              </Grid>
+              <Grid item xs={10} sm={5} md={5} justify="right">
+                <Typography>{address}</Typography>
+              </Grid>
+            </Grid>
           </ListItem>
           <Divider />
         </List>
@@ -189,7 +214,9 @@ export default class Profile extends Component {
                       <Grid item xs={6} sm={6} md={6} lg={8}>
                         <CardHeader
                           title={this.state.profile.fullName}
-                          subheader={'(' + this.state.profile.NickName + ')'}
+                          subheader={
+                            '(' + this.state.profile.NickName + ') ' + this.state.profile.Class
+                          }
                         />
                       </Grid>
                       <Grid item xs={6} sm={6} md={6} lg={4}>
