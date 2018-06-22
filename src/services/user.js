@@ -10,6 +10,7 @@ import { AuthError } from './error';
 import http from './http';
 import session from './session';
 import storage from './storage';
+import { socialMediaInfo } from '../socialMedia';
 
 /**
  * @global
@@ -449,16 +450,18 @@ function updateSocialLink(type, link) {
   //Remove domain names
   switch (type) {
     case 'facebook':
-      linkToSend = link.substring(25);
+      linkToSend = link.substring(socialMediaInfo.facebook.prefix.length);
       break;
     case 'twitter':
-      linkToSend = link.substring(20);
+      linkToSend = link.substring(socialMediaInfo.twitter.prefix.length);
       break;
     case 'linkedin':
-      linkToSend = link.substring(28);
+      linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length - 1); //linkedIn copy-paste
+      break; //leaves trailing slash
+    case 'instagram': //causing problems
+      linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
       break;
-    case 'instagram':
-      linkToSend = link.substring(26);
+    default:
       break;
   }
   linkToSend = encodeURIComponent(linkToSend);

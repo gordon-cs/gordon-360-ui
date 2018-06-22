@@ -10,7 +10,8 @@ import TextField from 'material-ui/TextField';
 import Grid from 'material-ui/Grid';
 import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
-import user from '../../../../services/user';
+import { socialMediaInfo } from '../../../../socialMedia';
+import { gordonColors } from '../../../../theme';
 
 export default class LinksDialog extends React.Component {
   constructor(props) {
@@ -62,23 +63,28 @@ export default class LinksDialog extends React.Component {
     let liValid = this.state.liValid;
     let igValid = this.state.igValid;
 
+    let facebook = socialMediaInfo.facebook;
+    let twitter = socialMediaInfo.twitter;
+    let linkedIn = socialMediaInfo.linkedIn;
+    let instagram = socialMediaInfo.instagram;
+
     // Require that content begins with appropriate domain name if not empty
     switch (fieldName) {
       case 'facebookInput':
-        fbValid = value === '' || value.indexOf('https://www.facebook.com/') === 0;
-        fieldValidationErrors.facebookInput = fbValid ? '' : 'Not a valid facebook link';
+        fbValid = value === '' || value.indexOf(facebook.prefix) === 0;
+        fieldValidationErrors.facebookInput = fbValid ? '' : facebook.error;
         break;
       case 'twitterInput':
-        twValid = value === '' || value.indexOf('https://twitter.com/') === 0;
-        fieldValidationErrors.twitterInput = twValid ? '' : 'Not a valid twitter link';
+        twValid = value === '' || value.indexOf(twitter.prefix) === 0;
+        fieldValidationErrors.twitterInput = twValid ? '' : twitter.error;
         break;
       case 'linkedInInput':
-        liValid = value === '' || value.indexOf('https://www.linkedin.com/') === 0;
-        fieldValidationErrors.linkedInInput = liValid ? '' : 'Not a valid linkedIn link';
+        liValid = value === '' || value.indexOf(linkedIn.prefix) === 0;
+        fieldValidationErrors.linkedInInput = liValid ? '' : linkedIn.error;
         break;
       case 'instagramInput':
-        igValid = value === '' || value.indexOf('https://www.instagram.com/') === 0;
-        fieldValidationErrors.instagramInput = igValid ? '' : 'Not a valid instagram link';
+        igValid = value === '' || value.indexOf(instagram.prefix) === 0;
+        fieldValidationErrors.instagramInput = igValid ? '' : instagram.error;
         break;
       default:
         break;
@@ -158,7 +164,7 @@ export default class LinksDialog extends React.Component {
 
   render() {
     const button = {
-      background: '#00AEEF', //Gordon color: cyan. Couldn't figure out how to import themes file.
+      background: gordonColors.primary.cyan,
       color: 'white',
     };
 

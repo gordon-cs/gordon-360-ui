@@ -7,7 +7,6 @@ import Typography from 'material-ui/Typography';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Dropzone from 'react-dropzone';
-import { Link } from 'react-router-dom';
 import Dialog, {
   DialogTitle,
   DialogActions,
@@ -20,14 +19,10 @@ import { gordonColors } from '../../theme';
 import Activities from './../../components/ActivityList';
 import LinksDialog from './Components/LinksDialog';
 import GordonLoader from './../../components/Loader';
+import { socialMediaInfo } from '../../socialMedia';
 
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-
-import FacebookIcon from 'react-icons/lib/fa/facebook';
-import TwitterIcon from 'react-icons/lib/fa/twitter';
-import LinkedInIcon from 'react-icons/lib/fa/linkedin';
-import InstagramIcon from 'react-icons/lib/fa/instagram';
 
 const CROP_DIM = 200; // pixels
 
@@ -91,7 +86,12 @@ export default class MyProfile extends Component {
 
   handleSocialLinksOpen = () => {
     this.setState({ socialLinksOpen: true });
-    console.log('photoOpen called');
+    console.log(
+      'FB DATABASE: ' + this.state.profile.Facebook + ' FB STATE: ' + this.state.facebookLink,
+    );
+    console.log(
+      'TW DATABASE: ' + this.state.profile.Twitter + ' TW STATE: ' + this.state.twitterLink,
+    );
   };
   handleSocialLinksClose = () => {
     this.setState({ socialLinksOpen: false });
@@ -205,19 +205,19 @@ export default class MyProfile extends Component {
       facebookLink:
         this.state.profile.Facebook === ''
           ? ''
-          : 'https://www.facebook.com/' + this.state.profile.Facebook,
+          : socialMediaInfo.facebook.prefix + this.state.profile.Facebook,
       twitterLink:
         this.state.profile.Twitter === ''
           ? ''
-          : 'https://twitter.com/' + this.state.profile.Twitter,
+          : socialMediaInfo.twitter.prefix + this.state.profile.Twitter,
       linkedInLink:
         this.state.profile.LinkedIn === ''
           ? ''
-          : 'https://www.linkedin.com/in/' + this.state.profile.LinkedIn,
+          : socialMediaInfo.linkedIn.prefix + this.state.profile.LinkedIn,
       instagramLink:
         this.state.profile.Instagram === ''
           ? ''
-          : 'https://www.instagram.com/' + this.state.profile.Instagram,
+          : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
     });
   }
 
@@ -273,36 +273,36 @@ export default class MyProfile extends Component {
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>
-          <Link to={this.state.facebookLink} target="_blank">
-            <FacebookIcon />
-          </Link>
+          <a href={this.state.facebookLink} target="_blank">
+            {socialMediaInfo.facebook.icon}
+          </a>
         </Grid>
       );
     }
     if (this.state.twitterLink !== '') {
       twitterButton = (
         <Grid item>
-          <Link to={this.state.twitterLink} target="_blank">
-            <TwitterIcon />
-          </Link>
+          <a href={this.state.twitterLink} target="_blank">
+            {socialMediaInfo.twitter.icon}
+          </a>
         </Grid>
       );
     }
     if (this.state.linkedInLink !== '') {
       linkedInButton = (
         <Grid item>
-          <Link to={this.state.linkedInLink} target="_blank">
-            <LinkedInIcon />
-          </Link>
+          <a href={this.state.linkedInLink} target="_blank">
+            {socialMediaInfo.linkedIn.icon}
+          </a>
         </Grid>
       );
     }
     if (this.state.instagramLink !== '') {
       instagramButton = (
         <Grid item>
-          <Link to={this.state.instagramLink} target="_blank">
-            <InstagramIcon />
-          </Link>
+          <a href={this.state.instagramLink} target="_blank">
+            {socialMediaInfo.instagram.icon}
+          </a>
         </Grid>
       );
     }
@@ -327,13 +327,11 @@ export default class MyProfile extends Component {
                       title={this.state.profile.fullName}
                       subheader={this.state.profile.Class}
                     />
-                    <Grid item>
-                      <Grid container>
-                        {facebookButton}
-                        {twitterButton}
-                        {linkedInButton}
-                        {instagramButton}
-                      </Grid>
+                    <Grid container>
+                      {facebookButton}
+                      {twitterButton}
+                      {linkedInButton}
+                      {instagramButton}
                     </Grid>
                     <Button onClick={this.handlePhotoOpen} raised style={style.button}>
                       Update Photo
