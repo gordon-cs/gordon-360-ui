@@ -18,6 +18,13 @@ import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
+import Image from '../../gc_seal_top_72.png';
+
+const styles = {
+  appBarContainer: {
+    backgroundImage: `url(${Image})`,
+  },
+};
 
 const getRouteName = route => {
   if (route.name) {
@@ -48,7 +55,7 @@ export default class GordonHeader extends Component {
   render() {
     return (
       <section className="gordon-header">
-        <AppBar className="app-bar" position="static">
+        <AppBar style={styles.appBarContainer} className="app-bar" position="static">
           <Toolbar>
             <IconButton
               className="menu-button"
