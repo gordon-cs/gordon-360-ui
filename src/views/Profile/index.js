@@ -12,6 +12,7 @@ import Minors from './../../components/MinorList';
 import Activities from './../../components/ActivityList';
 import GordonLoader from './../../components/Loader';
 import { typography } from 'material-ui/styles';
+import { socialMediaInfo } from '../../socialMedia';
 
 //Public profile view
 export default class Profile extends Component {
@@ -26,7 +27,12 @@ export default class Profile extends Component {
       profile: {},
       activities: [],
       files: [],
-      open: false,
+      photoDialogOpen: false,
+      socialLinksDialogOpen: false,
+      facebookLink: '',
+      linkedInLink: '',
+      twitterLink: '',
+      instagramLink: '',
     };
   }
 
@@ -50,6 +56,26 @@ export default class Profile extends Component {
       this.setState({ error });
       console.log('error');
     }
+    // Set state of social media links to database values after load.
+    // If not empty or null, add domain name back in for buttons.
+    this.setState({
+      facebookLink:
+        this.state.profile.Facebook === null || this.state.profile.Facebook === ''
+          ? ''
+          : socialMediaInfo.facebook.prefix + this.state.profile.Facebook,
+      twitterLink:
+        this.state.profile.Twitter === null || this.state.profile.Twitter === ''
+          ? ''
+          : socialMediaInfo.twitter.prefix + this.state.profile.Twitter,
+      linkedInLink:
+        this.state.profile.LinkedIn === null || this.state.profile.LinkedIn === ''
+          ? ''
+          : socialMediaInfo.linkedIn.prefix + this.state.profile.LinkedIn,
+      instagramLink:
+        this.state.profile.Instagram === null || this.state.profile.Instagram === ''
+          ? ''
+          : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
+    });
   }
   async checkPersonType(param) {
     try {
@@ -268,6 +294,48 @@ export default class Profile extends Component {
         </List>
       );
     }
+
+    let facebookButton;
+    let twitterButton;
+    let linkedInButton;
+    let instagramButton;
+    if (this.state.facebookLink !== '') {
+      facebookButton = (
+        <Grid item>
+          <a href={this.state.facebookLink} className="icon" target="_blank">
+            {socialMediaInfo.facebook.icon}
+          </a>
+        </Grid>
+      );
+    }
+    if (this.state.twitterLink !== '') {
+      twitterButton = (
+        <Grid item>
+          <a href={this.state.twitterLink} className="icon" target="_blank">
+            {socialMediaInfo.twitter.icon}
+          </a>
+        </Grid>
+      );
+    }
+    if (this.state.linkedInLink !== '') {
+      linkedInButton = (
+        <Grid item>
+          <a href={this.state.linkedInLink} className="icon" target="_blank">
+            {socialMediaInfo.linkedIn.icon}
+          </a>
+        </Grid>
+      );
+    }
+    if (this.state.instagramLink !== '') {
+      instagramButton = (
+        <Grid item>
+          <a href={this.state.instagramLink} className="icon" target="_blank">
+            {socialMediaInfo.instagram.icon}
+          </a>
+        </Grid>
+      );
+    }
+
     return (
       <div>
         <Grid container>
@@ -287,6 +355,12 @@ export default class Profile extends Component {
                               (this.state.profile.PersonType === 'stu') && this.state.profile.Class
                           }
                         />
+                        <Grid container justify="center">
+                          {facebookButton}
+                          {twitterButton}
+                          {linkedInButton}
+                          {instagramButton}
+                        </Grid>
                       </Grid>
                       <Grid item xs={6} sm={6} md={6} lg={4}>
                         <img

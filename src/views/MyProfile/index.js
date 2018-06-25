@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Divider from 'material-ui/Divider/Divider';
 import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import Button from 'material-ui/Button';
+import Tooltip from 'material-ui/Tooltip';
 import Typography from 'material-ui/Typography';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
@@ -17,7 +18,9 @@ import Dialog, {
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import Activities from './../../components/ActivityList';
+import LinksDialog from './Components/LinksDialog';
 import GordonLoader from './../../components/Loader';
+import { socialMediaInfo } from '../../socialMedia';
 
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -29,19 +32,26 @@ export default class Profile extends Component {
   constructor(props) {
     super(props);
 
-    this.handleChangePrivacy = this.handleChangePrivacy.bind(this);
+    this.handleExpandClick = this.handleExpandClick.bind(this);
+    this.onDialogSubmit = this.onDialogSubmit.bind(this);
 
     this.state = {
       username: String,
-      privacy: Number,
+      button: String,
+      isImagePublic: null,
       image: null,
       preview: null,
       loading: true,
       profile: {},
       activities: [],
       files: [],
-      open: false,
+      photoOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
+      socialLinksOpen: false,
+      facebookLink: '',
+      linkedInLink: '',
+      twitterLink: '',
+      instagramLink: '',
     };
   }
 
@@ -49,40 +59,93 @@ export default class Profile extends Component {
     user.toggleMobilePhonePrivacy();
   }
 
-  handleOpen = () => {
-    this.setState({ open: true });
+  handlePhotoOpen = () => {
+    this.setState({ photoOpen: true });
   };
 
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
       user.postImage(croppedImage);
-      window.didProfilePicUpdate = true;
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-      this.setState({ image: imageNoHeader });
-      this.setState({ open: false, preview: null });
+      this.setState({ image: imageNoHeader, photoOpen: false, preview: null });
+      window.didProfilePicUpdate = true;
     }
   };
 
   handleCloseCancel = () => {
-    this.setState({ open: false, preview: null });
+    this.setState({ photoOpen: false, preview: null });
   };
 
   handleResetImage = () => {
     user.resetImage();
-    this.loadProfile();
     window.didProfilePicUpdate = true;
-    this.setState({ open: false, preview: null });
+    this.setState({ photoOpen: false, preview: null });
+    this.loadProfile();
   };
 
+  toggleImagePrivacy = () => {
+    this.setState({ isImagePublic: !this.state.isImagePublic });
+    user.setImagePrivacy(this.state.isImagePublic);
+  };
+
+  handleSocialLinksOpen = () => {
+    this.setState({ socialLinksOpen: true });
+  };
+
+  handleSocialLinksClose = () => {
+    this.setState({ socialLinksOpen: false });
+  };
+
+  onDialogSubmit(fb, tw, li, ig) {
+    // For links that have changed, update this.state
+    // and send change to database.
+    if (fb !== this.state.facebookLink) {
+      this.setState({ facebookLink: fb });
+      user.updateSocialLink('facebook', fb);
+    }
+    if (tw !== this.state.twitterLink) {
+      this.setState({ twitterLink: tw });
+      user.updateSocialLink('twitter', tw);
+    }
+    if (li !== this.state.linkedInLink) {
+      this.setState({ linkedInLink: li });
+      user.updateSocialLink('linkedin', li);
+    }
+    if (ig !== this.state.instagramLink) {
+      this.setState({ instagramLink: ig });
+      user.updateSocialLink('instagram', ig);
+    }
+  }
+
+  changePrivacy() {
+    if (this.state.button === 'Make Public') {
+      this.setState({ button: 'Make Private' });
+    } else {
+      this.setState({ button: 'Make Public' });
+    }
+  }
+
   maxCropPreviewWidth() {
-    const breakpointWidth = 800;
+    const breakpointWidth = 960;
     const smallScreenRatio = 0.75;
-    const largeScreenRatio = 0.5;
-    return (
+    const largeScreenRatio = 0.525;
+    const maxHeightRatio = 0.5;
+    const aspect = this.state.cropperData.aspectRatio;
+    console.log(aspect);
+
+    var maxWidth =
       window.innerWidth *
-      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio)
-    );
+      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
+    var correspondingHeight = maxWidth / aspect;
+    var maxHeight = window.innerHeight * maxHeightRatio;
+    var correspondingWidth = maxHeight * aspect;
+
+    if (correspondingHeight > maxHeight) {
+      return correspondingWidth;
+    } else {
+      return maxWidth;
+    }
   }
 
   minCropBoxDim(imgWidth, dispWidth) {
@@ -102,8 +165,9 @@ export default class Profile extends Component {
           );
         } else {
           var aRatio = i.width / i.height;
-          var displayWidth =
-            this.maxCropPreviewWidth() > i.width ? i.width : this.maxCropPreviewWidth();
+          this.setState({ cropperData: { aspectRatio: aRatio } });
+          var maxWidth = this.maxCropPreviewWidth();
+          var displayWidth = maxWidth > i.width ? i.width : maxWidth;
           var cropDim = this.minCropBoxDim(i.width, displayWidth);
           this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
           this.setState({ preview: dataURL });
@@ -141,9 +205,35 @@ export default class Profile extends Component {
       const activities = await user.getMemberships(profile.ID);
       const image = preferredImage || defaultImage;
       this.setState({ image, loading: false, activities });
+      this.setState({ isImagePublic: this.state.profile.show_pic });
     } catch (error) {
       this.setState({ error });
     }
+    if (this.state.profile.IsMobilePhonePrivate === 0) {
+      this.setState({ button: 'Make Private' });
+    } else {
+      this.setState({ button: 'Make Public' });
+    }
+    // Set state of social media links to database values after load.
+    // If not empty, add domain name back in for display and buttons.
+    this.setState({
+      facebookLink:
+        this.state.profile.Facebook === null || this.state.profile.Facebook === ''
+          ? ''
+          : socialMediaInfo.facebook.prefix + this.state.profile.Facebook,
+      twitterLink:
+        this.state.profile.Twitter === null || this.state.profile.Twitter === ''
+          ? ''
+          : socialMediaInfo.twitter.prefix + this.state.profile.Twitter,
+      linkedInLink:
+        this.state.profile.LinkedIn === null || this.state.profile.LinkedIn === ''
+          ? ''
+          : socialMediaInfo.linkedIn.prefix + this.state.profile.LinkedIn,
+      instagramLink:
+        this.state.profile.Instagram === null || this.state.profile.Instagram === ''
+          ? ''
+          : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
+    });
   }
 
   render() {
@@ -281,6 +371,79 @@ export default class Profile extends Component {
       );
     }
 
+    let linksDialog = (
+      <LinksDialog
+        onDialogSubmit={this.onDialogSubmit}
+        handleSocialLinksClose={this.handleSocialLinksClose}
+        {...this.state}
+      />
+    );
+
+    // Define what icon buttons will display
+    // (only the sites that have links in database)
+    let facebookButton;
+    let twitterButton;
+    let linkedInButton;
+    let instagramButton;
+    let editButton;
+    let linkCount = 0; // To record wether or not any links are displayed
+    if (this.state.facebookLink !== '') {
+      facebookButton = (
+        <Grid item>
+          <a href={this.state.facebookLink} className="icon" target="_blank">
+            {socialMediaInfo.facebook.icon}
+          </a>
+        </Grid>
+      );
+      linkCount += 1;
+    }
+    if (this.state.twitterLink !== '') {
+      twitterButton = (
+        <Grid item>
+          <a href={this.state.twitterLink} className="icon" target="_blank">
+            {socialMediaInfo.twitter.icon}
+          </a>
+        </Grid>
+      );
+      linkCount += 1;
+    }
+    if (this.state.linkedInLink !== '') {
+      linkedInButton = (
+        <Grid item>
+          <a href={this.state.linkedInLink} className="icon" target="_blank">
+            {socialMediaInfo.linkedIn.icon}
+          </a>
+        </Grid>
+      );
+      linkCount += 1;
+    }
+    if (this.state.instagramLink !== '') {
+      instagramButton = (
+        <Grid item>
+          <a href={this.state.instagramLink} className="icon" target="_blank">
+            {socialMediaInfo.instagram.icon}
+          </a>
+        </Grid>
+      );
+      linkCount += 1;
+    }
+    if (linkCount > 0) {
+      editButton = (
+        <Grid item>
+          <a onClick={this.handleSocialLinksOpen} className="icon">
+            {socialMediaInfo.edit.icon}
+          </a>
+        </Grid>
+      );
+    } else {
+      editButton = (
+        <Grid item>
+          <a onClick={this.handleSocialLinksOpen} className="edit">
+            EDIT SOCIAL MEDIA LINKS
+          </a>
+        </Grid>
+      );
+    }
     return (
       <div>
         <Grid container justify="center">
@@ -301,11 +464,18 @@ export default class Profile extends Component {
                       title={this.state.profile.fullName}
                       subheader={this.state.profile.Class}
                     />
-                    <Button onClick={this.handleOpen} raised style={style.button}>
+                    <Grid container>
+                      {facebookButton}
+                      {twitterButton}
+                      {linkedInButton}
+                      {instagramButton}
+                      {editButton}
+                    </Grid>
+                    <Button onClick={this.handlePhotoOpen} raised style={style.button}>
                       Update Photo
                     </Button>
                     <Dialog
-                      open={this.state.open}
+                      open={this.state.photoOpen}
                       keepMounted
                       onClose={this.handleClose}
                       aria-labelledby="alert-dialog-slide-title"
@@ -345,7 +515,6 @@ export default class Profile extends Component {
                                 'max-width': this.maxCropPreviewWidth(),
                                 'max-height':
                                   this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
-                                justify: 'center',
                               }}
                               autoCropArea={1}
                               viewMode={3}
@@ -376,20 +545,61 @@ export default class Profile extends Component {
                         )}
                       </DialogContent>
                       <DialogActions>
-                        <Button
-                          onClick={this.handleResetImage}
-                          raised
-                          style={{ background: 'tomato', color: 'white' }}
+                        <Tooltip
+                          id="tooltip-hide"
+                          title={
+                            this.state.isImagePublic
+                              ? 'Only faculty and police will see your photo'
+                              : 'Make photo visible to other students'
+                          }
                         >
-                          Reset
-                        </Button>
-                        <Button onClick={this.handleCloseSubmit} raised style={style.button}>
-                          Submit
-                        </Button>
+                          <Button
+                            onClick={this.toggleImagePrivacy.bind(this)}
+                            raised
+                            style={style.button}
+                          >
+                            {this.state.isImagePublic ? 'Hide' : 'Show'}
+                          </Button>
+                        </Tooltip>
+                        <Tooltip id="tooltip-reset" title="Restore your original ID photo">
+                          <Button
+                            onClick={this.handleResetImage}
+                            raised
+                            style={{ background: 'tomato', color: 'white' }}
+                          >
+                            Reset
+                          </Button>
+                        </Tooltip>
                         <Button onClick={this.handleCloseCancel} raised style={style.button}>
                           Cancel
                         </Button>
+                        <Tooltip id="tooltip-submit" title="Crop to current region and submit">
+                          <Button
+                            onClick={this.handleCloseSubmit}
+                            raised
+                            disabled={!this.state.preview}
+                            style={
+                              this.state.preview
+                                ? style.button
+                                : { background: 'darkgray', color: 'white' }
+                            }
+                          >
+                            Submit
+                          </Button>
+                        </Tooltip>
                       </DialogActions>
+                    </Dialog>
+                    <Dialog
+                      open={this.state.socialLinksOpen}
+                      keepMounted
+                      onClose={this.handleSocialLinksClose}
+                      aria-labelledby="alert-dialog-slide-title"
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      <DialogTitle id="simple-dialog-title">
+                        Edit your social media links
+                      </DialogTitle>
+                      <DialogContent>{linksDialog}</DialogContent>
                     </Dialog>
                   </Grid>
                 </Grid>

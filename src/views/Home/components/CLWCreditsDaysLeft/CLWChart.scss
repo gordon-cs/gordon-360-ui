@@ -1,0 +1,33 @@
+@import '../../../../vars';
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-bottom: 5px;
+}
+
+.entry-label {
+  width: 30px;
+  height: 12px;
+  margin-right: 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
+}
+
+.entry-text {
+  font-family: Arial, Helvetica, Tahoma, Verdana, Trebuchet MS, sans-serif;
+  font-size: 10pt;
+  color: #505050;
+}
