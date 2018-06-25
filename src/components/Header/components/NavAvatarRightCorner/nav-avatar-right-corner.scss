@@ -1,9 +1,6 @@
 @import '../../../../vars';
 
 .gordon-nav-avatar-right-corner {
-  // padding: 1rem;
-  width: 100%;
-  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5);
 
   &:hover {
     transition: box-shadow 0.3s;
@@ -21,11 +18,11 @@
 
   .nav-avatar-placeholder {
     background-color: $primary-cyan;
-    height: 3rem;
   }
 
-  .nav-avatar-image {
-    height: 3rem;
+  .nav-avatar > img {
+    object-fit: cover;
+    height: 100%
   }
 
   .nav-avatar {
