@@ -149,7 +149,14 @@ export default class Profile extends Component {
         phone = (
           <div>
             <ListItem>
-              <Typography>Phone: {this.state.profile.HomePhone}</Typography>
+              <Grid container justify="center">
+                <Grid item xs={3} sm={6} md={3} lg={6}>
+                  <Typography>Phone:</Typography>
+                </Grid>
+                <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                  <Typography>{this.state.profile.HomePhone}</Typography>
+                </Grid>
+              </Grid>
             </ListItem>
             <Divider />
           </div>
@@ -159,7 +166,14 @@ export default class Profile extends Component {
         OfficePhone = (
           <div>
             <ListItem>
-              <Typography>Office Phone: {this.state.profile.OnCampusPhone}</Typography>
+              <Grid container justify="center">
+                <Grid item xs={3} sm={6} md={3} lg={6}>
+                  <Typography>Office Phone:</Typography>
+                </Grid>
+                <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                  <Typography> {this.state.profile.OnCampusPhone}</Typography>
+                </Grid>
+              </Grid>
             </ListItem>
             <Divider />
           </div>
@@ -169,7 +183,14 @@ export default class Profile extends Component {
         OfficHours = (
           <div>
             <ListItem>
-              <Typography>Office Hours: {this.state.profile.office_hours}</Typography>
+              <Grid container justify="center">
+                <Grid item xs={3} sm={6} md={3} lg={6}>
+                  <Typography>Office Hours:</Typography>
+                </Grid>
+                <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                  <Typography> {this.state.profile.office_hours}</Typography>
+                </Grid>
+              </Grid>
             </ListItem>
             <Divider />
           </div>
@@ -182,10 +203,17 @@ export default class Profile extends Component {
               <CardHeader title="Office Information" />
               <List>
                 <ListItem>
-                  <Typography>
-                    Room: {this.state.profile.BuildingDescription},{' '}
-                    {this.state.profile.OnCampusRoom}
-                  </Typography>
+                  <Grid container justify="center">
+                    <Grid item xs={3} sm={6} md={3} lg={6}>
+                      <Typography>Room:</Typography>
+                    </Grid>
+                    <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                      <Typography>
+                        {' '}
+                        {this.state.profile.BuildingDescription}, {this.state.profile.OnCampusRoom}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </ListItem>
                 <Divider />
                 {OfficePhone}
@@ -199,7 +227,14 @@ export default class Profile extends Component {
       Department = (
         <div>
           <ListItem>
-            <Typography>Department: {this.state.profile.OnCampusDepartment}</Typography>
+            <Grid container justify="center">
+              <Grid item xs={5} sm={6} md={3} lg={6}>
+                <Typography>Department:</Typography>
+              </Grid>
+              <Grid item xs={7} sm={6} md={9} lg={6} justify="right">
+                <Typography>{this.state.profile.OnCampusDepartment}</Typography>
+              </Grid>
+            </Grid>
           </ListItem>
           <Divider />
         </div>
@@ -208,12 +243,26 @@ export default class Profile extends Component {
       personalInfo = (
         <List>
           <ListItem>
-            <Typography>Email: {this.state.profile.Email}</Typography>
+            <Grid container justify="center">
+              <Grid item xs={2} sm={6} md={3} lg={6}>
+                <Typography>Email:</Typography>
+              </Grid>
+              <Grid item xs={10} sm={6} md={9} lg={6} justify="right">
+                <Typography>{this.state.profile.Email}</Typography>
+              </Grid>
+            </Grid>
           </ListItem>
           <Divider />
           {phone}
           <ListItem>
-            <Typography>Home: {address}</Typography>
+            <Grid container justify="center">
+              <Grid item xs={3} sm={6} md={3} lg={6}>
+                <Typography>Home:</Typography>
+              </Grid>
+              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                <Typography>{address}</Typography>
+              </Grid>
+            </Grid>
           </ListItem>
           <Divider />
         </List>
