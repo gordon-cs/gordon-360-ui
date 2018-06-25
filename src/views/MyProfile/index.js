@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Divider from 'material-ui/Divider/Divider';
 import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import Button from 'material-ui/Button';
+import Tooltip from 'material-ui/Tooltip';
 import Typography from 'material-ui/Typography';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
@@ -36,6 +37,7 @@ export default class MyProfile extends Component {
     this.state = {
       username: String,
       button: String,
+      isImagePublic: null,
       image: null,
       preview: null,
       loading: true,
@@ -65,10 +67,9 @@ export default class MyProfile extends Component {
     if (this.state.preview) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
       user.postImage(croppedImage);
-      window.didProfilePicUpdate = true;
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-      this.setState({ image: imageNoHeader });
-      this.setState({ photoOpen: false, preview: null });
+      this.setState({ image: imageNoHeader, photoOpen: false, preview: null });
+      window.didProfilePicUpdate = true;
     }
   };
 
@@ -78,17 +79,24 @@ export default class MyProfile extends Component {
 
   handleResetImage = () => {
     user.resetImage();
-    this.loadProfile();
     window.didProfilePicUpdate = true;
     this.setState({ photoOpen: false, preview: null });
+    this.loadProfile();
   };
+
+  toggleImagePrivacy = () => {
+    this.setState({isImagePublic: !this.state.isImagePublic});
+    user.setImagePrivacy(this.state.isImagePublic);
+  }
 
   handleSocialLinksOpen = () => {
     this.setState({ socialLinksOpen: true });
   };
+
   handleSocialLinksClose = () => {
     this.setState({ socialLinksOpen: false });
   };
+
   onDialogSubmit(fb, tw, li, ig) {
     // For links that have changed, update this.state
     // and send change to database.
@@ -119,13 +127,25 @@ export default class MyProfile extends Component {
   }
 
   maxCropPreviewWidth() {
-    const breakpointWidth = 800;
+    const breakpointWidth = 960;
     const smallScreenRatio = 0.75;
-    const largeScreenRatio = 0.5;
-    return (
-      window.innerWidth *
-      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio)
-    );
+    const largeScreenRatio = 0.525;
+    const maxHeightRatio = 0.5;
+    const aspect = this.state.cropperData.aspectRatio;
+    console.log(aspect);
+
+    var maxWidth = window.innerWidth *
+                   (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
+    var correspondingHeight = maxWidth / aspect;
+    var maxHeight = window.innerHeight * maxHeightRatio;
+    var correspondingWidth = maxHeight * aspect;
+
+    if (correspondingHeight > maxHeight) {
+      return correspondingWidth;
+    }
+    else {
+      return maxWidth;
+    }
   }
 
   minCropBoxDim(imgWidth, dispWidth) {
@@ -145,8 +165,9 @@ export default class MyProfile extends Component {
           );
         } else {
           var aRatio = i.width / i.height;
-          var displayWidth =
-            this.maxCropPreviewWidth() > i.width ? i.width : this.maxCropPreviewWidth();
+          this.setState({ cropperData: { aspectRatio: aRatio } });
+          var maxWidth = this.maxCropPreviewWidth();
+          var displayWidth = (maxWidth > i.width) ? i.width : maxWidth;
           var cropDim = this.minCropBoxDim(i.width, displayWidth);
           this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
           this.setState({ preview: dataURL });
@@ -177,13 +198,14 @@ export default class MyProfile extends Component {
     this.setState({ loading: true });
     try {
       const profile = await user.getProfileInfo();
-      this.setState({ loading: false, profile });
+      this.setState({ profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
       const activities = await user.getMemberships(profile.ID);
       const image = preferredImage || defaultImage;
       this.setState({ image, loading: false, activities });
+      this.setState({ isImagePublic: this.state.profile.show_pic })
     } catch (error) {
       this.setState({ error });
     }
@@ -393,7 +415,6 @@ export default class MyProfile extends Component {
                                 'max-width': this.maxCropPreviewWidth(),
                                 'max-height':
                                   this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
-                                justify: 'center',
                               }}
                               autoCropArea={1}
                               viewMode={3}
@@ -424,19 +445,40 @@ export default class MyProfile extends Component {
                         )}
                       </DialogContent>
                       <DialogActions>
-                        <Button
-                          onClick={this.handleResetImage}
-                          raised
-                          style={{ background: 'tomato', color: 'white' }}
+                        <Tooltip id='tooltip-hide' 
+                        title={(this.state.isImagePublic) ? 
+                               'Only faculty and police will see your photo' : 
+                               'Make photo visible to other students'}
                         >
-                          Reset
-                        </Button>
-                        <Button onClick={this.handleCloseSubmit} raised style={style.button}>
-                          Submit
-                        </Button>
+                          <Button
+                            onClick={this.toggleImagePrivacy.bind(this)}
+                            raised
+                            style={style.button}
+                          >
+                            {(this.state.isImagePublic) ? 'Hide' : 'Show'}
+                          </Button>
+                        </Tooltip>
+                        <Tooltip id='tooltip-reset' title='Restore your original ID photo'>
+                          <Button
+                            onClick={this.handleResetImage}
+                            raised
+                            style={{ background: 'tomato', color: 'white' }}
+                          >
+                            Reset
+                          </Button>
+                        </Tooltip>
                         <Button onClick={this.handleCloseCancel} raised style={style.button}>
                           Cancel
                         </Button>
+                        <Tooltip id='tooltip-submit' title='Crop to current region and submit'>
+                          <Button onClick={this.handleCloseSubmit} raised 
+                            disabled={!this.state.preview} style={(this.state.preview) ? 
+                                                        style.button : 
+                                                        {background: 'darkgray', color: 'white'}}
+                          >
+                            Submit
+                          </Button>
+                        </Tooltip>
                       </DialogActions>
                     </Dialog>
                     <Dialog
