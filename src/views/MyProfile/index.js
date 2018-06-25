@@ -218,19 +218,19 @@ export default class MyProfile extends Component {
     // If not empty, add domain name back in for display and buttons.
     this.setState({
       facebookLink:
-        this.state.profile.Facebook === ''
+        this.state.profile.Facebook === null || this.state.profile.Facebook === ''
           ? ''
           : socialMediaInfo.facebook.prefix + this.state.profile.Facebook,
       twitterLink:
-        this.state.profile.Twitter === ''
+        this.state.profile.Twitter === null || this.state.profile.Twitter === ''
           ? ''
           : socialMediaInfo.twitter.prefix + this.state.profile.Twitter,
       linkedInLink:
-        this.state.profile.LinkedIn === ''
+        this.state.profile.LinkedIn === null || this.state.profile.LinkedIn === ''
           ? ''
           : socialMediaInfo.linkedIn.prefix + this.state.profile.LinkedIn,
       instagramLink:
-        this.state.profile.Instagram === ''
+        this.state.profile.Instagram === null || this.state.profile.Instagram === ''
           ? ''
           : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
     });
