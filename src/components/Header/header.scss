@@ -11,6 +11,7 @@ $drawer-width: 240px;
   .app-bar {
     position: absolute;
     background-repeat: no-repeat;
+    background-position-x: 128px;
   }
 
   .tab {
@@ -25,7 +26,7 @@ $drawer-width: 240px;
 
   @media (min-width: 0px) {
     .app-bar {
-      background-image: url('./gc_seal_top_trans_56.png');
+      background-image: url('./gc_seal_top_56.png');
     }
 
     .center-container {
@@ -35,7 +36,7 @@ $drawer-width: 240px;
 
   @media (min-width: $break-sm) {
     .app-bar {
-      background-image: url('./gc_seal_top_trans_64.png');
+      background-image: url('./gc_seal_top_64.png');
     }
   }
 
@@ -44,7 +45,7 @@ $drawer-width: 240px;
       display: none;
     }
     .app-bar {
-      background-image: url('./gc_seal_top_trans_72.png');
+      background-image: url('./gc_seal_top_72.png');
     }
 
     .center-container {
@@ -69,7 +70,6 @@ $drawer-width: 240px;
   .title {
     flex: 1;
     margin-right: 10px;
-    margin-left: 34px;
     font-weight: bold;
   }
 
