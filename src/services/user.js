@@ -456,7 +456,11 @@ function updateSocialLink(type, link) {
       linkToSend = link.substring(socialMediaInfo.twitter.prefix.length);
       break;
     case 'linkedin': //linkedIn copy-paste leaves trailing slash causing problems
-      linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length, link.length - 1);
+      if (link.charAt(link.length - 1) === '/') {
+        linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length, link.length - 1);
+      } else {
+        linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length);
+      }
       break;
     case 'instagram':
       linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
