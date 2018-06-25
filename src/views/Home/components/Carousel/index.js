@@ -1,4 +1,3 @@
-import Card, { CardContent } from 'material-ui/Card';
 import React, { Component } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 
@@ -47,6 +46,8 @@ export default class GordonCarousel extends Component {
           infiniteLoop
           transitionTime={1000}
           interval={10000}
+          showStatus={false}
+          useKeyboardArrows={true}
         >
           {this.state.carouselContent.map(slide => (
             <div>
@@ -56,10 +57,6 @@ export default class GordonCarousel extends Component {
         </Carousel>
       );
     }
-    return (
-      <Card>
-        <CardContent>{content}</CardContent>
-      </Card>
-    );
+    return <div>{content}</div>;
   }
 }
