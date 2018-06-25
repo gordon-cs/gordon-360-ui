@@ -79,8 +79,8 @@ export default class GordonEventItem extends Component {
             <Grid container>
               <Grid item xs={8} sm={9} md={10}>
                 <Typography>{event.title}</Typography>
-                <Typography type="caption">{subheader}</Typography>
-                <Typography type="caption">{event.location}</Typography>
+                <Typography variant="caption">{subheader}</Typography>
+                <Typography variant="caption">{event.location}</Typography>
               </Grid>
             </Grid>
           </ExpansionPanelSummary>
@@ -88,7 +88,7 @@ export default class GordonEventItem extends Component {
             <Grid container>
               <Grid item xs={8} sm={9} md={10}>
                 <Typography>Description</Typography>
-                <Typography type="caption">{event.Description}</Typography>
+                <Typography variant="caption">{event.Description}</Typography>
                 {/* {content} */}
               </Grid>
               <Grid item sm={4} md={2} style={styles.grid}>

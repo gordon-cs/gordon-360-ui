@@ -86,8 +86,8 @@ export default class GordonPeopleSearch extends Component {
         onClick={this.reset}
         className="people-search-suggestion"
       >
-        <Typography type="body1">{`${suggestion.FirstName} ${suggestion.LastName}`}</Typography>
-        <Typography type="caption" component="p">
+        <Typography variant="body1">{`${suggestion.FirstName} ${suggestion.LastName}`}</Typography>
+        <Typography variant="caption" component="p">
           {suggestion.UserName}
         </Typography>
       </MenuItem>

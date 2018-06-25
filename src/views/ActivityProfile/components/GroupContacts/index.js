@@ -38,7 +38,7 @@ export default class GroupContacts extends Component {
       if (groupAdmin.length > 0) {
         content = (
           <section className="gordon-activity-profile">
-            <Typography type="body1">
+            <Typography variant="body1">
               <strong>Group Contacts:</strong>
             </Typography>
             <List dense disablePadding>

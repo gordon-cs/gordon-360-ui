@@ -44,12 +44,12 @@ export default class GordonNav extends Component {
       <section className="gordon-nav">
         <Hidden mdUp>
           <Drawer
-            type="temporary"
+            variant="temporary"
             open={this.props.drawerOpen}
             classes={{
               paper: 'gordon-nav-drawer',
             }}
-            onRequestClose={this.props.onDrawerToggle}
+            onClose={this.props.onDrawerToggle}
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
             }}
@@ -59,7 +59,7 @@ export default class GordonNav extends Component {
         </Hidden>
         <Hidden mdDown implementation="css">
           <Drawer
-            type="permanent"
+            variant="permanent"
             open
             classes={{
               paper: 'drawer',

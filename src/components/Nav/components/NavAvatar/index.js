@@ -85,10 +85,10 @@ class GordonNavAvatar extends Component {
         component={buttonLink}
       >
         {avatar}
-        <Typography type="body2" className="text" align="left" gutterBottom>
+        <Typography variant="body2" className="text" align="left" gutterBottom>
           {this.state.name}
         </Typography>
-        <Typography type="caption" className="text" align="left" gutterBottom>
+        <Typography variant="caption" className="text" align="left" gutterBottom>
           {this.state.email}
         </Typography>
       </Button>

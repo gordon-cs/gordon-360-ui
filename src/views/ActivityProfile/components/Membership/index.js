@@ -332,7 +332,7 @@ export default class Membership extends Component {
                       </DialogContent>
                     </Dialog>
                     <Grid item xs={12}>
-                      <Typography type="headline">Membership Requests</Typography>
+                      <Typography variant="headline">Membership Requests</Typography>
                       {requestList}
                     </Grid>
                     <Grid item>{confirmRoster}</Grid>

@@ -58,7 +58,7 @@ export default class GordonHeader extends Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography className="title" type="title" color="inherit">
+            <Typography className="title" variant="title" color="inherit">
               <Switch>
                 {routes.map(route => (
                   <Route

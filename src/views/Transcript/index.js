@@ -97,7 +97,7 @@ export default class Transcript extends Component {
               </Grid>
               <Grid item xs={12} margin="normal" className="heading">
                 <div>
-                  <Typography type="headline">
+                  <Typography variant="headline">
                     <b> Experience Transcript - {this.state.profile.fullName} </b>
                   </Typography>
                 </div>

@@ -255,7 +255,7 @@ class ActivityProfile extends Component {
       let description;
       if (activityBlurb.length !== 0) {
         description = (
-          <Typography type="body1">
+          <Typography variant="body1">
             <strong>Description: </strong>
             {activityBlurb}
           </Typography>
@@ -264,7 +264,7 @@ class ActivityProfile extends Component {
       let website;
       if (activityURL.length !== 0) {
         website = (
-          <Typography type="body1">
+          <Typography variant="body1">
             <strong>Website: </strong>
             <a href={activityURL}> {activityURL}</a>
           </Typography>
@@ -290,14 +290,14 @@ class ActivityProfile extends Component {
         <section className="gordon-activity-profile">
           <Card>
             <CardContent>
-              <Typography align="center" type="display1">
+              <Typography align="center" variant="display1">
                 {activityDescription}
               </Typography>
               <Grid align="center" className="activity-image" item>
                 <img alt={activity.activityDescription} src={activityImagePath} className="img" />
               </Grid>
               <Grid item>{editActivity}</Grid>
-              <Typography type="body1">
+              <Typography variant="body1">
                 <strong>Session: </strong>
                 {sessionDescription}
               </Typography>
@@ -309,7 +309,7 @@ class ActivityProfile extends Component {
                 <strong>Special Information for Joining: </strong>
                 {this.state.activityInfo.ActivityJoinInfo}
               </Typography>
-              <Typography type="body1">
+              <Typography variant="body1">
                 <strong>Current Activity Roster: </strong>
                 {membersNum} Member(s) and {followersNum} follower(s)
               </Typography>

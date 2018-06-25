@@ -54,7 +54,7 @@ export default class ActivityEdit extends Component {
             <input type="textarea" id="editActivityJoining" />
           </label>
           <Button>cancel</Button>
-          <Button color="primary" type="submit">
+          <Button color="primary" variant="submit">
             submit changes
           </Button>
         </form>

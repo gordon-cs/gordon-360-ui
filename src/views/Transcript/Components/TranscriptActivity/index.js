@@ -17,7 +17,7 @@ export default class Activity extends Component {
       <div>
         <Grid container className="heading">
           <Grid item xs={12}>
-            <Typography type="title">
+            <Typography variant="title">
               <b> {Activity.SessionDescription} </b>
             </Typography>
           </Grid>

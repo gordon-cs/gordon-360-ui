@@ -102,12 +102,12 @@ export default class CLWCreditsDaysLeft extends Component {
             style={{ paddingTop: 5, paddingBottom: 5 }}
           >
             <Grid item>
-              <Typography type="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${daysLeft} Days Left in Semester`}
               </Typography>
             </Grid>
             <Grid item>
-              <Typography type="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${current} CL&W Credit` + (current === 1 ? '' : 's') + ' Earned'}
               </Typography>
             </Grid>
@@ -134,7 +134,7 @@ export default class CLWCreditsDaysLeft extends Component {
     return (
       <Card>
         <CardContent>
-          <Typography type="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
             Christian Life & Worship Credits
           </Typography>
           {content}

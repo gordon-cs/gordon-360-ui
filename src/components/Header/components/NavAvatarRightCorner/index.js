@@ -120,7 +120,7 @@ export default class GordonNavAvatarRightCorner extends Component {
           id="nav-avatar-right-corner"
           anchorEl={this.state.anchorEl}
           open={open}
-          onRequestClose={this.onClose}
+          onClose={this.onClose}
         >
           <Link to={myProfileLink}>
             <MenuItem onClick={this.onClose}>My Profile</MenuItem>

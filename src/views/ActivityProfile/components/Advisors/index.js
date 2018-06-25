@@ -38,7 +38,7 @@ export default class Advisors extends Component {
       if (advisors.length > 0) {
         content = (
           <section className="gordon-activity-profile">
-            <Typography type="body1">
+            <Typography variant="body1">
               <strong>Advisors:</strong>
             </Typography>
             <List dense disablePadding>

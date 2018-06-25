@@ -30,7 +30,7 @@ class GordonActivityGrid extends Component {
     let content = (
       <Grid container justify="center">
         <Grid item xs={12} md={12} lg={8}>
-          <Typography type="headline">No Involvements Found</Typography>
+          <Typography variant="headline">No Involvements Found</Typography>
         </Grid>
       </Grid>
     );
