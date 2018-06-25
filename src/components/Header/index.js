@@ -48,7 +48,7 @@ export default class GordonHeader extends Component {
   render() {
     return (
       <section className="gordon-header">
-        <AppBar /*style={styles.appBarContainer}*/ className="app-bar" position="static">
+        <AppBar className="app-bar" position="static">
           <Toolbar>
             <IconButton
               className="menu-button"
