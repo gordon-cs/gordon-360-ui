@@ -59,7 +59,6 @@ export default class MyProfile extends Component {
 
   handlePhotoOpen = () => {
     this.setState({ photoOpen: true });
-    console.log('photoOpen called');
   };
 
   handleCloseSubmit = () => {
@@ -86,12 +85,6 @@ export default class MyProfile extends Component {
 
   handleSocialLinksOpen = () => {
     this.setState({ socialLinksOpen: true });
-    console.log(
-      'FB DATABASE: ' + this.state.profile.Facebook + ' FB STATE: ' + this.state.facebookLink,
-    );
-    console.log(
-      'TW DATABASE: ' + this.state.profile.Twitter + ' TW STATE: ' + this.state.twitterLink,
-    );
   };
   handleSocialLinksClose = () => {
     this.setState({ socialLinksOpen: false });
