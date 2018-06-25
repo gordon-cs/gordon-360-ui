@@ -25,13 +25,13 @@ export default class Help extends Component {
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
           <li>
-            <strong>My Activities</strong> &ndash; List of Current and Past Leadership or
-            Memberships. If blank, go to All Activities to get connected.
+            <strong>My Involvements</strong> &ndash; List of Current and Past Leadership or
+            Memberships. If blank, go to All Involvements to get connected.
           </li>
           <li>
-            <strong>All Activities</strong> &ndash; List of all Current Activities for this Academic
-            Session. Pick the Academic Session in the drop down menu for the Session you want to
-            connect your involvement(s). Current Active Session defaults to Current Academic
+            <strong>All Involvements</strong> &ndash; List of all Current Involvements for this
+            Academic Session. Pick the Academic Session in the drop down menu for the Session you
+            want to connect your involvement(s). Current Active Session defaults to Current Academic
             Session.
           </li>
           <li>
@@ -78,8 +78,8 @@ export default class Help extends Component {
           </li>
           <li>
             <strong>Super-Advisor</strong> &ndash; Administrative role for program and department
-            staff responsible for multiple Activities. Same privileges as Leader and Advisor, plus,
-            can manage Activities they are not a Leader or Advisor for.
+            staff responsible for multiple Involvements. Same privileges as Leader and Advisor,
+            plus, can manage Involvements they are not a Leader or Advisor for.
           </li>
         </Typography>
         <br />

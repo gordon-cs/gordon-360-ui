@@ -1,23 +1,45 @@
 @import '../../../../vars';
 
 .gordon-activity-grid {
-  .activity {
-    text-align: center; // Center images when the tile is wider than the image
+  .container {
+    display: grid;
+    color: #ffffff;
+    background-color: $neutral-light-gray;
+    grid-auto-rows: 1fr;
+    grid-auto-columns: 1fr;
+  }
 
-    .tile-bar {
-      background: transparentize(
-        $neutral-dark-gray,
-        0.3
-      ); // Make titles more readable over image background
-      height: 64px; // Make space for a two-line title
+  .item {
+    background-color: white;
+    color: $primary-blue;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 16px;
+    font-size: 100%;
+    text-align: center;
+  }
+  @media (max-width: $break-sm) {
+    .item {
+      justify-content: center;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 90%;
     }
+  }
 
-    .title {
-      align-items: flex-end;
-      display: flex;
-      height: 48px; // Limit to two lines of the title
-      text-align: left;
-      white-space: initial; // Allow title to wrap onto a second line
+  @media (max-width: $break-sm) {
+    img {
+      display: none;
     }
+  }
+
+  .item-title {
+    background-color: white;
+    color: $primary-blue;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 16px;
+    font-size: 100%;
+    text-align: center;
   }
 }

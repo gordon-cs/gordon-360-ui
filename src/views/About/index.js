@@ -23,11 +23,12 @@ export default class About extends Component {
 
         <Typography type="display1" gutterBottom style={blue}>
           Gordon&apos;s 360 Mobile Activities Platform: The Scottie Faire in your hand
+
         </Typography>
         <Typography type="body1" gutterBottom component="ul">
           <li>Mobile-friendly, responsive web portal</li>
           <li>Promotional access to student Involvement and leadership</li>
-          <li>Academic session-based Campus Activities and Leadership Experiences</li>
+          <li>Academic session-based Campus Involvements and Leadership Experiences</li>
           <li>Subscriber email feeds</li>
           <li>Membership affinity connections</li>
           <li>Student leader and Advisor Activity self-management</li>
