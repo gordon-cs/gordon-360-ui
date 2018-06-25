@@ -100,7 +100,7 @@ export default class GordonNavAvatarRightCorner extends Component {
           {avatar}
         </IconButton>
         <Menu
-          // id="nav-avatar-right-corners"
+          id="nav-avatar-right-corner"
           anchorEl={this.state.anchorEl}
           open={open}
           onRequestClose={this.onClose}
