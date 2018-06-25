@@ -45,7 +45,7 @@ export default class GordonNavAvatarRightCorner extends Component {
   async componentWillMount() {
     this.loadAvatar();
   }
-  
+
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
   }
