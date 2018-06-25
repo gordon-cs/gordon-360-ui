@@ -264,6 +264,7 @@ export default class MyProfile extends Component {
     let linkedInButton;
     let instagramButton;
     let editButton;
+    let linkCount = 0; // To record wether or not any links are displayed
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>
@@ -272,6 +273,7 @@ export default class MyProfile extends Component {
           </a>
         </Grid>
       );
+      linkCount += 1;
     }
     if (this.state.twitterLink !== '') {
       twitterButton = (
@@ -281,6 +283,7 @@ export default class MyProfile extends Component {
           </a>
         </Grid>
       );
+      linkCount += 1;
     }
     if (this.state.linkedInLink !== '') {
       linkedInButton = (
@@ -290,6 +293,7 @@ export default class MyProfile extends Component {
           </a>
         </Grid>
       );
+      linkCount += 1;
     }
     if (this.state.instagramLink !== '') {
       instagramButton = (
@@ -299,14 +303,25 @@ export default class MyProfile extends Component {
           </a>
         </Grid>
       );
+      linkCount += 1;
     }
-    editButton = (
-      <Grid item>
-        <a onClick={this.handleSocialLinksOpen} className="icon">
-          {socialMediaInfo.edit.icon}
-        </a>
-      </Grid>
-    );
+    if (linkCount > 0) {
+      editButton = (
+        <Grid item>
+          <a onClick={this.handleSocialLinksOpen} className="icon">
+            {socialMediaInfo.edit.icon}
+          </a>
+        </Grid>
+      );
+    } else {
+      editButton = (
+        <Grid item>
+          <a onClick={this.handleSocialLinksOpen} className="edit">
+            EDIT SOCIAL MEDIA LINKS
+          </a>
+        </Grid>
+      );
+    }
     return (
       <div>
         <Grid container justify="center">
