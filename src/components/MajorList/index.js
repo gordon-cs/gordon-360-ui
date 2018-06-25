@@ -23,10 +23,10 @@ export default class Majors extends Component {
       <div>
         <ListItem>
           <Grid container justify="center">
-            <Grid item xs={8}>
+            <Grid item xs={3} sm={6} md={3} lg={6}>
               <Typography>Major(s):</Typography>
             </Grid>
-            <Grid item xs={4} justify="right">
+            <Grid item xs={9} sm={5} md={9} lg={6} justify="right">
               {content}
             </Grid>
           </Grid>
