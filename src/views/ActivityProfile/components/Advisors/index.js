@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import Email from 'material-ui-icons/Email';
-import IconButton from 'material-ui/IconButton';
-import List, { ListItem } from 'material-ui/List';
-import Typography from 'material-ui/Typography';
+import Email from '@material-ui/icons/Email';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Typography from '@material-ui/core/Typography';
 
 import GordonLoader from '../../../../components/Loader';
 

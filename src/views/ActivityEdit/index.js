@@ -1,4 +1,4 @@
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import Dropzone from 'react-dropzone';
 import React, { Component } from 'react';
 

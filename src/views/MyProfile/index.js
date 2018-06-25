@@ -1,19 +1,20 @@
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import Divider from 'material-ui/Divider/Divider';
-import Card, { CardContent, CardHeader } from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import Tooltip from 'material-ui/Tooltip';
-import Typography from 'material-ui/Typography';
-import List from 'material-ui/List/List';
-import ListItem from 'material-ui/List/ListItem';
+import Divider from '@material-ui/core/Divider/';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import Dropzone from 'react-dropzone';
-import Dialog, {
-  DialogTitle,
-  DialogActions,
-  DialogContentText,
-  DialogContent,
-} from 'material-ui/Dialog';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
@@ -24,7 +25,7 @@ import { socialMediaInfo } from '../../socialMedia';
 
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import { Switch } from 'material-ui';
+import Switch from '@material-ui/core/Switch';
 
 const CROP_DIM = 200; // pixels
 
@@ -148,7 +149,7 @@ export default class Profile extends Component {
   }
 
   minCropBoxDim(imgWidth, dispWidth) {
-    return CROP_DIM * dispWidth / imgWidth;
+    return (CROP_DIM * dispWidth) / imgWidth;
   }
 
   onDropAccepted(fileList) {

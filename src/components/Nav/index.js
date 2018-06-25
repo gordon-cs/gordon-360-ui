@@ -1,6 +1,6 @@
-import Drawer from 'material-ui/Drawer';
-import Divider from 'material-ui/Divider';
-import Hidden from 'material-ui/Hidden';
+import Drawer from '@material-ui/core/Drawer';
+import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import List from 'material-ui/List';
-import Grid from 'material-ui/Grid';
-import TextField from 'material-ui/TextField';
-import { FormGroup, FormControlLabel } from 'material-ui/Form';
-import Checkbox from 'material-ui/Checkbox';
-import Button from 'material-ui/Button';
-import Collapse from 'material-ui/transitions/Collapse';
-import Divider from 'material-ui/Divider';
-import Switch from 'material-ui/Switch';
+import List from '@material-ui/core/List';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
+import Divider from '@material-ui/core/Divider';
+import Switch from '@material-ui/core/Switch';
 
 import gordonEvent from './../../services/event';
 import EventItem from './components/EventItem';

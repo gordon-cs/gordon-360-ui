@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
-import Button from 'material-ui/Button';
-import Checkbox from 'material-ui/Checkbox';
-import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog';
-import ExpansionPanel, {
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-} from 'material-ui/ExpansionPanel';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import { FormControl, FormControlLabel } from 'material-ui/Form';
-import Grid from 'material-ui/Grid';
-import { MenuItem } from 'material-ui/Menu';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
+import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
-import Select from 'material-ui/Select';
-import TextField from 'material-ui/TextField';
-import Typography from 'material-ui/Typography';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 import { gordonColors } from '../../../../../../theme';
 import user from '../../../../../../services/user';

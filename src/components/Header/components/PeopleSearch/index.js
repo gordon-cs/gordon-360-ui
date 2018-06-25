@@ -1,10 +1,10 @@
 import Downshift from 'downshift';
 import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
-import TextField from 'material-ui/TextField';
-import Paper from 'material-ui/Paper';
-import { MenuItem } from 'material-ui/Menu';
-import Typography from 'material-ui/Typography';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 

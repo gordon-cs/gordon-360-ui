@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^1.2.3",
+    "@material-ui/icons": "^1.1.0",
     "base64toblob": "0.0.2",
     "chart.js": "^2.7.1",
     "classnames": "^2.2.5",
@@ -12,8 +14,6 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
     "luxon": "^0.2.12",
-    "material-ui": "^1.0.0-beta.22",
-    "material-ui-icons": "^1.0.0-beta.17",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-chartjs-2": "^2.6.4",

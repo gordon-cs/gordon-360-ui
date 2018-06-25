@@ -1,8 +1,8 @@
-import Grid from 'material-ui/Grid';
-import Divider from 'material-ui/Divider/Divider';
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import List from 'material-ui/List';
-import Typography from 'material-ui/Typography';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
 import './transcriptActivity.css';
 
 //This component is a child of the Transcript component. Separates Headings from content in order

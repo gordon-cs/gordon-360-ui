@@ -5,11 +5,12 @@ import TwitterIcon from 'react-icons/lib/fa/twitter';
 import LinkedInIcon from 'react-icons/lib/fa/linkedin';
 import InstagramIcon from 'react-icons/lib/fa/instagram';
 
-import { DialogContent, DialogActions } from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import Grid from 'material-ui/Grid';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui//core/Grid';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import { socialMediaInfo } from '../../../../socialMedia';
 import { gordonColors } from '../../../../theme';
 
