@@ -40,6 +40,20 @@ a {
   }
 }
 
+.icon {
+  color: #000;
+
+  &:hover {
+    color: #00aeef;
+  }
+}
+
+.edit {
+  font-weight: bold;
+  font-size: 12px;
+  color: #00aeef;
+}
+
 .app-wrapper {
   display: flex;
   position: relative;
