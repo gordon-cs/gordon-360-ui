@@ -310,7 +310,6 @@ function dataURItoBlob(dataURI) {
   if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
   else byteString = unescape(dataURI.split(',')[1]);
 
-  console.log(byteString);
   // separate out the mime component
   var mimeString = dataURI
     .split(',')[0]
@@ -322,8 +321,7 @@ function dataURItoBlob(dataURI) {
   for (var i = 0; i < byteString.length; i++) {
     ia[i] = byteString.charCodeAt(i);
   }
-  console.log([ia]);
-  console.log(mimeString);
+
   return new Blob([ia], { type: mimeString });
 }
 
@@ -398,6 +396,11 @@ function toggleMobilePhonePrivacy() {
   setPrivacy(newPrivacy);
 }
 
+async function setImagePrivacy(makePrivate) {
+  // 'Y' = show image, 'N' = don't show image
+  await http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y'));
+}
+
 const getMemberships = async id => {
   let memberships;
   memberships = await http.get(`memberships/student/${id}`);
@@ -457,7 +460,11 @@ function updateSocialLink(type, link) {
       linkToSend = link.substring(socialMediaInfo.twitter.prefix.length);
       break;
     case 'linkedin': //linkedIn copy-paste leaves trailing slash causing problems
-      linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length, link.length - 1);
+      if (link.charAt(link.length - 1) === '/') {
+        linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length, link.length - 1);
+      } else {
+        linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length);
+      }
       break;
     case 'instagram':
       linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
@@ -478,6 +485,7 @@ function updateSocialLink(type, link) {
 
 export default {
   toggleMobilePhonePrivacy,
+  setImagePrivacy,
   getMemberships,
   getAttendedChapelEvents,
   getChapelCredits,
