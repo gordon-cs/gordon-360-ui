@@ -5,6 +5,8 @@
     display: grid;
     color: #ffffff;
     background-color: $neutral-light-gray;
+    grid-auto-rows: 1fr;
+    grid-auto-columns: 1fr;
   }
 
   .item {
@@ -16,7 +18,28 @@
     font-size: 100%;
     text-align: center;
   }
-  .title {
-    display: grid;
+  @media (max-width: $break-sm) {
+    .item {
+      justify-content: center;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 90%;
+    }
+  }
+
+  @media (max-width: $break-sm) {
+    img {
+      display: none;
+    }
+  }
+
+  .item-title {
+    background-color: white;
+    color: $primary-blue;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 16px;
+    font-size: 100%;
+    text-align: center;
   }
 }

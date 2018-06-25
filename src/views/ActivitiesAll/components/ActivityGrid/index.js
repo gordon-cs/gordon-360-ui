@@ -13,7 +13,7 @@ const gridListCols = width => {
     default:
       return 2;
     case 'xs':
-      return 1;
+      return 2;
     case 'sm':
       return 2;
     case 'md':
@@ -38,19 +38,21 @@ class GordonActivityGrid extends Component {
     if (Array.isArray(this.props.activities) && this.props.activities.length > 0) {
       content = this.props.activities.map(activity => (
         <div className="container">
-          <div className="item">
-            <Link to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}>
+          <Link
+            to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
+            className="item"
+          >
+            <div>
               <img
+                className="picture"
                 src={activity.ActivityImagePath}
                 alt={activity.ActivityDescription}
                 height="150"
                 width="150"
               />
-              <div className="item" fullWidth>
-                {activity.ActivityDescription}
-              </div>
-            </Link>
-          </div>
+              <div className="item-title">{activity.ActivityDescription}</div>
+            </div>
+          </Link>
         </div>
       ));
     }

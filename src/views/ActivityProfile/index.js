@@ -320,7 +320,15 @@ class ActivityProfile extends Component {
       );
     }
 
-    return <section>{content}</section>;
+    return (
+      <section>
+        <Grid container justify="center">
+          <Grid item xs={12} md={12} lg={8}>
+            {content}
+          </Grid>
+        </Grid>
+      </section>
+    );
   }
 }
 
