@@ -270,10 +270,11 @@ export default class MyProfile extends Component {
     let twitterButton;
     let linkedInButton;
     let instagramButton;
+    let editButton;
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>
-          <a href={this.state.facebookLink} target="_blank">
+          <a href={this.state.facebookLink} className="icon" target="_blank">
             {socialMediaInfo.facebook.icon}
           </a>
         </Grid>
@@ -282,7 +283,7 @@ export default class MyProfile extends Component {
     if (this.state.twitterLink !== '') {
       twitterButton = (
         <Grid item>
-          <a href={this.state.twitterLink} target="_blank">
+          <a href={this.state.twitterLink} className="icon" target="_blank">
             {socialMediaInfo.twitter.icon}
           </a>
         </Grid>
@@ -291,7 +292,7 @@ export default class MyProfile extends Component {
     if (this.state.linkedInLink !== '') {
       linkedInButton = (
         <Grid item>
-          <a href={this.state.linkedInLink} target="_blank">
+          <a href={this.state.linkedInLink} className="icon" target="_blank">
             {socialMediaInfo.linkedIn.icon}
           </a>
         </Grid>
@@ -300,13 +301,19 @@ export default class MyProfile extends Component {
     if (this.state.instagramLink !== '') {
       instagramButton = (
         <Grid item>
-          <a href={this.state.instagramLink} target="_blank">
+          <a href={this.state.instagramLink} className="icon" target="_blank">
             {socialMediaInfo.instagram.icon}
           </a>
         </Grid>
       );
     }
-
+    editButton = (
+      <Grid item>
+        <a onClick={this.handleSocialLinksOpen} className="icon">
+          {socialMediaInfo.edit.icon}
+        </a>
+      </Grid>
+    );
     return (
       <div>
         <Grid container justify="center">
@@ -332,6 +339,7 @@ export default class MyProfile extends Component {
                       {twitterButton}
                       {linkedInButton}
                       {instagramButton}
+                      {editButton}
                     </Grid>
                     <Button onClick={this.handlePhotoOpen} raised style={style.button}>
                       Update Photo
@@ -423,23 +431,18 @@ export default class MyProfile extends Component {
                         </Button>
                       </DialogActions>
                     </Dialog>
-                    <Grid item>
-                      <Button onClick={this.handleSocialLinksOpen} raised style={style.button}>
+                    <Dialog
+                      open={this.state.socialLinksOpen}
+                      keepMounted
+                      onClose={this.handleSocialLinksClose}
+                      aria-labelledby="alert-dialog-slide-title"
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      <DialogTitle id="simple-dialog-title">
                         Edit your social media links
-                      </Button>
-                      <Dialog
-                        open={this.state.socialLinksOpen}
-                        keepMounted
-                        onClose={this.handleSocialLinksClose}
-                        aria-labelledby="alert-dialog-slide-title"
-                        aria-describedby="alert-dialog-slide-description"
-                      >
-                        <DialogTitle id="simple-dialog-title">
-                          Edit your social media links
-                        </DialogTitle>
-                        <DialogContent>{linksDialog}</DialogContent>
-                      </Dialog>
-                    </Grid>
+                      </DialogTitle>
+                      <DialogContent>{linksDialog}</DialogContent>
+                    </Dialog>
                   </Grid>
                 </Grid>
               </CardContent>

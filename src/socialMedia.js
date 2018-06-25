@@ -3,6 +3,7 @@ import FacebookIcon from 'react-icons/lib/fa/facebook';
 import TwitterIcon from 'react-icons/lib/fa/twitter';
 import LinkedInIcon from 'react-icons/lib/fa/linkedin';
 import InstagramIcon from 'react-icons/lib/fa/instagram';
+import EditIcon from 'react-icons/lib/fa/edit';
 
 export const socialMediaInfo = {
   facebook: {
@@ -24,5 +25,8 @@ export const socialMediaInfo = {
     icon: <InstagramIcon />,
     prefix: 'https://www.instagram.com/',
     error: 'Not a valid instagram link',
+  },
+  edit: {
+    icon: <EditIcon />,
   },
 };
