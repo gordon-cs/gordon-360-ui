@@ -212,7 +212,7 @@ export default class Profile extends Component {
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>
-          <a href={this.state.facebookLink} target="_blank">
+          <a href={this.state.facebookLink} className="icon" target="_blank">
             {socialMediaInfo.facebook.icon}
           </a>
         </Grid>
@@ -221,7 +221,7 @@ export default class Profile extends Component {
     if (this.state.twitterLink !== '') {
       twitterButton = (
         <Grid item>
-          <a href={this.state.twitterLink} target="_blank">
+          <a href={this.state.twitterLink} className="icon" target="_blank">
             {socialMediaInfo.twitter.icon}
           </a>
         </Grid>
@@ -230,7 +230,7 @@ export default class Profile extends Component {
     if (this.state.linkedInLink !== '') {
       linkedInButton = (
         <Grid item>
-          <a href={this.state.linkedInLink} target="_blank">
+          <a href={this.state.linkedInLink} className="icon" target="_blank">
             {socialMediaInfo.linkedIn.icon}
           </a>
         </Grid>
@@ -239,7 +239,7 @@ export default class Profile extends Component {
     if (this.state.instagramLink !== '') {
       instagramButton = (
         <Grid item>
-          <a href={this.state.instagramLink} target="_blank">
+          <a href={this.state.instagramLink} className="icon" target="_blank">
             {socialMediaInfo.instagram.icon}
           </a>
         </Grid>

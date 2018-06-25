@@ -455,10 +455,10 @@ function updateSocialLink(type, link) {
     case 'twitter':
       linkToSend = link.substring(socialMediaInfo.twitter.prefix.length);
       break;
-    case 'linkedin':
-      linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length - 1); //linkedIn copy-paste
-      break; //leaves trailing slash
-    case 'instagram': //causing problems
+    case 'linkedin': //linkedIn copy-paste leaves trailing slash causing problems
+      linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length, link.length - 1);
+      break;
+    case 'instagram':
       linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
       break;
     default:
