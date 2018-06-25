@@ -67,9 +67,12 @@ const createRequest = (url, method, body, headerOptions) =>
  * response code
  */
 export const parseResponse = res => {
-  // Attempt to parse body of response
+  // Parse body of response if not empty
+  //    Make sure text of response is not empty before trying to convert it
+  //    to a JSON object
   const json = res
-    .json()
+    .text()
+    .then(text => (text.length ? JSON.parse(text) : {}))
     // Handle error if response body is not valid JSON
     .catch(err => Promise.reject(createError(err, res)));
 
