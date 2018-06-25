@@ -10,6 +10,7 @@ import { AuthError } from './error';
 import http from './http';
 import session from './session';
 import storage from './storage';
+import { socialMediaInfo } from '../socialMedia';
 
 /**
  * @global
@@ -308,7 +309,6 @@ function dataURItoBlob(dataURI) {
   if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
   else byteString = unescape(dataURI.split(',')[1]);
 
-  console.log(byteString);
   // separate out the mime component
   var mimeString = dataURI
     .split(',')[0]
@@ -320,8 +320,7 @@ function dataURItoBlob(dataURI) {
   for (var i = 0; i < byteString.length; i++) {
     ia[i] = byteString.charCodeAt(i);
   }
-  console.log([ia]);
-  console.log(mimeString);
+
   return new Blob([ia], { type: mimeString });
 }
 
@@ -396,6 +395,11 @@ function toggleMobilePhonePrivacy() {
   setPrivacy(newPrivacy);
 }
 
+async function setImagePrivacy(makePrivate) {
+  // 'Y' = show image, 'N' = don't show image
+  await http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y'));
+}
+
 const getMemberships = async id => {
   let memberships;
   memberships = await http.get(`memberships/student/${id}`);
@@ -442,8 +446,45 @@ const getProfileInfo = async username => {
   return profile;
 };
 
+function updateSocialLink(type, link) {
+  let linkToSend;
+  let url;
+  //Get link ready to send to API
+  //Remove domain names
+  switch (type) {
+    case 'facebook':
+      linkToSend = link.substring(socialMediaInfo.facebook.prefix.length);
+      break;
+    case 'twitter':
+      linkToSend = link.substring(socialMediaInfo.twitter.prefix.length);
+      break;
+    case 'linkedin': //linkedIn copy-paste leaves trailing slash causing problems
+      if (link.charAt(link.length - 1) === '/') {
+        linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length, link.length - 1);
+      } else {
+        linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length);
+      }
+      break;
+    case 'instagram':
+      linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
+      break;
+    default:
+      break;
+  }
+  linkToSend = encodeURIComponent(linkToSend);
+
+  url = {
+    [type]: linkToSend,
+  };
+  //Send put request
+  return http.put('profiles/' + type, url).catch(() => {
+    console.log('put requested');
+  });
+}
+
 export default {
   toggleMobilePhonePrivacy,
+  setImagePrivacy,
   getMemberships,
   getAttendedEvents,
   getChapelCredits,
@@ -454,4 +495,5 @@ export default {
   resetImage,
   postImage,
   getTranscriptInfo,
+  updateSocialLink,
 };

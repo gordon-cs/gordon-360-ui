@@ -10,6 +10,7 @@ $drawer-width: 240px;
 
   .app-bar {
     position: absolute;
+    background-repeat: no-repeat;
   }
 
   .tab {
@@ -17,18 +18,46 @@ $drawer-width: 240px;
     text-transform: capitalize;
     min-width: 90px;
   }
-  @media (min-width: $break-lg) {
-    .tab {
-      min-width: 160px;
-    }
-  }
 
   .menu-button {
     margin-left: -12px;
   }
+
+  @media (min-width: 0px) {
+    .app-bar {
+      background-image: url('./gc_seal_top_56.png');
+    }
+
+    .center-container {
+      display: none;
+    }
+  }
+
+  @media (min-width: $break-sm) {
+    .app-bar {
+      background-image: url('./gc_seal_top_64.png');
+    }
+  }
+
   @media (min-width: $break-md) {
     .menu-button {
       display: none;
+    }
+    .app-bar {
+      background-image: url('./gc_seal_top_72.png');
+    }
+
+    .center-container {
+      flex: 8;
+      justify-content: center;
+      // float: none;
+      display: flex;
+    }
+  }
+
+  @media (min-width: $break-lg) {
+    .tab {
+      min-width: 160px;
     }
   }
 
@@ -40,23 +69,7 @@ $drawer-width: 240px;
   .title {
     flex: 1;
     margin-right: 10px;
-    margin-left: 34px;
     font-weight: bold;
-  }
-
-  @media (min-width: 0) {
-    .center-container {
-      display: none;
-    }
-  }
-
-  @media (min-width: $break-md) {
-    .center-container {
-      flex: 8;
-      justify-content: center;
-      // float: none;
-      display: flex;
-    }
   }
 
   .right-side-container {
