@@ -102,43 +102,47 @@ export default class GordonActivitiesAll extends Component {
 
     return (
       <section className="activities-all">
-        <Grid container className="activities-filter">
-          <Grid item xs={12} md={6} lg={3}>
-            <FormControl fullWidth>
-              <InputLabel htmlFor="activity-session">Session</InputLabel>
-              <Select
-                value={this.state.session}
-                onChange={this.changeSession}
-                input={<Input id="activity-session" />}
-              >
-                {sessionOptions}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <FormControl fullWidth>
-              <InputLabel htmlFor="activity-type">Type</InputLabel>
-              <Select
-                value={this.state.type}
-                onChange={this.filter('type')}
-                input={<Input id="activity-type" />}
-              >
-                <MenuItem label="All" value="">
-                  <em>All</em>
-                </MenuItem>
-                {typeOptions}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} md={12} lg={6}>
-            <TextField
-              id="search"
-              label="Search"
-              value={this.state.search}
-              onChange={this.filter('search')}
-              margin="none"
-              fullWidth
-            />
+        <Grid container justify="center">
+          <Grid item xs={12} md={12} lg={8}>
+            <Grid container className="activities-filter">
+              <Grid item xs={12} md={6} lg={3}>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="activity-session">Session</InputLabel>
+                  <Select
+                    value={this.state.session}
+                    onChange={this.changeSession}
+                    input={<Input id="activity-session" />}
+                  >
+                    {sessionOptions}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6} lg={3}>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="activity-type">Type of Involvement</InputLabel>
+                  <Select
+                    value={this.state.type}
+                    onChange={this.filter('type')}
+                    input={<Input id="activity-type" />}
+                  >
+                    <MenuItem label="All" value="">
+                      <em>All</em>
+                    </MenuItem>
+                    {typeOptions}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={12} lg={6}>
+                <TextField
+                  id="search"
+                  label="Search"
+                  value={this.state.search}
+                  onChange={this.filter('search')}
+                  margin="none"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         {content}
