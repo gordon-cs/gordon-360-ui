@@ -116,6 +116,7 @@ export default class MyProfile extends Component {
       this.setState({ instagramLink: ig });
       user.updateSocialLink('instagram', ig);
     }
+  }
 
   changePrivacy() {
     if (this.state.button === 'Make Public') {
