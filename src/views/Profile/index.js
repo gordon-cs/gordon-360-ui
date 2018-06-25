@@ -11,7 +11,6 @@ import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
 import Activities from './../../components/ActivityList';
 import GordonLoader from './../../components/Loader';
-import { typography } from 'material-ui/styles';
 import { socialMediaInfo } from '../../socialMedia';
 
 //Public profile view

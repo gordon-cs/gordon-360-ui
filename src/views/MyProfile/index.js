@@ -260,7 +260,7 @@ export default class Profile extends Component {
       justifyContent: 'center',
       alignItems: 'center',
     };
-
+    let PersonalInfo;
     let activityList;
     if (!this.state.activities) {
       activityList = <GordonLoader />;
@@ -305,7 +305,7 @@ export default class Profile extends Component {
         </CardContent>
       );
 
-      var PersonalInfo = (
+      PersonalInfo = (
         <List>
           <ListItem>
             <Typography>Department: {this.state.profile.OnCampusDepartment}</Typography>
@@ -323,7 +323,7 @@ export default class Profile extends Component {
       );
     }
     if (this.state.profile.PersonType === 'stu') {
-      var PersonalInfo = (
+      PersonalInfo = (
         <List>
           <ListItem>
             <Typography>Major: {this.state.profile.Major1Description}</Typography>
