@@ -10,6 +10,7 @@ import { AuthError } from './error';
 import http from './http';
 import session from './session';
 import storage from './storage';
+import { socialMediaInfo } from '../socialMedia';
 
 /**
  * @global
@@ -443,6 +444,38 @@ const getProfileInfo = async username => {
   return profile;
 };
 
+function updateSocialLink(type, link) {
+  let linkToSend;
+  let url;
+  //Get link ready to send to API
+  //Remove domain names
+  switch (type) {
+    case 'facebook':
+      linkToSend = link.substring(socialMediaInfo.facebook.prefix.length);
+      break;
+    case 'twitter':
+      linkToSend = link.substring(socialMediaInfo.twitter.prefix.length);
+      break;
+    case 'linkedin': //linkedIn copy-paste leaves trailing slash causing problems
+      linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length, link.length - 1);
+      break;
+    case 'instagram':
+      linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
+      break;
+    default:
+      break;
+  }
+  linkToSend = encodeURIComponent(linkToSend);
+
+  url = {
+    [type]: linkToSend,
+  };
+  //Send put request
+  return http.put('profiles/' + type, url).catch(() => {
+    console.log('put requested');
+  });
+}
+
 export default {
   toggleMobilePhonePrivacy,
   getMemberships,
@@ -455,4 +488,5 @@ export default {
   resetImage,
   postImage,
   getTranscriptInfo,
+  updateSocialLink,
 };
