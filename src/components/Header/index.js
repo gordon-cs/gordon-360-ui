@@ -58,7 +58,6 @@ export default class GordonHeader extends Component {
             >
               <MenuIcon />
             </IconButton>
-            <img src={require('./GordonSeal.png')} alt="Gordon College" />
             <Typography className="title" type="title" color="inherit">
               <Switch>
                 {routes.map(route => (
