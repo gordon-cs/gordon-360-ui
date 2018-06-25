@@ -257,8 +257,7 @@ export default class MyProfile extends Component {
                               style={{
                                 'max-width': this.maxCropPreviewWidth(),
                                 'max-height':
-                                  this.maxCropPreviewWidth() / 
-                                  this.state.cropperData.aspectRatio,
+                                  this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
                                 justify: 'center',
                               }}
                               autoCropArea={1}
