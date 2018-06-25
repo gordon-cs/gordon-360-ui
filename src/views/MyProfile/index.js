@@ -32,7 +32,6 @@ export default class Profile extends Component {
   constructor(props) {
     super(props);
 
-    this.handleExpandClick = this.handleExpandClick.bind(this);
     this.onDialogSubmit = this.onDialogSubmit.bind(this);
 
     this.state = {
