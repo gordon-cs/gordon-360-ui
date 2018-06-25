@@ -17,7 +17,9 @@ import Dialog, {
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import Activities from './../../components/ActivityList';
+import LinksDialog from './Components/LinksDialog';
 import GordonLoader from './../../components/Loader';
+import { socialMediaInfo } from '../../socialMedia';
 
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -29,6 +31,7 @@ export default class MyProfile extends Component {
     super(props);
 
     this.handleExpandClick = this.handleExpandClick.bind(this);
+    this.onDialogSubmit = this.onDialogSubmit.bind(this);
 
     this.state = {
       username: String,
@@ -39,8 +42,13 @@ export default class MyProfile extends Component {
       profile: {},
       activities: [],
       files: [],
-      open: false,
+      photoOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
+      socialLinksOpen: false,
+      facebookLink: '',
+      linkedInLink: '',
+      twitterLink: '',
+      instagramLink: '',
     };
   }
 
@@ -49,8 +57,8 @@ export default class MyProfile extends Component {
     user.toggleMobilePhonePrivacy();
   }
 
-  handleOpen = () => {
-    this.setState({ open: true });
+  handlePhotoOpen = () => {
+    this.setState({ photoOpen: true });
   };
 
   handleCloseSubmit = () => {
@@ -60,20 +68,47 @@ export default class MyProfile extends Component {
       window.didProfilePicUpdate = true;
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({ image: imageNoHeader });
-      this.setState({ open: false, preview: null });
+      this.setState({ photoOpen: false, preview: null });
     }
   };
 
   handleCloseCancel = () => {
-    this.setState({ open: false, preview: null });
+    this.setState({ photoOpen: false, preview: null });
   };
 
   handleResetImage = () => {
     user.resetImage();
     this.loadProfile();
     window.didProfilePicUpdate = true;
-    this.setState({ open: false, preview: null });
+    this.setState({ photoOpen: false, preview: null });
   };
+
+  handleSocialLinksOpen = () => {
+    this.setState({ socialLinksOpen: true });
+  };
+  handleSocialLinksClose = () => {
+    this.setState({ socialLinksOpen: false });
+  };
+  onDialogSubmit(fb, tw, li, ig) {
+    // For links that have changed, update this.state
+    // and send change to database.
+    if (fb !== this.state.facebookLink) {
+      this.setState({ facebookLink: fb });
+      user.updateSocialLink('facebook', fb);
+    }
+    if (tw !== this.state.twitterLink) {
+      this.setState({ twitterLink: tw });
+      user.updateSocialLink('twitter', tw);
+    }
+    if (li !== this.state.linkedInLink) {
+      this.setState({ linkedInLink: li });
+      user.updateSocialLink('linkedin', li);
+    }
+    if (ig !== this.state.instagramLink) {
+      this.setState({ instagramLink: ig });
+      user.updateSocialLink('instagram', ig);
+    }
+  }
 
   changePrivacy() {
     if (this.state.button === 'Make Public') {
@@ -157,6 +192,26 @@ export default class MyProfile extends Component {
     } else {
       this.setState({ button: 'Make Public' });
     }
+    // Set state of social media links to database values after load.
+    // If not empty, add domain name back in for display and buttons.
+    this.setState({
+      facebookLink:
+        this.state.profile.Facebook === null || this.state.profile.Facebook === ''
+          ? ''
+          : socialMediaInfo.facebook.prefix + this.state.profile.Facebook,
+      twitterLink:
+        this.state.profile.Twitter === null || this.state.profile.Twitter === ''
+          ? ''
+          : socialMediaInfo.twitter.prefix + this.state.profile.Twitter,
+      linkedInLink:
+        this.state.profile.LinkedIn === null || this.state.profile.LinkedIn === ''
+          ? ''
+          : socialMediaInfo.linkedIn.prefix + this.state.profile.LinkedIn,
+      instagramLink:
+        this.state.profile.Instagram === null || this.state.profile.Instagram === ''
+          ? ''
+          : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
+    });
   }
 
   render() {
@@ -194,6 +249,79 @@ export default class MyProfile extends Component {
       ));
     }
 
+    let linksDialog = (
+      <LinksDialog
+        onDialogSubmit={this.onDialogSubmit}
+        handleSocialLinksClose={this.handleSocialLinksClose}
+        {...this.state}
+      />
+    );
+
+    // Define what icon buttons will display
+    // (only the sites that have links in database)
+    let facebookButton;
+    let twitterButton;
+    let linkedInButton;
+    let instagramButton;
+    let editButton;
+    let linkCount = 0; // To record wether or not any links are displayed
+    if (this.state.facebookLink !== '') {
+      facebookButton = (
+        <Grid item>
+          <a href={this.state.facebookLink} className="icon" target="_blank">
+            {socialMediaInfo.facebook.icon}
+          </a>
+        </Grid>
+      );
+      linkCount += 1;
+    }
+    if (this.state.twitterLink !== '') {
+      twitterButton = (
+        <Grid item>
+          <a href={this.state.twitterLink} className="icon" target="_blank">
+            {socialMediaInfo.twitter.icon}
+          </a>
+        </Grid>
+      );
+      linkCount += 1;
+    }
+    if (this.state.linkedInLink !== '') {
+      linkedInButton = (
+        <Grid item>
+          <a href={this.state.linkedInLink} className="icon" target="_blank">
+            {socialMediaInfo.linkedIn.icon}
+          </a>
+        </Grid>
+      );
+      linkCount += 1;
+    }
+    if (this.state.instagramLink !== '') {
+      instagramButton = (
+        <Grid item>
+          <a href={this.state.instagramLink} className="icon" target="_blank">
+            {socialMediaInfo.instagram.icon}
+          </a>
+        </Grid>
+      );
+      linkCount += 1;
+    }
+    if (linkCount > 0) {
+      editButton = (
+        <Grid item>
+          <a onClick={this.handleSocialLinksOpen} className="icon">
+            {socialMediaInfo.edit.icon}
+          </a>
+        </Grid>
+      );
+    } else {
+      editButton = (
+        <Grid item>
+          <a onClick={this.handleSocialLinksOpen} className="edit">
+            EDIT SOCIAL MEDIA LINKS
+          </a>
+        </Grid>
+      );
+    }
     return (
       <div>
         <Grid container justify="center">
@@ -214,11 +342,18 @@ export default class MyProfile extends Component {
                       title={this.state.profile.fullName}
                       subheader={this.state.profile.Class}
                     />
-                    <Button onClick={this.handleOpen} raised style={style.button}>
+                    <Grid container>
+                      {facebookButton}
+                      {twitterButton}
+                      {linkedInButton}
+                      {instagramButton}
+                      {editButton}
+                    </Grid>
+                    <Button onClick={this.handlePhotoOpen} raised style={style.button}>
                       Update Photo
                     </Button>
                     <Dialog
-                      open={this.state.open}
+                      open={this.state.photoOpen}
                       keepMounted
                       onClose={this.handleClose}
                       aria-labelledby="alert-dialog-slide-title"
@@ -303,6 +438,18 @@ export default class MyProfile extends Component {
                           Cancel
                         </Button>
                       </DialogActions>
+                    </Dialog>
+                    <Dialog
+                      open={this.state.socialLinksOpen}
+                      keepMounted
+                      onClose={this.handleSocialLinksClose}
+                      aria-labelledby="alert-dialog-slide-title"
+                      aria-describedby="alert-dialog-slide-description"
+                    >
+                      <DialogTitle id="simple-dialog-title">
+                        Edit your social media links
+                      </DialogTitle>
+                      <DialogContent>{linksDialog}</DialogContent>
                     </Dialog>
                   </Grid>
                 </Grid>

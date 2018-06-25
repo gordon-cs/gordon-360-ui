@@ -43,16 +43,33 @@ export default class GordonNavAvatarRightCorner extends Component {
   }
 
   async componentWillMount() {
+    this.loadAvatar();
+  }
+  
+  componentDidMount() {
+    setInterval(this.checkPeer.bind(this), 1500);
+  }
+
+  async loadAvatar() {
     const { name, user_name: username } = user.getLocalInfo();
     this.setState({ name, username });
     const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
       await user.getProfileInfo(),
       await user.getImage(),
     ]);
-
     const image = preferredImage || defaultImage;
-
     this.setState({ email, image });
+  }
+
+  /**
+   * This method checks a peer component Profile
+   * and rerenders the avatar if the Profile picture is updated
+   */
+  checkPeer() {
+    if (window.didProfilePicUpdate) {
+      this.loadAvatar();
+      window.didProfilePicUpdate = false;
+    }
   }
 
   getInitials() {
@@ -70,6 +87,8 @@ export default class GordonNavAvatarRightCorner extends Component {
 
     // const { classes } = this.props;
 
+    let username = this.state.username;
+    let myProfileLink = '/myprofile/' + username;
     let avatar = (
       <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>
     );
@@ -103,7 +122,7 @@ export default class GordonNavAvatarRightCorner extends Component {
           open={open}
           onRequestClose={this.onClose}
         >
-          <Link to="/myprofile/ ">
+          <Link to={myProfileLink}>
             <MenuItem onClick={this.onClose}>My Profile</MenuItem>
           </Link>
           <Link to="/help">
