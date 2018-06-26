@@ -1,13 +1,16 @@
-import Button from 'material-ui/Button';
-import Card, { CardContent } from 'material-ui/Card';
-import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog';
-import Grid from 'material-ui/Grid';
-import Input from 'material-ui/Input';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import TextField from 'material-ui/TextField';
-import Typography from 'material-ui/Typography';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 import activity from '../../services/activity';
 import './activity-profile.css';
@@ -255,7 +258,7 @@ class ActivityProfile extends Component {
       let description;
       if (activityBlurb.length !== 0) {
         description = (
-          <Typography type="body1">
+          <Typography variant="body1">
             <strong>Description: </strong>
             {activityBlurb}
           </Typography>
@@ -264,7 +267,7 @@ class ActivityProfile extends Component {
       let website;
       if (activityURL.length !== 0) {
         website = (
-          <Typography type="body1">
+          <Typography variant="body1">
             <strong>Website: </strong>
             <a href={activityURL}> {activityURL}</a>
           </Typography>
@@ -290,14 +293,14 @@ class ActivityProfile extends Component {
         <section className="gordon-activity-profile">
           <Card>
             <CardContent>
-              <Typography align="center" type="display1">
+              <Typography align="center" variant="display1">
                 {activityDescription}
               </Typography>
               <Grid align="center" className="activity-image" item>
                 <img alt={activity.activityDescription} src={activityImagePath} className="img" />
               </Grid>
               <Grid item>{editActivity}</Grid>
-              <Typography type="body1">
+              <Typography variant="body1">
                 <strong>Session: </strong>
                 {sessionDescription}
               </Typography>
@@ -309,7 +312,7 @@ class ActivityProfile extends Component {
                 <strong>Special Information for Joining: </strong>
                 {this.state.activityInfo.ActivityJoinInfo}
               </Typography>
-              <Typography type="body1">
+              <Typography variant="body1">
                 <strong>Current Activity Roster: </strong>
                 {membersNum} Member(s) and {followersNum} follower(s)
               </Typography>

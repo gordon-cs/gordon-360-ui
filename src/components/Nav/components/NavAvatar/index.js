@@ -1,7 +1,7 @@
-import { withStyles } from 'material-ui/styles';
-import Avatar from 'material-ui/Avatar';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -85,10 +85,10 @@ class GordonNavAvatar extends Component {
         component={buttonLink}
       >
         {avatar}
-        <Typography type="body2" className="text" align="left" gutterBottom>
+        <Typography variant="body2" className="text" align="left" gutterBottom>
           {this.state.name}
         </Typography>
-        <Typography type="caption" className="text" align="left" gutterBottom>
+        <Typography variant="caption" className="text" align="left" gutterBottom>
           {this.state.email}
         </Typography>
       </Button>

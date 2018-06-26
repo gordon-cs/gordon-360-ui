@@ -1,4 +1,4 @@
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 
 import Carousel from './components/Carousel';

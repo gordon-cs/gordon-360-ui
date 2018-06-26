@@ -1,8 +1,9 @@
-import Avatar from 'material-ui/Avatar';
-import IconButton from 'material-ui/IconButton';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Menu, { MenuItem } from 'material-ui/Menu';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 
 import { signOut } from '../../../../services/auth';
@@ -120,7 +121,7 @@ export default class GordonNavAvatarRightCorner extends Component {
           id="nav-avatar-right-corner"
           anchorEl={this.state.anchorEl}
           open={open}
-          onRequestClose={this.onClose}
+          onClose={this.onClose}
         >
           <Link to={myProfileLink}>
             <MenuItem onClick={this.onClose}>My Profile</MenuItem>

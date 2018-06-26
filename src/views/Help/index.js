@@ -1,4 +1,4 @@
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 
 import './help.css';
@@ -11,18 +11,18 @@ export default class Help extends Component {
 
     return (
       <section>
-        <Typography type="display1" gutterBottom style={style}>
+        <Typography variant="display1" gutterBottom style={style}>
           Login
         </Typography>
-        <Typography type="body1" gutterBottom component="ul">
+        <Typography variant="body1" gutterBottom component="ul">
           <li>Firstname.Lastname or Gordon email address</li>
           <li>Normal Gordon password</li>
         </Typography>
         <br />
-        <Typography type="display1" gutterBottom style={style}>
+        <Typography variant="display1" gutterBottom style={style}>
           Site Navigation
         </Typography>
-        <Typography type="body1" gutterBottom component="ul">
+        <Typography variant="body1" gutterBottom component="ul">
           <li>
             <strong>My Involvements</strong> &ndash; List of Current and Past Leadership or
             Memberships. If blank, go to All Involvements to get connected.
@@ -52,10 +52,10 @@ export default class Help extends Component {
           </li>
         </Typography>
         <br />
-        <Typography type="display1" gutterBottom style={style}>
+        <Typography variant="display1" gutterBottom style={style}>
           User Levels
         </Typography>
-        <Typography type="body1" gutterBottom component="ul">
+        <Typography variant="body1" gutterBottom component="ul">
           <li>
             <strong>Subscriber</strong> &ndash; Guest mode, can follow Activity Group and receive
             Group Email. Does not appear on Transcript view.
@@ -82,10 +82,10 @@ export default class Help extends Component {
           </li>
         </Typography>
         <br />
-        <Typography type="display1" gutterBottom style={style}>
+        <Typography variant="display1" gutterBottom style={style}>
           Management/Editing Functions
         </Typography>
-        <Typography type="body1" gutterBottom component="ul">
+        <Typography variant="body1" gutterBottom component="ul">
           <li>
             <strong>Group Email</strong> &ndash; Leaders/Advisors can email the full roster of
             Members, plus any Subscribers to your Communications feed. Allows direct connection
@@ -125,30 +125,30 @@ export default class Help extends Component {
           </li>
         </Typography>
         <br />
-        <Typography type="display1" gutterBottom style={style}>
+        <Typography variant="display1" gutterBottom style={style}>
           Troubleshooting/Issues
         </Typography>
-        <Typography type="body1" gutterBottom component="ul">
+        <Typography variant="body1" gutterBottom component="ul">
           <li>
             Contact CTS for issues using the portal on your device, or for login issues, or any
             peculiar behaviors.
           </li>
         </Typography>
         <br />
-        <Typography type="display1" gutterBottom style={style}>
+        <Typography variant="display1" gutterBottom style={style}>
           Platforms
         </Typography>
-        <Typography type="body1" gutterBottom component="ul">
+        <Typography variant="body1" gutterBottom component="ul">
           <li>
             Tested successfully on Windows (IE, Firefox, Chrome), Mac (Safari, Firefox, Chrome), and
             on Android and iPhone default browsers.
           </li>
         </Typography>
         <br />
-        <Typography type="display1" gutterBottom style={style}>
+        <Typography variant="display1" gutterBottom style={style}>
           FAQ
         </Typography>
-        <Typography type="body1" gutterBottom component="ul">
+        <Typography variant="body1" gutterBottom component="ul">
           <li>
             <strong>Do I have to join a group each semester?</strong> Yes. This allows each student
             to control their inclusion in groups or activities for their Transcript. Student Leaders

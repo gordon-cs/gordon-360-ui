@@ -1,19 +1,20 @@
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
-import MenuIcon from 'material-ui-icons/Menu';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import HomeIcon from '@material-ui/icons/Home';
+import LocalActivityIcon from '@material-ui/icons/LocalActivity';
+import EventIcon from '@material-ui/icons/Event';
+import PeopleIcon from '@material-ui/icons/People';
+import DescriptionIcon from '@material-ui/icons/Description';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import { Route, Switch } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
-import HomeIcon from 'material-ui-icons/Home';
-import LocalActivityIcon from 'material-ui-icons/LocalActivity';
-import EventIcon from 'material-ui-icons/Event';
-import DescriptionIcon from 'material-ui-icons/Description';
-import PeopleIcon from 'material-ui-icons/People';
-import Tabs, { Tab } from 'material-ui/Tabs';
+import { Route, Switch, NavLink } from 'react-router-dom';
+
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
@@ -58,7 +59,7 @@ export default class GordonHeader extends Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography className="title" type="title" color="inherit">
+            <Typography className="title" variant="title" color="inherit">
               <Switch>
                 {routes.map(route => (
                   <Route

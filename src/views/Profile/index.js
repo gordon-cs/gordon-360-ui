@@ -1,10 +1,12 @@
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import Divider from 'material-ui/Divider/Divider';
-import Card, { CardContent, CardHeader } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-import List from 'material-ui/List/List';
-import ListItem from 'material-ui/List/ListItem';
+import Divider from '@material-ui/core/Divider/';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 import user from './../../services/user';
 import Majors from './../../components/MajorList';

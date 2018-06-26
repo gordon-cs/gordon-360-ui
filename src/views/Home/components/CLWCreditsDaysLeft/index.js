@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import Card, { CardContent /* CardHeader */ } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
 
 import { gordonColors } from '../../../../theme';
@@ -102,12 +103,12 @@ export default class CLWCreditsDaysLeft extends Component {
             style={{ paddingTop: 5, paddingBottom: 5 }}
           >
             <Grid item>
-              <Typography type="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${daysLeft} Days Left in Semester`}
               </Typography>
             </Grid>
             <Grid item>
-              <Typography type="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${current} CL&W Credit` + (current === 1 ? '' : 's') + ' Earned'}
               </Typography>
             </Grid>
@@ -134,7 +135,7 @@ export default class CLWCreditsDaysLeft extends Component {
     return (
       <Card>
         <CardContent>
-          <Typography type="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
             Christian Life & Worship Credits
           </Typography>
           {content}

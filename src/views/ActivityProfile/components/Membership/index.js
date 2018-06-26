@@ -1,12 +1,16 @@
-import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog';
-import Grid from 'material-ui/Grid';
-import { FormControl } from 'material-ui/Form';
-import { MenuItem } from 'material-ui/Menu';
-import Select from 'material-ui/Select';
-import TextField from 'material-ui/TextField';
-import Typography from 'material-ui/Typography';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 
 import activity from '../../../../services/activity';
@@ -332,7 +336,7 @@ export default class Membership extends Component {
                       </DialogContent>
                     </Dialog>
                     <Grid item xs={12}>
-                      <Typography type="headline">Membership Requests</Typography>
+                      <Typography variant="headline">Membership Requests</Typography>
                       {requestList}
                     </Grid>
                     <Grid item>{confirmRoster}</Grid>

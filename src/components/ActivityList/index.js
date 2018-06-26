@@ -1,8 +1,8 @@
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import Divider from 'material-ui/Divider/Divider';
+import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 
 export default class Activities extends Component {
