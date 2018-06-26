@@ -554,48 +554,58 @@ export default class Profile extends Component {
                         )}
                       </DialogContent>
                       <DialogActions>
-                        <Tooltip
-                          id="tooltip-hide"
-                          title={
-                            this.state.isImagePublic
-                              ? 'Only faculty and police will see your photo'
-                              : 'Make photo visible to other students'
-                          }
-                        >
-                          <Button
-                            onClick={this.toggleImagePrivacy.bind(this)}
-                            raised
-                            style={style.button}
-                          >
-                            {this.state.isImagePublic ? 'Hide' : 'Show'}
-                          </Button>
-                        </Tooltip>
-                        <Tooltip id="tooltip-reset" title="Restore your original ID photo">
-                          <Button
-                            onClick={this.handleResetImage}
-                            raised
-                            style={{ background: 'tomato', color: 'white' }}
-                          >
-                            Reset
-                          </Button>
-                        </Tooltip>
-                        <Button onClick={this.handleCloseCancel} raised style={style.button}>
-                          Cancel
-                        </Button>
-                        <Tooltip id="tooltip-submit" title="Crop to current region and submit">
-                          <Button
-                            onClick={this.handleCloseSubmit}
-                            raised
-                            disabled={!this.state.preview}
-                            style={
-                              this.state.preview
-                                ? style.button
-                                : { background: 'darkgray', color: 'white' }
-                            }
-                          >
-                            Submit
-                          </Button>
-                        </Tooltip>
+                        <Grid container spacing={8} justify="flex-end">
+                          <Grid item>
+                            <Tooltip
+                              id="tooltip-hide"
+                              title={
+                                this.state.isImagePublic
+                                  ? 'Only faculty and police will see your photo'
+                                  : 'Make photo visible to other students'
+                              }
+                            >
+                              <Button
+                                onClick={this.toggleImagePrivacy.bind(this)}
+                                raised
+                                style={style.button}
+                              >
+                                {this.state.isImagePublic ? 'Hide' : 'Show'}
+                              </Button>
+                            </Tooltip>
+                          </Grid>
+                          <Grid item>
+                            <Tooltip id="tooltip-reset" title="Restore your original ID photo">
+                              <Button
+                                onClick={this.handleResetImage}
+                                raised
+                                style={{ background: 'tomato', color: 'white' }}
+                              >
+                                Reset
+                              </Button>
+                            </Tooltip>
+                          </Grid>
+                          <Grid item>
+                            <Button onClick={this.handleCloseCancel} raised style={style.button}>
+                              Cancel
+                            </Button>
+                          </Grid>
+                          <Grid item>
+                            <Tooltip id="tooltip-submit" title="Crop to current region and submit">
+                              <Button
+                                onClick={this.handleCloseSubmit}
+                                raised
+                                disabled={!this.state.preview}
+                                style={
+                                  this.state.preview
+                                    ? style.button
+                                    : { background: 'darkgray', color: 'white' }
+                                }
+                              >
+                                Submit
+                              </Button>
+                            </Tooltip>
+                          </Grid>
+                        </Grid>
                       </DialogActions>
                     </Dialog>
                     <Dialog
