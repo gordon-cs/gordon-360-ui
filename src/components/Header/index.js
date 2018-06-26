@@ -57,7 +57,7 @@ export default class GordonHeader extends Component {
               aria-label="open drawer"
               onClick={this.props.onDrawerToggle}
             >
-              <MenuIcon />
+              <MenuIcon className="menu-button-icon" />
             </IconButton>
             <Typography className="title" variant="title" color="inherit">
               <Switch>
