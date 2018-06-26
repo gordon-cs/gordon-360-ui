@@ -103,9 +103,9 @@ export default class GordonActivitiesAll extends Component {
 
     return (
       <section className="activities-all">
-        <Grid container justify="center">
+        <Grid container justify="center" spacing="16">
           <Grid item xs={12} md={12} lg={8}>
-            <Grid container className="activities-filter">
+            <Grid container className="activities-filter" spacing="16">
               <Grid item xs={12} md={6} lg={3}>
                 <FormControl fullWidth>
                   <InputLabel htmlFor="activity-session">Session</InputLabel>
