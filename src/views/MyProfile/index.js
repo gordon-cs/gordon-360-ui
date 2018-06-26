@@ -1,19 +1,20 @@
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import Divider from 'material-ui/Divider/Divider';
-import Card, { CardContent, CardHeader } from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import Tooltip from 'material-ui/Tooltip';
-import Typography from 'material-ui/Typography';
-import List from 'material-ui/List/List';
-import ListItem from 'material-ui/List/ListItem';
+import Divider from '@material-ui/core/Divider/';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import Dropzone from 'react-dropzone';
-import Dialog, {
-  DialogTitle,
-  DialogActions,
-  DialogContentText,
-  DialogContent,
-} from 'material-ui/Dialog';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
@@ -24,14 +25,14 @@ import { socialMediaInfo } from '../../socialMedia';
 
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import Switch from '@material-ui/core/Switch';
 
 const CROP_DIM = 200; // pixels
 
-export default class MyProfile extends Component {
+export default class Profile extends Component {
   constructor(props) {
     super(props);
 
-    this.handleExpandClick = this.handleExpandClick.bind(this);
     this.onDialogSubmit = this.onDialogSubmit.bind(this);
 
     this.state = {
@@ -54,8 +55,7 @@ export default class MyProfile extends Component {
     };
   }
 
-  handleExpandClick() {
-    this.changePrivacy();
+  handleChangePrivacy() {
     user.toggleMobilePhonePrivacy();
   }
 
@@ -64,7 +64,7 @@ export default class MyProfile extends Component {
   };
 
   handleCloseSubmit = () => {
-    if (this.state.preview) {
+    if (this.state.preview != null) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
       user.postImage(croppedImage);
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
@@ -85,9 +85,9 @@ export default class MyProfile extends Component {
   };
 
   toggleImagePrivacy = () => {
-    this.setState({isImagePublic: !this.state.isImagePublic});
+    this.setState({ isImagePublic: !this.state.isImagePublic });
     user.setImagePrivacy(this.state.isImagePublic);
-  }
+  };
 
   handleSocialLinksOpen = () => {
     this.setState({ socialLinksOpen: true });
@@ -134,16 +134,16 @@ export default class MyProfile extends Component {
     const aspect = this.state.cropperData.aspectRatio;
     console.log(aspect);
 
-    var maxWidth = window.innerWidth *
-                   (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
+    var maxWidth =
+      window.innerWidth *
+      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
     var correspondingHeight = maxWidth / aspect;
     var maxHeight = window.innerHeight * maxHeightRatio;
     var correspondingWidth = maxHeight * aspect;
 
     if (correspondingHeight > maxHeight) {
       return correspondingWidth;
-    }
-    else {
+    } else {
       return maxWidth;
     }
   }
@@ -167,7 +167,7 @@ export default class MyProfile extends Component {
           var aRatio = i.width / i.height;
           this.setState({ cropperData: { aspectRatio: aRatio } });
           var maxWidth = this.maxCropPreviewWidth();
-          var displayWidth = (maxWidth > i.width) ? i.width : maxWidth;
+          var displayWidth = maxWidth > i.width ? i.width : maxWidth;
           var cropDim = this.minCropBoxDim(i.width, displayWidth);
           this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
           this.setState({ preview: dataURL });
@@ -190,7 +190,6 @@ export default class MyProfile extends Component {
   }
 
   componentWillMount() {
-    // const { username } = this.props.match.params.username;
     this.loadProfile();
   }
 
@@ -198,14 +197,15 @@ export default class MyProfile extends Component {
     this.setState({ loading: true });
     try {
       const profile = await user.getProfileInfo();
-      this.setState({ profile });
+      this.setState({ privacy: profile.IsMobilePhonePrivate });
+      this.setState({ loading: false, profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
       const activities = await user.getMemberships(profile.ID);
       const image = preferredImage || defaultImage;
       this.setState({ image, loading: false, activities });
-      this.setState({ isImagePublic: this.state.profile.show_pic })
+      this.setState({ isImagePublic: this.state.profile.show_pic });
     } catch (error) {
       this.setState({ error });
     }
@@ -261,7 +261,7 @@ export default class MyProfile extends Component {
       justifyContent: 'center',
       alignItems: 'center',
     };
-
+    let PersonalInfo;
     let activityList;
     if (!this.state.activities) {
       activityList = <GordonLoader />;
@@ -269,6 +269,115 @@ export default class MyProfile extends Component {
       activityList = this.state.activities.map(activity => (
         <Activities Activity={activity} key={activity.MembershipID} />
       ));
+    }
+
+    let address;
+    let homeStreet;
+    if (
+      this.state.profile.Country === 'United States Of America' ||
+      this.state.profile.Country === ''
+    ) {
+      address = `${this.state.profile.HomeCity},${this.state.profile.HomeState}`;
+      homeStreet = `${this.state.profile.HomeStreet2}`;
+    } else {
+      address = `${this.state.profile.Country}`;
+    }
+
+    if (this.state.profile.PersonType === 'fac') {
+      var Office = (
+        <CardContent>
+          <CardHeader title="Office Information" />
+          <List>
+            <ListItem>
+              <Typography>
+                Room: {this.state.profile.BuildingDescription}, {this.state.profile.OnCampusRoom}
+              </Typography>
+            </ListItem>
+            <Divider />
+            <ListItem>
+              <Typography>Office Phone: {this.state.profile.OnCampusPhone}</Typography>
+            </ListItem>
+            <Divider />
+
+            <ListItem>
+              <Typography>Office Hours: {this.state.profile.office_hours}</Typography>
+            </ListItem>
+          </List>
+        </CardContent>
+      );
+
+      PersonalInfo = (
+        <List>
+          <ListItem>
+            <Typography>Department: {this.state.profile.OnCampusDepartment}</Typography>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Typography>Email: {this.state.profile.Email}</Typography>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Typography>Phone: {this.state.profile.HomePhone}</Typography>
+          </ListItem>
+          <Divider />
+        </List>
+      );
+    }
+    if (this.state.profile.PersonType === 'stu') {
+      PersonalInfo = (
+        <List>
+          <ListItem>
+            <Typography>Major: {this.state.profile.Major1Description}</Typography>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Grid container xs={6} sm={6} md={6} lg={6} spacing="16">
+              <Grid item>
+                <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              alignItems="center"
+              justify="flex-end"
+              xs={8}
+              sm={6}
+              md={6}
+              lg={6}
+              spacing="16"
+            >
+              <Grid item>
+                <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
+              </Grid>
+              <Grid item>
+                <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Typography>Student ID: {this.state.profile.ID}</Typography>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Typography>Email: {this.state.profile.Email}</Typography>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
+          </ListItem>
+
+          <Divider />
+        </List>
+      );
     }
 
     let linksDialog = (
@@ -346,11 +455,11 @@ export default class MyProfile extends Component {
     }
     return (
       <div>
-        <Grid container justify="center">
+        <Grid container justify="center" spacing="16">
           <Grid item xs={12} lg={10}>
             <Card id="print">
               <CardContent>
-                <Grid container justify="center">
+                <Grid container justify="center" spacing="16">
                   <Grid item xs={6} sm={6} md={6} lg={4}>
                     <img
                       src={`data:image/jpg;base64,${this.state.image}`}
@@ -364,7 +473,7 @@ export default class MyProfile extends Component {
                       title={this.state.profile.fullName}
                       subheader={this.state.profile.Class}
                     />
-                    <Grid container>
+                    <Grid container spacing="16">
                       {facebookButton}
                       {twitterButton}
                       {linkedInButton}
@@ -397,7 +506,7 @@ export default class MyProfile extends Component {
                             accept="image/jpeg,image/jpg,image/png"
                             style={photoUploader}
                           >
-                            <Grid container justify="center">
+                            <Grid container justify="center" spacing="16">
                               <img
                                 src={require('./image.png')}
                                 alt=""
@@ -407,7 +516,7 @@ export default class MyProfile extends Component {
                           </Dropzone>
                         )}
                         {preview && (
-                          <Grid container justify="center">
+                          <Grid container justify="center" spacing="16">
                             <Cropper
                               ref="cropper"
                               src={preview}
@@ -431,7 +540,7 @@ export default class MyProfile extends Component {
                         )}
                         {preview && <br />}
                         {preview && (
-                          <Grid container justify="center">
+                          <Grid container justify="center" spacing="16">
                             <Grid item>
                               <Button
                                 onClick={() => this.setState({ preview: null })}
@@ -445,40 +554,58 @@ export default class MyProfile extends Component {
                         )}
                       </DialogContent>
                       <DialogActions>
-                        <Tooltip id='tooltip-hide' 
-                        title={(this.state.isImagePublic) ? 
-                               'Only faculty and police will see your photo' : 
-                               'Make photo visible to other students'}
-                        >
-                          <Button
-                            onClick={this.toggleImagePrivacy.bind(this)}
-                            raised
-                            style={style.button}
-                          >
-                            {(this.state.isImagePublic) ? 'Hide' : 'Show'}
-                          </Button>
-                        </Tooltip>
-                        <Tooltip id='tooltip-reset' title='Restore your original ID photo'>
-                          <Button
-                            onClick={this.handleResetImage}
-                            raised
-                            style={{ background: 'tomato', color: 'white' }}
-                          >
-                            Reset
-                          </Button>
-                        </Tooltip>
-                        <Button onClick={this.handleCloseCancel} raised style={style.button}>
-                          Cancel
-                        </Button>
-                        <Tooltip id='tooltip-submit' title='Crop to current region and submit'>
-                          <Button onClick={this.handleCloseSubmit} raised 
-                            disabled={!this.state.preview} style={(this.state.preview) ? 
-                                                        style.button : 
-                                                        {background: 'darkgray', color: 'white'}}
-                          >
-                            Submit
-                          </Button>
-                        </Tooltip>
+                        <Grid container spacing={8} justify="flex-end">
+                          <Grid item>
+                            <Tooltip
+                              id="tooltip-hide"
+                              title={
+                                this.state.isImagePublic
+                                  ? 'Only faculty and police will see your photo'
+                                  : 'Make photo visible to other students'
+                              }
+                            >
+                              <Button
+                                onClick={this.toggleImagePrivacy.bind(this)}
+                                raised
+                                style={style.button}
+                              >
+                                {this.state.isImagePublic ? 'Hide' : 'Show'}
+                              </Button>
+                            </Tooltip>
+                          </Grid>
+                          <Grid item>
+                            <Tooltip id="tooltip-reset" title="Restore your original ID photo">
+                              <Button
+                                onClick={this.handleResetImage}
+                                raised
+                                style={{ background: 'tomato', color: 'white' }}
+                              >
+                                Reset
+                              </Button>
+                            </Tooltip>
+                          </Grid>
+                          <Grid item>
+                            <Button onClick={this.handleCloseCancel} raised style={style.button}>
+                              Cancel
+                            </Button>
+                          </Grid>
+                          <Grid item>
+                            <Tooltip id="tooltip-submit" title="Crop to current region and submit">
+                              <Button
+                                onClick={this.handleCloseSubmit}
+                                raised
+                                disabled={!this.state.preview}
+                                style={
+                                  this.state.preview
+                                    ? style.button
+                                    : { background: 'darkgray', color: 'white' }
+                                }
+                              >
+                                Submit
+                              </Button>
+                            </Tooltip>
+                          </Grid>
+                        </Grid>
                       </DialogActions>
                     </Dialog>
                     <Dialog
@@ -500,72 +627,30 @@ export default class MyProfile extends Component {
           </Grid>
 
           <Grid item xs={12} lg={10}>
-            <Grid container>
+            <Grid container spacing="16">
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
                   <CardContent>
                     <CardHeader title="Personal Information" />
 
-                    <List>
-                      <ListItem>
-                        <Typography>Major: {this.state.profile.Major1Description}</Typography>
-                      </ListItem>
-
-                      <Divider />
-
-                      <ListItem>
-                        <Grid item xs={6} sm={7} md={8} lg={10}>
-                          <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
-                        </Grid>
-
-                        <Grid item xs={6} sm={5} md={4} lg={1}>
-                          <Button onClick={this.handleExpandClick} raised style={style.button}>
-                            {this.state.button}
-                          </Button>
-                        </Grid>
-                      </ListItem>
-
-                      <Divider />
-
-                      <ListItem>
-                        <Typography>Student ID: {this.state.profile.ID}</Typography>
-                      </ListItem>
-
-                      <Divider />
-
-                      <ListItem>
-                        <Typography>Email: {this.state.profile.Email}</Typography>
-                      </ListItem>
-
-                      <Divider />
-
-                      <ListItem>
-                        <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
-                      </ListItem>
-
-                      <Divider />
-                    </List>
+                    {PersonalInfo}
 
                     <CardHeader title="Home Address" />
-
                     <List>
-                      <Divider />
-
                       <ListItem>
-                        <Typography>Street Number: {this.state.profile.HomeStreet2}</Typography>
+                        <Typography>Home: {address}</Typography>
                       </ListItem>
-
                       <Divider />
-
-                      <ListItem>
-                        <Typography>
-                          Home Town: {this.state.profile.HomeCity}, {this.state.profile.HomeState}
-                        </Typography>
-                      </ListItem>
+                      {homeStreet && (
+                        <ListItem>
+                          <Typography>Street: {this.state.profile.HomeStreet2}</Typography>
+                        </ListItem>
+                      )}
 
                       <Divider />
                     </List>
                   </CardContent>
+                  {Office}
                 </Card>
               </Grid>
 

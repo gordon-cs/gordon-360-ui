@@ -1,7 +1,7 @@
-import Grid from 'material-ui/Grid';
-import { GridList, GridListTile, GridListTileBar } from 'material-ui/GridList';
-import Typography from 'material-ui/Typography';
-import withWidth from 'material-ui/utils/withWidth';
+import Grid from '@material-ui/core/Grid';
+import GridList from '@material-ui/core/GridList';
+import Typography from '@material-ui/core/Typography';
+import withWidth from '@material-ui/core/withWidth';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -12,7 +12,10 @@ const gridListCols = width => {
   switch (width) {
     default:
       return 2;
+    case 'xs':
+      return 2;
     case 'sm':
+      return 2;
     case 'md':
       return 3;
     case 'lg':
@@ -25,37 +28,48 @@ const gridListCols = width => {
 class GordonActivityGrid extends Component {
   render() {
     let content = (
-      <Grid item>
-        <Typography type="display1">No Activities Found</Typography>
+      <Grid container justify="center" spacing="16">
+        <Grid item xs={12} md={12} lg={8}>
+          <Typography variant="headline">No Involvements Found</Typography>
+        </Grid>
       </Grid>
     );
 
     if (Array.isArray(this.props.activities) && this.props.activities.length > 0) {
       content = this.props.activities.map(activity => (
-        <GridListTile key={activity.ActivityCode} className="activity">
-          <Link to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}>
-            <img src={activity.ActivityImagePath} alt={activity.ActivityDescription} />
-
-            <GridListTileBar
-              className="tile-bar"
-              classes={{
-                title: 'title',
-              }}
-              title={activity.ActivityDescription}
-            />
+        <div className="container">
+          <Link
+            to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
+            className="item"
+          >
+            <div>
+              <img
+                className="picture"
+                src={activity.ActivityImagePath}
+                alt={activity.ActivityDescription}
+                height="150"
+                width="150"
+              />
+              <div className="item-title">{activity.ActivityDescription}</div>
+            </div>
           </Link>
-        </GridListTile>
+        </div>
       ));
     }
 
     return (
-      <GridList
-        cellHeight={200}
-        cols={gridListCols(this.props.width)}
-        className="gordon-activity-grid"
-      >
-        {content}
-      </GridList>
+      <Grid container justify="center" spacing="16">
+        <Grid item xs={12} md={12} lg={8}>
+          <GridList
+            cellHeight={250}
+            spacing="32"
+            cols={gridListCols(this.props.width)}
+            className="gordon-activity-grid"
+          >
+            {content}
+          </GridList>
+        </Grid>
+      </Grid>
     );
   }
 }

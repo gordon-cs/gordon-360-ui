@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import Button from 'material-ui/Button';
-import Card, { CardContent } from 'material-ui/Card';
-import Grid from 'material-ui/Grid';
-import Typography from 'material-ui/Typography';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 import { gordonColors } from '../../theme';
 import session from '../../services/session';
@@ -83,7 +84,7 @@ export default class Transcript extends Component {
     };
 
     return (
-      <Grid container className="transcript" alignItems="center" justify="center">
+      <Grid container className="transcript" alignItems="center" justify="center" spacing="16">
         <Grid xs={12} sm={12} md={8} lg={6}>
           <Card elevation="10">
             <CardContent>
@@ -97,7 +98,7 @@ export default class Transcript extends Component {
               </Grid>
               <Grid item xs={12} margin="normal" className="heading">
                 <div>
-                  <Typography type="headline">
+                  <Typography variant="headline">
                     <b> Experience Transcript - {this.state.profile.fullName} </b>
                   </Typography>
                 </div>

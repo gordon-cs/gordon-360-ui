@@ -1,4 +1,4 @@
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 
 import Carousel from './components/Carousel';
@@ -7,7 +7,7 @@ import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 export default class Home extends Component {
   render() {
     return (
-      <Grid container justify="center">
+      <Grid container justify="center" spacing="16">
         <Grid item xs={12} md={10}>
           <Carousel />
         </Grid>

@@ -1,21 +1,20 @@
-// import { ListItem, ListItemText } from 'material-ui/List';
 import PropTypes from 'prop-types';
 import GoogleIcon from 'react-icons/lib/fa/google';
 import MicrosoftIcon from 'react-icons/lib/fa/windows';
 import AppleIcon from 'react-icons/lib/fa/apple';
-import ListItemIcon, { ListItemText } from 'material-ui/List';
-import Typography from 'material-ui/Typography';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
-import MenuItem from 'material-ui/Menu/MenuItem';
-import MenuList from 'material-ui/Menu/MenuList';
-import Button from 'material-ui/Button';
-import Grid from 'material-ui/Grid';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import ExpansionPanel, {
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-} from 'material-ui/ExpansionPanel';
-import Collapse from 'material-ui/transitions/Collapse';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Collapse from '@material-ui/core/Collapse';
 import './event-item.css';
 
 const styles = {
@@ -76,19 +75,19 @@ export default class GordonEventItem extends Component {
       <section>
         <ExpansionPanel defaultExpanded={false}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid container>
+            <Grid container spacing="16">
               <Grid item xs={8} sm={9} md={10}>
                 <Typography>{event.title}</Typography>
-                <Typography type="caption">{subheader}</Typography>
-                <Typography type="caption">{event.location}</Typography>
+                <Typography variant="caption">{subheader}</Typography>
+                <Typography variant="caption">{event.location}</Typography>
               </Grid>
             </Grid>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Grid container>
+            <Grid container spacing="16">
               <Grid item xs={8} sm={9} md={10}>
                 <Typography>Description</Typography>
-                <Typography type="caption">{event.Description}</Typography>
+                <Typography variant="caption">{event.Description}</Typography>
                 {/* {content} */}
               </Grid>
               <Grid item sm={4} md={2} style={styles.grid}>

@@ -1,8 +1,8 @@
-import Divider from 'material-ui/Divider/Divider';
+import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import ListItem from 'material-ui/List/ListItem';
-import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
+import ListItem from '@material-ui/core/ListItem';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 export default class Minors extends Component {
   constructor(props) {
@@ -23,10 +23,10 @@ export default class Minors extends Component {
       <div>
         <ListItem>
           <Grid container justify="center">
-            <Grid item xs={8}>
+            <Grid item xs={5} sm={6} md={3} lg={6}>
               <Typography>Minors(s):</Typography>
             </Grid>
-            <Grid item xs={4} justify="right">
+            <Grid item xs={7} sm={5} md={9} lg={6} justify="right">
               {content}
             </Grid>
           </Grid>

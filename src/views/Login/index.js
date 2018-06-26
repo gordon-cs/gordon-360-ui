@@ -1,8 +1,8 @@
-import Button from 'material-ui/Button';
-import { CircularProgress } from 'material-ui/Progress';
-import TextField from 'material-ui/TextField';
-import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
@@ -47,7 +47,7 @@ export default class Login extends Component {
         <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
           <img src={GordonLogoVerticalWhite} alt="Gordon 360" />
           <form onSubmit={this.logIn}>
-            <Typography type="subheading">Log in to Gordon 360</Typography>
+            <Typography variant="subheading">Log in to Gordon 360</Typography>
             <TextField
               label="Username"
               placeholder="firstname.lastname"
@@ -77,7 +77,7 @@ export default class Login extends Component {
                 },
               }}
             />
-            <Typography className="error" type="body1" color="error">
+            <Typography className="error" variant="body1" color="error">
               {this.state.error}
             </Typography>
             <section className="button-wrapper">
