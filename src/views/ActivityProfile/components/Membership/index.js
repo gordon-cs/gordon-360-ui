@@ -378,65 +378,63 @@ export default class Membership extends Component {
           );
         }
         content = (
-          <Card>
-            <CardActions>
-              {subscribeButton}
-              <Button
-                color="primary"
-                disabled={isActivityClosed}
-                onClick={this.openJoinDialog}
-                raised
-              >
-                Join
-              </Button>
-              <Dialog open={this.state.openJoin} keepMounted align="center">
-                <DialogContent>
-                  <Grid container align="center" padding={6}>
-                    <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
-                      <DialogTitle>Join {this.state.activityDescription}</DialogTitle>
-                      <Typography>Participation (Required)</Typography>
-                      <Grid item padding={6} align="center">
-                        <FormControl fullWidth style={formControl}>
-                          <Select
-                            value={this.state.participationCode}
-                            onChange={this.handleSelectParticipationLevel}
-                            displayEmpty
-                          >
-                            <MenuItem value="">
-                              <em>None</em>
-                            </MenuItem>
-                            <MenuItem value="ADV">Advisor</MenuItem>
-                            <MenuItem value="GUEST">Guest</MenuItem>
-                            <MenuItem value="LEAD">Leader</MenuItem>
-                            <MenuItem value="MEMBR">Member</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item align="center">
-                        <Typography>Title/Comment: (Optional)</Typography>
-                        <TextField
-                          fullWidth
-                          defaultValue=""
-                          onChange={this.handleText('titleComment')}
-                          style={formControl}
-                        />
-                      </Grid>
-                      <Grid item style={formControl}>
-                        <Button color="primary" onClick={this.onRequest} raised>
-                          REQUEST MEMBERSHIP
-                        </Button>
-                      </Grid>
-                      <Grid item xs={12} sm={12} style={formControl}>
-                        <Button color="primary" onClick={this.onClose} raised>
-                          CANCEL
-                        </Button>
-                      </Grid>
+          <CardActions>
+            {subscribeButton}
+            <Button
+              color="primary"
+              disabled={isActivityClosed}
+              onClick={this.openJoinDialog}
+              raised
+            >
+              Join
+            </Button>
+            <Dialog open={this.state.openJoin} keepMounted align="center">
+              <DialogContent>
+                <Grid container align="center" padding={6}>
+                  <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
+                    <DialogTitle>Join {this.state.activityDescription}</DialogTitle>
+                    <Typography>Participation (Required)</Typography>
+                    <Grid item padding={6} align="center">
+                      <FormControl fullWidth style={formControl}>
+                        <Select
+                          value={this.state.participationCode}
+                          onChange={this.handleSelectParticipationLevel}
+                          displayEmpty
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="ADV">Advisor</MenuItem>
+                          <MenuItem value="GUEST">Guest</MenuItem>
+                          <MenuItem value="LEAD">Leader</MenuItem>
+                          <MenuItem value="MEMBR">Member</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item align="center">
+                      <Typography>Title/Comment: (Optional)</Typography>
+                      <TextField
+                        fullWidth
+                        defaultValue=""
+                        onChange={this.handleText('titleComment')}
+                        style={formControl}
+                      />
+                    </Grid>
+                    <Grid item style={formControl}>
+                      <Button color="primary" onClick={this.onRequest} raised>
+                        REQUEST MEMBERSHIP
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={12} style={formControl}>
+                      <Button color="primary" onClick={this.onClose} raised>
+                        CANCEL
+                      </Button>
                     </Grid>
                   </Grid>
-                </DialogContent>
-              </Dialog>
-            </CardActions>
-          </Card>
+                </Grid>
+              </DialogContent>
+            </Dialog>
+          </CardActions>
         );
       }
     }
