@@ -25,7 +25,8 @@ export default class Profile extends Component {
       isStu: Boolean,
       isFac: Boolean,
       isAlu: Boolean,
-      nickName: String,
+      hasNickName: Boolean,
+      nickname: String,
       subheaderInfo: String,
       image: null,
       preview: null,
@@ -58,7 +59,7 @@ export default class Profile extends Component {
       const activities = await user.getPublicMemberships(searchedUser.match.params.username);
       const image = preferredImage || defaultImage;
       this.setState({ image, loading: false, activities });
-      this.setNickName(profile);
+      this.hasNickName(profile);
       this.setSubheader(profile);
     } catch (error) {
       this.setState({ error });
@@ -92,17 +93,10 @@ export default class Profile extends Component {
     this.setState({ isAlu: personType.includes('alu') });
   }
 
-  setNickName(profile) {
+  hasNickName(profile) {
     let Name = String(profile.fullName);
-    console.log(Name);
     let FirstName = Name.split(' ')[0];
-    console.log(FirstName);
-    if (FirstName !== profile.NickName) {
-      console.log(profile.NickName);
-      this.setState({ nickName: '(' + profile.NickName + ')' });
-      console.log(this.state.nickName);
-    }
-    this.setState({ nickName: '' });
+    this.setState({ hasNickName: FirstName !== profile.NickName });
   }
 
   setSubheader(profile) {
@@ -114,7 +108,6 @@ export default class Profile extends Component {
       subheaderText += profile.Class;
     }
     if (this.state.isAlu) {
-      subheaderText += profile;
     }
     this.setState({ subheaderInfo: subheaderText });
   }
@@ -182,13 +175,13 @@ export default class Profile extends Component {
       );
     }
 
-    if (this.state.profile.HomePhone !== '') {
+    if (this.state.profile.HomePhone !== '' || undefined) {
       homephone = (
         <div>
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={3} sm={6} md={3} lg={6}>
-                <Typography>Phone:</Typography>
+                <Typography>Home Phone:</Typography>
               </Grid>
               <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
                 <Typography>{this.state.profile.HomePhone}</Typography>
@@ -205,7 +198,7 @@ export default class Profile extends Component {
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={3} sm={6} md={3} lg={6}>
-                <Typography>Phone:</Typography>
+                <Typography>Mobile Phone:</Typography>
               </Grid>
               <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
                 <Typography>{this.state.profile.MobilePhone}</Typography>
@@ -386,7 +379,14 @@ export default class Profile extends Component {
                     <Grid container justify="center">
                       <Grid item xs={6} sm={6} md={6} lg={8}>
                         <CardHeader
-                          title={this.state.profile.fullName + this.state.nickName}
+                          title={
+                            this.state.hasNickName
+                              ? this.state.profile.fullName +
+                                ' (' +
+                                this.state.profile.NickName +
+                                ')'
+                              : this.state.profile.fullName
+                          }
                           subheader={this.state.subheaderInfo}
                         />
                         <Grid container justify="center">
