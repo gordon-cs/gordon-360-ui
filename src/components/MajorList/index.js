@@ -26,7 +26,7 @@ export default class Majors extends Component {
             <Grid item xs={3} sm={6} md={3} lg={6}>
               <Typography>Major(s):</Typography>
             </Grid>
-            <Grid item xs={9} sm={5} md={9} lg={6} justify="right">
+            <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
               {content}
             </Grid>
           </Grid>

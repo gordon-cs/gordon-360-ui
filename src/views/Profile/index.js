@@ -22,6 +22,11 @@ export default class Profile extends Component {
 
     this.state = {
       button: String,
+      isStu: Boolean,
+      isFac: Boolean,
+      isAlu: Boolean,
+      nickName: String,
+      subheaderInfo: String,
       image: null,
       preview: null,
       loading: true,
@@ -45,7 +50,7 @@ export default class Profile extends Component {
     this.setState({ username: searchedUser.match.params.username });
     try {
       const profile = await user.getProfileInfo(searchedUser.match.params.username);
-
+      this.checkPersonType(profile);
       this.setState({ loading: false, profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(searchedUser.match.params.username),
@@ -53,9 +58,11 @@ export default class Profile extends Component {
       const activities = await user.getPublicMemberships(searchedUser.match.params.username);
       const image = preferredImage || defaultImage;
       this.setState({ image, loading: false, activities });
+      this.setNickName(profile);
+      this.setSubheader(profile);
     } catch (error) {
       this.setState({ error });
-      console.log('error');
+      console.log(error);
     }
     // Set state of social media links to database values after load.
     // If not empty or null, add domain name back in for buttons.
@@ -78,16 +85,40 @@ export default class Profile extends Component {
           : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
     });
   }
-  async checkPersonType(param) {
-    try {
-      const profile = await user.getProfileInfo();
-      let type = profile.PersonType;
-      this.setState({ loading: true });
-      return type.includes(param);
-    } catch (error) {
-      console.log(error);
-    }
+  checkPersonType(profile) {
+    let personType = String(profile.PersonType);
+    this.setState({ isStu: personType.includes('stu') });
+    this.setState({ isFac: personType.includes('fac') });
+    this.setState({ isAlu: personType.includes('alu') });
   }
+
+  setNickName(profile) {
+    let Name = String(profile.fullName);
+    console.log(Name);
+    let FirstName = Name.split(' ')[0];
+    console.log(FirstName);
+    if (FirstName !== profile.NickName) {
+      console.log(profile.NickName);
+      this.setState({ nickName: '(' + profile.NickName + ')' });
+      console.log(this.state.nickName);
+    }
+    this.setState({ nickName: '' });
+  }
+
+  setSubheader(profile) {
+    let subheaderText = '';
+    if (this.state.isFac && profile.JobTitle !== undefined) {
+      subheaderText += profile.JobTitle;
+    }
+    if (this.state.isStu) {
+      subheaderText += profile.Class;
+    }
+    if (this.state.isAlu) {
+      subheaderText += profile;
+    }
+    this.setState({ subheaderInfo: subheaderText });
+  }
+
   render() {
     const style = {
       width: '100%',
@@ -110,78 +141,98 @@ export default class Profile extends Component {
     } else {
       address = `${this.state.profile.Country}`;
     }
-    let personalInfo;
     let office;
-    let phone;
-    let OfficePhone;
-    let OfficHours;
-    let Department;
-    let minors;
-    if (this.state.profile.PersonType === 'stu') {
-      if (this.state.profile.Minors.length !== 0) {
-        minors = <Minors minors={this.state.profile.Minors} />;
-      }
-      personalInfo = (
-        <List>
-          <Majors majors={this.state.profile.Majors} />
-          {minors}
-          <ListItem>
-            <Grid container justify="center">
-              <Grid item xs={3} sm={6} md={3} lg={6}>
-                <Typography>Phone:</Typography>
-              </Grid>
-              <Grid item xs={9} sm={5} md={9} lg={6} justify="right">
-                <Typography>{this.state.profile.MobilePhone}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
+    let homephone, mobilephone, Home, email;
+    let OfficePhone, OfficHours, Department, Room;
+    let minors, majors, residence;
+
+    if (this.state.Email !== '') {
+      email = (
+        <div>
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={2} sm={6} md={3} lg={6}>
                 <Typography>Email:</Typography>
               </Grid>
-              <Grid item xs={10} sm={5} md={9} lg={6} justify="right">
+              <Grid item xs={10} sm={6} md={9} lg={6} justify="right">
                 <Typography>{this.state.profile.Email}</Typography>
               </Grid>
             </Grid>
           </ListItem>
           <Divider />
-          <ListItem>
-            <Grid container justify="center">
-              <Grid item xs={6} sm={6} md={3} lg={6}>
-                <Typography>On/Off Campus:</Typography>
-              </Grid>
-              <Grid item xs={6} sm={5} md={9} lg={6} justify="right">
-                <Typography>{this.state.profile.OnOffCampus}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
+        </div>
+      );
+    }
+
+    if (address !== '') {
+      Home = (
+        <div>
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={3} sm={6} md={3} lg={6}>
                 <Typography>Home:</Typography>
               </Grid>
-              <Grid item xs={9} sm={5} md={9} lg={6} justify="right">
+              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
                 <Typography>{address}</Typography>
               </Grid>
             </Grid>
           </ListItem>
           <Divider />
-        </List>
+        </div>
       );
-    } else {
-      if (this.state.profile.HomePhone !== '') {
-        phone = (
+    }
+
+    if (this.state.profile.HomePhone !== '') {
+      homephone = (
+        <div>
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={3} sm={6} md={3} lg={6}>
+                <Typography>Phone:</Typography>
+              </Grid>
+              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                <Typography>{this.state.profile.HomePhone}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    }
+    if (this.state.profile.MobilePhone !== '' || undefined) {
+      mobilephone = (
+        <div>
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={3} sm={6} md={3} lg={6}>
+                <Typography>Phone:</Typography>
+              </Grid>
+              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                <Typography>{this.state.profile.MobilePhone}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    }
+    if (this.state.isStu) {
+      if (String(this.state.profile.Minors).length !== 0) {
+        minors = <Minors minors={this.state.profile.Minors} />;
+      }
+
+      majors = <Majors majors={this.state.profile.Majors} />;
+
+      if (this.state.profile.OnOffCampus !== '') {
+        residence = (
           <div>
             <ListItem>
               <Grid container justify="center">
-                <Grid item xs={3} sm={6} md={3} lg={6}>
-                  <Typography>Phone:</Typography>
+                <Grid item xs={6} sm={6} md={3} lg={6}>
+                  <Typography>On/Off Campus:</Typography>
                 </Grid>
-                <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                  <Typography>{this.state.profile.HomePhone}</Typography>
+                <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+                  <Typography>{this.state.profile.OnOffCampus}</Typography>
                 </Grid>
               </Grid>
             </ListItem>
@@ -189,6 +240,9 @@ export default class Profile extends Component {
           </div>
         );
       }
+    }
+
+    if (this.state.isFac) {
       if (this.state.profile.OnCampusPhone !== '') {
         OfficePhone = (
           <div>
@@ -198,7 +252,7 @@ export default class Profile extends Component {
                   <Typography>Office Phone:</Typography>
                 </Grid>
                 <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                  <Typography> {this.state.profile.OnCampusPhone}</Typography>
+                  <Typography> {'(978)927-' + this.state.profile.OnCampusPhone}</Typography>
                 </Grid>
               </Grid>
             </ListItem>
@@ -206,6 +260,7 @@ export default class Profile extends Component {
           </div>
         );
       }
+
       if (this.state.profile.office_hours !== '') {
         OfficHours = (
           <div>
@@ -223,76 +278,59 @@ export default class Profile extends Component {
           </div>
         );
       }
+
+      if (this.state.profile.BuildingDescription !== '' && this.state.profile.OnCampusRoom !== '') {
+        Room = (
+          <div>
+            <ListItem>
+              <Grid container justify="center">
+                <Grid item xs={3} sm={6} md={3} lg={6}>
+                  <Typography>Room:</Typography>
+                </Grid>
+                <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                  <Typography>
+                    {' '}
+                    {this.state.profile.BuildingDescription}, {this.state.profile.OnCampusRoom}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <Divider />
+          </div>
+        );
+      }
+
+      if (this.state.profile.OnCampusDepartment !== '') {
+        Department = (
+          <div>
+            <ListItem>
+              <Grid container justify="center">
+                <Grid item xs={5} sm={6} md={3} lg={6}>
+                  <Typography>Department:</Typography>
+                </Grid>
+                <Grid item xs={7} sm={6} md={9} lg={6} justify="right">
+                  <Typography>{this.state.profile.OnCampusDepartment}</Typography>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <Divider />
+          </div>
+        );
+      }
+
       office = (
         <Grid item xs={12}>
           <Card>
             <CardContent>
               <CardHeader title="Office Information" />
               <List>
-                <ListItem>
-                  <Grid container justify="center">
-                    <Grid item xs={3} sm={6} md={3} lg={6}>
-                      <Typography>Room:</Typography>
-                    </Grid>
-                    <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                      <Typography>
-                        {' '}
-                        {this.state.profile.BuildingDescription}, {this.state.profile.OnCampusRoom}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <Divider />
+                {Room}
                 {OfficePhone}
                 {OfficHours}
               </List>
             </CardContent>
           </Card>
         </Grid>
-      );
-
-      Department = (
-        <div>
-          <ListItem>
-            <Grid container justify="center">
-              <Grid item xs={5} sm={6} md={3} lg={6}>
-                <Typography>Department:</Typography>
-              </Grid>
-              <Grid item xs={7} sm={6} md={9} lg={6} justify="right">
-                <Typography>{this.state.profile.OnCampusDepartment}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </div>
-      );
-
-      personalInfo = (
-        <List>
-          <ListItem>
-            <Grid container justify="center">
-              <Grid item xs={2} sm={6} md={3} lg={6}>
-                <Typography>Email:</Typography>
-              </Grid>
-              <Grid item xs={10} sm={6} md={9} lg={6} justify="right">
-                <Typography>{this.state.profile.Email}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-          {phone}
-          <ListItem>
-            <Grid container justify="center">
-              <Grid item xs={3} sm={6} md={3} lg={6}>
-                <Typography>Home:</Typography>
-              </Grid>
-              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                <Typography>{address}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </List>
       );
     }
 
@@ -348,13 +386,8 @@ export default class Profile extends Component {
                     <Grid container justify="center">
                       <Grid item xs={6} sm={6} md={6} lg={8}>
                         <CardHeader
-                          title={this.state.profile.fullName}
-                          subheader={
-                            '(' +
-                              this.state.profile.NickName +
-                              ') ' +
-                              (this.state.profile.PersonType === 'stu') && this.state.profile.Class
-                          }
+                          title={this.state.profile.fullName + this.state.nickName}
+                          subheader={this.state.subheaderInfo}
                         />
                         <Grid container justify="center">
                           {facebookButton}
@@ -379,8 +412,16 @@ export default class Profile extends Component {
                 <Card>
                   <CardContent>
                     <CardHeader title="Personal Information" />
-                    {Department}
-                    {personalInfo}
+                    <List>
+                      {majors}
+                      {minors}
+                      {residence}
+                      {Department}
+                      {mobilephone}
+                      {homephone}
+                      {email}
+                      {Home}
+                    </List>
                   </CardContent>
                 </Card>
               </Grid>
