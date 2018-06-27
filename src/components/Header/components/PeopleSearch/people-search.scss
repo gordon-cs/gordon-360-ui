@@ -11,25 +11,26 @@
     display: block;
   }
 
-  .people-search-input {
+  .people-search-root {
+    align-self: flex-end;
     color: inherit;
-  }
-
-  .people-search-underline {
-    &::after {
-      border-bottom-color: $neutral-white;
+    transition: box-shadow 0.3s, width 0.3s;
+    margin-right: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid white;
+    padding: 2px 10px;
+    width: calc(100% - 5rem);
+    &:focus-within {
+      box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.2);
+      width: calc(100% - 1rem);
     }
-
-    &::before {
-      border-bottom-color: $neutral-white;
-    }
-
-    &:hover {
-      &:not(.people-search-disabled) {
-        &::before {
-          border-bottom-color: $neutral-white;
-        }
-      }
+    &:hover:not(:focus-within) {
+      box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
     }
   }
+
+  // .people-search-input {
+  //   //font-size: 16;
+  //   //font-family: sans-serif;
+  // }
 }

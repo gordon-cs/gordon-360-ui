@@ -2,6 +2,8 @@ import Downshift from 'downshift';
 import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
@@ -22,12 +24,17 @@ const renderInput = inputProps => {
       value={value}
       inputRef={ref}
       InputProps={{
+        disableUnderline: true,
         classes: {
-          root: 'people-search-input',
-          inkbar: 'people-search-inkbar',
-          underline: 'people-search-underline',
+          root: 'people-search-root',
+          input: 'people-search-input',
           inputDisabled: 'people-search-disabled',
         },
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        ),
         ...other,
       }}
     />
