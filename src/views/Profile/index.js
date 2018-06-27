@@ -27,6 +27,7 @@ export default class Profile extends Component {
       isAlu: Boolean,
       hasNickName: Boolean,
       nickname: String,
+      userPrivlege: Boolean,
       subheaderInfo: String,
       image: null,
       preview: null,
@@ -99,6 +100,20 @@ export default class Profile extends Component {
     this.setState({ hasNickName: FirstName !== profile.NickName });
   }
 
+  formatPhone(phone) {
+    let tele = String(phone);
+    if (tele.length === 10) {
+      return '(' + tele.slice(0, 3) + ') ' + tele.slice(3, 6) + '-' + tele.slice(6);
+    }
+    if (tele !== 'undefined') {
+      return tele;
+    }
+  }
+
+  async determainePrivilges() {
+    const currentUser = await user.getProfileInfo();
+  }
+
   setSubheader(profile) {
     let subheaderText = '';
     if (this.state.isFac && profile.JobTitle !== undefined) {
@@ -108,6 +123,7 @@ export default class Profile extends Component {
       subheaderText += profile.Class;
     }
     if (this.state.isAlu) {
+      subheaderText += ' Class of ' + profile.GradDate.split(' ')[2];
     }
     this.setState({ subheaderInfo: subheaderText });
   }
@@ -174,8 +190,7 @@ export default class Profile extends Component {
         </div>
       );
     }
-
-    if (this.state.profile.HomePhone !== '' || undefined) {
+    if (this.state.profile.HomePhone !== undefined) {
       homephone = (
         <div>
           <ListItem>
@@ -184,7 +199,7 @@ export default class Profile extends Component {
                 <Typography>Home Phone:</Typography>
               </Grid>
               <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                <Typography>{this.state.profile.HomePhone}</Typography>
+                <Typography>{this.formatPhone(this.state.profile.HomePhone)}</Typography>
               </Grid>
             </Grid>
           </ListItem>
@@ -192,7 +207,8 @@ export default class Profile extends Component {
         </div>
       );
     }
-    if (this.state.profile.MobilePhone !== '' || undefined) {
+    console.log('PersonType' + this.state.profile.PersonType);
+    if (this.state.profile.MobilePhone !== undefined) {
       mobilephone = (
         <div>
           <ListItem>
@@ -201,7 +217,7 @@ export default class Profile extends Component {
                 <Typography>Mobile Phone:</Typography>
               </Grid>
               <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                <Typography>{this.state.profile.MobilePhone}</Typography>
+                <Typography>{this.formatPhone(this.state.profile.MobilePhone)}</Typography>
               </Grid>
             </Grid>
           </ListItem>
@@ -245,7 +261,7 @@ export default class Profile extends Component {
                   <Typography>Office Phone:</Typography>
                 </Grid>
                 <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                  <Typography> {'(978)927-' + this.state.profile.OnCampusPhone}</Typography>
+                  <Typography> {'(978) 927-' + this.state.profile.OnCampusPhone}</Typography>
                 </Grid>
               </Grid>
             </ListItem>
