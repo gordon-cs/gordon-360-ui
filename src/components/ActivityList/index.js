@@ -13,13 +13,14 @@ export default class Activities extends Component {
 
     this.state = {};
   }
-  componentWillMount() {
-    this.loadProfile();
-  }
-  async loadProfile() {}
 
   handleChangeMembershipPrivacy(userMembership) {
-    userMembership.toggleMembershipPrivacy;
+    //console.log("I took a trip to the bank \nyeah ")
+    membership.toggleMembershipPrivacy(userMembership);
+  }
+
+  handleChangeSwitch() {
+    console.log('switch');
   }
 
   render() {
@@ -47,8 +48,11 @@ export default class Activities extends Component {
             <Grid container>
               <Grid item xs={12} align="center">
                 <Switch
-                  onClick={this.handleChangeMembershipPrivacy(Activity)}
-                  checked={Activity.Privacy}
+                  onChange={this.handleChangeMembershipPrivacy(Activity)}
+                  checked={!Activity.Privacy}
+                />
+                <Switch
+                //onClick={this.handleChangeSwitch()}
                 />
               </Grid>
               <Grid item xs={12} align="center">

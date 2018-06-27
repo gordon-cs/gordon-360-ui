@@ -17,6 +17,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import user from './../../services/user';
+import membership from './../../services/membership';
 import { gordonColors } from '../../theme';
 import Activities from './../../components/ActivityList';
 import LinksDialog from './Components/LinksDialog';
@@ -43,7 +44,7 @@ export default class Profile extends Component {
       preview: null,
       loading: true,
       profile: {},
-      activities: [],
+      memberships: [],
       files: [],
       photoOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
@@ -57,6 +58,7 @@ export default class Profile extends Component {
 
   handleChangePrivacy() {
     user.toggleMobilePhonePrivacy();
+    console.log('in handlechangePrivacy in myProfile');
   }
 
   handlePhotoOpen = () => {
@@ -202,9 +204,9 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
-      const activities = await user.getMemberships(profile.ID);
+      const memberships = await user.getMembershipsAlphabetically(profile.ID);
       const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, activities });
+      this.setState({ image, loading: false, memberships });
       this.setState({ isImagePublic: this.state.profile.show_pic });
     } catch (error) {
       this.setState({ error });
@@ -262,11 +264,12 @@ export default class Profile extends Component {
       alignItems: 'center',
     };
     let PersonalInfo;
+
     let activityList;
-    if (!this.state.activities) {
+    if (!this.state.memberships) {
       activityList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(activity => (
+      activityList = this.state.memberships.map(activity => (
         <Activities Activity={activity} key={activity.MembershipID} />
       ));
     }
@@ -657,7 +660,7 @@ export default class Profile extends Component {
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
                   <CardContent>
-                    <CardHeader title="Activities" />
+                    <CardHeader title="Involvements" />
                     <List>{activityList}</List>
                   </CardContent>
                 </Card>
