@@ -178,6 +178,17 @@ const getFutureEvents = async () => {
   }
   return futureEvents.sort(sortByTime);
 };
+const getAllEventsFormatted = async () => {
+  const allEvents = await getAllEvents();
+  const events = [];
+  allEvents.sort(sortByTime);
+  for (let i = 0; i < allEvents.length; i += 1) {
+    events.push(allEvents[i]);
+    formatevent(allEvents[i]);
+  }
+  return events.sort(sortByTime);
+};
+
 const getFilteredEvents = async filters => {
   const allEvents = filters.events;
   let filteredEvents = [];
@@ -220,7 +231,9 @@ const getFilteredEvents = async filters => {
 
 export default {
   getAllEvents,
+  getAllEventsFormatted,
   getFutureEvents,
   getCLWEvents,
   getFilteredEvents,
+  formatevent,
 };
