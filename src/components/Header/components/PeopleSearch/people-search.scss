@@ -15,21 +15,19 @@
     color: inherit;
   }
 
-  .people-search-inkbar {
-    &::after {
-      background-color: $neutral-white;
-    }
-  }
-
   .people-search-underline {
+    &::after {
+      border-bottom-color: $neutral-white;
+    }
+
     &::before {
-      background-color: $neutral-white;
+      border-bottom-color: $neutral-white;
     }
 
     &:hover {
       &:not(.people-search-disabled) {
         &::before {
-          background-color: $neutral-white;
+          border-bottom-color: $neutral-white;
         }
       }
     }
