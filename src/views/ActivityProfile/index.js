@@ -317,8 +317,8 @@ class ActivityProfile extends Component {
                 {membersNum} Member(s) and {followersNum} follower(s)
               </Typography>
             </CardContent>
+            {membership}
           </Card>
-          {membership}
         </section>
       );
     }

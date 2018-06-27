@@ -28,7 +28,7 @@ const gridListCols = width => {
 class GordonActivityGrid extends Component {
   render() {
     let content = (
-      <Grid container justify="center">
+      <Grid container justify="center" spacing="16">
         <Grid item xs={12} md={12} lg={8}>
           <Typography variant="headline">No Involvements Found</Typography>
         </Grid>
@@ -58,7 +58,7 @@ class GordonActivityGrid extends Component {
     }
 
     return (
-      <Grid container justify="center">
+      <Grid container justify="center" spacing="16">
         <Grid item xs={12} md={12} lg={8}>
           <GridList
             cellHeight={250}

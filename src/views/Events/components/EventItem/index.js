@@ -75,7 +75,7 @@ export default class GordonEventItem extends Component {
       <section>
         <ExpansionPanel defaultExpanded={false}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid container>
+            <Grid container spacing="16">
               <Grid item xs={8} sm={9} md={10}>
                 <Typography>{event.title}</Typography>
                 <Typography variant="caption">{subheader}</Typography>
@@ -84,7 +84,7 @@ export default class GordonEventItem extends Component {
             </Grid>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Grid container>
+            <Grid container spacing="16">
               <Grid item xs={8} sm={9} md={10}>
                 <Typography>Description</Typography>
                 <Typography variant="caption">{event.Description}</Typography>
