@@ -15,6 +15,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import ButtonBase from '@material-ui/core/ButtonBase';
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
@@ -26,6 +27,7 @@ import { socialMediaInfo } from '../../socialMedia';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import Switch from '@material-ui/core/Switch';
+import { createMuiTheme } from '@material-ui/core';
 
 const CROP_DIM = 200; // pixels
 
@@ -254,6 +256,41 @@ export default class Profile extends Component {
         background: gordonColors.primary.cyan,
         color: 'white',
       },
+
+      image: {
+        position: 'relative',
+        opacity: 1,
+        backgroundColor: 'black',
+        height: 200,
+        width: 200,
+      },
+      imageText: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        opacity: 1,
+        padding: '20px',
+      },
+      imageBackdrop: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: 'black',
+        opacity: 0,
+        height: 200,
+        width: 200,
+        '&:hover': {
+          opacity: 1,
+        },
+      },
     };
 
     const photoUploader = {
@@ -461,11 +498,18 @@ export default class Profile extends Component {
               <CardContent>
                 <Grid container justify="center" spacing="16">
                   <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <img
-                      src={`data:image/jpg;base64,${this.state.image}`}
+                    <ButtonBase
+                      onClick={this.handlePhotoOpen}
+                      focusRipple
                       alt=""
-                      style={style.img}
-                    />
+                      style={style.image}
+                    >
+                      <img src={`data:image/jpg;base64,${this.state.image}`} alt="Profile Photo" />
+                      <span style={style.imageBackdrop} />
+                      <Typography component="span" variant="subheading" style={style.imageText}>
+                        Update Photo
+                      </Typography>
+                    </ButtonBase>
                   </Grid>
 
                   <Grid item xs={6} sm={6} md={6} lg={4}>
@@ -480,9 +524,6 @@ export default class Profile extends Component {
                       {instagramButton}
                       {editButton}
                     </Grid>
-                    <Button onClick={this.handlePhotoOpen} raised style={style.button}>
-                      Update Photo
-                    </Button>
                     <Dialog
                       open={this.state.photoOpen}
                       keepMounted
