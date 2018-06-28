@@ -14,6 +14,7 @@ import Minors from './../../components/MinorList';
 import Activities from './../../components/ActivityList';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
+import './index.css';
 
 //Public profile view
 export default class Profile extends Component {
@@ -155,7 +156,7 @@ export default class Profile extends Component {
     let OfficePhone, OfficHours, Department, Room;
     let minors, majors, residence;
 
-    if (this.state.Email !== '') {
+    if (this.state.profile.Email !== '') {
       email = (
         <div>
           <ListItem>
@@ -190,7 +191,7 @@ export default class Profile extends Component {
         </div>
       );
     }
-    if (this.state.profile.HomePhone !== undefined) {
+    if (this.state.profile.HomePhone !== undefined && this.state.profile.HomePhone !== '') {
       homephone = (
         <div>
           <ListItem>
@@ -199,7 +200,16 @@ export default class Profile extends Component {
                 <Typography>Home Phone:</Typography>
               </Grid>
               <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                <Typography>{this.formatPhone(this.state.profile.HomePhone)}</Typography>
+                {this.state.profile.HomePhone !== 'Private as requested.' && (
+                  <a href={'tel:' + this.state.profile.HomePhone}>
+                    <Typography className="linkColor">
+                      {this.formatPhone(this.state.profile.HomePhone)}
+                    </Typography>
+                  </a>
+                )}
+                {this.state.profile.HomePhone === 'Private as requested.' && (
+                  <Typography>{this.formatPhone(this.state.profile.HomePhone)}</Typography>
+                )}
               </Grid>
             </Grid>
           </ListItem>
@@ -208,7 +218,7 @@ export default class Profile extends Component {
       );
     }
     console.log('PersonType' + this.state.profile.PersonType);
-    if (this.state.profile.MobilePhone !== undefined) {
+    if (this.state.profile.MobilePhone !== undefined && this.state.profile.MobilePhone !== '') {
       mobilephone = (
         <div>
           <ListItem>
@@ -217,7 +227,17 @@ export default class Profile extends Component {
                 <Typography>Mobile Phone:</Typography>
               </Grid>
               <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                <Typography>{this.formatPhone(this.state.profile.MobilePhone)}</Typography>
+                {this.state.profile.MobilePhone !== 'Private as requested.' &&
+                  window.innerWidth <= 600 && (
+                    <a href={'tel:' + this.state.profile.MobilePhone}>
+                      <Typography className="linkColor">
+                        {this.formatPhone(this.state.profile.MobilePhone)}
+                      </Typography>
+                    </a>
+                  )}
+                {this.state.profile.MobilePhone === 'Private as requested.' && (
+                  <Typography>{this.formatPhone(this.state.profile.MobilePhone)}</Typography>
+                )}
               </Grid>
             </Grid>
           </ListItem>
@@ -261,7 +281,13 @@ export default class Profile extends Component {
                   <Typography>Office Phone:</Typography>
                 </Grid>
                 <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                  <Typography> {'(978) 927-' + this.state.profile.OnCampusPhone}</Typography>
+                  <a href={'tel:978927' + this.state.profile.OnCampusPhone}>
+                    {' '}
+                    <Typography className="linkColor">
+                      {' '}
+                      {'(978) 927-' + this.state.profile.OnCampusPhone}
+                    </Typography>
+                  </a>
                 </Grid>
               </Grid>
             </ListItem>

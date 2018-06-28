@@ -227,7 +227,7 @@ function formatCountry(profile) {
   return profile;
 }
 function setClass(profile) {
-  if (profile.PersonType === 'stu') {
+  if (String(profile.PersonType).includes('stu')) {
     switch (profile.Class) {
       case '1':
         profile.Class = 'Freshman';
