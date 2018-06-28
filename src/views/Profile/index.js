@@ -53,6 +53,7 @@ export default class Profile extends Component {
     this.setState({ username: searchedUser.match.params.username });
     try {
       const profile = await user.getProfileInfo(searchedUser.match.params.username);
+      console.log(profile);
       this.checkPersonType(profile);
       this.setState({ loading: false, profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
@@ -124,7 +125,7 @@ export default class Profile extends Component {
       subheaderText += profile.Class;
     }
     if (this.state.isAlu) {
-      subheaderText += ' Class of ' + profile.GradDate.split(' ')[2];
+      subheaderText += 'Class of ' + profile.ClassYear;
     }
     this.setState({ subheaderInfo: subheaderText });
   }
@@ -227,14 +228,13 @@ export default class Profile extends Component {
                 <Typography>Mobile Phone:</Typography>
               </Grid>
               <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                {this.state.profile.MobilePhone !== 'Private as requested.' &&
-                  window.innerWidth <= 600 && (
-                    <a href={'tel:' + this.state.profile.MobilePhone}>
-                      <Typography className="linkColor">
-                        {this.formatPhone(this.state.profile.MobilePhone)}
-                      </Typography>
-                    </a>
-                  )}
+                {this.state.profile.MobilePhone !== 'Private as requested.' && (
+                  <a href={'tel:' + this.state.profile.MobilePhone}>
+                    <Typography className="linkColor">
+                      {this.formatPhone(this.state.profile.MobilePhone)}
+                    </Typography>
+                  </a>
+                )}
                 {this.state.profile.MobilePhone === 'Private as requested.' && (
                   <Typography>{this.formatPhone(this.state.profile.MobilePhone)}</Typography>
                 )}
@@ -339,7 +339,7 @@ export default class Profile extends Component {
         Department = (
           <div>
             <ListItem>
-              <Grid container justify="center">
+              <Grid container justify="center" spacing={16}>
                 <Grid item xs={5} sm={6} md={3} lg={6}>
                   <Typography>Department:</Typography>
                 </Grid>
@@ -357,12 +357,14 @@ export default class Profile extends Component {
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <CardHeader title="Office Information" />
-              <List>
-                {Room}
-                {OfficePhone}
-                {OfficHours}
-              </List>
+              <Grid container spacing={16}>
+                <CardHeader title="Office Information" />
+                <List>
+                  {Room}
+                  {OfficePhone}
+                  {OfficHours}
+                </List>
+              </Grid>
             </CardContent>
           </Card>
         </Grid>
@@ -418,7 +420,7 @@ export default class Profile extends Component {
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    <Grid container justify="center">
+                    <Grid container justify="center" spacing={16}>
                       <Grid item xs={6} sm={6} md={6} lg={8}>
                         <CardHeader
                           title={
@@ -431,7 +433,7 @@ export default class Profile extends Component {
                           }
                           subheader={this.state.subheaderInfo}
                         />
-                        <Grid container justify="center">
+                        <Grid container justify="center" spacing={16}>
                           {facebookButton}
                           {twitterButton}
                           {linkedInButton}
@@ -450,7 +452,7 @@ export default class Profile extends Component {
                 </Card>
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid item xs={12} spacing={16}>
                 <Card>
                   <CardContent>
                     <CardHeader title="Personal Information" />
@@ -471,7 +473,7 @@ export default class Profile extends Component {
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Grid container>
+            <Grid container spacing={16}>
               {office}
               <Grid item xs={12}>
                 <Card>

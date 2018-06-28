@@ -186,6 +186,12 @@ function setOnOffCampus(data) {
   }
   return data;
 }
+function setClassYear(data) {
+  if (data.PreferredClassYear) {
+    data.ClassYear = data.PreferredClassYear;
+  }
+  return data;
+}
 function setMajorObject(data) {
   data.Majors = [];
   if (data.Major1Description) {
@@ -439,6 +445,7 @@ const getProfileInfo = async username => {
   let profile = await getProfile(username);
   formatName(profile);
   setClass(profile);
+  setClassYear(profile);
   setMajorObject(profile);
   formatCountry(profile);
   setOnOffCampus(profile);
