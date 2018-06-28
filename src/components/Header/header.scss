@@ -14,7 +14,7 @@ $drawer-width: 240px;
   }
 
   .tab {
-    color: white;
+    color: $neutral-white;
     text-transform: capitalize;
     min-width: 90px;
   }
@@ -26,16 +26,28 @@ $drawer-width: 240px;
   @media (min-width: 0px) {
     .app-bar {
       background-image: url('./gc_seal_top_56.png');
+      height: $header-height-xs;
     }
 
     .center-container {
-      display: none;
+      visibility: hidden;
+      width: 0;
+    }
+
+    .right-side-container {
+      margin-left: 16px;
+      padding: 0;
     }
   }
 
   @media (min-width: $break-sm) {
     .app-bar {
       background-image: url('./gc_seal_top_64.png');
+      height: $header-height-sm;
+    }
+    .right-side-container {
+      width: auto;
+      margin-left: 24px;
     }
   }
 
@@ -45,6 +57,7 @@ $drawer-width: 240px;
     }
     .app-bar {
       background-image: url('./gc_seal_top_72.png');
+      height: $header-height-md;
     }
 
     .center-container {
@@ -52,6 +65,7 @@ $drawer-width: 240px;
       justify-content: center;
       // float: none;
       display: flex;
+      visibility: visible;
     }
   }
 
@@ -75,7 +89,11 @@ $drawer-width: 240px;
   .right-side-container {
     align-items: center;
     display: flex;
-    margin-left: 12px;
+  }
+
+  .search-container {
+    display: inline-flex;
+    align-items: flex-end;
   }
 
   .menu-button-icon {

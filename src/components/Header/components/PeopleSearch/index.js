@@ -23,6 +23,7 @@ const renderInput = inputProps => {
       autoFocus={autoFocus}
       value={value}
       inputRef={ref}
+      className={'text-field'}
       InputProps={{
         disableUnderline: true,
         classes: {
@@ -111,7 +112,7 @@ export default class GordonPeopleSearch extends Component {
           <span className="gordon-people-search">
             {renderInput(
               getInputProps({
-                placeholder: 'Search...',
+                placeholder: 'Search',
                 onChange: event => this.getSuggestions(event.target.value),
               }),
             )}
