@@ -17,9 +17,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import user from './../../services/user';
-import membership from './../../services/membership';
 import { gordonColors } from '../../theme';
-import Activities from './../../components/ActivityList';
+import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
@@ -29,7 +28,7 @@ import 'cropperjs/dist/cropper.css';
 import Switch from '@material-ui/core/Switch';
 
 const CROP_DIM = 200; // pixels
-
+//MyProfile
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -58,7 +57,6 @@ export default class Profile extends Component {
 
   handleChangePrivacy() {
     user.toggleMobilePhonePrivacy();
-    console.log('in handlechangePrivacy in myProfile');
   }
 
   handlePhotoOpen = () => {
@@ -265,12 +263,12 @@ export default class Profile extends Component {
     };
     let PersonalInfo;
 
-    let activityList;
+    let membershipList;
     if (!this.state.memberships) {
-      activityList = <GordonLoader />;
+      membershipList = <GordonLoader />;
     } else {
-      activityList = this.state.memberships.map(activity => (
-        <Activities Activity={activity} key={activity.MembershipID} />
+      membershipList = this.state.memberships.map(activity => (
+        <MyProfileActivityList Activity={activity} />
       ));
     }
 
@@ -661,7 +659,7 @@ export default class Profile extends Component {
                 <Card>
                   <CardContent>
                     <CardHeader title="Involvements" />
-                    <List>{activityList}</List>
+                    <List>{membershipList}</List>
                   </CardContent>
                 </Card>
               </Grid>

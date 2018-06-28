@@ -4,38 +4,23 @@ import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
-import Switch from '@material-ui/core/Switch';
-import membership from './../../services/membership';
 
-export default class Activities extends Component {
+//Public Profile Involvements List
+export default class ProfileActivityList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {};
   }
-
-  handleChangeMembershipPrivacy(userMembership) {
-    //console.log("I took a trip to the bank \nyeah ")
-    membership.toggleMembershipPrivacy(userMembership);
-  }
-
-  handleChangeSwitch() {
-    console.log('switch');
-  }
-
   render() {
     const { Activity } = this.props;
     const imgStyle = {
       width: '90%',
     };
-    const toggleTextStyle = {
-      fontSize: '10pt',
-    };
-
     return (
       <div>
         <Grid container alignItems="center">
-          <Grid item xs={8} sm={8} md={8} lg={8}>
+          <Grid item xs={10}>
             <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
               <Typography>
                 <b>{Activity.ActivityDescription}</b>
@@ -44,23 +29,7 @@ export default class Activities extends Component {
               <Typography>{Activity.ParticipationDescription}</Typography>
             </Link>
           </Grid>
-          <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
-            <Grid container>
-              <Grid item xs={12} align="center">
-                <Switch
-                  onChange={this.handleChangeMembershipPrivacy(Activity)}
-                  checked={!Activity.Privacy}
-                />
-                <Switch
-                //onClick={this.handleChangeSwitch()}
-                />
-              </Grid>
-              <Grid item xs={12} align="center">
-                <Typography style={toggleTextStyle}>Privacy</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={2} sm={2} md={2} lg={2}>
+          <Grid item xs={2}>
             <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
               <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
             </Link>
@@ -72,7 +41,7 @@ export default class Activities extends Component {
   }
 }
 
-Activities.propTypes = {
+ProfileActivityList.propTypes = {
   Activity: PropTypes.shape({
     ActivityDescription: PropTypes.string.isRequired,
     ActivityImagePath: PropTypes.string.isRequired,
