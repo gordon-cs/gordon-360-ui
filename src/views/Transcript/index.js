@@ -92,7 +92,13 @@ export default class Transcript extends Component {
                 <img src={require('./logo.png')} alt="" />
               </Grid>
               <Grid item xs={12}>
-                <Button raised style={button} justify="center" onClick={this.handleDownload}>
+                <Button
+                  variant="contained"
+                  raised
+                  style={button}
+                  justify="center"
+                  onClick={this.handleDownload}
+                >
                   Download Transcript
                 </Button>
               </Grid>

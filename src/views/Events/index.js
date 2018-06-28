@@ -96,7 +96,7 @@ export default class Events extends Component {
                 />
               </Grid>
               <Grid item xs={4} sm={3} md={2} lg={2}>
-                <Button raised color="primary" onClick={this.handleExpandClick}>
+                <Button variant="contained" color="primary" onClick={this.handleExpandClick}>
                   Filters
                 </Button>
               </Grid>

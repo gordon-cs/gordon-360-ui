@@ -249,13 +249,13 @@ export default class Membership extends Component {
           if (this.state.participationDetail[1] === 'Advisor') {
             if (this.state.status === 'OPEN') {
               confirmRoster = (
-                <Button color="primary" onClick={this.onConfirmRoster} raised>
+                <Button variant="contained" color="primary" onClick={this.onConfirmRoster} raised>
                   Confirm final roster
                 </Button>
               );
             } else {
               confirmRoster = (
-                <Button color="primary" onClick={this.onReopenActivity} raised>
+                <Button variant="contained" color="primary" onClick={this.onReopenActivity} raised>
                   Reopen roster
                 </Button>
               );
@@ -323,12 +323,22 @@ export default class Membership extends Component {
                             </Grid>
                           </Grid>
                           <Grid item xs={12} sm={6} style={formControl}>
-                            <Button color="primary" onClick={this.onAddMember} raised>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={this.onAddMember}
+                              raised
+                            >
                               Add member
                             </Button>
                           </Grid>
                           <Grid item xs={12} sm={6} style={formControl}>
-                            <Button color="primary" onClick={this.onClose} raised>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={this.onClose}
+                              raised
+                            >
                               CANCEL
                             </Button>
                           </Grid>
@@ -365,14 +375,19 @@ export default class Membership extends Component {
         if (this.state.participationDetail[1] === 'Guest') {
           // User is a guest
           subscribeButton = (
-            <Button color="primary" onClick={this.onUnsubscribe} raised>
+            <Button variant="contained" color="primary" onClick={this.onUnsubscribe} raised>
               Unsubscribe
             </Button>
           );
         } else {
           // User is not in the activity
           subscribeButton = (
-            <Button color="primary" disabled={isActivityClosed} onClick={this.onSubscribe} raised>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={isActivityClosed}
+              onClick={this.onSubscribe}
+            >
               Subscribe
             </Button>
           );
@@ -381,10 +396,10 @@ export default class Membership extends Component {
           <CardActions>
             {subscribeButton}
             <Button
+              variant="contained"
               color="primary"
               disabled={isActivityClosed}
               onClick={this.openJoinDialog}
-              raised
             >
               Join
             </Button>
@@ -421,12 +436,12 @@ export default class Membership extends Component {
                       />
                     </Grid>
                     <Grid item style={formControl}>
-                      <Button color="primary" onClick={this.onRequest} raised>
+                      <Button variant="contained" color="primary" onClick={this.onRequest} raised>
                         REQUEST MEMBERSHIP
                       </Button>
                     </Grid>
                     <Grid item xs={12} sm={12} style={formControl}>
-                      <Button color="primary" onClick={this.onClose} raised>
+                      <Button variant="contained" color="primary" onClick={this.onClose} raised>
                         CANCEL
                       </Button>
                     </Grid>
