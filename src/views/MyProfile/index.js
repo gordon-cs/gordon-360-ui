@@ -333,12 +333,21 @@ export default class Profile extends Component {
           <Divider />
 
           <ListItem>
-            <Grid container xs={6} sm={6} md={6} lg={6}>
+            <Grid container xs={6} sm={6} md={6} lg={6} spacing="16">
               <Grid item>
                 <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
               </Grid>
             </Grid>
-            <Grid container alignItems="center" justify="flex-end" xs={8} sm={6} md={6} lg={6}>
+            <Grid
+              container
+              alignItems="center"
+              justify="flex-end"
+              xs={8}
+              sm={6}
+              md={6}
+              lg={6}
+              spacing="16"
+            >
               <Grid item>
                 <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
               </Grid>
@@ -446,11 +455,11 @@ export default class Profile extends Component {
     }
     return (
       <div>
-        <Grid container justify="center">
-          <Grid item xs={12} lg={10} spacing={16}>
+        <Grid container justify="center" spacing="16">
+          <Grid item xs={12} lg={10}>
             <Card id="print">
               <CardContent>
-                <Grid container justify="center">
+                <Grid container justify="center" spacing="16">
                   <Grid item xs={6} sm={6} md={6} lg={4}>
                     <img
                       src={`data:image/jpg;base64,${this.state.image}`}
@@ -464,7 +473,7 @@ export default class Profile extends Component {
                       title={this.state.profile.fullName}
                       subheader={this.state.profile.Class}
                     />
-                    <Grid container>
+                    <Grid container spacing="16">
                       {facebookButton}
                       {twitterButton}
                       {linkedInButton}
@@ -497,7 +506,7 @@ export default class Profile extends Component {
                             accept="image/jpeg,image/jpg,image/png"
                             style={photoUploader}
                           >
-                            <Grid container justify="center">
+                            <Grid container justify="center" spacing="16">
                               <img
                                 src={require('./image.png')}
                                 alt=""
@@ -507,7 +516,7 @@ export default class Profile extends Component {
                           </Dropzone>
                         )}
                         {preview && (
-                          <Grid container justify="center">
+                          <Grid container justify="center" spacing="16">
                             <Cropper
                               ref="cropper"
                               src={preview}
@@ -531,7 +540,7 @@ export default class Profile extends Component {
                         )}
                         {preview && <br />}
                         {preview && (
-                          <Grid container justify="center">
+                          <Grid container justify="center" spacing="16">
                             <Grid item>
                               <Button
                                 onClick={() => this.setState({ preview: null })}
@@ -545,48 +554,58 @@ export default class Profile extends Component {
                         )}
                       </DialogContent>
                       <DialogActions>
-                        <Tooltip
-                          id="tooltip-hide"
-                          title={
-                            this.state.isImagePublic
-                              ? 'Only faculty and police will see your photo'
-                              : 'Make photo visible to other students'
-                          }
-                        >
-                          <Button
-                            onClick={this.toggleImagePrivacy.bind(this)}
-                            raised
-                            style={style.button}
-                          >
-                            {this.state.isImagePublic ? 'Hide' : 'Show'}
-                          </Button>
-                        </Tooltip>
-                        <Tooltip id="tooltip-reset" title="Restore your original ID photo">
-                          <Button
-                            onClick={this.handleResetImage}
-                            raised
-                            style={{ background: 'tomato', color: 'white' }}
-                          >
-                            Reset
-                          </Button>
-                        </Tooltip>
-                        <Button onClick={this.handleCloseCancel} raised style={style.button}>
-                          Cancel
-                        </Button>
-                        <Tooltip id="tooltip-submit" title="Crop to current region and submit">
-                          <Button
-                            onClick={this.handleCloseSubmit}
-                            raised
-                            disabled={!this.state.preview}
-                            style={
-                              this.state.preview
-                                ? style.button
-                                : { background: 'darkgray', color: 'white' }
-                            }
-                          >
-                            Submit
-                          </Button>
-                        </Tooltip>
+                        <Grid container spacing={8} justify="flex-end">
+                          <Grid item>
+                            <Tooltip
+                              id="tooltip-hide"
+                              title={
+                                this.state.isImagePublic
+                                  ? 'Only faculty and police will see your photo'
+                                  : 'Make photo visible to other students'
+                              }
+                            >
+                              <Button
+                                onClick={this.toggleImagePrivacy.bind(this)}
+                                raised
+                                style={style.button}
+                              >
+                                {this.state.isImagePublic ? 'Hide' : 'Show'}
+                              </Button>
+                            </Tooltip>
+                          </Grid>
+                          <Grid item>
+                            <Tooltip id="tooltip-reset" title="Restore your original ID photo">
+                              <Button
+                                onClick={this.handleResetImage}
+                                raised
+                                style={{ background: 'tomato', color: 'white' }}
+                              >
+                                Reset
+                              </Button>
+                            </Tooltip>
+                          </Grid>
+                          <Grid item>
+                            <Button onClick={this.handleCloseCancel} raised style={style.button}>
+                              Cancel
+                            </Button>
+                          </Grid>
+                          <Grid item>
+                            <Tooltip id="tooltip-submit" title="Crop to current region and submit">
+                              <Button
+                                onClick={this.handleCloseSubmit}
+                                raised
+                                disabled={!this.state.preview}
+                                style={
+                                  this.state.preview
+                                    ? style.button
+                                    : { background: 'darkgray', color: 'white' }
+                                }
+                              >
+                                Submit
+                              </Button>
+                            </Tooltip>
+                          </Grid>
+                        </Grid>
                       </DialogActions>
                     </Dialog>
                     <Dialog
@@ -608,7 +627,7 @@ export default class Profile extends Component {
           </Grid>
 
           <Grid item xs={12} lg={10}>
-            <Grid container>
+            <Grid container spacing="16">
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
                   <CardContent>
