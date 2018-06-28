@@ -4,12 +4,10 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpansionPanel, {
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-} from '@material-ui/core/ExpansionPanel';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import user from './../../services/user';
-import session from './../../services/session';
 import gordonEvent from './../../services/event';
 import GordonLoader from '../../components/Loader';
 
@@ -45,9 +43,7 @@ export default class EventsAttended extends Component {
 
   async loadEvents() {
     this.setState({ loading: true });
-    const { user_name: username } = user.getLocalInfo();
-    const termCode = session.getTermCode();
-    const events = await user.getAttendedChapelEvents(username, termCode);
+    const events = await user.getAttendedChapelEventsFormatted();
     this.setState({ events, loading: false, filteredEvents: events });
   }
   render() {
@@ -77,8 +73,6 @@ export default class EventsAttended extends Component {
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
-
-        /*<EventItem event={currEvent} key={currEvent.Event_ID} />*/
       ));
     } else {
       content = (
@@ -102,11 +96,6 @@ export default class EventsAttended extends Component {
                   fullWidth
                 />
               </Grid>
-              {/*<Grid item xs={4} sm={3} md={2} lg={2}>
-                <Button raised color="primary" onClick={this.handleExpandClick}>
-                  Filters
-                </Button>
-                </Grid>*/}
             </Grid>
           </Grid>
           <Grid item xs={12} md={12} lg={8}>

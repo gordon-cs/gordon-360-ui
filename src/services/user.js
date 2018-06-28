@@ -11,6 +11,7 @@ import http from './http';
 import session from './session';
 import storage from './storage';
 import { socialMediaInfo } from '../socialMedia';
+import gordonEvent from './event';
 
 /**
  * @global
@@ -345,6 +346,20 @@ const getLocalInfo = () => {
   }
 };
 
+//Call function to retrieve events from database then format them
+const getAttendedChapelEventsFormatted = async () => {
+  const { user_name: username } = getLocalInfo();
+  const termCode = session.getTermCode();
+  const attendedEvents = await getAttendedChapelEvents(username, termCode);
+  const events = [];
+  attendedEvents.sort(gordonEvent.sortByTime);
+  for (let i = 0; i < attendedEvents.length; i += 1) {
+    events.push(attendedEvents[i]);
+    gordonEvent.formatevent(attendedEvents[i]);
+  }
+  return events.sort(gordonEvent.sortByTime);
+};
+
 /**
  * Get the number of cl&w credits aquired, and number of credits required.
  * @return {Promise.<CLWCredits>} An Object of their current and requiered number of CL&W events,
@@ -487,7 +502,7 @@ export default {
   toggleMobilePhonePrivacy,
   setImagePrivacy,
   getMemberships,
-  getAttendedChapelEvents,
+  getAttendedChapelEventsFormatted,
   getChapelCredits,
   getImage,
   getLocalInfo,
