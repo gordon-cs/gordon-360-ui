@@ -180,7 +180,12 @@ class ActivityProfile extends Component {
         editActivity = (
           <section align="center" padding={6}>
             <CardContent>
-              <Button color="primary" onClick={this.openEditActivityDialog} raised>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.openEditActivityDialog}
+                raised
+              >
                 Edit Activity
               </Button>
             </CardContent>
@@ -189,7 +194,7 @@ class ActivityProfile extends Component {
               <DialogContent>
                 <Grid container align="center">
                   <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <Button raised onClick={this.alertRemoveImage} style={redButton}>
+                    <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
                       Remove image
                     </Button>
                   </Grid>
@@ -198,12 +203,17 @@ class ActivityProfile extends Component {
                     <DialogContent>
                       <Grid container>
                         <Grid item xs={6} sm={6} md={6} lg={6}>
-                          <Button color="primary" onClick={this.onRemoveImage} raised>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={this.onRemoveImage}
+                            raised
+                          >
                             OK
                           </Button>
                         </Grid>
                         <Grid item xs={6} sm={6} md={6} lg={6}>
-                          <Button onClick={this.onClose} raised>
+                          <Button variant="contained" onClick={this.onClose} raised>
                             CANCEL
                           </Button>
                         </Grid>
@@ -239,12 +249,17 @@ class ActivityProfile extends Component {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6} md={6} lg={6} padding={6}>
-                    <Button color="primary" onClick={this.onEditActivity} raised>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={this.onEditActivity}
+                      raised
+                    >
                       Submit changes
                     </Button>
                   </Grid>
                   <Grid item xs={12} sm={6} md={6} lg={6} padding={6}>
-                    <Button color="primary" onClick={this.onClose} raised>
+                    <Button variant="contained" color="primary" onClick={this.onClose} raised>
                       Cancel
                     </Button>
                   </Grid>
