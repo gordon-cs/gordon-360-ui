@@ -186,6 +186,12 @@ function setOnOffCampus(data) {
   }
   return data;
 }
+function setClassYear(data) {
+  if (data.PreferredClassYear) {
+    data.ClassYear = data.PreferredClassYear;
+  }
+  return data;
+}
 function setMajorObject(data) {
   data.Majors = [];
   if (data.Major1Description) {
@@ -227,7 +233,7 @@ function formatCountry(profile) {
   return profile;
 }
 function setClass(profile) {
-  if (profile.PersonType === 'stu') {
+  if (String(profile.PersonType).includes('stu')) {
     switch (profile.Class) {
       case '1':
         profile.Class = 'Freshman';
@@ -412,6 +418,27 @@ const getPublicMemberships = async username => {
   return memberships;
 };
 
+const getMembershipsAlphabetically = async id => {
+  let memberships;
+  memberships = await http.get(`memberships/student/${id}`);
+  memberships.sort(compareByTitle);
+  return memberships;
+};
+
+//compares items by ActivityDescription, used by getMembershipsAlphabetically to sort by ActivityDescription
+function compareByTitle(a, b) {
+  const involvementA = a.ActivityDescription;
+  const involvementB = b.ActivityDescription;
+
+  let comparison = 0;
+  if (involvementA > involvementB) {
+    comparison = 1;
+  } else if (involvementA < involvementB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
 //compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
 function compareBySession(a, b) {
   const sessA = a.SessionCode;
@@ -439,6 +466,7 @@ const getProfileInfo = async username => {
   let profile = await getProfile(username);
   formatName(profile);
   setClass(profile);
+  setClassYear(profile);
   setMajorObject(profile);
   formatCountry(profile);
   setOnOffCampus(profile);
@@ -491,6 +519,7 @@ export default {
   getImage,
   getLocalInfo,
   getPublicMemberships,
+  getMembershipsAlphabetically,
   getProfileInfo,
   resetImage,
   postImage,
