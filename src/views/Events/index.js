@@ -40,6 +40,7 @@ export default class Events extends Component {
       events: [],
       filteredEvents: [],
       includePast: false,
+      includePastButton: 'Include Past Events',
       loading: true,
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
@@ -72,10 +73,10 @@ export default class Events extends Component {
   async togglePastEvents() {
     //set events to all or to all future
     if (this.state.includePast === false) {
-      this.setState({ includePast: true });
+      this.setState({ includePast: true, includePastButton: 'Show Upcoming Events' });
       await this.setState({ events: this.state.allEvents });
     } else {
-      this.setState({ includePast: false });
+      this.setState({ includePast: false, includePastButton: 'Include Past Events' });
       const futureEvents = gordonEvent.getFutureEvents(this.state.allEvents);
       await this.setState({ events: futureEvents });
     }
@@ -122,7 +123,7 @@ export default class Events extends Component {
               </Grid>
               <Grid item xs={3} sm={2} md={2} lg={2}>
                 <Button raised color="primary" onClick={this.togglePastEvents}>
-                  Include Past Events
+                  {this.state.includePastButton}
                 </Button>
               </Grid>
             </Grid>
