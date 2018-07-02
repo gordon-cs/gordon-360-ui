@@ -93,7 +93,7 @@ export default class GordonEventItem extends Component {
               <Grid item sm={4} md={2} style={styles.grid}>
                 {/* This button is not functional yet */}
                 {/* TODO: Add calendar integration */}
-                <Button raised color="primary" onClick={this.toggleCalendarMenu}>
+                <Button variant="contained" color="primary" onClick={this.toggleCalendarMenu}>
                   Add to Calendar
                 </Button>
                 <Collapse

@@ -138,6 +138,27 @@ const get = (activityCode, sessionCode) => {
   return allMembership;
 };
 
+//Change the privacy value for a club membership
+const toggleMembershipPrivacy = userMembership => {
+  let currentMembershipPrivacy = userMembership.Privacy;
+  let newMembershipPrivacy = !currentMembershipPrivacy;
+  let setMembershipPrivacy = function(value) {
+    return http
+      .put('/memberships/' + userMembership.MembershipID + '/privacy/' + value, value)
+      .catch(reason => {
+        console.log(reason);
+        console.log('This is the value: ' + value);
+        //TODO handle error
+      });
+  };
+  // let transition = function () {
+  userMembership.Privacy = newMembershipPrivacy;
+  // }
+  setMembershipPrivacy(newMembershipPrivacy);
+
+  //   .then(transition);
+};
+
 /**
  * Get all memberships
  * @param {String} activityCode Identifier for an activity
@@ -292,4 +313,5 @@ export default {
   requestMembership,
   search,
   toggleGroupAdmin,
+  toggleMembershipPrivacy,
 };
