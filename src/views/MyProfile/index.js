@@ -18,7 +18,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
-import Activities from './../../components/ActivityList';
+import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
@@ -28,7 +28,7 @@ import 'cropperjs/dist/cropper.css';
 import Switch from '@material-ui/core/Switch';
 
 const CROP_DIM = 200; // pixels
-
+//MyProfile
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +43,7 @@ export default class Profile extends Component {
       preview: null,
       loading: true,
       profile: {},
-      activities: [],
+      memberships: [],
       files: [],
       photoOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
@@ -202,9 +202,9 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
-      const activities = await user.getMemberships(profile.ID);
+      const memberships = await user.getMembershipsAlphabetically(profile.ID);
       const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, activities });
+      this.setState({ image, loading: false, memberships });
       this.setState({ isImagePublic: this.state.profile.show_pic });
     } catch (error) {
       this.setState({ error });
@@ -262,12 +262,13 @@ export default class Profile extends Component {
       alignItems: 'center',
     };
     let PersonalInfo;
-    let activityList;
-    if (!this.state.activities) {
-      activityList = <GordonLoader />;
+
+    let membershipList;
+    if (!this.state.memberships) {
+      membershipList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(activity => (
-        <Activities Activity={activity} key={activity.MembershipID} />
+      membershipList = this.state.memberships.map(activity => (
+        <MyProfileActivityList Activity={activity} />
       ));
     }
 
@@ -657,8 +658,8 @@ export default class Profile extends Component {
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
                   <CardContent>
-                    <CardHeader title="Activities" />
-                    <List>{activityList}</List>
+                    <CardHeader title="Involvements" />
+                    <List>{membershipList}</List>
                   </CardContent>
                 </Card>
               </Grid>
