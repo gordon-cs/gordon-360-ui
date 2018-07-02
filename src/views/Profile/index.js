@@ -1,17 +1,19 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
+import Divider from '@material-ui/core/Divider/';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+
 import user from './../../services/user';
-import ProfileList from './../../components/ProfileList';
-import Office from './../../components/OfficeList';
-import ProfileActivityList from './../../components/ProfileActivityList';
+import Majors from './../../components/MajorList';
+import Minors from './../../components/MinorList';
+import Activities from './../../components/ActivityList';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
-import './index.css';
 
 //Public profile view
 export default class Profile extends Component {
@@ -19,19 +21,12 @@ export default class Profile extends Component {
     super(props);
 
     this.state = {
-      isStu: Boolean,
-      isFac: Boolean,
-      isAlu: Boolean,
-      hasNickName: Boolean,
-      nickname: String,
-      subheaderInfo: String,
-      profileinfo: null,
-      officeinfo: null,
+      button: String,
       image: null,
       preview: null,
       loading: true,
       profile: {},
-      memberships: [],
+      activities: [],
       files: [],
       photoDialogOpen: false,
       socialLinksDialogOpen: false,
@@ -46,28 +41,28 @@ export default class Profile extends Component {
     this.loadProfile(this.props);
   }
 
+  componentWillReceiveProps(newProps) {
+    if (this.props.match.params.username !== newProps.match.params.username) {
+      this.loadProfile(newProps);
+    }
+  }
+
   async loadProfile(searchedUser) {
     this.setState({ loading: true });
     this.setState({ username: searchedUser.match.params.username });
     try {
       const profile = await user.getProfileInfo(searchedUser.match.params.username);
-      let profileinfo = <ProfileList profile={profile}> </ProfileList>;
-      let officeinfo = <Office profile={profile} />;
-      this.setState({ profileinfo: profileinfo });
-      this.setState({ officeinfo: officeinfo });
-      this.checkPersonType(profile);
+
       this.setState({ loading: false, profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(searchedUser.match.params.username),
       ]);
-      const memberships = await user.getPublicMemberships(searchedUser.match.params.username);
+      const activities = await user.getPublicMemberships(searchedUser.match.params.username);
       const image = preferredImage || defaultImage;
-      this.hasNickName(profile);
-      this.setSubheader(profile);
-      this.setState({ image, loading: false, memberships });
+      this.setState({ image, loading: false, activities });
     } catch (error) {
       this.setState({ error });
-      console.log(error);
+      console.log('error');
     }
     // Set state of social media links to database values after load.
     // If not empty or null, add domain name back in for buttons.
@@ -90,65 +85,222 @@ export default class Profile extends Component {
           : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
     });
   }
-  checkPersonType(profile) {
-    let personType = String(profile.PersonType);
-    this.setState({ isStu: personType.includes('stu') });
-    this.setState({ isFac: personType.includes('fac') });
-    this.setState({ isAlu: personType.includes('alu') });
-  }
-
-  hasNickName(profile) {
-    let Name = String(profile.fullName);
-    let FirstName = Name.split(' ')[0];
-    this.setState({ hasNickName: FirstName !== profile.NickName });
-  }
-
-  setSubheader(profile) {
-    let subheaderText = '';
-    if (this.state.isFac && profile.JobTitle !== undefined) {
-      subheaderText += profile.JobTitle;
+  async checkPersonType(param) {
+    try {
+      const profile = await user.getProfileInfo();
+      let type = profile.PersonType;
+      this.setState({ loading: true });
+      return type.includes(param);
+    } catch (error) {
+      console.log(error);
     }
-    if (this.state.isStu) {
-      subheaderText += profile.Class;
-    }
-    if (this.state.isAlu) {
-      subheaderText += 'Class of ' + profile.ClassYear;
-    }
-    this.setState({ subheaderInfo: subheaderText });
   }
-
   render() {
     const style = {
       width: '100%',
     };
-    // The list of memberships that will be displayed on the page
-    let displayedMembershipList;
-
-    // The list of memberships that the user has made public
-    let publicMemberships = [];
-
-    if (!this.state.memberships) {
-      displayedMembershipList = <GordonLoader />;
+    let activityList;
+    if (!this.state.activities) {
+      activityList = <GordonLoader />;
     } else {
-      // Populate publicMemberships with the user's public Involvements
-      for (let i = 0; i < this.state.memberships.length; i++) {
-        if (!this.state.memberships[i].Privacy) {
-          publicMemberships.push(this.state.memberships[i]);
-        }
-      }
+      activityList = this.state.activities.map(activity => (
+        <Activities Activity={activity} key={activity.MembershipID} />
+      ));
+    }
 
-      // If the user has no public Involvements, say so on the page
-      if (publicMemberships.length === 0) {
-        displayedMembershipList = (
-          <Typography align="center" variant="body2">
-            No Involvements to display.
-          </Typography>
-        );
-      } else {
-        displayedMembershipList = publicMemberships.map(activity => (
-          <ProfileActivityList Activity={activity} key={activity.MembershipID} />
-        ));
+    let address;
+    if (
+      this.state.profile.Country === 'United States Of America' ||
+      this.state.profile.Country === ''
+    ) {
+      address = `${this.state.profile.HomeCity} ${this.state.profile.HomeState}`;
+    } else {
+      address = `${this.state.profile.Country}`;
+    }
+    let personalInfo;
+    let office;
+    let phone;
+    let OfficePhone;
+    let OfficHours;
+    let Department;
+    let minors;
+    if (this.state.profile.PersonType === 'stu') {
+      if (this.state.profile.Minors.length !== 0) {
+        minors = <Minors minors={this.state.profile.Minors} />;
       }
+      personalInfo = (
+        <List>
+          <Majors majors={this.state.profile.Majors} />
+          {minors}
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={3} sm={6} md={3} lg={6}>
+                <Typography>Phone:</Typography>
+              </Grid>
+              <Grid item xs={9} sm={5} md={9} lg={6} justify="right">
+                <Typography>{this.state.profile.MobilePhone}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={2} sm={6} md={3} lg={6}>
+                <Typography>Email:</Typography>
+              </Grid>
+              <Grid item xs={10} sm={5} md={9} lg={6} justify="right">
+                <Typography>{this.state.profile.Email}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={6} sm={6} md={3} lg={6}>
+                <Typography>On/Off Campus:</Typography>
+              </Grid>
+              <Grid item xs={6} sm={5} md={9} lg={6} justify="right">
+                <Typography>{this.state.profile.OnOffCampus}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={3} sm={6} md={3} lg={6}>
+                <Typography>Home:</Typography>
+              </Grid>
+              <Grid item xs={9} sm={5} md={9} lg={6} justify="right">
+                <Typography>{address}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </List>
+      );
+    } else {
+      if (this.state.profile.HomePhone !== '') {
+        phone = (
+          <div>
+            <ListItem>
+              <Grid container justify="center">
+                <Grid item xs={3} sm={6} md={3} lg={6}>
+                  <Typography>Phone:</Typography>
+                </Grid>
+                <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                  <Typography>{this.state.profile.HomePhone}</Typography>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <Divider />
+          </div>
+        );
+      }
+      if (this.state.profile.OnCampusPhone !== '') {
+        OfficePhone = (
+          <div>
+            <ListItem>
+              <Grid container justify="center">
+                <Grid item xs={3} sm={6} md={3} lg={6}>
+                  <Typography>Office Phone:</Typography>
+                </Grid>
+                <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                  <Typography> {this.state.profile.OnCampusPhone}</Typography>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <Divider />
+          </div>
+        );
+      }
+      if (this.state.profile.office_hours !== '') {
+        OfficHours = (
+          <div>
+            <ListItem>
+              <Grid container justify="center">
+                <Grid item xs={3} sm={6} md={3} lg={6}>
+                  <Typography>Office Hours:</Typography>
+                </Grid>
+                <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                  <Typography> {this.state.profile.office_hours}</Typography>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <Divider />
+          </div>
+        );
+      }
+      office = (
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <CardHeader title="Office Information" />
+              <List>
+                <ListItem>
+                  <Grid container justify="center">
+                    <Grid item xs={3} sm={6} md={3} lg={6}>
+                      <Typography>Room:</Typography>
+                    </Grid>
+                    <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                      <Typography>
+                        {' '}
+                        {this.state.profile.BuildingDescription}, {this.state.profile.OnCampusRoom}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </ListItem>
+                <Divider />
+                {OfficePhone}
+                {OfficHours}
+              </List>
+            </CardContent>
+          </Card>
+        </Grid>
+      );
+
+      Department = (
+        <div>
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={5} sm={6} md={3} lg={6}>
+                <Typography>Department:</Typography>
+              </Grid>
+              <Grid item xs={7} sm={6} md={9} lg={6} justify="right">
+                <Typography>{this.state.profile.OnCampusDepartment}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+
+      personalInfo = (
+        <List>
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={2} sm={6} md={3} lg={6}>
+                <Typography>Email:</Typography>
+              </Grid>
+              <Grid item xs={10} sm={6} md={9} lg={6} justify="right">
+                <Typography>{this.state.profile.Email}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+          {phone}
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={3} sm={6} md={3} lg={6}>
+                <Typography>Home:</Typography>
+              </Grid>
+              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                <Typography>{address}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </List>
+      );
     }
 
     let facebookButton;
@@ -200,20 +352,18 @@ export default class Profile extends Component {
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    <Grid container justify="center" spacing={16}>
+                    <Grid container justify="center">
                       <Grid item xs={6} sm={6} md={6} lg={8}>
                         <CardHeader
-                          title={
-                            this.state.hasNickName
-                              ? this.state.profile.fullName +
-                                ' (' +
-                                this.state.profile.NickName +
-                                ')'
-                              : this.state.profile.fullName
+                          title={this.state.profile.fullName}
+                          subheader={
+                            '(' +
+                              this.state.profile.NickName +
+                              ') ' +
+                              (this.state.profile.PersonType === 'stu') && this.state.profile.Class
                           }
-                          subheader={this.state.subheaderInfo}
                         />
-                        <Grid container justify="center" spacing={16}>
+                        <Grid container justify="center">
                           {facebookButton}
                           {twitterButton}
                           {linkedInButton}
@@ -232,11 +382,12 @@ export default class Profile extends Component {
                 </Card>
               </Grid>
 
-              <Grid item xs={12} spacing={16}>
+              <Grid item xs={12}>
                 <Card>
                   <CardContent>
                     <CardHeader title="Personal Information" />
-                    <List>{this.state.profileinfo}</List>
+                    {Department}
+                    {personalInfo}
                   </CardContent>
                 </Card>
               </Grid>
@@ -245,12 +396,12 @@ export default class Profile extends Component {
 
           <Grid item xs={12} sm={12} md={6} lg={6}>
             <Grid container>
-              {this.state.officeinfo}
+              {office}
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    <CardHeader title="Involvements" />
-                    <List>{displayedMembershipList}</List>
+                    <CardHeader title="Activities" />
+                    <List>{activityList}</List>
                   </CardContent>
                 </Card>
               </Grid>

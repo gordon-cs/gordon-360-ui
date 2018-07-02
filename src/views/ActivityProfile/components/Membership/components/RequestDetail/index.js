@@ -46,12 +46,12 @@ export default class RequestDetail extends Component {
           <Typography>Title/Comment: {this.props.member.CommentText}</Typography>
         </Grid>
         <Grid item xs={6} sm={6} md={6} lg={6} padding={6}>
-          <Button variant="contained" color="primary" onClick={this.onApprove} raised>
+          <Button color="primary" onClick={this.onApprove} raised>
             Approve
           </Button>
         </Grid>
         <Grid item xs={6} sm={6} md={6} lg={6} padding={6}>
-          <Button variant="contained" style={redButton} onClick={this.onDeny} raised>
+          <Button style={redButton} onClick={this.onDeny} raised>
             Deny
           </Button>
         </Grid>

@@ -23,7 +23,6 @@ export default class CLWCreditsDaysLeft extends Component {
       chapelCredits: {},
       error: null,
       loading: true,
-      currSessionDescription: '',
     };
   }
 
@@ -36,12 +35,9 @@ export default class CLWCreditsDaysLeft extends Component {
     try {
       const daysLeftPromise = session.getDaysLeft();
       const chapelCreditsPromise = user.getChapelCredits();
-      const currSessionPromise = session.getCurrent();
       const daysLeft = await daysLeftPromise;
       const chapelCredits = await chapelCreditsPromise;
-      const currSession = await currSessionPromise;
-      const currSessionDescription = currSession.SessionDescription;
-      this.setState({ loading: false, daysLeft, chapelCredits, currSessionDescription });
+      this.setState({ loading: false, daysLeft, chapelCredits });
     } catch (error) {
       this.setState({ error });
     }
@@ -140,7 +136,7 @@ export default class CLWCreditsDaysLeft extends Component {
       <Card>
         <CardContent>
           <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.currSessionDescription}
+            Christian Life & Worship Credits
           </Typography>
           {content}
         </CardContent>
