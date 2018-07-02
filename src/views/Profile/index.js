@@ -148,7 +148,7 @@ export default class Profile extends Component {
           <Majors majors={this.state.profile.Majors} />
           {minors}
           <ListItem>
-            <Grid container justify="center">
+            <Grid container justify="center" spacing="16">
               <Grid item xs={3} sm={6} md={3} lg={6}>
                 <Typography>Phone:</Typography>
               </Grid>
@@ -159,7 +159,7 @@ export default class Profile extends Component {
           </ListItem>
           <Divider />
           <ListItem>
-            <Grid container justify="center">
+            <Grid container justify="center" spacing="16">
               <Grid item xs={2} sm={6} md={3} lg={6}>
                 <Typography>Email:</Typography>
               </Grid>
@@ -170,7 +170,7 @@ export default class Profile extends Component {
           </ListItem>
           <Divider />
           <ListItem>
-            <Grid container justify="center">
+            <Grid container justify="center" spacing="16">
               <Grid item xs={6} sm={6} md={3} lg={6}>
                 <Typography>On/Off Campus:</Typography>
               </Grid>
@@ -181,7 +181,7 @@ export default class Profile extends Component {
           </ListItem>
           <Divider />
           <ListItem>
-            <Grid container justify="center">
+            <Grid container justify="center" spacing="16">
               <Grid item xs={3} sm={6} md={3} lg={6}>
                 <Typography>Home:</Typography>
               </Grid>
@@ -198,7 +198,7 @@ export default class Profile extends Component {
         phone = (
           <div>
             <ListItem>
-              <Grid container justify="center">
+              <Grid container justify="center" spacing="16">
                 <Grid item xs={3} sm={6} md={3} lg={6}>
                   <Typography>Phone:</Typography>
                 </Grid>
@@ -215,7 +215,7 @@ export default class Profile extends Component {
         OfficePhone = (
           <div>
             <ListItem>
-              <Grid container justify="center">
+              <Grid container justify="center" spacing="16">
                 <Grid item xs={3} sm={6} md={3} lg={6}>
                   <Typography>Office Phone:</Typography>
                 </Grid>
@@ -232,7 +232,7 @@ export default class Profile extends Component {
         OfficHours = (
           <div>
             <ListItem>
-              <Grid container justify="center">
+              <Grid container justify="center" spacing="16">
                 <Grid item xs={3} sm={6} md={3} lg={6}>
                   <Typography>Office Hours:</Typography>
                 </Grid>
@@ -252,7 +252,7 @@ export default class Profile extends Component {
               <CardHeader title="Office Information" />
               <List>
                 <ListItem>
-                  <Grid container justify="center">
+                  <Grid container justify="center" spacing="16">
                     <Grid item xs={3} sm={6} md={3} lg={6}>
                       <Typography>Room:</Typography>
                     </Grid>
@@ -276,7 +276,7 @@ export default class Profile extends Component {
       Department = (
         <div>
           <ListItem>
-            <Grid container justify="center">
+            <Grid container justify="center" spacing="16">
               <Grid item xs={5} sm={6} md={3} lg={6}>
                 <Typography>Department:</Typography>
               </Grid>
@@ -292,7 +292,7 @@ export default class Profile extends Component {
       personalInfo = (
         <List>
           <ListItem>
-            <Grid container justify="center">
+            <Grid container justify="center" spacing="16">
               <Grid item xs={2} sm={6} md={3} lg={6}>
                 <Typography>Email:</Typography>
               </Grid>
@@ -304,7 +304,7 @@ export default class Profile extends Component {
           <Divider />
           {phone}
           <ListItem>
-            <Grid container justify="center">
+            <Grid container justify="center" spacing="16">
               <Grid item xs={3} sm={6} md={3} lg={6}>
                 <Typography>Home:</Typography>
               </Grid>
@@ -361,13 +361,13 @@ export default class Profile extends Component {
 
     return (
       <div>
-        <Grid container>
+        <Grid container justify="center" spacing="16">
           <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Grid container>
+            <Grid container spacing="16">
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    <Grid container justify="center">
+                    <Grid container justify="center" spacing="16">
                       <Grid item xs={6} sm={6} md={6} lg={8}>
                         <CardHeader
                           title={this.state.profile.fullName}
@@ -378,7 +378,7 @@ export default class Profile extends Component {
                               (this.state.profile.PersonType === 'stu') && this.state.profile.Class
                           }
                         />
-                        <Grid container justify="center">
+                        <Grid container justify="center" spacing="16">
                           {facebookButton}
                           {twitterButton}
                           {linkedInButton}
@@ -410,7 +410,7 @@ export default class Profile extends Component {
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Grid container>
+            <Grid container spacing="16">
               {office}
               <Grid item xs={12}>
                 <Card>
