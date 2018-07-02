@@ -186,6 +186,12 @@ function setOnOffCampus(data) {
   }
   return data;
 }
+function setClassYear(data) {
+  if (data.PreferredClassYear) {
+    data.ClassYear = data.PreferredClassYear;
+  }
+  return data;
+}
 function setMajorObject(data) {
   data.Majors = [];
   if (data.Major1Description) {
@@ -227,7 +233,7 @@ function formatCountry(profile) {
   return profile;
 }
 function setClass(profile) {
-  if (profile.PersonType === 'stu') {
+  if (String(profile.PersonType).includes('stu')) {
     switch (profile.Class) {
       case '1':
         profile.Class = 'Freshman';
@@ -460,6 +466,7 @@ const getProfileInfo = async username => {
   let profile = await getProfile(username);
   formatName(profile);
   setClass(profile);
+  setClassYear(profile);
   setMajorObject(profile);
   formatCountry(profile);
   setOnOffCampus(profile);
