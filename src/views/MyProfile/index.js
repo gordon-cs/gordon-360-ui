@@ -18,7 +18,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
-import Activities from './../../components/ActivityList';
+import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
@@ -28,7 +28,7 @@ import 'cropperjs/dist/cropper.css';
 import Switch from '@material-ui/core/Switch';
 
 const CROP_DIM = 200; // pixels
-
+//MyProfile
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +43,7 @@ export default class Profile extends Component {
       preview: null,
       loading: true,
       profile: {},
-      activities: [],
+      memberships: [],
       files: [],
       photoOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
@@ -202,9 +202,9 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
-      const activities = await user.getMemberships(profile.ID);
+      const memberships = await user.getMembershipsAlphabetically(profile.ID);
       const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, activities });
+      this.setState({ image, loading: false, memberships });
       this.setState({ isImagePublic: this.state.profile.show_pic });
     } catch (error) {
       this.setState({ error });
@@ -262,12 +262,13 @@ export default class Profile extends Component {
       alignItems: 'center',
     };
     let PersonalInfo;
-    let activityList;
-    if (!this.state.activities) {
-      activityList = <GordonLoader />;
+
+    let membershipList;
+    if (!this.state.memberships) {
+      membershipList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(activity => (
-        <Activities Activity={activity} key={activity.MembershipID} />
+      membershipList = this.state.memberships.map(activity => (
+        <MyProfileActivityList Activity={activity} />
       ));
     }
 
@@ -480,7 +481,7 @@ export default class Profile extends Component {
                       {instagramButton}
                       {editButton}
                     </Grid>
-                    <Button onClick={this.handlePhotoOpen} raised style={style.button}>
+                    <Button variant="contained" onClick={this.handlePhotoOpen} style={style.button}>
                       Update Photo
                     </Button>
                     <Dialog
@@ -543,8 +544,8 @@ export default class Profile extends Component {
                           <Grid container justify="center" spacing="16">
                             <Grid item>
                               <Button
+                                variant="contained"
                                 onClick={() => this.setState({ preview: null })}
-                                raised
                                 style={style.button}
                               >
                                 Choose Another Image
@@ -565,8 +566,8 @@ export default class Profile extends Component {
                               }
                             >
                               <Button
+                                variant="contained"
                                 onClick={this.toggleImagePrivacy.bind(this)}
-                                raised
                                 style={style.button}
                               >
                                 {this.state.isImagePublic ? 'Hide' : 'Show'}
@@ -576,8 +577,8 @@ export default class Profile extends Component {
                           <Grid item>
                             <Tooltip id="tooltip-reset" title="Restore your original ID photo">
                               <Button
+                                variant="contained"
                                 onClick={this.handleResetImage}
-                                raised
                                 style={{ background: 'tomato', color: 'white' }}
                               >
                                 Reset
@@ -585,15 +586,19 @@ export default class Profile extends Component {
                             </Tooltip>
                           </Grid>
                           <Grid item>
-                            <Button onClick={this.handleCloseCancel} raised style={style.button}>
+                            <Button
+                              variant="contained"
+                              onClick={this.handleCloseCancel}
+                              style={style.button}
+                            >
                               Cancel
                             </Button>
                           </Grid>
                           <Grid item>
                             <Tooltip id="tooltip-submit" title="Crop to current region and submit">
                               <Button
+                                variant="contained"
                                 onClick={this.handleCloseSubmit}
-                                raised
                                 disabled={!this.state.preview}
                                 style={
                                   this.state.preview
@@ -657,8 +662,8 @@ export default class Profile extends Component {
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
                   <CardContent>
-                    <CardHeader title="Activities" />
-                    <List>{activityList}</List>
+                    <CardHeader title="Involvements" />
+                    <List>{membershipList}</List>
                   </CardContent>
                 </Card>
               </Grid>
