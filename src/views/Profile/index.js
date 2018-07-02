@@ -11,7 +11,7 @@ import ListItem from '@material-ui/core/ListItem';
 import user from './../../services/user';
 import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
-import Activities from './../../components/ActivityList';
+import ProfileActivityList from './../../components/ProfileActivityList';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 
@@ -26,7 +26,7 @@ export default class Profile extends Component {
       preview: null,
       loading: true,
       profile: {},
-      activities: [],
+      memberships: [],
       files: [],
       photoDialogOpen: false,
       socialLinksDialogOpen: false,
@@ -50,9 +50,9 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(searchedUser.match.params.username),
       ]);
-      const activities = await user.getPublicMemberships(searchedUser.match.params.username);
+      const memberships = await user.getPublicMemberships(searchedUser.match.params.username);
       const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, activities });
+      this.setState({ image, loading: false, memberships });
     } catch (error) {
       this.setState({ error });
       console.log('error');
@@ -88,17 +88,39 @@ export default class Profile extends Component {
       console.log(error);
     }
   }
+
   render() {
     const style = {
       width: '100%',
     };
-    let activityList;
-    if (!this.state.activities) {
-      activityList = <GordonLoader />;
+    // The list of memberships that will be displayed on the page
+    let displayedMembershipList;
+
+    // The list of memberships that the user has made public
+    let publicMemberships = [];
+
+    if (!this.state.memberships) {
+      displayedMembershipList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(activity => (
-        <Activities Activity={activity} key={activity.MembershipID} />
-      ));
+      // Populate publicMemberships with the user's public Involvements
+      for (let i = 0; i < this.state.memberships.length; i++) {
+        if (!this.state.memberships[i].Privacy) {
+          publicMemberships.push(this.state.memberships[i]);
+        }
+      }
+
+      // If the user has no public Involvements, say so on the page
+      if (publicMemberships.length === 0) {
+        displayedMembershipList = (
+          <Typography align="center" variant="body2">
+            No Involvements to display.
+          </Typography>
+        );
+      } else {
+        displayedMembershipList = publicMemberships.map(activity => (
+          <ProfileActivityList Activity={activity} key={activity.MembershipID} />
+        ));
+      }
     }
 
     let address;
@@ -393,8 +415,8 @@ export default class Profile extends Component {
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    <CardHeader title="Activities" />
-                    <List>{activityList}</List>
+                    <CardHeader title="Involvements" />
+                    <List>{displayedMembershipList}</List>
                   </CardContent>
                 </Card>
               </Grid>
