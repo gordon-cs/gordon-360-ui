@@ -16,8 +16,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ButtonBase from '@material-ui/core/ButtonBase';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 
 import user from './../../services/user';
@@ -472,7 +470,7 @@ export default class Profile extends Component {
                       alt=""
                       className="profile-image"
                     >
-                      <img src={`data:image/jpg;base64,${this.state.image}`} alt="Profile Photo" />
+                      <img src={`data:image/jpg;base64,${this.state.image}`} alt="Profile" />
                       <span className="imageBackdrop" />
                       <GridListTileBar className="tile-bar" title="Update Photo" />
                     </ButtonBase>
