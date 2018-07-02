@@ -36,11 +36,15 @@ export default class Events extends Component {
       admissions: false,
       fair: false,
       chapelOffice: false,
+      allEvents: [],
       events: [],
       filteredEvents: [],
+      includePast: false,
+      includePastButton: 'Include Past Events',
       loading: true,
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
+    this.togglePastEvents = this.togglePastEvents.bind(this);
   }
   componentWillMount() {
     this.loadEvents();
@@ -66,10 +70,27 @@ export default class Events extends Component {
     };
   }
 
+  async togglePastEvents() {
+    //set events to all or to all future
+    if (this.state.includePast === false) {
+      this.setState({ includePast: true, includePastButton: 'Show Upcoming Events' });
+      await this.setState({ events: this.state.allEvents });
+    } else {
+      this.setState({ includePast: false, includePastButton: 'Include Past Events' });
+      const futureEvents = gordonEvent.getFutureEvents(this.state.allEvents);
+      await this.setState({ events: futureEvents });
+    }
+    //filter events to reflect boxes still checked
+    const events = gordonEvent.getFilteredEvents(this.state);
+    this.setState({ filteredEvents: events, loading: false });
+  }
+
+  //This should be the only time we pull from the database
   async loadEvents() {
     this.setState({ loading: true });
-    const events = await gordonEvent.getFutureEvents();
-    this.setState({ events, loading: false, filteredEvents: events });
+    const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
+    const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
+    this.setState({ allEvents, events, loading: false, filteredEvents: events });
   }
   render() {
     let content;
@@ -85,7 +106,7 @@ export default class Events extends Component {
         <Grid container justify="center">
           <Grid item xs={12} md={12} lg={8}>
             <Grid container alignItems="baseline" style={styles.searchBar}>
-              <Grid item xs={8} sm={9} md={10} lg={10}>
+              <Grid item xs={6} sm={8} md={8} lg={8}>
                 <TextField
                   id="search"
                   label="Search"
@@ -95,9 +116,14 @@ export default class Events extends Component {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={4} sm={3} md={2} lg={2}>
+              <Grid item xs={3} sm={2} md={2} lg={2}>
                 <Button variant="contained" color="primary" onClick={this.handleExpandClick}>
                   Filters
+                </Button>
+              </Grid>
+              <Grid item xs={3} sm={2} md={2} lg={2}>
+                <Button variant="contained" color="primary" onClick={this.togglePastEvents}>
+                  {this.state.includePastButton}
                 </Button>
               </Grid>
             </Grid>
