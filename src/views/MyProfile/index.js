@@ -649,9 +649,7 @@ export default class Profile extends Component {
                 <Card>
                   <CardContent>
                     <CardHeader title="Personal Information" />
-
                     {PersonalInfo}
-
                     <CardHeader title="Home Address" />
                     <List>
                       <ListItem>
@@ -663,7 +661,6 @@ export default class Profile extends Component {
                           <Typography>Street: {this.state.profile.HomeStreet2}</Typography>
                         </ListItem>
                       )}
-
                       <Divider />
                     </List>
                   </CardContent>
