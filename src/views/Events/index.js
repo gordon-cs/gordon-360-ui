@@ -158,6 +158,12 @@ export default class Events extends Component {
                 />
                 <FormControlLabel
                   control={
+                    <Checkbox checked={this.state.sports} onChange={this.filterEvents('sports')} />
+                  }
+                  label="Athletics"
+                />
+                <FormControlLabel
+                  control={
                     <Checkbox
                       checked={this.state.calendar}
                       onChange={this.filterEvents('calendar')}
@@ -194,12 +200,6 @@ export default class Events extends Component {
                     <Checkbox checked={this.state.fair} onChange={this.filterEvents('fair')} />
                   }
                   label="Fair or Expos"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={this.state.sports} onChange={this.filterEvents('Sports')} />
-                  }
-                  label="Athletics"
                 />
               </FormGroup>
               <Divider light />
