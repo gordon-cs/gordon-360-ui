@@ -415,8 +415,30 @@ const getMemberships = async id => {
 const getPublicMemberships = async username => {
   let memberships;
   memberships = await http.get(`/memberships/student/username/${username}/`);
+  memberships.sort(compareByTitle);
   return memberships;
 };
+
+const getMembershipsAlphabetically = async id => {
+  let memberships;
+  memberships = await http.get(`memberships/student/${id}`);
+  memberships.sort(compareByTitle);
+  return memberships;
+};
+
+//compares items by ActivityDescription, used by getMembershipsAlphabetically to sort by ActivityDescription
+function compareByTitle(a, b) {
+  const involvementA = a.ActivityDescription;
+  const involvementB = b.ActivityDescription;
+
+  let comparison = 0;
+  if (involvementA > involvementB) {
+    comparison = 1;
+  } else if (involvementA < involvementB) {
+    comparison = -1;
+  }
+  return comparison;
+}
 
 //compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
 function compareBySession(a, b) {
@@ -498,6 +520,7 @@ export default {
   getImage,
   getLocalInfo,
   getPublicMemberships,
+  getMembershipsAlphabetically,
   getProfileInfo,
   resetImage,
   postImage,

@@ -4,11 +4,11 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import List from '@material-ui/core/List';
-
+import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
-import Activities from './../../components/ActivityList';
+import ProfileActivityList from './../../components/ProfileActivityList';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import './index.css';
@@ -31,7 +31,7 @@ export default class Profile extends Component {
       preview: null,
       loading: true,
       profile: {},
-      activities: [],
+      memberships: [],
       files: [],
       photoDialogOpen: false,
       socialLinksDialogOpen: false,
@@ -44,6 +44,12 @@ export default class Profile extends Component {
 
   componentWillMount() {
     this.loadProfile(this.props);
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (this.props.match.params.username !== newProps.match.params.username) {
+      this.loadProfile(newProps);
+    }
   }
 
   async loadProfile(searchedUser) {
@@ -64,11 +70,11 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(searchedUser.match.params.username),
       ]);
-      const activities = await user.getPublicMemberships(searchedUser.match.params.username);
+      const memberships = await user.getPublicMemberships(searchedUser.match.params.username);
       const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, activities });
       this.hasNickName(profile);
       this.setSubheader(profile);
+      this.setState({ image, loading: false, memberships });
     } catch (error) {
       this.setState({ error });
       console.log(error);
@@ -123,15 +129,36 @@ export default class Profile extends Component {
 
   render() {
     const style = {
-      width: '100%',
+      maxWidth: '100%',
     };
-    let activityList;
-    if (!this.state.activities) {
-      activityList = <GordonLoader />;
+    // The list of memberships that will be displayed on the page
+    let displayedMembershipList;
+
+    // The list of memberships that the user has made public
+    let publicMemberships = [];
+
+    if (!this.state.memberships) {
+      displayedMembershipList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(activity => (
-        <Activities Activity={activity} key={activity.MembershipID} />
-      ));
+      // Populate publicMemberships with the user's public Involvements
+      for (let i = 0; i < this.state.memberships.length; i++) {
+        if (!this.state.memberships[i].Privacy) {
+          publicMemberships.push(this.state.memberships[i]);
+        }
+      }
+
+      // If the user has no public Involvements, say so on the page
+      if (publicMemberships.length === 0) {
+        displayedMembershipList = (
+          <Typography align="center" variant="body2">
+            No Involvements to display.
+          </Typography>
+        );
+      } else {
+        displayedMembershipList = publicMemberships.map(activity => (
+          <ProfileActivityList Activity={activity} key={activity.MembershipID} />
+        ));
+      }
     }
 
     let facebookButton;
@@ -177,45 +204,37 @@ export default class Profile extends Component {
 
     return (
       <div>
-        <Grid container>
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Grid container spacing={16}>
-              <Grid item xs={12}>
-                <Card>
-                  <CardContent>
-                    <Grid container justify="center" spacing={16}>
-                      <Grid item xs={6} sm={6} md={6} lg={8}>
-                        <CardHeader
-                          title={
-                            this.state.hasNickName
-                              ? this.state.profile.fullName +
-                                ' (' +
-                                this.state.profile.NickName +
-                                ')'
-                              : this.state.profile.fullName
-                          }
-                          subheader={this.state.subheaderInfo}
-                        />
-                        <Grid container justify="center" spacing={16}>
-                          {facebookButton}
-                          {twitterButton}
-                          {linkedInButton}
-                          {instagramButton}
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={6} sm={6} md={6} lg={4}>
-                        <img
-                          src={`data:image/jpg;base64,${this.state.image}`}
-                          alt=""
-                          style={style}
-                        />
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              </Grid>
+        <Grid container justify="center" spacing="16">
+          <Grid item xs={12} lg={10}>
+            <Card>
+              <CardContent>
+                <Grid container alignItems="center" align="center" justify="center" spacing="16">
+                  {/* <Grid item xs={12} sm={6} md={6} lg={4}> */}
+                  <Grid item xs={6} sm={6} md={6} lg={4}>
+                    <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
+                  </Grid>
+                  <CardHeader
+                    title={
+                      this.state.hasNickName
+                        ? this.state.profile.fullName + ' (' + this.state.profile.NickName + ')'
+                        : this.state.profile.fullName
+                    }
+                    subheader={this.state.subheaderInfo}
+                  />
+                  <Grid container spacing="16" align="center" justify="center">
+                    {facebookButton}
+                    {twitterButton}
+                    {linkedInButton}
+                    {instagramButton}
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
 
-              <Grid item xs={12}>
+          <Grid item xs={12} lg={10}>
+            <Grid container spacing="16">
+              <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
                   <CardContent>
                     <CardHeader title="Personal Information" />
@@ -223,16 +242,14 @@ export default class Profile extends Component {
                   </CardContent>
                 </Card>
               </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Grid container spacing={16}>
-              {this.state.officeinfo}
-              <Grid item xs={12}>
+
+              <Grid item xs={12} sm={12} md={6} lg={6}>
+                {this.state.officeinfo}
+
                 <Card>
                   <CardContent>
-                    <CardHeader title="Activities" />
-                    <List>{activityList}</List>
+                    <CardHeader title="Involvements" />
+                    <List>{displayedMembershipList}</List>
                   </CardContent>
                 </Card>
               </Grid>
