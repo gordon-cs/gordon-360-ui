@@ -46,6 +46,12 @@ export default class Profile extends Component {
     this.loadProfile(this.props);
   }
 
+  componentWillReceiveProps(newProps) {
+    if (this.props.match.params.username !== newProps.match.params.username) {
+      this.loadProfile(newProps);
+    }
+  }
+
   async loadProfile(searchedUser) {
     this.setState({ loading: true });
     this.setState({ username: searchedUser.match.params.username });
