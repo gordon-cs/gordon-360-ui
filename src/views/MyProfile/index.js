@@ -272,10 +272,10 @@ export default class Profile extends Component {
       justifyContent: 'center',
       alignItems: 'center',
     };
-    let activityList;
+    //let activityList;
     let membershipList;
     if (!this.state.activities) {
-      activityList = <GordonLoader />;
+      //activityList = <GordonLoader />;
     } else {
       membershipList = this.state.memberships.map(activity => (
         <MyProfileActivityList Activity={activity} />
