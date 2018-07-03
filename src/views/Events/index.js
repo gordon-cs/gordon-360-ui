@@ -104,8 +104,8 @@ export default class Events extends Component {
       <section>
         <Grid container justify="center">
           <Grid item xs={12} md={12} lg={8}>
-            <Grid container alignItems="baseline" style={styles.searchBar}>
-              <Grid item xs={6} sm={8} md={8} lg={8}>
+            <Grid container alignItems="baseline" style={styles.searchBar} spacing={8}>
+              <Grid item xs={4} sm={8} md={8} lg={8}>
                 <TextField
                   id="search"
                   label="Search"
@@ -115,12 +115,12 @@ export default class Events extends Component {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={3} sm={2} md={2} lg={2}>
+              <Grid item xs={4} sm={2} md={2} lg={2}>
                 <Button variant="contained" color="primary" onClick={this.handleExpandClick}>
                   Filters
                 </Button>
               </Grid>
-              <Grid item xs={3} sm={2} md={2} lg={2}>
+              <Grid item xs={4} sm={2} md={2} lg={2}>
                 <FormControlLabel
                   control={<Switch onChange={this.togglePastEvents} />}
                   label="Include Past"
