@@ -11,6 +11,9 @@ import { signOut } from '../../../../services/auth';
 import './nav-avatar-right-corner.css';
 import user from '../../../../services/user';
 
+const style = {
+  selected: 'false',
+};
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
     super(props);
@@ -78,7 +81,8 @@ export default class GordonNavAvatarRightCorner extends Component {
       return this.state.username
         .split('.') // Split name into separate words
         .map(name => name[0]) // Get first letter of each part of name
-        .join(''); // Join initials back into a string
+        .join('')
+        .toUpperCase(); // Join initials back into a string
     }
     return '';
   }
@@ -123,16 +127,28 @@ export default class GordonNavAvatarRightCorner extends Component {
           open={open}
           onClose={this.onClose}
         >
+          {/*This first MenuItem is hidden just to hide the React bug that leaves the first option perpeutally highlighted.*/}
+          <MenuItem onClick={this.onClose} style={{ display: 'none' }}>
+            My Profile
+          </MenuItem>
           <Link to={myProfileLink}>
-            <MenuItem onClick={this.onClose}>My Profile</MenuItem>
+            <MenuItem onClick={this.onClose} divider="true" style={{ style }}>
+              My Profile
+            </MenuItem>
           </Link>
           <Link to="/help">
-            <MenuItem onClick={this.onClose}>Help</MenuItem>
+            <MenuItem onClick={this.onClose} divider="true">
+              Help
+            </MenuItem>
           </Link>
           <Link to="/about">
-            <MenuItem onClick={this.onClose}>About</MenuItem>
+            <MenuItem onClick={this.onClose} divider="true">
+              About
+            </MenuItem>
           </Link>
-          <MenuItem onClick={this.onSignOut}>Sign out</MenuItem>
+          <MenuItem onClick={this.onSignOut} divider="true">
+            Sign Out
+          </MenuItem>
         </Menu>
       </section>
     );
