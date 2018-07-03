@@ -11,9 +11,6 @@ import { signOut } from '../../../../services/auth';
 import './nav-avatar-right-corner.css';
 import user from '../../../../services/user';
 
-const style = {
-  selected: 'false',
-};
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
     super(props);
@@ -132,7 +129,7 @@ export default class GordonNavAvatarRightCorner extends Component {
             My Profile
           </MenuItem>
           <Link to={myProfileLink}>
-            <MenuItem onClick={this.onClose} divider="true" style={{ style }}>
+            <MenuItem onClick={this.onClose} divider="true">
               My Profile
             </MenuItem>
           </Link>
