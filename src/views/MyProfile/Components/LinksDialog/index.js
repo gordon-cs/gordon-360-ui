@@ -186,6 +186,7 @@ export default class LinksDialog extends React.Component {
               value={this.state.facebookInput}
               onChange={this.handleChange('facebookInput')}
               error={!this.state.fbValid}
+              margin="dense"
             />
           </Grid>
           <Grid item>
@@ -196,6 +197,7 @@ export default class LinksDialog extends React.Component {
               value={this.state.twitterInput}
               onChange={this.handleChange('twitterInput')}
               error={!this.state.twValid}
+              margin="dense"
             />
           </Grid>
           <Grid item>
@@ -206,6 +208,7 @@ export default class LinksDialog extends React.Component {
               value={this.state.linkedInInput}
               onChange={this.handleChange('linkedInInput')}
               error={!this.state.liValid}
+              margin="dense"
             />
           </Grid>
           <Grid item>
@@ -216,6 +219,7 @@ export default class LinksDialog extends React.Component {
               value={this.state.instagramInput}
               onChange={this.handleChange('instagramInput')}
               error={!this.state.igValid}
+              margin="dense"
             />
           </Grid>
           <br />
