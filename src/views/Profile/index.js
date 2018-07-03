@@ -125,7 +125,7 @@ export default class Profile extends Component {
 
   render() {
     const style = {
-      width: '100%',
+      maxWidth: '100%',
     };
     // The list of memberships that will be displayed on the page
     let displayedMembershipList;
