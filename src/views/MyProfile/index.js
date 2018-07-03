@@ -43,6 +43,8 @@ export default class Profile extends Component {
       isImagePublic: null,
       image: null,
       preview: null,
+      hasNickName: Boolean,
+      nickname: String,
       loading: true,
       profileinfo: null,
       officeinfo: null,
@@ -193,6 +195,12 @@ export default class Profile extends Component {
     this.loadProfile();
   }
 
+  hasNickName(profile) {
+    let Name = String(profile.fullName);
+    let FirstName = Name.split(' ')[0];
+    this.setState({ hasNickName: FirstName !== profile.NickName });
+  }
+
   async loadProfile() {
     this.setState({ loading: true });
     try {
@@ -213,13 +221,9 @@ export default class Profile extends Component {
       const image = preferredImage || defaultImage;
       this.setState({ image, loading: false, memberships });
       this.setState({ isImagePublic: this.state.profile.show_pic });
+      this.hasNickName(profile);
     } catch (error) {
       this.setState({ error });
-    }
-    if (this.state.profile.IsMobilePhonePrivate === 0) {
-      this.setState({ button: 'Make Private' });
-    } else {
-      this.setState({ button: 'Make Public' });
     }
     // Set state of social media links to database values after load.
     // If not empty, add domain name back in for display and buttons.
@@ -374,7 +378,14 @@ export default class Profile extends Component {
                     <Grid container align="center" alignItems="center">
                       <Grid item xs={12}>
                         <CardHeader
-                          title={this.state.profile.fullName}
+                          title={
+                            this.state.hasNickName
+                              ? this.state.profile.fullName +
+                                ' (' +
+                                this.state.profile.NickName +
+                                ')'
+                              : this.state.profile.fullName
+                          }
                           subheader={this.state.profile.Class}
                         />
                         <Grid container spacing="16" align="center" justify="center">
