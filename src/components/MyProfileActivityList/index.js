@@ -7,6 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import Switch from '@material-ui/core/Switch';
 import membership from './../../services/membership';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 const styles = {
   colorSwitchBase: {
@@ -48,13 +50,17 @@ class MyProfileActivityList extends Component {
       <div>
         <Grid container alignItems="center">
           <Grid item xs={8} sm={8} md={8} lg={8}>
-            <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
-              <Typography>
-                <b>{Activity.ActivityDescription}</b>
-              </Typography>
-              <Typography>{Activity.SessionDescription}</Typography>
-              <Typography>{Activity.ParticipationDescription}</Typography>
-            </Link>
+            <List>
+              <ListItem>
+                <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
+                  <Typography>
+                    <b>{Activity.ActivityDescription}</b>
+                  </Typography>
+                  <Typography>{Activity.SessionDescription}</Typography>
+                  <Typography>{Activity.ParticipationDescription}</Typography>
+                </Link>
+              </ListItem>
+            </List>
           </Grid>
           <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
             <Grid container>
