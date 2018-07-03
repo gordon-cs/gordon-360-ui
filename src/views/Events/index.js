@@ -186,6 +186,13 @@ export default class Events extends Component {
                   }
                   label="Chapel Office"
                 />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={this.state.fair} onChange={this.filterEvents('fair')} />
+                  }
+                  label="Fair or Expos"
+                />
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -194,12 +201,6 @@ export default class Events extends Component {
                     />
                   }
                   label="Student Life"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={this.state.fair} onChange={this.filterEvents('fair')} />
-                  }
-                  label="Fair or Expos"
                 />
               </FormGroup>
               <Divider light />
