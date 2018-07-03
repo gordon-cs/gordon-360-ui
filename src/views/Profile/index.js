@@ -125,7 +125,7 @@ export default class Profile extends Component {
 
   render() {
     const style = {
-      width: '100%',
+      maxWidth: '100%',
     };
     // The list of memberships that will be displayed on the page
     let displayedMembershipList;
@@ -200,45 +200,37 @@ export default class Profile extends Component {
 
     return (
       <div>
-        <Grid container>
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Grid container>
-              <Grid item xs={12}>
-                <Card>
-                  <CardContent>
-                    <Grid container justify="center" spacing={16}>
-                      <Grid item xs={6} sm={6} md={6} lg={8}>
-                        <CardHeader
-                          title={
-                            this.state.hasNickName
-                              ? this.state.profile.fullName +
-                                ' (' +
-                                this.state.profile.NickName +
-                                ')'
-                              : this.state.profile.fullName
-                          }
-                          subheader={this.state.subheaderInfo}
-                        />
-                        <Grid container justify="center" spacing={16}>
-                          {facebookButton}
-                          {twitterButton}
-                          {linkedInButton}
-                          {instagramButton}
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={6} sm={6} md={6} lg={4}>
-                        <img
-                          src={`data:image/jpg;base64,${this.state.image}`}
-                          alt=""
-                          style={style}
-                        />
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              </Grid>
+        <Grid container justify="center" spacing="16">
+          <Grid item xs={12} lg={10}>
+            <Card>
+              <CardContent>
+                <Grid container alignItems="center" align="center" justify="center" spacing="16">
+                  {/* <Grid item xs={12} sm={6} md={6} lg={4}> */}
+                  <Grid item xs={6} sm={6} md={6} lg={4}>
+                    <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
+                  </Grid>
+                  <CardHeader
+                    title={
+                      this.state.hasNickName
+                        ? this.state.profile.fullName + ' (' + this.state.profile.NickName + ')'
+                        : this.state.profile.fullName
+                    }
+                    subheader={this.state.subheaderInfo}
+                  />
+                  <Grid container spacing="16" align="center" justify="center">
+                    {facebookButton}
+                    {twitterButton}
+                    {linkedInButton}
+                    {instagramButton}
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
 
-              <Grid item xs={12} spacing={16}>
+          <Grid item xs={12} lg={10}>
+            <Grid container spacing="16">
+              <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
                   <CardContent>
                     <CardHeader title="Personal Information" />
@@ -246,13 +238,9 @@ export default class Profile extends Component {
                   </CardContent>
                 </Card>
               </Grid>
-            </Grid>
-          </Grid>
 
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Grid container>
-              {this.state.officeinfo}
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
+                {this.state.officeinfo}
                 <Card>
                   <CardContent>
                     <CardHeader title="Involvements" />
