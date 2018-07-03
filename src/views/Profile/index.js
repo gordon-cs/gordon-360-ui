@@ -245,7 +245,8 @@ export default class Profile extends Component {
 
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 {this.state.officeinfo}
-
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
                   <CardContent>
                     <CardHeader title="Involvements" />

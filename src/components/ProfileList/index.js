@@ -8,6 +8,7 @@ import Minors from './../../components/MinorList';
 import Switch from '@material-ui/core/Switch';
 import user from './../../services/user';
 
+// all logic for displaying parts of the Personal Information Card is contained in this file
 export default class ProfileList extends Component {
   constructor(props) {
     super(props);
