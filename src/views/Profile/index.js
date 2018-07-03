@@ -51,7 +51,11 @@ export default class Profile extends Component {
     this.setState({ username: searchedUser.match.params.username });
     try {
       const profile = await user.getProfileInfo(searchedUser.match.params.username);
-      let profileinfo = <ProfileList profile={profile}> </ProfileList>;
+      let profileinfo = (
+        <ProfileList profile={profile} myProf={false}>
+          {' '}
+        </ProfileList>
+      );
       let officeinfo = <Office profile={profile} />;
       this.setState({ profileinfo: profileinfo });
       this.setState({ officeinfo: officeinfo });
@@ -175,7 +179,7 @@ export default class Profile extends Component {
       <div>
         <Grid container>
           <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Grid container>
+            <Grid container spacing={16}>
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
@@ -211,7 +215,7 @@ export default class Profile extends Component {
                 </Card>
               </Grid>
 
-              <Grid item xs={12} spacing={16}>
+              <Grid item xs={12}>
                 <Card>
                   <CardContent>
                     <CardHeader title="Personal Information" />
@@ -221,9 +225,8 @@ export default class Profile extends Component {
               </Grid>
             </Grid>
           </Grid>
-
           <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Grid container>
+            <Grid container spacing={16}>
               {this.state.officeinfo}
               <Grid item xs={12}>
                 <Card>

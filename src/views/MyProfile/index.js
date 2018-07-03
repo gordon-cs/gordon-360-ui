@@ -1,20 +1,20 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import Divider from '@material-ui/core/Divider/';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import Dropzone from 'react-dropzone';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
+import ProfileList from './../../components/ProfileList';
+import Office from './../../components/OfficeList';
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
@@ -25,7 +25,6 @@ import { socialMediaInfo } from '../../socialMedia';
 
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import Switch from '@material-ui/core/Switch';
 
 const CROP_DIM = 200; // pixels
 
@@ -42,6 +41,8 @@ export default class Profile extends Component {
       image: null,
       preview: null,
       loading: true,
+      profileinfo: null,
+      officeinfo: null,
       profile: {},
       activities: [],
       files: [],
@@ -53,10 +54,6 @@ export default class Profile extends Component {
       twitterLink: '',
       instagramLink: '',
     };
-  }
-
-  handleChangePrivacy() {
-    user.toggleMobilePhonePrivacy();
   }
 
   handlePhotoOpen = () => {
@@ -197,7 +194,14 @@ export default class Profile extends Component {
     this.setState({ loading: true });
     try {
       const profile = await user.getProfileInfo();
-      this.setState({ privacy: profile.IsMobilePhonePrivate });
+      let profileinfo = (
+        <ProfileList profile={profile} myProf={true}>
+          {' '}
+        </ProfileList>
+      );
+      let officeinfo = <Office profile={profile} />;
+      this.setState({ profileinfo: profileinfo });
+      this.setState({ officeinfo: officeinfo });
       this.setState({ loading: false, profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
@@ -261,7 +265,6 @@ export default class Profile extends Component {
       justifyContent: 'center',
       alignItems: 'center',
     };
-    let PersonalInfo;
     let activityList;
     if (!this.state.activities) {
       activityList = <GordonLoader />;
@@ -269,115 +272,6 @@ export default class Profile extends Component {
       activityList = this.state.activities.map(activity => (
         <Activities Activity={activity} key={activity.MembershipID} />
       ));
-    }
-
-    let address;
-    let homeStreet;
-    if (
-      this.state.profile.Country === 'United States Of America' ||
-      this.state.profile.Country === ''
-    ) {
-      address = `${this.state.profile.HomeCity},${this.state.profile.HomeState}`;
-      homeStreet = `${this.state.profile.HomeStreet2}`;
-    } else {
-      address = `${this.state.profile.Country}`;
-    }
-
-    if (this.state.profile.PersonType === 'fac') {
-      var Office = (
-        <CardContent>
-          <CardHeader title="Office Information" />
-          <List>
-            <ListItem>
-              <Typography>
-                Room: {this.state.profile.BuildingDescription}, {this.state.profile.OnCampusRoom}
-              </Typography>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <Typography>Office Phone: {this.state.profile.OnCampusPhone}</Typography>
-            </ListItem>
-            <Divider />
-
-            <ListItem>
-              <Typography>Office Hours: {this.state.profile.office_hours}</Typography>
-            </ListItem>
-          </List>
-        </CardContent>
-      );
-
-      PersonalInfo = (
-        <List>
-          <ListItem>
-            <Typography>Department: {this.state.profile.OnCampusDepartment}</Typography>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <Typography>Email: {this.state.profile.Email}</Typography>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <Typography>Phone: {this.state.profile.HomePhone}</Typography>
-          </ListItem>
-          <Divider />
-        </List>
-      );
-    }
-    if (this.state.profile.PersonType === 'stu') {
-      PersonalInfo = (
-        <List>
-          <ListItem>
-            <Typography>Major: {this.state.profile.Major1Description}</Typography>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <Grid container xs={6} sm={6} md={6} lg={6} spacing="16">
-              <Grid item>
-                <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              alignItems="center"
-              justify="flex-end"
-              xs={8}
-              sm={6}
-              md={6}
-              lg={6}
-              spacing="16"
-            >
-              <Grid item>
-                <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
-              </Grid>
-              <Grid item>
-                <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <Typography>Student ID: {this.state.profile.ID}</Typography>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <Typography>Email: {this.state.profile.Email}</Typography>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
-          </ListItem>
-
-          <Divider />
-        </List>
-      );
     }
 
     let linksDialog = (
@@ -632,25 +526,9 @@ export default class Profile extends Component {
                 <Card>
                   <CardContent>
                     <CardHeader title="Personal Information" />
-
-                    {PersonalInfo}
-
-                    <CardHeader title="Home Address" />
-                    <List>
-                      <ListItem>
-                        <Typography>Home: {address}</Typography>
-                      </ListItem>
-                      <Divider />
-                      {homeStreet && (
-                        <ListItem>
-                          <Typography>Street: {this.state.profile.HomeStreet2}</Typography>
-                        </ListItem>
-                      )}
-
-                      <Divider />
-                    </List>
+                    {this.state.profileinfo}
                   </CardContent>
-                  {Office}
+                  {this.state.officeinfo}
                 </Card>
               </Grid>
 

@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
+import Switch from '@material-ui/core/Switch';
+import user from './../../services/user';
 
 export default class ProfileList extends Component {
   constructor(props) {
@@ -12,8 +14,14 @@ export default class ProfileList extends Component {
     this.state = {
       isStu: Boolean,
       isFac: Boolean,
+      privacy: Boolean,
+      myProf: false, //if my profile page
       profile: {},
     };
+  }
+
+  handleChangePrivacy() {
+    user.toggleMobilePhonePrivacy();
   }
 
   formatPhone(phone) {
@@ -28,6 +36,7 @@ export default class ProfileList extends Component {
   componentWillMount() {
     this.setState({ isStu: String(this.props.profile.PersonType).includes('stu') });
     this.setState({ isFac: String(this.props.profile.PersonType).includes('fac') });
+    this.setState({ privacy: this.props.profile.IsMobilePhonePrivate });
   }
 
   render() {
@@ -98,14 +107,18 @@ export default class ProfileList extends Component {
                 <Typography>Home Phone:</Typography>
               </Grid>
               <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                {this.props.profile.HomePhone !== 'Private as requested.' && (
-                  <a href={'tel:' + this.props.profile.HomePhone}>
-                    <Typography className="linkColor">
-                      {this.formatPhone(this.props.profile.HomePhone)}
-                    </Typography>
-                  </a>
-                )}
+                {this.props.profile.HomePhone !== 'Private as requested.' &&
+                  !this.props.myProf && (
+                    <a href={'tel:' + this.props.profile.HomePhone}>
+                      <Typography className="linkColor">
+                        {this.formatPhone(this.props.profile.HomePhone)}
+                      </Typography>
+                    </a>
+                  )}
                 {this.props.profile.HomePhone === 'Private as requested.' && (
+                  <Typography>{this.formatPhone(this.props.profile.HomePhone)}</Typography>
+                )}
+                {this.props.myProf && (
                   <Typography>{this.formatPhone(this.props.profile.HomePhone)}</Typography>
                 )}
               </Grid>
@@ -141,6 +154,33 @@ export default class ProfileList extends Component {
         </div>
       );
     }
+    if (this.props.myProf) {
+      mobilephone = (
+        <div>
+          <ListItem>
+            <Grid container xs={6} sm={6} md={6} lg={6}>
+              <Grid item>
+                <Typography>Cell Phone:</Typography>
+              </Grid>
+            </Grid>
+            <Grid container alignItems="center" justify="flex-end" xs={8} sm={6} md={6} lg={6}>
+              <Grid item>
+                <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
+              </Grid>
+              <Grid item>
+                <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
+              </Grid>
+
+              <Grid item>
+                <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+
+          <Divider />
+        </div>
+      );
+    }
     if (this.state.isStu) {
       if (String(this.props.profile.Minors).length !== 0) {
         minors = <Minors minors={this.props.profile.Minors} />;
@@ -171,7 +211,7 @@ export default class ProfileList extends Component {
         Department = (
           <div>
             <ListItem>
-              <Grid container justify="center" spacing={16}>
+              <Grid container justify="center">
                 <Grid item xs={5} sm={6} md={3} lg={6}>
                   <Typography>Department:</Typography>
                 </Grid>
