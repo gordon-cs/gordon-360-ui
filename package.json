@@ -58,7 +58,8 @@
     "lint": "npm-run-all --parallel --aggregate-output --silent lint-js lint-scss",
     "lint-js": "eslint --ext .js src",
     "lint-scss": "stylelint 'src/**/*.scss'",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "postbuild": "node iisConfig/copyIISConfig.js"
   },
   "lint-staged": {
     "{**/*.md,src/**/*.{js,scss}}": [
