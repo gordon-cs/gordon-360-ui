@@ -27,7 +27,8 @@ export default class Profile extends Component {
       subheaderInfo: String,
       profileinfo: null,
       officeinfo: null,
-      image: null,
+      prefImage: null,
+      defImage: null,
       preview: null,
       loading: true,
       profile: {},
@@ -71,10 +72,11 @@ export default class Profile extends Component {
         await user.getImage(searchedUser.match.params.username),
       ]);
       const memberships = await user.getPublicMemberships(searchedUser.match.params.username);
-      const image = preferredImage || defaultImage;
+      const prefImage = preferredImage;
+      const defImage = defaultImage;
       this.hasNickName(profile);
       this.setSubheader(profile);
-      this.setState({ image, loading: false, memberships });
+      this.setState({ prefImage, defImage, loading: false, memberships });
     } catch (error) {
       this.setState({ error });
       console.log(error);
@@ -115,13 +117,23 @@ export default class Profile extends Component {
 
   setSubheader(profile) {
     let subheaderText = '';
+    let numberOfSubtitles = 0;
     if (this.state.isFac && profile.JobTitle !== undefined) {
       subheaderText += profile.JobTitle;
+      numberOfSubtitles++;
     }
     if (this.state.isStu) {
+      numberOfSubtitles++;
+      if (numberOfSubtitles > 1) {
+        subheaderText += ', ';
+      }
       subheaderText += profile.Class;
     }
     if (this.state.isAlu) {
+      numberOfSubtitles++;
+      if (numberOfSubtitles > 1) {
+        subheaderText += ', ';
+      }
       subheaderText += 'Class of ' + profile.ClassYear;
     }
     this.setState({ subheaderInfo: subheaderText });
@@ -209,9 +221,22 @@ export default class Profile extends Component {
             <Card>
               <CardContent>
                 <Grid container alignItems="center" align="center" justify="center" spacing="16">
-                  {/* <Grid item xs={12} sm={6} md={6} lg={4}> */}
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
+                  <Grid container xs={12} sm={6} md={6} lg={6}>
+                    <Grid item xs={6} sm={6} md={6} lg={6}>
+                      <img
+                        src={`data:image/jpg;base64,${this.state.prefImage}`}
+                        alt=""
+                        style={style}
+                      />
+                    </Grid>
+                    <Grid item xs={6} sm={6} md={6} lg={6}>
+                      <img
+                        class="alignPicCenter"
+                        src={`data:image/jpg;base64,${this.state.defImage}`}
+                        alt=""
+                        style={style}
+                      />
+                    </Grid>
                   </Grid>
                   <CardHeader
                     title={
