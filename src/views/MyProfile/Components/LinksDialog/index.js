@@ -5,6 +5,7 @@ import TwitterIcon from 'react-icons/lib/fa/twitter';
 import LinkedInIcon from 'react-icons/lib/fa/linkedin';
 import InstagramIcon from 'react-icons/lib/fa/instagram';
 
+import FormHelperText from '@material-ui/core/FormHelperText';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
@@ -179,7 +180,7 @@ export default class LinksDialog extends React.Component {
             {this.state.formErrors.instagramInput}
           </Typography>
           <Grid item>
-            <FacebookIcon alignItems="center" />
+            <FacebookIcon alignItems="center" style={{ fontSize: '20px' }} />
             <TextField
               id="facebookInput"
               label=" Facebook link"
@@ -190,7 +191,7 @@ export default class LinksDialog extends React.Component {
             />
           </Grid>
           <Grid item>
-            <TwitterIcon alignItems="center" />
+            <TwitterIcon alignItems="center" style={{ fontSize: '20px' }} />
             <TextField
               id="twitterInput"
               label=" Twitter link"
@@ -201,7 +202,7 @@ export default class LinksDialog extends React.Component {
             />
           </Grid>
           <Grid item>
-            <LinkedInIcon alignItems="center" />
+            <LinkedInIcon alignItems="center" style={{ fontSize: '20px' }} />
             <TextField
               id="linkedInInput"
               label=" LinkedIn link"
@@ -212,7 +213,7 @@ export default class LinksDialog extends React.Component {
             />
           </Grid>
           <Grid item>
-            <InstagramIcon alignItems="center" />
+            <InstagramIcon alignItems="center" style={{ fontSize: '20px' }} />
             <TextField
               id="instagramInput"
               label=" Instagram link"
