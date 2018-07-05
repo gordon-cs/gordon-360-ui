@@ -6,23 +6,27 @@
 .alignPicCenter {
   padding-top: 8%;
 }
-@media (max-width: $break-md) {
-  .alignPicCenter {
-    padding-top: 8%;
-  }
-}
-@media (max-width: $break-sm) {
-  .alignPicCenter {
-    padding-top: 8%;
-  }
-}
-@media (max-width: 800px) {
-  .alignPicCenter {
-    padding-top: 8%;
-  }
-}
-@media (max-width: $break-xs) {
+
+@media (max-width: 420px) {
   .alignPicCenter {
     padding-top: 0%;
+  }
+}
+
+@media (min-width: $break-sm) {
+  .alignPicCenter {
+    padding-top: 0%;
+  }
+}
+
+@media (min-width: 720px) {
+  .alignPicCenter {
+    padding-top: 8%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .alignPicCenter {
+    padding-top: 5%;
   }
 }

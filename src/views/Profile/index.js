@@ -222,21 +222,25 @@ export default class Profile extends Component {
               <CardContent>
                 <Grid container alignItems="center" align="center" justify="center" spacing="16">
                   <Grid container xs={12} sm={6} md={6} lg={6}>
-                    <Grid item xs={6} sm={6} md={6} lg={6}>
-                      <img
-                        src={`data:image/jpg;base64,${this.state.prefImage}`}
-                        alt=""
-                        style={style}
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={6} md={6} lg={6}>
-                      <img
-                        class="alignPicCenter"
-                        src={`data:image/jpg;base64,${this.state.defImage}`}
-                        alt=""
-                        style={style}
-                      />
-                    </Grid>
+                    {this.state.profile.preferred_photo !== 0 && (
+                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                        <img
+                          src={`data:image/jpg;base64,${this.state.prefImage}`}
+                          alt=""
+                          style={style}
+                        />
+                      </Grid>
+                    )}
+                    {this.state.profile.show_pic !== 0 && (
+                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                        <img
+                          class="alignPicCenter"
+                          src={`data:image/jpg;base64,${this.state.defImage}`}
+                          alt=""
+                          style={style}
+                        />
+                      </Grid>
+                    )}
                   </Grid>
                   <CardHeader
                     title={
@@ -259,18 +263,8 @@ export default class Profile extends Component {
 
           <Grid item xs={12} lg={10}>
             <Grid container spacing="16">
-              <Grid item xs={12} sm={12} md={6} lg={6}>
-                <Card>
-                  <CardContent>
-                    <CardHeader title="Personal Information" />
-                    <List>{this.state.profileinfo}</List>
-                  </CardContent>
-                </Card>
-              </Grid>
+              {this.state.profileinfo}
 
-              <Grid item xs={12} sm={12} md={6} lg={6}>
-                {this.state.officeinfo}
-              </Grid>
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
                   <CardContent>
@@ -279,6 +273,8 @@ export default class Profile extends Component {
                   </CardContent>
                 </Card>
               </Grid>
+
+              {this.state.officeinfo}
             </Grid>
           </Grid>
         </Grid>

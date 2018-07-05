@@ -550,15 +550,7 @@ export default class Profile extends Component {
 
           <Grid item xs={12} lg={10}>
             <Grid container spacing="16">
-              <Grid item xs={12} sm={12} md={6} lg={6}>
-                <Card>
-                  <CardContent>
-                    <CardHeader title="Personal Information" />
-                    {this.state.profileinfo}
-                  </CardContent>
-                  {this.state.officeinfo}
-                </Card>
-              </Grid>
+              {this.state.profileinfo}
 
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
@@ -568,6 +560,7 @@ export default class Profile extends Component {
                   </CardContent>
                 </Card>
               </Grid>
+              {this.state.officeinfo}
             </Grid>
           </Grid>
         </Grid>

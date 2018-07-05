@@ -7,7 +7,9 @@ import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
 import Switch from '@material-ui/core/Switch';
 import user from './../../services/user';
-
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 // all logic for displaying parts of the Personal Information Card is contained in this file
 export default class ProfileList extends Component {
   constructor(props) {
@@ -228,16 +230,21 @@ export default class ProfileList extends Component {
     }
 
     return (
-      <div>
-        {majors}
-        {minors}
-        {residence}
-        {Department}
-        {mobilephone}
-        {homephone}
-        {email}
-        {Home}
-      </div>
+      <Grid item xs={12} sm={12} md={6} lg={6}>
+        <Card>
+          <CardContent>
+            <CardHeader title="Personal Information" />
+            {majors}
+            {minors}
+            {residence}
+            {Department}
+            {mobilephone}
+            {homephone}
+            {email}
+            {Home}
+          </CardContent>
+        </Card>
+      </Grid>
     );
   }
 }
