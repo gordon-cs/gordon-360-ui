@@ -22,7 +22,7 @@ import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
-import GordonLoader from './../../components/Loader';
+//import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 
 import './profileButton.css';
@@ -272,10 +272,10 @@ export default class Profile extends Component {
       justifyContent: 'center',
       alignItems: 'center',
     };
-    let activityList;
+    //let activityList;
     let membershipList;
     if (!this.state.activities) {
-      activityList = <GordonLoader />;
+      //activityList = <GordonLoader />;
     } else {
       membershipList = this.state.memberships.map(activity => (
         <MyProfileActivityList Activity={activity} />
