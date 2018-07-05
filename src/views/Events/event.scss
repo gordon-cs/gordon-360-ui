@@ -1,0 +1,17 @@
+@import '../../vars';
+
+// Make rows alternate white and grey
+// Not working yet.
+.event-row:nth-child(even) {
+  background: #ddd;
+  &:hover {
+    background-color: #b2bb1c;
+  }
+}
+
+.event-row:nth-child(odd) {
+  background: #ffffff;
+  &:hover {
+    background-color: #b2bb1c;
+  }
+}

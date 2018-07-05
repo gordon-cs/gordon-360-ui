@@ -9,10 +9,14 @@ import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
+import Typography from '@material-ui/core/Typography';
 
 import gordonEvent from './../../services/event';
 import EventItem from './components/EventItem';
 import GordonLoader from '../../components/Loader';
+import { gordonColors } from '../../theme';
+
+import './event.css';
 
 const styles = {
   searchBar: {
@@ -97,9 +101,16 @@ export default class Events extends Component {
       content = <GordonLoader />;
     } else if (this.state.events) {
       content = this.state.filteredEvents.map(currEvent => (
-        <EventItem event={currEvent} key={currEvent.Event_ID} />
+        <EventItem event={currEvent} key={currEvent.Event_ID} className="event-row" />
       ));
     }
+
+    const headerStyle = {
+      backgroundColor: gordonColors.primary.blue,
+      color: '#FFF',
+      padding: '10px',
+    };
+
     return (
       <section>
         <Grid container justify="center">
@@ -216,6 +227,25 @@ export default class Events extends Component {
                 />
               </FormGroup>
             </Collapse>
+            <div style={headerStyle}>
+              <Grid container direction="row">
+                <Grid item xs={4}>
+                  <Typography variant="body2" style={headerStyle}>
+                    EVENT
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body2" style={headerStyle}>
+                    LOCATION
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body2" style={headerStyle}>
+                    DATE & TIME
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
           </Grid>
           <Grid item xs={12} md={12} lg={8}>
             <List>{content}</List>
