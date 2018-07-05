@@ -57,6 +57,10 @@ else
   printf "%s\n" "Failed to clear out app directory"
 fi
 
+# Print list of files before deploying app
+find build -type f -print > files.txt
+mv files.txt build
+
 printf "%s\n" "Copying app to server... "
 
 # Copy built app to server
