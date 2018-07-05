@@ -63,8 +63,6 @@ printf "%s\n" "Copying app to server... "
 sshpass -p "$DEPLOY_PASSWORD" scp -r build/* "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 
 if [ $? == 0 ]; then
-  # Create web.config
-  sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" echo '<?xml version="1.0" encoding="utf-8"?><configuration><system.webServer><rewrite><rules><rule name="React Routes" stopProcessing="true"><match url=".*" /><conditions logicalGrouping="MatchAll"><add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" /><add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" /></conditions><action type="Rewrite" url="/" /></rule></rules></rewrite></system.webServer></configuration>' > "$DIR/web.config"
   printf "%s\n" "Successfully copied app to $DEPLOY_ENV"
 else
   printf "%s\n" "Failed to copy app to server"
