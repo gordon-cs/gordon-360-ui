@@ -4,8 +4,6 @@ import FacebookIcon from 'react-icons/lib/fa/facebook';
 import TwitterIcon from 'react-icons/lib/fa/twitter';
 import LinkedInIcon from 'react-icons/lib/fa/linkedin';
 import InstagramIcon from 'react-icons/lib/fa/instagram';
-
-import FormHelperText from '@material-ui/core/FormHelperText';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
@@ -179,49 +177,69 @@ export default class LinksDialog extends React.Component {
             {this.state.formErrors.linkedInInput}
             {this.state.formErrors.instagramInput}
           </Typography>
-          <Grid item>
-            <FacebookIcon alignItems="center" style={{ fontSize: '20px' }} />
-            <TextField
-              id="facebookInput"
-              label=" Facebook link"
-              value={this.state.facebookInput}
-              onChange={this.handleChange('facebookInput')}
-              error={!this.state.fbValid}
-              margin="dense"
-            />
+          <Grid container spacing={8} alignItems="flex-end">
+            <Grid item>
+              <FacebookIcon alignItems="center" style={{ fontSize: '20px' }} />
+            </Grid>
+            <Grid item>
+              <TextField
+                id="facebookInput"
+                label=" Facebook link"
+                value={this.state.facebookInput}
+                onChange={this.handleChange('facebookInput')}
+                error={!this.state.fbValid}
+                margin="dense"
+                fullWidth
+              />
+            </Grid>
           </Grid>
-          <Grid item>
-            <TwitterIcon alignItems="center" style={{ fontSize: '20px' }} />
-            <TextField
-              id="twitterInput"
-              label=" Twitter link"
-              value={this.state.twitterInput}
-              onChange={this.handleChange('twitterInput')}
-              error={!this.state.twValid}
-              margin="dense"
-            />
+
+          <Grid container spacing={8} alignItems="flex-end">
+            <Grid item>
+              <TwitterIcon alignItems="center" style={{ fontSize: '20px' }} />
+            </Grid>
+            <Grid item xs zeroMinWidth>
+              <TextField
+                id="twitterInput"
+                label=" Twitter link"
+                value={this.state.twitterInput}
+                onChange={this.handleChange('twitterInput')}
+                error={!this.state.twValid}
+                margin="dense"
+              />
+            </Grid>
           </Grid>
-          <Grid item>
-            <LinkedInIcon alignItems="center" style={{ fontSize: '20px' }} />
-            <TextField
-              id="linkedInInput"
-              label=" LinkedIn link"
-              value={this.state.linkedInInput}
-              onChange={this.handleChange('linkedInInput')}
-              error={!this.state.liValid}
-              margin="dense"
-            />
+          <Grid container spacing={8} alignItems="flex-end">
+            <Grid item>
+              <LinkedInIcon alignItems="center" style={{ fontSize: '20px' }} />
+            </Grid>
+            <Grid item>
+              <TextField
+                id="linkedInInput"
+                label=" LinkedIn link"
+                value={this.state.linkedInInput}
+                onChange={this.handleChange('linkedInInput')}
+                error={!this.state.liValid}
+                margin="dense"
+                fullWidth
+              />
+            </Grid>
           </Grid>
-          <Grid item>
-            <InstagramIcon alignItems="center" style={{ fontSize: '20px' }} />
-            <TextField
-              id="instagramInput"
-              label=" Instagram link"
-              value={this.state.instagramInput}
-              onChange={this.handleChange('instagramInput')}
-              error={!this.state.igValid}
-              margin="dense"
-            />
+          <Grid container spacing={8} alignItems="flex-end">
+            <Grid item>
+              <InstagramIcon alignItems="center" style={{ fontSize: '20px' }} />
+            </Grid>
+            <Grid item>
+              <TextField
+                id="instagramInput"
+                label=" Instagram link"
+                value={this.state.instagramInput}
+                onChange={this.handleChange('instagramInput')}
+                error={!this.state.igValid}
+                margin="dense"
+                fullWidth
+              />
+            </Grid>
           </Grid>
           <br />
           <DialogActions>

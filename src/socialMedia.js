@@ -9,22 +9,22 @@ export const socialMediaInfo = {
   facebook: {
     icon: <FacebookIcon />,
     prefix: 'https://www.facebook.com/',
-    error: 'Not a valid facebook link',
+    error: 'Invalid Facebook link. ',
   },
   twitter: {
     icon: <TwitterIcon />,
     prefix: 'https://twitter.com/',
-    error: 'Not a valid twitter link',
+    error: 'Invalid Twitter link. ',
   },
   linkedIn: {
     icon: <LinkedInIcon />,
     prefix: 'https://www.linkedin.com/in/',
-    error: 'Not a valid linkedIn link',
+    error: 'Invalid LinkedIn link. ',
   },
   instagram: {
     icon: <InstagramIcon />,
     prefix: 'https://www.instagram.com/',
-    error: 'Not a valid instagram link',
+    error: 'Invalid Instagram link. ',
   },
   edit: {
     icon: <EditIcon />,
