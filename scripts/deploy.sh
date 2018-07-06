@@ -35,6 +35,7 @@ else
   printf "%s\n" "Failed to remove backup directory"
 fi
 
+
 printf "%s\n" "Moving app to backup directory... "
 
 # Move app to temporary directory
@@ -61,6 +62,10 @@ printf "%s\n" "Copying app to server... "
 
 # Copy built app to server
 sshpass -p "$DEPLOY_PASSWORD" scp -r build/* "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
+
+# List files on IIS Server
+sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" \
+  "ls -R $DIR | Out-File -filepath $DIR/files.txt"
 
 if [ $? == 0 ]; then
   printf "%s\n" "Successfully copied app to $DEPLOY_ENV"
