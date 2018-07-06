@@ -58,9 +58,6 @@ else
   printf "%s\n" "Failed to clear out app directory"
 fi
 
-# Print contents of thebookof.mormon
-cat public/thebookof.mormon
-
 printf "%s\n" "Copying app to server... "
 
 # Copy built app to server
