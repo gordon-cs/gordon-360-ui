@@ -214,6 +214,16 @@ export default class Profile extends Component {
       );
     }
 
+    let email;
+    if (this.state.profile.Email !== '') {
+      email = (
+        <div>
+          {/* <EmailIcon> */}
+          <Typography>{this.state.profile.Email}</Typography>
+        </div>
+      );
+    }
+
     return (
       <div>
         <Grid container justify="center" spacing="16">
@@ -260,6 +270,7 @@ export default class Profile extends Component {
                           {linkedInButton}
                           {instagramButton}
                         </Grid>
+                        {email}
                       </Grid>
                     </Grid>
                   </Grid>

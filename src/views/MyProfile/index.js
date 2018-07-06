@@ -14,6 +14,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+import Typography from '@material-ui/core/Typography';
 
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
@@ -355,6 +356,16 @@ export default class Profile extends Component {
         </Grid>
       );
     }
+
+    let email;
+    if (this.state.profile.Email !== '') {
+      email = (
+        <div>
+          {/* <EmailIcon> */}
+          <Typography>{this.state.profile.Email}</Typography>
+        </div>
+      );
+    }
     return (
       <div>
         <Grid container justify="center" spacing="16">
@@ -395,6 +406,7 @@ export default class Profile extends Component {
                           {instagramButton}
                           {editButton}
                         </Grid>
+                        {email}
                         <Dialog
                           open={this.state.photoOpen}
                           keepMounted

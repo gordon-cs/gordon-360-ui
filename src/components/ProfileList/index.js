@@ -38,7 +38,7 @@ export default class ProfileList extends Component {
 
   render() {
     let address;
-    let homephone, mobilephone, Home, street, email;
+    let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
 
@@ -49,24 +49,6 @@ export default class ProfileList extends Component {
       address = `${this.props.profile.HomeCity}, ${this.props.profile.HomeState}`;
     } else {
       address = `${this.props.profile.Country}`;
-    }
-
-    if (this.props.profile.Email !== '') {
-      email = (
-        <div>
-          <ListItem>
-            <Grid container justify="center">
-              <Grid item xs={6} sm={6} md={3} lg={6}>
-                <Typography>Email:</Typography>
-              </Grid>
-              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
-                <Typography>{this.props.profile.Email}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </div>
-      );
     }
 
     if (this.props.profile.HomeStreet2 !== '') {
@@ -230,7 +212,6 @@ export default class ProfileList extends Component {
             {Department}
             {mobilephone}
             {homephone}
-            {email}
             {Home}
           </CardContent>
         </Card>
