@@ -5,7 +5,6 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
-import Switch from '@material-ui/core/Switch';
 import user from './../../services/user';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -161,25 +160,15 @@ export default class ProfileList extends Component {
       mobilephone = (
         <div>
           <ListItem>
-            <Grid container xs={6} sm={6} md={6} lg={6}>
-              <Grid item>
-                <Typography>Cell Phone:</Typography>
+            <Grid container justify="center">
+              <Grid item xs={3} sm={6} md={3} lg={6}>
+                <Typography>Mobile Phone:</Typography>
               </Grid>
-            </Grid>
-            <Grid container alignItems="center" justify="flex-end" xs={8} sm={6} md={6} lg={6}>
-              <Grid item>
+              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
                 <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
-              </Grid>
-              <Grid item>
-                <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
-              </Grid>
-
-              <Grid item>
-                <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
               </Grid>
             </Grid>
           </ListItem>
-
           <Divider />
         </div>
       );
