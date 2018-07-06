@@ -362,7 +362,7 @@ export default class Profile extends Component {
             <Card id="print">
               <CardContent>
                 <Grid container alignItems="center" align="center" justify="center" spacing="16">
-                  <Grid item xs={12} sm={6} md={6} lg={4}>
+                  <Grid item xs={12} sm={12} md={12} lg={12}>
                     <ButtonBase
                       onClick={this.handlePhotoOpen}
                       focusRipple
@@ -374,7 +374,7 @@ export default class Profile extends Component {
                       <GridListTileBar className="tile-bar" title="Update Photo" />
                     </ButtonBase>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={6} lg={4}>
+                  <Grid item xs={12} sm={12} md={12} lg={12}>
                     <Grid container align="center" alignItems="center">
                       <Grid item xs={12}>
                         <CardHeader

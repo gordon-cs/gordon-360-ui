@@ -221,26 +221,23 @@ export default class Profile extends Component {
             <Card>
               <CardContent>
                 <Grid container alignItems="center" align="center" justify="center" spacing="16">
-                  <Grid container xs={12} sm={6} md={6} lg={6}>
-                    {this.state.profile.preferred_photo !== 0 && (
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                  <Grid container alignItems="center">
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                      {this.state.profile.preferred_photo !== 0 && (
                         <img
                           src={`data:image/jpg;base64,${this.state.prefImage}`}
                           alt=""
                           style={style}
                         />
-                      </Grid>
-                    )}
-                    {this.state.profile.show_pic !== 0 && (
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                      )}
+                      {this.state.profile.show_pic !== 0 && (
                         <img
-                          class="alignPicCenter"
                           src={`data:image/jpg;base64,${this.state.defImage}`}
                           alt=""
                           style={style}
                         />
-                      </Grid>
-                    )}
+                      )}
+                    </Grid>
                   </Grid>
                   <CardHeader
                     title={
