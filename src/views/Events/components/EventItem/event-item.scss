@@ -1,6 +1,6 @@
 @import '../../../../vars';
 
-.event-row {
+.event-item {
   padding-left: 10px;
   padding-top: 10px;
   padding-right: 10px;
@@ -12,7 +12,7 @@
   padding-right: 10px;
 }
 
-.event-row:hover .event-column {
+.event-item:hover .event-column {
   background-color: #b2bb1c;
   color: #fff;
 }

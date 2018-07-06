@@ -23,7 +23,7 @@ export default class GordonEventItem extends Component {
 
     return (
       <section>
-        <Grid container direction="row" onClick={this.handleExpandClick} className="event-row">
+        <Grid container direction="row" onClick={this.handleExpandClick} className="event-item">
           <Grid item xs={4}>
             <Typography className="event-column">{event.title}</Typography>
           </Grid>

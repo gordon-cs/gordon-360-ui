@@ -10,6 +10,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
 
 import gordonEvent from './../../services/event';
 import EventItem from './components/EventItem';
@@ -101,7 +102,7 @@ export default class Events extends Component {
       content = <GordonLoader />;
     } else if (this.state.events) {
       content = this.state.filteredEvents.map(currEvent => (
-        <EventItem event={currEvent} key={currEvent.Event_ID} className="event-row" />
+        <EventItem event={currEvent} key={currEvent.Event_ID} />
       ));
     }
 
@@ -140,7 +141,7 @@ export default class Events extends Component {
             </Grid>
           </Grid>
 
-          <Grid item xs={11} md={12} lg={8}>
+          <Grid item xs={12} md={12} lg={8}>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <FormGroup row>
                 <FormControlLabel
@@ -227,28 +228,30 @@ export default class Events extends Component {
                 />
               </FormGroup>
             </Collapse>
-            <div style={headerStyle}>
-              <Grid container direction="row">
-                <Grid item xs={4}>
-                  <Typography variant="body2" style={headerStyle}>
-                    EVENT
-                  </Typography>
+            <Card>
+              <div style={headerStyle}>
+                <Grid container direction="row">
+                  <Grid item xs={4}>
+                    <Typography variant="body2" style={headerStyle}>
+                      EVENT
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography variant="body2" style={headerStyle}>
+                      LOCATION
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography variant="body2" style={headerStyle}>
+                      DATE & TIME
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={4}>
-                  <Typography variant="body2" style={headerStyle}>
-                    LOCATION
-                  </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography variant="body2" style={headerStyle}>
-                    DATE & TIME
-                  </Typography>
-                </Grid>
+              </div>
+              <Grid>
+                <List className="event-list">{content}</List>
               </Grid>
-            </div>
-          </Grid>
-          <Grid item xs={12} md={12} lg={8}>
-            <List>{content}</List>
+            </Card>
           </Grid>
         </Grid>
       </section>
