@@ -67,3 +67,20 @@ Links to the homepages of libraries used in this project, listed here for easy r
     * In the `proxy` key, there are two subkeys: `/api` and `/token`. Change the `target` line in both of these to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the text to say `"target": "http://localhost:5555/"` in both subkeys.
 
   * Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file.
+
+  
+### Server Notes
+The staging server is hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu`, `360newtrain.gordon.edu`, and `360new.gordon.edu`.
+
+The production server is hosted on `cts-360.gordon.edu`. This machine is also known as `360.gordon.edu` and `360train.gordon.edu` (it also runs the staging server for the Ember site).
+
+#### Making Refresh, URL Entry, and Forward/Back Buttons Work
+As noted earlier, gordon-360-ui uses React Router for routing URLs to different views. This works as expected when running the front-end locally with `npm start`. However, when the production build is running on the IIS Server, React Router only handles link clicks; manual URL entry and use of browser navigation buttons results in a 404 error. This is because URLs are sent to the IIS Server (as HTTP requests) before they are handled by React Router. Because none of the URLs correspond to actual directories on the server root, a 404 error results.
+
+To remedy this, a `web.config` file with [these contents](https://gist.githubusercontent.com/lcostea/f17663ebf041b103d98989b6b52d8353/raw/6744846d241c9b785df9054fecbcfc4f2e5dda80/web.config) can be placed in the server's root directory (`D:\wwwroot\360train.gordon.edu`). This file is read by the IIS Server. It provides commands to the URL Rewrite extension (which must be installed in the "Internet Information Services (IIS) Manager" program and can be downloaded from [The Official Microsoft IIS Site](https://www.iis.net/downloads/microsoft/url-rewrite)) which tells the server to reroute all invalid URLs to the server's root directory, eliminating the 404 errors and allowing React Router to handle URLs as expected.
+
+##### The Bad News
+Unfortunately, due to some yet-to-be-fathomed fluke, our attempts to make this `web.config` file be automatically copied to the server root upon deployment have as of yet been foiled. The file can be placed in the server root directory manually, but it will be removed upon the next deployment. Until this issue can be solved, a ~~hack~~ workaround has been concocted which automatically copies `web.config` to the server root whenever it is removed. This has been implemented using a PowerShell script (`D:\scripts\webconfig\webconfig-filecheck.ps1`) containing a constantly-running while loop. Execution of the script is started by Windows Task Scheduler every morning at 2:00 AM. The back-up `web.config` file is located in the same directory as the script.
+
+##### Note
+Currently, this workaround is only in place for the development site (`360newtrain.gordon.edu`). Analogous changes must be made to the server root directories for the other sites (`360new.gordon.edu`, and `360.gordon.edu` once the React site officially replaces the Ember site) in order for the 404-error-eliminating fixes to take effect on those sites.
