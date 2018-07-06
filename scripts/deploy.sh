@@ -67,3 +67,4 @@ if [ $? == 0 ]; then
 else
   printf "%s\n" "Failed to copy app to server"
 fi
+
