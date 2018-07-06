@@ -65,7 +65,7 @@ class MyProfileActivityList extends Component {
           <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
             <Grid container>
               <Grid item xs={12} align="center">
-                {/* The function you are trying to fire by clicking the toggle must passed to onChange()
+                {/* The function we are trying to fire by clicking the toggle must be passed to onChange()
               using an Arrow Function.
               https://stackoverflow.com/questions/33846682/react-onclick-function-fires-on-render             
               */}
@@ -83,7 +83,7 @@ class MyProfileActivityList extends Component {
               </Grid>
               <Grid item xs={12} align="center">
                 <Typography style={toggleTextStyle}>
-                  {Activity.Privacy ? 'Hidden' : 'Public'}
+                  {Activity.Privacy ? 'Private' : 'Public'}
                 </Typography>
               </Grid>
             </Grid>
