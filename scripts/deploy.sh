@@ -64,7 +64,7 @@ printf "%s\n" "Copying app to server... "
 sshpass -p "$DEPLOY_PASSWORD" scp -r build/* "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 
 # List files on IIS Server
-sshpass -p "$DEPLOR_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" \
+sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" \
   "ls $DIR | Out-File -filepath $DIR/files.txt"
 
 if [ $? == 0 ]; then
