@@ -252,7 +252,8 @@ export default class Profile extends Component {
 
     const style = {
       img: {
-        maxWidth: '100%',
+        width: '200px',
+        height: '200px',
       },
 
       centerGridContainer: {
@@ -549,13 +550,13 @@ export default class Profile extends Component {
           </Grid>
 
           <Grid item xs={12} lg={5}>
-            <Grid container xs={12} sm={12} md={12} lg={12} direction="column" spacing="16">
+            <Grid container direction="column">
               {this.state.profileinfo}
               {this.state.officeinfo}
             </Grid>
           </Grid>
           <Grid item xs={12} lg={5}>
-            <Grid container xs={12} sm={12} md={12} lg={12} direction="column" spacing="16">
+            <Grid container direction="column">
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Card>
                   <CardContent>

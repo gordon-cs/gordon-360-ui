@@ -141,7 +141,8 @@ export default class Profile extends Component {
 
   render() {
     const style = {
-      maxWidth: '100%',
+      width: '200px',
+      height: '200px',
     };
     // The list of memberships that will be displayed on the page
     let displayedMembershipList;
@@ -172,7 +173,7 @@ export default class Profile extends Component {
         ));
       }
     }
-
+    console.log(this.state.profile);
     let facebookButton;
     let twitterButton;
     let linkedInButton;
@@ -229,7 +230,7 @@ export default class Profile extends Component {
                           alt=""
                           style={style}
                         />
-                      )}
+                      )}{' '}
                       {this.state.profile.show_pic !== 0 && (
                         <img
                           src={`data:image/jpg;base64,${this.state.defImage}`}
@@ -269,13 +270,13 @@ export default class Profile extends Component {
           </Grid>
 
           <Grid item xs={12} lg={5}>
-            <Grid container xs={12} sm={12} md={12} lg={12} direction="column" spacing="16">
+            <Grid container direction="column" spacing="16">
               {this.state.profileinfo}
               {this.state.officeinfo}
             </Grid>
           </Grid>
           <Grid item xs={12} lg={5}>
-            <Grid container xs={12} sm={12} md={12} lg={12} direction="column" spacing="16">
+            <Grid container direction="column" spacing="16">
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Card>
                   <CardContent>
