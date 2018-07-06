@@ -242,19 +242,29 @@ export default class Profile extends Component {
                       </Grid>
                     )}
                   </Grid>
-                  <CardHeader
-                    title={
-                      this.state.hasNickName
-                        ? this.state.profile.fullName + ' (' + this.state.profile.NickName + ')'
-                        : this.state.profile.fullName
-                    }
-                    subheader={this.state.subheaderInfo}
-                  />
-                  <Grid container spacing="16" align="center" justify="center">
-                    {facebookButton}
-                    {twitterButton}
-                    {linkedInButton}
-                    {instagramButton}
+                  <Grid item xs={12} sm={6} md={6} lg={4}>
+                    <Grid container align="center" alignItems="center">
+                      <Grid item xs={12}>
+                        <CardHeader
+                          title={
+                            this.state.hasNickName
+                              ? this.state.profile.fullName +
+                                ' (' +
+                                this.state.profile.NickName +
+                                ')'
+                              : this.state.profile.fullName
+                          }
+                          subheader={this.state.subheaderInfo}
+                        />
+
+                        <Grid container spacing="16" align="center" justify="center">
+                          {facebookButton}
+                          {twitterButton}
+                          {linkedInButton}
+                          {instagramButton}
+                        </Grid>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
               </CardContent>
