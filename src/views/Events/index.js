@@ -40,7 +40,6 @@ export default class Events extends Component {
       events: [],
       filteredEvents: [],
       includePast: false,
-      includePastButton: 'Include Past Events',
       loading: true,
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
@@ -73,10 +72,10 @@ export default class Events extends Component {
   async togglePastEvents() {
     //set events to all or to all future
     if (this.state.includePast === false) {
-      this.setState({ includePast: true, includePastButton: 'Show Upcoming Events' });
+      this.setState({ includePast: true });
       await this.setState({ events: this.state.allEvents });
     } else {
-      this.setState({ includePast: false, includePastButton: 'Include Past Events' });
+      this.setState({ includePast: false });
       const futureEvents = gordonEvent.getFutureEvents(this.state.allEvents);
       await this.setState({ events: futureEvents });
     }
@@ -105,8 +104,8 @@ export default class Events extends Component {
       <section>
         <Grid container justify="center">
           <Grid item xs={12} md={12} lg={8}>
-            <Grid container alignItems="baseline" style={styles.searchBar}>
-              <Grid item xs={6} sm={8} md={8} lg={8}>
+            <Grid container alignItems="baseline" style={styles.searchBar} spacing={8}>
+              <Grid item xs={4} sm={8} md={8} lg={8}>
                 <TextField
                   id="search"
                   label="Search"
@@ -116,15 +115,16 @@ export default class Events extends Component {
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={3} sm={2} md={2} lg={2}>
-                <Button raised color="primary" onClick={this.handleExpandClick}>
+              <Grid item xs={4} sm={2} md={2} lg={2}>
+                <Button variant="contained" color="primary" onClick={this.handleExpandClick}>
                   Filters
                 </Button>
               </Grid>
-              <Grid item xs={3} sm={2} md={2} lg={2}>
-                <Button raised color="primary" onClick={this.togglePastEvents}>
-                  {this.state.includePastButton}
-                </Button>
+              <Grid item xs={4} sm={2} md={2} lg={2}>
+                <FormControlLabel
+                  control={<Switch onChange={this.togglePastEvents} />}
+                  label="Include Past"
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -158,6 +158,12 @@ export default class Events extends Component {
                 />
                 <FormControlLabel
                   control={
+                    <Checkbox checked={this.state.sports} onChange={this.filterEvents('sports')} />
+                  }
+                  label="Athletics"
+                />
+                <FormControlLabel
+                  control={
                     <Checkbox
                       checked={this.state.calendar}
                       onChange={this.filterEvents('calendar')}
@@ -180,15 +186,7 @@ export default class Events extends Component {
                   }
                   label="Chapel Office"
                 />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.studentLife}
-                      onChange={this.filterEvents('studentLife')}
-                    />
-                  }
-                  label="Student Life"
-                />
+
                 <FormControlLabel
                   control={
                     <Checkbox checked={this.state.fair} onChange={this.filterEvents('fair')} />
@@ -197,9 +195,12 @@ export default class Events extends Component {
                 />
                 <FormControlLabel
                   control={
-                    <Checkbox checked={this.state.sports} onChange={this.filterEvents('Sports')} />
+                    <Checkbox
+                      checked={this.state.studentLife}
+                      onChange={this.filterEvents('studentLife')}
+                    />
                   }
-                  label="Athletics"
+                  label="Student Life"
                 />
               </FormGroup>
               <Divider light />

@@ -4,49 +4,50 @@ import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
-export default class Activities extends Component {
+//Public Profile Involvements List
+export default class ProfileActivityList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {};
   }
-  componentWillMount() {
-    this.loadProfile();
-  }
-  async loadProfile() {}
   render() {
     const { Activity } = this.props;
     const imgStyle = {
       width: '90%',
     };
-    const textStyle = {
-      textIndent: '12pt',
-    };
-
     return (
       <div>
-        <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
-          <Grid container alignItems="center">
-            <Grid item xs={10} sm={10} md={10} lg={10} style={textStyle}>
-              <Typography>
-                <b>{Activity.ActivityDescription}</b>
-              </Typography>
-              <Typography>{Activity.SessionDescription}</Typography>
-              <Typography>{Activity.ParticipationDescription}</Typography>
-            </Grid>
-            <Grid item xs={2} sm={2} md={2} lg={2}>
-              <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
-            </Grid>
+        <Grid container alignItems="center">
+          <Grid item xs={10}>
+            <List>
+              <ListItem>
+                <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
+                  <Typography>
+                    <b>{Activity.ActivityDescription}</b>
+                  </Typography>
+                  <Typography>{Activity.SessionDescription}</Typography>
+                  <Typography>{Activity.ParticipationDescription}</Typography>
+                </Link>
+              </ListItem>
+            </List>
           </Grid>
-        </Link>
+          <Grid item xs={2}>
+            <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
+              <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
+            </Link>
+          </Grid>
+        </Grid>
         <Divider />
       </div>
     );
   }
 }
 
-Activities.propTypes = {
+ProfileActivityList.propTypes = {
   Activity: PropTypes.shape({
     ActivityDescription: PropTypes.string.isRequired,
     ActivityImagePath: PropTypes.string.isRequired,

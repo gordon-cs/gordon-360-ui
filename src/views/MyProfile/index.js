@@ -15,20 +15,23 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
-import Activities from './../../components/ActivityList';
+import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 
+import './profileButton.css';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import Switch from '@material-ui/core/Switch';
 
 const CROP_DIM = 200; // pixels
-
+//MyProfile
 export default class Profile extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +46,7 @@ export default class Profile extends Component {
       preview: null,
       loading: true,
       profile: {},
-      activities: [],
+      memberships: [],
       files: [],
       photoOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
@@ -202,9 +205,9 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
-      const activities = await user.getMemberships(profile.ID);
+      const memberships = await user.getMembershipsAlphabetically(profile.ID);
       const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, activities });
+      this.setState({ image, loading: false, memberships });
       this.setState({ isImagePublic: this.state.profile.show_pic });
     } catch (error) {
       this.setState({ error });
@@ -262,12 +265,13 @@ export default class Profile extends Component {
       alignItems: 'center',
     };
     let PersonalInfo;
-    let activityList;
-    if (!this.state.activities) {
-      activityList = <GordonLoader />;
+
+    let membershipList;
+    if (!this.state.memberships) {
+      membershipList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(activity => (
-        <Activities Activity={activity} key={activity.MembershipID} />
+      membershipList = this.state.memberships.map(activity => (
+        <MyProfileActivityList Activity={activity} />
       ));
     }
 
@@ -459,167 +463,180 @@ export default class Profile extends Component {
           <Grid item xs={12} lg={10}>
             <Card id="print">
               <CardContent>
-                <Grid container justify="center" spacing="16">
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <img
-                      src={`data:image/jpg;base64,${this.state.image}`}
+                <Grid container alignItems="center" align="center" justify="center" spacing="16">
+                  <Grid item xs={12} sm={6} md={6} lg={4}>
+                    <ButtonBase
+                      onClick={this.handlePhotoOpen}
+                      focusRipple
                       alt=""
-                      style={style.img}
-                    />
+                      className="profile-image"
+                    >
+                      <img src={`data:image/jpg;base64,${this.state.image}`} alt="Profile" />
+                      <span className="imageBackdrop" />
+                      <GridListTileBar className="tile-bar" title="Update Photo" />
+                    </ButtonBase>
                   </Grid>
-
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <CardHeader
-                      title={this.state.profile.fullName}
-                      subheader={this.state.profile.Class}
-                    />
-                    <Grid container spacing="16">
-                      {facebookButton}
-                      {twitterButton}
-                      {linkedInButton}
-                      {instagramButton}
-                      {editButton}
-                    </Grid>
-                    <Button onClick={this.handlePhotoOpen} raised style={style.button}>
-                      Update Photo
-                    </Button>
-                    <Dialog
-                      open={this.state.photoOpen}
-                      keepMounted
-                      onClose={this.handleClose}
-                      aria-labelledby="alert-dialog-slide-title"
-                      aria-describedby="alert-dialog-slide-description"
-                      maxWidth="false"
-                    >
-                      <DialogTitle id="simple-dialog-title">Update Profile Picture</DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          Drag &amp; Drop Picture, or Click to Browse Files
-                        </DialogContentText>
-                        <DialogContentText>
-                          <br />
-                        </DialogContentText>
-                        {!preview && (
-                          <Dropzone
-                            onDropAccepted={this.onDropAccepted.bind(this)}
-                            onDropRejected={this.onDropRejected.bind(this)}
-                            accept="image/jpeg,image/jpg,image/png"
-                            style={photoUploader}
-                          >
-                            <Grid container justify="center" spacing="16">
-                              <img
-                                src={require('./image.png')}
-                                alt=""
-                                style={{ 'max-width': '100%' }}
-                              />
-                            </Grid>
-                          </Dropzone>
-                        )}
-                        {preview && (
-                          <Grid container justify="center" spacing="16">
-                            <Cropper
-                              ref="cropper"
-                              src={preview}
-                              style={{
-                                'max-width': this.maxCropPreviewWidth(),
-                                'max-height':
-                                  this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
-                              }}
-                              autoCropArea={1}
-                              viewMode={3}
-                              aspectRatio={1}
-                              highlight={false}
-                              background={false}
-                              zoom={this.onCropperZoom.bind(this)}
-                              zoomable={false}
-                              dragMode={'none'}
-                              minCropBoxWidth={this.state.cropperData.cropBoxDim}
-                              minCropBoxHeight={this.state.cropperData.cropBoxDim}
-                            />
-                          </Grid>
-                        )}
-                        {preview && <br />}
-                        {preview && (
-                          <Grid container justify="center" spacing="16">
-                            <Grid item>
-                              <Button
-                                onClick={() => this.setState({ preview: null })}
-                                raised
-                                style={style.button}
-                              >
-                                Choose Another Image
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        )}
-                      </DialogContent>
-                      <DialogActions>
-                        <Grid container spacing={8} justify="flex-end">
-                          <Grid item>
-                            <Tooltip
-                              id="tooltip-hide"
-                              title={
-                                this.state.isImagePublic
-                                  ? 'Only faculty and police will see your photo'
-                                  : 'Make photo visible to other students'
-                              }
-                            >
-                              <Button
-                                onClick={this.toggleImagePrivacy.bind(this)}
-                                raised
-                                style={style.button}
-                              >
-                                {this.state.isImagePublic ? 'Hide' : 'Show'}
-                              </Button>
-                            </Tooltip>
-                          </Grid>
-                          <Grid item>
-                            <Tooltip id="tooltip-reset" title="Restore your original ID photo">
-                              <Button
-                                onClick={this.handleResetImage}
-                                raised
-                                style={{ background: 'tomato', color: 'white' }}
-                              >
-                                Reset
-                              </Button>
-                            </Tooltip>
-                          </Grid>
-                          <Grid item>
-                            <Button onClick={this.handleCloseCancel} raised style={style.button}>
-                              Cancel
-                            </Button>
-                          </Grid>
-                          <Grid item>
-                            <Tooltip id="tooltip-submit" title="Crop to current region and submit">
-                              <Button
-                                onClick={this.handleCloseSubmit}
-                                raised
-                                disabled={!this.state.preview}
-                                style={
-                                  this.state.preview
-                                    ? style.button
-                                    : { background: 'darkgray', color: 'white' }
-                                }
-                              >
-                                Submit
-                              </Button>
-                            </Tooltip>
-                          </Grid>
+                  <Grid item xs={12} sm={6} md={6} lg={4}>
+                    <Grid container align="center" alignItems="center">
+                      <Grid item xs={12}>
+                        <CardHeader
+                          title={this.state.profile.fullName}
+                          subheader={this.state.profile.Class}
+                        />
+                        <Grid container spacing="16" align="center" justify="center">
+                          {facebookButton}
+                          {twitterButton}
+                          {linkedInButton}
+                          {instagramButton}
+                          {editButton}
                         </Grid>
-                      </DialogActions>
-                    </Dialog>
-                    <Dialog
-                      open={this.state.socialLinksOpen}
-                      keepMounted
-                      onClose={this.handleSocialLinksClose}
-                      aria-labelledby="alert-dialog-slide-title"
-                      aria-describedby="alert-dialog-slide-description"
-                    >
-                      <DialogTitle id="simple-dialog-title">
-                        Edit your social media links
-                      </DialogTitle>
-                      <DialogContent>{linksDialog}</DialogContent>
-                    </Dialog>
+                        <Dialog
+                          open={this.state.photoOpen}
+                          keepMounted
+                          onClose={this.handleClose}
+                          aria-labelledby="alert-dialog-slide-title"
+                          aria-describedby="alert-dialog-slide-description"
+                          maxWidth="false"
+                        >
+                          <DialogTitle id="simple-dialog-title">Update Profile Picture</DialogTitle>
+                          <DialogContent>
+                            <DialogContentText>
+                              Drag &amp; Drop Picture, or Click to Browse Files
+                            </DialogContentText>
+                            <DialogContentText>
+                              <br />
+                            </DialogContentText>
+                            {!preview && (
+                              <Dropzone
+                                onDropAccepted={this.onDropAccepted.bind(this)}
+                                onDropRejected={this.onDropRejected.bind(this)}
+                                accept="image/jpeg,image/jpg,image/png"
+                                style={photoUploader}
+                              >
+                                <Grid container justify="center" spacing="16">
+                                  <img
+                                    src={require('./image.png')}
+                                    alt=""
+                                    style={{ 'max-width': '100%' }}
+                                  />
+                                </Grid>
+                              </Dropzone>
+                            )}
+                            {preview && (
+                              <Grid container justify="center" spacing="16">
+                                <Cropper
+                                  ref="cropper"
+                                  src={preview}
+                                  style={{
+                                    'max-width': this.maxCropPreviewWidth(),
+                                    'max-height':
+                                      this.maxCropPreviewWidth() /
+                                      this.state.cropperData.aspectRatio,
+                                  }}
+                                  autoCropArea={1}
+                                  viewMode={3}
+                                  aspectRatio={1}
+                                  highlight={false}
+                                  background={false}
+                                  zoom={this.onCropperZoom.bind(this)}
+                                  zoomable={false}
+                                  dragMode={'none'}
+                                  minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                                  minCropBoxHeight={this.state.cropperData.cropBoxDim}
+                                />
+                              </Grid>
+                            )}
+                            {preview && <br />}
+                            {preview && (
+                              <Grid container justify="center" spacing="16">
+                                <Grid item>
+                                  <Button
+                                    variant="contained"
+                                    onClick={() => this.setState({ preview: null })}
+                                    style={style.button}
+                                  >
+                                    Choose Another Image
+                                  </Button>
+                                </Grid>
+                              </Grid>
+                            )}
+                          </DialogContent>
+                          <DialogActions>
+                            <Grid container spacing={8} justify="flex-end">
+                              <Grid item>
+                                <Tooltip
+                                  id="tooltip-hide"
+                                  title={
+                                    this.state.isImagePublic
+                                      ? 'Only faculty and police will see your photo'
+                                      : 'Make photo visible to other students'
+                                  }
+                                >
+                                  <Button
+                                    variant="contained"
+                                    onClick={this.toggleImagePrivacy.bind(this)}
+                                    style={style.button}
+                                  >
+                                    {this.state.isImagePublic ? 'Hide' : 'Show'}
+                                  </Button>
+                                </Tooltip>
+                              </Grid>
+                              <Grid item>
+                                <Tooltip id="tooltip-reset" title="Restore your original ID photo">
+                                  <Button
+                                    variant="contained"
+                                    onClick={this.handleResetImage}
+                                    style={{ background: 'tomato', color: 'white' }}
+                                  >
+                                    Reset
+                                  </Button>
+                                </Tooltip>
+                              </Grid>
+                              <Grid item>
+                                <Button
+                                  variant="contained"
+                                  onClick={this.handleCloseCancel}
+                                  style={style.button}
+                                >
+                                  Cancel
+                                </Button>
+                              </Grid>
+                              <Grid item>
+                                <Tooltip
+                                  id="tooltip-submit"
+                                  title="Crop to current region and submit"
+                                >
+                                  <Button
+                                    variant="contained"
+                                    onClick={this.handleCloseSubmit}
+                                    disabled={!this.state.preview}
+                                    style={
+                                      this.state.preview
+                                        ? style.button
+                                        : { background: 'darkgray', color: 'white' }
+                                    }
+                                  >
+                                    Submit
+                                  </Button>
+                                </Tooltip>
+                              </Grid>
+                            </Grid>
+                          </DialogActions>
+                        </Dialog>
+                        <Dialog
+                          open={this.state.socialLinksOpen}
+                          keepMounted
+                          onClose={this.handleSocialLinksClose}
+                          aria-labelledby="alert-dialog-slide-title"
+                          aria-describedby="alert-dialog-slide-description"
+                        >
+                          <DialogTitle id="simple-dialog-title">
+                            Edit your social media links
+                          </DialogTitle>
+                          <DialogContent>{linksDialog}</DialogContent>
+                        </Dialog>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
               </CardContent>
@@ -632,9 +649,7 @@ export default class Profile extends Component {
                 <Card>
                   <CardContent>
                     <CardHeader title="Personal Information" />
-
                     {PersonalInfo}
-
                     <CardHeader title="Home Address" />
                     <List>
                       <ListItem>
@@ -646,7 +661,6 @@ export default class Profile extends Component {
                           <Typography>Street: {this.state.profile.HomeStreet2}</Typography>
                         </ListItem>
                       )}
-
                       <Divider />
                     </List>
                   </CardContent>
@@ -657,8 +671,8 @@ export default class Profile extends Component {
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 <Card>
                   <CardContent>
-                    <CardHeader title="Activities" />
-                    <List>{activityList}</List>
+                    <CardHeader title="Involvements" />
+                    <List>{membershipList}</List>
                   </CardContent>
                 </Card>
               </Grid>

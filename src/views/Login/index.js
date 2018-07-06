@@ -82,9 +82,9 @@ export default class Login extends Component {
             </Typography>
             <section className="button-wrapper">
               <Button
+                variant="contained"
                 className="submit-button"
                 type="submit"
-                raised
                 color="primary"
                 disabled={!this.state.username || !this.state.password || this.state.loading}
               >
