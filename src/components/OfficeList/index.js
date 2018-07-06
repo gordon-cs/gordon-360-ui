@@ -9,10 +9,6 @@ import CardContent from '@material-ui/core/CardContent';
 import List from '@material-ui/core/List';
 
 export default class Office extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     let OfficeHours, OfficePhone, Room, Office;
     if (String(this.props.profile.PersonType).includes('fac')) {
