@@ -59,7 +59,7 @@ else
 fi
 
 # Print contents of thebookof.mormon
-cat public/thebookof.mormon > contents.txt
+cat public/thebookof.mormon
 
 printf "%s\n" "Copying app to server... "
 
