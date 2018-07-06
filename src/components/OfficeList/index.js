@@ -11,19 +11,11 @@ import List from '@material-ui/core/List';
 export default class Office extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isFac: Boolean,
-      profile: {},
-    };
   }
 
-  componentWillMount() {
-    this.setState({ isFac: String(this.props.profile.PersonType).includes('fac') });
-  }
   render() {
     let OfficeHours, OfficePhone, Room, Office;
-    console.log(this.state.profile);
-    if (this.state.isFac) {
+    if (String(this.props.profile.PersonType).includes('fac')) {
       if (this.props.profile.OnCampusPhone !== '') {
         OfficePhone = (
           <div>
@@ -101,7 +93,7 @@ export default class Office extends Component {
       );
     }
     return (
-      <Grid item xs={12} sm={12} md={6} lg={6}>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
         {Office}
       </Grid>
     );

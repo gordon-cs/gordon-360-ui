@@ -15,11 +15,7 @@ export default class ProfileList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isStu: Boolean,
-      isFac: Boolean,
-      privacy: Boolean,
       myProf: false, //if my profile page
-      profile: {},
     };
   }
 
@@ -37,8 +33,6 @@ export default class ProfileList extends Component {
     }
   }
   componentWillMount() {
-    this.setState({ isStu: String(this.props.profile.PersonType).includes('stu') });
-    this.setState({ isFac: String(this.props.profile.PersonType).includes('fac') });
     this.setState({ privacy: this.props.profile.IsMobilePhonePrivate });
   }
 
@@ -180,7 +174,7 @@ export default class ProfileList extends Component {
         </div>
       );
     }
-    if (this.state.isStu) {
+    if (String(this.props.profile.PersonType).includes('stu')) {
       if (String(this.props.profile.Minors).length !== 0) {
         minors = <Minors minors={this.props.profile.Minors} />;
       }
@@ -205,7 +199,7 @@ export default class ProfileList extends Component {
         );
       }
     }
-    if (this.state.isFac) {
+    if (String(this.props.profile.PersonType).includes('fac')) {
       if (this.props.profile.OnCampusDepartment !== '') {
         Department = (
           <div>
@@ -226,7 +220,7 @@ export default class ProfileList extends Component {
     }
 
     return (
-      <Grid item xs={12} sm={12} md={6} lg={6}>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
         <Card>
           <CardContent>
             <CardHeader title="Personal Information" />
