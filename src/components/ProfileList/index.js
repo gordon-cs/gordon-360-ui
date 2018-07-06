@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
 import user from './../../services/user';
+import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -61,10 +62,10 @@ export default class ProfileList extends Component {
         <div>
           <ListItem>
             <Grid container justify="center">
-              <Grid item xs={2} sm={6} md={3} lg={6}>
+              <Grid item xs={6} sm={6} md={3} lg={6}>
                 <Typography>Email:</Typography>
               </Grid>
-              <Grid item xs={10} sm={6} md={9} lg={6} justify="right">
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 <Typography>{this.props.profile.Email}</Typography>
               </Grid>
             </Grid>
@@ -87,10 +88,10 @@ export default class ProfileList extends Component {
         <div>
           <ListItem>
             <Grid container justify="center">
-              <Grid item xs={3} sm={6} md={3} lg={6}>
+              <Grid item xs={6} sm={6} md={3} lg={6}>
                 <Typography>Home:</Typography>
               </Grid>
-              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 {street}
                 <Typography>{address} </Typography>
               </Grid>
@@ -105,10 +106,10 @@ export default class ProfileList extends Component {
         <div>
           <ListItem>
             <Grid container justify="center">
-              <Grid item xs={3} sm={6} md={3} lg={6}>
+              <Grid item xs={6} sm={6} md={3} lg={6}>
                 <Typography>Home Phone:</Typography>
               </Grid>
-              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 {this.props.profile.HomePhone !== 'Private as requested.' &&
                   !this.props.myProf && (
                     <a href={'tel:' + this.props.profile.HomePhone}>
@@ -135,10 +136,10 @@ export default class ProfileList extends Component {
         <div>
           <ListItem>
             <Grid container justify="center">
-              <Grid item xs={3} sm={6} md={3} lg={6}>
+              <Grid item xs={6} sm={6} md={3} lg={6}>
                 <Typography>Mobile Phone:</Typography>
               </Grid>
-              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 {this.props.profile.MobilePhone !== 'Private as requested.' && (
                   <a href={'tel:' + this.props.profile.MobilePhone}>
                     <Typography className="linkColor">
@@ -160,12 +161,18 @@ export default class ProfileList extends Component {
       mobilephone = (
         <div>
           <ListItem>
-            <Grid container justify="center">
-              <Grid item xs={3} sm={6} md={3} lg={6}>
+            <Grid container alignItems="center" justify="space-between">
+              <Grid item xs={6}>
                 <Typography>Mobile Phone:</Typography>
               </Grid>
-              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+              <Grid item xs={3} justify="right">
                 <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Grid container justify="center" alignItems="center">
+                  <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
+                  <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
+                </Grid>
               </Grid>
             </Grid>
           </ListItem>
@@ -204,10 +211,10 @@ export default class ProfileList extends Component {
           <div>
             <ListItem>
               <Grid container justify="center">
-                <Grid item xs={5} sm={6} md={3} lg={6}>
+                <Grid item xs={6} sm={6} md={3} lg={6}>
                   <Typography>Department:</Typography>
                 </Grid>
-                <Grid item xs={7} sm={6} md={9} lg={6} justify="right">
+                <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                   <Typography>{this.props.profile.OnCampusDepartment}</Typography>
                 </Grid>
               </Grid>
