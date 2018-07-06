@@ -198,7 +198,7 @@ export default class Profile extends Component {
   hasNickName(profile) {
     let Name = String(profile.fullName);
     let FirstName = Name.split(' ')[0];
-    this.setState({ hasNickName: FirstName !== profile.NickName });
+    this.setState({ hasNickName: FirstName !== profile.NickName && profile.NickName !== '' });
   }
 
   async loadProfile() {
