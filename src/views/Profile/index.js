@@ -112,7 +112,7 @@ export default class Profile extends Component {
   hasNickName(profile) {
     let Name = String(profile.fullName);
     let FirstName = Name.split(' ')[0];
-    this.setState({ hasNickName: FirstName !== profile.NickName });
+    this.setState({ hasNickName: FirstName !== profile.NickName && profile.NickName !== '' });
   }
 
   setSubheader(profile) {
@@ -258,11 +258,15 @@ export default class Profile extends Component {
             </Card>
           </Grid>
 
-          <Grid item xs={12} lg={10}>
-            <Grid container spacing="16">
+          <Grid item xs={12} lg={5}>
+            <Grid container xs={12} sm={12} md={12} lg={12} direction="column" spacing="16">
               {this.state.profileinfo}
-
-              <Grid item xs={12} sm={12} md={6} lg={6}>
+              {this.state.officeinfo}
+            </Grid>
+          </Grid>
+          <Grid item xs={12} lg={5}>
+            <Grid container xs={12} sm={12} md={12} lg={12} direction="column" spacing="16">
+              <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Card>
                   <CardContent>
                     <CardHeader title="Involvements" />
@@ -270,8 +274,6 @@ export default class Profile extends Component {
                   </CardContent>
                 </Card>
               </Grid>
-
-              {this.state.officeinfo}
             </Grid>
           </Grid>
         </Grid>
