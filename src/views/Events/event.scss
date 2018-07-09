@@ -1,0 +1,20 @@
+@import '../../vars';
+
+// Make rows alternate white and grey
+/* stylelint-disable */
+.event-list > section:nth-child(even) {
+  background: #ebeaea;
+  &:hover {
+    background-color: $primary-cyan;
+    cursor: pointer;
+  }
+}
+
+.event-list > section:nth-child(odd) {
+  background: #ffffff;
+  &:hover {
+    background-color: $primary-cyan;
+    cursor: pointer;
+  }
+}
+/* stylelint-enable */

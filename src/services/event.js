@@ -47,7 +47,7 @@ function formatevent(event) {
     beginTime = DateTime.fromISO(event.Occurrences[0][0]).toFormat('t');
     endTime = DateTime.fromISO(event.Occurrences[0][1]).toFormat('t');
   }
-  const timeRange = ` from ${beginTime} to ${endTime}`;
+  const timeRange = `${beginTime} - ${endTime}`;
   event.timeRange = timeRange;
 
   let date;

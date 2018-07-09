@@ -9,10 +9,11 @@ import user from './../../services/user';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
 import ProfileActivityList from './../../components/ProfileActivityList';
+import EmailIcon from '@material-ui/icons/Email';
 import GordonLoader from './../../components/Loader';
 import { Link } from 'react-router-dom';
 import { socialMediaInfo } from '../../socialMedia';
-import './index.css';
+import './profile.css';
 
 //Public profile view
 export default class Profile extends Component {
@@ -225,7 +226,6 @@ export default class Profile extends Component {
     if (this.state.profile.Email !== '') {
       email = (
         <div>
-          {/* <EmailIcon> */}
           <Typography>{this.state.profile.Email}</Typography>
         </div>
       );
@@ -240,7 +240,7 @@ export default class Profile extends Component {
               <Card>
                 <CardContent>
                   <Grid container alignItems="center" align="center" justify="center" spacing="16">
-                    <Grid container alignItems="center">
+                    <Grid container alignItems="center" spacing="16">
                       <Grid item xs={12} sm={12} md={12} lg={12}>
                         {this.state.profile.preferred_photo !== 0 && (
                           <img
@@ -260,7 +260,7 @@ export default class Profile extends Component {
                       </Grid>
                     </Grid>
                     <Grid item xs={12} sm={6} md={6} lg={4}>
-                      <Grid container align="center" alignItems="center">
+                      <Grid container align="center" alignItems="center" spacing="16">
                         <Grid item xs={12}>
                           <CardHeader
                             title={
@@ -280,7 +280,19 @@ export default class Profile extends Component {
                             {linkedInButton}
                             {instagramButton}
                           </Grid>
-                          <a href={`mailto:${this.state.profile.Email}`}>{email}</a>
+                          <a href={`mailto:${this.state.profile.Email}`} className="icon">
+                            <Grid
+                              container
+                              justify="center"
+                              spacing="16"
+                              style={{ marginTop: '20px' }}
+                            >
+                              <Grid item>
+                                <EmailIcon />
+                              </Grid>
+                              <Grid item>{email}</Grid>
+                            </Grid>
+                          </a>
                         </Grid>
                       </Grid>
                     </Grid>
