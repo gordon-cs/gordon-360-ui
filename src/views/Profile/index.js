@@ -67,7 +67,7 @@ export default class Profile extends Component {
       this.setState({ profileinfo: profileinfo });
       this.setState({ officeinfo: officeinfo });
       this.checkPersonType(profile);
-      this.setState({ loading: false, profile });
+      this.setState({ profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(searchedUser.match.params.username),
       ]);
@@ -173,7 +173,13 @@ export default class Profile extends Component {
         ));
       }
     }
-    console.log(this.state.profile);
+    console.log(
+      this.state.profile.show_pic,
+      this.state.profile.preferred_photo,
+      this.state.defImage,
+      this.state.prefImage,
+    );
+
     let facebookButton;
     let twitterButton;
     let linkedInButton;
@@ -217,77 +223,81 @@ export default class Profile extends Component {
 
     return (
       <div>
-        <Grid container justify="center" spacing="16">
-          <Grid item xs={12} lg={10}>
-            <Card>
-              <CardContent>
-                <Grid container alignItems="center" align="center" justify="center" spacing="16">
-                  <Grid container alignItems="center">
-                    <Grid item xs={12} sm={12} md={12} lg={12}>
-                      {this.state.profile.preferred_photo !== 0 && (
-                        <img
-                          src={`data:image/jpg;base64,${this.state.prefImage}`}
-                          alt=""
-                          style={style}
-                        />
-                      )}{' '}
-                      {this.state.profile.show_pic !== 0 && (
-                        <img
-                          src={`data:image/jpg;base64,${this.state.defImage}`}
-                          alt=""
-                          style={style}
-                        />
-                      )}
+        {this.state.loading && <GordonLoader />}
+        {!this.state.loading && (
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} lg={10}>
+              <Card>
+                <CardContent>
+                  <Grid container alignItems="center" align="center" justify="center" spacing="16">
+                    <Grid container alignItems="center">
+                      <Grid item xs={12} sm={12} md={12} lg={12}>
+                        {this.state.profile.preferred_photo !== 0 && (
+                          <img
+                            src={`data:image/jpg;base64,${this.state.prefImage}`}
+                            alt=""
+                            style={style}
+                          />
+                        )}{' '}
+                        {this.state.profile.show_pic !== 0 &&
+                          this.state.defImage !== undefined && (
+                            <img
+                              src={`data:image/jpg;base64,${this.state.defImage}`}
+                              alt=""
+                              style={style}
+                            />
+                          )}
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6} lg={4}>
-                    <Grid container align="center" alignItems="center">
-                      <Grid item xs={12}>
-                        <CardHeader
-                          title={
-                            this.state.hasNickName
-                              ? this.state.profile.fullName +
-                                ' (' +
-                                this.state.profile.NickName +
-                                ')'
-                              : this.state.profile.fullName
-                          }
-                          subheader={this.state.subheaderInfo}
-                        />
+                    <Grid item xs={12} sm={6} md={6} lg={4}>
+                      <Grid container align="center" alignItems="center">
+                        <Grid item xs={12}>
+                          <CardHeader
+                            title={
+                              this.state.hasNickName
+                                ? this.state.profile.fullName +
+                                  ' (' +
+                                  this.state.profile.NickName +
+                                  ')'
+                                : this.state.profile.fullName
+                            }
+                            subheader={this.state.subheaderInfo}
+                          />
 
-                        <Grid container spacing="16" align="center" justify="center">
-                          {facebookButton}
-                          {twitterButton}
-                          {linkedInButton}
-                          {instagramButton}
+                          <Grid container spacing="16" align="center" justify="center">
+                            {facebookButton}
+                            {twitterButton}
+                            {linkedInButton}
+                            {instagramButton}
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} lg={5}>
-            <Grid container direction="column" spacing="16">
-              {this.state.profileinfo}
-              {this.state.officeinfo}
+                </CardContent>
+              </Card>
             </Grid>
-          </Grid>
-          <Grid item xs={12} lg={5}>
-            <Grid container direction="column" spacing="16">
-              <Grid item xs={12} sm={12} md={12} lg={12}>
-                <Card>
-                  <CardContent>
-                    <CardHeader title="Involvements" />
-                    <List>{displayedMembershipList}</List>
-                  </CardContent>
-                </Card>
+
+            <Grid item xs={12} lg={5}>
+              <Grid container direction="column" spacing="16">
+                {this.state.profileinfo}
+                {this.state.officeinfo}
+              </Grid>
+            </Grid>
+            <Grid item xs={12} lg={5}>
+              <Grid container direction="column" spacing="16">
+                <Grid item xs={12} sm={12} md={12} lg={12}>
+                  <Card>
+                    <CardContent>
+                      <CardHeader title="Involvements" />
+                      <List>{displayedMembershipList}</List>
+                    </CardContent>
+                  </Card>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
       </div>
     );
   }
