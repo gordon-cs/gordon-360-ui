@@ -173,12 +173,6 @@ export default class Profile extends Component {
         ));
       }
     }
-    console.log(
-      this.state.profile.show_pic,
-      this.state.profile.preferred_photo,
-      this.state.defImage,
-      this.state.prefImage,
-    );
 
     let facebookButton;
     let twitterButton;
