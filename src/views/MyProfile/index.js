@@ -15,9 +15,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 
+import Typography from '@material-ui/core/Typography';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
 
+import EmailIcon from '@material-ui/icons/Email';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import MyProfileActivityList from './../../components/MyProfileActivityList';
@@ -25,7 +27,7 @@ import LinksDialog from './Components/LinksDialog';
 import { socialMediaInfo } from '../../socialMedia';
 import { Link } from 'react-router-dom';
 
-import './profileButton.css';
+import './myProfile.css';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import GordonLoader from '../../components/Loader';
@@ -341,8 +343,8 @@ export default class Profile extends Component {
     }
     if (linkCount > 0) {
       editButton = (
-        <Grid item>
-          <a onClick={this.handleSocialLinksOpen} className="icon">
+        <Grid item style={{ marginTop: '5px' }}>
+          <a onClick={this.handleSocialLinksOpen} className="edit-icon">
             {socialMediaInfo.edit.icon}
           </a>
         </Grid>
@@ -355,25 +357,41 @@ export default class Profile extends Component {
           </a>
         </Grid>
       );
-    } /*}
-          <Typography>{this.state.profile.Email}</Typography>
-        </div>
-      );
-}*/
+    }
 
-    /*let email;
+    let email;
     if (this.state.profile.Email !== '') {
       email = (
         <div>
-          {/* <EmailIcon> */ return (
+          <Typography className="email-link">{this.state.profile.Email}</Typography>
+        </div>
+      );
+    }
+
+    return (
       <div>
         {this.state.loading && <GordonLoader />}
         {!this.state.loading && (
           <Grid container justify="center" spacing="16">
             <Grid item xs={12} lg={10}>
-              <Card id="print">
+              <Card>
                 <CardContent>
                   <Grid container alignItems="center" align="center" justify="center" spacing="16">
+                    <Grid item xs={6}>
+                      <Link
+                        to={`/profile/${this.state.profile.FirstName}.${
+                          this.state.profile.LastName
+                        }`}
+                      >
+                        <Button
+                          variant="contained"
+                          onClick={() => this.setState({ preview: null })}
+                          style={style.button}
+                        >
+                          View My Public Profile
+                        </Button>
+                      </Link>
+                    </Grid>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
                       <ButtonBase
                         onClick={this.handlePhotoOpen}
@@ -407,6 +425,19 @@ export default class Profile extends Component {
                             {instagramButton}
                             {editButton}
                           </Grid>
+                          <a href={`mailto:${this.state.profile.Email}`} className="icon">
+                            <Grid
+                              container
+                              justify="center"
+                              spacing="16"
+                              style={{ marginTop: '20px' }}
+                            >
+                              <Grid item>
+                                <EmailIcon />
+                              </Grid>
+                              <Grid item>{email}</Grid>
+                            </Grid>
+                          </a>
                           <Dialog
                             open={this.state.photoOpen}
                             keepMounted
@@ -557,13 +588,6 @@ export default class Profile extends Component {
                             </DialogTitle>
                             <DialogContent>{linksDialog}</DialogContent>
                           </Dialog>
-                          <Link
-                            to={`/profile/${this.state.profile.FirstName}.${
-                              this.state.profile.LastName
-                            }`}
-                          >
-                            View Public Profile
-                          </Link>
                         </Grid>
                       </Grid>
                     </Grid>
