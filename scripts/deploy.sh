@@ -12,7 +12,9 @@ set -euo pipefail
 # STAGING_DIR absolute path to directory for staging app
 
 # Variable used to create web.config
-WEB_CONFIG=`cat web_config`
+# Note: Regular expression replaces all quotes with two backslash-escaped quotes i.e. " => \"\"
+# (for PowerShell execution)
+WEB_CONFIG=`sed -e 's/\"/\\\"\\\"/g' web_config`
 
 # Get current environment (production or staging) from argument passed by Travis
 DEPLOY_ENV="$1"
@@ -70,7 +72,7 @@ sshpass -p "$DEPLOY_PASSWORD" scp -r build/* "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 printf "%s\n" "Creating web.config..."
 
 sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" \
-  "echo $WEB_CONFIG | Out-File -filepath $DIR/web.config"
+  "echo \"$WEB_CONFIG\" | Out-File -filepath $DIR/web.config"
 
 printf"%s\n" "Created web.config"
 
