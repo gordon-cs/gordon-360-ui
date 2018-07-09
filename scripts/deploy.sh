@@ -64,8 +64,9 @@ printf "%s\n" "Copying app to server... "
 sshpass -p "$DEPLOY_PASSWORD" scp -r build/* "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 
 # Create web.config on the server
+printf "%s\n" "Creating web.config..."
 sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" \
-  "echo \"<?xml version=""1.0""?><configuration><system.webServer><rewrite><rules><rule name=""React Routes"" stopProcessing=""true""><match url="".*"" /><conditions logicalGrouping=""MatchAll""><add input=""{REQUEST_FILENAME}"" matchType=""IsFile"" negate=""true"" /><add input=""{REQUEST_FILENAME}"" matchType=""IsDirectory"" negate=""true"" /></conditions><action type=""Rewrite"" url=""/"" /></rule></rules></rewrite></system.webServer></configuration>\" | Out-File -filepath $DIR/web.config"
+  "echo \"<?xml version=\"\"1.0\"\"?><configuration><system.webServer><rewrite><rules><rule name=\"\"React Routes\"\" stopProcessing=\"\"true\"\"><match url=\"\".*\"\" /><conditions logicalGrouping=\"\"MatchAll\"\"><add input=\"\"{REQUEST_FILENAME}\"\" matchType=\"\"IsFile\"\" negate=\"\"true\"\" /><add input=\"\"{REQUEST_FILENAME}\"\" matchType=\"\"IsDirectory\"\" negate=\"\"true\"\" /></conditions><action type=\"\"Rewrite\"\" url=\"\"/\"\" /></rule></rules></rewrite></system.webServer></configuration>\" | Out-File -filepath $DIR/web.config"
 
 if [ $? == 0 ]; then
   printf "%s\n" "Successfully copied app to $DEPLOY_ENV"
