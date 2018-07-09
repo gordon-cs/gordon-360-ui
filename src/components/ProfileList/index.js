@@ -142,13 +142,13 @@ export default class ProfileList extends Component {
         <div>
           <ListItem>
             <Grid container alignItems="center" justify="space-between">
-              <Grid item xs={6}>
+              <Grid item xs={6} md={3} lg={6}>
                 <Typography>Mobile Phone:</Typography>
               </Grid>
-              <Grid item xs={3} justify="right">
+              <Grid item xs={3} md={3} lg={3} justify="right">
                 <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={3} md={6} lg={3}>
                 <Grid container justify="center" alignItems="center">
                   <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
                   <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
