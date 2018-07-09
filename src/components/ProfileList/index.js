@@ -11,7 +11,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 
-const privateInfo = 'Private as requested.';
+const PRIVATE_INFO = 'Private as requested.';
 // all logic for displaying parts of the Personal Information Card is contained in this file
 export default class ProfileList extends Component {
   constructor(props) {
@@ -90,7 +90,7 @@ export default class ProfileList extends Component {
                 <Typography>Home Phone:</Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
-                {this.props.profile.HomePhone !== privateInfo &&
+                {this.props.profile.HomePhone !== PRIVATE_INFO &&
                   !this.props.myProf && (
                     <a href={'tel:' + this.props.profile.HomePhone}>
                       <Typography className="linkColor">
@@ -98,7 +98,7 @@ export default class ProfileList extends Component {
                       </Typography>
                     </a>
                   )}
-                {this.props.profile.HomePhone === privateInfo && (
+                {this.props.profile.HomePhone === PRIVATE_INFO && (
                   <Typography>Private as requested</Typography>
                 )}
                 {this.props.myProf && (
@@ -120,14 +120,14 @@ export default class ProfileList extends Component {
                 <Typography>Mobile Phone:</Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
-                {this.props.profile.MobilePhone !== privateInfo && (
+                {this.props.profile.MobilePhone !== PRIVATE_INFO && (
                   <a href={'tel:' + this.props.profile.MobilePhone}>
                     <Typography className="linkColor">
                       {this.formatPhone(this.props.profile.MobilePhone)}
                     </Typography>
                   </a>
                 )}
-                {this.props.profile.MobilePhone === privateInfo && (
+                {this.props.profile.MobilePhone === PRIVATE_INFO && (
                   <Typography>Private as requested</Typography>
                 )}
               </Grid>
@@ -137,7 +137,7 @@ export default class ProfileList extends Component {
         </div>
       );
     }
-    if (this.props.myProf) {
+    if (this.props.myProf && this.props.profile.MobilePhone !== '') {
       mobilephone = (
         <div>
           <ListItem>
