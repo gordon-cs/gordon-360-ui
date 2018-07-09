@@ -3,13 +3,10 @@ import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import user from './../../services/user';
 import gordonEvent from './../../services/event';
 import GordonLoader from '../../components/Loader';
+import EventList from './../../components/EventList';
 
 const styles = {
   searchBar: {
@@ -51,29 +48,7 @@ export default class EventsAttended extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else if (this.state.events.length > 0) {
-      content = this.state.filteredEvents.map(currEvent => (
-        <ExpansionPanel defaultExpanded={false}>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid container>
-              <Grid item xs={8} sm={9} md={10}>
-                <Typography>{currEvent.title}</Typography>
-                <Typography variant="caption">{`${currEvent.date}, ${
-                  currEvent.timeRange
-                }`}</Typography>
-                <Typography variant="caption">{currEvent.location}</Typography>
-              </Grid>
-            </Grid>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Grid container>
-              <Grid item xs={8} sm={9} md={10}>
-                <Typography>Description</Typography>
-                <Typography variant="caption">{currEvent.Description}</Typography>
-              </Grid>
-            </Grid>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-      ));
+      content = <EventList events={this.state.events} />;
     } else {
       content = (
         <Grid item>
