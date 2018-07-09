@@ -7,6 +7,12 @@
   padding-top: 8%;
 }
 
+.email-link {
+  &:hover {
+    color: #00aeef;
+  }
+}
+
 .noInvolvements {
   padding-left: 24px;
   color: $primary-cyan !important;

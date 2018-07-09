@@ -226,7 +226,7 @@ export default class Profile extends Component {
     if (this.state.profile.Email !== '') {
       email = (
         <div>
-          <Typography>{this.state.profile.Email}</Typography>
+          <Typography className="email-link">{this.state.profile.Email}</Typography>
         </div>
       );
     }
