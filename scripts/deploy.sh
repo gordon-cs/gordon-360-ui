@@ -11,6 +11,9 @@ set -euo pipefail
 # PRODUCTION_DIR absolute path to directory for production app
 # STAGING_DIR absolute path to directory for staging app
 
+# Variable used to create web.config
+WEB_CONFIG=`cat web_config`
+
 # Get current environment (production or staging) from argument passed by Travis
 DEPLOY_ENV="$1"
 
@@ -65,8 +68,11 @@ sshpass -p "$DEPLOY_PASSWORD" scp -r build/* "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 
 # Create web.config on the server
 printf "%s\n" "Creating web.config..."
+
 sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" \
-  "echo \"<?xml version=\"\"1.0\"\"?><configuration><system.webServer><rewrite><rules><rule name=\"\"React Routes\"\" stopProcessing=\"\"true\"\"><match url=\"\".*\"\" /><conditions logicalGrouping=\"\"MatchAll\"\"><add input=\"\"{REQUEST_FILENAME}\"\" matchType=\"\"IsFile\"\" negate=\"\"true\"\" /><add input=\"\"{REQUEST_FILENAME}\"\" matchType=\"\"IsDirectory\"\" negate=\"\"true\"\" /></conditions><action type=\"\"Rewrite\"\" url=\"\"/\"\" /></rule></rules></rewrite></system.webServer></configuration>\" | Out-File -filepath $DIR/web.config"
+  "echo $WEB_CONFIG | Out-File -filepath $DIR/web.config"
+
+printf"%s\n" "Created web.config"
 
 if [ $? == 0 ]; then
   printf "%s\n" "Successfully copied app to $DEPLOY_ENV"
