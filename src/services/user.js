@@ -147,7 +147,7 @@ import { socialMediaInfo } from '../socialMedia';
  * @property {String} Minor2 Second minor
  * @property {String} Minor3 Third minor
  * @property {String} MobilePhone Mobile phone number
- * @property {Number} IsMobilePhonePrivate Whether mobile phone number is private or not
+ * @property {Number} IsMobilePhonePrivate Whether mobile phone number is public (0) or private (1)
  * @property {String} AD_Username Username
  * @property {Number} show_pic Whether or not to show picture
  * @property {Number} preferred_photo Whether or not to show preferred photo
@@ -386,19 +386,17 @@ const getProfile = username => {
   return profile;
 };
 
-function toggleMobilePhonePrivacy() {
-  let profile = getProfileInfo();
-  let currentPrivacy = profile.IsMobilePhonePrivate;
-  let newPrivacy = currentPrivacy ? 'N' : 'Y';
+async function toggleMobilePhonePrivacy() {
+  let profile = await getProfileInfo();
+  profile.IsMobilePhonePrivate = profile.IsMobilePhonePrivate ? 0 : 1; // This does the toggle
   let setPrivacy = async function(value) {
-    return http
-      .put('profiles/mobile_privacy/' + value, value)
-      .then(res => {})
-      .catch(reason => {
-        //TODO handle error
-      });
+    return http.put('profiles/mobile_privacy/' + value, value).catch(reason => {
+      console.log(reason);
+      console.log('This is the value: ' + value);
+      //TODO handle error
+    });
   };
-  setPrivacy(newPrivacy);
+  setPrivacy(profile.IsMobilePhonePrivate ? 'Y' : 'N'); // This sends the new value for the API
 }
 
 async function setImagePrivacy(makePrivate) {

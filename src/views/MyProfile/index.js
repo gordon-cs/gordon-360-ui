@@ -40,13 +40,13 @@ export default class Profile extends Component {
 
     this.state = {
       username: String,
-      button: String,
       isImagePublic: null,
       image: null,
       preview: null,
       loading: true,
       profile: {},
       memberships: [],
+      mobilePhonePrivacy: Boolean,
       files: [],
       photoOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
@@ -58,8 +58,9 @@ export default class Profile extends Component {
     };
   }
 
-  handleChangePrivacy() {
+  handleChangeMobilePhonePrivacy() {
     user.toggleMobilePhonePrivacy();
+    this.forceUpdate();
   }
 
   handlePhotoOpen = () => {
@@ -118,14 +119,6 @@ export default class Profile extends Component {
     if (ig !== this.state.instagramLink) {
       this.setState({ instagramLink: ig });
       user.updateSocialLink('instagram', ig);
-    }
-  }
-
-  changePrivacy() {
-    if (this.state.button === 'Make Public') {
-      this.setState({ button: 'Make Private' });
-    } else {
-      this.setState({ button: 'Make Public' });
     }
   }
 
@@ -200,7 +193,7 @@ export default class Profile extends Component {
     this.setState({ loading: true });
     try {
       const profile = await user.getProfileInfo();
-      this.setState({ privacy: profile.IsMobilePhonePrivate });
+      this.setState({ mobilePhonePrivacy: profile.IsMobilePhonePrivate });
       this.setState({ loading: false, profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
@@ -211,11 +204,6 @@ export default class Profile extends Component {
       this.setState({ isImagePublic: this.state.profile.show_pic });
     } catch (error) {
       this.setState({ error });
-    }
-    if (this.state.profile.IsMobilePhonePrivate === 0) {
-      this.setState({ button: 'Make Private' });
-    } else {
-      this.setState({ button: 'Make Public' });
     }
     // Set state of social media links to database values after load.
     // If not empty, add domain name back in for display and buttons.
@@ -339,7 +327,7 @@ export default class Profile extends Component {
           <ListItem>
             <Grid container xs={6} sm={6} md={6} lg={6} spacing="16">
               <Grid item>
-                <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
+                <Typography>Mobile Phone: {this.state.profile.MobilePhone}</Typography>
               </Grid>
             </Grid>
             <Grid
@@ -353,10 +341,15 @@ export default class Profile extends Component {
               spacing="16"
             >
               <Grid item>
-                <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
+                <Switch
+                  onChange={() => {
+                    this.handleChangeMobilePhonePrivacy();
+                  }}
+                  checked={!this.state.mobilePhonePrivacy}
+                />
               </Grid>
               <Grid item>
-                <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
+                <Typography>{this.state.mobilePhonePrivacy ? 'Private' : 'Public'}</Typography>
               </Grid>
             </Grid>
           </ListItem>
