@@ -173,7 +173,6 @@ export default class Profile extends Component {
         ));
       }
     }
-    console.log(this.state.profile);
     let facebookButton;
     let twitterButton;
     let linkedInButton;

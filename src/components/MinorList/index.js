@@ -12,6 +12,7 @@ export default class Minors extends Component {
 
   render() {
     let content;
+    let minorPrefix;
     if (this.props.minors) {
       content = this.props.minors.map(minor => (
         <div>
@@ -19,12 +20,27 @@ export default class Minors extends Component {
         </div>
       ));
     }
+
+    if (this.props.minors.length === 1) {
+      minorPrefix = (
+        <div>
+          <Typography>Minor:</Typography>
+        </div>
+      );
+    } else if (this.props.minors.length > 1) {
+      minorPrefix = (
+        <div>
+          <Typography>Minors:</Typography>
+        </div>
+      );
+    }
+
     return (
       <div>
         <ListItem>
           <Grid container justify="center">
             <Grid item xs={4} sm={6} md={3} lg={6}>
-              <Typography>Minors(s):</Typography>
+              <Typography>{minorPrefix}</Typography>
             </Grid>
             <Grid item xs={8} sm={6} md={9} lg={6} justify="right">
               {content}
