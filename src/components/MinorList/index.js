@@ -40,7 +40,7 @@ export default class Minors extends Component {
         <ListItem>
           <Grid container justify="center">
             <Grid item xs={6} sm={6} md={3} lg={6}>
-              <Typography>Minors(s):</Typography>
+              <Typography>{minorPrefix}</Typography>
             </Grid>
             <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
               {content}
