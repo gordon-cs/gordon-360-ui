@@ -12,6 +12,7 @@ export default class Majors extends Component {
 
   render() {
     let content;
+    let majorPrefix;
     if (this.props.majors) {
       content = this.props.majors.map(major => (
         <div>
@@ -19,12 +20,27 @@ export default class Majors extends Component {
         </div>
       ));
     }
+
+    if (this.props.majors.length === 1) {
+      majorPrefix = (
+        <div>
+          <Typography>Major:</Typography>
+        </div>
+      );
+    } else if (this.props.majors.length > 1) {
+      majorPrefix = (
+        <div>
+          <Typography>Majors:</Typography>
+        </div>
+      );
+    }
+
     return (
       <div>
         <ListItem>
           <Grid container justify="center">
             <Grid item xs={6} sm={6} md={3} lg={6}>
-              <Typography>Major(s):</Typography>
+              <Typography>{majorPrefix}</Typography>
             </Grid>
             <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
               {content}

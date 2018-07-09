@@ -14,6 +14,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+import Typography from '@material-ui/core/Typography';
 
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
@@ -22,7 +23,6 @@ import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
-//import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import { Link } from 'react-router-dom';
 
@@ -275,10 +275,9 @@ export default class Profile extends Component {
       justifyContent: 'center',
       alignItems: 'center',
     };
-    //let activityList;
+
     let membershipList;
-    if (!this.state.activities) {
-      //activityList = <GordonLoader />;
+    if (!this.state.memberships) {
     } else {
       membershipList = this.state.memberships.map(activity => (
         <MyProfileActivityList Activity={activity} />
@@ -356,6 +355,16 @@ export default class Profile extends Component {
             EDIT SOCIAL MEDIA LINKS
           </a>
         </Grid>
+      );
+    }
+
+    let email;
+    if (this.state.profile.Email !== '') {
+      email = (
+        <div>
+          {/* <EmailIcon> */}
+          <Typography>{this.state.profile.Email}</Typography>
+        </div>
       );
     }
     return (
