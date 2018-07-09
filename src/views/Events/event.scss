@@ -1,6 +1,7 @@
 @import '../../vars';
 
 // Make rows alternate white and grey
+/* stylelint-disable */
 .event-list > section:nth-child(even) {
   background: #ebeaea;
   &:hover {
@@ -16,3 +17,4 @@
     cursor: pointer;
   }
 }
+/* stylelint-enable */
