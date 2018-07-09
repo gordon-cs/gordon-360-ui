@@ -73,7 +73,7 @@ printf "%s\n" "Creating web.config..."
 sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" \
   "echo \"$WEB_CONFIG\" | Out-File -filepath $DIR/web.config"
 
-printf"%s\n" "Created web.config"
+printf "%s\n" "Created web.config"
 
 if [ $? == 0 ]; then
   printf "%s\n" "Successfully copied app to $DEPLOY_ENV"
