@@ -4,13 +4,15 @@
 .event-list > section:nth-child(even) {
   background: #ebeaea;
   &:hover {
-    background-color: #b2bb1c;
+    background-color: $primary-cyan;
+    cursor: pointer;
   }
 }
 
 .event-list > section:nth-child(odd) {
   background: #ffffff;
   &:hover {
-    background-color: #b2bb1c;
+    background-color: $primary-cyan;
+    cursor: pointer;
   }
 }

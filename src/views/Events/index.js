@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
+import ResponsiveTable from 'material-ui-next-responsive-table';
 
 import gordonEvent from './../../services/event';
 import EventItem from './components/EventItem';
@@ -49,6 +50,8 @@ export default class Events extends Component {
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
+    this.isMobileView = false;
+    this.breakpointWidth = 540;
   }
   componentWillMount() {
     this.loadEvents();
@@ -96,21 +99,104 @@ export default class Events extends Component {
     const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
     this.setState({ allEvents, events, loading: false, filteredEvents: events });
   }
+
+  //Has to rerender on screen resize in order for table to switch to the mobile view
+  resize = () => {
+    if (this.breakpointPassed()) {
+      this.isMobileView = !this.isMobileView;
+      this.forceUpdate();
+    }
+  };
+
+  //checks if the screen has been resized past the mobile breakpoint
+  //allows for forceUpdate to only be called when necessary, improving resizing performance
+  breakpointPassed() {
+    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
+    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
+    else return false;
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
+
   render() {
     let content;
-    if (this.state.loading === true) {
-      content = <GordonLoader />;
-    } else if (this.state.events) {
-      content = this.state.filteredEvents.map(currEvent => (
-        <EventItem event={currEvent} key={currEvent.Event_ID} />
-      ));
-    }
+    let header;
 
     const headerStyle = {
       backgroundColor: gordonColors.primary.blue,
       color: '#FFF',
       padding: '10px',
     };
+
+    if (this.state.loading === true) {
+      content = <GordonLoader />;
+    } else if (window.innerWidth < this.breakpointWidth) {
+      const columns = [
+        {
+          key: 'Event_Name',
+          label: 'Event',
+          primary: true,
+        },
+        {
+          key: 'Description',
+          label: 'Description',
+        },
+        {
+          key: 'location',
+          label: 'Location',
+        },
+        {
+          key: 'timeRange',
+          label: 'Date & Time     ',
+        },
+      ];
+
+      content = <ResponsiveTable columns={columns} data={this.state.events} />;
+
+      header = (
+        <div style={headerStyle}>
+          <Grid container direction="row">
+            <Grid item xs={12}>
+              <Typography variant="body2" style={headerStyle}>
+                EVENTS
+              </Typography>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    } else if (this.state.events) {
+      content = this.state.filteredEvents.map(currEvent => (
+        <EventItem event={currEvent} key={currEvent.Event_ID} />
+      ));
+
+      header = (
+        <div style={headerStyle}>
+          <Grid container direction="row">
+            <Grid item xs={4}>
+              <Typography variant="body2" style={headerStyle}>
+                EVENT
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="body2" style={headerStyle}>
+                LOCATION
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="body2" style={headerStyle}>
+                DATE & TIME
+              </Typography>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    }
 
     return (
       <section>
@@ -230,25 +316,7 @@ export default class Events extends Component {
               </FormGroup>
             </Collapse>
             <Card>
-              <div style={headerStyle}>
-                <Grid container direction="row">
-                  <Grid item xs={4}>
-                    <Typography variant="body2" style={headerStyle}>
-                      EVENT
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="body2" style={headerStyle}>
-                      LOCATION
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="body2" style={headerStyle}>
-                      DATE & TIME
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </div>
+              {header}
               <Grid>
                 <List className="event-list">{content}</List>
               </Grid>
