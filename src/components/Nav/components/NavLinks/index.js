@@ -30,7 +30,7 @@ export default class GordonNavLinks extends Component {
             <ListItemIcon>
               <LocalActivityIcon />
             </ListItemIcon>
-            <ListItemText primary="Activities" />
+            <ListItemText primary="Involvements" />
           </ListItem>
         </NavLink>
         <NavLink exact to="/events" onClick={this.props.onLinkClick}>
@@ -49,14 +49,14 @@ export default class GordonNavLinks extends Component {
             <ListItemText primary="Transcript" />
           </ListItem>
         </NavLink>
-        <NavLink exact to="/transcript" onClick={this.props.onLinkClick}>
+        {/* <NavLink exact to="/transcript" onClick={this.props.onLinkClick}>
           <ListItem button>
             <ListItemIcon>
               <PeopleIcon />
             </ListItemIcon>
             <ListItemText primary="People" />
           </ListItem>
-        </NavLink>
+        </NavLink> */}
       </List>
     );
   }
