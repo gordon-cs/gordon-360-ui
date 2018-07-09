@@ -9,23 +9,10 @@ import CardContent from '@material-ui/core/CardContent';
 import List from '@material-ui/core/List';
 
 export default class Office extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isFac: Boolean,
-      profile: {},
-    };
-  }
-
-  componentWillMount() {
-    this.setState({ isFac: String(this.props.profile.PersonType).includes('fac') });
-    this.setState({ profile: this.props.profile });
-  }
   render() {
     let OfficeHours, OfficePhone, Room, Office;
-    console.log(this.state.profile);
-    if (this.state.isFac) {
-      if (this.state.profile.OnCampusPhone !== '') {
+    if (String(this.props.profile.PersonType).includes('fac')) {
+      if (this.props.profile.OnCampusPhone !== '') {
         OfficePhone = (
           <div>
             <ListItem>
@@ -34,11 +21,11 @@ export default class Office extends Component {
                   <Typography>Office Phone:</Typography>
                 </Grid>
                 <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                  <a href={'tel:978927' + this.state.profile.OnCampusPhone}>
+                  <a href={'tel:978927' + this.props.profile.OnCampusPhone}>
                     {' '}
                     <Typography className="linkColor">
                       {' '}
-                      {'(978) 927-' + this.state.profile.OnCampusPhone}
+                      {'(978) 927-' + this.props.profile.OnCampusPhone}
                     </Typography>
                   </a>
                 </Grid>
@@ -49,7 +36,7 @@ export default class Office extends Component {
         );
       }
 
-      if (this.state.profile.office_hours !== '') {
+      if (this.props.profile.office_hours !== '') {
         OfficeHours = (
           <div>
             <ListItem>
@@ -58,7 +45,7 @@ export default class Office extends Component {
                   <Typography>Office Hours:</Typography>
                 </Grid>
                 <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                  <Typography> {this.state.profile.office_hours}</Typography>
+                  <Typography> {this.props.profile.office_hours}</Typography>
                 </Grid>
               </Grid>
             </ListItem>
@@ -67,7 +54,7 @@ export default class Office extends Component {
         );
       }
 
-      if (this.state.profile.BuildingDescription !== '' && this.state.profile.OnCampusRoom !== '') {
+      if (this.props.profile.BuildingDescription !== '' && this.props.profile.OnCampusRoom !== '') {
         Room = (
           <div>
             <ListItem>
@@ -78,7 +65,7 @@ export default class Office extends Component {
                 <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
                   <Typography>
                     {' '}
-                    {this.state.profile.BuildingDescription}, {this.state.profile.OnCampusRoom}
+                    {this.props.profile.BuildingDescription}, {this.props.profile.OnCampusRoom}
                   </Typography>
                 </Grid>
               </Grid>
@@ -102,7 +89,7 @@ export default class Office extends Component {
       );
     }
     return (
-      <Grid item xs={12}>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
         {Office}
       </Grid>
     );

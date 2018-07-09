@@ -99,7 +99,7 @@ export default class Transcript extends Component {
                   justify="center"
                   onClick={this.handleDownload}
                 >
-                  Download Transcript
+                  Print Transcript
                 </Button>
               </Grid>
               <Grid item xs={12} margin="normal" className="heading">
