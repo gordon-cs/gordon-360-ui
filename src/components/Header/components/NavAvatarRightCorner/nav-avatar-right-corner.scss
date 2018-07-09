@@ -2,12 +2,12 @@
 
 .gordon-nav-avatar-right-corner {
   &:hover {
-    transition: box-shadow 0.3s;
-    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.2s;
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.5);
   }
 
   &:not(:hover) {
-    transition: box-shadow 0.3s;
+    transition: box-shadow 0.4s;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5);
   }
 
