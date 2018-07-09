@@ -7,8 +7,10 @@ import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import Switch from '@material-ui/core/Switch';
 import membership from './../../services/membership';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
-const styles = ({
+const styles = {
   colorSwitchBase: {
     color: '#ebeaea',
     '&$colorChecked': {
@@ -17,10 +19,10 @@ const styles = ({
         backgroundColor: '#00aeef',
       },
     },
-  },  
+  },
   colorBar: {},
   colorChecked: {},
-});
+};
 
 //MyProfile Involvements List
 class MyProfileActivityList extends Component {
@@ -48,32 +50,41 @@ class MyProfileActivityList extends Component {
       <div>
         <Grid container alignItems="center">
           <Grid item xs={8} sm={8} md={8} lg={8}>
-            <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
-              <Typography>
-                <b>{Activity.ActivityDescription}</b>
-              </Typography>
-              <Typography>{Activity.SessionDescription}</Typography>
-              <Typography>{Activity.ParticipationDescription}</Typography>
-            </Link>
+            <List>
+              <ListItem>
+                <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
+                  <Typography>
+                    <b>{Activity.ActivityDescription}</b>
+                  </Typography>
+                  <Typography>{Activity.SessionDescription}</Typography>
+                  <Typography>{Activity.ParticipationDescription}</Typography>
+                </Link>
+              </ListItem>
+            </List>
           </Grid>
           <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
             <Grid container>
               <Grid item xs={12} align="center">
-              {/* The function you are trying to fire by clicking the toggle must passed to onChange()
+                {/* The function you are trying to fire by clicking the toggle must passed to onChange()
               using an Arrow Function.
               https://stackoverflow.com/questions/33846682/react-onclick-function-fires-on-render             
               */}
                 <Switch
-                  onChange={() => { this.handleChangeMembershipPrivacy(Activity) }}
+                  onChange={() => {
+                    this.handleChangeMembershipPrivacy(Activity);
+                  }}
                   checked={!Activity.Privacy}
                   classes={{
                     switchBase: classes.colorSwitchBase,
                     checked: classes.colorChecked,
-                    bar: classes.colorBar,}}
+                    bar: classes.colorBar,
+                  }}
                 />
               </Grid>
               <Grid item xs={12} align="center">
-                <Typography style={toggleTextStyle}>{Activity.Privacy ? 'Hidden' : 'Public' }</Typography>
+                <Typography style={toggleTextStyle}>
+                  {Activity.Privacy ? 'Hidden' : 'Public'}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>

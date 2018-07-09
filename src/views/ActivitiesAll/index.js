@@ -6,7 +6,6 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import React, { Component } from 'react';
-
 import './activities-all.css';
 import activity from '../../services/activity';
 import session from '../../services/session';
@@ -106,6 +105,16 @@ export default class GordonActivitiesAll extends Component {
         <Grid container justify="center" spacing="16">
           <Grid item xs={12} md={12} lg={8}>
             <Grid container className="activities-filter" spacing="16">
+              <Grid item xs={12} md={12} lg={6}>
+                <TextField
+                  id="search"
+                  label="Search"
+                  value={this.state.search}
+                  onChange={this.filter('search')}
+                  margin="none"
+                  fullWidth
+                />
+              </Grid>
               <Grid item xs={12} md={6} lg={3}>
                 <FormControl fullWidth>
                   <InputLabel htmlFor="activity-session">Session</InputLabel>
@@ -132,16 +141,6 @@ export default class GordonActivitiesAll extends Component {
                     {typeOptions}
                   </Select>
                 </FormControl>
-              </Grid>
-              <Grid item xs={12} md={12} lg={6}>
-                <TextField
-                  id="search"
-                  label="Search"
-                  value={this.state.search}
-                  onChange={this.filter('search')}
-                  margin="none"
-                  fullWidth
-                />
               </Grid>
             </Grid>
           </Grid>
