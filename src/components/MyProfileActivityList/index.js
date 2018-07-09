@@ -49,7 +49,7 @@ class MyProfileActivityList extends Component {
     return (
       <div>
         <Grid container alignItems="center">
-          <Grid item xs={8} sm={8} md={8} lg={8}>
+          <Grid item xs={8}>
             <List>
               <ListItem>
                 <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
@@ -62,7 +62,7 @@ class MyProfileActivityList extends Component {
               </ListItem>
             </List>
           </Grid>
-          <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
+          <Grid item xs={2}>
             <Grid container>
               <Grid item xs={12} align="center">
                 {/* The function you are trying to fire by clicking the toggle must passed to onChange()
@@ -88,7 +88,7 @@ class MyProfileActivityList extends Component {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={2} sm={2} md={2} lg={2}>
+          <Grid item xs={2}>
             <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
               <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
             </Link>

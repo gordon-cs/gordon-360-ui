@@ -1,10 +1,15 @@
 @import '../../vars';
 
 .linkColor {
-  color: blue !important;
+  color: $primary-cyan !important;
 }
 .alignPicCenter {
   padding-top: 8%;
+}
+
+.noInvolvements {
+  padding-left: 24px;
+  color: $primary-cyan !important;
 }
 
 @media (max-width: 420px) {
