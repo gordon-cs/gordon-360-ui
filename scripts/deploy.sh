@@ -12,9 +12,8 @@ set -euo pipefail
 # STAGING_DIR absolute path to directory for staging app
 
 # Variable used to create web.config
-# Note: Regular expression replaces all quotes with two backslash-escaped quotes i.e. " => \"\"
-# (for PowerShell execution)
-WEB_CONFIG=`sed -e 's/\"/\\\"\\\"/g' web_config`
+# Note: Regular expression replaces all quotes with two quotes, i.e. " => "" (for PowerShell)
+WEB_CONFIG=`sed -e 's/\"/\"\"/g' web_config`
 
 # Get current environment (production or staging) from argument passed by Travis
 DEPLOY_ENV="$1"
