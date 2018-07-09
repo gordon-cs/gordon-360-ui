@@ -10,6 +10,8 @@ import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+
+const privateInfo = 'Private as requested.';
 // all logic for displaying parts of the Personal Information Card is contained in this file
 export default class ProfileList extends Component {
   constructor(props) {
@@ -42,7 +44,9 @@ export default class ProfileList extends Component {
     let Department;
     let minors, majors, residence;
 
-    if (
+    if (this.props.profile.HomeCity === 'Private as requested.') {
+      address = 'Private as requested';
+    } else if (
       this.props.profile.Country === 'United States Of America' ||
       this.props.profile.Country === ''
     ) {
@@ -86,7 +90,7 @@ export default class ProfileList extends Component {
                 <Typography>Home Phone:</Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
-                {this.props.profile.HomePhone !== 'Private as requested.' &&
+                {this.props.profile.HomePhone !== privateInfo &&
                   !this.props.myProf && (
                     <a href={'tel:' + this.props.profile.HomePhone}>
                       <Typography className="linkColor">
@@ -94,8 +98,8 @@ export default class ProfileList extends Component {
                       </Typography>
                     </a>
                   )}
-                {this.props.profile.HomePhone === 'Private as requested.' && (
-                  <Typography>{this.formatPhone(this.props.profile.HomePhone)}</Typography>
+                {this.props.profile.HomePhone === privateInfo && (
+                  <Typography>Private as requested</Typography>
                 )}
                 {this.props.myProf && (
                   <Typography>{this.formatPhone(this.props.profile.HomePhone)}</Typography>
@@ -116,15 +120,15 @@ export default class ProfileList extends Component {
                 <Typography>Mobile Phone:</Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
-                {this.props.profile.MobilePhone !== 'Private as requested.' && (
+                {this.props.profile.MobilePhone !== privateInfo && (
                   <a href={'tel:' + this.props.profile.MobilePhone}>
                     <Typography className="linkColor">
                       {this.formatPhone(this.props.profile.MobilePhone)}
                     </Typography>
                   </a>
                 )}
-                {this.props.profile.MobilePhone === 'Private as requested.' && (
-                  <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
+                {this.props.profile.MobilePhone === privateInfo && (
+                  <Typography>Private as requested</Typography>
                 )}
               </Grid>
             </Grid>

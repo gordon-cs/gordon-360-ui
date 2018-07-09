@@ -280,8 +280,8 @@ export default class Profile extends Component {
                             {linkedInButton}
                             {instagramButton}
                           </Grid>
+                          <a href={`mailto:${this.state.profile.Email}`}>{email}</a>
                         </Grid>
-                        {email}
                       </Grid>
                     </Grid>
                   </Grid>
