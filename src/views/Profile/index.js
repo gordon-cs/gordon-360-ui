@@ -142,10 +142,6 @@ export default class Profile extends Component {
   }
 
   render() {
-    const style = {
-      width: '200px',
-      height: '200px',
-    };
     // The list of memberships that will be displayed on the page
     let displayedMembershipList;
 
@@ -244,17 +240,19 @@ export default class Profile extends Component {
                       <Grid item xs={12} sm={12} md={12} lg={12}>
                         {this.state.profile.preferred_photo !== 0 && (
                           <img
+                            className="rounded-corners"
                             src={`data:image/jpg;base64,${this.state.prefImage}`}
                             alt=""
-                            style={style}
+                            style={{ 'max-height': '200px', 'min-width': '160px' }}
                           />
                         )}{' '}
                         {this.state.profile.show_pic !== 0 &&
                           this.state.defImage !== undefined && (
                             <img
+                              className="rounded-corners"
                               src={`data:image/jpg;base64,${this.state.defImage}`}
                               alt=""
-                              style={style}
+                              style={{ 'max-height': '200px', 'min-width': '160px' }}
                             />
                           )}
                       </Grid>
