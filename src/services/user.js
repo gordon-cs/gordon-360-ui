@@ -11,6 +11,7 @@ import http from './http';
 import session from './session';
 import storage from './storage';
 import { socialMediaInfo } from '../socialMedia';
+import gordonEvent from './event';
 
 /**
  * @global
@@ -265,12 +266,13 @@ function setClass(profile) {
 }
 
 /**
- * Get events attended by the user
+ * Get chapel events attended by the user
  * @param {String} username username of the user
  * @param {String} termCode code for the semester
  * @return {Promise.<AttendedEvent[]>} An object of all CL&W events attended by the user
  */
-const getAttendedEvents = (username, termCode) => http.get(`events/chapel/${username}/${termCode}`);
+const getAttendedChapelEvents = (username, termCode) =>
+  http.get(`events/chapel/${username}/${termCode}`);
 
 /**
  * Get image for a given user or the current user if `username` is not provided
@@ -350,6 +352,20 @@ const getLocalInfo = () => {
   }
 };
 
+//Call function to retrieve events from database then format them
+const getAttendedChapelEventsFormatted = async () => {
+  const { user_name: username } = getLocalInfo();
+  const termCode = session.getTermCode();
+  const attendedEvents = await getAttendedChapelEvents(username, termCode);
+  const events = [];
+  attendedEvents.sort(gordonEvent.sortByTime);
+  for (let i = 0; i < attendedEvents.length; i += 1) {
+    events.push(attendedEvents[i]);
+    gordonEvent.formatevent(attendedEvents[i]);
+  }
+  return events.sort(gordonEvent.sortByTime);
+};
+
 /**
  * Get the number of cl&w credits aquired, and number of credits required.
  * @return {Promise.<CLWCredits>} An Object of their current and requiered number of CL&W events,
@@ -357,7 +373,7 @@ const getLocalInfo = () => {
 const getChapelCredits = async () => {
   const { user_name: username } = getLocalInfo();
   const termCode = session.getTermCode();
-  const attendedEvents = await getAttendedEvents(username, termCode);
+  const attendedEvents = await getAttendedChapelEvents(username, termCode);
 
   // Get required number of CL&W credits for the user, defaulting to thirty
   let required = 30;
@@ -386,19 +402,9 @@ const getProfile = username => {
   return profile;
 };
 
-function toggleMobilePhonePrivacy() {
-  let profile = getProfileInfo();
-  let currentPrivacy = profile.IsMobilePhonePrivate;
-  let newPrivacy = currentPrivacy ? 'N' : 'Y';
-  let setPrivacy = async function(value) {
-    return http
-      .put('profiles/mobile_privacy/' + value, value)
-      .then(res => {})
-      .catch(reason => {
-        //TODO handle error
-      });
-  };
-  setPrivacy(newPrivacy);
+async function setMobilePhonePrivacy(makePrivate) {
+  // 'Y' = private, 'N' = public
+  await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
 }
 
 async function setImagePrivacy(makePrivate) {
@@ -512,10 +518,10 @@ function updateSocialLink(type, link) {
 }
 
 export default {
-  toggleMobilePhonePrivacy,
+  setMobilePhonePrivacy,
   setImagePrivacy,
   getMemberships,
-  getAttendedEvents,
+  getAttendedChapelEventsFormatted,
   getChapelCredits,
   getImage,
   getLocalInfo,

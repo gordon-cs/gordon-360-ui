@@ -11,6 +11,10 @@ import activity from '../../services/activity';
 import session from '../../services/session';
 import GordonActivityGrid from './components/ActivityGrid';
 import GordonLoader from '../../components/Loader';
+import Typography from '@material-ui/core/Typography';
+import user from './../../services/user';
+import { gordonColors } from '../../theme';
+import Card from '@material-ui/core/Card';
 
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
@@ -22,6 +26,7 @@ export default class GordonActivitiesAll extends Component {
     this.state = {
       activities: [],
       allActivities: [],
+      myInvolvements: [],
       error: null,
       loading: true,
       search: '',
@@ -35,6 +40,7 @@ export default class GordonActivitiesAll extends Component {
     this.setState({ loading: true });
 
     try {
+      const profile = await user.getProfileInfo();
       const { SessionCode: sessionCode } = await session.getCurrent();
       this.setState({ session: sessionCode });
 
@@ -43,10 +49,12 @@ export default class GordonActivitiesAll extends Component {
         activity.getTypes(sessionCode),
         session.getAll(),
       ]);
+      const myInvolvements = await user.getMembershipsAlphabetically(profile.ID);
 
       this.setState({
         activities,
         allActivities: activities,
+        myInvolvements: myInvolvements,
         loading: false,
         sessions,
         types,
@@ -77,12 +85,20 @@ export default class GordonActivitiesAll extends Component {
       throw this.state.error;
     }
 
-    let content;
+    let allInvolvements;
+    let myInvolvements;
     if (this.state.loading === true) {
-      content = <GordonLoader />;
+      allInvolvements = <GordonLoader />;
+      myInvolvements = <GordonLoader />;
     } else {
-      content = (
+      allInvolvements = (
         <GordonActivityGrid activities={this.state.activities} sessionCode={this.state.session} />
+      );
+      myInvolvements = (
+        <GordonActivityGrid
+          activities={this.state.myInvolvements}
+          sessionCode={this.state.session}
+        />
       );
     }
 
@@ -99,6 +115,12 @@ export default class GordonActivitiesAll extends Component {
         {type}
       </MenuItem>
     ));
+
+    const headerStyle = {
+      backgroundColor: gordonColors.primary.blue,
+      color: '#FFF',
+      padding: '10px',
+    };
 
     return (
       <section className="activities-all">
@@ -145,7 +167,36 @@ export default class GordonActivitiesAll extends Component {
             </Grid>
           </Grid>
         </Grid>
-        {content}
+
+        <Grid container align="center" spacing="32" justify="center">
+          <Grid item xs={12} lg={8} fullWidth>
+            <Card>
+              <div style={headerStyle}>
+                <Typography variant="body2" style={headerStyle}>
+                  MY CURRENT INVOLVEMENTS
+                </Typography>
+              </div>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} lg={8}>
+            {myInvolvements}
+          </Grid>
+
+          <Grid item xs={12} lg={8}>
+            <Card>
+              <div style={headerStyle}>
+                <Typography variant="body2" style={headerStyle}>
+                  ALL INVOLVEMENTS
+                </Typography>
+              </div>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} lg={8}>
+            {allInvolvements}
+          </Grid>
+        </Grid>
       </section>
     );
   }
