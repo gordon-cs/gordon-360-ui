@@ -49,7 +49,7 @@ export default class GordonActivitiesAll extends Component {
         activity.getTypes(sessionCode),
         session.getAll(),
       ]);
-      const myInvolvements = await user.getMembershipsAlphabetically(profile.ID);
+      const myInvolvements = await user.getCurrentMemberships(profile.ID);
 
       this.setState({
         activities,

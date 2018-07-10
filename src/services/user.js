@@ -442,6 +442,19 @@ const getMembershipsAlphabetically = async id => {
   return memberships;
 };
 
+//Take student's memberships and filter for current only
+const getCurrentMemberships = async id => {
+  let myInvolvements = await getMembershipsAlphabetically(id);
+  let myCurrentInvolvements = [];
+  const { SessionCode: sessionCode } = await session.getCurrent();
+  for (let i = 0; i < myInvolvements.length; i += 1) {
+    if (myInvolvements[i].SessionCode === sessionCode) {
+      myCurrentInvolvements.push(myInvolvements[i]);
+    }
+  }
+  return myCurrentInvolvements;
+};
+
 //compares items by ActivityDescription, used by getMembershipsAlphabetically to sort by ActivityDescription
 function compareByTitle(a, b) {
   const involvementA = a.ActivityDescription;
@@ -537,6 +550,7 @@ export default {
   getLocalInfo,
   getPublicMemberships,
   getMembershipsAlphabetically,
+  getCurrentMemberships,
   getProfileInfo,
   resetImage,
   postImage,
