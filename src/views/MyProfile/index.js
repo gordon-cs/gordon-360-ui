@@ -279,7 +279,16 @@ export default class Profile extends Component {
     };
 
     let membershipList;
-    if (!this.state.memberships) {
+    if (this.state.memberships.length === 0) {
+      membershipList = (
+        <div>
+          <Link to={`/activities/`}>
+            <Typography variant="body2" className="noInvolvements">
+              No Involvements to display. Click here to see Involvements around campus!
+            </Typography>
+          </Link>
+        </div>
+      );
     } else {
       membershipList = this.state.memberships.map(activity => (
         <MyProfileActivityList Activity={activity} />

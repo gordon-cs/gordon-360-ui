@@ -11,7 +11,6 @@ import Office from './../../components/OfficeList';
 import ProfileActivityList from './../../components/ProfileActivityList';
 import EmailIcon from '@material-ui/icons/Email';
 import GordonLoader from './../../components/Loader';
-import { Link } from 'react-router-dom';
 import { socialMediaInfo } from '../../socialMedia';
 import './profile.css';
 
@@ -161,15 +160,9 @@ export default class Profile extends Component {
       // If the user has no public Involvements, say so on the page
       if (publicMemberships.length === 0) {
         displayedMembershipList = (
-          // <Grid container padding="24px">
-          //   <Grid item xs={8} justify="center">
-          <Link to={`/activities/`}>
-            <Typography variant="body2" className="noInvolvements">
-              No Involvements to display. Click here to see Involvements around campus!
-            </Typography>
-          </Link>
-          //   </Grid>
-          // </Grid>
+          <Typography variant="body2" align="center">
+            No Involvements to display
+          </Typography>
         );
       } else {
         displayedMembershipList = publicMemberships.map(activity => (
@@ -177,6 +170,7 @@ export default class Profile extends Component {
         ));
       }
     }
+
     let facebookButton;
     let twitterButton;
     let linkedInButton;
