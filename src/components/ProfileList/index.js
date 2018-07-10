@@ -159,7 +159,7 @@ export default class ProfileList extends Component {
                 <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
               </Grid>
               <Grid item xs={3} md={6} lg={3}>
-                <Grid container justify="center" alignItems="center">
+                <Grid container justify="center" alignItems="center" direction="column">
                   <Switch
                     onChange={() => {
                       this.handleChangeMobilePhonePrivacy();
