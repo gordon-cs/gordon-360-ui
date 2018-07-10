@@ -10,6 +10,8 @@ import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import LockIcon from '@material-ui/icons/Lock';
+import './profileList.css';
 
 const PRIVATE_INFO = 'Private as requested.';
 // all logic for displaying parts of the Personal Information Card is contained in this file
@@ -210,12 +212,15 @@ export default class ProfileList extends Component {
       studentID = (
         <div>
           <ListItem>
-            <Grid container justify="center">
-              <Grid item xs={6} sm={6} md={3} lg={6}>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item xs={6} md={3} lg={6}>
                 <Typography>Student ID:</Typography>
               </Grid>
-              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+              <Grid item xs={3} md={3} lg={3} justify="right">
                 <Typography>{this.props.profile.ID}</Typography>
+              </Grid>
+              <Grid item xs={3} md={6} lg={3} justify="right" align="center">
+                <LockIcon className="lock-icon" />
               </Grid>
             </Grid>
           </ListItem>
