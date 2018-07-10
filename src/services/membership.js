@@ -142,7 +142,7 @@ const get = (activityCode, sessionCode) => {
 const toggleMembershipPrivacy = userMembership => {
   let currentMembershipPrivacy = userMembership.Privacy;
   let newMembershipPrivacy = !currentMembershipPrivacy;
-  let setMembershipPrivacy = function(value) {
+  let setMembershipPrivacy = async function(value) {
     return http
       .put('/memberships/' + userMembership.MembershipID + '/privacy/' + value, value)
       .catch(reason => {

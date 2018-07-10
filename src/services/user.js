@@ -402,19 +402,9 @@ const getProfile = username => {
   return profile;
 };
 
-function toggleMobilePhonePrivacy() {
-  let profile = getProfileInfo();
-  let currentPrivacy = profile.IsMobilePhonePrivate;
-  let newPrivacy = currentPrivacy ? 'N' : 'Y';
-  let setPrivacy = async function(value) {
-    return http
-      .put('profiles/mobile_privacy/' + value, value)
-      .then(res => {})
-      .catch(reason => {
-        //TODO handle error
-      });
-  };
-  setPrivacy(newPrivacy);
+async function setMobilePhonePrivacy(makePrivate) {
+  // 'Y' = private, 'N' = public
+  await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
 }
 
 async function setImagePrivacy(makePrivate) {
@@ -440,6 +430,19 @@ const getMembershipsAlphabetically = async id => {
   memberships = await http.get(`memberships/student/${id}`);
   memberships.sort(compareByTitle);
   return memberships;
+};
+
+//Take student's memberships and filter for current only
+const getCurrentMemberships = async id => {
+  let myInvolvements = await getMembershipsAlphabetically(id);
+  let myCurrentInvolvements = [];
+  const { SessionCode: sessionCode } = await session.getCurrent();
+  for (let i = 0; i < myInvolvements.length; i += 1) {
+    if (myInvolvements[i].SessionCode === sessionCode) {
+      myCurrentInvolvements.push(myInvolvements[i]);
+    }
+  }
+  return myCurrentInvolvements;
 };
 
 //compares items by ActivityDescription, used by getMembershipsAlphabetically to sort by ActivityDescription
@@ -528,7 +531,7 @@ function updateSocialLink(type, link) {
 }
 
 export default {
-  toggleMobilePhonePrivacy,
+  setMobilePhonePrivacy,
   setImagePrivacy,
   getMemberships,
   getAttendedChapelEventsFormatted,
@@ -537,6 +540,7 @@ export default {
   getLocalInfo,
   getPublicMemberships,
   getMembershipsAlphabetically,
+  getCurrentMemberships,
   getProfileInfo,
   resetImage,
   postImage,

@@ -45,6 +45,9 @@ class MyProfileActivityList extends Component {
     const toggleTextStyle = {
       fontSize: '10pt',
     };
+    const activityItemStyle = {
+      opacity: Activity.Privacy ? '0.5' : '1',
+    };
 
     return (
       <div>
@@ -52,7 +55,10 @@ class MyProfileActivityList extends Component {
           <Grid item xs={8}>
             <List>
               <ListItem>
-                <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
+                <Link
+                  to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}
+                  style={activityItemStyle}
+                >
                   <Typography>
                     <b>{Activity.ActivityDescription}</b>
                   </Typography>
@@ -67,7 +73,7 @@ class MyProfileActivityList extends Component {
               <Grid item xs={12} align="center">
                 {/* The function you are trying to fire by clicking the toggle must passed to onChange()
               using an Arrow Function.
-              https://stackoverflow.com/questions/33846682/react-onclick-function-fires-on-render             
+              https://stackoverflow.com/questions/33846682/react-onclick-function-fires-on-render
               */}
                 <Switch
                   onChange={() => {
@@ -83,13 +89,16 @@ class MyProfileActivityList extends Component {
               </Grid>
               <Grid item xs={12} align="center">
                 <Typography style={toggleTextStyle}>
-                  {Activity.Privacy ? 'Hidden' : 'Public'}
+                  {Activity.Privacy ? 'Private' : 'Public'}
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={2}>
-            <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
+            <Link
+              to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}
+              style={activityItemStyle}
+            >
               <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
             </Link>
           </Grid>
