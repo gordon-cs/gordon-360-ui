@@ -220,7 +220,11 @@ export default class ProfileList extends Component {
                 <Typography>{this.props.profile.ID}</Typography>
               </Grid>
               <Grid item xs={3} md={6} lg={3} justify="right" align="center">
-                <LockIcon className="lock-icon" />
+                <Grid container justify="center">
+                  <Grid item>
+                    <LockIcon className="lock-icon" />
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </ListItem>
