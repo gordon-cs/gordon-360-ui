@@ -10,10 +10,26 @@ import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import { withStyles } from '@material-ui/core/styles';
 
 const PRIVATE_INFO = 'Private as requested.';
+
+const styles = {
+  colorSwitchBase: {
+    color: '#ebeaea',
+    '&$colorChecked': {
+      color: '#00aeef',
+      '& + $colorBar': {
+        backgroundColor: '#00aeef',
+      },
+    },
+  },
+  colorBar: {},
+  colorChecked: {},
+};
+
 // all logic for displaying parts of the Personal Information Card is contained in this file
-export default class ProfileList extends Component {
+class ProfileList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,6 +65,7 @@ export default class ProfileList extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     let address;
     let homephone, mobilephone, Home, street;
     let Department;
@@ -165,6 +182,11 @@ export default class ProfileList extends Component {
                       this.handleChangeMobilePhonePrivacy();
                     }}
                     checked={!this.state.mobilePhonePrivacy}
+                    classes={{
+                      switchBase: classes.colorSwitchBase,
+                      checked: classes.colorChecked,
+                      bar: classes.colorBar,
+                    }}
                   />
                   <Typography>{this.state.mobilePhonePrivacy ? 'Private' : 'Public'}</Typography>
                 </Grid>
@@ -238,3 +260,5 @@ export default class ProfileList extends Component {
     );
   }
 }
+
+export default withStyles(styles)(ProfileList);
