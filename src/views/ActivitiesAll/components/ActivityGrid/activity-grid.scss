@@ -13,23 +13,44 @@
     background-color: white;
     color: $primary-blue;
     justify-content: center;
-    padding: 20px;
-    border-radius: 16px;
-    font-size: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 90%;
     text-align: center;
-  }
-  @media (max-width: $break-sm) {
-    .item {
-      justify-content: center;
-      padding: 10px;
-      border-radius: 4px;
-      font-size: 90%;
-    }
   }
 
   @media (max-width: $break-sm) {
     img {
       display: none;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 90%;
+    }
+  }
+  @media (max-width: $break-md) {
+    .item {
+      justify-content: center;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 90%;
+    }
+  }
+
+  @media (max-width: $break-lg) {
+    .item {
+      justify-content: center;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 80%;
+    }
+  }
+
+  @media (max-width: 1281px) {
+    .item {
+      justify-content: center;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 90%;
     }
   }
 
@@ -37,9 +58,10 @@
     background-color: white;
     color: $primary-blue;
     justify-content: center;
-    padding: 20px;
+    padding: 8px;
     border-radius: 16px;
     font-size: 100%;
     text-align: center;
+    word-wrap: break-word;
   }
 }
