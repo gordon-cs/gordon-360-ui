@@ -56,7 +56,9 @@ const getAuth = (username, password) => {
  * @return {Promise.<undefined>} Resolved when token is refreshed
  */
 const authenticate = (username, password) =>
-  getAuth(username, password).then(token => storage.store('token', token));
+  getAuth(username, password)
+    .then(token => storage.store('token', token))
+    .then(console.log('auth: authenticate() - done'));
 
 /**
  * Check if current session is authenticated
@@ -66,6 +68,7 @@ const authenticate = (username, password) =>
 const isAuthenticated = () => {
   try {
     // Check that auth exists
+    console.log('auth: isAuthenticated() try}');
     const token = storage.get('token');
 
     // Check that auth contains a token
