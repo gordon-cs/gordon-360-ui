@@ -12,6 +12,8 @@ import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import LockIcon from '@material-ui/icons/Lock';
+import './profileList.css';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -84,6 +86,7 @@ class ProfileList extends Component {
     let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
+    let studentID;
 
     if (this.props.profile.HomeCity === 'Private as requested.') {
       address = 'Private as requested';
@@ -256,6 +259,31 @@ class ProfileList extends Component {
       }
     }
 
+    if (this.props.myProf && String(this.props.profile.PersonType).includes('stu')) {
+      studentID = (
+        <div>
+          <ListItem>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item xs={6} md={3} lg={6}>
+                <Typography>Student ID:</Typography>
+              </Grid>
+              <Grid item xs={3} md={3} lg={3} justify="right">
+                <Typography>{this.props.profile.ID}</Typography>
+              </Grid>
+              <Grid item xs={3} md={6} lg={3} justify="right" align="center">
+                <Grid container justify="center">
+                  <Grid item>
+                    <LockIcon className="lock-icon" />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    }
+
     return (
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <Card>
@@ -266,6 +294,7 @@ class ProfileList extends Component {
             {residence}
             {Department}
             {mobilephone}
+            {studentID}
             {homephone}
             {Home}
           </CardContent>
