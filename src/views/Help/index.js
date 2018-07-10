@@ -2,12 +2,13 @@ import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 
+import { gordonColors } from '../../theme';
 import './help.css';
 
 export default class Help extends Component {
   render() {
     const style = {
-      color: '#014983',
+      color: gordonColors.primary.blue,
     };
 
     return (

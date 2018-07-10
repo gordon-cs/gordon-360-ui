@@ -1,0 +1,43 @@
+@import '../../vars';
+
+.linkColor {
+  color: $primary-cyan !important;
+}
+.alignPicCenter {
+  padding-top: 8%;
+}
+
+.email-link {
+  &:hover {
+    color: #00aeef;
+  }
+}
+
+.noInvolvements {
+  padding-left: 24px;
+  color: $primary-cyan !important;
+}
+
+@media (max-width: 420px) {
+  .alignPicCenter {
+    padding-top: 0%;
+  }
+}
+
+@media (min-width: $break-sm) {
+  .alignPicCenter {
+    padding-top: 0%;
+  }
+}
+
+@media (min-width: 720px) {
+  .alignPicCenter {
+    padding-top: 8%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .alignPicCenter {
+    padding-top: 5%;
+  }
+}

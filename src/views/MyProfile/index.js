@@ -1,14 +1,11 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import Divider from '@material-ui/core/Divider/';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import Dropzone from 'react-dropzone';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -18,17 +15,22 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 
+import Typography from '@material-ui/core/Typography';
+import ProfileList from './../../components/ProfileList';
+import Office from './../../components/OfficeList';
+
+import EmailIcon from '@material-ui/icons/Email';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
-import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
+import { Link } from 'react-router-dom';
 
-import './profileButton.css';
+import './myProfile.css';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import Switch from '@material-ui/core/Switch';
+import GordonLoader from '../../components/Loader';
 
 const CROP_DIM = 200; // pixels
 //MyProfile
@@ -44,7 +46,11 @@ export default class Profile extends Component {
       isImagePublic: null,
       image: null,
       preview: null,
+      hasNickName: Boolean,
+      nickname: String,
       loading: true,
+      profileinfo: null,
+      officeinfo: null,
       profile: {},
       memberships: [],
       files: [],
@@ -56,10 +62,6 @@ export default class Profile extends Component {
       twitterLink: '',
       instagramLink: '',
     };
-  }
-
-  handleChangePrivacy() {
-    user.toggleMobilePhonePrivacy();
   }
 
   handlePhotoOpen = () => {
@@ -196,12 +198,25 @@ export default class Profile extends Component {
     this.loadProfile();
   }
 
+  hasNickName(profile) {
+    let Name = String(profile.fullName);
+    let FirstName = Name.split(' ')[0];
+    this.setState({ hasNickName: FirstName !== profile.NickName && profile.NickName !== '' });
+  }
+
   async loadProfile() {
     this.setState({ loading: true });
     try {
       const profile = await user.getProfileInfo();
-      this.setState({ privacy: profile.IsMobilePhonePrivate });
-      this.setState({ loading: false, profile });
+      let profileinfo = (
+        <ProfileList profile={profile} myProf={true}>
+          {' '}
+        </ProfileList>
+      );
+      let officeinfo = <Office profile={profile} />;
+      this.setState({ profileinfo: profileinfo });
+      this.setState({ officeinfo: officeinfo });
+      this.setState({ profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
@@ -209,13 +224,9 @@ export default class Profile extends Component {
       const image = preferredImage || defaultImage;
       this.setState({ image, loading: false, memberships });
       this.setState({ isImagePublic: this.state.profile.show_pic });
+      this.hasNickName(profile);
     } catch (error) {
       this.setState({ error });
-    }
-    if (this.state.profile.IsMobilePhonePrivate === 0) {
-      this.setState({ button: 'Make Private' });
-    } else {
-      this.setState({ button: 'Make Public' });
     }
     // Set state of social media links to database values after load.
     // If not empty, add domain name back in for display and buttons.
@@ -244,7 +255,8 @@ export default class Profile extends Component {
 
     const style = {
       img: {
-        maxWidth: '100%',
+        width: '200px',
+        height: '200px',
       },
 
       centerGridContainer: {
@@ -264,124 +276,13 @@ export default class Profile extends Component {
       justifyContent: 'center',
       alignItems: 'center',
     };
-    let PersonalInfo;
 
     let membershipList;
     if (!this.state.memberships) {
-      membershipList = <GordonLoader />;
     } else {
       membershipList = this.state.memberships.map(activity => (
         <MyProfileActivityList Activity={activity} />
       ));
-    }
-
-    let address;
-    let homeStreet;
-    if (
-      this.state.profile.Country === 'United States Of America' ||
-      this.state.profile.Country === ''
-    ) {
-      address = `${this.state.profile.HomeCity},${this.state.profile.HomeState}`;
-      homeStreet = `${this.state.profile.HomeStreet2}`;
-    } else {
-      address = `${this.state.profile.Country}`;
-    }
-
-    if (this.state.profile.PersonType === 'fac') {
-      var Office = (
-        <CardContent>
-          <CardHeader title="Office Information" />
-          <List>
-            <ListItem>
-              <Typography>
-                Room: {this.state.profile.BuildingDescription}, {this.state.profile.OnCampusRoom}
-              </Typography>
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <Typography>Office Phone: {this.state.profile.OnCampusPhone}</Typography>
-            </ListItem>
-            <Divider />
-
-            <ListItem>
-              <Typography>Office Hours: {this.state.profile.office_hours}</Typography>
-            </ListItem>
-          </List>
-        </CardContent>
-      );
-
-      PersonalInfo = (
-        <List>
-          <ListItem>
-            <Typography>Department: {this.state.profile.OnCampusDepartment}</Typography>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <Typography>Email: {this.state.profile.Email}</Typography>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <Typography>Phone: {this.state.profile.HomePhone}</Typography>
-          </ListItem>
-          <Divider />
-        </List>
-      );
-    }
-    if (this.state.profile.PersonType === 'stu') {
-      PersonalInfo = (
-        <List>
-          <ListItem>
-            <Typography>Major: {this.state.profile.Major1Description}</Typography>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <Grid container xs={6} sm={6} md={6} lg={6} spacing="16">
-              <Grid item>
-                <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              alignItems="center"
-              justify="flex-end"
-              xs={8}
-              sm={6}
-              md={6}
-              lg={6}
-              spacing="16"
-            >
-              <Grid item>
-                <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
-              </Grid>
-              <Grid item>
-                <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <Typography>Student ID: {this.state.profile.ID}</Typography>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <Typography>Email: {this.state.profile.Email}</Typography>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
-          </ListItem>
-
-          <Divider />
-        </List>
-      );
     }
 
     let linksDialog = (
@@ -442,8 +343,8 @@ export default class Profile extends Component {
     }
     if (linkCount > 0) {
       editButton = (
-        <Grid item>
-          <a onClick={this.handleSocialLinksOpen} className="icon">
+        <Grid item style={{ marginTop: '5px' }}>
+          <a onClick={this.handleSocialLinksOpen} className="edit-icon">
             {socialMediaInfo.edit.icon}
           </a>
         </Grid>
@@ -457,228 +358,264 @@ export default class Profile extends Component {
         </Grid>
       );
     }
+
+    let email;
+    if (this.state.profile.Email !== '') {
+      email = (
+        <div>
+          <Typography className="email-link">{this.state.profile.Email}</Typography>
+        </div>
+      );
+    }
+
     return (
       <div>
-        <Grid container justify="center" spacing="16">
-          <Grid item xs={12} lg={10}>
-            <Card id="print">
-              <CardContent>
-                <Grid container alignItems="center" align="center" justify="center" spacing="16">
-                  <Grid item xs={12} sm={6} md={6} lg={4}>
-                    <ButtonBase
-                      onClick={this.handlePhotoOpen}
-                      focusRipple
-                      alt=""
-                      className="profile-image"
-                    >
-                      <img src={`data:image/jpg;base64,${this.state.image}`} alt="Profile" />
-                      <span className="imageBackdrop" />
-                      <GridListTileBar className="tile-bar" title="Update Photo" />
-                    </ButtonBase>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6} lg={4}>
-                    <Grid container align="center" alignItems="center">
-                      <Grid item xs={12}>
-                        <CardHeader
-                          title={this.state.profile.fullName}
-                          subheader={this.state.profile.Class}
-                        />
-                        <Grid container spacing="16" align="center" justify="center">
-                          {facebookButton}
-                          {twitterButton}
-                          {linkedInButton}
-                          {instagramButton}
-                          {editButton}
-                        </Grid>
-                        <Dialog
-                          open={this.state.photoOpen}
-                          keepMounted
-                          onClose={this.handleClose}
-                          aria-labelledby="alert-dialog-slide-title"
-                          aria-describedby="alert-dialog-slide-description"
-                          maxWidth="false"
+        {this.state.loading && <GordonLoader />}
+        {!this.state.loading && (
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} lg={10}>
+              <Card>
+                <CardContent>
+                  <Grid container alignItems="center" align="center" justify="center" spacing="16">
+                    <Grid item xs={6}>
+                      <Link
+                        to={`/profile/${this.state.profile.FirstName}.${
+                          this.state.profile.LastName
+                        }`}
+                      >
+                        <Button
+                          variant="contained"
+                          onClick={() => this.setState({ preview: null })}
+                          style={style.button}
                         >
-                          <DialogTitle id="simple-dialog-title">Update Profile Picture</DialogTitle>
-                          <DialogContent>
-                            <DialogContentText>
-                              Drag &amp; Drop Picture, or Click to Browse Files
-                            </DialogContentText>
-                            <DialogContentText>
-                              <br />
-                            </DialogContentText>
-                            {!preview && (
-                              <Dropzone
-                                onDropAccepted={this.onDropAccepted.bind(this)}
-                                onDropRejected={this.onDropRejected.bind(this)}
-                                accept="image/jpeg,image/jpg,image/png"
-                                style={photoUploader}
-                              >
+                          View My Public Profile
+                        </Button>
+                      </Link>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <ButtonBase
+                        onClick={this.handlePhotoOpen}
+                        focusRipple
+                        alt=""
+                        className="profile-image"
+                      >
+                        <img src={`data:image/jpg;base64,${this.state.image}`} alt="Profile" />
+                        <span className="imageBackdrop" />
+                        <GridListTileBar className="tile-bar" title="Update Photo" />
+                      </ButtonBase>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <Grid container align="center" alignItems="center">
+                        <Grid item xs={12}>
+                          <CardHeader
+                            title={
+                              this.state.hasNickName
+                                ? this.state.profile.fullName +
+                                  ' (' +
+                                  this.state.profile.NickName +
+                                  ')'
+                                : this.state.profile.fullName
+                            }
+                            subheader={this.state.profile.Class}
+                          />
+                          <Grid container spacing="16" align="center" justify="center">
+                            {facebookButton}
+                            {twitterButton}
+                            {linkedInButton}
+                            {instagramButton}
+                            {editButton}
+                          </Grid>
+                          <a href={`mailto:${this.state.profile.Email}`} className="icon">
+                            <Grid
+                              container
+                              justify="center"
+                              spacing="16"
+                              style={{ marginTop: '20px' }}
+                            >
+                              <Grid item>
+                                <EmailIcon />
+                              </Grid>
+                              <Grid item>{email}</Grid>
+                            </Grid>
+                          </a>
+                          <Dialog
+                            open={this.state.photoOpen}
+                            keepMounted
+                            onClose={this.handleClose}
+                            aria-labelledby="alert-dialog-slide-title"
+                            aria-describedby="alert-dialog-slide-description"
+                            maxWidth="false"
+                          >
+                            <DialogTitle id="simple-dialog-title">
+                              Update Profile Picture
+                            </DialogTitle>
+                            <DialogContent>
+                              <DialogContentText>
+                                Drag &amp; Drop Picture, or Click to Browse Files
+                              </DialogContentText>
+                              <DialogContentText>
+                                <br />
+                              </DialogContentText>
+                              {!preview && (
+                                <Dropzone
+                                  onDropAccepted={this.onDropAccepted.bind(this)}
+                                  onDropRejected={this.onDropRejected.bind(this)}
+                                  accept="image/jpeg,image/jpg,image/png"
+                                  style={photoUploader}
+                                >
+                                  <Grid container justify="center" spacing="16">
+                                    <img
+                                      src={require('./image.png')}
+                                      alt=""
+                                      style={{ 'max-width': '100%' }}
+                                    />
+                                  </Grid>
+                                </Dropzone>
+                              )}
+                              {preview && (
                                 <Grid container justify="center" spacing="16">
-                                  <img
-                                    src={require('./image.png')}
-                                    alt=""
-                                    style={{ 'max-width': '100%' }}
+                                  <Cropper
+                                    ref="cropper"
+                                    src={preview}
+                                    style={{
+                                      'max-width': this.maxCropPreviewWidth(),
+                                      'max-height':
+                                        this.maxCropPreviewWidth() /
+                                        this.state.cropperData.aspectRatio,
+                                    }}
+                                    autoCropArea={1}
+                                    viewMode={3}
+                                    aspectRatio={1}
+                                    highlight={false}
+                                    background={false}
+                                    zoom={this.onCropperZoom.bind(this)}
+                                    zoomable={false}
+                                    dragMode={'none'}
+                                    minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                                    minCropBoxHeight={this.state.cropperData.cropBoxDim}
                                   />
                                 </Grid>
-                              </Dropzone>
-                            )}
-                            {preview && (
-                              <Grid container justify="center" spacing="16">
-                                <Cropper
-                                  ref="cropper"
-                                  src={preview}
-                                  style={{
-                                    'max-width': this.maxCropPreviewWidth(),
-                                    'max-height':
-                                      this.maxCropPreviewWidth() /
-                                      this.state.cropperData.aspectRatio,
-                                  }}
-                                  autoCropArea={1}
-                                  viewMode={3}
-                                  aspectRatio={1}
-                                  highlight={false}
-                                  background={false}
-                                  zoom={this.onCropperZoom.bind(this)}
-                                  zoomable={false}
-                                  dragMode={'none'}
-                                  minCropBoxWidth={this.state.cropperData.cropBoxDim}
-                                  minCropBoxHeight={this.state.cropperData.cropBoxDim}
-                                />
-                              </Grid>
-                            )}
-                            {preview && <br />}
-                            {preview && (
-                              <Grid container justify="center" spacing="16">
+                              )}
+                              {preview && <br />}
+                              {preview && (
+                                <Grid container justify="center" spacing="16">
+                                  <Grid item>
+                                    <Button
+                                      variant="contained"
+                                      onClick={() => this.setState({ preview: null })}
+                                      style={style.button}
+                                    >
+                                      Choose Another Image
+                                    </Button>
+                                  </Grid>
+                                </Grid>
+                              )}
+                            </DialogContent>
+                            <DialogActions>
+                              <Grid container spacing={8} justify="flex-end">
+                                <Grid item>
+                                  <Tooltip
+                                    id="tooltip-hide"
+                                    title={
+                                      this.state.isImagePublic
+                                        ? 'Only faculty and police will see your photo'
+                                        : 'Make photo visible to other students'
+                                    }
+                                  >
+                                    <Button
+                                      variant="contained"
+                                      onClick={this.toggleImagePrivacy.bind(this)}
+                                      style={style.button}
+                                    >
+                                      {this.state.isImagePublic ? 'Hide' : 'Show'}
+                                    </Button>
+                                  </Tooltip>
+                                </Grid>
+                                <Grid item>
+                                  <Tooltip
+                                    id="tooltip-reset"
+                                    title="Restore your original ID photo"
+                                  >
+                                    <Button
+                                      variant="contained"
+                                      onClick={this.handleResetImage}
+                                      style={{ background: 'tomato', color: 'white' }}
+                                    >
+                                      Reset
+                                    </Button>
+                                  </Tooltip>
+                                </Grid>
                                 <Grid item>
                                   <Button
                                     variant="contained"
-                                    onClick={() => this.setState({ preview: null })}
+                                    onClick={this.handleCloseCancel}
                                     style={style.button}
                                   >
-                                    Choose Another Image
+                                    Cancel
                                   </Button>
                                 </Grid>
-                              </Grid>
-                            )}
-                          </DialogContent>
-                          <DialogActions>
-                            <Grid container spacing={8} justify="flex-end">
-                              <Grid item>
-                                <Tooltip
-                                  id="tooltip-hide"
-                                  title={
-                                    this.state.isImagePublic
-                                      ? 'Only faculty and police will see your photo'
-                                      : 'Make photo visible to other students'
-                                  }
-                                >
-                                  <Button
-                                    variant="contained"
-                                    onClick={this.toggleImagePrivacy.bind(this)}
-                                    style={style.button}
+                                <Grid item>
+                                  <Tooltip
+                                    id="tooltip-submit"
+                                    title="Crop to current region and submit"
                                   >
-                                    {this.state.isImagePublic ? 'Hide' : 'Show'}
-                                  </Button>
-                                </Tooltip>
+                                    <Button
+                                      variant="contained"
+                                      onClick={this.handleCloseSubmit}
+                                      disabled={!this.state.preview}
+                                      style={
+                                        this.state.preview
+                                          ? style.button
+                                          : { background: 'darkgray', color: 'white' }
+                                      }
+                                    >
+                                      Submit
+                                    </Button>
+                                  </Tooltip>
+                                </Grid>
                               </Grid>
-                              <Grid item>
-                                <Tooltip id="tooltip-reset" title="Restore your original ID photo">
-                                  <Button
-                                    variant="contained"
-                                    onClick={this.handleResetImage}
-                                    style={{ background: 'tomato', color: 'white' }}
-                                  >
-                                    Reset
-                                  </Button>
-                                </Tooltip>
-                              </Grid>
-                              <Grid item>
-                                <Button
-                                  variant="contained"
-                                  onClick={this.handleCloseCancel}
-                                  style={style.button}
-                                >
-                                  Cancel
-                                </Button>
-                              </Grid>
-                              <Grid item>
-                                <Tooltip
-                                  id="tooltip-submit"
-                                  title="Crop to current region and submit"
-                                >
-                                  <Button
-                                    variant="contained"
-                                    onClick={this.handleCloseSubmit}
-                                    disabled={!this.state.preview}
-                                    style={
-                                      this.state.preview
-                                        ? style.button
-                                        : { background: 'darkgray', color: 'white' }
-                                    }
-                                  >
-                                    Submit
-                                  </Button>
-                                </Tooltip>
-                              </Grid>
-                            </Grid>
-                          </DialogActions>
-                        </Dialog>
-                        <Dialog
-                          open={this.state.socialLinksOpen}
-                          keepMounted
-                          onClose={this.handleSocialLinksClose}
-                          aria-labelledby="alert-dialog-slide-title"
-                          aria-describedby="alert-dialog-slide-description"
-                        >
-                          <DialogTitle id="simple-dialog-title">
-                            Edit your social media links
-                          </DialogTitle>
-                          <DialogContent>{linksDialog}</DialogContent>
-                        </Dialog>
+                            </DialogActions>
+                          </Dialog>
+                          <Dialog
+                            open={this.state.socialLinksOpen}
+                            keepMounted
+                            onClose={this.handleSocialLinksClose}
+                            aria-labelledby="alert-dialog-slide-title"
+                            aria-describedby="alert-dialog-slide-description"
+                          >
+                            <DialogTitle id="simple-dialog-title">
+                              Edit your social media links
+                            </DialogTitle>
+                            <DialogContent>{linksDialog}</DialogContent>
+                          </Dialog>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
 
-          <Grid item xs={12} lg={10}>
-            <Grid container spacing="16">
-              <Grid item xs={12} sm={12} md={6} lg={6}>
-                <Card>
-                  <CardContent>
-                    <CardHeader title="Personal Information" />
-                    {PersonalInfo}
-                    <CardHeader title="Home Address" />
-                    <List>
-                      <ListItem>
-                        <Typography>Home: {address}</Typography>
-                      </ListItem>
-                      <Divider />
-                      {homeStreet && (
-                        <ListItem>
-                          <Typography>Street: {this.state.profile.HomeStreet2}</Typography>
-                        </ListItem>
-                      )}
-                      <Divider />
-                    </List>
-                  </CardContent>
-                  {Office}
-                </Card>
+            <Grid item xs={12} lg={5}>
+              <Grid container direction="column">
+                {this.state.profileinfo}
+                {this.state.officeinfo}
               </Grid>
-
-              <Grid item xs={12} sm={12} md={6} lg={6}>
-                <Card>
-                  <CardContent>
-                    <CardHeader title="Involvements" />
-                    <List>{membershipList}</List>
-                  </CardContent>
-                </Card>
+            </Grid>
+            <Grid item xs={12} lg={5}>
+              <Grid container direction="column">
+                <Grid item xs={12} sm={12} md={12} lg={12}>
+                  <Card>
+                    <CardContent>
+                      <CardHeader title="Involvements" />
+                      <List>{membershipList}</List>
+                    </CardContent>
+                  </Card>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
       </div>
     );
   }
