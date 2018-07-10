@@ -1,6 +1,8 @@
 import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 import ListItem from '@material-ui/core/ListItem';
+import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Majors from './../../components/MajorList';
@@ -11,6 +13,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -35,6 +38,7 @@ class ProfileList extends Component {
     this.state = {
       myProf: false, //if my profile page
       mobilePhonePrivacy: Boolean,
+      isSnackBarOpen: false,
     };
   }
 
@@ -47,10 +51,20 @@ class ProfileList extends Component {
     }
   }
 
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ isSnackBarOpen: false });
+  };
+
   handleChangeMobilePhonePrivacy() {
     this.setState({ mobilePhonePrivacy: !this.state.mobilePhonePrivacy });
     user.setMobilePhonePrivacy(!this.state.mobilePhonePrivacy);
+    this.setState({ isSnackBarOpen: true });
   }
+
   formatPhone(phone) {
     let tele = String(phone);
     if (tele.length === 10) {
@@ -256,6 +270,29 @@ class ProfileList extends Component {
             {Home}
           </CardContent>
         </Card>
+
+        <div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.isSnackBarOpen}
+            autoHideDuration={6000}
+            onClose={this.handleClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={
+              <span id="message-id">Success! Changes will take effect in a few minutes.</span>
+            }
+            action={[
+              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
+                <CloseIcon />
+              </IconButton>,
+            ]}
+          />
+        </div>
       </Grid>
     );
   }
