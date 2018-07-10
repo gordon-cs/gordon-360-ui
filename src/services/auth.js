@@ -66,6 +66,7 @@ const authenticate = (username, password) =>
 const isAuthenticated = () => {
   try {
     // Check that auth exists
+    console.log('auth: isAuthenticated() try}');
     const token = storage.get('token');
 
     // Check that auth contains a token
