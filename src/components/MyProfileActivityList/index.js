@@ -89,7 +89,7 @@ class MyProfileActivityList extends Component {
               </Grid>
               <Grid item xs={12} align="center">
                 <Typography style={toggleTextStyle}>
-                  {Activity.Privacy ? 'Hidden' : 'Public'}
+                  {Activity.Privacy ? 'Private' : 'Public'}
                 </Typography>
               </Grid>
             </Grid>
