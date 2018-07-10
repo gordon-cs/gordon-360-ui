@@ -18,13 +18,23 @@ export default class ProfileList extends Component {
     super(props);
     this.state = {
       myProf: false, //if my profile page
+      mobilePhonePrivacy: Boolean,
     };
   }
 
-  handleChangePrivacy() {
-    user.toggleMobilePhonePrivacy();
+  async loadProfileInfo() {
+    try {
+      const profile = await user.getProfileInfo();
+      this.setState({ mobilePhonePrivacy: profile.IsMobilePhonePrivate });
+    } catch (error) {
+      this.setState({ error });
+    }
   }
 
+  handleChangeMobilePhonePrivacy() {
+    this.setState({ mobilePhonePrivacy: !this.state.mobilePhonePrivacy });
+    user.setMobilePhonePrivacy(!this.state.mobilePhonePrivacy);
+  }
   formatPhone(phone) {
     let tele = String(phone);
     if (tele.length === 10) {
@@ -150,7 +160,12 @@ export default class ProfileList extends Component {
               </Grid>
               <Grid item xs={3} md={6} lg={3}>
                 <Grid container justify="center" alignItems="center">
-                  <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
+                  <Switch
+                    onChange={() => {
+                      this.handleChangeMobilePhonePrivacy();
+                    }}
+                    checked={!this.state.mobilePhonePrivacy}
+                  />
                   <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
                 </Grid>
               </Grid>
