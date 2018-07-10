@@ -15,7 +15,9 @@
  */
 const store = (key, value) => {
   console.log('storage: store()');
+  console.log(JSON.stringify(value));
   localStorage.setItem(key, JSON.stringify(value));
+  console.log('storage: store() - stored');
 };
 
 /**
@@ -29,7 +31,7 @@ const get = key => {
   const storedValue = localStorage.getItem(key);
   if (storedValue === null) {
     console.log('storage: get() - storedValue == null');
-    console.log(':storage: storedValue:');
+    console.log('storage: storedValue:');
     console.log(storedValue);
     throw new Error(`Key '${key}' does not exist in local storage`);
   }

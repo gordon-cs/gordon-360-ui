@@ -39,6 +39,7 @@ export default class Login extends Component {
       console.log('Login: async Login(event) try{}');
       await authenticate(this.state.username, this.state.password);
       this.props.onLogIn();
+      console.log('Login: async Login(event) try{} - onLogin() done');
     } catch (err) {
       this.setState({ error: err.message, loading: false });
     }
