@@ -9,9 +9,11 @@ import user from './../../services/user';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
 import ProfileActivityList from './../../components/ProfileActivityList';
+import EmailIcon from '@material-ui/icons/Email';
 import GordonLoader from './../../components/Loader';
+import { Link } from 'react-router-dom';
 import { socialMediaInfo } from '../../socialMedia';
-import './index.css';
+import './profile.css';
 
 //Public profile view
 export default class Profile extends Component {
@@ -27,7 +29,8 @@ export default class Profile extends Component {
       subheaderInfo: String,
       profileinfo: null,
       officeinfo: null,
-      image: null,
+      prefImage: null,
+      defImage: null,
       preview: null,
       loading: true,
       profile: {},
@@ -57,20 +60,25 @@ export default class Profile extends Component {
     this.setState({ username: searchedUser.match.params.username });
     try {
       const profile = await user.getProfileInfo(searchedUser.match.params.username);
-      let profileinfo = <ProfileList profile={profile}> </ProfileList>;
+      let profileinfo = (
+        <ProfileList profile={profile} myProf={false}>
+          {' '}
+        </ProfileList>
+      );
       let officeinfo = <Office profile={profile} />;
       this.setState({ profileinfo: profileinfo });
       this.setState({ officeinfo: officeinfo });
       this.checkPersonType(profile);
-      this.setState({ loading: false, profile });
+      this.setState({ profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(searchedUser.match.params.username),
       ]);
       const memberships = await user.getPublicMemberships(searchedUser.match.params.username);
-      const image = preferredImage || defaultImage;
+      const prefImage = preferredImage;
+      const defImage = defaultImage;
       this.hasNickName(profile);
       this.setSubheader(profile);
-      this.setState({ image, loading: false, memberships });
+      this.setState({ prefImage, defImage, loading: false, memberships });
     } catch (error) {
       this.setState({ error });
       console.log(error);
@@ -106,18 +114,28 @@ export default class Profile extends Component {
   hasNickName(profile) {
     let Name = String(profile.fullName);
     let FirstName = Name.split(' ')[0];
-    this.setState({ hasNickName: FirstName !== profile.NickName });
+    this.setState({ hasNickName: FirstName !== profile.NickName && profile.NickName !== '' });
   }
 
   setSubheader(profile) {
     let subheaderText = '';
+    let numberOfSubtitles = 0;
     if (this.state.isFac && profile.JobTitle !== undefined) {
       subheaderText += profile.JobTitle;
+      numberOfSubtitles++;
     }
     if (this.state.isStu) {
+      numberOfSubtitles++;
+      if (numberOfSubtitles > 1) {
+        subheaderText += ', ';
+      }
       subheaderText += profile.Class;
     }
     if (this.state.isAlu) {
+      numberOfSubtitles++;
+      if (numberOfSubtitles > 1) {
+        subheaderText += ', ';
+      }
       subheaderText += 'Class of ' + profile.ClassYear;
     }
     this.setState({ subheaderInfo: subheaderText });
@@ -125,7 +143,8 @@ export default class Profile extends Component {
 
   render() {
     const style = {
-      maxWidth: '100%',
+      width: '200px',
+      height: '200px',
     };
     // The list of memberships that will be displayed on the page
     let displayedMembershipList;
@@ -146,9 +165,15 @@ export default class Profile extends Component {
       // If the user has no public Involvements, say so on the page
       if (publicMemberships.length === 0) {
         displayedMembershipList = (
-          <Typography align="center" variant="body2">
-            No Involvements to display.
-          </Typography>
+          // <Grid container padding="24px">
+          //   <Grid item xs={8} justify="center">
+          <Link to={`/activities/`}>
+            <Typography variant="body2" className="noInvolvements">
+              No Involvements to display. Click here to see Involvements around campus!
+            </Typography>
+          </Link>
+          //   </Grid>
+          // </Grid>
         );
       } else {
         displayedMembershipList = publicMemberships.map(activity => (
@@ -156,7 +181,6 @@ export default class Profile extends Component {
         ));
       }
     }
-
     let facebookButton;
     let twitterButton;
     let linkedInButton;
@@ -198,59 +222,105 @@ export default class Profile extends Component {
       );
     }
 
+    let email;
+    if (this.state.profile.Email !== '') {
+      email = (
+        <div>
+          <Typography className="email-link">{this.state.profile.Email}</Typography>
+        </div>
+      );
+    }
+
     return (
       <div>
-        <Grid container justify="center" spacing="16">
-          <Grid item xs={12} lg={10}>
-            <Card>
-              <CardContent>
-                <Grid container alignItems="center" align="center" justify="center" spacing="16">
-                  {/* <Grid item xs={12} sm={6} md={6} lg={4}> */}
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
-                  </Grid>
-                  <CardHeader
-                    title={
-                      this.state.hasNickName
-                        ? this.state.profile.fullName + ' (' + this.state.profile.NickName + ')'
-                        : this.state.profile.fullName
-                    }
-                    subheader={this.state.subheaderInfo}
-                  />
-                  <Grid container spacing="16" align="center" justify="center">
-                    {facebookButton}
-                    {twitterButton}
-                    {linkedInButton}
-                    {instagramButton}
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
+        {this.state.loading && <GordonLoader />}
+        {!this.state.loading && (
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} lg={10}>
+              <Card>
+                <CardContent>
+                  <Grid container alignItems="center" align="center" justify="center" spacing="16">
+                    <Grid container alignItems="center" spacing="16">
+                      <Grid item xs={12} sm={12} md={12} lg={12}>
+                        {this.state.profile.preferred_photo !== 0 && (
+                          <img
+                            src={`data:image/jpg;base64,${this.state.prefImage}`}
+                            alt=""
+                            style={style}
+                          />
+                        )}{' '}
+                        {this.state.profile.show_pic !== 0 &&
+                          this.state.defImage !== undefined && (
+                            <img
+                              src={`data:image/jpg;base64,${this.state.defImage}`}
+                              alt=""
+                              style={style}
+                            />
+                          )}
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6} lg={4}>
+                      <Grid container align="center" alignItems="center" spacing="16">
+                        <Grid item xs={12}>
+                          <CardHeader
+                            title={
+                              this.state.hasNickName
+                                ? this.state.profile.fullName +
+                                  ' (' +
+                                  this.state.profile.NickName +
+                                  ')'
+                                : this.state.profile.fullName
+                            }
+                            subheader={this.state.subheaderInfo}
+                          />
 
-          <Grid item xs={12} lg={10}>
-            <Grid container spacing="16">
-              <Grid item xs={12} sm={12} md={6} lg={6}>
-                <Card>
-                  <CardContent>
-                    <CardHeader title="Personal Information" />
-                    <List>{this.state.profileinfo}</List>
-                  </CardContent>
-                </Card>
-              </Grid>
+                          <Grid container spacing="16" align="center" justify="center">
+                            {facebookButton}
+                            {twitterButton}
+                            {linkedInButton}
+                            {instagramButton}
+                          </Grid>
+                          <a href={`mailto:${this.state.profile.Email}`} className="icon">
+                            <Grid
+                              container
+                              justify="center"
+                              spacing="16"
+                              style={{ marginTop: '20px' }}
+                            >
+                              <Grid item>
+                                <EmailIcon />
+                              </Grid>
+                              <Grid item>{email}</Grid>
+                            </Grid>
+                          </a>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
 
-              <Grid item xs={12} sm={12} md={6} lg={6}>
+            <Grid item xs={12} lg={5}>
+              <Grid container direction="column" spacing="16">
+                {this.state.profileinfo}
                 {this.state.officeinfo}
-                <Card>
-                  <CardContent>
-                    <CardHeader title="Involvements" />
-                    <List>{displayedMembershipList}</List>
-                  </CardContent>
-                </Card>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} lg={5}>
+              <Grid container direction="column" spacing="16">
+                <Grid item xs={12} sm={12} md={12} lg={12}>
+                  <Card>
+                    <CardContent>
+                      <CardHeader title="Involvements" />
+                      <List>{displayedMembershipList}</List>
+                    </CardContent>
+                  </Card>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
       </div>
     );
   }

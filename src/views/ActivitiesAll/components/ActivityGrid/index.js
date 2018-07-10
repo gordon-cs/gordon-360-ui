@@ -15,23 +15,25 @@ const gridListCols = width => {
     case 'xs':
       return 2;
     case 'sm':
-      return 2;
-    case 'md':
       return 3;
-    case 'lg':
-      return 4;
-    case 'xl':
+    case 'md':
       return 5;
+    case 'lg':
+      return 5;
+    // case '1680':
+    //   return 5;
+    case 'xl':
+      return 6;
   }
 };
 
 class GordonActivityGrid extends Component {
   render() {
     let content = (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={12} lg={8}>
-          <Typography variant="headline">No Involvements Found</Typography>
-        </Grid>
+      <Grid item xs={12}>
+        <Typography variant="headline" align="center">
+          Sorry, for this specific session/Involvement type we couldn't find any results.
+        </Typography>
       </Grid>
     );
 
@@ -58,18 +60,14 @@ class GordonActivityGrid extends Component {
     }
 
     return (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={12} lg={8}>
-          <GridList
-            cellHeight={250}
-            spacing="32"
-            cols={gridListCols(this.props.width)}
-            className="gordon-activity-grid"
-          >
-            {content}
-          </GridList>
-        </Grid>
-      </Grid>
+      <GridList
+        cellHeight={250}
+        spacing="16"
+        cols={gridListCols(this.props.width)}
+        className="gordon-activity-grid"
+      >
+        {content}
+      </GridList>
     );
   }
 }
