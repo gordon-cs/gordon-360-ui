@@ -1,6 +1,8 @@
 import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 import ListItem from '@material-ui/core/ListItem';
+import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Majors from './../../components/MajorList';
@@ -10,19 +12,59 @@ import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import LockIcon from '@material-ui/icons/Lock';
+import './profileList.css';
+import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 
 const PRIVATE_INFO = 'Private as requested.';
+
+const styles = {
+  colorSwitchBase: {
+    color: '#ebeaea',
+    '&$colorChecked': {
+      color: '#00aeef',
+      '& + $colorBar': {
+        backgroundColor: '#00aeef',
+      },
+    },
+  },
+  colorBar: {},
+  colorChecked: {},
+};
+
 // all logic for displaying parts of the Personal Information Card is contained in this file
-export default class ProfileList extends Component {
+class ProfileList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       myProf: false, //if my profile page
+      mobilePhonePrivacy: Boolean,
+      isSnackBarOpen: false,
     };
   }
 
-  handleChangePrivacy() {
-    user.toggleMobilePhonePrivacy();
+  async loadProfileInfo() {
+    try {
+      const profile = await user.getProfileInfo();
+      this.setState({ mobilePhonePrivacy: profile.IsMobilePhonePrivate });
+    } catch (error) {
+      this.setState({ error });
+    }
+  }
+
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ isSnackBarOpen: false });
+  };
+
+  handleChangeMobilePhonePrivacy() {
+    this.setState({ mobilePhonePrivacy: !this.state.mobilePhonePrivacy });
+    user.setMobilePhonePrivacy(!this.state.mobilePhonePrivacy);
+    this.setState({ isSnackBarOpen: true });
   }
 
   formatPhone(phone) {
@@ -39,10 +81,12 @@ export default class ProfileList extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     let address;
     let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
+    let studentID;
 
     if (this.props.profile.HomeCity === 'Private as requested.') {
       address = 'Private as requested';
@@ -149,9 +193,19 @@ export default class ProfileList extends Component {
                 <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
               </Grid>
               <Grid item xs={3} md={6} lg={3}>
-                <Grid container justify="center" alignItems="center">
-                  <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
-                  <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
+                <Grid container justify="center" alignItems="center" direction="column">
+                  <Switch
+                    onChange={() => {
+                      this.handleChangeMobilePhonePrivacy();
+                    }}
+                    checked={!this.state.mobilePhonePrivacy}
+                    classes={{
+                      switchBase: classes.colorSwitchBase,
+                      checked: classes.colorChecked,
+                      bar: classes.colorBar,
+                    }}
+                  />
+                  <Typography>{this.state.mobilePhonePrivacy ? 'Private' : 'Public'}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -205,6 +259,31 @@ export default class ProfileList extends Component {
       }
     }
 
+    if (this.props.myProf && String(this.props.profile.PersonType).includes('stu')) {
+      studentID = (
+        <div>
+          <ListItem>
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item xs={6} md={3} lg={6}>
+                <Typography>Student ID:</Typography>
+              </Grid>
+              <Grid item xs={3} md={3} lg={3} justify="right">
+                <Typography>{this.props.profile.ID}</Typography>
+              </Grid>
+              <Grid item xs={3} md={6} lg={3} justify="right" align="center">
+                <Grid container justify="center">
+                  <Grid item>
+                    <LockIcon className="lock-icon" />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    }
+
     return (
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <Card>
@@ -215,11 +294,37 @@ export default class ProfileList extends Component {
             {residence}
             {Department}
             {mobilephone}
+            {studentID}
             {homephone}
             {Home}
           </CardContent>
         </Card>
+
+        <div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.isSnackBarOpen}
+            autoHideDuration={6000}
+            onClose={this.handleClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={
+              <span id="message-id">Success! Changes will take effect in a few minutes.</span>
+            }
+            action={[
+              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
+                <CloseIcon />
+              </IconButton>,
+            ]}
+          />
+        </div>
       </Grid>
     );
   }
 }
+
+export default withStyles(styles)(ProfileList);
