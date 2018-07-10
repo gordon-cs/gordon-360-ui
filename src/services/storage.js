@@ -14,6 +14,7 @@
  * @param {any} value Data to store
  */
 const store = (key, value) => {
+  console.log('storage: store()');
   localStorage.setItem(key, JSON.stringify(value));
 };
 
@@ -24,18 +25,23 @@ const store = (key, value) => {
  * @throws Will throw an error when the key is not set in local storage
  */
 const get = key => {
+  console.log('storage: get()');
   const storedValue = localStorage.getItem(key);
   if (storedValue === null) {
+    console.log('storage: get() - storedValue == null');
+    console.log(':storage: storedValue:');
+    console.log(storedValue);
     throw new Error(`Key '${key}' does not exist in local storage`);
   }
 
   let value;
   try {
     value = JSON.parse(storedValue);
+    console.log('storage: get() try{} - value:');
+    console.log(value);
   } catch (err) {
     throw new Error(`Could not parse value stored at '${key}'`);
   }
-
   return value;
 };
 
