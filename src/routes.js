@@ -6,6 +6,7 @@ import Home from './views/Home';
 import Help from './views/Help';
 import Transcript from './views/Transcript';
 import Events from './views/Events';
+import EventsAttended from './views/EventsAttended';
 import Profile from './views/Profile';
 import MyProfile from './views/MyProfile';
 
@@ -51,6 +52,11 @@ export default [
     name: 'Events',
     path: '/events',
     component: Events,
+  },
+  {
+    name: 'Attended',
+    path: '/attended',
+    component: EventsAttended,
   },
   {
     name: 'Profile',

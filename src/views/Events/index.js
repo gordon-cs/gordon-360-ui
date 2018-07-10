@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -10,15 +9,12 @@ import Collapse from '@material-ui/core/Collapse';
 import Divider from '@material-ui/core/Divider';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import ResponsiveTable from 'material-ui-next-responsive-table';
 
 import gordonEvent from './../../services/event';
-import EventItem from './components/EventItem';
+import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
-import { gordonColors } from '../../theme';
 
-import './event.css';
+//import './event.css';
 
 const styles = {
   searchBar: {
@@ -126,75 +122,15 @@ export default class Events extends Component {
 
   render() {
     let content;
-    let header;
-
-    const headerStyle = {
-      backgroundColor: gordonColors.primary.blue,
-      color: '#FFF',
-      padding: '10px',
-    };
-
     if (this.state.loading === true) {
       content = <GordonLoader />;
-    } else if (window.innerWidth < this.breakpointWidth) {
-      const columns = [
-        {
-          key: 'Event_Name',
-          label: 'Event',
-          primary: true,
-        },
-        {
-          key: 'Description',
-          label: 'Description',
-        },
-        {
-          key: 'location',
-          label: 'Location',
-        },
-        {
-          key: 'timeRange',
-          label: 'Date & Time     ',
-        },
-      ];
-
-      content = <ResponsiveTable columns={columns} data={this.state.events} />;
-
-      header = (
-        <div style={headerStyle}>
-          <Grid container direction="row">
-            <Grid item xs={12}>
-              <Typography variant="body2" style={headerStyle}>
-                EVENTS
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      );
-    } else if (this.state.events) {
-      content = this.state.filteredEvents.map(currEvent => (
-        <EventItem event={currEvent} key={currEvent.Event_ID} />
-      ));
-
-      header = (
-        <div style={headerStyle}>
-          <Grid container direction="row">
-            <Grid item xs={4}>
-              <Typography variant="body2" style={headerStyle}>
-                EVENT
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" style={headerStyle}>
-                LOCATION
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" style={headerStyle}>
-                DATE & TIME
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
+    } else if (this.state.events.length > 0) {
+      content = <EventList events={this.state.filteredEvents} />;
+    } else {
+      content = (
+        <Grid item>
+          <Typography variant="display1">No Events To Show</Typography>
+        </Grid>
       );
     }
 
@@ -315,12 +251,7 @@ export default class Events extends Component {
                 />
               </FormGroup>
             </Collapse>
-            <Card>
-              {header}
-              <Grid>
-                <List className="event-list">{content}</List>
-              </Grid>
-            </Card>
+            {content}
           </Grid>
         </Grid>
       </section>
