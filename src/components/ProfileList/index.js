@@ -166,7 +166,7 @@ export default class ProfileList extends Component {
                     }}
                     checked={!this.state.mobilePhonePrivacy}
                   />
-                  <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
+                  <Typography>{this.state.mobilePhonePrivacy ? 'Private' : 'Public'}</Typography>
                 </Grid>
               </Grid>
             </Grid>
