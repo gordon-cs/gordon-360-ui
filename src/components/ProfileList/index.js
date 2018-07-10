@@ -43,6 +43,9 @@ export default class ProfileList extends Component {
     let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
+    const mobilePhoneStyle = {
+      opacity: this.state.privacy ? '0.5' : '1',
+    };
 
     if (this.props.profile.HomeCity === 'Private as requested.') {
       address = 'Private as requested';
@@ -145,7 +148,7 @@ export default class ProfileList extends Component {
               <Grid item xs={6} md={3} lg={6}>
                 <Typography>Mobile Phone:</Typography>
               </Grid>
-              <Grid item xs={3} md={3} lg={3} justify="right">
+              <Grid item xs={3} md={3} lg={3} justify="right" style={mobilePhoneStyle}>
                 <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
               </Grid>
               <Grid item xs={3} md={6} lg={3}>
