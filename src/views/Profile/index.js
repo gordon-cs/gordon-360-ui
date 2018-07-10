@@ -79,6 +79,7 @@ export default class Profile extends Component {
       this.hasNickName(profile);
       this.setSubheader(profile);
       this.setState({ prefImage, defImage, loading: false, memberships });
+      console.log(profile);
     } catch (error) {
       this.setState({ error });
       console.log(error);
@@ -143,7 +144,6 @@ export default class Profile extends Component {
 
   render() {
     const style = {
-      width: '200px',
       height: '200px',
     };
     // The list of memberships that will be displayed on the page
@@ -242,13 +242,14 @@ export default class Profile extends Component {
                   <Grid container alignItems="center" align="center" justify="center" spacing="16">
                     <Grid container alignItems="center" spacing="16">
                       <Grid item xs={12} sm={12} md={12} lg={12}>
-                        {this.state.profile.preferred_photo !== 0 && (
-                          <img
-                            src={`data:image/jpg;base64,${this.state.prefImage}`}
-                            alt=""
-                            style={style}
-                          />
-                        )}{' '}
+                        {this.state.profile.preferred_photo !== 0 &&
+                          this.state.prefImage !== undefined && (
+                            <img
+                              src={`data:image/jpg;base64,${this.state.prefImage}`}
+                              alt=""
+                              style={style}
+                            />
+                          )}{' '}
                         {this.state.profile.show_pic !== 0 &&
                           this.state.defImage !== undefined && (
                             <img

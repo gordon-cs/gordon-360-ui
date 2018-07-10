@@ -10,7 +10,7 @@ import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-
+import './profilelist.css';
 const PRIVATE_INFO = 'Private as requested.';
 // all logic for displaying parts of the Personal Information Card is contained in this file
 export default class ProfileList extends Component {
@@ -18,6 +18,10 @@ export default class ProfileList extends Component {
     super(props);
     this.state = {
       myProf: false, //if my profile page
+      privacy: Boolean,
+      mobilePhoneDisclaimer: false,
+      homePhoneDisclaimer: false,
+      addressDisclaimer: false,
     };
   }
 
@@ -36,15 +40,33 @@ export default class ProfileList extends Component {
   }
   componentWillMount() {
     this.setState({ privacy: this.props.profile.IsMobilePhonePrivate });
+    if (!this.props.myProf) {
+      this.setState({
+        mobilePhoneDisclaimer:
+          this.props.profile.IsMobilePhonePrivate === 1 &&
+          this.props.profile.MobilePhone !== PRIVATE_INFO,
+      });
+      this.setState({
+        homePhoneDisclaimer:
+          String(this.props.profile.PersonType).includes('stu') && this.props.profile.HomePhone,
+      });
+      this.setState({
+        addressDisclaimer:
+          String(this.props.profile.PersonType).includes('stu') &&
+          (this.props.profile.HomeStreet2 || this.props.profile.HomeStreet1),
+      });
+    }
+    console.log(this.state.mobilePhoneDisclaimer);
   }
 
+  setDisclaimers() {}
   render() {
     let address;
     let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
 
-    if (this.props.profile.HomeCity === 'Private as requested.') {
+    if (this.props.profile.HomeCity === PRIVATE_INFO) {
       address = 'Private as requested';
     } else if (
       this.props.profile.Country === 'United States Of America' ||
@@ -58,7 +80,9 @@ export default class ProfileList extends Component {
     if (this.props.profile.HomeStreet2 !== '') {
       street = (
         <div>
-          <Typography>{this.props.profile.HomeStreet2}</Typography>
+          <Typography className={this.state.addressDisclaimer ? 'disclaimer' : ''}>
+            {this.props.profile.HomeStreet2}
+          </Typography>
         </div>
       );
     }
@@ -69,7 +93,9 @@ export default class ProfileList extends Component {
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={6} sm={6} md={3} lg={6}>
-                <Typography>Home:</Typography>
+                <Typography className={this.state.addressDisclaimer ? 'disclaimer' : ''}>
+                  Home:
+                </Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 {street}
@@ -87,13 +113,17 @@ export default class ProfileList extends Component {
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={6} sm={6} md={3} lg={6}>
-                <Typography>Home Phone:</Typography>
+                <Typography className={this.state.homePhoneDisclaimer ? 'disclaimer' : ''}>
+                  Home Phone:
+                </Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 {this.props.profile.HomePhone !== PRIVATE_INFO &&
                   !this.props.myProf && (
                     <a href={'tel:' + this.props.profile.HomePhone}>
-                      <Typography className="linkColor">
+                      <Typography
+                        className={this.state.homePhoneDisclaimer ? 'disclaimer' : 'linkColor'}
+                      >
                         {this.formatPhone(this.props.profile.HomePhone)}
                       </Typography>
                     </a>
@@ -117,12 +147,16 @@ export default class ProfileList extends Component {
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={6} sm={6} md={3} lg={6}>
-                <Typography>Mobile Phone:</Typography>
+                <Typography className={this.state.mobilePhoneDisclaimer ? 'disclaimer' : ''}>
+                  Mobile Phone:
+                </Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 {this.props.profile.MobilePhone !== PRIVATE_INFO && (
                   <a href={'tel:' + this.props.profile.MobilePhone}>
-                    <Typography className="linkColor">
+                    <Typography
+                      className={this.state.mobilePhoneDisclaimer ? 'disclaimer' : 'linkColor'}
+                    >
                       {this.formatPhone(this.props.profile.MobilePhone)}
                     </Typography>
                   </a>
@@ -137,7 +171,7 @@ export default class ProfileList extends Component {
         </div>
       );
     }
-    if (this.props.myProf && this.props.profile.MobilePhone !== '') {
+    if (this.props.myProf && this.props.profile.MobilePhone) {
       mobilephone = (
         <div>
           <ListItem>
@@ -217,6 +251,17 @@ export default class ProfileList extends Component {
             {mobilephone}
             {homephone}
             {Home}
+            {console.log(this.state.myProf)}
+            {(this.state.homePhoneDisclaimer ||
+              this.state.addressDisclaimer ||
+              this.state.mobilePhoneDisclaimer) &&
+              !this.props.myProf && (
+                <Grid>
+                  <Typography align="center" className="disclaimer">
+                    Private by request of student and visible only to faculty and staff
+                  </Typography>
+                </Grid>
+              )}
           </CardContent>
         </Card>
       </Grid>
