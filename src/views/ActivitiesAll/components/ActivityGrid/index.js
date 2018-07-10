@@ -28,10 +28,10 @@ const gridListCols = width => {
 class GordonActivityGrid extends Component {
   render() {
     let content = (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={12} lg={8}>
-          <Typography variant="headline">No Involvements Found</Typography>
-        </Grid>
+      <Grid item xs={12}>
+        <Typography variant="headline" align="center">
+          Sorry, for this specific session/Involvement type we couldn't find any results.
+        </Typography>
       </Grid>
     );
 
