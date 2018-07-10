@@ -76,14 +76,12 @@ export default class Membership extends Component {
 
   // Called when Confirm Roster button clicked
   async onConfirmRoster() {
-    console.log(this.props.activityCode);
     await activity.closeActivity(this.props.activityCode, this.state.sessionInfo.SessionCode);
     this.refresh();
   }
 
   // Called when Reopen Activity button clicked
   async onReopenActivity() {
-    console.log(this.props.activityCode);
     await activity.reopenActivity(this.props.activityCode, this.state.sessionInfo.SessionCode);
     this.refresh();
   }

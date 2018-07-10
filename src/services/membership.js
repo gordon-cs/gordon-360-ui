@@ -147,7 +147,6 @@ const toggleMembershipPrivacy = userMembership => {
       .put('/memberships/' + userMembership.MembershipID + '/privacy/' + value, value)
       .catch(reason => {
         console.log(reason);
-        console.log('This is the value: ' + value);
         //TODO handle error
       });
   };

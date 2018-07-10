@@ -5,15 +5,24 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
+import user from './../../services/user';
+import Switch from '@material-ui/core/Switch';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 
+const PRIVATE_INFO = 'Private as requested.';
+// all logic for displaying parts of the Personal Information Card is contained in this file
 export default class ProfileList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isStu: Boolean,
-      isFac: Boolean,
-      profile: {},
+      myProf: false, //if my profile page
     };
+  }
+
+  handleChangePrivacy() {
+    user.toggleMobilePhonePrivacy();
   }
 
   formatPhone(phone) {
@@ -26,41 +35,24 @@ export default class ProfileList extends Component {
     }
   }
   componentWillMount() {
-    this.setState({ isStu: String(this.props.profile.PersonType).includes('stu') });
-    this.setState({ isFac: String(this.props.profile.PersonType).includes('fac') });
+    this.setState({ privacy: this.props.profile.IsMobilePhonePrivate });
   }
 
   render() {
     let address;
-    let homephone, mobilephone, Home, street, email;
+    let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
 
-    if (
+    if (this.props.profile.HomeCity === 'Private as requested.') {
+      address = 'Private as requested';
+    } else if (
       this.props.profile.Country === 'United States Of America' ||
       this.props.profile.Country === ''
     ) {
       address = `${this.props.profile.HomeCity}, ${this.props.profile.HomeState}`;
     } else {
       address = `${this.props.profile.Country}`;
-    }
-
-    if (this.props.profile.Email !== '') {
-      email = (
-        <div>
-          <ListItem>
-            <Grid container justify="center">
-              <Grid item xs={2} sm={6} md={3} lg={6}>
-                <Typography>Email:</Typography>
-              </Grid>
-              <Grid item xs={10} sm={6} md={9} lg={6} justify="right">
-                <Typography>{this.props.profile.Email}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </div>
-      );
     }
 
     if (this.props.profile.HomeStreet2 !== '') {
@@ -76,10 +68,10 @@ export default class ProfileList extends Component {
         <div>
           <ListItem>
             <Grid container justify="center">
-              <Grid item xs={3} sm={6} md={3} lg={6}>
+              <Grid item xs={6} sm={6} md={3} lg={6}>
                 <Typography>Home:</Typography>
               </Grid>
-              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 {street}
                 <Typography>{address} </Typography>
               </Grid>
@@ -94,18 +86,22 @@ export default class ProfileList extends Component {
         <div>
           <ListItem>
             <Grid container justify="center">
-              <Grid item xs={3} sm={6} md={3} lg={6}>
+              <Grid item xs={6} sm={6} md={3} lg={6}>
                 <Typography>Home Phone:</Typography>
               </Grid>
-              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                {this.props.profile.HomePhone !== 'Private as requested.' && (
-                  <a href={'tel:' + this.props.profile.HomePhone}>
-                    <Typography className="linkColor">
-                      {this.formatPhone(this.props.profile.HomePhone)}
-                    </Typography>
-                  </a>
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+                {this.props.profile.HomePhone !== PRIVATE_INFO &&
+                  !this.props.myProf && (
+                    <a href={'tel:' + this.props.profile.HomePhone}>
+                      <Typography className="linkColor">
+                        {this.formatPhone(this.props.profile.HomePhone)}
+                      </Typography>
+                    </a>
+                  )}
+                {this.props.profile.HomePhone === PRIVATE_INFO && (
+                  <Typography>Private as requested</Typography>
                 )}
-                {this.props.profile.HomePhone === 'Private as requested.' && (
+                {this.props.myProf && (
                   <Typography>{this.formatPhone(this.props.profile.HomePhone)}</Typography>
                 )}
               </Grid>
@@ -120,19 +116,19 @@ export default class ProfileList extends Component {
         <div>
           <ListItem>
             <Grid container justify="center">
-              <Grid item xs={3} sm={6} md={3} lg={6}>
+              <Grid item xs={6} sm={6} md={3} lg={6}>
                 <Typography>Mobile Phone:</Typography>
               </Grid>
-              <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                {this.props.profile.MobilePhone !== 'Private as requested.' && (
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+                {this.props.profile.MobilePhone !== PRIVATE_INFO && (
                   <a href={'tel:' + this.props.profile.MobilePhone}>
                     <Typography className="linkColor">
                       {this.formatPhone(this.props.profile.MobilePhone)}
                     </Typography>
                   </a>
                 )}
-                {this.props.profile.MobilePhone === 'Private as requested.' && (
-                  <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
+                {this.props.profile.MobilePhone === PRIVATE_INFO && (
+                  <Typography>Private as requested</Typography>
                 )}
               </Grid>
             </Grid>
@@ -141,7 +137,30 @@ export default class ProfileList extends Component {
         </div>
       );
     }
-    if (this.state.isStu) {
+    if (this.props.myProf && this.props.profile.MobilePhone !== '') {
+      mobilephone = (
+        <div>
+          <ListItem>
+            <Grid container alignItems="center" justify="space-between">
+              <Grid item xs={6} md={3} lg={6}>
+                <Typography>Mobile Phone:</Typography>
+              </Grid>
+              <Grid item xs={3} md={3} lg={3} justify="right">
+                <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
+              </Grid>
+              <Grid item xs={3} md={6} lg={3}>
+                <Grid container justify="center" alignItems="center">
+                  <Switch onClick={this.handleChangePrivacy} checked={!this.state.privacy} />
+                  <Typography>{this.state.privacy ? 'Private' : 'Public'}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    }
+    if (String(this.props.profile.PersonType).includes('stu')) {
       if (String(this.props.profile.Minors).length !== 0) {
         minors = <Minors minors={this.props.profile.Minors} />;
       }
@@ -166,16 +185,16 @@ export default class ProfileList extends Component {
         );
       }
     }
-    if (this.state.isFac) {
+    if (String(this.props.profile.PersonType).includes('fac')) {
       if (this.props.profile.OnCampusDepartment !== '') {
         Department = (
           <div>
             <ListItem>
-              <Grid container justify="center" spacing={16}>
-                <Grid item xs={5} sm={6} md={3} lg={6}>
+              <Grid container justify="center">
+                <Grid item xs={6} sm={6} md={3} lg={6}>
                   <Typography>Department:</Typography>
                 </Grid>
-                <Grid item xs={7} sm={6} md={9} lg={6} justify="right">
+                <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                   <Typography>{this.props.profile.OnCampusDepartment}</Typography>
                 </Grid>
               </Grid>
@@ -187,16 +206,20 @@ export default class ProfileList extends Component {
     }
 
     return (
-      <div>
-        {majors}
-        {minors}
-        {residence}
-        {Department}
-        {mobilephone}
-        {homephone}
-        {email}
-        {Home}
-      </div>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Card>
+          <CardContent>
+            <CardHeader title="Personal Information" />
+            {majors}
+            {minors}
+            {residence}
+            {Department}
+            {mobilephone}
+            {homephone}
+            {Home}
+          </CardContent>
+        </Card>
+      </Grid>
     );
   }
 }
