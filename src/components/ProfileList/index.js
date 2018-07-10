@@ -43,6 +43,7 @@ export default class ProfileList extends Component {
     let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
+    let studentID;
 
     if (this.props.profile.HomeCity === 'Private as requested.') {
       address = 'Private as requested';
@@ -205,6 +206,24 @@ export default class ProfileList extends Component {
       }
     }
 
+    if (this.props.myProf && String(this.props.profile.PersonType).includes('stu')) {
+      studentID = (
+        <div>
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={6} sm={6} md={3} lg={6}>
+                <Typography>Student ID:</Typography>
+              </Grid>
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+                <Typography>{this.props.profile.ID}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    }
+
     return (
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <Card>
@@ -215,6 +234,7 @@ export default class ProfileList extends Component {
             {residence}
             {Department}
             {mobilephone}
+            {studentID}
             {homephone}
             {Home}
           </CardContent>
