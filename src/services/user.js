@@ -386,19 +386,9 @@ const getProfile = username => {
   return profile;
 };
 
-function toggleMobilePhonePrivacy() {
-  let profile = getProfileInfo();
-  let currentPrivacy = profile.IsMobilePhonePrivate;
-  let newPrivacy = currentPrivacy ? 'N' : 'Y';
-  let setPrivacy = async function(value) {
-    return http
-      .put('profiles/mobile_privacy/' + value, value)
-      .then(res => {})
-      .catch(reason => {
-        //TODO handle error
-      });
-  };
-  setPrivacy(newPrivacy);
+async function setMobilePhonePrivacy(makePrivate) {
+  // 'Y' = private, 'N' = public
+  await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
 }
 
 async function setImagePrivacy(makePrivate) {
@@ -512,7 +502,7 @@ function updateSocialLink(type, link) {
 }
 
 export default {
-  toggleMobilePhonePrivacy,
+  setMobilePhonePrivacy,
   setImagePrivacy,
   getMemberships,
   getAttendedEvents,
