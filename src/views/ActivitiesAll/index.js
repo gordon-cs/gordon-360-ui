@@ -10,7 +10,7 @@ import './activities-all.css';
 import activity from '../../services/activity';
 import session from '../../services/session';
 import GordonActivityGrid from './components/ActivityGrid';
-// import GordonLoader from '../../components/Loader';
+import GordonLoader from '../../components/Loader';
 import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
@@ -88,7 +88,8 @@ export default class GordonActivitiesAll extends Component {
     let allInvolvements;
     let myInvolvements;
     if (this.state.loading === true) {
-      // allInvolvements = <GordonLoader />;
+      allInvolvements = <GordonLoader />;
+      myInvolvements = <GordonLoader />;
     } else {
       allInvolvements = (
         <GordonActivityGrid activities={this.state.activities} sessionCode={this.state.session} />
