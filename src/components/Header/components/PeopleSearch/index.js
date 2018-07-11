@@ -60,6 +60,11 @@ export default class GordonPeopleSearch extends Component {
       return;
     }
 
+    //so apparently everything breaks if the first letter is capital, which is what happens on mobile
+    //sometimes and then you spend four hours trying to figure out why downshift is not working
+    //but really its just that its capitalized what the heck
+    query = query.toLowerCase();
+
     let suggestions = await peopleSearch.search(query);
 
     // Sort first by last name, then by first name
