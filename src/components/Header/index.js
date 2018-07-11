@@ -39,12 +39,37 @@ const getRouteName = route => {
 
 export default class GordonHeader extends Component {
   state = {
-    value: 0,
+    value: null,
   };
 
   handleChange = (event, value) => {
     this.setState({ value });
   };
+
+  /**
+   * Update the tab highlight indicator based on the url
+   *
+   * The checks use regular expressions to check for matches in the url.
+   */
+  updateTabHighlight() {
+    let currentPath = window.location.pathname;
+    let urls = [[/^\/$/, 0], [/^\/activities$|^\/activity/, 1], [/^\/events$/, 2]];
+    this.value = false;
+    for (let i = 0; i < urls.length; i++) {
+      if (urls[i][0].test(currentPath)) {
+        this.value = urls[i][1];
+      }
+    }
+  }
+
+  componentWillUpdate() {
+    this.updateTabHighlight();
+  }
+
+  componentWillMount() {
+    this.value = false;
+    this.updateTabHighlight();
+  }
 
   render() {
     return (
@@ -72,7 +97,7 @@ export default class GordonHeader extends Component {
               </Switch>
             </Typography>
             <div className="center-container">
-              <Tabs centered value={this.state.value} onChange={this.handleChange}>
+              <Tabs centered value={this.value} onChange={this.handleChange}>
                 <Tab className="tab" icon={<HomeIcon />} label="Home" component={NavLink} to="/" />
                 <Tab
                   className="tab"
