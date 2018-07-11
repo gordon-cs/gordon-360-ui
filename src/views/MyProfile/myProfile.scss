@@ -18,10 +18,11 @@
   font-size: 28px;
 
   &:hover {
-    color: #00aeef;
+    color: $primary-cyan;
     cursor: pointer;
   }
 }
+
 
 .edit-icon {
   color: #000;

@@ -270,6 +270,9 @@ export default class Profile extends Component {
         background: gordonColors.primary.cyan,
         color: 'white',
       },
+      uncontainedButton: {
+        color: gordonColors.primary.cyan,
+      },
     };
 
     const photoUploader = {
@@ -362,9 +365,9 @@ export default class Profile extends Component {
     } else {
       editButton = (
         <Grid item>
-          <a onClick={this.handleSocialLinksOpen} className="edit">
+          <Button onClick={this.handleSocialLinksOpen} style={style.uncontainedButton}>
             EDIT SOCIAL MEDIA LINKS
-          </a>
+          </Button>
         </Grid>
       );
     }
@@ -393,13 +396,7 @@ export default class Profile extends Component {
                           this.state.profile.LastName
                         }`}
                       >
-                        <Button
-                          variant="contained"
-                          onClick={() => this.setState({ preview: null })}
-                          style={style.button}
-                        >
-                          View My Public Profile
-                        </Button>
+                        <Button style={style.uncontainedButton}>View My Public Profile</Button>
                       </Link>
                     </Grid>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -627,11 +624,23 @@ export default class Profile extends Component {
               </Grid>
             </Grid>
             <Grid item xs={12} lg={5}>
-              <Grid container direction="column">
-                <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Grid container>
+                <Grid item xs={12}>
                   <Card>
                     <CardContent>
-                      <CardHeader title="Involvements" />
+                      <Grid container direction="row" alignItems="center">
+                        <Grid item xs={7}>
+                          <CardHeader title="Involvements" />
+                        </Grid>
+                        <Grid item xs={5} align="right">
+                          <Link to="/transcript">
+                            <Button variant="contained" style={style.button}>
+                              Co-Curricular Transcript
+                            </Button>
+                          </Link>
+                        </Grid>
+                      </Grid>
+
                       <List>{membershipList}</List>
                     </CardContent>
                   </Card>
