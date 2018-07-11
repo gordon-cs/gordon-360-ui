@@ -170,7 +170,6 @@ export default class Profile extends Component {
         ));
       }
     }
-
     let facebookButton;
     let twitterButton;
     let linkedInButton;

@@ -13,7 +13,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import LockIcon from '@material-ui/icons/Lock';
-import './profileList.css';
+import './profilelist.css';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -39,6 +39,9 @@ class ProfileList extends Component {
     super(props);
     this.state = {
       myProf: false, //if my profile page
+      mobilePhoneDisclaimer: false,
+      homePhoneDisclaimer: false,
+      addressDisclaimer: false,
       isMobilePhonePrivate: Boolean,
       isSnackBarOpen: false,
     };
@@ -78,8 +81,26 @@ class ProfileList extends Component {
   }
   componentWillMount() {
     this.setState({ privacy: this.props.profile.IsMobilePhonePrivate });
+    if (!this.props.myProf) {
+      this.setState({
+        mobilePhoneDisclaimer:
+          this.props.profile.IsMobilePhonePrivate === 1 &&
+          this.props.profile.MobilePhone !== PRIVATE_INFO,
+      });
+      this.setState({
+        homePhoneDisclaimer:
+          String(this.props.profile.PersonType).includes('stu') && this.props.profile.HomePhone,
+      });
+      this.setState({
+        addressDisclaimer:
+          String(this.props.profile.PersonType).includes('stu') &&
+          (this.props.profile.HomeStreet2 || this.props.profile.HomeStreet1),
+      });
+    }
+    console.log(this.state.mobilePhoneDisclaimer);
   }
 
+  setDisclaimers() {}
   render() {
     const { classes } = this.props;
     const privacyStyle = {
@@ -91,7 +112,7 @@ class ProfileList extends Component {
     let minors, majors, residence;
     let studentID;
 
-    if (this.props.profile.HomeCity === 'Private as requested.') {
+    if (this.props.profile.HomeCity === PRIVATE_INFO) {
       address = 'Private as requested';
     } else if (
       this.props.profile.Country === 'United States Of America' ||
@@ -105,7 +126,9 @@ class ProfileList extends Component {
     if (this.props.profile.HomeStreet2 !== '') {
       street = (
         <div>
-          <Typography>{this.props.profile.HomeStreet2}</Typography>
+          <Typography className={this.state.addressDisclaimer ? 'disclaimer' : ''}>
+            {this.props.profile.HomeStreet2}
+          </Typography>
         </div>
       );
     }
@@ -116,7 +139,9 @@ class ProfileList extends Component {
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={6} sm={6} md={3} lg={6}>
-                <Typography>Home:</Typography>
+                <Typography className={this.state.addressDisclaimer ? 'disclaimer' : ''}>
+                  Home:
+                </Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 {street}
@@ -134,13 +159,17 @@ class ProfileList extends Component {
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={6} sm={6} md={3} lg={6}>
-                <Typography>Home Phone:</Typography>
+                <Typography className={this.state.homePhoneDisclaimer ? 'disclaimer' : ''}>
+                  Home Phone:
+                </Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 {this.props.profile.HomePhone !== PRIVATE_INFO &&
                   !this.props.myProf && (
                     <a href={'tel:' + this.props.profile.HomePhone}>
-                      <Typography className="linkColor">
+                      <Typography
+                        className={this.state.homePhoneDisclaimer ? 'disclaimer' : 'linkColor'}
+                      >
                         {this.formatPhone(this.props.profile.HomePhone)}
                       </Typography>
                     </a>
@@ -164,12 +193,16 @@ class ProfileList extends Component {
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={6} sm={6} md={3} lg={6}>
-                <Typography>Mobile Phone:</Typography>
+                <Typography className={this.state.mobilePhoneDisclaimer ? 'disclaimer' : ''}>
+                  Mobile Phone:
+                </Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 {this.props.profile.MobilePhone !== PRIVATE_INFO && (
                   <a href={'tel:' + this.props.profile.MobilePhone}>
-                    <Typography className="linkColor">
+                    <Typography
+                      className={this.state.mobilePhoneDisclaimer ? 'disclaimer' : 'linkColor'}
+                    >
                       {this.formatPhone(this.props.profile.MobilePhone)}
                     </Typography>
                   </a>
@@ -184,7 +217,7 @@ class ProfileList extends Component {
         </div>
       );
     }
-    if (this.props.myProf && this.props.profile.MobilePhone !== '') {
+    if (this.props.myProf && this.props.profile.MobilePhone) {
       mobilephone = (
         <div>
           <ListItem>
@@ -287,6 +320,29 @@ class ProfileList extends Component {
       );
     }
 
+    let snack = (
+      <div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.isSnackBarOpen}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">Success! Changes will take effect in a few minutes.</span>}
+          action={[
+            <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+      </div>
+    );
+
     return (
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <Card>
@@ -297,34 +353,22 @@ class ProfileList extends Component {
             {residence}
             {Department}
             {mobilephone}
-            {studentID}
             {homephone}
             {Home}
+            {(this.state.homePhoneDisclaimer ||
+              this.state.addressDisclaimer ||
+              this.state.mobilePhoneDisclaimer) &&
+              !this.props.myProf && (
+                <Grid>
+                  <Typography align="center" className="disclaimer">
+                    Private by request of student and visible only to faculty and staff
+                  </Typography>
+                </Grid>
+              )}
+            {studentID}
           </CardContent>
         </Card>
-
-        <div>
-          <Snackbar
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            open={this.state.isSnackBarOpen}
-            autoHideDuration={6000}
-            onClose={this.handleClose}
-            ContentProps={{
-              'aria-describedby': 'message-id',
-            }}
-            message={
-              <span id="message-id">Success! Changes will take effect in a few minutes.</span>
-            }
-            action={[
-              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
-                <CloseIcon />
-              </IconButton>,
-            ]}
-          />
-        </div>
+        {snack}
       </Grid>
     );
   }
