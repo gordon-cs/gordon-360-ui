@@ -308,6 +308,7 @@ export default {
   getMembersNum,
   getIndividualMembership,
   getRequests,
+  filterCurrentRequests,
   remove,
   requestMembership,
   search,
