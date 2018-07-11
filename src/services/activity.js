@@ -19,7 +19,7 @@ import http from './http';
  * @property {String} ActivityType
  * @property {String} ActivityTypeDescription
  * @property {String} ActivityURL
- * @property {String} Privacy Whether the club is private or public to everyone, such as a scholars group etc.
+ * @property {String} Privacy Whether the club is private or public to everyone, such as a scholars group etc. false=public true=private
  */
 
 /**
