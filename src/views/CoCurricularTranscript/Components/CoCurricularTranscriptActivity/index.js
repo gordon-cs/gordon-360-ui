@@ -3,12 +3,12 @@ import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import './transcriptActivity.css';
+import './coCurricularTranscriptActivity.css';
 
-//This component is a child of the Transcript component. Separates Headings from content in order
+//This component is a child of the CoCurricularTranscript component. Separates Headings from content in order
 //that activities be grouped by session. Returns a formatted table grid of activites to be displayed
 //by the Transcript component
-//Activity object and isUnique bool passed as props from Transcript
+//Activity object and isUnique bool passed as props from CoCurricularTranscript
 
 export default class Activity extends Component {
   getHeading = () => {

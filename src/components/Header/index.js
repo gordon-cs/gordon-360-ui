@@ -7,7 +7,6 @@ import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 // import PeopleIcon from '@material-ui/icons/People';
-import DescriptionIcon from '@material-ui/icons/Description';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
@@ -112,13 +111,6 @@ export default class GordonHeader extends Component {
                   label="Events"
                   component={NavLink}
                   to="/events"
-                />
-                <Tab
-                  className="tab"
-                  icon={<DescriptionIcon />}
-                  label="Transcript"
-                  component={NavLink}
-                  to="/transcript"
                 />
                 {/* <Tab
                   className="tab"
