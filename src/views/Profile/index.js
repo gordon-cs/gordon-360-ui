@@ -11,7 +11,6 @@ import Office from './../../components/OfficeList';
 import ProfileActivityList from './../../components/ProfileActivityList';
 import EmailIcon from '@material-ui/icons/Email';
 import GordonLoader from './../../components/Loader';
-import { Link } from 'react-router-dom';
 import { socialMediaInfo } from '../../socialMedia';
 import './profile.css';
 
