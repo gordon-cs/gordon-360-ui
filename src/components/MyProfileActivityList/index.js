@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import Switch from '@material-ui/core/Switch';
 import membership from './../../services/membership';
 import List from '@material-ui/core/List';
+import LockIcon from '@material-ui/icons/Lock';
 import ListItem from '@material-ui/core/ListItem';
 
 const styles = {
@@ -28,7 +29,9 @@ const styles = {
 class MyProfileActivityList extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      involvementPrivacy: Boolean,
+    };
   }
 
   handleChangeMembershipPrivacy(userMembership) {
@@ -37,7 +40,8 @@ class MyProfileActivityList extends Component {
   }
 
   render() {
-    const { Activity } = this.props;
+    const { Membership } = this.props;
+    const { InvolvementPrivacy } = this.props;
     const { classes } = this.props;
     const imgStyle = {
       width: '90%',
@@ -45,72 +49,129 @@ class MyProfileActivityList extends Component {
     const toggleTextStyle = {
       fontSize: '10pt',
     };
-    const activityItemStyle = {
-      opacity: Activity.Privacy ? '0.5' : '1',
+    const membershipItemStyle = {
+      opacity: Membership.Privacy ? '0.5' : '1',
     };
+    // If the Involvement is a regular (non-special/secret group - AKA Public) it is False.
+    // if (!this.state.involvementPrivacy) {
 
-    return (
-      <div>
-        <Grid container alignItems="center">
-          <Grid item xs={8}>
-            <List>
-              <ListItem>
-                <Link
-                  to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}
-                  style={activityItemStyle}
-                >
-                  <Typography>
-                    <b>{Activity.ActivityDescription}</b>
-                  </Typography>
-                  <Typography>{Activity.SessionDescription}</Typography>
-                  <Typography>{Activity.ParticipationDescription}</Typography>
-                </Link>
-              </ListItem>
-            </List>
-          </Grid>
-          <Grid item xs={2}>
-            <Grid container>
-              <Grid item xs={12} align="center">
-                {/* The function you are trying to fire by clicking the toggle must passed to onChange()
+    let myProfileInvolvementsList;
+    if (!InvolvementPrivacy) {
+      myProfileInvolvementsList = (
+        <div>
+          <Grid container alignItems="center">
+            <Grid item xs={8}>
+              <List>
+                <ListItem>
+                  <Link
+                    to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
+                    style={membershipItemStyle}
+                  >
+                    <Typography>
+                      <b>{Membership.ActivityDescription}</b>
+                    </Typography>
+                    <Typography>{Membership.SessionDescription}</Typography>
+                    <Typography>{Membership.ParticipationDescription}</Typography>
+                  </Link>
+                </ListItem>
+              </List>
+            </Grid>
+            <Grid item xs={2}>
+              <Grid container>
+                <Grid item xs={12} align="center">
+                  {/* The function you are trying to fire by clicking the toggle must passed to onChange()
               using an Arrow Function.
               https://stackoverflow.com/questions/33846682/react-onclick-function-fires-on-render
               */}
-                <Switch
-                  onChange={() => {
-                    this.handleChangeMembershipPrivacy(Activity);
-                  }}
-                  checked={!Activity.Privacy}
-                  classes={{
-                    switchBase: classes.colorSwitchBase,
-                    checked: classes.colorChecked,
-                    bar: classes.colorBar,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} align="center">
-                <Typography style={toggleTextStyle}>
-                  {Activity.Privacy ? 'Private' : 'Public'}
-                </Typography>
+                  <Switch
+                    onChange={() => {
+                      this.handleChangeMembershipPrivacy(Membership);
+                    }}
+                    checked={!Membership.Privacy}
+                    classes={{
+                      switchBase: classes.colorSwitchBase,
+                      checked: classes.colorChecked,
+                      bar: classes.colorBar,
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} align="center">
+                  <Typography style={toggleTextStyle}>
+                    {Membership.Privacy ? 'Private' : 'Public'}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
+            <Grid item xs={2}>
+              <Link
+                to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
+                style={membershipItemStyle}
+              >
+                <img src={Membership.ActivityImagePath} alt="" style={imgStyle} />
+              </Link>
+            </Grid>
           </Grid>
-          <Grid item xs={2}>
-            <Link
-              to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}
-              style={activityItemStyle}
-            >
-              <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
-            </Link>
+          <Divider />
+        </div>
+      );
+      // If the Involvement is some kind of Private group (e.g. scholarship group etc. AKA Private)
+      // it is True.
+    } else {
+      myProfileInvolvementsList = (
+        <div>
+          <Grid container alignItems="center">
+            <Grid item xs={8}>
+              <List>
+                <ListItem>
+                  <Link
+                    to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
+                    style={membershipItemStyle}
+                  >
+                    <Typography>
+                      <b>{Membership.ActivityDescription}</b>
+                    </Typography>
+                    <Typography>{Membership.SessionDescription}</Typography>
+                    <Typography>{Membership.ParticipationDescription}</Typography>
+                  </Link>
+                </ListItem>
+              </List>
+            </Grid>
+            <Grid item xs={2}>
+              <Grid container>
+                <Grid item xs={12} align="center">
+                  <Grid container justify="center">
+                    <Grid item>
+                      <LockIcon className="lock-icon" />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} align="center">
+                  <Typography style={toggleTextStyle}>
+                    {Membership.getInvolvementPrivacy ? 'Private' : 'Public'}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={2}>
+              <Link
+                to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
+                style={membershipItemStyle}
+              >
+                <img src={Membership.ActivityImagePath} alt="" style={imgStyle} />
+              </Link>
+            </Grid>
           </Grid>
-        </Grid>
-        <Divider />
-      </div>
-    );
+          <Divider />
+        </div>
+      );
+    }
+
+    return <div>{myProfileInvolvementsList}</div>;
   }
 }
 
 MyProfileActivityList.propTypes = {
-  Activity: PropTypes.shape({
+  Membership: PropTypes.shape({
     ActivityDescription: PropTypes.string.isRequired,
     ActivityImagePath: PropTypes.string.isRequired,
     SessionDescription: PropTypes.string.isRequired,

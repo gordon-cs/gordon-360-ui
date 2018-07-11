@@ -14,19 +14,17 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-
 import Typography from '@material-ui/core/Typography';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
-
 import EmailIcon from '@material-ui/icons/Email';
 import user from './../../services/user';
+import activity from './../../services/activity';
 import { gordonColors } from '../../theme';
 import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
 import { socialMediaInfo } from '../../socialMedia';
 import { Link } from 'react-router-dom';
-
 import './myProfile.css';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -53,6 +51,7 @@ export default class Profile extends Component {
       officeinfo: null,
       profile: {},
       memberships: [],
+      involvementPrivacy: [],
       files: [],
       photoOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
@@ -205,6 +204,15 @@ export default class Profile extends Component {
     this.setState({ hasNickName: FirstName !== profile.NickName && profile.NickName !== '' });
   }
 
+  async getInvolvementPrivacyList(memberships) {
+    let involvementPrivacyList = [];
+    for (let i = 0; i < memberships.length; i++) {
+      let involvement = await activity.get(memberships[i].ActivityCode);
+      involvementPrivacyList.push(involvement.Privacy);
+    }
+    return involvementPrivacyList;
+  }
+
   async loadProfile() {
     this.setState({ loading: true });
     try {
@@ -221,9 +229,12 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
+
       const memberships = await user.getMembershipsAlphabetically(profile.ID);
+      const involvementPrivacy = await this.getInvolvementPrivacyList(memberships);
+
       const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, memberships });
+      this.setState({ image, loading: false, memberships, involvementPrivacy });
       this.setState({ isImagePublic: this.state.profile.show_pic });
       this.hasNickName(profile);
     } catch (error) {
@@ -293,9 +304,14 @@ export default class Profile extends Component {
         </div>
       );
     } else {
-      membershipList = this.state.memberships.map(activity => (
-        <MyProfileActivityList Activity={activity} />
+      // involvementPrivacyList = this.state.involvementPrivacyList;
+      membershipList = this.state.memberships.map(membership => (
+        <MyProfileActivityList
+          Membership={membership}
+          InvolvementPrivacy={this.state.involvementPrivacy}
+        />
       ));
+      console.log(this.state.involvementPrivacy);
     }
 
     let linksDialog = (
