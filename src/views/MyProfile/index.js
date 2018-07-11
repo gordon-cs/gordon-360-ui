@@ -269,7 +269,7 @@ export default class Profile extends Component {
         background: gordonColors.primary.cyan,
         color: 'white',
       },
-      transcriptButton: {
+      uncontainedButton: {
         color: gordonColors.primary.cyan,
       },
     };
@@ -355,9 +355,9 @@ export default class Profile extends Component {
     } else {
       editButton = (
         <Grid item>
-          <a onClick={this.handleSocialLinksOpen} className="edit">
+          <Button onClick={this.handleSocialLinksOpen} style={style.uncontainedButton}>
             EDIT SOCIAL MEDIA LINKS
-          </a>
+          </Button>
         </Grid>
       );
     }
@@ -386,12 +386,7 @@ export default class Profile extends Component {
                           this.state.profile.LastName
                         }`}
                       >
-                        <Button
-                          onClick={() => this.setState({ preview: null })}
-                          style={style.transcriptButton}
-                        >
-                          View My Public Profile
-                        </Button>
+                        <Button style={style.uncontainedButton}>View My Public Profile</Button>
                       </Link>
                     </Grid>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -615,11 +610,7 @@ export default class Profile extends Component {
                         </Grid>
                         <Grid item xs={5} align="right">
                           <Link to="/transcript">
-                            <Button
-                              variant="contained"
-                              onClick={() => this.setState({ preview: null })}
-                              style={style.button}
-                            >
+                            <Button variant="contained" style={style.button}>
                               Co-Curricular Transcript
                             </Button>
                           </Link>
