@@ -7,6 +7,16 @@
   padding-top: 8%;
 }
 
+.rounded-corners {
+  border-radius: 0.5rem;
+}
+
+.email-link {
+  &:hover {
+    color: #00aeef;
+  }
+}
+
 .noInvolvements {
   padding-left: 24px;
   color: $primary-cyan !important;

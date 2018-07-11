@@ -79,7 +79,6 @@ export default class Profile extends Component {
       this.hasNickName(profile);
       this.setSubheader(profile);
       this.setState({ prefImage, defImage, loading: false, memberships });
-      console.log(profile);
     } catch (error) {
       this.setState({ error });
       console.log(error);
@@ -143,9 +142,6 @@ export default class Profile extends Component {
   }
 
   render() {
-    const style = {
-      height: '200px',
-    };
     // The list of memberships that will be displayed on the page
     let displayedMembershipList;
 
@@ -165,15 +161,9 @@ export default class Profile extends Component {
       // If the user has no public Involvements, say so on the page
       if (publicMemberships.length === 0) {
         displayedMembershipList = (
-          // <Grid container padding="24px">
-          //   <Grid item xs={8} justify="center">
-          <Link to={`/activities/`}>
-            <Typography variant="body2" className="noInvolvements">
-              No Involvements to display. Click here to see Involvements around campus!
-            </Typography>
-          </Link>
-          //   </Grid>
-          // </Grid>
+          <Typography variant="body2" align="center">
+            No Involvements to display
+          </Typography>
         );
       } else {
         displayedMembershipList = publicMemberships.map(activity => (
@@ -226,7 +216,7 @@ export default class Profile extends Component {
     if (this.state.profile.Email !== '') {
       email = (
         <div>
-          <Typography>{this.state.profile.Email}</Typography>
+          <Typography className="email-link">{this.state.profile.Email}</Typography>
         </div>
       );
     }
@@ -242,20 +232,21 @@ export default class Profile extends Component {
                   <Grid container alignItems="center" align="center" justify="center" spacing="16">
                     <Grid container alignItems="center" spacing="16">
                       <Grid item xs={12} sm={12} md={12} lg={12}>
-                        {this.state.profile.preferred_photo !== 0 &&
-                          this.state.prefImage !== undefined && (
-                            <img
-                              src={`data:image/jpg;base64,${this.state.prefImage}`}
-                              alt=""
-                              style={style}
-                            />
-                          )}{' '}
+                        {this.state.profile.preferred_photo !== 0 && (
+                          <img
+                            className="rounded-corners"
+                            src={`data:image/jpg;base64,${this.state.prefImage}`}
+                            alt=""
+                            style={{ 'max-height': '200px', 'min-width': '160px' }}
+                          />
+                        )}{' '}
                         {this.state.profile.show_pic !== 0 &&
                           this.state.defImage !== undefined && (
                             <img
+                              className="rounded-corners"
                               src={`data:image/jpg;base64,${this.state.defImage}`}
                               alt=""
-                              style={style}
+                              style={{ 'max-height': '200px', 'min-width': '160px' }}
                             />
                           )}
                       </Grid>

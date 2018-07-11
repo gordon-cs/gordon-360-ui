@@ -4,8 +4,9 @@ import ActivityEdit from './views/ActivityEdit';
 import ActivityProfile from './views/ActivityProfile';
 import Home from './views/Home';
 import Help from './views/Help';
-import Transcript from './views/Transcript';
+import CoCurricularTranscript from './views/CoCurricularTranscript';
 import Events from './views/Events';
+import EventsAttended from './views/EventsAttended';
 import Profile from './views/Profile';
 import MyProfile from './views/MyProfile';
 
@@ -45,12 +46,17 @@ export default [
   {
     name: 'Transcript',
     path: '/transcript',
-    component: Transcript,
+    component: CoCurricularTranscript,
   },
   {
     name: 'Events',
     path: '/events',
     component: Events,
+  },
+  {
+    name: 'Attended',
+    path: '/attended',
+    component: EventsAttended,
   },
   {
     name: 'Profile',
