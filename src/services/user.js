@@ -467,12 +467,13 @@ const getSentMembershipRequests = (id, sessionCode) => {
  */
 const getReceivedMembershipRequests = async (id, sessionCode) => {
   let allRequests = [];
-  let leaderPositions = await getLeaderPositions(id);
-  console.log(leaderPositions);
-  for (let i = 0; i < leaderPositions.length; i += 0) {
-    let requests = membership.getRequests(leaderPositions[i].ActivityCode, sessionCode);
-    for (let i = 0; i < requests.length; i += 0) {
-      allRequests.push(requests[i]);
+  const leaderPositions = await getLeaderPositions(id);
+  let requests;
+  for (let i = 0; i < leaderPositions.length; i += 1) {
+    requests = [];
+    requests = await membership.getRequests(leaderPositions[i].ActivityCode, sessionCode);
+    if (requests.length > 0) {
+      allRequests = allRequests.concat(requests);
     }
   }
   return allRequests;
