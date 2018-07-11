@@ -9,6 +9,7 @@ import jwtDecode from 'jwt-decode';
 import { AuthError } from './error';
 import http from './http';
 import session from './session';
+import membership from './membership';
 import storage from './storage';
 import { socialMediaInfo } from '../socialMedia';
 import gordonEvent from './event';
@@ -445,6 +446,54 @@ const getCurrentMemberships = async id => {
   return myCurrentInvolvements;
 };
 
+/**
+ * Get requests sent by a specific student and filtered by session code
+ * @param {String} id Identifier for student
+ * @param {String} sessionCode Identifier for a session
+ * @return {Request[]} List of requests for student and session
+ */
+const getSentMembershipRequests = (id, sessionCode) => {
+  let allRequests = http.get(`requests/student/${id}`).then(function(result) {
+    return membership.filterCurrentRequests(result, sessionCode);
+  });
+  return allRequests;
+};
+
+/**
+ * Get requests a specific student may respond to
+ * @param {String} id Identifier for student
+ * @param {String} sessionCode Identifier for a session
+ * @return {Request[]} List of requests for student and session
+ */
+const getReceivedMembershipRequests = async (id, sessionCode) => {
+  let allRequests = [];
+  let leaderPositions = await getLeaderPositions(id);
+  console.log(leaderPositions);
+  for (let i = 0; i < leaderPositions.length; i += 0) {
+    let requests = membership.getRequests(leaderPositions[i].ActivityCode, sessionCode);
+    for (let i = 0; i < requests.length; i += 0) {
+      allRequests.push(requests[i]);
+    }
+  }
+  return allRequests;
+};
+
+/**
+ * Get memberships for specific student where they hold admin status
+ * @param {String} id Identifier for student
+ * @return {Request[]} List of memberships
+ */
+const getLeaderPositions = async id => {
+  let leaderPositions = [];
+  let allMemberships = await getMemberships(id);
+  for (let i = 0; i < allMemberships.length; i += 1) {
+    if (allMemberships[i].GroupAdmin) {
+      leaderPositions.push(allMemberships[i]);
+    }
+  }
+  return leaderPositions;
+};
+
 //compares items by ActivityDescription, used by getMembershipsAlphabetically to sort by ActivityDescription
 function compareByTitle(a, b) {
   const involvementA = a.ActivityDescription;
@@ -541,6 +590,8 @@ export default {
   getPublicMemberships,
   getMembershipsAlphabetically,
   getCurrentMemberships,
+  getReceivedMembershipRequests,
+  getSentMembershipRequests,
   getProfileInfo,
   resetImage,
   postImage,
