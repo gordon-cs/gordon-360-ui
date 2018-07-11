@@ -13,10 +13,18 @@
   }
 }
 
-
 .icon {
   color: #000;
   font-size: 28px;
+
+  &:hover {
+    color: $primary-cyan;
+    cursor: pointer;
+  }
+}
+
+.edit-social-media-links {
+  color: #000;
 
   &:hover {
     color: #00aeef;
@@ -26,13 +34,12 @@
 
 .edit-icon {
   color: #000;
-  
+
   &:hover {
     color: #00aeef;
     cursor: pointer;
   }
 }
-
 
 @media (min-width: $break-sm) {
   .profile-image {
