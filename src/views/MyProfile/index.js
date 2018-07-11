@@ -92,6 +92,7 @@ export default class Profile extends Component {
   toggleImagePrivacy = () => {
     this.setState({ isImagePublic: !this.state.isImagePublic });
     user.setImagePrivacy(this.state.isImagePublic);
+    this.setState({ photoOpen: false, preview: null });
   };
 
   handleSocialLinksOpen = () => {
@@ -281,7 +282,16 @@ export default class Profile extends Component {
     };
 
     let membershipList;
-    if (!this.state.memberships) {
+    if (this.state.memberships.length === 0) {
+      membershipList = (
+        <div>
+          <Link to={`/activities/`}>
+            <Typography variant="body2" className="noInvolvements">
+              No Involvements to display. Click here to see Involvements around campus!
+            </Typography>
+          </Link>
+        </div>
+      );
     } else {
       membershipList = this.state.memberships.map(activity => (
         <MyProfileActivityList Activity={activity} />
@@ -395,10 +405,16 @@ export default class Profile extends Component {
                         focusRipple
                         alt=""
                         className="profile-image"
+                        style={{ 'border-radius': '0.5rem' }}
                       >
-                        <img src={`data:image/jpg;base64,${this.state.image}`} alt="Profile" />
+                        <img
+                          src={`data:image/jpg;base64,${this.state.image}`}
+                          alt="Profile"
+                          className="rounded-corners"
+                          style={{ 'max-height': '200px', 'min-width': '160px' }}
+                        />
                         <span className="imageBackdrop" />
-                        <GridListTileBar className="tile-bar" title="Update Photo" />
+                        <GridListTileBar className="tile-bar" title="Photo Options" />
                       </ButtonBase>
                     </Grid>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -448,26 +464,31 @@ export default class Profile extends Component {
                             </DialogTitle>
                             <DialogContent>
                               <DialogContentText>
-                                Drag &amp; Drop Picture, or Click to Browse Files
+                                {window.innerWidth < 600
+                                  ? 'Tap Image to Browse Files'
+                                  : 'Drag & Drop Picture, or Click to Browse Files'}
                               </DialogContentText>
                               <DialogContentText>
                                 <br />
                               </DialogContentText>
                               {!preview && (
-                                <Dropzone
-                                  onDropAccepted={this.onDropAccepted.bind(this)}
-                                  onDropRejected={this.onDropRejected.bind(this)}
-                                  accept="image/jpeg,image/jpg,image/png"
-                                  style={photoUploader}
-                                >
-                                  <Grid container justify="center" spacing="16">
+                                <Grid container justify="center" spacing="16">
+                                  <Dropzone
+                                    className="dropzone"
+                                    activeClassName="drop-overlay"
+                                    onDropAccepted={this.onDropAccepted.bind(this)}
+                                    onDropRejected={this.onDropRejected.bind(this)}
+                                    accept="image/jpeg,image/jpg,image/png"
+                                    style={photoUploader}
+                                  >
                                     <img
-                                      src={require('./image.png')}
+                                      className="rounded-corners"
+                                      src={`data:image/jpg;base64,${this.state.image}`}
                                       alt=""
-                                      style={{ 'max-width': '100%' }}
+                                      style={{ 'max-width': '200px', 'max-height': '200px' }}
                                     />
-                                  </Grid>
-                                </Dropzone>
+                                  </Dropzone>
+                                </Grid>
                               )}
                               {preview && (
                                 <Grid container justify="center" spacing="16">
@@ -512,6 +533,7 @@ export default class Profile extends Component {
                               <Grid container spacing={8} justify="flex-end">
                                 <Grid item>
                                   <Tooltip
+                                    classes={{ tooltip: 'tooltip' }}
                                     id="tooltip-hide"
                                     title={
                                       this.state.isImagePublic
@@ -530,6 +552,7 @@ export default class Profile extends Component {
                                 </Grid>
                                 <Grid item>
                                   <Tooltip
+                                    classes={{ tooltip: 'tooltip' }}
                                     id="tooltip-reset"
                                     title="Restore your original ID photo"
                                   >
@@ -553,6 +576,7 @@ export default class Profile extends Component {
                                 </Grid>
                                 <Grid item>
                                   <Tooltip
+                                    classes={{ tooltip: 'tooltip' }}
                                     id="tooltip-submit"
                                     title="Crop to current region and submit"
                                   >

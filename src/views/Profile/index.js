@@ -11,7 +11,6 @@ import Office from './../../components/OfficeList';
 import ProfileActivityList from './../../components/ProfileActivityList';
 import EmailIcon from '@material-ui/icons/Email';
 import GordonLoader from './../../components/Loader';
-import { Link } from 'react-router-dom';
 import { socialMediaInfo } from '../../socialMedia';
 import './profile.css';
 
@@ -142,10 +141,6 @@ export default class Profile extends Component {
   }
 
   render() {
-    const style = {
-      width: '200px',
-      height: '200px',
-    };
     // The list of memberships that will be displayed on the page
     let displayedMembershipList;
 
@@ -165,15 +160,9 @@ export default class Profile extends Component {
       // If the user has no public Involvements, say so on the page
       if (publicMemberships.length === 0) {
         displayedMembershipList = (
-          // <Grid container padding="24px">
-          //   <Grid item xs={8} justify="center">
-          <Link to={`/activities/`}>
-            <Typography variant="body2" className="noInvolvements">
-              No Involvements to display. Click here to see Involvements around campus!
-            </Typography>
-          </Link>
-          //   </Grid>
-          // </Grid>
+          <Typography variant="body2" align="center">
+            No Involvements to display
+          </Typography>
         );
       } else {
         displayedMembershipList = publicMemberships.map(activity => (
@@ -181,6 +170,7 @@ export default class Profile extends Component {
         ));
       }
     }
+
     let facebookButton;
     let twitterButton;
     let linkedInButton;
@@ -244,17 +234,19 @@ export default class Profile extends Component {
                       <Grid item xs={12} sm={12} md={12} lg={12}>
                         {this.state.profile.preferred_photo !== 0 && (
                           <img
+                            className="rounded-corners"
                             src={`data:image/jpg;base64,${this.state.prefImage}`}
                             alt=""
-                            style={style}
+                            style={{ 'max-height': '200px', 'min-width': '160px' }}
                           />
                         )}{' '}
                         {this.state.profile.show_pic !== 0 &&
                           this.state.defImage !== undefined && (
                             <img
+                              className="rounded-corners"
                               src={`data:image/jpg;base64,${this.state.defImage}`}
                               alt=""
-                              style={style}
+                              style={{ 'max-height': '200px', 'min-width': '160px' }}
                             />
                           )}
                       </Grid>

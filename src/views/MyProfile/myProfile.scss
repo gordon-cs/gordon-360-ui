@@ -41,35 +41,26 @@
     height: 200;
     width: 200;
     .tile-bar {
+      transition: opacity 0.3s;
       opacity: 0; // make tile bar only visible on hover
+      border-radius: 0 0 0.5rem 0.5rem;
+      height: 64px;
+      background: transparentize(
+        $neutral-dark-gray,
+        0.3
+      ); // Make titles more readable over image background
+      // Make space for a two-line title
+      text-align: center;
     }
     &:hover {
       .tile-bar {
-        transition: all 0.3s;
         opacity: 1;
-        background: transparentize(
-          $neutral-dark-gray,
-          0.3
-        ); // Make titles more readable over image background
-        height: 64px; // Make space for a two-line title
-        text-align: center;
-      }
-    }
-    &:not(:hover) {
-      .tile-bar {
-        transition: all 0.3s;
-        opacity: 0;
-        background: transparentize(
-          $neutral-dark-gray,
-          0.3
-        ); // Make titles more readable over image background
-        height: 64px; // Make space for a two-line title
-        text-align: center;
       }
     }
   }
 }
-@media (min-width: $break-sm) {
+
+@media (min-width: 0px) {
   .profile-image {
     position: 'relative';
     opacity: 1;
@@ -78,11 +69,46 @@
     width: 200;
   }
   .tile-bar {
+    transition: none;
     opacity: 1;
+    border-radius: 0 0 0.5rem 0.5rem;
     background: transparentize($neutral-dark-gray, 0.3);
     // Make titles more readable over image background
     height: 64px;
     // Make space for a two-line title
     text-align: center;
+  }
+}
+
+.rounded-corners {
+  border-radius: 0.5rem;
+}
+
+.tooltip {
+  background-color: $neutral-dark-gray !important;
+}
+
+@media (min-width: 600px) {
+  .dropzone {
+    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+    width: 18rem;
+    height: 18rem;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    border-style: dashed;
+    border-width: 0.2rem;
+    border-radius: 1rem;
+    border-color: darkgray;
+  }
+
+  .drop-overlay {
+    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+    border-style: dashed;
+    border-width: 0.2rem;
+    border-radius: 1rem;
+    border-color: gray;
+    background-color: #dddddd;
+    box-shadow: 0 0 0 0.25rem #dddddd;
   }
 }
