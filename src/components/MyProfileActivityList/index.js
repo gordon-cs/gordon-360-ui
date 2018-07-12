@@ -10,14 +10,15 @@ import membership from './../../services/membership';
 import List from '@material-ui/core/List';
 import LockIcon from '@material-ui/icons/Lock';
 import ListItem from '@material-ui/core/ListItem';
+import { gordonColors } from '../../theme';
 
 const styles = {
   colorSwitchBase: {
-    color: '#ebeaea',
+    color: gordonColors.neutral.lightGray,
     '&$colorChecked': {
-      color: '#00aeef',
+      color: gordonColors.primary.cyan,
       '& + $colorBar': {
-        backgroundColor: '#00aeef',
+        backgroundColor: gordonColors.primary.cyan,
       },
     },
   },
@@ -50,11 +51,9 @@ class MyProfileActivityList extends Component {
       fontSize: '10pt',
     };
     const membershipItemStyle = {
-      opacity: Membership.Privacy ? '0.5' : '1',
+      opacity: Membership.Privacy || InvolvementPrivacy ? '0.5' : '1',
     };
     // If the Involvement is a regular (non-special/secret group - AKA Public) it is False.
-    // if (!this.state.involvementPrivacy) {
-
     let myProfileInvolvementsList;
     if (!InvolvementPrivacy) {
       myProfileInvolvementsList = (
@@ -114,8 +113,7 @@ class MyProfileActivityList extends Component {
           <Divider />
         </div>
       );
-      // If the Involvement is some kind of Private group (e.g. scholarship group etc. AKA Private)
-      // it is True.
+      // If the Involvement is some kind of Private group (e.g. scholarship group etc. - AKA Private) it is False.
     } else {
       myProfileInvolvementsList = (
         <div>
@@ -146,8 +144,8 @@ class MyProfileActivityList extends Component {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} align="center">
-                  <Typography style={toggleTextStyle}>
-                    {Membership.getInvolvementPrivacy ? 'Private' : 'Public'}
+                  <Typography classes={{ body1: 'lock-text-style' }}>
+                    {InvolvementPrivacy ? 'Private' : 'Public'}
                   </Typography>
                 </Grid>
               </Grid>
