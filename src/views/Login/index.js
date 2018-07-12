@@ -53,8 +53,10 @@ export default class Login extends Component {
           <form onSubmit={this.logIn}>
             <Typography variant="subheading">Log in to Gordon 360</Typography>
             <TextField
+              id="username"
               label="Username"
               placeholder="firstname.lastname"
+              autoComplete="username"
               value={this.state.username}
               onChange={this.handleChange('username')}
               margin="normal"
