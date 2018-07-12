@@ -127,7 +127,7 @@ export default class Membership extends Component {
     };
     membership.requestMembership(data);
     this.onClose();
-    this.refresh();
+    //Used to call this.refresh() here, but it caused requests not to go through
   }
 
   // Called when Subscribe button clicked
