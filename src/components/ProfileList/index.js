@@ -16,16 +16,17 @@ import LockIcon from '@material-ui/icons/Lock';
 import './profileList.css';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
+import { gordonColors } from '../../theme';
 
 const PRIVATE_INFO = 'Private as requested.';
 
 const styles = {
   colorSwitchBase: {
-    color: '#ebeaea',
+    color: gordonColors.neutral.lightGray,
     '&$colorChecked': {
-      color: '#00aeef',
+      color: gordonColors.primary.cyan,
       '& + $colorBar': {
-        backgroundColor: '#00aeef',
+        backgroundColor: gordonColors.primary.cyan,
       },
     },
   },
@@ -47,10 +48,16 @@ class ProfileList extends Component {
   async loadProfileInfo() {
     try {
       const profile = await user.getProfileInfo();
-      this.setState({ isMobilePhonePrivate: profile.IsMobilePhonePrivate });
+      // this.setState({ isMobilePhonePrivate: profile.IsMobilePhonePrivate });
+
+      this.isMobilePhonePrivate(profile);
     } catch (error) {
       this.setState({ error });
     }
+  }
+
+  isMobilePhonePrivate(profile) {
+    this.setState({ isMobilePhonePrivate: profile.IsMobilePhonePrivate });
   }
 
   handleClose = (event, reason) => {
@@ -81,6 +88,7 @@ class ProfileList extends Component {
   }
 
   render() {
+    console.log('state of ismobilephoneprivate:', this.state.isMobilePhonePrivate);
     const { classes } = this.props;
     const privacyStyle = {
       opacity: this.state.isMobilePhonePrivate ? '0.5' : '1',
