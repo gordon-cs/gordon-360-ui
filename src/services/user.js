@@ -591,6 +591,7 @@ export default {
   getPublicMemberships,
   getMembershipsAlphabetically,
   getCurrentMemberships,
+  getLeaderPositions,
   getReceivedMembershipRequests,
   getSentMembershipRequests,
   getProfileInfo,
