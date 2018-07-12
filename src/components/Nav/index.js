@@ -26,7 +26,7 @@ export default class GordonNav extends Component {
       <div>
         <GordonNavAvatar onLinkClick={this.props.onDrawerToggle} />
         <Divider />
-        <GordonNavLinks onLinkClick={this.props.onDrawerToggle} />
+        <GordonNavLinks onLinkClick={this.props.onDrawerToggle} onSignOut={this.props.onSignOut} />
       </div>
     );
 
@@ -66,4 +66,5 @@ export default class GordonNav extends Component {
 GordonNav.propTypes = {
   drawerOpen: PropTypes.bool.isRequired,
   onDrawerToggle: PropTypes.func.isRequired,
+  onSignOut: PropTypes.func.isRequired,
 };

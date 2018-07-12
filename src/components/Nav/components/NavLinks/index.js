@@ -19,15 +19,32 @@ export default class GordonNavLinks extends Component {
   constructor(props) {
     super(props);
 
+    this.onClick = this.onClick.bind(this);
+    this.onClose = this.onClose.bind(this);
     this.onSignOut = this.onSignOut.bind(this);
+
+    this.state = {
+      anchorEl: null,
+    };
+  }
+
+  onClick(event) {
+    this.setState({ anchorEl: event.currentTarget });
+  }
+  onClose() {
+    this.setState({ anchorEl: null });
   }
 
   onSignOut() {
+    console.log('all the single ladies');
     signOut();
-    this.props.onSignOut();
+
+    this.onClose();
+    // this.props.onSignOut();
   }
 
   render() {
+    const open = Boolean(this.state.anchorEl);
     return (
       <div>
         <List className="gordon-nav-links">
@@ -59,7 +76,7 @@ export default class GordonNavLinks extends Component {
         <Divider />
 
         <div>
-          <List className="gordon-nav-links-bottom">
+          <List className="gordon-nav-links-bottom" anchorEl={this.state.anchorEl}>
             <NavLink exact to="/help" onClick={this.props.onLinkClick}>
               <ListItem button>
                 <ListItemText primary="Help" />
@@ -70,7 +87,7 @@ export default class GordonNavLinks extends Component {
                 <ListItemText primary="About" />
               </ListItem>
             </NavLink>
-            <ListItem button onClick={this.props.onSignOut}>
+            <ListItem button onClick={this.onSignOut}>
               <ListItemText primary="Sign Out" />
             </ListItem>
           </List>
