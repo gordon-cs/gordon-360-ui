@@ -56,7 +56,7 @@ export default class Requests extends Component {
       <Grid item>
         <ExpansionPanel defaultExpanded>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="body2">{involvement.ActivityDescription}</Typography>
+            <Typography variant="title">{involvement.ActivityDescription}</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <RequestsReceived involvement={involvement} />
@@ -71,16 +71,16 @@ export default class Requests extends Component {
     } else {
       receivedPanel = (
         <Grid item>
-          <ExpansionPanel defaultExpanded>
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          <Grid container spacing={8}>
+            <Grid item>
               <Typography variant="title">Requests Received</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            </Grid>
+            <Grid item>
               <Grid container direction="column">
                 {received}
               </Grid>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+            </Grid>
+          </Grid>
         </Grid>
       );
     }
