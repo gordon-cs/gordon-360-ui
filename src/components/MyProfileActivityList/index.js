@@ -11,6 +11,7 @@ import List from '@material-ui/core/List';
 import LockIcon from '@material-ui/icons/Lock';
 import ListItem from '@material-ui/core/ListItem';
 import { gordonColors } from '../../theme';
+import '../ProfileList/profileList.css';
 
 const styles = {
   colorSwitchBase: {
@@ -144,7 +145,7 @@ class MyProfileActivityList extends Component {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} align="center">
-                  <Typography classes={{ body1: 'lock-text-style' }}>
+                  <Typography style={toggleTextStyle}>
                     {InvolvementPrivacy ? 'Private' : 'Public'}
                   </Typography>
                 </Grid>
