@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 import { gordonColors } from '../../../../../../theme';
 import membership from '../../../../../../services/membership';
@@ -23,10 +24,7 @@ export default class RequestDetail extends Component {
   async loadRequests() {
     let requests;
     let involvement = this.props.involvement;
-    console.log('INVOLVEMENT PROP');
-    console.log(involvement);
     requests = await membership.getRequests(involvement.ActivityCode, involvement.SessionCode);
-    console.log(requests);
     this.setState({ requests });
   }
 
@@ -40,36 +38,45 @@ export default class RequestDetail extends Component {
     let content;
     content = requests.map(request => (
       <Grid item xs={12} sm={12}>
-        <Grid container>
-          <Grid item xs={8} sm={9} md={10}>
-            <Typography>
-              {request.FirstName} {request.LastName}
-            </Typography>
-          </Grid>
-          <Grid item xs={4} sm={3} md={2}>
-            <Typography>{request.ParticipationDescription} </Typography>
-          </Grid>
-          <Grid item>
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography>Title/Comment: {request.CommentText}</Typography>
+        <Grid container spacing={8}>
+          <Grid item xs={12} sm={12}>
+            <Grid container direction="row">
+              <Grid item xs={8} sm={9} md={10}>
+                <Typography>
+                  {request.FirstName} {request.LastName}
+                </Typography>
               </Grid>
-              <Grid item xs={6} sm={6} md={6} lg={6} padding={6}>
-                <Button variant="contained" color="primary" onClick={this.onApprove} raised>
-                  Approve
-                </Button>
-              </Grid>
-              <Grid item xs={6} sm={6} md={6} lg={6} padding={6}>
-                <Button variant="contained" style={redButton} onClick={this.onDeny} raised>
-                  Deny
-                </Button>
+              <Grid item xs={4} sm={3} md={2}>
+                <Typography>{request.ParticipationDescription} </Typography>
               </Grid>
             </Grid>
+            <Grid item>
+              <Grid container direction="row">
+                <Grid item xs={8}>
+                  <Typography>Title/Comment: {request.CommentText}</Typography>
+                </Grid>
+                <Grid item xs={4} sm={4} align="right">
+                  <Button variant="contained" color="primary" onClick={this.onApprove} raised>
+                    Approve
+                  </Button>
+                  <Button variant="contained" style={redButton} onClick={this.onDeny} raised>
+                    Deny
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <Divider />
           </Grid>
         </Grid>
       </Grid>
     ));
 
-    return <Grid container>{content}</Grid>;
+    return (
+      <Grid container spacing={8}>
+        {content}
+      </Grid>
+    );
   }
 }
