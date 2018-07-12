@@ -38,11 +38,11 @@ export default class Help extends Component {
                 Academic Session.
               </li>
               <li>
-                <strong>Transcript</strong> &ndash; Unofficial Experience Transcript, listing
-                Leadership and Membership activity for each Session. Great for building
-                resum&eacute;s, cover letters, and interview conversations. The Official Gordon
-                Experience Transcript is certified by request (coming 2017-18!), and will be part of
-                the Gordon College Experience Portfolio (coming 2018-19, or sooner!).
+                <strong>Co-Curricular Transcript</strong> &ndash; Unofficial Co-Curricular
+                Transcript, listing Leadership and Membership activity for each Session. Great for
+                building resum&eacute;s, cover letters, and interview conversations. The Official
+                Gordon Co-Curricular Transcript is certified by request (coming 2017-18!), and will
+                be part of the Gordon College Co-Curricular Portfolio (coming 2018-19, or sooner!).
               </li>
               <li>
                 <strong>My Profile</strong> &ndash; Managing your profile, and managing any advising
@@ -52,8 +52,8 @@ export default class Help extends Component {
                 <strong>My Profile Red Dot</strong> &ndash; You have Subscriber or Membership
                 requests for one or more of the groups you Lead or Advise! Process these to add new
                 Subscribers, Members, and to assign them a membership type and a &ldquo;Title&rdquo;
-                if appropriate. Titles will appear on the Official Transcript (be clever, but
-                appropriate!).
+                if appropriate. Titles will appear on the Official Co-Curricular Transcript (be
+                clever, but appropriate!).
               </li>
             </Typography>
             <br />
@@ -63,18 +63,19 @@ export default class Help extends Component {
             <Typography variant="body1" gutterBottom component="ul">
               <li>
                 <strong>Subscriber</strong> &ndash; Guest mode, can follow Activity Group and
-                receive Group Email. Does not appear on Transcript view.
+                receive Group Email. Does not appear on Co-Curricular Transcript view.
               </li>
               <li>
                 <strong>Member</strong> &ndash; Members appear on the roster and can see other
                 Members and Subscribers (Guests). Members receive Group Emails and have their role
-                recorded in Memberships on the Experience Transcript, with a Title, if added.
+                recorded in Memberships on the Co-Curricular Transcript, with a Title, if added.
               </li>
               <li>
                 <strong>Leader</strong> &ndash; Leaders appear on the roster with Title, can manage
                 all Subscribers, Members and Leaders in the Group, manage join requests, Send Group
                 Email, and Edit the Activity Group Information (photo, web link, Description).
-                Leadership appears on Transcript view and Official Transcript, with Title.
+                Leadership appears on Co-Curricular Transcript view and Official Co-Curricular
+                Transcript, with Title.
               </li>
               <li>
                 <strong>Advisor</strong> &ndash; Faculty or Staff Advisor have the same privileges
@@ -111,9 +112,9 @@ export default class Help extends Component {
               </li>
               <li>
                 <strong>Title/Comment</strong> &ndash; Short but descriptive job or role title that
-                will appear on the Roster and the Transcript. Helps manage roles in large rosters.
-                Recommended for Leader and Advisors, can be used for anyone. These are public and
-                appear as a detail for the Official Transcript!
+                will appear on the Roster and the Co-Curricular Transcript. Helps manage roles in
+                large rosters. Recommended for Leader and Advisors, can be used for anyone. These
+                are public and appear as a detail for the Official Co-Curricular Transcript!
               </li>
               <li>
                 <strong>Web link</strong> &ndash; Link to an Activity Group&apos;s web page for more
@@ -157,9 +158,9 @@ export default class Help extends Component {
             <Typography variant="body1" gutterBottom component="ul">
               <li>
                 <strong>Do I have to join a group each semester?</strong> Yes. This allows each
-                student to control their inclusion in groups or activities for their Transcript.
-                Student Leaders and Advisors can ADD members and guests, too, and some may do this
-                to help maintain their team roster.
+                student to control their inclusion in groups or activities for their Co-Curricular
+                Transcript. Student Leaders and Advisors can ADD members and guests, too, and some
+                may do this to help maintain their team roster.
               </li>
               <li>
                 <strong>What&apos;s the advantage to Subscribing to a group? </strong>
@@ -171,13 +172,13 @@ export default class Help extends Component {
                 <strong>What&apos;s the advantage to Membership in a group? </strong>
                 Membership allows you to see other members in the group, and Membership for that
                 academic session is automatically added to the &ldquo;Memberships&rdquo; section of
-                your Experience Transcript.
+                your Co-Curricular Transcript.
               </li>
               <li>
                 <strong>What if I leave a group?</strong> Subscribership and Membership are fluid
                 during an academic session, and are confirmed at the conclusion of a session. You
                 can come and go over the semester, and your Membership will move to your official
-                Transcript only at the end of the semester.
+                Co-Curricular Transcript only at the end of the semester.
               </li>
               <li>
                 <strong>What if I am in a group I don&apos;t want to be part of? </strong>

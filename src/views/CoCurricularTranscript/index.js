@@ -7,13 +7,13 @@ import Typography from '@material-ui/core/Typography';
 
 import { gordonColors } from '../../theme';
 import session from '../../services/session';
-import Activity from './Components/TranscriptActivity';
+import Activity from './Components/CoCurricularTranscriptActivity';
 import user from './../../services/user';
 import GordonLoader from './../../components/Loader';
-import './transcript.css';
+import './coCurricularTranscript.css';
 
-//This component creates the overall interface for the transcript (card, heading, download button),
-//and contains a ActivityList object for displaying the content
+//This component creates the overall interface for the CoCurricularTranscript (card, heading, download button),
+//and contains a InvolvementsList object for displaying the content
 
 export default class Transcript extends Component {
   constructor(props) {
@@ -84,12 +84,12 @@ export default class Transcript extends Component {
     };
 
     return (
-      <Grid container className="transcript" alignItems="center" justify="center" spacing="16">
+      <Grid container className="co-curricular-transcript" alignItems="center" justify="center" spacing="16">
         <Grid xs={12} sm={12} md={8} lg={6}>
           <Card elevation="10">
             <CardContent>
               <Grid item xs={12} className="print-only">
-                <img src={require('./logo.png')} alt="" />
+                {/* <img src={require('./logo.png')} alt="" /> */}
               </Grid>
               <Grid item xs={12}>
                 <Button
@@ -99,13 +99,13 @@ export default class Transcript extends Component {
                   justify="center"
                   onClick={this.handleDownload}
                 >
-                  Print Transcript
+                  Print Co-Curricular Transcript
                 </Button>
               </Grid>
               <Grid item xs={12} margin="normal" className="heading">
                 <div>
                   <Typography variant="headline">
-                    <b> Experience Transcript - {this.state.profile.fullName} </b>
+                    <b> Co-Curricular Transcript - {this.state.profile.fullName} </b>
                   </Typography>
                 </div>
               </Grid>
