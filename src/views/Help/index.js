@@ -1,6 +1,7 @@
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 import { gordonColors } from '../../theme';
 import './help.css';
@@ -191,6 +192,12 @@ export default class Help extends Component {
                 Sorry, but alumni cannot join new groups. You could still subscribe to groups to
                 receive emails!
               </li>
+            </Typography>
+            <Typography variant="subheading" gutterBottom>
+              <br /> Found a bug?
+              <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
+                <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
+              </a>
             </Typography>
           </Grid>
         </Grid>

@@ -1,6 +1,7 @@
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 import { gordonColors } from '../../theme';
 import './about.css';
@@ -106,9 +107,11 @@ export default class About extends Component {
                 your guidance and encouragement to try new things.
               </Typography>
             </div>
-            <Typography variant="caption" gutterBottom>
-              Found a bug?
-              <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug"> Report to CTS</a>
+            <Typography variant="subheading" gutterBottom>
+              <br /> Found a bug?
+              <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
+                <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
+              </a>
             </Typography>
           </Grid>
         </Grid>
