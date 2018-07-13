@@ -4,4 +4,9 @@
   .active > li {
     background: $neutral-gray;
   }
+
+  .gordon-nav-links-bottom {
+    position: fixed;
+    bottom: 0;
+  }
 }

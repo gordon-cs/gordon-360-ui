@@ -23,7 +23,7 @@ import http from './http';
  * @property {Number} MembershipID Membership ID
  * @property {String} Participation Participation Code or abbreviation
  * @property {String} ParticipationDescription Participation description
- * @property {String} Privacy 0 if not private, 1 if private, sometimes null
+ * @property {String} Privacy false if public, true if private, sometimes null
  * @property {String} SessionCode Identifier for session
  * @property {String} SessionDescription Session description
  * @property {String} StartDate Beginning date of session
