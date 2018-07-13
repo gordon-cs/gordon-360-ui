@@ -11,6 +11,13 @@
           </conditions>
           <action type="Rewrite" url="/" />
         </rule>
+        <rule name="Redirect to HTTPS" stopProcessing="true">
+            <match url="(.*)" />
+            <conditions>
+                <add input="{HTTPS}" pattern="^OFF$" />
+            </conditions>
+            <action type="Redirect" url="https://{HTTP_HOST}/{R:1}" redirectType="SeeOther" />
+        </rule>
       </rules>
     </rewrite>
   </system.webServer>
