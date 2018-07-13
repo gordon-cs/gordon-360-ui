@@ -9,36 +9,14 @@ import GordonNavAvatar from './components/NavAvatar';
 import GordonNavLinks from './components/NavLinks';
 
 export default class GordonNav extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isMobileDevice: false,
-    };
-  }
-
-  toggleIsMobileDevice() {
-    this.setState({ isMobileDevice: !this.state.isMobileDevice });
-  }
-
   render() {
     const drawer = (
       <div>
         <GordonNavAvatar onLinkClick={this.props.onDrawerToggle} />
         <Divider />
-        <GordonNavLinks onLinkClick={this.props.onDrawerToggle} />
+        <GordonNavLinks onLinkClick={this.props.onDrawerToggle} onSignOut={this.props.onSignOut} />
       </div>
     );
-
-    // let navCSS;
-
-    // if (!this.state.isMobileDevice) {
-    //   navCSS = {
-    //     display: 'none'
-    //   };
-    // } else {
-    //   navCSS = null;
-    // }
 
     return (
       <section className="gordon-nav">
@@ -76,4 +54,5 @@ export default class GordonNav extends Component {
 GordonNav.propTypes = {
   drawerOpen: PropTypes.bool.isRequired,
   onDrawerToggle: PropTypes.func.isRequired,
+  onSignOut: PropTypes.func.isRequired,
 };
