@@ -7,7 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import { gordonColors } from '../../../../../../theme';
 import membership from '../../../../../../services/membership';
 
-export default class RequestDetail extends Component {
+export default class RequestReceived extends Component {
   constructor(props) {
     super(props);
 
