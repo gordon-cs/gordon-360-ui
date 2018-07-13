@@ -100,6 +100,15 @@ const denyRequest = requestID => {
 };
 
 /**
+ * Cancel request with given request id
+ * @param {String} requestID request id
+ * @return {Promise.<Object>} deleted object
+ */
+const cancelRequest = requestID => {
+  return http.del(`requests/${requestID}`);
+};
+
+/**
  * Edit membership with given membership id
  * @param {String} id Membership id
  * @param {Object} data Data passed in
@@ -299,6 +308,7 @@ export default {
   approveRequest,
   checkAdmin,
   denyRequest,
+  cancelRequest,
   editMembership,
   get,
   getAll,
