@@ -29,32 +29,35 @@ export default class Help extends Component {
             </Typography>
             <Typography variant="body1" gutterBottom component="ul">
               <li>
-                <strong>My Involvements</strong> &ndash; List of Current and Past Leadership or
-                Memberships. If blank, go to All Involvements to get connected.
+                <strong>Home</strong> &ndash; Contains a chart displaying the number of days left in
+                the current semester, alongside the number of Christian Life &amp; Worship Credits
+                you have earned this semester. This chart can be clicked to view the CL&amp; events
+                you have attended. Your pending requests to join Involvements, as well as requests
+                to join you club, if you are a leader.
               </li>
               <li>
-                <strong>All Involvements</strong> &ndash; List of all Current Involvements for this
+                <strong>Involvements</strong> &ndash; List of all Current Involvements for this
                 Academic Session. Pick the Academic Session in the drop down menu for the Session
-                you want to connect your involvement(s). Current Active Session defaults to Current
-                Academic Session.
+                you want to connect your involvement(s).
               </li>
               <li>
-                <strong>Co-Curricular Transcript</strong> &ndash; Unofficial Co-Curricular
-                Transcript, listing Leadership and Membership activity for each Session. Great for
-                building resum&eacute;s, cover letters, and interview conversations. The Official
-                Gordon Co-Curricular Transcript is certified by request (coming 2017-18!), and will
-                be part of the Gordon College Co-Curricular Portfolio (coming 2018-19, or sooner!).
+                <strong>Events</strong> &ndash; Displays a table of upcoming events on campus. You
+                can search for specific events by name, location, or time. You can also filter just
+                for events offering CL&amp;w credit.
               </li>
               <li>
-                <strong>My Profile</strong> &ndash; Managing your profile, and managing any advising
-                or leadership functions for assigned groups.
+                <strong>Search Bar</strong> &ndash; You can search for students, faculty, and Gordon
+                staff. (Just search by first or last name, don't include titles like Dr).
               </li>
               <li>
-                <strong>My Profile Red Dot</strong> &ndash; You have Subscriber or Membership
-                requests for one or more of the groups you Lead or Advise! Process these to add new
-                Subscribers, Members, and to assign them a membership type and a &ldquo;Title&rdquo;
-                if appropriate. Titles will appear on the Official Co-Curricular Transcript (be
-                clever, but appropriate!).
+                <strong>My Profile</strong> &ndash; This page is accessible from the profile image
+                on the top right (on Desktop), or in the Navigation Drawer to the left (on Mobile).
+                Here you can view your personal information (such as your Student ID, and any
+                Involvements you have been a part of) and access your co-curricular transcript. You
+                can toggle what information is made visible to other students, as well as update or
+                hide your profile photo (click on your photo for photo options). There is also an
+                option to link your personal social media accounts, that will be visible to other
+                users.
               </li>
             </Typography>
             <br />
@@ -105,7 +108,7 @@ export default class Help extends Component {
               </li>
               <li>
                 <strong>Managing Requests</strong> &ndash; To receive a Subscriber or Membership
-                request, go to your profile page, or open the Activity you Lead/Advise. New requests
+                request, go to the home page, or open the Activity you Lead/Advise. New requests
                 appear at the bottom of the roster. To modify a request to a different user level,
                 use the dropdown menu (Advisor, Guest, Leader, Member) to assign a different level.
                 Add an appropriate Title for Leaders and Advisors. You can add a Title to other
@@ -138,7 +141,13 @@ export default class Help extends Component {
             </Typography>
             <Typography variant="body1" gutterBottom component="ul">
               <li>
-                Contact CTS for issues using the portal on your device, or for login issues, or any
+                <a
+                  href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug"
+                  style={{ color: gordonColors.primary.cyan }}
+                >
+                  Contact CTS
+                </a>
+                &nbsp;for issues using the portal on your device, or for login issues, or any
                 peculiar behaviors.
               </li>
             </Typography>
@@ -148,8 +157,9 @@ export default class Help extends Component {
             </Typography>
             <Typography variant="body1" gutterBottom component="ul">
               <li>
-                Tested successfully on Windows (IE, Firefox, Chrome), Mac (Safari, Firefox, Chrome),
-                and on Android and iPhone default browsers.
+                Tested successfully on Windows (Firefox, Chrome), Mac (Safari, Firefox, Chrome), and
+                on Android and iPhone default browsers. Currently not working on Edge or Internet
+                Explorer. Or on Windows Phone (lol jk, what's that).
               </li>
             </Typography>
             <br />
@@ -158,22 +168,21 @@ export default class Help extends Component {
             </Typography>
             <Typography variant="body1" gutterBottom component="ul">
               <li>
-                <strong>Do I have to join a group each semester?</strong> Yes. This allows each
+                <strong>Yo wheres the three dot menu at though??</strong> Blame Nikki
+              </li>
+              <li>
+                <strong>Do I have to rejoin a group each semester?</strong> Yes. This allows each
                 student to control their inclusion in groups or activities for their Co-Curricular
                 Transcript. Student Leaders and Advisors can ADD members and guests, too, and some
                 may do this to help maintain their team roster.
               </li>
               <li>
-                <strong>What&apos;s the advantage to Subscribing to a group? </strong>
-                Some groups may have their own social network presence, but since the 360.gordon.edu
-                platform creates group rosters of members and guests, Leader can use the tool to
-                communicate directly with Guests and Members only.
-              </li>
-              <li>
-                <strong>What&apos;s the advantage to Membership in a group? </strong>
-                Membership allows you to see other members in the group, and Membership for that
-                academic session is automatically added to the &ldquo;Memberships&rdquo; section of
-                your Co-Curricular Transcript.
+                <strong>
+                  What&apos;s the difference between subscribing to, and joining a group?{' '}
+                </strong>
+                Subscribing to a group allows you to receive emails from the group, but not to view
+                other members of the group. Joining a group means you're a member of the group, and
+                can view other members in the group, in addition to getting emails.
               </li>
               <li>
                 <strong>What if I leave a group?</strong> Subscribership and Membership are fluid

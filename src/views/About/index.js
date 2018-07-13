@@ -18,9 +18,8 @@ export default class About extends Component {
           <Grid item xs={12} md={12} lg={8}>
             <br />
             <hr style={style} />
-            <Typography variant="headline" gutterBottom>
-              Conceived and built at Gordon College, by students for students. Everyone should be
-              involved in something at College. It&apos;s what makes College your own Experience.
+            <Typography variant="headline" gutterBottom align="center">
+              Conceived and Built at Gordon College - By Students for Students
             </Typography>
             <hr style={style} />
             <br />
