@@ -63,56 +63,59 @@ export default class RequestDetail extends Component {
     if (requests.length === 0) {
       content = <Typography>No requests to show</Typography>;
     } else {
-      content = requests.map(request => (
-        <Grid item xs={12} sm={12}>
-          <Grid container spacing={8}>
-            <Grid item xs={12} sm={12}>
-              <Grid container direction="row">
-                <Grid item xs={8} sm={9} md={10}>
-                  <Typography>
-                    {request.FirstName} {request.LastName}
-                  </Typography>
+      content = requests
+        .slice(0)
+        .reverse()
+        .map(request => (
+          <Grid item xs={12} sm={12}>
+            <Grid container spacing={8}>
+              <Grid item xs={12} sm={12}>
+                <Grid container direction="row">
+                  <Grid item xs={8} sm={9} md={10}>
+                    <Typography>
+                      {request.FirstName} {request.LastName}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4} sm={3} md={2}>
+                    <Typography>{request.ParticipationDescription} </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={4} sm={3} md={2}>
-                  <Typography>{request.ParticipationDescription} </Typography>
-                </Grid>
-              </Grid>
-              <Grid container direction="row">
-                <Grid item xs={6}>
-                  <Typography>Title/Comment: {request.CommentText}</Typography>
-                </Grid>
-                <Grid item xs={6} sm={6} align="right">
-                  <Grid container direction="row" spacing={8} justify="flex-end">
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => this.onApprove(request, request.RequestID)}
-                        size="small"
-                      >
-                        Approve
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        style={redButton}
-                        onClick={() => this.onDeny(request, request.RequestID)}
-                        size="small"
-                      >
-                        Deny
-                      </Button>
+                <Grid container direction="row">
+                  <Grid item xs={6}>
+                    <Typography>Title/Comment: {request.CommentText}</Typography>
+                  </Grid>
+                  <Grid item xs={6} sm={6} align="right">
+                    <Grid container direction="row" spacing={8} justify="flex-end">
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => this.onApprove(request, request.RequestID)}
+                          size="small"
+                        >
+                          Approve
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          style={redButton}
+                          onClick={() => this.onDeny(request, request.RequestID)}
+                          size="small"
+                        >
+                          Deny
+                        </Button>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <Divider />
+              <Grid item xs={12} sm={12}>
+                <Divider />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      ));
+        ));
     }
 
     return (

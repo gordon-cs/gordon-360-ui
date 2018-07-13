@@ -110,9 +110,12 @@ export default class Requests extends Component {
     if (this.state.requestsSent.length === 0) {
       sent = <Typography>No Requests to Show</Typography>;
     } else {
-      sent = this.state.requestsSent.map(request => (
-        <RequestSent member={request} key={request.RequestID} onCancel={this.onCancel} />
-      ));
+      sent = this.state.requestsSent
+        .slice(0)
+        .reverse()
+        .map(request => (
+          <RequestSent member={request} key={request.RequestID} onCancel={this.onCancel} />
+        ));
     }
     return (
       <Card>
