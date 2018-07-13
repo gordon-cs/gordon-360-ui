@@ -8,9 +8,16 @@ import { gordonColors } from '../../../../../../theme';
 import membership from '../../../../../../services/membership';
 
 export default class RequestSent extends Component {
-  handleCancel(requestID) {
+  constructor(props) {
+    super(props);
+
+    this.handleCancel = this.handleCancel.bind(this);
+  }
+
+  handleCancel() {
+    let requestID = this.props.member.RequestID;
     membership.cancelRequest(requestID);
-    window.location.reload();
+    this.props.onCancel(this.props.member); // Updates state of parent component to cause rerender
   }
 
   render() {
@@ -38,7 +45,7 @@ export default class RequestSent extends Component {
                     variant="outlined"
                     size="small"
                     style={button}
-                    onClick={() => this.handleCancel(this.props.member.RequestID)}
+                    onClick={this.handleCancel}
                   >
                     Cancel
                   </Button>

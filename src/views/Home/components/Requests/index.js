@@ -21,6 +21,7 @@ export default class Requests extends Component {
     super(props);
 
     this.handleExpandClick = this.handleExpandClick.bind(this);
+    this.onCancel = this.onCancel.bind(this);
 
     this.state = {
       requestsSent: [],
@@ -48,6 +49,15 @@ export default class Requests extends Component {
 
   handleExpandClick() {
     this.setState({ open: !this.state.open });
+  }
+
+  // Rerenders list of sent requests when a request is cancelled
+  // Child component calls this function when cancel is clicked
+  onCancel(request) {
+    let requestsSent = this.state.requestsSent;
+    let index = requestsSent.indexOf(request);
+    requestsSent.splice(index, 1);
+    this.setState({ requestsSent });
   }
 
   render() {
@@ -106,7 +116,7 @@ export default class Requests extends Component {
       sent = <Typography>No Requests to Show</Typography>;
     } else {
       sent = this.state.requestsSent.map(request => (
-        <RequestSent member={request} key={request.RequestID} />
+        <RequestSent member={request} key={request.RequestID} onCancel={this.onCancel} />
       ));
     }
     return (
