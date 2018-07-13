@@ -72,7 +72,7 @@ export default class Requests extends Component {
     } else {
       receivedPanel = (
         <Grid item>
-          <Grid container spacing={8}>
+          <Grid container spacing={8} direction="column">
             <Grid item>
               <Typography variant="title">Requests Received</Typography>
             </Grid>
@@ -100,8 +100,13 @@ export default class Requests extends Component {
         <CardContent>
           <Grid container direction="column" spacing={8}>
             {receivedPanel}
-            <Grid item xs={12} sm={12} onClick={this.handleExpandClick}>
-              <Grid container alignItems="baseline" direction="row">
+            <Grid item xs={12} sm={12}>
+              <Grid
+                container
+                alignItems="baseline"
+                direction="row"
+                onClick={this.handleExpandClick}
+              >
                 <Grid item xs={11}>
                   <Typography variant="title">Requests Sent </Typography>
                 </Grid>
