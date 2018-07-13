@@ -9,18 +9,6 @@ import GordonNavAvatar from './components/NavAvatar';
 import GordonNavLinks from './components/NavLinks';
 
 export default class GordonNav extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isMobileDevice: false,
-    };
-  }
-
-  toggleIsMobileDevice() {
-    this.setState({ isMobileDevice: !this.state.isMobileDevice });
-  }
-
   render() {
     const drawer = (
       <div>
