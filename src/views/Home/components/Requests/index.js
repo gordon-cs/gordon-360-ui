@@ -12,7 +12,6 @@ import { Button } from '@material-ui/core';
 
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
-import session from '../../../../services/session';
 import RequestsReceived from './components/RequestsReceived';
 import RequestSent from './components/RequestSent';
 
@@ -27,7 +26,6 @@ export default class Requests extends Component {
       requestsSent: [],
       involvementsLeading: [],
       open: false,
-      loading: true,
     };
   }
   componentWillMount() {
@@ -35,14 +33,11 @@ export default class Requests extends Component {
   }
 
   async loadRequests() {
-    this.setState({ loading: true });
     let requestsSent;
     let involvementsLeading;
     const id = user.getLocalInfo().id;
     involvementsLeading = await user.getLeaderPositions(user.getLocalInfo().id);
-    const { SessionCode: sessionCode } = await session.getCurrent();
-
-    requestsSent = await user.getSentMembershipRequests(id, sessionCode);
+    requestsSent = await user.getSentMembershipRequests(id);
 
     this.setState({ requestsSent, involvementsLeading });
   }
