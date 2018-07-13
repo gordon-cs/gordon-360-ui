@@ -51,16 +51,10 @@ class ProfileList extends Component {
   async loadProfileInfo() {
     try {
       const profile = await user.getProfileInfo();
-      // this.setState({ isMobilePhonePrivate: profile.IsMobilePhonePrivate });
-
-      this.isMobilePhonePrivate(profile);
+      this.setState({ isMobilePhonePrivate: profile.IsMobilePhonePrivate });
     } catch (error) {
       this.setState({ error });
     }
-  }
-
-  isMobilePhonePrivate(profile) {
-    this.setState({ isMobilePhonePrivate: profile.IsMobilePhonePrivate });
   }
 
   handleClose = (event, reason) => {
@@ -107,7 +101,6 @@ class ProfileList extends Component {
   }
 
   render() {
-    console.log('state of ismobilephoneprivate:', this.state.isMobilePhonePrivate);
     const { classes } = this.props;
     const privacyStyle = {
       opacity: this.state.isMobilePhonePrivate ? '0.5' : '1',
