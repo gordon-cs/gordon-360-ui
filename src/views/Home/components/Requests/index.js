@@ -7,13 +7,14 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import Collapse from '@material-ui/core/Collapse';
+import { CardHeader, CardContent } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
-//import { gordonColors } from '../../../../theme';
+import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
 import session from '../../../../services/session';
 import RequestsReceived from './components/RequestsReceived';
 import RequestSent from './components/RequestSent';
-import { CardHeader, CardContent } from '@material-ui/core';
 
 export default class Requests extends Component {
   constructor(props) {
@@ -52,7 +53,20 @@ export default class Requests extends Component {
   render() {
     let receivedPanel;
     let received;
+    let show;
 
+    const button = {
+      color: gordonColors.primary.cyan,
+    };
+
+    if (this.state.open === false) {
+      show = 'Show';
+    } else {
+      show = 'Hide';
+    }
+
+    // For each involvement leading, render RequestsReceived component
+    // which will render the individual requests
     received = this.state.involvementsLeading.map(involvement => (
       <Grid item>
         <ExpansionPanel defaultExpanded>
@@ -66,7 +80,7 @@ export default class Requests extends Component {
       </Grid>
     ));
 
-    //If not a leader, don't render RequestsReceived component
+    //If not a leader, don't render any RequestsReceived components
     if (this.state.involvementsLeading.length === 0) {
       receivedPanel = '';
     } else {
@@ -86,6 +100,7 @@ export default class Requests extends Component {
       );
     }
 
+    // For each request sent, render RequestSent component
     let sent;
     if (this.state.requestsSent.length === 0) {
       sent = <Typography>No Requests to Show</Typography>;
@@ -101,17 +116,14 @@ export default class Requests extends Component {
           <Grid container direction="column" spacing={8}>
             {receivedPanel}
             <Grid item xs={12} sm={12}>
-              <Grid
-                container
-                alignItems="baseline"
-                direction="row"
-                onClick={this.handleExpandClick}
-              >
-                <Grid item xs={11}>
+              <Grid container alignItems="baseline" direction="row" spacing={8}>
+                <Grid item>
                   <Typography variant="title">Requests Sent </Typography>
                 </Grid>
-                <Grid item xs={1}>
-                  <ExpandMoreIcon />
+                <Grid item>
+                  <Button size="small" style={button} onClick={this.handleExpandClick}>
+                    {show}
+                  </Button>
                 </Grid>
               </Grid>
               <Collapse in={this.state.open} timeout="auto" unmountOnExit>
