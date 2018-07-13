@@ -143,6 +143,11 @@ export default class GordonNavAvatarRightCorner extends Component {
               About
             </MenuItem>
           </Link>
+          <Link to="/feedback">
+            <MenuItem onClick={this.onClose} divider="true">
+              Feedback
+            </MenuItem>
+          </Link>
           <MenuItem onClick={this.onSignOut} divider="true">
             Sign Out
           </MenuItem>
