@@ -14,19 +14,17 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-
 import Typography from '@material-ui/core/Typography';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
-
 import EmailIcon from '@material-ui/icons/Email';
 import user from './../../services/user';
+import activity from './../../services/activity';
 import { gordonColors } from '../../theme';
 import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
 import { socialMediaInfo } from '../../socialMedia';
 import { Link } from 'react-router-dom';
-
 import './myProfile.css';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -53,6 +51,7 @@ export default class Profile extends Component {
       officeinfo: null,
       profile: {},
       memberships: [],
+      involvementsAndTheirPrivacy: [],
       files: [],
       photoOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
@@ -138,8 +137,6 @@ export default class Profile extends Component {
     const largeScreenRatio = 0.525;
     const maxHeightRatio = 0.5;
     const aspect = this.state.cropperData.aspectRatio;
-    console.log(aspect);
-
     var maxWidth =
       window.innerWidth *
       (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
@@ -205,6 +202,19 @@ export default class Profile extends Component {
     this.setState({ hasNickName: FirstName !== profile.NickName && profile.NickName !== '' });
   }
 
+  async getInvolvementAndPrivacyDictionary(membershipsList) {
+    let involvementAndPrivacyDictionary = [];
+    for (let i = 0; i < membershipsList.length; i++) {
+      // let involvementPrivacy = await activity.get(membershipsList[i].ActivityCode).Privacy;
+      let involvement = await activity.get(membershipsList[i].ActivityCode);
+      involvementAndPrivacyDictionary.push({
+        key: membershipsList[i],
+        value: involvement.Privacy,
+      });
+    }
+    return involvementAndPrivacyDictionary;
+  }
+
   async loadProfile() {
     this.setState({ loading: true });
     try {
@@ -222,8 +232,11 @@ export default class Profile extends Component {
         await user.getImage(),
       ]);
       const memberships = await user.getMembershipsAlphabetically(profile.ID);
+      const involvementsAndTheirPrivacy = await this.getInvolvementAndPrivacyDictionary(
+        memberships,
+      );
       const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, memberships });
+      this.setState({ image, loading: false, memberships, involvementsAndTheirPrivacy });
       this.setState({ isImagePublic: this.state.profile.show_pic });
       this.hasNickName(profile);
     } catch (error) {
@@ -281,9 +294,9 @@ export default class Profile extends Component {
       alignItems: 'center',
     };
 
-    let membershipList;
+    let involvementAndPrivacyList;
     if (this.state.memberships.length === 0) {
-      membershipList = (
+      involvementAndPrivacyList = (
         <div>
           <Link to={`/activities/`}>
             <Typography variant="body2" className="noInvolvements">
@@ -293,9 +306,14 @@ export default class Profile extends Component {
         </div>
       );
     } else {
-      membershipList = this.state.memberships.map(activity => (
-        <MyProfileActivityList Activity={activity} />
-      ));
+      involvementAndPrivacyList = this.state.involvementsAndTheirPrivacy.map(
+        involvementPrivacyKeyValuePair => (
+          <MyProfileActivityList
+            Membership={involvementPrivacyKeyValuePair.key}
+            InvolvementPrivacy={involvementPrivacyKeyValuePair.value}
+          />
+        ),
+      );
     }
 
     let linksDialog = (
@@ -641,7 +659,7 @@ export default class Profile extends Component {
                         </Grid>
                       </Grid>
 
-                      <List>{membershipList}</List>
+                      <List>{involvementAndPrivacyList}</List>
                     </CardContent>
                   </Card>
                 </Grid>

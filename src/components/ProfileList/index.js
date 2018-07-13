@@ -16,16 +16,17 @@ import LockIcon from '@material-ui/icons/Lock';
 import './profileList.css';
 import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
+import { gordonColors } from '../../theme';
 
 const PRIVATE_INFO = 'Private as requested.';
 
 const styles = {
   colorSwitchBase: {
-    color: '#ebeaea',
+    color: gordonColors.neutral.lightGray,
     '&$colorChecked': {
-      color: '#00aeef',
+      color: gordonColors.primary.cyan,
       '& + $colorBar': {
-        backgroundColor: '#00aeef',
+        backgroundColor: gordonColors.primary.cyan,
       },
     },
   },

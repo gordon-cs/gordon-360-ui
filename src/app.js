@@ -57,7 +57,11 @@ export default class App extends Component {
     let content = (
       <section className="app-wrapper">
         <GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
-        <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
+        <GordonNav
+          onDrawerToggle={this.onDrawerToggle}
+          drawerOpen={this.state.drawerOpen}
+          onSignOut={this.onAuthChange}
+        />
         <main className="app-main">
           <Switch>
             {routes.map(route => (

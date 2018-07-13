@@ -134,6 +134,91 @@ export default class Events extends Component {
       );
     }
 
+    let filter;
+    if (this.state.loading === true) {
+    } else {
+      filter = (
+        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.academics}
+                  onChange={this.filterEvents('academics')}
+                />
+              }
+              label="Academics"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.admissions}
+                  onChange={this.filterEvents('admissions')}
+                />
+              }
+              label="Admissions"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={this.state.art} onChange={this.filterEvents('art')} />}
+              label="Arts"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={this.state.sports} onChange={this.filterEvents('sports')} />
+              }
+              label="Athletics"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={this.state.calendar} onChange={this.filterEvents('calendar')} />
+              }
+              label="Calendar Events"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={this.state.cec} onChange={this.filterEvents('cec')} />}
+              label="CEC"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.chapelOffice}
+                  onChange={this.filterEvents('chapelOffice')}
+                />
+              }
+              label="Chapel Office"
+            />
+
+            <FormControlLabel
+              control={<Checkbox checked={this.state.fair} onChange={this.filterEvents('fair')} />}
+              label="Fair or Expos"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.studentLife}
+                  onChange={this.filterEvents('studentLife')}
+                />
+              }
+              label="Student Life"
+            />
+          </FormGroup>
+          <Divider light />
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={this.state.chapelCredits}
+                  onChange={this.filterEvents('chapelCredits')}
+                  aria-label="chapelCredits"
+                />
+              }
+              label="CL&W"
+            />
+          </FormGroup>
+        </Collapse>
+      );
+    }
+
     return (
       <section>
         <Grid container justify="center">
@@ -164,93 +249,7 @@ export default class Events extends Component {
           </Grid>
 
           <Grid item xs={12} md={12} lg={8}>
-            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-              <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.academics}
-                      onChange={this.filterEvents('academics')}
-                    />
-                  }
-                  label="Academics"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.admissions}
-                      onChange={this.filterEvents('admissions')}
-                    />
-                  }
-                  label="Admissions"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={this.state.art} onChange={this.filterEvents('art')} />
-                  }
-                  label="Arts"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={this.state.sports} onChange={this.filterEvents('sports')} />
-                  }
-                  label="Athletics"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.calendar}
-                      onChange={this.filterEvents('calendar')}
-                    />
-                  }
-                  label="Calendar Events"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={this.state.cec} onChange={this.filterEvents('cec')} />
-                  }
-                  label="CEC"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.chapelOffice}
-                      onChange={this.filterEvents('chapelOffice')}
-                    />
-                  }
-                  label="Chapel Office"
-                />
-
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={this.state.fair} onChange={this.filterEvents('fair')} />
-                  }
-                  label="Fair or Expos"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={this.state.studentLife}
-                      onChange={this.filterEvents('studentLife')}
-                    />
-                  }
-                  label="Student Life"
-                />
-              </FormGroup>
-              <Divider light />
-              <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={this.state.chapelCredits}
-                      onChange={this.filterEvents('chapelCredits')}
-                      aria-label="chapelCredits"
-                    />
-                  }
-                  label="CL&W"
-                />
-              </FormGroup>
-            </Collapse>
+            {filter}
             {content}
           </Grid>
         </Grid>
