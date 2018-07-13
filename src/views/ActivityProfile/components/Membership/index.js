@@ -18,8 +18,9 @@ import '../../activity-profile.css';
 import GordonLoader from '../../../../components/Loader';
 import MemberDetail from './components/MemberDetail';
 import membership from '../../../../services/membership';
-import RequestDetail from './components/RequestDetail';
+//import RequestDetail from './components/RequestDetail';
 import user from '../../../../services/user';
+import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 
 export default class Membership extends Component {
   constructor(props) {
@@ -84,6 +85,23 @@ export default class Membership extends Component {
   async onReopenActivity() {
     await activity.reopenActivity(this.props.activityCode, this.state.sessionInfo.SessionCode);
     this.refresh();
+  }
+
+  async getMembership() {
+    let memberships = await user.getCurrentMemberships(this.state.id);
+    console.log('bcsbcysbcscbesucbsbceusoecsbuo');
+    console.log(memberships);
+    let membership;
+    console.log('STATE');
+    console.log(this.props.activityCode);
+    for (let i = 0; i < memberships.length; i += 1) {
+      if (memberships[i].ActivityCode === this.props.activityCode) {
+        membership = memberships[i];
+      }
+    }
+    console.log('MEMBERSHIP');
+    console.log(membership);
+    return membership;
   }
 
   onClose() {
@@ -216,6 +234,10 @@ export default class Membership extends Component {
     const formControl = {
       padding: 10,
     };
+    console.log('RENDER');
+    let membership = this.getMembership();
+
+    console.log(membership);
     let content;
     let requestList;
     let confirmRoster;
@@ -240,9 +262,7 @@ export default class Membership extends Component {
           if (this.state.requests.length === 0) {
             requestList = <Typography>There are no pending requests</Typography>;
           } else {
-            requestList = this.state.requests.map(request => (
-              <RequestDetail member={request} key={request.RequestID} />
-            ));
+            requestList = <RequestsReceived involvement={membership} />;
           }
           if (this.state.participationDetail[1] === 'Advisor') {
             if (this.state.status === 'OPEN') {
