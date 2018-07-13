@@ -6,7 +6,6 @@ import Divider from '@material-ui/core/Divider';
 
 import { gordonColors } from '../../../../../../theme';
 import membership from '../../../../../../services/membership';
-//import ReceivedRequest from './components/ReceivedRequest';
 
 export default class RequestDetail extends Component {
   constructor(props) {
@@ -52,10 +51,10 @@ export default class RequestDetail extends Component {
             </Grid>
             <Grid item>
               <Grid container direction="row">
-                <Grid item xs={8}>
+                <Grid item xs={6}>
                   <Typography>Title/Comment: {request.CommentText}</Typography>
                 </Grid>
-                <Grid item xs={4} sm={4} align="right">
+                <Grid item xs={6} sm={6} align="right">
                   <Button variant="contained" color="primary" onClick={this.onApprove} raised>
                     Approve
                   </Button>

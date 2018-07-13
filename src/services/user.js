@@ -460,33 +460,13 @@ const getSentMembershipRequests = (id, sessionCode) => {
 };
 
 /**
- * Get requests a specific student may respond to
- * @param {String} id Identifier for student
- * @param {String} sessionCode Identifier for a session
- * @return {Request[]} List of requests for student and session
- */
-const getReceivedMembershipRequests = async (id, sessionCode) => {
-  let allRequests = [];
-  const leaderPositions = await getLeaderPositions(id);
-  let requests;
-  for (let i = 0; i < leaderPositions.length; i += 1) {
-    requests = [];
-    requests = await membership.getRequests(leaderPositions[i].ActivityCode, sessionCode);
-    if (requests.length > 0) {
-      allRequests = allRequests.concat(requests);
-    }
-  }
-  return allRequests;
-};
-
-/**
  * Get memberships for specific student where they hold admin status
  * @param {String} id Identifier for student
  * @return {Request[]} List of memberships
  */
 const getLeaderPositions = async id => {
   let leaderPositions = [];
-  let allMemberships = await getMemberships(id);
+  let allMemberships = await getCurrentMemberships(id);
   for (let i = 0; i < allMemberships.length; i += 1) {
     if (allMemberships[i].GroupAdmin) {
       leaderPositions.push(allMemberships[i]);
@@ -592,7 +572,6 @@ export default {
   getMembershipsAlphabetically,
   getCurrentMemberships,
   getLeaderPositions,
-  getReceivedMembershipRequests,
   getSentMembershipRequests,
   getProfileInfo,
   resetImage,
