@@ -38,6 +38,7 @@ export default class Membership extends Component {
     this.onUnsubscribe = this.onUnsubscribe.bind(this);
 
     this.state = {
+      membership: [],
       openAddMember: false,
       openJoin: false,
       status: this.props.status,
@@ -56,6 +57,7 @@ export default class Membership extends Component {
   }
 
   async componentWillMount() {
+    this.getMembership();
     this.loadMembers();
   }
 
@@ -89,18 +91,13 @@ export default class Membership extends Component {
 
   async getMembership() {
     let memberships = await user.getCurrentMemberships(this.state.id);
-    console.log('bcsbcysbcscbesucbsbceusoecsbuo');
-    console.log(memberships);
     let membership;
-    console.log('STATE');
-    console.log(this.props.activityCode);
     for (let i = 0; i < memberships.length; i += 1) {
       if (memberships[i].ActivityCode === this.props.activityCode) {
         membership = memberships[i];
       }
     }
-    console.log('MEMBERSHIP');
-    console.log(membership);
+    this.setState({ membership });
     return membership;
   }
 
@@ -234,10 +231,7 @@ export default class Membership extends Component {
     const formControl = {
       padding: 10,
     };
-    console.log('RENDER');
-    let membership = this.getMembership();
-
-    console.log(membership);
+    let membership = this.state.membership;
     let content;
     let requestList;
     let confirmRoster;
@@ -257,7 +251,6 @@ export default class Membership extends Component {
     } else {
       if (this.state.participationDetail[0] && this.state.participationDetail[1] !== 'Guest') {
         // User is in activity and not a guest
-
         if (this.state.isAdmin) {
           if (this.state.requests.length === 0) {
             requestList = <Typography>There are no pending requests</Typography>;
