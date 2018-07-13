@@ -147,6 +147,9 @@ export default class MemberDetail extends Component {
       background: gordonColors.secondary.red,
       color: 'white',
     };
+    const outlinedRedButton = {
+      color: gordonColors.secondary.red,
+    };
     let showLeaveButton = false;
     if (this.props.member.IDNumber.toString() === user.getLocalInfo().id) {
       showLeaveButton = true;
@@ -158,7 +161,7 @@ export default class MemberDetail extends Component {
       options = (
         <Grid container>
           <Grid item>
-            <Button variant="contained" style={redButton} onClick={this.alertLeave} raised>
+            <Button variant="contained" style={redButton} onClick={this.alertLeave}>
               LEAVE
             </Button>
             <Dialog
@@ -171,17 +174,12 @@ export default class MemberDetail extends Component {
               <DialogContent>
                 <Grid container>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button variant="contained" color="primary" onClick={this.onClose} raised>
+                    <Button variant="contained" color="primary" onClick={this.onClose}>
                       No, stay
                     </Button>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button
-                      variant="contained"
-                      raised
-                      onClick={this.confirmLeave}
-                      style={redButton}
-                    >
+                    <Button variant="contained" onClick={this.confirmLeave} style={redButton}>
                       Yes, leave
                     </Button>
                   </Grid>
@@ -209,9 +207,9 @@ export default class MemberDetail extends Component {
         // Can't make guests or members a group admin
       }
       options = (
-        <Grid container>
+        <Grid container alignItems="center" spacing={8}>
           <Grid item>
-            <Button variant="contained" color="primary" onClick={this.openEditMember} raised>
+            <Button color="primary" onClick={this.openEditMember} variant="outlined" size="small">
               Edit
             </Button>
             <Dialog open={this.state.openEdit} keepMounted align="center">
@@ -246,17 +244,12 @@ export default class MemberDetail extends Component {
                       />
                     </Grid>
                     <Grid item style={formControl}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.onEditMember}
-                        raised
-                      >
+                      <Button variant="contained" color="primary" onClick={this.onEditMember}>
                         SUBMIT CHANGES
                       </Button>
                     </Grid>
                     <Grid item xs={12} sm={12} style={formControl}>
-                      <Button variant="contained" color="primary" onClick={this.onClose} raised>
+                      <Button variant="contained" color="primary" onClick={this.onClose}>
                         CANCEL
                       </Button>
                     </Grid>
@@ -266,7 +259,12 @@ export default class MemberDetail extends Component {
             </Dialog>
           </Grid>
           <Grid item>
-            <Button variant="contained" style={redButton} onClick={this.onRemove} raised>
+            <Button
+              style={outlinedRedButton}
+              onClick={this.onRemove}
+              variant="outlined"
+              size="small"
+            >
               Remove
             </Button>
             <Dialog open={this.state.alertRemove} keepMounted align="center">
@@ -278,12 +276,12 @@ export default class MemberDetail extends Component {
               <DialogContent>
                 <Grid container>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button variant="contained" color="primary" onClick={this.confirmLeave} raised>
+                    <Button variant="contained" color="primary" onClick={this.confirmLeave}>
                       OK
                     </Button>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button variant="contained" onClick={this.onClose} raised>
+                    <Button variant="contained" onClick={this.onClose}>
                       CANCEL
                     </Button>
                   </Grid>
