@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import Button from '@material-ui/core/Button';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -7,6 +6,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
+import Collapse from '@material-ui/core/Collapse';
 
 //import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
@@ -19,10 +19,12 @@ export default class Requests extends Component {
   constructor(props) {
     super(props);
 
+    this.handleExpandClick = this.handleExpandClick.bind(this);
+
     this.state = {
       requestsSent: [],
-      requestsReceived: [],
       involvementsLeading: [],
+      open: false,
       loading: true,
     };
   }
@@ -32,20 +34,19 @@ export default class Requests extends Component {
 
   async loadRequests() {
     this.setState({ loading: true });
-    let requestsReceived;
     let requestsSent;
     let involvementsLeading;
     const id = user.getLocalInfo().id;
     involvementsLeading = await user.getLeaderPositions(user.getLocalInfo().id);
     const { SessionCode: sessionCode } = await session.getCurrent();
-    if (involvementsLeading.length === 0) {
-      requestsReceived = 0; //If not a leader, don't bother checking for requests received
-    } else {
-      requestsReceived = await user.getReceivedMembershipRequests(id, sessionCode);
-    }
+
     requestsSent = await user.getSentMembershipRequests(id, sessionCode);
 
-    this.setState({ requestsSent, requestsReceived, involvementsLeading });
+    this.setState({ requestsSent, involvementsLeading });
+  }
+
+  handleExpandClick() {
+    this.setState({ open: !this.state.open });
   }
 
   render() {
@@ -99,19 +100,20 @@ export default class Requests extends Component {
         <CardContent>
           <Grid container direction="column" spacing={8}>
             {receivedPanel}
-            <Grid item xs={12} sm={12}>
-              <ExpansionPanel>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Grid item xs={12} sm={12}>
-                    <Typography variant="title">Requests Sent</Typography>
-                  </Grid>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <Grid item xs={12} sm={12}>
-                    {sent}
-                  </Grid>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
+            <Grid item xs={12} sm={12} onClick={this.handleExpandClick}>
+              <Grid container alignItems="baseline" direction="row">
+                <Grid item xs={11}>
+                  <Typography variant="title">Requests Sent </Typography>
+                </Grid>
+                <Grid item xs={1}>
+                  <ExpandMoreIcon />
+                </Grid>
+              </Grid>
+              <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+                <Grid item xs={12} sm={12}>
+                  {sent}
+                </Grid>
+              </Collapse>
             </Grid>
           </Grid>
         </CardContent>

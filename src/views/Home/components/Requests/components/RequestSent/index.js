@@ -3,8 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-//import membership from '../../../../../../services/membership';
-
 export default class RequestSent extends Component {
   render() {
     return (
