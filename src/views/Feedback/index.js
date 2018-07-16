@@ -3,30 +3,6 @@ import React, { Component } from 'react';
 import './feedback.css';
 
 export default class Feedback extends Component {
-  componentWillMount() {
-    this.updateAppClass();
-  }
-
-  componentWillUpdate() {
-    this.updateAppClass();
-  }
-
-  componentWillUnmount() {
-    this.restoreAppClass();
-  }
-
-  updateAppClass() {
-    //used to dynamically set the value of app-main class name
-    window.appMainClass = 'app-main-nopadding';
-    console.log('no padding ', window.appMainClass);
-  }
-
-  restoreAppClass() {
-    window.appMainClass = 'app-main';
-    window.forceAppMainRefresh();
-    console.log('appmain', window.appMainClass);
-  }
-
   render() {
     return (
       <div class="form">

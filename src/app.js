@@ -29,9 +29,6 @@ export default class App extends Component {
     this.onDrawerToggle = this.onDrawerToggle.bind(this);
     this.onAuthChange = this.onAuthChange.bind(this);
 
-    window.appMainClass = 'app-main';
-    window.forceAppMainRefresh = this.forceAppMainRefresh();
-
     this.state = {
       error: null,
       errorInfo: null,
@@ -56,11 +53,6 @@ export default class App extends Component {
     //setting up a global variable very hacky
     window.didProfilePicUpdate = false;
   }
-
-  forceAppMainRefresh() {
-    this.forceUpdate();
-  }
-
   render() {
     let content = (
       <section className="app-wrapper">
@@ -70,7 +62,7 @@ export default class App extends Component {
           drawerOpen={this.state.drawerOpen}
           onSignOut={this.onAuthChange}
         />
-        <main className={window.appMainClass}>
+        <main className="app-main">
           <Switch>
             {routes.map(route => (
               <Route
