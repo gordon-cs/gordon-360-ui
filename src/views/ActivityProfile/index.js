@@ -343,7 +343,7 @@ class ActivityProfile extends Component {
                 {this.state.activityInfo.ActivityJoinInfo}
               </Typography>
               <Typography variant="body1">
-                <strong>Current Activity Roster: </strong>
+                <strong>Current Involvement Roster: </strong>
                 {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
               </Typography>
             </CardContent>
