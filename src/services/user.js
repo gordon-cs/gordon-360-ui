@@ -550,9 +550,7 @@ function updateSocialLink(type, link) {
     [type]: linkToSend,
   };
   //Send put request
-  return http.put('profiles/' + type, url).catch(() => {
-    console.log('put requested');
-  });
+  return http.put('profiles/' + type, url).catch(() => {});
 }
 
 export default {
