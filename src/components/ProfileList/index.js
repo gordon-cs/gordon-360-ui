@@ -41,7 +41,6 @@ class ProfileList extends Component {
       homePhoneDisclaimer: false,
       addressDisclaimer: false,
       isMobilePhonePrivate: Boolean,
-      // isSnackBarOpen: false,
     };
   }
 
@@ -54,18 +53,9 @@ class ProfileList extends Component {
     }
   }
 
-  handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    // this.setState({ isSnackBarOpen: false });
-  };
-
   handleChangeMobilePhonePrivacy() {
     this.setState({ isMobilePhonePrivate: !this.state.isMobilePhonePrivate });
     user.setMobilePhonePrivacy(!this.state.isMobilePhonePrivate);
-    // this.setState({ isSnackBarOpen: true });
   }
 
   formatPhone(phone) {
@@ -344,35 +334,6 @@ class ProfileList extends Component {
               )}
           </CardContent>
         </Card>
-
-        {/* <div>
-          <Snackbar
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            open={this.state.isSnackBarOpen}
-            autoHideDuration={6000}
-            onClose={this.handleClose}
-            ContentProps={{
-              'aria-describedby': 'message-id',
-            }}
-            message={
-              <span id="message-id">
-              <CheckCircleIcon style={
-                                      {
-                                        marginBottom: "-4.5pt",
-                                        marginRight: "1rem"
-                                      }
-                                    }/>Success!</span>
-            }
-            action={[
-              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
-                <CloseIcon />
-              </IconButton>,
-            ]}
-          />
-        </div> */}
       </Grid>
     );
   }
