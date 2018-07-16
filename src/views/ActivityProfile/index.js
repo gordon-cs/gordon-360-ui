@@ -188,15 +188,17 @@ class ActivityProfile extends Component {
                 Edit Activity
               </Button>
             </CardContent>
+
             <Dialog open={this.state.openEditActivity}>
               <DialogTitle> Edit {activityDescription}</DialogTitle>
-              <DialogContent>
+              <DialogContent className="edit-activity-dialog-box">
                 <Grid container align="center" spacing={16}>
                   <Grid item xs={12} sm={4} md={4} lg={4}>
                     <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
                       Remove image
                     </Button>
                   </Grid>
+
                   <Dialog open={this.state.openRemoveImage} keepMounted align="center">
                     <DialogTitle>Are you sure you want to remove image?</DialogTitle>
                     <DialogContent>
@@ -219,7 +221,8 @@ class ActivityProfile extends Component {
                       </Grid>
                     </DialogContent>
                   </Dialog>
-                  <Grid item xs={12} align="center" padding={6}>
+
+                  <Grid item xs={12} align="center">
                     <Typography>Description</Typography>
                     <TextField
                       fullWidth
