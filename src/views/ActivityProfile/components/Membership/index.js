@@ -13,12 +13,12 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 
+import { gordonColors } from '../../../../theme';
 import activity from '../../../../services/activity';
 import '../../activity-profile.css';
 import GordonLoader from '../../../../components/Loader';
-import MemberDetail from './components/MemberDetail';
+import MemberList from './components/MemberList';
 import membership from '../../../../services/membership';
-//import RequestDetail from './components/RequestDetail';
 import user from '../../../../services/user';
 import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 
@@ -54,11 +54,37 @@ export default class Membership extends Component {
       addGordonID: '',
       requests: [],
     };
+    this.isMobileView = false;
+    this.breakpointWidth = 810;
   }
 
   async componentWillMount() {
     this.getMembership();
     this.loadMembers();
+  }
+
+  //Has to rerender on screen resize in order for table to switch to the mobile view
+  resize = () => {
+    if (this.breakpointPassed()) {
+      this.isMobileView = !this.isMobileView;
+      this.forceUpdate();
+    }
+  };
+
+  //checks if the screen has been resized past the mobile breakpoint
+  //allows for forceUpdate to only be called when necessary, improving resizing performance
+  breakpointPassed() {
+    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
+    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
+    else return false;
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
   }
 
   handleSelectParticipationLevel = event => {
@@ -241,6 +267,12 @@ export default class Membership extends Component {
     members.sort((a, b) => this.compareFunction(a, b));
     let subscribeButton;
     let isActivityClosed;
+    let header;
+    const headerStyle = {
+      backgroundColor: gordonColors.primary.blue,
+      color: '#FFF',
+      padding: '10px',
+    };
     if (this.state.status === 'CLOSED') {
       isActivityClosed = true;
     } else {
@@ -252,6 +284,32 @@ export default class Membership extends Component {
       if (this.state.participationDetail[0] && this.state.participationDetail[1] !== 'Guest') {
         // User is in activity and not a guest
         if (this.state.isAdmin) {
+          header = (
+            <div style={headerStyle}>
+              <Grid container direction="row">
+                <Grid item xs={3}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    NAME
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    PARTICIPATION
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    TITLE/COMMENT
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    ADMIN
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
+          );
           if (this.state.requests.length === 0) {
             requestList = <Typography>There are no pending requests</Typography>;
           } else {
@@ -367,18 +425,49 @@ export default class Membership extends Component {
               {ferpaAsterisks}
             </section>
           );
+        } else {
+          header = (
+            <div style={headerStyle}>
+              <Grid container direction="row">
+                <Grid item xs={6}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    NAME
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    PARTICIPATION
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
+          );
+        }
+        if (window.innerWidth < this.breakpointWidth) {
+          header = (
+            <div style={headerStyle}>
+              <Grid>
+                <Typography variant="body2" className="header" style={headerStyle}>
+                  MEMBERS
+                </Typography>
+              </Grid>
+            </div>
+          );
         }
         content = (
           <section>
             {adminView}
-            {members.map(groupMember => (
-              <MemberDetail
-                member={groupMember}
-                admin={this.state.isAdmin}
-                groupAdmin={groupMember.GroupAdmin}
-                key={groupMember.MembershipID}
-              />
-            ))}
+            <Card>
+              {header}
+              {members.map(groupMember => (
+                <MemberList
+                  member={groupMember}
+                  admin={this.state.isAdmin}
+                  groupAdmin={groupMember.GroupAdmin}
+                  key={groupMember.MembershipID}
+                />
+              ))}
+            </Card>
           </section>
         );
       } else {
