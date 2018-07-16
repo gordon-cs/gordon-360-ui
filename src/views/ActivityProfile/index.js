@@ -5,7 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
@@ -147,6 +146,7 @@ class ActivityProfile extends Component {
 
   onClose() {
     this.setState({
+      openRemoveImage: false,
       openEditActivity: false,
       alertRemoveImage: false,
     });
@@ -192,7 +192,7 @@ class ActivityProfile extends Component {
             <Dialog open={this.state.openEditActivity}>
               <DialogTitle> Edit {activityDescription}</DialogTitle>
               <DialogContent>
-                <Grid container align="center">
+                <Grid container align="center" spacing={16}>
                   <Grid item xs={12} sm={4} md={4} lg={4}>
                     <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
                       Remove image
@@ -222,10 +222,9 @@ class ActivityProfile extends Component {
                   </Dialog>
                   <Grid item xs={12} align="center" padding={6}>
                     <Typography>Description</Typography>
-                    <Input
+                    <TextField
                       fullWidth
                       multiline
-                      rows={4}
                       defaultValue={activityBlurb}
                       onChange={this.handleChange('tempActivityBlurb')}
                     />
@@ -235,7 +234,6 @@ class ActivityProfile extends Component {
                     <TextField
                       fullWidth
                       multiline
-                      rows={4}
                       defaultValue={activityJoinInfo}
                       onChange={this.handleChange('tempActivityJoinInfo')}
                     />
