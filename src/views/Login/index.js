@@ -26,20 +26,16 @@ export default class Login extends Component {
     };
   }
   handleChange(prop) {
-    console.log('Login: handleChange(prop)');
     return event => {
       this.setState({ [prop]: event.target.value });
     };
   }
   async logIn(event) {
-    console.log('Login: async Login(event)');
     event.preventDefault();
     this.setState({ loading: true, error: null });
     try {
-      console.log('Login: async Login(event) try{}');
       await authenticate(this.state.username, this.state.password);
       this.props.onLogIn();
-      console.log('Login: async Login(event) try{} - onLogin() done');
     } catch (err) {
       this.setState({ error: err.message, loading: false });
     }
