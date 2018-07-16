@@ -1,9 +1,6 @@
 import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 import ListItem from '@material-ui/core/ListItem';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CloseIcon from '@material-ui/icons/Close';
-import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Majors from './../../components/MajorList';
@@ -16,7 +13,6 @@ import CardContent from '@material-ui/core/CardContent';
 import LockIcon from '@material-ui/icons/Lock';
 import './profileList.css';
 import { withStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
 import { gordonColors } from '../../theme';
 
 const PRIVATE_INFO = 'Private as requested.';
