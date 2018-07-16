@@ -71,18 +71,18 @@ export default class RequestReceived extends Component {
             <Grid container spacing={8}>
               <Grid item xs={12} sm={12}>
                 <Grid container direction="row">
-                  <Grid item xs={8} sm={9} md={10}>
+                  <Grid item xs={10} sm={10} md={10}>
                     <Typography>
                       {request.FirstName} {request.LastName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={4} sm={3} md={2}>
+                  <Grid item xs={2} sm={2} md={2}>
                     <Typography>{request.ParticipationDescription} </Typography>
                   </Grid>
                 </Grid>
                 <Grid container direction="row">
                   <Grid item xs={6}>
-                    <Typography>Title/Comment: {request.CommentText}</Typography>
+                    <Typography>{request.CommentText}</Typography>
                   </Grid>
                   <Grid item xs={6} sm={6} align="right">
                     <Grid container direction="row" spacing={8} justify="flex-end">
