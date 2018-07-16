@@ -117,7 +117,7 @@ export default class GordonPeopleSearch extends Component {
           <span className="gordon-people-search">
             {renderInput(
               getInputProps({
-                placeholder: 'Search for people',
+                placeholder: 'People Search',
                 onChange: event => this.getSuggestions(event.target.value),
               }),
             )}
