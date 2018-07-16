@@ -1,6 +1,7 @@
 import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 import ListItem from '@material-ui/core/ListItem';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
@@ -44,7 +45,7 @@ class ProfileList extends Component {
       homePhoneDisclaimer: false,
       addressDisclaimer: false,
       isMobilePhonePrivate: Boolean,
-      isSnackBarOpen: false,
+      // isSnackBarOpen: false,
     };
   }
 
@@ -62,13 +63,13 @@ class ProfileList extends Component {
       return;
     }
 
-    this.setState({ isSnackBarOpen: false });
+    // this.setState({ isSnackBarOpen: false });
   };
 
   handleChangeMobilePhonePrivacy() {
     this.setState({ isMobilePhonePrivate: !this.state.isMobilePhonePrivate });
     user.setMobilePhonePrivacy(!this.state.isMobilePhonePrivate);
-    this.setState({ isSnackBarOpen: true });
+    // this.setState({ isSnackBarOpen: true });
   }
 
   formatPhone(phone) {
@@ -348,7 +349,7 @@ class ProfileList extends Component {
           </CardContent>
         </Card>
 
-        <div>
+        {/* <div>
           <Snackbar
             anchorOrigin={{
               vertical: 'bottom',
@@ -361,7 +362,13 @@ class ProfileList extends Component {
               'aria-describedby': 'message-id',
             }}
             message={
-              <span id="message-id">Success! Changes will take effect in a few minutes.</span>
+              <span id="message-id">
+              <CheckCircleIcon style={
+                                      {
+                                        marginBottom: "-4.5pt",
+                                        marginRight: "1rem"
+                                      }
+                                    }/>Success!</span>
             }
             action={[
               <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
@@ -369,7 +376,7 @@ class ProfileList extends Component {
               </IconButton>,
             ]}
           />
-        </div>
+        </div> */}
       </Grid>
     );
   }
