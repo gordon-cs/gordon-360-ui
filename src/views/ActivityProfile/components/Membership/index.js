@@ -14,11 +14,15 @@ import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 
 import { gordonColors } from '../../../../theme';
+import Snackbar from '@material-ui/core/Snackbar';
 import activity from '../../../../services/activity';
 import '../../activity-profile.css';
 import GordonLoader from '../../../../components/Loader';
 import MemberList from './components/MemberList';
 import membership from '../../../../services/membership';
+import IconButton from '@material-ui/core/IconButton';
+//import RequestDetail from './components/RequestDetail';
+import CloseIcon from '@material-ui/icons/Close';
 import user from '../../../../services/user';
 import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 
@@ -182,15 +186,14 @@ export default class Membership extends Component {
       GRP_ADMIN: false,
     };
     await membership.addMembership(data);
-    this.refresh();
+    // this.refresh();
   }
 
   // Called when Unsubscribe button clicked
   async onUnsubscribe() {
-    let membershipID = this.state.participationDetail[2];
-    await membership.remove(membershipID);
+    let participationDescription = this.state.participationDetail[2];
+    await membership.remove(participationDescription);
     this.setState({ participationDetail: [false, false, null] });
-    this.refresh();
   }
 
   async loadMembers() {
@@ -506,7 +509,7 @@ export default class Membership extends Component {
             <Dialog open={this.state.openJoin} keepMounted align="center">
               <DialogContent>
                 <Grid container align="center" padding={6}>
-                  <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
+                  <Grid item xs={12} padding={6}>
                     <DialogTitle>Join {this.state.activityDescription}</DialogTitle>
                     <Typography>Participation (Required)</Typography>
                     <Grid item padding={6} align="center">
@@ -520,7 +523,7 @@ export default class Membership extends Component {
                             <em>None</em>
                           </MenuItem>
                           <MenuItem value="ADV">Advisor</MenuItem>
-                          <MenuItem value="GUEST">Guest</MenuItem>
+                          {/* <MenuItem value="GUEST">Guest</MenuItem> */}
                           <MenuItem value="LEAD">Leader</MenuItem>
                           <MenuItem value="MEMBR">Member</MenuItem>
                         </Select>
@@ -535,15 +538,17 @@ export default class Membership extends Component {
                         style={formControl}
                       />
                     </Grid>
-                    <Grid item style={formControl}>
-                      <Button variant="contained" color="primary" onClick={this.onRequest} raised>
-                        REQUEST MEMBERSHIP
-                      </Button>
-                    </Grid>
-                    <Grid item xs={12} sm={12} style={formControl}>
-                      <Button variant="contained" color="primary" onClick={this.onClose} raised>
-                        CANCEL
-                      </Button>
+                    <Grid container direction="row" alignItems="center" spacing="16">
+                      <Grid item xs={5} sm={4} style={formControl}>
+                        <Button variant="contained" color="primary" onClick={this.onClose} raised>
+                          CANCEL
+                        </Button>
+                      </Grid>
+                      <Grid item xs={7} sm={8} style={formControl}>
+                        <Button variant="contained" color="primary" onClick={this.onRequest} raised>
+                          REQUEST MEMBERSHIP
+                        </Button>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -553,6 +558,31 @@ export default class Membership extends Component {
         );
       }
     }
-    return <section>{content}</section>;
+    return (
+      <section>
+        {content}
+
+        <div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.isSnackBarOpen}
+            autoHideDuration={6000}
+            onClose={this.handleClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={<span id="message-id">Success!</span>}
+            action={[
+              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
+                <CloseIcon />
+              </IconButton>,
+            ]}
+          />
+        </div>
+      </section>
+    );
   }
 }

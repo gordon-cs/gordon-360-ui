@@ -288,10 +288,21 @@ class ActivityProfile extends Component {
           </Typography>
         );
       }
+      let subscribersWord, membersWord;
       let groupContacts = <GroupContacts groupAdmin={this.state.activityGroupAdmins} />;
       let advisors = <Advisors advisors={this.state.activityAdvisors} />;
-      const followersNum = this.state.activityFollowers;
+      const subscribersNum = this.state.activityFollowers;
+      if (subscribersNum === 1) {
+        subscribersWord = 'Subscriber';
+      } else {
+        subscribersWord = 'Subscribers';
+      }
       const membersNum = this.state.activityMembersNum;
+      if (membersNum === 1) {
+        membersWord = 'Member';
+      } else {
+        membersWord = 'Members';
+      }
       let membership = (
         <Membership
           members={this.state.activityMembers}
@@ -312,7 +323,11 @@ class ActivityProfile extends Component {
                 {activityDescription}
               </Typography>
               <Grid align="center" className="activity-image" item>
-                <img alt={activity.activityDescription} src={activityImagePath} className="img" />
+                <img
+                  alt={activity.activityDescription}
+                  src={activityImagePath}
+                  className="rounded-corners"
+                />
               </Grid>
               <Grid item>{editActivity}</Grid>
               <Typography variant="body1">
@@ -328,8 +343,8 @@ class ActivityProfile extends Component {
                 {this.state.activityInfo.ActivityJoinInfo}
               </Typography>
               <Typography variant="body1">
-                <strong>Current Activity Roster: </strong>
-                {membersNum} Member(s) and {followersNum} follower(s)
+                <strong>Current Involvement Roster: </strong>
+                {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
               </Typography>
             </CardContent>
             {membership}
