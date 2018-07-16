@@ -29,6 +29,7 @@ import './myProfile.css';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import GordonLoader from '../../components/Loader';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -702,7 +703,14 @@ export default class Profile extends Component {
                   'aria-describedby': 'message-id',
                 }}
                 message={
-                  <span id="message-id">Success! Changes will take effect in a few minutes.</span>
+                  <span id="message-id">
+                    <CheckCircleIcon
+                      style={{
+                        marginBottom: '-4.5pt',
+                        marginRight: '1rem',
+                      }}
+                    />Success!
+                  </span>
                 }
                 action={[
                   <IconButton
