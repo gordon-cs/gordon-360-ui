@@ -104,7 +104,7 @@ export default class GordonNavAvatarRightCorner extends Component {
     }
 
     return (
-      <section>
+      <section className="right-side-container">
         <IconButton
           className="gordon-nav-avatar-right-corner"
           classes={{

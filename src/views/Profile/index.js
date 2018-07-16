@@ -232,23 +232,23 @@ export default class Profile extends Component {
                   <Grid container alignItems="center" align="center" justify="center" spacing="16">
                     <Grid container alignItems="center" spacing="16">
                       <Grid item xs={12} sm={12} md={12} lg={12}>
-                        {this.state.profile.preferred_photo !== 0 && (
+                        {this.state.prefImage && (
                           <img
                             className="rounded-corners"
                             src={`data:image/jpg;base64,${this.state.prefImage}`}
                             alt=""
                             style={{ 'max-height': '200px', 'min-width': '160px' }}
                           />
-                        )}{' '}
-                        {this.state.profile.show_pic !== 0 &&
-                          this.state.defImage !== undefined && (
-                            <img
-                              className="rounded-corners"
-                              src={`data:image/jpg;base64,${this.state.defImage}`}
-                              alt=""
-                              style={{ 'max-height': '200px', 'min-width': '160px' }}
-                            />
-                          )}
+                        )}
+                        {this.state.prefImage && this.state.defImage && ' '}
+                        {this.state.defImage && (
+                          <img
+                            className="rounded-corners"
+                            src={`data:image/jpg;base64,${this.state.defImage}`}
+                            alt=""
+                            style={{ 'max-height': '200px', 'min-width': '160px' }}
+                          />
+                        )}
                       </Grid>
                     </Grid>
                     <Grid item xs={12} sm={6} md={6} lg={4}>
