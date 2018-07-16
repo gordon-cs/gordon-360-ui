@@ -10,7 +10,6 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-
 import activity from '../../services/activity';
 import './activity-profile.css';
 import Advisors from './components/Advisors';
@@ -201,7 +200,7 @@ class ActivityProfile extends Component {
                   <Dialog open={this.state.openRemoveImage} keepMounted align="center">
                     <DialogTitle>Are you sure you want to remove image?</DialogTitle>
                     <DialogContent>
-                      <Grid container>
+                      <Grid container spacing={16}>
                         <Grid item xs={6} sm={6} md={6} lg={6}>
                           <Button
                             variant="contained"
@@ -353,7 +352,7 @@ class ActivityProfile extends Component {
 
     return (
       <section>
-        <Grid container justify="center">
+        <Grid container justify="center" spacing="16">
           <Grid item xs={12} md={12} lg={8}>
             {content}
           </Grid>

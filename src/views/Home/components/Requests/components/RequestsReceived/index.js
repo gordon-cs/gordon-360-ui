@@ -67,16 +67,17 @@ export default class RequestReceived extends Component {
         .slice(0)
         .reverse()
         .map(request => (
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12}>
             <Grid container spacing={8}>
-              <Grid item xs={12} sm={12}>
+              <Grid item xs={12}>
                 <Grid container direction="row">
-                  <Grid item xs={10} sm={10} md={10}>
+                  <Grid item xs={10}>
+                    <br />
                     <Typography>
                       {request.FirstName} {request.LastName}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2} sm={2} md={2}>
+                  <Grid item xs={2} sm={2}>
                     <Typography>{request.ParticipationDescription} </Typography>
                   </Grid>
                 </Grid>

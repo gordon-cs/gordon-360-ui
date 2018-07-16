@@ -26,6 +26,8 @@ import { gordonColors } from '../../../../theme';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 
+import AddPersonIcon from '@material-ui/icons/PersonAdd';
+
 export default class Membership extends Component {
   constructor(props) {
     super(props);
@@ -298,7 +300,7 @@ export default class Membership extends Component {
         if (this.state.isAdmin) {
           header = (
             <div style={headerStyle}>
-              <Grid container direction="row">
+              <Grid container direction="row" spacing={16}>
                 <Grid item xs={3}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     NAME
@@ -351,23 +353,22 @@ export default class Membership extends Component {
           }
           adminView = (
             <section>
+              <Grid item xs={12}>
+                <Card>
+                  <div style={headerStyle}>
+                    <Typography variant="body2" style={headerStyle}>
+                      MEMBERSHIP REQUESTS
+                    </Typography>
+                  </div>
+                </Card>
+              </Grid>
               <Card>
                 <CardContent>
-                  <Grid container>
-                    <Grid item xs={6} sm={4} md={4} lg={4}>
-                      <Button
-                        color="primary"
-                        disabled={isActivityClosed}
-                        onClick={this.openAddMemberDialog}
-                        raised
-                      >
-                        Add member
-                      </Button>
-                    </Grid>
+                  <Grid container spacing={16}>
                     <Dialog open={this.state.openAddMember} keepMounted align="center">
                       <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
                       <DialogContent>
-                        <Grid container align="center" padding={6}>
+                        <Grid container align="center" padding={6} spacing={16}>
                           <Grid item xs={12} padding={6} align="center">
                             <Typography>Student Email</Typography>
                             <TextField
@@ -387,9 +388,9 @@ export default class Membership extends Component {
                                   displayEmpty
                                 >
                                   <MenuItem value="ADV">Advisor</MenuItem>
-                                  <MenuItem value="GUEST">Guest</MenuItem>
                                   <MenuItem value="LEAD">Leader</MenuItem>
                                   <MenuItem value="MEMBR">Member</MenuItem>
+                                  <MenuItem value="GUEST">Subscriber</MenuItem>
                                 </Select>
                               </FormControl>
                             </Grid>
@@ -403,7 +404,7 @@ export default class Membership extends Component {
                               />
                             </Grid>
                           </Grid>
-                          <Grid item xs={12} sm={6} style={formControl}>
+                          <Grid item xs={12} sm={6} style={formControl} justifyContent="right">
                             <Button
                               variant="contained"
                               color="primary"
@@ -426,10 +427,19 @@ export default class Membership extends Component {
                         </Grid>
                       </DialogContent>
                     </Dialog>
-                    <Grid item xs={12}>
-                      <Typography variant="headline">Membership Requests</Typography>
-                      {requestList}
+
+                    <Grid item xs={6} sm={4} md={4} lg={4}>
+                      <Button
+                        color="primary"
+                        disabled={isActivityClosed}
+                        onClick={this.openAddMemberDialog}
+                        raised
+                      >
+                        <AddPersonIcon />
+                        Add member
+                      </Button>
                     </Grid>
+                    {requestList}
                     <Grid item>{confirmRoster}</Grid>
                   </Grid>
                 </CardContent>
@@ -440,7 +450,7 @@ export default class Membership extends Component {
         } else {
           header = (
             <div style={headerStyle}>
-              <Grid container direction="row">
+              <Grid container direction="row" spacing={16}>
                 <Grid item xs={6}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     NAME
@@ -517,7 +527,7 @@ export default class Membership extends Component {
             </Button>
             <Dialog open={this.state.openJoin} keepMounted align="center">
               <DialogContent>
-                <Grid container align="center" padding={6}>
+                <Grid container align="center" padding={6} spacing={16}>
                   <Grid item xs={12} padding={6}>
                     <DialogTitle>Join {this.state.activityDescription}</DialogTitle>
                     <Typography>Participation (Required)</Typography>

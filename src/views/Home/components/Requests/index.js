@@ -7,9 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import Collapse from '@material-ui/core/Collapse';
-import { CardHeader, CardContent } from '@material-ui/core';
+import { CardContent } from '@material-ui/core';
 import { Button } from '@material-ui/core';
-
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
 import RequestsReceived from './components/RequestsReceived';
@@ -60,6 +59,11 @@ export default class Requests extends Component {
     let received;
     let show;
 
+    const headerStyle = {
+      backgroundColor: gordonColors.primary.blue,
+      color: '#FFF',
+      padding: '10px',
+    };
     const button = {
       color: gordonColors.primary.cyan,
     };
@@ -119,7 +123,15 @@ export default class Requests extends Component {
     }
     return (
       <Card>
-        <CardHeader title="Membership Requests" />
+        <Grid item>
+          <Card>
+            <div style={headerStyle}>
+              <Typography variant="body2" style={headerStyle}>
+                MEMBERSHIP REQUESTS
+              </Typography>
+            </div>
+          </Card>
+        </Grid>
         <CardContent>
           <Grid container direction="column" spacing={8}>
             {receivedPanel}
