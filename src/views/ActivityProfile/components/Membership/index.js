@@ -12,8 +12,6 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
-
-import { gordonColors } from '../../../../theme';
 import Snackbar from '@material-ui/core/Snackbar';
 import activity from '../../../../services/activity';
 import '../../activity-profile.css';
@@ -24,6 +22,7 @@ import IconButton from '@material-ui/core/IconButton';
 //import RequestDetail from './components/RequestDetail';
 import CloseIcon from '@material-ui/icons/Close';
 import user from '../../../../services/user';
+import { gordonColors } from '../../../../theme';
 import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 
 export default class Membership extends Component {
