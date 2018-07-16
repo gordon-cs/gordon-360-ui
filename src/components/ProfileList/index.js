@@ -81,7 +81,7 @@ class ProfileList extends Component {
     }
   }
   componentWillMount() {
-    this.setState({ privacy: this.props.profile.IsMobilePhonePrivate });
+    this.setState({ isMobilePhonePrivate: this.props.profile.IsMobilePhonePrivate });
     if (!this.props.myProf) {
       this.setState({
         mobilePhoneDisclaimer:
