@@ -6,6 +6,7 @@
     max-height: 1000%;
     overflow-y: auto;
     overflow-x: hidden;
+    right:17px;
   }
 
   .people-search-suggestion {
@@ -47,6 +48,10 @@
     .people-search-suggestion{
       width:12rem;
     }
+    .people-search-dropdown
+    {
+      right:auto;
+    }
   }
 
   @media (min-width: $break-sm) {
@@ -85,7 +90,7 @@
       }
     }
   }
-  @media (min-width:968px)
+  @media (min-width:960px)
   {
     .people-search-suggestion{
       width:9.5rem;
