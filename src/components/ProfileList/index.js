@@ -105,7 +105,7 @@ class ProfileList extends Component {
     const privacyStyle = {
       opacity: this.state.isMobilePhonePrivate ? '0.5' : '1',
     };
-    const privateID = {
+    const privateConstStyle = {
       opacity: '.5',
     };
     let address;
@@ -127,7 +127,7 @@ class ProfileList extends Component {
 
     if (this.props.profile.HomeStreet2 !== '') {
       street = (
-        <div>
+        <div style={privateConstStyle}>
           <Typography className={this.state.addressDisclaimer ? 'disclaimer' : ''}>
             {this.props.profile.HomeStreet2}
           </Typography>
@@ -299,7 +299,7 @@ class ProfileList extends Component {
 
     if (this.props.myProf && String(this.props.profile.PersonType).includes('stu')) {
       studentID = (
-        <div style={privateID}>
+        <div style={privateConstStyle}>
           <ListItem>
             <Grid container justify="space-between" alignItems="center">
               <Grid item xs={6} md={3} lg={6}>
