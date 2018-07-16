@@ -288,10 +288,21 @@ class ActivityProfile extends Component {
           </Typography>
         );
       }
+      let subscribersWord, membersWord;
       let groupContacts = <GroupContacts groupAdmin={this.state.activityGroupAdmins} />;
       let advisors = <Advisors advisors={this.state.activityAdvisors} />;
-      const followersNum = this.state.activityFollowers;
+      const subscribersNum = this.state.activityFollowers;
+      if (subscribersNum === 1) {
+        subscribersWord = 'Subscriber';
+      } else {
+        subscribersWord = 'Subscribers';
+      }
       const membersNum = this.state.activityMembersNum;
+      if (membersNum === 1) {
+        membersWord = 'Member';
+      } else {
+        membersWord = 'Members';
+      }
       let membership = (
         <Membership
           members={this.state.activityMembers}
@@ -333,7 +344,7 @@ class ActivityProfile extends Component {
               </Typography>
               <Typography variant="body1">
                 <strong>Current Activity Roster: </strong>
-                {membersNum} Member(s) and {followersNum} follower(s)
+                {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
               </Typography>
             </CardContent>
             {membership}
