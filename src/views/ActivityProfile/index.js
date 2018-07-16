@@ -312,7 +312,11 @@ class ActivityProfile extends Component {
                 {activityDescription}
               </Typography>
               <Grid align="center" className="activity-image" item>
-                <img alt={activity.activityDescription} src={activityImagePath} className="img" />
+                <img
+                  alt={activity.activityDescription}
+                  src={activityImagePath}
+                  className="rounded-corners"
+                />
               </Grid>
               <Grid item>{editActivity}</Grid>
               <Typography variant="body1">
