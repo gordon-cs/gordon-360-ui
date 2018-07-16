@@ -432,7 +432,7 @@ export default class Membership extends Component {
                             <em>None</em>
                           </MenuItem>
                           <MenuItem value="ADV">Advisor</MenuItem>
-                          <MenuItem value="GUEST">Guest</MenuItem>
+                          {/* <MenuItem value="GUEST">Guest</MenuItem> */}
                           <MenuItem value="LEAD">Leader</MenuItem>
                           <MenuItem value="MEMBR">Member</MenuItem>
                         </Select>
