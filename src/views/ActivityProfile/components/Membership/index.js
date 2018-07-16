@@ -23,6 +23,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import user from '../../../../services/user';
 import { gordonColors } from '../../../../theme';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 
 export default class Membership extends Component {
@@ -130,6 +131,14 @@ export default class Membership extends Component {
     return membership;
   }
 
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ isSnackBarOpen: false });
+  };
+
   onClose() {
     this.setState({
       openAddMember: false,
@@ -171,6 +180,7 @@ export default class Membership extends Component {
     };
     membership.requestMembership(data);
     this.onClose();
+    this.setState({ isSnackBarOpen: true });
     //Used to call this.refresh() here, but it caused requests not to go through
   }
 
@@ -181,11 +191,11 @@ export default class Membership extends Component {
       SESS_CDE: this.state.sessionInfo.SessionCode,
       ID_NUM: user.getLocalInfo().id,
       PART_CDE: 'GUEST',
-      COMMENT_TXT: 'Basic Follower',
+      COMMENT_TXT: 'Subscriber',
       GRP_ADMIN: false,
     };
     await membership.addMembership(data);
-    // this.refresh();
+    this.refresh();
   }
 
   // Called when Unsubscribe button clicked
@@ -573,7 +583,16 @@ export default class Membership extends Component {
             ContentProps={{
               'aria-describedby': 'message-id',
             }}
-            message={<span id="message-id">Success!</span>}
+            message={
+              <span id="message-id">
+                <CheckCircleIcon
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '1rem',
+                  }}
+                />Success!
+              </span>
+            }
             action={[
               <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
                 <CloseIcon />
