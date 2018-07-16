@@ -3,10 +3,11 @@
 .gordon-people-search {
   .people-search-dropdown {
     position: absolute;
-    max-height: 1000%;
+    max-height: 600%;
     overflow-y: auto;
     overflow-x: hidden;
-    right:17px;
+    right:20px;
+    border-radius:4px;
   }
 
   .people-search-suggestion {
@@ -50,7 +51,7 @@
     }
     .people-search-dropdown
     {
-      right:auto;
+      right:28px;
     }
   }
 
@@ -82,18 +83,25 @@
     .text-field {
       width: 11.5rem;
     }
-    .people-search-root,.people-search-suggestion {
+    .people-search-root {
       align-self: flex-end;
       width: 13rem;
       &:focus-within {
         width: 15rem;
       }
     }
+    .people-search-suggestion{
+      width: 12.25rem;
+    }
   }
   @media (min-width:960px)
   {
     .people-search-suggestion{
-      width:9.5rem;
+      width:8.5rem;
+    }
+    .people-search-dropdown
+    {
+      right:auto;
     }
   }
 
@@ -109,7 +117,7 @@
       }
     }
     .people-search-suggestion{
-      width:12rem;
+      width:11.15rem;
     }
   }
 
