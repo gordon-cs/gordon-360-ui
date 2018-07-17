@@ -10,6 +10,10 @@
     }
   }
 
+  .rounded-corners {
+    border-radius: 0.5rem;
+  }
+
   .email-button {
     height: 24px;
     width: 24px;
@@ -21,5 +25,9 @@
 
   .col {
     flex: 33%;
+  }
+
+  .edit-activity-dialog-box {
+    overflow-x: hidden;
   }
 }

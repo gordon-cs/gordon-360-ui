@@ -445,6 +445,47 @@ const getCurrentMemberships = async id => {
   return myCurrentInvolvements;
 };
 
+//Take student's memberships and filter for current only, omit the memberships that are just 'Guest'
+const getCurrentMembershipsWithoutGuests = async id => {
+  let myInvolvements = await getMembershipsAlphabetically(id);
+  let myCurrentInvolvementsWithoutGuests = [];
+  const { SessionCode: sessionCode } = await session.getCurrent();
+  for (let i = 0; i < myInvolvements.length; i += 1) {
+    if (
+      myInvolvements[i].SessionCode === sessionCode &&
+      !(myInvolvements[i].ParticipationDescription === 'Guest')
+    ) {
+      myCurrentInvolvementsWithoutGuests.push(myInvolvements[i]);
+    }
+  }
+  return myCurrentInvolvementsWithoutGuests;
+};
+
+/**
+ * Get requests sent by a specific student
+ * @param {String} id Identifier for student
+ * @return {Request[]} List of requests for student
+ */
+const getSentMembershipRequests = id => {
+  return http.get(`requests/student/${id}`);
+};
+
+/**
+ * Get memberships for specific student where they hold admin status
+ * @param {String} id Identifier for student
+ * @return {Request[]} List of memberships
+ */
+const getLeaderPositions = async id => {
+  let leaderPositions = [];
+  let allMemberships = await getCurrentMemberships(id);
+  for (let i = 0; i < allMemberships.length; i += 1) {
+    if (allMemberships[i].GroupAdmin) {
+      leaderPositions.push(allMemberships[i]);
+    }
+  }
+  return leaderPositions;
+};
+
 //compares items by ActivityDescription, used by getMembershipsAlphabetically to sort by ActivityDescription
 function compareByTitle(a, b) {
   const involvementA = a.ActivityDescription;
@@ -539,6 +580,9 @@ export default {
   getPublicMemberships,
   getMembershipsAlphabetically,
   getCurrentMemberships,
+  getCurrentMembershipsWithoutGuests,
+  getLeaderPositions,
+  getSentMembershipRequests,
   getProfileInfo,
   resetImage,
   postImage,
