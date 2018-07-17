@@ -115,8 +115,8 @@ export default class Requests extends Component {
       sent = <Typography>No Requests to Show</Typography>;
     } else {
       sent = this.state.requestsSent
-        .slice(0)
-        .reverse()
+        .slice(0) // Render requests in order of newest to oldest
+        .reverse() // newest to oldest
         .map(request => (
           <RequestSent member={request} key={request.RequestID} onCancel={this.onCancel} />
         ));

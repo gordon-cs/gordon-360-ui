@@ -36,17 +36,21 @@ export default class RequestSent extends Component {
     } else {
       cancel = (
         <Button size="small" onClick={this.handleCancel}>
-          {<ClearIcon style={button} />}
+          {<ClearIcon />}
         </Button>
       );
     }
 
     return (
       <Grid container direction="column" spacing={16}>
+        <br />
         <Grid item>
           <Grid container alignItems="center">
             <Grid item xs={6} sm={4} md={6} lg={4}>
-              <Typography>{this.props.member.ActivityDescription}</Typography>
+              <Typography>
+                {' '}
+                <strong> {this.props.member.ActivityDescription} </strong>
+              </Typography>
             </Grid>
             <Grid item xs={6} sm={4} md={6} lg={4} align="center">
               <Typography>{this.props.member.ParticipationDescription}</Typography>
