@@ -79,7 +79,6 @@ export default class Profile extends Component {
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({ image: imageNoHeader, photoOpen: false, preview: null });
       window.didProfilePicUpdate = true;
-      this.setState({ isSnackBarOpen: true });
     }
   };
 
@@ -92,7 +91,6 @@ export default class Profile extends Component {
     window.didProfilePicUpdate = true;
     this.setState({ photoOpen: false, preview: null });
     this.loadProfile();
-    this.setState({ isSnackBarOpen: true });
   };
 
   toggleImagePrivacy = () => {
@@ -655,7 +653,7 @@ export default class Profile extends Component {
                               <DialogTitle id="simple-dialog-title">
                                 Edit your social media links
                               </DialogTitle>
-                              <DialogContent>{linksDialog}</DialogContent>
+                              {linksDialog}
                             </Dialog>
                           </Grid>
                         </Grid>
