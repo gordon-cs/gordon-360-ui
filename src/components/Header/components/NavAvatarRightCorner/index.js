@@ -10,6 +10,7 @@ import { signOut } from '../../../../services/auth';
 
 import './nav-avatar-right-corner.css';
 import user from '../../../../services/user';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
@@ -105,19 +106,21 @@ export default class GordonNavAvatarRightCorner extends Component {
 
     return (
       <section className="right-side-container">
-        <IconButton
-          className="gordon-nav-avatar-right-corner"
-          classes={{
-            root: 'gordon-nav-avatar-right-corner nav-avatar-button',
-            label: 'nav-avatar-label',
-          }}
-          aria-label="More"
-          aria-owns={open ? 'global-menu' : null}
-          aria-haspopup="true"
-          onClick={this.onClick}
-        >
-          {avatar}
-        </IconButton>
+        <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
+          <IconButton
+            className="gordon-nav-avatar-right-corner"
+            classes={{
+              root: 'gordon-nav-avatar-right-corner nav-avatar-button',
+              label: 'nav-avatar-label',
+            }}
+            aria-label="More"
+            aria-owns={open ? 'global-menu' : null}
+            aria-haspopup="true"
+            onClick={this.onClick}
+          >
+            {avatar}
+          </IconButton>
+        </Tooltip>
         <Menu
           id="nav-avatar-right-corner"
           anchorEl={this.state.anchorEl}
