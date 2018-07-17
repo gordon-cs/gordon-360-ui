@@ -6,8 +6,8 @@
     max-height: 60vh;
     overflow-y: auto;
     overflow-x: hidden;
-    right:20px;
-    border-radius:4px;
+    right: 20px;
+    border-radius: 4px;
   }
 
   .people-search-suggestion {
@@ -18,50 +18,49 @@
 
   @media (min-width: 0px) {
     .people-search-root {
-      width: 9rem;
+      width: 7rem;
       &:focus-within {
-        width: 10rem;
+        width: 7rem;
       }
     }
   }
 
   @media (min-width: $break-xs) {
     //margin-left: -10rem;
-    .people-search-root, {
+    .people-search-root {
       width: 8rem;
       &:focus-within {
-        width: 12rem;
+        width: 8rem;
       }
     }
   }
 
   @media (min-width: 400px) {
     //margin-left: -8rem;
-    .people-search-root, {
+    .people-search-root {
       width: 10rem;
       &:focus-within {
-        width: 14rem;
+        width: 10rem;
       }
     }
   }
 
-  @media (min-width:$break-sm){
-    .people-search-suggestion{
-      width:12rem;
+  @media (min-width: $break-sm) {
+    .people-search-suggestion {
+      width: 12rem;
     }
-    .people-search-dropdown
-    {
-      right:28px;
+    .people-search-dropdown {
+      right: 28px;
     }
   }
 
   @media (min-width: $break-sm) {
     width: auto;
     //margin-left: -18px;
-    .people-search-root, {
+    .people-search-root {
       width: 12rem;
       &:focus-within {
-        width: 17rem;
+        width: 14.5rem;
       }
     }
   }
@@ -70,7 +69,7 @@
     .text-field {
       width: 14rem;
     }
-    .people-search-root, {
+    .people-search-root {
       align-self: flex-end;
       width: 15rem;
       &:focus-within {
@@ -90,18 +89,16 @@
         width: 15rem;
       }
     }
-    .people-search-suggestion{
+    .people-search-suggestion {
       width: 12.25rem;
     }
   }
-  @media (min-width:960px)
-  {
-    .people-search-suggestion{
-      width:8.5rem;
+  @media (min-width: 960px) {
+    .people-search-suggestion {
+      width: 8.5rem;
     }
-    .people-search-dropdown
-    {
-      right:auto;
+    .people-search-dropdown {
+      right: auto;
     }
   }
 
@@ -116,8 +113,8 @@
         width: 16rem;
       }
     }
-    .people-search-suggestion{
-      width:11.15rem;
+    .people-search-suggestion {
+      width: 11.15rem;
     }
   }
 
