@@ -54,13 +54,13 @@ Links to the homepages of libraries used in this project, listed here for easy r
   Material-UI is a widely-used React implementation of Google's Material Design. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
   _Note_: this project currently uses `material-ui@next`, which is a beta version of the library. The library is approaching a 1.0.0 release, so the beta version is more similar to that release than the current stable version is.
 
-- [Downshift](https://github.com/paypal/downshift)
+* [Downshift](https://github.com/paypal/downshift)
 
   Downshift is a component that can be used for building autocomplete components. We use it because it is used in one of the Material-UI autocomplete examples, showing that it integrates well with Material-UI components.
 
 ### Connect Local Backend To React
 
-- After setting up the backend as documented in [Project Raymond](http://localhost:3000/static/js/C:/Users/Nathaniel.Rudenberg/Documents/gordon-360-ui/src/views/About/about.css):
+- After setting up the backend as documented in [Project Raymond](https://github.com/gordon-cs/gordon-360-api):
 
   - Open `package.json` and scroll to the bottom.
 
@@ -80,9 +80,9 @@ As noted earlier, gordon-360-ui uses React Router for routing URLs to different 
 
 To remedy this, a `web.config` file with [these contents](https://gist.githubusercontent.com/lcostea/f17663ebf041b103d98989b6b52d8353/raw/6744846d241c9b785df9054fecbcfc4f2e5dda80/web.config) can be placed in the server's root directory (`D:\wwwroot\360train.gordon.edu`). This file is read by the IIS Server. It provides commands to the URL Rewrite extension (which must be installed in the "Internet Information Services (IIS) Manager" program and can be downloaded from [The Official Microsoft IIS Site](https://www.iis.net/downloads/microsoft/url-rewrite)) which tells the server to reroute all invalid URLs to the server's root directory, eliminating the 404 errors and allowing React Router to handle URLs as expected.
 
-##### The Bad  News, and a Workaround
+##### The Bad News, and a Workaround
 
-Unfortunately, due to some yet-to-be-fathomed fluke, our attempts to make this `web.config` file be automatically copied to the server root upon deployment have as of yet been foiled. When placed in the `public` directory of our repository (along with other files which are automatically copied over to the server root by an `scp` command in `deploy.sh`), the `web.config` file is copied to the `static` directory on the server rather than to the server root, and the contents of the file are erased (the file is empty). We theorize that this issue is caused by a hiccup in the implementation of `scp` within [PowerShell Server](https://www.nsoftware.com/powershell/server/), a third-party, proprietary program used on the server to facilitate `ssh` connections. (This behavior also occurred with a small number of arbitrarily-named test files, so it is not specific to the "`web.config`" filename.) The file can be placed in the server root directory manually, but it will be removed upon the next deployment (by the deployment script). 
+Unfortunately, due to some yet-to-be-fathomed fluke, our attempts to make this `web.config` file be automatically copied to the server root upon deployment have as of yet been foiled. When placed in the `public` directory of our repository (along with other files which are automatically copied over to the server root by an `scp` command in `deploy.sh`), the `web.config` file is copied to the `static` directory on the server rather than to the server root, and the contents of the file are erased (the file is empty). We theorize that this issue is caused by a hiccup in the implementation of `scp` within [PowerShell Server](https://www.nsoftware.com/powershell/server/), a third-party, proprietary program used on the server to facilitate `ssh` connections. (This behavior also occurred with a small number of arbitrarily-named test files, so it is not specific to the "`web.config`" filename.) The file can be placed in the server root directory manually, but it will be removed upon the next deployment (by the deployment script).
 
 Currently, a reasonably elegant workaround has been created by adding a couple of lines to the `deploy.sh` script in the `scripts` directory of the repository. The contents of the `web_config` file (located in the root of the repo) are loaded into a shell variable at the beginning of script execution, and the contents of the file are transferred to the server using an `ssh` connection. This is done by simply echoing the contents of the file (from the aforementioned variable) and redirecting console output (in PowerShell on the server) into a (new) file called `web.config`. This solution achieves the desired result, and allows the contents of the file to be stored in the repo (in the `web_config` file), making future editing much easier than if the file was stored only on the server.
 
