@@ -45,7 +45,7 @@ export default class About extends Component {
               <li>Membership affinity connections</li>
               <li>Student leader and Advisor Activity self-management</li>
               <li>Rosters and administrative records</li>
-              <li>Student Membership and Leadership Experience Transcript</li>
+              <li>Student Membership and Leadership Co-Curricular Transcript</li>
             </Typography>
             <br />
             <Grid item>
