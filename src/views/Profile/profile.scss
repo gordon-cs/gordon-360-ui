@@ -13,8 +13,39 @@
 }
 
 .email-link {
+  color: #000;
+  font-size: 28px;
+  transition: color 200ms;
+}
+
+.email-link-container:hover .email-link {
+  transition: color 200ms;
+  color: $primary-cyan;
+}
+
+.email-link-container:not(:hover) .email-link {
+  transition: color 200ms;
+  color: #000;
+}
+
+.icon {
+  color: #000;
+  font-size: 28px;
+  transition: color 200ms;
+
   &:hover {
-    color: #00aeef;
+    color: $primary-cyan;
+    cursor: pointer;
+  }
+}
+
+.edit-icon {
+  color: #000;
+  transition: color 200ms;
+
+  &:hover {
+    color: $primary-cyan;
+    cursor: pointer;
   }
 }
 

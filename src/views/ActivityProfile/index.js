@@ -16,6 +16,7 @@ import Advisors from './components/Advisors';
 import GroupContacts from './components/GroupContacts';
 import GordonLoader from '../../components/Loader';
 import Membership from './components/Membership';
+import DialogActions from '@material-ui/core/DialogActions';
 import membership from '../../services/membership';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
@@ -189,82 +190,83 @@ class ActivityProfile extends Component {
               </Button>
             </CardContent>
 
-            <Dialog open={this.state.openEditActivity}>
+            <Dialog open={this.state.openEditActivity} fullWidth>
               <DialogTitle> Edit {activityDescription}</DialogTitle>
-              <DialogContent className="edit-activity-dialog-box">
-                <Grid container align="center" spacing={16}>
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
-                      Remove image
-                    </Button>
-                  </Grid>
-
-                  <Dialog open={this.state.openRemoveImage} keepMounted align="center">
-                    <DialogTitle>Are you sure you want to remove image?</DialogTitle>
-                    <DialogContent>
-                      <Grid container spacing={16}>
-                        <Grid item xs={6} sm={6} md={6} lg={6}>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={this.onRemoveImage}
-                            raised
-                          >
-                            OK
-                          </Button>
-                        </Grid>
-                        <Grid item xs={6} sm={6} md={6} lg={6}>
-                          <Button variant="contained" onClick={this.onClose} raised>
-                            CANCEL
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </DialogContent>
-                  </Dialog>
-
-                  <Grid item xs={12} align="center">
-                    <Typography>Description</Typography>
-                    <TextField
-                      fullWidth
-                      multiline
-                      defaultValue={activityBlurb}
-                      onChange={this.handleChange('tempActivityBlurb')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} align="center" padding={6}>
-                    <Typography>Special Information for Joining</Typography>
-                    <TextField
-                      fullWidth
-                      multiline
-                      defaultValue={activityJoinInfo}
-                      onChange={this.handleChange('tempActivityJoinInfo')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} align="center" padding={6}>
-                    <Typography>Website</Typography>
-                    <TextField
-                      fullWidth
-                      defaultValue={activityURL}
-                      onChange={this.handleChange('tempActivityURL')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6} lg={6} padding={6}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={this.onEditActivity}
-                      raised
-                    >
-                      Submit changes
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6} lg={6} padding={6}>
-                    <Button variant="contained" color="primary" onClick={this.onClose} raised>
-                      Cancel
-                    </Button>
-                  </Grid>
+              <DialogContent>
+                <Grid item>
+                  <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
+                    Remove image
+                  </Button>
                 </Grid>
+
+                <Dialog open={this.state.openRemoveImage} keepMounted align="center">
+                  <DialogTitle>Are you sure you want to remove image?</DialogTitle>
+                  <DialogContent>
+                    <Grid container spacing={16}>
+                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={this.onRemoveImage}
+                          raised
+                        >
+                          OK
+                        </Button>
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                        <Button variant="contained" onClick={this.onClose} raised>
+                          CANCEL
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </DialogContent>
+                </Dialog>
+                <form onSubmit={this.handleSubmit}>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Description"
+                        margin="dense"
+                        multiline
+                        fullWidth
+                        defaultValue={activityBlurb}
+                        onChange={this.handleChange('tempActivityBlurb')}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Special Information for Joining"
+                        margin="dense"
+                        multiline
+                        fullWidth
+                        defaultValue={activityJoinInfo}
+                        onChange={this.handleChange('tempActivityJoinInfo')}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Website"
+                        margin="dense"
+                        multiline
+                        fullWidth
+                        defaultValue={activityURL}
+                        onChange={this.handleChange('tempActivityURL')}
+                      />
+                    </Grid>
+                  </Grid>
+                </form>
               </DialogContent>
+
+              <DialogActions>
+                <Button variant="contained" color="primary" onClick={this.onClose} raised>
+                  Cancel
+                </Button>
+                <Button variant="contained" color="primary" onClick={this.onEditActivity} raised>
+                  Submit
+                </Button>
+              </DialogActions>
             </Dialog>
           </section>
         );

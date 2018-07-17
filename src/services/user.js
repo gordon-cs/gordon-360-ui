@@ -445,6 +445,22 @@ const getCurrentMemberships = async id => {
   return myCurrentInvolvements;
 };
 
+//Take student's memberships and filter for current only, omit the memberships that are just 'Guest'
+const getCurrentMembershipsWithoutGuests = async id => {
+  let myInvolvements = await getMembershipsAlphabetically(id);
+  let myCurrentInvolvementsWithoutGuests = [];
+  const { SessionCode: sessionCode } = await session.getCurrent();
+  for (let i = 0; i < myInvolvements.length; i += 1) {
+    if (
+      myInvolvements[i].SessionCode === sessionCode &&
+      !(myInvolvements[i].ParticipationDescription === 'Guest')
+    ) {
+      myCurrentInvolvementsWithoutGuests.push(myInvolvements[i]);
+    }
+  }
+  return myCurrentInvolvementsWithoutGuests;
+};
+
 /**
  * Get requests sent by a specific student
  * @param {String} id Identifier for student
@@ -564,6 +580,7 @@ export default {
   getPublicMemberships,
   getMembershipsAlphabetically,
   getCurrentMemberships,
+  getCurrentMembershipsWithoutGuests,
   getLeaderPositions,
   getSentMembershipRequests,
   getProfileInfo,

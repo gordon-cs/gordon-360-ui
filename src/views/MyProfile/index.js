@@ -79,7 +79,6 @@ export default class Profile extends Component {
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({ image: imageNoHeader, photoOpen: false, preview: null });
       window.didProfilePicUpdate = true;
-      this.setState({ isSnackBarOpen: true });
     }
   };
 
@@ -92,7 +91,6 @@ export default class Profile extends Component {
     window.didProfilePicUpdate = true;
     this.setState({ photoOpen: false, preview: null });
     this.loadProfile();
-    this.setState({ isSnackBarOpen: true });
   };
 
   toggleImagePrivacy = () => {
@@ -406,15 +404,6 @@ export default class Profile extends Component {
       );
     }
 
-    let email;
-    if (this.state.profile.Email !== '') {
-      email = (
-        <div>
-          <Typography className="email-link">{this.state.profile.Email}</Typography>
-        </div>
-      );
-    }
-
     return (
       <div>
         {this.state.loading && <GordonLoader />}
@@ -479,19 +468,35 @@ export default class Profile extends Component {
                               {instagramButton}
                               {editButton}
                             </Grid>
-                            <a href={`mailto:${this.state.profile.Email}`} className="icon">
-                              <Grid
-                                container
-                                justify="center"
-                                spacing="16"
-                                style={{ marginTop: '20px' }}
+                            {this.state.profile.Email !== '' && (
+                              <div
+                                style={{
+                                  marginTop: '20px',
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                }}
                               >
-                                <Grid item>
-                                  <EmailIcon />
-                                </Grid>
-                                <Grid item>{email}</Grid>
-                              </Grid>
-                            </a>
+                                <a href={`mailto:${this.state.profile.Email}`}>
+                                  <div
+                                    className="email-link-container"
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      alignContent: 'center',
+                                      justifyContent: 'center',
+                                    }}
+                                  >
+                                    <EmailIcon
+                                      className="email-link"
+                                      style={{ marginRight: '0.75rem' }}
+                                    />
+                                    <Typography className="email-link">
+                                      {this.state.profile.Email}
+                                    </Typography>
+                                  </div>
+                                </a>
+                              </div>
+                            )}
                             <Dialog
                               open={this.state.photoOpen}
                               keepMounted
@@ -648,7 +653,7 @@ export default class Profile extends Component {
                               <DialogTitle id="simple-dialog-title">
                                 Edit your social media links
                               </DialogTitle>
-                              <DialogContent>{linksDialog}</DialogContent>
+                              {linksDialog}
                             </Dialog>
                           </Grid>
                         </Grid>
