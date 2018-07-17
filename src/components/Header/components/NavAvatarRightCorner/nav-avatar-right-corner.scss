@@ -1,5 +1,9 @@
 @import '../../../../vars';
 
+.tooltip {
+  background-color: $neutral-dark-gray !important;
+}
+
 @media (max-width: $break-md) {
   .right-side-container {
     display: none !important;
