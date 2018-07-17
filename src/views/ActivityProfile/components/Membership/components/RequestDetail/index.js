@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import Button from 'material-ui/Button';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import ExpansionPanel, {
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+} from 'material-ui/ExpansionPanel';
+import Grid from 'material-ui/Grid';
+import Typography from 'material-ui/Typography';
 
 import { gordonColors } from '../../../../../../theme';
 import membership from '../../../../../../services/membership';
@@ -46,12 +47,12 @@ export default class RequestDetail extends Component {
           <Typography>Title/Comment: {this.props.member.CommentText}</Typography>
         </Grid>
         <Grid item xs={6} sm={6} md={6} lg={6} padding={6}>
-          <Button variant="contained" color="primary" onClick={this.onApprove} raised>
+          <Button color="primary" onClick={this.onApprove} raised>
             Approve
           </Button>
         </Grid>
         <Grid item xs={6} sm={6} md={6} lg={6} padding={6}>
-          <Button variant="contained" style={redButton} onClick={this.onDeny} raised>
+          <Button style={redButton} onClick={this.onDeny} raised>
             Deny
           </Button>
         </Grid>

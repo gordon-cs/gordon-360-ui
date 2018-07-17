@@ -4,6 +4,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
@@ -12,14 +13,20 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
-
+import Snackbar from '@material-ui/core/Snackbar';
 import activity from '../../../../services/activity';
 import '../../activity-profile.css';
 import GordonLoader from '../../../../components/Loader';
-import MemberDetail from './components/MemberDetail';
+import MemberList from './components/MemberList';
 import membership from '../../../../services/membership';
-import RequestDetail from './components/RequestDetail';
+import IconButton from '@material-ui/core/IconButton';
+//import RequestDetail from './components/RequestDetail';
+import CloseIcon from '@material-ui/icons/Close';
 import user from '../../../../services/user';
+import { gordonColors } from '../../../../theme';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
+import AddPersonIcon from '@material-ui/icons/PersonAdd';
 
 export default class Membership extends Component {
   constructor(props) {
@@ -37,6 +44,7 @@ export default class Membership extends Component {
     this.onUnsubscribe = this.onUnsubscribe.bind(this);
 
     this.state = {
+      membership: [],
       openAddMember: false,
       openJoin: false,
       status: this.props.status,
@@ -52,10 +60,37 @@ export default class Membership extends Component {
       addGordonID: '',
       requests: [],
     };
+    this.isMobileView = false;
+    this.breakpointWidth = 810;
   }
 
   async componentWillMount() {
+    this.getMembership();
     this.loadMembers();
+  }
+
+  //Has to rerender on screen resize in order for table to switch to the mobile view
+  resize = () => {
+    if (this.breakpointPassed()) {
+      this.isMobileView = !this.isMobileView;
+      this.forceUpdate();
+    }
+  };
+
+  //checks if the screen has been resized past the mobile breakpoint
+  //allows for forceUpdate to only be called when necessary, improving resizing performance
+  breakpointPassed() {
+    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
+    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
+    else return false;
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
   }
 
   handleSelectParticipationLevel = event => {
@@ -85,6 +120,26 @@ export default class Membership extends Component {
     await activity.reopenActivity(this.props.activityCode, this.state.sessionInfo.SessionCode);
     this.refresh();
   }
+
+  async getMembership() {
+    let memberships = await user.getCurrentMemberships(this.state.id);
+    let membership;
+    for (let i = 0; i < memberships.length; i += 1) {
+      if (memberships[i].ActivityCode === this.props.activityCode) {
+        membership = memberships[i];
+      }
+    }
+    this.setState({ membership });
+    return membership;
+  }
+
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ isSnackBarOpen: false });
+  };
 
   onClose() {
     this.setState({
@@ -127,7 +182,8 @@ export default class Membership extends Component {
     };
     membership.requestMembership(data);
     this.onClose();
-    this.refresh();
+    this.setState({ isSnackBarOpen: true });
+    //Used to call this.refresh() here, but it caused requests not to go through
   }
 
   // Called when Subscribe button clicked
@@ -137,7 +193,7 @@ export default class Membership extends Component {
       SESS_CDE: this.state.sessionInfo.SessionCode,
       ID_NUM: user.getLocalInfo().id,
       PART_CDE: 'GUEST',
-      COMMENT_TXT: 'Basic Follower',
+      COMMENT_TXT: 'Subscriber',
       GRP_ADMIN: false,
     };
     await membership.addMembership(data);
@@ -146,10 +202,9 @@ export default class Membership extends Component {
 
   // Called when Unsubscribe button clicked
   async onUnsubscribe() {
-    let membershipID = this.state.participationDetail[2];
-    await membership.remove(membershipID);
+    let participationDescription = this.state.participationDetail[2];
+    await membership.remove(participationDescription);
     this.setState({ participationDetail: [false, false, null] });
-    this.refresh();
   }
 
   async loadMembers() {
@@ -216,6 +271,7 @@ export default class Membership extends Component {
     const formControl = {
       padding: 10,
     };
+    let membership = this.state.membership;
     let content;
     let requestList;
     let confirmRoster;
@@ -225,6 +281,12 @@ export default class Membership extends Component {
     members.sort((a, b) => this.compareFunction(a, b));
     let subscribeButton;
     let isActivityClosed;
+    let header;
+    const headerStyle = {
+      backgroundColor: gordonColors.primary.blue,
+      color: '#FFF',
+      padding: '10px',
+    };
     if (this.state.status === 'CLOSED') {
       isActivityClosed = true;
     } else {
@@ -235,14 +297,37 @@ export default class Membership extends Component {
     } else {
       if (this.state.participationDetail[0] && this.state.participationDetail[1] !== 'Guest') {
         // User is in activity and not a guest
-
         if (this.state.isAdmin) {
+          header = (
+            <div style={headerStyle}>
+              <Grid container direction="row" spacing={16}>
+                <Grid item xs={3}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    NAME
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    PARTICIPATION
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    TITLE/COMMENT
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    ADMIN
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
+          );
           if (this.state.requests.length === 0) {
             requestList = <Typography>There are no pending requests</Typography>;
           } else {
-            requestList = this.state.requests.map(request => (
-              <RequestDetail member={request} key={request.RequestID} />
-            ));
+            requestList = <RequestsReceived involvement={membership} />;
           }
           if (this.state.participationDetail[1] === 'Advisor') {
             if (this.state.status === 'OPEN') {
@@ -268,23 +353,22 @@ export default class Membership extends Component {
           }
           adminView = (
             <section>
+              <Grid item xs={12}>
+                <Card>
+                  <div style={headerStyle}>
+                    <Typography variant="body2" style={headerStyle}>
+                      MEMBERSHIP REQUESTS
+                    </Typography>
+                  </div>
+                </Card>
+              </Grid>
               <Card>
                 <CardContent>
-                  <Grid container>
-                    <Grid item xs={6} sm={4} md={4} lg={4}>
-                      <Button
-                        color="primary"
-                        disabled={isActivityClosed}
-                        onClick={this.openAddMemberDialog}
-                        raised
-                      >
-                        Add member
-                      </Button>
-                    </Grid>
+                  <Grid container spacing={16}>
                     <Dialog open={this.state.openAddMember} keepMounted align="center">
                       <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
                       <DialogContent>
-                        <Grid container align="center" padding={6}>
+                        <Grid container align="center" padding={6} spacing={16}>
                           <Grid item xs={12} padding={6} align="center">
                             <Typography>Student Email</Typography>
                             <TextField
@@ -304,9 +388,9 @@ export default class Membership extends Component {
                                   displayEmpty
                                 >
                                   <MenuItem value="ADV">Advisor</MenuItem>
-                                  <MenuItem value="GUEST">Guest</MenuItem>
                                   <MenuItem value="LEAD">Leader</MenuItem>
                                   <MenuItem value="MEMBR">Member</MenuItem>
+                                  <MenuItem value="GUEST">Subscriber</MenuItem>
                                 </Select>
                               </FormControl>
                             </Grid>
@@ -320,7 +404,7 @@ export default class Membership extends Component {
                               />
                             </Grid>
                           </Grid>
-                          <Grid item xs={12} sm={6} style={formControl}>
+                          <Grid item xs={12} sm={6} style={formControl} justifyContent="right">
                             <Button
                               variant="contained"
                               color="primary"
@@ -343,10 +427,19 @@ export default class Membership extends Component {
                         </Grid>
                       </DialogContent>
                     </Dialog>
-                    <Grid item xs={12}>
-                      <Typography variant="headline">Membership Requests</Typography>
-                      {requestList}
+
+                    <Grid item xs={6} sm={4} md={4} lg={4}>
+                      <Button
+                        color="primary"
+                        disabled={isActivityClosed}
+                        onClick={this.openAddMemberDialog}
+                        raised
+                      >
+                        <AddPersonIcon />
+                        Add member
+                      </Button>
                     </Grid>
+                    {requestList}
                     <Grid item>{confirmRoster}</Grid>
                   </Grid>
                 </CardContent>
@@ -354,18 +447,49 @@ export default class Membership extends Component {
               {ferpaAsterisks}
             </section>
           );
+        } else {
+          header = (
+            <div style={headerStyle}>
+              <Grid container direction="row" spacing={16}>
+                <Grid item xs={6}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    NAME
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    PARTICIPATION
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
+          );
+        }
+        if (window.innerWidth < this.breakpointWidth) {
+          header = (
+            <div style={headerStyle}>
+              <Grid>
+                <Typography variant="body2" className="header" style={headerStyle}>
+                  MEMBERS
+                </Typography>
+              </Grid>
+            </div>
+          );
         }
         content = (
           <section>
             {adminView}
-            {members.map(groupMember => (
-              <MemberDetail
-                member={groupMember}
-                admin={this.state.isAdmin}
-                groupAdmin={groupMember.GroupAdmin}
-                key={groupMember.MembershipID}
-              />
-            ))}
+            <Card>
+              {header}
+              {members.map(groupMember => (
+                <MemberList
+                  member={groupMember}
+                  admin={this.state.isAdmin}
+                  groupAdmin={groupMember.GroupAdmin}
+                  key={groupMember.MembershipID}
+                />
+              ))}
+            </Card>
           </section>
         );
       } else {
@@ -403,8 +527,8 @@ export default class Membership extends Component {
             </Button>
             <Dialog open={this.state.openJoin} keepMounted align="center">
               <DialogContent>
-                <Grid container align="center" padding={6}>
-                  <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
+                <Grid container align="center" padding={6} spacing={16}>
+                  <Grid item xs={12} padding={6}>
                     <DialogTitle>Join {this.state.activityDescription}</DialogTitle>
                     <Typography>Participation (Required)</Typography>
                     <Grid item padding={6} align="center">
@@ -418,31 +542,40 @@ export default class Membership extends Component {
                             <em>None</em>
                           </MenuItem>
                           <MenuItem value="ADV">Advisor</MenuItem>
-                          <MenuItem value="GUEST">Guest</MenuItem>
                           <MenuItem value="LEAD">Leader</MenuItem>
                           <MenuItem value="MEMBR">Member</MenuItem>
+                          {/* <MenuItem value="GUEST">Subscriber</MenuItem> */}
                         </Select>
                       </FormControl>
                     </Grid>
                     <Grid item align="center">
-                      <Typography>Title/Comment: (Optional)</Typography>
                       <TextField
+                        label="Title/Comment: (Optional)"
                         fullWidth
-                        defaultValue=""
                         onChange={this.handleText('titleComment')}
                         style={formControl}
                       />
                     </Grid>
-                    <Grid item style={formControl}>
-                      <Button variant="contained" color="primary" onClick={this.onRequest} raised>
-                        REQUEST MEMBERSHIP
+
+                    <DialogActions>
+                      <Button
+                        onClick={this.onClose}
+                        variant="contained"
+                        style={formControl}
+                        color="primary"
+                      >
+                        Cancel
                       </Button>
-                    </Grid>
-                    <Grid item xs={12} sm={12} style={formControl}>
-                      <Button variant="contained" color="primary" onClick={this.onClose} raised>
-                        CANCEL
+                      <Button
+                        color="primary"
+                        type="submit"
+                        variant="contained"
+                        style={formControl}
+                        onClick={this.onRequest}
+                      >
+                        Submit
                       </Button>
-                    </Grid>
+                    </DialogActions>
                   </Grid>
                 </Grid>
               </DialogContent>
@@ -451,6 +584,40 @@ export default class Membership extends Component {
         );
       }
     }
-    return <section>{content}</section>;
+    return (
+      <section>
+        {content}
+
+        <div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.isSnackBarOpen}
+            autoHideDuration={6000}
+            onClose={this.handleClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={
+              <span id="message-id">
+                <CheckCircleIcon
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '1rem',
+                  }}
+                />Success!
+              </span>
+            }
+            action={[
+              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
+                <CloseIcon />
+              </IconButton>,
+            ]}
+          />
+        </div>
+      </section>
+    );
   }
 }

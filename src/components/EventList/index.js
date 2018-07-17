@@ -76,7 +76,11 @@ export default class EventList extends Component {
         },
         {
           key: 'timeRange',
-          label: 'Date & Time     ',
+          label: 'Date',
+        },
+        {
+          key: 'timeRange',
+          label: 'Time',
         },
       ];
 
@@ -109,9 +113,14 @@ export default class EventList extends Component {
                 LOCATION
               </Typography>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={2}>
               <Typography variant="body2" style={headerStyle}>
-                DATE & TIME
+                DATE
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography variant="body2" style={headerStyle}>
+                TIME
               </Typography>
             </Grid>
           </Grid>

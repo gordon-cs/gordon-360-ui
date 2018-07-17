@@ -16,7 +16,7 @@ import http from './http';
  * @property {String} ActivityImagePath URL path for activity image
  * @property {String} Description Comment text for membership
  * @property {String} EndDate Often null
- * @property {String} FirstName First Name
+ * @property {String} FirstName First Name.
  * @property {boolean} GroupAdmin Boolean if Group Admin or not
  * @property {Number} IDNumber User id
  * @property {String} LastName Last Name
@@ -40,7 +40,7 @@ import http from './http';
  * @property {Number} IDNumber User id
  * @property {String} LastName Last Name
  * @property {String} Participation Particpation Code or abbreviation
- * @property {String} ParticipationDescription Participation description
+ * @property {String} ParticipationDescription Participation description (Advisor/Leader/Member/Guest)
  * @property {String} RequestApproved Status of request: Pending, Approved, or Denied
  * @property {Number} RequestID Request ID
  * @property {String} SessionCode Identifier for session
@@ -97,6 +97,15 @@ const checkAdmin = (id, sessionCode, activityCode) => {
  */
 const denyRequest = requestID => {
   return http.post(`requests/${requestID}/deny`);
+};
+
+/**
+ * Cancel request with given request id
+ * @param {String} requestID request id
+ * @return {Promise.<Object>} deleted object
+ */
+const cancelRequest = requestID => {
+  return http.del(`requests/${requestID}`);
 };
 
 /**
@@ -183,10 +192,10 @@ const getEmailAccount = async email => {
 };
 
 /**
- * Get number of followers (guests) of an activity
+ * Get number of subscribers (guests) of an activity
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
- * @returns {Number} Number of followers
+ * @returns {Number} Number of subscribers
  */
 const getFollowersNum = (activityCode, sessionCode) =>
   http.get(`memberships/activity/${activityCode}/followers/${sessionCode}`);
@@ -267,7 +276,7 @@ function requestMembership(data) {
  * @param {String} id User id
  * @param {String} sessionCode Identifier for session
  * @param {String} activityCode Identifier for activity
- * @return {Array} 3 elements: boolean if in specific activity and session, boolean if guest,
+ * @return {Array} 3 elements: boolean if in specific activity and session, string of participation description,
  *                  and membershipID if in specific activity and session
  */
 const search = (id, sessionCode, activityCode) => {
@@ -299,6 +308,7 @@ export default {
   approveRequest,
   checkAdmin,
   denyRequest,
+  cancelRequest,
   editMembership,
   get,
   getAll,
@@ -308,6 +318,7 @@ export default {
   getMembersNum,
   getIndividualMembership,
   getRequests,
+  filterCurrentRequests,
   remove,
   requestMembership,
   search,

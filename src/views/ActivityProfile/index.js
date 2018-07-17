@@ -5,19 +5,18 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-
 import activity from '../../services/activity';
 import './activity-profile.css';
 import Advisors from './components/Advisors';
 import GroupContacts from './components/GroupContacts';
 import GordonLoader from '../../components/Loader';
 import Membership from './components/Membership';
+import DialogActions from '@material-ui/core/DialogActions';
 import membership from '../../services/membership';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
@@ -147,6 +146,7 @@ class ActivityProfile extends Component {
 
   onClose() {
     this.setState({
+      openRemoveImage: false,
       openEditActivity: false,
       alertRemoveImage: false,
     });
@@ -189,82 +189,84 @@ class ActivityProfile extends Component {
                 Edit Activity
               </Button>
             </CardContent>
-            <Dialog open={this.state.openEditActivity}>
+
+            <Dialog open={this.state.openEditActivity} fullWidth>
               <DialogTitle> Edit {activityDescription}</DialogTitle>
               <DialogContent>
-                <Grid container align="center">
-                  <Grid item xs={12} sm={4} md={4} lg={4}>
-                    <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
-                      Remove image
-                    </Button>
-                  </Grid>
-                  <Dialog open={this.state.openRemoveImage} keepMounted align="center">
-                    <DialogTitle>Are you sure you want to remove image?</DialogTitle>
-                    <DialogContent>
-                      <Grid container>
-                        <Grid item xs={6} sm={6} md={6} lg={6}>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={this.onRemoveImage}
-                            raised
-                          >
-                            OK
-                          </Button>
-                        </Grid>
-                        <Grid item xs={6} sm={6} md={6} lg={6}>
-                          <Button variant="contained" onClick={this.onClose} raised>
-                            CANCEL
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </DialogContent>
-                  </Dialog>
-                  <Grid item xs={12} align="center" padding={6}>
-                    <Typography>Description</Typography>
-                    <Input
-                      fullWidth
-                      multiline
-                      rows={4}
-                      defaultValue={activityBlurb}
-                      onChange={this.handleChange('tempActivityBlurb')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} align="center" padding={6}>
-                    <Typography>Special Information for Joining</Typography>
-                    <TextField
-                      fullWidth
-                      multiline
-                      rows={4}
-                      defaultValue={activityJoinInfo}
-                      onChange={this.handleChange('tempActivityJoinInfo')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} align="center" padding={6}>
-                    <Typography>Website</Typography>
-                    <TextField
-                      fullWidth
-                      defaultValue={activityURL}
-                      onChange={this.handleChange('tempActivityURL')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6} lg={6} padding={6}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={this.onEditActivity}
-                      raised
-                    >
-                      Submit changes
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6} lg={6} padding={6}>
-                    <Button variant="contained" color="primary" onClick={this.onClose} raised>
-                      Cancel
-                    </Button>
-                  </Grid>
+                <Grid item>
+                  <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
+                    Remove image
+                  </Button>
                 </Grid>
+
+                <Dialog open={this.state.openRemoveImage} keepMounted align="center">
+                  <DialogTitle>Are you sure you want to remove image?</DialogTitle>
+                  <DialogContent>
+                    <Grid container spacing={16}>
+                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={this.onRemoveImage}
+                          raised
+                        >
+                          OK
+                        </Button>
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={6} lg={6}>
+                        <Button variant="contained" onClick={this.onClose} raised>
+                          CANCEL
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </DialogContent>
+                </Dialog>
+                <form onSubmit={this.handleSubmit}>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Description"
+                        margin="dense"
+                        multiline
+                        fullWidth
+                        defaultValue={activityBlurb}
+                        onChange={this.handleChange('tempActivityBlurb')}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Special Information for Joining"
+                        margin="dense"
+                        multiline
+                        fullWidth
+                        defaultValue={activityJoinInfo}
+                        onChange={this.handleChange('tempActivityJoinInfo')}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Website"
+                        margin="dense"
+                        multiline
+                        fullWidth
+                        defaultValue={activityURL}
+                        onChange={this.handleChange('tempActivityURL')}
+                      />
+                    </Grid>
+                  </Grid>
+                </form>
               </DialogContent>
+
+              <DialogActions>
+                <Button variant="contained" color="primary" onClick={this.onClose} raised>
+                  Cancel
+                </Button>
+                <Button variant="contained" color="primary" onClick={this.onEditActivity} raised>
+                  Submit
+                </Button>
+              </DialogActions>
             </Dialog>
           </section>
         );
@@ -288,10 +290,21 @@ class ActivityProfile extends Component {
           </Typography>
         );
       }
+      let subscribersWord, membersWord;
       let groupContacts = <GroupContacts groupAdmin={this.state.activityGroupAdmins} />;
       let advisors = <Advisors advisors={this.state.activityAdvisors} />;
-      const followersNum = this.state.activityFollowers;
+      const subscribersNum = this.state.activityFollowers;
+      if (subscribersNum === 1) {
+        subscribersWord = 'Subscriber';
+      } else {
+        subscribersWord = 'Subscribers';
+      }
       const membersNum = this.state.activityMembersNum;
+      if (membersNum === 1) {
+        membersWord = 'Member';
+      } else {
+        membersWord = 'Members';
+      }
       let membership = (
         <Membership
           members={this.state.activityMembers}
@@ -312,7 +325,11 @@ class ActivityProfile extends Component {
                 {activityDescription}
               </Typography>
               <Grid align="center" className="activity-image" item>
-                <img alt={activity.activityDescription} src={activityImagePath} className="img" />
+                <img
+                  alt={activity.activityDescription}
+                  src={activityImagePath}
+                  className="rounded-corners"
+                />
               </Grid>
               <Grid item>{editActivity}</Grid>
               <Typography variant="body1">
@@ -328,8 +345,8 @@ class ActivityProfile extends Component {
                 {this.state.activityInfo.ActivityJoinInfo}
               </Typography>
               <Typography variant="body1">
-                <strong>Current Activity Roster: </strong>
-                {membersNum} Member(s) and {followersNum} follower(s)
+                <strong>Current Involvement Roster: </strong>
+                {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
               </Typography>
             </CardContent>
             {membership}
@@ -340,7 +357,7 @@ class ActivityProfile extends Component {
 
     return (
       <section>
-        <Grid container justify="center">
+        <Grid container justify="center" spacing="16">
           <Grid item xs={12} md={12} lg={8}>
             {content}
           </Grid>
