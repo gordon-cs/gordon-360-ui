@@ -11,7 +11,6 @@ import { signOut } from '../../../../services/auth';
 import './nav-avatar-right-corner.css';
 import user from '../../../../services/user';
 import Tooltip from '@material-ui/core/Tooltip';
-import { gordonColors } from '../../../../theme';
 
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
