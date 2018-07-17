@@ -9,6 +9,7 @@ import Events from './views/Events';
 import EventsAttended from './views/EventsAttended';
 import Profile from './views/Profile';
 import MyProfile from './views/MyProfile';
+import Feedback from './views/Feedback';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 export default [
@@ -57,6 +58,11 @@ export default [
     name: 'Attended',
     path: '/attended',
     component: EventsAttended,
+  },
+  {
+    name: 'Feedback',
+    path: '/feedback',
+    component: Feedback,
   },
   {
     name: 'Profile',

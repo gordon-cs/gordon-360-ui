@@ -70,6 +70,11 @@ export default class GordonNavLinks extends Component {
                 <ListItemText primary="About" />
               </ListItem>
             </NavLink>
+            <NavLink exact to="/feedback" onClick={this.props.onLinkClick}>
+              <ListItem button>
+                <ListItemText primary="Feedback" />
+              </ListItem>
+            </NavLink>
             <ListItem button onClick={this.onSignOut}>
               <ListItemText primary="Sign Out" />
             </ListItem>

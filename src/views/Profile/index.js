@@ -212,15 +212,6 @@ export default class Profile extends Component {
       );
     }
 
-    let email;
-    if (this.state.profile.Email !== '') {
-      email = (
-        <div>
-          <Typography className="email-link">{this.state.profile.Email}</Typography>
-        </div>
-      );
-    }
-
     return (
       <div>
         {this.state.loading && <GordonLoader />}
@@ -232,23 +223,23 @@ export default class Profile extends Component {
                   <Grid container alignItems="center" align="center" justify="center" spacing="16">
                     <Grid container alignItems="center" spacing="16">
                       <Grid item xs={12} sm={12} md={12} lg={12}>
-                        {this.state.profile.preferred_photo !== 0 && (
+                        {this.state.prefImage && (
                           <img
                             className="rounded-corners"
                             src={`data:image/jpg;base64,${this.state.prefImage}`}
                             alt=""
                             style={{ 'max-height': '200px', 'min-width': '160px' }}
                           />
-                        )}{' '}
-                        {this.state.profile.show_pic !== 0 &&
-                          this.state.defImage !== undefined && (
-                            <img
-                              className="rounded-corners"
-                              src={`data:image/jpg;base64,${this.state.defImage}`}
-                              alt=""
-                              style={{ 'max-height': '200px', 'min-width': '160px' }}
-                            />
-                          )}
+                        )}
+                        {this.state.prefImage && this.state.defImage && ' '}
+                        {this.state.defImage && (
+                          <img
+                            className="rounded-corners"
+                            src={`data:image/jpg;base64,${this.state.defImage}`}
+                            alt=""
+                            style={{ 'max-height': '200px', 'min-width': '160px' }}
+                          />
+                        )}
                       </Grid>
                     </Grid>
                     <Grid item xs={12} sm={6} md={6} lg={4}>
@@ -272,19 +263,35 @@ export default class Profile extends Component {
                             {linkedInButton}
                             {instagramButton}
                           </Grid>
-                          <a href={`mailto:${this.state.profile.Email}`} className="icon">
-                            <Grid
-                              container
-                              justify="center"
-                              spacing="16"
-                              style={{ marginTop: '20px' }}
+                          {this.state.profile.Email !== '' && (
+                            <div
+                              style={{
+                                marginTop: '20px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                              }}
                             >
-                              <Grid item>
-                                <EmailIcon />
-                              </Grid>
-                              <Grid item>{email}</Grid>
-                            </Grid>
-                          </a>
+                              <a href={`mailto:${this.state.profile.Email}`}>
+                                <div
+                                  className="email-link-container"
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    alignContent: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <EmailIcon
+                                    className="email-link"
+                                    style={{ marginRight: '0.75rem' }}
+                                  />
+                                  <Typography className="email-link">
+                                    {this.state.profile.Email}
+                                  </Typography>
+                                </div>
+                              </a>
+                            </div>
+                          )}
                         </Grid>
                       </Grid>
                     </Grid>
