@@ -36,7 +36,7 @@ export default class RequestSent extends Component {
     } else {
       cancel = (
         <Button size="small" onClick={this.handleCancel}>
-          {<ClearIcon />}
+          {<ClearIcon style={button} />}
         </Button>
       );
     }
