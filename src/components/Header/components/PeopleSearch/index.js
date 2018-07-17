@@ -53,6 +53,8 @@ export default class GordonPeopleSearch extends Component {
     this.state = {
       suggestions: [],
     };
+    this.isMobileView = false;
+    this.breakpointWidth = 400;
   }
   async getSuggestions(query) {
     // Bail if query is missing or is less than minimum query length
@@ -106,7 +108,37 @@ export default class GordonPeopleSearch extends Component {
       </MenuItem>
     );
   }
+
+  //Makes People Search placeholder switch to People to avoid cutting it off
+  //Has to rerender on screen resize in order to switch to the mobile view
+  resize = () => {
+    if (this.breakpointPassed()) {
+      this.isMobileView = !this.isMobileView;
+      this.forceUpdate();
+    }
+  };
+
+  //checks if the screen has been resized past the mobile breakpoint
+  //allows for forceUpdate to only be called when necessary, improving resizing performance
+  breakpointPassed() {
+    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
+    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
+    else return false;
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
+
   render() {
+    let placeholder = 'People Search';
+    if (window.innerWidth < this.breakpointWidth) {
+      placeholder = 'People';
+    }
     return (
       <Downshift
         // Assign reference to Downshift to `this` for usage elsewhere in the component
@@ -117,7 +149,7 @@ export default class GordonPeopleSearch extends Component {
           <span className="gordon-people-search">
             {renderInput(
               getInputProps({
-                placeholder: 'Search for people',
+                placeholder: placeholder,
                 onChange: event => this.getSuggestions(event.target.value),
               }),
             )}
