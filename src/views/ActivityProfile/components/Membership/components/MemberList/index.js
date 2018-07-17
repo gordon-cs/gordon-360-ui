@@ -231,9 +231,9 @@ export default class MemberList extends Component {
                             onChange={this.handleSelect}
                           >
                             <MenuItem value="Advisor">Advisor</MenuItem>
-                            <MenuItem value="Guest">Guest</MenuItem>
                             <MenuItem value="Leader">Leader</MenuItem>
                             <MenuItem value="Member">Member</MenuItem>
+                            <MenuItem value="Guest">Subscriber</MenuItem>
                           </Select>
                         </FormControl>
                       </Grid>

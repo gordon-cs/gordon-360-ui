@@ -192,10 +192,10 @@ const getEmailAccount = async email => {
 };
 
 /**
- * Get number of followers (guests) of an activity
+ * Get number of subscribers (guests) of an activity
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
- * @returns {Number} Number of followers
+ * @returns {Number} Number of subscribers
  */
 const getFollowersNum = (activityCode, sessionCode) =>
   http.get(`memberships/activity/${activityCode}/followers/${sessionCode}`);
