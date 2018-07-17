@@ -102,7 +102,7 @@ export default class About extends Component {
                 <br /> Chris Hansen, Jason Whitehouse &apos;99, Information Systems Group
               </Typography>
               <Typography variant="subheading" gutterBottom>
-                <strong>Software Development Team, 2016/2017</strong>
+                <strong>Software Development Team, Summer 2017</strong>
               </Typography>
               <Typography variant="body1" paragraph>
                 Bradley Boutcher &apos;18, Matthew Felgate &apos;18, Jenny Kim &apos;19, Sam Nguyen
@@ -116,6 +116,16 @@ export default class About extends Component {
               </Typography>
               <Typography variant="body1" paragraph>
                 Addison Abbot &apos;20, Matt Felgate &apos;18, and Rebekah Stauffer &apos;19
+                <br /> Chris Hansen, Jason Whitehouse &apos;99, Information Systems Group
+              </Typography>
+              <Typography variant="subheading" gutterBottom>
+                <strong>Software Development Team, Summer 2018</strong>
+              </Typography>
+              <Typography variant="body1" paragraph>
+                Addison Abbot &apos;20, Nikki Adevai &apos;19, Emily Bishop &apos;20, Stephen
+                Macomber &apos;19, Max Moniz &apos;19, and Nathaniel Rudenberg &apos;20
+                Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning, Summer Practicum in Computer Science
+                (2018)
               </Typography>
               <Typography variant="subheading" gutterBottom>
                 <strong>Beneficent Philanthropes</strong>
