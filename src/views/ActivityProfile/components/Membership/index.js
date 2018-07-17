@@ -4,6 +4,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
@@ -25,7 +26,6 @@ import user from '../../../../services/user';
 import { gordonColors } from '../../../../theme';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
-
 import AddPersonIcon from '@material-ui/icons/PersonAdd';
 
 export default class Membership extends Component {
@@ -549,26 +549,33 @@ export default class Membership extends Component {
                       </FormControl>
                     </Grid>
                     <Grid item align="center">
-                      <Typography>Title/Comment: (Optional)</Typography>
                       <TextField
+                        label="Title/Comment: (Optional)"
                         fullWidth
-                        defaultValue=""
                         onChange={this.handleText('titleComment')}
                         style={formControl}
                       />
                     </Grid>
-                    <Grid container direction="row" alignItems="center" spacing="16">
-                      <Grid item xs={5} sm={4} style={formControl}>
-                        <Button variant="contained" color="primary" onClick={this.onClose} raised>
-                          CANCEL
-                        </Button>
-                      </Grid>
-                      <Grid item xs={7} sm={8} style={formControl}>
-                        <Button variant="contained" color="primary" onClick={this.onRequest} raised>
-                          REQUEST MEMBERSHIP
-                        </Button>
-                      </Grid>
-                    </Grid>
+
+                    <DialogActions>
+                      <Button
+                        onClick={this.onClose}
+                        variant="contained"
+                        style={formControl}
+                        color="primary"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        color="primary"
+                        type="submit"
+                        variant="contained"
+                        style={formControl}
+                        onClick={this.onRequest}
+                      >
+                        Submit
+                      </Button>
+                    </DialogActions>
                   </Grid>
                 </Grid>
               </DialogContent>
