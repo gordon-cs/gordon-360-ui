@@ -453,7 +453,7 @@ const getCurrentMembershipsWithoutGuests = async id => {
   for (let i = 0; i < myInvolvements.length; i += 1) {
     if (
       myInvolvements[i].SessionCode === sessionCode &&
-      !(myInvolvements[i].Participation === 'GUEST')
+      !(myInvolvements[i].ParticipationDescription === 'Guest')
     ) {
       myCurrentInvolvementsWithoutGuests.push(myInvolvements[i]);
     }
