@@ -1,0 +1,41 @@
+//@media screen is css that is in effect when views on a display, @media print takes effect when
+//in a print view (eg after hittig Print Co-Curricular Transcript). Allows logo to only show when printing
+
+.co-curricular-transcript {
+  text-align: center;
+}
+.heading {
+  padding: '20px';
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+    overflow: visible !important;
+  }
+  .heading * {
+    visibility: visible;
+  }
+  .print * {
+    visibility: visible;
+    overflow: visible;
+  }
+  .print-only * {
+    visibility: visible;
+    padding: 0%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin: 0;
+  }
+}
+
+@media screen {
+  .print-only * {
+    visibility: hidden;
+    border-spacing: 0;
+    border-collapse: collapse;
+    height: 0;
+    padding: 0;
+    margin: 0;
+  }
+}

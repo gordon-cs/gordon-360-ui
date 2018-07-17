@@ -31,6 +31,9 @@ const handleError = err => {
  * @return {String} Token for use on API requests
  */
 const getAuth = (username, password) => {
+  if (username.includes('@gordon.edu')) username = username.replace('@gordon.edu', '');
+  else if (username.includes('Gordon.edu')) username = username.replace('@Gordon.edu', '');
+
   const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
   const body = new URLSearchParams({
     username,
@@ -53,7 +56,9 @@ const getAuth = (username, password) => {
  * @return {Promise.<undefined>} Resolved when token is refreshed
  */
 const authenticate = (username, password) =>
-  getAuth(username, password).then(token => storage.store('token', token));
+  getAuth(username, password)
+    .then(token => storage.store('token', token))
+    .then(console.log('auth: authenticate() - done'));
 
 /**
  * Check if current session is authenticated

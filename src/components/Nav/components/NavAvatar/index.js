@@ -1,7 +1,7 @@
-import { withStyles } from 'material-ui/styles';
-import Avatar from 'material-ui/Avatar';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -16,9 +16,7 @@ const styles = theme => ({
 class GordonNavAvatar extends Component {
   constructor(props) {
     super(props);
-
     this.getInitials = this.getInitials.bind(this);
-
     this.state = {
       email: null,
       image: null,
@@ -27,16 +25,31 @@ class GordonNavAvatar extends Component {
     };
   }
   async componentWillMount() {
+    this.loadAvatar();
+  }
+  componentDidMount() {
+    setInterval(this.checkPeer.bind(this), 1500);
+  }
+
+  async loadAvatar() {
     const { name, user_name: username } = user.getLocalInfo();
     this.setState({ name, username });
     const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
       await user.getProfileInfo(),
       await user.getImage(),
     ]);
-
     const image = preferredImage || defaultImage;
-
     this.setState({ email, image });
+  }
+  /**
+   * This method checks a peer component Profile
+   * and rerenders the avatar if the Profile picture is updated
+   */
+  checkPeer() {
+    if (window.didProfilePicUpdate) {
+      this.loadAvatar();
+      window.didProfilePicUpdate = false;
+    }
   }
   getInitials() {
     if (this.state.username) {
@@ -59,7 +72,7 @@ class GordonNavAvatar extends Component {
 
     // Link component to be used with Button component
     const buttonLink = ({ ...props }) => (
-      <Link {...props} to={`/profile/${this.state.username}`} onClick={this.props.onLinkClick} />
+      <Link {...props} to={`/myprofile/${this.state.username}`} onClick={this.props.onLinkClick} />
     );
 
     return (
@@ -72,10 +85,10 @@ class GordonNavAvatar extends Component {
         component={buttonLink}
       >
         {avatar}
-        <Typography type="body2" className="text" align="left" gutterBottom>
+        <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
           {this.state.name}
         </Typography>
-        <Typography type="caption" className="text" align="left" gutterBottom>
+        <Typography variant="caption" className="avatar-text" align="left" gutterBottom>
           {this.state.email}
         </Typography>
       </Button>

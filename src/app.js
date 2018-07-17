@@ -1,5 +1,5 @@
 import createHistory from 'history/createBrowserHistory';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 
@@ -49,11 +49,19 @@ export default class App extends Component {
 
     this.setState({ error, errorInfo });
   }
+  componentWillMount() {
+    //setting up a global variable very hacky
+    window.didProfilePicUpdate = false;
+  }
   render() {
     let content = (
       <section className="app-wrapper">
         <GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
-        <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
+        <GordonNav
+          onDrawerToggle={this.onDrawerToggle}
+          drawerOpen={this.state.drawerOpen}
+          onSignOut={this.onAuthChange}
+        />
         <main className="app-main">
           <Switch>
             {routes.map(route => (

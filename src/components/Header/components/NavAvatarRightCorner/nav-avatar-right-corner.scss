@@ -1,0 +1,53 @@
+@import '../../../../vars';
+
+.tooltip {
+  background-color: $neutral-dark-gray !important;
+}
+
+@media (max-width: $break-md) {
+  .right-side-container {
+    display: none !important;
+  }
+}
+
+@media (min-width: $break-md) {
+  .gordon-nav-avatar-right-corner {
+    &:hover {
+      transition: box-shadow 0.2s;
+      box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.5);
+    }
+
+    &:not(:hover) {
+      transition: box-shadow 0.3s;
+      box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5);
+    }
+
+    .label {
+      display: inline;
+    }
+
+    .nav-avatar-placeholder {
+      background-color: $primary-cyan;
+    }
+
+    .nav-avatar > img {
+      object-fit: cover;
+      height: 100%;
+    }
+
+    .nav-avatar {
+      height: 3rem;
+      width: 3rem;
+    }
+
+    // Override button centering content
+    // &.nav-avatar-button {
+    //   padding: 1rem;
+    // }
+
+    // Override button changing text to uppercase
+    .text {
+      text-transform: initial;
+    }
+  }
+}

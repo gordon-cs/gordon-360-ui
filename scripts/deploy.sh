@@ -11,6 +11,10 @@ set -euo pipefail
 # PRODUCTION_DIR absolute path to directory for production app
 # STAGING_DIR absolute path to directory for staging app
 
+# Variable used to create web.config
+# Note: Regular expression replaces all quotes with two quotes, i.e. " => "" (for PowerShell)
+WEB_CONFIG=`sed -e 's/\"/\"\"/g' web_config`
+
 # Get current environment (production or staging) from argument passed by Travis
 DEPLOY_ENV="$1"
 
@@ -34,6 +38,7 @@ if [ $? == 0 ]; then
 else
   printf "%s\n" "Failed to remove backup directory"
 fi
+
 
 printf "%s\n" "Moving app to backup directory... "
 
@@ -62,8 +67,17 @@ printf "%s\n" "Copying app to server... "
 # Copy built app to server
 sshpass -p "$DEPLOY_PASSWORD" scp -r build/* "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 
+# Create web.config on the server
+printf "%s\n" "Creating web.config..."
+
+sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" \
+  "echo \"$WEB_CONFIG\" | Out-File -filepath $DIR/web.config"
+
+printf "%s\n" "Created web.config"
+
 if [ $? == 0 ]; then
   printf "%s\n" "Successfully copied app to $DEPLOY_ENV"
 else
   printf "%s\n" "Failed to copy app to server"
 fi
+

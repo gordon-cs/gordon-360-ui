@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import Card, { CardContent, CardHeader } from 'material-ui/Card';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
 
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
@@ -41,7 +43,7 @@ export default class ChapelProgress extends Component {
       content = <GordonLoader />;
     } else {
       const { current, required } = this.state.chapelCredits;
-      const remaining = required - current;
+      const remaining = current > required ? 0 : required - current;
       const data = {
         datasets: [
           {

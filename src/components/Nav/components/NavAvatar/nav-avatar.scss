@@ -14,13 +14,15 @@
     height: 4rem;
   }
 
-  .image {
-    height: auto;
+  .avatar > img {
+    object-fit: cover;
+    height: 100%;
   }
 
   .avatar {
-    margin-bottom: 1rem;
-    max-height: 4rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.4rem;
+    height: 4rem;
     width: 4rem;
   }
 
@@ -30,7 +32,7 @@
   }
 
   // Override button changing text to uppercase
-  .text {
+  .avatar-text {
     text-transform: initial;
   }
 }

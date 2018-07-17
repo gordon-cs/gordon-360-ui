@@ -1,0 +1,79 @@
+@import '../../vars';
+
+.linkColor {
+  color: $primary-cyan !important;
+}
+
+.alignPicCenter {
+  padding-top: 8%;
+}
+
+.rounded-corners {
+  border-radius: 0.5rem;
+}
+
+.email-link {
+  color: #000;
+  font-size: 28px;
+  transition: color 200ms;
+}
+
+.email-link-container:hover .email-link {
+  transition: color 200ms;
+  color: $primary-cyan;
+}
+
+.email-link-container:not(:hover) .email-link {
+  transition: color 200ms;
+  color: #000;
+}
+
+.icon {
+  color: #000;
+  font-size: 28px;
+  transition: color 200ms;
+
+  &:hover {
+    color: $primary-cyan;
+    cursor: pointer;
+  }
+}
+
+.edit-icon {
+  color: #000;
+  transition: color 200ms;
+
+  &:hover {
+    color: $primary-cyan;
+    cursor: pointer;
+  }
+}
+
+.noInvolvements {
+  padding-left: 24px;
+  color: $primary-cyan !important;
+}
+
+@media (max-width: 420px) {
+  .alignPicCenter {
+    padding-top: 0%;
+  }
+}
+
+@media (min-width: $break-sm) {
+  .alignPicCenter {
+    padding-top: 0%;
+  }
+}
+
+@media (min-width: 720px) {
+  .alignPicCenter {
+    padding-top: 8%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .alignPicCenter {
+    padding-top: 5%;
+  }
+}

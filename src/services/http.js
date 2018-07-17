@@ -10,19 +10,38 @@ import storage from './storage';
 const base = process.env.REACT_APP_API_URL;
 
 /**
- * Make a headers object for use with the API
+ * Make a headers object with just authentication options for use with the API
  * @description Provides the correct authorization for API requests.
+ * @param {object|array} headerOptions options to put in the header, if empty only auth is added
  * @return {Headers} A headers object
  */
-const makeHeaders = () => {
-  try {
-    const token = storage.get('token');
-    return new Headers({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json', // Accepts JSON data
-    });
-  } catch (err) {
-    throw new Error('Token is not available');
+const makeHeaders = headerOptions => {
+  if (headerOptions !== undefined) {
+    try {
+      const token = storage.get('token');
+      let header = new Headers({
+        Authorization: `Bearer ${token}`,
+      });
+      for (const key in headerOptions) {
+        if (headerOptions.hasOwnProperty(key)) {
+          header.append(key, headerOptions[key]);
+        }
+      }
+      return header;
+    } catch (err) {
+      throw new Error('Token is not available');
+    }
+  } else {
+    //default
+    try {
+      const token = storage.get('token');
+      return new Headers({
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      });
+    } catch (err) {
+      throw new Error('Token is not available');
+    }
   }
 };
 
@@ -31,13 +50,14 @@ const makeHeaders = () => {
  * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
  * @param {String} method HTTP method
  * @param {object|array} body data to send with request
+ * @param {object|array} headerOptions options to put in the header, if empty only auth is added
  * @return {Request} A request object
  */
-const createRequest = (url, method, body) =>
+const createRequest = (url, method, body, headerOptions) =>
   new Request(`${base}api/${url}`, {
     method,
     body,
-    headers: makeHeaders(),
+    headers: makeHeaders(headerOptions),
   });
 
 /**
@@ -47,9 +67,12 @@ const createRequest = (url, method, body) =>
  * response code
  */
 export const parseResponse = res => {
-  // Attempt to parse body of response
+  // Parse body of response if not empty
+  //    Make sure text of response is not empty before trying to convert it
+  //    to a JSON object
   const json = res
-    .json()
+    .text()
+    .then(text => (text.length ? JSON.parse(text) : {}))
     // Handle error if response body is not valid JSON
     .catch(err => Promise.reject(createError(err, res)));
 
@@ -65,10 +88,11 @@ export const parseResponse = res => {
  * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
  * @param {String} method HTTP method
  * @param {object|array} body data to send with request
+ * @param {object|array} headerOptions options to send to the header, only auth is added
  * @return {Promise.<Object>} Response body
  */
-const makeRequest = (url, method, body) =>
-  fetch(createRequest(url, method, body)).then(parseResponse);
+const makeRequest = (url, method, body, headerOptions) =>
+  fetch(createRequest(url, method, body, headerOptions)).then(parseResponse);
 
 /**
  * Get
@@ -89,9 +113,16 @@ const put = (url, body) => makeRequest(url, 'put', JSON.stringify(body));
  * Post
  * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
  * @param {object|array} body data to send with request, needs to be JSON object
+ * @param {object|array} headerOptions options to put in the header, if not undefined options are added, if empty only auth is added
  * @return {Promise.<Object>} Response body
  */
-const post = (url, body) => makeRequest(url, 'post', JSON.stringify(body));
+const post = (url, body, headerOptions) => {
+  if (headerOptions !== undefined) {
+    return makeRequest(url, 'post', body, headerOptions);
+  } else {
+    return makeRequest(url, 'post', JSON.stringify(body));
+  }
+};
 
 /**
  * Delete

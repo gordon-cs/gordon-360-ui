@@ -4,8 +4,12 @@ import ActivityEdit from './views/ActivityEdit';
 import ActivityProfile from './views/ActivityProfile';
 import Home from './views/Home';
 import Help from './views/Help';
+import CoCurricularTranscript from './views/CoCurricularTranscript';
 import Events from './views/Events';
+import EventsAttended from './views/EventsAttended';
 import Profile from './views/Profile';
+import MyProfile from './views/MyProfile';
+import Feedback from './views/Feedback';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 export default [
@@ -41,13 +45,33 @@ export default [
     component: Help,
   },
   {
+    name: 'Transcript',
+    path: '/transcript',
+    component: CoCurricularTranscript,
+  },
+  {
     name: 'Events',
     path: '/events',
     component: Events,
   },
   {
+    name: 'Attended',
+    path: '/attended',
+    component: EventsAttended,
+  },
+  {
+    name: 'Feedback',
+    path: '/feedback',
+    component: Feedback,
+  },
+  {
     name: 'Profile',
     path: '/profile/:username',
     component: Profile,
+  },
+  {
+    name: 'My Profile',
+    path: '/myprofile/:username',
+    component: MyProfile,
   },
 ];

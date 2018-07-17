@@ -35,7 +35,6 @@ const get = key => {
   } catch (err) {
     throw new Error(`Could not parse value stored at '${key}'`);
   }
-
   return value;
 };
 

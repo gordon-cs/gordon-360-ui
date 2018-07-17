@@ -47,7 +47,7 @@ function formatevent(event) {
     beginTime = DateTime.fromISO(event.Occurrences[0][0]).toFormat('t');
     endTime = DateTime.fromISO(event.Occurrences[0][1]).toFormat('t');
   }
-  const timeRange = ` from ${beginTime} to ${endTime}`;
+  const timeRange = `${beginTime} - ${endTime}`;
   event.timeRange = timeRange;
 
   let date;
@@ -163,22 +163,33 @@ const getCLWEvents = async () => {
   return chapelEvents.sort(sortByTime);
 };
 
-const getFutureEvents = async () => {
-  const allEvents = await getAllEvents();
+//Takes parameter of all events(formatted) so getting from database is not needed
+const getFutureEvents = allEvents => {
   const futureEvents = [];
   const date = new Date().getTime();
   allEvents.sort(sortByTime);
   for (let i = 0; i < allEvents.length; i += 1) {
     const startDate = new Date(allEvents[i].Occurrences[0][0]).getTime();
-
     if (startDate > date) {
       futureEvents.push(allEvents[i]);
     }
-    formatevent(allEvents[i]);
   }
   return futureEvents.sort(sortByTime);
 };
-const getFilteredEvents = async filters => {
+
+//Calls getAllEvents to get from database and then formats events
+const getAllEventsFormatted = async () => {
+  const allEvents = await getAllEvents();
+  const events = [];
+  allEvents.sort(sortByTime);
+  for (let i = 0; i < allEvents.length; i += 1) {
+    events.push(allEvents[i]);
+    formatevent(allEvents[i]);
+  }
+  return events.sort(sortByTime);
+};
+
+const getFilteredEvents = filters => {
   const allEvents = filters.events;
   let filteredEvents = [];
   let shownEvents = [];
@@ -220,7 +231,9 @@ const getFilteredEvents = async filters => {
 
 export default {
   getAllEvents,
+  getAllEventsFormatted,
   getFutureEvents,
   getCLWEvents,
   getFilteredEvents,
+  formatevent,
 };

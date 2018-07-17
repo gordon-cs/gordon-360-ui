@@ -1,236 +1,325 @@
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import Divider from 'material-ui/Divider/Divider';
-import Card, { CardContent, CardHeader } from 'material-ui/Card';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import List from 'material-ui/List/List';
-import ListItem from 'material-ui/List/ListItem';
-import Dropzone from 'react-dropzone';
-import Dialog, {
-  DialogTitle,
-  DialogActions,
-  DialogContentText,
-  DialogContent,
-} from 'material-ui/Dialog';
-
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
-import { gordonColors } from '../../theme';
-import Activities from './Components/ActivityList';
+import ProfileList from './../../components/ProfileList';
+import Office from './../../components/OfficeList';
+import ProfileActivityList from './../../components/ProfileActivityList';
+import EmailIcon from '@material-ui/icons/Email';
 import GordonLoader from './../../components/Loader';
+import { socialMediaInfo } from '../../socialMedia';
+import './profile.css';
 
+//Public profile view
 export default class Profile extends Component {
   constructor(props) {
     super(props);
 
-    this.handleExpandClick = this.handleExpandClick.bind(this);
-
     this.state = {
-      unsername: String,
-      button: String,
-      image: null,
+      isStu: Boolean,
+      isFac: Boolean,
+      isAlu: Boolean,
+      hasNickName: Boolean,
+      nickname: String,
+      subheaderInfo: String,
+      profileinfo: null,
+      officeinfo: null,
+      prefImage: null,
+      defImage: null,
       preview: null,
       loading: true,
       profile: {},
-      activities: [],
+      memberships: [],
       files: [],
-      open: false,
+      photoDialogOpen: false,
+      socialLinksDialogOpen: false,
+      facebookLink: '',
+      linkedInLink: '',
+      twitterLink: '',
+      instagramLink: '',
     };
   }
 
-  handleExpandClick() {
-    this.changePrivacy();
-    user.toggleMobilePhonePrivacy();
+  componentWillMount() {
+    this.loadProfile(this.props);
   }
 
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  changePrivacy() {
-    if (this.state.button === 'Make Public') {
-      this.setState({ button: 'Make Private' });
-    } else {
-      this.setState({ button: 'Make Public' });
+  componentWillReceiveProps(newProps) {
+    if (this.props.match.params.username !== newProps.match.params.username) {
+      this.loadProfile(newProps);
     }
   }
-  onDrop(preview) {
-    this.setState({ preview });
-    console.log(preview);
-  }
-  rand() {
-    return Math.round(Math.random() * 20) - 10;
-  }
-  componentWillMount() {
-    // const { username } = this.props.match.params.username;
-    this.loadProfile();
-  }
-  async loadProfile() {
+
+  async loadProfile(searchedUser) {
     this.setState({ loading: true });
+    this.setState({ username: searchedUser.match.params.username });
     try {
-      const profile = await user.getProfileInfo();
-      this.setState({ loading: false, profile });
+      const profile = await user.getProfileInfo(searchedUser.match.params.username);
+      let profileinfo = (
+        <ProfileList profile={profile} myProf={false}>
+          {' '}
+        </ProfileList>
+      );
+      let officeinfo = <Office profile={profile} />;
+      this.setState({ profileinfo: profileinfo });
+      this.setState({ officeinfo: officeinfo });
+      this.checkPersonType(profile);
+      this.setState({ profile });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-        await user.getImage(),
+        await user.getImage(searchedUser.match.params.username),
       ]);
-      const activities = await user.getMemberships(profile.ID);
-      const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, activities });
+      const memberships = await user.getPublicMemberships(searchedUser.match.params.username);
+      const prefImage = preferredImage;
+      const defImage = defaultImage;
+      this.hasNickName(profile);
+      this.setSubheader(profile);
+      this.setState({ prefImage, defImage, loading: false, memberships });
     } catch (error) {
       this.setState({ error });
+      console.log(error);
     }
-    if (this.state.profile.IsMobilePhonePrivate === 0) {
-      this.setState({ button: 'Make Private' });
-    } else {
-      this.setState({ button: 'Make Public' });
-    }
+    // Set state of social media links to database values after load.
+    // If not empty or null, add domain name back in for buttons.
+    this.setState({
+      facebookLink:
+        this.state.profile.Facebook === null || this.state.profile.Facebook === ''
+          ? ''
+          : socialMediaInfo.facebook.prefix + this.state.profile.Facebook,
+      twitterLink:
+        this.state.profile.Twitter === null || this.state.profile.Twitter === ''
+          ? ''
+          : socialMediaInfo.twitter.prefix + this.state.profile.Twitter,
+      linkedInLink:
+        this.state.profile.LinkedIn === null || this.state.profile.LinkedIn === ''
+          ? ''
+          : socialMediaInfo.linkedIn.prefix + this.state.profile.LinkedIn,
+      instagramLink:
+        this.state.profile.Instagram === null || this.state.profile.Instagram === ''
+          ? ''
+          : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
+    });
   }
+  checkPersonType(profile) {
+    let personType = String(profile.PersonType);
+    this.setState({ isStu: personType.includes('stu') });
+    this.setState({ isFac: personType.includes('fac') });
+    this.setState({ isAlu: personType.includes('alu') });
+  }
+
+  hasNickName(profile) {
+    let Name = String(profile.fullName);
+    let FirstName = Name.split(' ')[0];
+    this.setState({ hasNickName: FirstName !== profile.NickName && profile.NickName !== '' });
+  }
+
+  setSubheader(profile) {
+    let subheaderText = '';
+    let numberOfSubtitles = 0;
+    if (this.state.isFac && profile.JobTitle !== undefined) {
+      subheaderText += profile.JobTitle;
+      numberOfSubtitles++;
+    }
+    if (this.state.isStu) {
+      numberOfSubtitles++;
+      if (numberOfSubtitles > 1) {
+        subheaderText += ', ';
+      }
+      subheaderText += profile.Class;
+    }
+    if (this.state.isAlu) {
+      numberOfSubtitles++;
+      if (numberOfSubtitles > 1) {
+        subheaderText += ', ';
+      }
+      subheaderText += 'Class of ' + profile.ClassYear;
+    }
+    this.setState({ subheaderInfo: subheaderText });
+  }
+
   render() {
-    const { preview } = this.state;
+    // The list of memberships that will be displayed on the page
+    let displayedMembershipList;
 
-    const style = {
-      width: '100%',
-    };
-    const button = {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    };
-    const photoUploader = {
-      padding: '20px',
-      justifyContent: 'center',
-      alignItems: 'center',
-    };
+    // The list of memberships that the user has made public
+    let publicMemberships = [];
 
-    let activityList;
-    if (!this.state.activities) {
-      activityList = <GordonLoader />;
+    if (!this.state.memberships) {
+      displayedMembershipList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(activity => (
-        <Activities Activity={activity} key={activity.MembershipID} />
-      ));
+      // Populate publicMemberships with the user's public Involvements
+      for (let i = 0; i < this.state.memberships.length; i++) {
+        if (!this.state.memberships[i].Privacy) {
+          publicMemberships.push(this.state.memberships[i]);
+        }
+      }
+
+      // If the user has no public Involvements, say so on the page
+      if (publicMemberships.length === 0) {
+        displayedMembershipList = (
+          <Typography variant="body2" align="center">
+            No Involvements to display
+          </Typography>
+        );
+      } else {
+        displayedMembershipList = publicMemberships.map(activity => (
+          <ProfileActivityList Activity={activity} key={activity.MembershipID} />
+        ));
+      }
+    }
+
+    let facebookButton;
+    let twitterButton;
+    let linkedInButton;
+    let instagramButton;
+    if (this.state.facebookLink !== '') {
+      facebookButton = (
+        <Grid item>
+          <a href={this.state.facebookLink} className="icon" target="_blank">
+            {socialMediaInfo.facebook.icon}
+          </a>
+        </Grid>
+      );
+    }
+    if (this.state.twitterLink !== '') {
+      twitterButton = (
+        <Grid item>
+          <a href={this.state.twitterLink} className="icon" target="_blank">
+            {socialMediaInfo.twitter.icon}
+          </a>
+        </Grid>
+      );
+    }
+    if (this.state.linkedInLink !== '') {
+      linkedInButton = (
+        <Grid item>
+          <a href={this.state.linkedInLink} className="icon" target="_blank">
+            {socialMediaInfo.linkedIn.icon}
+          </a>
+        </Grid>
+      );
+    }
+    if (this.state.instagramLink !== '') {
+      instagramButton = (
+        <Grid item>
+          <a href={this.state.instagramLink} className="icon" target="_blank">
+            {socialMediaInfo.instagram.icon}
+          </a>
+        </Grid>
+      );
     }
 
     return (
       <div>
-        <Grid container>
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Card>
-              <CardContent>
-                <Grid container justify="center">
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <CardHeader
-                      title={this.state.profile.fullName}
-                      subheader={this.state.profile.Class}
-                    />
-                    <Button onClick={this.handleOpen} raised style={button}>
-                      Update Photo
-                    </Button>
-                    <Dialog
-                      open={this.state.open}
-                      keepMounted
-                      onClose={this.handleClose}
-                      aria-labelledby="alert-dialog-slide-title"
-                      aria-describedby="alert-dialog-slide-description"
-                    >
-                      <DialogTitle id="simple-dialog-title">Update Profile Picture</DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          Drag and Drop Picture, or Click to Browse Your Files
-                        </DialogContentText>
-                        <Dropzone
-                          onDrop={this.onDrop.bind(this)}
-                          accept="image/jpeg,image/jpg,image/tiff,image/gif,image/png"
-                          style={photoUploader}
-                        >
-                          <img src={require('./image.png')} alt="" style={style} />
-                        </Dropzone>
-                        {preview && <img src={preview} alt="preview" />}
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={this.handleClose} raised style={button}>
-                          Cancel
-                        </Button>
-                        <Button onClick={this.handleClose} raised style={button}>
-                          Submit
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
+        {this.state.loading && <GordonLoader />}
+        {!this.state.loading && (
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} lg={10}>
+              <Card>
+                <CardContent>
+                  <Grid container alignItems="center" align="center" justify="center" spacing="16">
+                    <Grid container alignItems="center" spacing="16">
+                      <Grid item xs={12} sm={12} md={12} lg={12}>
+                        {this.state.prefImage && (
+                          <img
+                            className="rounded-corners"
+                            src={`data:image/jpg;base64,${this.state.prefImage}`}
+                            alt=""
+                            style={{ 'max-height': '200px', 'min-width': '160px' }}
+                          />
+                        )}
+                        {this.state.prefImage && this.state.defImage && ' '}
+                        {this.state.defImage && (
+                          <img
+                            className="rounded-corners"
+                            src={`data:image/jpg;base64,${this.state.defImage}`}
+                            alt=""
+                            style={{ 'max-height': '200px', 'min-width': '160px' }}
+                          />
+                        )}
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6} lg={4}>
+                      <Grid container align="center" alignItems="center" spacing="16">
+                        <Grid item xs={12}>
+                          <CardHeader
+                            title={
+                              this.state.hasNickName
+                                ? this.state.profile.fullName +
+                                  ' (' +
+                                  this.state.profile.NickName +
+                                  ')'
+                                : this.state.profile.fullName
+                            }
+                            subheader={this.state.subheaderInfo}
+                          />
+
+                          <Grid container spacing="16" align="center" justify="center">
+                            {facebookButton}
+                            {twitterButton}
+                            {linkedInButton}
+                            {instagramButton}
+                          </Grid>
+                          {this.state.profile.Email !== '' && (
+                            <div
+                              style={{
+                                marginTop: '20px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <a href={`mailto:${this.state.profile.Email}`}>
+                                <div
+                                  className="email-link-container"
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    alignContent: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <EmailIcon
+                                    className="email-link"
+                                    style={{ marginRight: '0.75rem' }}
+                                  />
+                                  <Typography className="email-link">
+                                    {this.state.profile.Email}
+                                  </Typography>
+                                </div>
+                              </a>
+                            </div>
+                          )}
+                        </Grid>
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
-                    <img src={`data:image/jpg;base64,${this.state.image}`} alt="" style={style} />
-                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid item xs={12} lg={5}>
+              <Grid container direction="column" spacing="16">
+                {this.state.profileinfo}
+                {this.state.officeinfo}
+              </Grid>
+            </Grid>
+            <Grid item xs={12} lg={5}>
+              <Grid container direction="column" spacing="16">
+                <Grid item xs={12} sm={12} md={12} lg={12}>
+                  <Card>
+                    <CardContent>
+                      <CardHeader title="Involvements" />
+                      <List>{displayedMembershipList}</List>
+                    </CardContent>
+                  </Card>
                 </Grid>
-              </CardContent>
-            </Card>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Card>
-              <CardContent>
-                <CardHeader title="Home Address" />
-                <List>
-                  <Divider />
-                  <ListItem>
-                    <Typography>Street Number: {this.state.profile.HomeStreet2}</Typography>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Typography>
-                      Home Town: {this.state.profile.HomeCity}, {this.state.profile.HomeState}
-                    </Typography>
-                  </ListItem>
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Card>
-              <CardContent>
-                <CardHeader title="Personal Information" />
-                <List>
-                  <ListItem>
-                    <Typography>Major: {this.state.profile.Major1Description}</Typography>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Grid item xs={6} sm={7} md={8} lg={10}>
-                      <Typography>Cell Phone: {this.state.profile.MobilePhone}</Typography>
-                    </Grid>
-                    <Grid item xs={6} sm={5} md={4} lg={1}>
-                      <Button onClick={this.handleExpandClick} raised style={button}>
-                        {this.state.button}
-                      </Button>
-                    </Grid>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Typography>Student ID: {this.state.profile.ID}</Typography>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Typography>Email: {this.state.profile.Email}</Typography>
-                  </ListItem>
-                  <Divider />
-                  <ListItem>
-                    <Typography>On/Off Campus: {this.state.profile.OnOffCampus}</Typography>
-                  </ListItem>
-                  <Divider />
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={6}>
-            <Card>
-              <CardContent>
-                <CardHeader title="Activities" />
-                <List>{activityList}</List>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        )}
       </div>
     );
   }

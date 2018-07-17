@@ -1,10 +1,12 @@
 import Downshift from 'downshift';
 import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
-import TextField from 'material-ui/TextField';
-import Paper from 'material-ui/Paper';
-import { MenuItem } from 'material-ui/Menu';
-import Typography from 'material-ui/Typography';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SearchIcon from '@material-ui/icons/Search';
+import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -21,13 +23,19 @@ const renderInput = inputProps => {
       autoFocus={autoFocus}
       value={value}
       inputRef={ref}
+      className={'text-field'}
       InputProps={{
+        disableUnderline: true,
         classes: {
-          root: 'people-search-input',
-          inkbar: 'people-search-inkbar',
-          underline: 'people-search-underline',
+          root: 'people-search-root',
+          input: 'people-search-input',
           inputDisabled: 'people-search-disabled',
         },
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        ),
         ...other,
       }}
     />
@@ -45,12 +53,19 @@ export default class GordonPeopleSearch extends Component {
     this.state = {
       suggestions: [],
     };
+    this.isMobileView = false;
+    this.breakpointWidth = 400;
   }
   async getSuggestions(query) {
     // Bail if query is missing or is less than minimum query length
     if (!query || query.length < MIN_QUERY_LENGTH) {
       return;
     }
+
+    //so apparently everything breaks if the first letter is capital, which is what happens on mobile
+    //sometimes and then you spend four hours trying to figure out why downshift is not working
+    //but really its just that its capitalized what the heck
+    query = query.toLowerCase();
 
     let suggestions = await peopleSearch.search(query);
 
@@ -86,14 +101,44 @@ export default class GordonPeopleSearch extends Component {
         onClick={this.reset}
         className="people-search-suggestion"
       >
-        <Typography type="body1">{`${suggestion.FirstName} ${suggestion.LastName}`}</Typography>
-        <Typography type="caption" component="p">
+        <Typography variant="body1">{`${suggestion.FirstName} ${suggestion.LastName}`}</Typography>
+        <Typography variant="caption" component="p">
           {suggestion.UserName}
         </Typography>
       </MenuItem>
     );
   }
+
+  //Makes People Search placeholder switch to People to avoid cutting it off
+  //Has to rerender on screen resize in order to switch to the mobile view
+  resize = () => {
+    if (this.breakpointPassed()) {
+      this.isMobileView = !this.isMobileView;
+      this.forceUpdate();
+    }
+  };
+
+  //checks if the screen has been resized past the mobile breakpoint
+  //allows for forceUpdate to only be called when necessary, improving resizing performance
+  breakpointPassed() {
+    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
+    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
+    else return false;
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.resize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
+
   render() {
+    let placeholder = 'People Search';
+    if (window.innerWidth < this.breakpointWidth) {
+      placeholder = 'People';
+    }
     return (
       <Downshift
         // Assign reference to Downshift to `this` for usage elsewhere in the component
@@ -104,7 +149,7 @@ export default class GordonPeopleSearch extends Component {
           <span className="gordon-people-search">
             {renderInput(
               getInputProps({
-                placeholder: 'Search for people...',
+                placeholder: placeholder,
                 onChange: event => this.getSuggestions(event.target.value),
               }),
             )}

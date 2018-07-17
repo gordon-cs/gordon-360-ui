@@ -1,0 +1,40 @@
+@import '../../vars';
+
+.event-item {
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+
+.event-column {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.event-item:hover .event-column {
+  color: #fff;
+}
+
+.event-item:hover .descriptionText {
+  color: #fff;
+}
+
+// Make rows alternate white and grey
+/* stylelint-disable */
+.event-list > section:nth-child(even) {
+  background: #ebeaea;
+  &:hover {
+    background-color: $primary-cyan;
+    cursor: pointer;
+  }
+}
+
+.event-list > section:nth-child(odd) {
+  background: #ffffff;
+  &:hover {
+    background-color: $primary-cyan;
+    cursor: pointer;
+  }
+}
+/* stylelint-enable */

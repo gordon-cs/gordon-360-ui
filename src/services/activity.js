@@ -19,7 +19,7 @@ import http from './http';
  * @property {String} ActivityType
  * @property {String} ActivityTypeDescription
  * @property {String} ActivityURL
- * @property {String} Privacy
+ * @property {String} Privacy Whether the club is private or public to everyone, such as a scholars group etc. false=public true=private
  */
 
 /**
@@ -98,12 +98,6 @@ const getStatus = (activityCode, sessionCode) =>
  * @return {Promise.<String[]>} List of activity types for a session
  */
 const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/types`);
-/**
- * Get group administrators for an activity
- * @param {String} ActivityCode Identifier for an activity
- * @returns {Avtivity} the Activity of a activity code
- */
-const getSpecificActivity = async ActivityCode => http.get(`/activities/${ActivityCode}`);
 
 /**
  * Filter a list of activities by type and description
@@ -152,7 +146,6 @@ export default {
   closeActivity,
   editActivity,
   get,
-  getSpecificActivity,
   getAdvisors,
   getAll,
   getGroupAdmins,
