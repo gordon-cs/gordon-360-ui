@@ -664,7 +664,7 @@ export default class Profile extends Component {
               </Grid>
 
               <Grid item xs={12} lg={5}>
-                <Grid container direction="column">
+                <Grid container spacing={16}>
                   {this.state.profileinfo}
                   {this.state.officeinfo}
                 </Grid>
