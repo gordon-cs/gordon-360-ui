@@ -1,7 +1,9 @@
 @import '../../vars';
 
 .gordon-login {
-  background-color: $neutral-light-gray;
+  //background-color: $neutral-light-gray;
+  background-image: url(campus.jpg);
+  background-size: cover;
   height: 100%;
   padding: 0.5rem;
   text-align: center;
@@ -9,6 +11,7 @@
   .container {
     background-color: $primary-blue;
     border: 2px solid $primary-blue;
+    border-radius: 0.5rem;
   }
 
   img {
@@ -18,6 +21,7 @@
   form {
     background-color: $neutral-light-gray;
     padding: 2rem;
+    border-radius: 0 0 0.5rem 0.5rem;
   }
 
   .input {
