@@ -169,94 +169,94 @@ export default class LinksDialog extends React.Component {
     };
 
     return (
-      <DialogContent>
-        <form onSubmit={this.handleSubmit}>
-          <Typography style={{ color: 'red' }}>
-            {this.state.formErrors.facebookInput}
-            {this.state.formErrors.twitterInput}
-            {this.state.formErrors.linkedInInput}
-            {this.state.formErrors.instagramInput}
-          </Typography>
-          <Grid container spacing={8} alignItems="flex-end">
-            <Grid item>
-              <FacebookIcon alignItems="center" style={{ fontSize: '20px' }} />
+      <div>
+        <DialogContent>
+          <form
+            onSubmit={this.handleSubmit}
+            style={{ paddingLeft: '1.5rem', marginBottom: '-0.75rem', marginTop: '-1.5rem' }}
+          >
+            <Typography style={{ color: 'red' }}>
+              {this.state.formErrors.facebookInput}
+              {this.state.formErrors.twitterInput}
+              {this.state.formErrors.linkedInInput}
+              {this.state.formErrors.instagramInput}
+            </Typography>
+            <Grid container spacing={8} alignItems="flex-end">
+              <Grid item>
+                <FacebookIcon alignItems="center" style={{ fontSize: '20px' }} />
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="facebookInput"
+                  label=" Facebook link"
+                  value={this.state.facebookInput}
+                  onChange={this.handleChange('facebookInput')}
+                  error={!this.state.fbValid}
+                  margin="dense"
+                  fullWidth
+                />
+              </Grid>
             </Grid>
-            <Grid item>
-              <TextField
-                id="facebookInput"
-                label=" Facebook link"
-                value={this.state.facebookInput}
-                onChange={this.handleChange('facebookInput')}
-                error={!this.state.fbValid}
-                margin="dense"
-                fullWidth
-              />
-            </Grid>
-          </Grid>
 
-          <Grid container spacing={8} alignItems="flex-end">
-            <Grid item>
-              <TwitterIcon alignItems="center" style={{ fontSize: '20px' }} />
+            <Grid container spacing={8} alignItems="flex-end">
+              <Grid item>
+                <TwitterIcon alignItems="center" style={{ fontSize: '20px' }} />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <TextField
+                  id="twitterInput"
+                  label=" Twitter link"
+                  value={this.state.twitterInput}
+                  onChange={this.handleChange('twitterInput')}
+                  error={!this.state.twValid}
+                  margin="dense"
+                />
+              </Grid>
             </Grid>
-            <Grid item xs zeroMinWidth>
-              <TextField
-                id="twitterInput"
-                label=" Twitter link"
-                value={this.state.twitterInput}
-                onChange={this.handleChange('twitterInput')}
-                error={!this.state.twValid}
-                margin="dense"
-              />
+            <Grid container spacing={8} alignItems="flex-end">
+              <Grid item>
+                <LinkedInIcon alignItems="center" style={{ fontSize: '20px' }} />
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="linkedInInput"
+                  label=" LinkedIn link"
+                  value={this.state.linkedInInput}
+                  onChange={this.handleChange('linkedInInput')}
+                  error={!this.state.liValid}
+                  margin="dense"
+                  fullWidth
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container spacing={8} alignItems="flex-end">
-            <Grid item>
-              <LinkedInIcon alignItems="center" style={{ fontSize: '20px' }} />
+            <Grid container spacing={8} alignItems="flex-end">
+              <Grid item>
+                <InstagramIcon alignItems="center" style={{ fontSize: '20px' }} />
+              </Grid>
+              <Grid item>
+                <TextField
+                  id="instagramInput"
+                  label=" Instagram link"
+                  value={this.state.instagramInput}
+                  onChange={this.handleChange('instagramInput')}
+                  error={!this.state.igValid}
+                  margin="dense"
+                  fullWidth
+                />
+              </Grid>
             </Grid>
-            <Grid item>
-              <TextField
-                id="linkedInInput"
-                label=" LinkedIn link"
-                value={this.state.linkedInInput}
-                onChange={this.handleChange('linkedInInput')}
-                error={!this.state.liValid}
-                margin="dense"
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={8} alignItems="flex-end">
-            <Grid item>
-              <InstagramIcon alignItems="center" style={{ fontSize: '20px' }} />
-            </Grid>
-            <Grid item>
-              <TextField
-                id="instagramInput"
-                label=" Instagram link"
-                value={this.state.instagramInput}
-                onChange={this.handleChange('instagramInput')}
-                error={!this.state.igValid}
-                margin="dense"
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-          <br />
-          <DialogActions>
-            <Button onClick={this.handleClose} variant="contained" style={button}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={!this.state.formValid}
-              variant="contained"
-              style={button}
-            >
-              Submit
-            </Button>
-          </DialogActions>
-        </form>
-      </DialogContent>
+            <br />
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleClose} variant="contained" style={button}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={!this.state.formValid} variant="contained" style={button}>
+            Submit
+          </Button>
+        </DialogActions>
+      </div>
     );
   }
 }
