@@ -29,6 +29,7 @@ import './myProfile.css';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import GordonLoader from '../../components/Loader';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -405,15 +406,6 @@ export default class Profile extends Component {
       );
     }
 
-    let email;
-    if (this.state.profile.Email !== '') {
-      email = (
-        <div>
-          <Typography className="email-link">{this.state.profile.Email}</Typography>
-        </div>
-      );
-    }
-
     return (
       <div>
         {this.state.loading && <GordonLoader />}
@@ -478,19 +470,35 @@ export default class Profile extends Component {
                               {instagramButton}
                               {editButton}
                             </Grid>
-                            <a href={`mailto:${this.state.profile.Email}`} className="icon">
-                              <Grid
-                                container
-                                justify="center"
-                                spacing="16"
-                                style={{ marginTop: '20px' }}
+                            {this.state.profile.Email !== '' && (
+                              <div
+                                style={{
+                                  marginTop: '20px',
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                }}
                               >
-                                <Grid item>
-                                  <EmailIcon />
-                                </Grid>
-                                <Grid item>{email}</Grid>
-                              </Grid>
-                            </a>
+                                <a href={`mailto:${this.state.profile.Email}`}>
+                                  <div
+                                    className="email-link-container"
+                                    style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      alignContent: 'center',
+                                      justifyContent: 'center',
+                                    }}
+                                  >
+                                    <EmailIcon
+                                      className="email-link"
+                                      style={{ marginRight: '0.75rem' }}
+                                    />
+                                    <Typography className="email-link">
+                                      {this.state.profile.Email}
+                                    </Typography>
+                                  </div>
+                                </a>
+                              </div>
+                            )}
                             <Dialog
                               open={this.state.photoOpen}
                               keepMounted
@@ -702,7 +710,14 @@ export default class Profile extends Component {
                   'aria-describedby': 'message-id',
                 }}
                 message={
-                  <span id="message-id">Success! Changes will take effect in a few minutes.</span>
+                  <span id="message-id">
+                    <CheckCircleIcon
+                      style={{
+                        marginBottom: '-4.5pt',
+                        marginRight: '1rem',
+                      }}
+                    />Success!
+                  </span>
                 }
                 action={[
                   <IconButton

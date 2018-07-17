@@ -1,0 +1,18 @@
+@import '../../_vars';
+
+.form {
+  margin: -1rem;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden !important;
+  @media (min-width: $break-xs) {
+    height: calc(100vh - 56px);
+  }
+  @media (min-width: $break-sm) {
+    height: calc(100vh - 64px);
+  }
+  @media (min-width: $break-md) {
+    height: calc(100vh - 72px);
+  }
+}
