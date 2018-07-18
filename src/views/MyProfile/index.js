@@ -653,6 +653,9 @@ export default class Profile extends Component {
                               <DialogTitle id="simple-dialog-title">
                                 Edit your social media links
                               </DialogTitle>
+                              <Typography align="center" variant="caption">
+                                Copy and paste your links below
+                              </Typography>
                               {linksDialog}
                             </Dialog>
                           </Grid>
