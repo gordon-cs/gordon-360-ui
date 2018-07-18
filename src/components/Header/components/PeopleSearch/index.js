@@ -9,12 +9,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
 import './people-search.css';
 import peopleSearch from '../../../../services/people-search';
-
 const MIN_QUERY_LENGTH = 3;
 
+
+//  TextBox Input Field
 const renderInput = inputProps => {
   const { autoFocus, value, ref, ...other } = inputProps;
 
@@ -45,13 +45,13 @@ const renderInput = inputProps => {
 export default class GordonPeopleSearch extends Component {
   constructor(props) {
     super(props);
-
     this.getSuggestions = this.getSuggestions.bind(this);
     this.renderSuggestion = this.renderSuggestion.bind(this);
     this.reset = this.reset.bind(this);
-
+    this.handleEnter = this.handleEnter.bind(this);
     this.state = {
       suggestions: [],
+      count:0,
     };
     this.isMobileView = false;
     this.breakpointWidth = 400;
@@ -75,7 +75,39 @@ export default class GordonPeopleSearch extends Component {
     // Remove any duplicate entries
     suggestions = uniqBy(suggestions, 'UserName');
 
+    
     this.setState({ suggestions });
+  }
+
+  handleEnter = (key) =>
+  {
+    let counter = this.state.count;
+    if( key === "Enter" )
+    {
+      if(this.state.suggestions && this.state.suggestions.length > 0)
+      {
+      
+      let theChosenOne = this.state.suggestions[counter].UserName
+      window.location.pathname = '/profile/' + theChosenOne;
+      this.reset(); 
+      }
+    }
+    if( key === "ArrowDown" )
+    { 
+        counter += 1;
+        console.log("arrowDown",counter)
+        counter = counter % this.state.suggestions.length
+        this.setState({count:counter})
+        console.log("arrowDown",counter)
+    }
+    if(key === "ArrowUp")
+    {
+        counter -= 1;
+        console.log("arrowup",counter)
+        if (counter === -1) counter = this.state.suggestions.length-1;
+        this.setState({count:counter}) 
+        console.log("arrowup",counter)
+    }
   }
   reset() {
     // Remove chosen username from the input
@@ -83,15 +115,18 @@ export default class GordonPeopleSearch extends Component {
 
     // Remove loaded suggestions
     this.downshift.clearItems();
+
+    this.setState({ count:0})
   }
+
+
   renderSuggestion(params) {
     const { suggestion, itemProps } = params;
-
+    
     // Bail if any required properties are missing
     if (!suggestion.UserName || !suggestion.FirstName || !suggestion.LastName) {
       return null;
     }
-
     return (
       <MenuItem
         {...itemProps}
@@ -99,7 +134,11 @@ export default class GordonPeopleSearch extends Component {
         component={Link}
         to={`/profile/${suggestion.UserName}`}
         onClick={this.reset}
-        className="people-search-suggestion"
+        className={
+          this.state.suggestions?
+          suggestion.UserName === this.state.suggestions[this.state.count].UserName ?
+           "people-search-suggestion-selected ":"people-search-suggestion"
+           :"people-search-suggestion"}
       >
         <Typography variant="body1">{`${suggestion.FirstName} ${suggestion.LastName}`}</Typography>
         <Typography variant="caption" component="p">
@@ -151,11 +190,13 @@ export default class GordonPeopleSearch extends Component {
               getInputProps({
                 placeholder: placeholder,
                 onChange: event => this.getSuggestions(event.target.value),
+                onKeyDown: event => {this.handleEnter(event.key)},
               }),
             )}
             {isOpen && this.state.suggestions.length > 0 ? (
               <Paper square className="people-search-dropdown">
-                {this.state.suggestions.map(suggestion =>
+                { 
+                  this.state.suggestions.map(suggestion =>
                   this.renderSuggestion({
                     suggestion,
                     itemProps: getItemProps({ item: suggestion.UserName }),
