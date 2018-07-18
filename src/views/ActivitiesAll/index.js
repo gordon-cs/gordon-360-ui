@@ -49,7 +49,7 @@ export default class GordonActivitiesAll extends Component {
         activity.getTypes(sessionCode),
         session.getAll(),
       ]);
-      const myInvolvements = await user.getCurrentMemberships(profile.ID);
+      const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
 
       this.setState({
         activities,
@@ -96,7 +96,7 @@ export default class GordonActivitiesAll extends Component {
       );
       myInvolvements = (
         <GordonActivityGrid
-          activities={this.state.myInvolvements}
+          myInvolvements={this.state.myInvolvements}
           sessionCode={this.state.session}
         />
       );

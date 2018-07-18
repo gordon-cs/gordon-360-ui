@@ -29,15 +29,47 @@ const gridListCols = width => {
 
 class GordonActivityGrid extends Component {
   render() {
-    let content = (
-      <Grid item xs={12}>
-        <Typography variant="headline" align="center">
-          Sorry, for this specific session/Involvement type we couldn't find any results.
-        </Typography>
-      </Grid>
-    );
+    let content;
 
-    if (Array.isArray(this.props.activities) && this.props.activities.length > 0) {
+    if (Array.isArray(this.props.myInvolvements) && this.props.myInvolvements.length === 0) {
+      content = (
+        <Grid item xs={12}>
+          <Typography variant="headline" align="center">
+            We found no current Involvements for you. Get connected below!
+          </Typography>
+        </Grid>
+      );
+    } else if (Array.isArray(this.props.myInvolvements) && this.props.myInvolvements.length > 0) {
+      content = this.props.myInvolvements.map(activity => (
+        <div className="container">
+          <Link
+            to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
+            className="item"
+          >
+            <div>
+              <img
+                className="picture"
+                src={activity.ActivityImagePath}
+                alt={activity.ActivityDescription}
+                height="150"
+                width="150"
+              />
+              <div className="item-title">{activity.ActivityDescription}</div>
+            </div>
+          </Link>
+        </div>
+      ));
+    }
+
+    if (Array.isArray(this.props.activities) && this.props.activities.length === 0) {
+      content = (
+        <Grid item xs={12}>
+          <Typography variant="headline" align="center">
+            No results for the selected session and type.
+          </Typography>
+        </Grid>
+      );
+    } else if (Array.isArray(this.props.activities) && this.props.activities.length > 0) {
       content = this.props.activities.map(activity => (
         <div className="container">
           <Link

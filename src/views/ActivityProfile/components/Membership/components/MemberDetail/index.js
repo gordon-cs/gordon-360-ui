@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
+import Button from 'material-ui/Button';
+import Checkbox from 'material-ui/Checkbox';
+import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog';
+import ExpansionPanel, {
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+} from 'material-ui/ExpansionPanel';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import { FormControl, FormControlLabel } from 'material-ui/Form';
+import Grid from 'material-ui/Grid';
+import { MenuItem } from 'material-ui/Menu';
 import PropTypes from 'prop-types';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import Select from 'material-ui/Select';
+import TextField from 'material-ui/TextField';
+import Typography from 'material-ui/Typography';
 
 import { gordonColors } from '../../../../../../theme';
 import user from '../../../../../../services/user';
@@ -106,7 +104,7 @@ export default class MemberDetail extends Component {
     });
   }
 
-  // Called when updated details submitted in Edit Membership dialog box
+  // Called when updated deatils submitted in Edit Membership dialog box
   async onEditMember() {
     let data = {
       MEMBERSHIP_ID: this.props.member.MembershipID,
@@ -158,7 +156,7 @@ export default class MemberDetail extends Component {
       options = (
         <Grid container>
           <Grid item>
-            <Button variant="contained" style={redButton} onClick={this.alertLeave} raised>
+            <Button style={redButton} onClick={this.alertLeave} raised>
               LEAVE
             </Button>
             <Dialog
@@ -171,17 +169,12 @@ export default class MemberDetail extends Component {
               <DialogContent>
                 <Grid container>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button variant="contained" color="primary" onClick={this.onClose} raised>
+                    <Button color="primary" onClick={this.onClose} raised>
                       No, stay
                     </Button>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button
-                      variant="contained"
-                      raised
-                      onClick={this.confirmLeave}
-                      style={redButton}
-                    >
+                    <Button raised onClick={this.confirmLeave} style={redButton}>
                       Yes, leave
                     </Button>
                   </Grid>
@@ -211,7 +204,7 @@ export default class MemberDetail extends Component {
       options = (
         <Grid container>
           <Grid item>
-            <Button variant="contained" color="primary" onClick={this.openEditMember} raised>
+            <Button color="primary" onClick={this.openEditMember} raised>
               Edit
             </Button>
             <Dialog open={this.state.openEdit} keepMounted align="center">
@@ -246,17 +239,12 @@ export default class MemberDetail extends Component {
                       />
                     </Grid>
                     <Grid item style={formControl}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.onEditMember}
-                        raised
-                      >
+                      <Button color="primary" onClick={this.onEditMember} raised>
                         SUBMIT CHANGES
                       </Button>
                     </Grid>
                     <Grid item xs={12} sm={12} style={formControl}>
-                      <Button variant="contained" color="primary" onClick={this.onClose} raised>
+                      <Button color="primary" onClick={this.onClose} raised>
                         CANCEL
                       </Button>
                     </Grid>
@@ -266,7 +254,7 @@ export default class MemberDetail extends Component {
             </Dialog>
           </Grid>
           <Grid item>
-            <Button variant="contained" style={redButton} onClick={this.onRemove} raised>
+            <Button style={redButton} onClick={this.onRemove} raised>
               Remove
             </Button>
             <Dialog open={this.state.alertRemove} keepMounted align="center">
@@ -278,12 +266,12 @@ export default class MemberDetail extends Component {
               <DialogContent>
                 <Grid container>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button variant="contained" color="primary" onClick={this.confirmLeave} raised>
+                    <Button color="primary" onClick={this.confirmLeave} raised>
                       OK
                     </Button>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button variant="contained" onClick={this.onClose} raised>
+                    <Button onClick={this.onClose} raised>
                       CANCEL
                     </Button>
                   </Grid>

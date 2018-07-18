@@ -88,7 +88,7 @@ export default class Help extends Component {
             <Typography variant="body1" gutterBottom component="ul">
               <br />
               <li>
-                <strong>Subscriber</strong> &ndash; Guest mode, can follow the Involvement and
+                <strong>Subscriber</strong> &ndash; Subscriber mode, can follow the Involvement and
                 receive Group email. Does not appear on Co-Curricular Transcript view.
               </li>
               <li>
@@ -140,9 +140,9 @@ export default class Help extends Component {
                 <strong>Managing Requests</strong> &ndash; To receive a Subscriber or Membership
                 request, go to the home page, or open the Involvement you Lead/Advise. New requests
                 appear at the top of the roster. To modify a request to a different user level, use
-                the dropdown menu (Advisor, Guest, Leader, Member) to assign a different level. Add
-                an appropriate Title for Leaders and Advisors. You can add a Title to other users,
-                too.
+                the dropdown menu (Advisor, Leader, Member, Subscriber) to assign a different level.
+                Add an appropriate Title for Leaders and Advisors. You can add a Title to other
+                users, too.
               </li>
               <li>
                 <strong>Title/Comment</strong> &ndash; Short but descriptive job or role title that
