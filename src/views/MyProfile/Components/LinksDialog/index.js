@@ -9,7 +9,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui//core/Grid';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import { socialMediaInfo } from '../../../../socialMedia';
 import { gordonColors } from '../../../../theme';
 
@@ -175,15 +174,9 @@ export default class LinksDialog extends React.Component {
             onSubmit={this.handleSubmit}
             style={{ paddingLeft: '1.5rem', marginBottom: '-0.75rem', marginTop: '-1.5rem' }}
           >
-            <Typography style={{ color: 'red' }}>
-              {this.state.formErrors.facebookInput}
-              {this.state.formErrors.twitterInput}
-              {this.state.formErrors.linkedInInput}
-              {this.state.formErrors.instagramInput}
-            </Typography>
-            <Grid container spacing={8} alignItems="flex-end">
+            <Grid container spacing={8} alignItems="baseline">
               <Grid item>
-                <FacebookIcon alignItems="center" style={{ fontSize: '20px' }} />
+                <FacebookIcon style={{ fontSize: '20px' }} />
               </Grid>
               <Grid item>
                 <TextField
@@ -192,30 +185,32 @@ export default class LinksDialog extends React.Component {
                   value={this.state.facebookInput}
                   onChange={this.handleChange('facebookInput')}
                   error={!this.state.fbValid}
+                  helperText={this.state.fbValid ? '' : this.state.formErrors.facebookInput}
                   margin="dense"
                   fullWidth
                 />
               </Grid>
             </Grid>
-
-            <Grid container spacing={8} alignItems="flex-end">
+            <Grid container spacing={8} alignItems="baseline">
               <Grid item>
-                <TwitterIcon alignItems="center" style={{ fontSize: '20px' }} />
+                <TwitterIcon style={{ fontSize: '20px' }} />
               </Grid>
-              <Grid item xs zeroMinWidth>
+              <Grid item>
                 <TextField
                   id="twitterInput"
                   label=" Twitter link"
                   value={this.state.twitterInput}
                   onChange={this.handleChange('twitterInput')}
                   error={!this.state.twValid}
+                  helperText={this.state.twValid ? '' : this.state.formErrors.twitterInput}
                   margin="dense"
+                  fullWidth
                 />
               </Grid>
             </Grid>
-            <Grid container spacing={8} alignItems="flex-end">
+            <Grid container spacing={8} alignItems="baseline">
               <Grid item>
-                <LinkedInIcon alignItems="center" style={{ fontSize: '20px' }} />
+                <LinkedInIcon style={{ fontSize: '20px' }} />
               </Grid>
               <Grid item>
                 <TextField
@@ -224,14 +219,15 @@ export default class LinksDialog extends React.Component {
                   value={this.state.linkedInInput}
                   onChange={this.handleChange('linkedInInput')}
                   error={!this.state.liValid}
+                  helperText={this.state.liValid ? '' : this.state.formErrors.linkedInInput}
                   margin="dense"
                   fullWidth
                 />
               </Grid>
             </Grid>
-            <Grid container spacing={8} alignItems="flex-end">
+            <Grid container spacing={8} alignItems="baseline">
               <Grid item>
-                <InstagramIcon alignItems="center" style={{ fontSize: '20px' }} />
+                <InstagramIcon style={{ fontSize: '20px' }} />
               </Grid>
               <Grid item>
                 <TextField
@@ -240,6 +236,7 @@ export default class LinksDialog extends React.Component {
                   value={this.state.instagramInput}
                   onChange={this.handleChange('instagramInput')}
                   error={!this.state.igValid}
+                  helperText={this.state.igValid ? '' : this.state.formErrors.instagramInput}
                   margin="dense"
                   fullWidth
                 />
