@@ -48,8 +48,10 @@ export default class RequestSent extends Component {
           <Grid container alignItems="center">
             <Grid item xs={6} sm={4} md={6} lg={4}>
               <Typography>
-                {' '}
                 <strong> {this.props.member.ActivityDescription} </strong>
+              </Typography>
+              <Typography>
+                <span className="weak">{membership.getDiffDays(this.props.member.DateSent)}</span>
               </Typography>
             </Grid>
             <Grid item xs={6} sm={4} md={6} lg={4} align="center">
