@@ -1,3 +1,5 @@
+// TODO: When login page hang/refresh issue is solved, remove all code marked "Login Hang"
+
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
@@ -6,10 +8,17 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
+import Snackbar from '@material-ui/core/Snackbar'; // \
+import CloseIcon from '@material-ui/icons/Close'; // |- Login Hang
+import IconButton from '@material-ui/core/IconButton'; // |
+import amber from '@material-ui/core/colors/amber'; // /
 
 import './login.css';
 import { authenticate } from '../../services/auth';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
+
+// To temporarily disable the Login Hang message, set this boolean to false
+const LOGIN_BUG_MESSAGE = true; // Login Hang
 
 export default class Login extends Component {
   constructor(props) {
@@ -23,23 +32,52 @@ export default class Login extends Component {
       loading: false,
       password: '',
       username: '',
+      showMessageSnackbar: false, // Login Hang
     };
   }
+
   handleChange(prop) {
     return event => {
       this.setState({ [prop]: event.target.value });
     };
   }
+
   async logIn(event) {
     event.preventDefault();
     this.setState({ loading: true, error: null });
+
+    var id; // Login Hang
+    if (LOGIN_BUG_MESSAGE)
+      // Login Hang
+      id = setTimeout(() => {
+        this.setState({ showMessageSnackbar: true });
+      }, 6000); // Login Hang
+
     try {
       await authenticate(this.state.username, this.state.password);
       this.props.onLogIn();
     } catch (err) {
       this.setState({ error: err.message, loading: false });
     }
+
+    if (LOGIN_BUG_MESSAGE) {
+      //  \
+      //  |
+      this.setState({ showMessageSnackbar: false }); //  |- Login Hang
+      clearTimeout(id); //  |
+    } //  /
   }
+
+  handleCloseSnackbar(event, reason) {
+    //  \
+    if (reason === 'clickaway') {
+      //  |
+      return; //  |
+    } //  |- Login Hang
+    //  |
+    this.setState({ showMessageSnackbar: false }); //  |
+  } //  /
+
   render() {
     return (
       <Grid className="gordon-login" container alignItems="center" justify="center" spacing={0}>
@@ -96,6 +134,43 @@ export default class Login extends Component {
             </section>
           </form>
         </Grid>
+        {LOGIN_BUG_MESSAGE && (
+          <Snackbar /* Login Hang [START of section; remove everything from here to END] */
+            style={{ marginTop: '1rem' }}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            open={this.state.showMessageSnackbar}
+            onClose={this.handleCloseSnackbar.bind(this)}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+              style: { backgroundColor: amber[700] },
+            }}
+            message={
+              <span id="message-id">
+                Whoops! It looks like our login page has frozen. This happens occasionally, and
+                we're working to fix it.
+                <b> Please refresh your browser page</b>. Sorry for the inconvenience, and thank you
+                for your patience!
+              </span>
+            }
+            action={[
+              <Button onClick={() => window.location.reload()} style={{ color: 'white' }}>
+                Refresh
+              </Button>,
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                onClick={this.handleCloseSnackbar.bind(this)}
+              >
+                <CloseIcon />
+              </IconButton>,
+            ]}
+          />
+        )}{' '}
+        {/* Login Hang [END of section] */}
       </Grid>
     );
   }
