@@ -19,6 +19,12 @@ import BookIcon from 'react-icons/lib/fa/book';
 import GlobeIcon from 'react-icons/lib/fa/globe';
 import { Typography } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
+import sortBy from 'lodash/sortBy';
+import uniqBy from 'lodash/uniqBy';
+import goStalk from '../../services/goStalk';
+import Button from '@material-ui/core/Button';
+
+const MIN_QUERY_LENGTH = 3;
 
 const styles = {
   FontAwesome: {
@@ -46,6 +52,10 @@ class PeopleSearch extends Component {
     academicsExpanded: false,
     homeExpanded: false,
     offDepExpanded: false,
+
+    textFieldValue: '',
+
+    majorResults: [],
   };
 
   handleNameExpandClick = () => {
@@ -60,6 +70,39 @@ class PeopleSearch extends Component {
   handleOffDepExpandClick = () => {
     this.setState(state => ({ offDepExpanded: !state.offDepExpanded }));
   };
+
+  async getMajorResults(query) {
+    // Bail if query is missing or is less than minimum query length
+    if (!query || query.length < MIN_QUERY_LENGTH) {
+      return;
+    }
+
+    //so apparently everything breaks if the first letter is capital, which is what happens on mobile
+    //sometimes and then you spend four hours trying to figure out why downshift is not working
+    //but really its just that its capitalized what the heck
+    // query = query.toLowerCase();
+
+    let majorResults = await goStalk.searchMajor(query);
+
+    // Sort first by last name, then by first name
+    majorResults = sortBy(majorResults, ['LastName', 'FirstName']);
+
+    // Remove any duplicate entries
+    // suggestions = uniqBy(suggestions, 'UserName');
+
+    this.setState({ majorResults });
+  }
+  // THE MAJORTEXTFIELD REF CURRENTLY IS UNDEFINED
+  // WE JUST NEED TO GET THE TEXTFIELD VALUE OF MAJORTEXTFIELD IN ORDER TO TEST IF WE DID THIS ALL RIGHT
+
+  handleTextFieldChange = e => {
+    console.log('before the state is set again: ', this.state.textFieldValue);
+    this.setState({
+      textFieldValue: e.target.value,
+    });
+    console.log('AFTER THE STATE IS SET in handle method: ', this.state.textFieldValue);
+  };
+
   render() {
     const { classes } = this.props;
     return (
@@ -118,7 +161,13 @@ class PeopleSearch extends Component {
                     <BookIcon style={styles.FontAwesome} />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField id="major" label="Major" fullWidth />
+                    <TextField
+                      id="major"
+                      label="Major"
+                      value={this.state.textFieldValue}
+                      onChange={this.handleTextFieldChange}
+                      fullWidth
+                    />
                   </Grid>
                 </Grid>
 
@@ -257,6 +306,11 @@ class PeopleSearch extends Component {
               </Collapse>
             </CardContent>
           </Card>
+          {/* {console.log("in render, what is the state of textFieldValue?: ", this.state.textFieldValue);} */}
+          <Button color="primary" onClick={this.getMajorResults(this.state.textFieldValue)} raised>
+            SEARCH BOI.
+          </Button>
+          <Typography>The majors should appear here: {this.state.majorResults}</Typography>
         </Grid>
       </Grid>
     );

@@ -29,7 +29,9 @@ const search = query => {
     searchQuery = query.trim().replace(/\.|\s/g, '/');
   }
 
-  return http.get(`accounts/search/${searchQuery}`);
+  let result = http.get(`accounts/search/${searchQuery}`);
+  console.log('THis is the result: ', result);
+  return result;
 };
 
 export default {

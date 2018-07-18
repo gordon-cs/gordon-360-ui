@@ -16,22 +16,22 @@ import http from './http';
  */
 
 /**
- * Search for a person
+ * Search for a person's major/minor
  * @param {String} query Query to search
  * @return {Promise.<SearchResult[]>} List of search results
  */
-const search = query => {
-  let searchQuery = query;
+const searchMajor = query => {
+  let majorSearchQuery = query;
 
   // If query has a space in it or is a username, separate it into first and last names
   if (query.trim().includes(' ') || (query.includes('.') && query.indexOf('.') !== 0)) {
     // Replace period or space with a slash: 'first.last' or 'first last' become 'first/last'
-    searchQuery = query.trim().replace(/\.|\s/g, '/');
+    majorSearchQuery = query.trim().replace(/\.|\s/g, '/');
   }
 
-  return http.get(`accounts/search/${searchQuery}`);
+  return http.get(`accounts/search-major/${majorSearchQuery}`);
 };
 
 export default {
-  search,
+  searchMajor,
 };
