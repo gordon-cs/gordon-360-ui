@@ -6,14 +6,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
-// import PeopleIcon from '@material-ui/icons/People';
+import PeopleIcon from '@material-ui/icons/People';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
 import { Route, Switch, NavLink } from 'react-router-dom';
-
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
@@ -52,7 +51,12 @@ export default class GordonHeader extends Component {
    */
   updateTabHighlight() {
     let currentPath = window.location.pathname;
-    let urls = [[/^\/$/, 0], [/^\/activities$|^\/activity/, 1], [/^\/events$/, 2]];
+    let urls = [
+      [/^\/$/, 0],
+      [/^\/activities$|^\/activity/, 1],
+      [/^\/events$/, 2],
+      [/^\/people$/, 3],
+    ];
     this.value = false;
     for (let i = 0; i < urls.length; i++) {
       if (urls[i][0].test(currentPath)) {
@@ -112,13 +116,13 @@ export default class GordonHeader extends Component {
                   component={NavLink}
                   to="/events"
                 />
-                {/* <Tab
+                <Tab
                   className="tab"
                   icon={<PeopleIcon />}
                   label="People"
                   component={NavLink}
-                  to="/transcript"
-                /> */}
+                  to="/people"
+                />
               </Tabs>
             </div>
             <GordonPeopleSearch />
