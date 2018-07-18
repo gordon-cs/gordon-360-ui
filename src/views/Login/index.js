@@ -8,10 +8,10 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import Snackbar from '@material-ui/core/Snackbar'; // \
-import CloseIcon from '@material-ui/icons/Close'; // |- Login Hang
-import IconButton from '@material-ui/core/IconButton'; // |
-import amber from '@material-ui/core/colors/amber'; // /
+import Snackbar from '@material-ui/core/Snackbar';      // \
+import CloseIcon from '@material-ui/icons/Close';       // |- Login Hang
+import IconButton from '@material-ui/core/IconButton';  // |
+import amber from '@material-ui/core/colors/amber';     // /
 
 import './login.css';
 import { authenticate } from '../../services/auth';
@@ -47,11 +47,8 @@ export default class Login extends Component {
     this.setState({ loading: true, error: null });
 
     var id; // Login Hang
-    if (LOGIN_BUG_MESSAGE)
-      // Login Hang
-      id = setTimeout(() => {
-        this.setState({ showMessageSnackbar: true });
-      }, 6000); // Login Hang
+    if (LOGIN_BUG_MESSAGE) // Login Hang
+      id = setTimeout(() => { this.setState({ showMessageSnackbar: true }); }, 6000); // Login Hang
 
     try {
       await authenticate(this.state.username, this.state.password);
@@ -60,23 +57,19 @@ export default class Login extends Component {
       this.setState({ error: err.message, loading: false });
     }
 
-    if (LOGIN_BUG_MESSAGE) {
-      //  \
-      //  |
-      this.setState({ showMessageSnackbar: false }); //  |- Login Hang
-      clearTimeout(id); //  |
-    } //  /
+    if (LOGIN_BUG_MESSAGE) {                          //  \
+      this.setState({ showMessageSnackbar: false });  //  |- Login Hang
+      clearTimeout(id);                               //  |
+    }                                                 //  /
   }
 
-  handleCloseSnackbar(event, reason) {
-    //  \
-    if (reason === 'clickaway') {
-      //  |
-      return; //  |
-    } //  |- Login Hang
-    //  |
-    this.setState({ showMessageSnackbar: false }); //  |
-  } //  /
+  handleCloseSnackbar(event, reason) {              //  \
+    if (reason === 'clickaway') {                   //  |
+      return;                                       //  |
+    }                                               //  |- Login Hang
+                                                    //  |
+    this.setState({ showMessageSnackbar: false });  //  |
+  }                                                 //  /
 
   render() {
     return (
@@ -169,8 +162,7 @@ export default class Login extends Component {
               </IconButton>,
             ]}
           />
-        )}{' '}
-        {/* Login Hang [END of section] */}
+        )}{/* Login Hang [END of section] */}
       </Grid>
     );
   }
