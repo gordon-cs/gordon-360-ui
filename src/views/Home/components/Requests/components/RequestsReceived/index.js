@@ -6,6 +6,7 @@ import Divider from '@material-ui/core/Divider';
 
 import { gordonColors } from '../../../../../../theme';
 import membership from '../../../../../../services/membership';
+import './requests.css';
 
 export default class RequestReceived extends Component {
   constructor(props) {
@@ -75,6 +76,7 @@ export default class RequestReceived extends Component {
                     <br />
                     <Typography>
                       {request.FirstName} {request.LastName}
+                      <span className="weak"> {membership.getDiffDays(request.DateSent)}</span>
                     </Typography>
                   </Grid>
                   <Grid item xs={2} sm={2}>

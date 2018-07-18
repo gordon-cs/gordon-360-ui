@@ -251,6 +251,24 @@ const filterCurrentRequests = (requestsArray, sessionCode) => {
   return filteredRequestsArray;
 };
 
+// Get the difference in days bewteen today and specified date
+// Returns integer and printable string
+const getDiffDays = function(date) {
+  let currentDate = new Date();
+  let requestDate = new Date(date);
+  let timeDiff = Math.abs(currentDate.getTime() - requestDate.getTime());
+  let diffDays = Math.floor(timeDiff / (1000 * 3600 * 24));
+  let diffString;
+  if (diffDays === 0) {
+    diffString = 'Today';
+  } else if (diffDays === 1) {
+    diffString = 'Yesterday';
+  } else {
+    diffString = diffDays.toString() + ' days ago';
+  }
+  return diffString;
+};
+
 /**
  * Remove given membershipID from membership table (Example of successful delete)
  * @param {String} membershipID The membershipID to remove
@@ -319,6 +337,7 @@ export default {
   getIndividualMembership,
   getRequests,
   filterCurrentRequests,
+  getDiffDays,
   remove,
   requestMembership,
   search,
