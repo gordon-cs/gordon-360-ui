@@ -53,7 +53,7 @@ class PeopleSearch extends Component {
     homeExpanded: false,
     offDepExpanded: false,
 
-    textFieldValue: '',
+    majorSearchValue: '',
 
     majorResults: [],
   };
@@ -71,18 +71,20 @@ class PeopleSearch extends Component {
     this.setState(state => ({ offDepExpanded: !state.offDepExpanded }));
   };
 
-  async getMajorResults(query) {
+  async searchMajors(query) {
+    console.log('SEARCH FUNCTION, with this state being logged:', this.state.majorSearchValue);
+    console.log('SEARCH FUNCTION, the query should equal that ^^^^', query);
+
     // Bail if query is missing or is less than minimum query length
     if (!query || query.length < MIN_QUERY_LENGTH) {
       return;
     }
 
-    //so apparently everything breaks if the first letter is capital, which is what happens on mobile
-    //sometimes and then you spend four hours trying to figure out why downshift is not working
-    //but really its just that its capitalized what the heck
-    // query = query.toLowerCase();
+    query = query.toLowerCase();
+    console.log('SEARCH FUNCTION, right before the await goStalk.searchMajor', query);
 
     let majorResults = await goStalk.searchMajor(query);
+    console.log('SEARCH FUNCTION, the majorResults', majorResults);
 
     // Sort first by last name, then by first name
     majorResults = sortBy(majorResults, ['LastName', 'FirstName']);
@@ -96,11 +98,14 @@ class PeopleSearch extends Component {
   // WE JUST NEED TO GET THE TEXTFIELD VALUE OF MAJORTEXTFIELD IN ORDER TO TEST IF WE DID THIS ALL RIGHT
 
   handleTextFieldChange = e => {
-    console.log('before the state is set again: ', this.state.textFieldValue);
+    console.log('-----------------------------------------');
+    console.log('before the state is set again: ', this.state.majorSearchValue);
     this.setState({
-      textFieldValue: e.target.value,
+      majorSearchValue: e.target.value,
     });
-    console.log('AFTER THE STATE IS SET in handle method: ', this.state.textFieldValue);
+    console.log('AFTER THE STATE IS SET in handle method: ', this.state.majorSearchValue);
+
+    console.log('-----------------------------------------');
   };
 
   render() {
@@ -164,7 +169,7 @@ class PeopleSearch extends Component {
                     <TextField
                       id="major"
                       label="Major"
-                      value={this.state.textFieldValue}
+                      value={this.state.majorSearchValue}
                       onChange={this.handleTextFieldChange}
                       fullWidth
                     />
@@ -306,10 +311,22 @@ class PeopleSearch extends Component {
               </Collapse>
             </CardContent>
           </Card>
-          {/* {console.log("in render, what is the state of textFieldValue?: ", this.state.textFieldValue);} */}
-          <Button color="primary" onClick={this.getMajorResults(this.state.textFieldValue)} raised>
+          {console.log('-----------------------------------------')}
+          {console.log(
+            'RENDER, this.state.majorSearchValue has been set. but to what?',
+            this.state.majorSearchValue,
+          )}
+          <Button
+            color="primary"
+            onClick={() => {
+              this.searchMajors(this.state.majorSearchValue);
+            }}
+            raised
+          >
             SEARCH BOI.
           </Button>
+          {console.log("RENDER, these are the majorResults' state:", this.state.majorResults)}
+          {console.log('-----------------------------------------')}
           <Typography>The majors should appear here: {this.state.majorResults}</Typography>
         </Grid>
       </Grid>

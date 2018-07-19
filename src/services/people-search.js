@@ -30,7 +30,6 @@ const search = query => {
   }
 
   let result = http.get(`accounts/search/${searchQuery}`);
-  console.log('THis is the result: ', result);
   return result;
 };
 
