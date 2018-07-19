@@ -51,7 +51,7 @@ export default class GordonPeopleSearch extends Component {
     this.handleEnter = this.handleEnter.bind(this);
     this.state = {
       suggestions: [],
-      count:0,
+      count:-1,
     };
     this.isMobileView = false;
     this.breakpointWidth = 400;
@@ -61,7 +61,7 @@ export default class GordonPeopleSearch extends Component {
     if (!query || query.length < MIN_QUERY_LENGTH) {
       return;
     }
-
+    
     //so apparently everything breaks if the first letter is capital, which is what happens on mobile
     //sometimes and then you spend four hours trying to figure out why downshift is not working
     //but really its just that its capitalized what the heck
@@ -82,31 +82,29 @@ export default class GordonPeopleSearch extends Component {
   handleEnter = (key) =>
   {
     let counter = this.state.count;
+    let theChosenOne;
     if( key === "Enter" )
     {
       if(this.state.suggestions && this.state.suggestions.length > 0)
       {
-      
-      let theChosenOne = this.state.suggestions[counter].UserName
-      window.location.pathname = '/profile/' + theChosenOne;
-      this.reset(); 
+        counter === -1 ? theChosenOne = this.state.suggestions[0].UserName :
+        theChosenOne = this.state.suggestions[counter].UserName;
+        window.location.pathname = '/profile/' + theChosenOne;
+        this.reset(); 
       }
     }
     if( key === "ArrowDown" )
     { 
         counter += 1;
-        console.log("arrowDown",counter)
-        counter = counter % this.state.suggestions.length
+        counter = counter % this.state.suggestions.length;
         this.setState({count:counter})
-        console.log("arrowDown",counter)
     }
-    if(key === "ArrowUp")
+    if( key === "ArrowUp" )
     {
         counter -= 1;
-        console.log("arrowup",counter)
-        if (counter === -1) counter = this.state.suggestions.length-1;
-        this.setState({count:counter}) 
-        console.log("arrowup",counter)
+        if ( counter === -2 ) counter = 0;
+        if ( counter === -1 ) counter = this.state.suggestions.length-1;
+        this.setState({count:counter})
     }
   }
   reset() {
@@ -116,7 +114,7 @@ export default class GordonPeopleSearch extends Component {
     // Remove loaded suggestions
     this.downshift.clearItems();
 
-    this.setState({ count:0})
+    this.setState({ count:-1})
   }
 
 
@@ -135,8 +133,8 @@ export default class GordonPeopleSearch extends Component {
         to={`/profile/${suggestion.UserName}`}
         onClick={this.reset}
         className={
-          this.state.suggestions?
-          suggestion.UserName === this.state.suggestions[this.state.count].UserName ?
+          this.state.suggestions && this.state.suggestions[this.state.count]!==undefined ?
+          suggestion.UserName === this.state.suggestions[this.state.count].UserName && this.state.count !== -1 ?
            "people-search-suggestion-selected ":"people-search-suggestion"
            :"people-search-suggestion"}
       >
