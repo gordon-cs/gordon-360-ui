@@ -72,8 +72,8 @@ const isAuthenticated = () => {
     const token = storage.get('token');
     console.log('auth.js: got token from storage');
     // Check that auth contains a token
+    console.log('auth.js: checking token length');
     return token && token.length > 0;
-    console.log('auth.js: checked token length');
   } catch (err) {
     console.log('auth.js: error occured getting token');
     return false;
