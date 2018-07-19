@@ -8,14 +8,15 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import Snackbar from '@material-ui/core/Snackbar'; // \
-import CloseIcon from '@material-ui/icons/Close'; // |- Login Hang
-import IconButton from '@material-ui/core/IconButton'; // |
-import amber from '@material-ui/core/colors/amber'; // /
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import amber from '@material-ui/core/colors/amber'; // Login Hang
 
 import './login.css';
 import { authenticate } from '../../services/auth';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
+import { gordonColors } from '../../theme';
 
 // To temporarily disable the Login Hang message, set this boolean to false
 const LOGIN_BUG_MESSAGE = true; // Login Hang
@@ -36,6 +37,15 @@ export default class Login extends Component {
     };
   }
 
+  componentWillMount() {
+    this.isIE = false;
+    let ua = navigator.userAgent;
+    if (ua.indexOf('MSIE ') > -1 || ua.indexOf('Trident') > -1) {
+      this.isIE = true;
+      console.log('Chicken nuggets!');
+    }
+  }
+
   handleChange(prop) {
     return event => {
       this.setState({ [prop]: event.target.value });
@@ -47,11 +57,8 @@ export default class Login extends Component {
     this.setState({ loading: true, error: null });
 
     var id; // Login Hang
-    if (LOGIN_BUG_MESSAGE)
-      // Login Hang
-      id = setTimeout(() => {
-        this.setState({ showMessageSnackbar: true });
-      }, 6000); // Login Hang
+    if (LOGIN_BUG_MESSAGE) // Login Hang
+      id = setTimeout(() => { this.setState({ showMessageSnackbar: true }); }, 6000); // Login Hang
 
     try {
       await authenticate(this.state.username, this.state.password);
@@ -64,24 +71,21 @@ export default class Login extends Component {
 
     console.log('Login/index.js: Passed try block');
 
-    if (LOGIN_BUG_MESSAGE) {
-      //  \
-      clearTimeout(id); //  |- Login Hang
-      this.setState({ showMessageSnackbar: false }); //  |
-    } //  /
+    if (LOGIN_BUG_MESSAGE) {                          //  \
+      clearTimeout(id);                               //  |- Login Hang
+      this.setState({ showMessageSnackbar: false });  //  |
+    }                                                 //  /
 
     console.log('Login/index.js: Cleared timeout to disable message');
   }
 
-  handleCloseSnackbar(event, reason) {
-    //  \
-    if (reason === 'clickaway') {
-      //  |
-      return; //  |
-    } //  |- Login Hang
-    //  |
-    this.setState({ showMessageSnackbar: false }); //  |
-  } //  /
+  handleCloseSnackbar(event, reason) {             //  \
+    if (reason === 'clickaway') {                   //  |
+      return;                                       //  |
+    }                                               //  |- Login Hang
+                                                    //  |
+    this.setState({ showMessageSnackbar: false });  //  |
+  }                                                 //  /
 
   render() {
     return (
@@ -174,8 +178,49 @@ export default class Login extends Component {
               </IconButton>,
             ]}
           />
-        )}
-        {/* Login Hang [END of section] */}
+        )}{/* Login Hang [END of section] */}
+        <Snackbar
+          style={{ marginTop: '1rem' }}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={this.isIE}
+          onClose={this.handleCloseSnackbar.bind(this)}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+            style: { backgroundColor: gordonColors.primary.cyan },
+          }}
+          message={
+            <span id="message-id">
+              Whoops! It looks like you're using Internet Explorer. Unfortunately, Gordon 360
+              doesn't support IE. Please use a modern browser like Chrome or Firefox. (We don't
+              support Edge yet, but we hope to soon!)
+            </span>
+          }
+          action={[
+            <Button
+              onClick={() => (window.location.href = 'https://www.google.com/chrome/')}
+              style={{ color: 'white' }}
+            >
+              Get Chrome
+            </Button>,
+            <Button
+              onClick={() => (window.location.href = 'https://www.mozilla.org/en-US/firefox/new/')}
+              style={{ color: 'white' }}
+            >
+              Get Firefox
+            </Button>,
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={this.handleCloseSnackbar.bind(this)}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </Grid>
     );
   }
