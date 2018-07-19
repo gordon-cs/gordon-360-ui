@@ -103,7 +103,7 @@ export default class GordonPeopleSearch extends Component {
     }
     if( key === "ArrowUp" )
     {
-        suggestionIndex === -1 ? suggestionIndex : suggestionIndex--;
+        if ( suggestionIndex !== -1 ) suggestionIndex--;
         if ( suggestionIndex === -1 ) suggestionIndex = suggestionList.length-1;
         this.setState({suggestionIndex})
     }
