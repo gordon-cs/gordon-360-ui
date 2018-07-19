@@ -58,7 +58,7 @@ const getAuth = (username, password) => {
 const authenticate = (username, password) =>
   getAuth(username, password)
     .then(token => storage.store('token', token))
-    .then(console.log('auth: authenticate() - done'));
+    .then(console.log('auth.js: authenticate() - done'));
 
 /**
  * Check if current session is authenticated
@@ -66,13 +66,16 @@ const authenticate = (username, password) =>
  * @return {Promise.<boolean>} Whether session is authenticated or not
  */
 const isAuthenticated = () => {
+  console.log('auth.js: entered isAuthenticated()');
   try {
     // Check that auth exists
     const token = storage.get('token');
-
+    console.log('auth.js: got token from storage');
     // Check that auth contains a token
     return token && token.length > 0;
+    console.log('auth.js: checked token length');
   } catch (err) {
+    console.log('auth.js: error occured getting token');
     return false;
   }
 };
