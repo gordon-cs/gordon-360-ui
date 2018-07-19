@@ -11,6 +11,7 @@ import session from '../../../../services/session';
 import GordonLoader from '../../../../components/Loader';
 
 import './CLWChart.css';
+import { Tooltip } from '@material-ui/core';
 
 export default class CLWCreditsDaysLeft extends Component {
   constructor(props) {
@@ -133,7 +134,13 @@ export default class CLWCreditsDaysLeft extends Component {
           </Grid>
           <div className="container">
             <Doughnut data={data} height={175} options={options} />
-            <div className="centered-text">{current.toString()}</div>
+            <Tooltip
+              id="tooltip-chapel-credits"
+              classes={{ tooltip: 'tooltip' }}
+              title="CL&W Credits Earned"
+            >
+              <div className="centered-text">{current.toString()}</div>
+            </Tooltip>
           </div>
         </div>
       );
