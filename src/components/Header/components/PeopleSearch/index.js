@@ -48,10 +48,10 @@ export default class GordonPeopleSearch extends Component {
     this.getSuggestions = this.getSuggestions.bind(this);
     this.renderSuggestion = this.renderSuggestion.bind(this);
     this.reset = this.reset.bind(this);
-    this.handleEnter = this.handleEnter.bind(this);
+    this.handleKeys = this.handleKeys.bind(this);
     this.state = {
       suggestions: [],
-      count:-1,
+      suggestionIndex:-1,
     };
     this.isMobileView = false;
     this.breakpointWidth = 400;
@@ -79,32 +79,33 @@ export default class GordonPeopleSearch extends Component {
     this.setState({ suggestions });
   }
 
-  handleEnter = (key) =>
+  handleKeys = (key) =>
   {
-    let counter = this.state.count;
+    let suggestionIndex = this.state.suggestionIndex;
+    let suggestionList = this.state.suggestions;
     let theChosenOne;
+
     if( key === "Enter" )
     {
-      if(this.state.suggestions && this.state.suggestions.length > 0)
+      if(suggestionList && suggestionList.length > 0)
       {
-        counter === -1 ? theChosenOne = this.state.suggestions[0].UserName :
-        theChosenOne = this.state.suggestions[counter].UserName;
+        suggestionIndex === -1 ? theChosenOne = suggestionList[0].UserName :
+        theChosenOne = suggestionList[suggestionIndex].UserName;
         window.location.pathname = '/profile/' + theChosenOne;
         this.reset(); 
       }
     }
     if( key === "ArrowDown" )
     { 
-        counter += 1;
-        counter = counter % this.state.suggestions.length;
-        this.setState({count:counter})
+        suggestionIndex++;
+        suggestionIndex = suggestionIndex % suggestionList.length;
+        this.setState({suggestionIndex})
     }
     if( key === "ArrowUp" )
     {
-        counter -= 1;
-        if ( counter === -2 ) counter = 0;
-        if ( counter === -1 ) counter = this.state.suggestions.length-1;
-        this.setState({count:counter})
+        suggestionIndex === -1 ? suggestionIndex : suggestionIndex--;
+        if ( suggestionIndex === -1 ) suggestionIndex = suggestionList.length-1;
+        this.setState({suggestionIndex})
     }
   }
   reset() {
@@ -114,13 +115,14 @@ export default class GordonPeopleSearch extends Component {
     // Remove loaded suggestions
     this.downshift.clearItems();
 
-    this.setState({ count:-1})
+    this.setState({ suggestionIndex:-1})
   }
 
 
   renderSuggestion(params) {
     const { suggestion, itemProps } = params;
-    
+    let suggestionIndex = this.state.suggestionIndex;
+    let suggestionList = this.state.suggestions;
     // Bail if any required properties are missing
     if (!suggestion.UserName || !suggestion.FirstName || !suggestion.LastName) {
       return null;
@@ -133,8 +135,9 @@ export default class GordonPeopleSearch extends Component {
         to={`/profile/${suggestion.UserName}`}
         onClick={this.reset}
         className={
-          this.state.suggestions && this.state.suggestions[this.state.count]!==undefined ?
-          suggestion.UserName === this.state.suggestions[this.state.count].UserName && this.state.count !== -1 ?
+          suggestionList && suggestionList[suggestionIndex] !== undefined ?
+          suggestion.UserName === suggestionList[suggestionIndex].UserName
+          && suggestionIndex !== -1 ?
            "people-search-suggestion-selected ":"people-search-suggestion"
            :"people-search-suggestion"}
       >
@@ -188,7 +191,7 @@ export default class GordonPeopleSearch extends Component {
               getInputProps({
                 placeholder: placeholder,
                 onChange: event => this.getSuggestions(event.target.value),
-                onKeyDown: event => {this.handleEnter(event.key)},
+                onKeyDown: event => {this.handleKeys(event.key)},
               }),
             )}
             {isOpen && this.state.suggestions.length > 0 ? (
