@@ -8,26 +8,24 @@
     overflow-x: hidden;
     right: 20px;
     border-radius: 4px;
-    
   }
-  .people-search-suggestion-selected:hover { background-color: $neutral-light-gray !important; }
   
-  .people-search-dropdown:hover .people-search-suggestion-selected { background-color: white; }
-
-  
-
   .people-search-suggestion {
     display: block;
     align-self: left;
     padding-bottom: 25px;
   }
-
+  
+  .people-search-suggestion-selected:hover { background-color: $neutral-light-gray !important; }
+  
   .people-search-suggestion-selected{
     background-color:$neutral-light-gray;
     display: block;
     align-self: left;
     padding-bottom: 25px;
   }
+  
+  .people-search-dropdown:hover .people-search-suggestion-selected { background-color: white; }
 
   @media (min-width: 0px) {
     .people-search-root {
