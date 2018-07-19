@@ -10,9 +10,11 @@
     border-radius: 4px;
     
   }
+  .people-search-suggestion-selected:hover { background-color: $neutral-light-gray !important; }
+  
   .people-search-dropdown:hover .people-search-suggestion-selected { background-color: white; }
 
-  .people-search-suggestion-selected:hover { background-color: $neutral-light-gray !important; }
+  
 
   .people-search-suggestion {
     display: block;
