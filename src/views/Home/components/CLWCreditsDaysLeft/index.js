@@ -131,7 +131,10 @@ export default class CLWCreditsDaysLeft extends Component {
               </div>
             </Grid>
           </Grid>
-          <Doughnut data={data} height={175} options={options} />
+          <div className="container">
+            <Doughnut data={data} height={175} options={options} />
+            <div className="centered-text">{current.toString()}</div>
+          </div>
         </div>
       );
     }
