@@ -107,13 +107,8 @@ export default class CLWCreditsDaysLeft extends Component {
             style={{ paddingTop: 5, paddingBottom: 5 }}
           >
             <Grid item>
-              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body1" style={{ textAlign: 'center' }}>
                 {`${daysLeft} Days Left in Semester`}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
-                {`${current} CL&W Credit` + (current === 1 ? '' : 's') + ' Earned'}
               </Typography>
             </Grid>
           </Grid>
@@ -121,17 +116,17 @@ export default class CLWCreditsDaysLeft extends Component {
             <Grid item>
               <div class="legend">
                 <div class="entry">
-                  <span class="entry-label" style={{ background: gordonColors.primary.blue }} />
-                  <span class="entry-text">Days Finished</span>
+                  <span class="entry-label" style={{ background: gordonColors.primary.cyan }} />
+                  <span class="entry-text"> {current} CL&amp;W Credits</span>
                 </div>
                 <div class="entry">
-                  <span class="entry-label" style={{ background: gordonColors.primary.cyan }} />
-                  <span class="entry-text">CL&W Credits</span>
+                  <span class="entry-label" style={{ background: gordonColors.primary.blue }} />
+                  <span class="entry-text"> {pastDays} Days Finished</span>
                 </div>
               </div>
             </Grid>
           </Grid>
-          <Doughnut data={data} height={175} options={options} />
+          <Doughnut data={data} height={100} options={options} />
         </div>
       );
     }
