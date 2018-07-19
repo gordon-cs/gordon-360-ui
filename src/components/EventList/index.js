@@ -75,7 +75,7 @@ export default class EventList extends Component {
           label: 'Location',
         },
         {
-          key: 'timeRange',
+          key: 'date',
           label: 'Date',
         },
         {

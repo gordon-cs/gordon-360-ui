@@ -312,7 +312,7 @@ export default class Profile extends Component {
     if (this.state.memberships.length === 0) {
       involvementAndPrivacyList = (
         <div>
-          <Link to={`/activities/`}>
+          <Link to={`/activities`}>
             <Typography variant="body2" className="noInvolvements">
               No Involvements to display. Click here to see Involvements around campus!
             </Typography>
@@ -653,6 +653,9 @@ export default class Profile extends Component {
                               <DialogTitle id="simple-dialog-title">
                                 Edit your social media links
                               </DialogTitle>
+                              <Typography align="center" variant="caption">
+                                Copy and paste your links below
+                              </Typography>
                               {linksDialog}
                             </Dialog>
                           </Grid>
