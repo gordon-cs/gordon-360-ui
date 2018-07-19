@@ -95,6 +95,9 @@ const theme = createMuiTheme({
     error: gordonColors.secondary.redShades,
     grey: gordonColors.neutral.grayShades,
   },
+  typography: {
+    fontFamily: ['Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', 'sans-serif'].join(','),
+  },
 });
 
 export default theme;
