@@ -52,11 +52,13 @@ export default class GordonHeader extends Component {
    */
   updateTabHighlight() {
     let currentPath = window.location.pathname;
-    let urls = [[/^\/$/, 0], [/^\/activities$|^\/activity/, 1], [/^\/events$/, 2]];
+    // Tab url regular expressions must be listed in the same order as the tabs, since the
+    // indices of the elements in the array on the next line are mapped to the indices of the tabs
+    let urls = [/^\/$/, /^\/activities\/?$|^\/activity/, /^\/events\/?$/];
     this.value = false;
     for (let i = 0; i < urls.length; i++) {
-      if (urls[i][0].test(currentPath)) {
-        this.value = urls[i][1];
+      if (urls[i].test(currentPath)) {
+        this.value = i;
       }
     }
   }
