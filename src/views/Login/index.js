@@ -58,22 +58,28 @@ export default class Login extends Component {
 
     var id; // Login Hang
     if (LOGIN_BUG_MESSAGE) // Login Hang
-      id = setTimeout(() => {this.setState({ showMessageSnackbar: true });}, 6000); // Login Hang
+      id = setTimeout(() => { this.setState({ showMessageSnackbar: true }); }, 6000); // Login Hang
 
     try {
       await authenticate(this.state.username, this.state.password);
+      console.log('Login/index.js: Successfully authenticated');
       this.props.onLogIn();
+      console.log('Login/index.js: onLogIn() returned');
     } catch (err) {
       this.setState({ error: err.message, loading: false });
     }
 
+    console.log('Login/index.js: Passed try block');
+
     if (LOGIN_BUG_MESSAGE) {                          //  \
-      this.setState({ showMessageSnackbar: false });  //  |- Login Hang
-      clearTimeout(id);                               //  |
+      clearTimeout(id);                               //  |- Login Hang
+      this.setState({ showMessageSnackbar: false });  //  |
     }                                                 //  /
+
+    console.log('Login/index.js: Cleared timeout to disable message');
   }
 
-  handleCloseSnackbar(event, reason) {              //  \
+  handleCloseSnackbar(event, reason) {             //  \
     if (reason === 'clickaway') {                   //  |
       return;                                       //  |
     }                                               //  |- Login Hang
