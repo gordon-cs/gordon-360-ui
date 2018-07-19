@@ -83,30 +83,31 @@ export default class About extends Component {
                 <strong>Concept and Imagineering</strong>
               </Typography>
               <Typography variant="body1" paragraph>
-                Carissa Church &apos;18 and Grace Crook &apos;18
-                <br />Chris Carlson &apos;87, Student Life
+                Carissa Church&nbsp;&apos;18 and Grace Crook&nbsp;&apos;18
+                <br />Chris Carlson&nbsp;&apos;87, Student Life
               </Typography>
               <Typography variant="subheading" gutterBottom>
                 <strong>Incubation Team</strong>
               </Typography>
               <Typography variant="body1" paragraph>
-                Ezeanyinabia &lsquo;Eze&rsquo; Anyanwu &apos;17, Adam Bartholomew &apos;17, and
-                James Kempf &apos;17
+                Ezeanyinabia &lsquo;Eze&rsquo; Anyanwu&nbsp;&apos;17, Adam
+                Bartholomew&nbsp;&apos;17, and James Kempf&nbsp;&apos;17
                 <br /> Dr.&nbsp;Russ Tuck, Summer Practicum in Computer Science (2016)
               </Typography>
               <Typography variant="subheading" gutterBottom>
                 <strong>Product Deployment and Support</strong>
               </Typography>
               <Typography variant="body1" paragraph>
-                Emmanuel Roussel &apos;17 and Stephanie Powers &apos;17
-                <br /> Chris Hansen, Jason Whitehouse &apos;99, Information Systems Group
+                Emmanuel Roussel&nbsp;&apos;17 and Stephanie Powers&nbsp;&apos;17
+                <br /> Chris Hansen, Jason Whitehouse&nbsp;&apos;99, Information Systems Group
               </Typography>
               <Typography variant="subheading" gutterBottom>
                 <strong>Software Development Team, Summer 2017</strong>
               </Typography>
               <Typography variant="body1" paragraph>
-                Bradley Boutcher &apos;18, Matthew Felgate &apos;18, Jenny Kim &apos;19, Sam Nguyen
-                &apos;19, Chris Qiao &apos;17, and Joseph Ross
+                Bradley Boutcher&nbsp;&apos;18, Matthew Felgate&nbsp;&apos;18, Jenny
+                Kim&nbsp;&apos;19, Sam Nguyen&nbsp;&apos;19, Chris Qiao&nbsp;&apos;17, and Joseph
+                Ross
                 <br />
                 Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning, Summer Practicum in Computer Science
                 (2017)
@@ -115,17 +116,18 @@ export default class About extends Component {
                 <strong>Software Development Team, 2017/2018</strong>
               </Typography>
               <Typography variant="body1" paragraph>
-                Addison Abbot &apos;20, Matt Felgate &apos;18, and Rebekah Stauffer &apos;19
-                <br /> Chris Hansen, Jason Whitehouse &apos;99, Information Systems Group
+                Addison Abbot&nbsp;&apos;20, Matt Felgate&nbsp;&apos;18, and Rebekah
+                Stauffer&nbsp;&apos;19
+                <br /> Chris Hansen, Jason Whitehouse&nbsp;&apos;99, Information Systems Group
               </Typography>
               <Typography variant="subheading" gutterBottom>
                 <strong>Software Development Team, Summer 2018</strong>
               </Typography>
               <Typography variant="body1" paragraph>
-                Addison Abbot &apos;20, Nikki Adevai &apos;19, Emily Bishop &apos;20, Stephen
-                Macomber &apos;19, Max Moniz &apos;19, and Nathaniel Rudenberg &apos;20
-                Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning, Summer Practicum in Computer Science
-                (2018)
+                Addison Abbot&nbsp;&apos;20, Nikki Adevai&nbsp;&apos;19, Emily Bishop&nbsp;&apos;20,
+                Stephen Macomber&nbsp;&apos;19, Max Moniz&nbsp;&apos;19, and Nathaniel
+                Rudenberg&nbsp;&apos;20 Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning, Summer
+                Practicum in Computer Science (2018)
               </Typography>
               <Typography variant="subheading" gutterBottom>
                 <strong>Beneficent Philanthropes</strong>
@@ -133,9 +135,9 @@ export default class About extends Component {
               <Typography variant="body1" paragraph>
                 To the visionary benefactors who support the Summer Practicum in Computer Science
                 program at Gordon College, thank you!
-                <br /> And to Dr.&nbsp;D.&nbsp;Michael Lindsay, President, and Jennifer Jukanovich
-                &apos;94, Vice President for Student Life, thank you for the opportunity to apply
-                our learning in a creative, practical way!
+                <br /> And to Dr.&nbsp;D.&nbsp;Michael Lindsay, President, and Jennifer
+                Jukanovich&nbsp;&apos;94, Vice President for Student Life, thank you for the
+                opportunity to apply our learning in a creative, practical way!
                 <br /> And to our mentors and coaches in development and deployment, thank you for
                 your guidance and encouragement to try new things.
               </Typography>
