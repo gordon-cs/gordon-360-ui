@@ -23,6 +23,8 @@ import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
 import goStalk from '../../services/goStalk';
 import Button from '@material-ui/core/Button';
+import { gordonColors } from '../../theme';
+import PeopleSearchResult from './components/PeopleSearchResult';
 
 const MIN_QUERY_LENGTH = 3;
 
@@ -44,6 +46,11 @@ const styles = {
   CardContent: {
     marginLeft: 8,
   },
+  headerStyle: {
+    backgroundColor: gordonColors.primary.blue,
+    color: '#FFF',
+    padding: '10px',
+  },
 };
 
 class PeopleSearch extends Component {
@@ -53,9 +60,9 @@ class PeopleSearch extends Component {
     homeExpanded: false,
     offDepExpanded: false,
 
-    majorSearchValue: '',
+    firstNameSearchValue: '',
 
-    majorResults: [],
+    peopleSearchResults: null,
   };
 
   handleNameExpandClick = () => {
@@ -71,48 +78,107 @@ class PeopleSearch extends Component {
     this.setState(state => ({ offDepExpanded: !state.offDepExpanded }));
   };
 
-  async searchMajors(query) {
-    console.log('SEARCH FUNCTION, with this state being logged:', this.state.majorSearchValue);
-    console.log('SEARCH FUNCTION, the query should equal that ^^^^', query);
-
+  async searchFirstName(query) {
     // Bail if query is missing or is less than minimum query length
     if (!query || query.length < MIN_QUERY_LENGTH) {
       return;
     }
-
     query = query.toLowerCase();
-    console.log('SEARCH FUNCTION, right before the await goStalk.searchMajor', query);
-
-    let majorResults = await goStalk.searchMajor(query);
-    console.log('SEARCH FUNCTION, the majorResults', majorResults);
-
-    // Sort first by last name, then by first name
-    majorResults = sortBy(majorResults, ['LastName', 'FirstName']);
+    let peopleSearchResults = [];
+    peopleSearchResults = await goStalk.searchMajor(query);
+    // console.log('SEARCH FUNCTION, the peopleSearchResults', peopleSearchResults.slice(0, 30));
 
     // Remove any duplicate entries
-    // suggestions = uniqBy(suggestions, 'UserName');
+    peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username');
 
-    this.setState({ majorResults });
+    // console.log('SEARCH FUNCTION, b4b4b4 before state set', this.state.peopleSearchResults.slice(0, 30));
+    this.setState({ peopleSearchResults });
+    // console.log('SEARCH FUNCTION, after after STATE BEEN SET', this.state.peopleSearchResults.slice(0, 30));
   }
-  // THE MAJORTEXTFIELD REF CURRENTLY IS UNDEFINED
-  // WE JUST NEED TO GET THE TEXTFIELD VALUE OF MAJORTEXTFIELD IN ORDER TO TEST IF WE DID THIS ALL RIGHT
-
   handleTextFieldChange = e => {
-    console.log('-----------------------------------------');
-    console.log('before the state is set again: ', this.state.majorSearchValue);
     this.setState({
-      majorSearchValue: e.target.value,
+      firstNameSearchValue: e.target.value,
     });
-    console.log('AFTER THE STATE IS SET in handle method: ', this.state.majorSearchValue);
-
-    console.log('-----------------------------------------');
   };
 
   render() {
     const { classes } = this.props;
+    let people;
+
+    if (window.innerWidth < this.breakpointWidth) {
+      const columns = [
+        {
+          key: 'First_Name',
+          label: 'First Name',
+          primary: true,
+        },
+        {
+          key: 'Last_Name',
+          label: 'Last Name',
+        },
+        {
+          key: 'Email',
+          label: 'Email',
+        },
+      ];
+    }
+
+    // results = <ResponsiveTable columns={columns} data={person}/>
+    let header;
+
+    if (this.state.peopleSearchResults === null) {
+      header = '';
+      people = '';
+    } else if (this.state.peopleSearchResults.length === 0) {
+      header = '';
+      people = <Typography>No results found.</Typography>;
+    } else {
+      console.log(
+        'before the map, what does this.state.peopleSearchResults equal?:',
+        this.state.peopleSearchResults.slice(0, 30),
+      );
+      header = (
+        <div style={styles.headerStyle}>
+          <Grid container direction="row">
+            <Grid item xs={3}>
+              <Typography variant="body2" style={styles.headerStyle}>
+                FIRST NAME
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography variant="body2" style={styles.headerStyle}>
+                LAST NAME
+              </Typography>
+            </Grid>
+            {/* <Grid item xs={3}>
+              <Typography variant="body2" style={styles.headerStyle}>
+                EMAIL
+              </Typography>
+            </Grid> */}
+            <Grid item xs={3}>
+              <Typography variant="body2" style={styles.headerStyle}>
+                CLASS
+              </Typography>
+            </Grid>
+          </Grid>
+        </div>
+      );
+      people = this.state.peopleSearchResults.map(person => <PeopleSearchResult Person={person} />);
+    }
+
     return (
       <Grid container justify="center" spacing="16">
         <Grid item xs={12} md={8}>
+          <Button
+            color="primary"
+            onClick={() => {
+              this.searchFirstName(this.state.firstNameSearchValue);
+            }}
+            raised
+          >
+            SEARCH BOI.
+          </Button>
+
           <Card>
             <CardContent
               style={{
@@ -126,7 +192,13 @@ class PeopleSearch extends Component {
                   <PersonIcon />
                 </Grid>
                 <Grid item xs={11}>
-                  <TextField id="first-name" label="First Name" fullWidth />
+                  <TextField
+                    id="first-name"
+                    label="First Name"
+                    fullWidth
+                    value={this.state.firstNameSearchValue}
+                    onChange={this.handleTextFieldChange}
+                  />
                 </Grid>
               </Grid>
 
@@ -166,13 +238,7 @@ class PeopleSearch extends Component {
                     <BookIcon style={styles.FontAwesome} />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField
-                      id="major"
-                      label="Major"
-                      value={this.state.majorSearchValue}
-                      onChange={this.handleTextFieldChange}
-                      fullWidth
-                    />
+                    <TextField id="major" label="Major" fullWidth />
                   </Grid>
                 </Grid>
 
@@ -311,23 +377,11 @@ class PeopleSearch extends Component {
               </Collapse>
             </CardContent>
           </Card>
-          {console.log('-----------------------------------------')}
-          {console.log(
-            'RENDER, this.state.majorSearchValue has been set. but to what?',
-            this.state.majorSearchValue,
-          )}
-          <Button
-            color="primary"
-            onClick={() => {
-              this.searchMajors(this.state.majorSearchValue);
-            }}
-            raised
-          >
-            SEARCH BOI.
-          </Button>
-          {console.log("RENDER, these are the majorResults' state:", this.state.majorResults)}
-          {console.log('-----------------------------------------')}
-          <Typography>The majors should appear here: {this.state.majorResults}</Typography>
+          <br />
+          <Card>
+            {header}
+            {people}
+          </Card>
         </Grid>
       </Grid>
     );

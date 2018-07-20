@@ -28,7 +28,6 @@ const searchMajor = query => {
     // Replace period or space with a slash: 'first.last' or 'first last' become 'first/last'
     majorSearchQuery = query.trim().replace(/\.|\s/g, '/');
   }
-  console.log('goSTALK: searchMajor function:', query);
   return http.get(`accounts/search-major/${majorSearchQuery}`);
 };
 
