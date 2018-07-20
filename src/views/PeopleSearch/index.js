@@ -19,14 +19,12 @@ import BookIcon from 'react-icons/lib/fa/book';
 import GlobeIcon from 'react-icons/lib/fa/globe';
 import { Typography } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
-import sortBy from 'lodash/sortBy';
 import uniqBy from 'lodash/uniqBy';
 import goStalk from '../../services/goStalk';
 import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../theme';
 import PeopleSearchResult from './components/PeopleSearchResult';
-
-const MIN_QUERY_LENGTH = 3;
+import GordonLoader from '../../components/Loader';
 
 const styles = {
   FontAwesome: {
@@ -55,12 +53,18 @@ const styles = {
 
 class PeopleSearch extends Component {
   state = {
+    loading: false,
     nameExpanded: true,
     academicsExpanded: false,
     homeExpanded: false,
     offDepExpanded: false,
 
     firstNameSearchValue: '',
+    lastNameSearchValue: '',
+    majorSearchValue: '',
+    minorSearchValue: '',
+    hometownSearchValue: '',
+    zipCodeSearchValue: '',
 
     peopleSearchResults: null,
   };
@@ -78,52 +82,52 @@ class PeopleSearch extends Component {
     this.setState(state => ({ offDepExpanded: !state.offDepExpanded }));
   };
 
-  async searchFirstName(query) {
-    // Bail if query is missing or is less than minimum query length
-    if (!query || query.length < MIN_QUERY_LENGTH) {
-      return;
-    }
-    query = query.toLowerCase();
-    let peopleSearchResults = [];
-    peopleSearchResults = await goStalk.searchMajor(query);
-    // console.log('SEARCH FUNCTION, the peopleSearchResults', peopleSearchResults.slice(0, 30));
-
-    // Remove any duplicate entries
-    peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username');
-
-    // console.log('SEARCH FUNCTION, b4b4b4 before state set', this.state.peopleSearchResults.slice(0, 30));
-    this.setState({ peopleSearchResults });
-    // console.log('SEARCH FUNCTION, after after STATE BEEN SET', this.state.peopleSearchResults.slice(0, 30));
-  }
-  handleTextFieldChange = e => {
+  handleFirstNameInputChange = e => {
     this.setState({
       firstNameSearchValue: e.target.value,
     });
   };
+  handleLastNameInputChange = e => {
+    this.setState({
+      lastNameSearchValue: e.target.value,
+    });
+  };
+  handleMajorInputChange = e => {
+    this.setState({
+      majorSearchValue: e.target.value,
+    });
+  };
+  handleMinorInputChange = e => {
+    this.setState({
+      minorSearchValue: e.target.value,
+    });
+  };
+  handleHometownInputChange = e => {
+    this.setState({
+      hometownSearchValue: e.target.value,
+    });
+  };
+  handleZipCodeInputChange = e => {
+    this.setState({
+      zipCodeSearchValue: e.target.value,
+    });
+  };
+
+  async search(firstName, lastName) {
+    console.log('firstname: ', firstName, ' lastName: ', lastName);
+    let peopleSearchResults = [];
+    peopleSearchResults = await goStalk.search(firstName, lastName);
+    // Remove any duplicate entries
+    peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username');
+
+    console.log('After filtering dupes: ', peopleSearchResults);
+
+    this.setState({ peopleSearchResults });
+  }
 
   render() {
     const { classes } = this.props;
     let people;
-
-    if (window.innerWidth < this.breakpointWidth) {
-      const columns = [
-        {
-          key: 'First_Name',
-          label: 'First Name',
-          primary: true,
-        },
-        {
-          key: 'Last_Name',
-          label: 'Last Name',
-        },
-        {
-          key: 'Email',
-          label: 'Email',
-        },
-      ];
-    }
-
-    // results = <ResponsiveTable columns={columns} data={person}/>
     let header;
 
     if (this.state.peopleSearchResults === null) {
@@ -133,13 +137,10 @@ class PeopleSearch extends Component {
       header = '';
       people = <Typography>No results found.</Typography>;
     } else {
-      console.log(
-        'before the map, what does this.state.peopleSearchResults equal?:',
-        this.state.peopleSearchResults.slice(0, 30),
-      );
       header = (
         <div style={styles.headerStyle}>
           <Grid container direction="row">
+            <Grid item xs={1} />
             <Grid item xs={3}>
               <Typography variant="body2" style={styles.headerStyle}>
                 FIRST NAME
@@ -150,11 +151,11 @@ class PeopleSearch extends Component {
                 LAST NAME
               </Typography>
             </Grid>
-            {/* <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerStyle}>
-                EMAIL
+                TYPE
               </Typography>
-            </Grid> */}
+            </Grid>
             <Grid item xs={3}>
               <Typography variant="body2" style={styles.headerStyle}>
                 CLASS
@@ -163,22 +164,18 @@ class PeopleSearch extends Component {
           </Grid>
         </div>
       );
-      people = this.state.peopleSearchResults.map(person => <PeopleSearchResult Person={person} />);
+      if (this.state.loading) {
+        people = <GordonLoader />;
+      } else {
+        people = this.state.peopleSearchResults.map(person => (
+          <PeopleSearchResult Person={person} />
+        ));
+      }
     }
 
     return (
       <Grid container justify="center" spacing="16">
         <Grid item xs={12} md={8}>
-          <Button
-            color="primary"
-            onClick={() => {
-              this.searchFirstName(this.state.firstNameSearchValue);
-            }}
-            raised
-          >
-            SEARCH BOI.
-          </Button>
-
           <Card>
             <CardContent
               style={{
@@ -197,7 +194,7 @@ class PeopleSearch extends Component {
                     label="First Name"
                     fullWidth
                     value={this.state.firstNameSearchValue}
-                    onChange={this.handleTextFieldChange}
+                    onChange={this.handleFirstNameInputChange}
                   />
                 </Grid>
               </Grid>
@@ -207,7 +204,13 @@ class PeopleSearch extends Component {
                   <PersonIcon />
                 </Grid>
                 <Grid item xs={11}>
-                  <TextField id="last-name" label="Last Name" fullWidth />
+                  <TextField
+                    id="last-name"
+                    label="Last Name"
+                    fullWidth
+                    value={this.state.lastNameSearchValue}
+                    onChange={this.handleLastNameInputChange}
+                  />
                 </Grid>
               </Grid>
             </CardContent>
@@ -288,7 +291,13 @@ class PeopleSearch extends Component {
                     <HomeIcon />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField id="hometown" label="Hometown" fullWidth />
+                    <TextField
+                      id="hometown"
+                      label="Hometown"
+                      fullWidth
+                      value={this.state.hometownSearchValue}
+                      onChange={this.handleHometownInputChange}
+                    />
                   </Grid>
                 </Grid>
 
@@ -377,6 +386,17 @@ class PeopleSearch extends Component {
               </Collapse>
             </CardContent>
           </Card>
+          <Button
+            color="primary"
+            onClick={() => {
+              this.search(this.state.firstNameSearchValue, this.state.lastNameSearchValue);
+            }}
+            raised
+            fullWidth
+            variant="contained"
+          >
+            SEARCH
+          </Button>
           <br />
           <Card>
             {header}
