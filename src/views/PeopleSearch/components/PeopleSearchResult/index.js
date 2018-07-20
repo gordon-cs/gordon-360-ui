@@ -17,6 +17,8 @@ export default class PeopleSearchResult extends Component {
 
     this.state = {
       avatar: null,
+      prefImage: null,
+      defImage: null,
     };
   }
 
@@ -35,6 +37,7 @@ export default class PeopleSearchResult extends Component {
     const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
       await user.getImage(this.props.Person.AD_Username),
     ]);
+    console.log('preferredImage: ', preferredImage);
     const avatar = preferredImage || defaultImage;
     this.setState({ avatar });
   }
@@ -98,7 +101,7 @@ export default class PeopleSearchResult extends Component {
               <Typography className="person-column">{Person.LastName}</Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="person-column">{Person.HomeCity}</Typography>
+              <Typography className="person-column">{Person.PersonType}</Typography>
             </Grid>
             <Grid item xs={3}>
               <Typography className="person-column">{personClass}</Typography>

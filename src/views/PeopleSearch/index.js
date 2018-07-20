@@ -59,12 +59,18 @@ class PeopleSearch extends Component {
     homeExpanded: false,
     offDepExpanded: false,
 
+    // Keyboard string values
     firstNameSearchValue: '',
     lastNameSearchValue: '',
+    homeCitySearchValue: '',
+    zipCodeSearchValue: '',
+    // Drop-down menu values
     majorSearchValue: '',
     minorSearchValue: '',
-    hometownSearchValue: '',
-    zipCodeSearchValue: '',
+    stateSearchValue: '',
+    countrySearchValue: '',
+    departmentSearchValue: '',
+    buildingSearchValue: '',
 
     peopleSearchResults: null,
   };
@@ -102,9 +108,9 @@ class PeopleSearch extends Component {
       minorSearchValue: e.target.value,
     });
   };
-  handleHometownInputChange = e => {
+  handleHomeCityInputChange = e => {
     this.setState({
-      hometownSearchValue: e.target.value,
+      homeCitySearchValue: e.target.value,
     });
   };
   handleZipCodeInputChange = e => {
@@ -112,16 +118,32 @@ class PeopleSearch extends Component {
       zipCodeSearchValue: e.target.value,
     });
   };
+  handleStateInputChange = e => {
+    this.setState({
+      stateSearchValue: e.target.value,
+    });
+  };
+  handleCountryInputChange = e => {
+    this.setState({
+      countrySearchValue: e.target.value,
+    });
+  };
+  handleDepartmentInputChange = e => {
+    this.setState({
+      departmentSearchValue: e.target.value,
+    });
+  };
+  handleBuildingInputChange = e => {
+    this.setState({
+      buildingSearchValue: e.target.value,
+    });
+  };
 
-  async search(firstName, lastName) {
-    console.log('firstname: ', firstName, ' lastName: ', lastName);
+  async search(firstName, lastName, homeCity) {
+    console.log('The value of homeCity: ', homeCity);
     let peopleSearchResults = [];
-    peopleSearchResults = await goStalk.search(firstName, lastName);
-    // Remove any duplicate entries
-    peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username');
-
-    console.log('After filtering dupes: ', peopleSearchResults);
-
+    peopleSearchResults = await goStalk.search(firstName, lastName, homeCity);
+    peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
     this.setState({ peopleSearchResults });
   }
 
@@ -295,8 +317,8 @@ class PeopleSearch extends Component {
                       id="hometown"
                       label="Hometown"
                       fullWidth
-                      value={this.state.hometownSearchValue}
-                      onChange={this.handleHometownInputChange}
+                      value={this.state.homeCitySearchValue}
+                      onChange={this.handleHomeCityInputChange}
                     />
                   </Grid>
                 </Grid>
@@ -306,7 +328,13 @@ class PeopleSearch extends Component {
                     <LocationIcon />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField id="zip-code" label="Zip Code" fullWidth />
+                    <TextField
+                      id="zip-code"
+                      label="Zip Code"
+                      fullWidth
+                      value={this.state.zipCodeSearchValue}
+                      onChange={this.handleZipCodeInputChange}
+                    />
                   </Grid>
                 </Grid>
 
@@ -315,7 +343,13 @@ class PeopleSearch extends Component {
                     <CityIcon />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField id="state" label="State" fullWidth />
+                    <TextField
+                      id="state"
+                      label="State"
+                      fullWidth
+                      value={this.state.state}
+                      onChange={this.handleStateInputChange}
+                    />
                   </Grid>
                 </Grid>
 
@@ -329,7 +363,13 @@ class PeopleSearch extends Component {
                     />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField id="country" label="Country" fullWidth />
+                    <TextField
+                      id="country"
+                      label="Country"
+                      fullWidth
+                      value={this.state.countrySearchValue}
+                      onChange={this.handleCountryInputChange}
+                    />
                   </Grid>
                 </Grid>
               </Collapse>
@@ -366,7 +406,13 @@ class PeopleSearch extends Component {
                     />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField id="office" label="Office" fullWidth />
+                    <TextField
+                      id="department"
+                      label="Department"
+                      fullWidth
+                      value={this.state.departmentSearchValue}
+                      onChange={this.handleDepartmentInputChange}
+                    />
                   </Grid>
                 </Grid>
 
@@ -380,7 +426,13 @@ class PeopleSearch extends Component {
                     />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField id="Building" label="Building" fullWidth />
+                    <TextField
+                      id="Building"
+                      label="Building"
+                      fullWidth
+                      value={this.state.buildingSearchValue}
+                      onChange={this.handleBuildingInputChange}
+                    />
                   </Grid>
                 </Grid>
               </Collapse>
@@ -389,7 +441,11 @@ class PeopleSearch extends Component {
           <Button
             color="primary"
             onClick={() => {
-              this.search(this.state.firstNameSearchValue, this.state.lastNameSearchValue);
+              this.search(
+                this.state.firstNameSearchValue,
+                this.state.lastNameSearchValue,
+                this.state.homeCitySearchValue,
+              );
             }}
             raised
             fullWidth
@@ -397,6 +453,7 @@ class PeopleSearch extends Component {
           >
             SEARCH
           </Button>
+          <br />
           <br />
           <Card>
             {header}
