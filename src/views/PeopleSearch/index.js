@@ -139,10 +139,9 @@ class PeopleSearch extends Component {
     });
   };
 
-  async search(firstName, lastName, homeCity) {
-    console.log('The value of homeCity: ', homeCity);
+  async search(firstName, lastName, homeCity, zipCode) {
     let peopleSearchResults = [];
-    peopleSearchResults = await goStalk.search(firstName, lastName, homeCity);
+    peopleSearchResults = await goStalk.search(firstName, lastName, homeCity, zipCode);
     peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
     this.setState({ peopleSearchResults });
   }
@@ -445,6 +444,7 @@ class PeopleSearch extends Component {
                 this.state.firstNameSearchValue,
                 this.state.lastNameSearchValue,
                 this.state.homeCitySearchValue,
+                this.state.zipCodeSearchValue,
               );
             }}
             raised

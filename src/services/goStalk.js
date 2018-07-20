@@ -11,21 +11,25 @@ import http from './http';
  * @param {String} firstName firstName query
  * @param {String} lastName lastName query
  * @param {String} homeCity homeCity query
+ * @param {String} zipCode zipCode query
  * @return {Promise.<SearchResult[]>} List of search results
  */
-const search = (firstName, lastName, homeCity) => {
-  console.log('GOSTALK The value of homeCity: ', homeCity);
+const search = (firstName, lastName, homeCity, zipCode) => {
   if (firstName === '' || firstName === null) {
-    firstName = '\u266F';
+    firstName = 'C' + '\u266F';
   }
   if (lastName === '' || lastName === null) {
-    lastName = '\u266F';
+    lastName = 'C' + '\u266F';
   }
   if (homeCity === '' || homeCity === null) {
-    homeCity = '\u266F';
+    homeCity = 'C' + '\u266F';
   }
-  console.log('GOSTALK The value of homeCity: ', homeCity);
-  return http.get(`accounts/advanced-people-search/${firstName}/${lastName}/${homeCity}`);
+  if (zipCode === '' || zipCode === null) {
+    zipCode = 'C' + '\u266F';
+  }
+  return http.get(
+    `accounts/advanced-people-search/${firstName}/${lastName}/${homeCity}/${zipCode}`,
+  );
 };
 
 export default {
