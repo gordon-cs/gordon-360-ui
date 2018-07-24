@@ -24,6 +24,8 @@ export default class GordonActivitiesAll extends Component {
     this.filter = this.filter.bind(this);
 
     this.state = {
+      currentSession: '',
+      profile: '',
       activities: [],
       allActivities: [],
       myInvolvements: [],
@@ -42,7 +44,7 @@ export default class GordonActivitiesAll extends Component {
     try {
       const profile = await user.getProfileInfo();
       const { SessionCode: sessionCode } = await session.getCurrent();
-      this.setState({ session: sessionCode });
+      this.setState({ session: sessionCode, currentSession: sessionCode });
 
       const [activities, types, sessions] = await Promise.all([
         activity.getAll(sessionCode),
@@ -52,6 +54,7 @@ export default class GordonActivitiesAll extends Component {
       const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
 
       this.setState({
+        profile,
         activities,
         allActivities: activities,
         myInvolvements: myInvolvements,
@@ -63,16 +66,23 @@ export default class GordonActivitiesAll extends Component {
       this.setState({ error });
     }
   }
+
   async changeSession(event) {
     await this.setState({ session: event.target.value, loading: true });
     const allActivities = await activity.getAll(this.state.session);
+    const myInvolvements = await user.getSessionMembershipsWithoutGuests(
+      this.state.profile.ID,
+      this.state.session,
+    );
     const { type, search } = this.state;
     await this.setState({
       activities: activity.filter(allActivities, type, search),
       allActivities,
+      myInvolvements,
       loading: false,
     });
   }
+
   filter(name) {
     return async event => {
       await this.setState({ [name]: event.target.value });
@@ -87,6 +97,7 @@ export default class GordonActivitiesAll extends Component {
 
     let allInvolvements;
     let myInvolvements;
+    let involvementsHeading;
     if (this.state.loading === true) {
       allInvolvements = <GordonLoader />;
       myInvolvements = <GordonLoader />;
@@ -100,6 +111,16 @@ export default class GordonActivitiesAll extends Component {
           sessionCode={this.state.session}
         />
       );
+    }
+
+    if (this.state.session === this.state.currentSession) {
+      involvementsHeading = 'CURRENT';
+    } else {
+      for (var i = 0; i < this.state.sessions.length; i++) {
+        if (this.state.session === this.state.sessions[i].SessionCode) {
+          involvementsHeading = this.state.sessions[i].SessionDescription.toString().toUpperCase();
+        }
+      }
     }
 
     const sessionOptions = this.state.sessions.map(
@@ -173,7 +194,7 @@ export default class GordonActivitiesAll extends Component {
             <Card>
               <div style={headerStyle}>
                 <Typography variant="body2" style={headerStyle}>
-                  MY CURRENT INVOLVEMENTS
+                  MY {involvementsHeading} INVOLVEMENTS
                 </Typography>
               </div>
             </Card>
