@@ -16,15 +16,19 @@ import http from './http';
  */
 const search = (firstName, lastName, homeCity, zipCode) => {
   if (firstName === '' || firstName === null) {
+    // eslint-disable-next-line
     firstName = 'C' + '\u266F';
   }
   if (lastName === '' || lastName === null) {
+    // eslint-disable-next-line
     lastName = 'C' + '\u266F';
   }
   if (homeCity === '' || homeCity === null) {
+    // eslint-disable-next-line
     homeCity = 'C' + '\u266F';
   }
   if (zipCode === '' || zipCode === null) {
+    // eslint-disable-next-line
     zipCode = 'C' + '\u266F';
   }
   return http.get(

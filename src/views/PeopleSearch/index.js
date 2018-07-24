@@ -19,7 +19,7 @@ import BookIcon from 'react-icons/lib/fa/book';
 import GlobeIcon from 'react-icons/lib/fa/globe';
 import { Typography } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
-import uniqBy from 'lodash/uniqBy';
+// import uniqBy from 'lodash/uniqBy';
 import goStalk from '../../services/goStalk';
 import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../theme';
@@ -142,7 +142,7 @@ class PeopleSearch extends Component {
   async search(firstName, lastName, homeCity, zipCode) {
     let peopleSearchResults = [];
     peopleSearchResults = await goStalk.search(firstName, lastName, homeCity, zipCode);
-    peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
+    // peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
     this.setState({ peopleSearchResults });
   }
 
@@ -179,7 +179,7 @@ class PeopleSearch extends Component {
             </Grid>
             <Grid item xs={3}>
               <Typography variant="body2" style={styles.headerStyle}>
-                CLASS
+                CLASS/JOB TITLE
               </Typography>
             </Grid>
           </Grid>

@@ -37,45 +37,86 @@ export default class PeopleSearchResult extends Component {
     const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
       await user.getImage(this.props.Person.AD_Username),
     ]);
-    console.log('preferredImage: ', preferredImage);
     const avatar = preferredImage || defaultImage;
     this.setState({ avatar });
   }
 
   render() {
     const { Person } = this.props;
-    let personClass;
-    switch (Person.Class) {
-      case '':
-        personClass = 'Unassigned';
-        break;
-      case '0':
-        personClass = 'Unassigned';
-        break;
-      case '1':
-        personClass = 'Freshman';
-        break;
-      case '2':
-        personClass = 'Sophomore';
-        break;
-      case '3':
-        personClass = 'Junior';
-        break;
-      case '4':
-        personClass = 'Senior';
-        break;
-      case '5':
-        personClass = 'Graduate Student';
-        break;
-      case '6':
-        personClass = 'Undergraduate Conferred';
-        break;
-      case '7':
-        personClass = 'Graduate Student';
-        break;
-      default:
-        personClass = '';
-        break;
+    let personClassJobTitle, personType, nickname;
+
+    console.log('person: ', Person);
+    // CHECK FOR PERSON TYPE
+    if (Person.PersonType === 'stualufac' && Person.JobTitle !== undefined) {
+      personType = Person.Type;
+      personClassJobTitle = Person.JobTitle;
+    } else if (Person.PersonType === 'stualu') {
+      personType = 'Student';
+      if (
+        Person.NickName != null &&
+        Person.NickName !== '' &&
+        Person.FirstName !== Person.NickName
+      ) {
+        nickname = '(' + Person.NickName + ')';
+      }
+    } else if (Person.PersonType === 'alu') {
+      personType = 'Alum';
+      if (
+        Person.NickName != null &&
+        Person.NickName !== '' &&
+        Person.FirstName !== Person.NickName
+      ) {
+        nickname = '(' + Person.NickName + ')';
+      }
+      personClassJobTitle = 'Class of ' + Person.PreferredClassYear;
+    } else if (Person.PersonType === 'stu') {
+      personType = 'Student';
+      if (
+        Person.NickName != null &&
+        Person.NickName !== '' &&
+        Person.FirstName !== Person.NickName
+      ) {
+        nickname = '(' + Person.NickName + ')';
+      }
+    }
+
+    if (Person.PersonType === 'fac' && Person.JobTitle !== undefined) {
+      personClassJobTitle = Person.JobTitle;
+      personType = Person.Type;
+      if (
+        Person.NickName !== null &&
+        Person.NickName !== '' &&
+        Person.FirstName !== Person.NickName
+      ) {
+        nickname = '(' + Person.NickName + ')';
+      }
+    } else if (Person.Type === 'Student') {
+      switch (Person.Class) {
+        case '1':
+          personClassJobTitle = 'Freshman';
+          break;
+        case '2':
+          personClassJobTitle = 'Sophomore';
+          break;
+        case '3':
+          personClassJobTitle = 'Junior';
+          break;
+        case '4':
+          personClassJobTitle = 'Senior';
+          break;
+        case '5':
+          personClassJobTitle = 'Graduate Student';
+          break;
+        case '6':
+          personClassJobTitle = 'Undergraduate Conferred';
+          break;
+        case '7':
+          personClassJobTitle = 'Graduate Conferred';
+          break;
+        default:
+          personClassJobTitle = '--';
+          break;
+      }
     }
 
     return (
@@ -95,16 +136,18 @@ export default class PeopleSearchResult extends Component {
               <img className="avatar" src={`data:image/jpg;base64,${this.state.avatar}`} alt="" />
             </Grid>
             <Grid item xs={3}>
-              <Typography className="person-column">{Person.FirstName}</Typography>
+              <Typography>
+                {Person.FirstName} {nickname}{' '}
+              </Typography>
             </Grid>
             <Grid item xs={3}>
-              <Typography className="person-column">{Person.LastName}</Typography>
+              <Typography>{Person.LastName}</Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="person-column">{Person.PersonType}</Typography>
+              <Typography>{personType}</Typography>
             </Grid>
             <Grid item xs={3}>
-              <Typography className="person-column">{personClass}</Typography>
+              <Typography>{personClassJobTitle}</Typography>
             </Grid>
           </Grid>
         </Link>
