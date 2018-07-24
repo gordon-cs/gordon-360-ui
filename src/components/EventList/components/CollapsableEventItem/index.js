@@ -25,7 +25,7 @@ export default class GordonCollapsableEventItem extends Component {
     return (
       <section>
         <Grid container onClick={this.handleExpandClick} className="event-item">
-          <Grid item>
+          <Grid item xs={12}>
             <Typography variant="title" className="event-heading">
               {' '}
               {event.title}{' '}
@@ -35,8 +35,13 @@ export default class GordonCollapsableEventItem extends Component {
           </Grid>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography className="event-content">Description: {event.Description}</Typography>
-              <Typography className="event-content">Location: {event.location}</Typography>
+              <Typography className="event-content  ">Description:</Typography>
+              <Typography className="event-content">{event.Description}</Typography>
+              <p>
+                <nbsp />
+              </p>
+              <Typography className="event-content">Location:</Typography>
+              <Typography className="event-content">{event.location}</Typography>
             </CardContent>
           </Collapse>
         </Grid>
