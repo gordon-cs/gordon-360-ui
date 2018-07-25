@@ -43,54 +43,20 @@ export default class PeopleSearchResult extends Component {
 
   render() {
     const { Person } = this.props;
-    let personClassJobTitle, personType, nickname;
+    let personClassJobTitle, nickname;
 
     console.log('person: ', Person);
-    // CHECK FOR PERSON TYPE
-    if (Person.PersonType === 'stualufac' && Person.JobTitle !== undefined) {
-      personType = Person.Type;
-      personClassJobTitle = Person.JobTitle;
-    } else if (Person.PersonType === 'stualu') {
-      personType = 'Student';
-      if (
-        Person.NickName != null &&
-        Person.NickName !== '' &&
-        Person.FirstName !== Person.NickName
-      ) {
-        nickname = '(' + Person.NickName + ')';
-      }
-    } else if (Person.PersonType === 'alu') {
-      personType = 'Alum';
-      if (
-        Person.NickName != null &&
-        Person.NickName !== '' &&
-        Person.FirstName !== Person.NickName
-      ) {
-        nickname = '(' + Person.NickName + ')';
-      }
-      personClassJobTitle = 'Class of ' + Person.PreferredClassYear;
-    } else if (Person.PersonType === 'stu') {
-      personType = 'Student';
-      if (
-        Person.NickName != null &&
-        Person.NickName !== '' &&
-        Person.FirstName !== Person.NickName
-      ) {
-        nickname = '(' + Person.NickName + ')';
-      }
-    }
 
-    if (Person.PersonType === 'fac' && Person.JobTitle !== undefined) {
-      personClassJobTitle = Person.JobTitle;
-      personType = Person.Type;
-      if (
-        Person.NickName !== null &&
-        Person.NickName !== '' &&
-        Person.FirstName !== Person.NickName
-      ) {
-        nickname = '(' + Person.NickName + ')';
-      }
-    } else if (Person.Type === 'Student') {
+    // set nicknames up
+    if (
+      Person.NickName !== null &&
+      Person.NickName !== '' &&
+      Person.FirstName !== Person.NickName
+    ) {
+      nickname = '(' + Person.NickName + ')';
+    }
+    // set classes up
+    if (Person.Type === 'Student') {
       switch (Person.Class) {
         case '1':
           personClassJobTitle = 'Freshman';
@@ -114,9 +80,12 @@ export default class PeopleSearchResult extends Component {
           personClassJobTitle = 'Graduate Conferred';
           break;
         default:
-          personClassJobTitle = '--';
+          personClassJobTitle = '-----';
           break;
       }
+      // set job titles up
+    } else if (Person.Type !== 'Student' && Person.JobTitle !== undefined) {
+      personClassJobTitle = Person.JobTitle;
     }
 
     return (
@@ -144,7 +113,7 @@ export default class PeopleSearchResult extends Component {
               <Typography>{Person.LastName}</Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography>{personType}</Typography>
+              <Typography>{Person.Type}</Typography>
             </Grid>
             <Grid item xs={3}>
               <Typography>{personClassJobTitle}</Typography>

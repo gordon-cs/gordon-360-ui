@@ -11,7 +11,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PersonIcon from '@material-ui/icons/Person';
 import SchoolIcon from '@material-ui/icons/School';
 import HomeIcon from '@material-ui/icons/Home';
-import LocationIcon from '@material-ui/icons/LocationOn';
 import CityIcon from '@material-ui/icons/LocationCity';
 import BriefcaseIcon from 'react-icons/lib/fa/briefcase';
 import BuildingIcon from 'react-icons/lib/fa/building';
@@ -63,7 +62,6 @@ class PeopleSearch extends Component {
     firstNameSearchValue: '',
     lastNameSearchValue: '',
     homeCitySearchValue: '',
-    zipCodeSearchValue: '',
     // Drop-down menu values
     majorSearchValue: '',
     minorSearchValue: '',
@@ -113,11 +111,6 @@ class PeopleSearch extends Component {
       homeCitySearchValue: e.target.value,
     });
   };
-  handleZipCodeInputChange = e => {
-    this.setState({
-      zipCodeSearchValue: e.target.value,
-    });
-  };
   handleStateInputChange = e => {
     this.setState({
       stateSearchValue: e.target.value,
@@ -139,9 +132,10 @@ class PeopleSearch extends Component {
     });
   };
 
-  async search(firstName, lastName, homeCity, zipCode) {
+  async search(firstName, lastName, homeCity) {
+    console.log('Search params: ', firstName, lastName, homeCity);
     let peopleSearchResults = [];
-    peopleSearchResults = await goStalk.search(firstName, lastName, homeCity, zipCode);
+    peopleSearchResults = await goStalk.search(firstName, lastName, homeCity);
     // peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
     this.setState({ peopleSearchResults });
   }
@@ -324,21 +318,6 @@ class PeopleSearch extends Component {
 
                 <Grid container spacing={8} alignItems="flex-end">
                   <Grid item>
-                    <LocationIcon />
-                  </Grid>
-                  <Grid item xs={11}>
-                    <TextField
-                      id="zip-code"
-                      label="Zip Code"
-                      fullWidth
-                      value={this.state.zipCodeSearchValue}
-                      onChange={this.handleZipCodeInputChange}
-                    />
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={8} alignItems="flex-end">
-                  <Grid item>
                     <CityIcon />
                   </Grid>
                   <Grid item xs={11}>
@@ -444,7 +423,6 @@ class PeopleSearch extends Component {
                 this.state.firstNameSearchValue,
                 this.state.lastNameSearchValue,
                 this.state.homeCitySearchValue,
-                this.state.zipCodeSearchValue,
               );
             }}
             raised
