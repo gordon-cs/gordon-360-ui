@@ -98,6 +98,24 @@ export default class GordonActivitiesAll extends Component {
     let allInvolvements;
     let myInvolvements;
     let involvementsHeading;
+    let noInvolvementsText;
+
+    if (this.state.session === this.state.currentSession) {
+      involvementsHeading = 'CURRENT';
+      noInvolvementsText =
+        "It looks like you're not currently a member of any Involvements. Get connected below!";
+    } else {
+      for (var i = 0; i < this.state.sessions.length; i++) {
+        if (this.state.session === this.state.sessions[i].SessionCode) {
+          involvementsHeading = this.state.sessions[i].SessionDescription.toString();
+        }
+      }
+      noInvolvementsText = 'No Involvements found for ' + involvementsHeading;
+      involvementsHeading = involvementsHeading.toUpperCase();
+    }
+
+    console.log(noInvolvementsText);
+
     if (this.state.loading === true) {
       allInvolvements = <GordonLoader />;
       myInvolvements = <GordonLoader />;
@@ -109,18 +127,9 @@ export default class GordonActivitiesAll extends Component {
         <GordonActivityGrid
           myInvolvements={this.state.myInvolvements}
           sessionCode={this.state.session}
+          noInvolvementsText={noInvolvementsText}
         />
       );
-    }
-
-    if (this.state.session === this.state.currentSession) {
-      involvementsHeading = 'CURRENT';
-    } else {
-      for (var i = 0; i < this.state.sessions.length; i++) {
-        if (this.state.session === this.state.sessions[i].SessionCode) {
-          involvementsHeading = this.state.sessions[i].SessionDescription.toString().toUpperCase();
-        }
-      }
     }
 
     const sessionOptions = this.state.sessions.map(
