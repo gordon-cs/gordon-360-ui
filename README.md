@@ -3,7 +3,14 @@
 This project is a rebuild of the frontend of Gordon 360 in React. [The current frontend](https://github.com/gordon-cs/Project-Bernard/) was built in EmberJS, but was deemed to slow and difficult to maintain.
 
 Look at [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/master/ROADMAP.md) for progress on the rebuild.
-
+## Contents
+  * [Getting Started](#Getting Started)
+  * [Documentation](#Documentation)
+  * [Editor Recommendations](#Editor Recommendation)
+  * [Libraries](#Libraries)
+  * [Connect Local Backend to React](#Connect Local Backend to React)
+  * [Server Notes](#Server Notes)
+  
 ## Getting Started
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
