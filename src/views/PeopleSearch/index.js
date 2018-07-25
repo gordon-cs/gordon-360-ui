@@ -58,18 +58,6 @@ class PeopleSearch extends Component {
     homeExpanded: false,
     offDepExpanded: false,
 
-    // Keyboard string values
-    firstNameSearchValue: '',
-    lastNameSearchValue: '',
-    homeCitySearchValue: '',
-    // Drop-down menu values
-    majorSearchValue: '',
-    minorSearchValue: '',
-    stateSearchValue: '',
-    countrySearchValue: '',
-    departmentSearchValue: '',
-    buildingSearchValue: '',
-
     peopleSearchResults: null,
   };
 
@@ -143,7 +131,36 @@ class PeopleSearch extends Component {
   render() {
     const { classes } = this.props;
     let people;
-    let header;
+    let header,
+      // Keyboard string values
+      firstNameSearchValue = '',
+      lastNameSearchValue = '',
+      homeCitySearchValue = '',
+      // Drop-down menu values
+      majorSearchValue = '',
+      minorSearchValue = '',
+      stateSearchValue = '',
+      countrySearchValue = '',
+      departmentSearchValue = '',
+      buildingSearchValue = '';
+    /* 
+      // arrays of table data from backend
+      departments = [],
+      buildings = [];
+
+
+    const departments = departments.map(department => (
+      <MenuItem value={department} key={department}>
+        {department}
+      </MenuItem>
+    ));
+
+    const buildings = buildings.map(building => (
+      <MenuItem value={building} key={building}>
+        {building}
+      </MenuItem>
+    ));
+    */
 
     if (this.state.peopleSearchResults === null) {
       header = '';
@@ -208,7 +225,7 @@ class PeopleSearch extends Component {
                     id="first-name"
                     label="First Name"
                     fullWidth
-                    value={this.state.firstNameSearchValue}
+                    value={firstNameSearchValue}
                     onChange={this.handleFirstNameInputChange}
                   />
                 </Grid>
@@ -223,7 +240,7 @@ class PeopleSearch extends Component {
                     id="last-name"
                     label="Last Name"
                     fullWidth
-                    value={this.state.lastNameSearchValue}
+                    value={lastNameSearchValue}
                     onChange={this.handleLastNameInputChange}
                   />
                 </Grid>
@@ -310,7 +327,7 @@ class PeopleSearch extends Component {
                       id="hometown"
                       label="Hometown"
                       fullWidth
-                      value={this.state.homeCitySearchValue}
+                      value={homeCitySearchValue}
                       onChange={this.handleHomeCityInputChange}
                     />
                   </Grid>
@@ -325,7 +342,7 @@ class PeopleSearch extends Component {
                       id="state"
                       label="State"
                       fullWidth
-                      value={this.state.state}
+                      value={stateSearchValue}
                       onChange={this.handleStateInputChange}
                     />
                   </Grid>
@@ -345,7 +362,7 @@ class PeopleSearch extends Component {
                       id="country"
                       label="Country"
                       fullWidth
-                      value={this.state.countrySearchValue}
+                      value={countrySearchValue}
                       onChange={this.handleCountryInputChange}
                     />
                   </Grid>
@@ -388,7 +405,7 @@ class PeopleSearch extends Component {
                       id="department"
                       label="Department"
                       fullWidth
-                      value={this.state.departmentSearchValue}
+                      value={departmentSearchValue}
                       onChange={this.handleDepartmentInputChange}
                     />
                   </Grid>
@@ -408,7 +425,7 @@ class PeopleSearch extends Component {
                       id="Building"
                       label="Building"
                       fullWidth
-                      value={this.state.buildingSearchValue}
+                      value={buildingSearchValue}
                       onChange={this.handleBuildingInputChange}
                     />
                   </Grid>
@@ -419,11 +436,7 @@ class PeopleSearch extends Component {
           <Button
             color="primary"
             onClick={() => {
-              this.search(
-                this.state.firstNameSearchValue,
-                this.state.lastNameSearchValue,
-                this.state.homeCitySearchValue,
-              );
+              this.search(firstNameSearchValue, lastNameSearchValue, homeCitySearchValue);
             }}
             raised
             fullWidth
