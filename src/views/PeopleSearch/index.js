@@ -163,17 +163,17 @@ class PeopleSearch extends Component {
           <div style={styles.headerStyle}>
             <Grid container direction="row">
               <Grid item xs={1} />
-              <Grid item xs={3}>
+              <Grid item xs={2}>
                 <Typography variant="body2" style={styles.headerStyle}>
                   FIRST NAME
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={2}>
                 <Typography variant="body2" style={styles.headerStyle}>
                   LAST NAME
                 </Typography>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={1}>
                 <Typography variant="body2" style={styles.headerStyle}>
                   TYPE
                 </Typography>
@@ -181,6 +181,11 @@ class PeopleSearch extends Component {
               <Grid item xs={3}>
                 <Typography variant="body2" style={styles.headerStyle}>
                   CLASS/JOB TITLE
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography variant="body2" style={styles.headerStyle}>
+                  EMAIL
                 </Typography>
               </Grid>
             </Grid>
@@ -191,6 +196,24 @@ class PeopleSearch extends Component {
 
     console.log(this.state.peopleSearchResults);
   }
+
+  handleEnterKeyPress = event => {
+    if (event.key === 'Enter') {
+      if (
+        this.state.firstNameSearchValue === '' &&
+        this.state.lastNameSearchValue === '' &&
+        this.state.homeCitySearchValue === ''
+      ) {
+        // do not search
+      } else {
+        this.search(
+          this.state.firstNameSearchValue,
+          this.state.lastNameSearchValue,
+          this.state.homeCitySearchValue,
+        );
+      }
+    }
+  };
 
   render() {
     const { classes } = this.props;
@@ -237,6 +260,7 @@ class PeopleSearch extends Component {
                     fullWidth
                     value={this.state.firstNameSearchValue}
                     onChange={this.handleFirstNameInputChange}
+                    onKeyDown={this.handleEnterKeyPress}
                   />
                 </Grid>
               </Grid>

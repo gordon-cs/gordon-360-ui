@@ -108,19 +108,22 @@ export default class PeopleSearchResult extends Component {
             <Grid item xs={1}>
               <img className="avatar" src={`data:image/jpg;base64,${this.state.avatar}`} alt="" />
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography>
                 {Person.FirstName} {nickname}{' '}
               </Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography>{Person.LastName}</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={1}>
               <Typography>{Person.Type}</Typography>
             </Grid>
             <Grid item xs={3}>
               <Typography>{personClassJobTitle}</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography>{Person.Email}</Typography>
             </Grid>
           </Grid>
         </Link>
