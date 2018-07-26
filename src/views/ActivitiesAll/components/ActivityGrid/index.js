@@ -35,7 +35,7 @@ class GordonActivityGrid extends Component {
       content = (
         <Grid item xs={12}>
           <Typography variant="headline" align="center">
-            We found no current Involvements for you. Get connected below!
+            {this.props.noInvolvementsText}
           </Typography>
         </Grid>
       );
