@@ -138,60 +138,68 @@ class PeopleSearch extends Component {
   };
 
   async search(firstName, lastName, homeCity) {
-    this.setState({ header: <GordonLoader />, peopleSearchResults: null });
-    console.log('Search params: ', firstName, lastName, homeCity);
-    let peopleSearchResults = [];
-    peopleSearchResults = await goStalk.search(firstName, lastName, homeCity);
-    // peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
-    if (peopleSearchResults.length === 0) {
-      this.setState({
-        peopleSearchResults: (
-          <Grid item xs={12}>
-            <Typography variant="headline" align="center">
-              No results found.
-            </Typography>
-          </Grid>
-        ),
-        header: '',
-      });
+    if (
+      this.state.firstNameSearchValue === '' &&
+      this.state.lastNameSearchValue === '' &&
+      this.state.homeCitySearchValue === ''
+    ) {
+      // do not search
     } else {
-      this.setState({
-        peopleSearchResults: peopleSearchResults.map(person => (
-          <PeopleSearchResult Person={person} />
-        )),
-        header: (
-          <div style={styles.headerStyle}>
-            <Grid container direction="row">
-              <Grid item xs={1} />
-              <Grid item xs={2}>
-                <Typography variant="body2" style={styles.headerStyle}>
-                  FIRST NAME
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body2" style={styles.headerStyle}>
-                  LAST NAME
-                </Typography>
-              </Grid>
-              <Grid item xs={1}>
-                <Typography variant="body2" style={styles.headerStyle}>
-                  TYPE
-                </Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography variant="body2" style={styles.headerStyle}>
-                  CLASS/JOB TITLE
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body2" style={styles.headerStyle}>
-                  EMAIL
-                </Typography>
-              </Grid>
+      this.setState({ header: <GordonLoader />, peopleSearchResults: null });
+      console.log('Search params: ', firstName, lastName, homeCity);
+      let peopleSearchResults = [];
+      peopleSearchResults = await goStalk.search(firstName, lastName, homeCity);
+      // peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
+      if (peopleSearchResults.length === 0) {
+        this.setState({
+          peopleSearchResults: (
+            <Grid item xs={12}>
+              <Typography variant="headline" align="center">
+                No results found.
+              </Typography>
             </Grid>
-          </div>
-        ),
-      });
+          ),
+          header: '',
+        });
+      } else {
+        this.setState({
+          peopleSearchResults: peopleSearchResults.map(person => (
+            <PeopleSearchResult Person={person} />
+          )),
+          header: (
+            <div style={styles.headerStyle}>
+              <Grid container direction="row">
+                <Grid item xs={1} />
+                <Grid item xs={2}>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    FIRST NAME
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    LAST NAME
+                  </Typography>
+                </Grid>
+                <Grid item xs={1}>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    TYPE
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    CLASS/JOB TITLE
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    EMAIL
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
+          ),
+        });
+      }
     }
 
     console.log(this.state.peopleSearchResults);
