@@ -126,6 +126,7 @@ export default class GordonNavAvatarRightCorner extends Component {
           anchorEl={this.state.anchorEl}
           open={open}
           onClose={this.onClose}
+          disableRestoreFocus // Prevent tooltip from sticking
         >
           {/*This first MenuItem is hidden just to hide the React bug that leaves the first option perpeutally highlighted.*/}
           <MenuItem onClick={this.onClose} style={{ display: 'none' }}>

@@ -28,9 +28,7 @@ const search = query => {
     // Replace period or space with a slash: 'first.last' or 'first last' become 'first/last'
     searchQuery = query.trim().replace(/\.|\s/g, '/');
   }
-
-  let result = http.get(`accounts/search/${searchQuery}`);
-  return result;
+  return http.get(`accounts/search/${searchQuery}`);
 };
 
 export default {
