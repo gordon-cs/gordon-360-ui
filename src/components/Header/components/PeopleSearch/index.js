@@ -1,6 +1,4 @@
 import Downshift from 'downshift';
-import sortBy from 'lodash/sortBy';
-import uniqBy from 'lodash/uniqBy';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
@@ -68,13 +66,6 @@ export default class GordonPeopleSearch extends Component {
     query = query.toLowerCase();
 
     let suggestions = await peopleSearch.search(query);
-
-    // Sort first by last name, then by first name
-    suggestions = sortBy(suggestions, ['LastName', 'FirstName']);
-
-    // Remove any duplicate entries
-    suggestions = uniqBy(suggestions, 'UserName');
-
     
     this.setState({ suggestions });
   }
