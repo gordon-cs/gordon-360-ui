@@ -77,11 +77,11 @@
   },
   "proxy": {
     "/api": {
-      "target": "http://localhost:5000",
+      "target": "https://360ApiTrain.gordon.edu",
       "changeOrigin": true
     },
     "/token": {
-      "target": "http://localhost:5000",
+      "target": "https://360ApiTrain.gordon.edu",
       "changeOrigin": true
     }
   }
