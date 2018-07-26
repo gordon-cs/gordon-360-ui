@@ -249,7 +249,13 @@ export default class LinksDialog extends React.Component {
           <Button onClick={this.handleClose} variant="contained" style={button}>
             Cancel
           </Button>
-          <Button type="submit" disabled={!this.state.formValid} variant="contained" style={button}>
+          <Button
+            onClick={this.handleSubmit}
+            type="submit"
+            disabled={!this.state.formValid}
+            variant="contained"
+            style={button}
+          >
             Submit
           </Button>
         </DialogActions>
