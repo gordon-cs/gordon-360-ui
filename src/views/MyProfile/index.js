@@ -219,7 +219,6 @@ export default class Profile extends Component {
   async getInvolvementAndPrivacyDictionary(membershipsList) {
     let involvementAndPrivacyDictionary = [];
     for (let i = 0; i < membershipsList.length; i++) {
-      // let involvementPrivacy = await activity.get(membershipsList[i].ActivityCode).Privacy;
       let involvement = await activity.get(membershipsList[i].ActivityCode);
       involvementAndPrivacyDictionary.push({
         key: membershipsList[i],
@@ -345,7 +344,7 @@ export default class Profile extends Component {
     let linkedInButton;
     let instagramButton;
     let editButton;
-    let linkCount = 0; // To record wether or not any links are displayed
+    let linkCount = 0; // To record whether or not any links are displayed
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>

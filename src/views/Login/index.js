@@ -57,8 +57,11 @@ export default class Login extends Component {
     this.setState({ loading: true, error: null });
 
     var id; // Login Hang
-    if (LOGIN_BUG_MESSAGE) // Login Hang
-      id = setTimeout(() => { this.setState({ showMessageSnackbar: true }); }, 6000); // Login Hang
+    if (LOGIN_BUG_MESSAGE)
+      // Login Hang
+      id = setTimeout(() => {
+        this.setState({ showMessageSnackbar: true });
+      }, 6000); // Login Hang
 
     try {
       await authenticate(this.state.username, this.state.password);
@@ -71,21 +74,22 @@ export default class Login extends Component {
 
     console.log('Login/index.js: Passed try block');
 
-    if (LOGIN_BUG_MESSAGE) {                          //  \
-      clearTimeout(id);                               //  |- Login Hang
-      this.setState({ showMessageSnackbar: false });  //  |
-    }                                                 //  /
+    //Temp Login Hang Fix - remove when reason for error addressed
+    if (LOGIN_BUG_MESSAGE) {
+      clearTimeout(id);
+      this.setState({ showMessageSnackbar: false });
+    }
 
     console.log('Login/index.js: Cleared timeout to disable message');
   }
 
-  handleCloseSnackbar(event, reason) {             //  \
-    if (reason === 'clickaway') {                   //  |
-      return;                                       //  |
-    }                                               //  |- Login Hang
-                                                    //  |
-    this.setState({ showMessageSnackbar: false });  //  |
-  }                                                 //  /
+  //Temp Login Hang Fix - remove when reason for error addressed
+  handleCloseSnackbar(event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({ showMessageSnackbar: false });
+  }
 
   render() {
     return (
@@ -178,7 +182,8 @@ export default class Login extends Component {
               </IconButton>,
             ]}
           />
-        )}{/* Login Hang [END of section] */}
+        )}
+        {/* Login Hang [END of section] */}
         <Snackbar
           style={{ marginTop: '1rem' }}
           anchorOrigin={{
