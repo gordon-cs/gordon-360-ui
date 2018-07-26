@@ -3,6 +3,11 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Badge from '@material-ui/core/Badge';
 
 import { gordonColors } from '../../../../../../theme';
 import membership from '../../../../../../services/membership';
@@ -60,11 +65,29 @@ export default class RequestReceived extends Component {
       color: 'white',
     };
 
-    let content;
-    if (requests.length === 0) {
-      content = <Typography>No requests to show</Typography>;
+    const badge = {
+      margin: 2,
+      padding: '0px',
+    };
+
+    //Involvement title with number of requests(if any)
+    let title;
+    if (requests.length > 0) {
+      title = (
+        <Badge color="error" badgeContent={requests.length} style={badge}>
+          <Typography variant="title">{this.props.involvement.ActivityDescription}</Typography>
+        </Badge>
+      );
     } else {
-      content = requests
+      title = <Typography variant="title">{this.props.involvement.ActivityDescription}</Typography>;
+    }
+
+    //Requests and buttons
+    let displayedRequets;
+    if (requests.length === 0) {
+      displayedRequets = <Typography>No requests to show</Typography>;
+    } else {
+      displayedRequets = requests
         .slice(0)
         .reverse()
         .map(request => (
@@ -121,10 +144,19 @@ export default class RequestReceived extends Component {
         ));
     }
 
-    return (
-      <Grid container spacing={8}>
-        {content}
-      </Grid>
+    //Everything put together inside expansion panel
+    let content;
+    content = (
+      <ExpansionPanel>
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>{title}</ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <Grid container spacing={8}>
+            {displayedRequets}
+          </Grid>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
     );
+
+    return <Grid>{content}</Grid>;
   }
 }
