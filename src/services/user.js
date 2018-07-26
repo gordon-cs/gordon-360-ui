@@ -461,6 +461,21 @@ const getCurrentMembershipsWithoutGuests = async id => {
   return myCurrentInvolvementsWithoutGuests;
 };
 
+//Take student's memberships and filter for specifiied session only, omit the memberships that are just 'Guest'
+const getSessionMembershipsWithoutGuests = async (id, session) => {
+  let myInvolvements = await getMembershipsAlphabetically(id);
+  let myCurrentInvolvementsWithoutGuests = [];
+  for (let i = 0; i < myInvolvements.length; i += 1) {
+    if (
+      myInvolvements[i].SessionCode === session &&
+      !(myInvolvements[i].ParticipationDescription === 'Guest')
+    ) {
+      myCurrentInvolvementsWithoutGuests.push(myInvolvements[i]);
+    }
+  }
+  return myCurrentInvolvementsWithoutGuests;
+};
+
 /**
  * Get requests sent by a specific student
  * @param {String} id Identifier for student
@@ -581,6 +596,7 @@ export default {
   getMembershipsAlphabetically,
   getCurrentMemberships,
   getCurrentMembershipsWithoutGuests,
+  getSessionMembershipsWithoutGuests,
   getLeaderPositions,
   getSentMembershipRequests,
   getProfileInfo,
