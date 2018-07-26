@@ -28,6 +28,10 @@ export default class PeopleSearchResult extends Component {
     }
   }
 
+  // shouldComponentUpdate() {
+  // this will stop the forced-re-rendering that is happening as the state changes.
+  // }
+
   componentWillMount() {
     this.loadAvatar();
   }
