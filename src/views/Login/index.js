@@ -74,24 +74,22 @@ export default class Login extends Component {
 
     console.log('Login/index.js: Passed try block');
 
+    //Temp Login Hang Fix - remove when reason for error addressed
     if (LOGIN_BUG_MESSAGE) {
-      //  \
-      clearTimeout(id); //  |- Login Hang
-      this.setState({ showMessageSnackbar: false }); //  |
-    } //  /
+      clearTimeout(id);
+      this.setState({ showMessageSnackbar: false });
+    }
 
     console.log('Login/index.js: Cleared timeout to disable message');
   }
 
+  //Temp Login Hang Fix - remove when reason for error addressed
   handleCloseSnackbar(event, reason) {
-    //  \
     if (reason === 'clickaway') {
-      //  |
-      return; //  |
-    } //  |- Login Hang
-    //  |
-    this.setState({ showMessageSnackbar: false }); //  |
-  } //  /
+      return;
+    }
+    this.setState({ showMessageSnackbar: false });
+  }
 
   render() {
     return (
