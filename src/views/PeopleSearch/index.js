@@ -69,7 +69,6 @@ class PeopleSearch extends Component {
       // arrays of table data from backend
       majors: [],
       minors: [],
-      classTypes: [],
       states: [],
       countries: [],
       departments: [],
@@ -95,39 +94,38 @@ class PeopleSearch extends Component {
 
   async componentWillMount() {
     try {
-      /*
-      const [majors, minors, classTypes, states, countries, departments, buildings] = await Promise.all([
-        goStalk.getMajors(),
-        goStalk.getMinors(),
-        goStalk.getClassTypes(),
-        goStalk.getStates(),
-        goStalk.getCountries(),
-        goStalk.getDepartments(),
-        goStalk.getBuildings(),
-      ]);
-      this.setState({
-        majors, 
-        minors, 
-        classTypes, 
-        states, 
-        countries, 
-        departments, 
-        buildings,
-      });
-      */
+      // const [majors, minors, states, countries, departments, buildings] = await Promise.all([
+      //   goStalk.getMajors(),
+      //   goStalk.getMinors(),
+      //   goStalk.getStates(),
+      //   goStalk.getCountries(),
+      //   goStalk.getDepartments(),
+      //   goStalk.getBuildings(),
+      // ]);
+      // this.setState({
+      //   majors,
+      //   minors,
+      //   states,
+      //   countries,
+      //   departments,
+      //   buildings,
+      // });
 
-      const [buildings, departments, states, countries] = await Promise.all([
-        goStalk.getBuildings(),
-        goStalk.getDepartments(),
+      const [minors, states, countries, departments, buildings] = await Promise.all([
+        goStalk.getMinors(),
         goStalk.getStates(),
         goStalk.getCountries(),
+        goStalk.getDepartments(),
+        goStalk.getBuildings(),
       ]);
       this.setState({
-        buildings,
-        departments,
+        minors,
         states,
         countries,
+        departments,
+        buildings,
       });
+      console.log('the state of minors:', this.state.minors);
     } catch (error) {
       // error
     }
@@ -166,9 +164,9 @@ class PeopleSearch extends Component {
       minorSearchValue: e.target.value,
     });
   };
-  handleClassInputChange = e => {
+  handleClassInputChange = value => {
     this.setState({
-      classSearchValue: e.target.value,
+      classSearchValue: value,
     });
   };
   handleHomeCityInputChange = e => {
@@ -197,10 +195,23 @@ class PeopleSearch extends Component {
     });
   };
 
-  async search(firstName, lastName, homeCity, state, country, building, department) {
+  async search(
+    firstName,
+    lastName,
+    minor,
+    classType,
+    homeCity,
+    state,
+    country,
+    building,
+    department,
+  ) {
+    console.log('value of classType in search: ', classType);
     if (
       this.state.firstNameSearchValue === '' &&
       this.state.lastNameSearchValue === '' &&
+      this.state.classTypeSearchValue === '' &&
+      this.state.minorSearchValue === '' &&
       this.state.homeCitySearchValue === '' &&
       this.state.stateSearchValue === '' &&
       this.state.countrySearchValue === '' &&
@@ -215,7 +226,10 @@ class PeopleSearch extends Component {
         firstName,
         lastName,
         homeCity,
-        'state: ',
+        'minor: ',
+        minor,
+        'class type BOI!:',
+        classType,
         state,
         country,
         building,
@@ -225,6 +239,8 @@ class PeopleSearch extends Component {
       peopleSearchResults = await goStalk.search(
         firstName,
         lastName,
+        minor,
+        classType,
         homeCity,
         state,
         country,
@@ -292,7 +308,10 @@ class PeopleSearch extends Component {
       this.search(
         this.state.firstNameSearchValue,
         this.state.lastNameSearchValue,
+        this.search.minorSearchValue,
+        this.state.classTypeSearchValue,
         this.state.homeCitySearchValue,
+        this.state.stateSearchValue,
         this.state.countrySearchValue,
         this.state.buildingSearchValue,
         this.state.departmentSearchValue,
@@ -312,12 +331,6 @@ class PeopleSearch extends Component {
     const minorOptions = this.state.minors.map(minor => (
       <MenuItem value={minor} key={minor}>
         {minor}
-      </MenuItem>
-    ));
-
-    const classTypeOptions = this.state.classTypes.map(classType => (
-      <MenuItem value={classType} key={classType}>
-        {classType}
       </MenuItem>
     ));
 
@@ -460,19 +473,47 @@ class PeopleSearch extends Component {
                     <SchoolIcon />
                   </Grid>
                   <Grid item xs={11}>
+                    {/* 
+                    TODO: 
+                    THIS DOESN'T WORK YET I NEED TO FIGURE OUT HOW TO PASS THE VALUE OF THE 
+                    SELECTED MENU ITEM TO THE SEARCH FUNCTION
+                    
                     <FormControl fullWidth>
                       <InputLabel>Class</InputLabel>
                       <Select
-                        value={this.state.classTypeSearchValue}
-                        onChange={this.handleClassSearchValue}
+                        // value={this.state.classTypeSearchValue}
+                        // onChange={this.handleClassInputChange}
                         input={<Input id="class" />}
                       >
                         <MenuItem label="All Classes" value="">
                           <em>All</em>
+                        </MenuItem >
+                        <MenuItem value="1">
+                        Freshman
                         </MenuItem>
-                        {classTypeOptions}
+                        <MenuItem onClick={this.handleClassInputChange.bind(this, '2')}>
+                        Sophomore
+                        </MenuItem>
+                        <MenuItem value="3">
+                        Junior
+                        </MenuItem>
+                        <MenuItem value="4">
+                        Senior
+                        </MenuItem>
+                        <MenuItem value="5">
+                        Graduate Student
+                        </MenuItem>
+                        <MenuItem value="6">
+                        Undergraduate Conferred
+                        </MenuItem>
+                        <MenuItem value="7">
+                        Graduate Conferred
+                        </MenuItem>
+                        <MenuItem value="0">
+                        Unassigned
+                        </MenuItem>
                       </Select>
-                    </FormControl>
+                    </FormControl> */}
                   </Grid>
                 </Grid>
               </Collapse>
@@ -654,8 +695,8 @@ class PeopleSearch extends Component {
                     this.state.firstNameSearchValue,
                     this.state.lastNameSearchValue,
                     // this.state.majorSearchValue,
-                    // this.state.minorSearchValue,
-                    // this.state.classSearchValue,
+                    this.state.minorSearchValue,
+                    this.state.classTypeSearchValue,
                     this.state.homeCitySearchValue,
                     this.state.stateSearchValue,
                     this.state.countrySearchValue,
