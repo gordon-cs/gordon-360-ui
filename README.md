@@ -69,17 +69,13 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
 - [Cropper-JS](https://github.com/fengyuanchen/cropperjs/blob/master/README.md)
     
-   Cropper JS is a robust image cropper that is used on My Profile, While this Library is not used directly, a [React component](https://www.npmjs.com/package/react-cropper) that wraps this library is used.
+   Cropper JS is a robust image cropper that is used on My Profile. While this Library is not used directly, a [React component](https://www.npmjs.com/package/react-cropper) that wraps this library is used.
 
 - [Chart-JS](http://www.chartjs.org/)
     
   Chart-JS is a Library that provides GUI charts 
   An example can be found on the homepage. The React Component that is used can be found [here](https://github.com/jerairrest/react-chartjs-2)
 
-- [Material-UI-Responsive-Table](https://github.com/local-insights/material-ui-responsive-table#readme)
-    
-  This library provides a read-only responsive table for Material-UI. 
-  Table is shown for desktop screen, list of expandable items - for tablet and mobile.
 - [history](https://github.com/ReactTraining/history#readme)
   
   history is a JavaScript library that lets you easily manage session history anywhere JavaScript runs. history abstracts away the differences in various environments and provides a minimal API that lets you manage the history stack, navigate, confirm navigation, and persist state between sessions.
@@ -94,7 +90,7 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
 - [react-responsive-carousel](http://react-responsive-carousel.js.org/)
   
-  A React image carousel,
+  A React image carousel.
   [Link to source code + readme](https://github.com/leandrowd/react-responsive-carousel)
 
 - [lodash](https://lodash.com/)
