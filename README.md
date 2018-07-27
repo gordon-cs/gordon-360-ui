@@ -70,9 +70,9 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
 ### Server Notes
 
-The staging server is hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu`, `360newtrain.gordon.edu`, and `360new.gordon.edu`.
+The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu` (used by Travis CI), `360train.gordon.edu`, and `360.gordon.edu`.
 
-The production server is hosted on `cts-360.gordon.edu`. This machine is also known as `360.gordon.edu` and `360train.gordon.edu` (it also runs the staging server for the Ember site).
+The backend server is hosted on `cts-360.gordon.edu`. This machine is also known as `360Api.gordon.edu` and `360ApiTrain.gordon.edu` (it also runs the frontend server for the old Ember site, and is thus also known as `360old.gordon.edu`).
 
 #### Making Refresh, URL Entry, and Forward/Back Buttons Work
 
@@ -90,4 +90,6 @@ Currently, a reasonably elegant workaround has been created by adding a couple o
 
 Our original workaround was in the form of a PowerShell script which automatically copies `web.config` to the server root whenever it is removed. The script is located at `D:\scripts\webconfig\webconfig-filecheck.ps1` and contains a constantly-running while loop. A task has been created in Windows Task Scheduler which, if enabled, starts running the script every morning at 2:00 AM, but automatic execution of this task has been disabled since the creation of the new workaround described above. This task still exists and can be restarted if it is ever needed. (The back-up `web.config` file is located in the same directory as the script.)
 
-Currently, the script and task only exist on the server for the development site (`360newtrain.gordon.edu`). Analogous changes must be made to the server root directories for the other sites (`360new.gordon.edu`, and `360.gordon.edu` once the React site officially replaces the Ember site) if this functionality is desired there. (The current workaround should work on any server and does not need the PowerShell script or the task in order to work.)
+Currently, the script and task only exist on the server for the development site (`360train.gordon.edu`). Analogous changes must be made to the server root directories for the production site (`360.gordon.edu`) if this functionality is desired there. 
+
+(The current workaround described earlier should work on any server and does not need the PowerShell script or the task in order to work.)
