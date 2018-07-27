@@ -4,14 +4,6 @@ This project is a rebuild of the frontend of Gordon 360 in React. [The current f
 
 Look at [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/master/ROADMAP.md) for progress on the rebuild.
 ## Contents
-<<<<<<< Updated upstream
-  * [Getting Started](#Getting Started)
-  * [Documentation](#Documentation)
-  * [Editor Recommendations](#Editor Recommendation)
-  * [Libraries](#Libraries)
-  * [Connect Local Backend to React](#Connect Local Backend to React)
-  * [Server Notes](#Server Notes)
-=======
   * [Getting Started](#Getting-Started)
   * [Editor Recommendations](#Editor-Recommendations)
   * [Libraries](#Libraries)
@@ -23,8 +15,7 @@ Look at [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/master/RO
   * [Project File Organization](#File-Organization)
   * [Enviroment Variables](#Environment-Variables)
   * [Deployment](#Deployment)
-  * [Source Code Explained](#Source-Code)
->>>>>>> Stashed changes
+  * [Known Issues](#Known-Issues)
   
 ## Getting Started
 
@@ -317,5 +308,10 @@ The script deploys to either staging or production based on the branch it is run
 1. Click "Create pull request."
 1. When the pull request is approved, merge it. This will trigger a build that will automatically deploy `master` to production.
 
+## Known Issues
+* Cannot login to 360 from Edge due to an authentication error that is caused from http request failing to return a token to edge which causes "Invalid Argument" error to be displayed
 
-## Source Code
+* Internet Explorer does not work with 360 and never will due to the fact that IE is too old to support features that 360 currently uses
+
+* There is a problem with the first login hanging after the backend starts up, this might be due to an authentication error but refreshing is currently the only fix
+
