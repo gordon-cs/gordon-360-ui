@@ -18,6 +18,11 @@ import BookIcon from 'react-icons/lib/fa/book';
 import GlobeIcon from 'react-icons/lib/fa/globe';
 import { Typography } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 // import uniqBy from 'lodash/uniqBy';
 import goStalk from '../../services/goStalk';
 import Button from '@material-ui/core/Button';
@@ -61,6 +66,15 @@ class PeopleSearch extends Component {
       homeExpanded: false,
       offDepExpanded: false,
 
+      // arrays of table data from backend
+      majors: [],
+      minors: [],
+      classTypes: [],
+      states: [],
+      countries: [],
+      departments: [],
+      buildings: [],
+
       // Keyboard string values
       firstNameSearchValue: '',
       lastNameSearchValue: '',
@@ -68,6 +82,7 @@ class PeopleSearch extends Component {
       // Drop-down menu values
       majorSearchValue: '',
       minorSearchValue: '',
+      classTypeSearchValue: '',
       stateSearchValue: '',
       countrySearchValue: '',
       departmentSearchValue: '',
@@ -76,6 +91,44 @@ class PeopleSearch extends Component {
       peopleSearchResults: null,
       header: '',
     };
+  }
+
+  async componentWillMount() {
+    try {
+      /*
+      const [majors, minors, classTypes, states, countries, departments, buildings] = await Promise.all([
+        goStalk.getMajors(),
+        goStalk.getMinors(),
+        goStalk.getClassTypes(),
+        goStalk.getStates(),
+        goStalk.getCountries(),
+        goStalk.getDepartments(),
+        goStalk.getBuildings(),
+      ]);
+      this.setState({
+        majors, 
+        minors, 
+        classTypes, 
+        states, 
+        countries, 
+        departments, 
+        buildings,
+      });
+      */
+
+      const [buildings, departments, countries] = await Promise.all([
+        goStalk.getBuildings(),
+        goStalk.getDepartments(),
+        goStalk.getCountries(),
+      ]);
+      this.setState({
+        buildings,
+        departments,
+        countries,
+      });
+    } catch (error) {
+      // error
+    }
   }
 
   handleNameExpandClick = () => {
@@ -111,6 +164,11 @@ class PeopleSearch extends Component {
       minorSearchValue: e.target.value,
     });
   };
+  handleClassInputChange = e => {
+    this.setState({
+      classSearchValue: e.target.value,
+    });
+  };
   handleHomeCityInputChange = e => {
     this.setState({
       homeCitySearchValue: e.target.value,
@@ -137,18 +195,37 @@ class PeopleSearch extends Component {
     });
   };
 
-  async search(firstName, lastName, homeCity) {
+  async search(firstName, lastName, homeCity, country, building, department) {
     if (
       this.state.firstNameSearchValue === '' &&
       this.state.lastNameSearchValue === '' &&
-      this.state.homeCitySearchValue === ''
+      this.state.homeCitySearchValue === '' &&
+      this.state.countrySearchValue === '' &&
+      this.state.buildingSearchValue === '' &&
+      this.state.departmentSearchValue === ''
     ) {
       // do not search
     } else {
       this.setState({ header: <GordonLoader />, peopleSearchResults: null });
-      console.log('Search params: ', firstName, lastName, homeCity);
+      console.log(
+        'Search params: ',
+        firstName,
+        lastName,
+        homeCity,
+        'country',
+        country,
+        building,
+        department,
+      );
       let peopleSearchResults = [];
-      peopleSearchResults = await goStalk.search(firstName, lastName, homeCity);
+      peopleSearchResults = await goStalk.search(
+        firstName,
+        lastName,
+        homeCity,
+        country,
+        building,
+        department,
+      );
       // peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
       if (peopleSearchResults.length === 0) {
         this.setState({
@@ -202,49 +279,66 @@ class PeopleSearch extends Component {
       }
     }
 
-    console.log(this.state.peopleSearchResults);
+    console.log('in search call: this.state.peopleSearchResults', this.state.peopleSearchResults);
   }
 
   handleEnterKeyPress = event => {
     if (event.key === 'Enter') {
-      if (
-        this.state.firstNameSearchValue === '' &&
-        this.state.lastNameSearchValue === '' &&
-        this.state.homeCitySearchValue === ''
-      ) {
-        // do not search
-      } else {
-        this.search(
-          this.state.firstNameSearchValue,
-          this.state.lastNameSearchValue,
-          this.state.homeCitySearchValue,
-        );
-      }
+      this.search(
+        this.state.firstNameSearchValue,
+        this.state.lastNameSearchValue,
+        this.state.homeCitySearchValue,
+        this.state.countrySearchValue,
+        this.state.buildingSearchValue,
+        this.state.departmentSearchValue,
+      );
     }
   };
 
   render() {
     const { classes } = this.props;
-    // let header;
 
-    /* 
-      // arrays of table data from backend
-      departments = [],
-      buildings = [];
+    const majorOptions = this.state.majors.map(major => (
+      <MenuItem value={major} key={major}>
+        {major}
+      </MenuItem>
+    ));
 
+    const minorOptions = this.state.minors.map(minor => (
+      <MenuItem value={minor} key={minor}>
+        {minor}
+      </MenuItem>
+    ));
 
-    const departments = departments.map(department => (
+    const classTypeOptions = this.state.classTypes.map(classType => (
+      <MenuItem value={classType} key={classType}>
+        {classType}
+      </MenuItem>
+    ));
+
+    const stateOptions = this.state.states.map(state => (
+      <MenuItem value={state} key={state}>
+        {state}
+      </MenuItem>
+    ));
+
+    const countryOptions = this.state.countries.map(country => (
+      <MenuItem value={country} key={country}>
+        {country}
+      </MenuItem>
+    ));
+
+    const departmentOptions = this.state.departments.map(department => (
       <MenuItem value={department} key={department}>
         {department}
       </MenuItem>
     ));
 
-    const buildings = buildings.map(building => (
+    const buildingOptions = this.state.buildings.map(building => (
       <MenuItem value={building} key={building}>
         {building}
       </MenuItem>
     ));
-    */
 
     return (
       <Grid container justify="center" spacing="16">
@@ -319,7 +413,19 @@ class PeopleSearch extends Component {
                     <BookIcon style={styles.FontAwesome} />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField id="major" label="Major" fullWidth />
+                    <FormControl fullWidth>
+                      <InputLabel>Major</InputLabel>
+                      <Select
+                        value={this.state.majorSearchValue}
+                        onChange={this.handleMajorInputChange}
+                        input={<Input id="major" />}
+                      >
+                        <MenuItem label="All Majors" value="">
+                          <em>All</em>
+                        </MenuItem>
+                        {majorOptions}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
 
@@ -328,7 +434,19 @@ class PeopleSearch extends Component {
                     <BookIcon style={styles.FontAwesome} />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField id="minor" label="Minor" fullWidth />
+                    <FormControl fullWidth>
+                      <InputLabel>Minor</InputLabel>
+                      <Select
+                        value={this.state.minorSearchValue}
+                        onChange={this.handleMinorInputChange}
+                        input={<Input id="minor" />}
+                      >
+                        <MenuItem label="All Minors" value="">
+                          <em>All</em>
+                        </MenuItem>
+                        {minorOptions}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
 
@@ -337,7 +455,19 @@ class PeopleSearch extends Component {
                     <SchoolIcon />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField id="class" label="Class" fullWidth />
+                    <FormControl fullWidth>
+                      <InputLabel>Class</InputLabel>
+                      <Select
+                        value={this.state.classTypeSearchValue}
+                        onChange={this.handleClassSearchValue}
+                        input={<Input id="class" />}
+                      >
+                        <MenuItem label="All Classes" value="">
+                          <em>All</em>
+                        </MenuItem>
+                        {classTypeOptions}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
               </Collapse>
@@ -388,13 +518,19 @@ class PeopleSearch extends Component {
                     <CityIcon />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField
-                      id="state"
-                      label="State"
-                      fullWidth
-                      value={this.state.stateSearchValue}
-                      onChange={this.handleStateInputChange}
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel>State</InputLabel>
+                      <Select
+                        value={this.state.stateSearchValue}
+                        onChange={this.handleStateInputChange}
+                        input={<Input id="state" />}
+                      >
+                        <MenuItem label="All States" value="">
+                          <em>All</em>
+                        </MenuItem>
+                        {stateOptions}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
 
@@ -408,13 +544,19 @@ class PeopleSearch extends Component {
                     />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField
-                      id="country"
-                      label="Country"
-                      fullWidth
-                      value={this.state.countrySearchValue}
-                      onChange={this.handleCountryInputChange}
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel>Country</InputLabel>
+                      <Select
+                        value={this.state.countrySearchValue}
+                        onChange={this.handleCountryInputChange}
+                        input={<Input id="country" />}
+                      >
+                        <MenuItem label="All Countries" value="">
+                          <em>All</em>
+                        </MenuItem>
+                        {countryOptions}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
               </Collapse>
@@ -426,7 +568,7 @@ class PeopleSearch extends Component {
                 disableActionSpacing
                 onClick={this.handleOffDepExpandClick}
               >
-                <Typography variant="headline">Office and Department</Typography>
+                <Typography variant="headline">Building and Department</Typography>
                 <IconButton
                   className={classnames(classes.expand, {
                     [classes.expandOpen]: this.state.offDepExpanded,
@@ -455,13 +597,19 @@ class PeopleSearch extends Component {
                     />
                   </Grid>
                   <Grid item xs={11}>
-                    <TextField
-                      id="department"
-                      label="Department"
-                      fullWidth
-                      value={this.state.departmentSearchValue}
-                      onChange={this.handleDepartmentInputChange}
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel>Department</InputLabel>
+                      <Select
+                        value={this.state.departmentSearchValue}
+                        onChange={this.handleDepartmentInputChange}
+                        input={<Input id="department-type" />}
+                      >
+                        <MenuItem label="All Departments" value="">
+                          <em>All</em>
+                        </MenuItem>
+                        {departmentOptions}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
 
@@ -474,14 +622,21 @@ class PeopleSearch extends Component {
                       }}
                     />
                   </Grid>
+
                   <Grid item xs={11}>
-                    <TextField
-                      id="Building"
-                      label="Building"
-                      fullWidth
-                      value={this.state.buildingSearchValue}
-                      onChange={this.handleBuildingInputChange}
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel>Building</InputLabel>
+                      <Select
+                        value={this.state.buildingSearchValue}
+                        onChange={this.handleBuildingInputChange}
+                        input={<Input id="building-type" />}
+                      >
+                        <MenuItem label="All Buildings" value="">
+                          <em>All</em>
+                        </MenuItem>
+                        {buildingOptions}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
               </Collapse>
@@ -493,7 +648,14 @@ class PeopleSearch extends Component {
                   this.search(
                     this.state.firstNameSearchValue,
                     this.state.lastNameSearchValue,
+                    // this.state.majorSearchValue,
+                    // this.state.minorSearchValue,
+                    // this.state.classSearchValue,
                     this.state.homeCitySearchValue,
+                    // this.state.stateSearchValue,
+                    this.state.countrySearchValue,
+                    this.state.buildingSearchValue,
+                    this.state.departmentSearchValue,
                   );
                 }}
                 raised
