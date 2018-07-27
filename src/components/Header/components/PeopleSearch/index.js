@@ -49,11 +49,14 @@ export default class GordonPeopleSearch extends Component {
     this.state = {
       suggestions: [],
       suggestionIndex: -1,
+      query: String,
     };
     this.isMobileView = false;
     this.breakpointWidth = 400;
   }
+
   async getSuggestions(query) {
+    this.setState({ query });
     // Bail if query is missing or is less than minimum query length
     if (!query || query.length < MIN_QUERY_LENGTH) {
       return;
@@ -94,6 +97,7 @@ export default class GordonPeopleSearch extends Component {
       this.setState({ suggestionIndex });
     }
   };
+
   reset() {
     // Remove chosen username from the input
     this.downshift.clearSelection();
@@ -102,6 +106,24 @@ export default class GordonPeopleSearch extends Component {
     this.downshift.clearItems();
 
     this.setState({ suggestionIndex: -1 });
+  }
+
+  highlightParse(text) {
+    return text.replace(/^[\s.]+|[\s.]+$/gm, '').replace(/ |\./, '|');
+  }
+
+  getHighlightedText(text, highlight) {
+    // Split text on highlight term, include term itself into parts, ignore case
+    var highlights = this.highlightParse(highlight);
+    var parts = text.split(new RegExp(`(${highlights})`, 'gi'));
+    return (
+      <span>
+        {parts.map(
+          part =>
+            part.match(new RegExp(`(${highlights})`, 'i')) ? <span class="h">{part}</span> : part,
+        )}
+      </span>
+    );
   }
 
   renderSuggestion(params) {
@@ -128,9 +150,18 @@ export default class GordonPeopleSearch extends Component {
             : 'people-search-suggestion'
         }
       >
-        <Typography variant="body1">{`${suggestion.FirstName} ${suggestion.LastName}`}</Typography>
+        <Typography variant="body1">
+          {this.getHighlightedText(
+            suggestion.FirstName + ' ' + suggestion.LastName,
+            this.state.query,
+          )}
+        </Typography>
         <Typography variant="caption" component="p">
-          {suggestion.UserName}
+          {!(suggestion.FirstName + ' ' + suggestion.LastName).match(
+            new RegExp(`(${this.highlightParse(this.state.query)})`, 'i'),
+          )
+            ? this.getHighlightedText(suggestion.UserName, this.state.query)
+            : suggestion.UserName}
         </Typography>
       </MenuItem>
     );
@@ -183,7 +214,9 @@ export default class GordonPeopleSearch extends Component {
                 },
               }),
             )}
-            {isOpen && this.state.suggestions.length > 0 ? (
+            {isOpen &&
+            this.state.suggestions.length > 0 &&
+            this.state.query.length >= MIN_QUERY_LENGTH ? (
               <Paper square className="people-search-dropdown">
                 {this.state.suggestions.map(suggestion =>
                   this.renderSuggestion({
