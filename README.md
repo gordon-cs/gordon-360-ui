@@ -4,18 +4,18 @@ This project is a rebuild of the frontend of Gordon 360 in React. [The current f
 
 Look at [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/master/ROADMAP.md) for progress on the rebuild.
 ## Contents
-  * [Getting Started](#Getting-Started)
-  * [Editor Recommendations](#Editor-Recommendations)
-  * [Libraries](#Libraries)
-  * [Connect Local Backend to React](#Connect-Local-Backend-to-React)
-  * [Server Notes](#Server-Notes)
+  * [Getting Started](#getting-started)
+  * [Editor Recommendations](#editor-recommendations)
+  * [Libraries](#libraries)
+  * [Connect Local Backend to React](#connect-local-backend-to-react)
+  * [Server Notes](#server-notes)
  
-  * [Code Style](#Code-Style)
-  * [Dependencies](#Dependencies)
-  * [Project File Organization](#File-Organization)
-  * [Enviroment Variables](#Environment-Variables)
-  * [Deployment](#Deployment)
-  * [Known Issues](#Known-Issues)
+  * [Code Style](#code-style)
+  * [Dependencies](#dependencies)
+  * [Project File Organization](#file-organization)
+  * [Enviroment Variables](#environment-variables)
+  * [Deployment](#deployment)
+  * [Known Issues](#known-issues)
   
 ## Getting Started
 
