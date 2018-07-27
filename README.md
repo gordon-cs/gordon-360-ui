@@ -4,18 +4,18 @@ This project is a rebuild of the frontend of Gordon 360 in React. [The current f
 
 Look at [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/master/ROADMAP.md) for progress on the rebuild.
 ## Contents
-  * [Getting Started](#Getting-Started)
-  * [Editor Recommendations](#Editor-Recommendations)
-  * [Libraries](#Libraries)
-  * [Connect Local Backend to React](#Connect-Local-Backend-to-React)
-  * [Server Notes](#Server-Notes)
+  * [Getting Started](#getting-started)
+  * [Editor Recommendations](#editor-recommendations)
+  * [Libraries](#libraries)
+  * [Connect Local Backend to React](#connect-local-backend-to-react)
+  * [Server Notes](#server-notes)
  
-  * [Code Style](#Code-Style)
-  * [Dependencies](#Dependencies)
-  * [Project File Organization](#File-Organization)
-  * [Enviroment Variables](#Environment-Variables)
-  * [Deployment](#Deployment)
-  * [Known Issues](#Known-Issues)
+  * [Code Style](#code-style)
+  * [Dependencies](#dependencies)
+  * [Project File Organization](#file-organization)
+  * [Enviroment Variables](#environment-variables)
+  * [Deployment](#deployment)
+  * [Known Issues](#known-issues)
   
 ## Getting Started
 
@@ -110,9 +110,9 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
 ### Server Notes
 
-The staging server is hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu`, `360newtrain.gordon.edu`, and `360new.gordon.edu`.
+The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu` (used by Travis CI), `360train.gordon.edu`, and `360.gordon.edu`.
 
-The production server is hosted on `cts-360.gordon.edu`. This machine is also known as `360.gordon.edu` and `360train.gordon.edu` (it also runs the staging server for the Ember site).
+The backend server is hosted on `cts-360.gordon.edu`. This machine is also known as `360Api.gordon.edu` and `360ApiTrain.gordon.edu` (it also runs the frontend server for the old Ember site, and is thus also known as `360old.gordon.edu`).
 
 #### Making Refresh, URL Entry, and Forward/Back Buttons Work
 
@@ -130,7 +130,9 @@ Currently, a reasonably elegant workaround has been created by adding a couple o
 
 Our original workaround was in the form of a PowerShell script which automatically copies `web.config` to the server root whenever it is removed. The script is located at `D:\scripts\webconfig\webconfig-filecheck.ps1` and contains a constantly-running while loop. A task has been created in Windows Task Scheduler which, if enabled, starts running the script every morning at 2:00 AM, but automatic execution of this task has been disabled since the creation of the new workaround described above. This task still exists and can be restarted if it is ever needed. (The back-up `web.config` file is located in the same directory as the script.)
 
-Currently, the script and task only exist on the server for the development site (`360newtrain.gordon.edu`). Analogous changes must be made to the server root directories for the other sites (`360new.gordon.edu`, and `360.gordon.edu` once the React site officially replaces the Ember site) if this functionality is desired there. (The current workaround should work on any server and does not need the PowerShell script or the task in order to work.)
+Currently, the script and task only exist on the server for the development site (`360train.gordon.edu`). Analogous changes must be made to the server root directories for the production site (`360.gordon.edu`) if this functionality is desired there. 
+
+(The current workaround described earlier should work on any server and does not need the PowerShell script or the task in order to work.)
 
 ## Code Style
 
@@ -310,4 +312,3 @@ The script deploys to either staging or production based on the branch it is run
 * Internet Explorer does not work with 360 and never will due to the fact that IE is too old to support features that 360 currently uses
 
 * There is a problem with the first login hanging after the backend starts up, this might be due to an authentication error but refreshing is currently the only fix
-
