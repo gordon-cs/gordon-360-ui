@@ -116,14 +116,16 @@ class PeopleSearch extends Component {
       });
       */
 
-      const [buildings, departments, countries] = await Promise.all([
+      const [buildings, departments, states, countries] = await Promise.all([
         goStalk.getBuildings(),
         goStalk.getDepartments(),
+        goStalk.getStates(),
         goStalk.getCountries(),
       ]);
       this.setState({
         buildings,
         departments,
+        states,
         countries,
       });
     } catch (error) {
@@ -195,11 +197,12 @@ class PeopleSearch extends Component {
     });
   };
 
-  async search(firstName, lastName, homeCity, country, building, department) {
+  async search(firstName, lastName, homeCity, state, country, building, department) {
     if (
       this.state.firstNameSearchValue === '' &&
       this.state.lastNameSearchValue === '' &&
       this.state.homeCitySearchValue === '' &&
+      this.state.stateSearchValue === '' &&
       this.state.countrySearchValue === '' &&
       this.state.buildingSearchValue === '' &&
       this.state.departmentSearchValue === ''
@@ -212,7 +215,8 @@ class PeopleSearch extends Component {
         firstName,
         lastName,
         homeCity,
-        'country',
+        'state: ',
+        state,
         country,
         building,
         department,
@@ -222,6 +226,7 @@ class PeopleSearch extends Component {
         firstName,
         lastName,
         homeCity,
+        state,
         country,
         building,
         department,
@@ -652,7 +657,7 @@ class PeopleSearch extends Component {
                     // this.state.minorSearchValue,
                     // this.state.classSearchValue,
                     this.state.homeCitySearchValue,
-                    // this.state.stateSearchValue,
+                    this.state.stateSearchValue,
                     this.state.countrySearchValue,
                     this.state.buildingSearchValue,
                     this.state.departmentSearchValue,
