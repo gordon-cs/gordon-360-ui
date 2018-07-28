@@ -94,24 +94,8 @@ class PeopleSearch extends Component {
 
   async componentWillMount() {
     try {
-      // const [majors, minors, states, countries, departments, buildings] = await Promise.all([
-      //   goStalk.getMajors(),
-      //   goStalk.getMinors(),
-      //   goStalk.getStates(),
-      //   goStalk.getCountries(),
-      //   goStalk.getDepartments(),
-      //   goStalk.getBuildings(),
-      // ]);
-      // this.setState({
-      //   majors,
-      //   minors,
-      //   states,
-      //   countries,
-      //   departments,
-      //   buildings,
-      // });
-
-      const [minors, states, countries, departments, buildings] = await Promise.all([
+      const [majors, minors, states, countries, departments, buildings] = await Promise.all([
+        goStalk.getMajors(),
         goStalk.getMinors(),
         goStalk.getStates(),
         goStalk.getCountries(),
@@ -119,13 +103,13 @@ class PeopleSearch extends Component {
         goStalk.getBuildings(),
       ]);
       this.setState({
+        majors,
         minors,
         states,
         countries,
         departments,
         buildings,
       });
-      console.log('the state of minors:', this.state.minors);
     } catch (error) {
       // error
     }
@@ -198,6 +182,7 @@ class PeopleSearch extends Component {
   async search(
     firstName,
     lastName,
+    major,
     minor,
     classType,
     homeCity,
@@ -206,46 +191,55 @@ class PeopleSearch extends Component {
     building,
     department,
   ) {
-    console.log('value of classType in search: ', classType);
     if (
       this.state.firstNameSearchValue === '' &&
       this.state.lastNameSearchValue === '' &&
       this.state.classTypeSearchValue === '' &&
+      this.state.majorSearchValue === '' &&
       this.state.minorSearchValue === '' &&
       this.state.homeCitySearchValue === '' &&
       this.state.stateSearchValue === '' &&
       this.state.countrySearchValue === '' &&
-      this.state.buildingSearchValue === '' &&
-      this.state.departmentSearchValue === ''
+      this.state.departmentSearchValue === '' &&
+      this.state.buildingSearchValue === ''
     ) {
       // do not search
     } else {
       this.setState({ header: <GordonLoader />, peopleSearchResults: null });
       console.log(
-        'Search params: ',
+        'Search params: FirstName: ',
         firstName,
+        ' LastName: ',
         lastName,
-        homeCity,
-        'minor: ',
+        ' Major: ',
+        major,
+        ' Minor: ',
         minor,
-        'class type BOI!:',
+        ' Class: ',
         classType,
+        ' Hometown: ',
+        homeCity,
+        ' State: ',
         state,
+        ' Country: ',
         country,
-        building,
+        ' Dept: ',
         department,
+        ' Building: ',
+        building,
       );
       let peopleSearchResults = [];
       peopleSearchResults = await goStalk.search(
         firstName,
         lastName,
+        major,
         minor,
         classType,
         homeCity,
         state,
         country,
-        building,
         department,
+        building,
       );
       // peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
       if (peopleSearchResults.length === 0) {
@@ -299,8 +293,6 @@ class PeopleSearch extends Component {
         });
       }
     }
-
-    console.log('in search call: this.state.peopleSearchResults', this.state.peopleSearchResults);
   }
 
   handleEnterKeyPress = event => {
@@ -308,13 +300,14 @@ class PeopleSearch extends Component {
       this.search(
         this.state.firstNameSearchValue,
         this.state.lastNameSearchValue,
+        this.state.majorSearchValue,
         this.search.minorSearchValue,
         this.state.classTypeSearchValue,
         this.state.homeCitySearchValue,
         this.state.stateSearchValue,
         this.state.countrySearchValue,
-        this.state.buildingSearchValue,
         this.state.departmentSearchValue,
+        this.state.buildingSearchValue,
       );
     }
   };
@@ -377,6 +370,7 @@ class PeopleSearch extends Component {
                   <TextField
                     id="first-name"
                     label="First Name"
+                    max="3"
                     fullWidth
                     value={this.state.firstNameSearchValue}
                     onChange={this.handleFirstNameInputChange}
@@ -694,14 +688,14 @@ class PeopleSearch extends Component {
                   this.search(
                     this.state.firstNameSearchValue,
                     this.state.lastNameSearchValue,
-                    // this.state.majorSearchValue,
+                    this.state.majorSearchValue,
                     this.state.minorSearchValue,
                     this.state.classTypeSearchValue,
                     this.state.homeCitySearchValue,
                     this.state.stateSearchValue,
                     this.state.countrySearchValue,
-                    this.state.buildingSearchValue,
                     this.state.departmentSearchValue,
+                    this.state.buildingSearchValue,
                   );
                 }}
                 raised
