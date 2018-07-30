@@ -438,15 +438,19 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={11}>
-                  <TextField
-                    id="last-name"
-                    label="Last Name"
-                    fullWidth
-                    value={this.state.lastNameSearchValue}
-                    onChange={this.handleLastNameInputChange}
-                    onKeyDown={this.handleEnterKeyPress}
-                  />
+                <Grid item xs={6}>
+                  <Grid container spacing={8} alignItems="flex-end">
+                    <Grid item xs={11}>
+                      <TextField
+                        id="last-name"
+                        label="Last Name"
+                        fullWidth
+                        value={this.state.lastNameSearchValue}
+                        onChange={this.handleLastNameInputChange}
+                        onKeyDown={this.handleEnterKeyPress}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </CardContent>
