@@ -20,6 +20,7 @@ import { Typography } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import Switch from '@material-ui/core/Switch';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -54,6 +55,17 @@ const styles = {
     color: '#FFF',
     padding: '10px',
   },
+  colorSwitchBase: {
+    color: gordonColors.neutral.lightGray,
+    '&$colorChecked': {
+      color: gordonColors.primary.cyan,
+      '& + $colorBar': {
+        backgroundColor: gordonColors.primary.cyan,
+      },
+    },
+  },
+  colorBar: {},
+  colorChecked: {},
 };
 
 class PeopleSearch extends Component {
@@ -87,6 +99,7 @@ class PeopleSearch extends Component {
       departmentSearchValue: '',
       buildingSearchValue: '',
 
+      includeAlumni: false,
       peopleSearchResults: null,
       header: '',
     };
@@ -179,7 +192,12 @@ class PeopleSearch extends Component {
     });
   };
 
+  handleChangeIncludeAlumni() {
+    this.setState({ includeAlumni: !this.state.includeAlumni });
+  }
+
   async search(
+    includeAlumni,
     firstName,
     lastName,
     major,
@@ -192,6 +210,7 @@ class PeopleSearch extends Component {
     department,
   ) {
     if (
+      this.state.includeAlumni === false &&
       this.state.firstNameSearchValue === '' &&
       this.state.lastNameSearchValue === '' &&
       this.state.classTypeSearchValue === '' &&
@@ -207,7 +226,9 @@ class PeopleSearch extends Component {
     } else {
       this.setState({ header: <GordonLoader />, peopleSearchResults: null });
       console.log(
-        'Search params: FirstName: ',
+        'Search params: includeAlumni ',
+        includeAlumni,
+        ' FirstName: ',
         firstName,
         ' LastName: ',
         lastName,
@@ -230,6 +251,7 @@ class PeopleSearch extends Component {
       );
       let peopleSearchResults = [];
       peopleSearchResults = await goStalk.search(
+        includeAlumni,
         firstName,
         lastName,
         major,
@@ -298,6 +320,7 @@ class PeopleSearch extends Component {
   handleEnterKeyPress = event => {
     if (event.key === 'Enter') {
       this.search(
+        this.state.includeAlumni,
         this.state.firstNameSearchValue,
         this.state.lastNameSearchValue,
         this.state.majorSearchValue,
@@ -682,28 +705,51 @@ class PeopleSearch extends Component {
               </Collapse>
             </CardContent>
             <CardActions>
-              <Button
-                color="primary"
-                onClick={() => {
-                  this.search(
-                    this.state.firstNameSearchValue,
-                    this.state.lastNameSearchValue,
-                    this.state.majorSearchValue,
-                    this.state.minorSearchValue,
-                    this.state.classTypeSearchValue,
-                    this.state.homeCitySearchValue,
-                    this.state.stateSearchValue,
-                    this.state.countrySearchValue,
-                    this.state.departmentSearchValue,
-                    this.state.buildingSearchValue,
-                  );
-                }}
-                raised
-                fullWidth
-                variant="contained"
-              >
-                SEARCH
-              </Button>
+              <Grid container justify="center" alignItems="center">
+                <Grid item xs={3}>
+                  <Grid container justify="center" alignItems="center" direction="column">
+                    <Switch
+                      onChange={() => {
+                        this.handleChangeIncludeAlumni();
+                      }}
+                      checked={this.state.includeAlumni}
+                      classes={{
+                        switchBase: classes.colorSwitchBase,
+                        checked: classes.colorChecked,
+                        bar: classes.colorBar,
+                      }}
+                    />
+                    <Typography>
+                      {this.state.includeAlumni ? 'Exclude Alumni' : 'Include Alumni'}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item xs={9}>
+                  <Button
+                    color="primary"
+                    onClick={() => {
+                      this.search(
+                        this.state.includeAlumni,
+                        this.state.firstNameSearchValue,
+                        this.state.lastNameSearchValue,
+                        this.state.majorSearchValue,
+                        this.state.minorSearchValue,
+                        this.state.classTypeSearchValue,
+                        this.state.homeCitySearchValue,
+                        this.state.stateSearchValue,
+                        this.state.countrySearchValue,
+                        this.state.departmentSearchValue,
+                        this.state.buildingSearchValue,
+                      );
+                    }}
+                    raised
+                    fullWidth
+                    variant="contained"
+                  >
+                    SEARCH
+                  </Button>
+                </Grid>
+              </Grid>
             </CardActions>
           </Card>
           <br />

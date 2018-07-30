@@ -8,6 +8,7 @@ import http from './http';
 
 /**
  * Search for (AKA GoStalk) a person/people based on the following queried parameters
+ * @param {Boolean} includeAlumni For non-Students to decide if they want alumni in their search results or not
  * @param {String} firstName First name queried
  * @param {String} lastName Last name queried
  * @param {String} major Major (matches up against 3 majors listed for people)
@@ -22,6 +23,7 @@ import http from './http';
  * @return {Promise.<SearchResult[]>} List of search results that match these queried parameters
  */
 const search = (
+  includeAlumni,
   firstName,
   lastName,
   major,
@@ -95,7 +97,8 @@ const search = (
     building = building.replace('.', '_');
   }
   console.log(
-    'goSTALK Search params: ',
+    'goSTALK Search params: includeAlumni: ',
+    includeAlumni,
     firstName,
     lastName,
     major,
@@ -108,7 +111,7 @@ const search = (
     building,
   );
   return http.get(
-    `accounts/advanced-people-search/${firstName}/${lastName}/${major}/${minor}/${classType}/${homeCity}/${state}/${country}/${department}/${building}`,
+    `accounts/advanced-people-search/${includeAlumni}/${firstName}/${lastName}/${major}/${minor}/${classType}/${homeCity}/${state}/${country}/${department}/${building}`,
   );
 };
 
