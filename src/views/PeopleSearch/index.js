@@ -385,35 +385,41 @@ class PeopleSearch extends Component {
               }}
             >
               <Typography variant="headline">Name</Typography>
-              <Grid container spacing={8} alignItems="flex-end">
-                <Grid item>
-                  <PersonIcon />
+              <Grid container>
+                <Grid item xs={6}>
+                  <Grid container spacing={8} alignItems="flex-end">
+                    <Grid item>
+                      <PersonIcon />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <TextField
+                        id="first-name"
+                        label="First Name"
+                        max="3"
+                        fullWidth
+                        value={this.state.firstNameSearchValue}
+                        onChange={this.handleFirstNameInputChange}
+                        onKeyDown={this.handleEnterKeyPress}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item xs={11}>
-                  <TextField
-                    id="first-name"
-                    label="First Name"
-                    max="3"
-                    fullWidth
-                    value={this.state.firstNameSearchValue}
-                    onChange={this.handleFirstNameInputChange}
-                    onKeyDown={this.handleEnterKeyPress}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={8} alignItems="flex-end">
-                <Grid item>
-                  <PersonIcon />
-                </Grid>
-                <Grid item xs={11}>
-                  <TextField
-                    id="last-name"
-                    label="Last Name"
-                    fullWidth
-                    value={this.state.lastNameSearchValue}
-                    onChange={this.handleLastNameInputChange}
-                  />
+                <Grid item xs={6}>
+                  <Grid container spacing={8} alignItems="flex-end">
+                    {/* <Grid item>
+                      <PersonIcon />
+                    </Grid> */}
+                    <Grid item xs={11}>
+                      <TextField
+                        id="last-name"
+                        label="Last Name"
+                        fullWidth
+                        value={this.state.lastNameSearchValue}
+                        onChange={this.handleLastNameInputChange}
+                        onKeyDown={this.handleEnterKeyPress}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </CardContent>
@@ -456,7 +462,7 @@ class PeopleSearch extends Component {
                         input={<Input id="major" />}
                       >
                         <MenuItem label="All Majors" value="">
-                          <em>All</em>
+                          <em>All Majors</em>
                         </MenuItem>
                         {majorOptions}
                       </Select>
@@ -477,7 +483,7 @@ class PeopleSearch extends Component {
                         input={<Input id="minor" />}
                       >
                         <MenuItem label="All Minors" value="">
-                          <em>All</em>
+                          <em>All Minors</em>
                         </MenuItem>
                         {minorOptions}
                       </Select>
@@ -572,6 +578,7 @@ class PeopleSearch extends Component {
                       fullWidth
                       value={this.state.homeCitySearchValue}
                       onChange={this.handleHomeCityInputChange}
+                      onKeyDown={this.handleEnterKeyPress}
                     />
                   </Grid>
                 </Grid>
@@ -582,14 +589,14 @@ class PeopleSearch extends Component {
                   </Grid>
                   <Grid item xs={11}>
                     <FormControl fullWidth>
-                      <InputLabel>State</InputLabel>
+                      <InputLabel>State/Province</InputLabel>
                       <Select
                         value={this.state.stateSearchValue}
                         onChange={this.handleStateInputChange}
                         input={<Input id="state" />}
                       >
                         <MenuItem label="All States" value="">
-                          <em>All</em>
+                          <em>All States/Provinces</em>
                         </MenuItem>
                         {stateOptions}
                       </Select>
@@ -615,7 +622,7 @@ class PeopleSearch extends Component {
                         input={<Input id="country" />}
                       >
                         <MenuItem label="All Countries" value="">
-                          <em>All</em>
+                          <em>All Countries</em>
                         </MenuItem>
                         {countryOptions}
                       </Select>
@@ -668,7 +675,7 @@ class PeopleSearch extends Component {
                         input={<Input id="department-type" />}
                       >
                         <MenuItem label="All Departments" value="">
-                          <em>All</em>
+                          <em>All Departments</em>
                         </MenuItem>
                         {departmentOptions}
                       </Select>
@@ -695,7 +702,7 @@ class PeopleSearch extends Component {
                         input={<Input id="building-type" />}
                       >
                         <MenuItem label="All Buildings" value="">
-                          <em>All</em>
+                          <em>All Buildings</em>
                         </MenuItem>
                         {buildingOptions}
                       </Select>
@@ -720,7 +727,7 @@ class PeopleSearch extends Component {
                       }}
                     />
                     <Typography>
-                      {this.state.includeAlumni ? 'Exclude Alumni' : 'Include Alumni'}
+                      {this.state.includeAlumni ? 'Alumni Included' : 'Alumni Excluded'}
                     </Typography>
                   </Grid>
                 </Grid>
