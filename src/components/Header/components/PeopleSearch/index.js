@@ -50,13 +50,17 @@ export default class GordonPeopleSearch extends Component {
       suggestions: [],
       suggestionIndex: -1,
       query: String,
+      highlightQuery: String,
     };
     this.isMobileView = false;
     this.breakpointWidth = 400;
   }
 
   async getSuggestions(query) {
-    this.setState({ query });
+    // Trim beginning or trailing spaces or periods from query text
+    var highlightQuery = query.replace(/^[\s.]+|[\s.]+$/gm, '');
+    this.setState({ highlightQuery, query });
+
     // Bail if query is missing or is less than minimum query length
     if (!query || query.length < MIN_QUERY_LENGTH) {
       return;
@@ -109,18 +113,21 @@ export default class GordonPeopleSearch extends Component {
   }
 
   highlightParse(text) {
-    return text.replace(/^[\s.]+|[\s.]+$/gm, '').replace(/ |\./, '|');
+    return text.replace(/ |\./, '|');
   }
 
   getHighlightedText(text, highlight) {
     // Split text on highlight term, include term itself into parts, ignore case
     var highlights = this.highlightParse(highlight);
     var parts = text.split(new RegExp(`(${highlights})`, 'gi'));
+    var hasMatched = false;
     return (
       <span>
         {parts.map(
           part =>
-            part.match(new RegExp(`(${highlights})`, 'i')) ? <span class="h">{part}</span> : part,
+            !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
+              ? (hasMatched = true && <span class="h">{part}</span>)
+              : part,
         )}
       </span>
     );
@@ -151,16 +158,27 @@ export default class GordonPeopleSearch extends Component {
         }
       >
         <Typography variant="body1">
-          {this.getHighlightedText(
-            suggestion.FirstName + ' ' + suggestion.LastName,
-            this.state.query,
-          )}
+          {this.state.highlightQuery.match(/ |\./)
+            ? [
+                this.getHighlightedText(
+                  suggestion.FirstName + ' ',
+                  this.state.highlightQuery.split(/ |\./)[0],
+                ),
+                this.getHighlightedText(
+                  suggestion.LastName,
+                  this.state.highlightQuery.split(/ |\./)[1],
+                ),
+              ].map(e => <span>{e}</span>)
+            : this.getHighlightedText(
+                suggestion.FirstName + ' ' + suggestion.LastName,
+                this.state.highlightQuery,
+              )}
         </Typography>
         <Typography variant="caption" component="p">
           {!(suggestion.FirstName + ' ' + suggestion.LastName).match(
-            new RegExp(`(${this.highlightParse(this.state.query)})`, 'i'),
+            new RegExp(`(${this.highlightParse(this.state.highlightQuery)})`, 'i'),
           )
-            ? this.getHighlightedText(suggestion.UserName, this.state.query)
+            ? this.getHighlightedText(suggestion.UserName, this.state.highlightQuery)
             : suggestion.UserName}
         </Typography>
       </MenuItem>
