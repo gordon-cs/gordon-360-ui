@@ -4,19 +4,21 @@ import { Carousel } from 'react-responsive-carousel';
 import cms from '../../../../services/cms';
 import '../../../../../node_modules/react-responsive-carousel/lib/styles/carousel.css';
 import GordonLoader from '../../../../components/Loader';
-import './carousel.scss';
 
 export default class GordonCarousel extends Component {
   constructor(props) {
     super(props);
 
     this.loadCarousel = this.loadCarousel.bind(this);
+    this.handleClickSlide = this.handleClickSlide.bind(this);
 
     this.state = {
       error: null,
       loading: true,
       carouselContent: {},
     };
+
+    this.linkArray = [];
   }
   componentWillMount() {
     this.loadCarousel();
@@ -30,6 +32,11 @@ export default class GordonCarousel extends Component {
       this.setState({ error });
     }
   }
+
+  handleClickSlide(index) {
+    window.location = this.linkArray[index];
+  }
+
   render() {
     if (this.state.error) {
       throw this.state.error;
@@ -45,13 +52,15 @@ export default class GordonCarousel extends Component {
           autoPlay={true}
           infiniteLoop
           transitionTime={1000}
-          interval={10000}
+          interval={5000}
           showStatus={false}
           useKeyboardArrows={true}
+          onClickItem={this.handleClickSlide}
         >
           {this.state.carouselContent.map(slide => (
             <div>
               <img src={slide.ImagePath} alt={slide.AltTag} />
+              {this.linkArray.push(slide.ActionLink)}
             </div>
           ))}
         </Carousel>

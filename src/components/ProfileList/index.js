@@ -92,8 +92,8 @@ class ProfileList extends Component {
     const privacyStyle = {
       opacity: this.state.isMobilePhonePrivate ? '0.5' : '1',
     };
-    const privateConstStyle = {
-      opacity: '.5',
+    const streetStyle = {
+      opacity: this.props.myProf ? '0.5' : '1',
     };
     let address;
     let homephone, mobilephone, Home, street;
@@ -114,7 +114,7 @@ class ProfileList extends Component {
 
     if (this.props.profile.HomeStreet2 !== '') {
       street = (
-        <div style={privateConstStyle}>
+        <div style={streetStyle}>
           <Typography className={this.state.addressDisclaimer ? 'disclaimer' : ''}>
             {this.props.profile.HomeStreet2}
           </Typography>
@@ -211,7 +211,7 @@ class ProfileList extends Component {
         <div>
           <ListItem>
             <Grid container alignItems="center" justify="space-between">
-              <Grid item xs={6} md={3} lg={6} style={privacyStyle}>
+              <Grid item xs={6} md={3} lg={6}>
                 <Typography>Mobile Phone:</Typography>
               </Grid>
               <Grid item xs={3} md={3} lg={3} justify="right" style={privacyStyle}>
@@ -286,14 +286,14 @@ class ProfileList extends Component {
 
     if (this.props.myProf && String(this.props.profile.PersonType).includes('stu')) {
       studentID = (
-        <div style={privateConstStyle}>
+        <div>
           <ListItem>
             <Grid container justify="space-between" alignItems="center">
               <Grid item xs={6} md={3} lg={6}>
                 <Typography>Student ID:</Typography>
               </Grid>
               <Grid item xs={3} md={3} lg={3} justify="right">
-                <Typography>{this.props.profile.ID}</Typography>
+                <Typography style={streetStyle}>{this.props.profile.ID}</Typography>
               </Grid>
               <Grid item xs={3} md={6} lg={3} justify="right" align="center">
                 <Grid container justify="center">

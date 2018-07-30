@@ -39,10 +39,12 @@ export default class Login extends Component {
 
   componentWillMount() {
     this.isIE = false;
+    this.isEdge = false;
     let ua = navigator.userAgent;
     if (ua.indexOf('MSIE ') > -1 || ua.indexOf('Trident') > -1) {
       this.isIE = true;
-      console.log('Chicken nuggets!');
+    } else if (ua.indexOf('Edge') > -1) {
+      this.isEdge = true;
     }
   }
 
@@ -53,15 +55,17 @@ export default class Login extends Component {
   }
 
   async logIn(event) {
+    console.log('Login/index.js: entering logIn() method');
     event.preventDefault();
     this.setState({ loading: true, error: null });
 
-    var id; // Login Hang
+    // Login Hang
+    var id;
     if (LOGIN_BUG_MESSAGE)
-      // Login Hang
       id = setTimeout(() => {
         this.setState({ showMessageSnackbar: true });
-      }, 6000); // Login Hang
+      }, 6000);
+    // Login Hang
 
     try {
       await authenticate(this.state.username, this.state.password);
@@ -69,18 +73,13 @@ export default class Login extends Component {
       this.props.onLogIn();
       console.log('Login/index.js: onLogIn() returned');
     } catch (err) {
-      this.setState({ error: err.message, loading: false });
-    }
-
-    console.log('Login/index.js: Passed try block');
-
-    //Temp Login Hang Fix - remove when reason for error addressed
-    if (LOGIN_BUG_MESSAGE) {
-      clearTimeout(id);
+      clearTimeout(id); // Login Hang
       this.setState({ showMessageSnackbar: false });
+      this.setState({ error: err.message, loading: false });
+      console.log('Login/index.js: Catch block was executed');
     }
 
-    console.log('Login/index.js: Cleared timeout to disable message');
+    console.log('Login/index.js: Passed try block; end of logIn() method');
   }
 
   //Temp Login Hang Fix - remove when reason for error addressed
@@ -184,7 +183,7 @@ export default class Login extends Component {
           />
         )}
         {/* Login Hang [END of section] */}
-        <Snackbar
+        <Snackbar /* Internet Explorer popup message */
           style={{ marginTop: '1rem' }}
           anchorOrigin={{
             vertical: 'top',
@@ -201,6 +200,47 @@ export default class Login extends Component {
               Whoops! It looks like you're using Internet Explorer. Unfortunately, Gordon 360
               doesn't support IE. Please use a modern browser like Chrome or Firefox. (We don't
               support Edge yet, but we hope to soon!)
+            </span>
+          }
+          action={[
+            <Button
+              onClick={() => (window.location.href = 'https://www.google.com/chrome/')}
+              style={{ color: 'white' }}
+            >
+              Get Chrome
+            </Button>,
+            <Button
+              onClick={() => (window.location.href = 'https://www.mozilla.org/en-US/firefox/new/')}
+              style={{ color: 'white' }}
+            >
+              Get Firefox
+            </Button>,
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={this.handleCloseSnackbar.bind(this)}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+        <Snackbar /* Edge browser popup message */
+          style={{ marginTop: '1rem' }}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={this.isEdge}
+          onClose={this.handleCloseSnackbar.bind(this)}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+            style: { backgroundColor: gordonColors.primary.cyan },
+          }}
+          message={
+            <span id="message-id">
+              Whoops! It looks like you're using Edge. Unfortunately, Gordon 360 doesn't support
+              Edge yet, but we hope to soon! In the meantime, please try Chrome or Firefox.
             </span>
           }
           action={[
