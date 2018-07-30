@@ -32,7 +32,11 @@ export default class EventsAttended extends Component {
     } else {
       content = (
         <Grid item>
-          <Typography variant="display1">No Events To Show</Typography>
+          <br />
+          <br />
+          <Typography variant="display1" align="center">
+            No Events To Show
+          </Typography>
         </Grid>
       );
     }

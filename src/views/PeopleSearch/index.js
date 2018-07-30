@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
+import Media from 'react-media';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
@@ -18,11 +19,19 @@ import BookIcon from 'react-icons/lib/fa/book';
 import GlobeIcon from 'react-icons/lib/fa/globe';
 import { Typography } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
-// import uniqBy from 'lodash/uniqBy';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Select from '@material-ui/core/Select';
 import goStalk from '../../services/goStalk';
+import user from '../../services/user';
 import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../theme';
 import PeopleSearchResult from './components/PeopleSearchResult';
+import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
 import GordonLoader from '../../components/Loader';
 import './peopleSearch.css';
 
@@ -49,6 +58,17 @@ const styles = {
     color: '#FFF',
     padding: '10px',
   },
+  colorSwitchBase: {
+    color: gordonColors.neutral.lightGray,
+    '&$colorChecked': {
+      color: gordonColors.primary.cyan,
+      '& + $colorBar': {
+        backgroundColor: gordonColors.primary.cyan,
+      },
+    },
+  },
+  colorBar: {},
+  colorChecked: {},
 };
 
 class PeopleSearch extends Component {
@@ -56,10 +76,20 @@ class PeopleSearch extends Component {
     super(props);
 
     this.state = {
+      personType: '',
       nameExpanded: true,
       academicsExpanded: false,
       homeExpanded: false,
       offDepExpanded: false,
+      additionalOpsExpanded: true,
+
+      // arrays of table data from backend
+      majors: [],
+      minors: [],
+      states: [],
+      countries: [],
+      departments: [],
+      buildings: [],
 
       // Keyboard string values
       firstNameSearchValue: '',
@@ -68,15 +98,48 @@ class PeopleSearch extends Component {
       // Drop-down menu values
       majorSearchValue: '',
       minorSearchValue: '',
+      classTypeSearchValue: '',
       stateSearchValue: '',
       countrySearchValue: '',
       departmentSearchValue: '',
       buildingSearchValue: '',
 
+      includeAlumni: false,
       peopleSearchResults: null,
       header: '',
+      searchButtons: '',
     };
   }
+
+  async componentWillMount() {
+    try {
+      const profile = await user.getProfileInfo();
+      const personType = profile.PersonType;
+      const [majors, minors, states, countries, departments, buildings] = await Promise.all([
+        goStalk.getMajors(),
+        goStalk.getMinors(),
+        goStalk.getStates(),
+        goStalk.getCountries(),
+        goStalk.getDepartments(),
+        goStalk.getBuildings(),
+      ]);
+      this.setState({
+        majors,
+        minors,
+        states,
+        countries,
+        departments,
+        buildings,
+        personType,
+      });
+    } catch (error) {
+      // error
+    }
+  }
+
+  handleAdditionalOpsExpandClick = () => {
+    this.setState(state => ({ additionalOpsExpanded: !state.additionalOpsExpanded }));
+  };
 
   handleNameExpandClick = () => {
     this.setState(state => ({ nameExpanded: !state.nameExpanded }));
@@ -111,6 +174,11 @@ class PeopleSearch extends Component {
       minorSearchValue: e.target.value,
     });
   };
+  handleClassTypeInputChange = event => {
+    this.setState({
+      classTypeSearchValue: event.target.value,
+    });
+  };
   handleHomeCityInputChange = e => {
     this.setState({
       homeCitySearchValue: e.target.value,
@@ -137,83 +205,211 @@ class PeopleSearch extends Component {
     });
   };
 
-  async search(firstName, lastName, homeCity) {
-    this.setState({ header: <GordonLoader />, peopleSearchResults: null });
-    console.log('Search params: ', firstName, lastName, homeCity);
-    let peopleSearchResults = [];
-    peopleSearchResults = await goStalk.search(firstName, lastName, homeCity);
-    // peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
-    if (peopleSearchResults.length === 0) {
-      this.setState({
-        peopleSearchResults: (
-          <Grid item xs={12}>
-            <Typography variant="headline" align="center">
-              No results found.
-            </Typography>
-          </Grid>
-        ),
-        header: '',
-      });
+  handleChangeIncludeAlumni() {
+    this.setState({ includeAlumni: !this.state.includeAlumni });
+  }
+
+  async search(
+    includeAlumni,
+    firstName,
+    lastName,
+    major,
+    minor,
+    classType,
+    homeCity,
+    state,
+    country,
+    building,
+    department,
+  ) {
+    if (
+      this.state.includeAlumni === false &&
+      this.state.firstNameSearchValue === '' &&
+      this.state.lastNameSearchValue === '' &&
+      this.state.classTypeSearchValue === '' &&
+      this.state.majorSearchValue === '' &&
+      this.state.minorSearchValue === '' &&
+      this.state.classTypeSearchValue === '' &&
+      this.state.homeCitySearchValue === '' &&
+      this.state.stateSearchValue === '' &&
+      this.state.countrySearchValue === '' &&
+      this.state.departmentSearchValue === '' &&
+      this.state.buildingSearchValue === ''
+    ) {
+      // do not search
     } else {
       this.setState({
-        peopleSearchResults: peopleSearchResults.map(person => (
-          <PeopleSearchResult Person={person} />
-        )),
-        header: (
-          <div style={styles.headerStyle}>
-            <Grid container direction="row">
-              <Grid item xs={1} />
-              <Grid item xs={3}>
-                <Typography variant="body2" style={styles.headerStyle}>
-                  FIRST NAME
-                </Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography variant="body2" style={styles.headerStyle}>
-                  LAST NAME
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body2" style={styles.headerStyle}>
-                  TYPE
-                </Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <Typography variant="body2" style={styles.headerStyle}>
-                  CLASS/JOB TITLE
-                </Typography>
-              </Grid>
-            </Grid>
-          </div>
-        ),
+        header: <GordonLoader />,
+        peopleSearchResults: null,
+        additionalOpsExpanded: false,
       });
+      let peopleSearchResults = [];
+      peopleSearchResults = await goStalk.search(
+        includeAlumni,
+        firstName,
+        lastName,
+        major,
+        minor,
+        classType,
+        homeCity,
+        state,
+        country,
+        department,
+        building,
+      );
+      if (peopleSearchResults.length === 0) {
+        this.setState({
+          peopleSearchResults: (
+            <Grid item xs={12}>
+              <Typography variant="headline" align="center">
+                No results found.
+              </Typography>
+            </Grid>
+          ),
+          header: '',
+        });
+      } else {
+        this.setState({
+          peopleSearchResults: (
+            <Media query="(min-width: 960px)">
+              {matches =>
+                matches
+                  ? peopleSearchResults.map(person => <PeopleSearchResult Person={person} />)
+                  : peopleSearchResults.map(person => <MobilePeopleSearchResult Person={person} />)
+              }
+            </Media>
+          ),
+          header: (
+            <Media query="(min-width: 960px)">
+              {matches =>
+                matches ? (
+                  <div style={styles.headerStyle}>
+                    <Grid container direction="row">
+                      <Grid item xs={1} />
+                      <Grid item xs={2}>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          FIRST NAME
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          LAST NAME
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          TYPE
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          CLASS/JOB TITLE
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          EMAIL
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </div>
+                ) : (
+                  <div style={styles.headerStyle}>
+                    <Grid container direction="row" justify="center">
+                      <Grid item>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          RESULTS
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </div>
+                )
+              }
+            </Media>
+          ),
+        });
+      }
     }
-
-    console.log(this.state.peopleSearchResults);
   }
+
+  handleEnterKeyPress = event => {
+    if (event.key === 'Enter') {
+      this.search(
+        this.state.includeAlumni,
+        this.state.firstNameSearchValue,
+        this.state.lastNameSearchValue,
+        this.state.majorSearchValue,
+        this.state.minorSearchValue,
+        this.state.classTypeSearchValue,
+        this.state.homeCitySearchValue,
+        this.state.stateSearchValue,
+        this.state.countrySearchValue,
+        this.state.departmentSearchValue,
+        this.state.buildingSearchValue,
+      );
+    }
+  };
 
   render() {
     const { classes } = this.props;
-    // let header;
+    let includeAlumniCheckbox;
 
-    /* 
-      // arrays of table data from backend
-      departments = [],
-      buildings = [];
+    const majorOptions = this.state.majors.map(major => (
+      <MenuItem value={major} key={major}>
+        {major}
+      </MenuItem>
+    ));
 
+    const minorOptions = this.state.minors.map(minor => (
+      <MenuItem value={minor} key={minor}>
+        {minor}
+      </MenuItem>
+    ));
 
-    const departments = departments.map(department => (
+    const stateOptions = this.state.states.map(state => (
+      <MenuItem value={state} key={state}>
+        {state}
+      </MenuItem>
+    ));
+
+    const countryOptions = this.state.countries.map(country => (
+      <MenuItem value={country} key={country}>
+        {country}
+      </MenuItem>
+    ));
+
+    const departmentOptions = this.state.departments.map(department => (
       <MenuItem value={department} key={department}>
         {department}
       </MenuItem>
     ));
 
-    const buildings = buildings.map(building => (
+    const buildingOptions = this.state.buildings.map(building => (
       <MenuItem value={building} key={building}>
         {building}
       </MenuItem>
     ));
-    */
+
+    if (this.state.personType !== 'stu' && this.state.personType !== '') {
+      includeAlumniCheckbox = (
+        <Grid item xs={3}>
+          <Grid container justify="center" alignItems="center" direction="column">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.includeAlumni}
+                  onChange={() => {
+                    this.handleChangeIncludeAlumni();
+                  }}
+                />
+              }
+              label="Include Alumni"
+            />
+          </Grid>
+        </Grid>
+      );
+    } else {
+    }
 
     return (
       <Grid container justify="center" spacing="16">
@@ -226,242 +422,324 @@ class PeopleSearch extends Component {
               }}
             >
               <Typography variant="headline">Name</Typography>
-              <Grid container spacing={8} alignItems="flex-end">
-                <Grid item>
-                  <PersonIcon />
+              <Grid container>
+                <Grid item xs={6}>
+                  <Grid container spacing={8} alignItems="flex-end">
+                    <Grid item>
+                      <PersonIcon />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <TextField
+                        id="first-name"
+                        label="First Name"
+                        max="3"
+                        fullWidth
+                        value={this.state.firstNameSearchValue}
+                        onChange={this.handleFirstNameInputChange}
+                        onKeyDown={this.handleEnterKeyPress}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item xs={11}>
-                  <TextField
-                    id="first-name"
-                    label="First Name"
-                    fullWidth
-                    value={this.state.firstNameSearchValue}
-                    onChange={this.handleFirstNameInputChange}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={8} alignItems="flex-end">
-                <Grid item>
-                  <PersonIcon />
-                </Grid>
-                <Grid item xs={11}>
-                  <TextField
-                    id="last-name"
-                    label="Last Name"
-                    fullWidth
-                    value={this.state.lastNameSearchValue}
-                    onChange={this.handleLastNameInputChange}
-                  />
+                <Grid item xs={6}>
+                  <Grid container spacing={8} alignItems="flex-end">
+                    <Grid item xs={11}>
+                      <TextField
+                        id="last-name"
+                        label="Last Name"
+                        fullWidth
+                        value={this.state.lastNameSearchValue}
+                        onChange={this.handleLastNameInputChange}
+                        onKeyDown={this.handleEnterKeyPress}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </CardContent>
 
-            <CardContent>
-              <CardActions
-                className={[classes.actions, 'card-expansion']}
-                disableActionSpacing
-                onClick={this.handleAcademicsExpandClick}
-              >
-                <Typography variant="headline">Academics</Typography>
-                <IconButton
-                  className={classnames(classes.expand, {
-                    [classes.expandOpen]: this.state.academicsExpanded,
-                  })}
+            <Collapse in={this.state.additionalOpsExpanded} timeout="auto" unmountOnExit>
+              <CardContent>
+                <CardActions
+                  className={[classes.actions, 'card-expansion']}
+                  disableActionSpacing
                   onClick={this.handleAcademicsExpandClick}
-                  aria-expanded={this.state.academicsExpanded}
-                  aria-label="Show more"
                 >
-                  <ExpandMoreIcon />
-                </IconButton>
-              </CardActions>
+                  <Typography variant="headline">Academics</Typography>
+                  <IconButton
+                    className={classnames(classes.expand, {
+                      [classes.expandOpen]: this.state.academicsExpanded,
+                    })}
+                    aria-expanded={this.state.academicsExpanded}
+                    aria-label="Show more"
+                  >
+                    <ExpandMoreIcon />
+                  </IconButton>
+                </CardActions>
 
-              <Collapse
-                in={this.state.academicsExpanded}
-                timeout="auto"
-                unmountOnExit
-                style={styles.CardContent}
-              >
-                <Grid container spacing={8} alignItems="baseline">
-                  <Grid item>
-                    <BookIcon style={styles.FontAwesome} />
+                <Collapse
+                  in={this.state.academicsExpanded}
+                  timeout="auto"
+                  unmountOnExit
+                  style={styles.CardContent}
+                >
+                  <Grid container spacing={8} alignItems="baseline">
+                    <Grid item>
+                      <BookIcon style={styles.FontAwesome} />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <FormControl fullWidth>
+                        <InputLabel>Major</InputLabel>
+                        <Select
+                          value={this.state.majorSearchValue}
+                          onChange={this.handleMajorInputChange}
+                          input={<Input id="major" />}
+                        >
+                          <MenuItem label="All Majors" value="">
+                            <em>All Majors</em>
+                          </MenuItem>
+                          {majorOptions}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={11}>
-                    <TextField id="major" label="Major" fullWidth />
-                  </Grid>
-                </Grid>
 
-                <Grid container spacing={8} alignItems="baseline">
-                  <Grid item>
-                    <BookIcon style={styles.FontAwesome} />
+                  <Grid container spacing={8} alignItems="baseline">
+                    <Grid item>
+                      <BookIcon style={styles.FontAwesome} />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <FormControl fullWidth>
+                        <InputLabel>Minor</InputLabel>
+                        <Select
+                          value={this.state.minorSearchValue}
+                          onChange={this.handleMinorInputChange}
+                          input={<Input id="minor" />}
+                        >
+                          <MenuItem label="All Minors" value="">
+                            <em>All Minors</em>
+                          </MenuItem>
+                          {minorOptions}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={11}>
-                    <TextField id="minor" label="Minor" fullWidth />
-                  </Grid>
-                </Grid>
 
-                <Grid container spacing={8} alignItems="flex-end">
-                  <Grid item>
-                    <SchoolIcon />
+                  <Grid container spacing={8} alignItems="flex-end">
+                    <Grid item>
+                      <SchoolIcon />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <FormControl fullWidth>
+                        <InputLabel>Class</InputLabel>
+                        <Select
+                          value={this.state.classTypeSearchValue}
+                          onChange={this.handleClassTypeInputChange}
+                          input={<Input id="class" />}
+                        >
+                          <MenuItem label="All Classes" value="">
+                            <em>All</em>
+                          </MenuItem>
+                          <MenuItem value={1}>Freshman</MenuItem>
+                          <MenuItem value={2}>Sophomore</MenuItem>
+                          <MenuItem value={3}>Junior</MenuItem>
+                          <MenuItem value={4}>Senior</MenuItem>
+                          <MenuItem value={5}>Graduate Student</MenuItem>
+                          <MenuItem value={6}>Undergraduate Conferred</MenuItem>
+                          <MenuItem value={7}>Graduate Conferred</MenuItem>
+                          <MenuItem value={0}>Unassigned</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={11}>
-                    <TextField id="class" label="Class" fullWidth />
-                  </Grid>
-                </Grid>
-              </Collapse>
-            </CardContent>
+                </Collapse>
+              </CardContent>
 
-            <CardContent>
-              <CardActions
-                className={[classes.actions, 'card-expansion']}
-                disableActionSpacing
-                onClick={this.handleHomeExpandClick}
-              >
-                <Typography variant="headline">Home</Typography>
-                <IconButton
-                  className={classnames(classes.expand, {
-                    [classes.expandOpen]: this.state.homeExpanded,
-                  })}
+              <CardContent>
+                <CardActions
+                  className={[classes.actions, 'card-expansion']}
+                  disableActionSpacing
                   onClick={this.handleHomeExpandClick}
-                  aria-expanded={this.state.homeExpanded}
-                  aria-label="Show more"
                 >
-                  <ExpandMoreIcon />
-                </IconButton>
-              </CardActions>
+                  <Typography variant="headline">Home</Typography>
+                  <IconButton
+                    className={classnames(classes.expand, {
+                      [classes.expandOpen]: this.state.homeExpanded,
+                    })}
+                    aria-expanded={this.state.homeExpanded}
+                    aria-label="Show more"
+                  >
+                    <ExpandMoreIcon />
+                  </IconButton>
+                </CardActions>
 
-              <Collapse
-                in={this.state.homeExpanded}
-                timeout="auto"
-                unmountOnExit
-                style={styles.CardContent}
-              >
-                <Grid container spacing={8} alignItems="flex-end">
-                  <Grid item>
-                    <HomeIcon />
+                <Collapse
+                  in={this.state.homeExpanded}
+                  timeout="auto"
+                  unmountOnExit
+                  style={styles.CardContent}
+                >
+                  <Grid container spacing={8} alignItems="flex-end">
+                    <Grid item>
+                      <HomeIcon />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <TextField
+                        id="hometown"
+                        label="Hometown"
+                        fullWidth
+                        value={this.state.homeCitySearchValue}
+                        onChange={this.handleHomeCityInputChange}
+                        onKeyDown={this.handleEnterKeyPress}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={11}>
-                    <TextField
-                      id="hometown"
-                      label="Hometown"
-                      fullWidth
-                      value={this.state.homeCitySearchValue}
-                      onChange={this.handleHomeCityInputChange}
-                    />
-                  </Grid>
-                </Grid>
 
-                <Grid container spacing={8} alignItems="flex-end">
-                  <Grid item>
-                    <CityIcon />
+                  <Grid container spacing={8} alignItems="flex-end">
+                    <Grid item>
+                      <CityIcon />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <FormControl fullWidth>
+                        <InputLabel>State</InputLabel>
+                        <Select
+                          value={this.state.stateSearchValue}
+                          onChange={this.handleStateInputChange}
+                          input={<Input id="state" />}
+                        >
+                          <MenuItem label="All States" value="">
+                            <em>All</em>
+                          </MenuItem>
+                          {stateOptions}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={11}>
-                    <TextField
-                      id="state"
-                      label="State"
-                      fullWidth
-                      value={this.state.stateSearchValue}
-                      onChange={this.handleStateInputChange}
-                    />
-                  </Grid>
-                </Grid>
 
-                <Grid container spacing={8} alignItems="baseline">
-                  <Grid item>
-                    <GlobeIcon
-                      style={{
-                        fontSize: 22,
-                        marginLeft: 2,
-                      }}
-                    />
+                  <Grid container spacing={8} alignItems="baseline">
+                    <Grid item>
+                      <GlobeIcon
+                        style={{
+                          fontSize: 22,
+                          marginLeft: 2,
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <FormControl fullWidth>
+                        <InputLabel>Country</InputLabel>
+                        <Select
+                          value={this.state.countrySearchValue}
+                          onChange={this.handleCountryInputChange}
+                          input={<Input id="country" />}
+                        >
+                          <MenuItem label="All Countries" value="">
+                            <em>All</em>
+                          </MenuItem>
+                          {countryOptions}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={11}>
-                    <TextField
-                      id="country"
-                      label="Country"
-                      fullWidth
-                      value={this.state.countrySearchValue}
-                      onChange={this.handleCountryInputChange}
-                    />
-                  </Grid>
-                </Grid>
-              </Collapse>
-            </CardContent>
+                </Collapse>
+              </CardContent>
 
-            <CardContent>
-              <CardActions
-                className={[classes.actions, 'card-expansion']}
-                disableActionSpacing
-                onClick={this.handleOffDepExpandClick}
-              >
-                <Typography variant="headline">Office and Department</Typography>
-                <IconButton
-                  className={classnames(classes.expand, {
-                    [classes.expandOpen]: this.state.offDepExpanded,
-                  })}
+              <CardContent>
+                <CardActions
+                  className={[classes.actions, 'card-expansion']}
+                  disableActionSpacing
                   onClick={this.handleOffDepExpandClick}
-                  aria-expanded={this.state.offDepExpanded}
-                  aria-label="Show more"
                 >
-                  <ExpandMoreIcon />
-                </IconButton>
-              </CardActions>
+                  <Typography variant="headline">Building and Department</Typography>
+                  <IconButton
+                    className={classnames(classes.expand, {
+                      [classes.expandOpen]: this.state.offDepExpanded,
+                    })}
+                    aria-expanded={this.state.offDepExpanded}
+                    aria-label="Show more"
+                  >
+                    <ExpandMoreIcon />
+                  </IconButton>
+                </CardActions>
 
-              <Collapse
-                in={this.state.offDepExpanded}
-                timeout="auto"
-                unmountOnExit
-                style={styles.CardContent}
-              >
-                <Grid container spacing={8} alignItems="baseline">
-                  <Grid item>
-                    <BriefcaseIcon
-                      style={{
-                        fontSize: 22,
-                        marginLeft: 2,
-                      }}
-                    />
+                <Collapse
+                  in={this.state.offDepExpanded}
+                  timeout="auto"
+                  unmountOnExit
+                  style={styles.CardContent}
+                >
+                  <Grid container spacing={8} alignItems="baseline">
+                    <Grid item>
+                      <BriefcaseIcon
+                        style={{
+                          fontSize: 22,
+                          marginLeft: 2,
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <FormControl fullWidth>
+                        <InputLabel>Department</InputLabel>
+                        <Select
+                          value={this.state.departmentSearchValue}
+                          onChange={this.handleDepartmentInputChange}
+                          input={<Input id="department-type" />}
+                        >
+                          <MenuItem label="All Departments" value="">
+                            <em>All</em>
+                          </MenuItem>
+                          {departmentOptions}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={11}>
-                    <TextField
-                      id="department"
-                      label="Department"
-                      fullWidth
-                      value={this.state.departmentSearchValue}
-                      onChange={this.handleDepartmentInputChange}
-                    />
-                  </Grid>
-                </Grid>
 
-                <Grid container spacing={8} alignItems="baseline">
-                  <Grid item>
-                    <BuildingIcon
-                      style={{
-                        fontSize: 22,
-                        marginLeft: 2,
-                      }}
-                    />
+                  <Grid container spacing={8} alignItems="baseline">
+                    <Grid item>
+                      <BuildingIcon
+                        style={{
+                          fontSize: 22,
+                          marginLeft: 2,
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={11}>
+                      <FormControl fullWidth>
+                        <InputLabel>Building</InputLabel>
+                        <Select
+                          value={this.state.buildingSearchValue}
+                          onChange={this.handleBuildingInputChange}
+                          input={<Input id="building-type" />}
+                        >
+                          <MenuItem label="All Buildings" value="">
+                            <em>All</em>
+                          </MenuItem>
+                          {buildingOptions}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={11}>
-                    <TextField
-                      id="Building"
-                      label="Building"
-                      fullWidth
-                      value={this.state.buildingSearchValue}
-                      onChange={this.handleBuildingInputChange}
-                    />
-                  </Grid>
-                </Grid>
-              </Collapse>
-            </CardContent>
+                </Collapse>
+              </CardContent>
+            </Collapse>
             <CardActions>
+              {includeAlumniCheckbox}
               <Button
                 color="primary"
                 onClick={() => {
                   this.search(
+                    this.state.includeAlumni,
                     this.state.firstNameSearchValue,
                     this.state.lastNameSearchValue,
+                    this.state.majorSearchValue,
+                    this.state.minorSearchValue,
+                    this.state.classTypeSearchValue,
                     this.state.homeCitySearchValue,
+                    this.state.stateSearchValue,
+                    this.state.countrySearchValue,
+                    this.state.departmentSearchValue,
+                    this.state.buildingSearchValue,
                   );
                 }}
                 raised
@@ -470,6 +748,28 @@ class PeopleSearch extends Component {
               >
                 SEARCH
               </Button>
+            </CardActions>
+            <CardActions
+              className={[classes.actions, 'card-expansion']}
+              disableActionSpacing
+              onClick={this.handleAdditionalOpsExpandClick}
+              style={{
+                marginTop: '-16px',
+              }}
+            >
+              <Grid container alignItems="baseline" justify="center">
+                <Grid item>
+                  <IconButton
+                    className={classnames(classes.expand, {
+                      [classes.expandOpen]: this.state.additionalOpsExpanded,
+                    })}
+                    aria-expanded={this.state.additionalOpsExpanded}
+                    aria-label="Show more"
+                  >
+                    <ExpandMoreIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
             </CardActions>
           </Card>
           <br />

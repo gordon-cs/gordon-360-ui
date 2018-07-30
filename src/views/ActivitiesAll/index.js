@@ -114,8 +114,6 @@ export default class GordonActivitiesAll extends Component {
       involvementsHeading = involvementsHeading.toUpperCase();
     }
 
-    console.log(noInvolvementsText);
-
     if (this.state.loading === true) {
       allInvolvements = <GordonLoader />;
       myInvolvements = <GordonLoader />;

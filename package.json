@@ -22,7 +22,9 @@
     "react-dom": "^16.2.0",
     "react-dropzone": "^4.2.13",
     "react-ga": "^2.3.5",
+    "react-graceful-image": "^1.2.9",
     "react-icons": "^2.2.7",
+    "react-media": "^1.8.0",
     "react-responsive-carousel": "^3.1.30",
     "react-router-dom": "^4.2.2"
   },
