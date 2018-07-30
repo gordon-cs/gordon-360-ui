@@ -127,7 +127,7 @@ export default class CLWCreditsDaysLeft extends Component {
                 </div>
                 <div class="entry">
                   <span class="entry-label" style={{ background: gordonColors.primary.cyan }} />
-                  <span class="entry-text">CL&W Credits</span>
+                  <span class="entry-text">CL&amp;W Credits</span>
                 </div>
               </div>
             </Grid>
@@ -137,7 +137,7 @@ export default class CLWCreditsDaysLeft extends Component {
             <Tooltip
               id="tooltip-chapel-credits"
               classes={{ tooltip: 'tooltip' }}
-              title="CL&W Credits Earned"
+              title="CL&amp;W Credits Earned"
             >
               <div className="centered-text">{current.toString()}</div>
             </Tooltip>
