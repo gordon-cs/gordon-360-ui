@@ -21,11 +21,11 @@ import { Typography } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import Switch from '@material-ui/core/Switch';
+import Checkbox from '@material-ui/core/Checkbox';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
-// import uniqBy from 'lodash/uniqBy';
 import goStalk from '../../services/goStalk';
 import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../theme';
@@ -168,10 +168,11 @@ class PeopleSearch extends Component {
       minorSearchValue: e.target.value,
     });
   };
-  handleClassInputChange = value => {
+  handleClassTypeInputChange = event => {
     this.setState({
-      classSearchValue: value,
+      classTypeSearchValue: event.target.value,
     });
+    console.log('handleClassTypeInputChange', this.state.classSearchValue);
   };
   handleHomeCityInputChange = e => {
     this.setState({
@@ -275,7 +276,6 @@ class PeopleSearch extends Component {
         department,
         building,
       );
-      // peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
       if (peopleSearchResults.length === 0) {
         this.setState({
           peopleSearchResults: (
@@ -419,26 +419,24 @@ class PeopleSearch extends Component {
               }}
             >
               <Typography variant="headline">Name</Typography>
-              <Grid container spacing={8} alignItems="flex-end">
-                <Grid item>
-                  <PersonIcon />
-                </Grid>
-                <Grid item xs={11}>
-                  <TextField
-                    id="first-name"
-                    label="First Name"
-                    max="3"
-                    fullWidth
-                    value={this.state.firstNameSearchValue}
-                    onChange={this.handleFirstNameInputChange}
-                    onKeyDown={this.handleEnterKeyPress}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={8} alignItems="flex-end">
-                <Grid item>
-                  <PersonIcon />
+              <Grid container>
+                <Grid item xs={6}>
+                  <Grid container spacing={8} alignItems="flex-end">
+                    <Grid item>
+                      <PersonIcon />
+                    </Grid>
+                    <Grid item xs={11}>
+                      <TextField
+                        id="first-name"
+                        label="First Name"
+                        max="3"
+                        fullWidth
+                        value={this.state.firstNameSearchValue}
+                        onChange={this.handleFirstNameInputChange}
+                        onKeyDown={this.handleEnterKeyPress}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item xs={11}>
                   <TextField
@@ -491,7 +489,7 @@ class PeopleSearch extends Component {
                           input={<Input id="major" />}
                         >
                           <MenuItem label="All Majors" value="">
-                            <em>All</em>
+                            <em>All Majors</em>
                           </MenuItem>
                           {majorOptions}
                         </Select>
@@ -512,7 +510,7 @@ class PeopleSearch extends Component {
                           input={<Input id="minor" />}
                         >
                           <MenuItem label="All Minors" value="">
-                            <em>All</em>
+                            <em>All Minors</em>
                           </MenuItem>
                           {minorOptions}
                         </Select>
@@ -525,47 +523,26 @@ class PeopleSearch extends Component {
                       <SchoolIcon />
                     </Grid>
                     <Grid item xs={11}>
-                      {/*
-                    TODO:
-                    THIS DOESN'T WORK YET I NEED TO FIGURE OUT HOW TO PASS THE VALUE OF THE
-                    SELECTED MENU ITEM TO THE SEARCH FUNCTION
-
-                    <FormControl fullWidth>
-                      <InputLabel>Class</InputLabel>
-                      <Select
-                        // value={this.state.classTypeSearchValue}
-                        // onChange={this.handleClassInputChange}
-                        input={<Input id="class" />}
-                      >
-                        <MenuItem label="All Classes" value="">
-                          <em>All</em>
-                        </MenuItem >
-                        <MenuItem value="1">
-                        Freshman
-                        </MenuItem>
-                        <MenuItem onClick={this.handleClassInputChange.bind(this, '2')}>
-                        Sophomore
-                        </MenuItem>
-                        <MenuItem value="3">
-                        Junior
-                        </MenuItem>
-                        <MenuItem value="4">
-                        Senior
-                        </MenuItem>
-                        <MenuItem value="5">
-                        Graduate Student
-                        </MenuItem>
-                        <MenuItem value="6">
-                        Undergraduate Conferred
-                        </MenuItem>
-                        <MenuItem value="7">
-                        Graduate Conferred
-                        </MenuItem>
-                        <MenuItem value="0">
-                        Unassigned
-                        </MenuItem>
-                      </Select>
-                    </FormControl> */}
+                      <FormControl fullWidth>
+                        <InputLabel>Class</InputLabel>
+                        <Select
+                          value={this.state.classTypeSearchValue}
+                          onChange={this.handleClassTypeInputChange}
+                          input={<Input id="class" />}
+                        >
+                          <MenuItem label="All Classes" value="">
+                            <em>All</em>
+                          </MenuItem>
+                          <MenuItem value={1}>Freshman</MenuItem>
+                          <MenuItem value={2}>Sophomore</MenuItem>
+                          <MenuItem value={3}>Junior</MenuItem>
+                          <MenuItem value={4}>Senior</MenuItem>
+                          <MenuItem value={5}>Graduate Student</MenuItem>
+                          <MenuItem value={6}>Undergraduate Conferred</MenuItem>
+                          <MenuItem value={7}>Graduate Conferred</MenuItem>
+                          <MenuItem value={0}>Unassigned</MenuItem>
+                        </Select>
+                      </FormControl>
                     </Grid>
                   </Grid>
                 </Collapse>
@@ -743,20 +720,17 @@ class PeopleSearch extends Component {
               <Grid container justify="center" alignItems="center">
                 <Grid item xs={3}>
                   <Grid container justify="center" alignItems="center" direction="column">
-                    <Switch
-                      onChange={() => {
-                        this.handleChangeIncludeAlumni();
-                      }}
-                      checked={this.state.includeAlumni}
-                      classes={{
-                        switchBase: classes.colorSwitchBase,
-                        checked: classes.colorChecked,
-                        bar: classes.colorBar,
-                      }}
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={this.state.includeAlumni}
+                          onChange={() => {
+                            this.handleChangeIncludeAlumni();
+                          }}
+                        />
+                      }
+                      label="Include Alumni"
                     />
-                    <Typography>
-                      {this.state.includeAlumni ? 'Exclude Alumni' : 'Include Alumni'}
-                    </Typography>
                   </Grid>
                 </Grid>
                 <Grid item xs={9}>
