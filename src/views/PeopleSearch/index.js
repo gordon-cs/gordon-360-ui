@@ -206,9 +206,7 @@ class PeopleSearch extends Component {
   };
 
   handleChangeIncludeAlumni() {
-    console.log('handleChangeIncludeAlumni called');
     this.setState({ includeAlumni: !this.state.includeAlumni });
-    console.log('includeAlumni changed to:', this.state.includeAlumni);
   }
 
   async search(
@@ -354,7 +352,7 @@ class PeopleSearch extends Component {
 
   render() {
     const { classes } = this.props;
-    let searchButtons;
+    let includeAlumniCheckbox;
 
     const majorOptions = this.state.majors.map(major => (
       <MenuItem value={major} key={major}>
@@ -392,79 +390,25 @@ class PeopleSearch extends Component {
       </MenuItem>
     ));
 
-    if (String(this.state.PersonType) !== 'stu') {
-      // if you are NOT a Student:
-      searchButtons = (
-        <Grid container justify="center" alignItems="center">
-          <Grid item xs={3}>
-            <Grid container justify="center" alignItems="center" direction="column">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.includeAlumni}
-                    onChange={() => {
-                      this.handleChangeIncludeAlumni();
-                    }}
-                  />
-                }
-                label="Include Alumni"
-              />
-            </Grid>
-          </Grid>
-          <Grid item xs={9}>
-            <Button
-              color="primary"
-              onClick={() => {
-                this.search(
-                  this.state.includeAlumni,
-                  this.state.firstNameSearchValue,
-                  this.state.lastNameSearchValue,
-                  this.state.majorSearchValue,
-                  this.state.minorSearchValue,
-                  this.state.classTypeSearchValue,
-                  this.state.homeCitySearchValue,
-                  this.state.stateSearchValue,
-                  this.state.countrySearchValue,
-                  this.state.departmentSearchValue,
-                  this.state.buildingSearchValue,
-                );
-              }}
-              raised
-              fullWidth
-              variant="contained"
-            >
-              SEARCH
-            </Button>
+    if (this.state.personType !== 'stu' && this.state.personType !== '') {
+      includeAlumniCheckbox = (
+        <Grid item xs={3}>
+          <Grid container justify="center" alignItems="center" direction="column">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.includeAlumni}
+                  onChange={() => {
+                    this.handleChangeIncludeAlumni();
+                  }}
+                />
+              }
+              label="Include Alumni"
+            />
           </Grid>
         </Grid>
       );
     } else {
-      // you ARE a student
-      searchButtons = (
-        <Button
-          color="primary"
-          onClick={() => {
-            this.search(
-              this.state.includeAlumni,
-              this.state.firstNameSearchValue,
-              this.state.lastNameSearchValue,
-              this.state.majorSearchValue,
-              this.state.minorSearchValue,
-              this.state.classTypeSearchValue,
-              this.state.homeCitySearchValue,
-              this.state.stateSearchValue,
-              this.state.countrySearchValue,
-              this.state.departmentSearchValue,
-              this.state.buildingSearchValue,
-            );
-          }}
-          raised
-          fullWidth
-          variant="contained"
-        >
-          SEARCH
-        </Button>
-      );
     }
 
     return (
@@ -779,7 +723,32 @@ class PeopleSearch extends Component {
                 </Collapse>
               </CardContent>
             </Collapse>
-            <CardActions>{searchButtons}</CardActions>
+            <CardActions>
+              {includeAlumniCheckbox}
+              <Button
+                color="primary"
+                onClick={() => {
+                  this.search(
+                    this.state.includeAlumni,
+                    this.state.firstNameSearchValue,
+                    this.state.lastNameSearchValue,
+                    this.state.majorSearchValue,
+                    this.state.minorSearchValue,
+                    this.state.classTypeSearchValue,
+                    this.state.homeCitySearchValue,
+                    this.state.stateSearchValue,
+                    this.state.countrySearchValue,
+                    this.state.departmentSearchValue,
+                    this.state.buildingSearchValue,
+                  );
+                }}
+                raised
+                fullWidth
+                variant="contained"
+              >
+                SEARCH
+              </Button>
+            </CardActions>
             <CardActions
               className={[classes.actions, 'card-expansion']}
               disableActionSpacing
