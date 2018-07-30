@@ -4,7 +4,6 @@ import { Carousel } from 'react-responsive-carousel';
 import cms from '../../../../services/cms';
 import '../../../../../node_modules/react-responsive-carousel/lib/styles/carousel.css';
 import GordonLoader from '../../../../components/Loader';
-import './carousel.scss';
 
 export default class GordonCarousel extends Component {
   constructor(props) {
