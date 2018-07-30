@@ -15,7 +15,7 @@ import http from './http';
  * @param {String} minor Minor (matches up against 3 minors listed for people)
  * @param {String} classType 0-7: Unassigned, Freshman, Sophomore, Junior, Senior, Graduate Student,
  * Undegraduate Conferred, Graduate Conferred
- * @param {String} homecity Hometown/Home city queried
+ * @param {String} homeCity Hometown/Home city queried
  * @param {String} state A US state or a Canadian Province
  * @param {String} country Country queried
  * @param {String} department Department where faculty/staff work
