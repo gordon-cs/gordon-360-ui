@@ -21,9 +21,10 @@ import { Typography } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import Switch from '@material-ui/core/Switch';
+import Checkbox from '@material-ui/core/Checkbox';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
 import Menu from '@material-ui/core/Menu';
 // import uniqBy from 'lodash/uniqBy';
@@ -720,20 +721,17 @@ class PeopleSearch extends Component {
               <Grid container justify="center" alignItems="center">
                 <Grid item xs={3}>
                   <Grid container justify="center" alignItems="center" direction="column">
-                    <Switch
-                      onChange={() => {
-                        this.handleChangeIncludeAlumni();
-                      }}
-                      checked={this.state.includeAlumni}
-                      classes={{
-                        switchBase: classes.colorSwitchBase,
-                        checked: classes.colorChecked,
-                        bar: classes.colorBar,
-                      }}
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={this.state.includeAlumni}
+                          onChange={() => {
+                            this.handleChangeIncludeAlumni();
+                          }}
+                        />
+                      }
+                      label="Include Alumni"
                     />
-                    <Typography>
-                      {this.state.includeAlumni ? 'Alumni Included' : 'Alumni Excluded'}
-                    </Typography>
                   </Grid>
                 </Grid>
                 <Grid item xs={9}>
