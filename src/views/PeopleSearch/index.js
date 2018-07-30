@@ -76,6 +76,7 @@ class PeopleSearch extends Component {
     super(props);
 
     this.state = {
+      personType: '',
       nameExpanded: true,
       academicsExpanded: false,
       homeExpanded: false,
@@ -113,88 +114,7 @@ class PeopleSearch extends Component {
   async componentWillMount() {
     try {
       const profile = await user.getProfileInfo();
-      const personType = String(profile.PersonType);
-      console.log('my personType is! :) :D ---->', personType);
-
-      if (personType !== 'stu') {
-        // if you are NOT a Student:
-        this.setState({
-          searchButtons: (
-            <Grid container justify="center" alignItems="center">
-              <Grid item xs={3}>
-                <Grid container justify="center" alignItems="center" direction="column">
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={this.state.includeAlumni}
-                        onChange={() => {
-                          this.handleChangeIncludeAlumni();
-                        }}
-                      />
-                    }
-                    label="Include Alumni"
-                  />
-                </Grid>
-              </Grid>
-              <Grid item xs={9}>
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    this.search(
-                      this.state.includeAlumni,
-                      this.state.firstNameSearchValue,
-                      this.state.lastNameSearchValue,
-                      this.state.majorSearchValue,
-                      this.state.minorSearchValue,
-                      this.state.classTypeSearchValue,
-                      this.state.homeCitySearchValue,
-                      this.state.stateSearchValue,
-                      this.state.countrySearchValue,
-                      this.state.departmentSearchValue,
-                      this.state.buildingSearchValue,
-                    );
-                  }}
-                  raised
-                  fullWidth
-                  variant="contained"
-                >
-                  SEARCH
-                </Button>
-              </Grid>
-            </Grid>
-          ),
-        });
-      } else {
-        // you ARE a student
-
-        this.setState({
-          searchButtons: (
-            <Button
-              color="primary"
-              onClick={() => {
-                this.search(
-                  this.state.includeAlumni,
-                  this.state.firstNameSearchValue,
-                  this.state.lastNameSearchValue,
-                  this.state.majorSearchValue,
-                  this.state.minorSearchValue,
-                  this.state.classTypeSearchValue,
-                  this.state.homeCitySearchValue,
-                  this.state.stateSearchValue,
-                  this.state.countrySearchValue,
-                  this.state.departmentSearchValue,
-                  this.state.buildingSearchValue,
-                );
-              }}
-              raised
-              fullWidth
-              variant="contained"
-            >
-              SEARCH
-            </Button>
-          ),
-        });
-      }
+      const personType = profile.PersonType;
       const [majors, minors, states, countries, departments, buildings] = await Promise.all([
         goStalk.getMajors(),
         goStalk.getMinors(),
@@ -210,6 +130,7 @@ class PeopleSearch extends Component {
         countries,
         departments,
         buildings,
+        personType,
       });
     } catch (error) {
       // error
@@ -285,7 +206,9 @@ class PeopleSearch extends Component {
   };
 
   handleChangeIncludeAlumni() {
+    console.log('handleChangeIncludeAlumni called');
     this.setState({ includeAlumni: !this.state.includeAlumni });
+    console.log('includeAlumni changed to:', this.state.includeAlumni);
   }
 
   async search(
@@ -431,6 +354,7 @@ class PeopleSearch extends Component {
 
   render() {
     const { classes } = this.props;
+    let searchButtons;
 
     const majorOptions = this.state.majors.map(major => (
       <MenuItem value={major} key={major}>
@@ -467,6 +391,81 @@ class PeopleSearch extends Component {
         {building}
       </MenuItem>
     ));
+
+    if (String(this.state.PersonType) !== 'stu') {
+      // if you are NOT a Student:
+      searchButtons = (
+        <Grid container justify="center" alignItems="center">
+          <Grid item xs={3}>
+            <Grid container justify="center" alignItems="center" direction="column">
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.includeAlumni}
+                    onChange={() => {
+                      this.handleChangeIncludeAlumni();
+                    }}
+                  />
+                }
+                label="Include Alumni"
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs={9}>
+            <Button
+              color="primary"
+              onClick={() => {
+                this.search(
+                  this.state.includeAlumni,
+                  this.state.firstNameSearchValue,
+                  this.state.lastNameSearchValue,
+                  this.state.majorSearchValue,
+                  this.state.minorSearchValue,
+                  this.state.classTypeSearchValue,
+                  this.state.homeCitySearchValue,
+                  this.state.stateSearchValue,
+                  this.state.countrySearchValue,
+                  this.state.departmentSearchValue,
+                  this.state.buildingSearchValue,
+                );
+              }}
+              raised
+              fullWidth
+              variant="contained"
+            >
+              SEARCH
+            </Button>
+          </Grid>
+        </Grid>
+      );
+    } else {
+      // you ARE a student
+      searchButtons = (
+        <Button
+          color="primary"
+          onClick={() => {
+            this.search(
+              this.state.includeAlumni,
+              this.state.firstNameSearchValue,
+              this.state.lastNameSearchValue,
+              this.state.majorSearchValue,
+              this.state.minorSearchValue,
+              this.state.classTypeSearchValue,
+              this.state.homeCitySearchValue,
+              this.state.stateSearchValue,
+              this.state.countrySearchValue,
+              this.state.departmentSearchValue,
+              this.state.buildingSearchValue,
+            );
+          }}
+          raised
+          fullWidth
+          variant="contained"
+        >
+          SEARCH
+        </Button>
+      );
+    }
 
     return (
       <Grid container justify="center" spacing="16">
@@ -780,7 +779,7 @@ class PeopleSearch extends Component {
                 </Collapse>
               </CardContent>
             </Collapse>
-            <CardActions>{this.state.searchButtons}</CardActions>
+            <CardActions>{searchButtons}</CardActions>
             <CardActions
               className={[classes.actions, 'card-expansion']}
               disableActionSpacing
