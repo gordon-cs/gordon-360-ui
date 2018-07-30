@@ -25,6 +25,7 @@ import Switch from '@material-ui/core/Switch';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Menu from '@material-ui/core/Menu';
 // import uniqBy from 'lodash/uniqBy';
 import goStalk from '../../services/goStalk';
 import Button from '@material-ui/core/Button';
@@ -163,10 +164,11 @@ class PeopleSearch extends Component {
       minorSearchValue: e.target.value,
     });
   };
-  handleClassInputChange = value => {
+  handleClassTypeInputChange = event => {
     this.setState({
-      classSearchValue: value,
+      classTypeSearchValue: event.target.value,
     });
+    console.log('handleClassTypeInputChange', this.state.classSearchValue);
   };
   handleHomeCityInputChange = e => {
     this.setState({
@@ -348,7 +350,7 @@ class PeopleSearch extends Component {
         this.state.firstNameSearchValue,
         this.state.lastNameSearchValue,
         this.state.majorSearchValue,
-        this.search.minorSearchValue,
+        this.state.minorSearchValue,
         this.state.classTypeSearchValue,
         this.state.homeCitySearchValue,
         this.state.stateSearchValue,
@@ -520,47 +522,26 @@ class PeopleSearch extends Component {
                     <SchoolIcon />
                   </Grid>
                   <Grid item xs={11}>
-                    {/*
-                    TODO:
-                    THIS DOESN'T WORK YET I NEED TO FIGURE OUT HOW TO PASS THE VALUE OF THE
-                    SELECTED MENU ITEM TO THE SEARCH FUNCTION
-
                     <FormControl fullWidth>
                       <InputLabel>Class</InputLabel>
                       <Select
-                        // value={this.state.classTypeSearchValue}
-                        // onChange={this.handleClassInputChange}
+                        value={this.state.classTypeSearchValue}
+                        onChange={this.handleClassTypeInputChange}
                         input={<Input id="class" />}
                       >
                         <MenuItem label="All Classes" value="">
                           <em>All</em>
-                        </MenuItem >
-                        <MenuItem value="1">
-                        Freshman
                         </MenuItem>
-                        <MenuItem onClick={this.handleClassInputChange.bind(this, '2')}>
-                        Sophomore
-                        </MenuItem>
-                        <MenuItem value="3">
-                        Junior
-                        </MenuItem>
-                        <MenuItem value="4">
-                        Senior
-                        </MenuItem>
-                        <MenuItem value="5">
-                        Graduate Student
-                        </MenuItem>
-                        <MenuItem value="6">
-                        Undergraduate Conferred
-                        </MenuItem>
-                        <MenuItem value="7">
-                        Graduate Conferred
-                        </MenuItem>
-                        <MenuItem value="0">
-                        Unassigned
-                        </MenuItem>
+                        <MenuItem value={1}>Freshman</MenuItem>
+                        <MenuItem value={2}>Sophomore</MenuItem>
+                        <MenuItem value={3}>Junior</MenuItem>
+                        <MenuItem value={4}>Senior</MenuItem>
+                        <MenuItem value={5}>Graduate Student</MenuItem>
+                        <MenuItem value={6}>Undergraduate Conferred</MenuItem>
+                        <MenuItem value={7}>Graduate Conferred</MenuItem>
+                        <MenuItem value={0}>Unassigned</MenuItem>
                       </Select>
-                    </FormControl> */}
+                    </FormControl>
                   </Grid>
                 </Grid>
               </Collapse>
