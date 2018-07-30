@@ -60,8 +60,9 @@ export default class Login extends Component {
     this.setState({ loading: true, error: null });
 
     // Login Hang
+    var id;
     if (LOGIN_BUG_MESSAGE)
-      setTimeout(() => {
+      id = setTimeout(() => {
         this.setState({ showMessageSnackbar: true });
       }, 6000);
     // Login Hang
@@ -72,7 +73,10 @@ export default class Login extends Component {
       this.props.onLogIn();
       console.log('Login/index.js: onLogIn() returned');
     } catch (err) {
+      clearTimeout(id); // Login Hang
+      this.setState({ showMessageSnackbar: false });
       this.setState({ error: err.message, loading: false });
+      console.log('Login/index.js: Catch block was executed');
     }
 
     console.log('Login/index.js: Passed try block; end of logIn() method');
