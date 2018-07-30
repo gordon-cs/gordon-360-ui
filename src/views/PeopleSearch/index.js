@@ -26,8 +26,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
-import Menu from '@material-ui/core/Menu';
-// import uniqBy from 'lodash/uniqBy';
 import goStalk from '../../services/goStalk';
 import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../theme';
@@ -268,7 +266,6 @@ class PeopleSearch extends Component {
         department,
         building,
       );
-      // peopleSearchResults = uniqBy(peopleSearchResults, 'AD_Username'); // Remove any duplicate entries
       if (peopleSearchResults.length === 0) {
         this.setState({
           peopleSearchResults: (
