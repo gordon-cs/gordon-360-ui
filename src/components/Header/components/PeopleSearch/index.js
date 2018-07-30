@@ -57,6 +57,8 @@ export default class GordonPeopleSearch extends Component {
   }
 
   async getSuggestions(query) {
+    query = query.replace(/[^a-zA-Z0-9\'\-.\s]/gm, '');
+
     // Trim beginning or trailing spaces or periods from query text
     var highlightQuery = query.replace(/^[\s.]+|[\s.]+$/gm, '');
     this.setState({ highlightQuery, query });
