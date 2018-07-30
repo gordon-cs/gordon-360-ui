@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
+import Media from 'react-media';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
@@ -29,6 +30,7 @@ import goStalk from '../../services/goStalk';
 import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../theme';
 import PeopleSearchResult from './components/PeopleSearchResult';
+import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
 import GordonLoader from '../../components/Loader';
 import './peopleSearch.css';
 
@@ -277,40 +279,62 @@ class PeopleSearch extends Component {
         });
       } else {
         this.setState({
-          peopleSearchResults: peopleSearchResults.map(person => (
-            <PeopleSearchResult Person={person} />
-          )),
+          peopleSearchResults: (
+            <Media query="(min-width: 960px)">
+              {matches =>
+                matches
+                  ? peopleSearchResults.map(person => <PeopleSearchResult Person={person} />)
+                  : peopleSearchResults.map(person => <MobilePeopleSearchResult Person={person} />)
+              }
+            </Media>
+          ),
           header: (
-            <div style={styles.headerStyle}>
-              <Grid container direction="row">
-                <Grid item xs={1} />
-                <Grid item xs={2}>
-                  <Typography variant="body2" style={styles.headerStyle}>
-                    FIRST NAME
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography variant="body2" style={styles.headerStyle}>
-                    LAST NAME
-                  </Typography>
-                </Grid>
-                <Grid item xs={1}>
-                  <Typography variant="body2" style={styles.headerStyle}>
-                    TYPE
-                  </Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2" style={styles.headerStyle}>
-                    CLASS/JOB TITLE
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography variant="body2" style={styles.headerStyle}>
-                    EMAIL
-                  </Typography>
-                </Grid>
-              </Grid>
-            </div>
+            <Media query="(min-width: 960px)">
+              {matches =>
+                matches ? (
+                  <div style={styles.headerStyle}>
+                    <Grid container direction="row">
+                      <Grid item xs={1} />
+                      <Grid item xs={2}>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          FIRST NAME
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          LAST NAME
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          TYPE
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          CLASS/JOB TITLE
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          EMAIL
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </div>
+                ) : (
+                  <div style={styles.headerStyle}>
+                    <Grid container direction="row" justify="center">
+                      <Grid item>
+                        <Typography variant="body2" style={styles.headerStyle}>
+                          RESULTS
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </div>
+                )
+              }
+            </Media>
           ),
         });
       }
@@ -490,11 +514,11 @@ class PeopleSearch extends Component {
                     <SchoolIcon />
                   </Grid>
                   <Grid item xs={11}>
-                    {/* 
-                    TODO: 
-                    THIS DOESN'T WORK YET I NEED TO FIGURE OUT HOW TO PASS THE VALUE OF THE 
+                    {/*
+                    TODO:
+                    THIS DOESN'T WORK YET I NEED TO FIGURE OUT HOW TO PASS THE VALUE OF THE
                     SELECTED MENU ITEM TO THE SEARCH FUNCTION
-                    
+
                     <FormControl fullWidth>
                       <InputLabel>Class</InputLabel>
                       <Select
