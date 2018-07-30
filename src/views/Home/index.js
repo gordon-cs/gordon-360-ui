@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import Requests from './components/Requests';
+import DiningBalance from './components/DiningBalance';
 
 export default class Home extends Component {
   render() {
@@ -20,6 +21,11 @@ export default class Home extends Component {
         </Grid>
         <Grid item xs={12} md={5}>
           <Requests />
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <Link to={`/attended`}>
+            <DiningBalance />
+          </Link>
         </Grid>
       </Grid>
     );
