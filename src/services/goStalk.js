@@ -14,7 +14,17 @@ import http from './http';
  * @param {String} zipCode zipCode query
  * @return {Promise.<SearchResult[]>} List of search results
  */
-const search = (firstName, lastName, homeCity, country, building, department) => {
+const search = (
+  firstName,
+  lastName,
+  minor,
+  classType,
+  homeCity,
+  state,
+  country,
+  building,
+  department,
+) => {
   console.log('goStalk: first line of search');
   if (firstName === '' || firstName === null) {
     // eslint-disable-next-line
@@ -28,12 +38,34 @@ const search = (firstName, lastName, homeCity, country, building, department) =>
   } else {
     lastName = lastName.toLowerCase();
   }
+
+  /*
+  if (major === '' || major === null) {
+    // eslint-disable-next-line
+    major = 'C' + '\u266F';
+  }
+  */
+  if (minor === '' || minor === null) {
+    // eslint-disable-next-line
+    minor = 'C' + '\u266F';
+  } else {
+  }
+  if (classType === '' || classType === null) {
+    // eslint-disable-next-line
+    classType = 'C' + '\u266F';
+  }
+
   if (homeCity === '' || homeCity === null) {
     // eslint-disable-next-line
     homeCity = 'C' + '\u266F';
   } else {
     homeCity = homeCity.toLowerCase();
   }
+  if (state === '' || state === null) {
+    // eslint-disable-next-line
+    state = 'C' + '\u266F';
+  }
+
   if (country === '' || country === null) {
     // eslint-disable-next-line
     country = 'C' + '\u266F';
@@ -56,14 +88,16 @@ const search = (firstName, lastName, homeCity, country, building, department) =>
     'goSTALK Search params: ',
     firstName,
     lastName,
+    minor,
+    classType,
     homeCity,
+    state,
     country,
     building,
-    'department: ',
     department,
   );
   return http.get(
-    `accounts/advanced-people-search/${firstName}/${lastName}/${homeCity}/${country}/${building}/${department}`,
+    `accounts/advanced-people-search/${firstName}/${lastName}/${minor}/${classType}/${homeCity}/${state}/${country}/${building}/${department}`,
   );
 };
 
@@ -76,39 +110,28 @@ const search = (firstName, lastName, homeCity, country, building, department) =>
 //     `advanced-search/majors`);
 // };
 
-// /**
-//  * Get all minors
-//  * @return {Promise.<String[]>} List of minors
-//  */
-// const getMinors = () => {
-//   return http.get(
-//     `advanced-search/minors`);
-// };
+/**
+ * Get all minors
+ * @return {Promise.<String[]>} List of minors
+ */
+const getMinors = () => {
+  console.log('goSTALK: getMinors called');
+  return http.get(`advanced-search/minors`);
+};
 
-// /**
-//  * Get all class-types
-//  * @return {Promise.<String[]>} List of class-types
-//  */
-// const getClassTypes = () => {
-//   return http.get(
-//     `advanced-search/class-types`);
-// };
-
-// /**
-//  * Get all states
-//  * @return {Promise.<String[]>} List of states
-//  */
-// const getStates = () => {
-//   return http.get(
-//     `advanced-search/states`);
-// };
+/**
+ * Get all states
+ * @return {Promise.<String[]>} List of states
+ */
+const getStates = () => {
+  return http.get(`advanced-search/states`);
+};
 
 /**
  * Get all countries
  * @return {Promise.<String[]>} List of countries
  */
 const getCountries = () => {
-  console.log('goStalk: getCountries called');
   return http.get(`advanced-search/countries`);
 };
 
@@ -117,7 +140,6 @@ const getCountries = () => {
  * @return {Promise.<String[]>} List of departments
  */
 const getDepartments = () => {
-  console.log('goStalk: getDepartments called');
   return http.get(`advanced-search/departments`);
 };
 
@@ -126,13 +148,14 @@ const getDepartments = () => {
  * @return {Promise.<String[]>} List of buildings
  */
 const getBuildings = () => {
-  console.log('goStalk: getBuildings called');
   return http.get(`advanced-search/buildings`);
 };
 
 export default {
   search,
-  getDepartments,
-  getBuildings,
+  getMinors,
+  getStates,
   getCountries,
+  getBuildings,
+  getDepartments,
 };
