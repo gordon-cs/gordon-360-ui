@@ -170,10 +170,19 @@ import gordonEvent from './event';
 /**
  * @global
  * @typedef DiningInfo
- * @property {String} ChoiceDescription Description for the meal plan chosen
- * @property {String} PlanDescriptions Descriptions for the indivilual plans
- * @property {String} InitialBalance Array of starting balances for each individual plan
- * @property {String} CurrentBalance Array of current balances for each individual plan
+ * @property {String} ChoiceDescription
+ * @property {MealPlanComponent} Swipes
+ * @property {MealPlanComponent} DiningDollars
+ * @property {MealPlanComponent} CurrentBalance
+ */
+
+/**
+ * @global
+ * @typedef MealPlanComponent
+ * @property {String} PlanDescription Description of the meal plan component
+ * @property {String} PlanID
+ * @property {Number} InitialBalance The initial balance of the meal plan
+ * @property {String} CurrentBalance The current remaining meal plan balance
  */
 
 function formatName(profile) {
@@ -398,9 +407,10 @@ const getChapelCredits = async () => {
 
 /**
  * Get all relevant info about user's dining plan
- * @return {Promise.<DiningInfo[]>} An array of objects containing dining plan information
+ * @return {Promise.<DiningInfo>} Dining plan info object
  */
 const getDiningInfo = async () => {
+  //const id = 999999003;
   const id = 999999001;
   //const id = 40000097;
   //const { id } = getLocalInfo();

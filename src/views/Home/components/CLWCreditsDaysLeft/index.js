@@ -41,7 +41,10 @@ export default class CLWCreditsDaysLeft extends Component {
       const daysLeft = await daysLeftPromise;
       const chapelCredits = await chapelCreditsPromise;
       const currSession = await currSessionPromise;
-      const currSessionDescription = currSession.SessionDescription;
+      const currSessionDescription = currSession.SessionDescription.replace(
+        /(Academic Year)|(Grad)/gm,
+        '',
+      );
       this.setState({ loading: false, daysLeft, chapelCredits, currSessionDescription });
     } catch (error) {
       this.setState({ error });
@@ -105,20 +108,20 @@ export default class CLWCreditsDaysLeft extends Component {
             container
             justify="space-around"
             spacing={0}
-            style={{ paddingTop: 5, paddingBottom: 5 }}
+            style={{ paddingTop: 5, paddingBottom: 10 }}
           >
             <Grid item>
               <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
-                {`${daysLeft} Days Left in Semester`}
+                {`${daysLeft} Days Left`}
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
-                {`${current} CL&W Credit` + (current === 1 ? '' : 's') + ' Earned'}
+                {`${current} CL&W Credit` + (current === 1 ? '' : 's')}
               </Typography>
             </Grid>
           </Grid>
-          <Grid container justify="center">
+          {/* <Grid container justify="center">
             <Grid item>
               <div class="legend">
                 <div class="entry">
@@ -127,20 +130,58 @@ export default class CLWCreditsDaysLeft extends Component {
                 </div>
                 <div class="entry">
                   <span class="entry-label" style={{ background: gordonColors.primary.cyan }} />
-                  <span class="entry-text">CL&W Credits</span>
+                  <span class="entry-text">CL&amp;W Credits</span>
                 </div>
               </div>
             </Grid>
-          </Grid>
-          <div className="container">
-            <Doughnut data={data} height={175} options={options} />
-            <Tooltip
-              id="tooltip-chapel-credits"
-              classes={{ tooltip: 'tooltip' }}
-              title="CL&W Credits Earned"
+          </Grid> */}
+          <Doughnut data={data} height={175} options={options} />
+          <div
+            style={{
+              marginTop: '1rem',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
             >
-              <div className="centered-text">{current.toString()}</div>
-            </Tooltip>
+              <Tooltip
+                id="tooltip-days-finished"
+                classes={{ tooltip: 'tooltip' }}
+                title="Days Finished in Semester"
+              >
+                <div className="label-text" style={{ color: gordonColors.primary.blue }}>
+                  {pastDays}
+                </div>
+              </Tooltip>
+              <div class="entry-text">Days Finished</div>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Tooltip
+                id="tooltip-chapel-credits"
+                classes={{ tooltip: 'tooltip' }}
+                title="CL&W Credits Earned"
+              >
+                <div className="label-text" style={{ color: gordonColors.primary.cyan }}>
+                  {current}
+                </div>
+              </Tooltip>
+              <div class="entry-text">CL&W Credits</div>
+            </div>
           </div>
         </div>
       );

@@ -20,12 +20,10 @@ export default class Home extends Component {
           </Link>
         </Grid>
         <Grid item xs={12} md={5}>
-          <Requests />
+          <DiningBalance />
         </Grid>
         <Grid item xs={12} md={5}>
-          <Link to={`/attended`}>
-            <DiningBalance />
-          </Link>
+          <Requests />
         </Grid>
       </Grid>
     );
