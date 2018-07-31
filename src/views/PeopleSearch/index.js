@@ -219,8 +219,8 @@ class PeopleSearch extends Component {
     homeCity,
     state,
     country,
-    building,
     department,
+    building,
   ) {
     if (
       this.state.includeAlumni === false &&
