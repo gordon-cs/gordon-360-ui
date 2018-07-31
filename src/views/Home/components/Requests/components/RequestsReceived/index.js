@@ -74,7 +74,7 @@ export default class RequestReceived extends Component {
     let title;
     if (requests.length > 0) {
       title = (
-        <Badge color="error" badgeContent={requests.length} style={badge}>
+        <Badge color="error" badgeContent={requests.length} style={badge} className="badge">
           <Typography variant="title">{this.props.involvement.ActivityDescription}</Typography>
         </Badge>
       );
