@@ -3,8 +3,8 @@ import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-import ResponsiveTable from 'material-ui-next-responsive-table';
 
+import CollapsableEventItem from './components/CollapsableEventItem';
 import EventItem from './components/EventItem';
 import { gordonColors } from '../../theme';
 
@@ -13,6 +13,8 @@ import './event-list.css';
 export default class EventList extends Component {
   constructor(props) {
     super(props);
+
+    this.handleExpandClick = this.handleExpandClick.bind(this);
 
     this.state = {
       open: false,
@@ -60,31 +62,9 @@ export default class EventList extends Component {
     };
 
     if (window.innerWidth < this.breakpointWidth) {
-      const columns = [
-        {
-          key: 'Event_Name',
-          label: 'Event',
-          primary: true,
-        },
-        {
-          key: 'Description',
-          label: 'Description',
-        },
-        {
-          key: 'location',
-          label: 'Location',
-        },
-        {
-          key: 'date',
-          label: 'Date',
-        },
-        {
-          key: 'timeRange',
-          label: 'Time',
-        },
-      ];
-
-      content = <ResponsiveTable columns={columns} data={events} />;
+      content = events.map(currEvent => (
+        <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
+      ));
 
       header = (
         <div style={headerStyle}>

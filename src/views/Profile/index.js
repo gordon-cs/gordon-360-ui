@@ -135,7 +135,7 @@ export default class Profile extends Component {
       if (numberOfSubtitles > 1) {
         subheaderText += ', ';
       }
-      subheaderText += 'Class of ' + profile.ClassYear;
+      subheaderText += 'Class of ' + profile.PreferredClassYear;
     }
     this.setState({ subheaderInfo: subheaderText });
   }
