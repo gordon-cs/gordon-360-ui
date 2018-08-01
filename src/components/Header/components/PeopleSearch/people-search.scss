@@ -10,6 +10,13 @@
     border-radius: 4px;
   }
 
+  .h {
+    text-decoration: none;
+    padding-bottom: 1px;
+    border-bottom: 2px solid $primary-cyan;
+    background-color: transparentize($color: $primary-cyan, $amount: 0.9);
+  }
+
   .people-search-suggestion {
     display: block;
     align-self: left;

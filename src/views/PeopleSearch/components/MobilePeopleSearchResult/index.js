@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import IMG from 'react-graceful-image';
 import Grid from '@material-ui/core/Grid';
+import IMG from 'react-graceful-image';
 import { Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import user from '../../../../services/user';
 import Divider from '@material-ui/core/Divider';
 import { Link } from 'react-router-dom';
-import './peopleSearchResult.css';
+import './mobilePeopleSearchResult.css';
 
 export default class PeopleSearchResult extends Component {
   constructor(props) {
@@ -49,8 +49,8 @@ export default class PeopleSearchResult extends Component {
 
   render() {
     const { Person } = this.props;
-    let personClassJobTitle, nickname;
-
+    let personClassJobTitle, nickname, fullName;
+    fullName = Person.FirstName + ' ' + Person.LastName;
     // set nicknames up
     if (
       Person.NickName !== null &&
@@ -98,38 +98,26 @@ export default class PeopleSearchResult extends Component {
         <Link to={`profile/${Person.AD_Username}`}>
           <Grid
             container
-            direction="row"
             alignItems="center"
             spacing={16}
             style={{
               padding: '1rem',
             }}
           >
-            <Grid item xs={1}>
+            <Grid item>
               <IMG
-                className="avatar"
+                className="avatar-mobile"
                 src={`data:image/jpg;base64,${this.state.avatar}`}
                 alt=""
                 noLazyLoad="true"
                 placeholderColor="#FFF"
               />
             </Grid>
-            <Grid item xs={2}>
-              <Typography>
-                {Person.FirstName} {nickname}{' '}
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{Person.LastName}</Typography>
-            </Grid>
-            <Grid item xs={1}>
-              <Typography>{Person.Type}</Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography>{personClassJobTitle}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{Person.AD_Username}</Typography>
+            <Grid item>
+              <Typography variant="headline">{fullName}</Typography>
+              <Typography variant="body2">{nickname}</Typography>
+              <Typography variant="body2">{personClassJobTitle}</Typography>
+              <Typography variant="body2">{Person.Email}</Typography>
             </Grid>
           </Grid>
         </Link>
