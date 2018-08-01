@@ -219,15 +219,9 @@ export default class DiningBalance extends Component {
                     alignItems: 'center',
                   }}
                 >
-                  <Tooltip
-                    id="tooltip-dining-swipes"
-                    classes={{ tooltip: 'tooltip' }}
-                    title="Swipe Balance"
-                  >
-                    <div className="label-text" style={{ color: swipesColor }}>
-                      {swipeInit === 0 ? '\u221E' : swipeCurr}
-                    </div>
-                  </Tooltip>
+                  <div className="label-text" style={{ color: swipesColor }}>
+                    {swipeInit === 0 ? '\u221E' : swipeCurr}
+                  </div>
                   <div class="entry-text">Swipes</div>
                 </div>
 
@@ -239,15 +233,9 @@ export default class DiningBalance extends Component {
                     alignItems: 'center',
                   }}
                 >
-                  <Tooltip
-                    id="tooltip-dining-dollars"
-                    classes={{ tooltip: 'tooltip' }}
-                    title="Dining Dollar Balance"
-                  >
-                    <div className="label-text" style={{ color: dollarsColor }}>
-                      ${dollarCurr}
-                    </div>
-                  </Tooltip>
+                  <div className="label-text" style={{ color: dollarsColor }}>
+                    ${dollarCurr}
+                  </div>
                   <div class="entry-text">Dining Dollars</div>
                 </div>
 
@@ -259,15 +247,9 @@ export default class DiningBalance extends Component {
                     alignItems: 'center',
                   }}
                 >
-                  <Tooltip
-                    id="tooltip-dining-guest"
-                    classes={{ tooltip: 'tooltip' }}
-                    title="Guest Swipe Balance"
-                  >
-                    <div className="label-text" style={{ color: guestColor }}>
-                      {guestCurr}
-                    </div>
-                  </Tooltip>
+                  <div className="label-text" style={{ color: guestColor }}>
+                    {guestCurr}
+                  </div>
                   <div class="entry-text">Guest Swipes</div>
                 </div>
               </div>
