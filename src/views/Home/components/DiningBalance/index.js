@@ -78,15 +78,15 @@ export default class DiningBalance extends Component {
       } else {
         description = this.diningInfo.ChoiceDescription;
 
-        let percentageRemaining = [];
-        let swipes = {};
+        //// let percentageRemaining = [];
+        //// let swipes = {};
         const swipeInit = this.diningInfo.Swipes.InitialBalance;
         const swipeCurr = swipeInit === 0 ? 1 : this.diningInfo.Swipes.CurrentBalance;
         const swipeUsed = swipeInit === 0 ? 0 : swipeInit - swipeCurr;
 
-        // const dollarInit = this.diningInfo.DiningDollars.InitialBalance;
-        // const dollarCurr = this.diningInfo.DiningDollars.CurrentBalance;
-        // const dollarUsed = dollarInit - dollarCurr;
+        //// // const dollarInit = this.diningInfo.DiningDollars.InitialBalance;
+        //// // const dollarCurr = this.diningInfo.DiningDollars.CurrentBalance;
+        /// // const dollarUsed = dollarInit - dollarCurr;
 
         const dollarInit = 100.0;
         const dollarCurr = 30.72;
@@ -94,7 +94,7 @@ export default class DiningBalance extends Component {
 
         const guestInit = this.diningInfo.GuestSwipes.InitialBalance;
         const guestCurr = this.diningInfo.GuestSwipes.CurrentBalance;
-        const guestUsed = guestUsed - guestCurr;
+        const guestUsed = guestInit - guestCurr;
 
         const daysLeft = this.daysLeft[0];
         const pastDays = this.daysLeft[1] - daysLeft;
@@ -160,7 +160,7 @@ export default class DiningBalance extends Component {
                 </Grid>
               </Grid>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <img className="sandwich" src={require('./sandwich.svg')} />
+                <img className="sandwich" src={require('./sandwich.svg')} alt="Enjoy your food!" />
               </div>
             </div>
           );
