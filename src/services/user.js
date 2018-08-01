@@ -167,6 +167,24 @@ import gordonEvent from './event';
  * @property {String} PersonType Type of person
  */
 
+/**
+ * @global
+ * @typedef DiningInfo
+ * @property {String} ChoiceDescription
+ * @property {MealPlanComponent} Swipes
+ * @property {MealPlanComponent} DiningDollars
+ * @property {MealPlanComponent} CurrentBalance
+ */
+
+/**
+ * @global
+ * @typedef MealPlanComponent
+ * @property {String} PlanDescription Description of the meal plan component
+ * @property {String} PlanID
+ * @property {Number} InitialBalance The initial balance of the meal plan
+ * @property {String} CurrentBalance The current remaining meal plan balance
+ */
+
 function formatName(profile) {
   profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
   return profile;
@@ -388,6 +406,22 @@ const getChapelCredits = async () => {
 };
 
 /**
+ * Get all relevant info about user's dining plan
+ * @return {Promise.<DiningInfo>} Dining plan info object
+ */
+const getDiningInfo = async () => {
+  //const id = 999999003;
+  //const id = 999999001;
+  //const id = 40000097;
+  const { id } = getLocalInfo();
+  const { SessionCode: sessionCode } = await session.getCurrent();
+  //const sessionCode = '201809';
+  const role = getLocalInfo().college_role;
+  //console.log(id + ' ' + sessionCode + ' ' + role);
+  return await http.get(`dining/${role}/${id}/${sessionCode}`);
+};
+
+/**
  * Get user profile info for a given user or the current user if `username` is not provided
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<StaffProfileInfo|StudentProfileInfo>} Profile info
@@ -592,6 +626,7 @@ export default {
   getChapelCredits,
   getImage,
   getLocalInfo,
+  getDiningInfo,
   getPublicMemberships,
   getMembershipsAlphabetically,
   getCurrentMemberships,

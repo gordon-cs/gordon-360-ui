@@ -11,7 +11,6 @@ import session from '../../../../services/session';
 import GordonLoader from '../../../../components/Loader';
 
 import './CLWChart.css';
-import { Tooltip } from '@material-ui/core';
 
 export default class CLWCreditsDaysLeft extends Component {
   constructor(props) {
@@ -41,7 +40,10 @@ export default class CLWCreditsDaysLeft extends Component {
       const daysLeft = await daysLeftPromise;
       const chapelCredits = await chapelCreditsPromise;
       const currSession = await currSessionPromise;
-      const currSessionDescription = currSession.SessionDescription;
+      const currSessionDescription = currSession.SessionDescription.replace(
+        /(Academic Year)|(Grad)/gm,
+        '',
+      );
       this.setState({ loading: false, daysLeft, chapelCredits, currSessionDescription });
     } catch (error) {
       this.setState({ error });
@@ -52,14 +54,18 @@ export default class CLWCreditsDaysLeft extends Component {
     if (this.state.error) {
       throw this.state.error;
     }
+    
+    let daysColor = gordonColors.primary.blue;
+    let chapelColor = gordonColors.primary.cyan;
+    let emptyColor = gordonColors.neutral.lightGray;
 
     defaults.global.legend.display = false;
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      const daysLeft = this.state.daysLeft[0];
-      const pastDays = this.state.daysLeft[1] - daysLeft;
+      const daysLeft = this.state.daysLeft[0] < 0 ? 0 : this.state.daysLeft[0];
+      const daysFinished = this.state.daysLeft[1] - daysLeft;
 
       const options = {
         cutoutPercentage: 25,
@@ -88,13 +94,13 @@ export default class CLWCreditsDaysLeft extends Component {
         datasets: [
           {
             label: ['Days Finished', 'Days Remaining'],
-            data: [pastDays, daysLeft],
-            backgroundColor: [gordonColors.primary.blue, gordonColors.neutral.lightGray],
+            data: [daysFinished, daysLeft],
+            backgroundColor: [daysColor, emptyColor],
           },
           {
             label: ['CL&W Credits Earned', 'CL&W Credits Remaining'],
             data: [current, remaining],
-            backgroundColor: [gordonColors.primary.cyan, gordonColors.neutral.lightGray],
+            backgroundColor: [chapelColor, emptyColor],
           },
         ],
       };
@@ -105,42 +111,68 @@ export default class CLWCreditsDaysLeft extends Component {
             container
             justify="space-around"
             spacing={0}
-            style={{ paddingTop: 5, paddingBottom: 5 }}
+            style={{ paddingTop: 5, paddingBottom: 10 }}
           >
             <Grid item>
               <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
-                {`${daysLeft} Days Left in Semester`}
+                {`${daysLeft} Days Left`}
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
-                {`${current} CL&W Credit` + (current === 1 ? '' : 's') + ' Earned'}
+                {`${current} CL&W Credit` + (current === 1 ? '' : 's')}
               </Typography>
             </Grid>
           </Grid>
-          <Grid container justify="center">
+          {/* <Grid container justify="center">
             <Grid item>
               <div class="legend">
                 <div class="entry">
-                  <span class="entry-label" style={{ background: gordonColors.primary.blue }} />
+                  <span class="entry-label" style={{ background: daysColor }} />
                   <span class="entry-text">Days Finished</span>
                 </div>
                 <div class="entry">
-                  <span class="entry-label" style={{ background: gordonColors.primary.cyan }} />
+                  <span class="entry-label" style={{ background: chapelColor }} />
                   <span class="entry-text">CL&amp;W Credits</span>
                 </div>
               </div>
             </Grid>
-          </Grid>
-          <div className="container">
-            <Doughnut data={data} height={175} options={options} />
-            <Tooltip
-              id="tooltip-chapel-credits"
-              classes={{ tooltip: 'tooltip' }}
-              title="CL&amp;W Credits Earned"
+          </Grid> */}
+          <Doughnut data={data} height={175} options={options} />
+          <div
+            style={{
+              marginTop: '1rem',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
             >
-              <div className="centered-text">{current.toString()}</div>
-            </Tooltip>
+              <div className="label-text" style={{ color: daysColor }}>
+                {daysFinished}
+              </div>
+              <div class="entry-text">Days Finished</div>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <div className="label-text" style={{ color: chapelColor }}>
+                {current}
+              </div>
+              <div class="entry-text">CL&W Credits</div>
+            </div>
           </div>
         </div>
       );
