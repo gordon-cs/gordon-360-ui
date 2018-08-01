@@ -20,12 +20,12 @@ import GordonLoader from '../../../../components/Loader';
 import MemberList from './components/MemberList';
 import membership from '../../../../services/membership';
 import IconButton from '@material-ui/core/IconButton';
-//import RequestDetail from './components/RequestDetail';
+import RequestDetail from './components/RequestDetail';
 import CloseIcon from '@material-ui/icons/Close';
 import user from '../../../../services/user';
 import { gordonColors } from '../../../../theme';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
+//import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 import AddPersonIcon from '@material-ui/icons/PersonAdd';
 
 export default class Membership extends Component {
@@ -327,7 +327,7 @@ export default class Membership extends Component {
           if (this.state.requests.length === 0) {
             requestList = <Typography>There are no pending requests</Typography>;
           } else {
-            requestList = <RequestsReceived involvement={membership} />;
+            requestList = <RequestDetail involvement={membership} />;
           }
           if (this.state.participationDetail[1] === 'Advisor') {
             if (this.state.status === 'OPEN') {
@@ -364,7 +364,7 @@ export default class Membership extends Component {
               </Grid>
               <Card>
                 <CardContent>
-                  <Grid container spacing={16}>
+                  <Grid container spacing={16} direction="column">
                     <Dialog open={this.state.openAddMember} keepMounted align="center">
                       <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
                       <DialogContent>
@@ -607,7 +607,8 @@ export default class Membership extends Component {
                     marginBottom: '-4.5pt',
                     marginRight: '1rem',
                   }}
-                />Success!
+                />
+                Success!
               </span>
             }
             action={[
