@@ -67,7 +67,7 @@ export default class RequestReceived extends Component {
 
     const badge = {
       margin: 2,
-      padding: '0px',
+      padding: '2px',
     };
 
     //Involvement title with number of requests(if any)
@@ -83,11 +83,11 @@ export default class RequestReceived extends Component {
     }
 
     //Requests and buttons
-    let displayedRequets;
+    let displayedRequests;
     if (requests.length === 0) {
-      displayedRequets = <Typography>No requests to show</Typography>;
+      displayedRequests = <Typography>No requests to show</Typography>;
     } else {
-      displayedRequets = requests
+      displayedRequests = requests
         .slice(0)
         .reverse()
         .map(request => (
@@ -151,7 +151,7 @@ export default class RequestReceived extends Component {
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>{title}</ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Grid container spacing={8}>
-            {displayedRequets}
+            {displayedRequests}
           </Grid>
         </ExpansionPanelDetails>
       </ExpansionPanel>
