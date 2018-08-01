@@ -6,7 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
 //import { Button } from '@material-ui/core';
 import GordonLoader from '../../../../components/Loader';
-import { Tooltip } from '@material-ui/core';
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
 import session from '../../../../services/session';
@@ -70,15 +69,9 @@ export default class DiningBalance extends Component {
               justifyContent: 'space-around',
             }}
           >
-            <Tooltip
-              id="tooltip-faculty-dollars"
-              classes={{ tooltip: 'tooltip' }}
-              title="Dining Dollar Balance"
-            >
-              <div className="label-text" style={{ color: dollarsColor }}>
-                ${this.facStaffBalance}
-              </div>
-            </Tooltip>
+            <div className="label-text" style={{ color: dollarsColor }}>
+              ${this.facStaffBalance}
+            </div>
           </div>
         );
       } else {
