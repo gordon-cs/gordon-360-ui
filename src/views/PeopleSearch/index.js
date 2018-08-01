@@ -435,9 +435,14 @@ class PeopleSearch extends Component {
     if (this.getDate().getMonth() === 3 && this.getDate().getDate() === 1) {
       aprilFools = (
         <Grid container spacing={8} alignItems="baseline">
-          <Grid item>
-            <HeartIcon style={styles.FontAwesome} />
-          </Grid>
+          <Media
+            query="(min-width: 600px)"
+            render={() => (
+              <Grid item>
+                <HeartIcon style={styles.FontAwesome} />
+              </Grid>
+            )}
+          />
           <Grid item xs={11}>
             <FormControl fullWidth>
               <InputLabel>Relationship Status</InputLabel>
