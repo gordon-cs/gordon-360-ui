@@ -10,6 +10,7 @@ import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PersonIcon from '@material-ui/icons/Person';
+import HeartIcon from 'react-icons/lib/fa/heart';
 import SchoolIcon from '@material-ui/icons/School';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
@@ -103,6 +104,8 @@ class PeopleSearch extends Component {
       countrySearchValue: '',
       departmentSearchValue: '',
       buildingSearchValue: '',
+      // For April Fools:
+      relationshipStatusValue: '',
 
       includeAlumni: false,
       peopleSearchResults: null,
@@ -153,7 +156,11 @@ class PeopleSearch extends Component {
   handleOffDepExpandClick = () => {
     this.setState(state => ({ offDepExpanded: !state.offDepExpanded }));
   };
-
+  handleRelationshipStatusInputChange = e => {
+    this.setState({
+      relationshipStatusValue: e.target.value,
+    });
+  };
   handleFirstNameInputChange = e => {
     this.setState({
       firstNameSearchValue: e.target.value,
@@ -332,6 +339,10 @@ class PeopleSearch extends Component {
     }
   }
 
+  getDate = () => {
+    return new Date();
+  };
+
   handleEnterKeyPress = event => {
     if (event.key === 'Enter') {
       this.search(
@@ -411,6 +422,84 @@ class PeopleSearch extends Component {
     } else {
     }
 
+    /*
+       /$$$$$$  /$$$$$$$  /$$$$$$$  /$$$$$$ /$$             /$$$$$$$$ /$$$$$$   /$$$$$$  /$$        /$$$$$$ 
+      /$$__  $$| $$__  $$| $$__  $$|_  $$_/| $$            | $$_____//$$__  $$ /$$__  $$| $$       /$$__  $$
+     | $$  \ $$| $$  \ $$| $$  \ $$  | $$  | $$            | $$     | $$  \ $$| $$  \ $$| $$      | $$  \__/
+     | $$$$$$$$| $$$$$$$/| $$$$$$$/  | $$  | $$            | $$$$$  | $$  | $$| $$  | $$| $$      |  $$$$$$ 
+     | $$__  $$| $$____/ | $$__  $$  | $$  | $$            | $$__/  | $$  | $$| $$  | $$| $$       \____  $$
+     | $$  | $$| $$      | $$  \ $$  | $$  | $$            | $$     | $$  | $$| $$  | $$| $$       /$$  \ $$
+     | $$  | $$| $$      | $$  | $$ /$$$$$$| $$$$$$$$      | $$     |  $$$$$$/|  $$$$$$/| $$$$$$$$|  $$$$$$/
+     |__/  |__/|__/      |__/  |__/|______/|________/      |__/      \______/  \______/ |________/ \______/ 
+    
+     */
+    let aprilFools = '';
+    if (this.getDate().getMonth() === 3 && this.getDate().getDate() === 1) {
+      aprilFools = (
+        <Grid container spacing={8} alignItems="baseline">
+          <Grid item>
+            <HeartIcon style={styles.FontAwesome} />
+          </Grid>
+          <Grid item xs={11}>
+            <FormControl fullWidth>
+              <InputLabel>Relationship Status</InputLabel>
+              <Select
+                value={this.state.relationshipStatusValue}
+                onChange={this.handleRelationshipStatusInputChange}
+                input={<Input id="relationship-status" />}
+              >
+                <MenuItem label="All" value="">
+                  <em>All</em>
+                </MenuItem>
+                <MenuItem label="Single" value="Single">
+                  Single
+                </MenuItem>
+                <MenuItem label="Taken" value="Taken">
+                  Taken
+                </MenuItem>
+                <MenuItem label="Engaged" value="Engaged">
+                  Engaged
+                </MenuItem>
+                <MenuItem label="Married" value="Married">
+                  Married
+                </MenuItem>
+                <MenuItem label="At DTR Bench Right NOW" value="At DTR Bench Right NOW">
+                  At DTR Bench Right NOW
+                </MenuItem>
+                <MenuItem label="1st DTR" value="1st DTR">
+                  1st DTR
+                </MenuItem>
+                <MenuItem label="2nd DTR" value="2nd DTR">
+                  2nd DTR
+                </MenuItem>
+                <MenuItem label="Sat Together At Chapel" value="Sat Together At Chapel">
+                  Sat Together At Chapel
+                </MenuItem>
+                <MenuItem
+                  label="&quot;Jesus Is My Significant Other&quot;"
+                  value="&quot;Jesus Is My Significant Other&quot;"
+                >
+                  "Jesus Is My Significant Other"
+                </MenuItem>
+                <MenuItem label="Waiting For Her Boaz" value="Waiting For Her Boaz">
+                  Waiting For Her Boaz
+                </MenuItem>
+                <MenuItem
+                  label="Waiting For His Proverbs 31 Woman"
+                  value="Waiting For His Proverbs 31 Woman"
+                >
+                  Waiting For His Proverbs 31 Woman
+                </MenuItem>
+                <MenuItem label="It's Complicated" value="It's Complicated">
+                  It's Complicated
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+      );
+    }
+
     return (
       <Grid container justify="center" spacing="16">
         <Grid item xs={12} md={8}>
@@ -456,6 +545,7 @@ class PeopleSearch extends Component {
                   </Grid>
                 </Grid>
               </Grid>
+              {aprilFools}
             </CardContent>
 
             <Collapse in={this.state.additionalOpsExpanded} timeout="auto" unmountOnExit>
