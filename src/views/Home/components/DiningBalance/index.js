@@ -45,14 +45,13 @@ export default class DiningBalance extends Component {
     }
     this.setState({ loading: false });
   }
-
   render() {
     let daysColor = gordonColors.primary.blue;
-    let swipesColor = gordonColors.primary.cyan;
-    let dollarsColor = gordonColors.secondary.green;
-    let guestColor = gordonColors.secondary.yellow;
+    let swipesColor = gordonColors.secondary.green;
+    let dollarsColor = gordonColors.secondary.yellow;
+    let guestColor = gordonColors.secondary.orange;
     let emptyColor = gordonColors.neutral.lightGray;
-    
+
     defaults.global.legend.display = false;
     let content;
     let description = '';
@@ -69,7 +68,8 @@ export default class DiningBalance extends Component {
               justifyContent: 'space-around',
             }}
           >
-            <div className="label-text" style={{ color: dollarsColor }}>
+            {/*They aren't really swipes, but green is nicer if it's the only one*/}
+            <div className="label-text" style={{ color: swipesColor }}>
               ${this.facStaffBalance}
             </div>
           </div>
@@ -102,18 +102,20 @@ export default class DiningBalance extends Component {
                 return (
                   data.datasets[item.datasetIndex].label[item.index] +
                   ': ' +
-                  data.datasets[item.datasetIndex].data[item.index]
+                  (swipeInit === 0 &&
+                  data.datasets[item.datasetIndex].label[item.index].includes('Swipes') &&
+                  !data.datasets[item.datasetIndex].label[item.index].includes('Guest')
+                    ? '\u221E'
+                    : data.datasets[item.datasetIndex].data[item.index])
                 );
               },
             },
           },
           legend: false,
         };
-        
-        // FIXME: Update legend colors, etc. or remove if not needed
+
         const data = {
-          legendEntries: ['A', 'B', 'C', 'D'],
-          legendColors: [gordonColors.primary.blue, gordonColors.primary.cyan],
+          legendEntries: ['A', 'B', 'C', 'D'], // Just used as key
           datasets: [
             {
               label: ['Days Finished', 'Days Remaining'],
