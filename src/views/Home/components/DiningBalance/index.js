@@ -81,16 +81,16 @@ export default class DiningBalance extends Component {
         const swipeCurr = swipeInit === 0 ? 1 : this.diningInfo.Swipes.CurrentBalance;
         const swipeUsed = swipeInit === 0 ? 0 : swipeInit - swipeCurr;
 
-        const dollarInit = 100.0;
-        const dollarCurr = 30.72;
+        const dollarInit = this.diningInfo.DiningDollars.InitialBalance;
+        const dollarCurr = this.diningInfo.DiningDollars.CurrentBalance;
         const dollarUsed = dollarInit - dollarCurr;
 
         const guestInit = this.diningInfo.GuestSwipes.InitialBalance;
         const guestCurr = this.diningInfo.GuestSwipes.CurrentBalance;
         const guestUsed = guestInit - guestCurr;
 
-        const daysLeft = this.daysLeft[0];
-        const pastDays = this.daysLeft[1] - daysLeft;
+        const daysLeft = this.daysLeft[0] < 0 ? 0 : this.daysLeft[0];
+        const daysFinished = this.daysLeft[1] - daysLeft;
 
         const options = {
           cutoutPercentage: 0,
@@ -119,7 +119,7 @@ export default class DiningBalance extends Component {
           datasets: [
             {
               label: ['Days Finished', 'Days Remaining'],
-              data: [pastDays, daysLeft],
+              data: [daysFinished, daysLeft],
               backgroundColor: [daysColor, emptyColor],
             },
             {
