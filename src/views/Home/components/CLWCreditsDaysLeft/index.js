@@ -64,8 +64,8 @@ export default class CLWCreditsDaysLeft extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      const daysLeft = this.state.daysLeft[0];
-      const pastDays = this.state.daysLeft[1] - daysLeft;
+      const daysLeft = this.state.daysLeft[0] < 0 ? 0 : this.state.daysLeft[0];
+      const daysFinished = this.state.daysLeft[1] - daysLeft;
 
       const options = {
         cutoutPercentage: 25,
@@ -94,7 +94,7 @@ export default class CLWCreditsDaysLeft extends Component {
         datasets: [
           {
             label: ['Days Finished', 'Days Remaining'],
-            data: [pastDays, daysLeft],
+            data: [daysFinished, daysLeft],
             backgroundColor: [daysColor, emptyColor],
           },
           {
@@ -156,7 +156,7 @@ export default class CLWCreditsDaysLeft extends Component {
               }}
             >
               <div className="label-text" style={{ color: daysColor }}>
-                {pastDays}
+                {daysFinished}
               </div>
               <div class="entry-text">Days Finished</div>
             </div>
