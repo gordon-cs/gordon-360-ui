@@ -392,20 +392,18 @@ class PeopleSearch extends Component {
 
     if (this.state.personType !== 'stu' && this.state.personType !== '') {
       includeAlumniCheckbox = (
-        <Grid item xs={3}>
-          <Grid container justify="center" alignItems="center" direction="column">
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.includeAlumni}
-                  onChange={() => {
-                    this.handleChangeIncludeAlumni();
-                  }}
-                />
-              }
-              label="Include Alumni"
-            />
-          </Grid>
+        <Grid item xs={6} justify="center">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.includeAlumni}
+                onChange={() => {
+                  this.handleChangeIncludeAlumni();
+                }}
+              />
+            }
+            label="Include Alumni"
+          />
         </Grid>
       );
     } else {
@@ -770,32 +768,63 @@ class PeopleSearch extends Component {
                 </Collapse>
               </CardContent>
             </Collapse>
+
             <CardActions>
-              {includeAlumniCheckbox}
-              <Button
-                color="primary"
-                onClick={() => {
-                  this.search(
-                    this.state.includeAlumni,
-                    this.state.firstNameSearchValue,
-                    this.state.lastNameSearchValue,
-                    this.state.majorSearchValue,
-                    this.state.minorSearchValue,
-                    this.state.classTypeSearchValue,
-                    this.state.homeCitySearchValue,
-                    this.state.stateSearchValue,
-                    this.state.countrySearchValue,
-                    this.state.departmentSearchValue,
-                    this.state.buildingSearchValue,
-                  );
-                }}
-                raised
-                fullWidth
-                variant="contained"
-              >
-                SEARCH
-              </Button>
+              <Grid container direction="column" alignItems="center">
+                <Grid item xs={12}>
+                  <Grid container direction="row" alignItems="flex-end" justify="center">
+                    {includeAlumniCheckbox}
+                    <Grid item>
+                      <Button
+                        color="primary"
+                        variant="outlined"
+                        onClick={() => {
+                          this.setState({
+                            includeAlumni: false,
+                            firstNameSearchValue: '',
+                            lastNameSearchValue: '',
+                            majorSearchValue: '',
+                            minorSearchValue: '',
+                            classTypeSearchValue: '',
+                            homeCitySearchValue: '',
+                            stateSearchValue: '',
+                            countrySearchValue: '',
+                            departmentSearchValue: '',
+                            buildingSearchValue: '',
+                          });
+                        }}
+                      >
+                        Clear Input
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <br />
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    this.search(
+                      this.state.includeAlumni,
+                      this.state.firstNameSearchValue,
+                      this.state.lastNameSearchValue,
+                      this.state.majorSearchValue,
+                      this.state.minorSearchValue,
+                      this.state.classTypeSearchValue,
+                      this.state.homeCitySearchValue,
+                      this.state.stateSearchValue,
+                      this.state.countrySearchValue,
+                      this.state.departmentSearchValue,
+                      this.state.buildingSearchValue,
+                    );
+                  }}
+                  fullWidth
+                  variant="contained"
+                >
+                  SEARCH
+                </Button>
+              </Grid>
             </CardActions>
+
             <CardActions
               className={[classes.actions, 'card-expansion']}
               disableActionSpacing
