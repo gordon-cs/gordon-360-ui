@@ -5,7 +5,6 @@ import { Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import user from '../../../../services/user';
 import Divider from '@material-ui/core/Divider';
-import { gordonColors } from '../../../../theme';
 import { Link } from 'react-router-dom';
 import './mobilePeopleSearchResult.css';
 
@@ -35,7 +34,16 @@ export default class PeopleSearchResult extends Component {
     const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
       await user.getImage(this.props.Person.AD_Username),
     ]);
-    const avatar = preferredImage || defaultImage;
+    let avatar;
+    if (this.props.Person.AD_Username) {
+      avatar = preferredImage || defaultImage;
+    } else {
+      avatar = (
+        <svg width="50" height="50" viewBox="0 0 50 50">
+          <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+        </svg>
+      );
+    }
     this.setState({ avatar });
   }
 
@@ -102,7 +110,7 @@ export default class PeopleSearchResult extends Component {
                 src={`data:image/jpg;base64,${this.state.avatar}`}
                 alt=""
                 noLazyLoad="true"
-                placeholderColor={gordonColors.primary.blue}
+                placeholderColor="#FFF"
               />
             </Grid>
             <Grid item>
@@ -111,23 +119,6 @@ export default class PeopleSearchResult extends Component {
               <Typography variant="body2">{personClassJobTitle}</Typography>
               <Typography variant="body2">{Person.Email}</Typography>
             </Grid>
-            {/* <Grid item xs={2}>
-              <Typography>
-                {Person.FirstName} {nickname}{' '}
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{Person.LastName}</Typography>
-            </Grid>
-            <Grid item xs={1}>
-              <Typography>{Person.Type}</Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography>{personClassJobTitle}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{Person.Email}</Typography>
-            </Grid> */}
           </Grid>
         </Link>
         <Divider />

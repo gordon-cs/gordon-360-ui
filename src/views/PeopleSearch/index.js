@@ -10,6 +10,7 @@ import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PersonIcon from '@material-ui/icons/Person';
+import HeartIcon from 'react-icons/lib/fa/heart';
 import SchoolIcon from '@material-ui/icons/School';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
@@ -103,6 +104,8 @@ class PeopleSearch extends Component {
       countrySearchValue: '',
       departmentSearchValue: '',
       buildingSearchValue: '',
+      // For April Fools:
+      relationshipStatusValue: '',
 
       includeAlumni: false,
       peopleSearchResults: null,
@@ -153,7 +156,11 @@ class PeopleSearch extends Component {
   handleOffDepExpandClick = () => {
     this.setState(state => ({ offDepExpanded: !state.offDepExpanded }));
   };
-
+  handleRelationshipStatusInputChange = e => {
+    this.setState({
+      relationshipStatusValue: e.target.value,
+    });
+  };
   handleFirstNameInputChange = e => {
     this.setState({
       firstNameSearchValue: e.target.value,
@@ -308,7 +315,7 @@ class PeopleSearch extends Component {
                       </Grid>
                       <Grid item xs={2}>
                         <Typography variant="body2" style={styles.headerStyle}>
-                          EMAIL
+                          @GORDON.EDU
                         </Typography>
                       </Grid>
                     </Grid>
@@ -331,6 +338,10 @@ class PeopleSearch extends Component {
       }
     }
   }
+
+  getDate = () => {
+    return new Date();
+  };
 
   handleEnterKeyPress = event => {
     if (event.key === 'Enter') {
@@ -392,23 +403,104 @@ class PeopleSearch extends Component {
 
     if (this.state.personType !== 'stu' && this.state.personType !== '') {
       includeAlumniCheckbox = (
-        <Grid item xs={3}>
-          <Grid container justify="center" alignItems="center" direction="column">
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.includeAlumni}
-                  onChange={() => {
-                    this.handleChangeIncludeAlumni();
-                  }}
-                />
-              }
-              label="Include Alumni"
-            />
-          </Grid>
+        <Grid item xs={6} justify="center">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.includeAlumni}
+                onChange={() => {
+                  this.handleChangeIncludeAlumni();
+                }}
+              />
+            }
+            label="Include Alumni"
+          />
         </Grid>
       );
     } else {
+    }
+
+    /*
+       /$$$$$$  /$$$$$$$  /$$$$$$$  /$$$$$$ /$$             /$$$$$$$$ /$$$$$$   /$$$$$$  /$$        /$$$$$$ 
+      /$$__  $$| $$__  $$| $$__  $$|_  $$_/| $$            | $$_____//$$__  $$ /$$__  $$| $$       /$$__  $$
+     | $$  \ $$| $$  \ $$| $$  \ $$  | $$  | $$            | $$     | $$  \ $$| $$  \ $$| $$      | $$  \__/
+     | $$$$$$$$| $$$$$$$/| $$$$$$$/  | $$  | $$            | $$$$$  | $$  | $$| $$  | $$| $$      |  $$$$$$ 
+     | $$__  $$| $$____/ | $$__  $$  | $$  | $$            | $$__/  | $$  | $$| $$  | $$| $$       \____  $$
+     | $$  | $$| $$      | $$  \ $$  | $$  | $$            | $$     | $$  | $$| $$  | $$| $$       /$$  \ $$
+     | $$  | $$| $$      | $$  | $$ /$$$$$$| $$$$$$$$      | $$     |  $$$$$$/|  $$$$$$/| $$$$$$$$|  $$$$$$/
+     |__/  |__/|__/      |__/  |__/|______/|________/      |__/      \______/  \______/ |________/ \______/ 
+    
+     */
+    let aprilFools = '';
+    if (this.getDate().getMonth() === 3 && this.getDate().getDate() === 1) {
+      aprilFools = (
+        <Grid container spacing={8} alignItems="baseline">
+          <Media
+            query="(min-width: 600px)"
+            render={() => (
+              <Grid item>
+                <HeartIcon style={styles.FontAwesome} />
+              </Grid>
+            )}
+          />
+          <Grid item xs={11}>
+            <FormControl fullWidth>
+              <InputLabel>Relationship Status</InputLabel>
+              <Select
+                value={this.state.relationshipStatusValue}
+                onChange={this.handleRelationshipStatusInputChange}
+                input={<Input id="relationship-status" />}
+              >
+                <MenuItem label="All" value="">
+                  <em>All</em>
+                </MenuItem>
+                <MenuItem label="Single" value="Single">
+                  Single
+                </MenuItem>
+                <MenuItem label="Taken" value="Taken">
+                  Taken
+                </MenuItem>
+                <MenuItem label="Engaged" value="Engaged">
+                  Engaged
+                </MenuItem>
+                <MenuItem label="Married" value="Married">
+                  Married
+                </MenuItem>
+                <MenuItem label="At DTR Bench Right NOW" value="At DTR Bench Right NOW">
+                  At DTR Bench Right NOW
+                </MenuItem>
+                <MenuItem label="1st DTR" value="1st DTR">
+                  1st DTR
+                </MenuItem>
+                <MenuItem label="2nd DTR" value="2nd DTR">
+                  2nd DTR
+                </MenuItem>
+                <MenuItem label="Sat Together At Chapel" value="Sat Together At Chapel">
+                  Sat Together At Chapel
+                </MenuItem>
+                <MenuItem
+                  label="&quot;Jesus Is My Significant Other&quot;"
+                  value="&quot;Jesus Is My Significant Other&quot;"
+                >
+                  "Jesus Is My Significant Other"
+                </MenuItem>
+                <MenuItem label="Waiting For Her Boaz" value="Waiting For Her Boaz">
+                  Waiting For Her Boaz
+                </MenuItem>
+                <MenuItem
+                  label="Waiting For His Proverbs 31 Woman"
+                  value="Waiting For His Proverbs 31 Woman"
+                >
+                  Waiting For His Proverbs 31 Woman
+                </MenuItem>
+                <MenuItem label="It's Complicated" value="It's Complicated">
+                  It's Complicated
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+      );
     }
 
     return (
@@ -422,40 +514,48 @@ class PeopleSearch extends Component {
               }}
             >
               <Typography variant="headline">Name</Typography>
-              <Grid container>
-                <Grid item xs={6}>
-                  <Grid container spacing={8} alignItems="flex-end">
+              <Grid container spacing={8} alignItems="flex-end">
+                <Media
+                  query="(min-width: 600px)"
+                  render={() => (
                     <Grid item>
                       <PersonIcon />
                     </Grid>
-                    <Grid item xs={11}>
-                      <TextField
-                        id="first-name"
-                        label="First Name"
-                        max="3"
-                        fullWidth
-                        value={this.state.firstNameSearchValue}
-                        onChange={this.handleFirstNameInputChange}
-                        onKeyDown={this.handleEnterKeyPress}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={6}>
-                  <Grid container spacing={8} alignItems="flex-end">
-                    <Grid item xs={11}>
-                      <TextField
-                        id="last-name"
-                        label="Last Name"
-                        fullWidth
-                        value={this.state.lastNameSearchValue}
-                        onChange={this.handleLastNameInputChange}
-                        onKeyDown={this.handleEnterKeyPress}
-                      />
-                    </Grid>
-                  </Grid>
+                  )}
+                />
+                <Grid item xs={11}>
+                  <TextField
+                    id="first-name"
+                    label="First Name"
+                    max="3"
+                    fullWidth
+                    value={this.state.firstNameSearchValue}
+                    onChange={this.handleFirstNameInputChange}
+                    onKeyDown={this.handleEnterKeyPress}
+                  />
                 </Grid>
               </Grid>
+              <Grid container spacing={8} alignItems="flex-end">
+                <Media
+                  query="(min-width: 600px)"
+                  render={() => (
+                    <Grid item>
+                      <PersonIcon />
+                    </Grid>
+                  )}
+                />
+                <Grid item xs={11}>
+                  <TextField
+                    id="last-name"
+                    label="Last Name"
+                    fullWidth
+                    value={this.state.lastNameSearchValue}
+                    onChange={this.handleLastNameInputChange}
+                    onKeyDown={this.handleEnterKeyPress}
+                  />
+                </Grid>
+              </Grid>
+              {aprilFools}
             </CardContent>
 
             <Collapse in={this.state.additionalOpsExpanded} timeout="auto" unmountOnExit>
@@ -484,9 +584,14 @@ class PeopleSearch extends Component {
                   style={styles.CardContent}
                 >
                   <Grid container spacing={8} alignItems="baseline">
-                    <Grid item>
-                      <BookIcon style={styles.FontAwesome} />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <BookIcon style={styles.FontAwesome} />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>Major</InputLabel>
@@ -505,9 +610,14 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <Grid container spacing={8} alignItems="baseline">
-                    <Grid item>
-                      <BookIcon style={styles.FontAwesome} />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <BookIcon style={styles.FontAwesome} />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>Minor</InputLabel>
@@ -526,9 +636,14 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <Grid container spacing={8} alignItems="flex-end">
-                    <Grid item>
-                      <SchoolIcon />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <SchoolIcon style={styles.FontAwesome} />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>Class</InputLabel>
@@ -580,9 +695,14 @@ class PeopleSearch extends Component {
                   style={styles.CardContent}
                 >
                   <Grid container spacing={8} alignItems="flex-end">
-                    <Grid item>
-                      <HomeIcon />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <HomeIcon style={styles.FontAwesome} />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <TextField
                         id="hometown"
@@ -596,9 +716,14 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <Grid container spacing={8} alignItems="flex-end">
-                    <Grid item>
-                      <CityIcon />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <CityIcon style={styles.FontAwesome} />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>State</InputLabel>
@@ -617,14 +742,19 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <Grid container spacing={8} alignItems="baseline">
-                    <Grid item>
-                      <GlobeIcon
-                        style={{
-                          fontSize: 22,
-                          marginLeft: 2,
-                        }}
-                      />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <GlobeIcon
+                            style={{
+                              fontSize: 22,
+                              marginLeft: 2,
+                            }}
+                          />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>Country</InputLabel>
@@ -669,14 +799,19 @@ class PeopleSearch extends Component {
                   style={styles.CardContent}
                 >
                   <Grid container spacing={8} alignItems="baseline">
-                    <Grid item>
-                      <BriefcaseIcon
-                        style={{
-                          fontSize: 22,
-                          marginLeft: 2,
-                        }}
-                      />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <BriefcaseIcon
+                            style={{
+                              fontSize: 22,
+                              marginLeft: 2,
+                            }}
+                          />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>Department</InputLabel>
@@ -695,14 +830,19 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <Grid container spacing={8} alignItems="baseline">
-                    <Grid item>
-                      <BuildingIcon
-                        style={{
-                          fontSize: 22,
-                          marginLeft: 2,
-                        }}
-                      />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <BuildingIcon
+                            style={{
+                              fontSize: 22,
+                              marginLeft: 2,
+                            }}
+                          />
+                        </Grid>
+                      )}
+                    />
 
                     <Grid item xs={11}>
                       <FormControl fullWidth>
@@ -723,32 +863,63 @@ class PeopleSearch extends Component {
                 </Collapse>
               </CardContent>
             </Collapse>
+
             <CardActions>
-              {includeAlumniCheckbox}
-              <Button
-                color="primary"
-                onClick={() => {
-                  this.search(
-                    this.state.includeAlumni,
-                    this.state.firstNameSearchValue,
-                    this.state.lastNameSearchValue,
-                    this.state.majorSearchValue,
-                    this.state.minorSearchValue,
-                    this.state.classTypeSearchValue,
-                    this.state.homeCitySearchValue,
-                    this.state.stateSearchValue,
-                    this.state.countrySearchValue,
-                    this.state.departmentSearchValue,
-                    this.state.buildingSearchValue,
-                  );
-                }}
-                raised
-                fullWidth
-                variant="contained"
-              >
-                SEARCH
-              </Button>
+              <Grid container direction="column" alignItems="center">
+                <Grid item xs={12}>
+                  <Grid container direction="row" alignItems="flex-end" justify="center">
+                    {includeAlumniCheckbox}
+                    <Grid item>
+                      <Button
+                        color="primary"
+                        variant="outlined"
+                        onClick={() => {
+                          this.setState({
+                            includeAlumni: false,
+                            firstNameSearchValue: '',
+                            lastNameSearchValue: '',
+                            majorSearchValue: '',
+                            minorSearchValue: '',
+                            classTypeSearchValue: '',
+                            homeCitySearchValue: '',
+                            stateSearchValue: '',
+                            countrySearchValue: '',
+                            departmentSearchValue: '',
+                            buildingSearchValue: '',
+                          });
+                        }}
+                      >
+                        Clear Input
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <br />
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    this.search(
+                      this.state.includeAlumni,
+                      this.state.firstNameSearchValue,
+                      this.state.lastNameSearchValue,
+                      this.state.majorSearchValue,
+                      this.state.minorSearchValue,
+                      this.state.classTypeSearchValue,
+                      this.state.homeCitySearchValue,
+                      this.state.stateSearchValue,
+                      this.state.countrySearchValue,
+                      this.state.departmentSearchValue,
+                      this.state.buildingSearchValue,
+                    );
+                  }}
+                  fullWidth
+                  variant="contained"
+                >
+                  SEARCH
+                </Button>
+              </Grid>
             </CardActions>
+
             <CardActions
               className={[classes.actions, 'card-expansion']}
               disableActionSpacing
