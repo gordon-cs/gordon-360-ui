@@ -315,7 +315,7 @@ class PeopleSearch extends Component {
                       </Grid>
                       <Grid item xs={2}>
                         <Typography variant="body2" style={styles.headerStyle}>
-                          EMAIL
+                          @GORDON.EDU
                         </Typography>
                       </Grid>
                     </Grid>
@@ -403,20 +403,18 @@ class PeopleSearch extends Component {
 
     if (this.state.personType !== 'stu' && this.state.personType !== '') {
       includeAlumniCheckbox = (
-        <Grid item xs={3}>
-          <Grid container justify="center" alignItems="center" direction="column">
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.includeAlumni}
-                  onChange={() => {
-                    this.handleChangeIncludeAlumni();
-                  }}
-                />
-              }
-              label="Include Alumni"
-            />
-          </Grid>
+        <Grid item xs={6} justify="center">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.includeAlumni}
+                onChange={() => {
+                  this.handleChangeIncludeAlumni();
+                }}
+              />
+            }
+            label="Include Alumni"
+          />
         </Grid>
       );
     } else {
@@ -511,38 +509,45 @@ class PeopleSearch extends Component {
               }}
             >
               <Typography variant="headline">Name</Typography>
-              <Grid container>
-                <Grid item xs={6}>
-                  <Grid container spacing={8} alignItems="flex-end">
+              <Grid container spacing={8} alignItems="flex-end">
+                <Media
+                  query="(min-width: 600px)"
+                  render={() => (
                     <Grid item>
                       <PersonIcon />
                     </Grid>
-                    <Grid item xs={11}>
-                      <TextField
-                        id="first-name"
-                        label="First Name"
-                        max="3"
-                        fullWidth
-                        value={this.state.firstNameSearchValue}
-                        onChange={this.handleFirstNameInputChange}
-                        onKeyDown={this.handleEnterKeyPress}
-                      />
-                    </Grid>
-                  </Grid>
+                  )}
+                />
+                <Grid item xs={11}>
+                  <TextField
+                    id="first-name"
+                    label="First Name"
+                    max="3"
+                    fullWidth
+                    value={this.state.firstNameSearchValue}
+                    onChange={this.handleFirstNameInputChange}
+                    onKeyDown={this.handleEnterKeyPress}
+                  />
                 </Grid>
-                <Grid item xs={6}>
-                  <Grid container spacing={8} alignItems="flex-end">
-                    <Grid item xs={11}>
-                      <TextField
-                        id="last-name"
-                        label="Last Name"
-                        fullWidth
-                        value={this.state.lastNameSearchValue}
-                        onChange={this.handleLastNameInputChange}
-                        onKeyDown={this.handleEnterKeyPress}
-                      />
+              </Grid>
+              <Grid container spacing={8} alignItems="flex-end">
+                <Media
+                  query="(min-width: 600px)"
+                  render={() => (
+                    <Grid item>
+                      <PersonIcon />
                     </Grid>
-                  </Grid>
+                  )}
+                />
+                <Grid item xs={11}>
+                  <TextField
+                    id="last-name"
+                    label="Last Name"
+                    fullWidth
+                    value={this.state.lastNameSearchValue}
+                    onChange={this.handleLastNameInputChange}
+                    onKeyDown={this.handleEnterKeyPress}
+                  />
                 </Grid>
               </Grid>
               {aprilFools}
@@ -574,9 +579,14 @@ class PeopleSearch extends Component {
                   style={styles.CardContent}
                 >
                   <Grid container spacing={8} alignItems="baseline">
-                    <Grid item>
-                      <BookIcon style={styles.FontAwesome} />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <BookIcon style={styles.FontAwesome} />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>Major</InputLabel>
@@ -595,9 +605,14 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <Grid container spacing={8} alignItems="baseline">
-                    <Grid item>
-                      <BookIcon style={styles.FontAwesome} />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <BookIcon style={styles.FontAwesome} />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>Minor</InputLabel>
@@ -616,9 +631,14 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <Grid container spacing={8} alignItems="flex-end">
-                    <Grid item>
-                      <SchoolIcon />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <SchoolIcon style={styles.FontAwesome} />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>Class</InputLabel>
@@ -670,9 +690,14 @@ class PeopleSearch extends Component {
                   style={styles.CardContent}
                 >
                   <Grid container spacing={8} alignItems="flex-end">
-                    <Grid item>
-                      <HomeIcon />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <HomeIcon style={styles.FontAwesome} />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <TextField
                         id="hometown"
@@ -686,9 +711,14 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <Grid container spacing={8} alignItems="flex-end">
-                    <Grid item>
-                      <CityIcon />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <CityIcon style={styles.FontAwesome} />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>State</InputLabel>
@@ -707,14 +737,19 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <Grid container spacing={8} alignItems="baseline">
-                    <Grid item>
-                      <GlobeIcon
-                        style={{
-                          fontSize: 22,
-                          marginLeft: 2,
-                        }}
-                      />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <GlobeIcon
+                            style={{
+                              fontSize: 22,
+                              marginLeft: 2,
+                            }}
+                          />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>Country</InputLabel>
@@ -759,14 +794,19 @@ class PeopleSearch extends Component {
                   style={styles.CardContent}
                 >
                   <Grid container spacing={8} alignItems="baseline">
-                    <Grid item>
-                      <BriefcaseIcon
-                        style={{
-                          fontSize: 22,
-                          marginLeft: 2,
-                        }}
-                      />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <BriefcaseIcon
+                            style={{
+                              fontSize: 22,
+                              marginLeft: 2,
+                            }}
+                          />
+                        </Grid>
+                      )}
+                    />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
                         <InputLabel>Department</InputLabel>
@@ -785,14 +825,19 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <Grid container spacing={8} alignItems="baseline">
-                    <Grid item>
-                      <BuildingIcon
-                        style={{
-                          fontSize: 22,
-                          marginLeft: 2,
-                        }}
-                      />
-                    </Grid>
+                    <Media
+                      query="(min-width: 600px)"
+                      render={() => (
+                        <Grid item>
+                          <BuildingIcon
+                            style={{
+                              fontSize: 22,
+                              marginLeft: 2,
+                            }}
+                          />
+                        </Grid>
+                      )}
+                    />
 
                     <Grid item xs={11}>
                       <FormControl fullWidth>
@@ -813,32 +858,63 @@ class PeopleSearch extends Component {
                 </Collapse>
               </CardContent>
             </Collapse>
+
             <CardActions>
-              {includeAlumniCheckbox}
-              <Button
-                color="primary"
-                onClick={() => {
-                  this.search(
-                    this.state.includeAlumni,
-                    this.state.firstNameSearchValue,
-                    this.state.lastNameSearchValue,
-                    this.state.majorSearchValue,
-                    this.state.minorSearchValue,
-                    this.state.classTypeSearchValue,
-                    this.state.homeCitySearchValue,
-                    this.state.stateSearchValue,
-                    this.state.countrySearchValue,
-                    this.state.departmentSearchValue,
-                    this.state.buildingSearchValue,
-                  );
-                }}
-                raised
-                fullWidth
-                variant="contained"
-              >
-                SEARCH
-              </Button>
+              <Grid container direction="column" alignItems="center">
+                <Grid item xs={12}>
+                  <Grid container direction="row" alignItems="flex-end" justify="center">
+                    {includeAlumniCheckbox}
+                    <Grid item>
+                      <Button
+                        color="primary"
+                        variant="outlined"
+                        onClick={() => {
+                          this.setState({
+                            includeAlumni: false,
+                            firstNameSearchValue: '',
+                            lastNameSearchValue: '',
+                            majorSearchValue: '',
+                            minorSearchValue: '',
+                            classTypeSearchValue: '',
+                            homeCitySearchValue: '',
+                            stateSearchValue: '',
+                            countrySearchValue: '',
+                            departmentSearchValue: '',
+                            buildingSearchValue: '',
+                          });
+                        }}
+                      >
+                        Clear Input
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <br />
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    this.search(
+                      this.state.includeAlumni,
+                      this.state.firstNameSearchValue,
+                      this.state.lastNameSearchValue,
+                      this.state.majorSearchValue,
+                      this.state.minorSearchValue,
+                      this.state.classTypeSearchValue,
+                      this.state.homeCitySearchValue,
+                      this.state.stateSearchValue,
+                      this.state.countrySearchValue,
+                      this.state.departmentSearchValue,
+                      this.state.buildingSearchValue,
+                    );
+                  }}
+                  fullWidth
+                  variant="contained"
+                >
+                  SEARCH
+                </Button>
+              </Grid>
             </CardActions>
+
             <CardActions
               className={[classes.actions, 'card-expansion']}
               disableActionSpacing
