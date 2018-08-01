@@ -118,6 +118,7 @@ export default class GordonPeopleSearch extends Component {
     return text.replace(/ |\./, '|');
   }
 
+  // Highlight first occurrence of 'highlight' in 'text'
   getHighlightedText(text, highlight) {
     // Split text on highlight term, include term itself into parts, ignore case
     var highlights = this.highlightParse(highlight);
@@ -160,6 +161,10 @@ export default class GordonPeopleSearch extends Component {
         }
       >
         <Typography variant="body1">
+          {/* If the query contains a space or a period, only highlight occurrences of the first
+              name part of the query in the first name, and only highlight occurrences of the last
+              name part of the query in the last name. Otherwise, highlight occurrences of the
+              query in the first and last name. */}
           {this.state.highlightQuery.match(/ |\./)
             ? [
                 this.getHighlightedText(
@@ -177,11 +182,29 @@ export default class GordonPeopleSearch extends Component {
               )}
         </Typography>
         <Typography variant="caption" component="p">
-          {!(suggestion.FirstName + ' ' + suggestion.LastName).match(
+          {/* If the first name matches either part (first or last name) of the query, don't
+              highlight occurrences of the query in the first name part of the username.
+              
+              If the username contains a period, add it back in.
+              
+              If the username contains a period,
+              If the last name matches either part (first of last name) of the query, don't
+              highlight occurrences of the query in the last name part of the username. */}
+          {!suggestion.FirstName.match(
             new RegExp(`(${this.highlightParse(this.state.highlightQuery)})`, 'i'),
           )
-            ? this.getHighlightedText(suggestion.UserName, this.state.highlightQuery)
-            : suggestion.UserName}
+            ? this.getHighlightedText(suggestion.UserName.split('.')[0], this.state.highlightQuery)
+            : suggestion.UserName.split('.')[0]}
+          {suggestion.UserName.includes('.') && '.'}
+          {suggestion.UserName.includes('.') &&
+            (!suggestion.LastName.match(
+              new RegExp(`(${this.highlightParse(this.state.highlightQuery)})`, 'i'),
+            )
+              ? this.getHighlightedText(
+                  suggestion.UserName.split('.')[1],
+                  this.state.highlightQuery,
+                )
+              : suggestion.UserName.split('.')[1])}
         </Typography>
       </MenuItem>
     );
