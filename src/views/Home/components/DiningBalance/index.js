@@ -48,6 +48,12 @@ export default class DiningBalance extends Component {
   }
 
   render() {
+    let daysColor = gordonColors.primary.blue;
+    let swipesColor = gordonColors.primary.cyan;
+    let dollarsColor = gordonColors.secondary.green;
+    let guestColor = gordonColors.secondary.yellow;
+    let emptyColor = gordonColors.neutral.lightGray;
+    
     defaults.global.legend.display = false;
     let content;
     let description = '';
@@ -69,7 +75,7 @@ export default class DiningBalance extends Component {
               classes={{ tooltip: 'tooltip' }}
               title="Dining Dollar Balance"
             >
-              <div className="label-text" style={{ color: '#b2bb1c' }}>
+              <div className="label-text" style={{ color: dollarsColor }}>
                 ${this.facStaffBalance}
               </div>
             </Tooltip>
@@ -78,15 +84,9 @@ export default class DiningBalance extends Component {
       } else {
         description = this.diningInfo.ChoiceDescription;
 
-        //// let percentageRemaining = [];
-        //// let swipes = {};
         const swipeInit = this.diningInfo.Swipes.InitialBalance;
         const swipeCurr = swipeInit === 0 ? 1 : this.diningInfo.Swipes.CurrentBalance;
         const swipeUsed = swipeInit === 0 ? 0 : swipeInit - swipeCurr;
-
-        //// // const dollarInit = this.diningInfo.DiningDollars.InitialBalance;
-        //// // const dollarCurr = this.diningInfo.DiningDollars.CurrentBalance;
-        /// // const dollarUsed = dollarInit - dollarCurr;
 
         const dollarInit = 100.0;
         const dollarCurr = 30.72;
@@ -116,30 +116,31 @@ export default class DiningBalance extends Component {
           },
           legend: false,
         };
-
+        
+        // FIXME: Update legend colors, etc. or remove if not needed
         const data = {
-          legendEntries: ['A', 'B', 'C'],
+          legendEntries: ['A', 'B', 'C', 'D'],
           legendColors: [gordonColors.primary.blue, gordonColors.primary.cyan],
           datasets: [
             {
               label: ['Days Finished', 'Days Remaining'],
               data: [pastDays, daysLeft],
-              backgroundColor: [gordonColors.primary.blue, gordonColors.neutral.lightGray],
+              backgroundColor: [daysColor, emptyColor],
             },
             {
               label: ['Swipes Used', 'Swipes Remaining'],
               data: [swipeUsed, swipeCurr],
-              backgroundColor: [gordonColors.neutral.lightGray, gordonColors.primary.cyan],
+              backgroundColor: [emptyColor, swipesColor],
             },
             {
               label: ['Dining Dollars Used', 'Dining Dollars Remaining'],
               data: [dollarUsed, dollarCurr],
-              backgroundColor: [gordonColors.neutral.lightGray, '#b2bb1c'],
+              backgroundColor: [emptyColor, dollarsColor],
             },
             {
               label: ['Guest Swipes Used', 'Guest Swipes Remaining'],
               data: [guestUsed, guestCurr],
-              backgroundColor: [gordonColors.neutral.lightGray, '#fdb913'],
+              backgroundColor: [emptyColor, guestColor],
             },
           ],
         };
@@ -223,7 +224,7 @@ export default class DiningBalance extends Component {
                     classes={{ tooltip: 'tooltip' }}
                     title="Swipe Balance"
                   >
-                    <div className="label-text" style={{ color: gordonColors.primary.cyan }}>
+                    <div className="label-text" style={{ color: swipesColor }}>
                       {swipeInit === 0 ? '\u221E' : swipeCurr}
                     </div>
                   </Tooltip>
@@ -243,7 +244,7 @@ export default class DiningBalance extends Component {
                     classes={{ tooltip: 'tooltip' }}
                     title="Dining Dollar Balance"
                   >
-                    <div className="label-text" style={{ color: '#b2bb1c' }}>
+                    <div className="label-text" style={{ color: dollarsColor }}>
                       ${dollarCurr}
                     </div>
                   </Tooltip>
@@ -263,7 +264,7 @@ export default class DiningBalance extends Component {
                     classes={{ tooltip: 'tooltip' }}
                     title="Guest Swipe Balance"
                   >
-                    <div className="label-text" style={{ color: '#fdb913' }}>
+                    <div className="label-text" style={{ color: guestColor }}>
                       {guestCurr}
                     </div>
                   </Tooltip>
