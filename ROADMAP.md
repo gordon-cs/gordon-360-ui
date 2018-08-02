@@ -41,7 +41,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
     - `StatDaysLeftInSemester`
   - unknowns
     - what is the best charting library to use with React?
-- [ ] carousel (in progress @ajabbot)
+- [x] carousel (in progress @ajabbot)
   - rotating images, text, and calls to action
   - intended for use as advertising space in the future
   - components
@@ -63,7 +63,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
     - `ActivityCard`: photo and name of an activity, click to view the activity profile
   - improvements
     - preserve original image ratios instead of stretching or squishing to conform to a square container
-- [ ] activity profile (in progress @RFStauffer)
+- [x] activity profile (in progress @RFStauffer)
   - [existing page](https://360.gordon.edu/#/specific-activity/201709/AJMISS)
   - information about a specific activity
   - buttons to subscribe to or join activity
@@ -76,13 +76,13 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
   - components
     - `ActivityEdit`
     - `UploadImage`
-- [ ] join activity
+- [x] join activity
   - [existing page](https://360.gordon.edu/#/add-membership/201709/AJG)
   - components
     - `ActivityJoin`
   - improvements
     - implement as a modal over the activity profile instead of as a separate page
-- [ ] ~~my involvements~~ my activities
+- [x] ~~my involvements~~ my activities
   - [existing page](https://360.gordon.edu/#/my-involvements)
   - list of activities the current user is involved in
   - an accordion list for each session that expands to show activities for that session
@@ -109,7 +109,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
 
 ## Events
 
-- [ ] events (in progress @mFelgate)
+- [x] events
   - [existing page](https://360.gordon.edu/#/all-events)
   - list of all future Gordon events
   - filter by event type
@@ -139,7 +139,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
   - search for anyone in the Gordon database by name
   - components
     - `PeopleSearch`
-- [ ] user profile
+- [x] user profile
   - [existing page](https://360.gordon.edu/#/profile/henry.hao)
   - information about a specific user
   - change cell phone number visibility
@@ -158,7 +158,7 @@ To check off items on the list, open `ROADMAP.md` in your editor and place an `x
     - `UploadImage`
     - `UserMembershipRequests`: display activity membership requests and their statuses
     - `UserActivities`: display activities and allow user to toggle their visibility
-- [ ] upload image
+- [x] upload image
   - select, crop, and upload an image to a URL
   - should be a modal
   - components
