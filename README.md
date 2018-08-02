@@ -293,6 +293,8 @@ Environment variables must be declared in all caps, must use snake case, and mus
 
 The deployment script `./scripts/deploy.sh` requires several environment variables to be defined in the Travis CI environment. These variables are documented at the top of the deployment script.
 
+One of these variables is the GITHUB_TOKEN. This is used to authenticate Travis-CI with the repo. This token needs to belong to a current administrator of the repo. (You can generate a personal access token with repo access from your GitHub profile settings).
+
 The script deploys to either staging or production based on the branch it is running from. The `develop` branch deploys to staging, while the `master` branch deploys to production.
 
 `develop` is the default branch on the repository, so all branches should be based on it and should merge back into it. Changes merged into `develop` will automatically deploy to the staging environment.
