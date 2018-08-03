@@ -11,6 +11,7 @@ import session from '../../../../services/session';
 import GordonLoader from '../../../../components/Loader';
 
 import './CLWChart.css';
+import { Tooltip } from '@material-ui/core';
 
 export default class CLWCreditsDaysLeft extends Component {
   constructor(props) {
