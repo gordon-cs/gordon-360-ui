@@ -22,17 +22,6 @@
     align-self: left;
     padding-bottom: 25px;
   }
-  
-  .people-search-suggestion-selected{
-    background-color:$neutral-light-gray;
-    display: block;
-    align-self: left;
-    padding-bottom: 25px;
-  }
-  
-  .people-search-suggestion-selected:hover { background-color: $neutral-light-gray !important; }
-  
-  .people-search-dropdown:hover .people-search-suggestion-selected { background-color: white; }
 
   .people-search-suggestion-selected {
     background-color: $neutral-light-gray;
