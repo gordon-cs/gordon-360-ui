@@ -4,6 +4,7 @@ import { Carousel } from 'react-responsive-carousel';
 import cms from '../../../../services/cms';
 import '../../../../../node_modules/react-responsive-carousel/lib/styles/carousel.css';
 import GordonLoader from '../../../../components/Loader';
+import './carousel.css';
 
 export default class GordonCarousel extends Component {
   constructor(props) {
@@ -56,6 +57,7 @@ export default class GordonCarousel extends Component {
           showStatus={false}
           useKeyboardArrows={true}
           onClickItem={this.handleClickSlide}
+          className="carouselClickable"
         >
           {this.state.carouselContent.map(slide => (
             <div>
