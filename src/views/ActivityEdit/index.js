@@ -25,7 +25,7 @@ export default class ActivityEdit extends Component {
   render() {
     return (
       <section>
-        <h1>Edit Activity</h1>
+        <h1>Edit Involvement</h1>
         <form>
           <label htmlFor="editActivityWebsite">
             Website

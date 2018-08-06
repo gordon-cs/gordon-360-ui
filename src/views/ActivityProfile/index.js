@@ -2,8 +2,11 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Dropzone from 'react-dropzone';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -12,15 +15,17 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import activity from '../../services/activity';
 import './activity-profile.css';
+import Cropper from 'react-cropper';
 import Advisors from './components/Advisors';
 import GroupContacts from './components/GroupContacts';
 import GordonLoader from '../../components/Loader';
 import Membership from './components/Membership';
-import DialogActions from '@material-ui/core/DialogActions';
 import membership from '../../services/membership';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
+
+const CROP_DIM = 320; // pixels
 
 class ActivityProfile extends Component {
   constructor(props) {
@@ -40,6 +45,8 @@ class ActivityProfile extends Component {
       activityGroupAdmins: [],
       activityMembersNum: 0,
       activityMembers: [],
+      image: null,
+      preview: null,
       activityStatus: '',
       sessionInfo: null,
       id: '', // User's id
@@ -112,6 +119,68 @@ class ActivityProfile extends Component {
     this.setState({ loading: false });
   }
 
+  onDropAccepted(fileList) {
+    var previewImageFile = fileList[0];
+    var reader = new FileReader();
+    reader.onload = function() {
+      var dataURL = reader.result.toString();
+      var i = new Image();
+      i.onload = function() {
+        if (i.width < CROP_DIM || i.height < CROP_DIM) {
+          alert(
+            'Sorry, your image is too small! Image dimensions must be at least 200 x 200 pixels.',
+          );
+        } else {
+          var aRatio = i.width / i.height;
+          this.setState({ cropperData: { aspectRatio: aRatio } });
+          var maxWidth = this.maxCropPreviewWidth();
+          var displayWidth = maxWidth > i.width ? i.width : maxWidth;
+          var cropDim = this.minCropBoxDim(i.width, displayWidth);
+          this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
+          this.setState({ preview: dataURL });
+          this.setState({ image: dataURL });
+        }
+      }.bind(this);
+      i.src = dataURL;
+    }.bind(this);
+    reader.readAsDataURL(previewImageFile);
+  }
+
+  maxCropPreviewWidth() {
+    const breakpointWidth = 960;
+    const smallScreenRatio = 0.75;
+    const largeScreenRatio = 0.525;
+    const maxHeightRatio = 0.5;
+    const aspect = this.state.cropperData.aspectRatio;
+    var maxWidth =
+      window.innerWidth *
+      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
+    var correspondingHeight = maxWidth / aspect;
+    var maxHeight = window.innerHeight * maxHeightRatio;
+    var correspondingWidth = maxHeight * aspect;
+
+    if (correspondingHeight > maxHeight) {
+      return correspondingWidth;
+    } else {
+      return maxWidth;
+    }
+  }
+
+  minCropBoxDim(imgWidth, dispWidth) {
+    return (CROP_DIM * dispWidth) / imgWidth;
+  }
+
+  onCropperZoom(event) {
+    if (event.detail.ratio > 1) {
+      event.preventDefault();
+      this.refs.cropper.zoomTo(1);
+    }
+  }
+
+  onDropRejected() {
+    alert('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
+  }
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
@@ -126,11 +195,13 @@ class ActivityProfile extends Component {
 
   // Called when user submits changes to activity from edit activity dialog box
   async onEditActivity() {
+    console.log('this.state.image', this.state.image);
     let data = {
       ACT_CDE: this.state.activityInfo.ActivityCode,
       ACT_URL: this.state.tempActivityURL,
       ACT_BLURB: this.state.tempActivityBlurb,
       ACT_JOIN_INFO: this.state.tempActivityJoinInfo,
+      ACT_IMG_PATH: this.state.image,
     };
     await activity.editActivity(this.state.activityInfo.ActivityCode, data);
     this.onClose();
@@ -156,6 +227,24 @@ class ActivityProfile extends Component {
     window.location.reload();
   }
 
+  handlePhotoOpen = () => {
+    this.setState({ photoOpen: true });
+  };
+
+  handleCloseCancel = () => {
+    this.setState({ photoOpen: false, preview: null });
+  };
+
+  handleCloseSubmit = () => {
+    if (this.state.preview != null) {
+      var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      user.postImage(croppedImage);
+      var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+      this.setState({ image: imageNoHeader, photoOpen: false, preview: null });
+      window.didProfilePicUpdate = true;
+    }
+  };
+
   render() {
     if (this.state.error) {
       throw this.state.error;
@@ -169,6 +258,11 @@ class ActivityProfile extends Component {
         background: gordonColors.secondary.red,
         color: 'white',
       };
+      const photoUploader = {
+        padding: '20px',
+        justifyContent: 'center',
+        alignItems: 'center',
+      };
       const {
         ActivityDescription: activityDescription,
         ActivityBlurb: activityBlurb,
@@ -176,6 +270,9 @@ class ActivityProfile extends Component {
         ActivityURL: activityURL,
         ActivityImagePath: activityImagePath,
       } = this.state.activityInfo;
+
+      const { preview } = this.state;
+
       if (this.state.isAdmin) {
         editActivity = (
           <section align="center" padding={6}>
@@ -186,18 +283,118 @@ class ActivityProfile extends Component {
                 onClick={this.openEditActivityDialog}
                 raised
               >
-                Edit Activity
+                Edit Involvement
               </Button>
             </CardContent>
 
             <Dialog open={this.state.openEditActivity} fullWidth>
               <DialogTitle> Edit {activityDescription}</DialogTitle>
               <DialogContent>
-                <Grid item>
-                  <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
-                    Remove image
-                  </Button>
+                <Grid container spacing={16}>
+                  <Grid item>
+                    <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
+                      Remove image
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button variant="contained" onClick={this.handlePhotoOpen} color="primary">
+                      Change Image
+                    </Button>
+                  </Grid>
                 </Grid>
+                <Dialog
+                  open={this.state.photoOpen}
+                  keepMounted
+                  onClose={this.handleClose}
+                  aria-labelledby="alert-dialog-slide-title"
+                  aria-describedby="alert-dialog-slide-description"
+                  maxWidth="false"
+                >
+                  <DialogTitle id="simple-dialog-title">Update Activity Picture</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      {window.innerWidth < 600
+                        ? 'Tap Image to Browse Files'
+                        : 'Drag & Drop Picture, or Click to Browse Files'}
+                    </DialogContentText>
+                    <DialogContentText>
+                      <br />
+                    </DialogContentText>
+                    {!preview && (
+                      <Grid container justify="center" spacing="16">
+                        <Dropzone
+                          className="dropzone"
+                          activeClassName="drop-overlay"
+                          onDropAccepted={this.onDropAccepted.bind(this)}
+                          onDropRejected={this.onDropRejected.bind(this)}
+                          accept="image/jpeg,image/jpg,image/png"
+                          style={photoUploader}
+                        >
+                          <img
+                            className="rounded-corners"
+                            src={`data:image/jpg;base64,${this.state.image}`}
+                            alt=""
+                            style={{ 'max-width': '200px', 'max-height': '200px' }}
+                          />
+                        </Dropzone>
+                      </Grid>
+                    )}
+                    {preview && (
+                      <Grid container justify="center" spacing="16">
+                        <Cropper
+                          ref="cropper"
+                          src={preview}
+                          style={{
+                            'max-width': this.maxCropPreviewWidth(),
+                            'max-height':
+                              this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
+                          }}
+                          autoCropArea={1}
+                          viewMode={3}
+                          aspectRatio={1}
+                          highlight={false}
+                          background={false}
+                          zoom={this.onCropperZoom.bind(this)}
+                          zoomable={false}
+                          dragMode={'none'}
+                          minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                          minCropBoxHeight={this.state.cropperData.cropBoxDim}
+                        />
+                      </Grid>
+                    )}
+                    {preview && <br />}
+                    {preview && (
+                      <Grid container justify="center" spacing="16">
+                        <Grid item>
+                          <Button
+                            variant="contained"
+                            onClick={() => this.setState({ preview: null })}
+                          >
+                            Choose Another Image
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    )}
+                  </DialogContent>
+                  <DialogActions>
+                    <Grid container spacing={8} justify="flex-end">
+                      <Grid item>
+                        <Button variant="contained" onClick={this.handleCloseCancel}>
+                          Cancel
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          onClick={this.handleCloseSubmit}
+                          disabled={!this.state.preview}
+                        >
+                          Select
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </DialogActions>
+                </Dialog>
 
                 <Dialog open={this.state.openRemoveImage} keepMounted align="center">
                   <DialogTitle>Are you sure you want to remove image?</DialogTitle>
