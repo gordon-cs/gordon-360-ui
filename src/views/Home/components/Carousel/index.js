@@ -29,6 +29,7 @@ export default class GordonCarousel extends Component {
     try {
       const carouselContent = await cms.getSlides();
       this.setState({ loading: false, carouselContent });
+      this.state.carouselContent.map(slide => this.linkArray.push(slide.ActionLink));
     } catch (error) {
       this.setState({ error });
     }
@@ -62,7 +63,6 @@ export default class GordonCarousel extends Component {
           {this.state.carouselContent.map(slide => (
             <div>
               <img src={slide.ImagePath} alt={slide.AltTag} />
-              {this.linkArray.push(slide.ActionLink)}
             </div>
           ))}
         </Carousel>
