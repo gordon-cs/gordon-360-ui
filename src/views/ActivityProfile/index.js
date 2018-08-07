@@ -259,11 +259,6 @@ class ActivityProfile extends Component {
         background: gordonColors.secondary.red,
         color: 'white',
       };
-      const photoUploader = {
-        padding: '20px',
-        justifyContent: 'center',
-        alignItems: 'center',
-      };
       const {
         ActivityDescription: activityDescription,
         ActivityBlurb: activityBlurb,
@@ -298,7 +293,7 @@ class ActivityProfile extends Component {
                     className="rounded-corners"
                   />
                 </Grid>
-                <Grid container spacing={16}>
+                <Grid container spacing={16} justify="center">
                   <Grid item>
                     <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
                       Remove image
@@ -336,11 +331,11 @@ class ActivityProfile extends Component {
                           onDropAccepted={this.onDropAccepted.bind(this)}
                           onDropRejected={this.onDropRejected.bind(this)}
                           accept="image/jpeg,image/jpg,image/png"
-                          style={photoUploader}
+                          className="photoUploader"
                         >
                           <img
                             className="rounded-corners"
-                            src={`data:image/jpg;base64,${this.state.image}`}
+                            src={activityImagePath}
                             alt=""
                             style={{ 'max-width': '320px', 'max-height': '320px' }}
                           />

@@ -524,7 +524,7 @@ export default class Profile extends Component {
                                       onDropAccepted={this.onDropAccepted.bind(this)}
                                       onDropRejected={this.onDropRejected.bind(this)}
                                       accept="image/jpeg,image/jpg,image/png"
-                                      style={photoUploader}
+                                      className="photoUploader"
                                     >
                                       <img
                                         className="rounded-corners"
