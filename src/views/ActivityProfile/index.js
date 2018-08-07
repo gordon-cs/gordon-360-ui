@@ -326,8 +326,6 @@ class ActivityProfile extends Component {
                     {!preview && (
                       <Grid container justify="center" spacing="16">
                         <Dropzone
-                          className="dropzone"
-                          activeClassName="drop-overlay"
                           onDropAccepted={this.onDropAccepted.bind(this)}
                           onDropRejected={this.onDropRejected.bind(this)}
                           accept="image/jpeg,image/jpg,image/png"
@@ -382,13 +380,18 @@ class ActivityProfile extends Component {
                   <DialogActions>
                     <Grid container spacing={8} justify="flex-end">
                       <Grid item>
-                        <Button variant="contained" onClick={this.handleCloseCancel}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={this.handleCloseCancel}
+                        >
                           Cancel
                         </Button>
                       </Grid>
                       <Grid item>
                         <Button
                           variant="contained"
+                          color="primary"
                           onClick={this.handleCloseSelect}
                           disabled={!this.state.preview}
                         >
