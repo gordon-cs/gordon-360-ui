@@ -300,13 +300,6 @@ export default class Profile extends Component {
         color: gordonColors.primary.cyan,
       },
     };
-
-    const photoUploader = {
-      padding: '20px',
-      justifyContent: 'center',
-      alignItems: 'center',
-    };
-
     let involvementAndPrivacyList;
     if (this.state.memberships.length === 0) {
       involvementAndPrivacyList = (
