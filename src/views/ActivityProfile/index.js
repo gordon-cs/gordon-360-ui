@@ -128,7 +128,7 @@ class ActivityProfile extends Component {
       i.onload = function() {
         if (i.width < CROP_DIM || i.height < CROP_DIM) {
           alert(
-            'Sorry, your image is too small! Image dimensions must be at least 200 x 200 pixels.',
+            'Sorry, your image is too small! Image dimensions must be at least 320 x 320 pixels.',
           );
         } else {
           var aRatio = i.width / i.height;
@@ -195,15 +195,14 @@ class ActivityProfile extends Component {
 
   // Called when user submits changes to activity from edit activity dialog box
   async onEditActivity() {
-    console.log('this.state.image', this.state.image);
     let data = {
       ACT_CDE: this.state.activityInfo.ActivityCode,
       ACT_URL: this.state.tempActivityURL,
       ACT_BLURB: this.state.tempActivityBlurb,
       ACT_JOIN_INFO: this.state.tempActivityJoinInfo,
-      ACT_IMG_PATH: this.state.image,
     };
     await activity.editActivity(this.state.activityInfo.ActivityCode, data);
+    await activity.setActivityImage(this.state.activityInfo.ActivityCode, this.state.image);
     this.onClose();
     this.refresh();
   }
@@ -238,10 +237,7 @@ class ActivityProfile extends Component {
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-      user.postImage(croppedImage);
-      var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-      this.setState({ image: imageNoHeader, photoOpen: false, preview: null });
-      window.didProfilePicUpdate = true;
+      this.setState({ image: croppedImage, photoOpen: false, preview: null });
     }
   };
 
@@ -334,7 +330,7 @@ class ActivityProfile extends Component {
                             className="rounded-corners"
                             src={`data:image/jpg;base64,${this.state.image}`}
                             alt=""
-                            style={{ 'max-width': '200px', 'max-height': '200px' }}
+                            style={{ 'max-width': '320px', 'max-height': '320px' }}
                           />
                         </Dropzone>
                       </Grid>
