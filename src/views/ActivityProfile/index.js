@@ -47,6 +47,7 @@ class ActivityProfile extends Component {
       activityMembers: [],
       image: null,
       preview: null,
+      photoUpdated: false,
       activityStatus: '',
       sessionInfo: null,
       id: '', // User's id
@@ -138,7 +139,7 @@ class ActivityProfile extends Component {
           var cropDim = this.minCropBoxDim(i.width, displayWidth);
           this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
           this.setState({ preview: dataURL });
-          this.setState({ image: dataURL });
+          this.setState({ photoUpdated: true });
         }
       }.bind(this);
       i.src = dataURL;
@@ -202,7 +203,10 @@ class ActivityProfile extends Component {
       ACT_JOIN_INFO: this.state.tempActivityJoinInfo,
     };
     await activity.editActivity(this.state.activityInfo.ActivityCode, data);
-    await activity.setActivityImage(this.state.activityInfo.ActivityCode, this.state.image);
+
+    if (this.state.photoUpdated === true) {
+      await activity.setActivityImage(this.state.activityInfo.ActivityCode, this.state.image);
+    }
     this.onClose();
     this.refresh();
   }
@@ -234,8 +238,9 @@ class ActivityProfile extends Component {
     this.setState({ photoOpen: false, preview: null });
   };
 
-  handleCloseSubmit = () => {
+  handleCloseSelect = () => {
     if (this.state.preview != null) {
+      this.setState({ image: this.state.preview });
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
       this.setState({ image: croppedImage, photoOpen: false, preview: null });
     }
@@ -286,6 +291,13 @@ class ActivityProfile extends Component {
             <Dialog open={this.state.openEditActivity} fullWidth>
               <DialogTitle> Edit {activityDescription}</DialogTitle>
               <DialogContent>
+                <Grid align="center" className="activity-image" item>
+                  <img
+                    alt={activity.activityDescription}
+                    src={this.state.image || activityImagePath}
+                    className="rounded-corners"
+                  />
+                </Grid>
                 <Grid container spacing={16}>
                   <Grid item>
                     <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
@@ -306,7 +318,7 @@ class ActivityProfile extends Component {
                   aria-describedby="alert-dialog-slide-description"
                   maxWidth="false"
                 >
-                  <DialogTitle id="simple-dialog-title">Update Activity Picture</DialogTitle>
+                  <DialogTitle id="simple-dialog-title">Update Involvement Picture</DialogTitle>
                   <DialogContent>
                     <DialogContentText>
                       {window.innerWidth < 600
@@ -382,7 +394,7 @@ class ActivityProfile extends Component {
                       <Grid item>
                         <Button
                           variant="contained"
-                          onClick={this.handleCloseSubmit}
+                          onClick={this.handleCloseSelect}
                           disabled={!this.state.preview}
                         >
                           Select
