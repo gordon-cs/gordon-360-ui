@@ -31,3 +31,11 @@
     overflow-x: hidden;
   }
 }
+
+.photoUploader {
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+  }
+}

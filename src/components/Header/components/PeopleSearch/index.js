@@ -67,7 +67,7 @@ export default class GordonPeopleSearch extends Component {
     if (!query || query.length < MIN_QUERY_LENGTH) {
       return;
     }
-
+    
     //so apparently everything breaks if the first letter is capital, which is what happens on mobile
     //sometimes and then you spend four hours trying to figure out why downshift is not working
     //but really its just that its capitalized what the heck
@@ -261,7 +261,8 @@ export default class GordonPeopleSearch extends Component {
             this.state.suggestions.length > 0 &&
             this.state.query.length >= MIN_QUERY_LENGTH ? (
               <Paper square className="people-search-dropdown">
-                {this.state.suggestions.map(suggestion =>
+                { 
+                  this.state.suggestions.map(suggestion =>
                   this.renderSuggestion({
                     suggestion,
                     itemProps: getItemProps({ item: suggestion.UserName }),

@@ -54,7 +54,7 @@ export default class CLWCreditsDaysLeft extends Component {
     if (this.state.error) {
       throw this.state.error;
     }
-    
+
     let daysColor = gordonColors.primary.blue;
     let chapelColor = gordonColors.primary.cyan;
     let emptyColor = gordonColors.neutral.lightGray;
