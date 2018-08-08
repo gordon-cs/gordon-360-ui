@@ -413,11 +413,7 @@ export default class Profile extends Component {
                       spacing="16"
                     >
                       <Grid item xs={6}>
-                        <Link
-                          to={`/profile/${this.state.profile.FirstName}.${
-                            this.state.profile.LastName
-                          }`}
-                        >
+                        <Link to={`/profile/${this.state.profile.AD_Username}`}>
                           <Button style={style.uncontainedButton}>View My Public Profile</Button>
                         </Link>
                       </Grid>
