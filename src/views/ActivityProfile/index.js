@@ -34,7 +34,7 @@ class ActivityProfile extends Component {
     this.alertRemoveImage = this.alertRemoveImage.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.openEditActivityDialog = this.openEditActivityDialog.bind(this);
-    this.openEmailDialog = this.openEmailDialog.bind(this);
+    this.sendEmail = this.sendEmail.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onEditActivity = this.onEditActivity.bind(this);
     this.onRemoveImage = this.onRemoveImage.bind(this);
@@ -57,9 +57,6 @@ class ActivityProfile extends Component {
       tempActivityURL: '', // For editing activity
       isAdmin: false, // Boolean for current user
       openEditActivity: false,
-      openEmail: false,
-      emailSubject: '',
-      emailBody: '',
       openRemoveImage: false,
     };
   }
@@ -194,10 +191,6 @@ class ActivityProfile extends Component {
     this.setState({ openEditActivity: true });
   }
 
-  openEmailDialog() {
-    this.setState({ openEmail: true });
-  }
-
   alertRemoveImage() {
     this.setState({ openRemoveImage: true });
   }
@@ -231,7 +224,6 @@ class ActivityProfile extends Component {
       openRemoveImage: false,
       openEditActivity: false,
       alertRemoveImage: false,
-      openEmail: false,
     });
   }
 
@@ -253,6 +245,10 @@ class ActivityProfile extends Component {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
       this.setState({ image: croppedImage, photoOpen: false, preview: null });
     }
+  };
+
+  sendEmail = () => {
+    console.log('state', this.state);
   };
 
   render() {
@@ -294,7 +290,7 @@ class ActivityProfile extends Component {
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="contained" color="primary" onClick={this.openEmailDialog} raised>
+                  <Button variant="contained" color="primary" onClick={this.sendEmail} raised>
                     Email Members/Subscribers
                   </Button>
                 </Grid>
@@ -488,34 +484,6 @@ class ActivityProfile extends Component {
                   Submit
                 </Button>
               </DialogActions>
-            </Dialog>
-
-            <Dialog open={this.state.openEmail} fullWidth>
-              <DialogTitle> Send Email for {activityDescription}</DialogTitle>
-              <DialogContent>
-                <TextField
-                  label="Subject"
-                  margin="dense"
-                  singleline
-                  onChange={this.handleChange('emailSubject')}
-                />
-                <TextField
-                  label="Email Body"
-                  margin="dense"
-                  multiline
-                  rows="4"
-                  fullWidth
-                  onChange={this.handleChange('emailBody')}
-                />
-                <DialogActions>
-                  <Button variant="contained" color="primary" onClick={this.onClose} raised>
-                    Cancel
-                  </Button>
-                  <Button variant="contained" color="primary" raised>
-                    Send
-                  </Button>
-                </DialogActions>
-              </DialogContent>
             </Dialog>
           </section>
         );
