@@ -21,6 +21,7 @@ import GroupContacts from './components/GroupContacts';
 import GordonLoader from '../../components/Loader';
 import Membership from './components/Membership';
 import membership from '../../services/membership';
+import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
@@ -58,6 +59,7 @@ class ActivityProfile extends Component {
       isAdmin: false, // Boolean for current user
       openEditActivity: false,
       openRemoveImage: false,
+      emailList: [],
     };
   }
 
@@ -74,6 +76,7 @@ class ActivityProfile extends Component {
       sessionInfo,
       id,
       isAdmin,
+      emailList,
     ] = await Promise.all([
       activity.get(activityCode),
       activity.getAdvisors(activityCode, sessionCode),
@@ -84,6 +87,7 @@ class ActivityProfile extends Component {
       session.get(sessionCode),
       user.getLocalInfo().id,
       membership.checkAdmin(user.getLocalInfo().id, sessionCode, activityCode),
+      emails.get(activityCode),
     ]);
 
     this.setState({
@@ -96,6 +100,7 @@ class ActivityProfile extends Component {
       sessionInfo,
       id,
       isAdmin,
+      emailList,
     });
 
     this.setState({
@@ -247,8 +252,26 @@ class ActivityProfile extends Component {
     }
   };
 
+  parseEmailList = () => {
+    var i;
+    let justEmails = '';
+    for (i = 0; i < this.state.emailList.length; i++) {
+      justEmails = justEmails + this.state.emailList[i].Email + ',';
+    }
+    return justEmails;
+  };
+
+  parseAdminEmailList = () => {
+    var i;
+    let justEmails = '';
+    for (i = 0; i < this.state.activityGroupAdmins.length; i++) {
+      justEmails = justEmails + this.state.activityGroupAdmins[i].Email + ',';
+    }
+    return justEmails;
+  };
+
   sendEmail = () => {
-    console.log('state', this.state);
+    window.location = 'mailto:' + this.parseAdminEmailList() + '?bcc=' + this.parseEmailList();
   };
 
   render() {
