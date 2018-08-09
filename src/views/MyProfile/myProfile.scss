@@ -44,6 +44,14 @@
   }
 }
 
+.photoUploader {
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 @media (min-width: $break-sm) {
   .profile-image {
     position: 'relative';
@@ -70,7 +78,6 @@
     }
   }
 }
-
 @media (min-width: 0px) {
   .profile-image {
     position: 'relative';
@@ -90,15 +97,12 @@
     text-align: center;
   }
 }
-
 .rounded-corners {
   border-radius: 0.5rem;
 }
-
 .tooltip {
   background-color: $neutral-dark-gray !important;
 }
-
 @media (min-width: 600px) {
   .dropzone {
     transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
@@ -111,8 +115,10 @@
     border-width: 0.2rem;
     border-radius: 1rem;
     border-color: darkgray;
+    &:hover {
+      cursor: pointer;
+    }
   }
-
   .drop-overlay {
     transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
     border-style: dashed;

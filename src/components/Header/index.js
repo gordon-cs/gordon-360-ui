@@ -53,7 +53,7 @@ export default class GordonHeader extends Component {
     let currentPath = window.location.pathname;
     // Tab url regular expressions must be listed in the same order as the tabs, since the
     // indices of the elements in the array on the next line are mapped to the indices of the tabs
-    let urls = [/^\/$/, /^\/activities\/?$|^\/activity/, /^\/events\/?$/, /^\/people$/];
+    let urls = [/^\/$/, /^\/involvements\/?$|^\/activity/, /^\/events\/?$/, /^\/people$/];
     this.value = false;
     for (let i = 0; i < urls.length; i++) {
       if (urls[i].test(currentPath)) {
@@ -104,7 +104,7 @@ export default class GordonHeader extends Component {
                   icon={<LocalActivityIcon />}
                   label="Involvements"
                   component={NavLink}
-                  to="/activities"
+                  to="/involvements"
                 />
                 <Tab
                   className="tab"

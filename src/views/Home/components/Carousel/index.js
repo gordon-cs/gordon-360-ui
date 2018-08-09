@@ -4,6 +4,7 @@ import { Carousel } from 'react-responsive-carousel';
 import cms from '../../../../services/cms';
 import '../../../../../node_modules/react-responsive-carousel/lib/styles/carousel.css';
 import GordonLoader from '../../../../components/Loader';
+import './carousel.css';
 
 export default class GordonCarousel extends Component {
   constructor(props) {
@@ -28,6 +29,7 @@ export default class GordonCarousel extends Component {
     try {
       const carouselContent = await cms.getSlides();
       this.setState({ loading: false, carouselContent });
+      this.state.carouselContent.map(slide => this.linkArray.push(slide.ActionLink));
     } catch (error) {
       this.setState({ error });
     }
@@ -56,11 +58,11 @@ export default class GordonCarousel extends Component {
           showStatus={false}
           useKeyboardArrows={true}
           onClickItem={this.handleClickSlide}
+          className="carouselClickable"
         >
           {this.state.carouselContent.map(slide => (
             <div>
               <img src={slide.ImagePath} alt={slide.AltTag} />
-              {this.linkArray.push(slide.ActionLink)}
             </div>
           ))}
         </Carousel>

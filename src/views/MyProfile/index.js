@@ -300,13 +300,6 @@ export default class Profile extends Component {
         color: gordonColors.primary.cyan,
       },
     };
-
-    const photoUploader = {
-      padding: '20px',
-      justifyContent: 'center',
-      alignItems: 'center',
-    };
-
     let involvementAndPrivacyList;
     if (this.state.memberships.length === 0) {
       involvementAndPrivacyList = (
@@ -420,11 +413,7 @@ export default class Profile extends Component {
                       spacing="16"
                     >
                       <Grid item xs={6}>
-                        <Link
-                          to={`/profile/${this.state.profile.FirstName}.${
-                            this.state.profile.LastName
-                          }`}
-                        >
+                        <Link to={`/profile/${this.state.profile.AD_Username}`}>
                           <Button style={style.uncontainedButton}>View My Public Profile</Button>
                         </Link>
                       </Grid>
@@ -524,7 +513,6 @@ export default class Profile extends Component {
                                       onDropAccepted={this.onDropAccepted.bind(this)}
                                       onDropRejected={this.onDropRejected.bind(this)}
                                       accept="image/jpeg,image/jpg,image/png"
-                                      style={photoUploader}
                                     >
                                       <img
                                         className="rounded-corners"

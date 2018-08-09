@@ -97,21 +97,24 @@ export default class Help extends Component {
                 recorded in Memberships on the Co-Curricular Transcript, with a Title, if added.
               </li>
               <li>
-                <strong>Leader</strong> &ndash; Leaders appear on the roster with Title, can manage
-                all Subscribers, Members and Leaders in the Involvement. They can also manage join
-                requests, Send Group Email, and Edit the Involvement Information (photo, web link,
-                Description). Leadership appears on Co-Curricular Transcript view and Official
-                Co-Curricular Transcript, with Title.
+                <strong>Leader</strong> &ndash; Leaders appear on the roster with Title, with all
+                the same privileges and Members. Leadership appears on Co-Curricular Transcript view
+                and Official Co-Curricular Transcript, with Title.
               </li>
               <li>
                 <strong>Advisor</strong> &ndash; Faculty or Staff Advisor have the same privileges
                 as Leaders. It is recommended to give an Advisor a Title for the Roster.
               </li>
               <li>
-                <strong>Super-Advisor</strong> &ndash; Administrative role for program and
-                department staff responsible for multiple Involvements. Same privileges as Leader
-                and Advisor, plus, they can manage Involvements they are not a Leader or Advisor
-                for.
+                <strong>Admin</strong> &ndash; can manage all Subscribers, Members and Leaders in
+                the Involvement. They can also manage join requests, Send Group Email, and Edit the
+                Involvement Information (photo, web link, Description). Admin privileges can be
+                granted to Members of any type.
+              </li>
+              <li>
+                <strong>Super-Admin</strong> &ndash; Administrative role for program and department
+                staff responsible for multiple Involvements. Super-Admins have admin privileges for
+                all Involvements, regardless if they have been added as members.
               </li>
             </Typography>
             <br />

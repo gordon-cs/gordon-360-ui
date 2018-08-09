@@ -27,18 +27,18 @@ export default [
     component: About,
   },
   {
-    name: 'Edit Activity',
+    name: 'Edit Involvement',
     path: '/activity/:activityId/edit',
     component: ActivityEdit,
   },
   {
-    name: 'Activity Profile',
+    name: 'Involvement Profile',
     path: '/activity/:sessionCode/:activityCode',
     component: ActivityProfile,
   },
   {
-    name: 'Activities',
-    path: '/activities',
+    name: 'Involvements',
+    path: '/involvements',
     component: ActivitiesAll,
   },
   {
