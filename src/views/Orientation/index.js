@@ -15,6 +15,8 @@ import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import { LinearProgress } from 'material-ui/Progress';
+import http from '../../services/http';
+import user from '../../services/user.js';
 
 import './orientation.css';
 
@@ -38,14 +40,15 @@ export default class Orientation extends Component {
     let tasksTotal = 2;
     if (tasksTotal < tasksComplete) tasksComplete = tasksTotal;
 
-    // ID Photo not uploaded
-    if (false) {
+    // ID Photo uploaded
+    if (http.get(`orientation/photo/${user.LocalInfo.user_name}`)) {
       idPhotoAvatar = 'green-avatar';
       idPhotoSubheader = 'Completed!';
-      idPhotoBody = "We’ve received your ID photo. An ID/Access/Meal Plan card will be prepared for your arrival this semester." +
+      idPhotoBody = "We’ve received your ID photo." +
+      " An ID/Access/Meal Plan card will be prepared for your arrival this semester." +
       " It will be available at Check In at your residence, or picked up at Gordon College Police.";
       tasksComplete ++
-    } else { // ID Photo uploaded
+    } else { // ID Photo not uploaded
       idPhotoAvatar = 'red-avatar';
       idPhotoSubheader = 'Not received';
       idPhotoBody = "Email a square-format headshot photo of yourself to IDCard.CTS@gordon.edu." +
@@ -54,12 +57,12 @@ export default class Orientation extends Component {
     }
 
     // Housing Assignment made
-    if (true) {
+    if (false) {
       residenceSurveyAvatar = 'green-avatar';
       residenceSurveySubheader = 'Completed!';
       residenceSurveyBody = "Your housing assignment has been made!"
       tasksComplete ++;
-    } else if(false) { // Residence Survey completed, Housing Assignment not made
+    } else if (false) { // Residence Survey completed, Housing Assignment not made
       residenceSurveyAvatar = 'yellow-avatar';
       residenceSurveySubheader = 'In Progress';
       residenceSurveyBody = "We’ve received your Housing Information Questionnaire," +
@@ -91,12 +94,12 @@ export default class Orientation extends Component {
             />
           </figure>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <Card>
             <CardContent>
               <CardHeader
                 avatar={<Avatar className={idPhotoAvatar} />}
-                title="ID Photo Received"
+                title="ID Photo"
                 subheader={idPhotoSubheader}
               />
             </CardContent>
@@ -116,12 +119,12 @@ export default class Orientation extends Component {
             </Collapse>
           </Card>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <Card>
             <CardContent>
               <CardHeader
                 avatar={<Avatar className={residenceSurveyAvatar} />}
-                title="Financial Hold"
+                title="Residence Survey"
                 subheader={residenceSurveySubheader}
               />
             </CardContent>
