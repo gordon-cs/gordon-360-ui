@@ -76,7 +76,6 @@ class ActivityProfile extends Component {
       sessionInfo,
       id,
       isAdmin,
-      emailList,
     ] = await Promise.all([
       activity.get(activityCode),
       activity.getAdvisors(activityCode, sessionCode),
@@ -87,8 +86,12 @@ class ActivityProfile extends Component {
       session.get(sessionCode),
       user.getLocalInfo().id,
       membership.checkAdmin(user.getLocalInfo().id, sessionCode, activityCode),
-      emails.get(activityCode),
     ]);
+
+    if (this.state.isAdmin) {
+      const emailList = await emails.get(activityCode);
+      this.setState({ emailList });
+    }
 
     this.setState({
       activityInfo,
@@ -100,7 +103,6 @@ class ActivityProfile extends Component {
       sessionInfo,
       id,
       isAdmin,
-      emailList,
     });
 
     this.setState({
