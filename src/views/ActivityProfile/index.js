@@ -60,6 +60,7 @@ class ActivityProfile extends Component {
       openEditActivity: false,
       openRemoveImage: false,
       emailList: [],
+      participationDescription: [],
     };
   }
 
@@ -76,6 +77,8 @@ class ActivityProfile extends Component {
       sessionInfo,
       id,
       isAdmin,
+      participationDescription,
+      emailList,
     ] = await Promise.all([
       activity.get(activityCode),
       activity.getAdvisors(activityCode, sessionCode),
@@ -86,12 +89,9 @@ class ActivityProfile extends Component {
       session.get(sessionCode),
       user.getLocalInfo().id,
       membership.checkAdmin(user.getLocalInfo().id, sessionCode, activityCode),
+      membership.search(user.getLocalInfo().id, sessionCode, activityCode),
+      emails.get(activityCode),
     ]);
-
-    if (this.state.isAdmin) {
-      const emailList = await emails.get(activityCode);
-      this.setState({ emailList });
-    }
 
     this.setState({
       activityInfo,
@@ -103,20 +103,20 @@ class ActivityProfile extends Component {
       sessionInfo,
       id,
       isAdmin,
-    });
-
-    this.setState({
+      participationDescription,
       tempActivityBlurb: activityInfo.ActivityBlurb,
       tempActivityJoinInfo: activityInfo.ActivityJoinInfo,
       tempActivityURL: activityInfo.ActivityURL,
     });
 
-    let participationDetail = await membership.search(
-      this.state.id,
-      this.state.sessionInfo.SessionCode,
-      this.state.activityInfo.ActivityCode,
-    );
-    if (participationDetail[0] && participationDetail[1] !== 'Guest') {
+    if (this.state.isAdmin) {
+      this.setState({ emailList });
+    }
+
+    if (
+      this.state.participationDescription[0] &&
+      this.state.participationDescription[1] !== 'Guest'
+    ) {
       // Only if the user is in the activity and not a guest can this get called
       // else Unauthorized error
       const activityMembers = await membership.get(
