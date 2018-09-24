@@ -22,7 +22,7 @@ import http from './http';
  * @property {String} LastName Last Name
  * @property {Number} MembershipID Membership ID
  * @property {String} Participation Participation Code or abbreviation
- * @property {String} ParticipationDescription Participation description
+ * @property {String} ParticipationDescription Participation description (eg. "Advisor", "Leader")
  * @property {String} Privacy false if public, true if private, sometimes null
  * @property {String} SessionCode Identifier for session
  * @property {String} SessionDescription Session description
