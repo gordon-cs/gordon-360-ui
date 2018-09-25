@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
+import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
 
@@ -49,7 +49,6 @@ export default class DaysLeft extends Component {
 
     defaults.global.legend.display = false;
     let content;
-    let subheader;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
@@ -68,30 +67,51 @@ export default class DaysLeft extends Component {
       };
       content = (
         <div>
-          <Grid container direction="column" spacing={16}>
+          <Grid
+            container
+            justify="space-around"
+            spacing={0}
+            style={{ paddingTop: 5, paddingBottom: 10 }}
+          >
             <Grid item>
-              <Doughnut data={data} options={options} />
+              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+                {`${daysleft} Days Left`}
+              </Typography>
             </Grid>
-            <Grid item align="center">
+          </Grid>
+          <Doughnut data={data} height={175} options={options} />
+          <div
+            style={{
+              marginTop: '1rem',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
               <div className="label-text" style={{ color: gordonColors.primary.blue }}>
                 {pastDays}
               </div>
               <div class="entry-text">Days Finished</div>
-            </Grid>
-          </Grid>
+            </div>
+          </div>
         </div>
       );
-      subheader = `${daysleft} Days Left in Semester`;
     }
 
     return (
       <Card>
         <CardContent>
-          <CardHeader
-            title={this.state.currSessionDescription}
-            subheader={subheader}
-            align="center"
-          />
+          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+            {this.state.currSessionDescription}
+          </Typography>
           {content}
         </CardContent>
       </Card>
