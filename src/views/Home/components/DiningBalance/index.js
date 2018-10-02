@@ -32,13 +32,22 @@ export default class DiningBalance extends Component {
   }
 
   async loadData() {
+    const profile = await user.getProfileInfo();
+    const personType = String(profile.PersonType);
     const { college_role } = user.getLocalInfo();
     const diningInfoPromise = user.getDiningInfo();
     const daysLeftPromise = session.getDaysLeft();
     const daysLeft = await daysLeftPromise;
     const diningInfo = await diningInfoPromise;
     this.daysLeft = daysLeft;
-    if (college_role === 'student') {
+
+    if (college_role === 'god') {
+      if (personType.includes('stu')) {
+        this.diningInfo = diningInfo;
+      } else {
+        this.facStaffBalance = diningInfo;
+      }
+    } else if (college_role === 'student') {
       this.diningInfo = diningInfo;
     } else {
       this.facStaffBalance = diningInfo;
