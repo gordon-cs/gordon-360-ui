@@ -314,3 +314,6 @@ The script deploys to either staging or production based on the branch it is run
 * Internet Explorer does not work with 360 and never will due to the fact that IE is too old to support features that 360 currently uses
 
 * There is a problem with the first login hanging after the backend starts up, this might be due to an authentication error but refreshing is currently the only fix
+
+* Edge Authentication - Fails at creation of request object in getAuth() in auth.js service. Incompatability with URLSearchParams was fixed with an update to Edge in April, but different problem with request object must exist still.
+

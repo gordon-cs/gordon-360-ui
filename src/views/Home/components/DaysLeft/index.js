@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
 
 import { gordonColors } from '../../../../theme';
@@ -16,6 +17,7 @@ export default class DaysLeft extends Component {
 
     this.state = {
       daysLeft: [],
+      currSessionDescription: '',
       error: null,
       loading: true,
     };
@@ -26,7 +28,15 @@ export default class DaysLeft extends Component {
   async loadDaysLeft() {
     this.setState({ loading: true });
     try {
-      const daysLeft = await session.getDaysLeft();
+      const daysLeftPromise = await session.getDaysLeft();
+      const currSessionPromise = session.getCurrent();
+      const daysLeft = await daysLeftPromise;
+      const currSession = await currSessionPromise;
+      const currSessionDescription = currSession.SessionDescription.replace(
+        /(Academic Year)|(Grad)/gm,
+        '',
+      );
+      this.setState({ loading: false, daysLeft, currSessionDescription });
       this.setState({ loading: false, daysLeft });
     } catch (error) {
       this.setState({ error });
@@ -39,7 +49,6 @@ export default class DaysLeft extends Component {
 
     defaults.global.legend.display = false;
     let content;
-    let subheader;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
@@ -56,14 +65,53 @@ export default class DaysLeft extends Component {
           },
         },
       };
-      content = <Doughnut data={data} options={options} />;
-      subheader = `${daysleft} Days Left in Semester`;
+      content = (
+        <div>
+          <Grid
+            container
+            justify="space-around"
+            spacing={0}
+            style={{ paddingTop: 5, paddingBottom: 10 }}
+          >
+            <Grid item>
+              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+                {`${daysleft} Days Left`}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Doughnut data={data} height={175} options={options} />
+          <div
+            style={{
+              marginTop: '1rem',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <div className="label-text" style={{ color: gordonColors.primary.blue }}>
+                {pastDays}
+              </div>
+              <div class="entry-text">Days Finished</div>
+            </div>
+          </div>
+        </div>
+      );
     }
 
     return (
       <Card>
         <CardContent>
-          <CardHeader title="Days Left" subheader={subheader} />
+          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+            {this.state.currSessionDescription}
+          </Typography>
           {content}
         </CardContent>
       </Card>

@@ -21,6 +21,7 @@ import GroupContacts from './components/GroupContacts';
 import GordonLoader from '../../components/Loader';
 import Membership from './components/Membership';
 import membership from '../../services/membership';
+import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
@@ -34,6 +35,7 @@ class ActivityProfile extends Component {
     this.alertRemoveImage = this.alertRemoveImage.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.openEditActivityDialog = this.openEditActivityDialog.bind(this);
+    this.sendEmail = this.sendEmail.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onEditActivity = this.onEditActivity.bind(this);
     this.onRemoveImage = this.onRemoveImage.bind(this);
@@ -57,6 +59,8 @@ class ActivityProfile extends Component {
       isAdmin: false, // Boolean for current user
       openEditActivity: false,
       openRemoveImage: false,
+      emailList: [],
+      participationDescription: [],
     };
   }
 
@@ -73,6 +77,8 @@ class ActivityProfile extends Component {
       sessionInfo,
       id,
       isAdmin,
+      participationDescription,
+      emailList,
     ] = await Promise.all([
       activity.get(activityCode),
       activity.getAdvisors(activityCode, sessionCode),
@@ -83,6 +89,8 @@ class ActivityProfile extends Component {
       session.get(sessionCode),
       user.getLocalInfo().id,
       membership.checkAdmin(user.getLocalInfo().id, sessionCode, activityCode),
+      membership.search(user.getLocalInfo().id, sessionCode, activityCode),
+      emails.get(activityCode),
     ]);
 
     this.setState({
@@ -95,20 +103,20 @@ class ActivityProfile extends Component {
       sessionInfo,
       id,
       isAdmin,
-    });
-
-    this.setState({
+      participationDescription,
       tempActivityBlurb: activityInfo.ActivityBlurb,
       tempActivityJoinInfo: activityInfo.ActivityJoinInfo,
       tempActivityURL: activityInfo.ActivityURL,
     });
 
-    let participationDetail = await membership.search(
-      this.state.id,
-      this.state.sessionInfo.SessionCode,
-      this.state.activityInfo.ActivityCode,
-    );
-    if (participationDetail[0] && participationDetail[1] !== 'Guest') {
+    if (this.state.isAdmin) {
+      this.setState({ emailList });
+    }
+
+    if (
+      this.state.participationDescription[0] &&
+      this.state.participationDescription[1] !== 'Guest'
+    ) {
       // Only if the user is in the activity and not a guest can this get called
       // else Unauthorized error
       const activityMembers = await membership.get(
@@ -246,6 +254,28 @@ class ActivityProfile extends Component {
     }
   };
 
+  parseEmailList = () => {
+    var i;
+    let justEmails = '';
+    for (i = 0; i < this.state.emailList.length; i++) {
+      justEmails = justEmails + this.state.emailList[i].Email + ',';
+    }
+    return justEmails;
+  };
+
+  parseAdminEmailList = () => {
+    var i;
+    let justEmails = '';
+    for (i = 0; i < this.state.activityGroupAdmins.length; i++) {
+      justEmails = justEmails + this.state.activityGroupAdmins[i].Email + ',';
+    }
+    return justEmails;
+  };
+
+  sendEmail = () => {
+    window.location = 'mailto:' + this.parseAdminEmailList() + '?bcc=' + this.parseEmailList();
+  };
+
   render() {
     if (this.state.error) {
       throw this.state.error;
@@ -273,14 +303,23 @@ class ActivityProfile extends Component {
         editActivity = (
           <section align="center" padding={6}>
             <CardContent>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.openEditActivityDialog}
-                raised
-              >
-                Edit Involvement
-              </Button>
+              <Grid container spacing={16} justify="center">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={this.openEditActivityDialog}
+                    raised
+                  >
+                    Edit Involvement
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button variant="contained" color="primary" onClick={this.sendEmail} raised>
+                    Email Members/Subscribers
+                  </Button>
+                </Grid>
+              </Grid>
             </CardContent>
 
             <Dialog open={this.state.openEditActivity} fullWidth>
