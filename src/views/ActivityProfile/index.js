@@ -67,6 +67,7 @@ class ActivityProfile extends Component {
   async componentWillMount() {
     this.setState({ loading: true });
     const { sessionCode, activityCode } = this.props.match.params;
+    const { college_role } = user.getLocalInfo();
     const [
       activityInfo,
       activityAdvisors,
@@ -93,6 +94,12 @@ class ActivityProfile extends Component {
       emails.get(activityCode),
     ]);
 
+    if (isAdmin || college_role === 'god') {
+      // god == superAdmin
+      this.setState({ isAdmin: true });
+    } else {
+    }
+
     this.setState({
       activityInfo,
       activityAdvisors,
@@ -102,7 +109,6 @@ class ActivityProfile extends Component {
       activityStatus,
       sessionInfo,
       id,
-      isAdmin,
       participationDescription,
       tempActivityBlurb: activityInfo.ActivityBlurb,
       tempActivityJoinInfo: activityInfo.ActivityJoinInfo,
