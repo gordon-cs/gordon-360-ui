@@ -107,7 +107,7 @@ class ActivityProfile extends Component {
       activityStatus,
       sessionInfo,
       id,
-      isAdmin,
+      isAdmin: isAdmin || college_role === 'god',
       isSuperAdmin: college_role === 'god' ? true : false,
       participationDescription,
       tempActivityBlurb: activityInfo.ActivityBlurb,
