@@ -96,8 +96,6 @@ class ActivityProfile extends Component {
       emails.get(activityCode),
     ]);
 
-    console.log('College role:', college_role);
-
     this.setState({
       activityInfo,
       activityAdvisors,
@@ -114,10 +112,6 @@ class ActivityProfile extends Component {
       tempActivityJoinInfo: activityInfo.ActivityJoinInfo,
       tempActivityURL: activityInfo.ActivityURL,
     });
-
-    console.log('isAdmin:', isAdmin);
-    console.log('state.isAdmin:', this.state.isAdmin);
-    console.log('state.isSuperAdmin:', this.state.isSuperAdmin);
 
     if (this.state.isAdmin) {
       this.setState({ emailList });
