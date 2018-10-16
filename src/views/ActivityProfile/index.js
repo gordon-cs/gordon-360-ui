@@ -57,6 +57,7 @@ class ActivityProfile extends Component {
       tempActivityJoinInfo: '', // For editing activity
       tempActivityURL: '', // For editing activity
       isAdmin: false, // Boolean for current user
+      isSuperAdmin: false, // Boolean for current user
       openEditActivity: false,
       openRemoveImage: false,
       emailList: [],
@@ -76,6 +77,7 @@ class ActivityProfile extends Component {
       activityStatus,
       sessionInfo,
       id,
+      college_role, // for testing purposes only, remove before push
       isAdmin,
       participationDescription,
       emailList,
@@ -88,6 +90,7 @@ class ActivityProfile extends Component {
       activity.getStatus(activityCode, sessionCode),
       session.get(sessionCode),
       user.getLocalInfo().id,
+      user.getLocalInfo().college_role,
       membership.checkAdmin(user.getLocalInfo().id, sessionCode, activityCode),
       membership.search(user.getLocalInfo().id, sessionCode, activityCode),
       emails.get(activityCode),
@@ -102,7 +105,8 @@ class ActivityProfile extends Component {
       activityStatus,
       sessionInfo,
       id,
-      isAdmin,
+      isAdmin: isAdmin || college_role === 'god',
+      isSuperAdmin: college_role === 'god' ? true : false,
       participationDescription,
       tempActivityBlurb: activityInfo.ActivityBlurb,
       tempActivityJoinInfo: activityInfo.ActivityJoinInfo,
@@ -114,10 +118,12 @@ class ActivityProfile extends Component {
     }
 
     if (
-      this.state.participationDescription[0] &&
-      this.state.participationDescription[1] !== 'Guest'
+      (this.state.participationDescription[0] &&
+        this.state.participationDescription[1] !== 'Guest') ||
+      this.state.isSuperAdmin
     ) {
-      // Only if the user is in the activity and not a guest can this get called
+      // Only if the user is in the activity and not a guest can this get called (unless user is
+      // a superadmin [god mode])
       // else Unauthorized error
       const activityMembers = await membership.get(
         this.state.activityInfo.ActivityCode,
@@ -556,6 +562,7 @@ class ActivityProfile extends Component {
           participationDetail={this.state.participationDetail}
           id={this.state.id}
           isAdmin={this.state.isAdmin}
+          isSuperAdmin={this.state.isSuperAdmin}
           status={this.state.activityStatus}
         />
       );

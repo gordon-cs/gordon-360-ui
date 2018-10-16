@@ -54,6 +54,7 @@ export default class Membership extends Component {
       participationCode: '',
       titleComment: '',
       isAdmin: this.props.isAdmin,
+      isSuperAdmin: this.props.isSuperAdmin,
       participationDetail: [],
       id: this.props.id,
       addEmail: '',
@@ -152,7 +153,11 @@ export default class Membership extends Component {
 
   // Called when submitting new member details from Add Member dialog box
   async onAddMember() {
-    let addID = await membership.getEmailAccount(this.state.addEmail).then(function(result) {
+    let memberEmail = this.state.addEmail;
+    if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
+      memberEmail = memberEmail + '@gordon.edu';
+    }
+    let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
       return result.GordonID;
     });
     let data = {
@@ -295,9 +300,12 @@ export default class Membership extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      if (this.state.participationDetail[0] && this.state.participationDetail[1] !== 'Guest') {
-        // User is in activity and not a guest
-        if (this.state.isAdmin) {
+      if (
+        (this.state.participationDetail[0] && this.state.participationDetail[1] !== 'Guest') ||
+        this.state.isSuperAdmin
+      ) {
+        // User is in activity and not a guest (unless user is superadmin [god mode])
+        if (this.state.isAdmin || this.state.isSuperAdmin) {
           header = (
             <div style={headerStyle}>
               <Grid container direction="row" spacing={16}>
@@ -329,7 +337,8 @@ export default class Membership extends Component {
           } else {
             requestList = <RequestDetail involvement={membership} />;
           }
-          if (this.state.participationDetail[1] === 'Advisor') {
+          // Only advisors and superadmins can re-open the roster
+          if (this.state.participationDetail[1] === 'Advisor' || this.state.isSuperAdmin) {
             if (this.state.status === 'OPEN') {
               confirmRoster = (
                 <Button variant="contained" color="primary" onClick={this.onConfirmRoster} raised>
