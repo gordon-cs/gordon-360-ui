@@ -153,7 +153,11 @@ export default class Membership extends Component {
 
   // Called when submitting new member details from Add Member dialog box
   async onAddMember() {
-    let addID = await membership.getEmailAccount(this.state.addEmail).then(function(result) {
+    let memberEmail = this.state.addEmail;
+    if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
+      memberEmail = memberEmail + '@gordon.edu';
+    }
+    let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
       return result.GordonID;
     });
     let data = {
