@@ -27,6 +27,7 @@ import { gordonColors } from '../../../../theme';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 //import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 import AddPersonIcon from '@material-ui/icons/PersonAdd';
+import Divider from '@material-ui/core/Divider';
 
 export default class Membership extends Component {
   constructor(props) {
@@ -453,15 +454,17 @@ export default class Membership extends Component {
 
                     <Grid item xs={6} sm={4} md={4} lg={4}>
                       <Button
+                        variant="contained"
                         color="primary"
                         disabled={isActivityClosed}
                         onClick={this.openAddMemberDialog}
-                        raised
+                        style={{ marginBottom: 8 }}
                       >
-                        <AddPersonIcon />
+                        <AddPersonIcon style={{ marginRight: 8 }} />
                         Add member
                       </Button>
                     </Grid>
+                    <Divider />
                     {requestList}
                     <Grid item>{confirmRoster}</Grid>
                   </Grid>
