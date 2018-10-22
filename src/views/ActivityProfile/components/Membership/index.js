@@ -413,7 +413,7 @@ export default class Membership extends Component {
                                   <MenuItem value="ADV">Advisor</MenuItem>
                                   <MenuItem value="LEAD">Leader</MenuItem>
                                   <MenuItem value="MEMBR">Member</MenuItem>
-                                  <MenuItem value="GUEST">Subscriber</MenuItem>
+                                  <MenuItem value="GUEST">Guest</MenuItem>
                                 </Select>
                               </FormControl>
                             </Grid>
