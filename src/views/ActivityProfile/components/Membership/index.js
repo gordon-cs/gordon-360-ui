@@ -46,6 +46,7 @@ export default class Membership extends Component {
     this.state = {
       membership: [],
       openAddMember: false,
+      addMemberDialogError: '',
       openJoin: false,
       status: this.props.status,
       sessionInfo: null,
@@ -153,24 +154,31 @@ export default class Membership extends Component {
 
   // Called when submitting new member details from Add Member dialog box
   async onAddMember() {
-    let memberEmail = this.state.addEmail;
-    if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
-      memberEmail = memberEmail + '@gordon.edu';
+    if (this.state.addEmail === '' || this.state.participationCode === '') {
+      this.setState({ addMemberDialogError: 'Please resolve the errors below and try again.' });
+    } else {
+      this.setState({ addMemberDialogError: '' });
+      let memberEmail = this.state.addEmail;
+      // If only the Exchange username is entered without the email address, add "@gordon.edu" to the
+      // username
+      if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
+        memberEmail = memberEmail + '@gordon.edu';
+      }
+      let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
+        return result.GordonID;
+      });
+      let data = {
+        ACT_CDE: this.props.activityCode,
+        SESS_CDE: this.state.sessionInfo.SessionCode,
+        ID_NUM: addID,
+        PART_CDE: this.state.participationCode,
+        COMMENT_TXT: this.state.titleComment,
+        GRP_ADMIN: false,
+      };
+      await membership.addMembership(data);
+      this.onClose();
+      this.refresh();
     }
-    let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
-      return result.GordonID;
-    });
-    let data = {
-      ACT_CDE: this.props.activityCode,
-      SESS_CDE: this.state.sessionInfo.SessionCode,
-      ID_NUM: addID,
-      PART_CDE: this.state.participationCode,
-      COMMENT_TXT: this.state.titleComment,
-      GRP_ADMIN: false,
-    };
-    await membership.addMembership(data);
-    this.onClose();
-    this.refresh();
   }
 
   // Called when submitting request details from Join dialog box
@@ -376,11 +384,16 @@ export default class Membership extends Component {
                   <Grid container spacing={16} direction="column">
                     <Dialog open={this.state.openAddMember} keepMounted align="center">
                       <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
+                      <Typography style={{ color: '#ff0000' }}>
+                        {this.state.addMemberDialogError}
+                      </Typography>
                       <DialogContent>
                         <Grid container align="center" padding={6} spacing={16}>
                           <Grid item xs={12} padding={6} align="center">
-                            <Typography>Student Email</Typography>
+                            <Typography>Username</Typography>
                             <TextField
+                              error={this.state.addEmail === '' ? true : false}
+                              helperText={this.state.addEmail === '' ? 'Required' : ''}
                               autoFocus
                               fullWidth
                               style={formControl}
@@ -388,10 +401,11 @@ export default class Membership extends Component {
                             />
                           </Grid>
                           <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
-                            <Typography>Participation (Required)</Typography>
+                            <Typography>Participation</Typography>
                             <Grid item padding={6} align="center">
                               <FormControl fullWidth style={formControl}>
                                 <Select
+                                  error={this.state.participationCode === '' ? true : false}
                                   value={this.state.participationCode}
                                   onChange={this.handleSelectParticipationLevel}
                                   displayEmpty
@@ -404,7 +418,7 @@ export default class Membership extends Component {
                               </FormControl>
                             </Grid>
                             <Grid item align="center">
-                              <Typography>Title/Comment: (Optional)</Typography>
+                              <Typography>Title/Comment (Optional)</Typography>
                               <TextField
                                 fullWidth
                                 onChange={this.handleText('titleComment')}
