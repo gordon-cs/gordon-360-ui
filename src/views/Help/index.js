@@ -88,8 +88,8 @@ export default class Help extends Component {
             <Typography variant="body1" gutterBottom component="ul">
               <br />
               <li>
-                <strong>Subscriber</strong> &ndash; Subscriber mode, can follow the Involvement and
-                receive Group email. Does not appear on Co-Curricular Transcript view.
+                <strong>Subscriber</strong> &ndash; Subscribers will receive Group emails. The
+                Involvement will not appear on your Co-Curricular Transcript.
               </li>
               <li>
                 <strong>Member</strong> &ndash; Members appear on the roster and can see other
