@@ -233,7 +233,7 @@ export default class MemberList extends Component {
                             <MenuItem value="Advisor">Advisor</MenuItem>
                             <MenuItem value="Leader">Leader</MenuItem>
                             <MenuItem value="Member">Member</MenuItem>
-                            <MenuItem value="Guest">Subscriber</MenuItem>
+                            <MenuItem value="Guest">Guest</MenuItem>
                           </Select>
                         </FormControl>
                       </Grid>
