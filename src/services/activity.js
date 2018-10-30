@@ -138,10 +138,16 @@ const getStatus = (activityCode, sessionCode) =>
 const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/types`);
 
 /**
- * Get all open activity for a session
+ * Get all open activities for a session
  * @return {Promise.<Activities[]>} List of open activities for a session
  */
 const getOpen = () => http.get(`activities/open`);
+
+/**
+ * Get all closed activities for a session
+ * @return {Promise.<Activities[]>} List of closed activities for a session
+ */
+const getClosed = () => http.get(`activities/closed`);
 
 /**
  * Filter a list of activities by type and description
@@ -197,6 +203,7 @@ export default {
   getStatus,
   getTypes,
   getOpen,
+  getClosed,
   filter,
   reopenActivity,
   resetImage,

@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { gordonColors } from '../../theme';
 import OpenInvolvements from './components/OpenInvolvements';
+import ClosedInvolvements from './components/ClosedInvolvements';
 
 export default class Admin extends Component {
   render() {
@@ -33,6 +34,7 @@ export default class Admin extends Component {
                 Closed Involvements
               </Typography>
             </div>
+            <ClosedInvolvements />
           </Card>
         </Grid>
         <Grid item xs={12}>

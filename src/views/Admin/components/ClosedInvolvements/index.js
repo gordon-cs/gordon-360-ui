@@ -6,7 +6,7 @@ import GordonLoader from '../../../../components/Loader';
 import activity from '../../../../services/activity';
 import InvolvementStatusList from '../InvolvementStatusList';
 
-export default class OpenInvolvements extends Component {
+export default class ClosedInvolvements extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +21,7 @@ export default class OpenInvolvements extends Component {
 
   async loadOpen() {
     this.setState({ loading: true });
-    const InvolvementStatusList = await activity.getOpen(); //Retrieve all open involvements
+    const InvolvementStatusList = await activity.getClosed(); //Retrieve all closed involvements
     this.setState({ InvolvementStatusList, loading: false });
   }
 
@@ -37,7 +37,7 @@ export default class OpenInvolvements extends Component {
     } else {
       content = (
         <Grid item>
-          <Typography variant="display1">No Open Involvements To Show</Typography>
+          <Typography variant="display1">No Closed Involvements To Show</Typography>
         </Grid>
       );
     }

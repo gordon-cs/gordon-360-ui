@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 
-export default class OpenInvolvementsList extends Component {
+export default class InvolvementStatusList extends Component {
   constructor(props) {
     super(props);
   }
@@ -14,12 +14,18 @@ export default class OpenInvolvementsList extends Component {
   render() {
     const { Activity } = this.props;
 
-    // membership.getFollowersNum(activityCode, sessionCode),
-    console.log(Activity);
+    const imgStyle = {
+      width: '20%',
+    };
 
     return (
       <div>
         <Grid container alignItems="center">
+        <Grid item xs={2}>
+            <Link to={`/activity/${Activity.sessionCode}/${Activity.activityCode}`}>
+              <img src={Activity.ActivityImagePath} alt="" style={imgStyle}/>
+            </Link>
+          </Grid>
           <Grid item xs={8}>
             <List>
               <ListItem>
@@ -30,11 +36,6 @@ export default class OpenInvolvementsList extends Component {
                 </Link>
               </ListItem>
             </List>
-          </Grid>
-          <Grid item xs={2}>
-            <Link to={`/activity/${Activity.sessionCode}/${Activity.activityCode}`}>
-              <img src={Activity.ActivityImagePath} alt="" />
-            </Link>
           </Grid>
         </Grid>
         <Divider />
