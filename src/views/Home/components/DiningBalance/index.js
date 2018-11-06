@@ -259,7 +259,6 @@ export default class DiningBalance extends Component {
           <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.loading ? '' : 'Dining Balance'}
           </Typography>
-          /* Temporarily adding a note about the dining balance not displaying properly.  Chris H. 11-6-18 */
           <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.loading ? '' : 'Meal points are not currently working.  Thank you for your patience while we address this issue.'}
           </Typography>
