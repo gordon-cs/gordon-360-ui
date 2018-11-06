@@ -260,7 +260,7 @@ export default class DiningBalance extends Component {
             {this.state.loading ? '' : 'Dining Balance'}
           </Typography>
           <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.loading ? '' : 'Meal points are not currently working.  Thank you for your patience while we address this issue.'}
+            {this.state.loading ? '' : 'The meal plan balance shown below is not working properly.  CTS is working to resolve, thank you for your patience.'}
           </Typography>
           {content}
         </CardContent>
