@@ -259,9 +259,6 @@ export default class DiningBalance extends Component {
           <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.loading ? '' : 'Dining Balance'}
           </Typography>
-          <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.loading ? '' : 'The meal plan balance shown below is not working properly.  CTS is working to resolve this, thank you for your patience.'}
-          </Typography>
           {content}
         </CardContent>
       </Card>
