@@ -259,8 +259,8 @@ export default class DiningBalance extends Component {
           <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.loading ? '' : 'Dining Balance'}
           </Typography>
-          <Typography varaint="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.loading ? '' : 'Dining Balances are not currently displaying properly.  Thank you for your patience while we address this issue.'}
+          <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
+            {this.state.loading ? '' : 'Meal points are not currently working.  Thank you for your patience while we address this issue.'}
           </Typography>
           {content}
         </CardContent>
