@@ -165,13 +165,11 @@ export default class Membership extends Component {
       if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
         memberEmail = memberEmail + '@gordon.edu';
       }
-      let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
-        return result.GordonID;
-      });
+      let addID = await membership.getEmailAccount(memberEmail);
       let data = {
         ACT_CDE: this.props.activityCode,
         SESS_CDE: this.state.sessionInfo.SessionCode,
-        ID_NUM: addID,
+        ID_NUM: addID.GordonID,
         PART_CDE: this.state.participationCode,
         COMMENT_TXT: this.state.titleComment,
         GRP_ADMIN: false,
