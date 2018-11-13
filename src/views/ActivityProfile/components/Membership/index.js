@@ -165,18 +165,23 @@ export default class Membership extends Component {
       if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
         memberEmail = memberEmail + '@gordon.edu';
       }
-      let addID = await membership.getEmailAccount(memberEmail);
-      let data = {
-        ACT_CDE: this.props.activityCode,
-        SESS_CDE: this.state.sessionInfo.SessionCode,
-        ID_NUM: addID.GordonID,
-        PART_CDE: this.state.participationCode,
-        COMMENT_TXT: this.state.titleComment,
-        GRP_ADMIN: false,
-      };
-      await membership.addMembership(data);
-      this.onClose();
-      this.refresh();
+      try {
+        let addID = await membership.getEmailAccount(memberEmail);
+        this.setState({ addMemberDialogError: '' });
+        let data = {
+          ACT_CDE: this.props.activityCode,
+          SESS_CDE: this.state.sessionInfo.SessionCode,
+          ID_NUM: addID.GordonID,
+          PART_CDE: this.state.participationCode,
+          COMMENT_TXT: this.state.titleComment,
+          GRP_ADMIN: false,
+        };
+        await membership.addMembership(data);
+        this.onClose();
+        this.refresh();
+      } catch (error) {
+        this.setState({ addMemberDialogError: error });
+      }
     }
   }
 

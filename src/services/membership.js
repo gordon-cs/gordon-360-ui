@@ -188,7 +188,7 @@ const getAllGroupAdmins = activityCode =>
  * @return {Object} Email details
  */
 const getEmailAccount = async email => {
-  return await http.get(`accounts/email/${email}/`);
+  return await http.get(`accounts/addMemberEmail/${email}/`);
 };
 
 /**
