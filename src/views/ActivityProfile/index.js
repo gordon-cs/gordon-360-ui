@@ -112,7 +112,8 @@ class ActivityProfile extends Component {
     });
 
     if (this.state.isAdmin) {
-      this.setState({ emailList: emails.get(activityCode) });
+      const [emailList] = await Promise.all([emails.get(activityCode)]);
+      this.setState({ emailList });
     }
 
     if (
@@ -266,7 +267,6 @@ class ActivityProfile extends Component {
     for (i = 0; i < this.state.emailList.length; i++) {
       justEmails = justEmails + this.state.emailList[i].Email + ',';
     }
-    console.log('outside for loop', justEmails);
     return justEmails;
   };
 
