@@ -262,8 +262,6 @@ class ActivityProfile extends Component {
   parseEmailList = () => {
     var i;
     let justEmails = '';
-    console.log('this.state.emaillist', this.state.emailList);
-    console.log('length', this.state.emailList.length);
     for (i = 0; i < this.state.emailList.length; i++) {
       justEmails = justEmails + this.state.emailList[i].Email + ',';
     }
