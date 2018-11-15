@@ -94,6 +94,11 @@ class ActivityProfile extends Component {
       membership.search(user.getLocalInfo().id, sessionCode, activityCode),
     ]);
 
+    if (this.state.isAdmin) {
+      const emailList = await emails.get(activityCode);
+      this.setState({ emailList });
+    }
+
     this.setState({
       activityInfo,
       activityAdvisors,
