@@ -120,7 +120,7 @@ export default class CLWCreditsDaysLeft extends Component {
             </Grid>
             <Grid item>
               <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
-                {`${remaining} CL&W Credit` + (current === 1 ? '' : 's') + ' Left'}
+                {`${remaining} CL&W Credit` + (remaining === 1 ? '' : 's') + ' Left'}
               </Typography>
             </Grid>
           </Grid>
@@ -171,7 +171,7 @@ export default class CLWCreditsDaysLeft extends Component {
               <div className="label-text" style={{ color: chapelColor }}>
                 {current}
               </div>
-              <div class="entry-text">CL&W Credits</div>
+              <div class="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
             </div>
           </div>
         </div>
