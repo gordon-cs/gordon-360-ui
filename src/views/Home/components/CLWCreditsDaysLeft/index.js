@@ -158,7 +158,7 @@ export default class CLWCreditsDaysLeft extends Component {
               <div className="label-text" style={{ color: daysColor }}>
                 {daysFinished}
               </div>
-              <div class="entry-text">Days Finished</div>
+              <div class="entry-text">{'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}</div>
             </div>
             <div
               style={{
