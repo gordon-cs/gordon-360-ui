@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html> 
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            background-color: #ebeaea;
+        }
+        h2 {
+            text-align: center;
+            color:white;
+            
+        }
+        #header {
+            background-color: #014983;     
+            margin-top: 10px;
+            border-radius: 25px;
+            font-family: sans-serif;
+            margin-bottom: 15px;
+            
+
+        }
+
+        i {
+            display: inline;
+            color:white;
+            margin-left: 10px;
+
+        }
+
+        span {
+            display: inline-block;
+            vertical-align: middle;
+            
+        }
+
+        #title {
+            margin-left: 15px;
+        }
+
+        #widget {
+            background-color: white;
+            border-radius: 10px;
+        }
+
+
+    </style>
+
+</head>
+<body>
+    <div id="header">
+        <span>
+            <a href="https://360.gordon.edu/events"><i class="fa fa-chevron-circle-left fa-3x" aria-hidden="true"></i></a>
+        </span>
+        <span id="title"><h2>Upcoming Christian Life & Worship Events</h2></span>
+    </div>
+    
+
+    <div id="widget">
+        <script type="text/javascript" src="http://25livepub.collegenet.com/scripts/spuds.js"></script>
+
+        <script type="text/javascript">
+            $Trumba.addSpud({
+            webName: "clw-approved-calendar",
+            spudType : "main" ,
+            spudConfig : "mobile" });
+        </script>
+    </div>
+
+</body>
+</html>

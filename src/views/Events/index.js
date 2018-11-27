@@ -13,8 +13,6 @@ import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
 
-//import './event.css';
-
 const styles = {
   searchBar: {
     margin: '0 auto',
@@ -118,6 +116,10 @@ export default class Events extends Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
   }
+
+  handleClickOpen = () => {
+    window.open('file:///Users/SamNguyen/Desktop/gordon-360-ui/src/views/Events/widget.html');
+  };
 
   render() {
     let content;
@@ -243,6 +245,7 @@ export default class Events extends Component {
                   label="CL&amp;W Only"
                 />
               </Grid>
+              <Button onClick={this.handleClickOpen}> Claw Widget </Button>
             </Grid>
           </Grid>
 
