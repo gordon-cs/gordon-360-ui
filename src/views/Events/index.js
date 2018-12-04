@@ -118,7 +118,7 @@ export default class Events extends Component {
   }
 
   handleClickOpen = () => {
-    window.open('file:///Users/SamNguyen/Desktop/gordon-360-ui/src/views/Events/widget.html');
+    window.open('http://360events.gordon.edu/');
   };
 
   render() {
@@ -238,14 +238,13 @@ export default class Events extends Component {
                   control={
                     <Switch
                       checked={this.state.chapelCredits}
-                      onChange={this.filterEvents('chapelCredits')}
+                      onChange={this.handleClickOpen} //onChange={this.filterEvents('chapelCredits')}
                       aria-label="chapelCredits"
                     />
                   }
                   label="CL&amp;W Only"
                 />
               </Grid>
-              <Button onClick={this.handleClickOpen}> Claw Widget </Button>
             </Grid>
           </Grid>
 
