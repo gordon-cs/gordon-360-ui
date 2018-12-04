@@ -80,7 +80,6 @@ class ActivityProfile extends Component {
       college_role, // for testing purposes only, remove before push
       isAdmin,
       participationDescription,
-      emailList,
     ] = await Promise.all([
       activity.get(activityCode),
       activity.getAdvisors(activityCode, sessionCode),
@@ -93,8 +92,12 @@ class ActivityProfile extends Component {
       user.getLocalInfo().college_role,
       membership.checkAdmin(user.getLocalInfo().id, sessionCode, activityCode),
       membership.search(user.getLocalInfo().id, sessionCode, activityCode),
-      emails.get(activityCode),
     ]);
+
+    if (this.state.isAdmin) {
+      const emailList = await emails.get(activityCode);
+      this.setState({ emailList });
+    }
 
     this.setState({
       activityInfo,
@@ -114,6 +117,7 @@ class ActivityProfile extends Component {
     });
 
     if (this.state.isAdmin) {
+      const [emailList] = await Promise.all([emails.get(activityCode)]);
       this.setState({ emailList });
     }
 
