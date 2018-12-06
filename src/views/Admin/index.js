@@ -16,31 +16,31 @@ export default class Admin extends Component {
     };
 
     return (
-      <Grid container align="center" spacing={16}>
-        <Grid item xs={12}>
+      <Grid container justify="center" spacing={16}>
+        <Grid item xs={12} lg={8}>
           <Card>
             <div style={headerStyle}>
-              <Typography variant="body2" style={headerStyle}>
+              <Typography variant="body2" align="center" style={headerStyle}>
                 Open Involvements
               </Typography>
             </div>
             <OpenInvolvements />
           </Card>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} lg={8}>
           <Card>
             <div style={headerStyle}>
-              <Typography variant="body2" style={headerStyle}>
+              <Typography variant="body2" align="center" style={headerStyle}>
                 Closed Involvements
               </Typography>
             </div>
             <ClosedInvolvements />
           </Card>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} lg={8}>
           <Card>
             <div style={headerStyle}>
-              <Typography variant="body2" style={headerStyle}>
+              <Typography variant="body2" align="center" style={headerStyle}>
                 Super Admins
               </Typography>
             </div>
