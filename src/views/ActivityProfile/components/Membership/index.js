@@ -27,6 +27,7 @@ import { gordonColors } from '../../../../theme';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 //import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 import AddPersonIcon from '@material-ui/icons/PersonAdd';
+import Divider from '@material-ui/core/Divider';
 
 export default class Membership extends Component {
   constructor(props) {
@@ -46,6 +47,7 @@ export default class Membership extends Component {
     this.state = {
       membership: [],
       openAddMember: false,
+      addMemberDialogError: '',
       openJoin: false,
       status: this.props.status,
       sessionInfo: null,
@@ -54,6 +56,7 @@ export default class Membership extends Component {
       participationCode: '',
       titleComment: '',
       isAdmin: this.props.isAdmin,
+      isSuperAdmin: this.props.isSuperAdmin,
       participationDetail: [],
       id: this.props.id,
       addEmail: '',
@@ -152,20 +155,31 @@ export default class Membership extends Component {
 
   // Called when submitting new member details from Add Member dialog box
   async onAddMember() {
-    let addID = await membership.getEmailAccount(this.state.addEmail).then(function(result) {
-      return result.GordonID;
-    });
-    let data = {
-      ACT_CDE: this.props.activityCode,
-      SESS_CDE: this.state.sessionInfo.SessionCode,
-      ID_NUM: addID,
-      PART_CDE: this.state.participationCode,
-      COMMENT_TXT: this.state.titleComment,
-      GRP_ADMIN: false,
-    };
-    await membership.addMembership(data);
-    this.onClose();
-    this.refresh();
+    if (this.state.addEmail === '' || this.state.participationCode === '') {
+      this.setState({ addMemberDialogError: 'Please resolve the errors below and try again.' });
+    } else {
+      this.setState({ addMemberDialogError: '' });
+      let memberEmail = this.state.addEmail;
+      // If only the Exchange username is entered without the email address, add "@gordon.edu" to the
+      // username
+      if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
+        memberEmail = memberEmail + '@gordon.edu';
+      }
+      let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
+        return result.GordonID;
+      });
+      let data = {
+        ACT_CDE: this.props.activityCode,
+        SESS_CDE: this.state.sessionInfo.SessionCode,
+        ID_NUM: addID,
+        PART_CDE: this.state.participationCode,
+        COMMENT_TXT: this.state.titleComment,
+        GRP_ADMIN: false,
+      };
+      await membership.addMembership(data);
+      this.onClose();
+      this.refresh();
+    }
   }
 
   // Called when submitting request details from Join dialog box
@@ -295,9 +309,12 @@ export default class Membership extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      if (this.state.participationDetail[0] && this.state.participationDetail[1] !== 'Guest') {
-        // User is in activity and not a guest
-        if (this.state.isAdmin) {
+      if (
+        (this.state.participationDetail[0] && this.state.participationDetail[1] !== 'Guest') ||
+        this.state.isSuperAdmin
+      ) {
+        // User is in activity and not a guest (unless user is superadmin [god mode])
+        if (this.state.isAdmin || this.state.isSuperAdmin) {
           header = (
             <div style={headerStyle}>
               <Grid container direction="row" spacing={16}>
@@ -329,7 +346,8 @@ export default class Membership extends Component {
           } else {
             requestList = <RequestDetail involvement={membership} />;
           }
-          if (this.state.participationDetail[1] === 'Advisor') {
+          // Only advisors and superadmins can re-open the roster
+          if (this.state.participationDetail[1] === 'Advisor' || this.state.isSuperAdmin) {
             if (this.state.status === 'OPEN') {
               confirmRoster = (
                 <Button variant="contained" color="primary" onClick={this.onConfirmRoster} raised>
@@ -367,11 +385,16 @@ export default class Membership extends Component {
                   <Grid container spacing={16} direction="column">
                     <Dialog open={this.state.openAddMember} keepMounted align="center">
                       <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
+                      <Typography style={{ color: '#ff0000' }}>
+                        {this.state.addMemberDialogError}
+                      </Typography>
                       <DialogContent>
                         <Grid container align="center" padding={6} spacing={16}>
                           <Grid item xs={12} padding={6} align="center">
-                            <Typography>Student Email</Typography>
+                            <Typography>Username</Typography>
                             <TextField
+                              error={this.state.addEmail === '' ? true : false}
+                              helperText={this.state.addEmail === '' ? 'Required' : ''}
                               autoFocus
                               fullWidth
                               style={formControl}
@@ -379,10 +402,11 @@ export default class Membership extends Component {
                             />
                           </Grid>
                           <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
-                            <Typography>Participation (Required)</Typography>
+                            <Typography>Participation</Typography>
                             <Grid item padding={6} align="center">
                               <FormControl fullWidth style={formControl}>
                                 <Select
+                                  error={this.state.participationCode === '' ? true : false}
                                   value={this.state.participationCode}
                                   onChange={this.handleSelectParticipationLevel}
                                   displayEmpty
@@ -390,12 +414,12 @@ export default class Membership extends Component {
                                   <MenuItem value="ADV">Advisor</MenuItem>
                                   <MenuItem value="LEAD">Leader</MenuItem>
                                   <MenuItem value="MEMBR">Member</MenuItem>
-                                  <MenuItem value="GUEST">Subscriber</MenuItem>
+                                  <MenuItem value="GUEST">Guest</MenuItem>
                                 </Select>
                               </FormControl>
                             </Grid>
                             <Grid item align="center">
-                              <Typography>Title/Comment: (Optional)</Typography>
+                              <Typography>Title/Comment (Optional)</Typography>
                               <TextField
                                 fullWidth
                                 onChange={this.handleText('titleComment')}
@@ -430,15 +454,17 @@ export default class Membership extends Component {
 
                     <Grid item xs={6} sm={4} md={4} lg={4}>
                       <Button
+                        variant="contained"
                         color="primary"
                         disabled={isActivityClosed}
                         onClick={this.openAddMemberDialog}
-                        raised
+                        style={{ marginBottom: 8 }}
                       >
-                        <AddPersonIcon />
+                        <AddPersonIcon style={{ marginRight: 8 }} />
                         Add member
                       </Button>
                     </Grid>
+                    <Divider />
                     {requestList}
                     <Grid item>{confirmRoster}</Grid>
                   </Grid>

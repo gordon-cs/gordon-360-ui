@@ -12,6 +12,15 @@ export default class Office extends Component {
   render() {
     let OfficeHours, OfficePhone, Room, Office;
     if (String(this.props.profile.PersonType).includes('fac')) {
+
+      if (this.props.profile.BuildingDescription === '' && 
+      this.props.profile.OnCampusRoom === '' &&
+       this.props.profile.OnCampusPhone === '' &&
+        this.props.profile.office_hours === '')
+        {
+          return null;
+        }
+
       if (this.props.profile.OnCampusPhone !== '') {
         OfficePhone = (
           <div>

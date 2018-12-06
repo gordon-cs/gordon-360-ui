@@ -479,31 +479,37 @@ const getCurrentMemberships = async id => {
   return myCurrentInvolvements;
 };
 
-//Take student's memberships and filter for current only, omit the memberships that are just 'Guest'
+//Take student's memberships and filter out "Guest" memberships
+const getMembershipsWithoutGuests = async id => {
+  let myInvolvements = await getMemberships(id);
+  let myInvolvementsWithoutGuests = [];
+  for (let i = 0; i < myInvolvements.length; i += 1) {
+    if (!(myInvolvements[i].ParticipationDescription === 'Guest')) {
+      myInvolvementsWithoutGuests.push(myInvolvements[i]);
+    }
+  }
+  return myInvolvementsWithoutGuests;
+};
+
+//Take student's non-"Guest" memberships and filter for current only
 const getCurrentMembershipsWithoutGuests = async id => {
-  let myInvolvements = await getMembershipsAlphabetically(id);
+  let myInvolvements = await getMembershipsWithoutGuests(id);
   let myCurrentInvolvementsWithoutGuests = [];
   const { SessionCode: sessionCode } = await session.getCurrent();
   for (let i = 0; i < myInvolvements.length; i += 1) {
-    if (
-      myInvolvements[i].SessionCode === sessionCode &&
-      !(myInvolvements[i].ParticipationDescription === 'Guest')
-    ) {
+    if (myInvolvements[i].SessionCode === sessionCode) {
       myCurrentInvolvementsWithoutGuests.push(myInvolvements[i]);
     }
   }
   return myCurrentInvolvementsWithoutGuests;
 };
 
-//Take student's memberships and filter for specifiied session only, omit the memberships that are just 'Guest'
+//Take student's non-"Guest" memberships and filter for specifiied session only
 const getSessionMembershipsWithoutGuests = async (id, session) => {
-  let myInvolvements = await getMembershipsAlphabetically(id);
+  let myInvolvements = await getMembershipsWithoutGuests(id);
   let myCurrentInvolvementsWithoutGuests = [];
   for (let i = 0; i < myInvolvements.length; i += 1) {
-    if (
-      myInvolvements[i].SessionCode === session &&
-      !(myInvolvements[i].ParticipationDescription === 'Guest')
-    ) {
+    if (myInvolvements[i].SessionCode === session) {
       myCurrentInvolvementsWithoutGuests.push(myInvolvements[i]);
     }
   }
@@ -564,10 +570,11 @@ function compareBySession(a, b) {
 }
 
 //returns an array of membership objects from backend server,
+//not including Guest memberships
 //using asynchronous http.get request (via getMemberships function)
 //sorts by SessionCode
 const getTranscriptInfo = async id => {
-  let transcriptInfo = await getMemberships(id);
+  let transcriptInfo = await getMembershipsWithoutGuests(id);
   transcriptInfo.sort(compareBySession);
   return transcriptInfo;
 };
