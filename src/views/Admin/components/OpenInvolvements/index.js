@@ -1,6 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 import GordonLoader from '../../../../components/Loader';
 import activity from '../../../../services/activity';
@@ -32,7 +33,10 @@ export default class OpenInvolvements extends Component {
       content = <GordonLoader />;
     } else if (this.state.InvolvementStatusList.length > 0) {
       content = this.state.InvolvementStatusList.map(activity => (
-        <InvolvementStatusList Activity={activity} />
+        <div>
+          <InvolvementStatusList Activity={activity} />
+          <Divider />
+        </div>
       ));
     } else {
       content = (
