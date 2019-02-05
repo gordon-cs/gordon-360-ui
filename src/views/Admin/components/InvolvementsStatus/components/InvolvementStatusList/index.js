@@ -1,14 +1,8 @@
-import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import session from '../../../../services/session';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import activity from '../../../../services/activity';
-import Button from '@material-ui/core/Button';
-
+import session from '../../../../../../services/session';
 export default class InvolvementStatusList extends Component {
   constructor(props) {
     super(props);
@@ -48,16 +42,6 @@ export default class InvolvementStatusList extends Component {
                   </Typography>
                 </Link>
               </Grid>
-              {/* <Grid item xs={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => activity.closeActivity(Activity.ActivityCode, '201809')}
-                size="small"
-                >
-                Close
-                </Button>
-              </Grid>      */}
             </Grid>
           </Grid>
         </Grid>

@@ -2,10 +2,8 @@ import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
-
 import { gordonColors } from '../../theme';
-import OpenInvolvements from './components/OpenInvolvements';
-import ClosedInvolvements from './components/ClosedInvolvements';
+import InvolvementsStatus from './components/InvolvementsStatus';
 
 export default class Admin extends Component {
   render() {
@@ -18,25 +16,13 @@ export default class Admin extends Component {
     return (
       <Grid container justify="center" spacing={16}>
         <Grid item xs={12} lg={8}>
-          <Card>
-            <div style={headerStyle}>
-              <Typography variant="body2" align="center" style={headerStyle}>
-                Open Involvements
-              </Typography>
-            </div>
-            <OpenInvolvements />
-          </Card>
+          <InvolvementsStatus status={'Open'} />
         </Grid>
+
         <Grid item xs={12} lg={8}>
-          <Card>
-            <div style={headerStyle}>
-              <Typography variant="body2" align="center" style={headerStyle}>
-                Closed Involvements
-              </Typography>
-            </div>
-            <ClosedInvolvements />
-          </Card>
+          <InvolvementsStatus status={'Closed'} />
         </Grid>
+
         <Grid item xs={12} lg={8}>
           <Card>
             <div style={headerStyle}>
