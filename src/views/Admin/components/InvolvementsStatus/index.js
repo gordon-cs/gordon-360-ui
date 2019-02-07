@@ -17,10 +17,10 @@ export default class InvolvementsStatus extends Component {
   }
 
   componentWillMount() {
-    this.loadInolvementsOfThisStatus();
+    this.loadInvolvementsOfThisStatus();
   }
 
-  async loadInolvementsOfThisStatus() {
+  async loadInvolvementsOfThisStatus() {
     if (this.props.status === 'Open') {
       this.setState({ loading: true });
       const InvolvementStatusList = await activity.getOpen(); //Retrieve all open involvements

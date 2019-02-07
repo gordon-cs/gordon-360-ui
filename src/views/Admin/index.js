@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { gordonColors } from '../../theme';
 import InvolvementsStatus from './components/InvolvementsStatus';
+import SuperAdmin from './components/SuperAdmins';
 
 export default class Admin extends Component {
   render() {
@@ -30,6 +31,7 @@ export default class Admin extends Component {
                 Super Admins
               </Typography>
             </div>
+            <SuperAdmin />
           </Card>
         </Grid>
       </Grid>
