@@ -83,7 +83,9 @@ export default class DiningBalance extends Component {
 
         const dollarInit = this.diningInfo.DiningDollars.InitialBalance;
         const dollarCurr = this.diningInfo.DiningDollars.CurrentBalance;
-        const dollarUsed = dollarInit - dollarCurr;
+        const dollarUsedNotRounded = dollarInit - dollarCurr;
+        //fixed issue of too many decimal places in meal points
+        const dollarUsed = Math.round(dollarUsedNotRounded * 100) / 100;
 
         const guestInit = this.diningInfo.GuestSwipes.InitialBalance;
         const guestCurr = this.diningInfo.GuestSwipes.CurrentBalance;
