@@ -5,8 +5,23 @@ import Typography from '@material-ui/core/Typography';
 import { gordonColors } from '../../theme';
 import InvolvementsStatus from './components/InvolvementsStatus';
 import SuperAdmin from './components/SuperAdmins';
+import user from '../../services/user';
 
 export default class Admin extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isSuperAdmin: false,
+      currentSession: '',
+    };
+  }
+
+  async componentWillMount() {
+    const college_role = await user.getLocalInfo().college_role;
+    this.setState({ isSuperAdmin: college_role === 'god' ? true : false });
+  }
+
   render() {
     const headerStyle = {
       backgroundColor: gordonColors.primary.blue,
@@ -14,27 +29,31 @@ export default class Admin extends Component {
       padding: '10px',
     };
 
-    return (
-      <Grid container justify="center" spacing={16}>
-        <Grid item xs={12} lg={8}>
-          <InvolvementsStatus status={'Open'} />
-        </Grid>
+    if (this.state.isSuperAdmin) {
+      return (
+        <Grid container justify="center" spacing={16}>
+          <Grid item xs={12} lg={8}>
+            <InvolvementsStatus status={'Open'} />
+          </Grid>
 
-        <Grid item xs={12} lg={8}>
-          <InvolvementsStatus status={'Closed'} />
-        </Grid>
+          <Grid item xs={12} lg={8}>
+            <InvolvementsStatus status={'Closed'} />
+          </Grid>
 
-        <Grid item xs={12} lg={8}>
-          <Card>
-            <div style={headerStyle}>
-              <Typography variant="body2" align="center" style={headerStyle}>
-                Super Admins
-              </Typography>
-            </div>
-            <SuperAdmin />
-          </Card>
+          <Grid item xs={12} lg={8}>
+            <Card>
+              <div style={headerStyle}>
+                <Typography variant="body2" align="center" style={headerStyle}>
+                  Super Admins
+                </Typography>
+              </div>
+              <SuperAdmin />
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    );
+      );
+    } else {
+      return <div />;
+    }
   }
 }
