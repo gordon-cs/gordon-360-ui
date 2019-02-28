@@ -21,12 +21,6 @@ export default class Admin extends Component {
   }
 
   render() {
-    const headerStyle = {
-      backgroundColor: gordonColors.primary.blue,
-      color: '#FFF',
-      padding: '10px',
-    };
-
     if (this.state.isSuperAdmin) {
       return (
         <Grid container justify="center" spacing={16}>
