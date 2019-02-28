@@ -1,6 +1,5 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import { gordonColors } from '../../theme';
 import InvolvementsStatus from './components/InvolvementsStatus';
 import SuperAdmin from './components/SuperAdmins';
 import user from '../../services/user';
