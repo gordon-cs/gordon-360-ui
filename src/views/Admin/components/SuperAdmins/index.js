@@ -9,16 +9,19 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { gordonColors } from '../../../../theme';
+import membership from '../../../../services/membership';
 
 export default class SuperAdmin extends Component {
   constructor(props) {
     super(props);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
       loading: true,
       admins: [],
       open: false, //add admin dialogue box
+      newAdminEmail: '',
     };
   }
 
@@ -33,6 +36,30 @@ export default class SuperAdmin extends Component {
 
   handleAdd() {
     this.setState({ open: true });
+  }
+
+  handleText = event => {
+    this.setState({ newAdminEmail: event.target.value });
+  };
+
+  async handleSubmit() {
+    let adminEmail = this.state.newAdminEmail;
+    if (!adminEmail.toLowerCase().includes('@gordon.edu')) {
+      adminEmail = adminEmail + '@gordon.edu';
+    }
+    let addID = await membership.getEmailAccount(adminEmail).then(function(result) {
+      return result.GordonID;
+    });
+    let data = {
+      ID_NUM: addID,
+      EMAIL: adminEmail,
+      USER_NAME: adminEmail.split('@')[0],
+      SUPER_ADMIN: true, //Used to be distinction between superadmin (godmode), admin, and groupadmin
+      //now just superadmin and groupadmin
+    };
+    await admin.addAdmin(data);
+    this.handleClose();
+    window.location.reload(); //refresh
   }
 
   //close add admin dialogue
@@ -73,13 +100,20 @@ export default class SuperAdmin extends Component {
         >
           <DialogTitle id="form-dialog-title">Add Admin</DialogTitle>
           <DialogContent>
-            <TextField autoFocus margin="dense" label="Admin Email" type="email" fullWidth />
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Admin Email"
+              type="email"
+              onChange={this.handleText}
+              fullWidth
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.handleClose} color="primary">
+            <Button onClick={this.handleSubmit} color="primary">
               Add Admin
             </Button>
           </DialogActions>

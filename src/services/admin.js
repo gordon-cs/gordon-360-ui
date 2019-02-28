@@ -19,7 +19,15 @@ const getAdmins = () => http.get(`/admins`);
  */
 const removeAdmin = id => http.del(`/admins/${id}`);
 
+/**
+ * Add superadmin with the given id
+ * @param {String} dataURI of the superadmin being added
+ * @return {Promise<any>} Response body
+ */
+const addAdmin = dataURI => http.post(`/admins/`, dataURI);
+
 export default {
   getAdmins,
   removeAdmin,
+  addAdmin,
 };
