@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import SuperAdminList from './components/SuperAdminList';
+import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
 import GordonLoader from '../../../../components/Loader';
 import admin from '../../../../services/admin';
 import Button from '@material-ui/core/Button';
@@ -68,8 +70,18 @@ export default class SuperAdmin extends Component {
   };
 
   render() {
-    let content;
+    const buttonStyle = {
+      margin: '20px',
+      background: gordonColors.primary.blue,
+      color: 'white',
+    };
+    const headerStyle = {
+      backgroundColor: gordonColors.primary.blue,
+      color: '#FFF',
+      padding: '10px',
+    };
 
+    let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
@@ -80,19 +92,19 @@ export default class SuperAdmin extends Component {
       ));
     }
 
-    const buttonStyle = {
-      margin: '20px',
-      background: gordonColors.primary.blue,
-      color: 'white',
-    };
-
     return (
-      <div>
-        {content}
+      <Card>
+        <div>
+          <div style={headerStyle}>
+            <Typography variant="body2" align="center" style={headerStyle}>
+              Super Admins
+            </Typography>
+          </div>
+          {content}
+        </div>
         <Button style={buttonStyle} onClick={this.handleAdd}>
           Add Admin
         </Button>
-
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
@@ -118,7 +130,7 @@ export default class SuperAdmin extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
+      </Card>
     );
   }
 }

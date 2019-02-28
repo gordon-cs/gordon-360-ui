@@ -1,7 +1,5 @@
-import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import Typography from '@material-ui/core/Typography';
 import { gordonColors } from '../../theme';
 import InvolvementsStatus from './components/InvolvementsStatus';
 import SuperAdmin from './components/SuperAdmins';
@@ -41,14 +39,7 @@ export default class Admin extends Component {
           </Grid>
 
           <Grid item xs={12} lg={8}>
-            <Card>
-              <div style={headerStyle}>
-                <Typography variant="body2" align="center" style={headerStyle}>
-                  Super Admins
-                </Typography>
-              </div>
-              <SuperAdmin />
-            </Card>
+            <SuperAdmin />
           </Grid>
         </Grid>
       );
