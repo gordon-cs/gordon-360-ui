@@ -91,6 +91,7 @@ class PeopleSearch extends Component {
       countries: [],
       departments: [],
       buildings: [],
+      halls: [],
 
       // Keyboard string values
       firstNameSearchValue: '',
@@ -99,6 +100,7 @@ class PeopleSearch extends Component {
       // Drop-down menu values
       majorSearchValue: '',
       minorSearchValue: '',
+      hallSearchValue: '',
       classTypeSearchValue: '',
       stateSearchValue: '',
       countrySearchValue: '',
@@ -118,9 +120,10 @@ class PeopleSearch extends Component {
     try {
       const profile = await user.getProfileInfo();
       const personType = profile.PersonType;
-      const [majors, minors, states, countries, departments, buildings] = await Promise.all([
+      const [majors, minors, halls, states, countries, departments, buildings] = await Promise.all([
         goStalk.getMajors(),
         goStalk.getMinors(),
+        goStalk.getHalls(),
         goStalk.getStates(),
         goStalk.getCountries(),
         goStalk.getDepartments(),
@@ -129,6 +132,7 @@ class PeopleSearch extends Component {
       this.setState({
         majors,
         minors,
+        halls,
         states,
         countries,
         departments,
@@ -181,6 +185,11 @@ class PeopleSearch extends Component {
       minorSearchValue: e.target.value,
     });
   };
+  handleHallInputChange = e => {
+    this.setState({
+      hallSearchValue: e.target.value,
+    });
+  };
   handleClassTypeInputChange = event => {
     this.setState({
       classTypeSearchValue: event.target.value,
@@ -222,6 +231,7 @@ class PeopleSearch extends Component {
     lastName,
     major,
     minor,
+    hall,
     classType,
     homeCity,
     state,
@@ -236,6 +246,7 @@ class PeopleSearch extends Component {
       this.state.classTypeSearchValue === '' &&
       this.state.majorSearchValue === '' &&
       this.state.minorSearchValue === '' &&
+      this.state.hallSearchValue === '' &&
       this.state.classTypeSearchValue === '' &&
       this.state.homeCitySearchValue === '' &&
       this.state.stateSearchValue === '' &&
@@ -257,6 +268,7 @@ class PeopleSearch extends Component {
         lastName,
         major,
         minor,
+        hall,
         classType,
         homeCity,
         state,
@@ -351,6 +363,7 @@ class PeopleSearch extends Component {
         this.state.lastNameSearchValue,
         this.state.majorSearchValue,
         this.state.minorSearchValue,
+        this.state.hallSearchValue,
         this.state.classTypeSearchValue,
         this.state.homeCitySearchValue,
         this.state.stateSearchValue,
@@ -374,6 +387,12 @@ class PeopleSearch extends Component {
     const minorOptions = this.state.minors.map(minor => (
       <MenuItem value={minor} key={minor}>
         {minor}
+      </MenuItem>
+    ));
+
+    const hallOptions = this.state.halls.map(hall => (
+      <MenuItem value={hall} key={hall}>
+        {hall}
       </MenuItem>
     ));
 
@@ -421,15 +440,15 @@ class PeopleSearch extends Component {
     }
 
     /*
-       /$$$$$$  /$$$$$$$  /$$$$$$$  /$$$$$$ /$$             /$$$$$$$$ /$$$$$$   /$$$$$$  /$$        /$$$$$$ 
+       /$$$$$$  /$$$$$$$  /$$$$$$$  /$$$$$$ /$$             /$$$$$$$$ /$$$$$$   /$$$$$$  /$$        /$$$$$$
       /$$__  $$| $$__  $$| $$__  $$|_  $$_/| $$            | $$_____//$$__  $$ /$$__  $$| $$       /$$__  $$
      | $$  \ $$| $$  \ $$| $$  \ $$  | $$  | $$            | $$     | $$  \ $$| $$  \ $$| $$      | $$  \__/
-     | $$$$$$$$| $$$$$$$/| $$$$$$$/  | $$  | $$            | $$$$$  | $$  | $$| $$  | $$| $$      |  $$$$$$ 
+     | $$$$$$$$| $$$$$$$/| $$$$$$$/  | $$  | $$            | $$$$$  | $$  | $$| $$  | $$| $$      |  $$$$$$
      | $$__  $$| $$____/ | $$__  $$  | $$  | $$            | $$__/  | $$  | $$| $$  | $$| $$       \____  $$
      | $$  | $$| $$      | $$  \ $$  | $$  | $$            | $$     | $$  | $$| $$  | $$| $$       /$$  \ $$
      | $$  | $$| $$      | $$  | $$ /$$$$$$| $$$$$$$$      | $$     |  $$$$$$/|  $$$$$$/| $$$$$$$$|  $$$$$$/
-     |__/  |__/|__/      |__/  |__/|______/|________/      |__/      \______/  \______/ |________/ \______/ 
-    
+     |__/  |__/|__/      |__/  |__/|______/|________/      |__/      \______/  \______/ |________/ \______/
+
      */
     let aprilFools = '';
     if (this.getDate().getMonth() === 3 && this.getDate().getDate() === 1) {
@@ -513,7 +532,7 @@ class PeopleSearch extends Component {
                 marginTop: 8,
               }}
             >
-              <Typography variant="headline">Name</Typography>
+              <Typography variant="headline">General Info</Typography>
               <Grid container spacing={8} alignItems="flex-end">
                 <Media
                   query="(min-width: 600px)"
@@ -553,6 +572,36 @@ class PeopleSearch extends Component {
                     onChange={this.handleLastNameInputChange}
                     onKeyDown={this.handleEnterKeyPress}
                   />
+                </Grid>
+                <Grid container spacing={8} alignItems="flex-end">
+                  <Media
+                    query="(min-width: 600px)"
+                    render={() => (
+                      <Grid item>
+                        <BuildingIcon
+                          style={{
+                            fontSize: 22,
+                            marginLeft: 4,
+                          }}
+                        />
+                      </Grid>
+                    )}
+                  />
+                  <Grid item xs={11}>
+                    <FormControl fullWidth>
+                      <InputLabel>Hall</InputLabel>
+                      <Select
+                        value={this.state.hallSearchValue}
+                        onChange={this.handleHallInputChange}
+                        input={<Input id="hall" />}
+                      >
+                        <MenuItem label="All Halls" value="">
+                          <em>All Halls</em>
+                        </MenuItem>
+                        {hallOptions}
+                      </Select>
+                    </FormControl>
+                  </Grid>
                 </Grid>
               </Grid>
               {aprilFools}
