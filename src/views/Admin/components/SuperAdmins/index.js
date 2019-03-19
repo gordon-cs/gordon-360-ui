@@ -103,7 +103,7 @@ export default class SuperAdmin extends Component {
           {content}
         </div>
         <Button style={buttonStyle} onClick={this.handleAdd}>
-          Add Admin
+          Add Super Admin
         </Button>
         <Dialog
           open={this.state.open}
@@ -111,11 +111,12 @@ export default class SuperAdmin extends Component {
           aria-labelledby="form-dialog-title"
           fullWidth="true"
         >
-          <DialogTitle id="form-dialog-title">Add Admin</DialogTitle>
+          <DialogTitle id="form-dialog-title">Add Super Admin</DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
-              label="Admin Email or Username"
+              margin="dense"
+              label="Super Admin Email (or username)"
               type="email"
               onChange={this.handleText}
               fullWidth
@@ -126,7 +127,7 @@ export default class SuperAdmin extends Component {
               Cancel
             </Button>
             <Button onClick={this.handleSubmit} color="primary">
-              Add Admin
+              Add Super Admin
             </Button>
           </DialogActions>
         </Dialog>
