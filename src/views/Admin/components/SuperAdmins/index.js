@@ -115,7 +115,7 @@ export default class SuperAdmin extends Component {
             <TextField
               autoFocus
               margin="dense"
-              label="Admin Email"
+              label="Admin Email or Username"
               type="email"
               onChange={this.handleText}
               fullWidth
