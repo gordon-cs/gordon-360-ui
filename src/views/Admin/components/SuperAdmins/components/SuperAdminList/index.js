@@ -51,8 +51,8 @@ export default class SuperAdminList extends Component {
 
     return (
       <div>
-        <Grid container style={itemStyle}>
-          <Grid item xs={4}>
+        <Grid container style={itemStyle} justify="center">
+          <Grid item xs={8}>
             <Typography>{this.props.Admin.USER_NAME}</Typography>
           </Grid>
           <Grid item xs={4}>
@@ -65,7 +65,7 @@ export default class SuperAdminList extends Component {
               aria-labelledby="form-dialog-title"
             >
               <DialogTitle id="form-dialog-title">
-                Are you sure you want to remove this admin?
+                Are you sure you want to remove this super admin?
               </DialogTitle>
               <DialogContent />
               <DialogActions>
