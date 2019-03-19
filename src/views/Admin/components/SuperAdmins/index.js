@@ -109,12 +109,12 @@ export default class SuperAdmin extends Component {
           open={this.state.open}
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
+          fullWidth="true"
         >
           <DialogTitle id="form-dialog-title">Add Admin</DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
-              margin="dense"
               label="Admin Email or Username"
               type="email"
               onChange={this.handleText}
