@@ -1,6 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import Dropzone from 'react-dropzone';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -8,6 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { gordonColors } from '../../theme';
+import IdCard from '../IDUploader/image.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 
@@ -131,17 +133,9 @@ export default class IDUploader extends Component {
       <div>
         <Grid container justify="center" spacing="16">
           <Grid item xs={12} lg={10}>
-            <img
-              src={`data:image/jpg;base64,${this.state.image}`}
-              alt="Profile"
-              className="rounded-corners"
-              style={{ 'max-height': '200px', 'min-width': '160px' }}
-            />
-          </Grid>
-          <Grid item xs={12} lg={10}>
-            <Button variant="contained" onClick={this.handleUploadPhoto}>
-              Upload new Student ID Photo
-            </Button>
+            <ButtonBase  onClick={this.handleUploadPhoto}>
+              <img src={IdCard} alt="ID Card"/>
+            </ButtonBase>
           </Grid>
         </Grid>
         <Dialog
@@ -152,7 +146,9 @@ export default class IDUploader extends Component {
           aria-describedby="alert-dialog-slide-description"
           maxWidth="false"
         >
-          <DialogTitle id="simple-dialog-title">Update Profile Picture</DialogTitle>
+          <DialogTitle id="simple-dialog-title">
+            Update ID Picture
+          </DialogTitle>
           <DialogContent>
             <DialogContentText>
               {window.innerWidth < 600
@@ -173,7 +169,7 @@ export default class IDUploader extends Component {
                 >
                   <img
                     className="rounded-corners"
-                    src={`data:image/jpg;base64,${this.state.image}`}
+                    src={`data:image/png;base64,${this.state.image}`}
                     alt=""
                     style={{ 'max-width': '200px', 'max-height': '200px' }}
                   />
@@ -187,7 +183,9 @@ export default class IDUploader extends Component {
                   src={preview}
                   style={{
                     'max-width': this.maxCropPreviewWidth(),
-                    'max-height': this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
+                    'max-height':
+                      this.maxCropPreviewWidth() /
+                      this.state.cropperData.aspectRatio,
                   }}
                   autoCropArea={1}
                   viewMode={3}
@@ -217,7 +215,35 @@ export default class IDUploader extends Component {
               </Grid>
             )}
           </DialogContent>
-          <DialogActions />
+          <DialogActions>
+            <Grid container spacing={8} justify="flex-end">
+              <Grid item>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  onClick={this.handleCloseCancel}
+                  style={style.button}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={this.handleCloseSubmit}
+                    disabled={!this.state.preview}
+                    style={
+                      this.state.preview
+                        ? style.button
+                        : { background: 'darkgray', color: 'white' }
+                    }
+                  >
+                    Submit
+                  </Button>
+              </Grid>
+            </Grid>
+          </DialogActions>
         </Dialog>
       </div>
     );
