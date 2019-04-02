@@ -12,6 +12,7 @@ import MyProfile from './views/MyProfile';
 import Feedback from './views/Feedback';
 import PeopleSearch from './views/PeopleSearch';
 import ProfileNotFound from './views/ProfileNotFound';
+import Admin from './views/Admin';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 export default [
@@ -85,5 +86,10 @@ export default [
     name: 'People',
     path: '/people',
     component: PeopleSearch,
+  },
+  {
+    name: 'Admin',
+    path: '/admin',
+    component: Admin,
   },
 ];
