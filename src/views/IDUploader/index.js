@@ -12,6 +12,7 @@ import { gordonColors } from '../../theme';
 import IdCard from '../IDUploader/image.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import './idUploader.css';
 
 const CROP_DIM = 200; // pixels
 export default class IDUploader extends Component {
@@ -22,6 +23,8 @@ export default class IDUploader extends Component {
       image: null,
       preview: null,
       photoOpen: false,
+      cropperData: { cropBoxDim: null, aspectRatio: null },
+      files: [],
     };
   }
 
@@ -130,11 +133,17 @@ export default class IDUploader extends Component {
     };
 
     return (
-      <div>
+      <div className="parent">
         <Grid container justify="center" spacing="16">
           <Grid item xs={12} lg={10}>
-            <ButtonBase  onClick={this.handleUploadPhoto}>
-              <img src={IdCard} alt="ID Card"/>
+            <ButtonBase onClick={this.handleUploadPhoto}>
+              <img src={IdCard} alt="ID Card" className="placeholder-id" />
+              <img
+                src={`data:image/jpg;base64,${this.state.image}`}
+                alt="Profile"
+                className="upload-id"
+                style={{ 'max-height': '200px', 'min-width': '160px' }}
+              />
             </ButtonBase>
           </Grid>
         </Grid>
@@ -146,9 +155,7 @@ export default class IDUploader extends Component {
           aria-describedby="alert-dialog-slide-description"
           maxWidth="false"
         >
-          <DialogTitle id="simple-dialog-title">
-            Update ID Picture
-          </DialogTitle>
+          <DialogTitle id="simple-dialog-title">Update ID Picture</DialogTitle>
           <DialogContent>
             <DialogContentText>
               {window.innerWidth < 600
@@ -183,9 +190,7 @@ export default class IDUploader extends Component {
                   src={preview}
                   style={{
                     'max-width': this.maxCropPreviewWidth(),
-                    'max-height':
-                      this.maxCropPreviewWidth() /
-                      this.state.cropperData.aspectRatio,
+                    'max-height': this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
                   }}
                   autoCropArea={1}
                   viewMode={3}
@@ -217,30 +222,23 @@ export default class IDUploader extends Component {
           </DialogContent>
           <DialogActions>
             <Grid container spacing={8} justify="flex-end">
+              <Grid item />
               <Grid item>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  onClick={this.handleCloseCancel}
-                  style={style.button}
-                >
+                <Button variant="contained" onClick={this.handleCloseCancel} style={style.button}>
                   Cancel
                 </Button>
               </Grid>
               <Grid item>
-                  <Button
-                    variant="contained"
-                    onClick={this.handleCloseSubmit}
-                    disabled={!this.state.preview}
-                    style={
-                      this.state.preview
-                        ? style.button
-                        : { background: 'darkgray', color: 'white' }
-                    }
-                  >
-                    Submit
-                  </Button>
+                <Button
+                  variant="contained"
+                  onClick={this.handleCloseSubmit}
+                  disabled={!this.state.preview}
+                  style={
+                    this.state.preview ? style.button : { background: 'darkgray', color: 'white' }
+                  }
+                >
+                  Submit
+                </Button>
               </Grid>
             </Grid>
           </DialogActions>
