@@ -12,7 +12,8 @@ import { gordonColors } from '../../theme';
 import IdCard from '../IDUploader/image.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import './idUploader.css';
+// import './idUploader.css';
+import user from '../../services/user';
 
 const CROP_DIM = 200; // pixels
 export default class IDUploader extends Component {
@@ -35,7 +36,7 @@ export default class IDUploader extends Component {
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-      //user.postImage(croppedImage);
+      user.postIDImage(croppedImage);
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({ image: imageNoHeader, photoOpen: false, preview: null });
       window.didProfilePicUpdate = true;

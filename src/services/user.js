@@ -658,6 +658,7 @@ export default {
   getProfileInfo,
   resetImage,
   postImage,
+  postIDImage,
   getTranscriptInfo,
   updateSocialLink,
 };
