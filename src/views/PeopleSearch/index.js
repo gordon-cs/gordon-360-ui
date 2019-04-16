@@ -276,6 +276,7 @@ class PeopleSearch extends Component {
         department,
         building,
       );
+      console.log('Results:', peopleSearchResults);
       if (peopleSearchResults.length === 0) {
         this.setState({
           peopleSearchResults: (
@@ -953,6 +954,7 @@ class PeopleSearch extends Component {
                       this.state.lastNameSearchValue,
                       this.state.majorSearchValue,
                       this.state.minorSearchValue,
+                      this.state.hallSearchValue,
                       this.state.classTypeSearchValue,
                       this.state.homeCitySearchValue,
                       this.state.stateSearchValue,
