@@ -138,6 +138,18 @@ const getStatus = (activityCode, sessionCode) =>
 const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/types`);
 
 /**
+ * Get all open activities for a session
+ * @return {Promise.<Activities[]>} List of open activities for a session
+ */
+const getOpen = () => http.get(`activities/open`);
+
+/**
+ * Get all closed activities for a session
+ * @return {Promise.<Activities[]>} List of closed activities for a session
+ */
+const getClosed = () => http.get(`activities/closed`);
+
+/**
  * Filter a list of activities by type and description
  * @param {Activity[]} [activities=[]] List of activities
  * @param {String} typeDescription Activity type description to match exactly against
@@ -190,6 +202,8 @@ export default {
   getGroupAdmins,
   getStatus,
   getTypes,
+  getOpen,
+  getClosed,
   filter,
   reopenActivity,
   resetImage,

@@ -12,14 +12,14 @@ export default class Office extends Component {
   render() {
     let OfficeHours, OfficePhone, Room, Office;
     if (String(this.props.profile.PersonType).includes('fac')) {
-
-      if (this.props.profile.BuildingDescription === '' && 
-      this.props.profile.OnCampusRoom === '' &&
-       this.props.profile.OnCampusPhone === '' &&
-        this.props.profile.office_hours === '')
-        {
-          return null;
-        }
+      if (
+        this.props.profile.BuildingDescription === '' &&
+        this.props.profile.OnCampusRoom === '' &&
+        this.props.profile.OnCampusPhone === '' &&
+        this.props.profile.office_hours === ''
+      ) {
+        return null;
+      }
 
       if (this.props.profile.OnCampusPhone !== '') {
         OfficePhone = (
@@ -30,11 +30,11 @@ export default class Office extends Component {
                   <Typography>Office Phone:</Typography>
                 </Grid>
                 <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                  <a href={'tel:978927' + this.props.profile.OnCampusPhone}>
+                  <a href={'tel:978867' + this.props.profile.OnCampusPhone}>
                     {' '}
                     <Typography className="linkColor">
                       {' '}
-                      {'(978) 927-' + this.props.profile.OnCampusPhone}
+                      {'(978) 867-' + this.props.profile.OnCampusPhone}
                     </Typography>
                   </a>
                 </Grid>
