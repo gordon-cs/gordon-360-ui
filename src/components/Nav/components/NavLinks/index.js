@@ -11,6 +11,7 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import user from '../../../../services/user';
 import { signOut } from '../../../../services/auth';
 
 import './nav-links.css';
@@ -18,7 +19,6 @@ import './nav-links.css';
 export default class GordonNavLinks extends Component {
   constructor(props) {
     super(props);
-
     this.onSignOut = this.onSignOut.bind(this);
   }
 
@@ -28,6 +28,16 @@ export default class GordonNavLinks extends Component {
   }
 
   render() {
+    let admin;
+    if (user.getLocalInfo().college_role === 'god') {
+      admin = (
+        <NavLink exact to="/admin" onClick={this.props.onLinkClick}>
+          <ListItem button>
+            <ListItemText primary="Admin" />
+          </ListItem>
+        </NavLink>
+      );
+    }
     return (
       <div>
         <List className="gordon-nav-links">
@@ -83,6 +93,7 @@ export default class GordonNavLinks extends Component {
                 <ListItemText primary="Feedback" />
               </ListItem>
             </NavLink>
+            {admin}
             <ListItem button onClick={this.onSignOut}>
               <ListItemText primary="Sign Out" />
             </ListItem>

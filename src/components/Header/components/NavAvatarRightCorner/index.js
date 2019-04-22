@@ -104,6 +104,17 @@ export default class GordonNavAvatarRightCorner extends Component {
       );
     }
 
+    let admin;
+    if (user.getLocalInfo().college_role === 'god') {
+      admin = (
+        <Link to="/admin">
+          <MenuItem onClick={this.onClose} divider="true">
+            Admin
+          </MenuItem>
+        </Link>
+      );
+    }
+
     return (
       <section className="right-side-container">
         <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
@@ -151,6 +162,7 @@ export default class GordonNavAvatarRightCorner extends Component {
             <MenuItem onClick={this.onClose} divider="true">
               Feedback
             </MenuItem>
+            {admin}
           </Link>
           <MenuItem onClick={this.onSignOut} divider="true">
             Sign Out
