@@ -21,6 +21,8 @@ Look at [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/master/RO
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
+Make sure Node.js is set up on your maching (https://nodejs.org/en/)
+
 To run the app for the first time, run the following commands:
 
 - `npm install`
