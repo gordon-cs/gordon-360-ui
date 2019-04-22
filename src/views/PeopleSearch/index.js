@@ -930,6 +930,7 @@ class PeopleSearch extends Component {
                             lastNameSearchValue: '',
                             majorSearchValue: '',
                             minorSearchValue: '',
+                            hallSearchValue: '',
                             classTypeSearchValue: '',
                             homeCitySearchValue: '',
                             stateSearchValue: '',
