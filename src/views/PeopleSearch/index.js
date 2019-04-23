@@ -582,7 +582,7 @@ class PeopleSearch extends Component {
                         <BuildingIcon
                           style={{
                             fontSize: 22,
-                            marginLeft: 4,
+                            marginLeft: 6,
                           }}
                         />
                       </Grid>
