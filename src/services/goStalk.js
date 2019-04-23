@@ -13,6 +13,7 @@ import http from './http';
  * @param {String} lastName Last name queried
  * @param {String} major Major (matches up against 3 majors listed for people)
  * @param {String} minor Minor (matches up against 3 minors listed for people)
+ * @param {String} hall Dorm hall that a student lives in
  * @param {String} classType 0-7: Unassigned, Freshman, Sophomore, Junior, Senior, Graduate Student,
  * Undegraduate Conferred, Graduate Conferred
  * @param {String} homeCity Hometown/Home city queried
@@ -28,6 +29,7 @@ const search = (
   lastName,
   major,
   minor,
+  hall,
   classType,
   homeCity,
   state,
@@ -70,6 +72,10 @@ const search = (
   } else if (minor.includes('&')) {
     // workaround to avoid breaking the backend
     minor = minor.replace('&', '_');
+  }
+  if (hall === '' || hall === null) {
+    // eslint-disable-next-line
+    hall = 'C' + '\u266F';
   }
   if (classType === '' || classType === null) {
     // eslint-disable-next-line
@@ -114,6 +120,7 @@ const search = (
     lastName,
     major,
     minor,
+    hall,
     classType,
     homeCity,
     state,
@@ -122,7 +129,7 @@ const search = (
     building,
   );
   return http.get(
-    `accounts/advanced-people-search/${includeAlumni}/${firstName}/${lastName}/${major}/${minor}/${classType}/${homeCity}/${state}/${country}/${department}/${building}`,
+    `accounts/advanced-people-search/${includeAlumni}/${firstName}/${lastName}/${major}/${minor}/${hall}/${classType}/${homeCity}/${state}/${country}/${department}/${building}`,
   );
 };
 
@@ -140,6 +147,14 @@ const getMajors = () => {
  */
 const getMinors = () => {
   return http.get(`advanced-search/minors`);
+};
+
+/**
+ * Get all halls
+ * @return {Promise.<String[]>} List of halls
+ */
+const getHalls = () => {
+  return http.get(`advanced-search/halls`);
 };
 
 /**
@@ -178,6 +193,7 @@ export default {
   search,
   getMajors,
   getMinors,
+  getHalls,
   getStates,
   getCountries,
   getDepartments,
