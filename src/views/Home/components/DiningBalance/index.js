@@ -38,7 +38,7 @@ export default class DiningBalance extends Component {
     const daysLeft = await daysLeftPromise;
     const diningInfo = await diningInfoPromise;
     this.daysLeft = daysLeft;
-    if (college_role === 'student') {
+    if (college_role === 'student' || college_role === 'god') {
       this.diningInfo = diningInfo;
     } else {
       this.facStaffBalance = diningInfo;
