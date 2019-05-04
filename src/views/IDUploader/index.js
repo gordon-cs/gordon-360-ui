@@ -1,7 +1,9 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import ButtonBase from '@material-ui/core/ButtonBase';
 import Dropzone from 'react-dropzone';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -128,6 +130,11 @@ export default class IDUploader extends Component {
         background: gordonColors.primary.cyan,
         color: 'white',
       },
+      uploadButton: {
+        background: gordonColors.primary.cyan,
+        color: 'white',
+        marginTop: '20px',
+      },
       uncontainedButton: {
         color: gordonColors.primary.cyan,
       },
@@ -135,9 +142,36 @@ export default class IDUploader extends Component {
 
     return (
       <div className="parent">
-        <Grid container justify="center" spacing="16">
-          <Grid item xs={12} lg={10}>
-            <ButtonBase onClick={this.handleUploadPhoto}>
+        <Grid container justify="left" spacing="16">
+          <Grid item xs={12} md={6} lg={6}>
+            <Card>
+              <CardContent>
+                <Typography align="center" variant="title">
+                  ID Photo Guidelines
+                </Typography>
+                <Typography align="left" variant="caption">
+                  <br />
+                  1. Facial features must be identifiable. <br />
+                  2. No sunglasses or hats. <br />
+                  3. Photo must include from shoulders to the top of the head <br />
+                  4. This does not need to be a professional photo as long as it meets the criteria
+                  (most cameras on a phone will work fine). It does need to be a reasonable
+                  representation of your face for an official campus ID card.
+                </Typography>
+              </CardContent>
+            </Card>
+            <Grid item xs={12} md={6} lg={6} align="center">
+              <Button
+                variant="contained"
+                style={style.uploadButton}
+                onClick={this.handleUploadPhoto}
+              >
+                Tap to Upload
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={6} lg={6}>
+            <div>
               <img src={IdCard} alt="ID Card" className="placeholder-id" />
               <img
                 src={`data:image/jpg;base64,${this.state.image}`}
@@ -145,7 +179,7 @@ export default class IDUploader extends Component {
                 className="upload-id"
                 style={{ 'max-height': '200px', 'min-width': '160px' }}
               />
-            </ButtonBase>
+            </div>
           </Grid>
         </Grid>
         <Dialog
