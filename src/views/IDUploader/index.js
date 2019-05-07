@@ -16,7 +16,7 @@ import IdCardGreen from '../IDUploader/image-green.png';
 import IdCardTop from '../IDUploader/image-top.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-// import './idUploader.css';
+import './IDUploader.css';
 import user from '../../services/user';
 
 const CROP_DIM = 1200; // pixels
@@ -206,7 +206,7 @@ export default class IDUploader extends Component {
                 </div>
               </Grid>
               <Grid item>
-                <Grid container>
+                <Grid container style={{ width: '406px' }}>
                   <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
                     <div>
                       <img
@@ -217,7 +217,7 @@ export default class IDUploader extends Component {
                       />
                     </div>
                   </Grid>
-                  <Grid item style={{ marginLeft: '7px', marginBottom: '5px' }}>
+                  <Grid item style={{ marginLeft: '7px', width: '53px', marginBottom: '5px' }}>
                     <div>
                       <img
                         src={IdCardGreen}
