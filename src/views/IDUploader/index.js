@@ -168,7 +168,7 @@ export default class IDUploader extends Component {
                   <Typography align="center" variant="title" style={{ fontWeight: 'bold' }}>
                     ID Photo Guidelines
                   </Typography>
-                  <Typography align="justify" variant="body1" style={style.instructionsText}>
+                  <Typography align="left" variant="body1" style={style.instructionsText}>
                     <br />
                     1. Facial features must be identifiable. <br />
                     2. No sunglasses or hats. <br />
@@ -192,8 +192,8 @@ export default class IDUploader extends Component {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={6} lg={4}>
-          <Grid container>
+        <Grid item xs={12} md={6} lg={4} justify="center">
+          <Grid container justify="center">
             <Card raised="true">
               <Grid item style={{ margin: '10px' }}>
                 <div>
