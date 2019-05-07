@@ -11,13 +11,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { gordonColors } from '../../theme';
-import IdCard from '../IDUploader/image.png';
+import IdCardDefault from '../IDUploader/image-default.png';
+import IdCardGreen from '../IDUploader/image-green.png';
+import IdCardTop from '../IDUploader/image-top.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 // import './idUploader.css';
 import user from '../../services/user';
 
-const CROP_DIM = 200; // pixels
+const CROP_DIM = 1200; // pixels
 export default class IDUploader extends Component {
   constructor(props) {
     super(props);
@@ -28,6 +30,7 @@ export default class IDUploader extends Component {
       photoOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
       files: [],
+      IdCardPlaceholder: IdCardDefault,
     };
   }
 
@@ -40,7 +43,12 @@ export default class IDUploader extends Component {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
       user.postIDImage(croppedImage);
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-      this.setState({ image: imageNoHeader, photoOpen: false, preview: null });
+      this.setState({
+        image: imageNoHeader,
+        photoOpen: false,
+        preview: null,
+        IdCardPlaceholder: croppedImage,
+      });
       window.didProfilePicUpdate = true;
     }
   };
@@ -111,7 +119,6 @@ export default class IDUploader extends Component {
   }
 
   render() {
-    console.log(this.state);
     const { preview } = this.state;
 
     const style = {
@@ -130,13 +137,20 @@ export default class IDUploader extends Component {
         background: gordonColors.primary.cyan,
         color: 'white',
       },
+
       uploadButton: {
         background: gordonColors.primary.cyan,
         color: 'white',
         marginTop: '20px',
       },
+
       uncontainedButton: {
         color: gordonColors.primary.cyan,
+      },
+
+      media: {
+        // ⚠️ object-fit is not supported by IE 11.
+        objectFit: 'cover',
       },
     };
 
@@ -171,15 +185,44 @@ export default class IDUploader extends Component {
             </Grid>
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
-            <div>
-              <img src={IdCard} alt="ID Card" className="placeholder-id" />
-              <img
-                src={`data:image/jpg;base64,${this.state.image}`}
-                alt="Profile"
-                className="upload-id"
-                style={{ 'max-height': '200px', 'min-width': '160px' }}
-              />
-            </div>
+            <Grid container>
+              <Card raised="true">
+                <Grid item style={{ margin: '10px' }}>
+                  <div>
+                    <img
+                      src={IdCardTop}
+                      alt="ID Card"
+                      className="placeholder-id"
+                      style={{ maxWidth: '100%', maxHeight: '100%' }}
+                    />
+                  </div>
+                </Grid>
+                <Grid item>
+                  <Grid container>
+                    <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
+                      <div>
+                        <img
+                          src={this.state.IdCardPlaceholder}
+                          alt="ID Card"
+                          className="placeholder-id"
+                          style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        />
+                      </div>
+                    </Grid>
+                    <Grid item style={{ marginLeft: '7px', marginBottom: '5px' }}>
+                      <div>
+                        <img
+                          src={IdCardGreen}
+                          alt="ID Card"
+                          className="placeholder-id"
+                          style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        />
+                      </div>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Card>
+            </Grid>
           </Grid>
         </Grid>
         <Dialog
