@@ -152,79 +152,87 @@ export default class IDUploader extends Component {
         // ⚠️ object-fit is not supported by IE 11.
         objectFit: 'cover',
       },
+
+      instructionsText: {
+        fontSize: '15pt',
+      },
     };
 
     return (
-      <div className="parent">
-        <Grid container justify="left" spacing="16">
-          <Grid item xs={12} md={6} lg={6}>
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="title">
-                  ID Photo Guidelines
-                </Typography>
-                <Typography align="left" variant="caption">
-                  <br />
-                  1. Facial features must be identifiable. <br />
-                  2. No sunglasses or hats. <br />
-                  3. Photo must include from shoulders to the top of the head <br />
-                  4. This does not need to be a professional photo as long as it meets the criteria
-                  (most cameras on a phone will work fine). It does need to be a reasonable
-                  representation of your face for an official campus ID card.
-                </Typography>
-              </CardContent>
-            </Card>
-            <Grid item xs={12} md={6} lg={6} align="center">
-              <Button
-                variant="contained"
-                style={style.uploadButton}
-                onClick={this.handleUploadPhoto}
-              >
-                Tap to Upload
-              </Button>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} md={6} lg={6}>
-            <Grid container>
-              <Card raised="true">
-                <Grid item style={{ margin: '10px' }}>
-                  <div>
-                    <img
-                      src={IdCardTop}
-                      alt="ID Card"
-                      className="placeholder-id"
-                      style={{ maxWidth: '100%', maxHeight: '100%' }}
-                    />
-                  </div>
+      <Grid container justify="center" spacing="16">
+        <Grid item xs={12} md={6} lg={8}>
+          <Card>
+            <CardContent>
+              <Grid container justify="center" direction="column">
+                <Grid item align="center">
+                  <Typography align="center" variant="title" style={{ fontWeight: 'bold' }}>
+                    ID Photo Guidelines
+                  </Typography>
+                  <Typography align="justify" variant="body1" style={style.instructionsText}>
+                    <br />
+                    1. Facial features must be identifiable. <br />
+                    2. No sunglasses or hats. <br />
+                    3. Photo must include your shoulders to the top of your head. <br />
+                    4. While this does not need to be a professional photo, it does need to be a
+                    reasonable representation of your face for an official campus ID card. As long
+                    as it meets the criteria, most cameras on a phone will work fine.
+                  </Typography>
                 </Grid>
-                <Grid item>
-                  <Grid container>
-                    <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
-                      <div>
-                        <img
-                          src={this.state.IdCardPlaceholder}
-                          alt="ID Card"
-                          className="placeholder-id"
-                          style={{ maxWidth: '100%', maxHeight: '100%' }}
-                        />
-                      </div>
-                    </Grid>
-                    <Grid item style={{ marginLeft: '7px', marginBottom: '5px' }}>
-                      <div>
-                        <img
-                          src={IdCardGreen}
-                          alt="ID Card"
-                          className="placeholder-id"
-                          style={{ maxWidth: '100%', maxHeight: '100%' }}
-                        />
-                      </div>
-                    </Grid>
+                <Grid item align="center">
+                  <Button
+                    variant="contained"
+                    style={style.uploadButton}
+                    onClick={this.handleUploadPhoto}
+                  >
+                    Tap to Upload
+                  </Button>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} md={6} lg={4}>
+          <Grid container>
+            <Card raised="true">
+              <Grid item style={{ margin: '10px' }}>
+                <div>
+                  <img
+                    src={IdCardTop}
+                    alt="ID Card"
+                    className="placeholder-id"
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  />
+                </div>
+              </Grid>
+              <Grid item>
+                <Grid container>
+                  <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
+                    <div>
+                      <img
+                        src={this.state.IdCardPlaceholder}
+                        alt="ID Card"
+                        className="placeholder-id"
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item style={{ marginLeft: '7px', marginBottom: '5px' }}>
+                    <div>
+                      <img
+                        src={IdCardGreen}
+                        alt="ID Card"
+                        className="placeholder-id"
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                      />
+                    </div>
                   </Grid>
                 </Grid>
-              </Card>
-            </Grid>
+              </Grid>
+            </Card>
           </Grid>
         </Grid>
+
         <Dialog
           open={this.state.photoOpen}
           keepMounted
@@ -321,7 +329,7 @@ export default class IDUploader extends Component {
             </Grid>
           </DialogActions>
         </Dialog>
-      </div>
+      </Grid>
     );
   }
 }
