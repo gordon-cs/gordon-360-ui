@@ -5,12 +5,46 @@ import { Link } from 'react-router-dom';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { signOut } from '../../../../services/auth';
 
 import './nav-avatar-right-corner.css';
 import user from '../../../../services/user';
 import Tooltip from '@material-ui/core/Tooltip';
+
+const styles = theme => ({
+  root: {
+    margin: 0,
+  },
+  closeButton: {
+    position: 'absolute',
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)(props => {
+  const { children, classes, onClose } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles(theme => ({
+  root: {},
+}))(MuiDialogContent);
 
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
@@ -27,6 +61,7 @@ export default class GordonNavAvatarRightCorner extends Component {
       image: null,
       name: null,
       username: null,
+      linkopen: false,
 
       anchorEl: null,
     };
@@ -47,6 +82,16 @@ export default class GordonNavAvatarRightCorner extends Component {
   async componentWillMount() {
     this.loadAvatar();
   }
+
+  handleLinkClickOpen = () => {
+    this.setState({
+      linkopen: true,
+    });
+  };
+
+  handleLinkClose = () => {
+    this.setState({ linkopen: false });
+  };
 
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
@@ -148,6 +193,15 @@ export default class GordonNavAvatarRightCorner extends Component {
               My Profile
             </MenuItem>
           </Link>
+          <MenuItem
+            onClick={() => {
+              this.onClose();
+              this.handleLinkClickOpen();
+            }}
+            divider="true"
+          >
+            Links
+          </MenuItem>
           <Link to="/help">
             <MenuItem onClick={this.onClose} divider="true">
               Help
@@ -168,6 +222,29 @@ export default class GordonNavAvatarRightCorner extends Component {
             Sign Out
           </MenuItem>
         </Menu>
+        <Dialog
+          onClose={this.handleLinkClose}
+          aria-labelledby="useful-links"
+          open={this.state.linkopen}
+        >
+          <DialogTitle id="useful-links">These are some useful links for you</DialogTitle>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac
+              facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum
+              at eros.
+            </Typography>
+            <Typography gutterBottom>
+              Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+              lacus vel augue laoreet rutrum faucibus dolor auctor.
+            </Typography>
+            <Typography gutterBottom>
+              Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
+              scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
+              auctor fringilla.
+            </Typography>
+          </DialogContent>
+        </Dialog>
       </section>
     );
   }
