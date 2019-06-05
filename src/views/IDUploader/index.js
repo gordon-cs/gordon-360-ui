@@ -90,7 +90,7 @@ export default class IDUploader extends Component {
       i.onload = function() {
         if (i.width < CROP_DIM || i.height < CROP_DIM) {
           alert(
-            'Sorry, your image is too small! Image dimensions must be at least 200 x 200 pixels.',
+            'Sorry, your image is too small! Image dimensions must be at least 1200 x 1200 pixels.',
           );
         } else {
           var aRatio = i.width / i.height;
