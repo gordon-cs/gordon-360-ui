@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 //import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
@@ -260,6 +261,19 @@ export default class DiningBalance extends Component {
     return (
       <Card>
         <CardContent>
+          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+            {this.state.loading ? '' : 'Still deciding what to eat?'}
+          </Typography>
+          <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
+            {[
+              <Button
+                onClick={() => (window.location.href = 'https://gordon.cafebonappetit.com/')}
+                style={{ color: 'blue' }}
+              >
+                Here's today's Bon Appetit menu!
+              </Button>,
+            ]}
+          </Typography>
           <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.loading ? '' : 'Dining Balance'}
           </Typography>
