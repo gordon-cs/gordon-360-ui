@@ -11,12 +11,17 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import LinkIcon from '@material-ui/icons/InsertLink';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 import { signOut } from '../../../../services/auth';
 
 import './nav-avatar-right-corner.css';
 import user from '../../../../services/user';
 import Tooltip from '@material-ui/core/Tooltip';
+import { Divider, ListItemIcon } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
@@ -45,6 +50,10 @@ const DialogTitle = withStyles(styles)(props => {
 const DialogContent = withStyles(theme => ({
   root: {},
 }))(MuiDialogContent);
+
+function ListItemLink(props) {
+  return <ListItem button component="a" {...props} />;
+}
 
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
@@ -228,20 +237,41 @@ export default class GordonNavAvatarRightCorner extends Component {
           open={this.state.linkopen}
         >
           <DialogTitle id="useful-links">These are some useful links for you</DialogTitle>
-          <DialogContent dividers>
-            <Typography gutterBottom>
-              Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac
-              facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum
-              at eros.
-            </Typography>
-            <Typography gutterBottom>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-              lacus vel augue laoreet rutrum faucibus dolor auctor.
-            </Typography>
-            <Typography gutterBottom>
-              Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-              scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-              auctor fringilla.
+          <DialogContent dividers="true">
+            <Divider />
+            <Typography>
+              <List component="nav" aria-label="Useful Links Lists">
+                <ListItemLink
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://www.gordon.edu"
+                >
+                  <ListItemIcon>
+                    <LinkIcon />
+                  </ListItemIcon>
+                  Gordon College Official Website
+                </ListItemLink>
+                <ListItemLink
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://my.gordon.edu"
+                >
+                  <ListItemIcon>
+                    <LinkIcon />
+                  </ListItemIcon>
+                  My Gordon
+                </ListItemLink>
+                <ListItemLink
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://blackboard.gordon.edu"
+                >
+                  <ListItemIcon>
+                    <LinkIcon />
+                  </ListItemIcon>
+                  Blackboard Learn
+                </ListItemLink>
+              </List>
             </Typography>
           </DialogContent>
         </Dialog>
