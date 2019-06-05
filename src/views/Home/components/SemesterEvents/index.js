@@ -186,8 +186,8 @@ export default class SemesterEvents extends Component {
           <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
             {[
               <Button
-                onClick={() => (window.location.href = 'https://360.gordon.edu/events/25Live/CLAW')}
-                style={{ color: 'blue' }}
+                onClick={() => (window.location.href = '/events/25Live/CLAW')}
+                style={{ color: gordonColors.primary.blue }}
               >
                 This semester's events
               </Button>,

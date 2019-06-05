@@ -268,7 +268,7 @@ export default class DiningBalance extends Component {
             {[
               <Button
                 onClick={() => (window.location.href = 'https://gordon.cafebonappetit.com/')}
-                style={{ color: 'blue' }}
+                style={{ color: gordonColors.primary.blue }}
               >
                 Here's today's Bon Appetit menu!
               </Button>,
