@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
 
@@ -181,6 +182,19 @@ export default class CLWCreditsDaysLeft extends Component {
     return (
       <Card>
         <CardContent>
+          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+            {this.state.loading ? '' : "Want to know this semester's events?"}
+          </Typography>
+          <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
+            {[
+              <Button
+                onClick={() => (window.location.href = 'https://360.gordon.edu/events/25Live/CLAW')}
+                style={{ color: 'blue' }}
+              >
+                This semester's events
+              </Button>,
+            ]}
+          </Typography>
           <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.currSessionDescription}
           </Typography>
