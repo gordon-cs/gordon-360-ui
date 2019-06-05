@@ -12,7 +12,7 @@ import user from '../../../../services/user';
 import session from '../../../../services/session';
 import { CardContent } from '../../../../../node_modules/@material-ui/core';
 
-import './DiningBalance.css';
+import './Menu.css';
 
 export default class DiningBalance extends Component {
   constructor(props) {
@@ -261,7 +261,7 @@ export default class DiningBalance extends Component {
     return (
       <Card>
         <CardContent>
-          {/* <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.loading ? '' : 'Still deciding what to eat?'}
           </Typography>
           <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
@@ -273,11 +273,11 @@ export default class DiningBalance extends Component {
                 Here's today's Bon Appetit menu!
               </Button>,
             ]}
-          </Typography> */}
-          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.loading ? '' : 'Dining Balance'}
           </Typography>
-          {content}
+          {/* <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+            {this.state.loading ? '' : 'Dining Balance'}
+          </Typography> */}
+          {/* {content} */}
         </CardContent>
       </Card>
     );

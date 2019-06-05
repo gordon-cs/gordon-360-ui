@@ -8,6 +8,8 @@ import DaysLeft from './components/DaysLeft';
 import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
 import user from '../../services/user';
+import SemesterEvents from './components/SemesterEvents';
+import Menu from './components/Menu';
 
 export default class Home extends Component {
   constructor(props) {
@@ -51,6 +53,12 @@ export default class Home extends Component {
         </Grid>
         <Grid item xs={12} md={5}>
           <DiningBalance />
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <SemesterEvents />
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <Menu />
         </Grid>
         <Grid item xs={12} md={5}>
           <Requests />

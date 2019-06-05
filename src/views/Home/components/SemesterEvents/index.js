@@ -11,9 +11,7 @@ import user from '../../../../services/user';
 import session from '../../../../services/session';
 import GordonLoader from '../../../../components/Loader';
 
-import './CLWChart.css';
-
-export default class CLWCreditsDaysLeft extends Component {
+export default class SemesterEvents extends Component {
   constructor(props) {
     super(props);
 
@@ -182,7 +180,7 @@ export default class CLWCreditsDaysLeft extends Component {
     return (
       <Card>
         <CardContent>
-          {/* <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.loading ? '' : "Want to know this semester's events?"}
           </Typography>
           <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
@@ -194,11 +192,11 @@ export default class CLWCreditsDaysLeft extends Component {
                 This semester's events
               </Button>,
             ]}
-          </Typography> */}
-          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.currSessionDescription}
           </Typography>
-          {content}
+          {/* <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+            {this.state.currSessionDescription}
+          </Typography> */}
+          {/* {content} */}
         </CardContent>
       </Card>
     );

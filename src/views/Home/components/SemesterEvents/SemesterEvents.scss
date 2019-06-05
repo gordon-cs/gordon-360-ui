@@ -1,0 +1,55 @@
+@import '../../../../vars';
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-bottom: 5px;
+}
+
+.entry-label {
+  width: 30px;
+  height: 12px;
+  margin-right: 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
+}
+
+.entry-text {
+  // font-family: Arial, Helvetica, Tahoma, Verdana, Trebuchet MS, sans-serif;
+  font-size: 10pt;
+  color: #505050;
+}
+
+.container {
+  position: relative;
+  text-align: center;
+}
+
+.label-text {
+  font-size: 8.5vw;
+  font-weight: bold;
+  letter-spacing: -0.8px;
+  text-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: $break-md) {
+  .centered-text {
+    font-size: 3.3vw;
+  }
+}
+
+.tooltip {
+  background-color: $neutral-dark-gray !important;
+}
