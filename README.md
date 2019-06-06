@@ -3,23 +3,27 @@
 This project is a rebuild of the frontend of Gordon 360 in React. [The current frontend](https://github.com/gordon-cs/Project-Bernard/) was built in EmberJS, but was deemed too slow and difficult to maintain.
 
 Look at [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/master/ROADMAP.md) for progress on the rebuild.
+
 ## Contents
-  * [Getting Started](#getting-started)
-  * [Editor Recommendations](#editor-recommendations)
-  * [Libraries](#libraries)
-  * [Connect Local Backend to React](#connect-local-backend-to-react)
-  * [Server Notes](#server-notes)
- 
-  * [Code Style](#code-style)
-  * [Dependencies](#dependencies)
-  * [Project File Organization](#file-organization)
-  * [Enviroment Variables](#environment-variables)
-  * [Deployment](#deployment)
-  * [Known Issues](#known-issues)
-  
+
+- [Getting Started](#getting-started)
+- [Editor Recommendations](#editor-recommendations)
+- [Libraries](#libraries)
+- [Connect Local Backend to React](#connect-local-backend-to-react)
+- [Server Notes](#server-notes)
+
+- [Code Style](#code-style)
+- [Dependencies](#dependencies)
+- [Project File Organization](#file-organization)
+- [Enviroment Variables](#environment-variables)
+- [Deployment](#deployment)
+- [Known Issues](#known-issues)
+
 ## Getting Started
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
+
+Make sure Node.js is set up on your maching (https://nodejs.org/en/)
 
 To run the app for the first time, run the following commands:
 
@@ -68,36 +72,36 @@ Links to the homepages of libraries used in this project, listed here for easy r
   Downshift is a component that can be used for building autocomplete components. We use it because it is used in one of the Material-UI autocomplete examples, showing that it integrates well with Material-UI components.
 
 - [Cropper-JS](https://github.com/fengyuanchen/cropperjs/blob/master/README.md)
-    
-   Cropper JS is a robust image cropper that is used on My Profile. While this Library is not used directly, a [React component](https://www.npmjs.com/package/react-cropper) that wraps this library is used.
+
+  Cropper JS is a robust image cropper that is used on My Profile. While this Library is not used directly, a [React component](https://www.npmjs.com/package/react-cropper) that wraps this library is used.
 
 - [Chart-JS](http://www.chartjs.org/)
-    
-  Chart-JS is a Library that provides GUI charts 
+
+  Chart-JS is a Library that provides GUI charts
   An example can be found on the homepage. The React Component that is used can be found [here](https://github.com/jerairrest/react-chartjs-2)
 
 - [history](https://github.com/ReactTraining/history#readme)
-  
+
   history is a JavaScript library that lets you easily manage session history anywhere JavaScript runs. history abstracts away the differences in various environments and provides a minimal API that lets you manage the history stack, navigate, confirm navigation, and persist state between sessions.
 
 - [React-DropZone](https://github.com/react-dropzone/react-dropzone)
-    
+
   A library that provides file drag+drop or a file browser submitting files
 
 - [luxon](https://github.com/moment/luxon#readme)
-  
+
   A library that wraps the native Javascript DateTime class with and allows for easier use of dates
 
 - [react-responsive-carousel](http://react-responsive-carousel.js.org/)
-  
+
   A React image carousel.
   [Link to source code + readme](https://github.com/leandrowd/react-responsive-carousel)
 
 - [lodash](https://lodash.com/)
-  
+
   A modern JavaScript utility library delivering modularity, performance & extras.
-  Extends functionality of Arrays and adds sorting methods of elements in arrays. 
-  
+  Extends functionality of Arrays and adds sorting methods of elements in arrays.
+
 ### Connect Local Backend To React
 
 - After setting up the backend as documented in [Project Raymond](https://github.com/gordon-cs/gordon-360-api):
@@ -130,7 +134,7 @@ Currently, a reasonably elegant workaround has been created by adding a couple o
 
 Our original workaround was in the form of a PowerShell script which automatically copies `web.config` to the server root whenever it is removed. The script is located at `D:\scripts\webconfig\webconfig-filecheck.ps1` and contains a constantly-running while loop. A task has been created in Windows Task Scheduler which, if enabled, starts running the script every morning at 2:00 AM, but automatic execution of this task has been disabled since the creation of the new workaround described above. This task still exists and can be restarted if it is ever needed. (The back-up `web.config` file is located in the same directory as the script.)
 
-Currently, the script and task only exist on the server for the development site (`360train.gordon.edu`). Analogous changes must be made to the server root directories for the production site (`360.gordon.edu`) if this functionality is desired there. 
+Currently, the script and task only exist on the server for the development site (`360train.gordon.edu`). Analogous changes must be made to the server root directories for the production site (`360.gordon.edu`) if this functionality is desired there.
 
 (The current workaround described earlier should work on any server and does not need the PowerShell script or the task in order to work.)
 
@@ -150,8 +154,8 @@ ESLint and Stylelint are used in conjunction with Prettier to catch syntax error
 
 If you are adding a dependency to the project, you must use either `--save` or `--save-dev` with `npm install`. This will save the dependency and its current version to `package.json`, which means it will be installed automatically when `npm install` is run.
 
-* If you are installing a dependency that will be used in development, such as a build tool, linter, or documentation tool, use `npm install --save-dev nameOfPackage`. This will save the dependency to the `devDependencies` property of `package.json`.
-* If you are installing a production dependency, such as a charting library, a date formatting library, or a utility like Lodash, use `npm install --save nameOfPackage`. This will save the dependency to the `dependencies` property of `package.json`.
+- If you are installing a dependency that will be used in development, such as a build tool, linter, or documentation tool, use `npm install --save-dev nameOfPackage`. This will save the dependency to the `devDependencies` property of `package.json`.
+- If you are installing a production dependency, such as a charting library, a date formatting library, or a utility like Lodash, use `npm install --save nameOfPackage`. This will save the dependency to the `dependencies` property of `package.json`.
 
 To remove a dependency, use `npm rm nameOfPackage`.
 
@@ -167,9 +171,9 @@ To update all depedencies to their latest allowed versions (as specified by the 
 
 > Given a version number MAJOR.MINOR.PATCH, increment the:
 >
-> * MAJOR version when you make incompatible API changes,
-> * MINOR version when you add functionality in a backwards-compatible manner, and
-> * PATCH version when you make backwards-compatible bug fixes.
+> - MAJOR version when you make incompatible API changes,
+> - MINOR version when you add functionality in a backwards-compatible manner, and
+> - PATCH version when you make backwards-compatible bug fixes.
 >
 > Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
 
@@ -179,10 +183,10 @@ npm uses semantic versioning ranges to specify a range of acceptable versions. F
 
 The source files for the app are in `./src`. The other top-level folders are as follows:
 
-* `.vscode` contains configuration for Visual Studio Code
-* `build` contains the built application; not tracked by Git
-* `node_modules` contains dependencies installed by `npm`; not tracked by Git
-* `public` contains assets that should not be processed by Webpack. Only files inside `public` can be used from `public/index.html`.
+- `.vscode` contains configuration for Visual Studio Code
+- `build` contains the built application; not tracked by Git
+- `node_modules` contains dependencies installed by `npm`; not tracked by Git
+- `public` contains assets that should not be processed by Webpack. Only files inside `public` can be used from `public/index.html`.
 
 The structure of the `src` directory is as follows:
 
@@ -204,8 +208,12 @@ The structure of the `src` directory is as follows:
 
 ```plain
 components
-├── Carousel
+├── Error
 │   └── index.js
+├── EventList
+|   ├── components
+│   │   └── ...
+|   └── index.js
 ├── Header
 │   ├── components
 │   │   └── ...
@@ -221,37 +229,37 @@ Each component must have a folder named in PascalCase (also known as upper camel
 
 A component folder can contain any resources needed by the component, such as images and CSS files. If there is more than one image or CSS file, a subdirectory named `images` or `styles` can be created inside the component folder.
 
-A component folder can contain its own `components` folder containing components that only apply to that component. This is a useful way to avoid polluting the top-level `./components` folder with single-use components. If a component in a nested component folder becomes useful to another component that is higher in the hierarchy than it is, that component should be moved up to the same level as that component. For example:
+A component folder can contain its own `components` folder containing components that only apply to that component. This is a useful way to avoid polluting the top-level `./components` folder with single-use components. If a component in a nested component folder becomes useful to another component that is higher in the hierarchy than it is, that component should be moved up to the same level as that component. For example, if for some strange reason you wanted to make a footer which also had the people search, you would start with this:
 
 ```plain
 components
-├── Carousel
-│   └── index.js <-- wants to use ../Header/components/MyButton
-└── Header
-    ├── components
-    │   └── MyButton
-    └── index.js <-- uses ./components/MyButton
-```
-
-changes to
-
-```plain
-components
-├── Carousel
-│   └── index.js <-- uses ../MyButton
 ├── Header
-│   └── index.js <-- uses ../MyButton
-└── MyButton
+|   ├── components
+|   │   └── PeopleSearch
+|   └── index.js <-- uses ./components/Header
+└── Footer
+    └── index.js <-- wants to use ../Header/components/PeopleSearch
 ```
 
-**Components should never have one-word names.** This is to avoid naming collisions with external libraries and with future HTML elements. This application is using the convention of prefixing component names with `Gordon`, as in `GordonButton` or `GordonCarousel`. Note that folder and file names do not have to follow this convention (respectively, the two examples would be `./components/Button` and `./components/Carousel`); only the class names of the components and their imports have to follow it:
+and should change it to this:
+
+```plain
+components
+├── Header
+│   └── index.js <-- uses ../PeopleSearch
+├── Footer
+│   └── index.js <-- uses ../PeopleSearch
+└── PeopleSearch
+```
+
+**Components should never have one-word names.** This is to avoid naming collisions with external libraries and with future HTML elements. This application is using the convention of prefixing component names with `Gordon`, as in `GordonError` or `GordonHeader`. Note that folder and file names do not have to follow this convention (respectively, the two examples would be `./components/Error` and `./components/Header`); only the class names of the components and their imports have to follow it:
 
 ```JavaScript
-// ./components/Button/index.js
-class GordonButton extends Component {}
+// In ./components/Loader/index.js
+export default class GordonLoader extends Component {}
 
-// ./views/Home/index.js
-import GordonButton from '../components/Button';
+// In ./views/Home/components/DiningBalance/index.js
+import GordonLoader from '../../../../components/Loader';
 ```
 
 ### Services
@@ -266,6 +274,8 @@ In general, **components should not handle anything other than displaying and in
 
 ```plain
 views
+├── About
+├── ...
 ├── Home
 │   ├── components
 │   │   └── ...
@@ -277,7 +287,7 @@ views
 
 This folder contains components that make up the discrete views of the application, for example "home," "login," and "edit activity." Each view uses the same folder structure as components in `./components`. Each view represents a route defined in `./app.js`. The route's path should be similar to the name of the component, such as `ActivityEdit` having a path of `/activity/:activityId/edit`.
 
-Similar to component folders, a view folder can have its own `components` folder containing components that only apply to that view. If a component in one of these folders ends up being useful to another view, it should move to `./components` to be shared by both views.
+Similar to component folders, a view folder can have its own `components` folder containing components that only apply to that view. If a component in one of these folders ends up being useful to another view, it should move all the way up to `src/components` to be shared by both views.
 
 ## Environment Variables
 
@@ -301,19 +311,19 @@ The script deploys to either staging or production based on the branch it is run
 
 ### Deploying to Production
 
-1. On the [repository's home page on GitHub](https://github.com/gordon-cs/gordon-360-ui), click "New pull request."
-1. Change the "base" branch of the pull request to `master`. The "compare" branch should be set to `develop` by default.
-1. Enter a title starting with "RELEASE:" (optional, but useful for quickly finding releases in the Git history) and containing a brief summary of the changes that the release brings.
-1. Add reviewers. The pull request must be approved before it can be merged.
-1. Click "Create pull request."
-1. When the pull request is approved, merge it. This will trigger a build that will automatically deploy `master` to production.
+1.  On the [repository's home page on GitHub](https://github.com/gordon-cs/gordon-360-ui), click "New pull request."
+1.  Change the "base" branch of the pull request to `master`. The "compare" branch should be set to `develop` by default.
+1.  Enter a title starting with "RELEASE:" (optional, but useful for quickly finding releases in the Git history) and containing a brief summary of the changes that the release brings.
+1.  Add reviewers. The pull request must be approved before it can be merged.
+1.  Click "Create pull request."
+1.  When the pull request is approved, merge it. This will trigger a build that will automatically deploy `master` to production.
 
 ## Known Issues
-* Cannot login to 360 from Edge due to an authentication error that is caused from http request failing to return a token to edge which causes "Invalid Argument" error to be displayed
 
-* Internet Explorer does not work with 360 and never will due to the fact that IE is too old to support features that 360 currently uses
+- Cannot login to 360 from Edge due to an authentication error that is caused from http request failing to return a token to edge which causes "Invalid Argument" error to be displayed
 
-* There is a problem with the first login hanging after the backend starts up, this might be due to an authentication error but refreshing is currently the only fix
+- Internet Explorer does not work with 360 and never will due to the fact that IE is too old to support features that 360 currently uses
 
-* Edge Authentication - Fails at creation of request object in getAuth() in auth.js service. Incompatability with URLSearchParams was fixed with an update to Edge in April, but different problem with request object must exist still.
+- There is a problem with the first login hanging after the backend starts up, this might be due to an authentication error but refreshing is currently the only fix
 
+- Edge Authentication - Fails at creation of request object in getAuth() in auth.js service. Incompatability with URLSearchParams was fixed with an update to Edge in April, but different problem with request object must exist still.

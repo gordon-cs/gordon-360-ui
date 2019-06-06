@@ -13,6 +13,7 @@ import Feedback from './views/Feedback';
 import PeopleSearch from './views/PeopleSearch';
 import ProfileNotFound from './views/ProfileNotFound';
 import IDUploader from './views/IDUploader';
+import Admin from './views/Admin';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 export default [
@@ -91,5 +92,10 @@ export default [
     name: 'ID Uploader',
     path: '/id',
     component: IDUploader,
+  },
+  {
+    name: 'Admin',
+    path: '/admin',
+    component: Admin,
   },
 ];
