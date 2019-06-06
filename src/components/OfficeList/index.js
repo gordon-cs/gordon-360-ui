@@ -21,11 +21,32 @@ export default class Office extends Component {
         return null;
       }
 
+      if (this.props.profile.BuildingDescription !== '' && this.props.profile.OnCampusRoom !== '') {
+        Room = (
+          <div>
+            <ListItem>
+              <Grid container item justify="center">
+                <Grid item xs={3} sm={6} md={3} lg={6}>
+                  <Typography>Room:</Typography>
+                </Grid>
+                <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
+                  <Typography>
+                    {' '}
+                    {this.props.profile.BuildingDescription}, {this.props.profile.OnCampusRoom}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <Divider />
+          </div>
+        );
+      }
+
       if (this.props.profile.OnCampusPhone !== '') {
         OfficePhone = (
           <div>
             <ListItem>
-              <Grid container justify="center">
+              <Grid container item justify="center">
                 <Grid item xs={3} sm={6} md={3} lg={6}>
                   <Typography>Office Phone:</Typography>
                 </Grid>
@@ -49,33 +70,12 @@ export default class Office extends Component {
         OfficeHours = (
           <div>
             <ListItem>
-              <Grid container justify="center">
+              <Grid container item justify="center">
                 <Grid item xs={3} sm={6} md={3} lg={6}>
                   <Typography>Office Hours:</Typography>
                 </Grid>
                 <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
                   <Typography> {this.props.profile.office_hours}</Typography>
-                </Grid>
-              </Grid>
-            </ListItem>
-            <Divider />
-          </div>
-        );
-      }
-
-      if (this.props.profile.BuildingDescription !== '' && this.props.profile.OnCampusRoom !== '') {
-        Room = (
-          <div>
-            <ListItem>
-              <Grid container justify="center">
-                <Grid item xs={3} sm={6} md={3} lg={6}>
-                  <Typography>Room:</Typography>
-                </Grid>
-                <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
-                  <Typography>
-                    {' '}
-                    {this.props.profile.BuildingDescription}, {this.props.profile.OnCampusRoom}
-                  </Typography>
                 </Grid>
               </Grid>
             </ListItem>
@@ -98,7 +98,7 @@ export default class Office extends Component {
       );
     }
     return (
-      <Grid item xs={12} sm={12} md={12} lg={12}>
+      <Grid container item xs={12} sm={12} md={12} lg={12} flexBasis="content">
         {Office}
       </Grid>
     );
