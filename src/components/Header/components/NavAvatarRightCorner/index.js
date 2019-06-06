@@ -5,55 +5,13 @@ import { Link } from 'react-router-dom';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
-import Dialog from '@material-ui/core/Dialog';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import LinkIcon from '@material-ui/icons/InsertLink';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-
+import QuickLinksDialog from '../../../QuickLinksDialog';
 import { signOut } from '../../../../services/auth';
 
 import './nav-avatar-right-corner.css';
 import user from '../../../../services/user';
 import Tooltip from '@material-ui/core/Tooltip';
-import { Divider, ListItemIcon } from '@material-ui/core';
-
-const styles = theme => ({
-  root: {
-    margin: 0,
-  },
-  closeButton: {
-    position: 'absolute',
-    color: theme.palette.grey[500],
-  },
-});
-
-const DialogTitle = withStyles(styles)(props => {
-  const { children, classes, onClose } = props;
-  return (
-    <MuiDialogTitle disableTypography className={classes.root}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
-
-const DialogContent = withStyles(theme => ({
-  root: {},
-}))(MuiDialogContent);
-
-function ListItemLink(props) {
-  return <ListItem button component="a" {...props} />;
-}
 
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
@@ -62,6 +20,8 @@ export default class GordonNavAvatarRightCorner extends Component {
     this.onClick = this.onClick.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onSignOut = this.onSignOut.bind(this);
+    this.handleLinkClickOpen = this.handleLinkClickOpen.bind(this);
+    this.handleLinkClose = this.handleLinkClose.bind(this);
 
     this.getInitials = this.getInitials.bind(this);
 
@@ -88,10 +48,6 @@ export default class GordonNavAvatarRightCorner extends Component {
     this.props.onSignOut();
   }
 
-  async componentWillMount() {
-    this.loadAvatar();
-  }
-
   handleLinkClickOpen = () => {
     this.setState({
       linkopen: true,
@@ -101,6 +57,10 @@ export default class GordonNavAvatarRightCorner extends Component {
   handleLinkClose = () => {
     this.setState({ linkopen: false });
   };
+
+  async componentWillMount() {
+    this.loadAvatar();
+  }
 
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
@@ -231,50 +191,11 @@ export default class GordonNavAvatarRightCorner extends Component {
             Sign Out
           </MenuItem>
         </Menu>
-        <Dialog
-          onClose={this.handleLinkClose}
-          aria-labelledby="useful-links"
-          open={this.state.linkopen}
-        >
-          <DialogTitle id="useful-links">These are some useful links for you</DialogTitle>
-          <DialogContent dividers="true">
-            <Divider />
-            <Typography>
-              <List component="nav" aria-label="Useful Links Lists">
-                <ListItemLink
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://www.gordon.edu"
-                >
-                  <ListItemIcon>
-                    <LinkIcon />
-                  </ListItemIcon>
-                  Gordon College Official Website
-                </ListItemLink>
-                <ListItemLink
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://my.gordon.edu"
-                >
-                  <ListItemIcon>
-                    <LinkIcon />
-                  </ListItemIcon>
-                  My Gordon
-                </ListItemLink>
-                <ListItemLink
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://blackboard.gordon.edu"
-                >
-                  <ListItemIcon>
-                    <LinkIcon />
-                  </ListItemIcon>
-                  Blackboard Learn
-                </ListItemLink>
-              </List>
-            </Typography>
-          </DialogContent>
-        </Dialog>
+        <QuickLinksDialog
+          handleLinkClickOpen={this.handleLinkClickOpen}
+          handleLinkClose={this.handleLinkClose}
+          linkopen={this.state.linkopen}
+        />
       </section>
     );
   }
