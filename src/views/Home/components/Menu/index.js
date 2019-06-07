@@ -267,7 +267,9 @@ export default class DiningBalance extends Component {
           <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
             {[
               <Button
-                onClick={() => (window.location.href = 'https://gordon.cafebonappetit.com/')}
+                onClick={() =>
+                  (window.location.href = 'https://gordon.cafebonappetit.com/#cafe-hours')
+                }
                 style={{ color: gordonColors.primary.blue }}
               >
                 Here's today's Bon Appetit menu!
