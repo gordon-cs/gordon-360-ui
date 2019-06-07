@@ -25,7 +25,7 @@ export default class Office extends Component {
         Room = (
           <div>
             <ListItem>
-              <Grid container item justify="center">
+              <Grid container justify="center">
                 <Grid item xs={3} sm={6} md={3} lg={6}>
                   <Typography>Room:</Typography>
                 </Grid>
@@ -46,7 +46,7 @@ export default class Office extends Component {
         OfficePhone = (
           <div>
             <ListItem>
-              <Grid container item justify="center">
+              <Grid container justify="center">
                 <Grid item xs={3} sm={6} md={3} lg={6}>
                   <Typography>Office Phone:</Typography>
                 </Grid>
@@ -70,7 +70,7 @@ export default class Office extends Component {
         OfficeHours = (
           <div>
             <ListItem>
-              <Grid container item justify="center">
+              <Grid container justify="center">
                 <Grid item xs={3} sm={6} md={3} lg={6}>
                   <Typography>Office Hours:</Typography>
                 </Grid>
@@ -98,7 +98,7 @@ export default class Office extends Component {
       );
     }
     return (
-      <Grid container item xs={12} sm={12} md={12} lg={12} flexBasis="content">
+      <Grid item xs={12} sm={12} md={12} lg={12}>
         {Office}
       </Grid>
     );

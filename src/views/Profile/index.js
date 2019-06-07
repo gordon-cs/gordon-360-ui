@@ -217,128 +217,136 @@ export default class Profile extends Component {
       <div>
         {this.state.loading && <GordonLoader />}
         {!this.state.loading && (
-          <Grid container justify="center" spacing="16">
-            {/*The entire top tile*/}
-            <Grid item xs={12} lg={10}>
-              <Card>
-                <CardContent>
-                  <Grid container align="center" justify="center" spacing="16">
-                    {/*Container for the profile picture(s)*/}
-                    <Grid
-                      container
-                      item
-                      align="center"
-                      alignItems="flex-end"
-                      justify="center"
-                      spacing="16"
-                      xs={12}
-                      sm={12}
-                      md={12}
-                      lg={12}
-                    >
-                      {this.state.prefImage && (
-                        <img
-                          className="rounded-corners"
-                          src={`data:image/jpg;base64,${this.state.prefImage}`}
-                          alt=""
-                          style={{ 'max-height': '200px', 'min-width': '160px' }}
-                        />
-                      )}
-                      {this.state.prefImage && this.state.defImage && ' '}
-                      {this.state.defImage && (
-                        <img
-                          className="rounded-corners"
-                          src={`data:image/jpg;base64,${this.state.defImage}`}
-                          alt=""
-                          style={{ 'max-height': '200px', 'min-width': '160px' }}
-                        />
-                      )}
-                    </Grid>
-                    {/*Container for info: name, title, and email*/}
-                    <Grid
-                      container
-                      item
-                      alignItems="center"
-                      align="center"
-                      justify="center"
-                      spacing="16"
-                      xs={12}
-                      sm={6}
-                      md={6}
-                      lg={4}
-                    >
-                      <CardHeader
-                        title={
-                          this.state.hasNickName
-                            ? this.state.profile.fullName + ' (' + this.state.profile.NickName + ')'
-                            : this.state.profile.fullName
-                        }
-                        subheader={this.state.subheaderInfo}
-                      />
-
-                      <Grid container item spacing="16" align="center" justify="center">
-                        {facebookButton}
-                        {twitterButton}
-                        {linkedInButton}
-                        {instagramButton}
-                      </Grid>
-
-                      <Grid item>
-                        {this.state.profile.Email !== '' && (
-                          <div
-                            style={{
-                              marginTop: '20px',
-                              display: 'flex',
-                              justifyContent: 'center',
-                            }}
-                          >
-                            <a href={`mailto:${this.state.profile.Email}`}>
-                              <div
-                                className="email-link-container"
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  alignContent: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <EmailIcon
-                                  className="email-link"
-                                  style={{ marginRight: '0.75rem' }}
-                                />
-                                <Typography className="email-link">
-                                  {this.state.profile.Email}
-                                </Typography>
-                              </div>
-                            </a>
-                          </div>
+          <Grid container direction="row" justify="center">
+            <Grid
+              container
+              item
+              justify="center"
+              justifyContent="space-evenly"
+              spacing="16"
+              s={12}
+              lg={10}
+            >
+              {/*The entire top card*/}
+              <Grid item xs={12} sm={12} md={12} lg={12}>
+                <Card>
+                  <CardContent>
+                    <Grid container align="center" justify="center">
+                      {/*Container for the profile picture(s)*/}
+                      <Grid
+                        container
+                        item
+                        alignItems="flex-end"
+                        justify="center"
+                        spacing="16"
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        lg={12}
+                      >
+                        {this.state.prefImage && (
+                          <img
+                            className="rounded-corners"
+                            src={`data:image/jpg;base64,${this.state.prefImage}`}
+                            alt=""
+                            style={{ 'max-height': '200px', 'min-width': '160px' }}
+                          />
+                        )}
+                        {this.state.prefImage && this.state.defImage && ' '}
+                        {this.state.defImage && (
+                          <img
+                            className="rounded-corners"
+                            src={`data:image/jpg;base64,${this.state.defImage}`}
+                            alt=""
+                            style={{ 'max-height': '200px', 'min-width': '160px' }}
+                          />
                         )}
                       </Grid>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
 
-            <Grid container item xs={12} lg={5}>
-              <Grid container item direction="column" justifyContent="space-around">
+                      {/*Container for info: name, title, and email*/}
+                      <Grid
+                        container
+                        item
+                        justify="center"
+                        spacing="16"
+                        xs={12}
+                        sm={6}
+                        md={6}
+                        lg={4}
+                      >
+                        <CardHeader
+                          title={
+                            this.state.hasNickName
+                              ? this.state.profile.fullName +
+                                ' (' +
+                                this.state.profile.NickName +
+                                ')'
+                              : this.state.profile.fullName
+                          }
+                          subheader={this.state.subheaderInfo}
+                        />
+
+                        <Grid container item align="center" justify="center" spacing="16">
+                          {facebookButton}
+                          {twitterButton}
+                          {linkedInButton}
+                          {instagramButton}
+                        </Grid>
+
+                        <Grid item>
+                          {this.state.profile.Email !== '' && (
+                            <div
+                              style={{
+                                marginTop: '20px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <a href={`mailto:${this.state.profile.Email}`}>
+                                <div
+                                  className="email-link-container"
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    alignContent: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <EmailIcon
+                                    className="email-link"
+                                    style={{ marginRight: '0.75rem' }}
+                                  />
+                                  <Typography className="email-link">
+                                    {this.state.profile.Email}
+                                  </Typography>
+                                </div>
+                              </a>
+                            </div>
+                          )}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {/*Container for office and personal info cards,
+            in order to always have one on top of the other*/}
+              <Grid container item className="personal-office-grid" direction="row" xs={12} lg={6}>
                 {this.state.officeinfo !== null && this.state.officeinfo}
                 {this.state.profileinfo}
               </Grid>
-            </Grid>
 
-            {/*<Grid container item xs={12} lg={5}>
-              <Grid container item direction="column" spacing="16">
-                <Grid item xs={12} sm={12} md={12} lg={12}>
-                  <Card>
-                    <CardContent>
-                      <CardHeader title="Involvements" />
-                      <List>{displayedMembershipList}</List>
-                    </CardContent>
-                  </Card>
-                </Grid>
+              {/*Container for the involvements card*/}
+              <Grid item xs={12} sm={12} md={12} lg={6}>
+                <Card>
+                  <CardContent>
+                    <CardHeader title="Involvements" />
+                    <List>{displayedMembershipList}</List>
+                  </CardContent>
+                </Card>
               </Grid>
-            </Grid>*/}
+            </Grid>
           </Grid>
         )}
       </div>
