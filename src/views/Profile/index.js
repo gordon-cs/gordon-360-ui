@@ -217,28 +217,50 @@ export default class Profile extends Component {
       <div>
         {this.state.loading && <GordonLoader />}
         {!this.state.loading && (
-          <Grid container direction="row" justify="center">
+          <div class="cont">
+            <Grid class="item-g">
+              <Card>
+                <CardContent>
+                  Testingggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                  gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                  gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                  gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                  gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                  gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid class="item-n">
+              <Card>
+                <CardContent>
+                  Testinnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnng
+                </CardContent>
+              </Card>
+            </Grid>
+          </div>
+          /*<div class="full-page-cont">
             <Grid
               container
               item
               justify="center"
-              justifyContent="space-evenly"
+              /*justifyContent="space-evenly"
               spacing="16"
               s={12}
               lg={10}
             >
-              {/*The entire top card*/}
+              {/*The entire top card}
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Card>
                   <CardContent>
                     <Grid container align="center" justify="center">
-                      {/*Container for the profile picture(s)*/}
-                      <Grid
+                      {/*Container for the profile picture(s)}
+                      <Grid className="profile-pic-cont"
                         container
                         item
-                        alignItems="flex-end"
+                        /*alignItems="flex-end"
                         justify="center"
-                        spacing="16"
+                        /*spacing="16"
                         xs={12}
                         sm={12}
                         md={12}
@@ -263,7 +285,7 @@ export default class Profile extends Component {
                         )}
                       </Grid>
 
-                      {/*Container for info: name, title, and email*/}
+                      {/*Container for info: name, title, and email}
                       <Grid
                         container
                         item
@@ -331,13 +353,13 @@ export default class Profile extends Component {
               </Grid>
 
               {/*Container for office and personal info cards,
-            in order to always have one on top of the other*/}
-              <Grid container item className="personal-office-grid" direction="row" xs={12} lg={6}>
+            in order to always have one on top of the other}
+              <Grid container item className="personal-office-cont" direction="row" xs={12} lg={6}>
                 {this.state.officeinfo !== null && this.state.officeinfo}
                 {this.state.profileinfo}
               </Grid>
 
-              {/*Container for the involvements card*/}
+              {/*Container for the involvements card}
               <Grid item xs={12} sm={12} md={12} lg={6}>
                 <Card>
                   <CardContent>
@@ -347,7 +369,7 @@ export default class Profile extends Component {
                 </Card>
               </Grid>
             </Grid>
-          </Grid>
+          </div>*/
         )}
       </div>
     );

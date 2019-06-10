@@ -310,7 +310,7 @@ class ProfileList extends Component {
     }
 
     return (
-      <Grid item xs={12} sm={12} md={12} lg={12}>
+      <Grid item /*className="personal-item"*/ xs={12} sm={12} md={12} lg={12}>
         <Card>
           <CardContent>
             <CardHeader title="Personal Information" />
