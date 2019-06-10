@@ -276,10 +276,6 @@ export default class DiningBalance extends Component {
               </Button>,
             ]}
           </Typography>
-          {/* <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.loading ? '' : 'Dining Balance'}
-          </Typography> */}
-          {/* {content} */}
         </CardContent>
       </Card>
     );

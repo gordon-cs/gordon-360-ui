@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
-
+import { Route, NavLink } from 'react-router-dom';
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
 import session from '../../../../services/session';
@@ -186,9 +186,10 @@ export default class SemesterEvents extends Component {
           <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
             {[
               <Button
-                onClick={() => (window.location.href = '/events/25Live/CLAW')}
+                onClick={() => (window.location.href = '/events')}
                 style={{ color: gordonColors.primary.blue }}
               >
+                <Route exact path="/25Live/CLAW" component={NavLink} />
                 This semester's events
               </Button>,
             ]}
