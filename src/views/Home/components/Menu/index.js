@@ -261,18 +261,15 @@ export default class DiningBalance extends Component {
     return (
       <Card>
         <CardContent>
-          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.loading ? '' : 'Still deciding what to eat?'}
-          </Typography>
           <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
             {[
               <Button
                 onClick={() =>
                   (window.location.href = 'https://gordon.cafebonappetit.com/#cafe-hours')
                 }
-                style={{ color: gordonColors.primary.blue }}
+                style={{ fontSize: 22, color: gordonColors.primary.blue }}
               >
-                Here's today's Bon Appetit menu!
+                Today's menu
               </Button>,
             ]}
           </Typography>

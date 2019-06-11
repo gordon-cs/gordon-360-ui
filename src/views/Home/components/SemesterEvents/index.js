@@ -180,14 +180,11 @@ export default class SemesterEvents extends Component {
     return (
       <Card>
         <CardContent>
-          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.loading ? '' : "Want to know this semester's events?"}
-          </Typography>
           <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
             {[
               <Button
                 onClick={() => (window.location.href = '/events')}
-                style={{ color: gordonColors.primary.blue }}
+                style={{ fontSize: 22, color: gordonColors.primary.blue }}
               >
                 <Route exact path="/25Live/CLAW" component={NavLink} />
                 This semester's events
