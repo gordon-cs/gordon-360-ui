@@ -54,14 +54,46 @@
   display: grid;
   direction: ltr;
   justify-content: center;
-  grid-template-columns: 100%;
+  grid-template-columns: 15% 70% 15%;
   grid-template-rows: 100%;
   grid-auto-rows: 16px;
+  grid-auto-columns: 16px;
 }
 
-.profile-pic-cont {
-  align-items: flex-end;
+.top-card-item {
+  grid-column: 2 / 3;
+  grid-row-start: 1;
+  grid-row-end: -1;
+}
+
+.top-card-cont {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: auto;
+  align-content: center;
   justify-content: center;
+  justify-items: center;
+}
+
+.profile-pic-item {
+  align-self: flex-end;
+  justify-self: center;
+}
+
+.name-contact-cont {
+  display: grid;
+  justify-content: center;
+}
+
+.name-title-cont {
+  display: grid;
+  justify-content: center;
+}
+
+.contact-icons-cont {
+  display: grid;
+  align-items: center;
+  justify-items: center;
 }
 
 /*.office-item {
@@ -74,16 +106,22 @@
 
 .personal-office-cont {
   grid-template-columns: 50%;
-  grid-template-rows: 45% auto 45%;
+  grid-template-rows: 1fr 1fr;
+  grid-row-gap: 16px;
+  direction: ltr;
 }
 
+.involvements-cont {
+  grid-template-columns: 50%;
+}
+
+/*unused*/
 .noInvolvements {
-  /*unused*/
   padding-left: 24px;
   color: $primary-cyan !important;
 }
 
-.cont {
+/*.cont {
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: 100%;
@@ -98,7 +136,7 @@
 .item-n {
   grid-column: 1 / 2;
   grid-row: 2 / 3;
-}
+}*/
 
 /*the follwing are unused*/
 @media (max-width: 420px) {

@@ -217,7 +217,7 @@ export default class Profile extends Component {
       <div>
         {this.state.loading && <GordonLoader />}
         {!this.state.loading && (
-          <div class="cont">
+          /*<div class="cont">
             <Grid class="item-g">
               <Card>
                 <CardContent>
@@ -238,64 +238,37 @@ export default class Profile extends Component {
                 </CardContent>
               </Card>
             </Grid>
-          </div>
-          /*<div class="full-page-cont">
-            <Grid
-              container
-              item
-              justify="center"
-              /*justifyContent="space-evenly"
-              spacing="16"
-              s={12}
-              lg={10}
-            >
-              {/*The entire top card}
-              <Grid item xs={12} sm={12} md={12} lg={12}>
-                <Card>
-                  <CardContent>
-                    <Grid container align="center" justify="center">
-                      {/*Container for the profile picture(s)}
-                      <Grid className="profile-pic-cont"
-                        container
-                        item
-                        /*alignItems="flex-end"
-                        justify="center"
-                        /*spacing="16"
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        lg={12}
-                      >
-                        {this.state.prefImage && (
-                          <img
-                            className="rounded-corners"
-                            src={`data:image/jpg;base64,${this.state.prefImage}`}
-                            alt=""
-                            style={{ 'max-height': '200px', 'min-width': '160px' }}
-                          />
-                        )}
-                        {this.state.prefImage && this.state.defImage && ' '}
-                        {this.state.defImage && (
-                          <img
-                            className="rounded-corners"
-                            src={`data:image/jpg;base64,${this.state.defImage}`}
-                            alt=""
-                            style={{ 'max-height': '200px', 'min-width': '160px' }}
-                          />
-                        )}
-                      </Grid>
+          </div>*/
+          <div class="full-page-cont">
+            {/*The entire top card*/}
+            <div class="top-card-item">
+              <Card>
+                <CardContent>
+                  <div class="top-card-cont">
+                    {/*Container for the profile picture(s)*/}
+                    <div class="profile-pic-item">
+                      {this.state.prefImage && (
+                        <img
+                          className="rounded-corners"
+                          src={`data:image/jpg;base64,${this.state.prefImage}`}
+                          alt=""
+                          style={{ 'max-height': '200px', 'min-width': '160px' }}
+                        />
+                      )}
+                      {this.state.prefImage && this.state.defImage && ' '}
+                      {this.state.defImage && (
+                        <img
+                          className="rounded-corners"
+                          src={`data:image/jpg;base64,${this.state.defImage}`}
+                          alt=""
+                          style={{ 'max-height': '200px', 'min-width': '160px' }}
+                        />
+                      )}
+                    </div>
 
-                      {/*Container for info: name, title, and email}
-                      <Grid
-                        container
-                        item
-                        justify="center"
-                        spacing="16"
-                        xs={12}
-                        sm={6}
-                        md={6}
-                        lg={4}
-                      >
+                    {/*Container for name, title, and contact info*/}
+                    <div class="name-contact-card">
+                      <div class="name-title-cont">
                         <CardHeader
                           title={
                             this.state.hasNickName
@@ -307,69 +280,69 @@ export default class Profile extends Component {
                           }
                           subheader={this.state.subheaderInfo}
                         />
+                      </div>
 
-                        <Grid container item align="center" justify="center" spacing="16">
-                          {facebookButton}
-                          {twitterButton}
-                          {linkedInButton}
-                          {instagramButton}
-                        </Grid>
+                      <div class="contact-icons-cont">
+                        {facebookButton}
+                        {twitterButton}
+                        {linkedInButton}
+                        {instagramButton}
+                      </div>
 
-                        <Grid item>
-                          {this.state.profile.Email !== '' && (
-                            <div
-                              style={{
-                                marginTop: '20px',
-                                display: 'flex',
-                                justifyContent: 'center',
-                              }}
-                            >
-                              <a href={`mailto:${this.state.profile.Email}`}>
-                                <div
-                                  className="email-link-container"
-                                  style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    alignContent: 'center',
-                                    justifyContent: 'center',
-                                  }}
-                                >
-                                  <EmailIcon
-                                    className="email-link"
-                                    style={{ marginRight: '0.75rem' }}
-                                  />
-                                  <Typography className="email-link">
-                                    {this.state.profile.Email}
-                                  </Typography>
-                                </div>
-                              </a>
-                            </div>
-                          )}
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              </Grid>
+                      <div>
+                        {this.state.profile.Email !== '' && (
+                          <div
+                            style={{
+                              marginTop: '20px',
+                              display: 'flex',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            <a href={`mailto:${this.state.profile.Email}`}>
+                              <div
+                                className="email-link-container"
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  alignContent: 'center',
+                                  justifyContent: 'center',
+                                }}
+                              >
+                                <EmailIcon
+                                  className="email-link"
+                                  style={{ marginRight: '0.75rem' }}
+                                />
+                                <Typography className="email-link">
+                                  {this.state.profile.Email}
+                                </Typography>
+                              </div>
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
-              {/*Container for office and personal info cards,
-            in order to always have one on top of the other}
-              <Grid container item className="personal-office-cont" direction="row" xs={12} lg={6}>
-                {this.state.officeinfo !== null && this.state.officeinfo}
-                {this.state.profileinfo}
-              </Grid>
+            {/*Container for office and personal info cards,
+            in order to always have one on top of the other*/}
+            <div class="personal-office-cont">
+              {this.state.officeinfo !== null && this.state.officeinfo}
+              {this.state.profileinfo}
+            </div>
 
-              {/*Container for the involvements card}
-              <Grid item xs={12} sm={12} md={12} lg={6}>
-                <Card>
-                  <CardContent>
-                    <CardHeader title="Involvements" />
-                    <List>{displayedMembershipList}</List>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-          </div>*/
+            {/*Container for the involvements card*/}
+            <div class="involvements-cont">
+              <Card>
+                <CardContent>
+                  <CardHeader title="Involvements" />
+                  <List>{displayedMembershipList}</List>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         )}
       </div>
     );
