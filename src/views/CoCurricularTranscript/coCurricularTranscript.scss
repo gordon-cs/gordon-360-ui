@@ -2,10 +2,30 @@
 //in a print view (eg after hittig Print Co-Curricular Transcript). Allows logo to only show when printing
 
 .co-curricular-transcript {
+  display: grid;
+  grid-template-columns: 25% 50% 25%;
+  justify-items: stretch;
   text-align: center;
 }
+
+.transcript-item {
+  grid-column: 2 / 3;
+}
+
 .heading {
+  margin: normal;
   padding: '20px';
+}
+
+.involvements {
+  display: grid;
+}
+
+/* For small screens (411px wide or less) */
+@media (max-width: 411px) {
+  .transcript-item {
+    grid-column: 1 / -1; /* -1 makes item go all the way to right edge of container */
+  }
 }
 
 @media print {

@@ -54,7 +54,7 @@ export default class Transcript extends Component {
   //isUnique value is passed as a prop, along with Activity object, to TranscriptActivity Component
   //Returns TranscriptActivity component which should be passed into activityList
   groupActivityBySession = activity => {
-    //bool to keep track of when an zctivity is part of a new session, passed to TranscriptActivity
+    //bool to keep track of when an activity is part of a new session, passed to TranscriptActivity
     let isUniqueSession = true;
 
     if (activity.SessionDescription === this.prevSessionVal) {
@@ -84,42 +84,34 @@ export default class Transcript extends Component {
     };
 
     return (
-      <Grid container className="co-curricular-transcript" alignItems="center" justify="center" spacing="16">
-        <Grid xs={12} sm={12} md={8} lg={6}>
-          <Card elevation="10">
-            <CardContent>
-              <Grid item xs={12} className="print-only">
-                {/* <img src={require('./logo.png')} alt="" /> */}
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  raised
-                  style={button}
-                  justify="center"
-                  onClick={this.handleDownload}
-                >
-                  Print Co-Curricular Transcript
-                </Button>
-              </Grid>
-              <Grid item xs={12} margin="normal" className="heading">
-                <div>
-                  <Typography variant="headline">
-                    <b> Co-Curricular Transcript - {this.state.profile.fullName} </b>
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={12} class="print">
-                <Grid container spacing={0}>
-                  <Grid item xs={12}>
-                    {activityList}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <div className="co-curricular-transcript">
+        <Card className="transcript-item" elevation="10">
+          <CardContent>
+            <div className="print-only">{/* <img src={require('./logo.png')} alt="" /> */}</div>
+            <div>
+              <Button
+                variant="contained"
+                raised
+                style={button}
+                justify="center"
+                onClick={this.handleDownload}
+              >
+                Print Co-Curricular Transcript
+              </Button>
+            </div>
+            <div className="heading">
+              <div>
+                <Typography variant="headline">
+                  <b> Co-Curricular Transcript - {this.state.profile.fullName} </b>
+                </Typography>
+              </div>
+            </div>
+            <div className="involvements" class="print">
+              <div className="full-length">{activityList}</div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 }
