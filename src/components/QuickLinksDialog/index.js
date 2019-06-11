@@ -62,7 +62,7 @@ export default class GordonQuickLinksDialog extends Component {
         aria-labelledby="useful-links"
         open={this.props.linkopen}
       >
-        <DialogTitle id="useful-links">These are some useful links for you</DialogTitle>
+        <DialogTitle id="useful-links">Useful links</DialogTitle>
         <DialogContent dividers="true">
           <GordonLinksList />
         </DialogContent>

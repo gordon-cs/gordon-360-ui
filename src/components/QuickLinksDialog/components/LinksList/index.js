@@ -18,19 +18,19 @@ export default class GordonLinksList extends Component {
     return (
       <Typography>
         <List component="nav" subheader={<ListSubheader component="div">Academics</ListSubheader>}>
-          <ListItemLink target="_blank" rel="noopener noreferrer" href="https://www.gordon.edu">
+          <ListItemLink target="_blank" rel="noopener" href="https://www.gordon.edu">
             <ListItemIcon>
               <img
-                className="mygordon"
+                className="gordon"
                 src="https://www.gordon.edu/favicon.ico"
-                alt="my gordon"
+                alt="gordon"
                 width="16"
                 height="16"
               />
             </ListItemIcon>
-            <ListItemText primary="Gordon Main" />
+            <ListItemText primary="Gordon College Official" />
           </ListItemLink>
-          <ListItemLink target="_blank" rel="noopener noreferrer" href="https://my.gordon.edu">
+          <ListItemLink target="_blank" rel="noopener" href="https://my.gordon.edu">
             <ListItemIcon>
               <img
                 className="mygordon"
@@ -42,11 +42,19 @@ export default class GordonLinksList extends Component {
             </ListItemIcon>
             <ListItemText primary="My Gordon" />
           </ListItemLink>
-          <ListItemLink
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://blackboard.gordon.edu"
-          >
+          <ListItemLink target="_blank" rel="noopener" href="https://go.gordon.edu">
+            <ListItemIcon>
+              <img
+                className="gogordon"
+                src="https://go.gordon.edu/favicon.ico"
+                alt="go gordon"
+                width="16"
+                height="16"
+              />
+            </ListItemIcon>
+            <ListItemText primary="Go Gordon" />
+          </ListItemLink>
+          <ListItemLink target="_blank" rel="noopener" href="https://blackboard.gordon.edu">
             <ListItemIcon>
               <img
                 className="blackboard"
@@ -56,38 +64,30 @@ export default class GordonLinksList extends Component {
                 height="16"
               />
             </ListItemIcon>
-            <ListItemText primary="Blackboard" />
+            <ListItemText primary="Blackboard Learn" />
           </ListItemLink>
         </List>
         <List
           component="nav"
           subheader={<ListSubheader component="div">Information</ListSubheader>}
         >
-          <ListItemLink
-            target="_blank"
-            rel="noopener noreferrer"
-            href="http://athletics.gordon.edu//"
-          >
+          <ListItemLink target="_blank" rel="noopener" href="http://athletics.gordon.edu//">
             <ListItemIcon>
               <LinkIcon style={{ fontSize: 16 }} />
             </ListItemIcon>
             <ListItemText primary="Fighting Scots" />
           </ListItemLink>
-          <ListItemLink target="_blank" rel="noopener noreferrer" href="http://stories.gordon.edu/">
+          <ListItemLink target="_blank" rel="noopener" href="http://stories.gordon.edu/">
             <ListItemIcon>
               <LinkIcon style={{ fontSize: 16 }} />
             </ListItemIcon>
             <ListItemText primary="The Bell" />
           </ListItemLink>
-          <ListItemLink
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://www.gordon.edu/titleix"
-          >
+          <ListItemLink target="_blank" rel="noopener" href="https://www.gordon.edu/titleix">
             <ListItemIcon>
               <LinkIcon style={{ fontSize: 16 }} />
             </ListItemIcon>
-            <ListItemText primary="Title IX Policy" />
+            <ListItemText primary="Sexual Discrimination and Harassment" />
           </ListItemLink>
         </List>
       </Typography>
