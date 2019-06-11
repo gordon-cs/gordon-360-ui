@@ -28,7 +28,7 @@ export default class IDUploader extends Component {
       image: null,
       preview: null,
       photoOpen: false,
-      photoSubmitted: false,
+      submitDialogOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
       files: [],
       IdCardPlaceholder: IdCardDefault,
@@ -49,7 +49,7 @@ export default class IDUploader extends Component {
         photoOpen: false,
         preview: null,
         IdCardPlaceholder: croppedImage,
-        photoSubmitted: true,
+        submitDialogOpen: true,
       });
       window.didProfilePicUpdate = true;
     }
@@ -60,7 +60,7 @@ export default class IDUploader extends Component {
   };
 
   handleCloseOkay = () => {
-    this.setState({ photoSubmitted: false });
+    this.setState({ submitDialogOpen: false });
   };
 
   maxCropPreviewWidth() {
@@ -341,7 +341,7 @@ export default class IDUploader extends Component {
         </Dialog>
 
         <Dialog
-          open={this.state.photoSubmitted}
+          open={this.state.submitDialogOpen}
           keepMounted
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-slide-title"
@@ -351,8 +351,8 @@ export default class IDUploader extends Component {
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>
             <DialogContentText style={style.submittedText}>
-              Your ID photo was submitted. It will be reviewed and you will be notified if it wasn't
-              accepted.
+              Your ID photo has been submitted. It will be reviewed and you will be notified if it
+              isn't accepted.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
