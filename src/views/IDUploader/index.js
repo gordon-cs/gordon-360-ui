@@ -351,8 +351,9 @@ export default class IDUploader extends Component {
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>
             <DialogContentText style={style.submittedText}>
-              Your ID photo has been submitted. It will be reviewed and you will be notified if it
-              isn't accepted.
+              Your ID photo has been sent successfully!
+              {<br />}
+              CTS will contact you if your photo does not meet the stated criteria.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
