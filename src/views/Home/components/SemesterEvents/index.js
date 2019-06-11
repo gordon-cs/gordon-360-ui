@@ -10,6 +10,7 @@ import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
 import session from '../../../../services/session';
 import GordonLoader from '../../../../components/Loader';
+import getAllCLAWEvents from '../../../../services/event';
 
 export default class SemesterEvents extends Component {
   constructor(props) {
@@ -186,7 +187,7 @@ export default class SemesterEvents extends Component {
                 onClick={() => (window.location.href = '/events')}
                 style={{ fontSize: 22, color: gordonColors.primary.blue }}
               >
-                <Route exact path="/25Live/CLAW" component={NavLink} />
+                <Route path="events/25Live/CLAW" component={getAllCLAWEvents} />
                 This semester's events
               </Button>,
             ]}
