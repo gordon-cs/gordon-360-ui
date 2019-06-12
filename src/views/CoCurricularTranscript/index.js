@@ -106,7 +106,21 @@ export default class Transcript extends Component {
                 {this.state.profile.fullName}
               </Typography>
             </div>
-            <div>
+            <div className="subtitle">
+              <Typography variant="headline">
+                <b>
+                  <i> Experience </i>
+                </b>
+              </Typography>
+            </div>
+            <div className="subtitle">
+              <Typography variant="headline">
+                <b>
+                  <i> Service Learning </i>
+                </b>
+              </Typography>
+            </div>
+            <div className="subtitle">
               <Typography variant="headline">
                 <b>
                   <i> Activities </i>
@@ -115,20 +129,6 @@ export default class Transcript extends Component {
             </div>
             <div className="involvements" class="print">
               <div className="full-length">{activityList}</div>
-            </div>
-            <div>
-              <Typography variant="headline">
-                <b>
-                  <i> Employment </i>
-                </b>
-              </Typography>
-            </div>
-            <div>
-              <Typography variant="headline">
-                <b>
-                  <i> Service Learning </i>
-                </b>
-              </Typography>
             </div>
           </CardContent>
         </Card>
