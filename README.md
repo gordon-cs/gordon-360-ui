@@ -13,6 +13,7 @@ Look at [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/master/RO
 - [Server Notes](#server-notes)
 
 - [Code Style](#code-style)
+- [UI Design Method](#ui-design-method)
 - [Dependencies](#dependencies)
 - [Project File Organization](#file-organization)
 - [Enviroment Variables](#environment-variables)
@@ -147,6 +148,14 @@ The advantage of using a code formatter is consistency between developers. Using
 Prettier is used as a pre commit hook in this repository. This means that it will automatically format any staged code before it is committed. It can also be used as an [extension for your editor](https://prettier.io/docs/en/editors.html). This repository includes a setup for VS Code: when the extension is installed, files will be formatted automatically every time they are saved.
 
 ESLint and Stylelint are used in conjunction with Prettier to catch syntax errors, but not to check code style - that is taken care of solely by Prettier.
+
+## UI Design Method
+
+### Explanation
+
+### Some Examples
+
+### Resources
 
 ## Dependencies
 
