@@ -1,13 +1,45 @@
-//@media screen is css that is in effect when views on a display, @media print takes effect when
-//in a print view (eg after hittig Print Co-Curricular Transcript). Allows logo to only show when printing
+/* Style sheet for CoCurricular Transcript view */
 
 .co-curricular-transcript {
+  display: grid;
+  grid-template-columns: 25% 50% 25%;
+  justify-items: stretch;
   text-align: center;
 }
+
+/* For large screens */
+.transcript-item {
+  grid-column: 2 / 3;
+}
+
+.card-content {
+  display: grid;
+  grid-row-gap: 10px;
+}
+
+.button {
+  justify-content: center;
+  align-items: center;
+}
+
 .heading {
+  margin: normal;
   padding: '20px';
 }
 
+.involvements {
+  display: grid;
+}
+
+/* For small and medium screens (1024px wide or less) */
+@media (max-width: 1024px) {
+  .transcript-item {
+    grid-column: 1 / -1; /* -1 makes item go all the way to right edge of container */
+  }
+}
+
+/* @media print takes effect when in a print view (eg after hittig Print Co-Curricular Transcript).
+   Allows logo to only show when printing. */
 @media print {
   body * {
     visibility: hidden;
@@ -29,6 +61,7 @@
   }
 }
 
+/* @media screen is css that is in effect when views on a display */
 @media screen {
   .print-only * {
     visibility: hidden;
