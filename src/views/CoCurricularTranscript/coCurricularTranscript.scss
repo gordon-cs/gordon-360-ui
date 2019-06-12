@@ -8,7 +8,7 @@
 }
 
 /* For large screens */
-.transcript-item {
+.card {
   grid-column: 2;
 }
 
@@ -26,8 +26,33 @@
   justify-self: flex-start;
 }
 
-.involvements {
+/* Divides the activities container into columns like so:
+
+================================================
+|5%|    70% organization and role   | 25% date |
+| i|                                |          |
+| n|                                |          |
+| d|                                |          |
+| e|                                |          |
+| n|                                |          |
+| t|                                |          |
+================================================
+
+*/
+.activities {
   display: grid;
+  grid-template-columns: 5% 70% 25%;
+  justify-items: stretch;
+}
+
+.organization-role {
+  grid-column: 2;
+  justify-self: flex-start;
+}
+
+.date {
+  grid-column: 3;
+  justify-self: flex-end;
 }
 
 /* For small and medium screens (1024px wide or less) */
