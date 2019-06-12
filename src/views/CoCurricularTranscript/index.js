@@ -42,9 +42,10 @@ export default class Transcript extends Component {
       const currentSession = await session.getCurrent();
 
       const profile = await user.getProfileInfo();
-      //const employment = await user.getEmploymentInfo(profile.ID);  -- needs to be written
-      //const service = await user.getServiceInfo(profile.ID);  -- needs to be written
-      const activities = await user.getTranscriptInfo(profile.ID);
+      // eslint-disable-next-line no-unused-vars
+      const employments = await user.getEmploymentInfo(profile.ID);
+      //const service = await user.getServiceInfo(profile.ID);
+      const activities = await user.getActivitiesInfo(profile.ID);
       this.setState({ loading: false, activities, currentSession, profile });
     } catch (error) {
       this.setState({ error });
