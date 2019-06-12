@@ -3,6 +3,8 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
 
 import { gordonColors } from '../../theme';
 import session from '../../services/session';
@@ -19,6 +21,8 @@ export default class Transcript extends Component {
     super(props);
     this.state = {
       activities: [],
+      employments: [],
+      //service: [],
       loading: true,
       profile: {},
     };
@@ -42,11 +46,10 @@ export default class Transcript extends Component {
       const currentSession = await session.getCurrent();
 
       const profile = await user.getProfileInfo();
-      // eslint-disable-next-line no-unused-vars
       const employments = await user.getEmploymentInfo(profile.ID);
       //const service = await user.getServiceInfo(profile.ID);
       const activities = await user.getActivitiesInfo(profile.ID);
-      this.setState({ loading: false, activities, currentSession, profile });
+      this.setState({ loading: false, activities, employments, currentSession, profile });
     } catch (error) {
       this.setState({ error });
       console.log('error');
@@ -76,6 +79,22 @@ export default class Transcript extends Component {
       activityList = <GordonLoader />;
     } else {
       activityList = this.state.activities.map(this.groupActivityBySession);
+    }
+
+    let employmentsList;
+
+    if (!this.state.employments) {
+      employmentsList = <GordonLoader />;
+    } else {
+      employmentsList = this.state.employments.map(employment => (
+        <Grid container>
+          <Grid item xs={6}>
+            <List>
+              <Typography className="text"> {employment} </Typography>
+            </List>
+          </Grid>
+        </Grid>
+      ));
     }
 
     const buttonColors = {
@@ -112,6 +131,9 @@ export default class Transcript extends Component {
                   <i> Experience </i>
                 </b>
               </Typography>
+            </div>
+            <div className="involvements" class="print">
+              <div className="full-length">{employmentsList}</div>
             </div>
             <div className="subtitle">
               <Typography variant="headline">
