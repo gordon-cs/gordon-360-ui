@@ -42,6 +42,8 @@ export default class Transcript extends Component {
       const currentSession = await session.getCurrent();
 
       const profile = await user.getProfileInfo();
+      //const employment = await user.getEmploymentInfo(profile.ID);  -- needs to be written
+      //const service = await user.getServiceInfo(profile.ID);  -- needs to be written
       const activities = await user.getTranscriptInfo(profile.ID);
       this.setState({ loading: false, activities, currentSession, profile });
     } catch (error) {
@@ -67,7 +69,6 @@ export default class Transcript extends Component {
   };
 
   render() {
-    /* bloated? */
     let activityList;
 
     if (!this.state.activities) {
@@ -100,11 +101,33 @@ export default class Transcript extends Component {
             </div>
             <div>
               <Typography variant="headline">
-                <b> Co-Curricular Transcript - {this.state.profile.fullName} </b>
+                <b> Co-Curricular Transcript - </b>
+                {this.state.profile.fullName}
+              </Typography>
+            </div>
+            <div>
+              <Typography variant="headline">
+                <b>
+                  <i> Activities </i>
+                </b>
               </Typography>
             </div>
             <div className="involvements" class="print">
               <div className="full-length">{activityList}</div>
+            </div>
+            <div>
+              <Typography variant="headline">
+                <b>
+                  <i> Employment </i>
+                </b>
+              </Typography>
+            </div>
+            <div>
+              <Typography variant="headline">
+                <b>
+                  <i> Service Learning </i>
+                </b>
+              </Typography>
             </div>
           </CardContent>
         </Card>
