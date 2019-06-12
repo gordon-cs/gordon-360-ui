@@ -16,7 +16,7 @@ import IdCardGreen from '../IDUploader/image-green.png';
 import IdCardTop from '../IDUploader/image-top.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import './IDUploader.css';
+import './IDUploader.scss';
 import user from '../../services/user';
 
 const CROP_DIM = 1200; // pixels

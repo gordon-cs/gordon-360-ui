@@ -302,8 +302,25 @@ export default class Profile extends Component {
 
             <Grid item xs={12} lg={5}>
               <Grid container direction="column" spacing="16">
-                {this.state.officeinfo !== null && this.state.officeinfo}
+                <Grid item xs={12} sm={12} md={12} lg={12}>
+                  <Card>
+                    <CardContent>
+                      <CardHeader title="Office Hours" />
+                      {(this.state.homePhoneDisclaimer ||
+                        this.state.addressDisclaimer ||
+                        this.state.mobilePhoneDisclaimer) &&
+                        !this.props.myProf && (
+                          <Grid>
+                            <Typography align="left" className="disclaimer">
+                              Private by request of student and visible only to faculty and staff
+                            </Typography>
+                          </Grid>
+                        )}
+                    </CardContent>
+                  </Card>
+                </Grid>
                 {this.state.profileinfo}
+                {this.state.officeinfo !== null && this.state.officeinfo}
               </Grid>
             </Grid>
             <Grid item xs={12} lg={5}>
