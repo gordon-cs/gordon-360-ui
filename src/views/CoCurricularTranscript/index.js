@@ -21,7 +21,7 @@ export default class Transcript extends Component {
     super(props);
     this.state = {
       activities: [],
-      employments: [],
+      //employments: [],
       //service: [],
       loading: true,
       profile: {},
@@ -46,10 +46,10 @@ export default class Transcript extends Component {
       const currentSession = await session.getCurrent();
 
       const profile = await user.getProfileInfo();
-      const employments = await user.getEmploymentInfo(profile.ID);
+      //const employments = await user.getEmploymentInfo(profile.ID);
       //const service = await user.getServiceInfo(profile.ID);
       const activities = await user.getActivitiesInfo(profile.ID);
-      this.setState({ loading: false, activities, employments, currentSession, profile });
+      this.setState({ loading: false, activities, /*employments,*/ currentSession, profile });
     } catch (error) {
       this.setState({ error });
       console.log('error');
@@ -81,7 +81,7 @@ export default class Transcript extends Component {
       activityList = this.state.activities.map(this.groupActivityBySession);
     }
 
-    let employmentsList;
+    /*let employmentsList;
 
     if (!this.state.employments) {
       employmentsList = <GordonLoader />;
@@ -95,7 +95,7 @@ export default class Transcript extends Component {
           </Grid>
         </Grid>
       ));
-    }
+    }*/
 
     const buttonColors = {
       /* not in style sheet so that gordonColors is accessible */
@@ -105,7 +105,7 @@ export default class Transcript extends Component {
 
     return (
       <div className="co-curricular-transcript">
-        <Card className="transcript-item" elevation="10">
+        <Card className="card" elevation="10">
           <CardContent className="card-content">
             <div className="print-only">{/* <img src={require('./logo.png')} alt="" /> */}</div>
             <div>
@@ -127,31 +127,29 @@ export default class Transcript extends Component {
             </div>
             <div className="subtitle">
               <Typography variant="headline">
-                <b>
-                  <i> Experience </i>
-                </b>
+                <b>Experience</b>
               </Typography>
             </div>
-            <div className="involvements" class="print">
+            {/*<div className="involvements" class="print">
               <div className="full-length">{employmentsList}</div>
-            </div>
+            </div>*/}
             <div className="subtitle">
               <Typography variant="headline">
-                <b>
-                  <i> Service Learning </i>
-                </b>
+                <b>Service Learning</b>
               </Typography>
             </div>
             <div className="subtitle">
               <Typography variant="headline">
-                <b>
-                  <i> Activities </i>
-                </b>
+                <b>Activities</b>
               </Typography>
             </div>
-            <div className="involvements" class="print">
+            <div className="activities">
+              <div className="organization-role">A. J. Gordon Scholars Program, Leader</div>
+              <div className="date">FA 2015-SP 2017</div>
+            </div>
+            {/*<div class="print">
               <div className="full-length">{activityList}</div>
-            </div>
+            </div>*/}
           </CardContent>
         </Card>
       </div>
