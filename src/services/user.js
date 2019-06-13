@@ -315,6 +315,20 @@ const resetImage = () => {
 };
 
 /**
+ * upload an ID image for a user to the __ folder
+ * @param {String} dataURI of the image being uploaded
+ * @return {Response} response of http request
+ */
+const postIDImage = dataURI => {
+  let imageData = new FormData();
+  let blob = dataURItoBlob(dataURI);
+  let type = blob.type.replace('image/', '');
+  let headerOptions = {};
+  imageData.append('canvasImage', blob, 'canvasImage.' + type);
+  return http.post('profiles/IDimage', imageData, headerOptions);
+};
+
+/**
  * upload a photo to user's profile, which is then used as the preferred photo
  * @param {String} dataURI of the image being uploaded
  * @return {Response} response of http request
@@ -644,6 +658,7 @@ export default {
   getProfileInfo,
   resetImage,
   postImage,
+  postIDImage,
   getTranscriptInfo,
   updateSocialLink,
 };
