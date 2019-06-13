@@ -607,10 +607,9 @@ const getActivitiesInfo = async id => {
   return transcriptInfo;
 };
 
-//returns an array of membership objects from backend server,
-//not including Guest memberships
-//using asynchronous http.get request (via getMemberships function)
-//sorts by SessionCode
+//returns an array of employment objects from backend server
+//using asynchronous http.get request (via getEmployment function)
+//sorts by
 const getEmploymentInfo = async id => {
   let employmentInfo = await getEmployment(id);
   //employmentInfo.sort(compareBySession);
@@ -618,10 +617,9 @@ const getEmploymentInfo = async id => {
 };
 
 /*
-//returns an array of membership objects from backend server,
-//not including Guest memberships
-//using asynchronous http.get request (via getMemberships function)
-//sorts by SessionCode
+//returns an array of serviceLearning objects from backend server
+//using asynchronous http.get request (via getService function)
+//sorts by
 const getServiceInfo = async id => {
   let serviceInfo = await getService(id);
   //serviceInfo.sort(compareBySession);
