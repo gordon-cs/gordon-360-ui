@@ -28,6 +28,7 @@ export default class IDUploader extends Component {
       image: null,
       preview: null,
       photoOpen: false,
+      submitDialogOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
       files: [],
       IdCardPlaceholder: IdCardDefault,
@@ -48,6 +49,7 @@ export default class IDUploader extends Component {
         photoOpen: false,
         preview: null,
         IdCardPlaceholder: croppedImage,
+        submitDialogOpen: true,
       });
       window.didProfilePicUpdate = true;
     }
@@ -55,6 +57,10 @@ export default class IDUploader extends Component {
 
   handleCloseCancel = () => {
     this.setState({ photoOpen: false, preview: null });
+  };
+
+  handleCloseOkay = () => {
+    this.setState({ submitDialogOpen: false });
   };
 
   maxCropPreviewWidth() {
@@ -155,6 +161,10 @@ export default class IDUploader extends Component {
 
       instructionsText: {
         fontSize: '15pt',
+      },
+
+      submittedText: {
+        color: 'black',
       },
     };
 
@@ -324,6 +334,34 @@ export default class IDUploader extends Component {
                   }
                 >
                   Submit
+                </Button>
+              </Grid>
+            </Grid>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={this.state.submitDialogOpen}
+          keepMounted
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+          maxWidth="false"
+        >
+          <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
+          <DialogContent>
+            <DialogContentText style={style.submittedText}>
+              Your ID photo has been sent successfully!
+              {<br />}
+              CTS will contact you if your photo does not meet the stated criteria.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Grid container spacing={8} justify="flex-end">
+              <Grid item />
+              <Grid item>
+                <Button variant="contained" onClick={this.handleCloseOkay} style={style.button}>
+                  Okay
                 </Button>
               </Grid>
             </Grid>
