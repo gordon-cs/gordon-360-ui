@@ -1,8 +1,8 @@
-import Grid from '@material-ui/core/Grid';
+//import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
+//import List from '@material-ui/core/List';
+//import Typography from '@material-ui/core/Typography';
 import './coCurricularTranscriptActivity.css';
 
 //This component is a child of the CoCurricularTranscript component. Separates Headings from content in order
@@ -11,7 +11,7 @@ import './coCurricularTranscriptActivity.css';
 //Activity object and isUnique bool passed as props from CoCurricularTranscript
 
 export default class Activity extends Component {
-  getHeading = () => {
+  /*getHeading = () => {
     const { Activity } = this.props;
     let heading = (
       <div>
@@ -46,8 +46,9 @@ export default class Activity extends Component {
       );
     }
     return heading;
-  };
+  };*/
 
+  /*
   getContent = () => {
     const { Activity } = this.props;
 
@@ -64,16 +65,30 @@ export default class Activity extends Component {
           </List>
         </Grid>
       </Grid>
+      <div className="activities">
+        <div className="organization-role">{Activity.ActivityDescription}, {Activity.ParticipationDescription} </div>
+         <div className="date">DATE TEXT PLACEHOLDER</div>
+      </div>
     );
 
     return content;
-  };
+  };*/
 
   render() {
+    const { Activity } = this.props;
     return (
       <div>
-        {this.getHeading()}
-        {this.getContent()}
+        {/*this.getHeading()*/}
+        <div className="activities">
+          <div className="organization-role">
+            {Activity.ActivityDescription}, {Activity.ParticipationDescription}{' '}
+          </div>
+          <div className="date"> {Activity.SessionDescription} </div>
+        </div>
+        {/*this.getContent()*/}
+        <div className="divider">
+          <Divider light={true} />
+        </div>
       </div>
     );
   }
