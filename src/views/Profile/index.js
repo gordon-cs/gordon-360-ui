@@ -302,8 +302,8 @@ export default class Profile extends Component {
 
             <Grid item xs={12} lg={5}>
               <Grid container direction="column" spacing="16">
+                {this.state.officeinfo !== null && this.state.officeinfo}
                 {this.state.profileinfo}
-                { this.state.officeinfo !== null && this.state.officeinfo }
               </Grid>
             </Grid>
             <Grid item xs={12} lg={5}>
