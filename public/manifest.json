@@ -6,20 +6,20 @@
   "theme_color": "#014983",
   "background_color": "#014983",
   "orientation": "portrait",
-  "categories": ["lifestyle","school"],
+  "categories": ["lifestyle", "school"],
   "description": "A progressive web application for gordon 360 ",
   "dir": "ltr",
   "lang": "en-US",
 
   "icons": [
     {
-      "src": "app-icon-48x48.png",
-      "sizes": "48x48",
+      "src": "favicon.ico",
+      "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "favicon.ico",
-      "sizes": "192x192",
+      "src": "android-chrome-144x144.png",
+      "sizes": "144x144",
       "type": "image/png"
     },
     {
