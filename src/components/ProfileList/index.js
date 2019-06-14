@@ -41,6 +41,7 @@ class ProfileList extends Component {
       homePhoneDisclaimer: false,
       addressDisclaimer: false,
       isMobilePhonePrivate: Boolean,
+      isSchedulePrivate: Boolean,
     };
   }
 
@@ -48,6 +49,7 @@ class ProfileList extends Component {
     try {
       const profile = await user.getProfileInfo();
       this.setState({ isMobilePhonePrivate: profile.IsMobilePhonePrivate });
+      this.setState({ isSchedulePrivate: profile.IsSchedulePrivate });
     } catch (error) {
       this.setState({ error });
     }
@@ -56,6 +58,11 @@ class ProfileList extends Component {
   handleChangeMobilePhonePrivacy() {
     this.setState({ isMobilePhonePrivate: !this.state.isMobilePhonePrivate });
     user.setMobilePhonePrivacy(!this.state.isMobilePhonePrivate);
+  }
+
+  handleChangeSchedulePrivacy() {
+    this.setState({ isSchedulePrivate: !this.state.isSchedulePrivate });
+    user.setSchedulePrivacy(!this.state.isSchedulePrivate);
   }
 
   formatPhone(phone) {
@@ -69,6 +76,7 @@ class ProfileList extends Component {
   }
   componentWillMount() {
     this.setState({ isMobilePhonePrivate: this.props.profile.IsMobilePhonePrivate });
+    this.setState({ isSchedulePrivate: this.props.profile.IsSchedulePrivate });
     if (!this.props.myProf) {
       this.setState({
         mobilePhoneDisclaimer:

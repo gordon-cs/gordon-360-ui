@@ -149,6 +149,7 @@ import gordonEvent from './event';
  * @property {String} Minor3 Third minor
  * @property {String} MobilePhone Mobile phone number
  * @property {Number} IsMobilePhonePrivate Whether mobile phone number is private or not
+ * @property {Number} IsSchedulePrivate Whether schedule is private or not
  * @property {String} AD_Username Username
  * @property {Number} show_pic Whether or not to show picture
  * @property {Number} preferred_photo Whether or not to show preferred photo
@@ -455,6 +456,11 @@ async function setMobilePhonePrivacy(makePrivate) {
   await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
 }
 
+async function setSchedulePrivacy(makePrivate) {
+  // 'Y' = private, 'N' = public
+  await http.put('profiles/schedule_privacy/' + (makePrivate ? 'Y' : 'N'));
+}
+
 async function setImagePrivacy(makePrivate) {
   // 'Y' = show image, 'N' = don't show image
   await http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y'));
@@ -640,6 +646,7 @@ function updateSocialLink(type, link) {
 }
 
 export default {
+  setSchedulePrivacy,
   setMobilePhonePrivacy,
   setImagePrivacy,
   getMemberships,
