@@ -43,8 +43,8 @@ export default class Transcript extends Component {
   async loadTranscript() {
     this.setState({ loading: true });
     try {
+      /* Retrieve data from server */
       const currentSession = await session.getCurrent();
-
       const profile = await user.getProfileInfo();
       //const employments = await user.getEmploymentInfo(profile.ID);
       //const service = await user.getServiceInfo(profile.ID);
@@ -56,9 +56,11 @@ export default class Transcript extends Component {
     }
   }
 
-  //Compares activity from activityList to previous activity' session to to determine how to group.
-  //isUnique value is passed as a prop, along with Activity object, to TranscriptActivity Component
-  //Returns TranscriptActivity component which should be passed into activityList
+  /* Compares activity from activityList to previous activity' session to to determine how to group.
+     isUnique value is passed as a prop, along with Activity object, to TranscriptActivity Component
+     Returns TranscriptActivity component which should be passed into activityList.
+     Call using map function: "this.state.activities.map(this.groupActivityBySession);"
+  */
   groupActivityBySession = activity => {
     //bool to keep track of when an activity is part of a new session, passed to TranscriptActivity
     let isUniqueSession = true;
@@ -72,13 +74,46 @@ export default class Transcript extends Component {
     return <Activity isUnique={isUniqueSession} Activity={activity} />;
   };
 
+  /* For each activity in an array of activities, this finds all other activities of the same Code
+     and keeps an array of all the sessions during which the student was involved in this activity.
+     Once all activities of the same activityCode are found, the array of sessions is processed
+     and translated into a duration. Then, one Activity component is created with that
+     ActivityDescription and the duration.
+
+     Returns: array of Activity components with props Description and Duration.
+  */
+  groupActivityByCode = activities => {
+    let condensedActs = [];
+
+    for (var i = 0; i < activities.length; i++) {
+      let sessions = [activities[i].SessionDescription];
+
+      // get the session codes for all activities of the current activity's code
+      let j = i;
+      while (activities[j + 1].ActivityCode === activities[j].ActivityCode) {
+        sessions.push(activities[j + 1].SessionDescription);
+        j++;
+      }
+
+      // translate the sessions array into a duration
+      let duration;
+
+      // add a new Activity component to the array
+      condensedActs.push(
+        <Activity Description={activities[i].ActivityDescription} Duration={duration} />,
+      );
+    }
+  };
+
   render() {
     let activityList;
 
     if (!this.state.activities) {
       activityList = <GordonLoader />;
     } else {
+      /* Call groupActivityBySession() on activities */
       activityList = this.state.activities.map(this.groupActivityBySession);
+      // activityList = groupActivityByCode(this.state.activities);
     }
 
     /*let employmentsList;
@@ -147,9 +182,9 @@ export default class Transcript extends Component {
               <div className="organization-role">A. J. Gordon Scholars Program, Leader</div>
               <div className="date">FA 2015-SP 2017</div>
             </div>
-            {/*<div class="print">
+            <div class="print">
               <div className="full-length">{activityList}</div>
-            </div>*/}
+            </div>
           </CardContent>
         </Card>
       </div>
