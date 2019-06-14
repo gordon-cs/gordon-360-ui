@@ -86,12 +86,12 @@ export default class Transcript extends Component {
     let condensedActs = [];
 
     for (var i = 0; i < activities.length; i++) {
-      let sessions = [activities[i].SessionDescription];
+      let sessions = [activities[i].SessionCode];
 
       // get the session codes for all activities of the current activity's code
-      let j = i;
-      while (activities[j + 1].ActivityCode === activities[j].ActivityCode) {
-        sessions.push(activities[j + 1].SessionDescription);
+      let j = i + 1;
+      while (j < activities.length && activities[j].ActivityCode === activities[i].ActivityCode) {
+        sessions.push(activities[j].SessionCode);
         j++;
       }
 
