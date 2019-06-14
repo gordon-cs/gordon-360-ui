@@ -665,11 +665,14 @@ export default class Profile extends Component {
                   <Grid item xs={12} lg={10}>
                     <Card>
                       <CardContent>
-                        <Grid container direction="row" justify="center">
-                          <Grid item xs={12}>
-                            <Grid container xs={12} justify="center">
+                        <Grid container direction="row" justify="center" alignItems="center">
+                          <Grid item xs={8}>
+                            <Grid container xs={12} justify="start">
                               <CardHeader title="Course Schedule" />
                             </Grid>
+                          </Grid>
+                          <Grid item xs={4} align="right">
+                            <Button onClick={this.handleSocialLinksOpen}>EDIT OFFICE HOURS</Button>
                           </Grid>
                           <Grid item xs={12} align="center">
                             <Grid container xs={12} lg={10}>
