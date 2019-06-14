@@ -1,8 +1,8 @@
 import Grid from '@material-ui/core/Grid';
-import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import List from '@material-ui/core/List';
@@ -24,7 +24,6 @@ import { gordonColors } from '../../theme';
 import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
 import { socialMediaInfo } from '../../socialMedia';
-import CourseSchedule from './../../components/CourseSchedule';
 import { Link } from 'react-router-dom';
 import './myProfile.css';
 import Cropper from 'react-cropper';
@@ -34,10 +33,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import GordonSchedulePanel from '../../components/SchedulePanel';
 
 const CROP_DIM = 200; // pixels
 //MyProfile
@@ -666,40 +662,7 @@ export default class Profile extends Component {
 
               <Grid item xs={12} lg={12} align="center">
                 <Grid container lg={10} spacing="16" justify="center">
-                  <ExpansionPanel>
-                    <ExpansionPanelSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                    />
-                    <ExpansionPanelDetails>
-                      <Grid item xs={12} lg={12}>
-                        <Card>
-                          <CardContent>
-                            <Grid container direction="row" justify="center" alignItems="center">
-                              <Grid item xs={8}>
-                                <Grid container xs={12} justify="start">
-                                  <CardHeader title="Course Schedule" />
-                                </Grid>
-                              </Grid>
-                              <Grid item xs={4} align="right">
-                                <Button onClick={this.handleSocialLinksOpen}>
-                                  EDIT OFFICE HOURS
-                                </Button>
-                              </Grid>
-                              <Grid item xs={12} align="center">
-                                <Grid container xs={12} lg={10}>
-                                  <Grid item xs={12}>
-                                    <CourseSchedule />
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    </ExpansionPanelDetails>
-                  </ExpansionPanel>
+                  <GordonSchedulePanel profile={this.state.profile} />
                 </Grid>
               </Grid>
 
