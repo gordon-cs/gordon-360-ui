@@ -24,6 +24,7 @@ import { gordonColors } from '../../theme';
 import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
 import { socialMediaInfo } from '../../socialMedia';
+import CourseSchedule from './../../components/CourseSchedule';
 import { Link } from 'react-router-dom';
 import './myProfile.css';
 import Cropper from 'react-cropper';
@@ -401,285 +402,320 @@ export default class Profile extends Component {
         {this.state.loading && <GordonLoader />}
         {!this.state.loading && (
           <div>
-            <Grid container justify="center" spacing="16">
+            <Grid container justify="center" spacing="16" alignItems="center">
               <Grid item xs={12} lg={10}>
-                <Card>
-                  <CardContent>
-                    <Grid
-                      container
-                      alignItems="center"
-                      align="center"
-                      justify="center"
-                      spacing="16"
-                    >
-                      <Grid item xs={6}>
-                        <Link to={`/profile/${this.state.profile.AD_Username}`}>
-                          <Button style={style.uncontainedButton}>View My Public Profile</Button>
-                        </Link>
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <ButtonBase
-                          onClick={this.handlePhotoOpen}
-                          focusRipple
-                          alt=""
-                          className="profile-image"
-                          style={{ 'border-radius': '0.5rem' }}
-                        >
-                          <img
-                            src={`data:image/jpg;base64,${this.state.image}`}
-                            alt="Profile"
-                            className="rounded-corners"
-                            style={{ 'max-height': '200px', 'min-width': '160px' }}
-                          />
-                          <span className="imageBackdrop" />
-                          <GridListTileBar className="tile-bar" title="Photo Options" />
-                        </ButtonBase>
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <Grid container align="center" alignItems="center">
-                          <Grid item xs={12}>
-                            <CardHeader
-                              title={
-                                this.state.hasNickName
-                                  ? this.state.profile.fullName +
-                                    ' (' +
-                                    this.state.profile.NickName +
-                                    ')'
-                                  : this.state.profile.fullName
-                              }
-                              subheader={this.state.profile.Class}
-                            />
-                            <Grid container spacing="16" align="center" justify="center">
-                              {facebookButton}
-                              {twitterButton}
-                              {linkedInButton}
-                              {instagramButton}
-                              {editButton}
-                            </Grid>
-                            {this.state.profile.Email !== '' && (
-                              <div
-                                style={{
-                                  marginTop: '20px',
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <a href={`mailto:${this.state.profile.Email}`}>
-                                  <div
-                                    className="email-link-container"
-                                    style={{
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      alignContent: 'center',
-                                      justifyContent: 'center',
-                                    }}
-                                  >
-                                    <EmailIcon
-                                      className="email-link"
-                                      style={{ marginRight: '0.75rem' }}
-                                    />
-                                    <Typography className="email-link">
-                                      {this.state.profile.Email}
-                                    </Typography>
-                                  </div>
-                                </a>
-                              </div>
-                            )}
-                            <Dialog
-                              open={this.state.photoOpen}
-                              keepMounted
-                              onClose={this.handleClose}
-                              aria-labelledby="alert-dialog-slide-title"
-                              aria-describedby="alert-dialog-slide-description"
-                              maxWidth="false"
-                            >
-                              <DialogTitle id="simple-dialog-title">
-                                Update Profile Picture
-                              </DialogTitle>
-                              <DialogContent>
-                                <DialogContentText>
-                                  {window.innerWidth < 600
-                                    ? 'Tap Image to Browse Files'
-                                    : 'Drag & Drop Picture, or Click to Browse Files'}
-                                </DialogContentText>
-                                <DialogContentText>
-                                  <br />
-                                </DialogContentText>
-                                {!preview && (
-                                  <Grid container justify="center" spacing="16">
-                                    <Dropzone
-                                      className="dropzone"
-                                      activeClassName="drop-overlay"
-                                      onDropAccepted={this.onDropAccepted.bind(this)}
-                                      onDropRejected={this.onDropRejected.bind(this)}
-                                      accept="image/jpeg,image/jpg,image/png"
-                                    >
-                                      <img
-                                        className="rounded-corners"
-                                        src={`data:image/jpg;base64,${this.state.image}`}
-                                        alt=""
-                                        style={{ 'max-width': '200px', 'max-height': '200px' }}
-                                      />
-                                    </Dropzone>
-                                  </Grid>
-                                )}
-                                {preview && (
-                                  <Grid container justify="center" spacing="16">
-                                    <Cropper
-                                      ref="cropper"
-                                      src={preview}
-                                      style={{
-                                        'max-width': this.maxCropPreviewWidth(),
-                                        'max-height':
-                                          this.maxCropPreviewWidth() /
-                                          this.state.cropperData.aspectRatio,
-                                      }}
-                                      autoCropArea={1}
-                                      viewMode={3}
-                                      aspectRatio={1}
-                                      highlight={false}
-                                      background={false}
-                                      zoom={this.onCropperZoom.bind(this)}
-                                      zoomable={false}
-                                      dragMode={'none'}
-                                      minCropBoxWidth={this.state.cropperData.cropBoxDim}
-                                      minCropBoxHeight={this.state.cropperData.cropBoxDim}
-                                    />
-                                  </Grid>
-                                )}
-                                {preview && <br />}
-                                {preview && (
-                                  <Grid container justify="center" spacing="16">
-                                    <Grid item>
-                                      <Button
-                                        variant="contained"
-                                        onClick={() => this.setState({ preview: null })}
-                                        style={style.button}
-                                      >
-                                        Choose Another Image
-                                      </Button>
-                                    </Grid>
-                                  </Grid>
-                                )}
-                              </DialogContent>
-                              <DialogActions>
-                                <Grid container spacing={8} justify="flex-end">
-                                  <Grid item>
-                                    <Tooltip
-                                      classes={{ tooltip: 'tooltip' }}
-                                      id="tooltip-hide"
-                                      title={
-                                        this.state.isImagePublic
-                                          ? 'Only faculty and police will see your photo'
-                                          : 'Make photo visible to other students'
-                                      }
-                                    >
-                                      <Button
-                                        variant="contained"
-                                        onClick={this.toggleImagePrivacy.bind(this)}
-                                        style={style.button}
-                                      >
-                                        {this.state.isImagePublic ? 'Hide' : 'Show'}
-                                      </Button>
-                                    </Tooltip>
-                                  </Grid>
-                                  <Grid item>
-                                    <Tooltip
-                                      classes={{ tooltip: 'tooltip' }}
-                                      id="tooltip-reset"
-                                      title="Restore your original ID photo"
-                                    >
-                                      <Button
-                                        variant="contained"
-                                        onClick={this.handleResetImage}
-                                        style={{ background: 'tomato', color: 'white' }}
-                                      >
-                                        Reset
-                                      </Button>
-                                    </Tooltip>
-                                  </Grid>
-                                  <Grid item>
-                                    <Button
-                                      variant="contained"
-                                      onClick={this.handleCloseCancel}
-                                      style={style.button}
-                                    >
-                                      Cancel
-                                    </Button>
-                                  </Grid>
-                                  <Grid item>
-                                    <Tooltip
-                                      classes={{ tooltip: 'tooltip' }}
-                                      id="tooltip-submit"
-                                      title="Crop to current region and submit"
-                                    >
-                                      <Button
-                                        variant="contained"
-                                        onClick={this.handleCloseSubmit}
-                                        disabled={!this.state.preview}
-                                        style={
-                                          this.state.preview
-                                            ? style.button
-                                            : { background: 'darkgray', color: 'white' }
-                                        }
-                                      >
-                                        Submit
-                                      </Button>
-                                    </Tooltip>
-                                  </Grid>
-                                </Grid>
-                              </DialogActions>
-                            </Dialog>
-                            <Dialog
-                              open={this.state.socialLinksOpen}
-                              keepMounted
-                              onClose={this.handleSocialLinksClose}
-                              aria-labelledby="alert-dialog-slide-title"
-                              aria-describedby="alert-dialog-slide-description"
-                            >
-                              <DialogTitle id="simple-dialog-title">
-                                Edit your social media links
-                              </DialogTitle>
-                              <Typography align="center" variant="caption">
-                                Copy and paste your links below
-                              </Typography>
-                              {linksDialog}
-                            </Dialog>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              </Grid>
-
-              <Grid item xs={12} lg={5}>
-                <Grid container spacing={16}>
-                  {this.state.profileinfo}
-                  {this.state.officeinfo}
-                </Grid>
-              </Grid>
-              <Grid item xs={12} lg={5}>
-                <Grid container>
-                  <Grid item xs={12}>
+                <Grid container spacing="16" justify="center">
+                  <Grid item xs={12} lg={12}>
                     <Card>
                       <CardContent>
-                        <Grid container direction="row" alignItems="center">
-                          <Grid item xs={7}>
-                            <CardHeader title="Involvements" />
-                          </Grid>
-                          <Grid item xs={5} align="right">
-                            <Link to="/transcript">
-                              <Button variant="contained" style={style.button}>
-                                Co-Curricular Transcript
+                        <Grid
+                          container
+                          alignItems="center"
+                          align="center"
+                          justify="center"
+                          spacing="16"
+                        >
+                          <Grid item xs={6}>
+                            <Link to={`/profile/${this.state.profile.AD_Username}`}>
+                              <Button style={style.uncontainedButton}>
+                                View My Public Profile
                               </Button>
                             </Link>
                           </Grid>
+                          <Grid item xs={12} sm={12} md={12} lg={12}>
+                            <ButtonBase
+                              onClick={this.handlePhotoOpen}
+                              focusRipple
+                              alt=""
+                              className="profile-image"
+                              style={{ 'border-radius': '0.5rem' }}
+                            >
+                              <img
+                                src={`data:image/jpg;base64,${this.state.image}`}
+                                alt="Profile"
+                                className="rounded-corners"
+                                style={{ 'max-height': '200px', 'min-width': '160px' }}
+                              />
+                              <span className="imageBackdrop" />
+                              <GridListTileBar className="tile-bar" title="Photo Options" />
+                            </ButtonBase>
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={12} lg={12}>
+                            <Grid container align="center" alignItems="center">
+                              <Grid item xs={12}>
+                                <CardHeader
+                                  title={
+                                    this.state.hasNickName
+                                      ? this.state.profile.fullName +
+                                        ' (' +
+                                        this.state.profile.NickName +
+                                        ')'
+                                      : this.state.profile.fullName
+                                  }
+                                  subheader={this.state.profile.Class}
+                                />
+                                <Grid container spacing="16" align="center" justify="center">
+                                  {facebookButton}
+                                  {twitterButton}
+                                  {linkedInButton}
+                                  {instagramButton}
+                                  {editButton}
+                                </Grid>
+                                {this.state.profile.Email !== '' && (
+                                  <div
+                                    style={{
+                                      marginTop: '20px',
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                    }}
+                                  >
+                                    <a href={`mailto:${this.state.profile.Email}`}>
+                                      <div
+                                        className="email-link-container"
+                                        style={{
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          alignContent: 'center',
+                                          justifyContent: 'center',
+                                        }}
+                                      >
+                                        <EmailIcon
+                                          className="email-link"
+                                          style={{ marginRight: '0.75rem' }}
+                                        />
+                                        <Typography className="email-link">
+                                          {this.state.profile.Email}
+                                        </Typography>
+                                      </div>
+                                    </a>
+                                  </div>
+                                )}
+                                <Dialog
+                                  open={this.state.photoOpen}
+                                  keepMounted
+                                  onClose={this.handleClose}
+                                  aria-labelledby="alert-dialog-slide-title"
+                                  aria-describedby="alert-dialog-slide-description"
+                                  maxWidth="false"
+                                >
+                                  <DialogTitle id="simple-dialog-title">
+                                    Update Profile Picture
+                                  </DialogTitle>
+                                  <DialogContent>
+                                    <DialogContentText>
+                                      {window.innerWidth < 600
+                                        ? 'Tap Image to Browse Files'
+                                        : 'Drag & Drop Picture, or Click to Browse Files'}
+                                    </DialogContentText>
+                                    <DialogContentText>
+                                      <br />
+                                    </DialogContentText>
+                                    {!preview && (
+                                      <Grid container justify="center" spacing="16">
+                                        <Dropzone
+                                          className="dropzone"
+                                          activeClassName="drop-overlay"
+                                          onDropAccepted={this.onDropAccepted.bind(this)}
+                                          onDropRejected={this.onDropRejected.bind(this)}
+                                          accept="image/jpeg,image/jpg,image/png"
+                                        >
+                                          <img
+                                            className="rounded-corners"
+                                            src={`data:image/jpg;base64,${this.state.image}`}
+                                            alt=""
+                                            style={{ maxWidth: '200px', maxHeight: '200px' }}
+                                          />
+                                        </Dropzone>
+                                      </Grid>
+                                    )}
+                                    {preview && (
+                                      <Grid container justify="center" spacing="16">
+                                        <Cropper
+                                          ref="cropper"
+                                          src={preview}
+                                          style={{
+                                            'max-width': this.maxCropPreviewWidth(),
+                                            'max-height':
+                                              this.maxCropPreviewWidth() /
+                                              this.state.cropperData.aspectRatio,
+                                          }}
+                                          autoCropArea={1}
+                                          viewMode={3}
+                                          aspectRatio={1}
+                                          highlight={false}
+                                          background={false}
+                                          zoom={this.onCropperZoom.bind(this)}
+                                          zoomable={false}
+                                          dragMode={'none'}
+                                          minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                                          minCropBoxHeight={this.state.cropperData.cropBoxDim}
+                                        />
+                                      </Grid>
+                                    )}
+                                    {preview && <br />}
+                                    {preview && (
+                                      <Grid container justify="center" spacing="16">
+                                        <Grid item>
+                                          <Button
+                                            variant="contained"
+                                            onClick={() => this.setState({ preview: null })}
+                                            style={style.button}
+                                          >
+                                            Choose Another Image
+                                          </Button>
+                                        </Grid>
+                                      </Grid>
+                                    )}
+                                  </DialogContent>
+                                  <DialogActions>
+                                    <Grid container spacing={8} justify="flex-end">
+                                      <Grid item>
+                                        <Tooltip
+                                          classes={{ tooltip: 'tooltip' }}
+                                          id="tooltip-hide"
+                                          title={
+                                            this.state.isImagePublic
+                                              ? 'Only faculty and police will see your photo'
+                                              : 'Make photo visible to other students'
+                                          }
+                                        >
+                                          <Button
+                                            variant="contained"
+                                            onClick={this.toggleImagePrivacy.bind(this)}
+                                            style={style.button}
+                                          >
+                                            {this.state.isImagePublic ? 'Hide' : 'Show'}
+                                          </Button>
+                                        </Tooltip>
+                                      </Grid>
+                                      <Grid item>
+                                        <Tooltip
+                                          classes={{ tooltip: 'tooltip' }}
+                                          id="tooltip-reset"
+                                          title="Restore your original ID photo"
+                                        >
+                                          <Button
+                                            variant="contained"
+                                            onClick={this.handleResetImage}
+                                            style={{ background: 'tomato', color: 'white' }}
+                                          >
+                                            Reset
+                                          </Button>
+                                        </Tooltip>
+                                      </Grid>
+                                      <Grid item>
+                                        <Button
+                                          variant="contained"
+                                          onClick={this.handleCloseCancel}
+                                          style={style.button}
+                                        >
+                                          Cancel
+                                        </Button>
+                                      </Grid>
+                                      <Grid item>
+                                        <Tooltip
+                                          classes={{ tooltip: 'tooltip' }}
+                                          id="tooltip-submit"
+                                          title="Crop to current region and submit"
+                                        >
+                                          <Button
+                                            variant="contained"
+                                            onClick={this.handleCloseSubmit}
+                                            disabled={!this.state.preview}
+                                            style={
+                                              this.state.preview
+                                                ? style.button
+                                                : { background: 'darkgray', color: 'white' }
+                                            }
+                                          >
+                                            Submit
+                                          </Button>
+                                        </Tooltip>
+                                      </Grid>
+                                    </Grid>
+                                  </DialogActions>
+                                </Dialog>
+                                <Dialog
+                                  open={this.state.socialLinksOpen}
+                                  keepMounted
+                                  onClose={this.handleSocialLinksClose}
+                                  aria-labelledby="alert-dialog-slide-title"
+                                  aria-describedby="alert-dialog-slide-description"
+                                >
+                                  <DialogTitle id="simple-dialog-title">
+                                    Edit your social media links
+                                  </DialogTitle>
+                                  <Typography align="center" variant="caption">
+                                    Copy and paste your links below
+                                  </Typography>
+                                  {linksDialog}
+                                </Dialog>
+                              </Grid>
+                            </Grid>
+                          </Grid>
                         </Grid>
-
-                        <List>{involvementAndPrivacyList}</List>
                       </CardContent>
                     </Card>
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              <Grid item xs={12} lg={12}>
+                <Grid container spacing="16" justify="center">
+                  <Grid item xs={12} lg={10}>
+                    <Card>
+                      <CardContent>
+                        <Grid container direction="row" justify="center">
+                          <Grid item xs={12}>
+                            <Grid container xs={12} justify="center">
+                              <CardHeader title="Course Schedule" />
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} align="center">
+                            <Grid container xs={12} lg={10}>
+                              <Grid item xs={12}>
+                                <CourseSchedule />
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              <Grid item xs={12} lg={12}>
+                <Grid container spacing="16" justify="center">
+                  <Grid item xs={12} lg={5}>
+                    <Grid container spacing={16}>
+                      {this.state.profileinfo}
+                      {this.state.officeinfo}
+                    </Grid>
+                  </Grid>
+
+                  <Grid item xs={12} lg={5}>
+                    <Grid container>
+                      <Grid item xs={12}>
+                        <Card>
+                          <CardContent>
+                            <Grid container direction="row" alignItems="center">
+                              <Grid item xs={7}>
+                                <CardHeader title="Involvements" />
+                              </Grid>
+                              <Grid item xs={5} align="right">
+                                <Link to="/transcript">
+                                  <Button variant="contained" style={style.button}>
+                                    Co-Curricular Transcript
+                                  </Button>
+                                </Link>
+                              </Grid>
+                            </Grid>
+                            <List>{involvementAndPrivacyList}</List>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
