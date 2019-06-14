@@ -16,6 +16,7 @@
     "luxon": "^0.2.12",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
+    "react-big-calendar": "^0.21.0",
     "react-chartjs-2": "^2.7.4",
     "react-cropper": "^1.0.1",
     "react-document-title": "^2.0.3",
