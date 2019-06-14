@@ -34,6 +34,10 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const CROP_DIM = 200; // pixels
 //MyProfile
@@ -660,31 +664,42 @@ export default class Profile extends Component {
                 </Grid>
               </Grid>
 
-              <Grid item xs={12} lg={12}>
-                <Grid container spacing="16" justify="center">
-                  <Grid item xs={12} lg={10}>
-                    <Card>
-                      <CardContent>
-                        <Grid container direction="row" justify="center" alignItems="center">
-                          <Grid item xs={8}>
-                            <Grid container xs={12} justify="start">
-                              <CardHeader title="Course Schedule" />
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={4} align="right">
-                            <Button onClick={this.handleSocialLinksOpen}>EDIT OFFICE HOURS</Button>
-                          </Grid>
-                          <Grid item xs={12} align="center">
-                            <Grid container xs={12} lg={10}>
-                              <Grid item xs={12}>
-                                <CourseSchedule />
+              <Grid item xs={12} lg={12} align="center">
+                <Grid container lg={10} spacing="16" justify="center">
+                  <ExpansionPanel>
+                    <ExpansionPanelSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    />
+                    <ExpansionPanelDetails>
+                      <Grid item xs={12} lg={12}>
+                        <Card>
+                          <CardContent>
+                            <Grid container direction="row" justify="center" alignItems="center">
+                              <Grid item xs={8}>
+                                <Grid container xs={12} justify="start">
+                                  <CardHeader title="Course Schedule" />
+                                </Grid>
+                              </Grid>
+                              <Grid item xs={4} align="right">
+                                <Button onClick={this.handleSocialLinksOpen}>
+                                  EDIT OFFICE HOURS
+                                </Button>
+                              </Grid>
+                              <Grid item xs={12} align="center">
+                                <Grid container xs={12} lg={10}>
+                                  <Grid item xs={12}>
+                                    <CourseSchedule />
+                                  </Grid>
+                                </Grid>
                               </Grid>
                             </Grid>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    </ExpansionPanelDetails>
+                  </ExpansionPanel>
                 </Grid>
               </Grid>
 
