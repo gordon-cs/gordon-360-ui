@@ -56,6 +56,34 @@ export default class Transcript extends Component {
     }
   }
 
+  /* Helper functions for parsing and translating sessionCode which is of the format "YYYYSE"
+     where SE is 09 for fall, 01 for spring, 05 for summer */
+
+  /* Returns year part of session code (first 4 characters) */
+  sliceYear = sesCode => {
+    return sesCode.slice(0, 5);
+  };
+
+  /* Returns semester part of session code (last 2 characters) */
+  sliceSem = sesCode => {
+    switch (sesCode.slice(5, 7)) {
+      case '09':
+        return 'FA';
+      case '01':
+        return 'SP';
+      case '05':
+        return 'SU';
+      default:
+        console.log('An unrecognized semester code was provided');
+        return 'XX';
+    }
+  };
+
+  /* Returns: date string of format "SE YYYY" where SE is FA, SP, or SU */
+  convertToDate = sesCode => {
+    return this.sliceSem(sesCode) + ' ' + this.sliceYear(sesCode);
+  };
+
   /* Compares activity from activityList to previous activity' session to to determine how to group.
      isUnique value is passed as a prop, along with Activity object, to TranscriptActivity Component
      Returns TranscriptActivity component which should be passed into activityList.
@@ -80,29 +108,61 @@ export default class Transcript extends Component {
      and translated into a duration. Then, one Activity component is created with that
      ActivityDescription and the duration.
 
-     Returns: array of Activity components with props Description and Duration.
+     Param: activities - a list of activity objects ("Memberships" as defined in gordon-360-api)
+     Returns: array of Activity components with props Activity and Duration.
   */
   groupActivityByCode = activities => {
     let condensedActs = [];
 
-    for (var i = 0; i < activities.length; i++) {
-      let sessions = [activities[i].SessionCode];
+    // sort activities by ActivityCode
 
-      // get the session codes for all activities of the current activity's code
-      let j = i + 1;
-      while (j < activities.length && activities[j].ActivityCode === activities[i].ActivityCode) {
-        sessions.push(activities[j].SessionCode);
-        j++;
+    while (activities.length > 0) {
+      // shift removes and returns the first item in the array
+      let curAct = activities.shift;
+      let sessions = [curAct.SessionCode];
+
+      // Get the session codes for all activities matching the current activity's code,
+      // knowing activities will be sorted by session and Activity Code.
+      // Continue looking at activities while the activity at array front has the
+      // same activityCode as the current activity
+      while (activities.length > 0 && activities.slice(0).ActivityCode === curAct.ActivityCode) {
+        sessions.push(activities.shift.SessionCode);
       }
 
-      // translate the sessions array into a duration
-      let duration;
+      // Translate the sessions array into a duration:
+
+      // Pop first session code from list and add it to a new list; new list will hold only the
+      // session codes needed to express the full length of involvement as a range with gaps
+      // let neededCodes = [sessions.shift];
+
+      // start duration out as the first session in date form- without a space before it
+      let duration = this.convertToDate(sessions.shift);
+      // Convert rest of session codes to date format and add (each with a space) to duration string
+      // **Compare consecutive session codes to see if there are gaps and
+      // add end-of-gap codes to neededCodes **code commented out
+      for (let code of sessions) {
+        /*let nextCode = sessions.shift;
+        let lastCode = neededCodes.slice(-1);
+
+        let nextSem = this.sliceSem(nextCode);
+        let nextYear = this.sliceYear(nextCode);
+        let lastSem = this.sliceSem(lastCode);
+        let lastYear = this.sliceYear(lastCode);
+        if ( !(lastSem === 'FA' &&
+               lastSem !== nextSem &&
+               parseInt(nextYear - parseInt(lastYear) == 1) &&
+             !(lastSem === 'SP' &&
+               lastSem !== nextSem &&
+               lastYear === nextYear)
+            ) {}*/
+
+        duration += ' ' + this.convertToDate(code);
+      }
 
       // add a new Activity component to the array
-      condensedActs.push(
-        <Activity Description={activities[i].ActivityDescription} Duration={duration} />,
-      );
+      condensedActs.push(<Activity Activity={curAct} Duration={duration} />);
     }
+    return condensedActs;
   };
 
   render() {
@@ -111,9 +171,9 @@ export default class Transcript extends Component {
     if (!this.state.activities) {
       activityList = <GordonLoader />;
     } else {
-      /* Call groupActivityBySession() on activities */
-      activityList = this.state.activities.map(this.groupActivityBySession);
-      // activityList = groupActivityByCode(this.state.activities);
+      /* Call groupActivityByCode() on activities */
+      //activityList = this.state.activities.map(this.groupActivityBySession);
+      activityList = this.groupActivityByCode(this.state.activities);
     }
 
     /*let employmentsList;
@@ -165,6 +225,11 @@ export default class Transcript extends Component {
                 <b>Experience</b>
               </Typography>
             </div>
+            {/*<div className="activities">
+              <div className="organization-role">Physical Plant, Custodian</div>
+              <div className="date">FA 2015, FA 2016, SP 2017, SP 2018, FA 2018
+              </div>
+            </div>*/}
             {/*<div className="involvements" class="print">
               <div className="full-length">{employmentsList}</div>
             </div>*/}
@@ -178,13 +243,10 @@ export default class Transcript extends Component {
                 <b>Activities</b>
               </Typography>
             </div>
-            <div className="activities">
-              <div className="organization-role">A. J. Gordon Scholars Program, Leader</div>
-              <div className="date">FA 2015-SP 2017</div>
-            </div>
-            <div class="print">
+            <div className="full-length">{activityList}</div>
+            {/*<div class="print">
               <div className="full-length">{activityList}</div>
-            </div>
+            </div>*/}
           </CardContent>
         </Card>
       </div>

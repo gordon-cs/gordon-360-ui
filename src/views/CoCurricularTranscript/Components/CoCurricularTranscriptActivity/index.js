@@ -48,12 +48,11 @@ export default class Activity extends Component {
     return heading;
   };*/
 
-  /*
   getContent = () => {
     const { Activity } = this.props;
 
     let content = (
-      <Grid container>
+      /*<Grid container>
         <Grid item xs={6}>
           <List>
             <Typography className="text"> {Activity.ActivityDescription} </Typography>
@@ -64,32 +63,34 @@ export default class Activity extends Component {
             <Typography className="text"> {Activity.ParticipationDescription} </Typography>
           </List>
         </Grid>
-      </Grid>
+      </Grid>*/
       <div className="activities">
-        <div className="organization-role">{Activity.ActivityDescription}, {Activity.ParticipationDescription} </div>
-         <div className="date">DATE TEXT PLACEHOLDER</div>
+        <div className="organization-role">
+          {Activity.ActivityDescription}, {Activity.ParticipationDescription}{' '}
+        </div>
+        <div className="date">{this.props.Duration}</div>
       </div>
     );
 
     return content;
-  };*/
+  };
 
   render() {
-    const { Activity } = this.props;
-    return (
-      <div>
-        {/*this.getHeading()*/}
+    //const { Activity } = this.props;
+    return this.getContent();
+    /*(<div>
+        this.getHeading()
         <div className="activities">
           <div className="organization-role">
             {Activity.ActivityDescription}, {Activity.ParticipationDescription}{' '}
           </div>
           <div className="date"> {Activity.SessionDescription} </div>
         </div>
-        {/*this.getContent()*/}
+
         <div className="divider">
           <Divider light={true} />
         </div>
       </div>
-    );
+      );*/
   }
 }
