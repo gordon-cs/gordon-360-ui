@@ -6,6 +6,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CourseSchedule from './components/CourseSchedule';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -15,6 +17,9 @@ import { withStyles } from '@material-ui/core/styles';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 
+this.state = {
+  officeHoursOpen: false,
+};
 const styles = {
   colorSwitchBase: {
     color: gordonColors.neutral.lightGray,
@@ -37,6 +42,14 @@ class GordonSchedulePanel extends Component {
       isSchedulePrivate: Boolean,
     };
   }
+
+  handleOfficeHoursOpen = () => {
+    this.setState({ officeHoursOpen: true });
+  };
+
+  handleOfficeHoursClose = () => {
+    this.setState({ officeHoursOpen: false });
+  };
 
   async loadProfileInfo() {
     try {
@@ -83,7 +96,7 @@ class GordonSchedulePanel extends Component {
     if (this.props.myProf && isFaculty) {
       editOfficeHourButton = (
         <Fragment>
-          <Button onClick={this.handleSocialLinksOpen}>EDIT OFFICE HOURS</Button>
+          <Button onClick={this.handleOfficeHoursOpen}>EDIT OFFICE HOURS</Button>
         </Fragment>
       );
     }
@@ -134,6 +147,19 @@ class GordonSchedulePanel extends Component {
                   </Grid>
                 </CardContent>
               </Card>
+              <Dialog
+                open={this.state.officeHoursOpen}
+                keepMounted
+                onClose={this.handleofficeHoursClose}
+                aria-labelledby="alert-dialog-slide-title"
+                aria-describedby="alert-dialog-slide-description"
+              >
+                <DialogTitle id="simple-dialog-title">Edit your office hours</DialogTitle>
+                <Typography align="center" variant="caption">
+                  Select day and times below
+                </Typography>
+                {/* {linksDialog} */}
+              </Dialog>
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>
