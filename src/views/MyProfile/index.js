@@ -662,7 +662,9 @@ export default class Profile extends Component {
 
               <Grid item xs={12} lg={12} align="center">
                 <Grid container lg={10} spacing="16" justify="center">
-                  <GordonSchedulePanel profile={this.state.profile} myProf={true} />
+                  <Grid item lg={12}>
+                    <GordonSchedulePanel profile={this.state.profile} myProf={true} />
+                  </Grid>
                 </Grid>
               </Grid>
 

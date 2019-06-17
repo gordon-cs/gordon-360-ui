@@ -59,7 +59,7 @@ class GordonSchedulePanel extends Component {
   render() {
     const { classes } = this.props;
     let isFaculty = String(this.props.profile.PersonType).includes('fac');
-    let privacyButton, editOfficeHourButton;
+    let privacyButton, editOfficeHourButton, schedulePanel;
 
     if (this.props.myProf) {
       privacyButton = (
@@ -88,43 +88,59 @@ class GordonSchedulePanel extends Component {
       );
     }
 
-    return (
-      <ExpansionPanel>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography>Show My Schedule</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <Grid item xs={12} lg={12}>
-            <Card>
-              <CardContent>
-                <Grid container direction="row" justify="center" alignItems="center">
-                  <Grid item xs={8}>
-                    <Grid container xs={12} justify="flex-start">
-                      <CardHeader title="Course Schedule" />
+    if (!this.props.myProf && this.state.isSchedulePrivate) {
+      schedulePanel = (
+        <ExpansionPanel disabled>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Private as requested</Typography>
+          </ExpansionPanelSummary>
+        </ExpansionPanel>
+      );
+    } else {
+      schedulePanel = (
+        <ExpansionPanel>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Show the Schedule</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            <Grid item xs={12} lg={12}>
+              <Card>
+                <CardContent>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <Grid item xs={8}>
+                      <Grid container xs={12} justify="flex-start">
+                        <CardHeader title="Course Schedule" />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid item xs={4} align="right">
-                    {privacyButton}
-                    {editOfficeHourButton}
-                  </Grid>
-                  <Grid item xs={12} align="center">
-                    <Grid container xs={12} lg={10}>
-                      <Grid item xs={12}>
-                        <CourseSchedule />
+                    <Grid item xs={4} align="right">
+                      {privacyButton}
+                      {editOfficeHourButton}
+                    </Grid>
+                    <Grid item xs={12} align="center">
+                      <Grid container xs={12} lg={10}>
+                        <Grid item xs={12}>
+                          <CourseSchedule />
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-    );
+                </CardContent>
+              </Card>
+            </Grid>
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      );
+    }
+
+    return <Fragment>{schedulePanel}</Fragment>;
   }
 }
 
