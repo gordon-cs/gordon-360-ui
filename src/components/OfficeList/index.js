@@ -5,13 +5,12 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
 import List from '@material-ui/core/List';
 
 export default class Office extends Component {
   render() {
-    let OfficeHours, OfficePhone, Room, Office, editButton;
+    let OfficeHours, OfficePhone, Room, Office;
     if (String(this.props.profile.PersonType).includes('fac')) {
       if (
         this.props.profile.BuildingDescription === '' &&
@@ -21,12 +20,6 @@ export default class Office extends Component {
       ) {
         return null;
       }
-
-      editButton = (
-        <Grid item>
-          <Button onClick={this.handleSocialLinksOpen}>EDIT OFFICE HOURS</Button>
-        </Grid>
-      );
 
       if (this.props.profile.OnCampusPhone !== '') {
         OfficePhone = (

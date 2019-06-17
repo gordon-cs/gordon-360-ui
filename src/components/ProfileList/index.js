@@ -41,7 +41,6 @@ class ProfileList extends Component {
       homePhoneDisclaimer: false,
       addressDisclaimer: false,
       isMobilePhonePrivate: Boolean,
-      isSchedulePrivate: Boolean,
     };
   }
 
