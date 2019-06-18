@@ -49,10 +49,8 @@ export default class Transcript extends Component {
       const profile = await user.getProfileInfo();
       const employments = await user.getEmploymentInfo();
       //const employments = null;
-      console.log(employments);
       //const service = await user.getServiceInfo(profile.ID);
       const activities = await user.getActivitiesInfo(profile.ID);
-      console.log(activities);
       this.setState({ loading: false, activities, employments, currentSession, profile });
     } catch (error) {
       this.setState({ error });
@@ -185,18 +183,23 @@ export default class Transcript extends Component {
     if (!this.state.activities) {
       activityList = <GordonLoader />;
     } else {
+      //Deep copy activities array so that it doesn't get overwritten
+      var displayedActivities = JSON.parse(JSON.stringify(this.state.activities));
       /* Call groupActivityByCode() on activities */
-      activityList = this.groupActivityByCode(this.state.activities);
+      activityList = this.groupActivityByCode(displayedActivities);
     }
 
     let leadershipList;
 
-    if (!this.state.activities) {
+    // Deep copy activities array so that it doesn't get overwritten
+    let copyActivities = JSON.parse(JSON.stringify(this.state.activities));
+    // Filter Activities to only those where user is leader
+    let leadActivities = this.filterActivitiesforLeadership(copyActivities);
+
+    if (!leadActivities) {
       leadershipList = <GordonLoader />;
     } else {
       /* Call groupActivityByCode() on leadActivities */
-      let leadActivities = this.filterActivitiesforLeadership(this.state.activities);
-
       leadershipList = this.groupActivityByCode(leadActivities);
     }
 

@@ -617,7 +617,6 @@ function compareByActCode(a, b) {
 //sorts by SessionCode and ActivityCode
 const getActivitiesInfo = async id => {
   let transcriptInfo = await getMembershipsWithoutGuests(id);
-  console.log(transcriptInfo);
   transcriptInfo.sort(compareBySession);
   transcriptInfo.sort(compareByActCode);
   return transcriptInfo;
@@ -628,7 +627,6 @@ const getActivitiesInfo = async id => {
 //sorts by
 const getEmploymentInfo = async () => {
   let employmentInfo = await getEmployment();
-  console.log(employmentInfo[0]);
   //employmentInfo.sort(compareBySession);
   return employmentInfo;
 };
