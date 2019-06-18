@@ -168,6 +168,17 @@ export default class Transcript extends Component {
     return condensedActs;
   };
 
+  filterActivitiesforLeadership = activities => {
+    let leadActivities = [];
+    while (activities.length > 0) {
+      let curAct = activities.shift();
+      if (curAct.ParticipationDescription === 'Leader') {
+        leadActivities.push(curAct);
+      }
+    }
+    return leadActivities;
+  };
+
   render() {
     let activityList;
 
@@ -176,6 +187,17 @@ export default class Transcript extends Component {
     } else {
       /* Call groupActivityByCode() on activities */
       activityList = this.groupActivityByCode(this.state.activities);
+    }
+
+    let leadershipList;
+
+    if (!this.state.activities) {
+      leadershipList = <GordonLoader />;
+    } else {
+      /* Call groupActivityByCode() on leadActivities */
+      let leadActivities = this.filterActivitiesforLeadership(this.state.activities);
+
+      leadershipList = this.groupActivityByCode(leadActivities);
     }
 
     let employmentsList;
@@ -215,6 +237,14 @@ export default class Transcript extends Component {
                 <b> Co-Curricular Transcript - </b>
                 {this.state.profile.fullName}
               </Typography>
+            </div>
+            <div className="subtitle">
+              <Typography variant="headline">
+                <b>Honors, Leadership, and Research</b>
+              </Typography>
+            </div>
+            <div className="involvements" class="print">
+              <div className="full-length">{leadershipList}</div>
             </div>
             <div className="subtitle">
               <Typography variant="headline">
