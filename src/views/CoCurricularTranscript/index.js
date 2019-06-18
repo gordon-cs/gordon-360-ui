@@ -21,7 +21,7 @@ export default class Transcript extends Component {
     super(props);
     this.state = {
       activities: [],
-      //employments: [],
+      employments: [],
       //service: [],
       loading: true,
       profile: {},
@@ -46,10 +46,13 @@ export default class Transcript extends Component {
       /* Retrieve data from server */
       const currentSession = await session.getCurrent();
       const profile = await user.getProfileInfo();
-      //const employments = await user.getEmploymentInfo(profile.ID);
+      //const employments = await user.getEmploymentInfo(profile.AD_Username);
+      const employments = null;
+      console.log(employments);
       //const service = await user.getServiceInfo(profile.ID);
       const activities = await user.getActivitiesInfo(profile.ID);
-      this.setState({ loading: false, activities, /*employments,*/ currentSession, profile });
+      console.log(activities);
+      this.setState({ loading: false, activities, employments, currentSession, profile });
     } catch (error) {
       this.setState({ error });
       console.log('error');
@@ -172,11 +175,11 @@ export default class Transcript extends Component {
       activityList = <GordonLoader />;
     } else {
       /* Call groupActivityByCode() on activities */
-      //activityList = this.state.activities.map(this.groupActivityBySession);
-      activityList = this.groupActivityByCode(this.state.activities);
+      activityList = this.state.activities.map(this.groupActivityBySession);
+      //activityList = this.groupActivityByCode(this.state.activities);
     }
 
-    /*let employmentsList;
+    let employmentsList;
 
     if (!this.state.employments) {
       employmentsList = <GordonLoader />;
@@ -190,7 +193,7 @@ export default class Transcript extends Component {
           </Grid>
         </Grid>
       ));
-    }*/
+    }
 
     const buttonColors = {
       /* not in style sheet so that gordonColors is accessible */
@@ -230,9 +233,9 @@ export default class Transcript extends Component {
               <div className="date">FA 2015, FA 2016, SP 2017, SP 2018, FA 2018
               </div>
             </div>*/}
-            {/*<div className="involvements" class="print">
+            <div className="involvements" class="print">
               <div className="full-length">{employmentsList}</div>
-            </div>*/}
+            </div>
             <div className="subtitle">
               <Typography variant="headline">
                 <b>Service Learning</b>
@@ -243,10 +246,9 @@ export default class Transcript extends Component {
                 <b>Activities</b>
               </Typography>
             </div>
-            <div className="full-length">{activityList}</div>
-            {/*<div class="print">
+            <div class="print">
               <div className="full-length">{activityList}</div>
-            </div>*/}
+            </div>
           </CardContent>
         </Card>
       </div>
