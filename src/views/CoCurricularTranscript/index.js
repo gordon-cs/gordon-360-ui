@@ -4,11 +4,12 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
+//import List from '@material-ui/core/List';
 
 import { gordonColors } from '../../theme';
 import session from '../../services/session';
 import Activity from './Components/CoCurricularTranscriptActivity';
+import Experience from './Components/CoCurricularTranscriptExperience';
 import user from './../../services/user';
 import GordonLoader from './../../components/Loader';
 import './coCurricularTranscript.css';
@@ -161,7 +162,7 @@ export default class Transcript extends Component {
         duration += ' ' + this.convertToDate(code);
       }
 
-      // add a new Activity component to the array
+      // add a new TranscriptItem component to the array
       condensedActs.push(<Activity Activity={curAct} Duration={duration} />);
     }
     return condensedActs;
@@ -183,13 +184,7 @@ export default class Transcript extends Component {
       employmentsList = <GordonLoader />;
     } else {
       employmentsList = this.state.employments.map(employment => (
-        <Grid container>
-          <Grid item xs={6}>
-            <List>
-              <Typography className="text"> {employment.Job_Title} </Typography>
-            </List>
-          </Grid>
-        </Grid>
+        <Experience className="text" Experience={employment} />
       ));
     }
 
