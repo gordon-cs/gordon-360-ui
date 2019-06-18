@@ -597,13 +597,28 @@ function compareBySession(a, b) {
   return comparison;
 }
 
+//compares items by ActivityCode, used by getTranscriptInfo to sort by SessionCode
+function compareByActCode(a, b) {
+  const codeA = a.ActivityCode;
+  const codeB = b.ActivityCode;
+
+  let comparison = 0;
+  if (codeA > codeB) {
+    comparison = 1;
+  } else if (codeA < codeB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
 //returns an array of membership objects from backend server,
 //not including Guest memberships
 //using asynchronous http.get request (via getMemberships function)
-//sorts by SessionCode
+//sorts by SessionCode and ActivityCode
 const getActivitiesInfo = async id => {
   let transcriptInfo = await getMembershipsWithoutGuests(id);
   transcriptInfo.sort(compareBySession);
+  transcriptInfo.sort(compareByActCode);
   return transcriptInfo;
 };
 

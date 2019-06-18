@@ -61,12 +61,12 @@ export default class Transcript extends Component {
 
   /* Returns year part of session code (first 4 characters) */
   sliceYear = sesCode => {
-    return sesCode.slice(0, 5);
+    return sesCode.toString().slice(0, 4);
   };
 
   /* Returns semester part of session code (last 2 characters) */
   sliceSem = sesCode => {
-    switch (sesCode.slice(5, 7)) {
+    switch (sesCode.toString().slice(4, 6)) {
       case '09':
         return 'FA';
       case '01':
@@ -115,18 +115,17 @@ export default class Transcript extends Component {
     let condensedActs = [];
 
     // sort activities by ActivityCode
-
     while (activities.length > 0) {
       // shift removes and returns the first item in the array
-      let curAct = activities.shift;
+      let curAct = activities.shift();
       let sessions = [curAct.SessionCode];
 
       // Get the session codes for all activities matching the current activity's code,
       // knowing activities will be sorted by session and Activity Code.
       // Continue looking at activities while the activity at array front has the
       // same activityCode as the current activity
-      while (activities.length > 0 && activities.slice(0).ActivityCode === curAct.ActivityCode) {
-        sessions.push(activities.shift.SessionCode);
+      while (activities.length > 0 && activities[0].ActivityCode === curAct.ActivityCode) {
+        sessions.push(activities.shift().SessionCode);
       }
 
       // Translate the sessions array into a duration:
@@ -136,7 +135,7 @@ export default class Transcript extends Component {
       // let neededCodes = [sessions.shift];
 
       // start duration out as the first session in date form- without a space before it
-      let duration = this.convertToDate(sessions.shift);
+      let duration = this.convertToDate(sessions.shift());
       // Convert rest of session codes to date format and add (each with a space) to duration string
       // **Compare consecutive session codes to see if there are gaps and
       // add end-of-gap codes to neededCodes **code commented out
@@ -172,7 +171,6 @@ export default class Transcript extends Component {
       activityList = <GordonLoader />;
     } else {
       /* Call groupActivityByCode() on activities */
-      //activityList = this.state.activities.map(this.groupActivityBySession);
       activityList = this.groupActivityByCode(this.state.activities);
     }
 
@@ -225,11 +223,6 @@ export default class Transcript extends Component {
                 <b>Experience</b>
               </Typography>
             </div>
-            {/*<div className="activities">
-              <div className="organization-role">Physical Plant, Custodian</div>
-              <div className="date">FA 2015, FA 2016, SP 2017, SP 2018, FA 2018
-              </div>
-            </div>*/}
             {/*<div className="involvements" class="print">
               <div className="full-length">{employmentsList}</div>
             </div>*/}
