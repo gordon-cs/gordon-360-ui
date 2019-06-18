@@ -46,8 +46,8 @@ export default class Transcript extends Component {
       /* Retrieve data from server */
       const currentSession = await session.getCurrent();
       const profile = await user.getProfileInfo();
-      //const employments = await user.getEmploymentInfo(profile.AD_Username);
-      const employments = null;
+      const employments = await user.getEmploymentInfo();
+      //const employments = null;
       console.log(employments);
       //const service = await user.getServiceInfo(profile.ID);
       const activities = await user.getActivitiesInfo(profile.ID);
@@ -186,7 +186,7 @@ export default class Transcript extends Component {
         <Grid container>
           <Grid item xs={6}>
             <List>
-              <Typography className="text"> {employment} </Typography>
+              <Typography className="text"> {employment.Job_Title} </Typography>
             </List>
           </Grid>
         </Grid>

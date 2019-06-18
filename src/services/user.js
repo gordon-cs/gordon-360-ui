@@ -518,9 +518,9 @@ const getCurrentMembershipsWithoutGuests = async id => {
   return myCurrentInvolvementsWithoutGuests;
 };
 
-const getEmployment = async username => {
+const getEmployment = async () => {
   let employments;
-  employments = await http.get(`studentemployment/${username}/`);
+  employments = await http.get(`studentemployment/`);
   return employments;
 };
 
@@ -626,9 +626,9 @@ const getActivitiesInfo = async id => {
 //returns an array of employment objects from backend server
 //using asynchronous http.get request (via getEmployment function)
 //sorts by
-const getEmploymentInfo = async username => {
-  let employmentInfo = await getEmployment(username);
-  console.log(employmentInfo);
+const getEmploymentInfo = async () => {
+  let employmentInfo = await getEmployment();
+  console.log(employmentInfo[0]);
   //employmentInfo.sort(compareBySession);
   return employmentInfo;
 };
