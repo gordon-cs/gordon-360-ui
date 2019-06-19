@@ -57,7 +57,6 @@ export default class Transcript extends Component {
 
   /* Helper functions for parsing and translating sessionCode which is of the format "YYYYSE"
      where SE is 09 for fall, 01 for spring, 05 for summer
-  /*=========================================================================================*/
 
   /* Returns year part of session code (first 4 characters) */
   sliceYear = sesCode => {
@@ -83,8 +82,6 @@ export default class Transcript extends Component {
   convertToDate = sesCode => {
     return this.sliceSem(sesCode) + ' ' + this.sliceYear(sesCode);
   };
-
-  /*========================================================================================*/
 
   /* Compares activity from activityList to previous activity' session to to determine how to group.
      isUnique value is passed as a prop, along with Activity object, to TranscriptActivity Component
@@ -182,7 +179,7 @@ export default class Transcript extends Component {
     if (gradDate === undefined || gradDate === '') {
       return null;
     } else {
-      return ', Class of ' + gradDate;
+      return ', Class of ' + gradDate.split(' ')[3];
     }
   }
 
