@@ -61,10 +61,11 @@
 /* @media print takes effect when in a print view (eg after hittig Print Co-Curricular Transcript).
    Allows logo to only show when printing. */
 @media print {
-  /*body * {
+  body {
+    // hides the header (with people search etc.)
     visibility: hidden;
-    overflow: visible !important;
   }
+  /*
   .heading * {
     visibility: visible;
   }
@@ -87,7 +88,10 @@
     visibility: visible;
   }
 
-  .button,
+  .button {
+    display: none !important;
+  }
+
   .card {
     visibility: hidden;
   }
