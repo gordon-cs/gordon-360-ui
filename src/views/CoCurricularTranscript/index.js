@@ -3,9 +3,8 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-//import Grid from '@material-ui/core/Grid';
 //import List from '@material-ui/core/List';
-//import Divider from '@material-ui/core/Divider';
+//import Divider from '@material-ui/core/Divider'; might need if we choose to have column headers
 
 import { gordonColors } from '../../theme';
 import session from '../../services/session';
@@ -48,11 +47,11 @@ export default class Transcript extends Component {
       /* Retrieve data from server */
       const currentSession = await session.getCurrent();
       const profile = await user.getProfileInfo();
-      const employments = await user.getEmploymentInfo();
+      //const employments = await user.getEmploymentInfo();
       //const employments = null;
       //const service = await user.getServiceInfo(profile.ID);
       const activities = await user.getActivitiesInfo(profile.ID);
-      this.setState({ loading: false, activities, employments, currentSession, profile });
+      this.setState({ loading: false, activities, /*employments,*/ currentSession, profile });
     } catch (error) {
       this.setState({ error });
       console.log('error');
@@ -60,7 +59,8 @@ export default class Transcript extends Component {
   }
 
   /* Helper functions for parsing and translating sessionCode which is of the format "YYYYSE"
-     where SE is 09 for fall, 01 for spring, 05 for summer */
+     where SE is 09 for fall, 01 for spring, 05 for summer
+  /*=========================================================================================*/
 
   /* Returns year part of session code (first 4 characters) */
   sliceYear = sesCode => {
@@ -86,6 +86,8 @@ export default class Transcript extends Component {
   convertToDate = sesCode => {
     return this.sliceSem(sesCode) + ' ' + this.sliceYear(sesCode);
   };
+
+  /*========================================================================================*/
 
   /* Compares activity from activityList to previous activity' session to to determine how to group.
      isUnique value is passed as a prop, along with Activity object, to TranscriptActivity Component
@@ -191,7 +193,7 @@ export default class Transcript extends Component {
 
   render() {
     // this.state.activities contains three of the four categories of activites that the transcript
-    // will display. The following lines filter activites for the different categories.
+    // will display. The following lines filter this.state.activities into the different categories.
 
     let activityList;
 
@@ -241,7 +243,7 @@ export default class Transcript extends Component {
       employmentsList = <GordonLoader />;
     } else {
       employmentsList = this.state.employments.map(employment => (
-        <Experience className="text" Experience={employment} />
+        <Experience className="text" Experience={employment} /> // may not need className="text"
       ));
     }
 
@@ -278,34 +280,37 @@ export default class Transcript extends Component {
                 <b>Honors, Leadership, and Research</b>
               </Typography>
             </div>
-            <div className="involvements" class="print">
-              <div className="full-length">{leadershipList}</div>
+            <div class="print" className="activity-list">
+              {leadershipList}
             </div>
             <div className="subtitle">
               <Typography variant="headline">
                 <b>Experience</b>
               </Typography>
             </div>
-            {/*Headers if needed: <div className="activities">
+            {/*Column Headers, if needed: <div className="column-headers">
               <div className="organization-role">Organization, Role</div>
               <div className="date">Date</div>
             </div>
             <Divider light={true} />*/}
-            <div className="involvements" class="print">
-              <div className="full-length">{employmentsList}</div>
+            <div class="print" className="activity-list">
+              {employmentsList}
             </div>
             <div className="subtitle">
               <Typography variant="headline">
                 <b>Service Learning</b>
               </Typography>
             </div>
+            {/*<div class="print" className="activity-list">
+              {serviceList}
+            </div>*/}
             <div className="subtitle">
               <Typography variant="headline">
                 <b>Activities</b>
               </Typography>
             </div>
-            <div class="print">
-              <div className="full-length">{activityList}</div>
+            <div class="print" className="activity-list">
+              {activityList}
             </div>
           </CardContent>
         </Card>

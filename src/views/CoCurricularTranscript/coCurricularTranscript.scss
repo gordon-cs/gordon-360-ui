@@ -14,6 +14,7 @@
 
 .card-content {
   display: grid;
+  grid-template-columns: 100%;
   grid-row-gap: 10px;
 }
 
@@ -23,12 +24,19 @@
 }
 
 .subtitle {
+  grid-column: 1 / -1;
   justify-self: flex-start;
 }
 
-.activities {
+.activity-list {
+  grid-column: 1 / -1;
+}
+
+/*.column-headers {
   display: grid;
   grid-template-columns: 5% 70% 25%;
+  grid-column: 1 / -1; // not sure if this can be declared a container (display: grid) and be given
+                       // item properties (grid-column: 1 / -1
   justify-items: stretch;
 }
 
@@ -41,7 +49,7 @@
   grid-column: 3;
   justify-self: flex-end;
   text-align: center;
-}
+}*/
 
 /* For small and medium screens (1024px wide or less) */
 @media (max-width: 1024px) {
@@ -53,7 +61,7 @@
 /* @media print takes effect when in a print view (eg after hittig Print Co-Curricular Transcript).
    Allows logo to only show when printing. */
 @media print {
-  body * {
+  /*body * {
     visibility: hidden;
     overflow: visible !important;
   }
@@ -70,6 +78,18 @@
     border-spacing: 0;
     border-collapse: collapse;
     margin: 0;
+  }*/
+
+  .co-curricular-transcript,
+  .card-content,
+  .subtitle,
+  .activity-list {
+    visibility: visible;
+  }
+
+  .button,
+  .card {
+    visibility: hidden;
   }
 }
 

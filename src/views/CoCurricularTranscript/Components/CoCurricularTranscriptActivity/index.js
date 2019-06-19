@@ -70,13 +70,11 @@ export default class Activity extends Component {
   render() {
     const { Activity } = this.props;
     return (
-      <div>
-        <div className="activities">
-          <div className="organization-role">
-            {Activity.ActivityDescription}, {Activity.ParticipationDescription}
-          </div>
-          <div className="date"> {this.props.Duration} </div>
+      <div className="activities">
+        <div className="organization-role">
+          {Activity.ActivityDescription}, {Activity.ParticipationDescription}
         </div>
+        <div className="date"> {this.props.Duration} </div>
         <div className="divider">
           <Divider light={true} />
         </div>
