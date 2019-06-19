@@ -40,7 +40,7 @@ export default class Experience extends Component {
       <div>
         <div className="activities">
           <div className="organization-role">
-            {Experience.Job_Department_Name}, {Experience.Job_Title}{' '}
+            {Experience.Job_Department_Name}, {Experience.Job_Title}
           </div>
           <div className="date"> {Duration} </div>
         </div>
