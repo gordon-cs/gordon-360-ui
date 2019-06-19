@@ -73,7 +73,7 @@ export default class Activity extends Component {
       <div>
         <div className="activities">
           <div className="organization-role">
-            {Activity.ActivityDescription}, {Activity.ParticipationDescription}{' '}
+            {Activity.ActivityDescription}, {Activity.ParticipationDescription}
           </div>
           <div className="date"> {this.props.Duration} </div>
         </div>
