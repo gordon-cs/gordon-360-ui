@@ -57,7 +57,7 @@
 
 /* For small and medium screens (1024px wide or less) */
 @media (max-width: 1024px) {
-  .transcript-item {
+  .card {
     grid-column: 1 / -1; /* -1 makes item go all the way to right edge of container */
   }
 }

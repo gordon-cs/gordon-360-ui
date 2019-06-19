@@ -524,14 +524,6 @@ const getEmployment = async () => {
   return employments;
 };
 
-/*
-const getService = async id => {
-  let serviceInfo;
-  serviceInfo = await http.get(`INSERT_ROUTE_HERE/${id}`);  //Route not in API yet
-  return serviceInfo;
-};
-*/
-
 //Take student's non-"Guest" memberships and filter for specifiied session only
 const getSessionMembershipsWithoutGuests = async (id, session) => {
   let myInvolvements = await getMembershipsWithoutGuests(id);
@@ -631,17 +623,6 @@ const getEmploymentInfo = async () => {
   return employmentInfo;
 };
 
-/*
-//returns an array of serviceLearning objects from backend server
-//using asynchronous http.get request (via getService function)
-//sorts by
-const getServiceInfo = async id => {
-  let serviceInfo = await getService(id);
-  //serviceInfo.sort(compareBySession);
-  return serviceInfo;
-};
-*/
-
 const getProfileInfo = async username => {
   let profile = await getProfile(username);
   formatName(profile);
@@ -710,6 +691,5 @@ export default {
   postIDImage,
   getActivitiesInfo,
   getEmploymentInfo,
-  //getServiceInfo,
   updateSocialLink,
 };

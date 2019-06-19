@@ -23,7 +23,6 @@ export default class Transcript extends Component {
     this.state = {
       activities: [],
       employments: [],
-      //service: [],
       loading: true,
       profile: {},
     };
@@ -48,8 +47,6 @@ export default class Transcript extends Component {
       const currentSession = await session.getCurrent();
       const profile = await user.getProfileInfo();
       const employments = await user.getEmploymentInfo();
-      //const employments = null;
-      //const service = await user.getServiceInfo(profile.ID);
       const activities = await user.getActivitiesInfo(profile.ID);
       this.setState({ loading: false, activities, employments, currentSession, profile });
     } catch (error) {
@@ -177,6 +174,45 @@ export default class Transcript extends Component {
     return leadActivities;
   };
 
+  getGradCohort() {
+    let gradDate = this.state.profile.GradDate;
+    if (gradDate === undefined || gradDate === '') {
+      return null;
+    } else {
+      return ', Class of ' + gradDate;
+    }
+  }
+
+  getMajors = majors => {
+    let majorsString = 'Majors: ';
+
+    //If majors is empty or not loaded, return null majors without iterating to avoid crashing
+    if (majors === undefined || majors.length === 0) {
+      return null;
+    } else {
+      for (let major of majors) {
+        majorsString += major + ', ';
+      }
+    }
+
+    return majorsString.substr(0, majorsString.length - 2);
+  };
+
+  getMinors = minors => {
+    let minorsString = 'Minors: ';
+
+    //If minors is empty or not loaded, return null minors without iterating to avoid crashing
+    if (minors === undefined || minors.length === 0) {
+      return null;
+    } else {
+      for (let minor of minors) {
+        minorsString += minor + ', ';
+      }
+    }
+
+    return minorsString.substr(0, minorsString.length - 2);
+  };
+
   render() {
     let activityList;
 
@@ -237,10 +273,15 @@ export default class Transcript extends Component {
             </div>
             <div>
               <Typography variant="headline">
-                <b> Co-Curricular Transcript - </b>
-                {this.state.profile.fullName}
+                <b> Gordon College Experience Transcript</b>
               </Typography>
             </div>
+            <div className="subtitle">
+              <b>{this.state.profile.fullName}</b>
+              {this.getGradCohort()}
+            </div>
+            <div className="subtitle">{this.getMajors(this.state.profile.Majors)}</div>
+            <div className="subtitle">{this.getMinors(this.state.profile.Minors)}</div>
             <div className="subtitle">
               <Typography variant="headline">
                 <b>Honors, Leadership, and Research</b>
