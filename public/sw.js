@@ -6,9 +6,37 @@ let cleanedCache = caches.keys().then(keys => {
   keys.forEach(key => {
     if (key !== cacheVersion && key.match('cache-')) {
       return caches.delete(key);
+    } else if (key === cacheVersion) {
+      caches.open(key).then(cache => {
+        cache.keys().then(listRequests => {
+          console.log(listRequests);
+        });
+      });
     }
   });
 });
+
+/* Fetches for each request through the network
+*  If the network is not available, it returns a response from
+*  the cache.
+*/
+const fetchThenCache = request => {
+  return fetch(request)
+    .then(fetchResponse => {
+      if (fetchResponse) {
+        // Adds fetch response to cache
+        caches.open(cacheVersion).then(cache => {
+          cache.put(request, fetchResponse.clone());
+        });
+
+        return fetchResponse.clone();
+      }
+    })
+    .catch(() => {
+      console.log(`\tGetting "${request.url}" from cache instead...`);
+      return caches.match(request);
+    });
+};
 
 self.addEventListener('install', event => {
   console.log('Installing Service Worker');
@@ -21,30 +49,13 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  // Sees if the request is from local
-  if (event.request.url.match(location.origin))
+  // If request is from Local, console.log it
+  if (event.request.url.match(location.origin)) {
     console.log('Fetching request from LOCAL:', event.request.url);
-  else console.log('Fetching request from REMOTE LOCATION:', event.request.url);
+  } else {
+    // If request is from Remote, console.log it
+    console.log('Fetching request from REMOTE LOCATION:', event.request.url);
+  }
+
   event.respondWith(fetchThenCache(event.request));
 });
-
-/* Fetches 
-* 
-*/
-const fetchThenCache = req => {
-  return fetch(req)
-    .then(fetchRes => {
-      if (fetchRes) {
-        // Adds fetch response to cache
-        caches.open(cacheVersion).then(cache => {
-          cache.put(req, fetchRes.clone());
-        });
-        return fetchRes.clone();
-      }
-    })
-    .catch(() => {
-      // Returns a clone of the fetch response
-      console.log(`\tGetting "${req.url}" from cache instead...`);
-      return caches.match(req);
-    });
-};

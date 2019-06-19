@@ -57,7 +57,9 @@ const getAuth = (username, password) => {
  */
 const authenticate = (username, password) =>
   getAuth(username, password)
-    .then(token => storage.store('token', token))
+    .then(token => {
+      storage.store('token', token);
+    })
     .then(console.log('auth.js: authenticate() - done'));
 
 /**
@@ -68,7 +70,6 @@ const authenticate = (username, password) =>
 const isAuthenticated = () => {
   console.log('auth.js: entered isAuthenticated()');
   try {
-    // Check that auth exists
     const token = storage.get('token');
     console.log('auth.js: got token from storage');
     // Check that auth contains a token
