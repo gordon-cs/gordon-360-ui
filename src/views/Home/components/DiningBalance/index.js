@@ -32,13 +32,12 @@ export default class DiningBalance extends Component {
   }
 
   async loadData() {
-    const { college_role } = user.getLocalInfo();
     const diningInfoPromise = user.getDiningInfo();
     const daysLeftPromise = session.getDaysLeft();
     const daysLeft = await daysLeftPromise;
     const diningInfo = await diningInfoPromise;
     this.daysLeft = daysLeft;
-    if (college_role === 'student' || college_role === 'god') {
+    if (typeof diningInfo === 'object') {
       this.diningInfo = diningInfo;
     } else {
       this.facStaffBalance = diningInfo;
