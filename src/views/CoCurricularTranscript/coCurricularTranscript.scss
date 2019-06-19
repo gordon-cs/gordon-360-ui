@@ -26,19 +26,6 @@
   justify-self: flex-start;
 }
 
-/* Divides the activities container into columns like so:
-
-================================================
-|5%|    70% organization and role   | 25% date |
-| i|                                |          |
-| n|                                |          |
-| d|                                |          |
-| e|                                |          |
-| n|                                |          |
-| t|                                |          |
-================================================
-
-*/
 .activities {
   display: grid;
   grid-template-columns: 5% 70% 25%;
@@ -47,17 +34,18 @@
 
 .organization-role {
   grid-column: 2;
-  justify-self: flex-start;
+  text-align: left;
 }
 
 .date {
   grid-column: 3;
   justify-self: flex-end;
+  text-align: center;
 }
 
 /* For small and medium screens (1024px wide or less) */
 @media (max-width: 1024px) {
-  .transcript-item {
+  .card {
     grid-column: 1 / -1; /* -1 makes item go all the way to right edge of container */
   }
 }

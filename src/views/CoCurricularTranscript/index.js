@@ -3,8 +3,9 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
+//import Grid from '@material-ui/core/Grid';
+//import List from '@material-ui/core/List';
+//import Divider from '@material-ui/core/Divider';
 
 import { gordonColors } from '../../theme';
 import session from '../../services/session';
@@ -223,9 +224,11 @@ export default class Transcript extends Component {
                 <b>Experience</b>
               </Typography>
             </div>
-            {/*<div className="involvements" class="print">
-              <div className="full-length">{employmentsList}</div>
-            </div>*/}
+            {/*Headers if needed: <div className="activities">
+              <div className="organization-role">Organization, Role</div>
+              <div className="date">Date</div>
+            </div>
+            <Divider light={true} />*/}
             <div className="subtitle">
               <Typography variant="headline">
                 <b>Service Learning</b>
@@ -237,9 +240,6 @@ export default class Transcript extends Component {
               </Typography>
             </div>
             <div className="full-length">{activityList}</div>
-            {/*<div class="print">
-              <div className="full-length">{activityList}</div>
-            </div>*/}
           </CardContent>
         </Card>
       </div>
