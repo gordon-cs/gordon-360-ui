@@ -16,6 +16,8 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
+import HoursDialog from './components/OfficeHoursDialog';
+import LinksDialog from '../../views/MyProfile/Components/LinksDialog';
 
 this.state = {
   officeHoursOpen: false,
@@ -73,6 +75,14 @@ class GordonSchedulePanel extends Component {
     const { classes } = this.props;
     let isFaculty = String(this.props.profile.PersonType).includes('fac');
     let privacyButton, editOfficeHourButton, schedulePanel;
+
+    let hoursDialog = (
+      <HoursDialog
+        onDialogSubmit={this.onDialogSubmit}
+        handleOfficeHoursClose={this.OfficeHoursClose}
+        {...this.state}
+      />
+    );
 
     if (this.props.myProf) {
       privacyButton = (
@@ -158,7 +168,7 @@ class GordonSchedulePanel extends Component {
                 <Typography align="center" variant="caption">
                   Select day and times below
                 </Typography>
-                {/* {linksDialog} */}
+                {hoursDialog}
               </Dialog>
             </Grid>
           </ExpansionPanelDetails>
