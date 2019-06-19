@@ -1,4 +1,5 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 
 import FacebookIcon from 'react-icons/lib/fa/facebook';
 import TwitterIcon from 'react-icons/lib/fa/twitter';
@@ -214,25 +215,28 @@ export default class HoursDialog extends React.Component {
                   onChange={this.handleDayOfTheWeekInputChange}
                   input={<Input id="weekday" />}
                 >
-                  <MenuItem label="monday" value="">
+                  <MenuItem label="selectday" value="">
+                    <em>Select a day...</em>
+                  </MenuItem>
+                  <MenuItem label="monday" value="Monday">
                     <em>Monday</em>
                   </MenuItem>
-                  <MenuItem label="monday" value="">
+                  <MenuItem label="tuesday" value="Tuesday">
                     <em>Tuesday</em>
                   </MenuItem>
-                  <MenuItem label="monday" value="">
+                  <MenuItem label="wednesday" value="Wednesday">
                     <em>Wednesday</em>
                   </MenuItem>
-                  <MenuItem label="monday" value="">
+                  <MenuItem label="thursday" value="Thrusday">
                     <em>Thursday</em>
                   </MenuItem>
-                  <MenuItem label="monday" value="">
+                  <MenuItem label="friday" value="Friday">
                     <em>Friday</em>
                   </MenuItem>
-                  <MenuItem label="monday" value="">
+                  <MenuItem label="saturday" value="Saturday">
                     <em>Saturday</em>
                   </MenuItem>
-                  <MenuItem label="monday" value="">
+                  <MenuItem label="sunday" value="Sunday">
                     <em>Sunday</em>
                   </MenuItem>
                 </Select>
