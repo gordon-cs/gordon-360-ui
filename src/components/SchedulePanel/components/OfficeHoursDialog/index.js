@@ -209,14 +209,14 @@ export default class HoursDialog extends React.Component {
           >
             <Grid container spacing={3} alignItems="baseline">
               <FormControl fullWidth>
-                <InputLabel>Day</InputLabel>
+                <InputLabel>Select day</InputLabel>
                 <Select
                   value={this.state.dayOfTheWeek}
                   onChange={this.handleDayOfTheWeekInputChange}
                   input={<Input id="weekday" />}
                 >
                   <MenuItem label="selectday" value="">
-                    <em>Select a day...</em>
+                    <em />
                   </MenuItem>
                   <MenuItem label="monday" value="Monday">
                     <em>Monday</em>
@@ -252,6 +252,35 @@ export default class HoursDialog extends React.Component {
                   'aria-label': 'change time',
                 }}
               /> */}
+
+              <TextField
+                id="first-name"
+                label="Location"
+                max="3"
+                fullWidth
+                value={this.state.firstNameSearchValue}
+                onChange={this.handleFirstNameInputChange}
+                onKeyDown={this.handleEnterKeyPress}
+              />
+
+              <FormControl fullWidth>
+                <InputLabel>Select hour type</InputLabel>
+                <Select
+                  value={this.state.hourType}
+                  onChange={this.handleHourTypeChange}
+                  input={<Input id="type" />}
+                >
+                  <MenuItem label="selecttype" value="">
+                    <em />
+                  </MenuItem>
+                  <MenuItem label="office" value="Office">
+                    <em>Office</em>
+                  </MenuItem>
+                  <MenuItem label="meeting" value="Meeting">
+                    <em>Meeting</em>
+                  </MenuItem>
+                </Select>
+              </FormControl>
 
               {/* <Select>
 

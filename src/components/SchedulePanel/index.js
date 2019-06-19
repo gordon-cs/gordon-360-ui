@@ -165,9 +165,6 @@ class GordonSchedulePanel extends Component {
                 aria-describedby="alert-dialog-slide-description"
               >
                 <DialogTitle id="simple-dialog-title">Edit your office hours</DialogTitle>
-                <Typography align="center" variant="caption">
-                  Select day and times below
-                </Typography>
                 {hoursDialog}
               </Dialog>
             </Grid>
