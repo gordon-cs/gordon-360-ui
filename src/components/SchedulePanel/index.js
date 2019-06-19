@@ -6,8 +6,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CourseSchedule from './components/CourseSchedule';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -40,8 +39,11 @@ class GordonSchedulePanel extends Component {
       myProf: false, //if my profile page
       isSchedulePrivate: Boolean,
       isExpanded: Boolean,
+      officeHoursOpen: false,
     };
     this.handleIsExpanded = this.handleIsExpanded.bind(this);
+    this.handleOfficeHoursOpen = this.handleOfficeHoursOpen.bind(this);
+    this.handleOfficeHoursClose = this.handleOfficeHoursClose.bind(this);
   }
 
   handleOfficeHoursOpen = () => {
@@ -83,8 +85,8 @@ class GordonSchedulePanel extends Component {
     let hoursDialog = (
       <HoursDialog
         onDialogSubmit={this.onDialogSubmit}
-        handleOfficeHoursClose={this.OfficeHoursClose}
-        {...this.state}
+        handleOfficeHoursClose={this.handleOfficeHoursClose}
+        officeHoursOpen={this.state.officeHoursOpen}
       />
     );
 
@@ -163,16 +165,7 @@ class GordonSchedulePanel extends Component {
                   </Grid>
                 </CardContent>
               </Card>
-              <Dialog
-                open={this.state.officeHoursOpen}
-                keepMounted
-                onClose={this.handleofficeHoursClose}
-                aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
-              >
-                <DialogTitle id="simple-dialog-title">Edit your office hours</DialogTitle>
-                {hoursDialog}
-              </Dialog>
+              {hoursDialog}
             </Grid>
           </ExpansionPanelDetails>
         </ExpansionPanel>

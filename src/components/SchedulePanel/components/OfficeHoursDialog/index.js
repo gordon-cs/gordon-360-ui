@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import FacebookIcon from 'react-icons/lib/fa/facebook';
 import TwitterIcon from 'react-icons/lib/fa/twitter';
 import LinkedInIcon from 'react-icons/lib/fa/linkedin';
@@ -41,7 +42,10 @@ export default class HoursDialog extends React.Component {
       // liValid: true,
       // igValid: true,
       // formValid: true,
+      officeHoursOpen: false,
     };
+    this.handleOfficeHoursClose = this.handleOfficeHoursClose.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleDayOfTheWeekInputChange = e => {
@@ -159,8 +163,8 @@ export default class HoursDialog extends React.Component {
     });
   };
 
-  handleClose = () => {
-    this.props.handleOfficeHoursClose();
+  handleOfficeHoursClose = () => {
+    this.setState({ officeHoursOpen: false });
 
     // Reset changed fields
     if (this.state.facebookInput !== this.props.facebookLink) {
@@ -201,48 +205,56 @@ export default class HoursDialog extends React.Component {
     };
 
     return (
-      <div>
-        <DialogContent>
-          <form
-            onSubmit={this.handleSubmit}
-            style={{ paddingLeft: '1.5rem', marginBottom: '-0.75rem', marginTop: '-1.5rem' }}
-          >
-            <Grid container spacing={3} alignItems="baseline">
-              <FormControl fullWidth>
-                <InputLabel>Select day</InputLabel>
-                <Select
-                  value={this.state.dayOfTheWeek}
-                  onChange={this.handleDayOfTheWeekInputChange}
-                  input={<Input id="weekday" />}
-                >
-                  <MenuItem label="selectday" value="">
-                    <em />
-                  </MenuItem>
-                  <MenuItem label="monday" value="Monday">
-                    <em>Monday</em>
-                  </MenuItem>
-                  <MenuItem label="tuesday" value="Tuesday">
-                    <em>Tuesday</em>
-                  </MenuItem>
-                  <MenuItem label="wednesday" value="Wednesday">
-                    <em>Wednesday</em>
-                  </MenuItem>
-                  <MenuItem label="thursday" value="Thrusday">
-                    <em>Thursday</em>
-                  </MenuItem>
-                  <MenuItem label="friday" value="Friday">
-                    <em>Friday</em>
-                  </MenuItem>
-                  <MenuItem label="saturday" value="Saturday">
-                    <em>Saturday</em>
-                  </MenuItem>
-                  <MenuItem label="sunday" value="Sunday">
-                    <em>Sunday</em>
-                  </MenuItem>
-                </Select>
-              </FormControl>
+      <Fragment>
+        <Dialog
+          open={this.props.officeHoursOpen}
+          keepMounted
+          onClose={this.props.handleOfficeHoursClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="simple-dialog-title">Edit your office hours</DialogTitle>
+          <DialogContent>
+            <form
+              onSubmit={this.handleSubmit}
+              style={{ paddingLeft: '1.5rem', marginBottom: '-0.75rem', marginTop: '-1.5rem' }}
+            >
+              <Grid container spacing={3} alignItems="baseline">
+                <FormControl fullWidth>
+                  <InputLabel>Select day</InputLabel>
+                  <Select
+                    value={this.state.dayOfTheWeek}
+                    onChange={this.handleDayOfTheWeekInputChange}
+                    input={<Input id="weekday" />}
+                  >
+                    <MenuItem label="selectday" value="">
+                      <em />
+                    </MenuItem>
+                    <MenuItem label="monday" value="Monday">
+                      <em>Monday</em>
+                    </MenuItem>
+                    <MenuItem label="tuesday" value="Tuesday">
+                      <em>Tuesday</em>
+                    </MenuItem>
+                    <MenuItem label="wednesday" value="Wednesday">
+                      <em>Wednesday</em>
+                    </MenuItem>
+                    <MenuItem label="thursday" value="Thrusday">
+                      <em>Thursday</em>
+                    </MenuItem>
+                    <MenuItem label="friday" value="Friday">
+                      <em>Friday</em>
+                    </MenuItem>
+                    <MenuItem label="saturday" value="Saturday">
+                      <em>Saturday</em>
+                    </MenuItem>
+                    <MenuItem label="sunday" value="Sunday">
+                      <em>Sunday</em>
+                    </MenuItem>
+                  </Select>
+                </FormControl>
 
-              {/* <KeyboardTimePicker
+                {/* <KeyboardTimePicker
                 margin="normal"
                 id="mui-pickers-time"
                 label="Time picker"
@@ -253,40 +265,40 @@ export default class HoursDialog extends React.Component {
                 }}
               /> */}
 
-              <TextField
-                id="first-name"
-                label="Location"
-                max="3"
-                fullWidth
-                value={this.state.firstNameSearchValue}
-                onChange={this.handleFirstNameInputChange}
-                onKeyDown={this.handleEnterKeyPress}
-              />
+                <TextField
+                  id="first-name"
+                  label="Location"
+                  max="3"
+                  fullWidth
+                  value={this.state.firstNameSearchValue}
+                  onChange={this.handleFirstNameInputChange}
+                  onKeyDown={this.handleEnterKeyPress}
+                />
 
-              <FormControl fullWidth>
-                <InputLabel>Select hour type</InputLabel>
-                <Select
-                  value={this.state.hourType}
-                  onChange={this.handleHourTypeChange}
-                  input={<Input id="type" />}
-                >
-                  <MenuItem label="selecttype" value="">
-                    <em />
-                  </MenuItem>
-                  <MenuItem label="office" value="Office">
-                    <em>Office</em>
-                  </MenuItem>
-                  <MenuItem label="meeting" value="Meeting">
-                    <em>Meeting</em>
-                  </MenuItem>
-                </Select>
-              </FormControl>
+                <FormControl fullWidth>
+                  <InputLabel>Select hour type</InputLabel>
+                  <Select
+                    value={this.state.hourType}
+                    onChange={this.handleHourTypeChange}
+                    input={<Input id="type" />}
+                  >
+                    <MenuItem label="selecttype" value="">
+                      <em />
+                    </MenuItem>
+                    <MenuItem label="office" value="Office">
+                      <em>Office</em>
+                    </MenuItem>
+                    <MenuItem label="meeting" value="Meeting">
+                      <em>Meeting</em>
+                    </MenuItem>
+                  </Select>
+                </FormControl>
 
-              {/* <Select>
+                {/* <Select>
 
               </Select> */}
 
-              {/* <Grid item>
+                {/* <Grid item>
                 <FacebookIcon style={{ fontSize: '20px' }} />
               </Grid>
               <Grid item>
@@ -352,25 +364,26 @@ export default class HoursDialog extends React.Component {
                   fullWidth
                 />
               </Grid> */}
-            </Grid>
-            <br />
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleClose} variant="contained" style={button}>
-            Cancel
-          </Button>
-          <Button
-            onClick={this.handleSubmit}
-            type="submit"
-            disabled={!this.state.formValid}
-            variant="contained"
-            style={button}
-          >
-            Submit
-          </Button>
-        </DialogActions>
-      </div>
+              </Grid>
+              <br />
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.props.handleOfficeHoursClose} variant="contained" style={button}>
+              Cancel
+            </Button>
+            <Button
+              onClick={this.handleSubmit}
+              type="submit"
+              disabled={!this.state.formValid}
+              variant="contained"
+              style={button}
+            >
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Fragment>
     );
   }
 }
