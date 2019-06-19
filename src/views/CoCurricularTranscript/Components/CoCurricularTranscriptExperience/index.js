@@ -3,27 +3,27 @@ import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 //import List from '@material-ui/core/List';
 //import Typography from '@material-ui/core/Typography';
-import './coCurricularTranscriptActivity.css';
+import './coCurricularTranscriptExperience.css';
 
 //This component is a child of the CoCurricularTranscript component. Separates Headings from content in order
 //that activities be grouped by session. Returns a formatted table grid of activites to be displayed
 //by the Transcript component
-//Activity object and isUnique bool passed as props from CoCurricularTranscript
+//TrancsriptItem object and isUnique bool passed as props from CoCurricularTranscript
 
-export default class Activity extends Component {
+export default class Experience extends Component {
   /*getHeading = () => {
-    const { Activity } = this.props;
+    const { TrancsriptItem } = this.props;
     let heading = (
       <div>
         <Grid container className="heading">
           <Grid item xs={12}>
             <Typography variant="title">
-              <b> {Activity.SessionDescription} </b>
+              <b> {TrancsriptItem.SessionDescription} </b>
             </Typography>
           </Grid>
           <Grid item xs={6}>
             <List>
-              <b> Activity </b>
+              <b> TrancsriptItem </b>
             </List>
           </Grid>
           <Grid item xs={6}>
@@ -49,18 +49,18 @@ export default class Activity extends Component {
   };
 
   getContent = () => {
-    const { Activity } = this.props;
+    const { TrancsriptItem } = this.props;
 
     let content = (
       <Grid container>
         <Grid item xs={6}>
           <List>
-            <Typography className="text"> {Activity.ActivityDescription} </Typography>
+            <Typography className="text"> {TrancsriptItem.TrancsriptItemDescription} </Typography>
           </List>
         </Grid>
         <Grid item xs={6}>
           <List>
-            <Typography className="text"> {Activity.ParticipationDescription} </Typography>
+            <Typography className="text"> {TrancsriptItem.ParticipationDescription} </Typography>
           </List>
         </Grid>
       )
@@ -68,15 +68,16 @@ export default class Activity extends Component {
 };*/
 
   render() {
-    const { Activity } = this.props;
+    const { Experience } = this.props;
     return (
       <div>
         <div className="activities">
           <div className="organization-role">
-            {Activity.ActivityDescription}, {Activity.ParticipationDescription}
+            {Experience.Job_Department_Name}, {Experience.Job_Title}{' '}
           </div>
-          <div className="date"> {this.props.Duration} </div>
+          {/* <div className="date"> {this.props.Duration} </div>*/}
         </div>
+
         <div className="divider">
           <Divider light={true} />
         </div>

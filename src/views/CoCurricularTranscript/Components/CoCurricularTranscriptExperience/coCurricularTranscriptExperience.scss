@@ -1,0 +1,42 @@
+.heading {
+  padding-top: 20px;
+}
+.divider {
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.text {
+  padding-left: 30%;
+  text-align: left;
+}
+
+/* Divides the activities container into columns like so:
+
+================================================
+|5%|    70% organization and role   | 25% date |
+| i|                                |          |
+| n|                                |          |
+| d|                                |          |
+| e|                                |          |
+| n|                                |          |
+| t|                                |          |
+================================================
+
+*/
+.activities {
+  display: grid;
+  grid-template-columns: 5% 70% 25%;
+  justify-items: stretch;
+}
+
+.organization-role {
+  grid-column: 2;
+  text-align: left;
+}
+
+.date {
+  grid-column: 3;
+  text-align: right;
+}

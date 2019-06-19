@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { gordonColors } from '../../theme';
 import session from '../../services/session';
 import Activity from './Components/CoCurricularTranscriptActivity';
+import Experience from './Components/CoCurricularTranscriptExperience';
 import user from './../../services/user';
 import GordonLoader from './../../components/Loader';
 import './coCurricularTranscript.css';
@@ -22,7 +23,7 @@ export default class Transcript extends Component {
     super(props);
     this.state = {
       activities: [],
-      //employments: [],
+      employments: [],
       //service: [],
       loading: true,
       profile: {},
@@ -47,10 +48,11 @@ export default class Transcript extends Component {
       /* Retrieve data from server */
       const currentSession = await session.getCurrent();
       const profile = await user.getProfileInfo();
-      //const employments = await user.getEmploymentInfo(profile.ID);
+      const employments = await user.getEmploymentInfo();
+      //const employments = null;
       //const service = await user.getServiceInfo(profile.ID);
       const activities = await user.getActivitiesInfo(profile.ID);
-      this.setState({ loading: false, activities, /*employments,*/ currentSession, profile });
+      this.setState({ loading: false, activities, employments, currentSession, profile });
     } catch (error) {
       this.setState({ error });
       console.log('error');
@@ -159,37 +161,89 @@ export default class Transcript extends Component {
         duration += ' ' + this.convertToDate(code);
       }
 
-      // add a new Activity component to the array
+      // add a new TranscriptItem component to the array
       condensedActs.push(<Activity Activity={curAct} Duration={duration} />);
     }
     return condensedActs;
   };
 
+  filterActivitiesforLeadership = activities => {
+    let leadActivities = [];
+    while (activities.length > 0) {
+      let curAct = activities.shift();
+      if (curAct.ParticipationDescription === 'Leader') {
+        leadActivities.push(curAct);
+      }
+    }
+    return leadActivities;
+  };
+
+  /*filterActivitiesforService = activities => {
+    let serviceActivities = [];
+    while (activities.length > 0) {
+      let curAct = activities.shift();
+      if (curAct.ActivityType === 'MIN' || curAct.ActivityType === 'SLP') {
+        serviceActivities.push(curAct);
+      }
+    }
+    return serviceActivities;
+  };*/
+
   render() {
+    // this.state.activities contains three of the four categories of activites that the transcript
+    // will display. The following lines filter activites for the different categories.
+
     let activityList;
 
     if (!this.state.activities) {
       activityList = <GordonLoader />;
     } else {
-      /* Call groupActivityByCode() on activities */
-      activityList = this.groupActivityByCode(this.state.activities);
+      // Deep copy activities array so that it doesn't get overwritten
+      var displayedActivities = JSON.parse(JSON.stringify(this.state.activities));
+      // Call groupActivityByCode() on activities
+      activityList = this.groupActivityByCode(displayedActivities);
     }
 
-    /*let employmentsList;
+    let leadershipList;
+
+    // Deep copy activities array so that it doesn't get overwritten
+    let leadActivities = JSON.parse(JSON.stringify(this.state.activities));
+    // Filter Activities to only those where user is leader
+    leadActivities = this.filterActivitiesforLeadership(leadActivities);
+
+    if (!leadActivities) {
+      leadershipList = <GordonLoader />;
+    } else {
+      // Call groupActivityByCode() on leadActivities
+      leadershipList = this.groupActivityByCode(leadActivities);
+    }
+
+    /*let serviceList;
+
+    // Deep copy activities array so that it doesn't get overwritten
+    let serviceActivities = JSON.parse(JSON.stringify(this.state.activities));
+    // Filter Activities to only those where user is leader
+    serviceActivities = this.filterActivitiesforService(serviceActivities);
+
+    if (!serviceActivities) {
+      leadershipList = <GordonLoader />;
+    } else {
+      // Call groupActivityByCode() on serviceActivities
+      serviceList = this.groupActivityByCode(serviceActivities);
+    }*/
+
+    // employments come fom a different place in the database and thus were stored separartely in
+    // this.state.employments
+
+    let employmentsList;
 
     if (!this.state.employments) {
       employmentsList = <GordonLoader />;
     } else {
       employmentsList = this.state.employments.map(employment => (
-        <Grid container>
-          <Grid item xs={6}>
-            <List>
-              <Typography className="text"> {employment} </Typography>
-            </List>
-          </Grid>
-        </Grid>
+        <Experience className="text" Experience={employment} />
       ));
-    }*/
+    }
 
     const buttonColors = {
       /* not in style sheet so that gordonColors is accessible */
@@ -221,6 +275,14 @@ export default class Transcript extends Component {
             </div>
             <div className="subtitle">
               <Typography variant="headline">
+                <b>Honors, Leadership, and Research</b>
+              </Typography>
+            </div>
+            <div className="involvements" class="print">
+              <div className="full-length">{leadershipList}</div>
+            </div>
+            <div className="subtitle">
+              <Typography variant="headline">
                 <b>Experience</b>
               </Typography>
             </div>
@@ -229,6 +291,9 @@ export default class Transcript extends Component {
               <div className="date">Date</div>
             </div>
             <Divider light={true} />*/}
+            <div className="involvements" class="print">
+              <div className="full-length">{employmentsList}</div>
+            </div>
             <div className="subtitle">
               <Typography variant="headline">
                 <b>Service Learning</b>
@@ -239,7 +304,9 @@ export default class Transcript extends Component {
                 <b>Activities</b>
               </Typography>
             </div>
-            <div className="full-length">{activityList}</div>
+            <div class="print">
+              <div className="full-length">{activityList}</div>
+            </div>
           </CardContent>
         </Card>
       </div>
