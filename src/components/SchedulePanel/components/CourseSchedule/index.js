@@ -1,67 +1,47 @@
 import React, { Component, Fragment } from 'react';
-import moment from 'moment';
+import moment, { now } from 'moment';
 
 import Calendar from 'react-big-calendar/dist/react-big-calendar';
 import momentLocalizer from 'react-big-calendar/lib/localizers/moment';
 
 import './courseschedule.css';
-
-const events = [
-  {
-    id: 0,
-    title: 'Board meeting',
-    start: new Date(2018, 0, 29, 9, 0, 0),
-    end: new Date(2018, 0, 29, 13, 0, 0),
-    resourceId: 1,
-  },
-  {
-    id: 1,
-    title: 'MS training',
-    allDay: true,
-    start: new Date(2018, 0, 29, 14, 0, 0),
-    end: new Date(2018, 0, 29, 16, 30, 0),
-    resourceId: 2,
-  },
-  {
-    id: 2,
-    title: 'Team lead meeting',
-    start: new Date(2018, 0, 29, 8, 30, 0),
-    end: new Date(2018, 0, 29, 12, 30, 0),
-    resourceId: 3,
-  },
-  {
-    id: 11,
-    title: 'Birthday Party',
-    start: new Date(2018, 0, 30, 7, 0, 0),
-    end: new Date(2018, 0, 30, 10, 30, 0),
-    resourceId: 4,
-  },
-];
+import CourseEvents from './../CourseEvents';
 
 const resourceMap = [
-  { resourceId: 1, resourceTitle: 'Monday' },
-  { resourceId: 2, resourceTitle: 'Tuesday' },
-  { resourceId: 3, resourceTitle: 'Wednesday' },
-  { resourceId: 4, resourceTitle: 'Thursday' },
-  { resourceId: 5, resourceTitle: 'Friday' },
-  { resourceId: 6, resourceTitle: 'Saturday' },
-  { resourceId: 7, resourceTitle: 'Sunday' },
+  { resourceId: 1, resourceTitle: 'Sunday' },
+  { resourceId: 2, resourceTitle: 'Monday' },
+  { resourceId: 3, resourceTitle: 'Tuesday' },
+  { resourceId: 4, resourceTitle: 'Wednesday' },
+  { resourceId: 5, resourceTitle: 'Thursday' },
+  { resourceId: 6, resourceTitle: 'Friday' },
+  { resourceId: 7, resourceTitle: 'Saturday' },
 ];
 
+// Localizer is always required for react-big-calendar initialization
 let formats = {
   dayHeaderFormat: (date, localizer = momentLocalizer(moment)) =>
     localizer.format(date, 'MMMM YYYY'),
 };
 
+const dayStart = new Date();
+dayStart.setHours(6, 0, 0, 0);
+
+const dayEnd = new Date();
+dayEnd.setHours(22, 0, 0, 0);
+
 let Resource = ({ localizer = momentLocalizer(moment) }) => (
   <Fragment>
     <Calendar
-      events={events}
+      events={CourseEvents}
       localizer={localizer}
-      step={60}
+      min={dayStart}
+      max={dayEnd}
+      step={15}
+      timeslots={4}
       defaultView="day"
       view={['day']}
-      defaultDate={new Date(2018, 0, 29)}
+      onSelectEvent={event => alert(event.title)}
+      defaultDate={now.date}
       resources={resourceMap}
       resourceIdAccessor="resourceId"
       resourceTitleAccessor="resourceTitle"
