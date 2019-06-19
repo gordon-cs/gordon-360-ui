@@ -17,9 +17,6 @@ import { withStyles } from '@material-ui/core/styles';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 
-this.state = {
-  officeHoursOpen: false,
-};
 const styles = {
   colorSwitchBase: {
     color: gordonColors.neutral.lightGray,
@@ -40,7 +37,9 @@ class GordonSchedulePanel extends Component {
     this.state = {
       myProf: false, //if my profile page
       isSchedulePrivate: Boolean,
+      isExpanded: Boolean,
     };
+    this.handleIsExpanded = this.handleIsExpanded.bind(this);
   }
 
   handleOfficeHoursOpen = () => {
@@ -65,8 +64,13 @@ class GordonSchedulePanel extends Component {
     user.setSchedulePrivacy(!this.state.isSchedulePrivate);
   }
 
+  handleIsExpanded() {
+    this.setState({ isExpanded: !this.state.isExpanded });
+  }
+
   componentWillMount() {
     this.setState({ isSchedulePrivate: this.props.profile.IsSchedulePrivate });
+    this.setState({ isExpanded: true });
   }
 
   render() {
@@ -114,14 +118,16 @@ class GordonSchedulePanel extends Component {
         </ExpansionPanel>
       );
     } else {
+      let panelTitle = '';
+      this.state.isExpanded ? (panelTitle = 'Show') : (panelTitle = 'Hide');
       schedulePanel = (
-        <ExpansionPanel>
+        <ExpansionPanel TransitionProps={{ unmountOnExit: true }} onChange={this.handleIsExpanded}>
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography>Show the Schedule</Typography>
+            <Typography>{panelTitle} the Schedule</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid item xs={12} lg={12}>
