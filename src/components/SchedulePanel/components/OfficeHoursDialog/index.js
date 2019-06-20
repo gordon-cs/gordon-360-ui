@@ -17,6 +17,9 @@ import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import { gordonColors } from '../../../../theme';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import { FixedSizeList } from 'react-window';
 
 export default class HoursDialog extends React.Component {
   constructor(props) {
@@ -204,6 +207,16 @@ export default class HoursDialog extends React.Component {
       color: 'white',
     };
 
+    function Row(props) {
+      const { index, style } = props;
+
+      return (
+        <ListItem button style={style} key={index}>
+          <ListItemText primary={`Item ${index + 1}`} />
+        </ListItem>
+      );
+    }
+
     return (
       <Fragment>
         <Dialog
@@ -265,6 +278,38 @@ export default class HoursDialog extends React.Component {
                 }}
               /> */}
 
+                <form fullWidth>
+                  <TextField
+                    id="time"
+                    label="Start time"
+                    type="time"
+                    defaultValue="08:00"
+                    //className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 300, // 5 min
+                    }}
+                  />
+                </form>
+
+                <form fullWidth>
+                  <TextField
+                    id="time"
+                    label="End time"
+                    type="time"
+                    defaultValue="17:00"
+                    //className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 300, // 5 min
+                    }}
+                  />
+                </form>
+
                 <TextField
                   id="first-name"
                   label="Location"
@@ -293,6 +338,12 @@ export default class HoursDialog extends React.Component {
                     </MenuItem>
                   </Select>
                 </FormControl>
+
+                <div>
+                  <FixedSizeList height={200} width={720} itemSize={46} itemCount={200}>
+                    {Row}
+                  </FixedSizeList>
+                </div>
 
                 {/* <Select>
 
