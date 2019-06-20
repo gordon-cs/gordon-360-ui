@@ -312,7 +312,7 @@ export default class HoursDialog extends React.Component {
 
                 <TextField
                   id="first-name"
-                  label="Location"
+                  label="Title"
                   max="3"
                   fullWidth
                   value={this.state.firstNameSearchValue}
@@ -320,7 +320,17 @@ export default class HoursDialog extends React.Component {
                   onKeyDown={this.handleEnterKeyPress}
                 />
 
-                <FormControl fullWidth>
+                <TextField
+                  id="first-name"
+                  label="Description"
+                  max="3"
+                  fullWidth
+                  value={this.state.firstNameSearchValue}
+                  onChange={this.handleFirstNameInputChange}
+                  onKeyDown={this.handleEnterKeyPress}
+                />
+
+                {/* <FormControl fullWidth>
                   <InputLabel>Select hour type</InputLabel>
                   <Select
                     value={this.state.hourType}
@@ -337,7 +347,7 @@ export default class HoursDialog extends React.Component {
                       <em>Meeting</em>
                     </MenuItem>
                   </Select>
-                </FormControl>
+                </FormControl> */}
 
                 <div>
                   <FixedSizeList height={200} width={720} itemSize={46} itemCount={200}>
@@ -420,6 +430,15 @@ export default class HoursDialog extends React.Component {
             </form>
           </DialogContent>
           <DialogActions>
+            <Button variant="contained" style={button}>
+              Add
+            </Button>
+            <Button variant="contained" style={button}>
+              Delete
+            </Button>
+            <Button variant="contained" style={button}>
+              Delete all
+            </Button>
             <Button onClick={this.props.handleOfficeHoursClose} variant="contained" style={button}>
               Cancel
             </Button>
