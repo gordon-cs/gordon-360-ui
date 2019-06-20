@@ -21,10 +21,15 @@ export default class Transcript extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activities: [],
+      memberships: [],
+      leadActivities: [],
       employments: [],
       loading: true,
       profile: {},
+      otherInvolvements: false,
+      honorsLeadership: false,
+      serviceLearning: false,
+      experiences: false,
     };
     //Variable used by groupActivityBySession to determine when activies in the list are part of a
     //new session necessary in order to remember session info about previous item in list while
@@ -46,9 +51,50 @@ export default class Transcript extends Component {
       /* Retrieve data from server */
       const currentSession = await session.getCurrent();
       const profile = await user.getProfileInfo();
+
+      const memberships = await user.getTranscriptMembershipsInfo(profile.ID);
+      let otherInvolvements = false;
+      if (!(memberships.length === 0)) {
+        otherInvolvements = true;
+      }
+
+      // Deep copy activities array so that it doesn't get overwritten
+      let activitiesCopy = JSON.parse(JSON.stringify(memberships));
+      // Filter Activities to only those where user is leader
+      let leadActivities = this.filterActivitiesforLeadership(activitiesCopy);
+      console.log(leadActivities);
+      let honorsLeadership = false;
+      if (!(leadActivities.length === 0)) {
+        honorsLeadership = true;
+      }
+      console.log(honorsLeadership);
+
+      // Deep copy activities array so that it doesn't get overwritten
+      /*let activitiesCopyTwo = JSON.parse(JSON.stringify(memberships));
+      // Filter Activities to only those where user is leader
+      let serviceActivities = this.filterActivitiesforService(activitiesCopyTwo);
+      let serviceLearning = false;
+      if (!(serviceActivities.length === 0)) {
+        serviceLearning = true;
+      }*/
+
       const employments = await user.getEmploymentInfo();
-      const activities = await user.getActivitiesInfo(profile.ID);
-      this.setState({ loading: false, activities, employments, currentSession, profile });
+      let experiences = false;
+      if (!(employments.length === 0)) {
+        experiences = true;
+      }
+
+      this.setState({
+        loading: false,
+        memberships,
+        employments,
+        leadActivities,
+        currentSession,
+        profile,
+        otherInvolvements,
+        honorsLeadership,
+        /*serviceLearning,*/ experiences,
+      });
     } catch (error) {
       this.setState({ error });
       console.log('error');
@@ -179,7 +225,7 @@ export default class Transcript extends Component {
     if (gradDate === undefined || gradDate === '') {
       return null;
     } else {
-      return ', Class of ' + gradDate.split(' ')[3];
+      return 'Class of ' + gradDate.split(' ')[3];
     }
   }
 
@@ -219,35 +265,25 @@ export default class Transcript extends Component {
 
     let activityList;
 
-    if (!this.state.activities) {
+    if (!this.state.memberships) {
       activityList = <GordonLoader />;
     } else {
       // Deep copy activities array so that it doesn't get overwritten
-      var displayedActivities = JSON.parse(JSON.stringify(this.state.activities));
+      var displayedActivities = JSON.parse(JSON.stringify(this.state.memberships));
       // Call groupActivityByCode() on activities
       activityList = this.groupActivityByCode(displayedActivities);
     }
 
     let leadershipList;
 
-    // Deep copy activities array so that it doesn't get overwritten
-    let leadActivities = JSON.parse(JSON.stringify(this.state.activities));
-    // Filter Activities to only those where user is leader
-    leadActivities = this.filterActivitiesforLeadership(leadActivities);
-
-    if (!leadActivities) {
+    if (!this.state.leadActivities) {
       leadershipList = <GordonLoader />;
     } else {
       // Call groupActivityByCode() on leadActivities
-      leadershipList = this.groupActivityByCode(leadActivities);
+      leadershipList = this.groupActivityByCode(this.state.leadActivities);
     }
 
     /*let serviceList;
-
-    // Deep copy activities array so that it doesn't get overwritten
-    let serviceActivities = JSON.parse(JSON.stringify(this.state.activities));
-    // Filter Activities to only those where user is leader
-    serviceActivities = this.filterActivitiesforService(serviceActivities);
 
     if (!serviceActivities) {
       leadershipList = <GordonLoader />;
@@ -255,9 +291,6 @@ export default class Transcript extends Component {
       // Call groupActivityByCode() on serviceActivities
       serviceList = this.groupActivityByCode(serviceActivities);
     }*/
-
-    // employments come fom a different place in the database and thus were stored separartely in
-    // this.state.employments
 
     let employmentsList;
 
@@ -275,6 +308,11 @@ export default class Transcript extends Component {
       color: 'white',
     };
 
+    const otherInvolvements = this.state.otherInvolvements;
+    const honorsLeadership = this.state.honorsLeadership;
+    const serviceLearning = this.state.serviceLearning;
+    const experiences = this.state.experiences;
+
     return (
       <div className="co-curricular-transcript">
         <Card className="card" elevation="10">
@@ -291,30 +329,32 @@ export default class Transcript extends Component {
                 Print Co-Curricular Transcript
               </Button>
             </div>
-            <div>
+            <div>Gordon College Experience Transcript</div>
+            <div className="subtitle">
               <Typography variant="headline">
-                <b> Gordon College Experience Transcript</b>
+                <b>{this.state.profile.fullName}</b>
               </Typography>
             </div>
-            <div className="subtitle">
-              <b>{this.state.profile.fullName}</b>
-              {this.getGradCohort()}
-            </div>
+            <div className="subtitle">{this.getGradCohort()}</div>
             <div className="subtitle">{this.getMajors(this.state.profile.Majors)}</div>
             <div className="subtitle">{this.getMinors(this.state.profile.Minors)}</div>
-            <div className="subtitle">
-              <Typography variant="headline">
-                <b>Honors, Leadership, and Research</b>
-              </Typography>
-            </div>
+            {honorsLeadership && (
+              <div className="subtitle">
+                <Typography variant="headline">
+                  <b>Honors, Leadership, and Research</b>
+                </Typography>
+              </div>
+            )}
             <div class="print" className="activity-list">
               {leadershipList}
             </div>
-            <div className="subtitle">
-              <Typography variant="headline">
-                <b>Experience</b>
-              </Typography>
-            </div>
+            {experiences && (
+              <div className="subtitle">
+                <Typography variant="headline">
+                  <b>Experience</b>
+                </Typography>
+              </div>
+            )}
             {/*Column Headers, if needed: <div className="column-headers">
               <div className="organization-role">Organization, Role</div>
               <div className="date">Date</div>
@@ -323,19 +363,23 @@ export default class Transcript extends Component {
             <div class="print" className="activity-list">
               {employmentsList}
             </div>
-            <div className="subtitle">
-              <Typography variant="headline">
-                <b>Service Learning</b>
-              </Typography>
-            </div>
+            {serviceLearning && (
+              <div className="subtitle">
+                <Typography variant="headline">
+                  <b>Service Learning</b>
+                </Typography>
+              </div>
+            )}
             {/*<div class="print" className="activity-list">
               {serviceList}
             </div>*/}
-            <div className="subtitle">
-              <Typography variant="headline">
-                <b>Activities</b>
-              </Typography>
-            </div>
+            {otherInvolvements && (
+              <div className="subtitle">
+                <Typography variant="headline">
+                  <b>Activities</b>
+                </Typography>
+              </div>
+            )}
             <div class="print" className="activity-list">
               {activityList}
             </div>
