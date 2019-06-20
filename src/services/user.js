@@ -607,7 +607,7 @@ function compareByActCode(a, b) {
 //not including Guest memberships
 //using asynchronous http.get request (via getMemberships function)
 //sorts by SessionCode and ActivityCode
-const getActivitiesInfo = async id => {
+const getTranscriptMembershipsInfo = async id => {
   let transcriptInfo = await getMembershipsWithoutGuests(id);
   transcriptInfo.sort(compareBySession);
   transcriptInfo.sort(compareByActCode);
@@ -689,7 +689,7 @@ export default {
   resetImage,
   postImage,
   postIDImage,
-  getActivitiesInfo,
+  getTranscriptMembershipsInfo,
   getEmploymentInfo,
   updateSocialLink,
 };
