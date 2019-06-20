@@ -432,7 +432,7 @@ const getDiningInfo = async () => {
   //const sessionCode = '201809';
   const role = getLocalInfo().college_role;
   //console.log(id + ' ' + sessionCode + ' ' + role);
-  return await http.get(`dining/${role}/${id}/${sessionCode}`);
+  return await http.get('dining');
 };
 
 /**
