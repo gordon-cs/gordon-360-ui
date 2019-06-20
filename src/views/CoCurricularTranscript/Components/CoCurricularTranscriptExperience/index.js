@@ -1,5 +1,5 @@
 //import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
+//import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 //import List from '@material-ui/core/List';
 //import Typography from '@material-ui/core/Typography';
@@ -37,17 +37,11 @@ export default class Experience extends Component {
     Duration = this.formatDuration(Experience);
 
     let content = (
-      <div>
-        <div className="activities">
-          <div className="organization-role">
-            {Experience.Job_Department_Name}, {Experience.Job_Title}
-          </div>
-          <div className="date"> {Duration} </div>
+      <div className="activities">
+        <div className="organization-role">
+          {Experience.Job_Department_Name}, {Experience.Job_Title}
         </div>
-
-        <div className="divider">
-          <Divider light={true} />
-        </div>
+        <div className="date"> {Duration} </div>
       </div>
     );
     return content;

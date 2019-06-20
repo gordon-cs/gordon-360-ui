@@ -25,7 +25,7 @@
   grid-template-columns: 5% 70% 25%;
   grid-template-rows: auto auto;
   justify-items: stretch;
-  grid-row-gap: 10px;
+  grid-row-gap: 20px;
 }
 
 .organization-role {
@@ -40,7 +40,8 @@
   text-align: right;
 }
 
-.divider {
-  grid-column: 2 / -1;
-  grid-row: 2;
+@media print {
+  .activities {
+    grid-row-gap: 0px;
+  }
 }

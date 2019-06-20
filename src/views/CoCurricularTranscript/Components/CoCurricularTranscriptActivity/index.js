@@ -1,5 +1,5 @@
 //import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
+//import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 //import List from '@material-ui/core/List';
 //import Typography from '@material-ui/core/Typography';
@@ -75,9 +75,6 @@ export default class Activity extends Component {
           {Activity.ActivityDescription}, {Activity.ParticipationDescription}
         </div>
         <div className="date"> {this.props.Duration} </div>
-        <div className="divider">
-          <Divider light={true} />
-        </div>
       </div>
     );
   }

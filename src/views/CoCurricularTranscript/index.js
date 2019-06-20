@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+//import Typography from '@material-ui/core/Typography';
 //import List from '@material-ui/core/List';
 //import Divider from '@material-ui/core/Divider'; might need if we choose to have column headers
 
@@ -291,29 +291,21 @@ export default class Transcript extends Component {
                 Print Co-Curricular Transcript
               </Button>
             </div>
-            <div>
-              <Typography variant="headline">
-                <b> Gordon College Experience Transcript</b>
-              </Typography>
-            </div>
-            <div className="subtitle">
+            <div className="intro">Experience Transcript for:</div>
+            <div className="name">
               <b>{this.state.profile.fullName}</b>
-              {this.getGradCohort()}
             </div>
-            <div className="subtitle">{this.getMajors(this.state.profile.Majors)}</div>
-            <div className="subtitle">{this.getMinors(this.state.profile.Minors)}</div>
+            <div>{this.getGradCohort()}</div>
+            <div className="majors-minors">{this.getMajors(this.state.profile.Majors)}</div>
+            <div className="majors-minors">{this.getMinors(this.state.profile.Minors)}</div>
             <div className="subtitle">
-              <Typography variant="headline">
-                <b>Honors, Leadership, and Research</b>
-              </Typography>
+              <b>Honors, Leadership, and Research</b>
             </div>
             <div class="print" className="activity-list">
               {leadershipList}
             </div>
             <div className="subtitle">
-              <Typography variant="headline">
-                <b>Experience</b>
-              </Typography>
+              <b>Experience</b>
             </div>
             {/*Column Headers, if needed: <div className="column-headers">
               <div className="organization-role">Organization, Role</div>
@@ -324,17 +316,13 @@ export default class Transcript extends Component {
               {employmentsList}
             </div>
             <div className="subtitle">
-              <Typography variant="headline">
-                <b>Service Learning</b>
-              </Typography>
+              <b>Service Learning</b>
             </div>
             {/*<div class="print" className="activity-list">
               {serviceList}
             </div>*/}
             <div className="subtitle">
-              <Typography variant="headline">
-                <b>Activities</b>
-              </Typography>
+              <b>Activities</b>
             </div>
             <div class="print" className="activity-list">
               {activityList}
