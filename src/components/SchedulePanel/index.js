@@ -16,7 +16,6 @@ import { withStyles } from '@material-ui/core/styles';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import HoursDialog from './components/OfficeHoursDialog';
-import LinksDialog from '../../views/MyProfile/Components/LinksDialog';
 
 const styles = {
   colorSwitchBase: {
@@ -148,7 +147,7 @@ class GordonSchedulePanel extends Component {
                   <Grid container direction="row" justify="center" alignItems="center">
                     <Grid item xs={8}>
                       <Grid container xs={12} justify="flex-start">
-                        <CardHeader title="Course Schedule" />
+                        <CardHeader title="My Schedule" />
                       </Grid>
                     </Grid>
                     <Grid item xs={4} align="right">
