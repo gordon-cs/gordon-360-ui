@@ -58,29 +58,38 @@ export default class Transcript extends Component {
   /* Helper functions for parsing and translating sessionCode which is of the format "YYYYSE"
      where SE is 09 for fall, 01 for spring, 05 for summer
 
-  /* Returns year part of session code (first 4 characters) */
+  /* Returns: string of year in format YYYY */
   sliceYear = sesCode => {
     return sesCode.toString().slice(0, 4);
   };
-
-  /* Returns semester part of session code (last 2 characters) */
-  sliceSem = sesCode => {
+  /* Returns: string of month (Mon), month being the first month of the given semester */
+  sliceStart = sesCode => {
     switch (sesCode.toString().slice(4, 6)) {
       case '09':
-        return 'FA';
+        return 'Sep';
       case '01':
-        return 'SP';
+        return 'Jan';
       case '05':
-        return 'SU';
+        return 'May';
       default:
         console.log('An unrecognized semester code was provided');
-        return 'XX';
+        return '';
     }
   };
 
-  /* Returns: date string of format "SE YYYY" where SE is FA, SP, or SU */
-  convertToDate = sesCode => {
-    return this.sliceSem(sesCode) + ' ' + this.sliceYear(sesCode);
+  /* Returns: string of month (Mon), month being last month of the given semester */
+  sliceEnd = sesCode => {
+    switch (sesCode.toString().slice(4, 6)) {
+      case '09':
+        return 'Dec';
+      case '01':
+        return 'May';
+      case '05':
+        return 'Aug';
+      default:
+        console.log('An unrecognized semester code was provided');
+        return '';
+    }
   };
 
   /* Compares activity from activityList to previous activity' session to to determine how to group.
@@ -129,19 +138,52 @@ export default class Transcript extends Component {
 
       // Translate the sessions array into a duration:
 
-      // Pop first session code from list and add it to a new list; new list will hold only the
-      // session codes needed to express the full length of involvement as a range with gaps
-      // let neededCodes = [sessions.shift];
+      // Pop first session code from array and split into months and years
+      let sess = sessions.shift();
+      let startMon = this.sliceStart(sess);
+      let endMon = this.sliceEnd(sess);
+      let startYear = this.sliceYear(sess),
+        endYear = startYear;
 
-      // start duration out as the first session in date form- without a space before it
-      let duration = this.convertToDate(sessions.shift());
-      // Convert rest of session codes to date format and add (each with a space) to duration string
+      // look through the rest of the array, keeping only the start of the earliest session
+      // and the end of the latest session for streaks of consecutive sessions
+      let duration = '';
+      while (sessions > 0) {
+        let prevSess = sess;
+        sess = sessions.shift();
+        if (false) {
+          // a streak of consecutive involvement continues
+          //change 'false' to definition of consecutive
+          endMon = this.sliceEnd(sess);
+          endYear = this.sliceYear(sess);
+        } else {
+          // a streak has been broken; add its start and end to the string and start new streak
+
+          // don't show the year twice if the months are of the same year
+          if (startYear === endYear) {
+            duration += startMon;
+          } else {
+            duration += startMon + ' ' + startYear;
+          }
+          duration += '-' + endMon + ' ' + endYear + '<br/>';
+
+          startMon = this.sliceStart(sess);
+          endMon = this.sliceEnd(sess);
+          startYear = endYear = this.sliceYear(sess);
+        }
+      }
+      // Flush the remaining start and end info to duration.
+      // Again, don't show the year twice if the months are of the same year
+      if (startYear === endYear) {
+        duration += startMon;
+      } else {
+        duration += startMon + ' ' + startYear;
+      }
+      duration += '-' + endMon + ' ' + endYear;
+
       // **Compare consecutive session codes to see if there are gaps and
-      // add end-of-gap codes to neededCodes **code commented out
-      for (let code of sessions) {
-        /*let nextCode = sessions.shift;
-        let lastCode = neededCodes.slice(-1);
-
+      // add end-of-gap codes to neededCodes **code commented out, might need some of it
+      /*
         let nextSem = this.sliceSem(nextCode);
         let nextYear = this.sliceYear(nextCode);
         let lastSem = this.sliceSem(lastCode);
@@ -152,10 +194,8 @@ export default class Transcript extends Component {
              !(lastSem === 'SP' &&
                lastSem !== nextSem &&
                lastYear === nextYear)
-            ) {}*/
-
-        duration += ' ' + this.convertToDate(code);
-      }
+            ) {}
+      */
 
       // add a new TranscriptItem component to the array
       condensedActs.push(<Activity Activity={curAct} Duration={duration} />);
