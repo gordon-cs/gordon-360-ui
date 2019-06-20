@@ -1,20 +1,29 @@
 // Current cache version
 let cacheVersion = 'cache-1.0';
 
-// Cleans static cache to remove data that's no longer in use
-let cleanedCache = caches.keys().then(keys => {
-  keys.forEach(key => {
-    if (key !== cacheVersion && key.match('cache-')) {
-      return caches.delete(key);
-    } else if (key === cacheVersion) {
-      caches.open(key).then(cache => {
-        cache.keys().then(listRequests => {
-          console.log(listRequests);
+// Static Files to cache upon installation of service worker
+const preCacheStatic = [
+  '/',
+  //'https://cloud.typography.com/7763712/7294392/css/fonts.css',
+  '/images/apple-touch-icon-144x144.png',
+  '/manifest.json',
+  '/pwa.js',
+  '/static/js/bundle.js',
+  '/favicon.ico',
+];
+
+// Cleans cache to remove cacheVersion data that's no longer in use (outdated version)
+function cleanedCache() {
+  caches.keys().then(keys => {
+    keys.forEach(key => {
+      if (key !== cacheVersion && key.match('cache-')) {
+        return caches.delete(key).then(() => {
+          console.log('Previous cache has been removed (outdated cache version');
         });
-      });
-    }
+      }
+    });
   });
-});
+}
 
 /* Fetches for each request through the network
 *  If the network is not available, it returns a response from
@@ -38,14 +47,28 @@ const fetchThenCache = request => {
     });
 };
 
+function preCacheFiles() {
+  caches.open(cacheVersion).then(cache => {
+    let preCachePromise = cache.addAll(preCacheStatic);
+    preCachePromise
+      .then(() => {
+        console.log(' -\tPrecached Files successfully installed with Service Worker');
+      })
+      .catch(() => {
+        console.log(' -\tPrecached Files failed to install with Service Worker');
+      });
+    return preCachePromise;
+  });
+}
+
 self.addEventListener('install', event => {
   console.log('Installing Service Worker');
+  let startupPromise = Promise.all([cleanedCache(), preCacheFiles()]);
+  event.waitUntil(startupPromise);
 });
 
 self.addEventListener('activate', event => {
   console.log('Activating Service Worker');
-
-  event.waitUntil(cleanedCache);
 });
 
 self.addEventListener('fetch', event => {
