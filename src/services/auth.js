@@ -60,7 +60,9 @@ const authenticate = (username, password) =>
     .then(token => {
       storage.store('token', token);
     })
-    .then(console.log('auth.js: authenticate() - done'));
+    .then(() => {
+      console.log('auth.js: authenticate() - done');
+    });
 
 /**
  * Check if current session is authenticated

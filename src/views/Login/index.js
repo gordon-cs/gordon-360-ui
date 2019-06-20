@@ -70,6 +70,7 @@ export default class Login extends Component {
     try {
       await authenticate(this.state.username, this.state.password);
       console.log('Login/index.js: Successfully authenticated');
+      //navigator.serviceWorker.controller.postMessage('cache-dynamic-files');
       this.props.onLogIn();
       console.log('Login/index.js: onLogIn() returned');
     } catch (err) {
