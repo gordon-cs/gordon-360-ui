@@ -10,7 +10,24 @@ const preCacheStatic = [
   '/pwa.js',
   '/static/js/bundle.js',
   '/favicon.ico',
+  '/static/media/gordon-logo-vertical-white.a6586885.svg',
+  '/static/media/campus1366.e8fc7838.jpg',
 ];
+
+// Static Files to cache upon installation of service worker
+const preCacheDynamic = [
+  '/api/cms/slider',
+  //'https://cloud.typography.com/7763712/7294392/css/fonts.css',
+  '/images/apple-touch-icon-144x144.png',
+  '/manifest.json',
+  '/pwa.js',
+  '/static/js/bundle.js',
+  '/favicon.ico',
+  '/static/media/gordon-logo-vertical-white.a6586885.svg',
+  '/static/media/campus1366.e8fc7838.jpg',
+];
+/************************************************************************************************** */
+function fetchAllCache() {}
 
 // Cleans cache to remove cacheVersion data that's no longer in use (outdated version)
 function cleanedCache() {
@@ -60,7 +77,7 @@ function preCacheFiles() {
     return preCachePromise;
   });
 }
-
+/************************************************************************************************ */
 self.addEventListener('install', event => {
   console.log('Installing Service Worker');
   let startupPromise = Promise.all([cleanedCache(), preCacheFiles()]);
