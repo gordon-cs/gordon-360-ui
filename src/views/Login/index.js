@@ -17,6 +17,7 @@ import './login.css';
 import { authenticate } from '../../services/auth';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
+import storage from '../../services/storage.js';
 
 // To temporarily disable the Login Hang message, set this boolean to false
 const LOGIN_BUG_MESSAGE = true; // Login Hang
@@ -70,7 +71,12 @@ export default class Login extends Component {
     try {
       await authenticate(this.state.username, this.state.password);
       console.log('Login/index.js: Successfully authenticated');
-      //navigator.serviceWorker.controller.postMessage('cache-dynamic-files');
+      // Sends a message to the service worker with the
+      // token to precache dynamic files
+      navigator.serviceWorker.controller.postMessage({
+        message: 'cache-dynamic-files',
+        token: storage.get('token'),
+      });
       this.props.onLogIn();
       console.log('Login/index.js: onLogIn() returned');
     } catch (err) {
