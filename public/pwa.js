@@ -19,8 +19,3 @@ window.addEventListener('online', () => {
     location.reload();
   }
 });
-
-if (navigator.online === false) {
-  console.log('------------------------     NO INTERNET CONNECTION     ------------------------');
-  alert('You are in OFFLINE MODE. Information might be not up to date.');
-}
