@@ -131,11 +131,26 @@ export default class Transcript extends Component {
       case '01':
         return 'May';
       case '05':
-        return 'Aug';
+        return 'Sep';
       default:
         console.log('An unrecognized semester code was provided');
         return '';
     }
+  };
+
+  /* Param: expects an array of [later month (format: Mon), later year (YYYY), earlier month,
+            earlier year]
+     Returns: true if given dates are consecutive, false otherwise */
+  checkConsecutiveness = dates => {
+    console.log(dates);
+    return (
+      (dates[1] === dates[3] &&
+        (dates[0] === 'Sep' || dates[0] === 'May') &&
+        dates[0] === dates[2]) ||
+      (parseInt(dates[1], 10) === parseInt(dates[3], 10) + 1 &&
+        dates[0] === 'Jan' &&
+        dates[2] === 'Dec')
+    );
   };
 
   /* Compares activity from activityList to previous activity' session to to determine how to group.
@@ -170,36 +185,33 @@ export default class Transcript extends Component {
 
     // sort activities by ActivityCode
     while (activities.length > 0) {
-      // shift removes and returns the first item in the array
-      let curAct = activities.shift();
-      let sessions = [curAct.SessionCode];
+      let curAct = activities[0];
 
-      // Get the session codes for all activities matching the current activity's code,
-      // knowing activities will be sorted by session and Activity Code.
-      // Continue looking at activities while the activity at array front has the
-      // same activityCode as the current activity
-      while (activities.length > 0 && activities[0].ActivityCode === curAct.ActivityCode) {
-        sessions.push(activities.shift().SessionCode);
-      }
+      // keep track of the activity code which will be used to identify all activities of the same
+      // code so they can be grouped into one activity component
+      let curActCode = curAct.ActivityCode;
 
-      // Translate the sessions array into a duration:
-
-      // Pop first session code from array and split into months and years
-      let sess = sessions.shift();
+      // Pop first session code from array and split into months and years, which are saved as
+      // the initial start and end dates
+      // (shift is like pop, removes and returns the first item in the array)
+      let sess = activities.shift().SessionCode;
       let startMon = this.sliceStart(sess);
       let endMon = this.sliceEnd(sess);
       let startYear = this.sliceYear(sess),
         endYear = startYear;
 
-      // look through the rest of the array, keeping only the start of the earliest session
-      // and the end of the latest session for streaks of consecutive sessions
+      // For each other activity matching curActCode, if it is consecutive to the current end date,
+      // save its end date as the new end date, otherwise, add the current start and end dates to
+      // the string 'duration' (because the streak is broken) and prepare to start a new streak.
+      // Loop assumes activities will be sorted by session and Activity Code.
       let duration = '';
-      let prevSess = sess;
-      while (sessions > 0) {
-        sess = sessions.shift();
-        if (false && prevSess) {
+      while (activities.length > 0 && activities[0].ActivityCode === curActCode) {
+        sess = activities.shift().SessionCode;
+        let curStartMon = this.sliceStart(sess);
+        let curYear = this.sliceYear(sess);
+        console.log(curAct.ActivityDescription);
+        if (this.checkConsecutiveness([curStartMon, curYear, endMon, endYear])) {
           // a streak of consecutive involvement continues
-          //change 'false' to definition of consecutive
           endMon = this.sliceEnd(sess);
           endYear = this.sliceYear(sess);
         } else {
@@ -211,14 +223,14 @@ export default class Transcript extends Component {
           } else {
             duration += startMon + ' ' + startYear;
           }
-          duration += '-' + endMon + ' ' + endYear + '<br/>';
+          duration += '-' + endMon + ' ' + endYear + ', ';
 
           startMon = this.sliceStart(sess);
           endMon = this.sliceEnd(sess);
           startYear = endYear = this.sliceYear(sess);
         }
-        prevSess = sess;
       }
+
       // Flush the remaining start and end info to duration.
       // Again, don't show the year twice if the months are of the same year
       if (startYear === endYear) {
@@ -228,23 +240,7 @@ export default class Transcript extends Component {
       }
       duration += '-' + endMon + ' ' + endYear;
 
-      // **Compare consecutive session codes to see if there are gaps and
-      // add end-of-gap codes to neededCodes **code commented out, might need some of it
-      /*
-        let nextSem = this.sliceSem(nextCode);
-        let nextYear = this.sliceYear(nextCode);
-        let lastSem = this.sliceSem(lastCode);
-        let lastYear = this.sliceYear(lastCode);
-        if ( !(lastSem === 'FA' &&
-               lastSem !== nextSem &&
-               parseInt(nextYear - parseInt(lastYear) == 1) &&
-             !(lastSem === 'SP' &&
-               lastSem !== nextSem &&
-               lastYear === nextYear)
-            ) {}
-      */
-
-      // add a new TranscriptItem component to the array
+      // add the new TranscriptItem component to the array
       condensedActs.push(<Activity Activity={curAct} Duration={duration} />);
     }
     return condensedActs;
