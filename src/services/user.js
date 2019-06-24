@@ -425,15 +425,7 @@ const getChapelCredits = async () => {
  * @return {Promise.<DiningInfo>} Dining plan info object
  */
 const getDiningInfo = async () => {
-  //const id = 999999003;
-  //const id = 999999001;
-  //const id = 40000097;
-  const { id } = getLocalInfo();
-  const { SessionCode: sessionCode } = await session.getCurrent();
-  //const sessionCode = '201809';
-  const role = getLocalInfo().college_role;
-  //console.log(id + ' ' + sessionCode + ' ' + role);
-  return await http.get(`dining/${role}/${id}/${sessionCode}`);
+  return await http.get('dining');
 };
 
 /**
