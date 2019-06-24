@@ -40,7 +40,7 @@ let Resource = ({ localizer = momentLocalizer(moment) }) => (
       timeslots={4}
       defaultView="day"
       view={['day']}
-      onSelectEvent={event => alert(event.title)}
+      //onSelectEvent={event => alert(event.title)}
       defaultDate={now.date}
       resources={resourceMap}
       resourceIdAccessor="resourceId"

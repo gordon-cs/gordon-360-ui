@@ -21,7 +21,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
 
-export default class HoursDialog extends React.Component {
+export default class RemoveHoursDialog extends React.Component {
   constructor(props) {
     super(props);
 
@@ -45,9 +45,9 @@ export default class HoursDialog extends React.Component {
       // liValid: true,
       // igValid: true,
       // formValid: true,
-      officeHoursOpen: false,
+      removeOfficeHoursOpen: false,
     };
-    this.handleOfficeHoursClose = this.handleOfficeHoursClose.bind(this);
+    this.handleRemoveOfficeHoursClose = this.handleRemoveOfficeHoursClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -166,8 +166,8 @@ export default class HoursDialog extends React.Component {
     });
   };
 
-  handleOfficeHoursClose = () => {
-    this.setState({ officeHoursOpen: false });
+  handleRemoveOfficeHoursClose = () => {
+    this.setState({ removeOfficeHoursOpen: false });
 
     // Reset changed fields
     if (this.state.facebookInput !== this.props.facebookLink) {
@@ -220,15 +220,17 @@ export default class HoursDialog extends React.Component {
     return (
       <Fragment>
         <Dialog
-          open={this.props.officeHoursOpen}
+          open={this.props.removeOfficeHoursOpen}
           keepMounted
-          onClose={this.props.handleOfficeHoursClose}
+          onClose={this.props.handleRemoveOfficeHoursClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
-          <DialogTitle id="simple-dialog-title">Edit your office hours</DialogTitle>
+          <DialogTitle id="simple-dialog-title">
+            Are you sure you want to remove these office hours?
+          </DialogTitle>
           <DialogContent>
-            <form
+            {/* <form
               onSubmit={this.handleSubmit}
               style={{ paddingLeft: '1.5rem', marginBottom: '-0.75rem', marginTop: '-1.5rem' }}
             >
@@ -265,9 +267,9 @@ export default class HoursDialog extends React.Component {
                       <em>Sunday</em>
                     </MenuItem>
                   </Select>
-                </FormControl>
+                </FormControl> */}
 
-                {/* <KeyboardTimePicker
+            {/* <KeyboardTimePicker
                 margin="normal"
                 id="mui-pickers-time"
                 label="Time picker"
@@ -278,7 +280,7 @@ export default class HoursDialog extends React.Component {
                 }}
               /> */}
 
-                <form fullWidth>
+            {/* <form fullWidth>
                   <TextField
                     id="time"
                     label="Start time"
@@ -328,9 +330,9 @@ export default class HoursDialog extends React.Component {
                   value={this.state.firstNameSearchValue}
                   onChange={this.handleFirstNameInputChange}
                   onKeyDown={this.handleEnterKeyPress}
-                />
+                /> */}
 
-                {/* <FormControl fullWidth>
+            {/* <FormControl fullWidth>
                   <InputLabel>Select hour type</InputLabel>
                   <Select
                     value={this.state.hourType}
@@ -348,18 +350,18 @@ export default class HoursDialog extends React.Component {
                     </MenuItem>
                   </Select>
                 </FormControl> */}
-
+            {/*
                 <div>
                   <FixedSizeList height={200} width={720} itemSize={46} itemCount={200}>
                     {Row}
                   </FixedSizeList>
-                </div>
+                </div> */}
 
-                {/* <Select>
+            {/* <Select>
 
               </Select> */}
 
-                {/* <Grid item>
+            {/* <Grid item>
                 <FacebookIcon style={{ fontSize: '20px' }} />
               </Grid>
               <Grid item>
@@ -425,22 +427,20 @@ export default class HoursDialog extends React.Component {
                   fullWidth
                 />
               </Grid> */}
-              </Grid>
+            {/* </Grid>
               <br />
-            </form>
+            /</form> */}
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.props.handleOfficeHoursClose} variant="contained" style={button}>
-              Cancel
+            <Button variant="contained" style={button}>
+              Yes
             </Button>
             <Button
-              onClick={this.handleSubmit}
-              type="submit"
-              disabled={!this.state.formValid}
+              onClick={this.props.handleRemoveOfficeHoursClose}
               variant="contained"
               style={button}
             >
-              Submit
+              No
             </Button>
           </DialogActions>
         </Dialog>
