@@ -18,6 +18,25 @@ const staticCache = [
   '/favicon.ico',
   '/static/media/gordon-logo-vertical-white.a6586885.svg',
   '/static/media/campus1366.e8fc7838.jpg',
+  // Icon Images
+  'images/apple-touch-icon-57x57.png',
+  'images/apple-touch-icon-60x60.png',
+  'images/apple-touch-icon-72x72.png',
+  'images/apple-touch-icon-76x76.png',
+  'images/apple-touch-icon-114x114.png',
+  'images/apple-touch-icon-120x120.png',
+  'images/apple-touch-icon-144x144.png',
+  'images/apple-touch-icon-152x152.png',
+  'images/favicon-16x16.png',
+  'images/favicon-32x32.png',
+  'images/favicon-96x96.png',
+  'images/favicon-128x128.png',
+  'images/favicon-196x196.png',
+  'images/mstile-70x70.png',
+  'images/mstile-144x144.png',
+  'images/mstile-150x150.png',
+  'images/mstile-310x310.png',
+  'android-chrome-144x144.png',
 ];
 
 // Dynamic Files to cache upon logging in
