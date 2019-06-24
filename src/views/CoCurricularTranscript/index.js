@@ -211,7 +211,7 @@ export default class Transcript extends Component {
           } else {
             duration += startMon + ' ' + startYear;
           }
-          duration += '-' + endMon + ' ' + endYear + '<br/>';
+          duration += '-' + endMon + ' ' + endYear + ', ';
 
           startMon = this.sliceStart(sess);
           endMon = this.sliceEnd(sess);
@@ -372,9 +372,8 @@ export default class Transcript extends Component {
             </div>
             <div>Gordon College Experience Transcript</div>
             <div className="subtitle">
-              <Typography variant="headline">
-                <b>{this.state.profile.fullName}</b>
-              </Typography>
+              {' '}
+              <b>{this.state.profile.fullName}</b>{' '}
             </div>
             <div className="subtitle">{this.getGradCohort()}</div>
             <div className="subtitle">{this.getMajors(this.state.profile.Majors)}</div>
