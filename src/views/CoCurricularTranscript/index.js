@@ -232,7 +232,7 @@ export default class Transcript extends Component {
     };
 
     let honorsTypes = ['LEA', 'SCH', 'SGV'];
-    let serviceTypes = ['SLP', 'MIN', 'STU'];
+    let serviceTypes = ['SLP', 'MIN'];
     let experienceTypes = ['RES'];
 
     while (memberships.length > 0) {
