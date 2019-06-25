@@ -138,18 +138,19 @@ export default class Transcript extends Component {
     }
   };
 
-  /* Param: expects an array of [later month (format: Mon), later year (YYYY), earlier month,
-            earlier year]
-     Returns: true if given dates are consecutive, false otherwise */
+  /* Param: expects an array of [month in which the earlier session ended,
+                                 year in which the ealier session ended,
+                                 month in which the later session started (format: Mon),
+                                 year in which the later session started (YYYY)]
+     Returns: true if given month-year pairs are consecutive, false otherwise. Summers are not
+            considered a break consecutiveness because there are no summer activities. */
   checkConsecutiveness = dates => {
     console.log(dates);
     return (
-      (dates[1] === dates[3] &&
-        (dates[0] === 'Sep' || dates[0] === 'May') &&
-        dates[0] === dates[2]) ||
-      (parseInt(dates[1], 10) === parseInt(dates[3], 10) + 1 &&
-        dates[0] === 'Jan' &&
-        dates[2] === 'Dec')
+      dates[1] === dates[3] ||
+      (parseInt(dates[1], 10) + 1 === parseInt(dates[3], 10) &&
+        dates[0] === 'Dec' &&
+        dates[2] === 'Jan')
     );
   };
 
@@ -210,7 +211,7 @@ export default class Transcript extends Component {
         let curStartMon = this.sliceStart(sess);
         let curYear = this.sliceYear(sess);
         console.log(curAct.ActivityDescription);
-        if (this.checkConsecutiveness([curStartMon, curYear, endMon, endYear])) {
+        if (this.checkConsecutiveness([endMon, endYear, curStartMon, curYear])) {
           // a streak of consecutive involvement continues
           endMon = this.sliceEnd(sess);
           endYear = this.sliceYear(sess);
