@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 //import Divider from '@material-ui/core/Divider'; might need if we choose to have column headers
 
 import { gordonColors } from '../../theme';
-import session from '../../services/session';
 import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
 import user from './../../services/user';
@@ -21,9 +20,7 @@ export default class Transcript extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      memberships: [],
-      leadActivities: [],
-      employments: [],
+      categorizedMemberships: {},
       loading: true,
       profile: {},
       otherInvolvements: false,
@@ -31,10 +28,6 @@ export default class Transcript extends Component {
       serviceLearning: false,
       experiences: false,
     };
-    //Variable used by groupActivityBySession to determine when activies in the list are part of a
-    //new session necessary in order to remember session info about previous item in list while
-    //looping though
-    this.prevSessionVal = '';
   }
 
   handleDownload() {
@@ -49,51 +42,46 @@ export default class Transcript extends Component {
     this.setState({ loading: true });
     try {
       /* Retrieve data from server */
-      const currentSession = await session.getCurrent();
       const profile = await user.getProfileInfo();
 
       const memberships = await user.getTranscriptMembershipsInfo(profile.ID);
+      let categorizedMemberships = this.filterMemberships(memberships);
+
       let otherInvolvements = false;
-      if (!(memberships.length === 0)) {
+      if (!(categorizedMemberships.activities.length === 0)) {
         otherInvolvements = true;
       }
 
-      // Deep copy activities array so that it doesn't get overwritten
-      let activitiesCopy = JSON.parse(JSON.stringify(memberships));
-      // Filter Activities to only those where user is leader
-      let leadActivities = this.filterActivitiesforLeadership(activitiesCopy);
-      console.log(leadActivities);
       let honorsLeadership = false;
-      if (!(leadActivities.length === 0)) {
+      if (!(categorizedMemberships.honors.length === 0)) {
         honorsLeadership = true;
       }
-      console.log(honorsLeadership);
 
-      // Deep copy activities array so that it doesn't get overwritten
-      /*let activitiesCopyTwo = JSON.parse(JSON.stringify(memberships));
-      // Filter Activities to only those where user is leader
-      let serviceActivities = this.filterActivitiesforService(activitiesCopyTwo);
       let serviceLearning = false;
-      if (!(serviceActivities.length === 0)) {
+      if (!(categorizedMemberships.service.length === 0)) {
         serviceLearning = true;
-      }*/
+      }
 
-      const employments = await user.getEmploymentInfo();
+      categorizedMemberships.experience.employments = await user.getEmploymentInfo();
+
       let experiences = false;
-      if (!(employments.length === 0)) {
+      if (
+        !(
+          categorizedMemberships.experience.experiences.length === 0 &&
+          categorizedMemberships.experience.employments.length === 0
+        )
+      ) {
         experiences = true;
       }
 
       this.setState({
         loading: false,
-        memberships,
-        employments,
-        leadActivities,
-        currentSession,
+        categorizedMemberships,
         profile,
         otherInvolvements,
         honorsLeadership,
-        /*serviceLearning,*/ experiences,
+        serviceLearning,
+        experiences,
       });
     } catch (error) {
       this.setState({ error });
@@ -152,24 +140,6 @@ export default class Transcript extends Component {
         dates[0] === 'Dec' &&
         dates[2] === 'Jan')
     );
-  };
-
-  /* Compares activity from activityList to previous activity' session to to determine how to group.
-     isUnique value is passed as a prop, along with Activity object, to TranscriptActivity Component
-     Returns TranscriptActivity component which should be passed into activityList.
-     Call using map function: "this.state.activities.map(this.groupActivityBySession);"
-  */
-  groupActivityBySession = activity => {
-    //bool to keep track of when an activity is part of a new session, passed to TranscriptActivity
-    let isUniqueSession = true;
-
-    if (activity.SessionDescription === this.prevSessionVal) {
-      isUniqueSession = false;
-    } else {
-      isUniqueSession = true;
-    }
-    this.prevSessionVal = activity.SessionDescription;
-    return <Activity isUnique={isUniqueSession} Activity={activity} />;
   };
 
   /* For each activity in an array of activities, this finds all other activities of the same Code
@@ -246,15 +216,40 @@ export default class Transcript extends Component {
     return condensedActs;
   };
 
-  filterActivitiesforLeadership = activities => {
-    let leadActivities = [];
-    while (activities.length > 0) {
-      let curAct = activities.shift();
-      if (curAct.ParticipationDescription === 'Leader') {
-        leadActivities.push(curAct);
+  filterMemberships = memberships => {
+    let filtered = {
+      honors: [],
+      experience: {
+        experiences: [],
+        employments: [],
+      },
+      service: [],
+      activities: [],
+    };
+
+    let honorsTypes = ['LEA', 'SCH', 'SGV'];
+    let serviceTypes = ['SLP', 'MIN'];
+    let experienceTypes = ['RES'];
+
+    while (memberships.length > 0) {
+      let membership = memberships.shift();
+
+      // Add Honors and Leadership to the honors list
+      if (membership.Participation === 'LEAD' || honorsTypes.includes(membership.ActivityType)) {
+        filtered.honors.push(membership);
+      }
+
+      // Filter memberships into either Experience, Service, or Activities
+      if (experienceTypes.includes(membership.ActivityType)) {
+        filtered.experience.experiences.push(membership);
+      } else if (serviceTypes.includes(membership.ActivityType)) {
+        filtered.service.push(membership);
+      } else {
+        filtered.activities.push(membership);
       }
     }
-    return leadActivities;
+
+    return filtered;
   };
 
   getGradCohort() {
@@ -301,42 +296,38 @@ export default class Transcript extends Component {
     // will display. The following lines filter this.state.activities into the different categories.
 
     let activityList;
-
-    if (!this.state.memberships) {
+    if (!this.state.categorizedMemberships.activities) {
       activityList = <GordonLoader />;
     } else {
-      // Deep copy activities array so that it doesn't get overwritten
-      var displayedActivities = JSON.parse(JSON.stringify(this.state.memberships));
-      // Call groupActivityByCode() on activities
-      activityList = this.groupActivityByCode(displayedActivities);
+      activityList = this.groupActivityByCode(this.state.categorizedMemberships.activities);
     }
 
-    let leadershipList;
-
-    if (!this.state.leadActivities) {
-      leadershipList = <GordonLoader />;
+    let honorsList;
+    if (!this.state.categorizedMemberships.honors) {
+      honorsList = <GordonLoader />;
     } else {
-      // Call groupActivityByCode() on leadActivities
-      leadershipList = this.groupActivityByCode(this.state.leadActivities);
+      honorsList = this.groupActivityByCode(this.state.categorizedMemberships.honors);
     }
 
-    /*let serviceList;
-
-    if (!serviceActivities) {
-      leadershipList = <GordonLoader />;
+    let serviceList;
+    if (!this.state.categorizedMemberships.service) {
+      serviceList = <GordonLoader />;
     } else {
-      // Call groupActivityByCode() on serviceActivities
-      serviceList = this.groupActivityByCode(serviceActivities);
-    }*/
+      serviceList = this.groupActivityByCode(this.state.categorizedMemberships.service);
+    }
 
-    let employmentsList;
-
-    if (!this.state.employments) {
-      employmentsList = <GordonLoader />;
+    let experienceList;
+    if (!this.state.categorizedMemberships.experience) {
+      experienceList = <GordonLoader />;
     } else {
-      employmentsList = this.state.employments.map(employment => (
-        <Experience className="text" Experience={employment} /> // may not need className="text"
-      ));
+      experienceList = this.groupActivityByCode(
+        this.state.categorizedMemberships.experience.experiences,
+      );
+      experienceList = experienceList.concat(
+        this.state.categorizedMemberships.experience.employments.map(employment => (
+          <Experience Experience={employment} />
+        )),
+      );
     }
 
     const buttonColors = {
@@ -345,10 +336,10 @@ export default class Transcript extends Component {
       color: 'white',
     };
 
-    const otherInvolvements = this.state.otherInvolvements;
     const honorsLeadership = this.state.honorsLeadership;
-    const serviceLearning = this.state.serviceLearning;
     const experiences = this.state.experiences;
+    const serviceLearning = this.state.serviceLearning;
+    const otherInvolvements = this.state.otherInvolvements;
 
     return (
       <div className="co-curricular-transcript">
@@ -382,7 +373,7 @@ export default class Transcript extends Component {
               </div>
             )}
             <div class="print" className="activity-list">
-              {leadershipList}
+              {honorsList}
             </div>
             {experiences && (
               <div className="subtitle">
@@ -397,7 +388,7 @@ export default class Transcript extends Component {
             </div>
             <Divider light={true} />*/}
             <div class="print" className="activity-list">
-              {employmentsList}
+              {experienceList}
             </div>
             {serviceLearning && (
               <div className="subtitle">
@@ -406,9 +397,9 @@ export default class Transcript extends Component {
                 </Typography>
               </div>
             )}
-            {/*<div class="print" className="activity-list">
+            <div class="print" className="activity-list">
               {serviceList}
-            </div>*/}
+            </div>
             {otherInvolvements && (
               <div className="subtitle">
                 <Typography variant="headline">
