@@ -85,10 +85,15 @@ const isAuthenticated = () => {
 
 /**
  * Sign a user out
- * @description Removes token from storage.
+ * @description Removes token from storage and all cache
  */
 const signOut = () => {
   storage.remove('token');
+  caches.keys().then(keys => {
+    keys.forEach(key => {
+      caches.delete(key);
+    });
+  });
 };
 
 export { authenticate, isAuthenticated, signOut };
