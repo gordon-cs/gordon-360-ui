@@ -186,7 +186,7 @@ export default class Transcript extends Component {
 
     // sort activities by ActivityCode
     while (activities.length > 0) {
-      let curAct = activities[0];
+      let curAct = activities.shift();
 
       // keep track of the activity code which will be used to identify all activities of the same
       // code so they can be grouped into one activity component
@@ -194,8 +194,7 @@ export default class Transcript extends Component {
 
       // Pop first session code from array and split into months and years, which are saved as
       // the initial start and end dates
-      // (shift is like pop, removes and returns the first item in the array)
-      let sess = activities.shift().SessionCode;
+      let sess = curAct.SessionCode;
       let startMon = this.sliceStart(sess);
       let endMon = this.sliceEnd(sess);
       let startYear = this.sliceYear(sess),
