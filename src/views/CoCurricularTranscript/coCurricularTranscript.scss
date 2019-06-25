@@ -48,25 +48,6 @@
   grid-column: 1 / -1;
 }
 
-/*.column-headers {
-  display: grid;
-  grid-template-columns: 5% 70% 25%;
-  grid-column: 1 / -1; // not sure if this can be declared a container (display: grid) and be given
-                       // item properties (grid-column: 1 / -1
-  justify-items: stretch;
-}
-
-.organization-role {
-  grid-column: 2;
-  text-align: left;
-}
-
-.date {
-  grid-column: 3;
-  justify-self: flex-end;
-  text-align: center;
-}*/
-
 /* For small and medium screens (1024px wide or less) */
 @media (max-width: 1024px) {
   .card {
@@ -81,21 +62,6 @@
     // hides the header (with people search etc.)
     visibility: hidden;
   }
-  /*
-  .heading * {
-    visibility: visible;
-  }
-  .print * {
-    visibility: visible;
-    overflow: visible;
-  }
-  .print-only * {
-    visibility: visible;
-    padding: 0%;
-    border-spacing: 0;
-    border-collapse: collapse;
-    margin: 0;
-  }*/
 
   .co-curricular-transcript,
   .card-content,

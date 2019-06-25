@@ -3,9 +3,6 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-//import List from '@material-ui/core/List';
-//import Divider from '@material-ui/core/Divider'; might need if we choose to have column headers
-
 import { gordonColors } from '../../theme';
 import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
@@ -31,7 +28,7 @@ export default class Transcript extends Component {
   }
 
   handleDownload() {
-    window.print(); //look for somethig that sends straight to download
+    window.print();
   }
 
   componentWillMount() {
@@ -179,7 +176,6 @@ export default class Transcript extends Component {
         sess = activities.shift().SessionCode;
         let curStartMon = this.sliceStart(sess);
         let curYear = this.sliceYear(sess);
-        console.log(curAct.ActivityDescription);
         if (this.checkConsecutiveness([endMon, endYear, curStartMon, curYear])) {
           // a streak of consecutive involvement continues
           endMon = this.sliceEnd(sess);
@@ -292,9 +288,6 @@ export default class Transcript extends Component {
   };
 
   render() {
-    // this.state.activities contains three of the four categories of activites that the transcript
-    // will display. The following lines filter this.state.activities into the different categories.
-
     let activityList;
     if (!this.state.categorizedMemberships.activities) {
       activityList = <GordonLoader />;
@@ -372,9 +365,7 @@ export default class Transcript extends Component {
                 </Typography>
               </div>
             )}
-            <div class="print" className="activity-list">
-              {honorsList}
-            </div>
+            <div className="activity-list">{honorsList}</div>
             {experiences && (
               <div className="subtitle">
                 <Typography variant="headline">
@@ -382,14 +373,7 @@ export default class Transcript extends Component {
                 </Typography>
               </div>
             )}
-            {/*Column Headers, if needed: <div className="column-headers">
-              <div className="organization-role">Organization, Role</div>
-              <div className="date">Date</div>
-            </div>
-            <Divider light={true} />*/}
-            <div class="print" className="activity-list">
-              {experienceList}
-            </div>
+            <div className="activity-list">{experienceList}</div>
             {serviceLearning && (
               <div className="subtitle">
                 <Typography variant="headline">
@@ -397,9 +381,7 @@ export default class Transcript extends Component {
                 </Typography>
               </div>
             )}
-            <div class="print" className="activity-list">
-              {serviceList}
-            </div>
+            <div className="activity-list">{serviceList}</div>
             {otherInvolvements && (
               <div className="subtitle">
                 <Typography variant="headline">
@@ -407,9 +389,7 @@ export default class Transcript extends Component {
                 </Typography>
               </div>
             )}
-            <div class="print" className="activity-list">
-              {activityList}
-            </div>
+            <div className="activity-list">{activityList}</div>
           </CardContent>
         </Card>
       </div>
