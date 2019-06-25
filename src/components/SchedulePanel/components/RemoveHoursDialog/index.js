@@ -432,15 +432,15 @@ export default class RemoveHoursDialog extends React.Component {
             /</form> */}
           </DialogContent>
           <DialogActions>
-            <Button variant="contained" style={button}>
-              Yes
-            </Button>
             <Button
               onClick={this.props.handleRemoveOfficeHoursClose}
               variant="contained"
               style={button}
             >
               No
+            </Button>
+            <Button variant="contained" style={button}>
+              Yes
             </Button>
           </DialogActions>
         </Dialog>

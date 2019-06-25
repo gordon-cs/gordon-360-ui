@@ -207,15 +207,15 @@ export default class HoursDialog extends React.Component {
       color: 'white',
     };
 
-    function Row(props) {
-      const { index, style } = props;
+    // function Row(props) {
+    //   const { index, style } = props;
 
-      return (
-        <ListItem button style={style} key={index}>
-          <ListItemText primary={`Item ${index + 1}`} />
-        </ListItem>
-      );
-    }
+    //   return (
+    //     <ListItem button style={style} key={index}>
+    //       <ListItemText primary={`Item ${index + 1}`} />
+    //     </ListItem>
+    //   );
+    // }
 
     return (
       <Fragment>
@@ -243,25 +243,25 @@ export default class HoursDialog extends React.Component {
                     <MenuItem label="selectday" value="">
                       <em />
                     </MenuItem>
-                    <MenuItem label="monday" value="Monday">
+                    <MenuItem label="monday" value="Monday" resourceID="2">
                       <em>Monday</em>
                     </MenuItem>
-                    <MenuItem label="tuesday" value="Tuesday">
+                    <MenuItem label="tuesday" value="Tuesday" resourceID="3">
                       <em>Tuesday</em>
                     </MenuItem>
-                    <MenuItem label="wednesday" value="Wednesday">
+                    <MenuItem label="wednesday" value="Wednesday" resourceID="4">
                       <em>Wednesday</em>
                     </MenuItem>
-                    <MenuItem label="thursday" value="Thrusday">
+                    <MenuItem label="thursday" value="Thrusday" resourceID="5">
                       <em>Thursday</em>
                     </MenuItem>
-                    <MenuItem label="friday" value="Friday">
+                    <MenuItem label="friday" value="Friday" resourceID="6">
                       <em>Friday</em>
                     </MenuItem>
-                    <MenuItem label="saturday" value="Saturday">
+                    <MenuItem label="saturday" value="Saturday" resourceID="7">
                       <em>Saturday</em>
                     </MenuItem>
-                    <MenuItem label="sunday" value="Sunday">
+                    <MenuItem label="sunday" value="Sunday" resourceID="1">
                       <em>Sunday</em>
                     </MenuItem>
                   </Select>
@@ -349,11 +349,11 @@ export default class HoursDialog extends React.Component {
                   </Select>
                 </FormControl> */}
 
-                <div>
+                {/* <div>
                   <FixedSizeList height={200} width={720} itemSize={46} itemCount={200}>
                     {Row}
                   </FixedSizeList>
-                </div>
+                </div> */}
 
                 {/* <Select>
 
