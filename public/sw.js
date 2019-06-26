@@ -35,72 +35,27 @@ const staticCache = [
 ];
 
 // Dynamic Files to cache upon logging in
-const dynamicCache = [
+const firstDynamicCache = [
   // Home Page Fetch URLs
   'https://360apitrain.gordon.edu/api/cms/slider',
-  'https://360apitrain.gordon.edu/api/dining/student/50128116/201905', // Student.ID and Session.Code needed
-  'https://360apitrain.gordon.edu/api/events/chapel/jake.moon/18SP', // Student.Name and Semester.Code needed
-  'https://360apitrain.gordon.edu/api/memberships/student/50128116', // Student.ID needed
   'https://360apitrain.gordon.edu/api/profiles',
   'https://360apitrain.gordon.edu/api/profiles/Image',
-  'https://360apitrain.gordon.edu/api/requests/student/50128116', // Student.ID needed
   'https://360apitrain.gordon.edu/api/sessions/current',
   'https://360apitrain.gordon.edu/api/sessions/daysLeft',
+  'https://360apitrain.gordon.edu/api/dining/',
   /************************************************************ */
   // Involvements Page Fetch URLs
-  'https://360apitrain.gordon.edu/api/activities/session/201905', // Session.Code needed
-  'https://360apitrain.gordon.edu/api/activities/session/201905/types', // Session.Code needed
   'https://360apitrain.gordon.edu/api/sessions',
-  // '/api/memberships/student/50197321',  -- Already fetched in Home Page URLs
-  // '/api/profiles',                      -- Already fetched in Home Page URLs
-  // '/api/sessions/current',              -- Already fetched in Home Page URLs
   /************************************************************ */
   // Events Page Fetch URLs
   'https://360apitrain.gordon.edu/api/events/25Live/All',
-  'https://360apitrain.gordon.edu/events',
-  // '/api/profiles',                             -- Already fetched in Home Page URLs
-  // '/api/profiles/Image',                       -- Already fetched in Home Page URLs
-  /************************************************************ */
-  // Help Page Fetch URLs
-  'https://360apitrain.gordon.edu/help',
-  // '/api/profiles',                             -- Already fetched in Home Page URLs
-  // '/api/profiles/Image',                       -- Already fetched in Home Page URLs
-  /************************************************************ */
-  // About Page Fetch URLs
-  'https://360apitrain.gordon.edu/about',
-  // '/api/profiles',                             -- Already fetched in Home Page URLs
-  // '/api/profiles/Image',                       -- Already fetched in Home Page URLs
-  /************************************************************ */
-  // Feedback Page Fetch URLs
-  'https://360apitrain.gordon.edu/feedback',
-  // '/api/profiles',                             -- Already fetched in Home Page URLs
-  // '/api/profiles/Image',                       -- Already fetched in Home Page URLs
-  /************************************************************ */
-  // Profile Page Fetch URLs
-  'https://360apitrain.gordon.edu/myprofile/jake.moon', // Student.Name needed
-  'https://360apitrain.gordon.edu/api/dining/student/50128116/201905', // Student.ID and SessionCode needed -- Already fetched in Home Page URLs
-  'https://360apitrain.gordon.edu/api/events/chapel/jake.moon/18SP', // Student.Name and Semester.Code needed -- Already fetched in Home Page URLs
-  'https://360apitrain.gordon.edu/api/memberships/student/50197321', // Student.ID needed -- Already fetched in Home Page URLs
-  'https://360apitrain.gordon.edu/api/profiles/Jake.Moon/', // Student.Name needed
-  // '/api/profiles',                                                 -- Already fetched in Home Page URLs
-  // '/api/profiles/Image',                                           -- Already fetched in Home Page URLs
-  // '/api/requests/student/50197321',                                -- Already fetched in Home Page URLs
-  // '/api/sessions/current',                                         -- Already fetched in Home Page URLs
-  // '/api/sessions/daysLeft',                                        -- Already fetched in Home Page URLs
-  /************************************************************ */
-  // Public Profile Page Fetch URLs
-  'https://360apitrain.gordon.edu/api//memberships/student/username/Jake.Moon/', // Student.Name needed
-  'https://360apitrain.gordon.edu/api/profiles/Image/Jake.Moon/', // Student.Name needed
-  // '/api/profiles',                         -- Already fetched in Home Page URLs
-  // '/api/profiles/Image',                   -- Already fetched in Home Page URLs
-  // '/api/profiles/Jahnuel.Dorelus/',        -- Already fetched in Profile Page URLs
 ];
 
 /*********************************************** CACHING FUNCTIONS ***********************************************/
 /* Fetches for each request through the network
-*  If the network is not available, it returns a response from
-*  the cache.
-*/
+ *  If the network is not available, it returns a response from
+ *  the cache.
+ */
 function fetchThenCache(request) {
   return fetch(request)
     .then(fetchResponse => {
@@ -118,10 +73,10 @@ function fetchThenCache(request) {
     });
 }
 
-/* Caches all of the static files that are listed in 
-*  the array staticCache
-*  @return A promise with the result of trying to cache the static files
-*/
+/* Caches all of the static files that are listed in
+ *  the array staticCache
+ *  @return A promise with the result of trying to cache the static files
+ */
 function preCacheStatic() {
   caches.open(cacheVersion).then(cache => {
     let preCachePromise = cache.addAll(staticCache);
@@ -136,10 +91,16 @@ function preCacheStatic() {
   });
 }
 
-async function getUserInfoForLinks(token, headers) {
+async function getUserInfoForLinks(token) {
+  // Creates the header for the request to have authenitification
+  let headers = new Headers({
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  });
+
   // Gets the user's profile object to access their firstname.lastname and ID#
   let profile = await new Promise((resolve, reject) => {
-    fetch(new Request('https://360apitrain.gordon.edu/api/profiles', { method: 'get', headers }))
+    fetch(new Request('https://360apitrain.gordon.edu/api/profiles', { method: 'GET', headers }))
       .then(response => {
         return resolve(response.json());
       })
@@ -151,7 +112,7 @@ async function getUserInfoForLinks(token, headers) {
   let currentSession = await new Promise((resolve, reject) => {
     fetch(
       new Request('https://360apitrain.gordon.edu/api/sessions/current', {
-        method: 'get',
+        method: 'GET',
         headers,
       }),
     )
@@ -162,16 +123,36 @@ async function getUserInfoForLinks(token, headers) {
         return reject(error.message);
       });
   });
-  let username = profile.AD_Username;
-  let id = profile.ID;
-  let sessionCode = currentSession.SessionCode;
-  console.log(`Username: ${username}   ID: ${id}   Code:${sessionCode}`);
+  let username = profile ? profile.AD_Username : null;
+  let id = profile ? profile.ID : null;
+  let sessionCode = currentSession ? currentSession.SessionCode : null;
+  let secondDynamicCache = [
+    // Home Page Fetch URLs
+    `https://360apitrain.gordon.edu/api/events/chapel/${username.toLowerCase()}/18SP`, // SEMESTER TERM NEEDED
+    `https://360apitrain.gordon.edu/api/memberships/student/${id}`,
+    `https://360apitrain.gordon.edu/api/requests/student/${id}`,
+    /************************************************************ */
+    // Involvements Page Fetch URLs
+    `https://360apitrain.gordon.edu/api/activities/session/${sessionCode}`,
+    `https://360apitrain.gordon.edu/api/activities/session/${sessionCode}/types`,
+    /************************************************************ */
+    // Profile Page Fetch URLs
+    `https://360apitrain.gordon.edu/myprofile/${username.toLowerCase()}`,
+    `https://360apitrain.gordon.edu/api/events/chapel/${username.toLowerCase()}/18SP`, // SEMESTER TERM NEEDED
+    `https://360apitrain.gordon.edu/api/memberships/student/${id}`,
+    `https://360apitrain.gordon.edu/api/profiles/${username}/`,
+    /************************************************************ */
+    // Public Profile Page Fetch URLs
+    `https://360apitrain.gordon.edu/api//memberships/student/username/${username}/`,
+    `https://360apitrain.gordon.edu/api/profiles/Image/${username}/`,
+  ];
+  preCacheDynamic(token, secondDynamicCache);
 }
 
-/* Caches all of the dynamic files that are listed in 
-*  the array cacheDynamic
-*/
-function preCacheDynamic(token, dynamicUserLinks) {
+/* Caches all of the dynamic files that are listed in
+ *  the array cacheDynamic
+ */
+function preCacheDynamic(token, dynamicUserCacheLinks) {
   // Creates the header for the request to have authenitification
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
@@ -179,7 +160,7 @@ function preCacheDynamic(token, dynamicUserLinks) {
   });
 
   // Caches each url in the list of dynamic files to cache
-  dynamicUserLinks.forEach(url => {
+  dynamicUserCacheLinks.forEach(url => {
     let request = new Request(url, {
       method: 'GET',
       headers,
@@ -197,12 +178,11 @@ function preCacheDynamic(token, dynamicUserLinks) {
         console.log(` -\tFailed to fetch and cache Dynamic File: "${url}"`);
       });
   });
-  getUserInfoForLinks();
 }
 
-/* Cleans cache to remove cacheVersion data that's 
-*  no longer in use (removes outdated cache version)
-*/
+/* Cleans cache to remove cacheVersion data that's
+ *  no longer in use (removes outdated cache version)
+ */
 function cleanCache() {
   caches.keys().then(keys => {
     keys.forEach(key => {
@@ -229,12 +209,12 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   // If request is from Local, console.log the URL
-  if (event.request.url.match(location.origin)) {
-    console.log('Fetching request from LOCAL:', event.request.url);
-  } else {
-    // If request is from Remote, console.log the URL
-    console.log('Fetching request from REMOTE LOCATION:', event.request.url);
-  }
+  // if (event.request.url.match(location.origin)) {
+  //   console.log('Fetching request from LOCAL:', event.request.url);
+  // } else {
+  //   // If request is from Remote, console.log the URL
+  //   console.log('Fetching request from REMOTE LOCATION:', event.request.url);
+  // }
   // If fetching for a static file, we serve automatically from the cache
   // for efficiency and performance
   if (staticCache.includes(event.request.url)) {
@@ -253,6 +233,7 @@ self.addEventListener('message', event => {
   // If the message is to pre-cache dynamic files
   if (event.data.message && event.data.message === 'cache-dynamic-files') {
     console.log('Received message from client. Fetching Dynamic Files');
-    preCacheDynamic(event.data.token, dynamicCache);
+    preCacheDynamic(event.data.token, firstDynamicCache);
+    getUserInfoForLinks(event.data.token);
   }
-}); 
+}); //
