@@ -511,6 +511,12 @@ const getCurrentMembershipsWithoutGuests = async id => {
   return myCurrentInvolvementsWithoutGuests;
 };
 
+const getEmployment = async () => {
+  let employments;
+  employments = await http.get(`studentemployment/`);
+  return employments;
+};
+
 //Take student's non-"Guest" memberships and filter for specifiied session only
 const getSessionMembershipsWithoutGuests = async (id, session) => {
   let myInvolvements = await getMembershipsWithoutGuests(id);
@@ -576,14 +582,38 @@ function compareBySession(a, b) {
   return comparison;
 }
 
+//compares items by ActivityCode, used by getTranscriptInfo to sort by SessionCode
+function compareByActCode(a, b) {
+  const codeA = a.ActivityCode;
+  const codeB = b.ActivityCode;
+
+  let comparison = 0;
+  if (codeA > codeB) {
+    comparison = 1;
+  } else if (codeA < codeB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
 //returns an array of membership objects from backend server,
 //not including Guest memberships
 //using asynchronous http.get request (via getMemberships function)
-//sorts by SessionCode
-const getTranscriptInfo = async id => {
+//sorts by SessionCode and ActivityCode
+const getTranscriptMembershipsInfo = async id => {
   let transcriptInfo = await getMembershipsWithoutGuests(id);
   transcriptInfo.sort(compareBySession);
+  transcriptInfo.sort(compareByActCode);
   return transcriptInfo;
+};
+
+//returns an array of employment objects from backend server
+//using asynchronous http.get request (via getEmployment function)
+//sorts by
+const getEmploymentInfo = async () => {
+  let employmentInfo = await getEmployment();
+  //employmentInfo.sort(compareBySession);
+  return employmentInfo;
 };
 
 const getProfileInfo = async username => {
@@ -652,6 +682,7 @@ export default {
   resetImage,
   postImage,
   postIDImage,
-  getTranscriptInfo,
+  getTranscriptMembershipsInfo,
+  getEmploymentInfo,
   updateSocialLink,
 };

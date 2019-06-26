@@ -1,8 +1,8 @@
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
+//import Grid from '@material-ui/core/Grid';
+//import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
+//import List from '@material-ui/core/List';
+//import Typography from '@material-ui/core/Typography';
 import './coCurricularTranscriptActivity.css';
 
 //This component is a child of the CoCurricularTranscript component. Separates Headings from content in order
@@ -11,7 +11,7 @@ import './coCurricularTranscriptActivity.css';
 //Activity object and isUnique bool passed as props from CoCurricularTranscript
 
 export default class Activity extends Component {
-  getHeading = () => {
+  /*getHeading = () => {
     const { Activity } = this.props;
     let heading = (
       <div>
@@ -63,17 +63,18 @@ export default class Activity extends Component {
             <Typography className="text"> {Activity.ParticipationDescription} </Typography>
           </List>
         </Grid>
-      </Grid>
-    );
-
+      )
     return content;
-  };
+};*/
 
   render() {
+    const { Activity } = this.props;
     return (
-      <div>
-        {this.getHeading()}
-        {this.getContent()}
+      <div className="activities">
+        <div className="organization-role">
+          {Activity.ActivityDescription}, {Activity.ParticipationDescription}
+        </div>
+        <div className="date"> {this.props.Duration} </div>
       </div>
     );
   }
