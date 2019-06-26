@@ -20,6 +20,9 @@ import { gordonColors } from '../../../../theme';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
+import Checkbox from '@material-ui/core/Checkbox';
+
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 export default class HoursDialog extends React.Component {
   constructor(props) {
@@ -30,6 +33,7 @@ export default class HoursDialog extends React.Component {
       startHour: '',
       endHour: '',
       hourType: '',
+      checkedDay: false,
       // facebookInput: '',
       // twitterInput: '',
       // linkedInInput: '',
@@ -278,7 +282,7 @@ export default class HoursDialog extends React.Component {
                 }}
               /> */}
 
-                <form fullWidth>
+                <div>
                   <TextField
                     id="time"
                     label="Start time"
@@ -292,14 +296,14 @@ export default class HoursDialog extends React.Component {
                       step: 300, // 5 min
                     }}
                   />
-                </form>
 
-                <form fullWidth>
                   <TextField
                     id="time"
                     label="End time"
                     type="time"
                     defaultValue="17:00"
+                    primary
+                    style={{ marginLeft: '10%' }}
                     //className={classes.textField}
                     InputLabelProps={{
                       shrink: true,
@@ -308,27 +312,32 @@ export default class HoursDialog extends React.Component {
                       step: 300, // 5 min
                     }}
                   />
-                </form>
 
-                <TextField
-                  id="first-name"
-                  label="Title"
-                  max="3"
-                  fullWidth
-                  value={this.state.firstNameSearchValue}
-                  onChange={this.handleFirstNameInputChange}
-                  onKeyDown={this.handleEnterKeyPress}
-                />
+                  <FormControlLabel
+                    control={<Checkbox value="checkedC" primary style={{ marginLeft: '50%' }} />}
+                    label="All day"
+                  />
 
-                <TextField
-                  id="first-name"
-                  label="Description"
-                  max="3"
-                  fullWidth
-                  value={this.state.firstNameSearchValue}
-                  onChange={this.handleFirstNameInputChange}
-                  onKeyDown={this.handleEnterKeyPress}
-                />
+                  <TextField
+                    id="first-name"
+                    label="Title"
+                    max="3"
+                    fullWidth
+                    value={this.state.firstNameSearchValue}
+                    onChange={this.handleFirstNameInputChange}
+                    onKeyDown={this.handleEnterKeyPress}
+                  />
+
+                  <TextField
+                    id="first-name"
+                    label="Description"
+                    max="3"
+                    fullWidth
+                    value={this.state.firstNameSearchValue}
+                    onChange={this.handleFirstNameInputChange}
+                    onKeyDown={this.handleEnterKeyPress}
+                  />
+                </div>
 
                 {/* <FormControl fullWidth>
                   <InputLabel>Select hour type</InputLabel>
