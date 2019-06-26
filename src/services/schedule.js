@@ -61,7 +61,7 @@ function makeScheduleCourses(schedule) {
   let eventArray = [];
   let eventId = 0;
 
-  for (let i = 0; i < schedule.length(); i++) {
+  for (let i = 0; i < schedule.length; i++) {
     let beginTime = moment(schedule[i].BeginTime);
     beginTime.set('y', today.year());
     beginTime.set('m', today.month());
@@ -83,7 +83,7 @@ function makeScheduleCourses(schedule) {
       ' ' +
       schedule[i].RoomCode;
 
-    for (let j = 0; j < dayArray.length(); j++) {
+    for (let j = 0; j < dayArray.length; j++) {
       const course = {
         id: eventId,
         title: courseTitle,
