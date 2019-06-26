@@ -3,6 +3,8 @@ import moment, { now } from 'moment';
 
 import Calendar from 'react-big-calendar/dist/react-big-calendar';
 import momentLocalizer from 'react-big-calendar/lib/localizers/moment';
+//import CourseSchedule from './../index.js';
+//import GordonSchedulePanel from './../SchedulePanel';
 
 import './courseschedule.css';
 import CourseEvents from './../CourseEvents';
@@ -40,7 +42,7 @@ let Resource = ({ localizer = momentLocalizer(moment) }) => (
       timeslots={4}
       defaultView="day"
       view={['day']}
-      //onSelectEvent={event => alert(event.title)}
+      onSelectEvent={this.handleRemoveButton}
       defaultDate={now.date}
       resources={resourceMap}
       resourceIdAccessor="resourceId"

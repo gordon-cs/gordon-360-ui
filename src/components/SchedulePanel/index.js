@@ -46,6 +46,7 @@ class GordonSchedulePanel extends Component {
     this.handleOfficeHoursClose = this.handleOfficeHoursClose.bind(this);
     this.handleRemoveOfficeHoursOpen = this.handleRemoveOfficeHoursOpen.bind(this);
     this.handleRemoveOfficeHoursClose = this.handleRemoveOfficeHoursClose.bind(this);
+    this.handleRemoveButton = this.handleRemoveButton.bind(this);
   }
 
   handleOfficeHoursOpen = () => {
@@ -62,6 +63,10 @@ class GordonSchedulePanel extends Component {
 
   handleRemoveOfficeHoursClose = () => {
     this.setState({ removeOfficeHoursOpen: false });
+  };
+
+  handleRemoveButton = () => {
+    this.setState({ disabled: false });
   };
 
   async loadProfileInfo() {
@@ -138,7 +143,11 @@ class GordonSchedulePanel extends Component {
     if (this.props.myProf && isFaculty) {
       removeOfficeHourButton = (
         <Fragment>
-          <Button onClick={this.handleRemoveOfficeHoursOpen}>REMOVE OFFICE HOURS</Button>
+          <Button
+            onClick={this.handleRemoveOfficeHoursOpen} //disabled
+          >
+            REMOVE OFFICE HOURS
+          </Button>
         </Fragment>
       );
     }

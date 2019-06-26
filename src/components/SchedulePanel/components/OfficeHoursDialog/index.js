@@ -20,6 +20,9 @@ import { gordonColors } from '../../../../theme';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { FixedSizeList } from 'react-window';
+import Checkbox from '@material-ui/core/Checkbox';
+
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 export default class HoursDialog extends React.Component {
   constructor(props) {
@@ -30,6 +33,7 @@ export default class HoursDialog extends React.Component {
       startHour: '',
       endHour: '',
       hourType: '',
+      checkedDay: false,
       // facebookInput: '',
       // twitterInput: '',
       // linkedInInput: '',
@@ -207,15 +211,15 @@ export default class HoursDialog extends React.Component {
       color: 'white',
     };
 
-    function Row(props) {
-      const { index, style } = props;
+    // function Row(props) {
+    //   const { index, style } = props;
 
-      return (
-        <ListItem button style={style} key={index}>
-          <ListItemText primary={`Item ${index + 1}`} />
-        </ListItem>
-      );
-    }
+    //   return (
+    //     <ListItem button style={style} key={index}>
+    //       <ListItemText primary={`Item ${index + 1}`} />
+    //     </ListItem>
+    //   );
+    // }
 
     return (
       <Fragment>
@@ -243,25 +247,25 @@ export default class HoursDialog extends React.Component {
                     <MenuItem label="selectday" value="">
                       <em />
                     </MenuItem>
-                    <MenuItem label="monday" value="Monday">
+                    <MenuItem label="monday" value="Monday" resourceID="2">
                       <em>Monday</em>
                     </MenuItem>
-                    <MenuItem label="tuesday" value="Tuesday">
+                    <MenuItem label="tuesday" value="Tuesday" resourceID="3">
                       <em>Tuesday</em>
                     </MenuItem>
-                    <MenuItem label="wednesday" value="Wednesday">
+                    <MenuItem label="wednesday" value="Wednesday" resourceID="4">
                       <em>Wednesday</em>
                     </MenuItem>
-                    <MenuItem label="thursday" value="Thrusday">
+                    <MenuItem label="thursday" value="Thrusday" resourceID="5">
                       <em>Thursday</em>
                     </MenuItem>
-                    <MenuItem label="friday" value="Friday">
+                    <MenuItem label="friday" value="Friday" resourceID="6">
                       <em>Friday</em>
                     </MenuItem>
-                    <MenuItem label="saturday" value="Saturday">
+                    <MenuItem label="saturday" value="Saturday" resourceID="7">
                       <em>Saturday</em>
                     </MenuItem>
-                    <MenuItem label="sunday" value="Sunday">
+                    <MenuItem label="sunday" value="Sunday" resourceID="1">
                       <em>Sunday</em>
                     </MenuItem>
                   </Select>
@@ -278,7 +282,7 @@ export default class HoursDialog extends React.Component {
                 }}
               /> */}
 
-                <form fullWidth>
+                <div>
                   <TextField
                     id="time"
                     label="Start time"
@@ -292,14 +296,14 @@ export default class HoursDialog extends React.Component {
                       step: 300, // 5 min
                     }}
                   />
-                </form>
 
-                <form fullWidth>
                   <TextField
                     id="time"
                     label="End time"
                     type="time"
                     defaultValue="17:00"
+                    primary
+                    style={{ marginLeft: '10%' }}
                     //className={classes.textField}
                     InputLabelProps={{
                       shrink: true,
@@ -308,27 +312,32 @@ export default class HoursDialog extends React.Component {
                       step: 300, // 5 min
                     }}
                   />
-                </form>
 
-                <TextField
-                  id="first-name"
-                  label="Title"
-                  max="3"
-                  fullWidth
-                  value={this.state.firstNameSearchValue}
-                  onChange={this.handleFirstNameInputChange}
-                  onKeyDown={this.handleEnterKeyPress}
-                />
+                  <FormControlLabel
+                    control={<Checkbox value="checkedC" primary style={{ marginLeft: '50%' }} />}
+                    label="All day"
+                  />
 
-                <TextField
-                  id="first-name"
-                  label="Description"
-                  max="3"
-                  fullWidth
-                  value={this.state.firstNameSearchValue}
-                  onChange={this.handleFirstNameInputChange}
-                  onKeyDown={this.handleEnterKeyPress}
-                />
+                  <TextField
+                    id="first-name"
+                    label="Title"
+                    max="3"
+                    fullWidth
+                    value={this.state.firstNameSearchValue}
+                    onChange={this.handleFirstNameInputChange}
+                    onKeyDown={this.handleEnterKeyPress}
+                  />
+
+                  <TextField
+                    id="first-name"
+                    label="Description"
+                    max="3"
+                    fullWidth
+                    value={this.state.firstNameSearchValue}
+                    onChange={this.handleFirstNameInputChange}
+                    onKeyDown={this.handleEnterKeyPress}
+                  />
+                </div>
 
                 {/* <FormControl fullWidth>
                   <InputLabel>Select hour type</InputLabel>
@@ -349,11 +358,11 @@ export default class HoursDialog extends React.Component {
                   </Select>
                 </FormControl> */}
 
-                <div>
+                {/* <div>
                   <FixedSizeList height={200} width={720} itemSize={46} itemCount={200}>
                     {Row}
                   </FixedSizeList>
-                </div>
+                </div> */}
 
                 {/* <Select>
 
