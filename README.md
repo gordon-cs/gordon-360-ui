@@ -104,13 +104,24 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
 ### Connect Local Backend To React
 
-- After setting up the backend as documented in [Project Raymond](https://github.com/gordon-cs/gordon-360-api):
-
+- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api),
+  
+  - Pull the UI repository, if you do not have it open on the virtual machine already. 
   - Open `package.json` and scroll to the bottom.
 
-    - In the `proxy` key, there are two subkeys: `/api` and `/token`. Change the `target` line in both of these to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the text to say `"target": "http://localhost:5555/"` in both subkeys.
+    - In the `proxy` key, there are two subkeys: `/api` and `/token`. Change the `target` line in both of these to reflect
+      the URL of your local test backend. For example, if your test backend is operating on your local computer and
+      listening on port 5555, you would change the text to say `"target": "http://localhost:5555/"` in both subkeys.
 
-  - Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file.
+  - Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so
+    that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the
+    variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file. 
+  - Do the same with `.env.development`.
+  
+- Now, you are ready to work on the frontend. Although, you may need to install npm, as shown [here](#getting-started).
+Also, note that it is better to run npm start in a VS Code terminal. It then knows to warn you if someone is already using port 3000. Type `y` if it does say 'Something is already running on port 3000...'.
+
+- In some scenarios, (for example, when someone has made custom changes to the backend which you also want to use) it is preferable to skip setting up your own backend and connect to someone else's. To do this, make sure you are on the virtual machine. Then, just follow the above directions, replacing each instance of the port number you chose with the port number on which their backend is listening.
 
 ### Server Notes
 
