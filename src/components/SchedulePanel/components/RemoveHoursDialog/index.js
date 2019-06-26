@@ -226,9 +226,7 @@ export default class RemoveHoursDialog extends React.Component {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
-          <DialogTitle id="simple-dialog-title">
-            Are you sure you want to remove these office hours?
-          </DialogTitle>
+          <DialogTitle id="simple-dialog-title">Are you sure removing this event?</DialogTitle>
           <DialogContent>
             {/* <form
               onSubmit={this.handleSubmit}
