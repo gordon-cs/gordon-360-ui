@@ -3,8 +3,12 @@
  *
  * @module schedule
  */
+
+import jwtDecode from 'jwt-decode';
+import { AuthError } from './error';
 import moment from 'moment';
 import http from './http';
+import storage from './storage';
 
 /**
  * @global
@@ -41,15 +45,15 @@ const getSchedule = username => {
 function checkDayofWeek(schedule) {
   let dayArray = [];
 
-  if (schedule.MonCode) {
+  if (schedule.MonCode === 'M') {
     dayArray.push(2);
-  } else if (schedule.TueCode) {
+  } else if (schedule.TueCode === 'T') {
     dayArray.push(3);
-  } else if (schedule.WedCode) {
+  } else if (schedule.WedCode === 'W') {
     dayArray.push(4);
-  } else if (schedule.ThuCode) {
+  } else if (schedule.ThuCode === 'R') {
     dayArray.push(5);
-  } else if (schedule.FriCode) {
+  } else if (schedule.FriCode === 'F') {
     dayArray.push(6);
   }
 
@@ -62,6 +66,9 @@ function makeScheduleCourses(schedule) {
   let eventId = 0;
 
   for (let i = 0; i < schedule.length; i++) {
+    schedule[i].CourseCode = schedule[i].CourseCode.trim();
+    schedule[i].CourseTitle = schedule[i].CourseTitle.trim();
+
     let beginTime = moment(schedule[i].BeginTime);
     beginTime.set('y', today.year());
     beginTime.set('m', today.month());
