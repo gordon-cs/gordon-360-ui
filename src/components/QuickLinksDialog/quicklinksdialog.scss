@@ -1,0 +1,12 @@
+@import '../../vars';
+
+.quicklinks-dialog {
+  .active > li {
+    background: $neutral-gray;
+  }
+
+  .quicklinks-dialog-list {
+    position: fixed;
+    bottom: 0;
+  }
+}

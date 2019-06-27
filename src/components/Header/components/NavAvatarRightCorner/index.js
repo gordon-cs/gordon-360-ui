@@ -6,6 +6,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 
+import QuickLinksDialog from '../../../QuickLinksDialog';
 import { signOut } from '../../../../services/auth';
 
 import './nav-avatar-right-corner.css';
@@ -19,6 +20,8 @@ export default class GordonNavAvatarRightCorner extends Component {
     this.onClick = this.onClick.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onSignOut = this.onSignOut.bind(this);
+    this.handleLinkClickOpen = this.handleLinkClickOpen.bind(this);
+    this.handleLinkClose = this.handleLinkClose.bind(this);
 
     this.getInitials = this.getInitials.bind(this);
 
@@ -27,6 +30,7 @@ export default class GordonNavAvatarRightCorner extends Component {
       image: null,
       name: null,
       username: null,
+      linkopen: false,
 
       anchorEl: null,
     };
@@ -43,6 +47,16 @@ export default class GordonNavAvatarRightCorner extends Component {
     signOut();
     this.props.onSignOut();
   }
+
+  handleLinkClickOpen = () => {
+    this.setState({
+      linkopen: true,
+    });
+  };
+
+  handleLinkClose = () => {
+    this.setState({ linkopen: false });
+  };
 
   async componentWillMount() {
     this.loadAvatar();
@@ -148,6 +162,15 @@ export default class GordonNavAvatarRightCorner extends Component {
               My Profile
             </MenuItem>
           </Link>
+          <MenuItem
+            onClick={() => {
+              this.onClose();
+              this.handleLinkClickOpen();
+            }}
+            divider="true"
+          >
+            Links
+          </MenuItem>
           <Link to="/help">
             <MenuItem onClick={this.onClose} divider="true">
               Help
@@ -168,6 +191,11 @@ export default class GordonNavAvatarRightCorner extends Component {
             Sign Out
           </MenuItem>
         </Menu>
+        <QuickLinksDialog
+          handleLinkClickOpen={this.handleLinkClickOpen}
+          handleLinkClose={this.handleLinkClose}
+          linkopen={this.state.linkopen}
+        />
       </section>
     );
   }

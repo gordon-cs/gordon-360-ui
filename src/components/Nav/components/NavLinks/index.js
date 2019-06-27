@@ -15,17 +15,33 @@ import user from '../../../../services/user';
 import { signOut } from '../../../../services/auth';
 
 import './nav-links.css';
+import QuickLinksDialog from '../../../QuickLinksDialog';
 
 export default class GordonNavLinks extends Component {
   constructor(props) {
     super(props);
     this.onSignOut = this.onSignOut.bind(this);
+    this.handleLinkClickOpen = this.handleLinkClickOpen.bind(this);
+    this.handleLinkClose = this.handleLinkClose.bind(this);
+    this.state = {
+      linkopen: false,
+    };
   }
 
   onSignOut() {
     signOut();
     this.props.onSignOut();
   }
+
+  handleLinkClickOpen = () => {
+    this.setState({
+      linkopen: true,
+    });
+  };
+
+  handleLinkClose = () => {
+    this.setState({ linkopen: false });
+  };
 
   render() {
     let admin;
@@ -78,6 +94,15 @@ export default class GordonNavLinks extends Component {
 
         <div>
           <List className="gordon-nav-links-bottom">
+            <ListItem
+              button
+              onClick={() => {
+                this.props.onLinkClick();
+                this.handleLinkClickOpen();
+              }}
+            >
+              <ListItemText primary="Links" />
+            </ListItem>
             <NavLink exact to="/help" onClick={this.props.onLinkClick}>
               <ListItem button>
                 <ListItemText primary="Help" />
@@ -98,6 +123,11 @@ export default class GordonNavLinks extends Component {
               <ListItemText primary="Sign Out" />
             </ListItem>
           </List>
+          <QuickLinksDialog
+            handleLinkClickOpen={this.handleLinkClickOpen}
+            handleLinkClose={this.handleLinkClose}
+            linkopen={this.state.linkopen}
+          />
         </div>
       </div>
     );

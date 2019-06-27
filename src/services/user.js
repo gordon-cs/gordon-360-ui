@@ -325,6 +325,7 @@ const postIDImage = dataURI => {
   let type = blob.type.replace('image/', '');
   let headerOptions = {};
   imageData.append('canvasImage', blob, 'canvasImage.' + type);
+  console.log('blob size: ' + blob.size);
   return http.post('profiles/IDimage', imageData, headerOptions);
 };
 
@@ -424,15 +425,7 @@ const getChapelCredits = async () => {
  * @return {Promise.<DiningInfo>} Dining plan info object
  */
 const getDiningInfo = async () => {
-  //const id = 999999003;
-  //const id = 999999001;
-  //const id = 40000097;
-  const { id } = getLocalInfo();
-  const { SessionCode: sessionCode } = await session.getCurrent();
-  //const sessionCode = '201809';
-  const role = getLocalInfo().college_role;
-  //console.log(id + ' ' + sessionCode + ' ' + role);
-  return await http.get(`dining/${role}/${id}/${sessionCode}`);
+  return await http.get('dining');
 };
 
 /**
@@ -518,6 +511,12 @@ const getCurrentMembershipsWithoutGuests = async id => {
   return myCurrentInvolvementsWithoutGuests;
 };
 
+const getEmployment = async () => {
+  let employments;
+  employments = await http.get(`studentemployment/`);
+  return employments;
+};
+
 //Take student's non-"Guest" memberships and filter for specifiied session only
 const getSessionMembershipsWithoutGuests = async (id, session) => {
   let myInvolvements = await getMembershipsWithoutGuests(id);
@@ -583,14 +582,38 @@ function compareBySession(a, b) {
   return comparison;
 }
 
+//compares items by ActivityCode, used by getTranscriptInfo to sort by SessionCode
+function compareByActCode(a, b) {
+  const codeA = a.ActivityCode;
+  const codeB = b.ActivityCode;
+
+  let comparison = 0;
+  if (codeA > codeB) {
+    comparison = 1;
+  } else if (codeA < codeB) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
 //returns an array of membership objects from backend server,
 //not including Guest memberships
 //using asynchronous http.get request (via getMemberships function)
-//sorts by SessionCode
-const getTranscriptInfo = async id => {
+//sorts by SessionCode and ActivityCode
+const getTranscriptMembershipsInfo = async id => {
   let transcriptInfo = await getMembershipsWithoutGuests(id);
   transcriptInfo.sort(compareBySession);
+  transcriptInfo.sort(compareByActCode);
   return transcriptInfo;
+};
+
+//returns an array of employment objects from backend server
+//using asynchronous http.get request (via getEmployment function)
+//sorts by
+const getEmploymentInfo = async () => {
+  let employmentInfo = await getEmployment();
+  //employmentInfo.sort(compareBySession);
+  return employmentInfo;
 };
 
 const getProfileInfo = async username => {
@@ -659,6 +682,7 @@ export default {
   resetImage,
   postImage,
   postIDImage,
-  getTranscriptInfo,
+  getTranscriptMembershipsInfo,
+  getEmploymentInfo,
   updateSocialLink,
 };
