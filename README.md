@@ -1,6 +1,6 @@
 # Gordon 360 User Interface
 
-This project is the frontend of Gordon 360 in React. [The retired frontend](https://github.com/gordon-cs/Project-Bernard/) was built in EmberJS, but was deemed too slow and difficult to maintain. To see the specifics of the rebuild, see [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/master/old_documentation/ROADMAP.md).
+This project is the frontend of Gordon 360 in React. [The retired frontend](https://github.com/gordon-cs/Project-Bernard/) was built in EmberJS, but was deemed too slow and difficult to maintain. To see the specifics of the rebuild, see [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/develop/old_documentation/ROADMAP.md).
 
 ## Contents
 
