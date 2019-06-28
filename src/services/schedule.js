@@ -4,101 +4,111 @@
  * @module schedule
  */
 
-import jwtDecode from 'jwt-decode';
-import { AuthError } from './error';
 import moment from 'moment';
 import http from './http';
-import storage from './storage';
+import user from './user';
 
 /**
  * @global
  * @typedef Schedule
- * @property {Number} IDNum
- * @property {String} CourseCode
- * @property {String} CourseTitle
- * @property {String} BuildingCode
- * @property {int} RoomCode
- * @property {String} MonCode
- * @property {String} TueCode
- * @property {String} WedCode
- * @property {String} ThuCode
- * @property {String} FriCode
- * @property {DateTime} BeginTime
- * @property {DateTime} EndTime
+ * @property {Number} ID_NUM
+ * @property {String} CRS_CDE
+ * @property {String} CRS_TITLE
+ * @property {String} BLDG_CDE
+ * @property {String} ROOM_CDE
+ * @property {String} MONDAY_CDE
+ * @property {String} TUESDAY_CDE
+ * @property {String} WEDNESDAY_CDE
+ * @property {String} THURSDAY_CDE
+ * @property {String} FRIDAY_CDE
+ * @property {TimeSpan} BEGIN_TIME
+ * @property {TimeSpan} END_TIME
  */
+
+/** 
+ @example
+ BEGIN_TIME: "11:30:00"
+ BLDG_CDE: "KOS"
+ CRS_CDE: "BCM  308  H                   "
+ CRS_TITLE: "CHRISTIAN THEOLOGY"
+ END_TIME: "12:30:00"
+ FRIDAY_CDE: " "
+ ID_NUM: 50179789
+ MONDAY_CDE: " "
+ ROOM_CDE: "126"
+ THURSDAY_CDE: " "
+ TUESDAY_CDE: "T"
+ WEDNESDAY_CDE: " "
+*/
 
 /**
  * Get course schedule for profile
  * @return {Promise.<Schedule[]>} returns all the course schedules
  */
 
-const getSchedule = username => {
+async function getSchedule() {
   let schedule;
+  const { user_name: username } = user.getLocalInfo();
   if (username) {
-    schedule = http.get(`schedule/${username}/`);
+    schedule = await http.get(`schedule/${username}/`);
   } else {
-    schedule = http.get('schedule');
+    schedule = await http.get('schedule');
   }
   return schedule;
-};
+}
 
-function checkDayofWeek(schedule) {
+function checkDayofWeek(course) {
   let dayArray = [];
 
-  if (schedule.MonCode === 'M') {
+  if (course.MONDAY_CDE === 'M') {
     dayArray.push(2);
-  } else if (schedule.TueCode === 'T') {
+  }
+  if (course.TUESDAY_CDE === 'T') {
     dayArray.push(3);
-  } else if (schedule.WedCode === 'W') {
+  }
+  if (course.WEDNESDAY_CDE === 'W') {
     dayArray.push(4);
-  } else if (schedule.ThuCode === 'R') {
+  }
+  if (course.THURSDAY_CDE === 'R') {
     dayArray.push(5);
-  } else if (schedule.FriCode === 'F') {
+  }
+  if (course.FRIDAY_CDE === 'F') {
     dayArray.push(6);
   }
 
   return dayArray;
 }
 
-function makeScheduleCourses(schedule) {
+async function makeScheduleCourses() {
+  let schedule = getSchedule();
+  let course = await schedule.then(courseSchedule => {
+    return courseSchedule;
+  });
   let today = moment();
   let eventArray = [];
   let eventId = 0;
-
-  for (let i = 0; i < schedule.length; i++) {
-    schedule[i].CourseCode = schedule[i].CourseCode.trim();
-    schedule[i].CourseTitle = schedule[i].CourseTitle.trim();
-
-    let beginTime = moment(schedule[i].BeginTime);
+  for (let i = 0; i < course.length; i++) {
+    course[i].CRS_CDE = course[i].CRS_CDE.trim();
+    course[i].CRS_TITLE = course[i].CRS_TITLE.trim();
+    let beginTime = moment(course[i].BEGIN_TIME, 'HH:mm:ss');
     beginTime.set('y', today.year());
-    beginTime.set('m', today.month());
+    beginTime.set('M', today.month());
     beginTime.set('d', today.day());
-
-    let endTime = moment(schedule[i].EndTime);
+    let endTime = moment(course[i].END_TIME, 'HH:mm:ss');
     endTime.set('y', today.year());
-    endTime.set('m', today.month());
+    endTime.set('M', today.month());
     endTime.set('d', today.day());
-
-    let dayArray = checkDayofWeek(schedule[i]);
-
-    let courseTitle =
-      schedule[i].CourseCode +
-      '\n' +
-      schedule[i].CourseTitle +
-      '\n' +
-      schedule[i].BuildingCode +
-      ' ' +
-      schedule[i].RoomCode;
-
+    let dayArray = checkDayofWeek(course[i]);
+    let courseTitle = course[i].CRS_CDE + '\n' + course[i].BLDG_CDE + ' ' + course[i].ROOM_CDE;
     for (let j = 0; j < dayArray.length; j++) {
-      const course = {
+      const courseEvent = {
         id: eventId,
         title: courseTitle,
         start: beginTime.toDate(),
         end: endTime.toDate(),
         resourceId: dayArray[j],
       };
-      eventArray.push(course);
+      eventArray.push(courseEvent);
       eventId++;
     }
     eventId++;
@@ -106,12 +116,7 @@ function makeScheduleCourses(schedule) {
   return eventArray;
 }
 
-const getScheduleCourses = username => {
-  return makeScheduleCourses(getSchedule(username));
-};
-
 export default {
   getSchedule,
   makeScheduleCourses,
-  getScheduleCourses,
 };
