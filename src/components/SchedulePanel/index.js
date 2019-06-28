@@ -6,7 +6,6 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CourseSchedule from './components/CourseSchedule';
-
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -17,6 +16,7 @@ import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import HoursDialog from './components/OfficeHoursDialog';
 import RemoveHoursDialog from './components/RemoveHoursDialog';
+import schedule from './../../services/schedule';
 
 const styles = {
   colorSwitchBase: {
