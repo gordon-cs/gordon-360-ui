@@ -1,6 +1,15 @@
-// INSTALLING SERVICE WORKER
-if (navigator.serviceWorker) {
-  navigator.serviceWorker.register('/sw.js').catch(console.error);
+// Checking to see if the Cache API is available
+// If so, check to see if the Service Worker API is available
+if ('caches' in window) {
+  // Checking to see if the Service Worker API is available
+  // If so, we register our service worker
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  } else {
+    console.log('SERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE');
+  }
+} else {
+  console.log('CACHE API IS NOT AVAILABLE: PWA NOT AVAILABLE');
 }
 
 // CHECKS TO SEE IF THE NETWORK IS AVAILABLE

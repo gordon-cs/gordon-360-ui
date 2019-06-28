@@ -42,7 +42,7 @@ const firstDynamicCache = [
   'https://360apitrain.gordon.edu/api/profiles/Image',
   'https://360apitrain.gordon.edu/api/sessions/current',
   'https://360apitrain.gordon.edu/api/sessions/daysLeft',
-  'https://360apitrain.gordon.edu/api/dining/',
+  'https://360apitrain.gordon.edu/api/dining',
   /************************************************************ */
   // Involvements Page Fetch URLs
   'https://360apitrain.gordon.edu/api/sessions',
@@ -56,8 +56,8 @@ const firstDynamicCache = [
  *  If the network is not available, it returns a response from
  *  the cache.
  */
-function fetchThenCache(request) {
-  return fetch(request)
+async function fetchThenCache(request) {
+  return await fetch(request)
     .then(fetchResponse => {
       if (fetchResponse) {
         // Adds fetch response to cache
@@ -69,7 +69,9 @@ function fetchThenCache(request) {
     })
     .catch(() => {
       console.log(`\tGetting "${request.url}" from cache instead...`);
-      return caches.match(request);
+      return caches.match(request).catch(() => {
+        console.log(`\tFailed to get ${request.url} from cache`);
+      });
     });
 }
 
@@ -82,10 +84,10 @@ function preCacheStatic() {
     let preCachePromise = cache.addAll(staticCache);
     preCachePromise
       .then(() => {
-        console.log(' -\tPrecached Static Files successfully installed with Service Worker');
+        console.log(' -\tPrecached Static Files successfully installed');
       })
       .catch(() => {
-        console.log(' -\tPrecached Static Files failed to install with Service Worker');
+        console.log(' -\tPrecached Static Files failed to install');
       });
     return preCachePromise;
   });
@@ -126,7 +128,7 @@ async function getUserInfoForLinks(token) {
   let username = profile ? profile.AD_Username : null;
   let id = profile ? profile.ID : null;
   let sessionCode = currentSession ? currentSession.SessionCode : null;
-  let secondDynamicCache = [
+  const secondDynamicCache = [
     // Home Page Fetch URLs
     `https://360apitrain.gordon.edu/api/events/chapel/${username.toLowerCase()}/18SP`, // SEMESTER TERM NEEDED
     `https://360apitrain.gordon.edu/api/memberships/student/${id}`,
@@ -137,7 +139,6 @@ async function getUserInfoForLinks(token) {
     `https://360apitrain.gordon.edu/api/activities/session/${sessionCode}/types`,
     /************************************************************ */
     // Profile Page Fetch URLs
-    `https://360apitrain.gordon.edu/myprofile/${username.toLowerCase()}`,
     `https://360apitrain.gordon.edu/api/events/chapel/${username.toLowerCase()}/18SP`, // SEMESTER TERM NEEDED
     `https://360apitrain.gordon.edu/api/memberships/student/${id}`,
     `https://360apitrain.gordon.edu/api/profiles/${username}/`,
@@ -198,42 +199,32 @@ function cleanCache() {
 /*********************************************** EVENT LISTENERS ***********************************************/
 self.addEventListener('install', event => {
   console.log('Installing Service Worker');
-  let startupPromise = Promise.all([cleanCache(), preCacheStatic()]);
-  event.waitUntil(startupPromise);
 });
 
 self.addEventListener('activate', event => {
   console.log('Activating Service Worker');
   self.clients.claim();
+  event.waitUntil(cleanCache());
 });
 
 self.addEventListener('fetch', event => {
   // If request is from Local, console.log the URL
-  // if (event.request.url.match(location.origin)) {
-  //   console.log('Fetching request from LOCAL:', event.request.url);
-  // } else {
-  //   // If request is from Remote, console.log the URL
-  //   console.log('Fetching request from REMOTE LOCATION:', event.request.url);
-  // }
-  // If fetching for a static file, we serve automatically from the cache
-  // for efficiency and performance
-  if (staticCache.includes(event.request.url)) {
-    caches.open(cacheVersion).then(cache => {
-      cache.match(event.request.url).then(cacheResponse => {
-        console.log(`-\tGetting "${event.request.url}" from cache instead...`);
-        event.respondwith(cacheResponse);
-      });
-    });
+  if (event.request.url.match(location.origin)) {
+    console.log('Fetching request from LOCAL:', event.request.url);
+  } else {
+    // If request is from Remote, console.log the URL
+    console.log('Fetching request from REMOTE LOCATION:', event.request.url);
   }
 
   event.respondWith(fetchThenCache(event.request));
 });
 
 self.addEventListener('message', event => {
-  // If the message is to pre-cache dynamic files
+  // If the message is to pre-cache static/dynamic files
   if (event.data.message && event.data.message === 'cache-dynamic-files') {
     console.log('Received message from client. Fetching Dynamic Files');
-    preCacheDynamic(event.data.token, firstDynamicCache);
-    getUserInfoForLinks(event.data.token);
+    preCacheStatic(); // Static Cache
+    preCacheDynamic(event.data.token, firstDynamicCache); // First Dynamic Cache
+    getUserInfoForLinks(event.data.token); // Second Dynamic Cache
   }
-}); //
+});

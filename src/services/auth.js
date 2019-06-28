@@ -89,11 +89,16 @@ const isAuthenticated = () => {
  */
 const signOut = () => {
   storage.remove('token');
-  caches.keys().then(keys => {
-    keys.forEach(key => {
-      caches.delete(key);
+  // Checks to see if Cache API is available before attempting to access it
+  // This is important because if the API is not available, the site will not load
+  // and give an error
+  if ('caches' in window) {
+    caches.keys().then(keys => {
+      keys.forEach(key => {
+        caches.delete(key);
+      });
     });
-  });
+  }
 };
 
 export { authenticate, isAuthenticated, signOut };
