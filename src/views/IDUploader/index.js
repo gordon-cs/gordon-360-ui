@@ -42,7 +42,7 @@ export default class IDUploader extends Component {
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-      user.postIDImage(croppedImage);
+      console.log(user.postIDImage(croppedImage));
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({
         image: imageNoHeader,
