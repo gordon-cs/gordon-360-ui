@@ -69,7 +69,11 @@
 }
 
 /* for smaller screens */
-@media (max-width: 414px) {
+@media (min-width: 768px) {
+  .title {
+    font-size: 600px;
+  }
+
   .info {
     grid-template-rows: 16% 4% 16% 10% 16% 16%;
     grid-template-columns: 50% 50%;
