@@ -83,11 +83,11 @@
   },
   "proxy": {
     "/api": {
-      "target": "https://360ApiTrain.gordon.edu",
+      "target": "https://360ApiTrain.gordon.edu/",
       "changeOrigin": true
     },
     "/token": {
-      "target": "https://360ApiTrain.gordon.edu",
+      "target": "https://360ApiTrain.gordon.edu/",
       "changeOrigin": true
     }
   }
