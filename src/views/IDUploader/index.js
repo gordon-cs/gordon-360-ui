@@ -43,7 +43,7 @@ export default class IDUploader extends Component {
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-      this.postCroppedImage(croppedImage);
+      this.postCroppedImage(croppedImage, 0);
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({
         image: imageNoHeader,
@@ -55,12 +55,16 @@ export default class IDUploader extends Component {
     }
   };
 
-  async postCroppedImage(croppedImage) {
+  async postCroppedImage(croppedImage, n) {
     try {
       console.log(await user.postIDImage(croppedImage));
       this.setState({ submitDialogOpen: true });
     } catch (error) {
-      this.setState({ errorDialogOpen: true });
+      if (n < 5) {
+        this.postCroppedImage(croppedImage, n + 1);
+      } else {
+        this.setState({ errorDialogOpen: true });
+      }
     }
   }
 
