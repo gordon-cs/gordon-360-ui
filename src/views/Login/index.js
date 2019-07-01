@@ -70,6 +70,7 @@ export default class Login extends Component {
     try {
       await authenticate(this.state.username, this.state.password);
       console.log('Login/index.js: Successfully authenticated');
+      console.log('Running onLogIn');
       this.props.onLogIn();
       console.log('Login/index.js: onLogIn() returned');
     } catch (err) {

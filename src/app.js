@@ -11,6 +11,7 @@ import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import { AuthError } from './services/error';
 import Login from './views/Login';
+import Home from './views/Home';
 import theme from './theme';
 import routes from './routes';
 
@@ -72,6 +73,7 @@ export default class App extends Component {
                 path={route.path}
                 exact={route.exact}
                 component={route.component}
+                onLogIn={this.onAuthChange}
               />
             ))}
           </Switch>
@@ -81,9 +83,9 @@ export default class App extends Component {
 
     console.log('app.js: about to enter if block which checks auth.isAuthenticated()');
 
-    /*if (!isAuthenticated() || this.state.error instanceof AuthError) {
+    if (!isAuthenticated() || this.state.error instanceof AuthError) {
       signOut();
-      content = <Login onLogIn={this.onAuthChange} />;
+      content = <Home />;
       console.log('app.js: isAuthenticated() returned false or authentication error');
       console.log('app.js: isAutheticated() =', isAuthenticated());
       console.log(
@@ -93,7 +95,7 @@ export default class App extends Component {
     } else if (this.state.error) {
       content = <GordonError error={this.state.error} errorInfo={this.state.errorInfo} />;
       console.log('app.js: this.state.error was true');
-    }*/
+    }
 
     console.log('app.js: left if block and about to return from render()');
 
