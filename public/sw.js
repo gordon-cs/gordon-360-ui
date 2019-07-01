@@ -1,66 +1,75 @@
+/**
+ * Caches files and responds to network requests when offline.
+ *
+ * This service worker fetches and caches necessary files to enable Gordon 360 to work offline.
+ * If the network is lost, all requests will be handled by the cache. A response from the cache
+ * will be served if a request was succussfully fetched and cached when the network was available.
+ *
+ * @file   This file defines the Service Worker for Gordon 360
+ * @author Jake Moon and Jahnuel Dorelus.
+ */
+
 /*********************************************** VARIABLES ***********************************************/
 // Current cache version
 let cacheVersion = 'cache-1.0';
 
-// Static Files to cache upon installation of service worker
+// Static Files to cache
 const staticCache = [
   '/',
-  //'https://cloud.typography.com/7763712/7294392/css/fonts.css', -- Doesn't work in Developlent
+  '/favicon.ico',
+  // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Developlent
   '/images/apple-touch-icon-144x144.png',
   '/manifest.json',
   '/pwa.js',
   '/static/js/bundle.js',
-  '/favicon.ico',
-  '/static/media/gordon-logo-vertical-white.a6586885.svg',
   '/static/media/campus1366.e8fc7838.jpg',
-  // Icon Images
-  '/public/images/apple-touch-icon-57x57.png',
-  '/public/images/apple-touch-icon-60x60.png',
-  '/public/images/apple-touch-icon-72x72.png',
-  '/public/images/apple-touch-icon-76x76.png',
-  '/public/images/apple-touch-icon-114x114.png',
-  '/public/images/apple-touch-icon-120x120.png',
-  '/public/images/apple-touch-icon-144x144.png',
-  '/public/images/apple-touch-icon-152x152.png',
-  '/public/images/favicon-16x16.png',
-  '/public/images/favicon-32x32.png',
-  '/public/images/favicon-96x96.png',
-  '/public/images/favicon-128x128.png',
-  '/public/images/favicon-196x196.png',
-  '/public/images/mstile-70x70.png',
-  '/public/images/mstile-144x144.png',
-  '/public/images/mstile-150x150.png',
-  '/public/images/mstile-310x310.png',
-  '/public/android-chrome-144x144.png',
+  '/static/media/gordon-logo-vertical-white.a6586885.svg',
 ];
 
-// Dynamic Files to cache upon logging in
+/**
+ * First set out of three to cache dynamic files that requies a
+   Request with its property mode set to "cors"
+*/
 const firstDynamicCache = [
   // Home Page Fetch URLs
   'https://360apitrain.gordon.edu/api/cms/slider',
+  'https://360apitrain.gordon.edu/api/dining',
+  'https://360apitrain.gordon.edu/api/events/25Live/All',
   'https://360apitrain.gordon.edu/api/profiles',
   'https://360apitrain.gordon.edu/api/profiles/Image',
+  'https://360apitrain.gordon.edu/api/sessions',
   'https://360apitrain.gordon.edu/api/sessions/current',
   'https://360apitrain.gordon.edu/api/sessions/daysLeft',
-  'https://360apitrain.gordon.edu/api/dining',
-  /************************************************************ */
-  // Involvements Page Fetch URLs
-  'https://360apitrain.gordon.edu/api/sessions',
-  /************************************************************ */
-  // Events Page Fetch URLs
-  'https://360apitrain.gordon.edu/api/events/25Live/All',
+  'https://360apitrain.gordon.edu/api/studentemployment/',
+  'https://360apitrain.gordon.edu/api/version',
+];
+
+/**
+ * Second set out of three to cache dynamic files that requies a
+   Request with its property mode set to "no-cors"
+*/
+const secondDynamicCache = [
+  'https://www.gordon.edu/favicon.ico',
+  'https://my.gordon.edu/ics/favicon.ico',
+  'https://go.gordon.edu/favicon.ico',
+  'https://blackboard.gordon.edu/favicon.ico',
 ];
 
 /*********************************************** CACHING FUNCTIONS ***********************************************/
-/* Fetches for each request through the network
- *  If the network is not available, it returns a response from
- *  the cache.
+/**
+ * Does a fetch for each request received.
+ *
+ * If the network is available, it returns a response from the fetch
+ * Else, it returns a response from the cache.
+ *
+ * @param {Request} request A request made to be fetched from the network or cache
+ * @return {Promise<Response>} A response wrapped in a promise that's served from the network or cache
  */
 async function fetchThenCache(request) {
   return await fetch(request)
     .then(fetchResponse => {
       if (fetchResponse) {
-        // Adds fetch response to cache
+        /* FOR DEVELOPING PURPOSES: THIS CACHES EACH FETCH MADE */
         // caches.open(cacheVersion).then(cache => {
         //   cache.put(request, fetchResponse.clone());
         // });
@@ -75,25 +84,39 @@ async function fetchThenCache(request) {
     });
 }
 
-/* Caches all of the static files that are listed in
- *  the array staticCache
- *  @return A promise with the result of trying to cache the static files
+/**
+ * Caches all of the static files that are listed in the array staticCache
+ *
+ * If all files are cached successfuly, its success is console logged
+ * Else, console log that caching all files failed
+ *
+ *  @return {Promise} A promise with the result of caching the static files
  */
-function preCacheStatic() {
-  caches.open(cacheVersion).then(cache => {
-    let preCachePromise = cache.addAll(staticCache);
-    preCachePromise
+async function cacheStatic() {
+  return await caches.open(cacheVersion).then(cache => {
+    cache
+      .addAll(staticCache)
       .then(() => {
-        console.log(' -\tPrecached Static Files successfully installed');
+        console.log(' -\tCached Static Files Successfully');
       })
       .catch(() => {
-        console.log(' -\tPrecached Static Files failed to install');
+        console.log(' -\tCaching Static Files Failed');
       });
-    return preCachePromise;
   });
 }
 
-async function getUserInfoForLinks(token) {
+/**
+ * Pre-caches third set of dynamic files that requies a Request with its property mode set to "cors"
+ *
+ * Two fetches are done to have the user's info and the current session.
+ * There are three variables that are obtained from these fetches which are the user's
+ * username/id and the current session code. These variables are then used to create an array of
+ * links that is passed into the function 'cacheDynamic()' to cache the last set of dynamic files
+ *
+ * @param {String} token The token from Local Storage to authenticate each request made
+ * @param {String} termCode The current semester term
+ */
+async function getUserInfoForLinks(token, termCode) {
   // Creates the header for the request to have authenitification
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
@@ -101,59 +124,56 @@ async function getUserInfoForLinks(token) {
   });
 
   // Gets the user's profile object to access their firstname.lastname and ID#
-  let profile = await new Promise((resolve, reject) => {
-    fetch(new Request('https://360apitrain.gordon.edu/api/profiles', { method: 'GET', headers }))
-      .then(response => {
-        return resolve(response.json());
-      })
-      .catch(error => {
-        return reject(error.message);
-      });
-  });
+  let profile = await fetch(
+    new Request('https://360apitrain.gordon.edu/api/profiles', { method: 'GET', headers }),
+  )
+    .then(response => {
+      return response.json();
+    })
+    .catch(error => {
+      return error.message;
+    });
   // Gets the current session object to access the current session code
-  let currentSession = await new Promise((resolve, reject) => {
-    fetch(
-      new Request('https://360apitrain.gordon.edu/api/sessions/current', {
-        method: 'GET',
-        headers,
-      }),
-    )
-      .then(response => {
-        return resolve(response.json());
-      })
-      .catch(error => {
-        return reject(error.message);
-      });
-  });
+  let currentSession = await fetch(
+    new Request('https://360apitrain.gordon.edu/api/sessions/current', {
+      method: 'GET',
+      headers,
+    }),
+  )
+    .then(response => {
+      return response.json();
+    })
+    .catch(error => {
+      return error.message;
+    });
   let username = profile ? profile.AD_Username : null;
   let id = profile ? profile.ID : null;
   let sessionCode = currentSession ? currentSession.SessionCode : null;
-  const secondDynamicCache = [
-    // Home Page Fetch URLs
-    `https://360apitrain.gordon.edu/api/events/chapel/${username.toLowerCase()}/18SP`, // SEMESTER TERM NEEDED
-    `https://360apitrain.gordon.edu/api/memberships/student/${id}`,
-    `https://360apitrain.gordon.edu/api/requests/student/${id}`,
-    /************************************************************ */
-    // Involvements Page Fetch URLs
+  const thirdDynamicCache = [
     `https://360apitrain.gordon.edu/api/activities/session/${sessionCode}`,
     `https://360apitrain.gordon.edu/api/activities/session/${sessionCode}/types`,
-    /************************************************************ */
-    // Profile Page Fetch URLs
-    `https://360apitrain.gordon.edu/api/events/chapel/${username.toLowerCase()}/18SP`, // SEMESTER TERM NEEDED
+    `https://360apitrain.gordon.edu/api/events/chapel/${termCode}`,
     `https://360apitrain.gordon.edu/api/memberships/student/${id}`,
+    `https://360apitrain.gordon.edu/api/memberships/student/username/${username}/`,
     `https://360apitrain.gordon.edu/api/profiles/${username}/`,
-    /************************************************************ */
-    // Public Profile Page Fetch URLs
-    `https://360apitrain.gordon.edu/api//memberships/student/username/${username}/`,
     `https://360apitrain.gordon.edu/api/profiles/Image/${username}/`,
+    `https://360apitrain.gordon.edu/api/requests/student/${id}`,
   ];
-  preCacheDynamic(token, secondDynamicCache);
+  cacheDynamic(token, thirdDynamicCache);
 }
 
-/* Caches all of the dynamic files that are listed in
- *  the array cacheDynamic
+/**
+ * Fetches and caches all the dynamic files that are listed in the passed-in array
+ *
+ * For each URL in the passed-in array, a fetch is made. If the fetch is
+ * successful, the response is then cached
+ * Else, we console the specific URL that failed to fetch
+ *
+ * @param {String} token The token from Local Storage to authenticate each request made
+ * @param {Array} dynamicUserCacheLinks An array of links to be fetched and cached
+ * @param {String} mode [Set to 'cors' by default] Defines the type of request to be made
  */
-function preCacheDynamic(token, dynamicUserCacheLinks) {
+async function cacheDynamic(token, dynamicUserCacheLinks, mode = 'cors') {
   // Creates the header for the request to have authenitification
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
@@ -161,12 +181,13 @@ function preCacheDynamic(token, dynamicUserCacheLinks) {
   });
 
   // Caches each url in the list of dynamic files to cache
-  dynamicUserCacheLinks.forEach(url => {
+  dynamicUserCacheLinks.forEach(async url => {
     let request = new Request(url, {
       method: 'GET',
+      mode,
       headers,
     });
-    fetch(request)
+    await fetch(request)
       .then(fetchResponse => {
         if (fetchResponse) {
           // Adds fetch response to cache
@@ -181,15 +202,17 @@ function preCacheDynamic(token, dynamicUserCacheLinks) {
   });
 }
 
-/* Cleans cache to remove cacheVersion data that's
- *  no longer in use (removes outdated cache version)
+/**
+ * Cleans the cache to remove data that's no longer in use (removes outdated cache version)
+ *
+ * @return {Promise} A promise with the result of removing outdated cache
  */
-function cleanCache() {
-  caches.keys().then(keys => {
+async function cleanCache() {
+  await caches.keys().then(keys => {
     keys.forEach(key => {
       if (key !== cacheVersion && key.match('cache-')) {
         return caches.delete(key).then(() => {
-          console.log('Previous cache has been removed (outdated cache version');
+          console.log(' -\tPrevious cache has been removed (outdated cache version');
         });
       }
     });
@@ -208,23 +231,26 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  /* FOR DEVELOPING PURPOSES: THIS CONSOLE LOGS EACH FETCH REQUEST MADE */
   // If request is from Local, console.log the URL
-  if (event.request.url.match(location.origin)) {
-    console.log('Fetching request from LOCAL:', event.request.url);
-  } else {
-    // If request is from Remote, console.log the URL
-    console.log('Fetching request from REMOTE LOCATION:', event.request.url);
-  }
+  // if (event.request.url.match(location.origin)) {
+  //   console.log('Fetching request from LOCAL:', event.request.url);
+  // } else {
+  //   // If request is from Remote, console.log the URL
+  //   console.log('Fetching request from REMOTE LOCATION:', event.request.url);
+  // }
 
   event.respondWith(fetchThenCache(event.request));
 });
 
 self.addEventListener('message', event => {
-  // If the message is to pre-cache static/dynamic files
-  if (event.data.message && event.data.message === 'cache-dynamic-files') {
+  // If the message is to cache all static/dynamic files, all of those files are cached
+  if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
     console.log('Received message from client. Fetching Dynamic Files');
-    preCacheStatic(); // Static Cache
-    preCacheDynamic(event.data.token, firstDynamicCache); // First Dynamic Cache
-    getUserInfoForLinks(event.data.token); // Second Dynamic Cache
+    cacheStatic(); // Static Cache
+    cacheDynamic(event.data.token, firstDynamicCache); // First Dynamic Cache
+    cacheDynamic(event.data.token, secondDynamicCache, 'no-cors'); // Second Dynamic Cache
+    getUserInfoForLinks(event.data.token, event.data.termCode); // Third Dynamic Cache
   }
 });
+//

@@ -18,6 +18,7 @@ import { authenticate } from '../../services/auth';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
 import storage from '../../services/storage.js';
+import session from '../../services/session.js';
 
 // To temporarily disable the Login Hang message, set this boolean to false
 const LOGIN_BUG_MESSAGE = true; // Login Hang
@@ -78,8 +79,9 @@ export default class Login extends Component {
         // Sends a message to the service worker with the
         // token to precache dynamic files
         navigator.serviceWorker.controller.postMessage({
-          message: 'cache-dynamic-files',
+          message: 'cache-static-dynamic-files',
           token: storage.get('token'),
+          termCode: session.getTermCode(),
         });
       } else {
         console.log('SERVICE WORKER IS NOT AVAILABLE');
