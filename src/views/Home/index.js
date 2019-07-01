@@ -17,7 +17,7 @@ export default class Home extends Component {
   }
 
   componentWillMount() {
-    this.getPersonType();
+    //this.getPersonType();
   }
 
   async getPersonType() {
@@ -27,7 +27,7 @@ export default class Home extends Component {
   }
 
   render() {
-    const personType = this.state.personType;
+    /*const personType = this.state.personType;
     let doughnut;
 
     //Only show CL&W credits if user is a student
@@ -39,10 +39,10 @@ export default class Home extends Component {
       );
     } else {
       doughnut = <DaysLeft />;
-    }
+    }*/
 
     return (
-      <Grid container justify="center" spacing={16}>
+      /*<Grid container justify="center" spacing={16}>
         <Grid item xs={12} md={10}>
           <Carousel />
         </Grid>
@@ -55,7 +55,8 @@ export default class Home extends Component {
         <Grid item xs={12} md={5}>
           <Requests />
         </Grid>
-      </Grid>
+      </Grid>*/
+      <div>Home page</div>
     );
   }
 }
