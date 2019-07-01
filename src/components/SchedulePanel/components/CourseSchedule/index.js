@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import moment, { now } from 'moment';
+import Moment, { Now } from 'moment';
 
 import Calendar from 'react-big-calendar/dist/react-big-calendar';
-import momentLocalizer from 'react-big-calendar/lib/localizers/moment';
+import MomentLocalizer from 'react-big-calendar/lib/localizers/moment';
 
 import GordonLoader from '../../../../components/Loader';
 import schedule from './../../../../services/schedule';
@@ -29,7 +29,7 @@ export default class CourseSchedule extends Component {
     const courseInfo = await courseEventsPromise;
     this.courseInfo = courseInfo;
 
-    console.log('Scheudle :', this.courseInfo);
+    console.log('Schedule :', this.courseInfo);
 
     this.setState({ loading: false });
   }
@@ -47,7 +47,7 @@ export default class CourseSchedule extends Component {
 
     // Localizer is always required for react-big-calendar initialization
     let formats = {
-      dayHeaderFormat: (date, localizer = momentLocalizer(moment)) =>
+      dayHeaderFormat: (date, localizer = MomentLocalizer(Moment)) =>
         localizer.format(date, 'MMMM YYYY'),
     };
 
@@ -61,7 +61,7 @@ export default class CourseSchedule extends Component {
     if (this.state.loading) {
       content = <GordonLoader />;
     } else {
-      let Resource = ({ localizer = momentLocalizer(moment) }) => (
+      let Resource = ({ localizer = MomentLocalizer(Moment) }) => (
         <Calendar
           events={this.courseInfo}
           localizer={localizer}
@@ -72,14 +72,14 @@ export default class CourseSchedule extends Component {
           defaultView="day"
           view={['day']}
           onSelectEvent={this.handleRemoveButton}
-          defaultDate={now.date}
+          defaultDate={Now.date}
           resources={resourceMap}
           resourceIdAccessor="resourceId"
           resourceTitleAccessor="resourceTitle"
           formats={formats}
         />
       );
-      content = Resource(momentLocalizer(moment));
+      content = Resource(MomentLocalizer(Moment));
     }
 
     return <Fragment>{content}</Fragment>;
