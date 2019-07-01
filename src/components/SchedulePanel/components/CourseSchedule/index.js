@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import Moment, { Now } from 'moment';
+import Moment from 'moment';
 
 import Calendar from 'react-big-calendar/dist/react-big-calendar';
 import MomentLocalizer from 'react-big-calendar/lib/localizers/moment';
@@ -21,18 +21,19 @@ export default class CourseSchedule extends Component {
   }
 
   componentWillMount() {
-    this.loadData();
+    this.loadData(this.props.profile);
   }
 
-  async loadData() {
-    const courseEventsPromise = schedule.makeScheduleCourses();
+  loadData = async searchedUser => {
+    const schedulePromise = schedule.getSchedule(searchedUser.AD_Username);
+    const courseEventsPromise = schedule.makeScheduleCourses(schedulePromise);
     const courseInfo = await courseEventsPromise;
     this.courseInfo = courseInfo;
 
     console.log('Schedule :', this.courseInfo);
 
     this.setState({ loading: false });
-  }
+  };
 
   render() {
     const resourceMap = [
@@ -72,7 +73,7 @@ export default class CourseSchedule extends Component {
           defaultView="day"
           view={['day']}
           onSelectEvent={this.handleRemoveButton}
-          defaultDate={Now.date}
+          defaultDate={Moment(new Date())}
           resources={resourceMap}
           resourceIdAccessor="resourceId"
           resourceTitleAccessor="resourceTitle"

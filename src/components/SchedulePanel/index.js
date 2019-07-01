@@ -192,7 +192,7 @@ class GordonSchedulePanel extends Component {
                     <Grid item xs={12} align="center">
                       <Grid container xs={12} lg={10}>
                         <Grid item xs={12}>
-                          <CourseSchedule />
+                          <CourseSchedule profile={this.props.profile} />
                         </Grid>
                       </Grid>
                     </Grid>
