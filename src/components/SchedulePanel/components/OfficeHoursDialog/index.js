@@ -3,14 +3,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
-import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
 import { gordonColors } from '../../../../theme';
 import Checkbox from '@material-ui/core/Checkbox';
 
@@ -94,7 +89,7 @@ export default class HoursDialog extends React.Component {
         maxWidth="md"
         className="time-tile"
       >
-        <DialogTitle className="title">Edit your office hours</DialogTitle>
+        <DialogTitle className="title">Add a schedule item</DialogTitle>
 
         <DialogContent className="dialog-content">
           <form className="info" onSubmit={this.handleSubmit}>
