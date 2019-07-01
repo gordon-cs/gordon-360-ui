@@ -3,7 +3,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
-//import Box from '@material-ui/core/Box';
 import { gordonColors } from '../../../../theme';
 
 export default class RemoveHoursDialog extends React.Component {
@@ -15,21 +14,6 @@ export default class RemoveHoursDialog extends React.Component {
       startHour: '',
       endHour: '',
       hourType: '',
-      // facebookInput: '',
-      // twitterInput: '',
-      // linkedInInput: '',
-      // instagramInput: '',
-      // formErrors: {
-      //   facebookInput: '',
-      //   twitterInput: '',
-      //   linkedInInput: '',
-      //   instagramInput: '',
-      // },
-      // fbValid: true,
-      // twValid: true,
-      // liValid: true,
-      // igValid: true,
-      // formValid: true,
       removeOfficeHoursOpen: false,
     };
     this.handleRemoveOfficeHoursClose = this.handleRemoveOfficeHoursClose.bind(this);

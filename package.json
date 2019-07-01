@@ -6,8 +6,6 @@
     "@material-ui/core": "^1.4.1",
     "@material-ui/icons": "^1.1.0",
     "base64toblob": "0.0.2",
-    "box": "0.0.4",
-    "box-ui-elements": "^10.1.0",
     "calendar": "^0.1.0",
     "chart.js": "^2.7.1",
     "classnames": "^2.2.5",
