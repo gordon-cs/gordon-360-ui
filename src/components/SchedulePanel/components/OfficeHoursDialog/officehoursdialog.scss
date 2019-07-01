@@ -26,7 +26,7 @@
 .info {
   display: grid;
   grid-template-rows: 20% 10px 20% 20% 20%;
-  grid-template-columns: 30% 20% 50%;
+  grid-template-columns: 12% 18% 70%;
   grid-row-gap: 10px;
   grid-column: 1;
 }
@@ -50,7 +50,7 @@
 .alldaycheckbox {
   grid-row: 3;
   grid-column: 3;
-  justify-self: center;
+  justify-self: left;
 }
 
 .office-hours-title {

@@ -134,7 +134,7 @@ class GordonSchedulePanel extends Component {
     if (this.props.myProf && isFaculty) {
       addOfficeHourButton = (
         <Fragment>
-          <Button onClick={this.handleOfficeHoursOpen}>ADD OFFICE HOURS</Button>
+          <Button onClick={this.handleOfficeHoursOpen}>ADD EVENT</Button>
         </Fragment>
       );
     }
@@ -145,7 +145,7 @@ class GordonSchedulePanel extends Component {
           <Button
             onClick={this.handleRemoveOfficeHoursOpen} //disabled
           >
-            REMOVE OFFICE HOURS
+            REMOVE EVENT
           </Button>
         </Fragment>
       );
