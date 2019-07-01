@@ -29,6 +29,7 @@ export default class IDUploader extends Component {
       preview: null,
       photoOpen: false,
       submitDialogOpen: false,
+      errorDialogOpen: false,
       cropperData: { cropBoxDim: null, aspectRatio: null },
       files: [],
       IdCardPlaceholder: IdCardDefault,
@@ -42,25 +43,33 @@ export default class IDUploader extends Component {
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-      console.log(user.postIDImage(croppedImage));
+      this.postCroppedImage(croppedImage);
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({
         image: imageNoHeader,
         photoOpen: false,
         preview: null,
         IdCardPlaceholder: croppedImage,
-        submitDialogOpen: true,
       });
       window.didProfilePicUpdate = true;
     }
   };
+
+  async postCroppedImage(croppedImage) {
+    try {
+      console.log(await user.postIDImage(croppedImage));
+      this.setState({ submitDialogOpen: true });
+    } catch (error) {
+      this.setState({ errorDialogOpen: true });
+    }
+  }
 
   handleCloseCancel = () => {
     this.setState({ photoOpen: false, preview: null });
   };
 
   handleCloseOkay = () => {
-    this.setState({ submitDialogOpen: false });
+    this.setState({ submitDialogOpen: false, errorDialogOpen: false });
   };
 
   maxCropPreviewWidth() {
@@ -161,10 +170,6 @@ export default class IDUploader extends Component {
 
       instructionsText: {
         fontSize: '15pt',
-      },
-
-      submittedText: {
-        color: 'black',
       },
     };
 
@@ -343,17 +348,39 @@ export default class IDUploader extends Component {
         <Dialog
           open={this.state.submitDialogOpen}
           keepMounted
-          onClose={this.handleClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
           maxWidth="false"
         >
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>
-            <DialogContentText style={style.submittedText}>
-              Your ID photo has been sent successfully!
-              {<br />}
-              CTS will contact you if your photo does not meet the stated criteria.
+            <DialogContentText className="submittedText">
+              Your ID photo has been sent successfully! <br /> CTS will contact you if your photo
+              does not meet the stated criteria.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Grid container spacing={8} justify="flex-end">
+              <Grid item />
+              <Grid item>
+                <Button variant="contained" onClick={this.handleCloseOkay} style={style.button}>
+                  Okay
+                </Button>
+              </Grid>
+            </Grid>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={this.state.errorDialogOpen}
+          keepMounted
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+          maxWidth="false"
+        >
+          <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
+          <DialogContent>
+            <DialogContentText className="submittedText">
+              Looks like something went wrong on our end! <br /> Try resubmitting your photo.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
