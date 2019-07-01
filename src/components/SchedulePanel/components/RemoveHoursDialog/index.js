@@ -13,6 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui//core/Grid';
 import Button from '@material-ui/core/Button';
+//import Box from '@material-ui/core/Box';
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -74,71 +75,6 @@ export default class RemoveHoursDialog extends React.Component {
       hourType: e.target.value,
     });
   };
-
-  // // Update local state as parent state changes
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.facebookLink !== this.props.facebookLink) {
-  //     this.setState({ facebookInput: nextProps.facebookLink });
-  //   }
-  //   if (nextProps.twitterLink !== this.props.twitterLink) {
-  //     this.setState({ twitterInput: nextProps.twitterLink });
-  //   }
-  //   if (nextProps.linkedInLink !== this.props.linkedInLink) {
-  //     if (this.props.linkedInLink === undefined) {
-  //       this.setState({ linkedInInput: '' });
-  //     } else {
-  //       this.setState({ linkedInInput: nextProps.linkedInLink });
-  //     }
-  //   }
-  //   if (nextProps.instagramLink !== this.props.instagramLink) {
-  //     this.setState({ instagramInput: nextProps.instagramLink });
-  //   }
-  // }
-
-  // validateField(fieldName, value) {
-  //   let fieldValidationErrors = this.state.formErrors;
-  //   let fbValid = this.state.fbValid;
-  //   let twValid = this.state.twValid;
-  //   let liValid = this.state.liValid;
-  //   let igValid = this.state.igValid;
-
-  //   let facebook = socialMediaInfo.facebook;
-  //   let twitter = socialMediaInfo.twitter;
-  //   let linkedIn = socialMediaInfo.linkedIn;
-  //   let instagram = socialMediaInfo.instagram;
-
-  //   // Require that content begins with appropriate domain name if not empty
-  //   switch (fieldName) {
-  //     case 'facebookInput':
-  //       fbValid = value === '' || value.indexOf(facebook.prefix) === 0;
-  //       fieldValidationErrors.facebookInput = fbValid ? '' : facebook.error;
-  //       break;
-  //     case 'twitterInput':
-  //       twValid = value === '' || value.indexOf(twitter.prefix) === 0;
-  //       fieldValidationErrors.twitterInput = twValid ? '' : twitter.error;
-  //       break;
-  //     case 'linkedInInput':
-  //       liValid = value === '' || value.indexOf(linkedIn.prefix) === 0;
-  //       fieldValidationErrors.linkedInInput = liValid ? '' : linkedIn.error;
-  //       break;
-  //     case 'instagramInput':
-  //       igValid = value === '' || value.indexOf(instagram.prefix) === 0;
-  //       fieldValidationErrors.instagramInput = igValid ? '' : instagram.error;
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   this.setState(
-  //     {
-  //       formErrors: fieldValidationErrors,
-  //       fbValid: fbValid,
-  //       twValid: twValid,
-  //       liValid: liValid,
-  //       igValid: igValid,
-  //     },
-  //     this.validateForm,
-  //   );
-  // }
 
   validateForm() {
     this.setState({
@@ -226,6 +162,7 @@ export default class RemoveHoursDialog extends React.Component {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
+          {/* <Box fontSize="h6.fontSize" m={1}>Are you sure about removing this event?</Box> */}
           <DialogTitle className="title">Are you sure about removing this event?</DialogTitle>
           <DialogActions className="buttons">
             <Button
