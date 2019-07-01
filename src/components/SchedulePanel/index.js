@@ -16,7 +16,6 @@ import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import HoursDialog from './components/OfficeHoursDialog';
 import RemoveHoursDialog from './components/RemoveHoursDialog';
-import schedule from './../../services/schedule';
 
 const styles = {
   colorSwitchBase: {
