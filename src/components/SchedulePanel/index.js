@@ -1,10 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import CourseSchedule from './components/CourseSchedule';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -16,6 +12,8 @@ import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import HoursDialog from './components/OfficeHoursDialog';
 import RemoveHoursDialog from './components/RemoveHoursDialog';
+
+import './schedulepanel.css';
 
 const styles = {
   colorSwitchBase: {
@@ -176,37 +174,29 @@ class GordonSchedulePanel extends Component {
             <Typography>{panelTitle} the Schedule</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <Grid item xs={12} lg={12}>
-              <Card>
-                <CardContent>
-                  <Grid container direction="row" justify="center" alignItems="center">
-                    <Grid item xs={8}>
-                      <Grid container xs={12} justify="flex-start">
-                        <CardHeader title="My Schedule" />
-                        {/* <Grid item xs={4} align="left">
-                      <Typography>
-                        Insert description here
-                      </Typography>
-                    </Grid> */}
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={4} align="right">
-                      {privacyButton}
-                      {addOfficeHourButton} {removeOfficeHourButton}
-                    </Grid>
-                    <Grid item xs={12} align="center">
-                      <Grid container xs={12} lg={10}>
-                        <Grid item xs={12}>
-                          <CourseSchedule profile={this.props.profile} />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
+            {/* ///////////////////////////////////////////////////////////////////// */}
+            <div className="schedule_content">
+              {/* <Card> */}
+              {/* <CardContent> */}
+              <div className="title">My Schedule</div>
+
+              <div className="privacy">{privacyButton}</div>
+
+              <div className="description">Insert description here</div>
+
+              <div className="add_event">{addOfficeHourButton}</div>
+
+              <div className="remove_event">{removeOfficeHourButton}</div>
+
+              <div className="schedule">
+                <CourseSchedule profile={this.props.profile} />
+              </div>
+              {/* </CardContent> */}
+              {/* </Card> */}
               {hoursDialog}
               {removeHoursDialog}
-            </Grid>
+            </div>
+            {/* //////////////////////////////////////////////////////////////////// */}
           </ExpansionPanelDetails>
         </ExpansionPanel>
       );
