@@ -220,7 +220,7 @@ export default class DiningBalance extends Component {
                   <div className="label-text" style={{ color: swipesColor }}>
                     {swipeInit === 0 ? '\u221E' : swipeCurr}
                   </div>
-                  <div class="entry-text">Swipes</div>
+                  <div className="entry-text">Swipes</div>
                 </div>
 
                 <div
@@ -234,7 +234,7 @@ export default class DiningBalance extends Component {
                   <div className="label-text" style={{ color: dollarsColor }}>
                     ${dollarCurr}
                   </div>
-                  <div class="entry-text">Dining Dollars</div>
+                  <div className="entry-text">Dining Dollars</div>
                 </div>
 
                 <div
@@ -248,7 +248,7 @@ export default class DiningBalance extends Component {
                   <div className="label-text" style={{ color: guestColor }}>
                     {guestCurr}
                   </div>
-                  <div class="entry-text">Guest Swipes</div>
+                  <div className="entry-text">Guest Swipes</div>
                 </div>
               </div>
             </div>

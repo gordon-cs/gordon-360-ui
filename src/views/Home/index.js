@@ -8,7 +8,6 @@ import DaysLeft from './components/DaysLeft';
 import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
 import { isAuthenticated, signOut } from '../../services/auth';
-import { AuthError } from '../../services/error';
 import user from '../../services/user';
 import Login from '../Login';
 
@@ -16,32 +15,45 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.onLogIn = this.onLogIn.bind(this);
+    this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null, content: null };
+    this.state = { personType: null };
   }
 
   componentWillMount() {
-    let content;
-
-    if (!isAuthenticated() || this.state.error instanceof AuthError) {
-      signOut();
-      content = <Login onLogIn={this.onLogIn} />;
-      //console.log('app.js: isAuthenticated() returned false or authentication error');
-      //console.log('app.js: isAutheticated() =', isAuthenticated());
-      //console.log(
-      //'app.js: this.state.error instanceof AuthError =',
-      //this.state.error instanceof AuthError,
-      //);
-    } /*else if (this.state.error) {
-      content = <GordonError error={this.state.error} errorInfo={this.state.errorInfo} />;
-      //console.log('app.js: this.state.error was true');
-    }*/ else {
+    if (isAuthenticated()) {
+      console.log('isAuthenticated returned true, getting PersonType');
       this.getPersonType();
+    }
+  }
 
+  async getPersonType() {
+    console.log('Called getPersonType');
+    const profile = await user.getProfileInfo();
+    const personType = String(profile.PersonType);
+    console.log('Setting state of personType');
+    this.setState({ personType });
+  }
+
+  logIn() {
+    console.log('Home LogIn was called.');
+    try {
+      this.props.onLogIn();
+      console.log('Home onLogIn succeeded.');
+    } catch (error) {
+      console.log('Home onLogIn failed with error: ' + error);
+    }
+  }
+
+  render() {
+    let content;
+    console.log('Rendering Home. About to check isAuthenticated');
+    if (isAuthenticated()) {
+      console.log('isAuthenticated returned true, checking state of PersonType');
       const personType = this.state.personType;
       let doughnut;
 
+      console.log('Making doughnut');
       //Only show CL&W credits if user is a student
       if (String(personType).includes('stu')) {
         doughnut = (
@@ -69,23 +81,11 @@ export default class Home extends Component {
           </Grid>
         </Grid>
       );
+    } else {
+      console.log('isAuthenticated failed at Home, switching to Login');
+      signOut();
+      content = <Login onLogIn={this.logIn} />;
     }
-
-    this.setState({ content });
-  }
-
-  async getPersonType() {
-    const profile = await user.getProfileInfo();
-    const personType = String(profile.PersonType);
-    this.setState({ personType });
-  }
-
-  onLogIn() {
-    this.props.onLogIn();
-  }
-
-  render() {
-    const content = this.state.content;
 
     return <div>{content}</div>;
   }

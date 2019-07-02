@@ -285,12 +285,10 @@ function setClass(profile) {
 
 /**
  * Get chapel events attended by the user
- * @param {String} username username of the user
  * @param {String} termCode code for the semester
  * @return {Promise.<AttendedEvent[]>} An object of all CL&W events attended by the user
  */
-const getAttendedChapelEvents = (username, termCode) =>
-  http.get(`events/chapel/${username}/${termCode}`);
+const getAttendedChapelEvents = termCode => http.get(`events/chapel/${termCode}`);
 
 /**
  * Get image for a given user or the current user if `username` is not provided
@@ -325,7 +323,7 @@ const postIDImage = dataURI => {
   let type = blob.type.replace('image/', '');
   let headerOptions = {};
   imageData.append('canvasImage', blob, 'canvasImage.' + type);
-  console.log("blob size: " + blob.size);
+  console.log('blob size: ' + blob.size);
   return http.post('profiles/IDimage', imageData, headerOptions);
 };
 
@@ -387,9 +385,8 @@ const getLocalInfo = () => {
 
 //Call function to retrieve events from database then format them
 const getAttendedChapelEventsFormatted = async () => {
-  const { user_name: username } = getLocalInfo();
   const termCode = session.getTermCode();
-  const attendedEvents = await getAttendedChapelEvents(username, termCode);
+  const attendedEvents = await getAttendedChapelEvents(termCode);
   const events = [];
   attendedEvents.sort(gordonEvent.sortByTime);
   for (let i = 0; i < attendedEvents.length; i += 1) {
@@ -404,9 +401,8 @@ const getAttendedChapelEventsFormatted = async () => {
  * @return {Promise.<CLWCredits>} An Object of their current and requiered number of CL&W events,
  */
 const getChapelCredits = async () => {
-  const { user_name: username } = getLocalInfo();
   const termCode = session.getTermCode();
-  const attendedEvents = await getAttendedChapelEvents(username, termCode);
+  const attendedEvents = await getAttendedChapelEvents(termCode);
 
   // Get required number of CL&W credits for the user, defaulting to thirty
   let required = 30;
