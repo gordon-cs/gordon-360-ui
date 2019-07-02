@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
+import { isAuthenticated } from '../../../../services/auth';
 import peopleSearch from '../../../../services/people-search';
 const MIN_QUERY_LENGTH = 3;
 
@@ -67,7 +68,7 @@ export default class GordonPeopleSearch extends Component {
     if (!query || query.length < MIN_QUERY_LENGTH) {
       return;
     }
-    
+
     //so apparently everything breaks if the first letter is capital, which is what happens on mobile
     //sometimes and then you spend four hours trying to figure out why downshift is not working
     //but really its just that its capitalized what the heck
@@ -184,9 +185,9 @@ export default class GordonPeopleSearch extends Component {
         <Typography variant="caption" component="p">
           {/* If the first name matches either part (first or last name) of the query, don't
               highlight occurrences of the query in the first name part of the username.
-              
+
               If the username contains a period, add it back in.
-              
+
               If the username contains a period,
               If the last name matches either part (first of last name) of the query, don't
               highlight occurrences of the query in the last name part of the username. */}
@@ -240,39 +241,68 @@ export default class GordonPeopleSearch extends Component {
     if (window.innerWidth < this.breakpointWidth) {
       placeholder = 'People';
     }
-    return (
-      <Downshift
-        // Assign reference to Downshift to `this` for usage elsewhere in the component
-        ref={downshift => {
-          this.downshift = downshift;
-        }}
-        render={({ getInputProps, getItemProps, isOpen }) => (
-          <span className="gordon-people-search">
-            {renderInput(
-              getInputProps({
-                placeholder: placeholder,
-                onChange: event => this.getSuggestions(event.target.value),
-                onKeyDown: event => {
-                  this.handleKeys(event.key);
-                },
-              }),
-            )}
-            {isOpen &&
-            this.state.suggestions.length > 0 &&
-            this.state.query.length >= MIN_QUERY_LENGTH ? (
-              <Paper square className="people-search-dropdown">
-                { 
-                  this.state.suggestions.map(suggestion =>
-                  this.renderSuggestion({
-                    suggestion,
-                    itemProps: getItemProps({ item: suggestion.UserName }),
-                  }),
-                )}
-              </Paper>
-            ) : null}
-          </span>
-        )}
-      />
-    );
+
+    let content;
+    if (isAuthenticated()) {
+      content = (
+        <Downshift
+          // Assign reference to Downshift to `this` for usage elsewhere in the component
+          ref={downshift => {
+            this.downshift = downshift;
+          }}
+          render={({ getInputProps, getItemProps, isOpen }) => (
+            <span className="gordon-people-search">
+              {renderInput(
+                getInputProps({
+                  placeholder: placeholder,
+                  onChange: event => this.getSuggestions(event.target.value),
+                  onKeyDown: event => {
+                    this.handleKeys(event.key);
+                  },
+                }),
+              )}
+              {isOpen &&
+              this.state.suggestions.length > 0 &&
+              this.state.query.length >= MIN_QUERY_LENGTH ? (
+                <Paper square className="people-search-dropdown">
+                  {this.state.suggestions.map(suggestion =>
+                    this.renderSuggestion({
+                      suggestion,
+                      itemProps: getItemProps({ item: suggestion.UserName }),
+                    }),
+                  )}
+                </Paper>
+              ) : null}
+            </span>
+          )}
+        />
+      );
+    } else {
+      content = (
+        <span className="gordon-people-search">
+          <TextField
+            //autoFocus={autoFocus}
+            value={'Log in to use People Search'}
+            //inputRef={ref}
+            className={'text-field'}
+            InputProps={{
+              disableUnderline: true,
+              classes: {
+                root: 'people-search-root',
+                input: 'people-search-input',
+                inputDisabled: 'people-search-disabled',
+              },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </span>
+      );
+    }
+
+    return content;
   }
 }
