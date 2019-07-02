@@ -6,7 +6,6 @@
 
 import moment from 'moment';
 import http from './http';
-//import user from './user';
 
 /**
  * @global
@@ -97,7 +96,7 @@ async function makeScheduleCourses(schedule) {
     endTime.set('M', today.month());
     endTime.set('d', today.day());
     let dayArray = checkDayofWeek(course[i]);
-    let courseTitle = course[i].CRS_CDE + '\n' + course[i].BLDG_CDE + ' ' + course[i].ROOM_CDE;
+    let courseTitle = course[i].CRS_CDE + ' in ' + course[i].BLDG_CDE + ' ' + course[i].ROOM_CDE;
     for (let j = 0; j < dayArray.length; j++) {
       const courseEvent = {
         id: eventId,
