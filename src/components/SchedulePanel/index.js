@@ -182,7 +182,8 @@ class GordonSchedulePanel extends Component {
                   <Grid container direction="row" justify="center" alignItems="center">
                     <Grid item xs={8}>
                       <Grid container xs={12} justify="flex-start">
-                        <CardHeader title="My Schedule" />
+                        {console.log(this.props.profile)}
+                        <CardHeader title={'Weekly Schedule of ' + this.props.profile.fullName} />
                         {/* <Grid item xs={4} align="left">
                       <Typography>
                         Insert description here
