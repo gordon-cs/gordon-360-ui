@@ -57,12 +57,15 @@ export default class IDUploader extends Component {
 
   async postCroppedImage(croppedImage, n) {
     try {
+      console.log('n = ' + n);
       console.log(await user.postIDImage(croppedImage));
       this.setState({ submitDialogOpen: true });
     } catch (error) {
       if (n < 5) {
+        console.log('recursion called');
         this.postCroppedImage(croppedImage, n + 1);
       } else {
+        console.log('recursion not called');
         this.setState({ errorDialogOpen: true });
       }
     }
