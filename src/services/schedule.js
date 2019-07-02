@@ -6,7 +6,7 @@
 
 import moment from 'moment';
 import http from './http';
-import user from './user';
+//import user from './user';
 
 /**
  * @global
@@ -25,7 +25,7 @@ import user from './user';
  * @property {TimeSpan} END_TIME
  */
 
-/** 
+/**
  @example
  BEGIN_TIME: "11:30:00"
  BLDG_CDE: "KOS"
