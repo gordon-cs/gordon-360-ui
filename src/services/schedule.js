@@ -46,16 +46,15 @@ import user from './user';
  * @return {Promise.<Schedule[]>} returns all the course schedules
  */
 
-async function getSchedule() {
+const getSchedule = async username => {
   let schedule;
-  const { user_name: username } = user.getLocalInfo();
   if (username) {
     schedule = await http.get(`schedule/${username}/`);
   } else {
     schedule = await http.get('schedule');
   }
   return schedule;
-}
+};
 
 function checkDayofWeek(course) {
   let dayArray = [];
@@ -79,8 +78,7 @@ function checkDayofWeek(course) {
   return dayArray;
 }
 
-async function makeScheduleCourses() {
-  let schedule = getSchedule();
+async function makeScheduleCourses(schedule) {
   let course = await schedule.then(courseSchedule => {
     return courseSchedule;
   });
