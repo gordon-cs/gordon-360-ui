@@ -1,0 +1,49 @@
+.schedule_content {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  grid-template-columns: 5% 10% 5% 20% 20% 10%;
+  grid-row-gap: 5px;
+  justify-self: left;
+}
+
+.title {
+  grid-row: 1;
+  grid-column: 2;
+  justify-self: left;
+}
+
+.privacy {
+  grid-row: 1;
+  grid-column: 5;
+  justify-self: right;
+}
+
+.description {
+  grid-row: 2;
+  grid-column: 2;
+  justify-self: left;
+}
+
+.edit_description {
+  grid-row: 2;
+  grid-column: 3;
+  justify-self: left;
+}
+
+.add_event {
+  grid-row: 2;
+  grid-column: 4;
+  justify-self: right;
+}
+
+.remove_event {
+  grid-row: 2;
+  grid-column: 5;
+  justify-self: right;
+}
+
+.schedule {
+  grid-row: 3;
+  grid-column: 1 / -1;
+  justify-self: center;
+}
