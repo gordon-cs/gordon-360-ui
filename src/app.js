@@ -7,7 +7,7 @@ import './app.css';
 import analytics from './services/analytics';
 //import { isAuthenticated, signOut } from './services/auth';
 //import GordonError from './components/Error';
-//import GordonHeader from './components/Header';
+import GordonHeader from './components/Header';
 //import GordonNav from './components/Nav';
 //import { AuthError } from './services/error';
 //import Login from './views/Login';
@@ -61,8 +61,8 @@ export default class App extends Component {
   render() {
     let content = (
       <section className="app-wrapper">
-        {/*<GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
-        <GordonNav
+        <GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
+        {/*<GordonNav
           onDrawerToggle={this.onDrawerToggle}
           drawerOpen={this.state.drawerOpen}
           onSignOut={this.onAuthChange}
@@ -81,24 +81,6 @@ export default class App extends Component {
         </main>
       </section>
     );
-
-    //console.log('app.js: about to enter if block which checks auth.isAuthenticated()');
-
-    /*if (!isAuthenticated() || this.state.error instanceof AuthError) {
-      signOut();
-      content = <Home />;
-      console.log('app.js: isAuthenticated() returned false or authentication error');
-      console.log('app.js: isAutheticated() =', isAuthenticated());
-      console.log(
-        'app.js: this.state.error instanceof AuthError =',
-        this.state.error instanceof AuthError,
-      );
-    } else if (this.state.error) {
-      content = <GordonError error={this.state.error} errorInfo={this.state.errorInfo} />;
-      console.log('app.js: this.state.error was true');
-    }
-
-    console.log('app.js: left if block and about to return from render()');*/
 
     return (
       <MuiThemeProvider theme={theme}>

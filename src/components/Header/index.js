@@ -15,7 +15,7 @@ import DocumentTitle from 'react-document-title';
 import { Route, Switch, NavLink } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
-import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
+//import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
 
 const getRouteName = route => {
@@ -123,7 +123,7 @@ export default class GordonHeader extends Component {
               </Tabs>
             </div>
             <GordonPeopleSearch />
-            <GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />
+            {/*<GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />*/}
           </Toolbar>
         </AppBar>
       </section>
