@@ -183,6 +183,11 @@ class GordonSchedulePanel extends Component {
                     <Grid item xs={8}>
                       <Grid container xs={12} justify="flex-start">
                         <CardHeader title="My Schedule" />
+                        {/* <Grid item xs={4} align="left">
+                      <Typography>
+                        Insert description here
+                      </Typography>
+                    </Grid> */}
                       </Grid>
                     </Grid>
                     <Grid item xs={4} align="right">
