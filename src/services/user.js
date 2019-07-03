@@ -12,6 +12,7 @@ import session from './session';
 import storage from './storage';
 import { socialMediaInfo } from '../socialMedia';
 import gordonEvent from './event';
+import { isAuthenticated, signOut } from './auth';
 
 /**
  * @global
@@ -369,13 +370,11 @@ function dataURItoBlob(dataURI) {
  */
 const getLocalInfo = () => {
   let token;
-
   try {
     token = storage.get('token');
   } catch (err) {
     throw new AuthError('Could not get local auth');
   }
-
   try {
     return jwtDecode(token);
   } catch (err) {
