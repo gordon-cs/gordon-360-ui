@@ -72,19 +72,18 @@ export default class EditDescriptionDialog extends React.Component {
         open={this.props.editDescriptionOpen}
         keepMounted
         fullWidth="true"
-        maxWidth="sm"
+        maxWidth="xs"
         className="tile"
       >
         <DialogTitle className="title">Edit schedule description</DialogTitle>
 
-        <div className="description">
-          <TextField
-            id="descInput"
-            label="Description"
-            value={this.state.descInput}
-            onChange={this.handleChange('descInput')}
-          />
-        </div>
+        <TextField
+          id="descInput"
+          label="Description"
+          value={this.state.descInput}
+          onChange={this.handleChange('descInput')}
+          className="description"
+        />
         <DialogActions className="buttons">
           <Button
             onClick={this.props.handleEditDescriptionClose}
