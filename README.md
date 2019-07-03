@@ -105,9 +105,9 @@ Links to the homepages of libraries used in this project, listed here for easy r
 - After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
 
   - Pull the UI repository, if you do not have it open on the virtual machine already.
-  - Open `package.json` and scroll to the bottom.
+  - Open `setupProxy.js`:
 
-    - In the `proxy` key, there are two subkeys: `/api` and `/token`. Change the `target` line in both of these to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the text to say `"target": "http://localhost:5555/"` in both subkeys.
+    - You will see two nearly identical function calls that start with `app.use(proxy...`. In both calls, change the string following the word `target` to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the string to say `'http://localhost:5555/'` in both.
 
   - Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file.
   - Do the same with `.env.development`.
