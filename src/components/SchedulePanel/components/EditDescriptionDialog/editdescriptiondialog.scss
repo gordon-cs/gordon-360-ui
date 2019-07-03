@@ -1,0 +1,21 @@
+.tile {
+  display: grid;
+  grid-template-rows: 30% 5% 30% 5% 30%;
+  grid-template-columns: 5% 45% 45% 5%;
+  grid-row-gap: 5px;
+}
+
+.title {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.description {
+  grid-row: 3;
+  grid-column: 2 / 4;
+}
+
+.buttons {
+  grid-row: 5;
+  grid-column: 3;
+}

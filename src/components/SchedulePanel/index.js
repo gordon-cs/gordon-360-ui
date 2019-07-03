@@ -12,6 +12,7 @@ import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import HoursDialog from './components/OfficeHoursDialog';
 import RemoveHoursDialog from './components/RemoveHoursDialog';
+import EditDescriptionDialog from './components/EditDescriptionDialog';
 
 import './schedulepanel.css';
 
@@ -44,6 +45,9 @@ class GordonSchedulePanel extends Component {
     this.handleRemoveOfficeHoursOpen = this.handleRemoveOfficeHoursOpen.bind(this);
     this.handleRemoveOfficeHoursClose = this.handleRemoveOfficeHoursClose.bind(this);
     this.handleRemoveButton = this.handleRemoveButton.bind(this);
+    this.handleEditDescriptionOpen = this.handleEditDescriptionOpen.bind(this);
+    this.handleEditDescriptionClose = this.handleEditDescriptionClose.bind(this);
+    this.handleEditDescriptionButton = this.handleEditDescriptionButton.bind(this);
   }
 
   handleOfficeHoursOpen = () => {
@@ -63,6 +67,18 @@ class GordonSchedulePanel extends Component {
   };
 
   handleRemoveButton = () => {
+    this.setState({ disabled: false });
+  };
+
+  handleEditDescriptionOpen = () => {
+    this.setState({ editDescriptionOpen: true });
+  };
+
+  handleEditDescriptionClose = () => {
+    this.setState({ editDescriptionOpen: false });
+  };
+
+  handleEditDescriptionButton = () => {
     this.setState({ disabled: false });
   };
 
@@ -92,7 +108,19 @@ class GordonSchedulePanel extends Component {
   render() {
     const { classes } = this.props;
     let isFaculty = String(this.props.profile.PersonType).includes('fac');
-    let privacyButton, addOfficeHourButton, removeOfficeHourButton, schedulePanel;
+    let privacyButton,
+      addOfficeHourButton,
+      removeOfficeHourButton,
+      editDescriptionButton,
+      schedulePanel;
+
+    let editDialog = (
+      <EditDescriptionDialog
+        onDialogSubmit={this.onDialogSubmit}
+        handleEditDescriptionClose={this.handleEditDescriptionClose}
+        editDescriptionOpen={this.state.editDescriptionOpen}
+      />
+    );
 
     let hoursDialog = (
       <HoursDialog
@@ -125,6 +153,14 @@ class GordonSchedulePanel extends Component {
             }}
           />
           <Typography>{this.state.isSchedulePrivate ? 'Private' : 'Public'}</Typography>
+        </Fragment>
+      );
+    }
+
+    if (this.props.myProf && isFaculty) {
+      editDescriptionButton = (
+        <Fragment>
+          <Button onClick={this.handleEditDescriptionOpen}>EDIT DESCRIPTION</Button>
         </Fragment>
       );
     }
@@ -184,6 +220,8 @@ class GordonSchedulePanel extends Component {
 
               <div className="description">Insert description here</div>
 
+              <div className="edit_description">{editDescriptionButton}</div>
+
               <div className="add_event">{addOfficeHourButton}</div>
 
               <div className="remove_event">{removeOfficeHourButton}</div>
@@ -193,6 +231,7 @@ class GordonSchedulePanel extends Component {
               </div>
               {/* </CardContent> */}
               {/* </Card> */}
+              {editDialog}
               {hoursDialog}
               {removeHoursDialog}
             </div>
