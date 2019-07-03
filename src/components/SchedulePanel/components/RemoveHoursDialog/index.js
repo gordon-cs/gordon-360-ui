@@ -53,13 +53,6 @@ export default class RemoveHoursDialog extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
-    var fb = this.state.facebookInput;
-    var tw = this.state.twitterInput;
-    var li = this.state.linkedInInput;
-    var ig = this.state.instagramInput;
-
-    this.props.onDialogSubmit(fb, tw, li, ig);
     this.handleClose();
   };
 
@@ -72,37 +65,6 @@ export default class RemoveHoursDialog extends React.Component {
 
   handleRemoveOfficeHoursClose = () => {
     this.setState({ removeOfficeHoursOpen: false });
-
-    // Reset changed fields
-    if (this.state.facebookInput !== this.props.facebookLink) {
-      this.setState({
-        facebookInput: this.props.facebookLink,
-        fbValid: true,
-        formErrors: { facebookInput: '' },
-      });
-    }
-    if (this.state.twitterInput !== this.props.twitterLink) {
-      this.setState({
-        twitterInput: this.props.twitterLink,
-        twValid: true,
-        formErrors: { twitterInput: '' },
-      });
-    }
-    if (this.state.linkedInInput !== this.props.linkedInLink) {
-      this.setState({
-        linkedInInput: this.props.linkedInLink,
-        liValid: true,
-        formErrors: { linkedInInput: '' },
-      });
-    }
-    if (this.state.instagramInput !== this.props.instagramLink) {
-      this.setState({
-        instagramInput: this.props.instagramLink,
-        igValid: true,
-        formErrors: { instagramInput: '' },
-      });
-    }
-    this.setState({ formValid: true });
   };
 
   render() {

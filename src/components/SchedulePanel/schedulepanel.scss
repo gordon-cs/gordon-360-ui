@@ -1,7 +1,7 @@
 .schedule_content {
   display: grid;
   grid-template-rows: auto auto auto;
-  grid-template-columns: 5% 10% 5% 20% 20% 10%;
+  grid-template-columns: 5% 20% 45% 10% 15% 5%;
   grid-row-gap: 5px;
   justify-self: left;
 }
@@ -27,7 +27,7 @@
 .edit_description {
   grid-row: 2;
   grid-column: 3;
-  justify-self: left;
+  justify-self: right;
 }
 
 .add_event {
@@ -44,6 +44,6 @@
 
 .schedule {
   grid-row: 3;
-  grid-column: 1 / -1;
+  grid-column: 2 / -1;
   justify-self: center;
 }
