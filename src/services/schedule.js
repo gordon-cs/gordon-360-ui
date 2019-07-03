@@ -41,7 +41,8 @@ import http from './http';
 */
 
 /**
- * Get course schedule for profile
+ * Get course schedule for a given user or the current user if `username` is not provided
+ * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<Schedule[]>} returns all the course schedules
  */
 
@@ -54,6 +55,12 @@ const getSchedule = async username => {
   }
   return schedule;
 };
+
+/**
+ * Find out which day of the week the course is assigned
+ * @param {<Schedule>} course an individual course
+ * @return {number[]} returns array of day in the format of ResourceID
+ */
 
 function checkDayofWeek(course) {
   let dayArray = [];
@@ -76,6 +83,12 @@ function checkDayofWeek(course) {
 
   return dayArray;
 }
+
+/**
+ * Format the given schedule and make event array
+ * @param {Promise.<Schedule[]>} schedule all course schedules
+ * @return {<Promise.Event[]>} returns array of events
+ */
 
 async function makeScheduleCourses(schedule) {
   let course = await schedule.then(courseSchedule => {
