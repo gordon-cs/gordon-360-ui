@@ -49,7 +49,7 @@ export default class CourseSchedule extends Component {
     // Localizer is always required for react-big-calendar initialization
     let formats = {
       dayHeaderFormat: (date, localizer = MomentLocalizer(Moment)) =>
-        localizer.format(date, 'MMMM YYYY'),
+        localizer.format(date, 'MMMM YYYY'), // [] makes string to escape from parser (use this for session display)
     };
 
     const dayStart = new Date();
@@ -72,7 +72,7 @@ export default class CourseSchedule extends Component {
           timeslots={4}
           defaultView="day"
           view={['day']}
-          onSelectEvent={this.handleRemoveButton}
+          onSelectEvent={this.props.handleRemoveButton}
           defaultDate={Moment(new Date())}
           resources={resourceMap}
           resourceIdAccessor="resourceId"

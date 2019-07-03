@@ -38,6 +38,7 @@ class GordonSchedulePanel extends Component {
       isSchedulePrivate: Boolean,
       isExpanded: Boolean,
       officeHoursOpen: false,
+      disabled: true,
     };
     this.handleIsExpanded = this.handleIsExpanded.bind(this);
     this.handleOfficeHoursOpen = this.handleOfficeHoursOpen.bind(this);
@@ -177,7 +178,8 @@ class GordonSchedulePanel extends Component {
       removeOfficeHourButton = (
         <Fragment>
           <Button
-            onClick={this.handleRemoveOfficeHoursOpen} //disabled
+            onClick={this.handleRemoveOfficeHoursOpen}
+            disabled={this.state.disabled} //disabled
           >
             REMOVE EVENT
           </Button>
@@ -227,7 +229,10 @@ class GordonSchedulePanel extends Component {
               <div className="remove_event">{removeOfficeHourButton}</div>
 
               <div className="schedule">
-                <CourseSchedule profile={this.props.profile} />
+                <CourseSchedule
+                  profile={this.props.profile}
+                  handleRemoveButton={this.handleRemoveButton.bind(this)}
+                />
               </div>
               {/* </CardContent> */}
               {/* </Card> */}
