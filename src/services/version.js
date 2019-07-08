@@ -13,7 +13,6 @@ import http from './http';
 const getVersion = () => {
   let version;
   version = http.get('version');
-  console.log(version);
   return version;
 };
 
