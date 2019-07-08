@@ -619,6 +619,7 @@ class ActivityProfile extends Component {
         );
       }
     } else {
+      signOut();
       if (this.state.loading === true) {
         content = <GordonLoader />;
       } else {

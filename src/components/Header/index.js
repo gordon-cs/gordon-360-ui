@@ -15,8 +15,9 @@ import DocumentTitle from 'react-document-title';
 import { Route, Switch, NavLink } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
-//import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
+import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
+import { isAuthenticated, signOut } from '../../services/auth';
 
 const getRouteName = route => {
   if (route.name) {
@@ -72,62 +73,130 @@ export default class GordonHeader extends Component {
   }
 
   render() {
-    return (
-      <section className="gordon-header">
-        <AppBar className="app-bar" position="static">
-          <Toolbar>
-            <IconButton
-              className="menu-button"
-              color="contrast"
-              aria-label="open drawer"
-              onClick={this.props.onDrawerToggle}
-            >
-              <MenuIcon className="menu-button-icon" />
-            </IconButton>
-            <Typography className="title" variant="title" color="inherit">
-              <Switch>
-                {routes.map(route => (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    exact={route.exact}
-                    component={getRouteName(route)}
+    let content;
+    if (isAuthenticated()) {
+      content = (
+        <section className="gordon-header">
+          <AppBar className="app-bar" position="static">
+            <Toolbar>
+              <IconButton
+                className="menu-button"
+                color="contrast"
+                aria-label="open drawer"
+                onClick={this.props.onDrawerToggle}
+              >
+                <MenuIcon className="menu-button-icon" />
+              </IconButton>
+              <Typography className="title" variant="title" color="inherit">
+                <Switch>
+                  {routes.map(route => (
+                    <Route
+                      key={route.path}
+                      path={route.path}
+                      exact={route.exact}
+                      component={getRouteName(route)}
+                    />
+                  ))}
+                </Switch>
+              </Typography>
+              <div className="center-container">
+                <Tabs centered value={this.value} onChange={this.handleChange}>
+                  <Tab
+                    className="tab"
+                    icon={<HomeIcon />}
+                    label="Home"
+                    component={NavLink}
+                    to="/"
                   />
-                ))}
-              </Switch>
-            </Typography>
-            <div className="center-container">
-              <Tabs centered value={this.value} onChange={this.handleChange}>
-                <Tab className="tab" icon={<HomeIcon />} label="Home" component={NavLink} to="/" />
-                <Tab
-                  className="tab"
-                  icon={<LocalActivityIcon />}
-                  label="Involvements"
-                  component={NavLink}
-                  to="/involvements"
-                />
-                <Tab
-                  className="tab"
-                  icon={<EventIcon />}
-                  label="Events"
-                  component={NavLink}
-                  to="/events"
-                />
-                <Tab
-                  className="tab"
-                  icon={<PeopleIcon />}
-                  label="People"
-                  component={NavLink}
-                  to="/people"
-                />
-              </Tabs>
-            </div>
-            <GordonPeopleSearch />
-            {/*<GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />*/}
-          </Toolbar>
-        </AppBar>
-      </section>
-    );
+                  <Tab
+                    className="tab"
+                    icon={<LocalActivityIcon />}
+                    label="Involvements"
+                    component={NavLink}
+                    to="/involvements"
+                  />
+                  <Tab
+                    className="tab"
+                    icon={<EventIcon />}
+                    label="Events"
+                    component={NavLink}
+                    to="/events"
+                  />
+
+                  <Tab
+                    className="tab"
+                    icon={<PeopleIcon />}
+                    label="People"
+                    component={NavLink}
+                    to="/people"
+                  />
+                </Tabs>
+              </div>
+              <GordonPeopleSearch />
+              <GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />
+            </Toolbar>
+          </AppBar>
+        </section>
+      );
+    } else {
+      content = (
+        <section className="gordon-header">
+          <AppBar className="app-bar" position="static">
+            <Toolbar>
+              <IconButton
+                className="menu-button"
+                color="contrast"
+                aria-label="open drawer"
+                onClick={this.props.onDrawerToggle}
+              >
+                <MenuIcon className="menu-button-icon" />
+              </IconButton>
+              <Typography className="title" variant="title" color="inherit">
+                <Switch>
+                  {routes.map(route => (
+                    <Route
+                      key={route.path}
+                      path={route.path}
+                      exact={route.exact}
+                      component={getRouteName(route)}
+                    />
+                  ))}
+                </Switch>
+              </Typography>
+              <div className="center-container">
+                <Tabs centered value={this.value} onChange={this.handleChange}>
+                  <Tab
+                    className="tab"
+                    icon={<HomeIcon />}
+                    label="Home"
+                    component={NavLink}
+                    to="/"
+                  />
+                  <Tab
+                    className="tab"
+                    icon={<LocalActivityIcon />}
+                    label="Involvements"
+                    component={NavLink}
+                    to="/involvements"
+                  />
+                  <Tab
+                    className="tab"
+                    icon={<EventIcon />}
+                    label="Events"
+                    component={NavLink}
+                    to="/events"
+                  />
+                </Tabs>
+              </div>
+              <GordonPeopleSearch />
+              <GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />
+            </Toolbar>
+          </AppBar>
+        </section>
+      );
+    }
+
+    return <div>{content}</div>;
   }
 }
 GordonHeader.propTypes = {
