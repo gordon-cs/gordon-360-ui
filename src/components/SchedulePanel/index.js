@@ -39,6 +39,8 @@ class GordonSchedulePanel extends Component {
       isExpanded: Boolean,
       officeHoursOpen: false,
       disabled: true,
+      selectedEvent: null,
+      isDoubleClick: false,
     };
     this.handleIsExpanded = this.handleIsExpanded.bind(this);
     this.handleOfficeHoursOpen = this.handleOfficeHoursOpen.bind(this);
@@ -49,10 +51,12 @@ class GordonSchedulePanel extends Component {
     this.handleEditDescriptionOpen = this.handleEditDescriptionOpen.bind(this);
     this.handleEditDescriptionClose = this.handleEditDescriptionClose.bind(this);
     this.handleEditDescriptionButton = this.handleEditDescriptionButton.bind(this);
+    this.handleDoubleClick = this.handleDoubleClick.bind(this);
   }
 
   handleOfficeHoursOpen = () => {
     this.setState({ officeHoursOpen: true });
+    this.setState({ isDoubleClick: false });
   };
 
   handleOfficeHoursClose = () => {
@@ -67,8 +71,9 @@ class GordonSchedulePanel extends Component {
     this.setState({ removeOfficeHoursOpen: false });
   };
 
-  handleRemoveButton = () => {
-    this.setState({ disabled: false });
+  handleRemoveButton = event => {
+    if (event.id > 1000) this.setState({ disabled: false });
+    this.setState({ selectedEvent: event });
   };
 
   handleEditDescriptionOpen = () => {
@@ -81,6 +86,14 @@ class GordonSchedulePanel extends Component {
 
   handleEditDescriptionButton = () => {
     this.setState({ disabled: false });
+  };
+
+  handleDoubleClick = event => {
+    if (this.props.myProf) {
+      this.setState({ officeHoursOpen: true });
+      this.setState({ selectedEvent: event });
+      this.setState({ isDoubleClick: true });
+    }
   };
 
   async loadProfileInfo() {
@@ -128,6 +141,8 @@ class GordonSchedulePanel extends Component {
         onDialogSubmit={this.onDialogSubmit}
         handleOfficeHoursClose={this.handleOfficeHoursClose}
         officeHoursOpen={this.state.officeHoursOpen}
+        selectedEvent={this.state.selectedEvent}
+        isDoubleClick={this.state.isDoubleClick}
       />
     );
 
@@ -139,7 +154,7 @@ class GordonSchedulePanel extends Component {
       />
     );
 
-    if (this.props.myProf) {
+    if (this.props.myProf && !isFaculty) {
       privacyButton = (
         <Fragment>
           <Switch
@@ -158,7 +173,7 @@ class GordonSchedulePanel extends Component {
       );
     }
 
-    if (this.props.myProf && isFaculty) {
+    if (this.props.myProf) {
       editDescriptionButton = (
         <Fragment>
           <Button onClick={this.handleEditDescriptionOpen}>EDIT DESCRIPTION</Button>
@@ -166,7 +181,7 @@ class GordonSchedulePanel extends Component {
       );
     }
 
-    if (this.props.myProf && isFaculty) {
+    if (this.props.myProf) {
       addOfficeHourButton = (
         <Fragment>
           <Button onClick={this.handleOfficeHoursOpen}>ADD EVENT</Button>
@@ -174,7 +189,7 @@ class GordonSchedulePanel extends Component {
       );
     }
 
-    if (this.props.myProf && isFaculty) {
+    if (this.props.myProf) {
       removeOfficeHourButton = (
         <Fragment>
           <Button
@@ -232,6 +247,7 @@ class GordonSchedulePanel extends Component {
                 <CourseSchedule
                   profile={this.props.profile}
                   handleRemoveButton={this.handleRemoveButton.bind(this)}
+                  handleDoubleClick={this.handleDoubleClick.bind(this)}
                 />
               </div>
               {/* </CardContent> */}

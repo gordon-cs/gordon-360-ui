@@ -30,8 +30,6 @@ export default class CourseSchedule extends Component {
     const courseInfo = await courseEventsPromise;
     this.courseInfo = courseInfo;
 
-    console.log('Schedule :', this.courseInfo);
-
     this.setState({ loading: false });
   };
 
@@ -72,7 +70,12 @@ export default class CourseSchedule extends Component {
           timeslots={4}
           defaultView="day"
           view={['day']}
-          onSelectEvent={this.props.handleRemoveButton}
+          onSelectEvent={event => {
+            this.props.handleRemoveButton(event);
+          }}
+          onDoubleClickEvent={event => {
+            this.props.handleDoubleClick(event);
+          }}
           defaultDate={Moment(new Date())}
           resources={resourceMap}
           resourceIdAccessor="resourceId"
