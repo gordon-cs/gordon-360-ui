@@ -156,7 +156,7 @@ export default class GordonHeader extends Component {
               </Tabs>
             </div>
             <GordonPeopleSearch />
-            {/*<GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />*/}
+            <GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />
           </Toolbar>
         </AppBar>
 
