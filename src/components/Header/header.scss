@@ -20,6 +20,13 @@ $drawer-width: 240px;
     min-width: 90px;
   }
 
+  .guestTab {
+    transition: min-width 0.2s;
+    color: $neutral-gray;
+    text-transform: capitalize;
+    min-width: 90px;
+  }
+
   .menu-button {
     margin-left: -12px;
   }
