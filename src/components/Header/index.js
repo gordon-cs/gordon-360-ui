@@ -9,6 +9,12 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
@@ -17,6 +23,7 @@ import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 //import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
+import { isAuthenticated } from '../../services/auth';
 
 const getRouteName = route => {
   if (route.name) {
@@ -38,6 +45,7 @@ const getRouteName = route => {
 export default class GordonHeader extends Component {
   state = {
     value: null,
+    loginDialogOpen: false,
   };
 
   handleChange = (event, value) => {
@@ -71,7 +79,38 @@ export default class GordonHeader extends Component {
     this.updateTabHighlight();
   }
 
+  unauthenticatedSearch() {
+    this.setState({ loginDialogOpen: true });
+  }
+
+  handleClose() {
+    this.setState({ loginDialogOpen: false });
+  }
+
   render() {
+    let content;
+    if (isAuthenticated()) {
+      content = (
+        <Tab
+          className="tab"
+          icon={<PeopleIcon />}
+          label="People"
+          component={NavLink}
+          to="/people"
+        />
+      );
+    } else {
+      content = (
+        <Tab
+          className="guestTab"
+          icon={<PeopleIcon />}
+          label="People"
+          component={Button}
+          onClick={clicked => this.unauthenticatedSearch()}
+        />
+      );
+    }
+
     return (
       <section className="gordon-header">
         <AppBar className="app-bar" position="static">
@@ -113,19 +152,32 @@ export default class GordonHeader extends Component {
                   component={NavLink}
                   to="/events"
                 />
-                <Tab
-                  className="tab"
-                  icon={<PeopleIcon />}
-                  label="People"
-                  component={NavLink}
-                  to="/people"
-                />
+                {content}
               </Tabs>
             </div>
             <GordonPeopleSearch />
             {/*<GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />*/}
           </Toolbar>
         </AppBar>
+
+        <Dialog
+          open={this.state.loginDialogOpen}
+          onClose={clicked => this.handleClose()}
+          aria-labelledby="login-dialog-title"
+          aria-describedby="login-dialog-description"
+        >
+          <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="login-dialog-description">
+              You are not logged in. Please log in to use People Search.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
       </section>
     );
   }

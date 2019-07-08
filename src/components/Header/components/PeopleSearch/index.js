@@ -5,6 +5,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
@@ -52,6 +58,7 @@ export default class GordonPeopleSearch extends Component {
       suggestionIndex: -1,
       query: String,
       highlightQuery: String,
+      loginDialog: false,
     };
     this.isMobileView = false;
     this.breakpointWidth = 400;
@@ -236,6 +243,14 @@ export default class GordonPeopleSearch extends Component {
     window.removeEventListener('resize', this.resize);
   }
 
+  unauthenticatedSearch() {
+    this.setState({ loginDialog: true });
+  }
+
+  handleClose() {
+    this.setState({ loginDialog: false });
+  }
+
   render() {
     let placeholder = 'People Search';
     if (window.innerWidth < this.breakpointWidth) {
@@ -281,16 +296,15 @@ export default class GordonPeopleSearch extends Component {
       content = (
         <span className="gordon-people-search">
           <TextField
-            //autoFocus={autoFocus}
-            value={'Log in to use People Search'}
-            //inputRef={ref}
+            placeholder="People Search"
+            value={''}
+            onChange={event => this.unauthenticatedSearch()}
             className={'text-field'}
             InputProps={{
               disableUnderline: true,
               classes: {
                 root: 'people-search-root',
                 input: 'people-search-input',
-                inputDisabled: 'people-search-disabled',
               },
               startAdornment: (
                 <InputAdornment position="start">
@@ -303,6 +317,28 @@ export default class GordonPeopleSearch extends Component {
       );
     }
 
-    return content;
+    return (
+      <div>
+        {content}
+        <Dialog
+          open={this.state.loginDialog}
+          onClose={clicked => this.handleClose()}
+          aria-labelledby="login-dialog-title"
+          aria-describedby="login-dialog-description"
+        >
+          <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="login-dialog-description">
+              You are not logged in. Please log in to use People Search.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
   }
 }
