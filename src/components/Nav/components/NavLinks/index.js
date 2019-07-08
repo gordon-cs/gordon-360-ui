@@ -23,13 +23,10 @@ export default class GordonNavLinks extends Component {
     this.onSignOut = this.onSignOut.bind(this);
     this.handleLinkClickOpen = this.handleLinkClickOpen.bind(this);
     this.handleLinkClose = this.handleLinkClose.bind(this);
-    //added
-    // this.handleNetworkChange = this.handleNetworkChange.bind(this);
+
     this.state = {
       linkopen: false,
       status: 'online',
-      //added
-      // isOffline: false,
     };
   }
 
@@ -37,13 +34,6 @@ export default class GordonNavLinks extends Component {
     signOut();
     this.props.onSignOut();
   }
-
-  //added
-  // handleNetworkChange = (e) => {
-  //   this.setState({
-  //     isOffline: e.target.value,
-  //   });
-  // };
 
   handleLinkClickOpen = () => {
     this.setState({
@@ -58,8 +48,6 @@ export default class GordonNavLinks extends Component {
   render() {
     let admin;
 
-    //const isOffline = this.state.isOffline;
-
     if (user.getLocalInfo().college_role === 'god') {
       admin = (
         <NavLink exact to="/admin" onClick={this.props.onLinkClick}>
@@ -70,19 +58,11 @@ export default class GordonNavLinks extends Component {
       );
     }
 
-    // let peopleSearch;
-    // if(!this.state.isOffline){
-    //   peopleSearch = <PeopleSearch/>;
-    // } else {
-    //   peopleSearch = this.setState
-    // }
-    // return statement if user has internet connection
-
     window.addEventListener('message', event => {
       // return offline mode
       if (event.data === 'offline') this.state.status = 'offline';
     });
-
+    // renders the page normally with connection
     if (this.state.status === 'online') {
       return (
         <div>
@@ -161,7 +141,9 @@ export default class GordonNavLinks extends Component {
           </div>
         </div>
       );
-    } else {
+    }
+    // renders the page with button limitations when there is no connection
+    else {
       return (
         <div>
           <List className="gordon-nav-links">
