@@ -45,6 +45,10 @@ export default class GordonNavLinks extends Component {
     this.setState({ linkopen: false });
   };
 
+  offlineAlert() {
+    alert('This feature is unavailable offline');
+  }
+
   render() {
     let admin;
 
@@ -171,14 +175,14 @@ export default class GordonNavLinks extends Component {
                 <ListItemText primary="Events" />
               </ListItem>
             </NavLink>
-            {/* <NavLink exact to="/people" onClick={this.props.onLinkClick}>
-                <ListItem button>
-                  <ListItemIcon>
-                    <PeopleIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="People" />
-                </ListItem>
-              </NavLink> */}
+            <NavLink exact to="" onClick={this.offlineAlert}>
+              <ListItem button disabled={this.state.status}>
+                <ListItemIcon>
+                  <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText primary="People" />
+              </ListItem>
+            </NavLink>
           </List>
           <Divider />
 
@@ -203,15 +207,17 @@ export default class GordonNavLinks extends Component {
                   <ListItemText primary="About" />
                 </ListItem>
               </NavLink>
-              {/* <NavLink exact to="/feedback" onClick={this.props.onLinkClick}>
-                  <ListItem button>
-                    <ListItemText primary="Feedback" />
-                  </ListItem>
-                </NavLink> */}
+              <NavLink exact to="" onClick={this.offlineAlert}>
+                <ListItem button disabled={this.state.status}>
+                  <ListItemText primary="Feedback" />
+                </ListItem>
+              </NavLink>
               {admin}
-              {/* <ListItem button onClick={this.onSignOut}>
+              <NavLink exact to="" onClick={this.offlineAlert}>
+                <ListItem button disabled={this.state.status}>
                   <ListItemText primary="Sign Out" />
-                </ListItem> */}
+                </ListItem>
+              </NavLink>
             </List>
             <QuickLinksDialog
               handleLinkClickOpen={this.handleLinkClickOpen}
