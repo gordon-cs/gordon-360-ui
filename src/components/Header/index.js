@@ -21,9 +21,9 @@ import DocumentTitle from 'react-document-title';
 import { Route, Switch, NavLink } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
-//import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
+import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
-import { isAuthenticated } from '../../services/auth';
+import { isAuthenticated, signOut } from '../../services/auth';
 
 const getRouteName = route => {
   if (route.name) {

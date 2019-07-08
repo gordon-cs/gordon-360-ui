@@ -8,7 +8,7 @@ import analytics from './services/analytics';
 //import { isAuthenticated, signOut } from './services/auth';
 //import GordonError from './components/Error';
 import GordonHeader from './components/Header';
-//import GordonNav from './components/Nav';
+import GordonNav from './components/Nav';
 //import { AuthError } from './services/error';
 //import Login from './views/Login';
 import theme from './theme';
