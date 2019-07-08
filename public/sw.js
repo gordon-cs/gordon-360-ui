@@ -53,6 +53,14 @@ const secondDynamicCache = [
   'https://my.gordon.edu/ics/favicon.ico',
   'https://go.gordon.edu/favicon.ico',
   'https://blackboard.gordon.edu/favicon.ico',
+  // 'https://360api.gordon.edu/browseable/uploads/Default/activityImage.png',
+  // 'https://360apitrain.gordon.edu/browseable/uploads/ACD/canvasImage.jpeg',
+  // 'https://360apitrain.gordon.edu/browseable/uploads/ASF/canvasImage.jpeg',
+  // 'https://360apitrain.gordon.edu/browseable/uploads/BADM/canvasImage.jpeg',
+  // 'https://360apitrain.gordon.edu/browseable/uploads/BARN/canvasImage.jpeg',
+  // 'https://360apitrain.gordon.edu/browseable/uploads/CLAR/canvasImage.jpeg',
+  // 'https://360apitrain.gordon.edu/browseable/uploads/REC/canvasImage.jpeg',
+  // 'https://360apitrain.gordon.edu/browseable/uploads/SCOTTIE/canvasImage.png',
 ];
 
 /*********************************************** CACHING FUNCTIONS ***********************************************/
@@ -76,11 +84,13 @@ async function fetchThenCache(request) {
         return fetchResponse.clone();
       }
     })
-    .catch(() => {
-      console.log(`\tGetting "${request.url}" from cache instead...`);
-      return caches.match(request).catch(() => {
-        console.log(`\tFailed to get ${request.url} from cache`);
-      });
+    .catch(async () => {
+      console.log(`Getting ${request.url} from cache instead...`);
+      const response = await caches.match(request);
+      // If there's no response from cache, we console log that the request failed
+      if (response) {
+        return response;
+      } else console.log(`\t- Failed to get ${request.url} from cache`);
     });
 }
 
@@ -97,10 +107,10 @@ async function cacheStatic() {
     cache
       .addAll(staticCache)
       .then(() => {
-        console.log(' -\tCached Static Files Successfully');
+        console.log('\t- Cached Static Files Successfully');
       })
       .catch(() => {
-        console.log(' -\tCaching Static Files Failed');
+        console.log('\t- Caching Static Files Failed');
       });
   });
 }
@@ -159,6 +169,47 @@ async function getUserInfoForLinks(token, termCode) {
     `https://360apitrain.gordon.edu/api/profiles/Image/${username}/`,
     `https://360apitrain.gordon.edu/api/requests/student/${id}`,
   ];
+  // Gets the involvements of the current user for the Involvement Profiles
+  let involvements = await fetch(
+    new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
+      method: 'GET',
+      headers,
+    }),
+  )
+    .then(response => {
+      return response.json();
+    })
+    .catch(error => {
+      involvement;
+      return error.message;
+    });
+  involvements.forEach(involvement => {
+    thirdDynamicCache.push(
+      `https://360apitrain.gordon.edu/api/activities/${involvement.ActivityCode}`,
+      `https://360apitrain.gordon.edu/api/activities/${involvement.SessionCode}/${
+        involvement.ActivityCode
+      }/status`,
+      `https://360apitrain.gordon.edu/api/emails/activity/${involvement.ActivityCode}`,
+      `https://360apitrain.gordon.edu/api/emails/activity/${
+        involvement.ActivityCode
+      }/advisors/session/${involvement.SessionCode}`,
+      `https://360apitrain.gordon.edu/api/emails/activity/${
+        involvement.ActivityCode
+      }/group-admin/session/${involvement.SessionCode}`,
+      `https://360apitrain.gordon.edu/api/memberships/activity/${involvement.ActivityCode}`,
+      `https://360apitrain.gordon.edu/api/memberships/activity/${
+        involvement.ActivityCode
+      }/followers/${involvement.SessionCode}`,
+      `https://360apitrain.gordon.edu/api/memberships/activity/${
+        involvement.ActivityCode
+      }/group-admin`,
+      `https://360apitrain.gordon.edu/api/memberships/activity/${
+        involvement.ActivityCode
+      }/members/${involvement.SessionCode}`,
+      `https://360apitrain.gordon.edu/api/requests/activity/${involvement.ActivityCode}`,
+      `https://360apitrain.gordon.edu/api/sessions/${involvement.SessionCode}`,
+    );
+  });
   cacheDynamic(token, thirdDynamicCache);
 }
 
@@ -197,7 +248,7 @@ async function cacheDynamic(token, dynamicUserCacheLinks, mode = 'cors') {
         }
       })
       .catch(() => {
-        console.log(` -\tFailed to fetch and cache Dynamic File: "${url}"`);
+        console.log(`\t- Failed to fetch and cache Dynamic File: ${url}`);
       });
   });
 }
@@ -212,7 +263,7 @@ async function cleanCache() {
     keys.forEach(key => {
       if (key !== cacheVersion && key.match('cache-')) {
         return caches.delete(key).then(() => {
-          console.log(' -\tPrevious cache has been removed (outdated cache version');
+          console.log('\t- Previous cache has been removed (outdated cache version)');
         });
       }
     });
@@ -232,7 +283,7 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   /* FOR DEVELOPING PURPOSES: THIS CONSOLE LOGS EACH FETCH REQUEST MADE */
-  // If request is from Local, console.log the URL
+  //If request is from Local, console.log the URL
   // if (event.request.url.match(location.origin)) {
   //   console.log('Fetching request from LOCAL:', event.request.url);
   // } else {
@@ -246,7 +297,7 @@ self.addEventListener('fetch', event => {
 self.addEventListener('message', event => {
   // If the message is to cache all static/dynamic files, all of those files are cached
   if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
-    console.log('Received message from client. Fetching Dynamic Files');
+    console.log('Received message from client. Attempting to cache all files');
     cacheStatic(); // Static Cache
     cacheDynamic(event.data.token, firstDynamicCache); // First Dynamic Cache
     cacheDynamic(event.data.token, secondDynamicCache, 'no-cors'); // Second Dynamic Cache

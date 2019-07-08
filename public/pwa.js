@@ -12,23 +12,20 @@ if ('caches' in window) {
   console.log('CACHE API IS NOT AVAILABLE: PWA NOT AVAILABLE');
 }
 
-// CHECKS TO SEE IF THE NETWORK IS AVAILABLE
-// If the internet cuts off during application
-window.addEventListener('offline', (event) => {
-  console.log('------------------------     NO INTERNET CONNECTION     ------------------------');
+// If network connectivity disables during application run-time
+window.addEventListener('offline', event => {
+  console.log('--------------------     NO INTERNET CONNECTION     --------------------');
   window.postMessage('offline');
   event.waitUntil(alert('You are offline. Information might be not up to date.'));
   location.reload();
 });
 
-// If there is internet comes back during application
+// If network connectivity re-enables during application run-time
 window.addEventListener('online', () => {
-  console.log(
-    '------------------------     INTERNET CONNECTION ESTABLISHED     ------------------------',
-  );
+  console.log('--------------------     INTERNET CONNECTION ESTABLISHED     --------------------');
+  //handleConnection();
   if (confirm("You've reconnected to internet. Would you like to reload this page?")) {
     location.reload();
     window.postMessage('online');
   }
 });
-
