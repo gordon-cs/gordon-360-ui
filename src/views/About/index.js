@@ -23,7 +23,6 @@ export default class About extends Component {
   async loadData() {
     const versionPromise = Version.getVersion();
     const version = await versionPromise;
-    console.log('Version:', version);
 
     this.setState({ loading: false, version });
   }
