@@ -152,4 +152,6 @@ export default {
   getMySchedule,
   makeMySchedule,
   addMySchedule,
+  updateMySchedule,
+  deleteMySchedule,
 };
