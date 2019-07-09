@@ -231,7 +231,6 @@ class GordonSchedulePanel extends Component {
             <div className="schedule_content">
               {/* <Card> */}
               {/* <CardContent> */}
-              <div className="title">My Schedule</div>
 
               <div className="privacy">{privacyButton}</div>
 
