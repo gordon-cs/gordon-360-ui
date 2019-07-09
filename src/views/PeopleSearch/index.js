@@ -10,14 +10,10 @@ import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PersonIcon from '@material-ui/icons/Person';
-import HeartIcon from 'react-icons/lib/fa/heart';
+import { FaHeart, FaBriefcase, FaBuilding, FaBook, FaGlobeAmericas } from 'react-icons/fa';
 import SchoolIcon from '@material-ui/icons/School';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
-import BriefcaseIcon from 'react-icons/lib/fa/briefcase';
-import BuildingIcon from 'react-icons/lib/fa/building';
-import BookIcon from 'react-icons/lib/fa/book';
-import GlobeIcon from 'react-icons/lib/fa/globe';
 import { Typography } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
 import Input from '@material-ui/core/Input';
@@ -459,7 +455,7 @@ class PeopleSearch extends Component {
             query="(min-width: 600px)"
             render={() => (
               <Grid item>
-                <HeartIcon style={styles.FontAwesome} />
+                <FaHeart style={styles.FontAwesome} />
               </Grid>
             )}
           />
@@ -499,8 +495,8 @@ class PeopleSearch extends Component {
                   Sat Together At Chapel
                 </MenuItem>
                 <MenuItem
-                  label="&quot;Jesus Is My Significant Other&quot;"
-                  value="&quot;Jesus Is My Significant Other&quot;"
+                  label='"Jesus Is My Significant Other"'
+                  value='"Jesus Is My Significant Other"'
                 >
                   "Jesus Is My Significant Other"
                 </MenuItem>
@@ -579,7 +575,7 @@ class PeopleSearch extends Component {
                     query="(min-width: 600px)"
                     render={() => (
                       <Grid item>
-                        <BuildingIcon
+                        <FaBuilding
                           style={{
                             fontSize: 22,
                             marginLeft: 6,
@@ -638,7 +634,7 @@ class PeopleSearch extends Component {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <BookIcon style={styles.FontAwesome} />
+                          <FaBook style={styles.FontAwesome} />
                         </Grid>
                       )}
                     />
@@ -664,7 +660,7 @@ class PeopleSearch extends Component {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <BookIcon style={styles.FontAwesome} />
+                          <FaBook style={styles.FontAwesome} />
                         </Grid>
                       )}
                     />
@@ -796,7 +792,7 @@ class PeopleSearch extends Component {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <GlobeIcon
+                          <FaGlobeAmericas
                             style={{
                               fontSize: 22,
                               marginLeft: 2,
@@ -853,7 +849,7 @@ class PeopleSearch extends Component {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <BriefcaseIcon
+                          <FaBriefcase
                             style={{
                               fontSize: 22,
                               marginLeft: 2,
@@ -884,7 +880,7 @@ class PeopleSearch extends Component {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <BuildingIcon
+                          <FaBuilding
                             style={{
                               fontSize: 22,
                               marginLeft: 2,
