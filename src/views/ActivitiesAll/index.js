@@ -19,7 +19,6 @@ import Card from '@material-ui/core/Card';
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
     super(props);
-
     this.changeSession = this.changeSession.bind(this);
     this.filter = this.filter.bind(this);
 
@@ -150,6 +149,19 @@ export default class GordonActivitiesAll extends Component {
       padding: '10px',
     };
 
+    /* Gets status of current network connection for online/offline rendering
+    *  Defaults to online in case of PWA not being possible
+    */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+    // Creates the session list depending on the status of the network found in local storage
+    let SessionList;
+    if (networkStatus === 'online') {
+      SessionList = sessionOptions;
+    } else {
+      SessionList = sessionOptions[0];
+    }
+
     return (
       <section className="activities-all">
         <Grid container justify="center" spacing="16">
@@ -173,7 +185,7 @@ export default class GordonActivitiesAll extends Component {
                     onChange={this.changeSession}
                     input={<Input id="activity-session" />}
                   >
-                    {sessionOptions}
+                    {SessionList}
                   </Select>
                 </FormControl>
               </Grid>

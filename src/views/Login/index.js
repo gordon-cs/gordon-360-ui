@@ -72,17 +72,19 @@ export default class Login extends Component {
     try {
       await authenticate(this.state.username, this.state.password);
       console.log('Login/index.js: Successfully authenticated');
-      // Checks to see if the Service Worker API is available before attempting to access it
-      // This is important because if the API is not available, the site will load
-      // but not allow you to login due to the error "undefined is not a function"
+      /* Checks to see if the Service Worker API is available before attempting to access it
+      *  This is important because if the API is not available, the site will load
+      *  but not allow you to login due to the error "undefined is not a function"
+      */
       if (navigator.serviceWorker) {
-        // Sends a message to the service worker with the
-        // token to precache dynamic files
+        // Sends a message to the service worker with the token to precache dynamic files
         navigator.serviceWorker.controller.postMessage({
           message: 'cache-static-dynamic-files',
           token: storage.get('token'),
           termCode: session.getTermCode(),
         });
+        // Saves the network state as online in local storage
+        localStorage.setItem('network-status', JSON.stringify('online'));
       } else {
         console.log('SERVICE WORKER IS NOT AVAILABLE');
       }

@@ -1,4 +1,9 @@
 import Avatar from '@material-ui/core/Avatar';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -13,6 +18,8 @@ import './nav-avatar-right-corner.css';
 import user from '../../../../services/user';
 import Tooltip from '@material-ui/core/Tooltip';
 
+import { Button } from '@material-ui/core';
+
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +29,8 @@ export default class GordonNavAvatarRightCorner extends Component {
     this.onSignOut = this.onSignOut.bind(this);
     this.handleLinkClickOpen = this.handleLinkClickOpen.bind(this);
     this.handleLinkClose = this.handleLinkClose.bind(this);
+    this.openDialogBox = this.openDialogBox.bind(this);
+    this.closeDialogBox = this.closeDialogBox.bind(this);
 
     this.getInitials = this.getInitials.bind(this);
 
@@ -47,6 +56,14 @@ export default class GordonNavAvatarRightCorner extends Component {
     signOut();
     this.props.onSignOut();
   }
+
+  openDialogBox = () => {
+    this.setState({ dialogBoxOpen: true });
+  };
+
+  closeDialogBox = () => {
+    this.setState({ dialogBoxOpen: false });
+  };
 
   handleLinkClickOpen = () => {
     this.setState({
@@ -129,6 +146,73 @@ export default class GordonNavAvatarRightCorner extends Component {
       );
     }
 
+    /* Gets status of current network connection for online/offline rendering
+    *  Defaults to online in case of PWA not being possible
+    */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+    // Creates the Links button depending on the status of the network found in local storage
+    let LinksButton;
+    if (networkStatus === 'online') {
+      LinksButton = (
+        <MenuItem
+          onClick={() => {
+            this.onClose();
+            this.handleLinkClickOpen();
+          }}
+          divider="true"
+        >
+          Links
+        </MenuItem>
+      );
+    } else {
+      LinksButton = (
+        <div onClick={this.openDialogBox}>
+          <MenuItem disabled={networkStatus} divider="true">
+            Links
+          </MenuItem>
+        </div>
+      );
+    }
+
+    // Creates the Feedback button depending on the status of the network found in local storage
+    let FeedbackButton;
+    if (networkStatus === 'online') {
+      FeedbackButton = (
+        <Link to="/feedback">
+          <MenuItem onClick={this.onClose} divider="true">
+            Feedback
+          </MenuItem>
+        </Link>
+      );
+    } else {
+      FeedbackButton = (
+        <div onClick={this.openDialogBox}>
+          <MenuItem disabled={networkStatus} divider="true">
+            Feedback
+          </MenuItem>
+        </div>
+      );
+    }
+
+    // Creates the Signout button depending on the status of the network found in local storage
+    let SignoutButton;
+    if (networkStatus === 'online') {
+      SignoutButton = (
+        <MenuItem onClick={this.onSignOut} divider="true">
+          Sign Out
+        </MenuItem>
+      );
+    } else {
+      SignoutButton = (
+        <div onClick={this.openDialogBox}>
+          <MenuItem disabled={networkStatus} divider="true">
+            Sign Out
+          </MenuItem>
+        </div>
+      );
+    }
+
     return (
       <section className="right-side-container">
         <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
@@ -162,15 +246,7 @@ export default class GordonNavAvatarRightCorner extends Component {
               My Profile
             </MenuItem>
           </Link>
-          <MenuItem
-            onClick={() => {
-              this.onClose();
-              this.handleLinkClickOpen();
-            }}
-            divider="true"
-          >
-            Links
-          </MenuItem>
+          {LinksButton}
           <Link to="/help">
             <MenuItem onClick={this.onClose} divider="true">
               Help
@@ -181,21 +257,34 @@ export default class GordonNavAvatarRightCorner extends Component {
               About
             </MenuItem>
           </Link>
-          <Link to="/feedback">
-            <MenuItem onClick={this.onClose} divider="true">
-              Feedback
-            </MenuItem>
-            {admin}
-          </Link>
-          <MenuItem onClick={this.onSignOut} divider="true">
-            Sign Out
-          </MenuItem>
+          {FeedbackButton}
+          {admin}
+          {SignoutButton}
         </Menu>
         <QuickLinksDialog
           handleLinkClickOpen={this.handleLinkClickOpen}
           handleLinkClose={this.handleLinkClose}
           linkopen={this.state.linkopen}
         />
+        <Dialog
+          open={this.state.dialogBoxOpen}
+          onClose={clicked => this.closeDialogBox()}
+          aria-labelledby="disabled-feature"
+          aria-describedby="disabled-feature-description"
+        >
+          <DialogTitle id="disabled-feature">{'Offline Mode:'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="disabled-feature-description">
+              This feature is unavailable offline. Please reconnect to internet to access this
+              feature.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={clicked => this.closeDialogBox()} color="primary">
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
       </section>
     );
   }

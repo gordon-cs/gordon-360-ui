@@ -85,10 +85,11 @@ const isAuthenticated = () => {
 
 /**
  * Sign a user out
- * @description Removes token from storage and all cache
+ * @description Removes tokens from storage and all cache
  */
 const signOut = () => {
   storage.remove('token');
+  storage.remove('status');
   // Checks to see if Cache API is available before attempting to access it
   // This is important because if the API is not available, the site will not load
   // and give an error

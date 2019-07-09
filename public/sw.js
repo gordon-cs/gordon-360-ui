@@ -16,6 +16,8 @@ let cacheVersion = 'cache-1.0';
 // Static Files to cache
 const staticCache = [
   '/',
+  '/events',
+  '/involvements',
   '/favicon.ico',
   // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Developlent
   '/images/apple-touch-icon-144x144.png',
@@ -309,9 +311,6 @@ self.addEventListener('message', event => {
 
 // window.addEventListener('online', function(e) { console.log('online'); });
 
-
-
-
 // function hostReachable() {
 
 //   // Handle IE and more capable browsers
@@ -330,4 +329,3 @@ self.addEventListener('message', event => {
 //   }
 
 // }
-
