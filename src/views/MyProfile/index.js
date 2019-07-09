@@ -704,7 +704,8 @@ export default class Profile extends Component {
                         marginBottom: '-4.5pt',
                         marginRight: '1rem',
                       }}
-                    />Success!
+                    />
+                    Success!
                   </span>
                 }
                 action={[
