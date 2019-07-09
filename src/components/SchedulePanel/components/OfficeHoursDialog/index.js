@@ -152,7 +152,7 @@ export default class HoursDialog extends React.Component {
         maxWidth="md"
         className="time-tile"
       >
-        <DialogTitle className="title">{dialogTitle} schedule item</DialogTitle>
+        <DialogTitle className="add-title">{dialogTitle} schedule item</DialogTitle>
 
         <DialogContent className="dialog-content">
           <form className="info" onSubmit={this.handleSubmit}>
