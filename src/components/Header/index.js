@@ -9,6 +9,12 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
@@ -39,6 +45,7 @@ const getRouteName = route => {
 export default class GordonHeader extends Component {
   state = {
     value: null,
+    loginDialogOpen: false,
   };
 
   handleChange = (event, value) => {
@@ -72,131 +79,106 @@ export default class GordonHeader extends Component {
     this.updateTabHighlight();
   }
 
+  unAuthenticatedSearch() {
+    this.setState({ loginDialogOpen: true });
+  }
+
+  handleClose() {
+    this.setState({ loginDialogOpen: false });
+  }
+
   render() {
     let content;
     if (isAuthenticated()) {
       content = (
-        <section className="gordon-header">
-          <AppBar className="app-bar" position="static">
-            <Toolbar>
-              <IconButton
-                className="menu-button"
-                color="contrast"
-                aria-label="open drawer"
-                onClick={this.props.onDrawerToggle}
-              >
-                <MenuIcon className="menu-button-icon" />
-              </IconButton>
-              <Typography className="title" variant="title" color="inherit">
-                <Switch>
-                  {routes.map(route => (
-                    <Route
-                      key={route.path}
-                      path={route.path}
-                      exact={route.exact}
-                      component={getRouteName(route)}
-                    />
-                  ))}
-                </Switch>
-              </Typography>
-              <div className="center-container">
-                <Tabs centered value={this.value} onChange={this.handleChange}>
-                  <Tab
-                    className="tab"
-                    icon={<HomeIcon />}
-                    label="Home"
-                    component={NavLink}
-                    to="/"
-                  />
-                  <Tab
-                    className="tab"
-                    icon={<LocalActivityIcon />}
-                    label="Involvements"
-                    component={NavLink}
-                    to="/involvements"
-                  />
-                  <Tab
-                    className="tab"
-                    icon={<EventIcon />}
-                    label="Events"
-                    component={NavLink}
-                    to="/events"
-                  />
-
-                  <Tab
-                    className="tab"
-                    icon={<PeopleIcon />}
-                    label="People"
-                    component={NavLink}
-                    to="/people"
-                  />
-                </Tabs>
-              </div>
-              <GordonPeopleSearch />
-              <GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />
-            </Toolbar>
-          </AppBar>
-        </section>
+        <Tab
+          className="tab"
+          icon={<PeopleIcon />}
+          label="People"
+          component={NavLink}
+          to="/people"
+        />
       );
     } else {
       content = (
-        <section className="gordon-header">
-          <AppBar className="app-bar" position="static">
-            <Toolbar>
-              <IconButton
-                className="menu-button"
-                color="contrast"
-                aria-label="open drawer"
-                onClick={this.props.onDrawerToggle}
-              >
-                <MenuIcon className="menu-button-icon" />
-              </IconButton>
-              <Typography className="title" variant="title" color="inherit">
-                <Switch>
-                  {routes.map(route => (
-                    <Route
-                      key={route.path}
-                      path={route.path}
-                      exact={route.exact}
-                      component={getRouteName(route)}
-                    />
-                  ))}
-                </Switch>
-              </Typography>
-              <div className="center-container">
-                <Tabs centered value={this.value} onChange={this.handleChange}>
-                  <Tab
-                    className="tab"
-                    icon={<HomeIcon />}
-                    label="Home"
-                    component={NavLink}
-                    to="/"
-                  />
-                  <Tab
-                    className="tab"
-                    icon={<LocalActivityIcon />}
-                    label="Involvements"
-                    component={NavLink}
-                    to="/involvements"
-                  />
-                  <Tab
-                    className="tab"
-                    icon={<EventIcon />}
-                    label="Events"
-                    component={NavLink}
-                    to="/events"
-                  />
-                </Tabs>
-              </div>
-              <GordonPeopleSearch />
-              <GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />
-            </Toolbar>
-          </AppBar>
-        </section>
+        <Tab
+          className="guestTab"
+          icon={<PeopleIcon />}
+          label="People"
+          component={Button}
+          onClick={clicked => this.unAuthenticatedSearch()}
+        />
       );
     }
 
-    return <div>{content}</div>;
+    return (
+      <section className="gordon-header">
+        <AppBar className="app-bar" position="static">
+          <Toolbar>
+            <IconButton
+              className="menu-button"
+              color="contrast"
+              aria-label="open drawer"
+              onClick={this.props.onDrawerToggle}
+            >
+              <MenuIcon className="menu-button-icon" />
+            </IconButton>
+            <Typography clsasName="title" variant="title" color="inherit">
+              <Switch>
+                {routes.map(route => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    exact={route.exact}
+                    component={getRouteName(route)}
+                  />
+                ))}
+              </Switch>
+            </Typography>
+            <div className="center-container">
+              <Tabs centered value={this.value} onChange={this.handleChange}>
+                <Tab className="tab" icon={<HomeIcon />} label="Home" component={NavLink} to="/" />
+                <Tab
+                  className="tab"
+                  icon={<LocalActivityIcon />}
+                  label="Involvements"
+                  component={NavLink}
+                  to="/involvements"
+                />
+                <Tab
+                  className="tab"
+                  icon={<EventIcon />}
+                  label="Events"
+                  component={NavLink}
+                  to="/events"
+                />
+                {content}
+              </Tabs>
+            </div>
+            <GordonPeopleSearch />
+            {<GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />}
+          </Toolbar>
+        </AppBar>
+        <Dialog
+          open={this.state.loginDialogOpen}
+          onClose={clicked => this.handleClose()}
+          aria-labelledby="login-dialog-title"
+          aria-describedby="login-dialog-description"
+        >
+          <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="login-dialog-description">
+              You are not logged in. Please log in to use People Search.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </section>
+    );
   }
 }
 GordonHeader.propTypes = {
