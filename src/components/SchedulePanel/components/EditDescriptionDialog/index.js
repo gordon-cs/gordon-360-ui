@@ -5,7 +5,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { gordonColors } from '../../../../theme';
-
 import './editdescriptiondialog.css';
 
 export default class EditDescriptionDialog extends React.Component {
@@ -48,7 +47,7 @@ export default class EditDescriptionDialog extends React.Component {
   };
 
   handleClose = () => {
-    this.props.handleSocialLinksClose();
+    this.props.handleEditDescriptionClose();
 
     // Reset changed fields
     if (this.state.descInput !== this.props.descriptionText) {
@@ -88,7 +87,7 @@ export default class EditDescriptionDialog extends React.Component {
             >
               Cancel
             </Button>
-            <Button variant="contained" style={button}>
+            <Button variant="contained" onClick={this.handleSubmit} style={button}>
               Submit
             </Button>
           </DialogActions>

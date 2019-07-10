@@ -15,6 +15,10 @@ import RemoveHoursDialog from './components/RemoveHoursDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
 
+import GordonLoader from '../../components/Loader';
+
+import ScheduleControl from './../../services/schedulecontrol';
+
 import './schedulepanel.css';
 
 const styles = {
@@ -42,7 +46,12 @@ class GordonSchedulePanel extends Component {
       disabled: true,
       selectedEvent: null,
       isDoubleClick: false,
+      loading: true,
+      description: null,
+      modifiedTimeStamp: null,
     };
+    this.scheduleControlInfo = null;
+
     this.handleIsExpanded = this.handleIsExpanded.bind(this);
     this.handleOfficeHoursOpen = this.handleOfficeHoursOpen.bind(this);
     this.handleOfficeHoursClose = this.handleOfficeHoursClose.bind(this);
@@ -54,6 +63,22 @@ class GordonSchedulePanel extends Component {
     this.handleEditDescriptionButton = this.handleEditDescriptionButton.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
   }
+
+  componentWillMount() {
+    this.loadData(this.props.profile);
+    this.setState({ isExpanded: true });
+  }
+
+  loadData = async searchedUser => {
+    const scheduleControlPromise = ScheduleControl.getScheduleControl(searchedUser.AD_Username);
+    const scheduleControlInfo = await scheduleControlPromise;
+    this.scheduleControlInfo = scheduleControlInfo;
+    this.setState({ isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate });
+    this.setState({ description: this.scheduleControlInfo.Description });
+    console.log('Schedule Control : ', this.scheduleControlInfo);
+
+    this.setState({ loading: false });
+  };
 
   handleOfficeHoursOpen = () => {
     this.setState({ officeHoursOpen: true });
@@ -89,6 +114,11 @@ class GordonSchedulePanel extends Component {
     this.setState({ disabled: false });
   };
 
+  handleDescriptionSubmit = async descValue => {
+    await ScheduleControl.setScheduleDescription(descValue);
+    window.location.reload(); // refresh to show the change
+  };
+
   handleDoubleClick = event => {
     if (this.props.myProf) {
       this.setState({ officeHoursOpen: true });
@@ -97,15 +127,6 @@ class GordonSchedulePanel extends Component {
     }
   };
 
-  async loadProfileInfo() {
-    try {
-      const profile = await user.getProfileInfo();
-      this.setState({ isSchedulePrivate: profile.IsSchedulePrivate });
-    } catch (error) {
-      this.setState({ error });
-    }
-  }
-
   handleChangeSchedulePrivacy() {
     this.setState({ isSchedulePrivate: !this.state.isSchedulePrivate });
     user.setSchedulePrivacy(!this.state.isSchedulePrivate);
@@ -113,11 +134,6 @@ class GordonSchedulePanel extends Component {
 
   handleIsExpanded() {
     this.setState({ isExpanded: !this.state.isExpanded });
-  }
-
-  componentWillMount() {
-    this.setState({ isSchedulePrivate: this.props.profile.IsSchedulePrivate });
-    this.setState({ isExpanded: true });
   }
 
   render() {
@@ -131,7 +147,7 @@ class GordonSchedulePanel extends Component {
 
     let editDialog = (
       <EditDescriptionDialog
-        onDialogSubmit={this.onDialogSubmit}
+        onDialogSubmit={this.handleDescriptionSubmit}
         handleEditDescriptionClose={this.handleEditDescriptionClose}
         editDescriptionOpen={this.state.editDescriptionOpen}
       />
@@ -169,7 +185,9 @@ class GordonSchedulePanel extends Component {
               bar: classes.colorBar,
             }}
           />
-          <Typography>{this.state.isSchedulePrivate ? 'Private' : 'Public'}</Typography>
+          <Typography>
+            {this.state.isSchedulePrivate ? 'Hide my course schedule' : 'Show my course schedule'}
+          </Typography>
         </Fragment>
       );
     }
@@ -202,19 +220,8 @@ class GordonSchedulePanel extends Component {
         </Fragment>
       );
     }
-
-    if (!this.props.myProf && this.state.isSchedulePrivate) {
-      schedulePanel = (
-        <ExpansionPanel disabled>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Private as requested</Typography>
-          </ExpansionPanelSummary>
-        </ExpansionPanel>
-      );
+    if (this.state.loading) {
+      schedulePanel = <GordonLoader />;
     } else {
       let panelTitle = '';
       this.state.isExpanded ? (panelTitle = 'Show') : (panelTitle = 'Hide');
@@ -235,11 +242,7 @@ class GordonSchedulePanel extends Component {
 
               <div className="privacy">{privacyButton}</div>
 
-              <div className="last-updated">
-                Last updated <TimeAgo date="August 29, 2014" />
-              </div>
-
-              <div className="description">Insert description here</div>
+              <div className="description">{this.state.description}</div>
 
               <div className="edit_description">{editDescriptionButton}</div>
 
