@@ -105,7 +105,7 @@ export default class GordonNavAvatarRightCorner extends Component {
     // const { classes } = this.props;
 
     let username = this.state.username;
-    let myProfileLink = '/myprofile/' + username;
+    let myProfileLink = '/myprofile/';
     let avatar = (
       <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>
     );
