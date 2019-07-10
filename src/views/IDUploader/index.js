@@ -18,6 +18,7 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
 import user from '../../services/user';
+import errorLog from '../../services/errorLog';
 
 const CROP_DIM = 1200; // pixels
 export default class IDUploader extends Component {
@@ -43,7 +44,6 @@ export default class IDUploader extends Component {
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
       var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-      console.log('Posting ID photo...');
       this.postCroppedImage(croppedImage, 0);
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({
@@ -57,17 +57,20 @@ export default class IDUploader extends Component {
   };
 
   async postCroppedImage(croppedImage, n) {
-    console.log('ID photo resubmission #' + n);
+    let logMessage = 'ID photo submission #' + n + ' from ' + errorLog.parseNavigator(navigator);
     try {
       await user.postIDImage(croppedImage);
       this.setState({ submitDialogOpen: true });
     } catch (error) {
+      let errorMessage = ' but image failed to post with error: ' + error;
+      logMessage = errorMessage + logMessage;
       if (n < 5) {
         this.postCroppedImage(croppedImage, n + 1);
       } else {
         this.setState({ errorDialogOpen: true });
       }
     }
+    errorLog.postErrorMessage(logMessage);
   }
 
   handleCloseCancel = () => {

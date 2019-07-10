@@ -53,7 +53,7 @@ import http from './http';
  * @return {Promise<any>} Response
  */
 function addMembership(data) {
-  return http.post(`memberships`, data).catch(reason => {
+  return http.post('memberships', data).catch(reason => {
     console.log(reason);
   });
 }
