@@ -27,16 +27,16 @@ import http from './http';
 
 async function setSchedulePrivacy(makePrivate) {
   // 'Y' = private, 'N' = public
-  await http.put('schedulecontrol/schedule_privacy/update/' + (makePrivate ? 'Y' : 'N'));
+  await http.put('schedulecontrol/update/privacy/' + (makePrivate ? 'Y' : 'N'));
 }
 
 async function setModifiedTimeStamp(TimeStamp) {
   // TimeStamp should be converted to string
-  await http.put('schedulecontrol/timestamp/update/' + TimeStamp);
+  await http.put('schedulecontrol/update/timestamp/' + TimeStamp);
 }
 
 async function setScheduleDescription(Description) {
-  await http.put('schedulecontrol/description/update/' + Description);
+  await http.put('schedulecontrol/update/description/' + Description);
 }
 
 /**
