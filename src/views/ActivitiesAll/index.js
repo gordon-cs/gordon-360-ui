@@ -59,14 +59,13 @@ export default class GordonActivitiesAll extends Component {
         activities,
         allActivities: activities,
         myInvolvements: myInvolvements,
-        loading: true,
         sessions,
         types,
       });
 
       if (activities.length === 0) {
         var recentSession;
-        recentSession = this.state.sessions[0].SessionCode;
+        recentSession = sessions[0].SessionCode;
         this.setState({ session: recentSession, currentSession: sessionCode });
         const [activities, types, sessions] = await Promise.all([
           activity.getAll(recentSession),
@@ -85,6 +84,7 @@ export default class GordonActivitiesAll extends Component {
           types,
         });
       }
+
       this.setState({
         loading: false,
       });
