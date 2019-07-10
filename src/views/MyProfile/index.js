@@ -246,6 +246,7 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
+      console.log(preferredImage);
       const memberships = await user.getMembershipsAlphabetically(profile.ID);
       const involvementsAndTheirPrivacy = await this.getInvolvementAndPrivacyDictionary(
         memberships,
