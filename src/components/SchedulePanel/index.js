@@ -13,6 +13,7 @@ import { gordonColors } from '../../theme';
 import HoursDialog from './components/OfficeHoursDialog';
 import RemoveHoursDialog from './components/RemoveHoursDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
+import TimeAgo from 'react-timeago';
 
 import './schedulepanel.css';
 
@@ -234,6 +235,10 @@ class GordonSchedulePanel extends Component {
 
               <div className="privacy">{privacyButton}</div>
 
+              <div className="last-updated">
+                Last updated <TimeAgo date="August 29, 2014" />
+              </div>
+
               <div className="description">Insert description here</div>
 
               <div className="edit_description">{editDescriptionButton}</div>
@@ -246,7 +251,9 @@ class GordonSchedulePanel extends Component {
                 <CourseSchedule
                   profile={this.props.profile}
                   handleRemoveButton={this.handleRemoveButton.bind(this)}
+                  handleEditDescriptionButton={this.handleEditDescriptionButton.bind(this)}
                   handleDoubleClick={this.handleDoubleClick.bind(this)}
+                  handleOfficeHoursOpen={this.handleOfficeHoursOpen.bind(this)}
                 />
               </div>
               {/* </CardContent> */}
