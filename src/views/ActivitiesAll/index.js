@@ -64,7 +64,7 @@ export default class GordonActivitiesAll extends Component {
         types,
       });
 
-      if (activities.length == 0) {
+      if (activities.length === 0) {
         var recentSession;
         recentSession = this.state.sessions[0].SessionCode;
         this.setState({ session: recentSession, currentSession: sessionCode });
