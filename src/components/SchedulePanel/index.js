@@ -8,14 +8,11 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import HoursDialog from './components/OfficeHoursDialog';
 import RemoveHoursDialog from './components/RemoveHoursDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
-
-import GordonLoader from '../../components/Loader';
 
 import ScheduleControl from './../../services/schedulecontrol';
 
@@ -46,7 +43,6 @@ class GordonSchedulePanel extends Component {
       disabled: true,
       selectedEvent: null,
       isDoubleClick: false,
-      loading: true,
       description: null,
       modifiedTimeStamp: null,
     };
@@ -73,11 +69,12 @@ class GordonSchedulePanel extends Component {
     const scheduleControlPromise = ScheduleControl.getScheduleControl(searchedUser.AD_Username);
     const scheduleControlInfo = await scheduleControlPromise;
     this.scheduleControlInfo = scheduleControlInfo;
-    this.setState({ isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate });
-    this.setState({ description: this.scheduleControlInfo.Description });
+    if (this.scheduleControlInfo) {
+      this.setState({ isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate });
+      this.setState({ description: this.scheduleControlInfo.Description });
+      this.setState({ modifiedTimeStamp: this.scheduleControlInfo.ModifiedTimeStamp });
+    }
     console.log('Schedule Control : ', this.scheduleControlInfo);
-
-    this.setState({ loading: false });
   };
 
   handleOfficeHoursOpen = () => {
@@ -129,7 +126,6 @@ class GordonSchedulePanel extends Component {
 
   handleChangeSchedulePrivacy() {
     this.setState({ isSchedulePrivate: !this.state.isSchedulePrivate });
-    user.setSchedulePrivacy(!this.state.isSchedulePrivate);
   }
 
   handleIsExpanded() {
@@ -220,60 +216,58 @@ class GordonSchedulePanel extends Component {
         </Fragment>
       );
     }
-    if (this.state.loading) {
-      schedulePanel = <GordonLoader />;
-    } else {
-      let panelTitle = '';
-      this.state.isExpanded ? (panelTitle = 'Show') : (panelTitle = 'Hide');
-      schedulePanel = (
-        <ExpansionPanel TransitionProps={{ unmountOnExit: true }} onChange={this.handleIsExpanded}>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>{panelTitle} the Schedule</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            {/* ///////////////////////////////////////////////////////////////////// */}
-            <div className="schedule_content">
-              {/* <Card> */}
-              {/* <CardContent> */}
 
-              <div className="privacy">{privacyButton}</div>
+    let panelTitle = '';
+    this.state.isExpanded ? (panelTitle = 'Show') : (panelTitle = 'Hide');
+    schedulePanel = (
+      <ExpansionPanel TransitionProps={{ unmountOnExit: true }} onChange={this.handleIsExpanded}>
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography>{panelTitle} the Schedule</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          {/* ///////////////////////////////////////////////////////////////////// */}
+          <div className="schedule_content">
+            {/* <Card> */}
+            {/* <CardContent> */}
 
-              <div className="last-updated">
-                Last updated <TimeAgo date="August 29, 2014" />
-              </div>
+            <div className="privacy">{privacyButton}</div>
 
-              <div className="description">{this.state.description}</div>
-
-              <div className="edit_description">{editDescriptionButton}</div>
-
-              <div className="add_event">{addOfficeHourButton}</div>
-
-              <div className="remove_event">{removeOfficeHourButton}</div>
-
-              <div className="schedule">
-                <CourseSchedule
-                  profile={this.props.profile}
-                  handleRemoveButton={this.handleRemoveButton.bind(this)}
-                  handleEditDescriptionButton={this.handleEditDescriptionButton.bind(this)}
-                  handleDoubleClick={this.handleDoubleClick.bind(this)}
-                  handleOfficeHoursOpen={this.handleOfficeHoursOpen.bind(this)}
-                />
-              </div>
-              {/* </CardContent> */}
-              {/* </Card> */}
-              {editDialog}
-              {hoursDialog}
-              {removeHoursDialog}
+            <div className="last-updated">
+              Last updated{' '}
+              <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
             </div>
-            {/* //////////////////////////////////////////////////////////////////// */}
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-      );
-    }
+
+            <div className="description">{this.state.description}</div>
+
+            <div className="edit_description">{editDescriptionButton}</div>
+
+            <div className="add_event">{addOfficeHourButton}</div>
+
+            <div className="remove_event">{removeOfficeHourButton}</div>
+
+            <div className="schedule">
+              <CourseSchedule
+                profile={this.props.profile}
+                handleRemoveButton={this.handleRemoveButton.bind(this)}
+                handleEditDescriptionButton={this.handleEditDescriptionButton.bind(this)}
+                handleDoubleClick={this.handleDoubleClick.bind(this)}
+                handleOfficeHoursOpen={this.handleOfficeHoursOpen.bind(this)}
+              />
+            </div>
+            {/* </CardContent> */}
+            {/* </Card> */}
+            {editDialog}
+            {hoursDialog}
+            {removeHoursDialog}
+          </div>
+          {/* //////////////////////////////////////////////////////////////////// */}
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+    );
 
     return <Fragment>{schedulePanel}</Fragment>;
   }
