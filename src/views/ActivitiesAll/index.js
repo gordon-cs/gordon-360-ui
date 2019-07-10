@@ -44,6 +44,7 @@ export default class GordonActivitiesAll extends Component {
     try {
       const profile = await user.getProfileInfo();
       const { SessionCode: sessionCode } = await session.getCurrent();
+
       this.setState({ session: sessionCode, currentSession: sessionCode });
 
       const [activities, types, sessions] = await Promise.all([
@@ -58,9 +59,34 @@ export default class GordonActivitiesAll extends Component {
         activities,
         allActivities: activities,
         myInvolvements: myInvolvements,
-        loading: false,
+        loading: true,
         sessions,
         types,
+      });
+
+      if (activities.length == 0) {
+        var recentSession;
+        recentSession = this.state.sessions[0].SessionCode;
+        this.setState({ session: recentSession, currentSession: sessionCode });
+        const [activities, types, sessions] = await Promise.all([
+          activity.getAll(recentSession),
+          activity.getTypes(recentSession),
+          session.getAll(),
+        ]);
+        const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
+
+        this.setState({
+          profile,
+          activities,
+          allActivities: activities,
+          myInvolvements: myInvolvements,
+          loading: false,
+          sessions,
+          types,
+        });
+      }
+      this.setState({
+        loading: false,
       });
     } catch (error) {
       this.setState({ error });
