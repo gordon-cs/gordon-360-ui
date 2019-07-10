@@ -65,7 +65,7 @@ export default class GordonActivitiesAll extends Component {
 
       if (activities.length === 0) {
         var recentSession;
-        recentSession = sessions[0].SessionCode;
+        recentSession = this.state.sessions[0].SessionCode;
         this.setState({ session: recentSession, currentSession: sessionCode });
         const [activities, types, sessions] = await Promise.all([
           activity.getAll(recentSession),
