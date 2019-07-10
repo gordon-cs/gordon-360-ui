@@ -80,6 +80,7 @@ export default class CourseSchedule extends Component {
     if (this.state.loading) {
       content = <GordonLoader />;
     } else {
+      // Calendar API can be controlled here with these properties
       let Resource = ({ localizer = MomentLocalizer(Moment) }) => (
         <Calendar
           selectable
