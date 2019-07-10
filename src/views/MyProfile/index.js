@@ -244,6 +244,7 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
+      console.log(preferredImage);
       const memberships = await user.getMembershipsAlphabetically(profile.ID);
       const involvementsAndTheirPrivacy = await this.getInvolvementAndPrivacyDictionary(
         memberships,
@@ -508,18 +509,26 @@ export default class Profile extends Component {
                                 {!preview && (
                                   <Grid container justify="center" spacing="16">
                                     <Dropzone
-                                      className="dropzone"
-                                      activeClassName="drop-overlay"
                                       onDropAccepted={this.onDropAccepted.bind(this)}
                                       onDropRejected={this.onDropRejected.bind(this)}
-                                      accept="image/jpeg,image/jpg,image/png"
+                                      accept="image/jpeg, image/jpg, image/png"
                                     >
-                                      <img
-                                        className="rounded-corners"
-                                        src={`data:image/jpg;base64,${this.state.image}`}
-                                        alt=""
-                                        style={{ 'max-width': '200px', 'max-height': '200px' }}
-                                      />
+                                      {({ getRootProps, getInputProps }) => (
+                                        <section>
+                                          <div className="prof-dropzone" {...getRootProps()}>
+                                            <input {...getInputProps()} />
+                                            <img
+                                              className="rounded-corners"
+                                              src={`data:image/jpg;base64,${this.state.image}`}
+                                              alt=""
+                                              style={{
+                                                'max-width': '200px',
+                                                'max-height': '200px',
+                                              }}
+                                            />
+                                          </div>
+                                        </section>
+                                      )}
                                     </Dropzone>
                                   </Grid>
                                 )}
