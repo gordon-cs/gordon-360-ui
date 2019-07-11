@@ -113,6 +113,8 @@ class PeopleSearch extends Component {
       peopleSearchResults: null,
       header: '',
       searchButtons: '',
+
+      network: 'online',
     };
   }
 
@@ -523,363 +525,78 @@ class PeopleSearch extends Component {
       );
     }
 
-    return (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                marginLeft: 8,
-                marginTop: 8,
-              }}
-            >
-              <Typography variant="headline">General Info</Typography>
-              <Grid container spacing={8} alignItems="flex-end">
-                <Media
-                  query="(min-width: 600px)"
-                  render={() => (
-                    <Grid item>
-                      <PersonIcon />
-                    </Grid>
-                  )}
-                />
-                <Grid item xs={11}>
-                  <TextField
-                    id="first-name"
-                    label="First Name"
-                    max="3"
-                    fullWidth
-                    value={this.state.firstNameSearchValue}
-                    onChange={this.handleFirstNameInputChange}
-                    onKeyDown={this.handleEnterKeyPress}
+    /* Used to re-render the page when the network connection changes
+    *  this.state.network is compared to the message received to prevent
+    *  multiple re-renders which creates extreme performance lost
+    */
+    window.addEventListener('message', event => {
+      if (event.data === 'online' && this.state.network === 'offline') {
+        this.setState({ network: 'online' });
+      } else if (event.data === 'offline' && this.state.network === 'online') {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    /* Gets status of current network connection for online/offline rendering
+    *  Defaults to online in case of PWA not being possible
+    */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+    // Creates the PeopleSearch page depending on the status of the network found in local storage
+    let PeopleSearch;
+    if (networkStatus === 'online') {
+      PeopleSearch = (
+        <Grid container justify="center" spacing="16">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  marginLeft: 8,
+                  marginTop: 8,
+                }}
+              >
+                <Typography variant="headline">General Info</Typography>
+                <Grid container spacing={8} alignItems="flex-end">
+                  <Media
+                    query="(min-width: 600px)"
+                    render={() => (
+                      <Grid item>
+                        <PersonIcon />
+                      </Grid>
+                    )}
                   />
-                </Grid>
-              </Grid>
-              <Grid container spacing={8} alignItems="flex-end">
-                <Media
-                  query="(min-width: 600px)"
-                  render={() => (
-                    <Grid item>
-                      <PersonIcon />
-                    </Grid>
-                  )}
-                />
-                <Grid item xs={11}>
-                  <TextField
-                    id="last-name"
-                    label="Last Name"
-                    fullWidth
-                    value={this.state.lastNameSearchValue}
-                    onChange={this.handleLastNameInputChange}
-                    onKeyDown={this.handleEnterKeyPress}
-                  />
+                  <Grid item xs={11}>
+                    <TextField
+                      id="first-name"
+                      label="First Name"
+                      max="3"
+                      fullWidth
+                      value={this.state.firstNameSearchValue}
+                      onChange={this.handleFirstNameInputChange}
+                      onKeyDown={this.handleEnterKeyPress}
+                    />
+                  </Grid>
                 </Grid>
                 <Grid container spacing={8} alignItems="flex-end">
                   <Media
                     query="(min-width: 600px)"
                     render={() => (
                       <Grid item>
-                        <BuildingIcon
-                          style={{
-                            fontSize: 22,
-                            marginLeft: 6,
-                          }}
-                        />
+                        <PersonIcon />
                       </Grid>
                     )}
                   />
                   <Grid item xs={11}>
-                    <FormControl fullWidth>
-                      <InputLabel>Hall</InputLabel>
-                      <Select
-                        value={this.state.hallSearchValue}
-                        onChange={this.handleHallInputChange}
-                        input={<Input id="hall" />}
-                      >
-                        <MenuItem label="All Halls" value="">
-                          <em>All Halls</em>
-                        </MenuItem>
-                        {hallOptions}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-              </Grid>
-              {aprilFools}
-            </CardContent>
-
-            <Collapse in={this.state.additionalOpsExpanded} timeout="auto" unmountOnExit>
-              <CardContent>
-                <CardActions
-                  className={[classes.actions, 'card-expansion']}
-                  disableActionSpacing
-                  onClick={this.handleAcademicsExpandClick}
-                >
-                  <Typography variant="headline">Academics</Typography>
-                  <IconButton
-                    className={classnames(classes.expand, {
-                      [classes.expandOpen]: this.state.academicsExpanded,
-                    })}
-                    aria-expanded={this.state.academicsExpanded}
-                    aria-label="Show more"
-                  >
-                    <ExpandMoreIcon />
-                  </IconButton>
-                </CardActions>
-
-                <Collapse
-                  in={this.state.academicsExpanded}
-                  timeout="auto"
-                  unmountOnExit
-                  style={styles.CardContent}
-                >
-                  <Grid container spacing={8} alignItems="baseline">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <BookIcon style={styles.FontAwesome} />
-                        </Grid>
-                      )}
+                    <TextField
+                      id="last-name"
+                      label="Last Name"
+                      fullWidth
+                      value={this.state.lastNameSearchValue}
+                      onChange={this.handleLastNameInputChange}
+                      onKeyDown={this.handleEnterKeyPress}
                     />
-                    <Grid item xs={11}>
-                      <FormControl fullWidth>
-                        <InputLabel>Major</InputLabel>
-                        <Select
-                          value={this.state.majorSearchValue}
-                          onChange={this.handleMajorInputChange}
-                          input={<Input id="major" />}
-                        >
-                          <MenuItem label="All Majors" value="">
-                            <em>All Majors</em>
-                          </MenuItem>
-                          {majorOptions}
-                        </Select>
-                      </FormControl>
-                    </Grid>
                   </Grid>
-
-                  <Grid container spacing={8} alignItems="baseline">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <BookIcon style={styles.FontAwesome} />
-                        </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <FormControl fullWidth>
-                        <InputLabel>Minor</InputLabel>
-                        <Select
-                          value={this.state.minorSearchValue}
-                          onChange={this.handleMinorInputChange}
-                          input={<Input id="minor" />}
-                        >
-                          <MenuItem label="All Minors" value="">
-                            <em>All Minors</em>
-                          </MenuItem>
-                          {minorOptions}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-
                   <Grid container spacing={8} alignItems="flex-end">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <SchoolIcon style={styles.FontAwesome} />
-                        </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <FormControl fullWidth>
-                        <InputLabel>Class</InputLabel>
-                        <Select
-                          value={this.state.classTypeSearchValue}
-                          onChange={this.handleClassTypeInputChange}
-                          input={<Input id="class" />}
-                        >
-                          <MenuItem label="All Classes" value="">
-                            <em>All</em>
-                          </MenuItem>
-                          <MenuItem value={1}>Freshman</MenuItem>
-                          <MenuItem value={2}>Sophomore</MenuItem>
-                          <MenuItem value={3}>Junior</MenuItem>
-                          <MenuItem value={4}>Senior</MenuItem>
-                          <MenuItem value={5}>Graduate Student</MenuItem>
-                          <MenuItem value={6}>Undergraduate Conferred</MenuItem>
-                          <MenuItem value={7}>Graduate Conferred</MenuItem>
-                          <MenuItem value={0}>Unassigned</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                </Collapse>
-              </CardContent>
-
-              <CardContent>
-                <CardActions
-                  className={[classes.actions, 'card-expansion']}
-                  disableActionSpacing
-                  onClick={this.handleHomeExpandClick}
-                >
-                  <Typography variant="headline">Home</Typography>
-                  <IconButton
-                    className={classnames(classes.expand, {
-                      [classes.expandOpen]: this.state.homeExpanded,
-                    })}
-                    aria-expanded={this.state.homeExpanded}
-                    aria-label="Show more"
-                  >
-                    <ExpandMoreIcon />
-                  </IconButton>
-                </CardActions>
-
-                <Collapse
-                  in={this.state.homeExpanded}
-                  timeout="auto"
-                  unmountOnExit
-                  style={styles.CardContent}
-                >
-                  <Grid container spacing={8} alignItems="flex-end">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <HomeIcon style={styles.FontAwesome} />
-                        </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <TextField
-                        id="hometown"
-                        label="Hometown"
-                        fullWidth
-                        value={this.state.homeCitySearchValue}
-                        onChange={this.handleHomeCityInputChange}
-                        onKeyDown={this.handleEnterKeyPress}
-                      />
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={8} alignItems="flex-end">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <CityIcon style={styles.FontAwesome} />
-                        </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <FormControl fullWidth>
-                        <InputLabel>State</InputLabel>
-                        <Select
-                          value={this.state.stateSearchValue}
-                          onChange={this.handleStateInputChange}
-                          input={<Input id="state" />}
-                        >
-                          <MenuItem label="All States" value="">
-                            <em>All</em>
-                          </MenuItem>
-                          {stateOptions}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={8} alignItems="baseline">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <GlobeIcon
-                            style={{
-                              fontSize: 22,
-                              marginLeft: 2,
-                            }}
-                          />
-                        </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <FormControl fullWidth>
-                        <InputLabel>Country</InputLabel>
-                        <Select
-                          value={this.state.countrySearchValue}
-                          onChange={this.handleCountryInputChange}
-                          input={<Input id="country" />}
-                        >
-                          <MenuItem label="All Countries" value="">
-                            <em>All</em>
-                          </MenuItem>
-                          {countryOptions}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                </Collapse>
-              </CardContent>
-
-              <CardContent>
-                <CardActions
-                  className={[classes.actions, 'card-expansion']}
-                  disableActionSpacing
-                  onClick={this.handleOffDepExpandClick}
-                >
-                  <Typography variant="headline">Building and Department</Typography>
-                  <IconButton
-                    className={classnames(classes.expand, {
-                      [classes.expandOpen]: this.state.offDepExpanded,
-                    })}
-                    aria-expanded={this.state.offDepExpanded}
-                    aria-label="Show more"
-                  >
-                    <ExpandMoreIcon />
-                  </IconButton>
-                </CardActions>
-
-                <Collapse
-                  in={this.state.offDepExpanded}
-                  timeout="auto"
-                  unmountOnExit
-                  style={styles.CardContent}
-                >
-                  <Grid container spacing={8} alignItems="baseline">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <BriefcaseIcon
-                            style={{
-                              fontSize: 22,
-                              marginLeft: 2,
-                            }}
-                          />
-                        </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <FormControl fullWidth>
-                        <InputLabel>Department</InputLabel>
-                        <Select
-                          value={this.state.departmentSearchValue}
-                          onChange={this.handleDepartmentInputChange}
-                          input={<Input id="department-type" />}
-                        >
-                          <MenuItem label="All Departments" value="">
-                            <em>All</em>
-                          </MenuItem>
-                          {departmentOptions}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-
-                  <Grid container spacing={8} alignItems="baseline">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
@@ -887,122 +604,437 @@ class PeopleSearch extends Component {
                           <BuildingIcon
                             style={{
                               fontSize: 22,
-                              marginLeft: 2,
+                              marginLeft: 6,
                             }}
                           />
                         </Grid>
                       )}
                     />
-
                     <Grid item xs={11}>
                       <FormControl fullWidth>
-                        <InputLabel>Building</InputLabel>
+                        <InputLabel>Hall</InputLabel>
                         <Select
-                          value={this.state.buildingSearchValue}
-                          onChange={this.handleBuildingInputChange}
-                          input={<Input id="building-type" />}
+                          value={this.state.hallSearchValue}
+                          onChange={this.handleHallInputChange}
+                          input={<Input id="hall" />}
                         >
-                          <MenuItem label="All Buildings" value="">
-                            <em>All</em>
+                          <MenuItem label="All Halls" value="">
+                            <em>All Halls</em>
                           </MenuItem>
-                          {buildingOptions}
+                          {hallOptions}
                         </Select>
                       </FormControl>
                     </Grid>
                   </Grid>
-                </Collapse>
+                </Grid>
+                {aprilFools}
               </CardContent>
-            </Collapse>
 
-            <CardActions>
-              <Grid container direction="column" alignItems="center">
-                <Grid item xs={12}>
-                  <Grid container direction="row" alignItems="flex-end" justify="center">
-                    {includeAlumniCheckbox}
-                    <Grid item>
-                      <Button
-                        color="primary"
-                        variant="outlined"
-                        onClick={() => {
-                          this.setState({
-                            includeAlumni: false,
-                            firstNameSearchValue: '',
-                            lastNameSearchValue: '',
-                            majorSearchValue: '',
-                            minorSearchValue: '',
-                            hallSearchValue: '',
-                            classTypeSearchValue: '',
-                            homeCitySearchValue: '',
-                            stateSearchValue: '',
-                            countrySearchValue: '',
-                            departmentSearchValue: '',
-                            buildingSearchValue: '',
-                          });
-                        }}
-                      >
-                        Clear Input
-                      </Button>
+              <Collapse in={this.state.additionalOpsExpanded} timeout="auto" unmountOnExit>
+                <CardContent>
+                  <CardActions
+                    className={[classes.actions, 'card-expansion']}
+                    disableActionSpacing
+                    onClick={this.handleAcademicsExpandClick}
+                  >
+                    <Typography variant="headline">Academics</Typography>
+                    <IconButton
+                      className={classnames(classes.expand, {
+                        [classes.expandOpen]: this.state.academicsExpanded,
+                      })}
+                      aria-expanded={this.state.academicsExpanded}
+                      aria-label="Show more"
+                    >
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </CardActions>
+
+                  <Collapse
+                    in={this.state.academicsExpanded}
+                    timeout="auto"
+                    unmountOnExit
+                    style={styles.CardContent}
+                  >
+                    <Grid container spacing={8} alignItems="baseline">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <BookIcon style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Major</InputLabel>
+                          <Select
+                            value={this.state.majorSearchValue}
+                            onChange={this.handleMajorInputChange}
+                            input={<Input id="major" />}
+                          >
+                            <MenuItem label="All Majors" value="">
+                              <em>All Majors</em>
+                            </MenuItem>
+                            {majorOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={8} alignItems="baseline">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <BookIcon style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Minor</InputLabel>
+                          <Select
+                            value={this.state.minorSearchValue}
+                            onChange={this.handleMinorInputChange}
+                            input={<Input id="minor" />}
+                          >
+                            <MenuItem label="All Minors" value="">
+                              <em>All Minors</em>
+                            </MenuItem>
+                            {minorOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={8} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <SchoolIcon style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Class</InputLabel>
+                          <Select
+                            value={this.state.classTypeSearchValue}
+                            onChange={this.handleClassTypeInputChange}
+                            input={<Input id="class" />}
+                          >
+                            <MenuItem label="All Classes" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            <MenuItem value={1}>Freshman</MenuItem>
+                            <MenuItem value={2}>Sophomore</MenuItem>
+                            <MenuItem value={3}>Junior</MenuItem>
+                            <MenuItem value={4}>Senior</MenuItem>
+                            <MenuItem value={5}>Graduate Student</MenuItem>
+                            <MenuItem value={6}>Undergraduate Conferred</MenuItem>
+                            <MenuItem value={7}>Graduate Conferred</MenuItem>
+                            <MenuItem value={0}>Unassigned</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </Collapse>
+                </CardContent>
+
+                <CardContent>
+                  <CardActions
+                    className={[classes.actions, 'card-expansion']}
+                    disableActionSpacing
+                    onClick={this.handleHomeExpandClick}
+                  >
+                    <Typography variant="headline">Home</Typography>
+                    <IconButton
+                      className={classnames(classes.expand, {
+                        [classes.expandOpen]: this.state.homeExpanded,
+                      })}
+                      aria-expanded={this.state.homeExpanded}
+                      aria-label="Show more"
+                    >
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </CardActions>
+
+                  <Collapse
+                    in={this.state.homeExpanded}
+                    timeout="auto"
+                    unmountOnExit
+                    style={styles.CardContent}
+                  >
+                    <Grid container spacing={8} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <HomeIcon style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <TextField
+                          id="hometown"
+                          label="Hometown"
+                          fullWidth
+                          value={this.state.homeCitySearchValue}
+                          onChange={this.handleHomeCityInputChange}
+                          onKeyDown={this.handleEnterKeyPress}
+                        />
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={8} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <CityIcon style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>State</InputLabel>
+                          <Select
+                            value={this.state.stateSearchValue}
+                            onChange={this.handleStateInputChange}
+                            input={<Input id="state" />}
+                          >
+                            <MenuItem label="All States" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {stateOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={8} alignItems="baseline">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <GlobeIcon
+                              style={{
+                                fontSize: 22,
+                                marginLeft: 2,
+                              }}
+                            />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Country</InputLabel>
+                          <Select
+                            value={this.state.countrySearchValue}
+                            onChange={this.handleCountryInputChange}
+                            input={<Input id="country" />}
+                          >
+                            <MenuItem label="All Countries" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {countryOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </Collapse>
+                </CardContent>
+
+                <CardContent>
+                  <CardActions
+                    className={[classes.actions, 'card-expansion']}
+                    disableActionSpacing
+                    onClick={this.handleOffDepExpandClick}
+                  >
+                    <Typography variant="headline">Building and Department</Typography>
+                    <IconButton
+                      className={classnames(classes.expand, {
+                        [classes.expandOpen]: this.state.offDepExpanded,
+                      })}
+                      aria-expanded={this.state.offDepExpanded}
+                      aria-label="Show more"
+                    >
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </CardActions>
+
+                  <Collapse
+                    in={this.state.offDepExpanded}
+                    timeout="auto"
+                    unmountOnExit
+                    style={styles.CardContent}
+                  >
+                    <Grid container spacing={8} alignItems="baseline">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <BriefcaseIcon
+                              style={{
+                                fontSize: 22,
+                                marginLeft: 2,
+                              }}
+                            />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Department</InputLabel>
+                          <Select
+                            value={this.state.departmentSearchValue}
+                            onChange={this.handleDepartmentInputChange}
+                            input={<Input id="department-type" />}
+                          >
+                            <MenuItem label="All Departments" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {departmentOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={8} alignItems="baseline">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <BuildingIcon
+                              style={{
+                                fontSize: 22,
+                                marginLeft: 2,
+                              }}
+                            />
+                          </Grid>
+                        )}
+                      />
+
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Building</InputLabel>
+                          <Select
+                            value={this.state.buildingSearchValue}
+                            onChange={this.handleBuildingInputChange}
+                            input={<Input id="building-type" />}
+                          >
+                            <MenuItem label="All Buildings" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {buildingOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </Collapse>
+                </CardContent>
+              </Collapse>
+
+              <CardActions>
+                <Grid container direction="column" alignItems="center">
+                  <Grid item xs={12}>
+                    <Grid container direction="row" alignItems="flex-end" justify="center">
+                      {includeAlumniCheckbox}
+                      <Grid item>
+                        <Button
+                          color="primary"
+                          variant="outlined"
+                          onClick={() => {
+                            this.setState({
+                              includeAlumni: false,
+                              firstNameSearchValue: '',
+                              lastNameSearchValue: '',
+                              majorSearchValue: '',
+                              minorSearchValue: '',
+                              hallSearchValue: '',
+                              classTypeSearchValue: '',
+                              homeCitySearchValue: '',
+                              stateSearchValue: '',
+                              countrySearchValue: '',
+                              departmentSearchValue: '',
+                              buildingSearchValue: '',
+                            });
+                          }}
+                        >
+                          Clear Input
+                        </Button>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-                <br />
-                <Button
-                  color="primary"
-                  onClick={() => {
-                    this.search(
-                      this.state.includeAlumni,
-                      this.state.firstNameSearchValue,
-                      this.state.lastNameSearchValue,
-                      this.state.majorSearchValue,
-                      this.state.minorSearchValue,
-                      this.state.hallSearchValue,
-                      this.state.classTypeSearchValue,
-                      this.state.homeCitySearchValue,
-                      this.state.stateSearchValue,
-                      this.state.countrySearchValue,
-                      this.state.departmentSearchValue,
-                      this.state.buildingSearchValue,
-                    );
-                  }}
-                  fullWidth
-                  variant="contained"
-                >
-                  SEARCH
-                </Button>
-              </Grid>
-            </CardActions>
-
-            <CardActions
-              className={[classes.actions, 'card-expansion']}
-              disableActionSpacing
-              onClick={this.handleAdditionalOpsExpandClick}
-              style={{
-                marginTop: '-16px',
-              }}
-            >
-              <Grid container alignItems="baseline" justify="center">
-                <Grid item>
-                  <IconButton
-                    className={classnames(classes.expand, {
-                      [classes.expandOpen]: this.state.additionalOpsExpanded,
-                    })}
-                    aria-expanded={this.state.additionalOpsExpanded}
-                    aria-label="Show more"
+                  <br />
+                  <Button
+                    color="primary"
+                    onClick={() => {
+                      this.search(
+                        this.state.includeAlumni,
+                        this.state.firstNameSearchValue,
+                        this.state.lastNameSearchValue,
+                        this.state.majorSearchValue,
+                        this.state.minorSearchValue,
+                        this.state.hallSearchValue,
+                        this.state.classTypeSearchValue,
+                        this.state.homeCitySearchValue,
+                        this.state.stateSearchValue,
+                        this.state.countrySearchValue,
+                        this.state.departmentSearchValue,
+                        this.state.buildingSearchValue,
+                      );
+                    }}
+                    fullWidth
+                    variant="contained"
                   >
-                    <ExpandMoreIcon />
-                  </IconButton>
+                    SEARCH
+                  </Button>
                 </Grid>
-              </Grid>
-            </CardActions>
-          </Card>
-          <br />
-          <Card>
-            {this.state.header}
-            {this.state.peopleSearchResults}
-          </Card>
+              </CardActions>
+
+              <CardActions
+                className={[classes.actions, 'card-expansion']}
+                disableActionSpacing
+                onClick={this.handleAdditionalOpsExpandClick}
+                style={{
+                  marginTop: '-16px',
+                }}
+              >
+                <Grid container alignItems="baseline" justify="center">
+                  <Grid item>
+                    <IconButton
+                      className={classnames(classes.expand, {
+                        [classes.expandOpen]: this.state.additionalOpsExpanded,
+                      })}
+                      aria-expanded={this.state.additionalOpsExpanded}
+                      aria-label="Show more"
+                    >
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </CardActions>
+            </Card>
+            <br />
+            <Card>
+              {this.state.header}
+              {this.state.peopleSearchResults}
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    );
+      );
+    } else {
+      PeopleSearch = (
+        <div>
+          <h1> Temporary Page for unavailable feature. </h1>
+          <h1> Please replace me ASAP (ಠ_ಠ) </h1>
+        </div>
+      );
+    }
+
+    return PeopleSearch;
   }
 }
 

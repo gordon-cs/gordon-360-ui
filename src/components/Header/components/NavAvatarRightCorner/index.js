@@ -40,8 +40,8 @@ export default class GordonNavAvatarRightCorner extends Component {
       name: null,
       username: null,
       linkopen: false,
-
       anchorEl: null,
+      network: 'online',
     };
   }
 
@@ -122,7 +122,7 @@ export default class GordonNavAvatarRightCorner extends Component {
     // const { classes } = this.props;
 
     let username = this.state.username;
-    let myProfileLink = '/myprofile/';
+    let myProfileLink = '/myprofile';
     let avatar = (
       <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>
     );
@@ -145,6 +145,18 @@ export default class GordonNavAvatarRightCorner extends Component {
         </Link>
       );
     }
+
+    /* Used to re-render the page when the network connection changes
+    *  this.state.network is compared to the message received to prevent
+    *  multiple re-renders which creates extreme performance lost
+    */
+    window.addEventListener('message', event => {
+      if (event.data === 'online' && this.state.network === 'offline') {
+        this.setState({ network: 'online' });
+      } else if (event.data === 'offline' && this.state.network === 'online') {
+        this.setState({ network: 'offline' });
+      }
+    });
 
     /* Gets status of current network connection for online/offline rendering
     *  Defaults to online in case of PWA not being possible

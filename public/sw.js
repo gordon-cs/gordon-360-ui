@@ -18,6 +18,8 @@ const staticCache = [
   '/',
   '/events',
   '/involvements',
+  '/feedback',
+  '/people',
   '/favicon.ico',
   // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Developlent
   '/images/apple-touch-icon-144x144.png',

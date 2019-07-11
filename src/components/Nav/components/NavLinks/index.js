@@ -35,6 +35,7 @@ export default class GordonNavLinks extends Component {
     this.state = {
       linkopen: false,
       dialogBoxOpen: false,
+      network: 'online',
     };
   }
 
@@ -77,6 +78,20 @@ export default class GordonNavLinks extends Component {
         </NavLink>
       );
     }
+
+    /* Used to re-render the page when the network connection changes
+    *  this.state.network is compared to the message received to prevent
+    *  multiple re-renders which creates extreme performance lost
+    */
+    window.addEventListener('message', event => {
+      if (event.data === 'online' && this.state.network === 'offline') {
+        this.setState({ network: 'online' });
+      } else if (event.data === 'offline' && this.state.network === 'online') {
+        // Closes out the links dialog  box if it's open
+        this.handleLinkClose();
+        this.setState({ network: 'offline' });
+      }
+    });
 
     /* Gets status of current network connection for online/offline rendering
     *  Defaults to online in case of PWA not being possible
