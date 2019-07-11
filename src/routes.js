@@ -80,7 +80,7 @@ export default [
   },
   {
     name: 'My Profile',
-    path: '/myprofile/:username',
+    path: '/myprofile/',
     component: MyProfile,
   },
   {
