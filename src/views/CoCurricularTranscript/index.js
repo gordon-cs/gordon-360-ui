@@ -298,7 +298,6 @@ export default class Transcript extends Component {
               <Button
                 className="button"
                 onClick={this.handleDownload}
-                //raised
                 style={buttonColors}
                 variant="contained"
               >
