@@ -56,16 +56,24 @@ export default class IDUploader extends Component {
     }
   };
 
-  async postCroppedImage(croppedImage, n) {
-    let logMessage = 'ID photo submission #' + n + ' from ' + errorLog.parseNavigator(navigator);
+  async postCroppedImage(croppedImage, attemptNumber) {
+    let profile = await user.getProfileInfo();
+    console.log(profile);
+    let logMessage =
+      'ID photo submission #' +
+      attemptNumber +
+      ' for ' +
+      profile.fullName +
+      ' from ' +
+      errorLog.parseNavigator(navigator);
     try {
       await user.postIDImage(croppedImage);
       this.setState({ submitDialogOpen: true });
     } catch (error) {
-      let errorMessage = ' but image failed to post with error: ' + error;
+      let errorMessage = ', but image failed to post with error: ' + error;
       logMessage = errorMessage + logMessage;
-      if (n < 5) {
-        this.postCroppedImage(croppedImage, n + 1);
+      if (attemptNumber < 5) {
+        this.postCroppedImage(croppedImage, attemptNumber + 1);
       } else {
         this.setState({ errorDialogOpen: true });
       }

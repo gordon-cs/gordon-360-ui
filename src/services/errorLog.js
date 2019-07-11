@@ -20,7 +20,7 @@ const postErrorMessage = message => {
 };
 
 //Code modified from https://medium.com/creative-technology-concepts-code/detect-device-browser-and-version-using-javascript-8b511906745
-function matchItem(string, data) {
+const matchItem = (string, data) => {
   var i = 0,
     regex,
     match;
@@ -35,7 +35,7 @@ function matchItem(string, data) {
     }
   }
   return { name: 'unknown' };
-}
+};
 
 const parseNavigator = navigator => {
   //Code modified from https://medium.com/creative-technology-concepts-code/detect-device-browser-and-version-using-javascript-8b511906745
@@ -74,7 +74,7 @@ const parseNavigator = navigator => {
   var agent = header.join(' ');
   var os = matchItem(agent, oses);
   var browser = matchItem(agent, browsers);
-  let result = 'OS: ' + os.name + ', Browser: ' + browser.name + ',';
+  let result = 'OS: ' + os.name + ', Browser: ' + browser.name;
   return result;
 };
 
