@@ -58,7 +58,6 @@ export default class IDUploader extends Component {
 
   async postCroppedImage(croppedImage, attemptNumber) {
     let profile = await user.getProfileInfo();
-    console.log(profile);
     let logMessage =
       'ID photo submission #' +
       attemptNumber +
