@@ -153,7 +153,7 @@ const toggleMembershipPrivacy = userMembership => {
   let newMembershipPrivacy = !currentMembershipPrivacy;
   let setMembershipPrivacy = async function(value) {
     return http
-      .put('/memberships/' + userMembership.MembershipID + '/privacy/' + value, value)
+      .put('memberships/' + userMembership.MembershipID + '/privacy/' + value, value)
       .catch(reason => {
         console.log(reason);
         //TODO handle error
