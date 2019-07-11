@@ -86,132 +86,83 @@ export default class Transcript extends Component {
     }
   }
 
-  /* Helper functions for parsing and translating sessionCode which is of the format "YYYYSE"
-     where SE is 09 for fall, 01 for spring, 05 for summer
-
-  /* Returns: string of year in format YYYY */
-  sliceYear = sesCode => {
-    return sesCode.toString().slice(0, 4);
-  };
-  /* Returns: string of month (Mon), month being the first month of the given semester */
-  sliceStart = sesCode => {
-    switch (sesCode.toString().slice(4, 6)) {
-      case '09':
-        return 'Sep';
-      case '01':
-        return 'Jan';
-      case '05':
-        return 'May';
-      default:
-        console.log('An unrecognized semester code was provided');
-        return '';
-    }
+  // Sorts a list of activity components in order of most recent end date to least recent end date.
+  // Param: activities - an array of Activity components with props Activity and Sessions
+  // Returns: the same array, sorted in order of most recent (newest) to least recent
+  sortNewestFirst = activities => {
+    let sorted = activities.sort(function(a, b) {
+      let lastSessA = a.props.Sessions[a.props.Sessions.length - 1];
+      let lastSessB = b.props.Sessions[b.props.Sessions.length - 1];
+      return lastSessB - lastSessA;
+    });
+    return sorted;
   };
 
-  /* Returns: string of month (Mon), month being last month of the given semester */
-  sliceEnd = sesCode => {
-    switch (sesCode.toString().slice(4, 6)) {
-      case '09':
-        return 'Dec';
-      case '01':
-        return 'May';
-      case '05':
-        return 'Sep';
-      default:
-        console.log('An unrecognized semester code was provided');
-        return '';
-    }
-  };
+  // For each activity in an array of activities, this finds all other activities of the same Code
+  // and keeps an array of all the sessions during which the student was involved in this activity.
+  // One Activity component is created with that ActivityDescription and the array of sessions.
+  // Once all Activity components have been made, they are sorted from most to least recent.
 
-  /* Param: expects an array of [month in which the earlier session ended,
-                                 year in which the ealier session ended,
-                                 month in which the later session started (format: Mon),
-                                 year in which the later session started (YYYY)]
-     Returns: true if given month-year pairs are consecutive, false otherwise. Summers are not
-            considered a break consecutiveness because there are no summer activities. */
-  checkConsecutiveness = dates => {
-    console.log(dates);
-    return (
-      dates[1] === dates[3] ||
-      (parseInt(dates[1], 10) + 1 === parseInt(dates[3], 10) &&
-        dates[0] === 'Dec' &&
-        dates[2] === 'Jan')
-    );
-  };
-
-  /* For each activity in an array of activities, this finds all other activities of the same Code
-     and keeps an array of all the sessions during which the student was involved in this activity.
-     Once all activities of the same activityCode are found, the array of sessions is processed
-     and translated into a duration. Then, one Activity component is created with that
-     ActivityDescription and the duration.
-
-     Param: activities - a list of activity objects ("Memberships" as defined in gordon-360-api)
-     Returns: array of Activity components with props Activity and Duration.
-  */
+  // Param: activities - a list of activity objects ("Memberships" as defined in gordon-360-api)
+  // Returns: array of Activity components with props Activity and Sessions.
   groupActivityByCode = activities => {
     let condensedActs = [];
 
     // sort activities by ActivityCode
     while (activities.length > 0) {
       let curAct = activities.shift();
+      let sessions = [];
+      let leaderSessions = [];
 
       // keep track of the activity code which will be used to identify all activities of the same
       // code so they can be grouped into one activity component
       let curActCode = curAct.ActivityCode;
 
-      // Pop first session code from array and split into months and years, which are saved as
-      // the initial start and end dates
-      let sess = curAct.SessionCode;
-      let startMon = this.sliceStart(sess);
-      let endMon = this.sliceEnd(sess);
-      let startYear = this.sliceYear(sess),
-        endYear = startYear;
-
       // For each other activity matching curActCode, if it is consecutive to the current end date,
       // save its end date as the new end date, otherwise, add the current start and end dates to
       // the string 'duration' (because the streak is broken) and prepare to start a new streak.
       // Loop assumes activities will be sorted by session and Activity Code.
-      let duration = '';
+      sessions.push(curAct.SessionCode);
+      if (curAct.Participation === 'LEAD') {
+        leaderSessions.push(curAct.SessionCode);
+      }
       while (activities.length > 0 && activities[0].ActivityCode === curActCode) {
-        sess = activities.shift().SessionCode;
-        let curStartMon = this.sliceStart(sess);
-        let curYear = this.sliceYear(sess);
-        if (this.checkConsecutiveness([endMon, endYear, curStartMon, curYear])) {
-          // a streak of consecutive involvement continues
-          endMon = this.sliceEnd(sess);
-          endYear = this.sliceYear(sess);
-        } else {
-          // a streak has been broken; add its start and end to the string and start new streak
-
-          // don't show the year twice if the months are of the same year
-          if (startYear === endYear) {
-            duration += startMon;
-          } else {
-            duration += startMon + ' ' + startYear;
-          }
-          duration += '-' + endMon + ' ' + endYear + ', ';
-
-          startMon = this.sliceStart(sess);
-          endMon = this.sliceEnd(sess);
-          startYear = endYear = this.sliceYear(sess);
+        sessions.push(activities[0].SessionCode);
+        if (activities[0].Participation === 'LEAD') {
+          leaderSessions.push(activities[0].SessionCode);
         }
+        activities.shift();
       }
 
-      // Flush the remaining start and end info to duration.
-      // Again, don't show the year twice if the months are of the same year
-      if (startYear === endYear) {
-        duration += startMon;
-      } else {
-        duration += startMon + ' ' + startYear;
-      }
-      duration += '-' + endMon + ' ' + endYear;
+      let sessionsOrdered = sessions.sort();
+
+      let leaderSessionsOrdered = leaderSessions.sort();
 
       // add the new TranscriptItem component to the array
-      condensedActs.push(<Activity Activity={curAct} Duration={duration} />);
+      condensedActs.push(
+        <Activity
+          key={curAct.ActivityCode}
+          Activity={curAct}
+          Sessions={sessionsOrdered}
+          LeaderSessions={leaderSessionsOrdered}
+        />,
+      );
     }
-    return condensedActs;
+
+    let sorted = this.sortNewestFirst(condensedActs);
+
+    return sorted;
   };
 
+  // Filters general memberships from the 360 Database into one of four categories
+  //        1. Honors, Leadership, and Research
+  //        2. Experience
+  //        3. Service and Service Learning
+  //        4. Activities (the catch-all)
+  // Memberships ars sorted based on their Activity Code, although this is not a perfect indicator
+  // of which category a membership should belong to.
+  // Params: memberships - An array of membership objects retrieved from the database.
+  // Returns: An array of four arrays-one per category-into which the  memberships have been filtered
   filterMemberships = memberships => {
     let filtered = {
       honors: [],
@@ -230,13 +181,10 @@ export default class Transcript extends Component {
     while (memberships.length > 0) {
       let membership = memberships.shift();
 
-      // Add Honors and Leadership to the honors list
-      if (membership.Participation === 'LEAD' || honorsTypes.includes(membership.ActivityType)) {
+      // Filter memberships into either Honors, Experience, Service, or Activities
+      if (honorsTypes.includes(membership.ActivityType)) {
         filtered.honors.push(membership);
-      }
-
-      // Filter memberships into either Experience, Service, or Activities
-      if (experienceTypes.includes(membership.ActivityType)) {
+      } else if (experienceTypes.includes(membership.ActivityType)) {
         filtered.experience.experiences.push(membership);
       } else if (serviceTypes.includes(membership.ActivityType)) {
         filtered.service.push(membership);
@@ -248,6 +196,7 @@ export default class Transcript extends Component {
     return filtered;
   };
 
+  // Returns: the graduation date of the current user, or nothing if they have no declared grad date
   getGradCohort() {
     let gradDate = this.state.profile.GradDate;
     if (gradDate === undefined || gradDate === '') {
@@ -257,6 +206,9 @@ export default class Transcript extends Component {
     }
   }
 
+  // Formats an array of major objects into a string for display on the transcript
+  // Params: majors - An array of major objects
+  // Returns: A string of all the current user's majors.
   getMajors = majors => {
     let majorsString = 'Majors: ';
 
@@ -272,6 +224,9 @@ export default class Transcript extends Component {
     return majorsString.substr(0, majorsString.length - 2);
   };
 
+  // Formats an array of minor objects into a string for display on the transcript
+  // Params: minors - An array of minor objects
+  // Returns: A string of all the current user's minors.
   getMinors = minors => {
     let minorsString = 'Minors: ';
 
@@ -317,9 +272,9 @@ export default class Transcript extends Component {
         this.state.categorizedMemberships.experience.experiences,
       );
       experienceList = experienceList.concat(
-        this.state.categorizedMemberships.experience.employments.map(employment => (
-          <Experience Experience={employment} />
-        )),
+        this.state.categorizedMemberships.experience.employments
+          .map(employment => <Experience Experience={employment} />)
+          .reverse(),
       );
     }
 
@@ -336,14 +291,13 @@ export default class Transcript extends Component {
 
     return (
       <div className="co-curricular-transcript">
-        <Card className="card" elevation="10">
+        <Card className="card" elevation={10}>
           <CardContent className="card-content">
             <div className="print-only">{/* <img src={require('./logo.png')} alt="" /> */}</div>
             <div>
               <Button
                 className="button"
                 onClick={this.handleDownload}
-                raised
                 style={buttonColors}
                 variant="contained"
               >

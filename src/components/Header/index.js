@@ -78,7 +78,7 @@ export default class GordonHeader extends Component {
           <Toolbar>
             <IconButton
               className="menu-button"
-              color="contrast"
+              color="default"
               aria-label="open drawer"
               onClick={this.props.onDrawerToggle}
             >
