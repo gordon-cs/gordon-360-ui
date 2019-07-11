@@ -7,12 +7,12 @@ export default class Activity extends Component {
 
   // Returns: string of year in format YYYY
   sliceYear = sesCode => {
-    return sesCode.toString().slice(0, 4);
+    return sesCode.slice(0, 4);
   };
 
   // Returns: string of month (Mon), month being the first month of the given semester
   sliceStart = sesCode => {
-    switch (sesCode.toString().slice(4, 6)) {
+    switch (sesCode.slice(4, 6)) {
       case '09':
         return 'Sep';
       case '01':
@@ -27,7 +27,7 @@ export default class Activity extends Component {
 
   // Returns: string of month (Mon), month being last month of the given semester
   sliceEnd = sesCode => {
-    switch (sesCode.toString().slice(4, 6)) {
+    switch (sesCode.slice(4, 6)) {
       case '09':
         return 'Dec';
       case '01':
@@ -118,15 +118,23 @@ export default class Activity extends Component {
   };
 
   render() {
-    const { Activity, Sessions } = this.props;
+    const { Activity, Sessions, LeaderSessions } = this.props;
     let duration = this.formatDuration(Sessions);
+    let leaderDuration;
+    if (LeaderSessions.length > 0) {
+      leaderDuration = this.formatDuration(LeaderSessions);
+    }
 
     return (
       <div className="activities">
-        <div className="organization-role">
-          {Activity.ActivityDescription}, {Activity.ParticipationDescription}
-        </div>
+        <div className="organization-role">{Activity.ActivityDescription}</div>
         <div className="date"> {duration} </div>
+        {!(leaderDuration === undefined) && (
+          <div className="leadership-line">
+            <div className="organization-role">Leader</div>
+            <div className="date">{leaderDuration}</div>
+          </div>
+        )}
       </div>
     );
   }

@@ -112,6 +112,7 @@ export default class Transcript extends Component {
     while (activities.length > 0) {
       let curAct = activities.shift();
       let sessions = [];
+      let leaderSessions = [];
 
       // keep track of the activity code which will be used to identify all activities of the same
       // code so they can be grouped into one activity component
@@ -122,18 +123,29 @@ export default class Transcript extends Component {
       // the string 'duration' (because the streak is broken) and prepare to start a new streak.
       // Loop assumes activities will be sorted by session and Activity Code.
       sessions.push(curAct.SessionCode);
+      if (curAct.Participation === 'LEAD') {
+        leaderSessions.push(curAct.SessionCode);
+      }
       while (activities.length > 0 && activities[0].ActivityCode === curActCode) {
         sessions.push(activities[0].SessionCode);
+        if (activities[0].Participation === 'LEAD') {
+          leaderSessions.push(activities[0].SessionCode);
+        }
         activities.shift();
       }
 
-      let sessionsOrdered = sessions.sort(function(a, b) {
-        return a - b;
-      });
+      let sessionsOrdered = sessions.sort();
+
+      let leaderSessionsOrdered = leaderSessions.sort();
 
       // add the new TranscriptItem component to the array
       condensedActs.push(
-        <Activity key={curAct.ActivityCode} Activity={curAct} Sessions={sessionsOrdered} />,
+        <Activity
+          key={curAct.ActivityCode}
+          Activity={curAct}
+          Sessions={sessionsOrdered}
+          LeaderSessions={leaderSessionsOrdered}
+        />,
       );
     }
 
@@ -169,13 +181,10 @@ export default class Transcript extends Component {
     while (memberships.length > 0) {
       let membership = memberships.shift();
 
-      // Add Honors and Leadership to the honors list
-      if (membership.Participation === 'LEAD' || honorsTypes.includes(membership.ActivityType)) {
+      // Filter memberships into either Honors, Experience, Service, or Activities
+      if (honorsTypes.includes(membership.ActivityType)) {
         filtered.honors.push(membership);
-      }
-
-      // Filter memberships into either Experience, Service, or Activities
-      if (experienceTypes.includes(membership.ActivityType)) {
+      } else if (experienceTypes.includes(membership.ActivityType)) {
         filtered.experience.experiences.push(membership);
       } else if (serviceTypes.includes(membership.ActivityType)) {
         filtered.service.push(membership);
