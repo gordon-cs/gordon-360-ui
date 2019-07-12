@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import './feedback.css';
+import { Button, Grid } from '@material-ui/core';
 
 export default class Feedback extends Component {
   constructor(props) {
@@ -49,10 +50,28 @@ export default class Feedback extends Component {
       );
     } else {
       Feedback = (
-        <div>
-          <h1> Temporary Page for unavailable feature. </h1>
-          <h1> Please replace me ASAP (ಠ_ಠ) </h1>
-        </div>
+        <center>
+          <br />
+          <h1>Please re-establish connection</h1>
+          <br />
+          <p> Feedback feature has been deactivated due to loss of network.</p>
+          <br />
+          <br />
+          <br />
+          <br />
+          <div>
+            <Button
+              color="primary"
+              backgroundColor="white"
+              variant="outlined"
+              onClick={() => {
+                window.location.pathname = '';
+              }}
+            >
+              back to Home
+            </Button>
+          </div>
+        </center>
       );
     }
 

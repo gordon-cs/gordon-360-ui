@@ -442,17 +442,6 @@ class PeopleSearch extends Component {
     } else {
     }
 
-    /*
-       /$$$$$$  /$$$$$$$  /$$$$$$$  /$$$$$$ /$$             /$$$$$$$$ /$$$$$$   /$$$$$$  /$$        /$$$$$$
-      /$$__  $$| $$__  $$| $$__  $$|_  $$_/| $$            | $$_____//$$__  $$ /$$__  $$| $$       /$$__  $$
-     | $$  \ $$| $$  \ $$| $$  \ $$  | $$  | $$            | $$     | $$  \ $$| $$  \ $$| $$      | $$  \__/
-     | $$$$$$$$| $$$$$$$/| $$$$$$$/  | $$  | $$            | $$$$$  | $$  | $$| $$  | $$| $$      |  $$$$$$
-     | $$__  $$| $$____/ | $$__  $$  | $$  | $$            | $$__/  | $$  | $$| $$  | $$| $$       \____  $$
-     | $$  | $$| $$      | $$  \ $$  | $$  | $$            | $$     | $$  | $$| $$  | $$| $$       /$$  \ $$
-     | $$  | $$| $$      | $$  | $$ /$$$$$$| $$$$$$$$      | $$     |  $$$$$$/|  $$$$$$/| $$$$$$$$|  $$$$$$/
-     |__/  |__/|__/      |__/  |__/|______/|________/      |__/      \______/  \______/ |________/ \______/
-
-     */
     let aprilFools = '';
     if (this.getDate().getMonth() === 3 && this.getDate().getDate() === 1) {
       aprilFools = (
@@ -1027,10 +1016,28 @@ class PeopleSearch extends Component {
       );
     } else {
       PeopleSearch = (
-        <div>
-          <h1> Temporary Page for unavailable feature. </h1>
-          <h1> Please replace me ASAP (ಠ_ಠ) </h1>
-        </div>
+        <center>
+          <br />
+          <h1>Please re-establish connection</h1>
+          <br />
+          <p> People Search feature has been deactivated due to loss of network.</p>
+          <br />
+          <br />
+          <br />
+          <br />
+          <div>
+            <Button
+              color="primary"
+              backgroundColor="white"
+              variant="outlined"
+              onClick={() => {
+                window.location.pathname = '';
+              }}
+            >
+              back to Home
+            </Button>
+          </div>
+        </center>
       );
     }
 
