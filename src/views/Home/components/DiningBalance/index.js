@@ -53,7 +53,6 @@ export default class DiningBalance extends Component {
 
     defaults.global.legend.display = false;
     let content;
-    let description = '';
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
@@ -74,8 +73,6 @@ export default class DiningBalance extends Component {
           </div>
         );
       } else {
-        description = this.diningInfo.ChoiceDescription;
-
         const swipeInit = this.diningInfo.Swipes.InitialBalance;
         const swipeCurr = swipeInit === 0 ? 1 : this.diningInfo.Swipes.CurrentBalance;
         const swipeUsed = swipeInit === 0 ? 0 : swipeInit - swipeCurr;
@@ -143,117 +140,93 @@ export default class DiningBalance extends Component {
           ],
         };
 
-        if (description === 'None') {
-          content = (
-            <div>
-              <Grid
-                container
-                justify="space-around"
-                spacing={0}
-                style={{ paddingTop: 5, paddingBottom: 5 }}
-              >
-                <Grid item>
-                  <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
-                    No Meal Plan
-                  </Typography>
-                </Grid>
+        content = (
+          <div>
+            <Grid
+              container
+              justify="space-around"
+              spacing={0}
+              style={{ paddingTop: 5, paddingBottom: 10 }}
+            >
+              <Grid item>
+                <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+                  {this.diningInfo.ChoiceDescription}
+                </Typography>
               </Grid>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <img className="sandwich" src={require('./sandwich.svg')} alt="Enjoy your food!" />
-              </div>
-            </div>
-          );
-        } else {
-          content = (
-            <div>
-              <Grid
-                container
-                justify="space-around"
-                spacing={0}
-                style={{ paddingTop: 5, paddingBottom: 10 }}
-              >
-                <Grid item>
-                  <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
-                    {this.diningInfo.ChoiceDescription}
-                  </Typography>
-                </Grid>
-              </Grid>
-              {/* <Grid container justify="center">
-                <Grid item>
-                  <div class="legend">
-                    <div class="entry">
-                        <span class="entry-label" style={{ background: gordonColors.primary.blue }} />
-                        <span class="entry-text">Days Finished</span>
-                    </div>
-                    <div class="entry">
-                      <span class="entry-label" style={{ background: gordonColors.primary.cyan }} />
-                      <span class="entry-text">Swipes</span>
-                    </div>
-                    <div class="entry">
-                      <span class="entry-label" style={{ background: '#b2bb1c' }} />
-                      <span class="entry-text">Dining Dollars</span>
-                    </div>
-                    <div class="entry">
-                      <span class="entry-label" style={{ background: '#fdb913' }} />
-                      <span class="entry-text">Guest Swipes</span>
-                    </div>
+            </Grid>
+            {/* <Grid container justify="center">
+              <Grid item>
+                <div class="legend">
+                  <div class="entry">
+                      <span class="entry-label" style={{ background: gordonColors.primary.blue }} />
+                      <span class="entry-text">Days Finished</span>
                   </div>
-                </Grid>
-              </Grid> */}
-              <Doughnut data={data} height={175} options={options} />
+                  <div class="entry">
+                    <span class="entry-label" style={{ background: gordonColors.primary.cyan }} />
+                    <span class="entry-text">Swipes</span>
+                  </div>
+                  <div class="entry">
+                    <span class="entry-label" style={{ background: '#b2bb1c' }} />
+                    <span class="entry-text">Dining Dollars</span>
+                  </div>
+                  <div class="entry">
+                    <span class="entry-label" style={{ background: '#fdb913' }} />
+                    <span class="entry-text">Guest Swipes</span>
+                  </div>
+                </div>
+              </Grid>
+            </Grid> */}
+            <Doughnut data={data} height={175} options={options} />
+            <div
+              style={{
+                marginTop: '1rem',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+              }}
+            >
               <div
                 style={{
-                  marginTop: '1rem',
                   display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
               >
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div className="label-text" style={{ color: swipesColor }}>
-                    {swipeInit === 0 ? '\u221E' : swipeCurr}
-                  </div>
-                  <div class="entry-text">Swipes</div>
+                <div className="label-text" style={{ color: swipesColor }}>
+                  {swipeInit === 0 ? '\u221E' : swipeCurr}
                 </div>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div className="label-text" style={{ color: dollarsColor }}>
-                    ${dollarCurr}
-                  </div>
-                  <div class="entry-text">Dining Dollars</div>
+                <div class="entry-text">Swipes</div>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <div className="label-text" style={{ color: dollarsColor }}>
+                  ${dollarCurr}
                 </div>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div className="label-text" style={{ color: guestColor }}>
-                    {guestCurr}
-                  </div>
-                  <div class="entry-text">Guest Swipes</div>
+                <div class="entry-text">Dining Dollars</div>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <div className="label-text" style={{ color: guestColor }}>
+                  {guestCurr}
                 </div>
+                <div class="entry-text">Guest Swipes</div>
               </div>
             </div>
-          );
-        }
+          </div>
+        );
       }
     }
     return (
