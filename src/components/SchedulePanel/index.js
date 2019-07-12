@@ -116,6 +116,10 @@ class GordonSchedulePanel extends Component {
     window.location.reload(); // refresh to show the change
   };
 
+  handleHoursSubmit = mySchedule => {
+    console.log('mySchedule', mySchedule);
+  };
+
   handleDoubleClick = event => {
     if (this.props.myProf) {
       this.setState({ officeHoursOpen: true });
@@ -151,7 +155,7 @@ class GordonSchedulePanel extends Component {
 
     let hoursDialog = (
       <HoursDialog
-        onDialogSubmit={this.onDialogSubmit}
+        onDialogSubmit={this.handleHoursSubmit}
         handleOfficeHoursClose={this.handleOfficeHoursClose}
         officeHoursOpen={this.state.officeHoursOpen}
         selectedEvent={this.state.selectedEvent}
@@ -161,7 +165,7 @@ class GordonSchedulePanel extends Component {
 
     let removeHoursDialog = (
       <RemoveHoursDialog
-        onDialogSubmit={this.onDialogSubmit}
+        onDialogSubmit={this.handleRemoveSubmit}
         handleRemoveOfficeHoursClose={this.handleRemoveOfficeHoursClose}
         removeOfficeHoursOpen={this.state.removeOfficeHoursOpen}
       />

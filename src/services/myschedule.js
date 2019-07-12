@@ -122,8 +122,7 @@ async function makeMySchedule(myschedule) {
  */
 
 const addMySchedule = async mySchedule => {
-  let username = await user.getLocalInfo().username;
-  return http.post(`/schedule/add/${username}`, mySchedule);
+  return http.post(`/myschedule/add/`, mySchedule);
 };
 
 /**
@@ -133,8 +132,7 @@ const addMySchedule = async mySchedule => {
  */
 
 const updateMySchedule = async mySchedule => {
-  let username = await user.getLocalInfo().username;
-  return http.post(`/schedule/edit/${username}`, mySchedule);
+  return http.post(`/myschedule/update/`, mySchedule);
 };
 
 /**
@@ -144,8 +142,7 @@ const updateMySchedule = async mySchedule => {
  */
 
 const deleteMySchedule = async eventID => {
-  let username = await user.getLocalInfo().username;
-  return http.del(`/schedule/delete/${username}`, eventID);
+  return http.del(`/schedule/delete/${eventID}`);
 };
 
 export default {
