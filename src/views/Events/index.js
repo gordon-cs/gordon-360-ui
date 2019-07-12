@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
+import { isAuthenticated, signOut } from '../../services/auth';
 
 import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
@@ -49,6 +50,11 @@ export default class Events extends Component {
     this.breakpointWidth = 540;
   }
   componentWillMount() {
+    //  if (isAuthenticated())
+    //  {
+    //    console.log('isAuthenticated returned true, loading Events')
+    //   this.loadEvents();
+    //  }
     this.loadEvents();
   }
   filterEvents(name) {
@@ -91,8 +97,12 @@ export default class Events extends Component {
   async loadEvents() {
     this.setState({ loading: true });
     const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
+    const allGuests = await gordonEvent.getAllGuestEventsFormatted(); //Retrieve all Guest events from database
     const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
-    this.setState({ allEvents, events, loading: false, filteredEvents: events });
+    const guests = gordonEvent.getFutureEvents(allGuests); //Filter out past events initially
+    if (isAuthenticated)
+      this.setState({ allEvents, events, loading: false, filteredEvents: events });
+    else this.setState({ allGuests, guests, loading: false, filteredEvents: guests });
   }
 
   //Has to rerender on screen resize in order for table to switch to the mobile view
