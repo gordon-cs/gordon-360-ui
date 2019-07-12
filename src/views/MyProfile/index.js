@@ -342,7 +342,12 @@ export default class Profile extends Component {
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>
-          <a href={this.state.facebookLink} className="icon" target="_blank">
+          <a
+            href={this.state.facebookLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.facebook.icon}
           </a>
         </Grid>
@@ -352,7 +357,12 @@ export default class Profile extends Component {
     if (this.state.twitterLink !== '') {
       twitterButton = (
         <Grid item>
-          <a href={this.state.twitterLink} className="icon" target="_blank">
+          <a
+            href={this.state.twitterLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.twitter.icon}
           </a>
         </Grid>
@@ -362,7 +372,12 @@ export default class Profile extends Component {
     if (this.state.linkedInLink !== '') {
       linkedInButton = (
         <Grid item>
-          <a href={this.state.linkedInLink} className="icon" target="_blank">
+          <a
+            href={this.state.linkedInLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.linkedIn.icon}
           </a>
         </Grid>
@@ -372,7 +387,12 @@ export default class Profile extends Component {
     if (this.state.instagramLink !== '') {
       instagramButton = (
         <Grid item>
-          <a href={this.state.instagramLink} className="icon" target="_blank">
+          <a
+            href={this.state.instagramLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.instagram.icon}
           </a>
         </Grid>
@@ -381,10 +401,10 @@ export default class Profile extends Component {
     }
     if (linkCount > 0) {
       editButton = (
-        <Grid item style={{ marginTop: '5px' }}>
-          <a onClick={this.handleSocialLinksOpen} className="edit-icon">
+        <Grid item>
+          <IconButton onClick={this.handleSocialLinksOpen} className="edit-icon">
             {socialMediaInfo.edit.icon}
-          </a>
+          </IconButton>
         </Grid>
       );
     } else {
