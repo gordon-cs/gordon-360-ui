@@ -22,12 +22,12 @@ export default class EditDescriptionDialog extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  // Update local state as parent state changes
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.descriptionText !== this.props.descriptionText) {
-      this.setState({ descInput: nextProps.descriptionText });
-    }
-  }
+  // // Update local state as parent state changes
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.descriptionText !== this.props.descriptionText) {
+  //     this.setState({ descInput: nextProps.descriptionText });
+  //   }
+  // }
 
   handleSubmit = e => {
     e.preventDefault();
@@ -49,13 +49,13 @@ export default class EditDescriptionDialog extends React.Component {
   handleClose = () => {
     this.props.handleEditDescriptionClose();
 
-    // Reset changed fields
-    if (this.state.descInput !== this.props.descriptionText) {
-      this.setState({
-        descInput: this.props.descriptionText,
-        formErrors: { descInput: '' },
-      });
-    }
+    // // Reset changed fields
+    // if (this.state.descInput !== this.props.descriptionText) {
+    //   this.setState({
+    //     descInput: this.props.descriptionText,
+    //     formErrors: { descInput: '' },
+    //   });
+    // }
 
     this.setState({ formValid: true });
   };

@@ -17,74 +17,133 @@ export default class HoursDialog extends React.Component {
     super(props);
 
     this.state = {
-      dayOfTheWeek: '',
-      startHour: '',
-      endHour: '',
-      hourType: '',
+      startHourInput: '08:00',
+      endHourInput: '17:00',
       officeHoursOpen: false,
       checkedC: false,
-      checkedMo: false,
-      checkedTu: false,
-      checkedWe: false,
-      checkedTh: false,
-      checkedFr: false,
-      checkedSa: false,
-      checkedSu: false,
+      checkedDayofWeek: {
+        checkedMo: false,
+        checkedTu: false,
+        checkedWe: false,
+        checkedTh: false,
+        checkedFr: false,
+        checkedSa: false,
+        checkedSu: false,
+      },
       selectedEvent: null,
+      descriptionInput: '',
+      locationInput: '',
+      descriptionValid: false,
+      locationValid: false,
+      startHourValid: true,
+      endHourValid: true,
+      formValid: false,
+      checkedValid: false,
+      formErrors: {
+        descriptionInput: '',
+        locationInput: '',
+        startHourValid: '',
+        endHourValid: '',
+      },
     };
     this.handleOfficeHoursClose = this.handleOfficeHoursClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentWillReceiveProps() {
-    if (this.props.selectedEvent) this.setState({ selectedEvent: this.props.selectedEvent });
-    this.setState({ checkedC: false });
-    this.setState({ checkedSu: false });
-    this.setState({ checkedMo: false });
-    this.setState({ checkedTu: false });
-    this.setState({ checkedWe: false });
-    this.setState({ checkedTh: false });
-    this.setState({ checkedFr: false });
-    this.setState({ checkedSa: false });
-    this.checkDay();
-
-    console.log('CheckBoxState : ', this.state.checkedMo);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedEvent !== this.props.selectedEvent)
+      this.setState({ selectedEvent: nextProps.selectedEvent });
   }
 
-  handleDayOfTheWeekInputChange = e => {
-    this.setState({
-      dayOfTheWeek: e.target.value,
-    });
-  };
+  validateField(fieldName, value) {
+    let fieldValidationErrors = this.state.formErrors;
+    let descriptionValid = this.state.descriptionValid;
+    let locationValid = this.state.locationValid;
+    let startHourValid = this.state.startHourValid;
+    let endHourValid = this.state.endHourValid;
+    console.log('StartHour : ', parseInt(this.state.startHourInput, 10));
 
-  handleStartHourChange = e => {
-    this.setState({
-      startHour: e.target.value,
-    });
-  };
-
-  handleEndHourChange = e => {
-    this.setState({
-      endHour: e.target.value,
-    });
-  };
-
-  handleHourTypeChange = e => {
-    this.setState({
-      hourType: e.target.value,
-    });
-  };
+    // Require that content havint appropriate size
+    switch (fieldName) {
+      case 'descriptionInput':
+        descriptionValid = value !== '' || value.length < 50;
+        fieldValidationErrors.descriptionInput = descriptionValid ? '' : 'Description is not Valid';
+        break;
+      case 'locationInput':
+        locationValid = value !== '' || value.length < 50;
+        fieldValidationErrors.locationInput = locationValid ? '' : 'Location is not Valid';
+        break;
+      case 'startHourInput':
+        startHourValid =
+          value === '' || parseInt(this.state.endHourInput, 10) > parseInt(value, 10);
+        fieldValidationErrors.startHourInput = startHourValid ? '' : 'Start Time is not Valid';
+        break;
+      case 'endHourInput':
+        endHourValid =
+          value === '' || parseInt(this.state.startHourInput, 10) < parseInt(value, 10);
+        fieldValidationErrors.endHourInput = endHourValid ? '' : 'End Time is not Valid';
+        break;
+      default:
+        break;
+    }
+    this.setState(
+      {
+        formErrors: fieldValidationErrors,
+        descriptionValid: descriptionValid,
+        locationValid: locationValid,
+        startHourValid: startHourValid,
+        endHourValid: endHourValid,
+      },
+      this.validateForm,
+    );
+  }
 
   validateForm() {
     this.setState({
       formValid:
-        this.state.fbValid && this.state.twValid && this.state.liValid && this.state.igValid,
+        this.state.locationValid &&
+        this.state.descriptionValid &&
+        this.state.startHourValid &&
+        this.state.endHourValid &&
+        this.state.checkedValid,
     });
   }
 
   handleSubmit = e => {
     e.preventDefault();
+
+    var startHour = this.state.startHourInput;
+    var endHour = this.state.endHourInput;
+    var location = this.state.locationInput;
+    var description = this.state.descriptionInput;
+
+    var mySchedule = {
+      startHour: startHour,
+      endHour: endHour,
+      location: location,
+      description: description,
+      monday: this.state.checkedMo,
+      tuesday: this.state.checkedTu,
+      wednesday: this.state.checkedWe,
+      thursday: this.state.checkedTh,
+      friday: this.state.checkedFr,
+      saturday: this.state.checkedSa,
+      sunday: this.state.checkedSu,
+      allDay: this.state.checkedC,
+    };
+    this.props.onDialogSubmit(mySchedule);
+
     this.handleClose();
+  };
+
+  validateCheck = dayofWeek => {
+    let valid = false;
+    for (var day in dayofWeek) {
+      if (dayofWeek[day]) valid = true;
+    }
+    console.log('checkedValid', valid);
+    this.setState({ checkedValid: valid });
+    this.validateForm();
   };
 
   handleChange = name => e => {
@@ -94,20 +153,66 @@ export default class HoursDialog extends React.Component {
     });
   };
 
+  handleCheckboxChange = name => e => {
+    if (name === 'checkedC') {
+      this.setState({ checkedC: e.target.checked });
+      if (e.target.checked) {
+        this.setState({
+          formValid:
+            this.state.locationValid && this.state.descriptionValid && this.state.checkedValid,
+          startHourValid: true,
+          endHourValid: true,
+        });
+      } else {
+        this.validateField('startHourInput', this.state.startHourInput);
+        this.validateField('endHourInput', this.state.endHourInput);
+      }
+    } else {
+      let dayofWeek = this.state.checkedDayofWeek;
+      dayofWeek[name] = e.target.checked;
+      console.log('Day ', dayofWeek[name]);
+
+      this.setState({ checkedDayofWeek: dayofWeek }, () => {
+        this.validateCheck(dayofWeek);
+      });
+    }
+  };
+
   handleOfficeHoursClose = () => {
     this.setState({ officeHoursOpen: false });
+  };
+
+  handleClose = () => {
+    this.props.handleOfficeHoursClose();
+
+    // // Reset changed fields
+    // if (this.state.descInput !== this.props.descriptionText) {
+    //   this.setState({
+    //     descInput: this.props.descriptionText,
+    //     formErrors: { descInput: '' },
+    //   });
+    // }
+
+    this.setState({ formValid: true });
   };
 
   checkDay = () => {
     if (this.state.selectedEvent && this.props.isDoubleClick) {
       if (this.state.selectedEvent.allDay === 1) this.setState({ checkedC: true });
-      if (this.state.selectedEvent.resourceId === 1) this.setState({ checkedSu: true });
-      if (this.state.selectedEvent.resourceId === 2) this.setState({ checkedMo: true });
-      if (this.state.selectedEvent.resourceId === 3) this.setState({ checkedTu: true });
-      if (this.state.selectedEvent.resourceId === 4) this.setState({ checkedWe: true });
-      if (this.state.selectedEvent.resourceId === 5) this.setState({ checkedTh: true });
-      if (this.state.selectedEvent.resourceId === 6) this.setState({ checkedFr: true });
-      if (this.state.selectedEvent.resourceId === 7) this.setState({ checkedSa: true });
+      if (this.state.selectedEvent.resourceId === 1)
+        this.setState({ dayofWeek: { checkedSu: true } });
+      if (this.state.selectedEvent.resourceId === 2)
+        this.setState({ dayofWeek: { checkedMo: true } });
+      if (this.state.selectedEvent.resourceId === 3)
+        this.setState({ dayofWeek: { checkedTu: true } });
+      if (this.state.selectedEvent.resourceId === 4)
+        this.setState({ dayofWeek: { checkedWe: true } });
+      if (this.state.selectedEvent.resourceId === 5)
+        this.setState({ dayofWeek: { checkedTh: true } });
+      if (this.state.selectedEvent.resourceId === 6)
+        this.setState({ dayofWeek: { checkedFr: true } });
+      if (this.state.selectedEvent.resourceId === 7)
+        this.setState({ dayofWeek: { checkedSa: true } });
     }
   };
 
@@ -158,31 +263,73 @@ export default class HoursDialog extends React.Component {
           <form className="info" onSubmit={this.handleSubmit}>
             <FormGroup row="true" className="dayWeek">
               <FormControlLabel
-                control={<Checkbox checked={this.state.checkedSu} value="checkedSu" primary />}
+                control={
+                  <Checkbox
+                    value={this.state.checkedDayofWeek.checkedSu}
+                    onChange={this.handleCheckboxChange('checkedSu')}
+                    primary
+                  />
+                }
                 label="Sunday"
               />
               <FormControlLabel
-                control={<Checkbox checked={this.state.checkedMo} value="checkedMo" primary />}
+                control={
+                  <Checkbox
+                    value={this.state.checkedDayofWeek.checkedMo}
+                    onChange={this.handleCheckboxChange('checkedMo')}
+                    primary
+                  />
+                }
                 label="Monday"
               />
               <FormControlLabel
-                control={<Checkbox checked={this.state.checkedTu} value="checkedTu" primary />}
+                control={
+                  <Checkbox
+                    value={this.state.checkedDayofWeek.checkedTu}
+                    onChange={this.handleCheckboxChange('checkedTu')}
+                    primary
+                  />
+                }
                 label="Tuesday"
               />
               <FormControlLabel
-                control={<Checkbox checked={this.state.checkedWe} value="checkedWe" primary />}
+                control={
+                  <Checkbox
+                    value={this.state.checkedDayofWeek.checkedWe}
+                    onChange={this.handleCheckboxChange('checkedWe')}
+                    primary
+                  />
+                }
                 label="Wednesday"
               />
               <FormControlLabel
-                control={<Checkbox checked={this.state.checkedTh} value="checkedTh" primary />}
+                control={
+                  <Checkbox
+                    value={this.state.checkedDayofWeek.checkedTh}
+                    onChange={this.handleCheckboxChange('checkedTh')}
+                    primary
+                  />
+                }
                 label="Thursday"
               />
               <FormControlLabel
-                control={<Checkbox checked={this.state.checkedFr} value="checkedFr" primary />}
+                control={
+                  <Checkbox
+                    value={this.state.checkedDayofWeek.checkedFr}
+                    onChange={this.handleCheckboxChange('checkedFr')}
+                    primary
+                  />
+                }
                 label="Friday"
               />
               <FormControlLabel
-                control={<Checkbox checked={this.state.checkedSa} value="checkedSa" primary />}
+                control={
+                  <Checkbox
+                    value={this.state.checkedDayofWeek.checkedSa}
+                    onChange={this.handleCheckboxChange('checkedSa')}
+                    primary
+                  />
+                }
                 label="Saturday"
               />
             </FormGroup>
@@ -192,6 +339,11 @@ export default class HoursDialog extends React.Component {
                 label="Start time"
                 type="time"
                 defaultValue={startTime}
+                disabled={this.state.checkedC}
+                value={this.state.startHourInput}
+                onChange={this.handleChange('startHourInput')}
+                error={!this.state.startHourValid}
+                helperText={this.state.startHourValid ? '' : this.state.formErrors.startHourInput}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -204,7 +356,12 @@ export default class HoursDialog extends React.Component {
               <TextField
                 label="End time"
                 type="time"
+                disabled={this.state.checkedC}
                 defaultValue={endTime}
+                value={this.state.endHourInput}
+                onChange={this.handleChange('endHourInput')}
+                error={!this.state.endHourValid}
+                helperText={this.state.endHourValid ? '' : this.state.formErrors.endHourInput}
                 primary
                 style={{ marginLeft: '10%' }}
                 InputLabelProps={{
@@ -216,7 +373,13 @@ export default class HoursDialog extends React.Component {
               />
             </div>
             <FormControlLabel
-              control={<Checkbox value="checkedC" primary />}
+              control={
+                <Checkbox
+                  value={this.state.checkedC}
+                  onChange={this.handleCheckboxChange('checkedC')}
+                  primary
+                />
+              }
               label="All day"
               className="alldaycheckbox"
             />
@@ -224,8 +387,10 @@ export default class HoursDialog extends React.Component {
               <TextField
                 label="Location"
                 fullWidth
-                value={this.state.firstNameSearchValue}
-                onChange={this.handleFirstNameInputChange}
+                value={this.state.locationInput}
+                onChange={this.handleChange('locationInput')}
+                error={!this.state.locationValid}
+                helperText={this.state.locationValid ? '' : this.state.formErrors.locationInput}
                 onKeyDown={this.handleEnterKeyPress}
               />
             </div>
@@ -234,8 +399,12 @@ export default class HoursDialog extends React.Component {
                 label="Description"
                 fullWidth
                 defaultValue={description}
-                value={this.state.firstNameSearchValue}
-                onChange={this.handleFirstNameInputChange}
+                value={this.state.descriptionInput}
+                onChange={this.handleChange('descriptionInput')}
+                error={!this.state.descriptionValid}
+                helperText={
+                  this.state.descriptionValid ? '' : this.state.formErrors.descriptionInput
+                }
                 onKeyDown={this.handleEnterKeyPress}
               />
             </div>
