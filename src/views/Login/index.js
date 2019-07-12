@@ -17,6 +17,7 @@ import './login.css';
 import { authenticate } from '../../services/auth';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
+import { projectName } from '../../project-name';
 
 // To temporarily disable the Login Hang message, set this boolean to false
 const LOGIN_BUG_MESSAGE = true; // Login Hang
@@ -93,11 +94,11 @@ export default class Login extends Component {
   render() {
     return (
       <Grid className="gordon-login" container alignItems="center" justify="center" spacing={0}>
-        <DocumentTitle title="Login | Gordon 360" />
+        <DocumentTitle title={`Login | ${projectName}`} />
         <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
-          <img src={GordonLogoVerticalWhite} alt="Gordon 360" />
+          <img src={GordonLogoVerticalWhite} alt={`${projectName}`} />
           <form onSubmit={this.logIn}>
-            <Typography variant="subheading">Welcome to Gordon 360!</Typography>
+            <Typography variant="subheading">Welcome to {projectName}!</Typography>
             <TextField
               id="username"
               label="Username"
