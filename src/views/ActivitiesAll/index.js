@@ -150,14 +150,23 @@ export default class GordonActivitiesAll extends Component {
       padding: '10px',
     };
 
-    /* Used to re-render the page when the network connection changes
+    /* Used to re-render the page when the network connection changes.
     *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders which creates extreme performance lost
+    *  multiple re-renders that creates extreme performance lost.
+    *  The origin of the message is checked to prevent cross-site scripting attacks
     */
     window.addEventListener('message', event => {
-      if (event.data === 'online' && this.state.network === 'offline') {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
         this.setState({ network: 'online' });
-      } else if (event.data === 'offline' && this.state.network === 'online') {
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
         this.setState({ network: 'offline' });
       }
     });

@@ -67,26 +67,23 @@ export default class GordonNavLinks extends Component {
   }
 
   render() {
-    let admin;
-
-    if (user.getLocalInfo().college_role === 'god') {
-      admin = (
-        <NavLink exact to="/admin" onClick={this.props.onLinkClick}>
-          <ListItem button>
-            <ListItemText primary="Admin" />
-          </ListItem>
-        </NavLink>
-      );
-    }
-
-    /* Used to re-render the page when the network connection changes
+    /* Used to re-render the page when the network connection changes.
     *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders which creates extreme performance lost
+    *  multiple re-renders that creates extreme performance lost.
+    *  The origin of the message is checked to prevent cross-site scripting attacks
     */
     window.addEventListener('message', event => {
-      if (event.data === 'online' && this.state.network === 'offline') {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
         this.setState({ network: 'online' });
-      } else if (event.data === 'offline' && this.state.network === 'online') {
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
         // Closes out the links dialog  box if it's open
         this.handleLinkClose();
         this.setState({ network: 'offline' });
@@ -168,6 +165,28 @@ export default class GordonNavLinks extends Component {
       );
     }
 
+    // Creates the Admin button depending on the status of the network found in local storage
+    let Admin;
+    if (networkStatus === 'online') {
+      if (user.getLocalInfo().college_role === 'god') {
+        Admin = (
+          <NavLink exact to="/admin" onClick={this.props.onLinkClick}>
+            <ListItem button>
+              <ListItemText primary="Admin" />
+            </ListItem>
+          </NavLink>
+        );
+      }
+    } else {
+      Admin = (
+        <div onClick={this.openDialogBox}>
+          <ListItem button disabled={networkStatus}>
+            <ListItemText primary="Admin" />
+          </ListItem>
+        </div>
+      );
+    }
+
     // Creates the Signout button depending on the status of the network found in local storage
     let SignoutButton;
     if (networkStatus === 'online') {
@@ -231,7 +250,7 @@ export default class GordonNavLinks extends Component {
               </ListItem>
             </NavLink>
             {FeedbackButton}
-            {admin}
+            {Admin}
             {SignoutButton}
           </List>
           <QuickLinksDialog

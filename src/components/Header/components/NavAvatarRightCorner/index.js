@@ -121,8 +121,6 @@ export default class GordonNavAvatarRightCorner extends Component {
 
     // const { classes } = this.props;
 
-    let username = this.state.username;
-    let myProfileLink = '/myprofile';
     let avatar = (
       <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>
     );
@@ -146,14 +144,23 @@ export default class GordonNavAvatarRightCorner extends Component {
       );
     }
 
-    /* Used to re-render the page when the network connection changes
+    /* Used to re-render the page when the network connection changes.
     *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders which creates extreme performance lost
+    *  multiple re-renders that creates extreme performance lost.
+    *  The origin of the message is checked to prevent cross-site scripting attacks
     */
     window.addEventListener('message', event => {
-      if (event.data === 'online' && this.state.network === 'offline') {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
         this.setState({ network: 'online' });
-      } else if (event.data === 'offline' && this.state.network === 'online') {
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
         this.setState({ network: 'offline' });
       }
     });
@@ -162,6 +169,14 @@ export default class GordonNavAvatarRightCorner extends Component {
     *  Defaults to online in case of PWA not being possible
     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+    // Creates the My Profile button link depending on the status of the network found in local storage
+    let myProfileLink;
+    if (networkStatus === 'online') {
+      myProfileLink = '/myprofile';
+    } else {
+      myProfileLink = `profile/${this.state.username}`;
+    }
 
     // Creates the Links button depending on the status of the network found in local storage
     let LinksButton;

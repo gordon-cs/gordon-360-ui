@@ -514,14 +514,23 @@ class PeopleSearch extends Component {
       );
     }
 
-    /* Used to re-render the page when the network connection changes
+    /* Used to re-render the page when the network connection changes.
     *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders which creates extreme performance lost
+    *  multiple re-renders that creates extreme performance lost.
+    *  The origin of the message is checked to prevent cross-site scripting attacks
     */
     window.addEventListener('message', event => {
-      if (event.data === 'online' && this.state.network === 'offline') {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
         this.setState({ network: 'online' });
-      } else if (event.data === 'offline' && this.state.network === 'online') {
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
         this.setState({ network: 'offline' });
       }
     });
@@ -1016,28 +1025,49 @@ class PeopleSearch extends Component {
       );
     } else {
       PeopleSearch = (
-        <center>
-          <br />
-          <h1>Please re-establish connection</h1>
-          <br />
-          <p> People Search feature has been deactivated due to loss of network.</p>
-          <br />
-          <br />
-          <br />
-          <br />
-          <div>
-            <Button
-              color="primary"
-              backgroundColor="white"
-              variant="outlined"
-              onClick={() => {
-                window.location.pathname = '';
-              }}
-            >
-              back to Home
-            </Button>
-          </div>
-        </center>
+        <Grid container justify="center" spacing="16">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <Grid
+                  item
+                  xs={2}
+                  alignItems="center"
+                  style={{
+                    display: 'block',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
+                >
+                  <img
+                    src={require(`${'../../NoConnection.svg'}`)}
+                    alt="Internet Connection Lost"
+                  />
+                </Grid>
+                <br />
+                <h1>Please Re-establish Connection</h1>
+                <h4>People Search has been deactivated due to loss of network.</h4>
+                <br />
+                <br />
+                <Button
+                  color="primary"
+                  backgroundColor="white"
+                  variant="outlined"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Back To Home
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       );
     }
 

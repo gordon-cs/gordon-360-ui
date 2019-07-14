@@ -28,6 +28,9 @@ const staticCache = [
   '/static/js/bundle.js',
   '/static/media/campus1366.e8fc7838.jpg',
   '/static/media/gordon-logo-vertical-white.a6586885.svg',
+  '/static/media/NoConnection.68275814.svg',
+  '/admin',
+  '/myprofile',
 ];
 
 /**
@@ -46,7 +49,6 @@ const firstDynamicCache = [
   'https://360apitrain.gordon.edu/api/sessions/daysLeft',
   'https://360apitrain.gordon.edu/api/studentemployment/',
   'https://360apitrain.gordon.edu/api/version',
-  '/myprofile',
 ];
 
 /**

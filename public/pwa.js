@@ -13,7 +13,7 @@ if ('caches' in window) {
       alert('You are offline. Information might be not up to date.');
       // Saves the network state as offline in local storage
       localStorage.setItem('network-status', JSON.stringify('offline'));
-      window.postMessage('offline');
+      window.postMessage('offline', location.origin);
     });
 
     // If network connectivity re-enables during application run-time
@@ -23,7 +23,7 @@ if ('caches' in window) {
       );
       // Saves the network state as online in local storage
       localStorage.setItem('network-status', JSON.stringify('online'));
-      window.postMessage('online');
+      window.postMessage('online', location.origin);
     });
 
     /* When a user exists out the app and re-opens it, this will check to see if they are
