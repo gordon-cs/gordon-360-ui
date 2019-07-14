@@ -118,7 +118,6 @@ export default class GordonNavAvatarRightCorner extends Component {
 
   render() {
     const open = Boolean(this.state.anchorEl);
-    let myProfileLink = '/myprofile';
     let avatar = (
       <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>
     );
@@ -128,17 +127,6 @@ export default class GordonNavAvatarRightCorner extends Component {
           className="nav-avatar nav-avatar-image"
           src={`data:image/jpg;base64,${this.state.image}`}
         />
-      );
-    }
-
-    let admin;
-    if (user.getLocalInfo().college_role === 'god') {
-      admin = (
-        <Link to="/admin">
-          <MenuItem onClick={this.onClose} divider="true">
-            Admin
-          </MenuItem>
-        </Link>
       );
     }
 
@@ -160,6 +148,7 @@ export default class GordonNavAvatarRightCorner extends Component {
         event.origin === window.location.origin
       ) {
         this.setState({ network: 'offline' });
+        this.handleLinkClose();
       }
     });
 
@@ -173,7 +162,7 @@ export default class GordonNavAvatarRightCorner extends Component {
     if (networkStatus === 'online') {
       myProfileLink = '/myprofile';
     } else {
-      myProfileLink = `profile/${this.state.username}`;
+      myProfileLink = `profile/${this.state.name.replace(' ', '.')}`;
     }
 
     // Creates the Links button depending on the status of the network found in local storage
@@ -215,6 +204,28 @@ export default class GordonNavAvatarRightCorner extends Component {
         <div onClick={this.openDialogBox}>
           <MenuItem disabled={networkStatus} divider="true">
             Feedback
+          </MenuItem>
+        </div>
+      );
+    }
+
+    // Creates the Admin button depending on the status of the network found in local storage
+    let Admin;
+    if (networkStatus === 'online') {
+      if (user.getLocalInfo().college_role === 'god') {
+        Admin = (
+          <Link to="/admin">
+            <MenuItem onClick={this.onClose} divider="true">
+              Admin
+            </MenuItem>
+          </Link>
+        );
+      }
+    } else {
+      Admin = (
+        <div onClick={this.openDialogBox}>
+          <MenuItem disabled={networkStatus} divider="true">
+            Admin
           </MenuItem>
         </div>
       );
@@ -283,7 +294,7 @@ export default class GordonNavAvatarRightCorner extends Component {
             </MenuItem>
           </Link>
           {FeedbackButton}
-          {admin}
+          {Admin}
           {SignoutButton}
         </Menu>
         <QuickLinksDialog
