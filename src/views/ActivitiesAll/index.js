@@ -38,17 +38,26 @@ export default class GordonActivitiesAll extends Component {
       network: 'online',
     };
   }
+
+  componentDidUpdate() {
+    window.onpopstate = e => {
+      window.location.reload();
+    };
+  }
+
   async componentWillMount() {
     this.setState({ loading: true });
-
     try {
       const profile = await user.getProfileInfo();
       const { SessionCode: sessionCode } = await session.getCurrent();
       this.setState({ session: sessionCode, currentSession: sessionCode });
-
+      if (window.location.href.includes('?')) {
+        const tempSession = window.location.href.split('?')[1];
+        this.setState({ session: tempSession, currentSession: tempSession });
+      }
       const [activities, types, sessions] = await Promise.all([
-        activity.getAll(sessionCode),
-        activity.getTypes(sessionCode),
+        activity.getAll(this.state.session),
+        activity.getTypes(this.state.session),
         session.getAll(),
       ]);
       const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
@@ -58,9 +67,34 @@ export default class GordonActivitiesAll extends Component {
         activities,
         allActivities: activities,
         myInvolvements: myInvolvements,
-        loading: false,
         sessions,
         types,
+      });
+
+      if (activities.length === 0) {
+        var recentSession;
+        recentSession = this.state.sessions[0].SessionCode;
+        this.setState({ session: recentSession, currentSession: sessionCode });
+        const [activities, types, sessions] = await Promise.all([
+          activity.getAll(recentSession),
+          activity.getTypes(recentSession),
+          session.getAll(),
+        ]);
+        const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
+
+        this.setState({
+          profile,
+          activities,
+          allActivities: activities,
+          myInvolvements: myInvolvements,
+          loading: false,
+          sessions,
+          types,
+        });
+      }
+
+      this.setState({
+        loading: false,
       });
     } catch (error) {
       this.setState({ error });
@@ -69,6 +103,7 @@ export default class GordonActivitiesAll extends Component {
 
   async changeSession(event) {
     await this.setState({ session: event.target.value, loading: true });
+    this.props.history.push(`?${this.state.session}`);
     const allActivities = await activity.getAll(this.state.session);
     const myInvolvements = await user.getSessionMembershipsWithoutGuests(
       this.state.profile.ID,

@@ -118,9 +118,7 @@ export default class GordonNavAvatarRightCorner extends Component {
 
   render() {
     const open = Boolean(this.state.anchorEl);
-
-    // const { classes } = this.props;
-
+    let myProfileLink = '/myprofile';
     let avatar = (
       <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>
     );

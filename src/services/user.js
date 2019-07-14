@@ -565,9 +565,11 @@ function compareByTitle(a, b) {
 }
 
 //compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
-function compareBySession(a, b) {
+/*function compareBySession(a, b) {
   const sessA = a.SessionCode;
+  console.log(sessA)
   const sessB = b.SessionCode;
+  console.log(sessB)
 
   let comparison = 0;
   if (sessA > sessB) {
@@ -575,10 +577,11 @@ function compareBySession(a, b) {
   } else if (sessA < sessB) {
     comparison = -1;
   }
+  console.log(comparison)
   return comparison;
-}
+}*/
 
-//compares items by ActivityCode, used by getTranscriptInfo to sort by SessionCode
+//compares items by ActivityCode, used by getTranscriptMembershipsInfo to sort by ActivityCode
 function compareByActCode(a, b) {
   const codeA = a.ActivityCode;
   const codeB = b.ActivityCode;
@@ -598,7 +601,6 @@ function compareByActCode(a, b) {
 //sorts by SessionCode and ActivityCode
 const getTranscriptMembershipsInfo = async id => {
   let transcriptInfo = await getMembershipsWithoutGuests(id);
-  transcriptInfo.sort(compareBySession);
   transcriptInfo.sort(compareByActCode);
   return transcriptInfo;
 };
