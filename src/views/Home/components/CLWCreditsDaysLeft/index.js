@@ -114,12 +114,13 @@ export default class CLWCreditsDaysLeft extends Component {
             style={{ paddingTop: 5, paddingBottom: 10 }}
           >
             <Grid item>
-              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              {/* use body2 wherever we use body1*/}
+              <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${daysLeft} Days Left`}
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${remaining} CL&W Credit` + (remaining === 1 ? '' : 's') + ' Left'}
               </Typography>
             </Grid>
@@ -181,7 +182,8 @@ export default class CLWCreditsDaysLeft extends Component {
     return (
       <Card>
         <CardContent>
-          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+          {/* headline value no longer exists, use h5*/}
+          <Typography variant="h5" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.currSessionDescription}
           </Typography>
           {content}

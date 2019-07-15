@@ -34,7 +34,7 @@ class GordonActivityGrid extends Component {
     if (Array.isArray(this.props.myInvolvements) && this.props.myInvolvements.length === 0) {
       content = (
         <Grid item xs={12}>
-          <Typography variant="headline" align="center">
+          <Typography variant="h5" align="center">
             {this.props.noInvolvementsText}
           </Typography>
         </Grid>

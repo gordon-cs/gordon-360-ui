@@ -42,7 +42,16 @@ export default class Home extends Component {
     }
 
     return (
-      <Grid container justify="center" spacing={16}>
+      // <div className="home-container">
+      //   <Carousel className="home-carousel"/>
+      //   <div className="home-days-left">
+      //     {doughnut}
+      //   </div>
+      //   <DiningBalance className="home-dining-balance"/>
+      //   <Requests className="home-requests"/>
+
+      // </div>
+      <Grid container justify="center" spacing={2}>
         <Grid item xs={12} md={10}>
           <Carousel />
         </Grid>
