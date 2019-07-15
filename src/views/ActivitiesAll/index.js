@@ -216,7 +216,7 @@ export default class GordonActivitiesAll extends Component {
     if (networkStatus === 'online') {
       SessionList = sessionOptions;
     } else {
-      SessionList = sessionOptions[0];
+      SessionList = sessionOptions[2];
     }
 
     return (

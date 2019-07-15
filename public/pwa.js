@@ -1,3 +1,5 @@
+//import session from '../src/services/session.js';
+
 /* Checking to see if the Cache API is available
 *  If so, check to see if the Service Worker API is available
 */
@@ -5,7 +7,21 @@ if ('caches' in window) {
   // Checking to see if the Service Worker API is available
   // If so, we register our service worker and run all PWA operations
   if (navigator.serviceWorker) {
-    navigator.serviceWorker.register('/sw.js').catch(console.error);
+    // If the new worker is not up to date with the current worker, it will install the new
+    // woker as its new current
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then(reg => {
+        reg.onupdatefound = () => {
+          const installingWorker = reg.installing;
+          installingWorker.onstatechange = () => {
+            if (installingWorker.state === 'activated') {
+              navigator.serviceWorker.controller.postMessage('update-cache-files');
+            }
+          };
+        };
+      })
+      .catch(console.error);
 
     // If network connectivity disables during application run-time
     window.addEventListener('offline', event => {

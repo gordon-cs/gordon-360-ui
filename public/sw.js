@@ -12,6 +12,8 @@
 /*********************************************** VARIABLES ***********************************************/
 // Current cache version
 let cacheVersion = 'cache-1.0';
+let token;
+let currentSession;
 
 // Static Files to cache
 const staticCache = [
@@ -35,28 +37,10 @@ const staticCache = [
 ];
 
 /**
- * First set out of three to cache dynamic files that requies a
-   Request with its property mode set to "cors"
-*/
-const firstDynamicCache = [
-  // Home Page Fetch URLs
-  'https://360apitrain.gordon.edu/api/cms/slider',
-  'https://360apitrain.gordon.edu/api/dining',
-  'https://360apitrain.gordon.edu/api/events/25Live/All',
-  'https://360apitrain.gordon.edu/api/profiles',
-  'https://360apitrain.gordon.edu/api/profiles/Image',
-  'https://360apitrain.gordon.edu/api/sessions',
-  'https://360apitrain.gordon.edu/api/sessions/current',
-  'https://360apitrain.gordon.edu/api/sessions/daysLeft',
-  'https://360apitrain.gordon.edu/api/studentemployment/',
-  'https://360apitrain.gordon.edu/api/version',
-];
-
-/**
  * Second set out of three to cache dynamic files that requies a
    Request with its property mode set to "no-cors"
 */
-const secondDynamicCache = [
+const imageCache = [
   'https://www.gordon.edu/favicon.ico',
   'https://my.gordon.edu/ics/favicon.ico',
   'https://go.gordon.edu/favicon.ico',
@@ -124,12 +108,7 @@ async function cacheStatic() {
 }
 
 /**
- * Pre-caches third set of dynamic files that requies a Request with its property mode set to "cors"
- *
- * Two fetches are done to have the user's info and the current session.
- * There are three variables that are obtained from these fetches which are the user's
- * username/id and the current session code. These variables are then used to create an array of
- * links that is passed into the function 'cacheDynamic()' to cache the last set of dynamic files
+ * Pre-caches main set of dynamic files that requies a Request with its property mode set to "cors"
  *
  * @param {String} token The token from Local Storage to authenticate each request made
  * @param {String} termCode The current semester term
@@ -151,6 +130,7 @@ async function getUserInfoForLinks(token, termCode) {
     .catch(error => {
       return error.message;
     });
+
   // Gets the current session object to access the current session code
   let currentSession = await fetch(
     new Request('https://360apitrain.gordon.edu/api/sessions/current', {
@@ -164,10 +144,23 @@ async function getUserInfoForLinks(token, termCode) {
     .catch(error => {
       return error.message;
     });
+
   let username = profile ? profile.AD_Username : null;
   let id = profile ? profile.ID : null;
   let sessionCode = currentSession ? currentSession.SessionCode : null;
-  const thirdDynamicCache = [
+  const mainDynamicCache = [
+    // Home Page Fetch URLs
+    'https://360apitrain.gordon.edu/api/cms/slider',
+    'https://360apitrain.gordon.edu/api/dining',
+    'https://360apitrain.gordon.edu/api/events/25Live/All',
+    'https://360apitrain.gordon.edu/api/profiles',
+    'https://360apitrain.gordon.edu/api/profiles/Image',
+    'https://360apitrain.gordon.edu/api/sessions',
+    'https://360apitrain.gordon.edu/api/sessions/current',
+    'https://360apitrain.gordon.edu/api/sessions/daysLeft',
+    'https://360apitrain.gordon.edu/api/studentemployment/',
+    'https://360apitrain.gordon.edu/api/version',
+    'https://360apitrain.gordon.edu/api/activities/session/201809',
     `https://360apitrain.gordon.edu/api/activities/session/${sessionCode}`,
     `https://360apitrain.gordon.edu/api/activities/session/${sessionCode}/types`,
     `https://360apitrain.gordon.edu/api/events/chapel/${termCode}`,
@@ -178,6 +171,7 @@ async function getUserInfoForLinks(token, termCode) {
     `https://360apitrain.gordon.edu/api/requests/student/${id}`,
     `/profile/${username}`,
   ];
+
   // Gets the involvements of the current user for the Involvement Profiles
   let involvements = await fetch(
     new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
@@ -193,33 +187,23 @@ async function getUserInfoForLinks(token, termCode) {
       return error.message;
     });
   involvements.forEach(involvement => {
-    thirdDynamicCache.push(
-      `https://360apitrain.gordon.edu/api/activities/${involvement.ActivityCode}`,
-      `https://360apitrain.gordon.edu/api/activities/${involvement.SessionCode}/${
-        involvement.ActivityCode
-      }/status`,
-      `https://360apitrain.gordon.edu/api/emails/activity/${involvement.ActivityCode}`,
-      `https://360apitrain.gordon.edu/api/emails/activity/${
-        involvement.ActivityCode
-      }/advisors/session/${involvement.SessionCode}`,
-      `https://360apitrain.gordon.edu/api/emails/activity/${
-        involvement.ActivityCode
-      }/group-admin/session/${involvement.SessionCode}`,
-      `https://360apitrain.gordon.edu/api/memberships/activity/${involvement.ActivityCode}`,
-      `https://360apitrain.gordon.edu/api/memberships/activity/${
-        involvement.ActivityCode
-      }/followers/${involvement.SessionCode}`,
-      `https://360apitrain.gordon.edu/api/memberships/activity/${
-        involvement.ActivityCode
-      }/group-admin`,
-      `https://360apitrain.gordon.edu/api/memberships/activity/${
-        involvement.ActivityCode
-      }/members/${involvement.SessionCode}`,
-      `https://360apitrain.gordon.edu/api/requests/activity/${involvement.ActivityCode}`,
-      `https://360apitrain.gordon.edu/api/sessions/${involvement.SessionCode}`,
+    let activityCode = involvement ? involvement.ActivityCode : null;
+    let sessionCode = involvement ? involvement.SessionCode : null;
+    mainDynamicCache.push(
+      `https://360apitrain.gordon.edu/api/activities/${activityCode}`,
+      `https://360apitrain.gordon.edu/api/activities/${sessionCode}/${activityCode}/status`,
+      `https://360apitrain.gordon.edu/api/emails/activity/${activityCode}`,
+      `https://360apitrain.gordon.edu/api/emails/activity/${activityCode}/advisors/session/${sessionCode}`,
+      `https://360apitrain.gordon.edu/api/emails/activity/${activityCode}/group-admin/session/${sessionCode}`,
+      `https://360apitrain.gordon.edu/api/memberships/activity/${activityCode}`,
+      `https://360apitrain.gordon.edu/api/memberships/activity/${activityCode}/followers/${sessionCode}`,
+      `https://360apitrain.gordon.edu/api/memberships/activity/${activityCode}/group-admin`,
+      `https://360apitrain.gordon.edu/api/memberships/activity/${activityCode}/members/${sessionCode}`,
+      `https://360apitrain.gordon.edu/api/requests/activity/${activityCode}`,
+      `https://360apitrain.gordon.edu/api/sessions/${sessionCode}`,
     );
   });
-  cacheDynamic(token, thirdDynamicCache);
+  cacheDynamic(token, mainDynamicCache);
 }
 
 /**
@@ -298,7 +282,7 @@ self.addEventListener('fetch', event => {
   // } else {
   //   // If request is from Remote, console.log the URL
   //   console.log('Fetching request from REMOTE LOCATION:', event.request.url);
-  // }
+  // }//
 
   event.respondWith(fetchThenCache(event.request));
 });
@@ -306,10 +290,22 @@ self.addEventListener('fetch', event => {
 self.addEventListener('message', event => {
   // If the message is to cache all static/dynamic files, all of those files are cached
   if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
-    console.log('Received message from client. Attempting to cache all files');
+    console.log('Received message. Attempting to cache all files');
+    // Saves token for caching later
+    token = event.data.token;
+    // Saves current session for caching later
+    currentSession = event.data.termCode;
+    // Caching All Files
     cacheStatic(); // Static Cache
-    cacheDynamic(event.data.token, firstDynamicCache); // First Dynamic Cache
-    cacheDynamic(event.data.token, secondDynamicCache, 'no-cors'); // Second Dynamic Cache
-    getUserInfoForLinks(event.data.token, event.data.termCode); // Third Dynamic Cache
+    getUserInfoForLinks(token, currentSession); // Main Dynamic Cache
+    cacheDynamic(token, imageCache, 'no-cors'); // Image Dynamic Cache
+  }
+  // If the message is to update the cache
+  else if (event.data === 'update-cache-files') {
+    console.log('Received message. Attempting to  update cache.');
+    // Caching All Files
+    cacheStatic(); // Static Cache
+    getUserInfoForLinks(token, currentSession); // Main Dynamic Cache
+    cacheDynamic(token, imageCache, 'no-cors'); // Image Dynamic Cache
   }
 });
