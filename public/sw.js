@@ -108,6 +108,62 @@ async function cacheStaticFiles() {
 }
 
 /**
+ * Fetches and caches all the dynamic files that are listed in the passed-in array
+ *
+ * For each URL in the passed-in array, a fetch is made. If the fetch is
+ * successful, the response is then cached
+ * Else, we console the specific URL that failed to fetch
+ *
+ * @param {String} token The token from Local Storage to authenticate each request made
+ * @param {Array} dynamicUserCacheLinks An array of links to be fetched and cached
+ * @param {String} mode [Set to 'cors' by default] Defines the type of request to be made
+ */
+async function cacheDynamicFiles(token, dynamicUserCacheLinks, mode = 'cors') {
+  // Creates the header for the request to have authenitification
+  let headers = new Headers({
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  });
+
+  // Caches each url in the list of dynamic files to cache
+  dynamicUserCacheLinks.forEach(async url => {
+    let request = new Request(url, {
+      method: 'GET',
+      mode,
+      headers,
+    });
+    await fetch(request)
+      .then(fetchResponse => {
+        if (fetchResponse) {
+          // Adds fetch response to cache
+          caches.open(cacheVersion).then(cache => {
+            cache.put(request, fetchResponse);
+          });
+        }
+      })
+      .catch(() => {
+        console.log(`\t- Failed to fetch and cache Dynamic File: ${url}`);
+      });
+  });
+}
+
+/**
+ * Cleans the cache to remove data that's no longer in use (removes outdated cache version)
+ *
+ * @return {Promise} A promise with the result of removing outdated cache
+ */
+async function cleanCache() {
+  await caches.keys().then(keys => {
+    keys.forEach(key => {
+      if (key !== cacheVersion && key.match('cache-')) {
+        return caches.delete(key).then(() => {
+          console.log('\t- Previous cache has been removed (outdated cache version)');
+        });
+      }
+    });
+  });
+}
+/**
  * Pre-caches main set of dynamic files that requies a Request with its property mode set to "cors"
  *
  * @param {String} token The token from Local Storage to authenticate each request made
@@ -208,65 +264,9 @@ async function dynamicLinksThenCache(token, termCode) {
   cacheDynamicFiles(token, dynamicCache);
 }
 
-/**
- * Fetches and caches all the dynamic files that are listed in the passed-in array
- *
- * For each URL in the passed-in array, a fetch is made. If the fetch is
- * successful, the response is then cached
- * Else, we console the specific URL that failed to fetch
- *
- * @param {String} token The token from Local Storage to authenticate each request made
- * @param {Array} dynamicUserCacheLinks An array of links to be fetched and cached
- * @param {String} mode [Set to 'cors' by default] Defines the type of request to be made
- */
-async function cacheDynamicFiles(token, dynamicUserCacheLinks, mode = 'cors') {
-  // Creates the header for the request to have authenitification
-  let headers = new Headers({
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  });
-
-  // Caches each url in the list of dynamic files to cache
-  dynamicUserCacheLinks.forEach(async url => {
-    let request = new Request(url, {
-      method: 'GET',
-      mode,
-      headers,
-    });
-    await fetch(request)
-      .then(fetchResponse => {
-        if (fetchResponse) {
-          // Adds fetch response to cache
-          caches.open(cacheVersion).then(cache => {
-            cache.put(request, fetchResponse);
-          });
-        }
-      })
-      .catch(() => {
-        console.log(`\t- Failed to fetch and cache Dynamic File: ${url}`);
-      });
-  });
-}
-
-/**
- * Cleans the cache to remove data that's no longer in use (removes outdated cache version)
- *
- * @return {Promise} A promise with the result of removing outdated cache
- */
-async function cleanCache() {
-  await caches.keys().then(keys => {
-    keys.forEach(key => {
-      if (key !== cacheVersion && key.match('cache-')) {
-        return caches.delete(key).then(() => {
-          console.log('\t- Previous cache has been removed (outdated cache version)');
-        });
-      }
-    });
-  });
-}
-
 /*********************************************** EVENT LISTENERS ***********************************************/
 self.addEventListener('install', event => {
+  self.skipWaiting();
   console.log('Installing Service Worker');
 });
 
