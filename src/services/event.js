@@ -40,7 +40,7 @@ const getAllEvents = () => http.get('events/25Live/All');
 
 const getAllCLAWEvents = () => http.get('/events/25Live/CLAW');
 
-const getAllGuestEvents = () => http.get('/events/25Live/Public');
+const getAllGuestEvents = () => http.get('events/25Live/Public');
 
 function formatevent(event) {
   let beginTime;

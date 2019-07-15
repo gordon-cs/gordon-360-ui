@@ -50,11 +50,6 @@ export default class Events extends Component {
     this.breakpointWidth = 540;
   }
   componentWillMount() {
-    //  if (isAuthenticated())
-    //  {
-    //    console.log('isAuthenticated returned true, loading Events')
-    //   this.loadEvents();
-    //  }
     this.loadEvents();
   }
   filterEvents(name) {
@@ -96,13 +91,17 @@ export default class Events extends Component {
   //This should be the only time we pull from the database
   async loadEvents() {
     this.setState({ loading: true });
-    const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
-    const allGuests = await gordonEvent.getAllGuestEventsFormatted(); //Retrieve all Guest events from database
-    const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
-    const guests = gordonEvent.getFutureEvents(allGuests); //Filter out past events initially
-    if (isAuthenticated)
+    if (isAuthenticated()) {
+      console.log('Loading authenticated events');
+      const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
+      const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
-    else this.setState({ allGuests, guests, loading: false, filteredEvents: guests });
+    } else {
+      console.log('Loading unauthenticated events');
+      const allEvents = await gordonEvent.getAllGuestEventsFormatted(); //Retrieve all Guest events from database
+      const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
+      this.setState({ allEvents, events, loading: false, filteredEvents: events });
+    }
   }
 
   //Has to rerender on screen resize in order for table to switch to the mobile view
