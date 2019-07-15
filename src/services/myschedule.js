@@ -117,7 +117,7 @@ async function makeMySchedule(myschedule) {
 
 /**
  * Add mySchedule of the profile
- * @param {<MySchedule>[]} mySchedule of the local user
+ * @param {<MySchedule>} mySchedule of the local user
  * @return {Promise<any>} Response body
  */
 
@@ -127,7 +127,7 @@ const addMySchedule = async mySchedule => {
 
 /**
  * Update mySchedule of the profile
- * @param {<MySchedule>[]} mySchedule of the local user
+ * @param {<MySchedule>} mySchedule of the local user
  * @return {Promise<any>} Response body
  */
 
@@ -137,7 +137,7 @@ const updateMySchedule = async mySchedule => {
 
 /**
  * Delete mySchedule of the profile
- * @param {<MySchedule>[]} mySchedule of the local user
+ * @param {<MySchedule>} mySchedule of the local user
  * @return {Promise<any>} Response body
  */
 
