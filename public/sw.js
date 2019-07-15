@@ -171,7 +171,6 @@ async function getUserInfoForLinks(token, termCode) {
     `https://360apitrain.gordon.edu/api/requests/student/${id}`,
     `/profile/${username}`,
   ];
-
   // Gets the involvements of the current user for the Involvement Profiles
   let involvements = await fetch(
     new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
