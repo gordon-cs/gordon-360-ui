@@ -37,7 +37,7 @@ const staticCache = [
 ];
 
 /**
- * Second set out of three to cache dynamic files that requies a
+ * A set if image links to cache. It requires a
    Request with its property mode set to "no-cors"
 */
 const imageCache = [
@@ -94,7 +94,7 @@ async function fetchThenCache(request) {
  *
  *  @return {Promise} A promise with the result of caching the static files
  */
-async function cacheStatic() {
+async function cacheStaticFiles() {
   return await caches.open(cacheVersion).then(cache => {
     cache
       .addAll(staticCache)
@@ -113,7 +113,10 @@ async function cacheStatic() {
  * @param {String} token The token from Local Storage to authenticate each request made
  * @param {String} termCode The current semester term
  */
-async function getUserInfoForLinks(token, termCode) {
+async function dynamicLinksThenCache(token, termCode) {
+  // Caches all image files
+  cacheDynamicFiles(token, imageCache, 'no-cors');
+
   // Creates the header for the request to have authenitification
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
@@ -148,7 +151,7 @@ async function getUserInfoForLinks(token, termCode) {
   let username = profile ? profile.AD_Username : null;
   let id = profile ? profile.ID : null;
   let sessionCode = currentSession ? currentSession.SessionCode : null;
-  const mainDynamicCache = [
+  const dynamicCache = [
     // Home Page Fetch URLs
     'https://360apitrain.gordon.edu/api/cms/slider',
     'https://360apitrain.gordon.edu/api/dining',
@@ -188,7 +191,7 @@ async function getUserInfoForLinks(token, termCode) {
   involvements.forEach(involvement => {
     let activityCode = involvement ? involvement.ActivityCode : null;
     let sessionCode = involvement ? involvement.SessionCode : null;
-    mainDynamicCache.push(
+    dynamicCache.push(
       `https://360apitrain.gordon.edu/api/activities/${activityCode}`,
       `https://360apitrain.gordon.edu/api/activities/${sessionCode}/${activityCode}/status`,
       `https://360apitrain.gordon.edu/api/emails/activity/${activityCode}`,
@@ -202,7 +205,7 @@ async function getUserInfoForLinks(token, termCode) {
       `https://360apitrain.gordon.edu/api/sessions/${sessionCode}`,
     );
   });
-  cacheDynamic(token, mainDynamicCache);
+  cacheDynamicFiles(token, dynamicCache);
 }
 
 /**
@@ -216,7 +219,7 @@ async function getUserInfoForLinks(token, termCode) {
  * @param {Array} dynamicUserCacheLinks An array of links to be fetched and cached
  * @param {String} mode [Set to 'cors' by default] Defines the type of request to be made
  */
-async function cacheDynamic(token, dynamicUserCacheLinks, mode = 'cors') {
+async function cacheDynamicFiles(token, dynamicUserCacheLinks, mode = 'cors') {
   // Creates the header for the request to have authenitification
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
@@ -295,16 +298,14 @@ self.addEventListener('message', event => {
     // Saves current session for caching later
     currentSession = event.data.termCode;
     // Caching All Files
-    cacheStatic(); // Static Cache
-    getUserInfoForLinks(token, currentSession); // Main Dynamic Cache
-    cacheDynamic(token, imageCache, 'no-cors'); // Image Dynamic Cache
+    cacheStaticFiles(); // Static Cache
+    dynamicLinksThenCache(token, currentSession); // Main Dynamic Cache
   }
   // If the message is to update the cache
   else if (event.data === 'update-cache-files') {
     console.log('Received message. Attempting to  update cache.');
     // Caching All Files
-    cacheStatic(); // Static Cache
-    getUserInfoForLinks(token, currentSession); // Main Dynamic Cache
-    cacheDynamic(token, imageCache, 'no-cors'); // Image Dynamic Cache
+    cacheStaticFiles(); // Static Cache
+    dynamicLinksThenCache(token, currentSession); // Main Dynamic Cache
   }
 });
