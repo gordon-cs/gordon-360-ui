@@ -17,20 +17,21 @@ import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
+import { projectName } from '../../project-name';
 
 const getRouteName = route => {
   if (route.name) {
     return () => (
       <span>
-        <DocumentTitle title={`${route.name} | Gordon 360`} />
+        <DocumentTitle title={`${route.name} | ${projectName}`} />
         {route.name}
       </span>
     );
   }
   return () => (
     <span>
-      <DocumentTitle title="Gordon 360" />
-      Gordon 360
+      <DocumentTitle title={`${projectName}`} />
+      {projectName}
     </span>
   );
 };
