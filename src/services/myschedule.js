@@ -89,8 +89,6 @@ async function makeMySchedule(myschedule) {
   let today = moment();
   let eventArray = [];
   for (let i = 0; i < events.length; i++) {
-    events[i].CRS_CDE = events[i].CRS_CDE.trim();
-    events[i].CRS_TITLE = events[i].CRS_TITLE.trim();
     let beginTime = moment(events[i].BEGIN_TIME, 'HH:mm:ss');
     beginTime.set('y', today.year());
     beginTime.set('M', today.month());
@@ -105,9 +103,10 @@ async function makeMySchedule(myschedule) {
       const customEvent = {
         id: events[i].EVENT_ID,
         title: eventTitle,
-        start: beginTime.toDate(),
-        end: endTime.toDate(),
+        start: new Date(), // beginTime.toDate(),
+        end: new Date(), // endTime.toDate(),
         resourceId: dayArray[j],
+        allDay: true,
       };
       eventArray.push(customEvent);
     }
@@ -122,7 +121,7 @@ async function makeMySchedule(myschedule) {
  */
 
 const addMySchedule = async mySchedule => {
-  return http.post(`/myschedule/add/`, mySchedule);
+  return http.post(`/myschedule/`, mySchedule);
 };
 
 /**
@@ -132,7 +131,7 @@ const addMySchedule = async mySchedule => {
  */
 
 const updateMySchedule = async mySchedule => {
-  return http.post(`/myschedule/update/`, mySchedule);
+  return http.post(`/myschedule/`, mySchedule);
 };
 
 /**
@@ -142,7 +141,7 @@ const updateMySchedule = async mySchedule => {
  */
 
 const deleteMySchedule = async eventID => {
-  return http.del(`/schedule/delete/${eventID}`);
+  return http.del(`/schedule/${eventID}`);
 };
 
 export default {
