@@ -55,10 +55,10 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-row-segment .rbc-event-content {
-  font-size: 90%;
+  font-size: 80%;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: initial;
 }
 
 .rbc-day-slot .rbc-event-content {
@@ -354,7 +354,7 @@ button.rbc-input::-moz-focus-inner {
     flex: 1 0 0%;
   }
   .rbc-time-view-resources .rbc-day-bg {
-    width: 140px;
+    width: 100%;
     flex: 1 1 0;
     flex-basis: 0 px;
   }

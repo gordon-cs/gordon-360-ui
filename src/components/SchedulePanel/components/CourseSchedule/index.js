@@ -6,6 +6,7 @@ import MomentLocalizer from 'react-big-calendar/lib/localizers/moment';
 
 import GordonLoader from '../../../../components/Loader';
 import schedule from './../../../../services/schedule';
+import myschedule from './../../../../services/myschedule';
 
 import './courseschedule.css';
 
@@ -22,7 +23,7 @@ export default class CourseSchedule extends Component {
       selectedEvent: null,
       isDoubleClick: false,
     };
-    this.courseInfo = null;
+    this.eventInfo = null;
   }
 
   handleSelect = ({ start, end }) => {
@@ -48,9 +49,13 @@ export default class CourseSchedule extends Component {
     const schedulePromise = schedule.getSchedule(searchedUser.AD_Username);
     const courseEventsPromise = schedule.makeScheduleCourses(schedulePromise);
     const courseInfo = await courseEventsPromise;
-    this.courseInfo = courseInfo;
+    const myschedulePromise = myschedule.getMySchedule(searchedUser.AD_Username);
+    const myEventsPromise = myschedule.makeMySchedule(myschedulePromise);
+    const myscheduleInfo = await myEventsPromise;
+    this.eventInfo = courseInfo.concat(myscheduleInfo);
 
     this.setState({ loading: false });
+    console.log('Event Info : ', this.eventInfo);
   };
 
   render() {
@@ -84,7 +89,7 @@ export default class CourseSchedule extends Component {
       let Resource = ({ localizer = MomentLocalizer(Moment) }) => (
         <Calendar
           selectable
-          events={this.courseInfo}
+          events={this.eventInfo}
           localizer={localizer}
           min={dayStart}
           max={dayEnd}
