@@ -14,11 +14,31 @@ export default class CourseSchedule extends Component {
     super(props);
 
     this.state = {
+      myProf: false, //if my profile page
+      isSchedulePrivate: Boolean,
       loading: true,
+      officeHoursOpen: false,
+      disabled: true,
+      selectedEvent: null,
+      isDoubleClick: false,
     };
-
     this.courseInfo = null;
   }
+
+  handleSelect = ({ start, end }) => {
+    const title = window.prompt('New Event name');
+    if (title)
+      this.setState({
+        events: [
+          ...this.state.events,
+          {
+            start,
+            end,
+            title,
+          },
+        ],
+      });
+  };
 
   componentWillMount() {
     this.loadData(this.props.profile);
@@ -60,8 +80,10 @@ export default class CourseSchedule extends Component {
     if (this.state.loading) {
       content = <GordonLoader />;
     } else {
+      // Calendar API can be controlled here with these properties
       let Resource = ({ localizer = MomentLocalizer(Moment) }) => (
         <Calendar
+          selectable
           events={this.courseInfo}
           localizer={localizer}
           min={dayStart}
@@ -76,6 +98,7 @@ export default class CourseSchedule extends Component {
           onDoubleClickEvent={event => {
             this.props.handleDoubleClick(event);
           }}
+          onSelectSlot={this.handleOfficeHoursOpen}
           defaultDate={Moment(new Date())}
           resources={resourceMap}
           resourceIdAccessor="resourceId"

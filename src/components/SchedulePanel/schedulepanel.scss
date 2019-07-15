@@ -1,7 +1,7 @@
 .schedule_content {
   display: grid;
   grid-template-rows: auto auto auto;
-  grid-template-columns: 19% 20% 20% 20% 15% 15% 5%;
+  grid-template-columns: 15% 20% 20% 5% 20% 15% 15%;
   grid-row-gap: 5px;
 }
 
@@ -17,6 +17,12 @@
   justify-self: right;
 }
 
+.last-updated {
+  grid-row: 1;
+  grid-column: 7;
+  justify-self: right;
+}
+
 .description {
   grid-row: 2;
   grid-column: 2;
@@ -25,19 +31,19 @@
 
 .edit_description {
   grid-row: 2;
-  grid-column: 4;
+  grid-column: 5;
   justify-self: right;
 }
 
 .add_event {
   grid-row: 2;
-  grid-column: 5;
+  grid-column: 6;
   justify-self: right;
 }
 
 .remove_event {
   grid-row: 2;
-  grid-column: 6;
+  grid-column: 7;
   justify-self: right;
 }
 
