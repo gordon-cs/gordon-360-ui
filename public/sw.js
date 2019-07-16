@@ -36,25 +36,6 @@ const staticCache = [
   '/myprofile',
 ];
 
-/**
- * A set if image links to cache. It requires a
-   Request with its property mode set to "no-cors"
-*/
-const imageCache = [
-  'https://www.gordon.edu/favicon.ico',
-  'https://my.gordon.edu/ics/favicon.ico',
-  'https://go.gordon.edu/favicon.ico',
-  'https://blackboard.gordon.edu/favicon.ico',
-  'https://360api.gordon.edu/browseable/uploads/Default/activityImage.png',
-  // 'https://360apitrain.gordon.edu/browseable/uploads/ACD/canvasImage.jpeg',
-  // 'https://360apitrain.gordon.edu/browseable/uploads/ASF/canvasImage.jpeg',
-  // 'https://360apitrain.gordon.edu/browseable/uploads/BADM/canvasImage.jpeg',
-  // 'https://360apitrain.gordon.edu/browseable/uploads/BARN/canvasImage.jpeg',
-  // 'https://360apitrain.gordon.edu/browseable/uploads/CLAR/canvasImage.jpeg',
-  // 'https://360apitrain.gordon.edu/browseable/uploads/REC/canvasImage.jpeg',
-  // 'https://360apitrain.gordon.edu/browseable/uploads/SCOTTIE/canvasImage.png',
-];
-
 /*********************************************** CACHING FUNCTIONS ***********************************************/
 /**
  * Cleans the cache to remove data that's no longer in use (removes outdated cache version)
@@ -128,40 +109,65 @@ async function cacheStaticFiles() {
  * Fetches and caches all the dynamic files that are listed in the passed-in array
  *
  * For each URL in the passed-in array, a fetch is made. If the fetch is
- * successful, the response is then cached
- * Else, we console the specific URL that failed to fetch
+ * successful, the response is then cached.
+ * Else, we console log the specific URL that failed to fetch
  *
  * @param {String} token The token from Local Storage to authenticate each request made
- * @param {Array} dynamicUserCacheLinks An array of links to be fetched and cached
+ * @param {Array} dynamicLinks An array of links to be fetched and cached
  * @param {String} mode [Set to 'cors' by default] Defines the type of request to be made
+ *
+ * @return {Promise<Boolean>} A boolean that determines if all links given cached successfully
  */
-async function cacheDynamicFiles(token, dynamicUserCacheLinks, mode = 'cors') {
+async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
   // Creates the header for the request to have authenitification
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   });
+  // Variable that determines if all links successfully cached
+  let status = true;
 
-  // Caches each url in the list of dynamic files to cache
-  dynamicUserCacheLinks.forEach(async url => {
-    let request = new Request(url, {
+  // Attempts to fetch all links
+  for (let url = 0; url < dynamicLinks.length; url++) {
+    let request = new Request(dynamicLinks[url], {
       method: 'GET',
       mode,
       headers,
     });
-    await fetch(request)
+    let fetchSuccess = await fetch(request)
       .then(fetchResponse => {
         if (fetchResponse) {
           // Adds fetch response to cache
           caches.open(cacheVersion).then(cache => {
-            cache.put(request, fetchResponse);
+            cache.put(request, fetchResponse.clone());
           });
+          return fetchResponse;
         }
       })
-      .catch(() => {
-        console.log(`\t- Failed to fetch and cache Dynamic File: ${url}`);
+      .catch(error => {
+        return error.message;
       });
-  }); //
+
+    // If the fetch resulted in error
+    if (fetchSuccess === 'Failed to fetch') {
+      status = false;
+      console.log(`\t- Failed to fetch and cache Dynamic File: ${dynamicLinks[url]}`);
+    }
+    // If the fetch resulted in a bad response
+    else if (fetchSuccess.statusText !== 'OK') {
+      status = false;
+      console.log(
+        `\t- Bad Response: Status - ${fetchSuccess.status} \n\t\tURL: ${dynamicLinks[url]}`,
+      );
+    }
+  }
+
+  // The promise to return with a boolean value determining if all links cached successfully
+  let operationSuccess = await new Promise((resolve, reject) => {
+    status === true ? resolve(true) : reject(false);
+  });
+
+  return operationSuccess;
 }
 
 /**
@@ -171,13 +177,12 @@ async function cacheDynamicFiles(token, dynamicUserCacheLinks, mode = 'cors') {
  * @param {String} termCode The current semester term
  */
 async function dynamicLinksThenCache(token, termCode) {
-  // Caches all image files
-  cacheDynamicFiles(token, imageCache, 'no-cors');
   // Creates the header for the request to have authenitification
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   });
+
   // Gets the user's profile object to access their firstname.lastname and ID#
   let profile = await fetch(
     new Request('https://360apitrain.gordon.edu/api/profiles', { method: 'GET', headers }),
@@ -188,6 +193,7 @@ async function dynamicLinksThenCache(token, termCode) {
     .catch(error => {
       return error.Message;
     });
+
   // Gets the current session object to access the current session code
   let currentSession = await fetch(
     new Request('https://360apitrain.gordon.edu/api/sessions/current', {
@@ -205,6 +211,7 @@ async function dynamicLinksThenCache(token, termCode) {
   let username = profile ? profile.AD_Username : null;
   let id = profile ? profile.ID : null;
   let sessionCode = currentSession ? currentSession.SessionCode : null;
+
   const dynamicCache = [
     // Home Page Fetch URLs
     'https://360apitrain.gordon.edu/api/cms/slider',
@@ -228,6 +235,7 @@ async function dynamicLinksThenCache(token, termCode) {
     `https://360apitrain.gordon.edu/api/requests/student/${id}`,
     `/profile/${username}`,
   ];
+
   // Gets the involvements of the current user for the Involvement Profiles
   let involvements = await fetch(
     new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
@@ -242,6 +250,7 @@ async function dynamicLinksThenCache(token, termCode) {
       involvement;
       return error.message;
     });
+
   involvements.forEach(involvement => {
     let activityCode = involvement ? involvement.ActivityCode : null;
     let sessionCode = involvement ? involvement.SessionCode : null;
@@ -259,7 +268,9 @@ async function dynamicLinksThenCache(token, termCode) {
       `https://360apitrain.gordon.edu/api/sessions/${sessionCode}`,
     );
   });
-  cacheDynamicFiles(token, dynamicCache);
+
+  fetchResult = await cacheDynamicFiles(token, dynamicCache);
+  if (fetchResult) console.log('\t- Cached Dynamic Files Successfully');
 }
 
 /*********************************************** EVENT LISTENERS ***********************************************/
