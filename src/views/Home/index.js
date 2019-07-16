@@ -10,6 +10,7 @@ import DiningBalance from './components/DiningBalance';
 import { isAuthenticated, signOut } from '../../services/auth';
 import user from '../../services/user';
 import Login from '../Login';
+import './home.css';
 
 export default class Home extends Component {
   constructor(props) {
@@ -22,38 +23,30 @@ export default class Home extends Component {
 
   componentWillMount() {
     if (isAuthenticated()) {
-      console.log('isAuthenticated returned true, getting PersonType');
       this.getPersonType();
     }
   }
 
   async getPersonType() {
-    console.log('Called getPersonType');
     const profile = await user.getProfileInfo();
     const personType = String(profile.PersonType);
-    console.log('Setting state of personType');
     this.setState({ personType });
   }
 
   logIn() {
-    console.log('Home LogIn was called.');
     try {
       this.props.onLogIn();
-      console.log('Home onLogIn succeeded.');
     } catch (error) {
-      console.log('Home onLogIn failed with error: ' + error);
+      console.log('Home logIn failed with error: ' + error);
     }
   }
 
   render() {
     let content;
-    console.log('Rendering Home. About to check isAuthenticated');
     if (isAuthenticated()) {
-      console.log('isAuthenticated returned true, checking state of PersonType');
       const personType = this.state.personType;
       let doughnut;
 
-      console.log('Making doughnut');
       //Only show CL&W credits if user is a student
       if (String(personType).includes('stu')) {
         doughnut = (
@@ -82,11 +75,14 @@ export default class Home extends Component {
         </Grid>
       );
     } else {
-      console.log('isAuthenticated failed at Home, switching to Login');
       signOut();
-      content = <Login onLogIn={this.logIn} />;
+      content = (
+        <div className="gordon-login">
+          <Login onLogIn={this.logIn} />
+        </div>
+      );
     }
 
-    return <div>{content}</div>;
+    return content;
   }
 }

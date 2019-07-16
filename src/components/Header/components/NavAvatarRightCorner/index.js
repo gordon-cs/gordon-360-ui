@@ -47,7 +47,9 @@ export default class GordonNavAvatarRightCorner extends Component {
     signOut();
     this.props.onSignOut();
   }
-
+  onSignIn() {
+    this.onClose();
+  }
   handleLinkClickOpen = () => {
     this.setState({
       linkopen: true,
@@ -58,6 +60,10 @@ export default class GordonNavAvatarRightCorner extends Component {
     this.setState({ linkopen: false });
   };
 
+  async componentWillReceiveProps() {
+    this.loadAvatar();
+  }
+
   async componentWillMount() {
     this.loadAvatar();
   }
@@ -67,7 +73,9 @@ export default class GordonNavAvatarRightCorner extends Component {
   }
 
   async loadAvatar() {
-    if (isAuthenticated()) {
+    console.log('Running loadAvatar in NavAvatarRightCorner');
+    if (await isAuthenticated()) {
+      console.log('loadAvatar found token');
       const { name, user_name: username } = user.getLocalInfo();
       this.setState({ name, username });
       const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
@@ -77,14 +85,8 @@ export default class GordonNavAvatarRightCorner extends Component {
       const image = preferredImage || defaultImage;
       this.setState({ email, image });
     } else {
-      const name = 'Guest';
-      const username = 'Guest';
-      this.setState({ name, username });
-      const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-        await user.getImage(),
-      ]);
-      const image = defaultImage;
-      this.setState({ image });
+      console.log("loadAvatar didn't find token.");
+      this.setState({ name: 'Guest', username: 'Guest' });
     }
   }
 
@@ -111,17 +113,26 @@ export default class GordonNavAvatarRightCorner extends Component {
   }
 
   render() {
-    let content;
-    if (isAuthenticated()) {
-      const open = Boolean(this.state.anchorEl);
+    const open = Boolean(this.state.anchorEl);
 
-      // const { classes } = this.props;
+    let avatar;
+    let signInOut;
+    let myProfileLink;
+    let admin;
+    if (isAuthenticated()) {
+      // Set authenticated values for dropdown menu
 
       let username = this.state.username;
-      let myProfileLink = '/myprofile/' + username;
-      let avatar = (
-        <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>
+      let myProfile = '/myprofile/' + username;
+      myProfileLink = (
+        <Link to={myProfile}>
+          <MenuItem onClick={this.onClose} divider="true">
+            My Profile
+          </MenuItem>
+        </Link>
       );
+
+      avatar = <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>;
       if (this.state.image) {
         avatar = (
           <Avatar
@@ -131,7 +142,6 @@ export default class GordonNavAvatarRightCorner extends Component {
         );
       }
 
-      let admin;
       if (user.getLocalInfo().college_role === 'god') {
         admin = (
           <Link to="/admin">
@@ -141,155 +151,91 @@ export default class GordonNavAvatarRightCorner extends Component {
           </Link>
         );
       }
-      content = (
-        <section className="right-side-container">
-          <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
-            <IconButton
-              className="gordon-nav-avatar-right-corner"
-              classes={{
-                root: 'gordon-nav-avatar-right-corner nav-avatar-button',
-                label: 'nav-avatar-label',
-              }}
-              aria-label="More"
-              aria-owns={open ? 'global-menu' : null}
-              aria-haspopup="true"
-              onClick={this.onClick}
-            >
-              {avatar}
-            </IconButton>
-          </Tooltip>
-          <Menu
-            id="nav-avatar-right-corner"
-            anchorEl={this.state.anchorEl}
-            open={open}
-            onClose={this.onClose}
-            disableRestoreFocus // Prevent tooltip from sticking
-          >
-            {/*This first MenuItem is hidden just to hide the React bug that leaves the first option perpeutally highlighted.*/}
-            <MenuItem onClick={this.onClose} style={{ display: 'none' }}>
-              My Profile
-            </MenuItem>
-            <Link to={myProfileLink}>
-              <MenuItem onClick={this.onClose} divider="true">
-                My Profile
-              </MenuItem>
-            </Link>
-            <MenuItem
-              onClick={() => {
-                this.onClose();
-                this.handleLinkClickOpen();
-              }}
-              divider="true"
-            >
-              Links
-            </MenuItem>
-            <Link to="/help">
-              <MenuItem onClick={this.onClose} divider="true">
-                Help
-              </MenuItem>
-            </Link>
-            <Link to="/about">
-              <MenuItem onClick={this.onClose} divider="true">
-                About
-              </MenuItem>
-            </Link>
-            <Link to="/feedback">
-              <MenuItem onClick={this.onClose} divider="true">
-                Feedback
-              </MenuItem>
-              {admin}
-            </Link>
-            <MenuItem onClick={this.onSignOut} divider="true">
-              Sign Out
-            </MenuItem>
-          </Menu>
-          <QuickLinksDialog
-            handleLinkClickOpen={this.handleLinkClickOpen}
-            handleLinkClose={this.handleLinkClose}
-            linkopen={this.state.linkopen}
-          />
-        </section>
+
+      signInOut = (
+        <Link to="/">
+          <MenuItem onClick={this.onSignOut.bind(this)} divider="true">
+            Sign Out
+          </MenuItem>
+        </Link>
       );
     } else {
-      const open = Boolean(this.state.anchorEl);
-      let username = this.state.username;
-      let myProfileLink = '/myprofile/' + username;
-      let avatar = <Avatar className="nav-avatar nav-avatar-placeholder">Guest</Avatar>;
-      if (this.state.image) {
-        avatar = (
-          <Avatar
-            className="nav-avatar nav-avatar-image"
-            src={`data:image/jpg;base64,${this.state.image}`}
-          />
-        );
-      }
-      content = (
-        <section className="right-side-container">
-          <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
-            <IconButton
-              className="gordon-nav-avatar-right-corner"
-              classes={{
-                root: 'gordon-nav-avatar-right-corner nav-avatar-button',
-                label: 'nav-avatar-label',
-              }}
-              aria-label="More"
-              aria-owns={open ? 'global-menu' : null}
-              aria-haspopup="true"
-              onClick={this.onClick}
-            >
-              {avatar}
-            </IconButton>
-          </Tooltip>
-          <Menu
-            id="nav-avatar-right-corner"
-            anchorEl={this.state.anchorEl}
-            open={open}
-            onClose={this.onClose}
-            disableRestoreFocus // Prevent tooltip from sticking
-          >
-            {/*This first MenuItem is hidden just to hide the React bug that leaves the first option perpeutally highlighted.*/}
-            <MenuItem onClick={this.onClose} style={{ display: 'none' }}>
-              My Profile
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                this.onClose();
-                this.handleLinkClickOpen();
-              }}
-              divider="true"
-            >
-              Links
-            </MenuItem>
-            <Link to="/help">
-              <MenuItem onClick={this.onClose} divider="true">
-                Help
-              </MenuItem>
-            </Link>
-            <Link to="/about">
-              <MenuItem onClick={this.onClose} divider="true">
-                About
-              </MenuItem>
-            </Link>
-            <Link to="/feedback">
-              <MenuItem onClick={this.onClose} divider="true">
-                Feedback
-              </MenuItem>
-            </Link>
-            <Link to="/">
-              <MenuItem onClick={this.onClose} divider="true">
-                Sign In
-              </MenuItem>
-            </Link>
-          </Menu>
-          <QuickLinksDialog
-            handleLinkClickOpen={this.handleLinkClickOpen}
-            handleLinkClose={this.handleLinkClose}
-            linkopen={this.state.linkopen}
-          />
-        </section>
+      // Set unauthenticated values for dropdown menu
+
+      avatar = <Avatar className="nav-avatar nav-avatar-placeholder">Guest</Avatar>;
+
+      signInOut = (
+        <Link to="/">
+          <MenuItem onClick={this.onClose.bind(this)} divider="true">
+            Sign In
+          </MenuItem>
+        </Link>
       );
     }
-    return <div>{content}</div>;
+
+    return (
+      <section className="right-side-container">
+        <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
+          <IconButton
+            className="gordon-nav-avatar-right-corner"
+            classes={{
+              root: 'gordon-nav-avatar-right-corner nav-avatar-button',
+              label: 'nav-avatar-label',
+            }}
+            aria-label="More"
+            aria-owns={open ? 'global-menu' : null}
+            aria-haspopup="true"
+            onClick={this.onClick}
+          >
+            {avatar}
+          </IconButton>
+        </Tooltip>
+        <Menu
+          id="nav-avatar-right-corner"
+          anchorEl={this.state.anchorEl}
+          open={open}
+          onClose={this.onClose}
+          disableRestoreFocus // Prevent tooltip from sticking
+        >
+          {/*This first MenuItem is hidden just to hide the React bug that leaves the first option perpeutally highlighted.*/}
+          <MenuItem onClick={this.onClose} style={{ display: 'none' }}>
+            My Profile
+          </MenuItem>
+          {myProfileLink}
+          <MenuItem
+            onClick={() => {
+              this.onClose();
+              this.handleLinkClickOpen();
+            }}
+            divider="true"
+          >
+            Links
+          </MenuItem>
+          <Link to="/help">
+            <MenuItem onClick={this.onClose} divider="true">
+              Help
+            </MenuItem>
+          </Link>
+          <Link to="/about">
+            <MenuItem onClick={this.onClose} divider="true">
+              About
+            </MenuItem>
+          </Link>
+          <Link to="/feedback">
+            <MenuItem onClick={this.onClose} divider="true">
+              Feedback
+            </MenuItem>
+            {admin}
+          </Link>
+          {signInOut}
+        </Menu>
+        <QuickLinksDialog
+          handleLinkClickOpen={this.handleLinkClickOpen}
+          handleLinkClose={this.handleLinkClose}
+          linkopen={this.state.linkopen}
+        />
+      </section>
+    );
   }
 }
 

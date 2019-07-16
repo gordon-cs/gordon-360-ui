@@ -55,7 +55,6 @@ export default class Login extends Component {
   }
 
   async logIn(event) {
-    console.log('Login/index.js: entering logIn() method');
     event.preventDefault();
     this.setState({ loading: true, error: null });
 
@@ -69,18 +68,12 @@ export default class Login extends Component {
 
     try {
       await authenticate(this.state.username, this.state.password);
-      console.log('Login/index.js: Successfully authenticated');
-      console.log('Running onLogIn');
       this.props.onLogIn();
-      console.log('Login/index.js: onLogIn() returned');
     } catch (err) {
       clearTimeout(id); // Login Hang
       this.setState({ showMessageSnackbar: false });
       this.setState({ error: err.message, loading: false });
-      console.log('Login/index.js: Catch block was executed');
     }
-
-    console.log('Login/index.js: Passed try block; end of logIn() method');
   }
 
   //Temp Login Hang Fix - remove when reason for error addressed
@@ -93,7 +86,7 @@ export default class Login extends Component {
 
   render() {
     return (
-      <Grid className="gordon-login" container alignItems="center" justify="center" spacing={0}>
+      <Grid container alignItems="center" justify="center" spacing={0}>
         <DocumentTitle title="Login | Gordon 360" />
         <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
           <img src={GordonLogoVerticalWhite} alt="Gordon 360" />

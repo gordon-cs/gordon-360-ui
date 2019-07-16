@@ -8,7 +8,7 @@ import analytics from './services/analytics';
 //import { isAuthenticated, signOut } from './services/auth';
 //import GordonError from './components/Error';
 import GordonHeader from './components/Header';
-//import GordonNav from './components/Nav';
+import GordonNav from './components/Nav';
 //import { AuthError } from './services/error';
 //import Login from './views/Login';
 import theme from './theme';
@@ -53,20 +53,20 @@ export default class App extends Component {
 
   onAuthChange() {
     // Force this component to re-render, login view -> main app view
-    console.log('app.js: about to call forceUpdate() in onAuthChange()');
+    console.log('app.js: about to forceUpdate in onAuthChange()');
     this.forceUpdate();
-    console.log('app.js: called forceUpdate() in onAuthChange()');
+    //window.location.reload();
   }
 
   render() {
     let content = (
       <section className="app-wrapper">
         <GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
-        {/*<GordonNav
+        <GordonNav
           onDrawerToggle={this.onDrawerToggle}
           drawerOpen={this.state.drawerOpen}
           onSignOut={this.onAuthChange}
-        />*/}
+        />
         <main className="app-main">
           <Switch>
             {routes.map(route => (

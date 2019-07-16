@@ -46,7 +46,6 @@ export default class Transcript extends Component {
       this.setState({ loading: false, activities, currentSession, profile });
     } catch (error) {
       this.setState({ error });
-      console.log('error');
     }
   }
 
@@ -84,7 +83,13 @@ export default class Transcript extends Component {
     };
 
     return (
-      <Grid container className="co-curricular-transcript" alignItems="center" justify="center" spacing="16">
+      <Grid
+        container
+        className="co-curricular-transcript"
+        alignItems="center"
+        justify="center"
+        spacing="16"
+      >
         <Grid xs={12} sm={12} md={8} lg={6}>
           <Card elevation="10">
             <CardContent>

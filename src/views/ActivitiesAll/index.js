@@ -16,7 +16,6 @@ import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import Card from '@material-ui/core/Card';
 import { isAuthenticated, signOut } from '../../services/auth';
-import Login from '../Login';
 
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
@@ -268,7 +267,6 @@ export default class GordonActivitiesAll extends Component {
         </section>
       );
     } else {
-      console.log('isAuthenticated failed');
       signOut();
 
       if (this.state.loading === true) {

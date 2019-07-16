@@ -6,7 +6,7 @@
 
 import { createError } from './error';
 import storage from './storage';
-import { isAuthenticated, signOut } from './auth';
+import { isAuthenticated } from './auth';
 
 const base = process.env.REACT_APP_API_URL;
 

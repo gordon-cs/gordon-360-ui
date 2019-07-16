@@ -23,7 +23,7 @@ import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
-import { isAuthenticated, signOut } from '../../services/auth';
+import { isAuthenticated } from '../../services/auth';
 
 const getRouteName = route => {
   if (route.name) {
@@ -156,7 +156,7 @@ export default class GordonHeader extends Component {
               </Tabs>
             </div>
             <GordonPeopleSearch />
-            {<GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />}
+            <GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />
           </Toolbar>
         </AppBar>
         <Dialog

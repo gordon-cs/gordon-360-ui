@@ -624,10 +624,6 @@ class ActivityProfile extends Component {
         content = <GordonLoader />;
       } else {
         let editActivity;
-        const redButton = {
-          background: gordonColors.secondary.red,
-          color: 'white',
-        };
 
         const {
           ActivityDescription: activityDescription,
@@ -635,7 +631,6 @@ class ActivityProfile extends Component {
           ActivityURL: activityURL,
           ActivityImagePath: activityImagePath,
         } = this.state.activityInfo;
-        const { preview } = this.state;
 
         const { SessionDescription: sessionDescription } = this.state.sessionInfo;
         let description;

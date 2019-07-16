@@ -7,12 +7,18 @@ import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import user from '../../../../services/user';
-import { signOut } from '../../../../services/auth';
+import { isAuthenticated, signOut } from '../../../../services/auth';
 
 import './nav-links.css';
 import QuickLinksDialog from '../../../QuickLinksDialog';
@@ -25,6 +31,7 @@ export default class GordonNavLinks extends Component {
     this.handleLinkClose = this.handleLinkClose.bind(this);
     this.state = {
       linkopen: false,
+      loginDialogOpen: false,
     };
   }
 
@@ -43,17 +50,69 @@ export default class GordonNavLinks extends Component {
     this.setState({ linkopen: false });
   };
 
+  unAuthenticatedSearch = e => {
+    e.preventDefault();
+    this.setState({ loginDialogOpen: true });
+  };
+
+  handleClose() {
+    this.setState({ loginDialogOpen: false });
+  }
+
   render() {
     let admin;
-    if (user.getLocalInfo().college_role === 'god') {
-      admin = (
-        <NavLink exact to="/admin" onClick={this.props.onLinkClick}>
+    let people;
+    let signInOut;
+    if (isAuthenticated()) {
+      if (user.getLocalInfo().college_role === 'god') {
+        admin = (
+          <NavLink exact to="/admin" onClick={this.props.onLinkClick}>
+            <ListItem button>
+              <ListItemText primary="Admin" />
+            </ListItem>
+          </NavLink>
+        );
+      }
+
+      people = (
+        <NavLink exact to="/people" onClick={this.props.onLinkClick}>
           <ListItem button>
-            <ListItemText primary="Admin" />
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="People" />
+          </ListItem>
+        </NavLink>
+      );
+
+      signInOut = (
+        <NavLink exact to="/" onClick={this.onSignOut}>
+          <ListItem button>
+            <ListItemText primary="Sign Out" />
+          </ListItem>
+        </NavLink>
+      );
+    } else {
+      people = (
+        <NavLink to="#" onClick={this.unAuthenticatedSearch}>
+          <ListItem button>
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary="People" />
+          </ListItem>
+        </NavLink>
+      );
+
+      signInOut = (
+        <NavLink exact to="/" onClick={this.props.onSignOut}>
+          <ListItem button>
+            <ListItemText primary="Sign In" />
           </ListItem>
         </NavLink>
       );
     }
+
     return (
       <div>
         <List className="gordon-nav-links">
@@ -81,14 +140,7 @@ export default class GordonNavLinks extends Component {
               <ListItemText primary="Events" />
             </ListItem>
           </NavLink>
-          <NavLink exact to="/people" onClick={this.props.onLinkClick}>
-            <ListItem button>
-              <ListItemIcon>
-                <PeopleIcon />
-              </ListItemIcon>
-              <ListItemText primary="People" />
-            </ListItem>
-          </NavLink>
+          {people}
         </List>
         <Divider />
 
@@ -119,10 +171,26 @@ export default class GordonNavLinks extends Component {
               </ListItem>
             </NavLink>
             {admin}
-            <ListItem button onClick={this.onSignOut}>
-              <ListItemText primary="Sign Out" />
-            </ListItem>
+            {signInOut}
           </List>
+          <Dialog
+            open={this.state.loginDialogOpen}
+            onClose={clicked => this.handleClose()}
+            aria-labelledby="login-dialog-title"
+            aria-describedby="login-dialog-description"
+          >
+            <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="login-dialog-description">
+                You are not logged in. Please log in to use People Search.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
+                Okay
+              </Button>
+            </DialogActions>
+          </Dialog>
           <QuickLinksDialog
             handleLinkClickOpen={this.handleLinkClickOpen}
             handleLinkClose={this.handleLinkClose}

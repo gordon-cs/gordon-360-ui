@@ -12,7 +12,6 @@ import session from './session';
 import storage from './storage';
 import { socialMediaInfo } from '../socialMedia';
 import gordonEvent from './event';
-import { isAuthenticated, signOut } from './auth';
 
 /**
  * @global
@@ -324,7 +323,6 @@ const postIDImage = dataURI => {
   let type = blob.type.replace('image/', '');
   let headerOptions = {};
   imageData.append('canvasImage', blob, 'canvasImage.' + type);
-  console.log('blob size: ' + blob.size);
   return http.post('profiles/IDimage', imageData, headerOptions);
 };
 

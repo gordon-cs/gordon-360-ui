@@ -276,7 +276,6 @@ class PeopleSearch extends Component {
         department,
         building,
       );
-      console.log('Results:', peopleSearchResults);
       if (peopleSearchResults.length === 0) {
         this.setState({
           peopleSearchResults: (

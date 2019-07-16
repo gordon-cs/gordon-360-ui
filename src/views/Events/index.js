@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
-import { isAuthenticated, signOut } from '../../services/auth';
+import { isAuthenticated } from '../../services/auth';
 
 import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
@@ -92,12 +92,10 @@ export default class Events extends Component {
   async loadEvents() {
     this.setState({ loading: true });
     if (isAuthenticated()) {
-      console.log('Loading authenticated events');
       const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
     } else {
-      console.log('Loading unauthenticated events');
       const allEvents = await gordonEvent.getAllGuestEventsFormatted(); //Retrieve all Guest events from database
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
