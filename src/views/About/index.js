@@ -4,9 +4,30 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import { gordonColors } from '../../theme';
+import Version from '../../services/version';
+import { projectName } from '../../project-name';
 import './about.css';
 
 export default class About extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      version: null,
+    };
+  }
+
+  componentWillMount() {
+    this.loadData();
+  }
+
+  async loadData() {
+    const versionPromise = Version.getVersion();
+    const version = await versionPromise;
+
+    this.setState({ loading: false, version });
+  }
+
   render() {
     const style = {
       color: gordonColors.primary.blue,
@@ -16,6 +37,7 @@ export default class About extends Component {
       color: '#FFF',
       padding: '10px',
     };
+
     return (
       <section>
         <Grid container justify="center" spacing="16">
@@ -31,7 +53,8 @@ export default class About extends Component {
               <Card>
                 <div style={headerStyle}>
                   <Typography variant="body2" style={headerStyle}>
-                    GORDON&apos;S 360 MOBILE INVOLVEMENTS PLATFORM: THE SCOTTIE FAIRE IN YOUR HAND
+                    {projectName}: THE SCOTTIE FAIRE IN YOUR HAND
+                    {/*GORDON&apos;S 360 MOBILE INVOLVEMENTS PLATFORM: THE SCOTTIE FAIRE IN YOUR HAND*/}
                   </Typography>
                 </div>
               </Card>
@@ -151,6 +174,10 @@ export default class About extends Component {
               <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
                 <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
               </a>
+            </Typography>
+            <hr style={style} />
+            <Typography variant="body1" paragraph>
+              Api Version - {this.state.version}
             </Typography>
           </Grid>
         </Grid>
