@@ -33,6 +33,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
 
 const CROP_DIM = 200; // pixels
 //MyProfile
@@ -434,6 +435,9 @@ export default class Profile extends Component {
                           <span className="imageBackdrop" />
                           <GridListTileBar className="tile-bar" title="Photo Options" />
                         </ButtonBase>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <VictoryPromiseDisplay />
                       </Grid>
                       <Grid item xs={12} sm={12} md={12} lg={12}>
                         <Grid container align="center" alignItems="center">
