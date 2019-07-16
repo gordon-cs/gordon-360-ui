@@ -14,9 +14,10 @@ import RemoveHoursDialog from './components/RemoveHoursDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
 
-import ScheduleControl from './../../services/schedulecontrol';
+import schedulecontrol from './../../services/schedulecontrol';
 
 import './schedulepanel.css';
+import myschedule from '../../services/myschedule';
 
 const styles = {
   colorSwitchBase: {
@@ -66,7 +67,7 @@ class GordonSchedulePanel extends Component {
   }
 
   loadData = async searchedUser => {
-    const scheduleControlPromise = ScheduleControl.getScheduleControl(searchedUser.AD_Username);
+    const scheduleControlPromise = schedulecontrol.getScheduleControl(searchedUser.AD_Username);
     const scheduleControlInfo = await scheduleControlPromise;
     this.scheduleControlInfo = scheduleControlInfo;
     if (this.scheduleControlInfo) {
@@ -112,12 +113,34 @@ class GordonSchedulePanel extends Component {
   };
 
   handleDescriptionSubmit = async descValue => {
-    await ScheduleControl.setScheduleDescription(descValue);
+    await schedulecontrol.setScheduleDescription(descValue);
     window.location.reload(); // refresh to show the change
   };
 
-  handleHoursSubmit = mySchedule => {
-    console.log('mySchedule', mySchedule);
+  handleHoursSubmit = async mySchedule => {
+    console.log('ID Num', this.props.profile.ID);
+
+    let data = {
+      Gordon_ID: this.props.profile.ID,
+      Event_ID: null,
+      DESCRIPTION: mySchedule.description,
+      LOCATION: mySchedule.location,
+      MON_CDE: mySchedule.monday ? 'M' : null,
+      TUE_CDE: mySchedule.tuesday ? 'T' : null,
+      WED_CDE: mySchedule.wednesday ? 'W' : null,
+      THU_CDE: mySchedule.thursday ? 'R' : null,
+      FRI_CDE: mySchedule.friday ? 'F' : null,
+      SAT_CDE: mySchedule.saturday ? 'S' : null,
+      SUN_CDE: mySchedule.sunday ? 'N' : null,
+      IS_ALLDAY: mySchedule.allDay ? 1 : 0,
+      BEGIN_TIME: mySchedule.startHour,
+      END_TIME: mySchedule.endHour,
+    };
+
+    await myschedule.addMySchedule(data);
+    let now = new Date();
+    await schedulecontrol.setModifiedTimeStamp(now.toJSON());
+    window.location.reload();
   };
 
   handleDoubleClick = event => {
