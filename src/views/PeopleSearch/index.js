@@ -169,7 +169,7 @@ class PeopleSearch extends Component {
   }
 
   componentDidUpdate() {
-    window.onpopstate = e => {
+    window.onpopstate = () => {
       if (!window.location.href.includes('?')) {
         window.location.reload();
       } else {
