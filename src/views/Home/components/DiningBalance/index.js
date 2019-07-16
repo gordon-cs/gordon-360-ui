@@ -58,14 +58,14 @@ export default class DiningBalance extends Component {
       content = <GordonLoader />;
     } else {
       if (this.facStaffBalance) {
-        //balance color will be green or yellow (low balance) or orange (really low balance)
-        const lowBalance = 10; //dollars
-        const reallyLowBalance = 5; //dollars
-        let balanceColor = gordonColors.secondary.green;
+        //Set color to use when displaying balance based on how low it is...
+        const lowBalance = 20; //dollars
+        const reallyLowBalance = 10; //dollars
+        let balanceColor = gordonColors.secondary.green; // balance okay
         if (this.facStaffBalance < lowBalance) {
-          balanceColor = gordonColors.secondary.yellow;
+          balanceColor = gordonColors.secondary.yellow; // balance is low
         } else if (this.facStaffBalance < reallyLowBalance) {
-          balanceColor = gordonColors.secondary.orange;
+          balanceColor = gordonColors.secondary.orange; // balance is really low
         }
         content = (
           <div
