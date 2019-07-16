@@ -77,12 +77,14 @@ export default class Login extends Component {
       *  but not allow you to login due to the error "undefined is not a function"
       */
       if (navigator.serviceWorker) {
-        // Sends a message to the service worker with the token to precache dynamic files
+        // Sends a message, the token and current term code to the service worker to precache dynamic files
         navigator.serviceWorker.controller.postMessage({
           message: 'cache-static-dynamic-files',
           token: storage.get('token'),
           termCode: session.getTermCode(),
         });
+        // Stores the current term in Local Storage for later use when updating the cache
+        storage.store('currentTerm', session.getTermCode());
         // Saves the network state as online in local storage
         localStorage.setItem('network-status', JSON.stringify('online'));
       } else {

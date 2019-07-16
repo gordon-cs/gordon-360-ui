@@ -57,6 +57,23 @@ const imageCache = [
 
 /*********************************************** CACHING FUNCTIONS ***********************************************/
 /**
+ * Cleans the cache to remove data that's no longer in use (removes outdated cache version)
+ *
+ * @return {Promise} A promise with the result of removing outdated cache
+ */
+async function cleanCache() {
+  await caches.keys().then(keys => {
+    keys.forEach(key => {
+      if (key !== cacheVersion && key.match('cache-')) {
+        return caches.delete(key).then(() => {
+          console.log('\t- Previous cache has been removed (outdated cache version)');
+        });
+      }
+    });
+  });
+}
+
+/**
  * Does a fetch for each request received.
  *
  * If the network is available, it returns a response from the fetch
@@ -144,25 +161,9 @@ async function cacheDynamicFiles(token, dynamicUserCacheLinks, mode = 'cors') {
       .catch(() => {
         console.log(`\t- Failed to fetch and cache Dynamic File: ${url}`);
       });
-  });
+  }); //
 }
 
-/**
- * Cleans the cache to remove data that's no longer in use (removes outdated cache version)
- *
- * @return {Promise} A promise with the result of removing outdated cache
- */
-async function cleanCache() {
-  await caches.keys().then(keys => {
-    keys.forEach(key => {
-      if (key !== cacheVersion && key.match('cache-')) {
-        return caches.delete(key).then(() => {
-          console.log('\t- Previous cache has been removed (outdated cache version)');
-        });
-      }
-    });
-  });
-}
 /**
  * Pre-caches main set of dynamic files that requies a Request with its property mode set to "cors"
  *
@@ -172,13 +173,11 @@ async function cleanCache() {
 async function dynamicLinksThenCache(token, termCode) {
   // Caches all image files
   cacheDynamicFiles(token, imageCache, 'no-cors');
-
   // Creates the header for the request to have authenitification
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   });
-
   // Gets the user's profile object to access their firstname.lastname and ID#
   let profile = await fetch(
     new Request('https://360apitrain.gordon.edu/api/profiles', { method: 'GET', headers }),
@@ -187,9 +186,8 @@ async function dynamicLinksThenCache(token, termCode) {
       return response.json();
     })
     .catch(error => {
-      return error.message;
+      return error.Message;
     });
-
   // Gets the current session object to access the current session code
   let currentSession = await fetch(
     new Request('https://360apitrain.gordon.edu/api/sessions/current', {
@@ -201,7 +199,7 @@ async function dynamicLinksThenCache(token, termCode) {
       return response.json();
     })
     .catch(error => {
-      return error.message;
+      return error.Message;
     });
 
   let username = profile ? profile.AD_Username : null;
@@ -293,19 +291,15 @@ self.addEventListener('message', event => {
   // If the message is to cache all static/dynamic files, all of those files are cached
   if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
     console.log('Received message. Attempting to cache all files');
-    // Saves token for caching later
-    token = event.data.token;
-    // Saves current session for caching later
-    currentSession = event.data.termCode;
     // Caching All Files
     cacheStaticFiles(); // Static Cache
-    dynamicLinksThenCache(token, currentSession); // Main Dynamic Cache
+    dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
   }
   // If the message is to update the cache
-  else if (event.data === 'update-cache-files') {
-    console.log('Received message. Attempting to  update cache.');
+  else if (event.data.message && event.data.message === 'update-cache-files') {
+    console.log('Received message. Attempting to update cache.');
     // Caching All Files
     cacheStaticFiles(); // Static Cache
-    dynamicLinksThenCache(token, currentSession); // Main Dynamic Cache
+    dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
   }
 });

@@ -7,8 +7,8 @@ if ('caches' in window) {
   // Checking to see if the Service Worker API is available
   // If so, we register our service worker and run all PWA operations
   if (navigator.serviceWorker) {
-    // If the new worker is not up to date with the current worker, it will install the new
-    // woker as its new current
+    // If the new service worker is not up to date with the current worker, it will install the new
+    //  service woker as its new current
     navigator.serviceWorker
       .register('/sw.js')
       .then(reg => {
@@ -16,12 +16,34 @@ if ('caches' in window) {
           const installingWorker = reg.installing;
           installingWorker.onstatechange = () => {
             if (installingWorker.state === 'activated') {
-              navigator.serviceWorker.controller.postMessage('update-cache-files');
+              navigator.serviceWorker.controller.postMessage({
+                message: 'update-cache-files',
+                token: JSON.parse(localStorage.getItem('token')),
+                termCode: JSON.parse(localStorage.getItem('currentTerm')),
+              });
             }
           };
         };
       })
       .catch(console.error);
+
+    /* When a user exists out the app and re-opens it, this will check to see if they are
+      *  connected to the internet so that:
+      *     - If there's internet: Open in online mode if the current mode is offline
+      *     - If there's no internet: Open in offline mode if the current mode is online
+      */
+    if (JSON.parse(localStorage.getItem('network-status')) === 'offline') {
+      if (navigator.onLine) {
+        localStorage.setItem('network-status', JSON.stringify('online'));
+        location.reload();
+      }
+    } else {
+      if (!navigator.onLine) {
+        localStorage.setItem('network-status', JSON.stringify('offline'));
+        location.reload();
+        alert('You are offline. Information might be not up to date.');
+      }
+    }
 
     // If network connectivity disables during application run-time
     window.addEventListener('offline', event => {
@@ -41,24 +63,6 @@ if ('caches' in window) {
       localStorage.setItem('network-status', JSON.stringify('online'));
       window.postMessage('online', location.origin);
     });
-
-    /* When a user exists out the app and re-opens it, this will check to see if they are
-    *  connected to the internet so that:
-    *     - If there's internet: Open in online mode if the current mode is offline
-    *     - If there's no internet: Open in offline mode if the current mode is online
-    */
-    if (JSON.parse(localStorage.getItem('network-status')) === 'offline') {
-      if (navigator.onLine) {
-        localStorage.setItem('network-status', JSON.stringify('online'));
-        location.reload();
-      }
-    } else {
-      if (!navigator.onLine) {
-        localStorage.setItem('network-status', JSON.stringify('offline'));
-        location.reload();
-        alert('You are offline. Information might be not up to date.');
-      }
-    }
   } else {
     console.log('SERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE');
   }

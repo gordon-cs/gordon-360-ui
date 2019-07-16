@@ -70,25 +70,47 @@ class GordonActivityGrid extends Component {
         </Grid>
       );
     } else if (Array.isArray(this.props.myInvolvements) && this.props.myInvolvements.length > 0) {
-      Content = this.props.myInvolvements.map(activity => (
-        <div className="container">
-          <Link
-            to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
-            className="item"
-          >
-            <div>
-              <img
-                className="picture"
-                src={activity.ActivityImagePath}
-                alt={activity.ActivityDescription}
-                height="150"
-                width="150"
-              />
-              <div className="item-title">{activity.ActivityDescription}</div>
-            </div>
-          </Link>
-        </div>
-      ));
+      // Creates the My Involvements cards depending on the status of the network found in local storage
+      if (networkStatus === 'online') {
+        Content = this.props.myInvolvements.map(activity => (
+          <div className="container">
+            <Link
+              to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
+              className="item"
+            >
+              <div>
+                <img
+                  className="picture"
+                  src={activity.ActivityImagePath}
+                  alt={activity.ActivityDescription}
+                  height="150"
+                  width="150"
+                />
+                <div className="item-title">{activity.ActivityDescription}</div>
+              </div>
+            </Link>
+          </div>
+        ));
+      } else {
+        Content = this.props.myInvolvements.map(activity => (
+          <div className="container">
+            <Card>
+              <CardContent>
+                <div>
+                  <img
+                    className="picture"
+                    src={activity.ActivityImagePath}
+                    alt={activity.ActivityDescription}
+                    height="150"
+                    width="150"
+                  />
+                  <div className="item-title">{activity.ActivityDescription}</div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        ));
+      }
     }
 
     if (Array.isArray(this.props.activities) && this.props.activities.length === 0) {
