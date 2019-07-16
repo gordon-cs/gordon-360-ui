@@ -6,7 +6,6 @@
 
 import moment from 'moment';
 import http from './http';
-import user from './user';
 
 /**
  * @global
@@ -103,10 +102,10 @@ async function makeMySchedule(myschedule) {
       const customEvent = {
         id: events[i].EVENT_ID,
         title: eventTitle,
-        start: new Date(), // beginTime.toDate(),
-        end: new Date(), // endTime.toDate(),
+        start: beginTime.toDate(),
+        end: endTime.toDate(),
         resourceId: dayArray[j],
-        allDay: true,
+        allDay: events[i].IS_ALLDAY,
       };
       eventArray.push(customEvent);
     }

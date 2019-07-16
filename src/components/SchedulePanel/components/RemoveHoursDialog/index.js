@@ -10,57 +10,15 @@ export default class RemoveHoursDialog extends React.Component {
     super(props);
 
     this.state = {
-      dayOfTheWeek: '',
-      startHour: '',
-      endHour: '',
-      hourType: '',
       removeOfficeHoursOpen: false,
     };
     this.handleRemoveOfficeHoursClose = this.handleRemoveOfficeHoursClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleDayOfTheWeekInputChange = e => {
-    this.setState({
-      dayOfTheWeek: e.target.value,
-    });
-  };
-
-  handleStartHourChange = e => {
-    this.setState({
-      startHour: e.target.value,
-    });
-  };
-
-  handleEndHourChange = e => {
-    this.setState({
-      endHour: e.target.value,
-    });
-  };
-
-  handleHourTypeChange = e => {
-    this.setState({
-      hourType: e.target.value,
-    });
-  };
-
-  validateForm() {
-    this.setState({
-      formValid:
-        this.state.fbValid && this.state.twValid && this.state.liValid && this.state.igValid,
-    });
-  }
-
   handleSubmit = e => {
     e.preventDefault();
     this.handleClose();
-  };
-
-  handleChange = name => e => {
-    let value = e.target.value;
-    this.setState({ [name]: e.target.value }, () => {
-      this.validateField(name, value);
-    });
   };
 
   handleRemoveOfficeHoursClose = () => {

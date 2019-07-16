@@ -61,26 +61,31 @@ export default class HoursDialog extends React.Component {
     let locationValid = this.state.locationValid;
     let startHourValid = this.state.startHourValid;
     let endHourValid = this.state.endHourValid;
-    console.log('StartHour : ', parseInt(this.state.startHourInput, 10));
 
     // Require that content havint appropriate size
     switch (fieldName) {
       case 'descriptionInput':
-        descriptionValid = value !== '' || value.length < 50;
+        descriptionValid = value.trim() !== '' && value.length < 50;
         fieldValidationErrors.descriptionInput = descriptionValid ? '' : 'Description is not Valid';
         break;
       case 'locationInput':
-        locationValid = value !== '' || value.length < 50;
+        locationValid = value.trim() !== '' && value.length < 50;
         fieldValidationErrors.locationInput = locationValid ? '' : 'Location is not Valid';
         break;
       case 'startHourInput':
         startHourValid =
-          value === '' || parseInt(this.state.endHourInput, 10) > parseInt(value, 10);
+          value.trim() !== '' &&
+          parseInt(this.state.endHourInput, 10) > parseInt(value, 10) &&
+          parseInt(value, 10) >= 5 &&
+          parseInt(value, 10) <= 10;
         fieldValidationErrors.startHourInput = startHourValid ? '' : 'Start Time is not Valid';
         break;
       case 'endHourInput':
         endHourValid =
-          value === '' || parseInt(this.state.startHourInput, 10) < parseInt(value, 10);
+          value.trim() !== '' &&
+          parseInt(this.state.startHourInput, 10) < parseInt(value, 10) &&
+          parseInt(value, 10) >= 5 &&
+          parseInt(value, 10) <= 22;
         fieldValidationErrors.endHourInput = endHourValid ? '' : 'End Time is not Valid';
         break;
       default:
@@ -94,7 +99,9 @@ export default class HoursDialog extends React.Component {
         startHourValid: startHourValid,
         endHourValid: endHourValid,
       },
-      this.validateForm,
+      () => {
+        this.validateForm();
+      },
     );
   }
 
@@ -122,13 +129,13 @@ export default class HoursDialog extends React.Component {
       endHour: endHour,
       location: location,
       description: description,
-      monday: this.state.checkedMo,
-      tuesday: this.state.checkedTu,
-      wednesday: this.state.checkedWe,
-      thursday: this.state.checkedTh,
-      friday: this.state.checkedFr,
-      saturday: this.state.checkedSa,
-      sunday: this.state.checkedSu,
+      monday: this.state.checkedDayofWeek.checkedMo,
+      tuesday: this.state.checkedDayofWeek.checkedTu,
+      wednesday: this.state.checkedDayofWeek.checkedWe,
+      thursday: this.state.checkedDayofWeek.checkedTh,
+      friday: this.state.checkedDayofWeek.checkedFr,
+      saturday: this.state.checkedDayofWeek.checkedSa,
+      sunday: this.state.checkedDayofWeek.checkedSu,
       allDay: this.state.checkedC,
     };
     this.props.onDialogSubmit(mySchedule);
@@ -137,13 +144,15 @@ export default class HoursDialog extends React.Component {
   };
 
   validateCheck = dayofWeek => {
-    let valid = false;
-    for (var day in dayofWeek) {
-      if (dayofWeek[day]) valid = true;
+    var valid = false;
+    for (let day in dayofWeek) {
+      if (dayofWeek[day]) {
+        valid = true;
+      }
     }
-    console.log('checkedValid', valid);
-    this.setState({ checkedValid: valid });
-    this.validateForm();
+    this.setState({ checkedValid: valid }, () => {
+      this.validateForm();
+    });
   };
 
   handleChange = name => e => {
@@ -168,17 +177,16 @@ export default class HoursDialog extends React.Component {
         this.validateField('endHourInput', this.state.endHourInput);
       }
     } else {
-      let dayofWeek = this.state.checkedDayofWeek;
+      var dayofWeek = this.state.checkedDayofWeek;
       dayofWeek[name] = e.target.checked;
-      console.log('Day ', dayofWeek[name]);
 
-      this.setState({ checkedDayofWeek: dayofWeek }, () => {
-        this.validateCheck(dayofWeek);
-      });
+      this.validateCheck(dayofWeek);
+      this.setState({ checkedDayofWeek: dayofWeek });
     }
   };
 
   handleOfficeHoursClose = () => {
+    this.validateForm();
     this.setState({ officeHoursOpen: false });
   };
 
@@ -265,6 +273,7 @@ export default class HoursDialog extends React.Component {
               <FormControlLabel
                 control={
                   <Checkbox
+                    checked={this.state.checkedDayofWeek.checkedSu}
                     value={this.state.checkedDayofWeek.checkedSu}
                     onChange={this.handleCheckboxChange('checkedSu')}
                     primary
@@ -275,6 +284,7 @@ export default class HoursDialog extends React.Component {
               <FormControlLabel
                 control={
                   <Checkbox
+                    checked={this.state.checkedDayofWeek.checkedMo}
                     value={this.state.checkedDayofWeek.checkedMo}
                     onChange={this.handleCheckboxChange('checkedMo')}
                     primary
@@ -285,6 +295,7 @@ export default class HoursDialog extends React.Component {
               <FormControlLabel
                 control={
                   <Checkbox
+                    checked={this.state.checkedDayofWeek.checkedTu}
                     value={this.state.checkedDayofWeek.checkedTu}
                     onChange={this.handleCheckboxChange('checkedTu')}
                     primary
@@ -295,6 +306,7 @@ export default class HoursDialog extends React.Component {
               <FormControlLabel
                 control={
                   <Checkbox
+                    checked={this.state.checkedDayofWeek.checkedWe}
                     value={this.state.checkedDayofWeek.checkedWe}
                     onChange={this.handleCheckboxChange('checkedWe')}
                     primary
@@ -305,6 +317,7 @@ export default class HoursDialog extends React.Component {
               <FormControlLabel
                 control={
                   <Checkbox
+                    checked={this.state.checkedDayofWeek.checkedTh}
                     value={this.state.checkedDayofWeek.checkedTh}
                     onChange={this.handleCheckboxChange('checkedTh')}
                     primary
@@ -315,6 +328,7 @@ export default class HoursDialog extends React.Component {
               <FormControlLabel
                 control={
                   <Checkbox
+                    checked={this.state.checkedDayofWeek.checkedFr}
                     value={this.state.checkedDayofWeek.checkedFr}
                     onChange={this.handleCheckboxChange('checkedFr')}
                     primary
@@ -325,6 +339,7 @@ export default class HoursDialog extends React.Component {
               <FormControlLabel
                 control={
                   <Checkbox
+                    checked={this.state.checkedDayofWeek.checkedSa}
                     value={this.state.checkedDayofWeek.checkedSa}
                     onChange={this.handleCheckboxChange('checkedSa')}
                     primary
@@ -376,6 +391,7 @@ export default class HoursDialog extends React.Component {
               control={
                 <Checkbox
                   value={this.state.checkedC}
+                  checked={this.state.checkedC}
                   onChange={this.handleCheckboxChange('checkedC')}
                   primary
                 />
