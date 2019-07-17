@@ -22,7 +22,7 @@ export default class Home extends Component {
   }
 
   componentWillMount() {
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       this.getPersonType();
     }
   }
@@ -43,7 +43,7 @@ export default class Home extends Component {
 
   render() {
     let content;
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       const personType = this.state.personType;
       let doughnut;
 

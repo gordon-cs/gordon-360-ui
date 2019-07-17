@@ -258,7 +258,7 @@ export default class GordonPeopleSearch extends Component {
     }
 
     let content;
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       content = (
         <Downshift
           // Assign reference to Downshift to `this` for usage elsewhere in the component

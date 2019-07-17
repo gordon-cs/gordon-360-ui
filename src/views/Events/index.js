@@ -91,7 +91,7 @@ export default class Events extends Component {
   //This should be the only time we pull from the database
   async loadEvents() {
     this.setState({ loading: true });
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });

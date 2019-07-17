@@ -74,7 +74,7 @@ export default class GordonNavAvatarRightCorner extends Component {
 
   async loadAvatar() {
     console.log('Running loadAvatar in NavAvatarRightCorner');
-    if (await isAuthenticated()) {
+    if (this.props.Authentication) {
       console.log('loadAvatar found token');
       const { name, user_name: username } = user.getLocalInfo();
       this.setState({ name, username });
@@ -119,7 +119,7 @@ export default class GordonNavAvatarRightCorner extends Component {
     let signInOut;
     let myProfileLink;
     let admin;
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       // Set authenticated values for dropdown menu
 
       let username = this.state.username;
@@ -145,7 +145,7 @@ export default class GordonNavAvatarRightCorner extends Component {
       if (user.getLocalInfo().college_role === 'god') {
         admin = (
           <Link to="/admin">
-            <MenuItem onClick={this.onClose} divider="true">
+            <MenuItem onClick={this.onClose} divider={true}>
               Admin
             </MenuItem>
           </Link>
@@ -154,7 +154,7 @@ export default class GordonNavAvatarRightCorner extends Component {
 
       signInOut = (
         <Link to="/">
-          <MenuItem onClick={this.onSignOut.bind(this)} divider="true">
+          <MenuItem onClick={this.onSignOut.bind(this)} divider={true}>
             Sign Out
           </MenuItem>
         </Link>
@@ -166,7 +166,7 @@ export default class GordonNavAvatarRightCorner extends Component {
 
       signInOut = (
         <Link to="/">
-          <MenuItem onClick={this.onClose.bind(this)} divider="true">
+          <MenuItem onClick={this.onClose.bind(this)} divider={true}>
             Sign In
           </MenuItem>
         </Link>
@@ -207,22 +207,22 @@ export default class GordonNavAvatarRightCorner extends Component {
               this.onClose();
               this.handleLinkClickOpen();
             }}
-            divider="true"
+            divider={true}
           >
             Links
           </MenuItem>
           <Link to="/help">
-            <MenuItem onClick={this.onClose} divider="true">
+            <MenuItem onClick={this.onClose} divider={true}>
               Help
             </MenuItem>
           </Link>
           <Link to="/about">
-            <MenuItem onClick={this.onClose} divider="true">
+            <MenuItem onClick={this.onClose} divider={true}>
               About
             </MenuItem>
           </Link>
           <Link to="/feedback">
-            <MenuItem onClick={this.onClose} divider="true">
+            <MenuItem onClick={this.onClose} divider={true}>
               Feedback
             </MenuItem>
             {admin}

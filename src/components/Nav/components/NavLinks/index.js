@@ -64,7 +64,7 @@ export default class GordonNavLinks extends Component {
     let admin;
     let people;
     let signInOut;
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       if (user.getLocalInfo().college_role === 'god') {
         admin = (
           <NavLink exact to="/admin" onClick={this.props.onLinkClick}>

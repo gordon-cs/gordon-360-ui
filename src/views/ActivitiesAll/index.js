@@ -41,7 +41,7 @@ export default class GordonActivitiesAll extends Component {
   }
   async componentWillMount() {
     this.setState({ loading: true });
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       try {
         const profile = await user.getProfileInfo();
         const { SessionCode: sessionCode } = await session.getCurrent();
@@ -92,7 +92,7 @@ export default class GordonActivitiesAll extends Component {
 
   async changeSession(event) {
     await this.setState({ session: event.target.value, loading: true });
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       const allActivities = await activity.getAll(this.state.session);
       const myInvolvements = await user.getSessionMembershipsWithoutGuests(
         this.state.profile.ID,
@@ -134,7 +134,7 @@ export default class GordonActivitiesAll extends Component {
     let myInvolvements;
     let involvementsHeading;
     let noInvolvementsText;
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       if (this.state.session === this.state.currentSession) {
         involvementsHeading = 'CURRENT';
         noInvolvementsText =

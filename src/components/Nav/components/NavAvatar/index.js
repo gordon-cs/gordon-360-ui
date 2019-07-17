@@ -36,7 +36,7 @@ class GordonNavAvatar extends Component {
   }
 
   async loadAvatar() {
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       const { name, user_name: username } = user.getLocalInfo();
       this.setState({ name, username });
       const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
@@ -73,7 +73,7 @@ class GordonNavAvatar extends Component {
     const { classes } = this.props;
 
     let content;
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       let avatar = <Avatar className="avatar placeholder">{this.getInitials()}</Avatar>;
       if (this.state.image) {
         avatar = (

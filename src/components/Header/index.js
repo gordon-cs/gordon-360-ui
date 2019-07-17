@@ -89,7 +89,7 @@ export default class GordonHeader extends Component {
 
   render() {
     let content;
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       content = (
         <Tab
           className="tab"
@@ -156,8 +156,11 @@ export default class GordonHeader extends Component {
                 {content}
               </Tabs>
             </div>
-            <GordonPeopleSearch />
-            <GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />
+            <GordonPeopleSearch Authentication={this.props.Authentication} />
+            <GordonNavAvatarRightCorner
+              onSignOut={this.props.onSignOut}
+              Authentication={this.props.Authentication}
+            />
           </Toolbar>
         </AppBar>
         <Dialog

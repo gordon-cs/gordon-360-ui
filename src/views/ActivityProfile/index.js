@@ -68,7 +68,7 @@ class ActivityProfile extends Component {
   async componentWillMount() {
     this.setState({ loading: true });
     const { sessionCode, activityCode } = this.props.match.params;
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       const [
         activityInfo,
         activityAdvisors,
@@ -301,7 +301,7 @@ class ActivityProfile extends Component {
     }
 
     let content;
-    if (isAuthenticated()) {
+    if (this.props.Authentication) {
       if (this.state.loading === true) {
         content = <GordonLoader />;
       } else {

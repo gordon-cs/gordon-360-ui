@@ -5,7 +5,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 
 import './app.css';
 import analytics from './services/analytics';
-//import { isAuthenticated, signOut } from './services/auth';
+import { isAuthenticated, signOut } from './services/auth';
 //import GordonError from './components/Error';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
@@ -33,6 +33,7 @@ export default class App extends Component {
       error: null,
       errorInfo: null,
       drawerOpen: false,
+      authentication: false,
     };
   }
   onDrawerToggle() {
@@ -49,42 +50,58 @@ export default class App extends Component {
   componentWillMount() {
     //setting up a global variable very hacky
     window.didProfilePicUpdate = false;
+
+    console.log('About to check authentication from willmount of App.js');
+    let authentication = isAuthenticated();
+    this.setState({ authentication });
   }
 
   onAuthChange() {
+    console.log('Running onAuthChange');
+    let authentication = isAuthenticated();
+    this.setState({ authentication });
+
     // Force this component to re-render, login view -> main app view
-    console.log('app.js: about to forceUpdate in onAuthChange()');
-    this.forceUpdate();
+    //console.log('app.js: about to forceUpdate in onAuthChange()');
+    //this.forceUpdate();
     //window.location.reload();
   }
 
   render() {
-    let content = (
-      <section className="app-wrapper">
-        <GordonHeader onDrawerToggle={this.onDrawerToggle} onSignOut={this.onAuthChange} />
-        <GordonNav
-          onDrawerToggle={this.onDrawerToggle}
-          drawerOpen={this.state.drawerOpen}
-          onSignOut={this.onAuthChange}
-        />
-        <main className="app-main">
-          <Switch>
-            {routes.map(route => (
-              <Route
-                key={route.path}
-                path={route.path}
-                exact={route.exact}
-                render={() => <route.component onLogIn={this.onAuthChange} />}
-              />
-            ))}
-          </Switch>
-        </main>
-      </section>
-    );
-
     return (
       <MuiThemeProvider theme={theme}>
-        <Router history={this.history}>{content}</Router>
+        <Router history={this.history}>
+          <section className="app-wrapper">
+            <GordonHeader
+              onDrawerToggle={this.onDrawerToggle}
+              onSignOut={this.onAuthChange}
+              Authentication={this.state.authentication}
+            />
+            <GordonNav
+              onDrawerToggle={this.onDrawerToggle}
+              drawerOpen={this.state.drawerOpen}
+              onSignOut={this.onAuthChange}
+              Authentication={this.state.authentication}
+            />
+            <main className="app-main">
+              <Switch>
+                {routes.map(route => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    exact={route.exact}
+                    render={() => (
+                      <route.component
+                        onLogIn={this.onAuthChange}
+                        Authentication={this.state.authentication}
+                      />
+                    )}
+                  />
+                ))}
+              </Switch>
+            </main>
+          </section>
+        </Router>
       </MuiThemeProvider>
     );
   }
