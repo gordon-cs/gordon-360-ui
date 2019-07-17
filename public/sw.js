@@ -17,23 +17,52 @@ let currentSession;
 
 // Static Files to cache
 const staticCache = [
+  // Documents
   '/',
   '/events',
   '/involvements',
   '/feedback',
   '/people',
-  '/favicon.ico',
   '/about',
   '/help',
-  // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Developlent
-  '/manifest.json',
-  '/pwa.js',
-  '/static/js/bundle.js',
-  '/static/media/campus1366.e8fc7838.jpg',
-  '/static/media/gordon-logo-vertical-white.a6586885.svg',
-  '/static/media/NoConnection.68275814.svg',
   '/admin',
   '/myprofile',
+  // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Developlent
+  '/static/js/bundle.js',
+  //'/static/js/bundle.js',
+  '/manifest.json',
+  '/pwa.js',
+  '/static/media/campus1366.e8fc7838.jpg',
+  '/static/js/0.chunk.js',
+  '/static/js/main.chunk.js',
+  '/static/media/gordon-logo-vertical-white.a6586885.svg',
+  '/static/media/NoConnection.68275814.svg',
+  // Images
+  '/favicon.ico',
+  '/images/android-icon-36x36.png',
+  '/images/android-icon-48x48.png',
+  '/images/android-icon-72x72.png',
+  '/images/android-icon-96x96.png',
+  '/images/android-icon-144x144.png',
+  '/images/android-icon-192x192.png',
+  '/images/apple-icon-57x57.png',
+  '/images/apple-icon-60x60.png',
+  '/images/apple-icon-72x72.png',
+  '/images/apple-icon-76x76.png',
+  '/images/apple-icon-114x114.png',
+  '/images/apple-icon-120x120.png',
+  '/images/apple-icon-144x144.png',
+  '/images/apple-icon-152x152.png',
+  '/images/apple-icon-180x180.png',
+  '/images/apple-icon-precomposed.png',
+  '/images/apple-icon.png',
+  '/images/favicon-16x16.png',
+  '/images/favicon-32x32.png',
+  '/images/favicon-96x96.png',
+  '/images/ms-icon-70x70.png',
+  '/images/ms-icon-144x144.png',
+  '/images/ms-icon-150x150.png',
+  '/images/ms-icon-310x310.png',
 ];
 
 /*********************************************** CACHING FUNCTIONS ***********************************************/
@@ -75,7 +104,7 @@ async function fetchThenCache(request) {
       }
     })
     .catch(async () => {
-      console.log(`Getting ${request.url} from cache instead...`);
+      console.log(`\t- Getting ${request.url} from cache instead...`);
       const response = await caches.match(request);
       // If there's no response from cache, we console log that the request failed
       if (response) {
