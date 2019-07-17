@@ -10,14 +10,10 @@ import CardActions from '@material-ui/core/CardActions';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PersonIcon from '@material-ui/icons/Person';
-import HeartIcon from 'react-icons/lib/fa/heart';
+import { FaHeart, FaBriefcase, FaBuilding, FaBook, FaGlobeAmericas } from 'react-icons/fa';
 import SchoolIcon from '@material-ui/icons/School';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
-import BriefcaseIcon from 'react-icons/lib/fa/briefcase';
-import BuildingIcon from 'react-icons/lib/fa/building';
-import BookIcon from 'react-icons/lib/fa/book';
-import GlobeIcon from 'react-icons/lib/fa/globe';
 import { Typography } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
 import Input from '@material-ui/core/Input';
@@ -116,6 +112,161 @@ class PeopleSearch extends Component {
     };
   }
 
+  makeHeader() {
+    let content = (
+      <Media query="(min-width: 960px)">
+        {matches =>
+          matches ? (
+            <div style={styles.headerStyle}>
+              <Grid container direction="row">
+                <Grid item xs={1} />
+                <Grid item xs={2}>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    FIRST NAME
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    LAST NAME
+                  </Typography>
+                </Grid>
+                <Grid item xs={1}>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    TYPE
+                  </Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    CLASS/JOB TITLE
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    @GORDON.EDU
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
+          ) : (
+            <div style={styles.headerStyle}>
+              <Grid container direction="row" justify="center">
+                <Grid item>
+                  <Typography variant="body2" style={styles.headerStyle}>
+                    RESULTS
+                  </Typography>
+                </Grid>
+              </Grid>
+            </div>
+          )
+        }
+      </Media>
+    );
+    return content;
+  }
+
+  componentDidUpdate() {
+    window.onpopstate = () => {
+      if (!window.location.href.includes('?')) {
+        window.location.reload();
+      } else {
+        this.goBackPage();
+      }
+    };
+  }
+
+  async goBackPage() {
+    this.setState({
+      firstNameSearchValue: '',
+      lastNameSearchValue: '',
+      homeCitySearchValue: '',
+      majorSearchValue: '',
+      minorSearchValue: '',
+      hallSearchValue: '',
+      classTypeSearchValue: '',
+      stateSearchValue: '',
+      countrySearchValue: '',
+      departmentSearchValue: '',
+      buildingSearchValue: '',
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    var includeAlumni = urlParams.get('includeAlumni') || false;
+    var firstName = urlParams.get('firstName').trim() || '';
+    var lastName = urlParams.get('lastName').trim() || '';
+    var major = urlParams.get('major').trim() || '';
+    var minor = urlParams.get('minor').trim() || '';
+    var hall = urlParams.get('hall').trim() || '';
+    var classType = urlParams.get('classType').trim() || '';
+    var homeCity = urlParams.get('homeCity').trim() || '';
+    var state = urlParams.get('state').trim() || '';
+    var country = urlParams.get('country').trim() || '';
+    var department = urlParams.get('department').trim() || '';
+    var building = urlParams.get('building').trim() || '';
+
+    if (
+      includeAlumni === false &&
+      firstName === '' &&
+      lastName === '' &&
+      major === '' &&
+      minor === '' &&
+      hall === '' &&
+      classType === '' &&
+      homeCity === '' &&
+      state === '' &&
+      country === '' &&
+      department === '' &&
+      building === ''
+    ) {
+      // do not search
+    } else {
+      this.setState({
+        header: <GordonLoader />,
+        peopleSearchResults: null,
+        additionalOpsExpanded: false,
+      });
+      let peopleSearchResults = [];
+      peopleSearchResults = await goStalk.search(
+        includeAlumni,
+        firstName,
+        lastName,
+        major,
+        minor,
+        hall,
+        classType,
+        homeCity,
+        state,
+        country,
+        department,
+        building,
+      );
+      if (peopleSearchResults.length === 0) {
+        this.setState({
+          peopleSearchResults: (
+            <Grid item xs={12}>
+              <Typography variant="headline" align="center">
+                No results found.
+              </Typography>
+            </Grid>
+          ),
+          header: '',
+        });
+      } else {
+        this.setState({
+          peopleSearchResults: (
+            <Media query="(min-width: 960px)">
+              {matches =>
+                matches
+                  ? peopleSearchResults.map(person => <PeopleSearchResult Person={person} />)
+                  : peopleSearchResults.map(person => <MobilePeopleSearchResult Person={person} />)
+              }
+            </Media>
+          ),
+          header: this.makeHeader(),
+        });
+      }
+    }
+  }
+
   async componentWillMount() {
     try {
       const profile = await user.getProfileInfo();
@@ -141,6 +292,88 @@ class PeopleSearch extends Component {
       });
     } catch (error) {
       // error
+    }
+
+    if (window.location.href.includes('?')) {
+      const urlParams = new URLSearchParams(window.location.search);
+      var includeAlumni = urlParams.get('includeAlumni') || false;
+      var firstName = urlParams.get('firstName').trim() || '';
+      var lastName = urlParams.get('lastName').trim() || '';
+      var major = urlParams.get('major').trim() || '';
+      var minor = urlParams.get('minor').trim() || '';
+      var hall = urlParams.get('hall').trim() || '';
+      var classType = urlParams.get('classType').trim() || '';
+      var homeCity = urlParams.get('homeCity').trim() || '';
+      var state = urlParams.get('state').trim() || '';
+      var country = urlParams.get('country').trim() || '';
+      var department = urlParams.get('department').trim() || '';
+      var building = urlParams.get('building').trim() || '';
+      if (
+        includeAlumni === false &&
+        firstName === '' &&
+        lastName === '' &&
+        major === '' &&
+        minor === '' &&
+        hall === '' &&
+        classType === '' &&
+        homeCity === '' &&
+        state === '' &&
+        country === '' &&
+        department === '' &&
+        building === ''
+      ) {
+        // do not search
+      } else {
+        this.setState({
+          header: <GordonLoader />,
+          peopleSearchResults: null,
+          additionalOpsExpanded: false,
+        });
+        let peopleSearchResults = [];
+
+        peopleSearchResults = await goStalk.search(
+          includeAlumni,
+          firstName,
+          lastName,
+          major,
+          minor,
+          hall,
+          classType,
+          homeCity,
+          state,
+          country,
+          department,
+          building,
+        );
+
+        if (peopleSearchResults.length === 0) {
+          this.setState({
+            peopleSearchResults: (
+              <Grid item xs={12}>
+                <Typography variant="headline" align="center">
+                  No results found.
+                </Typography>
+              </Grid>
+            ),
+            header: '',
+          });
+        } else {
+          this.setState({
+            peopleSearchResults: (
+              <Media query="(min-width: 960px)">
+                {matches =>
+                  matches
+                    ? peopleSearchResults.map(person => <PeopleSearchResult Person={person} />)
+                    : peopleSearchResults.map(person => (
+                        <MobilePeopleSearchResult Person={person} />
+                      ))
+                }
+              </Media>
+            ),
+            header: this.makeHeader(),
+          });
+        }
+      }
     }
   }
 
@@ -276,7 +509,12 @@ class PeopleSearch extends Component {
         department,
         building,
       );
-      console.log('Results:', peopleSearchResults);
+
+      this.props.history.push(`?includeAlumni=${includeAlumni}&firstName=${firstName}&lastName=
+      ${lastName}&major=${major}&minor=${minor}&hall=${hall}&classType=${classType}&homeCity=${homeCity}
+      &state=${state}&country=${country}
+      &department=${department}&building=${building}`);
+
       if (peopleSearchResults.length === 0) {
         this.setState({
           peopleSearchResults: (
@@ -299,54 +537,7 @@ class PeopleSearch extends Component {
               }
             </Media>
           ),
-          header: (
-            <Media query="(min-width: 960px)">
-              {matches =>
-                matches ? (
-                  <div style={styles.headerStyle}>
-                    <Grid container direction="row">
-                      <Grid item xs={1} />
-                      <Grid item xs={2}>
-                        <Typography variant="body2" style={styles.headerStyle}>
-                          FIRST NAME
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography variant="body2" style={styles.headerStyle}>
-                          LAST NAME
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={1}>
-                        <Typography variant="body2" style={styles.headerStyle}>
-                          TYPE
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={3}>
-                        <Typography variant="body2" style={styles.headerStyle}>
-                          CLASS/JOB TITLE
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography variant="body2" style={styles.headerStyle}>
-                          @GORDON.EDU
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </div>
-                ) : (
-                  <div style={styles.headerStyle}>
-                    <Grid container direction="row" justify="center">
-                      <Grid item>
-                        <Typography variant="body2" style={styles.headerStyle}>
-                          RESULTS
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </div>
-                )
-              }
-            </Media>
-          ),
+          header: this.makeHeader(),
         });
       }
     }
@@ -459,7 +650,7 @@ class PeopleSearch extends Component {
             query="(min-width: 600px)"
             render={() => (
               <Grid item>
-                <HeartIcon style={styles.FontAwesome} />
+                <FaHeart style={styles.FontAwesome} />
               </Grid>
             )}
           />
@@ -499,8 +690,8 @@ class PeopleSearch extends Component {
                   Sat Together At Chapel
                 </MenuItem>
                 <MenuItem
-                  label="&quot;Jesus Is My Significant Other&quot;"
-                  value="&quot;Jesus Is My Significant Other&quot;"
+                  label='"Jesus Is My Significant Other"'
+                  value='"Jesus Is My Significant Other"'
                 >
                   "Jesus Is My Significant Other"
                 </MenuItem>
@@ -579,7 +770,7 @@ class PeopleSearch extends Component {
                     query="(min-width: 600px)"
                     render={() => (
                       <Grid item>
-                        <BuildingIcon
+                        <FaBuilding
                           style={{
                             fontSize: 22,
                             marginLeft: 6,
@@ -638,7 +829,7 @@ class PeopleSearch extends Component {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <BookIcon style={styles.FontAwesome} />
+                          <FaBook style={styles.FontAwesome} />
                         </Grid>
                       )}
                     />
@@ -664,7 +855,7 @@ class PeopleSearch extends Component {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <BookIcon style={styles.FontAwesome} />
+                          <FaBook style={styles.FontAwesome} />
                         </Grid>
                       )}
                     />
@@ -796,7 +987,7 @@ class PeopleSearch extends Component {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <GlobeIcon
+                          <FaGlobeAmericas
                             style={{
                               fontSize: 22,
                               marginLeft: 2,
@@ -853,7 +1044,7 @@ class PeopleSearch extends Component {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <BriefcaseIcon
+                          <FaBriefcase
                             style={{
                               fontSize: 22,
                               marginLeft: 2,
@@ -884,7 +1075,7 @@ class PeopleSearch extends Component {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <BuildingIcon
+                          <FaBuilding
                             style={{
                               fontSize: 22,
                               marginLeft: 2,
