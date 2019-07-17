@@ -1,5 +1,3 @@
-//import session from '../src/services/session.js';
-
 /* Checking to see if the Cache API is available
 *  If so, check to see if the Service Worker API is available
 */
@@ -40,7 +38,7 @@ if ('caches' in window) {
   }
 
   timerFunction();
-  
+ 
     /* When a user exists out the app and re-opens it, this will check to see if they are
       *  connected to the internet so that:
       *     - If there's internet: Open in online mode if the current mode is offline
@@ -66,6 +64,8 @@ if ('caches' in window) {
       // Saves the network state as offline in local storage
       localStorage.setItem('network-status', JSON.stringify('offline'));
       window.postMessage('offline', location.origin);
+      // When network goes offline, stop the interval for cache update
+      clearInterval(resetTimer);
     });
 
     // If network connectivity re-enables during application run-time
@@ -76,6 +76,8 @@ if ('caches' in window) {
       // Saves the network state as online in local storage
       localStorage.setItem('network-status', JSON.stringify('online'));
       window.postMessage('online', location.origin);
+      // If network goes back online, then restart the interval function for cache update
+      timerFunction();
     });
   } else {
     console.log('SERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE');
