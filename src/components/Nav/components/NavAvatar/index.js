@@ -22,6 +22,7 @@ class GordonNavAvatar extends Component {
       image: null,
       name: null,
       username: null,
+      network: 'online',
     };
   }
   async componentWillMount() {
@@ -70,10 +71,49 @@ class GordonNavAvatar extends Component {
       );
     }
 
-    // Link component to be used with Button component
-    const buttonLink = ({ ...props }) => (
-      <Link {...props} to={'/myprofile'} onClick={this.props.onLinkClick} />
-    );
+    /* Used to re-render the page when the network connection changes.
+    *  this.state.network is compared to the message received to prevent
+    *  multiple re-renders that creates extreme performance lost.
+    *  The origin of the message is checked to prevent cross-site scripting attacks
+    */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    /* Gets status of current network connection for online/offline rendering
+    *  Defaults to online in case of PWA not being possible
+    */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+    // Creates the My Profile button link depending on the status of the network found in local storage
+    let buttonLink;
+    if (networkStatus === 'online') {
+      // Link component to be used with Button component
+      buttonLink = ({ ...props }) => (
+        <Link {...props} to={'/myprofile'} onClick={this.props.onLinkClick} />
+      );
+    } else {
+      // Link component to be used with Button component
+      buttonLink = ({ ...props }) => (
+        <Link
+          {...props}
+          to={`/profile/${user.getLocalInfo().name.replace(' ', '.')}`}
+          onClick={this.props.onLinkClick}
+        />
+      );
+    }
 
     return (
       <Button
