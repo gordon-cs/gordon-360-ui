@@ -1,0 +1,40 @@
+@media (min-width: 3840px) {
+  // Larger than 4K
+  .victory-promise {
+    height: 12%;
+  }
+}
+
+@media (max-width: 3840px) {
+  .victory-promise {
+    height: 12%;
+  }
+}
+
+@media (max-width: 1920px) {
+  // 1080p Full HD or smaller
+  .victory-promise {
+    height: 12%;
+  }
+}
+
+@media (max-width: 1366px) {
+  // 1366 x 768 or smaller
+  .victory-promise {
+    height: 12%;
+  }
+}
+
+@media (max-width: 600px) {
+  // 600 pixels or smaller (larger mobile device)
+  .victory-promise {
+    height: 12%;
+  }
+}
+
+@media (max-width: 400px) {
+  // 400 pixels or smaller (smaller mobile device)
+  .victory-promise {
+    height: 12%;
+  }
+}

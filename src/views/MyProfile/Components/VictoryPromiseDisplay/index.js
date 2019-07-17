@@ -6,7 +6,13 @@ import { gordonColors } from '../../../../theme';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ProgressBar from './ProgressBar';
 import { Pie } from 'react-chartjs-2';
+import { Polar } from 'react-chartjs-2';
+import { Chart } from 'react-chartjs-2';
 import victory from '../../../../services/victory';
+import PuzzlePiece from 'react-icons/lib/fa/puzzle-piece';
+import './VictoryPromise.css';
+import basic from './images/00.png';
+import { defaults } from 'react-chartjs-2';
 
 export default class VictoryPromiseDisplay extends React.Component {
   constructor(props) {
@@ -15,7 +21,7 @@ export default class VictoryPromiseDisplay extends React.Component {
       labels: ['intellect', 'character', 'leadership', 'service'],
       datasets: [
         {
-          data: [0, 0, 0, 0],
+          data: [1, 1, 1, 1],
           backgroundColor: [
             gordonColors.neutral.lightGray,
             gordonColors.neutral.lightGray,
@@ -24,11 +30,13 @@ export default class VictoryPromiseDisplay extends React.Component {
           ],
         },
       ],
+      options: '',
       CC: null,
       IM: null,
       LS: null,
       LW: null,
     };
+    //defaults.global.animation = false;
   }
   componentWillMount() {
     this.getVPScores();
@@ -36,6 +44,7 @@ export default class VictoryPromiseDisplay extends React.Component {
 
   async getVPScores() {
     const scores = await victory.getVPScore();
+    //const CC = scores[0].TOTAL_VP_CC_SCORE;
     const CC = scores[0].TOTAL_VP_CC_SCORE;
     const IM = scores[0].TOTAL_VP_IM_SCORE;
     const LS = scores[0].TOTAL_VP_LS_SCORE;
@@ -56,18 +65,49 @@ export default class VictoryPromiseDisplay extends React.Component {
     }
 
     this.setColor();
+
+    if (CC + IM + LS + LW === 0) {
+      console.log("All 0's");
+      this.setState({
+        datasets: [
+          {
+            data: [1, 1, 1, 1],
+            backgroundColor: [
+              gordonColors.neutral.lightGray,
+              gordonColors.neutral.lightGray,
+              gordonColors.neutral.lightGray,
+              gordonColors.neutral.lightGray,
+            ],
+          },
+        ],
+      });
+    }
+
+    this.setState({
+      options: {
+        legend: {
+          display: false,
+        },
+        scale: {
+          gridLines: {
+            display: true,
+          },
+          ticks: {
+            display: false,
+            max: Math.max(this.state.CC, this.state.IM, this.state.LS, this.state.LW),
+            min: 0,
+            maxTicksLimit: 1,
+          },
+        },
+      },
+    });
   }
 
   setColor() {
     this.setState({
       datasets: [
         {
-          data: [
-            this.state.CC || 25,
-            this.state.IM || 25,
-            this.state.LS || 25,
-            this.state.LW || 25,
-          ],
+          data: [this.state.CC, this.state.IM, this.state.LS, this.state.LW],
           backgroundColor: [
             this.state.CCColor,
             this.state.IMColor,
@@ -78,19 +118,15 @@ export default class VictoryPromiseDisplay extends React.Component {
       ],
     });
   }
-
+  //<PuzzlePiece className="left-upper-corner"/>
+  //<PuzzlePiece className="right-upper-corner"/>
   render() {
     return (
-      <div>
-        <Pie
-          data={{
-            labels: this.state.labels,
-            datasets: this.state.datasets,
-          }}
-          height="50%"
-        />
-        <br />
-      </div>
+      <Polar
+        className="victory-promise"
+        data={{ labels: this.state.labels, datasets: this.state.datasets }}
+        options={this.state.options}
+      />
     );
   }
 }
