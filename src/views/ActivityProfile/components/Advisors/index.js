@@ -39,7 +39,7 @@ export default class Advisors extends Component {
       if (advisors.length > 0) {
         content = (
           <section className="gordon-activity-profile">
-            <Typography variant="body1">
+            <Typography variant="body2">
               <strong>Advisors:</strong>
             </Typography>
             <List dense disablePadding>
@@ -50,6 +50,7 @@ export default class Advisors extends Component {
                     color="primary"
                     href={`mailto:${activityAdvisor.Email}`}
                     padding={0}
+                    edge
                   >
                     <Email color="primary" style={{ width: 16, height: 16 }} />
                   </IconButton>

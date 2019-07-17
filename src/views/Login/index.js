@@ -98,7 +98,7 @@ export default class Login extends Component {
         <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
           <img src={GordonLogoVerticalWhite} alt={`${projectName}`} />
           <form onSubmit={this.logIn}>
-            <Typography variant="subheading">Welcome to {projectName}!</Typography>
+            <Typography variant="subtitle1">Welcome to {projectName}!</Typography>
             <TextField
               id="username"
               label="Username"
@@ -130,7 +130,7 @@ export default class Login extends Component {
                 },
               }}
             />
-            <Typography className="error" variant="body1" color="error">
+            <Typography className="error" variant="body2" color="error">
               {this.state.error}
             </Typography>
             <section className="button-wrapper">

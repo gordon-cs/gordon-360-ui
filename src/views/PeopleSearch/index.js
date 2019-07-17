@@ -277,7 +277,7 @@ class PeopleSearch extends Component {
         this.setState({
           peopleSearchResults: (
             <Grid item xs={12}>
-              <Typography variant="headline" align="center">
+              <Typography variant="h5" align="center">
                 No results found.
               </Typography>
             </Grid>
@@ -529,7 +529,7 @@ class PeopleSearch extends Component {
                 marginTop: 8,
               }}
             >
-              <Typography variant="headline">General Info</Typography>
+              <Typography variant="h5">General Info</Typography>
               <Grid container spacing={8} alignItems="flex-end">
                 <Media
                   query="(min-width: 600px)"
@@ -611,7 +611,7 @@ class PeopleSearch extends Component {
                   disableActionSpacing
                   onClick={this.handleAcademicsExpandClick}
                 >
-                  <Typography variant="headline">Academics</Typography>
+                  <Typography variant="h5">Academics</Typography>
                   <IconButton
                     className={classnames(classes.expand, {
                       [classes.expandOpen]: this.state.academicsExpanded,
@@ -722,7 +722,7 @@ class PeopleSearch extends Component {
                   disableActionSpacing
                   onClick={this.handleHomeExpandClick}
                 >
-                  <Typography variant="headline">Home</Typography>
+                  <Typography variant="h5">Home</Typography>
                   <IconButton
                     className={classnames(classes.expand, {
                       [classes.expandOpen]: this.state.homeExpanded,
@@ -826,7 +826,7 @@ class PeopleSearch extends Component {
                   disableActionSpacing
                   onClick={this.handleOffDepExpandClick}
                 >
-                  <Typography variant="headline">Building and Department</Typography>
+                  <Typography variant="h5">Building and Department</Typography>
                   <IconButton
                     className={classnames(classes.expand, {
                       [classes.expandOpen]: this.state.offDepExpanded,

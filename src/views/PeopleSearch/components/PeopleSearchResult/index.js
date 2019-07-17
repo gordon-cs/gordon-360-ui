@@ -6,7 +6,9 @@ import PropTypes from 'prop-types';
 import user from '../../../../services/user';
 import Divider from '@material-ui/core/Divider';
 import { Link } from 'react-router-dom';
+
 import './peopleSearchResult.css';
+import '../../../../app.css';
 
 export default class PeopleSearchResult extends Component {
   constructor(props) {
@@ -95,7 +97,7 @@ export default class PeopleSearchResult extends Component {
     return (
       <section>
         <Divider />
-        <Link to={`profile/${Person.AD_Username}`}>
+        <Link className="gc360-link-color" to={`profile/${Person.AD_Username}`}>
           <Grid
             container
             direction="row"

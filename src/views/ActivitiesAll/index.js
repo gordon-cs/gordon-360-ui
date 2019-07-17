@@ -187,9 +187,9 @@ export default class GordonActivitiesAll extends Component {
 
     return (
       <section className="activities-all">
-        <Grid container justify="center" spacing="16">
+        <Grid container justify="center" spacing={0}>
           <Grid item xs={12} md={12} lg={8}>
-            <Grid container className="activities-filter" spacing="16">
+            <Grid container className="activities-filter" spacing={2}>
               <Grid item xs={12} md={12} lg={6}>
                 <TextField
                   id="search"
@@ -231,7 +231,7 @@ export default class GordonActivitiesAll extends Component {
           </Grid>
         </Grid>
 
-        <Grid container align="center" spacing="32" justify="center">
+        <Grid container align="center" spacing={4} justify="center">
           <Grid item xs={12} lg={8} fullWidth>
             <Card>
               <div style={headerStyle}>

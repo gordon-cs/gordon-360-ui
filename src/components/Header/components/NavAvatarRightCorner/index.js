@@ -10,6 +10,7 @@ import QuickLinksDialog from '../../../QuickLinksDialog';
 import { signOut } from '../../../../services/auth';
 
 import './nav-avatar-right-corner.css';
+import '../../../../app.css';
 import user from '../../../../services/user';
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -117,7 +118,7 @@ export default class GordonNavAvatarRightCorner extends Component {
     let admin;
     if (user.getLocalInfo().college_role === 'god') {
       admin = (
-        <Link to="/admin">
+        <Link className="gc360-link-color" to="/admin">
           <MenuItem onClick={this.onClose} divider="true">
             Admin
           </MenuItem>
@@ -153,7 +154,7 @@ export default class GordonNavAvatarRightCorner extends Component {
           <MenuItem onClick={this.onClose} style={{ display: 'none' }}>
             My Profile
           </MenuItem>
-          <Link to={myProfileLink}>
+          <Link className="gc360-link-color" to={myProfileLink}>
             <MenuItem onClick={this.onClose} divider="true">
               My Profile
             </MenuItem>
@@ -167,17 +168,17 @@ export default class GordonNavAvatarRightCorner extends Component {
           >
             Links
           </MenuItem>
-          <Link to="/help">
+          <Link className="gc360-link-color" to="/help">
             <MenuItem onClick={this.onClose} divider="true">
               Help
             </MenuItem>
           </Link>
-          <Link to="/about">
+          <Link className="gc360-link-color" to="/about">
             <MenuItem onClick={this.onClose} divider="true">
               About
             </MenuItem>
           </Link>
-          <Link to="/feedback">
+          <Link className="gc360-link-color" to="/feedback">
             <MenuItem onClick={this.onClose} divider="true">
               Feedback
             </MenuItem>
