@@ -25,7 +25,6 @@ import MyProfileActivityList from './../../components/MyProfileActivityList';
 import LinksDialog from './Components/LinksDialog';
 import { socialMediaInfo } from '../../socialMedia';
 import { Link } from 'react-router-dom';
-import './myProfile.css';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import GordonLoader from '../../components/Loader';
@@ -33,6 +32,9 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+
+import './myProfile.css';
+import '../../app.css';
 
 const CROP_DIM = 200; // pixels
 //MyProfile
@@ -304,7 +306,7 @@ export default class Profile extends Component {
     if (this.state.memberships.length === 0) {
       involvementAndPrivacyList = (
         <div>
-          <Link to={`/activities`}>
+          <Link className="gc360-link-color" to={`/activities`}>
             <Typography variant="body2" className="noInvolvements">
               No Involvements to display. Click here to see Involvements around campus!
             </Typography>
@@ -433,7 +435,10 @@ export default class Profile extends Component {
                       spacing="16"
                     >
                       <Grid item xs={6}>
-                        <Link to={`/profile/${this.state.profile.AD_Username}`}>
+                        <Link
+                          className="gc360-link-color"
+                          to={`/profile/${this.state.profile.AD_Username}`}
+                        >
                           <Button style={style.uncontainedButton}>View My Public Profile</Button>
                         </Link>
                       </Grid>
@@ -697,7 +702,7 @@ export default class Profile extends Component {
                             <CardHeader title="Involvements" />
                           </Grid>
                           <Grid item xs={5} align="right">
-                            <Link to="/transcript">
+                            <Link className="gc360-link-color" to="/transcript">
                               <Button variant="contained" style={style.button}>
                                 Co-Curricular Transcript
                               </Button>

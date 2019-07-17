@@ -182,7 +182,6 @@ export default class CLWCreditsDaysLeft extends Component {
     return (
       <Card>
         <CardContent>
-          {/* headline value no longer exists, use h5*/}
           <Typography variant="h5" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.currSessionDescription}
           </Typography>

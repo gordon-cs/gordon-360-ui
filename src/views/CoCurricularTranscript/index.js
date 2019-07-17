@@ -314,7 +314,7 @@ export default class Transcript extends Component {
             <div className="subtitle">{this.getMinors(this.state.profile.Minors)}</div>
             {honorsLeadership && (
               <div className="subtitle">
-                <Typography variant="headline">
+                <Typography variant="h5">
                   <b>Honors, Leadership, and Research</b>
                 </Typography>
               </div>
@@ -322,7 +322,7 @@ export default class Transcript extends Component {
             <div className="activity-list">{honorsList}</div>
             {experiences && (
               <div className="subtitle">
-                <Typography variant="headline">
+                <Typography variant="h5">
                   <b>Experience</b>
                 </Typography>
               </div>
@@ -330,7 +330,7 @@ export default class Transcript extends Component {
             <div className="activity-list">{experienceList}</div>
             {serviceLearning && (
               <div className="subtitle">
-                <Typography variant="headline">
+                <Typography variant="h5">
                   <b>Service Learning</b>
                 </Typography>
               </div>
@@ -338,7 +338,7 @@ export default class Transcript extends Component {
             <div className="activity-list">{serviceList}</div>
             {otherInvolvements && (
               <div className="subtitle">
-                <Typography variant="headline">
+                <Typography variant="h5">
                   <b>Activities</b>
                 </Typography>
               </div>
