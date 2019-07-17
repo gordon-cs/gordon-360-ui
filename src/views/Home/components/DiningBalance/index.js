@@ -58,6 +58,15 @@ export default class DiningBalance extends Component {
       content = <GordonLoader />;
     } else {
       if (this.facStaffBalance) {
+        //Set color to use when displaying balance based on how low it is...
+        const lowBalance = 20; //dollars
+        const reallyLowBalance = 10; //dollars
+        let balanceColor = gordonColors.secondary.green; // balance okay
+        if (this.facStaffBalance < lowBalance) {
+          balanceColor = gordonColors.secondary.yellow; // balance is low
+        } else if (this.facStaffBalance < reallyLowBalance) {
+          balanceColor = gordonColors.secondary.orange; // balance is really low
+        }
         content = (
           <div
             style={{
@@ -67,8 +76,7 @@ export default class DiningBalance extends Component {
               justifyContent: 'space-around',
             }}
           >
-            {/*They aren't really swipes, but green is nicer if it's the only one*/}
-            <div className="label-text" style={{ color: swipesColor }}>
+            <div className="label-text" style={{ color: balanceColor }}>
               ${this.facStaffBalance}
             </div>
           </div>
