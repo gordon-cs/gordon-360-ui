@@ -41,7 +41,7 @@ class GordonActivityGrid extends Component {
       );
     } else if (Array.isArray(this.props.myInvolvements) && this.props.myInvolvements.length > 0) {
       content = this.props.myInvolvements.map(activity => (
-        <div className="container">
+        <div className="container" key={activity.ActivityCode}>
           <Link
             to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
             className="item"
@@ -94,7 +94,7 @@ class GordonActivityGrid extends Component {
     return (
       <GridList
         cellHeight={250}
-        spacing="16"
+        spacing={16}
         cols={gridListCols(this.props.width)}
         className="gordon-activity-grid"
       >

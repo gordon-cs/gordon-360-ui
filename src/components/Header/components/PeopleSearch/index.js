@@ -313,31 +313,27 @@ export default class GordonPeopleSearch extends Component {
               ),
             }}
           />
+          <Dialog
+            open={this.state.loginDialog}
+            onClose={clicked => this.handleClose()}
+            aria-labelledby="login-dialog-title"
+            aria-describedby="login-dialog-description"
+          >
+            <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="login-dialog-description">
+                You are not logged in. Please log in to use People Search.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
+                Okay
+              </Button>
+            </DialogActions>
+          </Dialog>
         </span>
       );
     }
-    return (
-      <div>
-        {content}
-        <Dialog
-          open={this.state.loginDialog}
-          onClose={clicked => this.handleClose()}
-          aria-labelledby="login-dialog-title"
-          aria-describedby="login-dialog-description"
-        >
-          <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="login-dialog-description">
-              You are not logged in. Please log in to use People Search.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
-              Okay
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-    );
+    return content;
   }
 }

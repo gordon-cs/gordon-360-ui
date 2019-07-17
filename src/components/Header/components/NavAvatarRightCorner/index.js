@@ -126,7 +126,7 @@ export default class GordonNavAvatarRightCorner extends Component {
       let myProfile = '/myprofile/' + username;
       myProfileLink = (
         <Link to={myProfile}>
-          <MenuItem onClick={this.onClose} divider="true">
+          <MenuItem onClick={this.onClose} divider={true}>
             My Profile
           </MenuItem>
         </Link>

@@ -15,7 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import Card from '@material-ui/core/Card';
-import { isAuthenticated, signOut } from '../../services/auth';
+import { isAuthenticated } from '../../services/auth';
 
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
@@ -68,7 +68,6 @@ export default class GordonActivitiesAll extends Component {
       }
     } else {
       try {
-        //const profile = await user.getProfileInfo();
         const { SessionCode: sessionCode } = await session.getCurrent();
         this.setState({ session: sessionCode, currentSession: sessionCode });
 
@@ -77,13 +76,10 @@ export default class GordonActivitiesAll extends Component {
           activity.getTypes(sessionCode),
           session.getAll(),
         ]);
-        //const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
 
         this.setState({
-          //profile,
           activities,
           allActivities: activities,
-          //myInvolvements: myInvolvements,
           loading: false,
           sessions,
           types,
@@ -191,9 +187,9 @@ export default class GordonActivitiesAll extends Component {
 
       content = (
         <section className="activities-all">
-          <Grid container justify="center" spacing="16">
+          <Grid container justify="center" spacing={16}>
             <Grid item xs={12} md={12} lg={8}>
-              <Grid container className="activities-filter" spacing="16">
+              <Grid container className="activities-filter" spacing={16}>
                 <Grid item xs={12} md={12} lg={6}>
                   <TextField
                     id="search"
@@ -235,7 +231,7 @@ export default class GordonActivitiesAll extends Component {
             </Grid>
           </Grid>
 
-          <Grid container align="center" spacing="32" justify="center">
+          <Grid container align="center" spacing={32} justify="center">
             <Grid item xs={12} lg={8} fullWidth>
               <Card>
                 <div style={headerStyle}>
@@ -267,8 +263,6 @@ export default class GordonActivitiesAll extends Component {
         </section>
       );
     } else {
-      signOut();
-
       if (this.state.loading === true) {
         allInvolvements = <GordonLoader />;
       } else {
@@ -299,9 +293,9 @@ export default class GordonActivitiesAll extends Component {
 
       content = (
         <section className="activities-all">
-          <Grid container justify="center" spacing="16">
+          <Grid container justify="center" spacing={16}>
             <Grid item xs={12} md={12} lg={8}>
-              <Grid container className="activities-filter" spacing="16">
+              <Grid container className="activities-filter" spacing={16}>
                 <Grid item xs={12} md={12} lg={6}>
                   <TextField
                     id="search"
@@ -343,7 +337,7 @@ export default class GordonActivitiesAll extends Component {
             </Grid>
           </Grid>
 
-          <Grid container align="center" spacing="32" justify="center">
+          <Grid container align="center" spacing={32} justify="center">
             <Grid item xs={12} lg={8}>
               <Card>
                 <div style={headerStyle}>

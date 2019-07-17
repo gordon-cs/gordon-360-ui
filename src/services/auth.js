@@ -64,6 +64,7 @@ const authenticate = (username, password) =>
  * @return {Promise.<boolean>} Whether session is authenticated or not
  */
 const isAuthenticated = () => {
+  console.log('Running isAuthenticated');
   try {
     // Check that auth exists
     const token = storage.get('token');

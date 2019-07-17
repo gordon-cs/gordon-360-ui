@@ -28,6 +28,9 @@ class GordonNavAvatar extends Component {
   async componentWillMount() {
     this.loadAvatar();
   }
+  async componentWillReceiveProps() {
+    this.loadAvatar();
+  }
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
   }
@@ -107,15 +110,9 @@ class GordonNavAvatar extends Component {
       );
     } else {
       let avatar = <Avatar className="avatar placeholder">Guest</Avatar>;
-      if (this.state.image) {
-        avatar = (
-          <Avatar className="avatar image" src={`data:image/jpg;base64,${this.state.image}`} />
-        );
-      }
-
       // Link component to be used with Button component
       const buttonLink = ({ ...props }) => (
-        <Link {...props} to={`/home`} onClick={this.props.onLinkClick} />
+        <Link {...props} to={`/`} onClick={this.props.onLinkClick} />
       );
 
       content = (

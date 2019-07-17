@@ -37,6 +37,7 @@ export default class GordonNavLinks extends Component {
 
   onSignOut() {
     signOut();
+    this.props.onLinkClick();
     this.props.onSignOut();
   }
 

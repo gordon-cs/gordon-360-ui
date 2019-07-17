@@ -105,7 +105,8 @@ export default class GordonHeader extends Component {
           className="guestTab"
           icon={<PeopleIcon />}
           label="People"
-          component={Button}
+          component={NavLink}
+          to="#"
           onClick={clicked => this.unAuthenticatedSearch()}
         />
       );
@@ -117,13 +118,13 @@ export default class GordonHeader extends Component {
           <Toolbar>
             <IconButton
               className="menu-button"
-              color="contrast"
+              color="primary"
               aria-label="open drawer"
               onClick={this.props.onDrawerToggle}
             >
               <MenuIcon className="menu-button-icon" />
             </IconButton>
-            <Typography clsasName="title" variant="title" color="inherit">
+            <Typography className="title" variant="title" color="inherit">
               <Switch>
                 {routes.map(route => (
                   <Route
