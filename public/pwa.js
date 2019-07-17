@@ -7,9 +7,9 @@ if ('caches' in window) {
   // Checking to see if the Service Worker API is available
   // If so, we register our service worker and run all PWA operations
   if (navigator.serviceWorker) {
-    // If the new service worker is not up to date with the current worker, it will install the new
-    //  service woker as its new current
-    navigator.serviceWorker
+        // If the new service worker is not up to date with the current worker, it will install the new
+        //  service woker as its new current
+      navigator.serviceWorker
       .register('/sw.js')
       .then(reg => {
         reg.onupdatefound = () => {
@@ -26,7 +26,21 @@ if ('caches' in window) {
         };
       })
       .catch(console.error);
+  
+  // Set interval function that will try to update cache every hour
+  function timerFunction() {
+    resetTimer = setInterval(() => {
+      navigator.serviceWorker.controller.postMessage({
+        message: 'update-cache-files',
+        token: JSON.parse(localStorage.getItem('token')),
+        termCode: JSON.parse(localStorage.getItem('currentTerm')),
+      });
+      // Set interval to every hour
+    }, 3600000);
+  }
 
+  timerFunction();
+  
     /* When a user exists out the app and re-opens it, this will check to see if they are
       *  connected to the internet so that:
       *     - If there's internet: Open in online mode if the current mode is offline
