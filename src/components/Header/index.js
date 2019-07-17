@@ -23,20 +23,21 @@ import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
 import { Button } from '@material-ui/core';
+import { projectName } from '../../project-name';
 
 const getRouteName = route => {
   if (route.name) {
     return () => (
       <span>
-        <DocumentTitle title={`${route.name} | Gordon 360`} />
+        <DocumentTitle title={`${route.name} | ${projectName}`} />
         {route.name}
       </span>
     );
   }
   return () => (
     <span>
-      <DocumentTitle title="Gordon 360" />
-      Gordon 360
+      <DocumentTitle title={`${projectName}`} />
+      {projectName}
     </span>
   );
 };
@@ -94,8 +95,8 @@ export default class GordonHeader extends Component {
 
   render() {
     /* Gets status of current network connection for online/offline rendering
-    *  Defaults to online in case of PWA not being possible
-    */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     // Creates the People Tab depending on the status of the network found in local storage

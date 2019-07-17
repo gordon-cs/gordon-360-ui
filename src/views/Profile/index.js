@@ -183,7 +183,12 @@ export default class Profile extends Component {
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>
-          <a href={this.state.facebookLink} className="icon" target="_blank">
+          <a
+            href={this.state.facebookLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.facebook.icon}
           </a>
         </Grid>
@@ -192,7 +197,12 @@ export default class Profile extends Component {
     if (this.state.twitterLink !== '') {
       twitterButton = (
         <Grid item>
-          <a href={this.state.twitterLink} className="icon" target="_blank">
+          <a
+            href={this.state.twitterLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.twitter.icon}
           </a>
         </Grid>
@@ -201,7 +211,12 @@ export default class Profile extends Component {
     if (this.state.linkedInLink !== '') {
       linkedInButton = (
         <Grid item>
-          <a href={this.state.linkedInLink} className="icon" target="_blank">
+          <a
+            href={this.state.linkedInLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.linkedIn.icon}
           </a>
         </Grid>
@@ -210,7 +225,12 @@ export default class Profile extends Component {
     if (this.state.instagramLink !== '') {
       instagramButton = (
         <Grid item>
-          <a href={this.state.instagramLink} className="icon" target="_blank">
+          <a
+            href={this.state.instagramLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.instagram.icon}
           </a>
         </Grid>
@@ -218,10 +238,10 @@ export default class Profile extends Component {
     }
 
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -239,8 +259,8 @@ export default class Profile extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-    *  Defaults to online in case of PWA not being possible
-    */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     // Creates the Public Profile page depending on the status of the network found in local storage

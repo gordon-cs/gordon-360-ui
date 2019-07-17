@@ -179,7 +179,9 @@ export default class Profile extends Component {
           var maxWidth = this.maxCropPreviewWidth();
           var displayWidth = maxWidth > i.width ? i.width : maxWidth;
           var cropDim = this.minCropBoxDim(i.width, displayWidth);
-          this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
+          this.setState({
+            cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim },
+          });
           this.setState({ preview: dataURL });
         }
       }.bind(this);
@@ -214,7 +216,9 @@ export default class Profile extends Component {
   hasNickName(profile) {
     let Name = String(profile.fullName);
     let FirstName = Name.split(' ')[0];
-    this.setState({ hasNickName: FirstName !== profile.NickName && profile.NickName !== '' });
+    this.setState({
+      hasNickName: FirstName !== profile.NickName && profile.NickName !== '',
+    });
   }
 
   async getInvolvementAndPrivacyDictionary(membershipsList) {
@@ -250,7 +254,12 @@ export default class Profile extends Component {
         memberships,
       );
       const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, memberships, involvementsAndTheirPrivacy });
+      this.setState({
+        image,
+        loading: false,
+        memberships,
+        involvementsAndTheirPrivacy,
+      });
       this.setState({ isImagePublic: this.state.profile.show_pic });
       this.hasNickName(profile);
     } catch (error) {
@@ -342,7 +351,12 @@ export default class Profile extends Component {
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>
-          <a href={this.state.facebookLink} className="icon" target="_blank">
+          <a
+            href={this.state.facebookLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.facebook.icon}
           </a>
         </Grid>
@@ -352,7 +366,12 @@ export default class Profile extends Component {
     if (this.state.twitterLink !== '') {
       twitterButton = (
         <Grid item>
-          <a href={this.state.twitterLink} className="icon" target="_blank">
+          <a
+            href={this.state.twitterLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.twitter.icon}
           </a>
         </Grid>
@@ -362,7 +381,12 @@ export default class Profile extends Component {
     if (this.state.linkedInLink !== '') {
       linkedInButton = (
         <Grid item>
-          <a href={this.state.linkedInLink} className="icon" target="_blank">
+          <a
+            href={this.state.linkedInLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.linkedIn.icon}
           </a>
         </Grid>
@@ -372,7 +396,12 @@ export default class Profile extends Component {
     if (this.state.instagramLink !== '') {
       instagramButton = (
         <Grid item>
-          <a href={this.state.instagramLink} className="icon" target="_blank">
+          <a
+            href={this.state.instagramLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.instagram.icon}
           </a>
         </Grid>
@@ -381,10 +410,10 @@ export default class Profile extends Component {
     }
     if (linkCount > 0) {
       editButton = (
-        <Grid item style={{ marginTop: '5px' }}>
-          <a onClick={this.handleSocialLinksOpen} className="edit-icon">
+        <Grid item>
+          <IconButton onClick={this.handleSocialLinksOpen} className="edit-icon">
             {socialMediaInfo.edit.icon}
-          </a>
+          </IconButton>
         </Grid>
       );
     } else {
@@ -398,10 +427,10 @@ export default class Profile extends Component {
     }
 
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -419,8 +448,8 @@ export default class Profile extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-    *  Defaults to online in case of PWA not being possible
-    */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     // Creates the My Profile button link depending on the status of the network found in local storage
@@ -459,7 +488,10 @@ export default class Profile extends Component {
                               src={`data:image/jpg;base64,${this.state.image}`}
                               alt="Profile"
                               className="rounded-corners"
-                              style={{ 'max-height': '200px', 'min-width': '160px' }}
+                              style={{
+                                'max-height': '200px',
+                                'min-width': '160px',
+                              }}
                             />
                             <span className="imageBackdrop" />
                             <GridListTileBar className="tile-bar" title="Photo Options" />
@@ -538,18 +570,26 @@ export default class Profile extends Component {
                                   {!preview && (
                                     <Grid container justify="center" spacing="16">
                                       <Dropzone
-                                        className="dropzone"
-                                        activeClassName="drop-overlay"
                                         onDropAccepted={this.onDropAccepted.bind(this)}
                                         onDropRejected={this.onDropRejected.bind(this)}
-                                        accept="image/jpeg,image/jpg,image/png"
+                                        accept="image/jpeg, image/jpg, image/png"
                                       >
-                                        <img
-                                          className="rounded-corners"
-                                          src={`data:image/jpg;base64,${this.state.image}`}
-                                          alt=""
-                                          style={{ 'max-width': '200px', 'max-height': '200px' }}
-                                        />
+                                        {({ getRootProps, getInputProps }) => (
+                                          <section>
+                                            <div className="prof-dropzone" {...getRootProps()}>
+                                              <input {...getInputProps()} />
+                                              <img
+                                                className="rounded-corners"
+                                                src={`data:image/jpg;base64,${this.state.image}`}
+                                                alt=""
+                                                style={{
+                                                  'max-width': '200px',
+                                                  'max-height': '200px',
+                                                }}
+                                              />
+                                            </div>
+                                          </section>
+                                        )}
                                       </Dropzone>
                                     </Grid>
                                   )}
@@ -622,7 +662,10 @@ export default class Profile extends Component {
                                         <Button
                                           variant="contained"
                                           onClick={this.handleResetImage}
-                                          style={{ background: 'tomato', color: 'white' }}
+                                          style={{
+                                            background: 'tomato',
+                                            color: 'white',
+                                          }}
                                         >
                                           Reset
                                         </Button>
@@ -650,7 +693,10 @@ export default class Profile extends Component {
                                           style={
                                             this.state.preview
                                               ? style.button
-                                              : { background: 'darkgray', color: 'white' }
+                                              : {
+                                                  background: 'darkgray',
+                                                  color: 'white',
+                                                }
                                           }
                                         >
                                           Submit
@@ -734,7 +780,8 @@ export default class Profile extends Component {
                           marginBottom: '-4.5pt',
                           marginRight: '1rem',
                         }}
-                      />Success!
+                      />
+                      Success!
                     </span>
                   }
                   action={[
