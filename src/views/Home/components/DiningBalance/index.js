@@ -60,11 +60,14 @@ export default class DiningBalance extends Component {
         //Set color to use when displaying balance based on how low it is...
         const lowBalance = 20; //dollars
         const reallyLowBalance = 10; //dollars
-        let balanceColor = gordonColors.secondary.green; // balance okay
-        if (this.facStaffBalance < lowBalance) {
-          balanceColor = gordonColors.secondary.yellow; // balance is low
-        } else if (this.facStaffBalance < reallyLowBalance) {
-          balanceColor = gordonColors.secondary.orange; // balance is really low
+        const balance = parseInt(this.facStaffBalance);
+        let balanceColor = gordonColors.secondary.green; //default
+        if (balance === 0) {
+          balanceColor = gordonColors.neutral.lightGray;
+        } else if (balance < reallyLowBalance) {
+          balanceColor = gordonColors.secondary.orange;
+        } else if (balance < lowBalance) {
+          balanceColor = gordonColors.secondary.yellow;
         }
         content = (
           <div
