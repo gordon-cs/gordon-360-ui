@@ -7,9 +7,9 @@ if ('caches' in window) {
   // Checking to see if the Service Worker API is available
   // If so, we register our service worker and run all PWA operations
   if (navigator.serviceWorker) {
-        // If the new service worker is not up to date with the current worker, it will install the new
-        //  service woker as its new current
-      navigator.serviceWorker
+    // If the new service worker is not up to date with the current worker, it will activate the new
+    // service worker as its new current. Otherwise, it will automatically activate the service worker
+    navigator.serviceWorker
       .register('/sw.js')
       .then(reg => {
         reg.onupdatefound = () => {
