@@ -39,7 +39,7 @@ export default class GordonActivitiesAll extends Component {
     };
   }
 
-  componentDidUpdate() {
+  async componentDidUpdate() {
     window.onpopstate = e => {
       window.location.reload();
     };
@@ -47,6 +47,7 @@ export default class GordonActivitiesAll extends Component {
 
   async componentWillMount() {
     this.setState({ loading: true });
+    console.log('componentWillMount');
     try {
       const profile = await user.getProfileInfo();
       const { SessionCode: sessionCode } = await session.getCurrent();

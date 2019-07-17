@@ -21,7 +21,7 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
-Make sure Node.js is set up on your maching (https://nodejs.org/en/)
+Make sure Node.js is set up on your machine (https://nodejs.org/en/)
 
 To run the app for the first time, run the following commands:
 
@@ -52,35 +52,35 @@ VS Code users will also see a ruler at the 100 character mark, helping the devel
 
 Links to the homepages of libraries used in this project, listed here for easy reference.
 
-- [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
-
-  Provides easy routing, allowing transitions between views with back button support and URL management.
-
-- [classnames](https://github.com/JedWatson/classnames)
-
-  A simple JavaScript utility for conditionally joining classNames together. See [Usage with React.js](https://github.com/JedWatson/classnames#usage-with-reactjs) for an explanation of why this library is useful with JSX.
-
 - [Material-UI](https://material-ui-next.com)
 
   Material-UI is a widely-used React implementation of Google's Material Design. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
-  _Note_: This project currently uses the 1.3.1 release
-
-- [Downshift](https://github.com/paypal/downshift)
-
-  Downshift is a component that can be used for building autocomplete components. We use it because it is used in one of the Material-UI autocomplete examples, showing that it integrates well with Material-UI components.
-
-- [Cropper-JS](https://github.com/fengyuanchen/cropperjs/blob/master/README.md)
-
-  Cropper JS is a robust image cropper that is used on My Profile. While this Library is not used directly, a [React component](https://www.npmjs.com/package/react-cropper) that wraps this library is used.
 
 - [Chart-JS](http://www.chartjs.org/)
 
   Chart-JS is a Library that provides GUI charts
   An example can be found on the homepage. The React Component that is used can be found [here](https://github.com/jerairrest/react-chartjs-2)
 
+- [classnames](https://github.com/JedWatson/classnames)
+
+  A simple JavaScript utility for conditionally joining classNames together. See [Usage with React.js](https://github.com/JedWatson/classnames#usage-with-reactjs) for an explanation of why this library is useful with JSX.
+
+- [Cropper-JS](https://github.com/fengyuanchen/cropperjs/blob/master/README.md)
+
+  Cropper JS is a robust image cropper that is used on My Profile. While this Library is not used directly, a [React component](https://www.npmjs.com/package/react-cropper) that wraps this library is used.
+
+- [Downshift](https://github.com/paypal/downshift)
+
+  Downshift is a component that can be used for building autocomplete components. We use it because it is used in one of the Material-UI autocomplete examples, showing that it integrates well with Material-UI components.
+
 - [history](https://github.com/ReactTraining/history#readme)
 
   history is a JavaScript library that lets you easily manage session history anywhere JavaScript runs. history abstracts away the differences in various environments and provides a minimal API that lets you manage the history stack, navigate, confirm navigation, and persist state between sessions.
+
+- [lodash](https://lodash.com/)
+
+  A modern JavaScript utility library delivering modularity, performance & extras.
+  Extends functionality of Arrays and adds sorting methods of elements in arrays.
 
 - [React-DropZone](https://github.com/react-dropzone/react-dropzone)
 
@@ -95,19 +95,18 @@ Links to the homepages of libraries used in this project, listed here for easy r
   A React image carousel.
   [Link to source code + readme](https://github.com/leandrowd/react-responsive-carousel)
 
-- [lodash](https://lodash.com/)
+- [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
 
-  A modern JavaScript utility library delivering modularity, performance & extras.
-  Extends functionality of Arrays and adds sorting methods of elements in arrays.
+  Provides easy routing, allowing transitions between views with back button support and URL management.
 
 ### Connect Local Backend To React
 
 - After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
 
   - Pull the UI repository, if you do not have it open on the virtual machine already.
-  - Open `package.json` and scroll to the bottom.
+  - Open `setupProxy.js`:
 
-    - In the `proxy` key, there are two subkeys: `/api` and `/token`. Change the `target` line in both of these to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the text to say `"target": "http://localhost:5555/"` in both subkeys.
+    - You will see two nearly identical function calls that start with `app.use(proxy...`. In both calls, change the string following the word `target` to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the string to say `'http://localhost:5555/'` in both.
 
   - Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file.
   - Do the same with `.env.development`.
@@ -169,6 +168,14 @@ To remove a dependency, use `npm rm nameOfPackage`.
 To see which depencies are out of date, run `npm outdated`.
 
 To update all depedencies to their latest allowed versions (as specified by the semver range in `package.json`), run `npm update --save --dev`. This command will save the latest versions of all production and development dependencies to `package.json` as the new minimum version. Read more about `npm update` [here](https://docs.npmjs.com/cli/update).
+
+### When Dependency Updates Break 360
+
+All dependency versions in package.json are currently prefixed with `>=` so that npm install will always download the latest versions. This keeps them from getting behind but may cause problems when there are major releases.
+
+If a dependency's major release causes problems, a quick fix is to change the `>=` to a `^` and do `npm install`. If this did not rollback, which you can check by looking for the dependency's version in package-lock.json, it may work to delete package-lock.json, delete node_modules and its contents, and `npm install` again.
+
+The long yet wise fix is to go to the folder for this dependency in node_modules and look for a CHANGELOG.md. Of course, make sure you have the latest version of this package, or notes about that version will not be there. The CHANGELOG.md should point out the "breaking changes" that came with major releases. If they are not called this, you should be able to find these changes in the notes for each major release's entry- any entry entitle X.0.0, where X would actually be a version number. Read about these changes and change your code accordingly. Then, you should be able to use the latest version!
 
 ### Semantic Versioning
 

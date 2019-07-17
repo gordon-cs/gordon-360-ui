@@ -1,30 +1,15 @@
-.submittedText {
-  color: 'black';
-  white-space: 'pre';
-}
-
-@media (min-width: 300px) {
-  .dropzone {
-    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
-    width: 18rem;
-    height: 18rem;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    border-style: dashed;
-    border-width: 0.2rem;
-    border-radius: 1rem;
-    border-color: darkgray;
-  }
-  .dropzone:hover {
-    cursor: pointer;
-  }
-  .drop-overlay {
-    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
-    border-style: dashed;
-    border-width: 0.2rem;
-    border-radius: 1rem;
-    border-color: gray;
+.id-dropzone {
+  transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+  width: 18rem;
+  height: 18rem;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  border-style: dashed;
+  border-width: 0.2rem;
+  border-radius: 1rem;
+  border-color: darkgray;
+  &:hover {
     background-color: #dddddd;
     box-shadow: 0 0 0 0.25rem #dddddd;
   }

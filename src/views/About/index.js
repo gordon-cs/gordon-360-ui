@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import { gordonColors } from '../../theme';
 import Version from '../../services/version';
+import { projectName } from '../../project-name';
 import './about.css';
 
 export default class About extends Component {
@@ -52,7 +53,8 @@ export default class About extends Component {
               <Card>
                 <div style={headerStyle}>
                   <Typography variant="body2" style={headerStyle}>
-                    GORDON&apos;S 360 MOBILE INVOLVEMENTS PLATFORM: THE SCOTTIE FAIRE IN YOUR HAND
+                    {projectName}: THE SCOTTIE FAIRE IN YOUR HAND
+                    {/*GORDON&apos;S 360 MOBILE INVOLVEMENTS PLATFORM: THE SCOTTIE FAIRE IN YOUR HAND*/}
                   </Typography>
                 </div>
               </Card>
