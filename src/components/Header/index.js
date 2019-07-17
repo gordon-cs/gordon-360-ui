@@ -79,13 +79,12 @@ export default class GordonHeader extends Component {
           <Toolbar>
             <IconButton
               className="menu-button"
-              color="default"
               aria-label="open drawer"
               onClick={this.props.onDrawerToggle}
             >
               <MenuIcon className="menu-button-icon" />
             </IconButton>
-            <Typography className="title" variant="title" color="inherit">
+            <Typography className="title" variant="h6" color="inherit">
               <Switch>
                 {routes.map(route => (
                   <Route

@@ -75,11 +75,11 @@ export default class RequestReceived extends Component {
     if (requests.length > 0) {
       title = (
         <Badge color="error" badgeContent={requests.length} style={badge} className="badge">
-          <Typography variant="title">{this.props.involvement.ActivityDescription}</Typography>
+          <Typography variant="h6">{this.props.involvement.ActivityDescription}</Typography>
         </Badge>
       );
     } else {
-      title = <Typography variant="title">{this.props.involvement.ActivityDescription}</Typography>;
+      title = <Typography variant="h6">{this.props.involvement.ActivityDescription}</Typography>;
     }
 
     //Requests and buttons

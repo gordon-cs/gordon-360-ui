@@ -9,6 +9,8 @@ import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
 import user from '../../services/user';
 
+import '../../app.css';
+
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -33,7 +35,7 @@ export default class Home extends Component {
     //Only show CL&W credits if user is a student
     if (String(personType).includes('stu')) {
       doughnut = (
-        <Link to={`/attended`}>
+        <Link className="gc360-link-color" to={`/attended`}>
           <CLWCreditsDaysLeft />
         </Link>
       );

@@ -26,7 +26,7 @@ export default class Help extends Component {
                 </div>
               </Card>
             </Grid>
-            <Typography variant="body1" gutterBottom component="ul">
+            <Typography variant="body2" gutterBottom component="ul">
               <br />
               <li>Firstname.Lastname or Gordon email address</li>
               <li>Normal Gordon password</li>
@@ -41,7 +41,7 @@ export default class Help extends Component {
                 </div>
               </Card>
             </Grid>
-            <Typography variant="body1" gutterBottom component="ul">
+            <Typography variant="body2" gutterBottom component="ul">
               <br />
               <li>
                 <strong>Home</strong> &ndash; Contains a chart displaying the number of days left in
@@ -85,7 +85,7 @@ export default class Help extends Component {
                 </div>
               </Card>
             </Grid>
-            <Typography variant="body1" gutterBottom component="ul">
+            <Typography variant="body2" gutterBottom component="ul">
               <br />
               <li>
                 <strong>Subscriber</strong> &ndash; Subscribers will receive Group emails. The
@@ -127,7 +127,7 @@ export default class Help extends Component {
                 </div>
               </Card>
             </Grid>
-            <Typography variant="body1" gutterBottom component="ul">
+            <Typography variant="body2" gutterBottom component="ul">
               <br />
               <li>
                 <strong>Group Email</strong> &ndash; Leaders/Advisors can email the full roster of
@@ -178,7 +178,7 @@ export default class Help extends Component {
                 </div>
               </Card>
             </Grid>
-            <Typography variant="body1" gutterBottom component="ul">
+            <Typography variant="body2" gutterBottom component="ul">
               <br />
               <li>
                 <a
@@ -201,7 +201,7 @@ export default class Help extends Component {
                 </div>
               </Card>
             </Grid>
-            <Typography variant="body1" gutterBottom component="ul">
+            <Typography variant="body2" gutterBottom component="ul">
               <br />
               <li>
                 Tested successfully on Windows (Firefox, Chrome), Mac (Safari, Firefox, Chrome), and
@@ -219,7 +219,7 @@ export default class Help extends Component {
                 </div>
               </Card>
             </Grid>
-            <Typography variant="body1" gutterBottom component="ul">
+            <Typography variant="body2" gutterBottom component="ul">
               <br />
               <li>
                 <strong>Do I have to rejoin an Involvement each semester?</strong> Yes. This allows
@@ -254,7 +254,7 @@ export default class Help extends Component {
                 Involvements to receive emails!
               </li>
             </Typography>
-            <Typography variant="subheading" gutterBottom>
+            <Typography variant="subtitle1" gutterBottom>
               <br /> Found a bug?
               <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
                 <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>

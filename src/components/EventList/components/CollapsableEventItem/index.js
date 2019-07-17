@@ -26,7 +26,7 @@ export default class GordonCollapsableEventItem extends Component {
       <section>
         <Grid container onClick={this.handleExpandClick} className="event-item">
           <Grid item xs={12}>
-            <Typography variant="title" className="event-heading">
+            <Typography variant="h6" className="event-heading">
               {' '}
               {event.title}{' '}
             </Typography>

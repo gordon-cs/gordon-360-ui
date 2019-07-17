@@ -84,7 +84,7 @@ export default class Requests extends Component {
         <Grid item>
           <Grid container spacing={8} direction="column">
             <Grid item>
-              <Typography variant="title">Requests Received</Typography>
+              <Typography variant="h6">Requests Received</Typography>
             </Grid>
             <Grid item>
               <Grid container direction="column">

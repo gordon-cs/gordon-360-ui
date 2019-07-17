@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import './nav-avatar.css';
+import '../../../../app.css';
 import user from '../../../../services/user';
 
 const styles = theme => ({
@@ -72,7 +73,12 @@ class GordonNavAvatar extends Component {
 
     // Link component to be used with Button component
     const buttonLink = ({ ...props }) => (
-      <Link {...props} to={'/myprofile'} onClick={this.props.onLinkClick} />
+      <Link
+        className="gc360-link-color"
+        {...props}
+        to={'/myprofile'}
+        onClick={this.props.onLinkClick}
+      />
     );
 
     return (
