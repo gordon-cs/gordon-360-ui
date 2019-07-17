@@ -67,7 +67,7 @@ export default class GordonPeopleSearch extends Component {
     if (!query || query.length < MIN_QUERY_LENGTH) {
       return;
     }
-    
+
     //so apparently everything breaks if the first letter is capital, which is what happens on mobile
     //sometimes and then you spend four hours trying to figure out why downshift is not working
     //but really its just that its capitalized what the heck
@@ -126,11 +126,10 @@ export default class GordonPeopleSearch extends Component {
     var hasMatched = false;
     return (
       <span>
-        {parts.map(
-          part =>
-            !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
-              ? (hasMatched = true && <span class="h">{part}</span>)
-              : part,
+        {parts.map(part =>
+          !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
+            ? (hasMatched = true && <span class="h">{part}</span>)
+            : part,
         )}
       </span>
     );
@@ -184,9 +183,9 @@ export default class GordonPeopleSearch extends Component {
         <Typography variant="caption" component="p">
           {/* If the first name matches either part (first or last name) of the query, don't
               highlight occurrences of the query in the first name part of the username.
-              
+
               If the username contains a period, add it back in.
-              
+
               If the username contains a period,
               If the last name matches either part (first of last name) of the query, don't
               highlight occurrences of the query in the last name part of the username. */}
@@ -236,33 +235,32 @@ export default class GordonPeopleSearch extends Component {
   }
 
   render() {
-    let placeholder = 'People Search';
+    let holder = 'People Search';
     if (window.innerWidth < this.breakpointWidth) {
-      placeholder = 'People';
+      holder = 'People';
     }
     return (
+      // Assign reference to Downshift to `this` for usage elsewhere in the component
       <Downshift
-        // Assign reference to Downshift to `this` for usage elsewhere in the component
         ref={downshift => {
           this.downshift = downshift;
         }}
-        render={({ getInputProps, getItemProps, isOpen }) => (
+      >
+        {({ getInputProps, getItemProps, isOpen }) => (
           <span className="gordon-people-search">
             {renderInput(
               getInputProps({
-                placeholder: placeholder,
+                placeholder: holder,
                 onChange: event => this.getSuggestions(event.target.value),
-                onKeyDown: event => {
-                  this.handleKeys(event.key);
-                },
+                onKeyDown: event => this.handleKeys(event.key),
               }),
             )}
+
             {isOpen &&
             this.state.suggestions.length > 0 &&
             this.state.query.length >= MIN_QUERY_LENGTH ? (
               <Paper square className="people-search-dropdown">
-                { 
-                  this.state.suggestions.map(suggestion =>
+                {this.state.suggestions.map(suggestion =>
                   this.renderSuggestion({
                     suggestion,
                     itemProps: getItemProps({ item: suggestion.UserName }),
@@ -272,7 +270,7 @@ export default class GordonPeopleSearch extends Component {
             ) : null}
           </span>
         )}
-      />
+      </Downshift>
     );
   }
 }
