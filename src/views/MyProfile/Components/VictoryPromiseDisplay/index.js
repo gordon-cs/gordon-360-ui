@@ -13,6 +13,15 @@ import PuzzlePiece from 'react-icons/lib/fa/puzzle-piece';
 import './VictoryPromise.css';
 import basic from './images/00.png';
 import { defaults } from 'react-chartjs-2';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import HomeIcon from '@material-ui/icons/Home';
+import PeopleIcon from '@material-ui/icons/People';
+import LocalActivityIcon from '@material-ui/icons/LocalActivity';
+import EventIcon from '@material-ui/icons/Event';
+import './VictoryPromise.css';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 export default class VictoryPromiseDisplay extends React.Component {
   constructor(props) {
@@ -31,13 +40,28 @@ export default class VictoryPromiseDisplay extends React.Component {
         },
       ],
       options: '',
-      CC: null,
-      IM: null,
-      LS: null,
-      LW: null,
+      CC: 0,
+      IM: 0,
+      LS: 0,
+      LW: 0,
+      CCColor: gordonColors.neutral.lightGray,
+      IMColor: gordonColors.neutral.lightGray,
+      LSColor: gordonColors.neutral.lightGray,
+      LWColor: gordonColors.neutral.lightGray,
+      defaultVPMode: true,
     };
     //defaults.global.animation = false;
   }
+
+  changeMode = () => {
+    console.log(this.state.defaultVPMode);
+    if (this.state.defaultVPMode) {
+      this.setState({ defaultVPMode: false });
+    } else {
+      this.setState({ defaultVPMode: true });
+    }
+  };
+
   componentWillMount() {
     this.getVPScores();
   }
@@ -64,22 +88,22 @@ export default class VictoryPromiseDisplay extends React.Component {
       this.setState({ LWColor: gordonColors.secondary.red });
     }
 
-    this.setColor();
-
     if (CC + IM + LS + LW === 0) {
-      console.log("All 0's");
       this.setState({
-        datasets: [
-          {
-            data: [1, 1, 1, 1],
-            backgroundColor: [
-              gordonColors.neutral.lightGray,
-              gordonColors.neutral.lightGray,
-              gordonColors.neutral.lightGray,
-              gordonColors.neutral.lightGray,
-            ],
+        CC: 1,
+        LW: 1,
+        IM: 1,
+        LS: 1,
+        options: {
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var label = data.labels[tooltipItem.index];
+                return label + ': 0';
+              },
+            },
           },
-        ],
+        },
       });
     }
 
@@ -101,6 +125,8 @@ export default class VictoryPromiseDisplay extends React.Component {
         },
       },
     });
+
+    this.setColor();
   }
 
   setColor() {
@@ -121,12 +147,98 @@ export default class VictoryPromiseDisplay extends React.Component {
   //<PuzzlePiece className="left-upper-corner"/>
   //<PuzzlePiece className="right-upper-corner"/>
   render() {
-    return (
-      <Polar
-        className="victory-promise"
-        data={{ labels: this.state.labels, datasets: this.state.datasets }}
-        options={this.state.options}
-      />
-    );
+    const style = {
+      button: {
+        background: gordonColors.primary.cyan,
+        color: 'white',
+      },
+    };
+    const HoverText = withStyles(theme => ({
+      tooltip: {
+        backgroundColor: '#f5f5f9',
+        color: 'rgba(0, 0, 0, 0.87)',
+        maxWidth: 220,
+        fontSize: theme.typography.pxToRem(12),
+        border: '1px solid #dadde9',
+      },
+    }))(Tooltip);
+
+    let content;
+
+    if (this.state.defaultVPMode) {
+      content = (
+        <section>
+          <Grid container alignItems="center" align="center" justify="center" spacing="16">
+            <Polar
+              className="victory-promise"
+              data={{ labels: this.state.labels, datasets: this.state.datasets }}
+              options={this.state.options}
+            />
+            <div>
+              <Button variant="contained" style={style.button} onClick={() => this.changeMode()}>
+                Change Style
+              </Button>
+            </div>
+          </Grid>
+        </section>
+      );
+    } else {
+      content = (
+        <section>
+          <Grid container justify="center">
+            <HoverText
+              title={
+                <React.Fragment>
+                  <Typography color="inherit">Christian Character</Typography>
+                  {"It's very engaging. Right?"}
+                </React.Fragment>
+              }
+            >
+              <HomeIcon className="vpdesign" style={{ fontSize: 50, color: this.state.CCColor }} />
+            </HoverText>
+            <HoverText
+              title={
+                <React.Fragment>
+                  <Typography color="inherit">Intellectual Maturity</Typography>
+                  {"It's very engaging. Right?"}
+                </React.Fragment>
+              }
+            >
+              <PeopleIcon
+                className="vpdesign"
+                style={{ fontSize: 50, color: this.state.IMColor }}
+              />
+            </HoverText>
+            <HoverText
+              title={
+                <React.Fragment>
+                  <Typography color="inherit">Lives of Service</Typography>
+                  {"It's very engaging. Right?"}
+                </React.Fragment>
+              }
+            >
+              <LocalActivityIcon
+                className="vpdesign"
+                style={{ fontSize: 50, color: this.state.LSColor }}
+              />
+            </HoverText>
+            <HoverText
+              title={
+                <React.Fragment>
+                  <Typography color="inherit">Leadership Worldwide</Typography>
+                  {"It's very engaging. Right?"}
+                </React.Fragment>
+              }
+            >
+              <EventIcon className="vpdesign" style={{ fontSize: 50, color: this.state.LWColor }} />
+            </HoverText>
+          </Grid>
+          <Button variant="contained" style={style.button} onClick={() => this.changeMode()}>
+            Change Style
+          </Button>
+        </section>
+      );
+    }
+    return <section>{content}</section>;
   }
 }
