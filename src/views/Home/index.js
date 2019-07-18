@@ -13,7 +13,7 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { personType: null, network: 'online' };
+    this.state = { personType: null };
   }
 
   componentWillMount() {
@@ -41,66 +41,21 @@ export default class Home extends Component {
       doughnut = <DaysLeft />;
     }
 
-    /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-  *  Defaults to online in case of PWA not being possible
-  */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
-    // Creates the Home Page depending on the status of the network found in local storage
-    let HomePage;
-    if (networkStatus === 'online') {
-      HomePage = (
-        <Grid container justify="center" spacing={16}>
-          <Grid item xs={12} md={10}>
-            <Carousel />
-          </Grid>
-          <Grid item xs={12} md={5}>
-            {doughnut}
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <DiningBalance />
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <Requests />
-          </Grid>
+    return (
+      <Grid container justify="center" spacing={16}>
+        <Grid item xs={12} md={10}>
+          <Carousel />
         </Grid>
-      );
-    } else {
-      HomePage = (
-        <Grid container justify="center" spacing={16}>
-          <Grid item xs={12} md={10}>
-            <Carousel />
-          </Grid>
-          <Grid item xs={12} md={5}>
-            {doughnut}
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <DiningBalance />
-          </Grid>
+        <Grid item xs={12} md={5}>
+          {doughnut}
         </Grid>
-      );
-    }
-    return HomePage;
+        <Grid item xs={12} md={5}>
+          <DiningBalance />
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <Requests />
+        </Grid>
+      </Grid>
+    );
   }
 }
