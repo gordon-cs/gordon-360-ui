@@ -510,10 +510,12 @@ class PeopleSearch extends Component {
         building,
       );
 
-      this.props.history.push(`?includeAlumni=${includeAlumni}&firstName=${firstName}&lastName=
-      ${lastName}&major=${major}&minor=${minor}&hall=${hall}&classType=${classType}&homeCity=${homeCity}
-      &state=${state}&country=${country}
-      &department=${department}&building=${building}`);
+      let searchParameters =
+        `?firstName=${firstName}&lastName=${lastName}` +
+        `&major=${major}&minor=${minor}&hall=${hall}&classType=${classType}` +
+        `&homeCity=${homeCity}&state=${state}&country=${country}` +
+        `&department=${department}&building=${building}&includeAlumni=${includeAlumni}`;
+      this.props.history.push(searchParameters);
 
       if (peopleSearchResults.length === 0) {
         this.setState({
