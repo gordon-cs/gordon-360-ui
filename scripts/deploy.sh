@@ -26,7 +26,7 @@ else
 fi
 
 BUILD_DIR="build"
-DATE = `date +"%m-%d-%Y-%H:%M"`
+CURRDATE=`date +"%m-%d-%Y-%H:%M"`
 
 printf "%s\n" "Removing backup directory from previous deployment..."
 
@@ -44,7 +44,7 @@ fi
 printf "%s\n" "Moving app to backup directory... "
 
 # Move app to temporary directory
-sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" mv "$DIR" "$DIR-backup-$DATE"
+sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" mv "$DIR" "$DIR-backup-$CURRDATE"
 
 if [ $? == 0 ]; then
   printf "%s\n" "Successfully moved app to backup directory"
