@@ -12,8 +12,8 @@
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
 let cacheVersion = 'cache-1.0';
-let token;
-let currentSession;
+let apiSource = 'https://360apitrain.gordon.edu';
+let token, termCode;
 
 // Static Files to cache
 const staticCache = [
@@ -211,13 +211,10 @@ async function dynamicLinksThenCache(token, termCode) {
       return error.Message;
     });
 
-  let apiSource = 'https://360apitrain.gordon.edu';
-
   let username = profile ? profile.AD_Username : null;
   let id = profile ? profile.ID : null;
   let sessionCode = currentSession ? currentSession.SessionCode : null;
 
-  
   const dynamicCache = [
     // Home Page Fetch URLs
     `${apiSource}/api/cms/slider`,
@@ -242,41 +239,52 @@ async function dynamicLinksThenCache(token, termCode) {
     `/profile/${username}`,
   ];
 
-  // Gets the involvements of the current user for the Involvement Profiles
-  let involvements = await fetch(
-    new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
-      method: 'GET',
-      headers,
-    }),
-  )
-    .then(response => {
-      return response.json();
-    })
-    .catch(error => {
-      involvement;
-      return error.message;
-    });
+  // // Gets the involvements of the current user for the Involvement Profiles
+  // let involvements = await fetch(
+  //   new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
+  //     method: 'GET',
+  //     headers,
+  //   }),
+  // )
+  //   .then(response => {
+  //     return response.json();
+  //   })
+  //   .catch(error => {
+  //     involvement;
+  //     return error.message;
+  //   });
 
-  involvements.forEach(involvement => {
-    let activityCode = involvement ? involvement.ActivityCode : null;
-    let sessionCode = involvement ? involvement.SessionCode : null;
-    dynamicCache.push(
-      `${apiSource}/activities/${activityCode}`,
-      `${apiSource}/api/activities/${sessionCode}/${activityCode}/status`,
-      `${apiSource}/api/emails/activity/${activityCode}`,
-      `${apiSource}/api/emails/activity/${activityCode}/advisors/session/${sessionCode}`,
-      `${apiSource}/api/emails/activity/${activityCode}/group-admin/session/${sessionCode}`,
-      `${apiSource}/api/memberships/activity/${activityCode}`,
-      `${apiSource}/api/memberships/activity/${activityCode}/followers/${sessionCode}`,
-      `${apiSource}/api/memberships/activity/${activityCode}/group-admin`,
-      `${apiSource}/api/memberships/activity/${activityCode}/members/${sessionCode}`,
-      `${apiSource}/api/requests/activity/${activityCode}`,
-      `${apiSource}/api/sessions/${sessionCode}`,
-    );
-  });
+  // involvements.forEach(involvement => {
+  //   let activityCode = involvement ? involvement.ActivityCode : null;
+  //   let sessionCode = involvement ? involvement.SessionCode : null;
+  //   dynamicCache.push(
+  //     `${apiSource}/activities/${activityCode}`,
+  //     `${apiSource}/api/activities/${sessionCode}/${activityCode}/status`,
+  //     `${apiSource}/api/emails/activity/${activityCode}`,
+  //     `${apiSource}/api/emails/activity/${activityCode}/advisors/session/${sessionCode}`,
+  //     `${apiSource}/api/emails/activity/${activityCode}/group-admin/session/${sessionCode}`,
+  //     `${apiSource}/api/memberships/activity/${activityCode}`,
+  //     `${apiSource}/api/memberships/activity/${activityCode}/followers/${sessionCode}`,
+  //     `${apiSource}/api/memberships/activity/${activityCode}/group-admin`,
+  //     `${apiSource}/api/memberships/activity/${activityCode}/members/${sessionCode}`,
+  //     `${apiSource}/api/requests/activity/${activityCode}`,
+  //     `${apiSource}/api/sessions/${sessionCode}`,
+  //   );
+  // });
 
   fetchResult = await cacheDynamicFiles(token, dynamicCache);
   if (fetchResult) console.log('\t- Cached Dynamic Files Successfully');
+}
+
+// Set interval function that will try to update cache every hour
+function timerFunction() {
+  resetTimer = setInterval(() => {
+    console.log('Received Message. Attempting To Update Cache.');
+    // Caching All Files
+    cacheStaticFiles(); // Static Cache
+    dynamicLinksThenCache(token, termCode); // Dynamic Cache
+    // Set interval to every hour
+  }, 10000);
 }
 
 /*********************************************** EVENT LISTENERS ***********************************************/
@@ -288,7 +296,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   console.log('Activating Service Worker');
   self.clients.claim();
-  event.waitUntil(cleanCache());
+  event.waitUntil(cleanCache(), timerFunction());
 });
 
 self.addEventListener('fetch', event => {
@@ -308,6 +316,9 @@ self.addEventListener('message', event => {
   // If the message is to cache all static/dynamic files, all of those files are cached
   if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
     console.log('Received message. Attempting to cache all files');
+    // Sets variable to prevent the lost of this data when a new service worker installs
+    token = event.data.token;
+    termCode = event.data.termCode;
     // Caching All Files
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
@@ -315,6 +326,9 @@ self.addEventListener('message', event => {
   // If the message is to update the cache
   else if (event.data.message && event.data.message === 'update-cache-files') {
     console.log('Received message. Attempting to update cache.');
+    // Sets variable to prevent the lost of this data when a new service worker installs
+    token = event.data.token;
+    termCode = event.data.termCode;
     // Caching All Files
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
