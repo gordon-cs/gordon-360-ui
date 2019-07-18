@@ -12,57 +12,28 @@
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
 let cacheVersion = 'cache-1.0';
-let token, termCode, resetTimer;
+let token;
+let currentSession;
 
 // Static Files to cache
 const staticCache = [
-  // Documents
   '/',
   '/events',
   '/involvements',
   '/feedback',
   '/people',
+  '/favicon.ico',
   '/about',
   '/help',
-  '/admin',
-  '/myprofile',
   // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Developlent
   '/manifest.json',
   '/pwa.js',
   '/static/js/bundle.js',
-  '/main.52e38ba435b249dc2bff.hot-update.js',
   '/static/media/campus1366.e8fc7838.jpg',
-  '/static/js/0.chunk.js',
-  '/static/js/1.chunk.js',
-  '/static/js/main.chunk.js',
   '/static/media/gordon-logo-vertical-white.a6586885.svg',
   '/static/media/NoConnection.68275814.svg',
-  // Images
-  '/favicon.ico',
-  '/images/android-icon-36x36.png',
-  '/images/android-icon-48x48.png',
-  '/images/android-icon-72x72.png',
-  '/images/android-icon-96x96.png',
-  '/images/android-icon-144x144.png',
-  '/images/android-icon-192x192.png',
-  '/images/apple-icon-57x57.png',
-  '/images/apple-icon-60x60.png',
-  '/images/apple-icon-72x72.png',
-  '/images/apple-icon-76x76.png',
-  '/images/apple-icon-114x114.png',
-  '/images/apple-icon-120x120.png',
-  '/images/apple-icon-144x144.png',
-  '/images/apple-icon-152x152.png',
-  '/images/apple-icon-180x180.png',
-  '/images/apple-icon-precomposed.png',
-  '/images/apple-icon.png',
-  '/images/favicon-16x16.png',
-  '/images/favicon-32x32.png',
-  '/images/favicon-96x96.png',
-  '/images/ms-icon-70x70.png',
-  '/images/ms-icon-144x144.png',
-  '/images/ms-icon-150x150.png',
-  '/images/ms-icon-310x310.png',
+  '/admin',
+  '/myprofile',
 ];
 
 /*********************************************** CACHING FUNCTIONS ***********************************************/
@@ -104,7 +75,7 @@ async function fetchThenCache(request) {
       }
     })
     .catch(async () => {
-      console.log(`   Getting ${request.url} from cache instead...`);
+      console.log(`Getting ${request.url} from cache instead...`);
       const response = await caches.match(request);
       // If there's no response from cache, we console log that the request failed
       if (response) {
@@ -148,25 +119,11 @@ async function cacheStaticFiles() {
  * @return {Promise<Boolean>} A boolean that determines if all links given cached successfully
  */
 async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
-  // A controller and signal to stop fetch requests
-  let fetchController = new AbortController();
-  let signal = fetchController.signal;
-
-  // A message event listener specifically made for cancelation of fetch requests
-  self.addEventListener('message', event => {
-    // If the message is to stop all fetches
-    if (event.data === 'cancel-fetches') {
-      console.log('Received Message. Canceling All Fetch Requests.');
-      fetchController.abort();
-    }
-  });
-
   // Creates the header for the request to have authenitification
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   });
-
   // Variable that determines if all links successfully cached
   let status = true;
 
@@ -176,7 +133,6 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
       method: 'GET',
       mode,
       headers,
-      signal,
     });
     let fetchSuccess = await fetch(request)
       .then(fetchResponse => {
@@ -200,12 +156,9 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
     // If the fetch resulted in a bad response
     else if (fetchSuccess.statusText !== 'OK') {
       status = false;
-      // Checks to see if the request was aborted. If so, we do not console log all the fetch errors
-      if (fetchSuccess !== 'The user aborted a request.') {
-        console.log(
-          `\t- Bad Response: Status - ${fetchSuccess.status} \n\t\tURL: ${dynamicLinks[url]}`,
-        );
-      }
+      console.log(
+        `\t- Bad Response: Status - ${fetchSuccess.status} \n\t\tURL: ${dynamicLinks[url]}`,
+      );
     }
   }
 
@@ -255,34 +208,37 @@ async function dynamicLinksThenCache(token, termCode) {
       return error.Message;
     });
 
+  let apiSource = 'https://360apitrain.gordon.edu';
+
   let username = profile ? profile.AD_Username : null;
   let id = profile ? profile.ID : null;
   let sessionCode = currentSession ? currentSession.SessionCode : null;
 
+  
   const dynamicCache = [
-    'https://360apitrain.gordon.edu/api/cms/slider',
-    'https://360apitrain.gordon.edu/api/dining',
-    'https://360apitrain.gordon.edu/api/events/25Live/All',
-    'https://360apitrain.gordon.edu/api/profiles',
-    'https://360apitrain.gordon.edu/api/profiles/Image',
-    'https://360apitrain.gordon.edu/api/sessions',
-    'https://360apitrain.gordon.edu/api/sessions/current',
-    'https://360apitrain.gordon.edu/api/sessions/daysLeft',
-    'https://360apitrain.gordon.edu/api/studentemployment/',
-    'https://360apitrain.gordon.edu/api/version',
-    'https://360apitrain.gordon.edu/api/activities/session/201809',
-    `https://360apitrain.gordon.edu/api/activities/session/${sessionCode}`,
-    `https://360apitrain.gordon.edu/api/activities/session/${sessionCode}/types`,
-    `https://360apitrain.gordon.edu/api/events/chapel/${termCode}`,
-    `https://360apitrain.gordon.edu/api/memberships/student/${id}`,
-    `https://360apitrain.gordon.edu/api/memberships/student/username/${username}/`,
-    `https://360apitrain.gordon.edu/api/profiles/${username}/`,
-    `https://360apitrain.gordon.edu/api/profiles/Image/${username}/`,
-    `https://360apitrain.gordon.edu/api/requests/student/${id}`,
+    // Home Page Fetch URLs
+    `${apiSource}/api/cms/slider`,
+    `${apiSource}/api/dining`,
+    `${apiSource}/api/events/25Live/All`,
+    `${apiSource}/api/profiles`,
+    `${apiSource}/api/profiles/Image`,
+    `${apiSource}/api/sessions`,
+    `${apiSource}/api/sessions/current`,
+    `${apiSource}/api/sessions/daysLeft`,
+    `${apiSource}/api/studentemployment/`,
+    `${apiSource}/api/version`,
+    `${apiSource}/api/activities/session/201809`,
+    `${apiSource}/api/activities/session/${sessionCode}`,
+    `${apiSource}/api/activities/session/${sessionCode}/types`,
+    `${apiSource}/api/events/chapel/${termCode}`,
+    `${apiSource}/api/memberships/student/${id}`,
+    `${apiSource}/api/memberships/student/username/${username}/`,
+    `${apiSource}/api/profiles/${username}/`,
+    `${apiSource}/api/profiles/Image/${username}/`,
+    `${apiSource}/api/requests/student/${id}`,
     `/profile/${username}`,
   ];
 
-  /* ONLY UNCOMMENT IF YOU WANT TO ADD THE USER'S INVOLVEMENTS' PROFILES TO THE PWA
   // Gets the involvements of the current user for the Involvement Profiles
   let involvements = await fetch(
     new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
@@ -301,7 +257,7 @@ async function dynamicLinksThenCache(token, termCode) {
   involvements.forEach(involvement => {
     let activityCode = involvement ? involvement.ActivityCode : null;
     let sessionCode = involvement ? involvement.SessionCode : null;
-    /dynamicCache.push(
+    dynamicCache.push(
       `https://360apitrain.gordon.edu/api/activities/${activityCode}`,
       `https://360apitrain.gordon.edu/api/activities/${sessionCode}/${activityCode}/status`,
       `https://360apitrain.gordon.edu/api/emails/activity/${activityCode}`,
@@ -315,21 +271,9 @@ async function dynamicLinksThenCache(token, termCode) {
       `https://360apitrain.gordon.edu/api/sessions/${sessionCode}`,
     );
   });
-  */
 
   fetchResult = await cacheDynamicFiles(token, dynamicCache);
   if (fetchResult) console.log('\t- Cached Dynamic Files Successfully');
-}
-
-// Set interval function that will try to update cache every hour
-function timerFunction() {
-  resetTimer = setInterval(() => {
-    console.log('Received Message. Attempting To Update Cache.');
-    // Caching All Files
-    cacheStaticFiles(); // Static Cache
-    dynamicLinksThenCache(token, termCode); // Dynamic Cache
-    // Set interval to every hour
-  }, 3600000);
 }
 
 /*********************************************** EVENT LISTENERS ***********************************************/
@@ -341,17 +285,17 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   console.log('Activating Service Worker');
   self.clients.claim();
-  event.waitUntil(cleanCache(), timerFunction());
+  event.waitUntil(cleanCache());
 });
 
 self.addEventListener('fetch', event => {
   /* FOR DEVELOPING PURPOSES: THIS CONSOLE LOGS EACH FETCH REQUEST MADE */
   //If request is from Local, console.log the URL
   // if (event.request.url.match(location.origin)) {
-  //   console.log('\tFetching request from LOCAL:', event.request.url);
+  //   console.log('Fetching request from LOCAL:', event.request.url);
   // } else {
   //   // If request is from Remote, console.log the URL
-  //   console.log('\tFetching request from REMOTE LOCATION:', event.request.url);
+  //   console.log('Fetching request from REMOTE LOCATION:', event.request.url);
   // }//
 
   event.respondWith(fetchThenCache(event.request));
@@ -360,15 +304,16 @@ self.addEventListener('fetch', event => {
 self.addEventListener('message', event => {
   // If the message is to cache all static/dynamic files, all of those files are cached
   if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
-    console.log('Received Message. Attempting To Cache All Files.');
-    token = event.data.token;
-    termCode = event.data.termCode;
+    console.log('Received message. Attempting to cache all files');
     // Caching All Files
     cacheStaticFiles(); // Static Cache
-    dynamicLinksThenCache(token, termCode); // Dynamic Cache
+    dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
   }
-  // // If the message is to update the cache
-  // else if (event.data.message && event.data.message === 'update-cache-files') {
-
-  // }
+  // If the message is to update the cache
+  else if (event.data.message && event.data.message === 'update-cache-files') {
+    console.log('Received message. Attempting to update cache.');
+    // Caching All Files
+    cacheStaticFiles(); // Static Cache
+    dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
+  }
 });
