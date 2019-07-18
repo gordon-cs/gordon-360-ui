@@ -45,7 +45,7 @@ fi
 printf "%s\n" "Moving app to backup directory... "
 
 # Move app to temporary directory
-sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" mv "$DIR" "$DIR-backup-$CURRDATE"
+sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" cp -r "$DIR" "$DIR-backup-$CURRDATE"
 
 if [ $? == 0 ]; then
   printf "%s\n" "Successfully moved app to backup directory"
