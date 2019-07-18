@@ -261,17 +261,17 @@ async function dynamicLinksThenCache(token, termCode) {
     let activityCode = involvement ? involvement.ActivityCode : null;
     let sessionCode = involvement ? involvement.SessionCode : null;
     dynamicCache.push(
-      `https://360apitrain.gordon.edu/api/activities/${activityCode}`,
-      `https://360apitrain.gordon.edu/api/activities/${sessionCode}/${activityCode}/status`,
-      `https://360apitrain.gordon.edu/api/emails/activity/${activityCode}`,
-      `https://360apitrain.gordon.edu/api/emails/activity/${activityCode}/advisors/session/${sessionCode}`,
-      `https://360apitrain.gordon.edu/api/emails/activity/${activityCode}/group-admin/session/${sessionCode}`,
-      `https://360apitrain.gordon.edu/api/memberships/activity/${activityCode}`,
-      `https://360apitrain.gordon.edu/api/memberships/activity/${activityCode}/followers/${sessionCode}`,
-      `https://360apitrain.gordon.edu/api/memberships/activity/${activityCode}/group-admin`,
-      `https://360apitrain.gordon.edu/api/memberships/activity/${activityCode}/members/${sessionCode}`,
-      `https://360apitrain.gordon.edu/api/requests/activity/${activityCode}`,
-      `https://360apitrain.gordon.edu/api/sessions/${sessionCode}`,
+      `${apiSource}/activities/${activityCode}`,
+      `${apiSource}/api/activities/${sessionCode}/${activityCode}/status`,
+      `${apiSource}/api/emails/activity/${activityCode}`,
+      `${apiSource}/api/emails/activity/${activityCode}/advisors/session/${sessionCode}`,
+      `${apiSource}/api/emails/activity/${activityCode}/group-admin/session/${sessionCode}`,
+      `${apiSource}/api/memberships/activity/${activityCode}`,
+      `${apiSource}/api/memberships/activity/${activityCode}/followers/${sessionCode}`,
+      `${apiSource}/api/memberships/activity/${activityCode}/group-admin`,
+      `${apiSource}/api/memberships/activity/${activityCode}/members/${sessionCode}`,
+      `${apiSource}/api/requests/activity/${activityCode}`,
+      `${apiSource}/api/sessions/${sessionCode}`,
     );
   });
 
