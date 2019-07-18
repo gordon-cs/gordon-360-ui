@@ -12,6 +12,7 @@
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
 let cacheVersion = 'cache-1.0';
+let token, termCode, resetTimer;
 
 // Static Files to cache
 const staticCache = [
@@ -281,6 +282,7 @@ async function dynamicLinksThenCache(token, termCode) {
     `/profile/${username}`,
   ];
 
+  /* ONLY UNCOMMENT IF YOU WANT TO ADD THE USER'S INVOLVEMENTS' PROFILES TO THE PWA
   // Gets the involvements of the current user for the Involvement Profiles
   let involvements = await fetch(
     new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
@@ -299,7 +301,7 @@ async function dynamicLinksThenCache(token, termCode) {
   involvements.forEach(involvement => {
     let activityCode = involvement ? involvement.ActivityCode : null;
     let sessionCode = involvement ? involvement.SessionCode : null;
-    dynamicCache.push(
+    /dynamicCache.push(
       `https://360apitrain.gordon.edu/api/activities/${activityCode}`,
       `https://360apitrain.gordon.edu/api/activities/${sessionCode}/${activityCode}/status`,
       `https://360apitrain.gordon.edu/api/emails/activity/${activityCode}`,
@@ -313,9 +315,21 @@ async function dynamicLinksThenCache(token, termCode) {
       `https://360apitrain.gordon.edu/api/sessions/${sessionCode}`,
     );
   });
+  */
 
   fetchResult = await cacheDynamicFiles(token, dynamicCache);
   if (fetchResult) console.log('\t- Cached Dynamic Files Successfully');
+}
+
+// Set interval function that will try to update cache every hour
+function timerFunction() {
+  resetTimer = setInterval(() => {
+    console.log('Received Message. Attempting To Update Cache.');
+    // Caching All Files
+    cacheStaticFiles(); // Static Cache
+    dynamicLinksThenCache(token, termCode); // Dynamic Cache
+    // Set interval to every hour
+  }, 3600000);
 }
 
 /*********************************************** EVENT LISTENERS ***********************************************/
@@ -327,7 +341,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   console.log('Activating Service Worker');
   self.clients.claim();
-  event.waitUntil(cleanCache());
+  event.waitUntil(cleanCache(), timerFunction());
 });
 
 self.addEventListener('fetch', event => {
@@ -347,15 +361,14 @@ self.addEventListener('message', event => {
   // If the message is to cache all static/dynamic files, all of those files are cached
   if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
     console.log('Received Message. Attempting To Cache All Files.');
+    token = event.data.token;
+    termCode = event.data.termCode;
     // Caching All Files
     cacheStaticFiles(); // Static Cache
-    dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
+    dynamicLinksThenCache(token, termCode); // Dynamic Cache
   }
-  // If the message is to update the cache
-  else if (event.data.message && event.data.message === 'update-cache-files') {
-    console.log('Received Message. Attempting To Update Cache.');
-    // Caching All Files
-    cacheStaticFiles(); // Static Cache
-    dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
-  }
+  // // If the message is to update the cache
+  // else if (event.data.message && event.data.message === 'update-cache-files') {
+
+  // }
 });
