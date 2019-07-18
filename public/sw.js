@@ -12,6 +12,8 @@
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
 let cacheVersion = 'cache-1.0';
+let token;
+let currentSession;
 
 // Static Files to cache
 const staticCache = [
@@ -26,13 +28,12 @@ const staticCache = [
   '/admin',
   '/myprofile',
   // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Developlent
+  '/static/js/bundle.js',
+  //'/static/js/bundle.js',
   '/manifest.json',
   '/pwa.js',
-  '/static/js/bundle.js',
-  '/main.52e38ba435b249dc2bff.hot-update.js',
   '/static/media/campus1366.e8fc7838.jpg',
   '/static/js/0.chunk.js',
-  '/static/js/1.chunk.js',
   '/static/js/main.chunk.js',
   '/static/media/gordon-logo-vertical-white.a6586885.svg',
   '/static/media/NoConnection.68275814.svg',
@@ -103,7 +104,7 @@ async function fetchThenCache(request) {
       }
     })
     .catch(async () => {
-      console.log(`   Getting ${request.url} from cache instead...`);
+      console.log(`\t- Getting ${request.url} from cache instead...`);
       const response = await caches.match(request);
       // If there's no response from cache, we console log that the request failed
       if (response) {
@@ -147,25 +148,11 @@ async function cacheStaticFiles() {
  * @return {Promise<Boolean>} A boolean that determines if all links given cached successfully
  */
 async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
-  // A controller and signal to stop fetch requests
-  let fetchController = new AbortController();
-  let signal = fetchController.signal;
-
-  // A message event listener specifically made for cancelation of fetch requests
-  self.addEventListener('message', event => {
-    // If the message is to stop all fetches
-    if (event.data === 'cancel-fetches') {
-      console.log('Received Message. Canceling All Fetch Requests.');
-      fetchController.abort();
-    }
-  });
-
   // Creates the header for the request to have authenitification
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   });
-
   // Variable that determines if all links successfully cached
   let status = true;
 
@@ -175,7 +162,6 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
       method: 'GET',
       mode,
       headers,
-      signal,
     });
     let fetchSuccess = await fetch(request)
       .then(fetchResponse => {
@@ -199,12 +185,9 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
     // If the fetch resulted in a bad response
     else if (fetchSuccess.statusText !== 'OK') {
       status = false;
-      // Checks to see if the request was aborted. If so, we do not console log all the fetch errors
-      if (fetchSuccess !== 'The user aborted a request.') {
-        console.log(
-          `\t- Bad Response: Status - ${fetchSuccess.status} \n\t\tURL: ${dynamicLinks[url]}`,
-        );
-      }
+      console.log(
+        `\t- Bad Response: Status - ${fetchSuccess.status} \n\t\tURL: ${dynamicLinks[url]}`,
+      );
     }
   }
 
@@ -259,6 +242,7 @@ async function dynamicLinksThenCache(token, termCode) {
   let sessionCode = currentSession ? currentSession.SessionCode : null;
 
   const dynamicCache = [
+    // Home Page Fetch URLs
     'https://360apitrain.gordon.edu/api/cms/slider',
     'https://360apitrain.gordon.edu/api/dining',
     'https://360apitrain.gordon.edu/api/events/25Live/All',
@@ -334,10 +318,10 @@ self.addEventListener('fetch', event => {
   /* FOR DEVELOPING PURPOSES: THIS CONSOLE LOGS EACH FETCH REQUEST MADE */
   //If request is from Local, console.log the URL
   // if (event.request.url.match(location.origin)) {
-  //   console.log('\tFetching request from LOCAL:', event.request.url);
+  //   console.log('Fetching request from LOCAL:', event.request.url);
   // } else {
   //   // If request is from Remote, console.log the URL
-  //   console.log('\tFetching request from REMOTE LOCATION:', event.request.url);
+  //   console.log('Fetching request from REMOTE LOCATION:', event.request.url);
   // }//
 
   event.respondWith(fetchThenCache(event.request));
@@ -346,14 +330,14 @@ self.addEventListener('fetch', event => {
 self.addEventListener('message', event => {
   // If the message is to cache all static/dynamic files, all of those files are cached
   if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
-    console.log('Received Message. Attempting To Cache All Files.');
+    console.log('Received message. Attempting to cache all files');
     // Caching All Files
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
   }
   // If the message is to update the cache
   else if (event.data.message && event.data.message === 'update-cache-files') {
-    console.log('Received Message. Attempting To Update Cache.');
+    console.log('Received message. Attempting to update cache.');
     // Caching All Files
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache

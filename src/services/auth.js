@@ -84,10 +84,6 @@ const isAuthenticated = () => {
       // Checks to see if Service Worker is available since these values would not exist
       // if the service worker was unavailable
       if (navigator.serviceWorker) {
-        /* Checks the length of the local storage to ensure that the
-         *  PWA variables exist before deleting them
-         *  Also tells the service worker to cancel any fetch requests made
-         */
         if (localStorage.length > 0) {
           storage.remove('status');
           storage.remove('currentTerm');
@@ -97,7 +93,7 @@ const isAuthenticated = () => {
               caches.delete(key);
             });
           });
-          navigator.serviceWorker.controller.postMessage('cancel-fetches');
+          // navigator.serviceWorker.controller.postMessage({ message: 'cancel-fetches' });
         }
       }
     }
@@ -107,8 +103,7 @@ const isAuthenticated = () => {
 
 /**
  * Sign a user out
- * @description Removes all data from storage and cache. Also tells the
- *              service worker to cancel any fetch requests made
+ * @description Removes all data from storage and cache
  */
 const signOut = () => {
   storage.remove('token');
@@ -117,7 +112,10 @@ const signOut = () => {
     // Checks to see if Service Worker is available since these values would not exist
     // if the service worker was unavailable
     if (navigator.serviceWorker) {
-      navigator.serviceWorker.controller.postMessage('cancel-fetches');
+      // if (localStorage.getItem('network-status')) {
+      //   console.log('TOKEN LENGTH IS GREATER THAN 0');
+      //   navigator.serviceWorker.controller.postMessage({ message: 'cancel-fetches' });
+      // }
       storage.remove('status');
       storage.remove('currentTerm');
       storage.remove('network-status');
