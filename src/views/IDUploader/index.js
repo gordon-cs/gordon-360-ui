@@ -83,22 +83,43 @@ class IDUploader extends Component {
   };
 
   maxCropPreviewWidth() {
-    const breakpointWidth = 960;
-    const smallScreenRatio = 0.75;
-    const largeScreenRatio = 0.525;
-    const maxHeightRatio = 0.5;
-    const aspect = this.state.cropperData.aspectRatio;
-    var maxWidth =
-      window.innerWidth *
-      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
-    var correspondingHeight = maxWidth / aspect;
-    var maxHeight = window.innerHeight * maxHeightRatio;
-    var correspondingWidth = maxHeight * aspect;
+    /* this logic was probably great but I did not have time to learn it and fix it.
+      If you do, please: make this function better */
+    //const breakpointWidth = 960;
+    //const smallScreenRatio = 0.75;
+    //const largeScreenRatio = 0.525;
+    //const maxHeightRatio = 0.5;
 
-    if (correspondingHeight > maxHeight) {
-      return correspondingWidth;
-    } else {
-      return maxWidth;
+    // const aspect = this.state.cropperData.aspectRatio;
+    // var maxWidth =
+    //   window.innerWidth *
+    //   (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
+    // var correspondingHeight = maxWidth / aspect;
+    // var maxHeight = window.innerHeight * maxHeightRatio;
+    // var correspondingWidth = maxHeight * aspect;
+
+    // if (correspondingHeight > maxHeight) {
+    //   return correspondingWidth;
+    // } else {
+    //   return maxWidth;
+    // }
+
+    const smallScreenRatio = 0.5;
+    const largeScreenRatio = 0.25;
+    const w = this.props.width;
+    switch (w) {
+      default:
+        return 960 * largeScreenRatio;
+      case 'xs':
+        return 360 * smallScreenRatio;
+      case 'sm':
+        return 600 * smallScreenRatio;
+      case 'md':
+        return 960 * largeScreenRatio;
+      case 'lg':
+        return 1280 * largeScreenRatio;
+      case 'xl':
+        return 1920 * largeScreenRatio;
     }
   }
 
@@ -265,16 +286,18 @@ class IDUploader extends Component {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
-          <DialogTitle id="simple-dialog-title">Update ID Picture</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              {this.props.width === 'md' || this.props.width === 'sm' || this.props.width === 'xs'
-                ? 'Tap Image to Browse Files'
-                : 'Drag & Drop Picture, or Click to Browse Files'}
-            </DialogContentText>
-            <Grid container direction="column" justify="center" spacing={4}>
+          <div className="gc360-dialog">
+            <DialogTitle className="gc360-dialog_title" id="simple-dialog-title">
+              Update ID Picture
+            </DialogTitle>
+            <DialogContent className="gc360-dialog_content">
+              <DialogContentText className="gc360-dialog_content_text">
+                {this.props.width === 'md' || this.props.width === 'sm' || this.props.width === 'xs'
+                  ? 'Tap Image to Browse Files'
+                  : 'Drag & Drop Picture, or Click to Browse Files'}
+              </DialogContentText>
               {!preview && (
-                <Grid item>
+                <div className="gc360-dialog_content_dropzone">
                   <Dropzone
                     onDropAccepted={this.onDropAccepted.bind(this)}
                     onDropRejected={this.onDropRejected.bind(this)}
@@ -282,7 +305,7 @@ class IDUploader extends Component {
                   >
                     {({ getRootProps, getInputProps }) => (
                       <section>
-                        <div className="gc360-id-dropzone" {...getRootProps()}>
+                        <div className="gc360-dialog_content_dropzone_content" {...getRootProps()}>
                           <input {...getInputProps()} />
                           <img
                             src={`data:image/jpg;base64,${this.state.image}`}
@@ -293,10 +316,10 @@ class IDUploader extends Component {
                       </section>
                     )}
                   </Dropzone>
-                </Grid>
+                </div>
               )}
               {preview && (
-                <Grid item>
+                <div className="gc360-dialog_content_cropper">
                   <Cropper
                     ref="cropper"
                     src={preview}
@@ -315,43 +338,35 @@ class IDUploader extends Component {
                     minCropBoxWidth={this.state.cropperData.cropBoxDim}
                     minCropBoxHeight={this.state.cropperData.cropBoxDim}
                   />
-                </Grid>
+                </div>
               )}
               {preview && (
-                <Grid item justify="center">
-                  <Button
-                    variant="contained"
-                    onClick={() => this.setState({ preview: null })}
-                    style={style.button}
-                  >
-                    Choose Another Image
-                  </Button>
-                </Grid>
-              )}
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Grid container spacing={2} justify="flex-end">
-              <Grid item />
-              <Grid item>
-                <Button variant="contained" onClick={this.handleCloseCancel} style={style.button}>
-                  Cancel
-                </Button>
-              </Grid>
-              <Grid item>
                 <Button
                   variant="contained"
-                  onClick={this.handleCloseSubmit}
-                  disabled={!this.state.preview}
-                  style={
-                    this.state.preview ? style.button : { background: 'darkgray', color: 'white' }
-                  }
+                  onClick={() => this.setState({ preview: null })}
+                  style={style.button}
+                  className="gc360-dialog_content_button"
                 >
-                  Submit
+                  Choose Another Image
                 </Button>
-              </Grid>
-            </Grid>
-          </DialogActions>
+              )}
+            </DialogContent>
+            <DialogActions className="gc360-dialog_content_actions">
+              <Button variant="contained" onClick={this.handleCloseCancel} style={style.button}>
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={this.handleCloseSubmit}
+                disabled={!this.state.preview}
+                style={
+                  this.state.preview ? style.button : { background: 'darkgray', color: 'white' }
+                }
+              >
+                Submit
+              </Button>
+            </DialogActions>
+          </div>
         </Dialog>
 
         <Dialog
