@@ -68,10 +68,10 @@ export default class GordonNavLinks extends Component {
 
   render() {
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -91,8 +91,8 @@ export default class GordonNavLinks extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-    *  Defaults to online in case of PWA not being possible
-    */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     // Creates the People button depending on the status of the network found in local storage
@@ -178,13 +178,15 @@ export default class GordonNavLinks extends Component {
         );
       }
     } else {
-      Admin = (
-        <div onClick={this.openDialogBox}>
-          <ListItem button disabled={networkStatus}>
-            <ListItemText primary="Admin" />
-          </ListItem>
-        </div>
-      );
+      if (user.getLocalInfo().college_role === 'god') {
+        Admin = (
+          <div onClick={this.openDialogBox}>
+            <ListItem button disabled={networkStatus}>
+              <ListItemText primary="Admin" />
+            </ListItem>
+          </div>
+        );
+      }
     }
 
     // Creates the Signout button depending on the status of the network found in local storage
