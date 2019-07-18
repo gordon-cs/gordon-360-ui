@@ -305,7 +305,7 @@ export default class Profile extends Component {
         color: gordonColors.primary.cyan,
       },
     };
-    
+
     if (this.props.Authentication) {
       const { preview } = this.state;
 
@@ -330,129 +330,129 @@ export default class Profile extends Component {
           ),
         );
       }
-    let linksDialog = (
-      <LinksDialog
-        onDialogSubmit={this.onDialogSubmit}
-        handleSocialLinksClose={this.handleSocialLinksClose}
-        {...this.state}
-      />
-    );
+      let linksDialog = (
+        <LinksDialog
+          onDialogSubmit={this.onDialogSubmit}
+          handleSocialLinksClose={this.handleSocialLinksClose}
+          {...this.state}
+        />
+      );
 
-    // Define what icon buttons will display
-    // (only the sites that have links in database)
-    let facebookButton;
-    let twitterButton;
-    let linkedInButton;
-    let instagramButton;
-    let editButton;
-    let linkCount = 0; // To record whether or not any links are displayed
-    if (this.state.facebookLink !== '') {
-      facebookButton = (
-        <Grid item>
-          <a
-            href={this.state.facebookLink}
-            className="icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.facebook.icon}
-          </a>
-        </Grid>
-      );
-      linkCount += 1;
-    }
-    if (this.state.twitterLink !== '') {
-      twitterButton = (
-        <Grid item>
-          <a
-            href={this.state.twitterLink}
-            className="icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.twitter.icon}
-          </a>
-        </Grid>
-      );
-      linkCount += 1;
-    }
-    if (this.state.linkedInLink !== '') {
-      linkedInButton = (
-        <Grid item>
-          <a
-            href={this.state.linkedInLink}
-            className="icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.linkedIn.icon}
-          </a>
-        </Grid>
-      );
-      linkCount += 1;
-    }
-    if (this.state.instagramLink !== '') {
-      instagramButton = (
-        <Grid item>
-          <a
-            href={this.state.instagramLink}
-            className="icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.instagram.icon}
-          </a>
-        </Grid>
-      );
-      linkCount += 1;
-    }
-    if (linkCount > 0) {
-      editButton = (
-        <Grid item>
-          <IconButton onClick={this.handleSocialLinksOpen} className="edit-icon">
-            {socialMediaInfo.edit.icon}
-          </IconButton>
-        </Grid>
-      );
-    } else {
-      editButton = (
-        <Grid item>
-          <Button onClick={this.handleSocialLinksOpen} style={style.uncontainedButton}>
-            EDIT SOCIAL MEDIA LINKS
-          </Button>
-        </Grid>
-      );
-    }
-
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
+      // Define what icon buttons will display
+      // (only the sites that have links in database)
+      let facebookButton;
+      let twitterButton;
+      let linkedInButton;
+      let instagramButton;
+      let editButton;
+      let linkCount = 0; // To record whether or not any links are displayed
+      if (this.state.facebookLink !== '') {
+        facebookButton = (
+          <Grid item>
+            <a
+              href={this.state.facebookLink}
+              className="icon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {socialMediaInfo.facebook.icon}
+            </a>
+          </Grid>
+        );
+        linkCount += 1;
       }
-    });
+      if (this.state.twitterLink !== '') {
+        twitterButton = (
+          <Grid item>
+            <a
+              href={this.state.twitterLink}
+              className="icon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {socialMediaInfo.twitter.icon}
+            </a>
+          </Grid>
+        );
+        linkCount += 1;
+      }
+      if (this.state.linkedInLink !== '') {
+        linkedInButton = (
+          <Grid item>
+            <a
+              href={this.state.linkedInLink}
+              className="icon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {socialMediaInfo.linkedIn.icon}
+            </a>
+          </Grid>
+        );
+        linkCount += 1;
+      }
+      if (this.state.instagramLink !== '') {
+        instagramButton = (
+          <Grid item>
+            <a
+              href={this.state.instagramLink}
+              className="icon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {socialMediaInfo.instagram.icon}
+            </a>
+          </Grid>
+        );
+        linkCount += 1;
+      }
+      if (linkCount > 0) {
+        editButton = (
+          <Grid item>
+            <IconButton onClick={this.handleSocialLinksOpen} className="edit-icon">
+              {socialMediaInfo.edit.icon}
+            </IconButton>
+          </Grid>
+        );
+      } else {
+        editButton = (
+          <Grid item>
+            <Button onClick={this.handleSocialLinksOpen} style={style.uncontainedButton}>
+              EDIT SOCIAL MEDIA LINKS
+            </Button>
+          </Grid>
+        );
+      }
 
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+      /* Used to re-render the page when the network connection changes.
+       *  this.state.network is compared to the message received to prevent
+       *  multiple re-renders that creates extreme performance lost.
+       *  The origin of the message is checked to prevent cross-site scripting attacks
+       */
+      window.addEventListener('message', event => {
+        if (
+          event.data === 'online' &&
+          this.state.network === 'offline' &&
+          event.origin === window.location.origin
+        ) {
+          this.setState({ network: 'online' });
+        } else if (
+          event.data === 'offline' &&
+          this.state.network === 'online' &&
+          event.origin === window.location.origin
+        ) {
+          this.setState({ network: 'offline' });
+        }
+      });
 
-    // Creates the My Profile button link depending on the status of the network found in local storage
-    let MyProfile;
-    if (networkStatus === 'online') {
+      /* Gets status of current network connection for online/offline rendering
+       *  Defaults to online in case of PWA not being possible
+       */
+      const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+      // Creates the My Profile button link depending on the status of the network found in local storage
+      let MyProfile;
+      if (networkStatus === 'online') {
         MyProfile = (
           <div>
             {this.state.loading && <GordonLoader />}
@@ -471,7 +471,9 @@ export default class Profile extends Component {
                         >
                           <Grid item xs={6}>
                             <Link to={`/profile/${this.state.profile.AD_Username}`}>
-                              <Button style={style.uncontainedButton}>View My Public Profile</Button>
+                              <Button style={style.uncontainedButton}>
+                                View My Public Profile
+                              </Button>
                             </Link>
                           </Grid>
                           <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -819,10 +821,10 @@ export default class Profile extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
+                    {/*<img
                       src={require(`${'../../NoConnection.svg'}`)}
                       alt="Internet Connection Lost"
-                    />
+                    />*/}
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>
@@ -847,8 +849,8 @@ export default class Profile extends Component {
       }
 
       return MyProfile;
-} else {
-     return (
+    } else {
+      return (
         <div>
           <GordonLoader />
           <Typography align="center" variant="headline">

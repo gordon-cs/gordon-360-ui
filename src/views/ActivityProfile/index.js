@@ -735,10 +735,10 @@ class ActivityProfile extends Component {
                     marginRight: 'auto',
                   }}
                 >
-                  <img
+                  {/*<img
                     src={require(`${'../../NoConnection.svg'}`)}
                     alt="Internet Connection Lost"
-                  />
+                  />*/}
                 </Grid>
                 <br />
                 <h1>Please Re-establish Connection</h1>

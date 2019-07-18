@@ -49,7 +49,6 @@ export default class GordonNavAvatarRightCorner extends Component {
   }
   onSignIn() {
     this.onClose();
-    this.props.onSignOut();
   }
   openDialogBox = () => {
     this.setState({ dialogBoxOpen: true });
@@ -70,22 +69,20 @@ export default class GordonNavAvatarRightCorner extends Component {
 
   async componentWillReceiveProps(newProps) {
     if (this.props.Authentication !== newProps.Authentication) {
-      this.loadAvatar();
+      this.loadAvatar(newProps.Authentication);
     }
   }
 
   async componentWillMount() {
-    this.loadAvatar();
+    this.loadAvatar(this.props.Authentication);
   }
 
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
   }
 
-  async loadAvatar() {
-    console.log('Running loadAvatar in NavAvatarRightCorner');
-    if (this.props.Authentication) {
-      console.log('loadAvatar found token');
+  async loadAvatar(Authentication) {
+    if (Authentication) {
       const { name, user_name: username } = user.getLocalInfo();
       this.setState({ name, username });
       const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
@@ -95,7 +92,6 @@ export default class GordonNavAvatarRightCorner extends Component {
       const image = preferredImage || defaultImage;
       this.setState({ email, image });
     } else {
-      console.log("loadAvatar didn't find token.");
       this.setState({ name: 'Guest', username: 'Guest' });
     }
   }
@@ -106,7 +102,7 @@ export default class GordonNavAvatarRightCorner extends Component {
    */
   checkPeer() {
     if (window.didProfilePicUpdate) {
-      this.loadAvatar();
+      this.loadAvatar(this.props.Authentication);
       window.didProfilePicUpdate = false;
     }
   }

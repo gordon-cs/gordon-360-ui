@@ -36,10 +36,10 @@ export default class Home extends Component {
     try {
       this.props.onLogIn();
     } catch (error) {
-      console.log('Home logIn failed with error: ' + error);
+      console.log('Login failed with error: ' + error);
     }
   }
-  
+
   render() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent

@@ -561,23 +561,6 @@ function compareByTitle(a, b) {
   return comparison;
 }
 
-//compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
-/*function compareBySession(a, b) {
-  const sessA = a.SessionCode;
-  console.log(sessA)
-  const sessB = b.SessionCode;
-  console.log(sessB)
-
-  let comparison = 0;
-  if (sessA > sessB) {
-    comparison = 1;
-  } else if (sessA < sessB) {
-    comparison = -1;
-  }
-  console.log(comparison)
-  return comparison;
-}*/
-
 //compares items by ActivityCode, used by getTranscriptMembershipsInfo to sort by ActivityCode
 function compareByActCode(a, b) {
   const codeA = a.ActivityCode;

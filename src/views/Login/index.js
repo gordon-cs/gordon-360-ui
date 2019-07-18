@@ -15,6 +15,8 @@ import amber from '@material-ui/core/colors/amber'; // Login Hang
 
 import './login.css';
 import { authenticate } from '../../services/auth';
+import storage from '../../services/storage';
+import session from '../../services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
 import { projectName } from '../../project-name';
@@ -69,7 +71,6 @@ export default class Login extends Component {
 
     try {
       await authenticate(this.state.username, this.state.password);
-      console.log('Login/index.js: Successfully authenticated');
 
       /* Checks to see if the Service Worker API is available before attempting to access it
        *  This is important because if the API is not available, the site will load

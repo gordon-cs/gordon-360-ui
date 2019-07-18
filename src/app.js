@@ -51,20 +51,13 @@ export default class App extends Component {
     //setting up a global variable very hacky
     window.didProfilePicUpdate = false;
 
-    console.log('About to check authentication from willmount of App.js');
     let authentication = isAuthenticated();
     this.setState({ authentication });
   }
 
   onAuthChange() {
-    console.log('Running onAuthChange');
     let authentication = isAuthenticated();
     this.setState({ authentication });
-
-    // Force this component to re-render, login view -> main app view
-    //console.log('app.js: about to forceUpdate in onAuthChange()');
-    //this.forceUpdate();
-    //window.location.reload();
   }
 
   render() {

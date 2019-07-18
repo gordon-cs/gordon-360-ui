@@ -24,19 +24,19 @@ class GordonNavAvatar extends Component {
     };
   }
   async componentWillMount() {
-    this.loadAvatar();
+    this.loadAvatar(this.props.Authentication);
   }
   async componentWillReceiveProps(newProps) {
     if (this.props.Authentication !== newProps.Authentication) {
-      this.loadAvatar();
+      this.loadAvatar(newProps.Authentication);
     }
   }
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
   }
 
-  async loadAvatar() {
-    if (this.props.Authentication) {
+  async loadAvatar(Authentication) {
+    if (Authentication) {
       const { name, user_name: username } = user.getLocalInfo();
       this.setState({ name, username });
       const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
@@ -56,7 +56,7 @@ class GordonNavAvatar extends Component {
    */
   checkPeer() {
     if (window.didProfilePicUpdate) {
-      this.loadAvatar();
+      this.loadAvatar(this.props.Authentication);
       window.didProfilePicUpdate = false;
     }
   }

@@ -9,6 +9,11 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -88,6 +93,14 @@ export default class GordonHeader extends Component {
   handleClose() {
     this.setState({ loginDialogOpen: false });
   }
+
+  openDialogBox = () => {
+    this.setState({ dialogBoxOpen: true });
+  };
+
+  closeDialogBox = () => {
+    this.setState({ dialogBoxOpen: false });
+  };
 
   render() {
     /* Gets status of current network connection for online/offline rendering
@@ -179,13 +192,7 @@ export default class GordonHeader extends Component {
                   component={NavLink}
                   to="/events"
                 />
-                <Tab
-                  className="tab"
-                  icon={<PeopleIcon />}
-                  label="People"
-                  component={NavLink}
-                  to="/people"
-                />
+                {PeopleTab}
               </Tabs>
             </div>
             <GordonPeopleSearch Authentication={this.props.Authentication} />
