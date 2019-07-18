@@ -168,7 +168,7 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
   });
 
   // Variable that determines if all links successfully cached
-  let status = true;
+  let isSuccessful = true;
 
   // Attempts to fetch all links
   for (let url = 0; url < dynamicLinks.length; url++) {
@@ -194,12 +194,12 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
 
     // If the fetch resulted in error
     if (fetchSuccess === 'Failed to fetch') {
-      status = false;
+      isSuccessful = false;
       console.log(`\t- Failed to fetch and cache Dynamic File: ${dynamicLinks[url]}`);
     }
     // If the fetch resulted in a bad response
     else if (fetchSuccess.statusText !== 'OK') {
-      status = false;
+      isSuccessful = false;
       // Checks to see if the request was aborted. If so, we do not console log all the fetch errors
       if (fetchSuccess !== 'The user aborted a request.') {
         console.log(
@@ -211,7 +211,7 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
 
   // The promise to return with a boolean value determining if all links cached successfully
   let operationSuccess = await new Promise((resolve, reject) => {
-    status === true ? resolve(true) : reject(false);
+    isSuccessful === true ? resolve(true) : reject(false);
   });
 
   return operationSuccess;
