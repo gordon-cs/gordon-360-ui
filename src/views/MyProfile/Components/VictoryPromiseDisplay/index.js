@@ -1,33 +1,28 @@
 import Grid from '@material-ui/core/Grid';
-import React, { Component } from 'react';
+import React from 'react';
 import CardHeader from '@material-ui/core/CardHeader';
 import Tooltip from '@material-ui/core/Tooltip';
 import { gordonColors } from '../../../../theme';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ProgressBar from './ProgressBar';
-import { Pie } from 'react-chartjs-2';
 import { Polar } from 'react-chartjs-2';
-import { Chart } from 'react-chartjs-2';
 import victory from '../../../../services/victory';
-import PuzzlePiece from 'react-icons/lib/fa/puzzle-piece';
 import './VictoryPromise.css';
-import basic from './images/00.png';
-import { defaults } from 'react-chartjs-2';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import HomeIcon from '@material-ui/icons/Home';
-import PeopleIcon from '@material-ui/icons/People';
-import LocalActivityIcon from '@material-ui/icons/LocalActivity';
-import EventIcon from '@material-ui/icons/Event';
 import './VictoryPromise.css';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 export default class VictoryPromiseDisplay extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      labels: ['intellect', 'character', 'leadership', 'service'],
+      labels: [
+        'Christian Character',
+        'Intellectual Maturity',
+        'Lives of Service',
+        'Leadership Worldwide',
+      ],
       datasets: [
         {
           data: [1, 1, 1, 1],
@@ -49,8 +44,11 @@ export default class VictoryPromiseDisplay extends React.Component {
       LSColor: gordonColors.neutral.lightGray,
       LWColor: gordonColors.neutral.lightGray,
       defaultVPMode: true,
+      CC_ON: false,
+      IM_ON: false,
+      LS_ON: false,
+      LW_ON: false,
     };
-    //defaults.global.animation = false;
   }
 
   changeMode = () => {
@@ -76,35 +74,16 @@ export default class VictoryPromiseDisplay extends React.Component {
     this.setState({ CC, IM, LS, LW });
 
     if (CC > 0) {
-      this.setState({ CCColor: gordonColors.primary.blue });
+      this.setState({ CCColor: gordonColors.secondary.red, CC_ON: true });
     }
     if (IM > 0) {
-      this.setState({ IMColor: gordonColors.secondary.green });
+      this.setState({ IMColor: gordonColors.secondary.green, IM_ON: true });
     }
     if (LS > 0) {
-      this.setState({ LSColor: gordonColors.secondary.yellow });
+      this.setState({ LSColor: gordonColors.secondary.yellow, LS_ON: true });
     }
     if (LW > 0) {
-      this.setState({ LWColor: gordonColors.secondary.red });
-    }
-
-    if (CC + IM + LS + LW === 0) {
-      this.setState({
-        CC: 1,
-        LW: 1,
-        IM: 1,
-        LS: 1,
-        options: {
-          tooltips: {
-            callbacks: {
-              label: function(tooltipItem, data) {
-                var label = data.labels[tooltipItem.index];
-                return label + ': 0';
-              },
-            },
-          },
-        },
-      });
+      this.setState({ LWColor: gordonColors.primary.cyan, LW_ON: true });
     }
 
     this.setState({
@@ -126,6 +105,38 @@ export default class VictoryPromiseDisplay extends React.Component {
       },
     });
 
+    if (CC + IM + LS + LW === 0) {
+      this.setState({
+        CC: 1,
+        LW: 1,
+        IM: 1,
+        LS: 1,
+        options: {
+          legend: {
+            display: false,
+          },
+          scale: {
+            gridLines: {
+              display: true,
+            },
+            ticks: {
+              display: false,
+              max: 1,
+              min: 0,
+              maxTicksLimit: 1,
+            },
+          },
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var label = data.labels[tooltipItem.index];
+                return label + ': 0';
+              },
+            },
+          },
+        },
+      });
+    }
     this.setColor();
   }
 
@@ -144,9 +155,57 @@ export default class VictoryPromiseDisplay extends React.Component {
       ],
     });
   }
-  //<PuzzlePiece className="left-upper-corner"/>
-  //<PuzzlePiece className="right-upper-corner"/>
+
   render() {
+    let IMG_CC;
+    let IMG_IM;
+    let IMG_LS;
+    let IMG_LW;
+
+    if (this.state.IM_ON) {
+      IMG_CC = (
+        <img className="vpdesign" src={require('./images/On-CC.svg')} alt="Christian Character" />
+      );
+    } else {
+      IMG_CC = (
+        <img className="vpdesign" src={require('./images/Off-CC.svg')} alt="Christian Character" />
+      );
+    }
+
+    if (this.state.IM_ON) {
+      IMG_IM = (
+        <img className="vpdesign" src={require('./images/On-IM.svg')} alt="Intellectual Maturity" />
+      );
+    } else {
+      IMG_IM = (
+        <img
+          className="vpdesign"
+          src={require('./images/Off-IM.svg')}
+          alt="Intellectual Maturity"
+        />
+      );
+    }
+
+    if (this.state.LS_ON) {
+      IMG_LS = (
+        <img className="vpdesign" src={require('./images/On-LS.svg')} alt="Lives of Service" />
+      );
+    } else {
+      IMG_LS = (
+        <img className="vpdesign" src={require('./images/Off-LS.svg')} alt="Lives of Service" />
+      );
+    }
+
+    if (this.state.LW_ON) {
+      IMG_LW = (
+        <img className="vpdesign" src={require('./images/On-LW.svg')} alt="Leadership Worldwide" />
+      );
+    } else {
+      IMG_LW = (
+        <img className="vpdesign" src={require('./images/Off-LW.svg')} alt="Leadership Worldwide" />
+      );
+    }
+
     const style = {
       button: {
         background: gordonColors.primary.cyan,
@@ -164,78 +223,115 @@ export default class VictoryPromiseDisplay extends React.Component {
     }))(Tooltip);
 
     let content;
+    //style={{backgroundColor: gordonColors.primary.blue}}
 
     if (this.state.defaultVPMode) {
       content = (
         <section>
-          <Grid container alignItems="center" align="center" justify="center" spacing="16">
-            <Polar
-              className="victory-promise"
-              data={{ labels: this.state.labels, datasets: this.state.datasets }}
-              options={this.state.options}
-            />
-            <div>
-              <Button variant="contained" style={style.button} onClick={() => this.changeMode()}>
-                Change Style
-              </Button>
-            </div>
+          <Grid container>
+            <Grid item xs={12}>
+              <Card>
+                <CardContent>
+                  <Grid container direction="row" alignItems="center">
+                    <Grid item xs={7}>
+                      <CardHeader title="Victory Promise" />
+                    </Grid>
+                    <Grid item xs={5} align="right">
+                      <Button
+                        variant="contained"
+                        style={style.button}
+                        onClick={() => this.changeMode()}
+                      >
+                        Change Style
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid className="victory-promise-layout" item container>
+                    <Grid item xs={12} container justify="center">
+                      <HoverText
+                        title={
+                          <React.Fragment>
+                            <Typography color="inherit">Christian Character</Typography>
+                            {"It's very engaging. Right?"}
+                          </React.Fragment>
+                        }
+                      >
+                        {IMG_CC}
+                      </HoverText>
+                      <HoverText
+                        title={
+                          <React.Fragment>
+                            <Typography color="inherit">Intellectual Maturity</Typography>
+                            {"It's very engaging. Right?"}
+                          </React.Fragment>
+                        }
+                      >
+                        {IMG_IM}
+                      </HoverText>
+                    </Grid>
+                    <Grid container justify="center">
+                      <HoverText
+                        title={
+                          <React.Fragment>
+                            <Typography color="inherit">Lives of Service</Typography>
+                            {"It's very engaging. Right?"}
+                          </React.Fragment>
+                        }
+                      >
+                        {IMG_LS}
+                      </HoverText>
+                      <HoverText
+                        title={
+                          <React.Fragment>
+                            <Typography color="inherit">Leadership Worldwide</Typography>
+                            {"It's very engaging. Right?"}
+                          </React.Fragment>
+                        }
+                      >
+                        {IMG_LW}
+                      </HoverText>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         </section>
       );
     } else {
       content = (
         <section>
-          <Grid container justify="center">
-            <HoverText
-              title={
-                <React.Fragment>
-                  <Typography color="inherit">Christian Character</Typography>
-                  {"It's very engaging. Right?"}
-                </React.Fragment>
-              }
-            >
-              <HomeIcon className="vpdesign" style={{ fontSize: 50, color: this.state.CCColor }} />
-            </HoverText>
-            <HoverText
-              title={
-                <React.Fragment>
-                  <Typography color="inherit">Intellectual Maturity</Typography>
-                  {"It's very engaging. Right?"}
-                </React.Fragment>
-              }
-            >
-              <PeopleIcon
-                className="vpdesign"
-                style={{ fontSize: 50, color: this.state.IMColor }}
-              />
-            </HoverText>
-            <HoverText
-              title={
-                <React.Fragment>
-                  <Typography color="inherit">Lives of Service</Typography>
-                  {"It's very engaging. Right?"}
-                </React.Fragment>
-              }
-            >
-              <LocalActivityIcon
-                className="vpdesign"
-                style={{ fontSize: 50, color: this.state.LSColor }}
-              />
-            </HoverText>
-            <HoverText
-              title={
-                <React.Fragment>
-                  <Typography color="inherit">Leadership Worldwide</Typography>
-                  {"It's very engaging. Right?"}
-                </React.Fragment>
-              }
-            >
-              <EventIcon className="vpdesign" style={{ fontSize: 50, color: this.state.LWColor }} />
-            </HoverText>
+          <Grid container>
+            <Grid item>
+              <Card>
+                <CardContent>
+                  <Grid container direction="row" alignItems="center">
+                    <Grid item xs={7}>
+                      <CardHeader title="Victory Promise" />
+                    </Grid>
+                    <Grid item xs={5} align="right">
+                      <Button
+                        variant="contained"
+                        style={style.button}
+                        onClick={() => this.changeMode()}
+                      >
+                        Change Style
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Grid item className="victory-promise-layout" container>
+                    <Grid container justify="center">
+                      <Polar
+                        className="victory-promise"
+                        data={{ labels: this.state.labels, datasets: this.state.datasets }}
+                        options={this.state.options}
+                      />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
-          <Button variant="contained" style={style.button} onClick={() => this.changeMode()}>
-            Change Style
-          </Button>
         </section>
       );
     }

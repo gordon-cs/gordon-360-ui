@@ -413,7 +413,7 @@ export default class Profile extends Component {
                 justify="flex-start"
                 spacing="16"
               >
-                <Grid item xs={12} lg={8}>
+                <Grid item xs={12} md={8} lg={8}>
                   <Card>
                     <CardContent>
                       <Grid
@@ -663,14 +663,8 @@ export default class Profile extends Component {
                     </CardContent>
                   </Card>
                 </Grid>
-                <Grid item xs={12} lg={4}>
-                  <Card>
-                    <CardContent>
-                      <Grid item>
-                        <VictoryPromiseDisplay />
-                      </Grid>
-                    </CardContent>
-                  </Card>
+                <Grid item xs={12} md={4} lg={4}>
+                  <VictoryPromiseDisplay />
                 </Grid>
               </Grid>
 
