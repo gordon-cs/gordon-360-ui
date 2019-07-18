@@ -10,6 +10,8 @@ import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
 import ProfileActivityList from './../../components/ProfileActivityList';
 import EmailIcon from '@material-ui/icons/Email';
+import Button from '@material-ui/core/Button';
+import { NavLink } from 'react-router-dom';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import Button from '@material-ui/core/Button';
@@ -48,7 +50,9 @@ export default class Profile extends Component {
   }
 
   componentWillMount() {
-    this.loadProfile(this.props);
+    if (this.props.Authentication) {
+      this.loadProfile(this.props);
+    }
   }
 
   componentWillReceiveProps(newProps) {
@@ -263,178 +267,194 @@ export default class Profile extends Component {
      */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-    // Creates the Public Profile page depending on the status of the network found in local storage
-    // If the searched profile is the current user's profile, the page will remain avaiable offline
-    let PublicProfile;
-    if (
-      networkStatus === 'online' ||
-      (networkStatus === 'offline' &&
-        this.state.profile.AD_Username === this.state.currentUser.AD_Username)
-    ) {
-      PublicProfile = (
-        <div>
-          {this.state.loading && <GordonLoader />}
-          {!this.state.loading && (
-            <Grid container justify="center" spacing="16">
-              <Grid item xs={12} lg={10}>
-                <Card>
-                  <CardContent>
-                    <Grid
-                      container
-                      alignItems="center"
-                      align="center"
-                      justify="center"
-                      spacing="16"
-                    >
-                      <Grid container alignItems="center" spacing="16">
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                          {this.state.prefImage && (
-                            <img
-                              className="rounded-corners"
-                              src={`data:image/jpg;base64,${this.state.prefImage}`}
-                              alt=""
-                              style={{ 'max-height': '200px', 'min-width': '160px' }}
-                            />
-                          )}
-                          {this.state.prefImage && this.state.defImage && ' '}
-                          {this.state.defImage && (
-                            <img
-                              className="rounded-corners"
-                              src={`data:image/jpg;base64,${this.state.defImage}`}
-                              alt=""
-                              style={{ 'max-height': '200px', 'min-width': '160px' }}
-                            />
-                          )}
-                        </Grid>
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={6} lg={4}>
-                        <Grid container align="center" alignItems="center" spacing="16">
-                          <Grid item xs={12}>
-                            <CardHeader
-                              title={
-                                this.state.hasNickName
-                                  ? this.state.profile.fullName +
-                                    ' (' +
-                                    this.state.profile.NickName +
-                                    ')'
-                                  : this.state.profile.fullName
-                              }
-                              subheader={this.state.subheaderInfo}
-                            />
-
-                            <Grid container spacing="16" align="center" justify="center">
-                              {facebookButton}
-                              {twitterButton}
-                              {linkedInButton}
-                              {instagramButton}
-                            </Grid>
-                            {this.state.profile.Email !== '' && (
-                              <div
-                                style={{
-                                  marginTop: '20px',
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <a href={`mailto:${this.state.profile.Email}`}>
-                                  <div
-                                    className="email-link-container"
-                                    style={{
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      alignContent: 'center',
-                                      justifyContent: 'center',
-                                    }}
-                                  >
-                                    <EmailIcon
-                                      className="email-link"
-                                      style={{ marginRight: '0.75rem' }}
-                                    />
-                                    <Typography className="email-link">
-                                      {this.state.profile.Email}
-                                    </Typography>
-                                  </div>
-                                </a>
-                              </div>
+    if (this.props.Authentication) {
+      // Creates the Public Profile page depending on the status of the network found in local storage
+      // If the searched profile is the current user's profile, the page will remain avaiable offline
+      let PublicProfile;
+      if (
+        networkStatus === 'online' ||
+        (networkStatus === 'offline' &&
+          this.state.profile.AD_Username === this.state.currentUser.AD_Username)
+      ) {
+        PublicProfile = (
+          <div>
+            {this.state.loading && <GordonLoader />}
+            {!this.state.loading && (
+              <Grid container justify="center" spacing="16">
+                <Grid item xs={12} lg={10}>
+                  <Card>
+                    <CardContent>
+                      <Grid
+                        container
+                        alignItems="center"
+                        align="center"
+                        justify="center"
+                        spacing="16"
+                      >
+                        <Grid container alignItems="center" spacing="16">
+                          <Grid item xs={12} sm={12} md={12} lg={12}>
+                            {this.state.prefImage && (
+                              <img
+                                className="rounded-corners"
+                                src={`data:image/jpg;base64,${this.state.prefImage}`}
+                                alt=""
+                                style={{ 'max-height': '200px', 'min-width': '160px' }}
+                              />
+                            )}
+                            {this.state.prefImage && this.state.defImage && ' '}
+                            {this.state.defImage && (
+                              <img
+                                className="rounded-corners"
+                                src={`data:image/jpg;base64,${this.state.defImage}`}
+                                alt=""
+                                style={{ 'max-height': '200px', 'min-width': '160px' }}
+                              />
                             )}
                           </Grid>
                         </Grid>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              </Grid>
+                        <Grid item xs={12} sm={6} md={6} lg={4}>
+                          <Grid container align="center" alignItems="center" spacing="16">
+                            <Grid item xs={12}>
+                              <CardHeader
+                                title={
+                                  this.state.hasNickName
+                                    ? this.state.profile.fullName +
+                                      ' (' +
+                                      this.state.profile.NickName +
+                                      ')'
+                                    : this.state.profile.fullName
+                                }
+                                subheader={this.state.subheaderInfo}
+                              />
 
-              <Grid item xs={12} lg={5}>
-                <Grid container direction="column" spacing="16">
-                  {this.state.officeinfo !== null && this.state.officeinfo}
-                  {this.state.profileinfo}
+                              <Grid container spacing="16" align="center" justify="center">
+                                {facebookButton}
+                                {twitterButton}
+                                {linkedInButton}
+                                {instagramButton}
+                              </Grid>
+                              {this.state.profile.Email !== '' && (
+                                <div
+                                  style={{
+                                    marginTop: '20px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                  }}
+                                >
+                                  <a href={`mailto:${this.state.profile.Email}`}>
+                                    <div
+                                      className="email-link-container"
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        alignContent: 'center',
+                                        justifyContent: 'center',
+                                      }}
+                                    >
+                                      <EmailIcon
+                                        className="email-link"
+                                        style={{ marginRight: '0.75rem' }}
+                                      />
+                                      <Typography className="email-link">
+                                        {this.state.profile.Email}
+                                      </Typography>
+                                    </div>
+                                  </a>
+                                </div>
+                              )}
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
                 </Grid>
-              </Grid>
-              <Grid item xs={12} lg={5}>
-                <Grid container direction="column" spacing="16">
-                  <Grid item xs={12} sm={12} md={12} lg={12}>
-                    <Card>
-                      <CardContent>
-                        <CardHeader title="Involvements" />
-                        <List>{displayedMembershipList}</List>
-                      </CardContent>
-                    </Card>
+
+                <Grid item xs={12} lg={5}>
+                  <Grid container direction="column" spacing="16">
+                    {this.state.officeinfo !== null && this.state.officeinfo}
+                    {this.state.profileinfo}
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} lg={5}>
+                  <Grid container direction="column" spacing="16">
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <Card>
+                        <CardContent>
+                          <CardHeader title="Involvements" />
+                          <List>{displayedMembershipList}</List>
+                        </CardContent>
+                      </Card>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
+            )}
+          </div>
+        );
+      } else {
+  <<<<<<< DevelopClone
+        PublicProfile = (
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} md={8}>
+              <Card>
+                <CardContent
+                  style={{
+                    margin: 'auto',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Grid
+                    item
+                    xs={2}
+                    alignItems="center"
+                    style={{
+                      display: 'block',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                  >
+                    <img
+                      src={require(`${'../../NoConnection.svg'}`)}
+                      alt="Internet Connection Lost"
+                    />
+                  </Grid>
+                  <br />
+                  <h1>Please Re-establish Connection</h1>
+                  <h4>People Search has been deactivated due to loss of network.</h4>
+                  <br />
+                  <br />
+                  <Button
+                    color="primary"
+                    backgroundColor="white"
+                    variant="outlined"
+                    onClick={() => {
+                      window.location.pathname = '';
+                    }}
+                  >
+                    Back To Home
+                  </Button>
+                </CardContent>
+              </Card>
             </Grid>
-          )}
+          </Grid>
+        );
+      }
+
+      return PublicProfile;
+
+} else {
+      return (
+        <div>
+          <GordonLoader />
+          <Typography align="center" variant="headline">
+            You must be logged in to view this profile.
+          </Typography>
+          <NavLink exact to="/">
+            <Button>Okay</Button>
+          </NavLink>
         </div>
       );
-    } else {
-      PublicProfile = (
-        <Grid container justify="center" spacing="16">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <Grid
-                  item
-                  xs={2}
-                  alignItems="center"
-                  style={{
-                    display: 'block',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
-                </Grid>
-                <br />
-                <h1>Please Re-establish Connection</h1>
-                <h4>People Search has been deactivated due to loss of network.</h4>
-                <br />
-                <br />
-                <Button
-                  color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
     }
-
-    return PublicProfile;
   }
 }

@@ -513,7 +513,6 @@ class PeopleSearch extends Component {
         department,
         building,
       );
-
       this.props.history.push(`?includeAlumni=${includeAlumni}&firstName=${firstName}&lastName=
       ${lastName}&major=${major}&minor=${minor}&hall=${hall}&classType=${classType}&homeCity=${homeCity}
       &state=${state}&country=${country}

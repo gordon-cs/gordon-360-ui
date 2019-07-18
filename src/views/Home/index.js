@@ -7,17 +7,24 @@ import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
 import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
+import { isAuthenticated, signOut } from '../../services/auth';
 import user from '../../services/user';
+import Login from '../Login';
+import './home.css';
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
+    
+    this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null, network: 'online' };
+    this.state = { personType: null, network: 'online'  };
   }
 
   componentWillMount() {
-    this.getPersonType();
+    if (this.props.Authentication) {
+      this.getPersonType();
+    }
   }
 
   async getPersonType() {
@@ -26,21 +33,15 @@ export default class Home extends Component {
     this.setState({ personType });
   }
 
-  render() {
-    const personType = this.state.personType;
-    let doughnut;
-
-    //Only show CL&W credits if user is a student
-    if (String(personType).includes('stu')) {
-      doughnut = (
-        <Link to={`/attended`}>
-          <CLWCreditsDaysLeft />
-        </Link>
-      );
-    } else {
-      doughnut = <DaysLeft />;
+  logIn() {
+    try {
+      this.props.onLogIn();
+    } catch (error) {
+      console.log('Home logIn failed with error: ' + error);
     }
+  }
 
+  render() {
     /* Used to re-render the page when the network connection changes.
     *  this.state.network is compared to the message received to prevent
     *  multiple re-renders that creates extreme performance lost.
@@ -66,28 +67,33 @@ export default class Home extends Component {
   *  Defaults to online in case of PWA not being possible
   */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
-    // Creates the Home Page depending on the status of the network found in local storage
-    let HomePage;
-    if (networkStatus === 'online') {
-      HomePage = (
-        <Grid container justify="center" spacing={16}>
-          <Grid item xs={12} md={10}>
-            <Carousel />
-          </Grid>
-          <Grid item xs={12} md={5}>
-            {doughnut}
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <DiningBalance />
-          </Grid>
+    
+    let content;
+    if (this.props.Authentication) {
+      const personType = this.state.personType;
+      
+      let requests;
+      if (networkStatus === 'online') {
+        requests = (
           <Grid item xs={12} md={5}>
             <Requests />
           </Grid>
-        </Grid>
-      );
-    } else {
-      HomePage = (
+        )
+      }
+
+      //Only show CL&W credits if user is a student
+      let doughnut;
+      if (String(personType).includes('stu')) {
+        doughnut = (
+          <Link to={`/attended`}>
+            <CLWCreditsDaysLeft />
+          </Link>
+        );
+      } else {
+        doughnut = <DaysLeft />;
+      }
+
+      content = (
         <Grid container justify="center" spacing={16}>
           <Grid item xs={12} md={10}>
             <Carousel />
@@ -98,9 +104,17 @@ export default class Home extends Component {
           <Grid item xs={12} md={5}>
             <DiningBalance />
           </Grid>
+        {requests}
         </Grid>
       );
+    } else {
+      content = (
+        <div className="gordon-login">
+          <Login onLogIn={this.logIn} />
+        </div>
+      );
     }
-    return HomePage;
+    
+    return content;
   }
 }

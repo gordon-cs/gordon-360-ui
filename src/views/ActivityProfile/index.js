@@ -25,7 +25,7 @@ import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
-
+import { isAuthenticated, signOut } from '../../services/auth';
 const CROP_DIM = 320; // pixels
 
 class ActivityProfile extends Component {
@@ -69,72 +69,81 @@ class ActivityProfile extends Component {
   async componentWillMount() {
     this.setState({ loading: true });
     const { sessionCode, activityCode } = this.props.match.params;
-    const [
-      activityInfo,
-      activityAdvisors,
-      activityFollowers,
-      activityGroupAdmins,
-      activityMembersNum,
-      activityStatus,
-      sessionInfo,
-      id,
-      college_role, // for testing purposes only, remove before push
-      isAdmin,
-      participationDescription,
-    ] = await Promise.all([
-      activity.get(activityCode),
-      activity.getAdvisors(activityCode, sessionCode),
-      membership.getFollowersNum(activityCode, sessionCode),
-      activity.getGroupAdmins(activityCode, sessionCode),
-      membership.getMembersNum(activityCode, sessionCode),
-      activity.getStatus(activityCode, sessionCode),
-      session.get(sessionCode),
-      user.getLocalInfo().id,
-      user.getLocalInfo().college_role,
-      membership.checkAdmin(user.getLocalInfo().id, sessionCode, activityCode),
-      membership.search(user.getLocalInfo().id, sessionCode, activityCode),
-    ]);
-
-    if (this.state.isAdmin) {
-      const emailList = await emails.get(activityCode);
-      this.setState({ emailList });
-    }
-
-    this.setState({
-      activityInfo,
-      activityAdvisors,
-      activityFollowers,
-      activityGroupAdmins,
-      activityMembersNum,
-      activityStatus,
-      sessionInfo,
-      id,
-      isAdmin: isAdmin || college_role === 'god',
-      isSuperAdmin: college_role === 'god' ? true : false,
-      participationDescription,
-      tempActivityBlurb: activityInfo.ActivityBlurb,
-      tempActivityJoinInfo: activityInfo.ActivityJoinInfo,
-      tempActivityURL: activityInfo.ActivityURL,
-    });
-
-    if (this.state.isAdmin) {
-      const [emailList] = await Promise.all([emails.get(activityCode)]);
-      this.setState({ emailList });
-    }
-
-    if (
-      (this.state.participationDescription[0] &&
-        this.state.participationDescription[1] !== 'Guest') ||
-      this.state.isSuperAdmin
-    ) {
-      // Only if the user is in the activity and not a guest can this get called (unless user is
-      // a superadmin [god mode])
-      // else Unauthorized error
-      const activityMembers = await membership.get(
-        this.state.activityInfo.ActivityCode,
-        this.state.sessionInfo.SessionCode,
-      );
-      this.setState({ activityMembers });
+    if (this.props.Authentication) {
+      const [
+        activityInfo,
+        activityAdvisors,
+        activityFollowers,
+        activityGroupAdmins,
+        activityMembersNum,
+        activityStatus,
+        sessionInfo,
+        id,
+        college_role, // for testing purposes only, remove before push
+        isAdmin,
+        participationDescription,
+      ] = await Promise.all([
+        activity.get(activityCode),
+        activity.getAdvisors(activityCode, sessionCode),
+        membership.getFollowersNum(activityCode, sessionCode),
+        activity.getGroupAdmins(activityCode, sessionCode),
+        membership.getMembersNum(activityCode, sessionCode),
+        activity.getStatus(activityCode, sessionCode),
+        session.get(sessionCode),
+        user.getLocalInfo().id,
+        user.getLocalInfo().college_role,
+        membership.checkAdmin(user.getLocalInfo().id, sessionCode, activityCode),
+        membership.search(user.getLocalInfo().id, sessionCode, activityCode),
+      ]);
+      if (this.state.isAdmin) {
+        const emailList = await emails.get(activityCode);
+        this.setState({ emailList });
+      }
+      this.setState({
+        activityInfo,
+        activityAdvisors,
+        activityFollowers,
+        activityGroupAdmins,
+        activityMembersNum,
+        activityStatus,
+        sessionInfo,
+        id,
+        isAdmin: isAdmin || college_role === 'god',
+        isSuperAdmin: college_role === 'god' ? true : false,
+        participationDescription,
+        tempActivityBlurb: activityInfo.ActivityBlurb,
+        tempActivityJoinInfo: activityInfo.ActivityJoinInfo,
+        tempActivityURL: activityInfo.ActivityURL,
+      });
+      if (this.state.isAdmin) {
+        const [emailList] = await Promise.all([emails.get(activityCode)]);
+        this.setState({ emailList });
+      }
+      if (
+        (this.state.participationDescription[0] &&
+          this.state.participationDescription[1] !== 'Guest') ||
+        this.state.isSuperAdmin
+      ) {
+        // Only if the user is in the activity and not a guest can this get called (unless user is
+        // a superadmin [god mode])
+        // else Unauthorized error
+        const activityMembers = await membership.get(
+          this.state.activityInfo.ActivityCode,
+          this.state.sessionInfo.SessionCode,
+        );
+        this.setState({ activityMembers });
+      }
+    } else {
+      const [activityInfo, activityStatus, sessionInfo] = await Promise.all([
+        activity.get(activityCode),
+        activity.getStatus(activityCode, sessionCode),
+        session.get(sessionCode),
+      ]);
+      this.setState({
+        activityInfo,
+        activityStatus,
+        sessionInfo,
+      });
     }
     this.setState({ loading: false });
   }
@@ -291,286 +300,6 @@ class ActivityProfile extends Component {
     if (this.state.error) {
       throw this.state.error;
     }
-    let content;
-    if (this.state.loading === true) {
-      content = <GordonLoader />;
-    } else {
-      let editActivity;
-      const redButton = {
-        background: gordonColors.secondary.red,
-        color: 'white',
-      };
-      const {
-        ActivityDescription: activityDescription,
-        ActivityBlurb: activityBlurb,
-        ActivityJoinInfo: activityJoinInfo,
-        ActivityURL: activityURL,
-        ActivityImagePath: activityImagePath,
-      } = this.state.activityInfo;
-
-      const { preview } = this.state;
-
-      if (this.state.isAdmin) {
-        editActivity = (
-          <section align="center" padding={6}>
-            <CardContent>
-              <Grid container spacing={16} justify="center">
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.openEditActivityDialog}
-                    raised
-                  >
-                    Edit Involvement
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="contained" color="primary" onClick={this.sendEmail} raised>
-                    Email Members/Subscribers
-                  </Button>
-                </Grid>
-              </Grid>
-            </CardContent>
-
-            <Dialog open={this.state.openEditActivity} fullWidth>
-              <DialogTitle> Edit {activityDescription}</DialogTitle>
-              <DialogContent>
-                <Grid align="center" className="activity-image" item>
-                  <img
-                    alt={activity.activityDescription}
-                    src={this.state.image || activityImagePath}
-                    className="rounded-corners"
-                  />
-                </Grid>
-                <Grid container spacing={16} justify="center">
-                  <Grid item>
-                    <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
-                      Remove image
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button variant="contained" onClick={this.handlePhotoOpen} color="primary">
-                      Change Image
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Dialog
-                  open={this.state.photoOpen}
-                  keepMounted
-                  onClose={this.handleClose}
-                  aria-labelledby="alert-dialog-slide-title"
-                  aria-describedby="alert-dialog-slide-description"
-                  maxWidth="false"
-                >
-                  <DialogTitle id="simple-dialog-title">Update Involvement Picture</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>
-                      {window.innerWidth < 600
-                        ? 'Tap Image to Browse Files'
-                        : 'Drag & Drop Picture, or Click to Browse Files'}
-                    </DialogContentText>
-                    <DialogContentText>
-                      <br />
-                    </DialogContentText>
-                    {!preview && (
-                      <Grid container justify="center" spacing="16">
-                        <Dropzone
-                          onDropAccepted={this.onDropAccepted.bind(this)}
-                          onDropRejected={this.onDropRejected.bind(this)}
-                          accept="image/jpeg,image/jpg,image/png"
-                          className="photoUploader"
-                        >
-                          <img
-                            className="rounded-corners"
-                            src={activityImagePath}
-                            alt=""
-                            style={{ 'max-width': '320px', 'max-height': '320px' }}
-                          />
-                        </Dropzone>
-                      </Grid>
-                    )}
-                    {preview && (
-                      <Grid container justify="center" spacing="16">
-                        <Cropper
-                          ref="cropper"
-                          src={preview}
-                          style={{
-                            'max-width': this.maxCropPreviewWidth(),
-                            'max-height':
-                              this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
-                          }}
-                          autoCropArea={1}
-                          viewMode={3}
-                          aspectRatio={1}
-                          highlight={false}
-                          background={false}
-                          zoom={this.onCropperZoom.bind(this)}
-                          zoomable={false}
-                          dragMode={'none'}
-                          minCropBoxWidth={this.state.cropperData.cropBoxDim}
-                          minCropBoxHeight={this.state.cropperData.cropBoxDim}
-                        />
-                      </Grid>
-                    )}
-                    {preview && <br />}
-                    {preview && (
-                      <Grid container justify="center" spacing="16">
-                        <Grid item>
-                          <Button
-                            variant="contained"
-                            onClick={() => this.setState({ preview: null })}
-                          >
-                            Choose Another Image
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    )}
-                  </DialogContent>
-                  <DialogActions>
-                    <Grid container spacing={8} justify="flex-end">
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={this.handleCloseCancel}
-                        >
-                          Cancel
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={this.handleCloseSelect}
-                          disabled={!this.state.preview}
-                        >
-                          Select
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </DialogActions>
-                </Dialog>
-
-                <Dialog open={this.state.openRemoveImage} keepMounted align="center">
-                  <DialogTitle>Are you sure you want to remove image?</DialogTitle>
-                  <DialogContent>
-                    <Grid container spacing={16}>
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={this.onRemoveImage}
-                          raised
-                        >
-                          OK
-                        </Button>
-                      </Grid>
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
-                        <Button variant="contained" onClick={this.onClose} raised>
-                          CANCEL
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </DialogContent>
-                </Dialog>
-                <form onSubmit={this.handleSubmit}>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Description"
-                        margin="dense"
-                        multiline
-                        fullWidth
-                        defaultValue={activityBlurb}
-                        onChange={this.handleChange('tempActivityBlurb')}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Special Information for Joining"
-                        margin="dense"
-                        multiline
-                        fullWidth
-                        defaultValue={activityJoinInfo}
-                        onChange={this.handleChange('tempActivityJoinInfo')}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Website"
-                        margin="dense"
-                        multiline
-                        fullWidth
-                        defaultValue={activityURL}
-                        onChange={this.handleChange('tempActivityURL')}
-                      />
-                    </Grid>
-                  </Grid>
-                </form>
-              </DialogContent>
-
-              <DialogActions>
-                <Button variant="contained" color="primary" onClick={this.onClose} raised>
-                  Cancel
-                </Button>
-                <Button variant="contained" color="primary" onClick={this.onEditActivity} raised>
-                  Submit
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </section>
-        );
-      }
-      const { SessionDescription: sessionDescription } = this.state.sessionInfo;
-      let description;
-      if (activityBlurb.length !== 0) {
-        description = (
-          <Typography variant="body1">
-            <strong>Description: </strong>
-            {activityBlurb}
-          </Typography>
-        );
-      }
-      let website;
-      if (activityURL.length !== 0) {
-        website = (
-          <Typography variant="body1">
-            <strong>Website: </strong>
-            <a href={activityURL}> {activityURL}</a>
-          </Typography>
-        );
-      }
-      let subscribersWord, membersWord;
-      let groupContacts = <GroupContacts groupAdmin={this.state.activityGroupAdmins} />;
-      let advisors = <Advisors advisors={this.state.activityAdvisors} />;
-      const subscribersNum = this.state.activityFollowers;
-      if (subscribersNum === 1) {
-        subscribersWord = 'Subscriber';
-      } else {
-        subscribersWord = 'Subscribers';
-      }
-      const membersNum = this.state.activityMembersNum;
-      if (membersNum === 1) {
-        membersWord = 'Member';
-      } else {
-        membersWord = 'Members';
-      }
-      let membership = (
-        <Membership
-          members={this.state.activityMembers}
-          sessionInfo={this.state.sessionInfo}
-          activityCode={this.state.activityInfo.ActivityCode}
-          activityDescription={this.state.activityInfo.ActivityDescription}
-          participationDetail={this.state.participationDetail}
-          id={this.state.id}
-          isAdmin={this.state.isAdmin}
-          isSuperAdmin={this.state.isSuperAdmin}
-          status={this.state.activityStatus}
-        />
-      );
 
       /* Used to re-render the page when the network connection changes.
       *  this.state.network is compared to the message received to prevent
@@ -597,45 +326,388 @@ class ActivityProfile extends Component {
       *  Defaults to online in case of PWA not being possible
       */
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+    
+    let content;
+    
+    // Creates the content of an activity's profile depending on the status of the network found in local storage
+    if (networkStatus === 'online') {
+      if (this.props.Authentication) {
+        if (this.state.loading === true) {
+          content = <GordonLoader />;
+        } else {
+          let editActivity;
+          const redButton = {
+            background: gordonColors.secondary.red,
+            color: 'white',
+          };
 
-      // Creates the content of an activity's profile depending on the status of the network found in local storage
-      if (networkStatus === 'online') {
-        content = (
-          <section className="gordon-activity-profile">
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="display1">
-                  {activityDescription}
-                </Typography>
-                <Grid align="center" className="activity-image" item>
-                  <img
-                    alt={activity.activityDescription}
-                    src={activityImagePath}
-                    className="rounded-corners"
-                  />
-                </Grid>
-                <Grid item>{editActivity}</Grid>
-                <Typography variant="body1">
-                  <strong>Session: </strong>
-                  {sessionDescription}
-                </Typography>
-                {description}
-                {website}
-                {groupContacts}
-                {advisors}
-                <Typography>
-                  <strong>Special Information for Joining: </strong>
-                  {this.state.activityInfo.ActivityJoinInfo}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Current Involvement Roster: </strong>
-                  {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
-                </Typography>
-              </CardContent>
-              {membership}
-            </Card>
-          </section>
-        );
+          const {
+            ActivityDescription: activityDescription,
+            ActivityBlurb: activityBlurb,
+            ActivityJoinInfo: activityJoinInfo,
+            ActivityURL: activityURL,
+            ActivityImagePath: activityImagePath,
+          } = this.state.activityInfo;
+          const { preview } = this.state;
+
+          if (this.state.isAdmin) {
+            editActivity = (
+              <section align="center" padding={6}>
+                <CardContent>
+                  <Grid container spacing={16} justify="center">
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={this.openEditActivityDialog}
+                        raised
+                      >
+                        Edit Involvement
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button variant="contained" color="primary" onClick={this.sendEmail} raised>
+                        Email Members/Subscribers
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+
+                <Dialog open={this.state.openEditActivity} fullWidth>
+                  <DialogTitle> Edit {activityDescription}</DialogTitle>
+                  <DialogContent>
+                    <Grid align="center" className="activity-image" item>
+                      <img
+                        alt={activity.activityDescription}
+                        src={this.state.image || activityImagePath}
+                        className="rounded-corners"
+                      />
+                    </Grid>
+                    <Grid container spacing={16} justify="center">
+                      <Grid item>
+                        <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
+                          Remove image
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button variant="contained" onClick={this.handlePhotoOpen} color="primary">
+                          Change Image
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    <Dialog
+                      open={this.state.photoOpen}
+                      keepMounted
+                      onClose={this.handleClose}
+                      aria-labelledby="alert-dialog-slide-title"
+                      aria-describedby="alert-dialog-slide-description"
+                      maxWidth="false"
+                    >
+                      <DialogTitle id="simple-dialog-title">Update Involvement Picture</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText>
+                          {window.innerWidth < 600
+                            ? 'Tap Image to Browse Files'
+                            : 'Drag & Drop Picture, or Click to Browse Files'}
+                        </DialogContentText>
+                        <DialogContentText>
+                          <br />
+                        </DialogContentText>
+                        {!preview && (
+                          <Grid container justify="center" spacing="16">
+                            <Dropzone
+                              onDropAccepted={this.onDropAccepted.bind(this)}
+                              onDropRejected={this.onDropRejected.bind(this)}
+                              accept="image/jpeg,image/jpg,image/png"
+                              className="photoUploader"
+                            >
+                              <img
+                                className="rounded-corners"
+                                src={activityImagePath}
+                                alt=""
+                                style={{ 'max-width': '320px', 'max-height': '320px' }}
+                              />
+                            </Dropzone>
+                          </Grid>
+                        )}
+                        {preview && (
+                          <Grid container justify="center" spacing="16">
+                            <Cropper
+                              ref="cropper"
+                              src={preview}
+                              style={{
+                                'max-width': this.maxCropPreviewWidth(),
+                                'max-height':
+                                  this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
+                              }}
+                              autoCropArea={1}
+                              viewMode={3}
+                              aspectRatio={1}
+                              highlight={false}
+                              background={false}
+                              zoom={this.onCropperZoom.bind(this)}
+                              zoomable={false}
+                              dragMode={'none'}
+                              minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                              minCropBoxHeight={this.state.cropperData.cropBoxDim}
+                            />
+                          </Grid>
+                        )}
+                        {preview && <br />}
+                        {preview && (
+                          <Grid container justify="center" spacing="16">
+                            <Grid item>
+                              <Button
+                                variant="contained"
+                                onClick={() => this.setState({ preview: null })}
+                              >
+                                Choose Another Image
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        )}
+                      </DialogContent>
+                      <DialogActions>
+                        <Grid container spacing={8} justify="flex-end">
+                          <Grid item>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={this.handleCloseCancel}
+                            >
+                              Cancel
+                            </Button>
+                          </Grid>
+                          <Grid item>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={this.handleCloseSelect}
+                              disabled={!this.state.preview}
+                            >
+                              Select
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </DialogActions>
+                    </Dialog>
+
+                    <Dialog open={this.state.openRemoveImage} keepMounted align="center">
+                      <DialogTitle>Are you sure you want to remove image?</DialogTitle>
+                      <DialogContent>
+                        <Grid container spacing={16}>
+                          <Grid item xs={6} sm={6} md={6} lg={6}>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={this.onRemoveImage}
+                              raised
+                            >
+                              OK
+                            </Button>
+                          </Grid>
+                          <Grid item xs={6} sm={6} md={6} lg={6}>
+                            <Button variant="contained" onClick={this.onClose} raised>
+                              CANCEL
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </DialogContent>
+                    </Dialog>
+                    <form onSubmit={this.handleSubmit}>
+                      <Grid container>
+                        <Grid item xs={12}>
+                          <TextField
+                            label="Description"
+                            margin="dense"
+                            multiline
+                            fullWidth
+                            defaultValue={activityBlurb}
+                            onChange={this.handleChange('tempActivityBlurb')}
+                          />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            label="Special Information for Joining"
+                            margin="dense"
+                            multiline
+                            fullWidth
+                            defaultValue={activityJoinInfo}
+                            onChange={this.handleChange('tempActivityJoinInfo')}
+                          />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            label="Website"
+                            margin="dense"
+                            multiline
+                            fullWidth
+                            defaultValue={activityURL}
+                            onChange={this.handleChange('tempActivityURL')}
+                          />
+                        </Grid>
+                      </Grid>
+                    </form>
+                  </DialogContent>
+
+                  <DialogActions>
+                    <Button variant="contained" color="primary" onClick={this.onClose} raised>
+                      Cancel
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={this.onEditActivity} raised>
+                      Submit
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </section>
+            );
+          }
+          const { SessionDescription: sessionDescription } = this.state.sessionInfo;
+          let description;
+          if (activityBlurb.length !== 0) {
+            description = (
+              <Typography variant="body1">
+                <strong>Description: </strong>
+                {activityBlurb}
+              </Typography>
+            );
+          }
+          let website;
+          if (activityURL.length !== 0) {
+            website = (
+              <Typography variant="body1">
+                <strong>Website: </strong>
+                <a href={activityURL}> {activityURL}</a>
+              </Typography>
+            );
+          }
+          let subscribersWord, membersWord;
+          let groupContacts = <GroupContacts groupAdmin={this.state.activityGroupAdmins} />;
+          let advisors = <Advisors advisors={this.state.activityAdvisors} />;
+          const subscribersNum = this.state.activityFollowers;
+          if (subscribersNum === 1) {
+            subscribersWord = 'Subscriber';
+          } else {
+            subscribersWord = 'Subscribers';
+          }
+          const membersNum = this.state.activityMembersNum;
+          if (membersNum === 1) {
+            membersWord = 'Member';
+          } else {
+            membersWord = 'Members';
+          }
+          let membership = (
+            <Membership
+              members={this.state.activityMembers}
+              sessionInfo={this.state.sessionInfo}
+              activityCode={this.state.activityInfo.ActivityCode}
+              activityDescription={this.state.activityInfo.ActivityDescription}
+              participationDetail={this.state.participationDetail}
+              id={this.state.id}
+              isAdmin={this.state.isAdmin}
+              isSuperAdmin={this.state.isSuperAdmin}
+              status={this.state.activityStatus}
+            />
+          );
+          content = (
+            <section className="gordon-activity-profile">
+              <Card>
+                <CardContent>
+                  <Typography align="center" variant="display1">
+                    {activityDescription}
+                  </Typography>
+                  <Grid align="center" className="activity-image" item>
+                    <img
+                      alt={activity.activityDescription}
+                      src={activityImagePath}
+                      className="rounded-corners"
+                    />
+                  </Grid>
+                  <Grid item>{editActivity}</Grid>
+                  <Typography variant="body1">
+                    <strong>Session: </strong>
+                    {sessionDescription}
+                  </Typography>
+                  {description}
+                  {website}
+                  {groupContacts}
+                  {advisors}
+                  <Typography>
+                    <strong>Special Information for Joining: </strong>
+                    {this.state.activityInfo.ActivityJoinInfo}
+                  </Typography>
+                  <Typography variant="body1">
+                    <strong>Current Involvement Roster: </strong>
+                    {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
+                  </Typography>
+                </CardContent>
+                {membership}
+              </Card>
+            </section>
+          );
+        }
+      } else {
+        signOut();
+        if (this.state.loading === true) {
+          content = <GordonLoader />;
+        } else {
+          let editActivity;
+
+          const {
+            ActivityDescription: activityDescription,
+            ActivityBlurb: activityBlurb,
+            ActivityURL: activityURL,
+            ActivityImagePath: activityImagePath,
+          } = this.state.activityInfo;
+
+          const { SessionDescription: sessionDescription } = this.state.sessionInfo;
+          let description;
+          if (activityBlurb.length !== 0) {
+            description = (
+              <Typography variant="body1">
+                <strong>Description: </strong>
+                {activityBlurb}
+              </Typography>
+            );
+          }
+          let website;
+          if (activityURL.length !== 0) {
+            website = (
+              <Typography variant="body1">
+                <strong>Website: </strong>
+                <a href={activityURL}> {activityURL}</a>
+              </Typography>
+            );
+          }
+          content = (
+            <section className="gordon-activity-profile">
+              <Card>
+                <CardContent>
+                  <Typography align="center" variant="display1">
+                    {activityDescription}
+                  </Typography>
+                  <Grid align="center" className="activity-image" item>
+                    <img
+                      alt={activity.activityDescription}
+                      src={activityImagePath}
+                      className="rounded-corners"
+                    />
+                  </Grid>
+                  <Grid item>{editActivity}</Grid>
+                  <Typography variant="body1">
+                    <strong>Session: </strong>
+                    {sessionDescription}
+                  </Typography>
+                  {description}
+                  {website}
+                </CardContent>
+              </Card>
+            </section>
+          );
+        }
+      }
       } else {
         content = (
           <Grid container justify="center" spacing="16">
@@ -683,7 +755,6 @@ class ActivityProfile extends Component {
           </Grid>
         );
       }
-    }
 
     return (
       <section>

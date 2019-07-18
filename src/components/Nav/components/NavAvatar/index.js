@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 import './nav-avatar.css';
 import user from '../../../../services/user';
+import { isAuthenticated } from '../../../../services/auth';
 
 const styles = theme => ({
   drawerHeader: theme.mixins.toolbar,
@@ -28,20 +29,28 @@ class GordonNavAvatar extends Component {
   async componentWillMount() {
     this.loadAvatar();
   }
+  async componentWillReceiveProps() {
+    this.loadAvatar();
+  }
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
   }
 
   async loadAvatar() {
-    const { name, user_name: username } = user.getLocalInfo();
-    this.setState({ name, username });
-    const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
-      await user.getProfileInfo(),
-      await user.getImage(),
-    ]);
-    const image = preferredImage || defaultImage;
-    this.setState({ email, image });
+    if (this.props.Authentication) {
+      const { name, user_name: username } = user.getLocalInfo();
+      this.setState({ name, username });
+      const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
+        await user.getProfileInfo(),
+        await user.getImage(),
+      ]);
+      const image = preferredImage || defaultImage;
+      this.setState({ email, image });
+    } else {
+      this.setState({ name: 'Guest', username: 'Guest' });
+    }
   }
+
   /**
    * This method checks a peer component Profile
    * and rerenders the avatar if the Profile picture is updated
@@ -63,13 +72,6 @@ class GordonNavAvatar extends Component {
   }
   render() {
     const { classes } = this.props;
-
-    let avatar = <Avatar className="avatar placeholder">{this.getInitials()}</Avatar>;
-    if (this.state.image) {
-      avatar = (
-        <Avatar className="avatar image" src={`data:image/jpg;base64,${this.state.image}`} />
-      );
-    }
 
     /* Used to re-render the page when the network connection changes.
     *  this.state.network is compared to the message received to prevent
@@ -96,43 +98,81 @@ class GordonNavAvatar extends Component {
     *  Defaults to online in case of PWA not being possible
     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+    
+    let content;
+    if (this.props.Authentication) {
+      
+      let avatar = <Avatar className="avatar placeholder">{this.getInitials()}</Avatar>;
+      if (this.state.image) {
+        avatar = (
+          <Avatar className="avatar image" src={`data:image/jpg;base64,${this.state.image}`} />
+        );
+      }
 
-    // Creates the My Profile button link depending on the status of the network found in local storage
-    let buttonLink;
-    if (networkStatus === 'online') {
-      // Link component to be used with Button component
-      buttonLink = ({ ...props }) => (
-        <Link {...props} to={'/myprofile'} onClick={this.props.onLinkClick} />
+      // Creates the My Profile button link depending on the status of the network found in local storage
+      if (networkStatus === 'online') {
+        // Link component to be used with Button component
+        const buttonLink = ({ ...props }) => (
+          <Link
+            {...props}
+            to={`/myprofile`}
+            onClick={this.props.onLinkClick}
+          />
+        );
+      } else {
+        // Link component to be used with Button component
+        const buttonLink = ({ ...props }) => (
+          <Link
+            {...props}
+            to={`/profile/${user.getLocalInfo().name.replace(' ', '.')}`}
+            onClick={this.props.onLinkClick}
+          />
+      }
+
+      content = (
+        <Button
+          className={`${classes.drawerHeader} gordon-nav-avatar`}
+          classes={{
+            root: 'gordon-nav-avatar button',
+            label: 'label',
+          }}
+          component={buttonLink}
+        >
+          {avatar}
+          <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
+            {this.state.name}
+          </Typography>
+          <Typography variant="caption" className="avatar-text" align="left" gutterBottom>
+            {this.state.email}
+          </Typography>
+        </Button>
       );
+
     } else {
+      let avatar = <Avatar className="avatar placeholder">Guest</Avatar>;
       // Link component to be used with Button component
-      buttonLink = ({ ...props }) => (
-        <Link
-          {...props}
-          to={`/profile/${user.getLocalInfo().name.replace(' ', '.')}`}
-          onClick={this.props.onLinkClick}
-        />
+      const buttonLink = ({ ...props }) => (
+        <Link {...props} to={`/`} onClick={this.props.onLinkClick} />
+      );
+
+      content = (
+        <Button
+          className={`${classes.drawerHeader} gordon-nav-avatar`}
+          classes={{
+            root: 'gordon-nav-avatar button',
+            label: 'label',
+          }}
+          component={buttonLink}
+        >
+          {avatar}
+          <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
+            Guest
+          </Typography>
+        </Button>
       );
     }
 
-    return (
-      <Button
-        className={`${classes.drawerHeader} gordon-nav-avatar`}
-        classes={{
-          root: 'gordon-nav-avatar button',
-          label: 'label',
-        }}
-        component={buttonLink}
-      >
-        {avatar}
-        <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
-          {this.state.name}
-        </Typography>
-        <Typography variant="caption" className="avatar-text" align="left" gutterBottom>
-          {this.state.email}
-        </Typography>
-      </Button>
-    );
+    return content;
   }
 }
 

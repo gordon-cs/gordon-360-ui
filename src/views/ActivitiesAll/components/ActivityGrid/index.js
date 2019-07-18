@@ -166,7 +166,7 @@ class GordonActivityGrid extends Component {
     return (
       <GridList
         cellHeight={250}
-        spacing="16"
+        spacing={16}
         cols={gridListCols(this.props.width)}
         className="gordon-activity-grid"
       >
