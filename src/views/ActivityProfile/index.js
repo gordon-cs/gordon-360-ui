@@ -61,7 +61,6 @@ class ActivityProfile extends Component {
       openRemoveImage: false,
       emailList: [],
       participationDescription: [],
-      network: 'online',
     };
   }
 

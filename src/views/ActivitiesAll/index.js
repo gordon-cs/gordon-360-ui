@@ -19,6 +19,7 @@ import Card from '@material-ui/core/Card';
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
     super(props);
+
     this.changeSession = this.changeSession.bind(this);
     this.filter = this.filter.bind(this);
 
@@ -35,7 +36,6 @@ export default class GordonActivitiesAll extends Component {
       sessions: [],
       type: '',
       types: [],
-      network: 'online',
     };
   }
 
@@ -237,7 +237,7 @@ export default class GordonActivitiesAll extends Component {
           this.setState({ network: 'offline' });
         }
       });
-
+      
       /* Gets status of current network connection for online/offline rendering
        *  Defaults to online in case of PWA not being possible
        */

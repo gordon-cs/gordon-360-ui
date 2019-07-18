@@ -1,9 +1,4 @@
 import AppBar from '@material-ui/core/AppBar';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -57,14 +52,6 @@ export default class GordonHeader extends Component {
 
   handleChange = (event, value) => {
     this.setState({ value });
-  };
-
-  openDialogBox = () => {
-    this.setState({ dialogBoxOpen: true });
-  };
-
-  closeDialogBox = () => {
-    this.setState({ dialogBoxOpen: false });
   };
 
   /**
@@ -192,7 +179,13 @@ export default class GordonHeader extends Component {
                   component={NavLink}
                   to="/events"
                 />
-                {PeopleTab}
+                <Tab
+                  className="tab"
+                  icon={<PeopleIcon />}
+                  label="People"
+                  component={NavLink}
+                  to="/people"
+                />
               </Tabs>
             </div>
             <GordonPeopleSearch Authentication={this.props.Authentication} />

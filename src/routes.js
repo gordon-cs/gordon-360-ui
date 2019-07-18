@@ -75,7 +75,7 @@ export default [
   },
   {
     name: 'My Profile',
-    path: '/myprofile',
+    path: '/myprofile/',
     component: MyProfile,
   },
   {

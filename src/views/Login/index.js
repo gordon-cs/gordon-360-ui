@@ -17,8 +17,6 @@ import './login.css';
 import { authenticate } from '../../services/auth';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
-import storage from '../../services/storage.js';
-import session from '../../services/session.js';
 import { projectName } from '../../project-name';
 
 // To temporarily disable the Login Hang message, set this boolean to false
@@ -72,6 +70,7 @@ export default class Login extends Component {
     try {
       await authenticate(this.state.username, this.state.password);
       console.log('Login/index.js: Successfully authenticated');
+
       /* Checks to see if the Service Worker API is available before attempting to access it
        *  This is important because if the API is not available, the site will load
        *  but not allow you to login due to the error "undefined is not a function"

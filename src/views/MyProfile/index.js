@@ -68,7 +68,6 @@ export default class Profile extends Component {
       twitterLink: '',
       instagramLink: '',
       isSnackBarOpen: false,
-      network: 'online',
     };
   }
 
@@ -182,9 +181,7 @@ export default class Profile extends Component {
           var maxWidth = this.maxCropPreviewWidth();
           var displayWidth = maxWidth > i.width ? i.width : maxWidth;
           var cropDim = this.minCropBoxDim(i.width, displayWidth);
-          this.setState({
-            cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim },
-          });
+          this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
           this.setState({ preview: dataURL });
         }
       }.bind(this);
@@ -223,9 +220,7 @@ export default class Profile extends Component {
   hasNickName(profile) {
     let Name = String(profile.fullName);
     let FirstName = Name.split(' ')[0];
-    this.setState({
-      hasNickName: FirstName !== profile.NickName && profile.NickName !== '',
-    });
+    this.setState({ hasNickName: FirstName !== profile.NickName && profile.NickName !== '' });
   }
 
   async getInvolvementAndPrivacyDictionary(membershipsList) {
@@ -261,12 +256,7 @@ export default class Profile extends Component {
         memberships,
       );
       const image = preferredImage || defaultImage;
-      this.setState({
-        image,
-        loading: false,
-        memberships,
-        involvementsAndTheirPrivacy,
-      });
+      this.setState({ image, loading: false, memberships, involvementsAndTheirPrivacy });
       this.setState({ isImagePublic: this.state.profile.show_pic });
       this.hasNickName(profile);
     } catch (error) {
