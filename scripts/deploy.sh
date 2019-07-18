@@ -26,7 +26,8 @@ else
 fi
 
 BUILD_DIR="build"
-CURRDATE=`date +"%m-%d-%Y-%H:%M"`
+# Gets and formats the date for the backup file
+CURRDATE=`date +"%m-%d-%Y-%H-%M"`
 
 printf "%s\n" "Removing backup directory from previous deployment..."
 
