@@ -7,9 +7,7 @@ import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
 import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
-import VictoryPromise from './components/VictoryPromise';
 import user from '../../services/user';
-import victory from '../../services/victory';
 
 export default class Home extends Component {
   constructor(props) {
@@ -20,18 +18,12 @@ export default class Home extends Component {
 
   componentWillMount() {
     this.getPersonType();
-    this.getVPScores();
   }
 
   async getPersonType() {
     const profile = await user.getProfileInfo();
     const personType = String(profile.PersonType);
     this.setState({ personType });
-  }
-
-  async getVPScores() {
-    const scores = await victory.getVPScore();
-    this.setState({ scores });
   }
 
   render() {
@@ -62,9 +54,6 @@ export default class Home extends Component {
         </Grid>
         <Grid item xs={12} md={5}>
           <Requests />
-        </Grid>
-        <Grid item xs={12} md={5}>
-          <VictoryPromise />
         </Grid>
       </Grid>
     );
