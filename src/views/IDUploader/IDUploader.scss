@@ -1,4 +1,6 @@
-.id-dropzone {
+@import '../../vars';
+
+.gc360-id-dropzone {
   transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
   width: 18rem;
   height: 18rem;
@@ -12,5 +14,12 @@
   &:hover {
     background-color: #dddddd;
     box-shadow: 0 0 0 0.25rem #dddddd;
+  }
+}
+
+@media (max-width: $break-sm) {
+  .gc360-id-dropzone {
+    width: 10rem;
+    height: 10rem;
   }
 }

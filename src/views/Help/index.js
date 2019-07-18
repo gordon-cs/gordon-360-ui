@@ -15,7 +15,7 @@ export default class Help extends Component {
     };
     return (
       <section>
-        <Grid container justify="center" spacing="16">
+        <Grid container justify="center">
           <Grid item xs={12} md={12} lg={8}>
             <Grid item>
               <Card>

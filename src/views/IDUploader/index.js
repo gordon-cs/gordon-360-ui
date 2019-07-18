@@ -1,15 +1,18 @@
-import Grid from '@material-ui/core/Grid';
+import {
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  CardContent,
+  Grid,
+  Typography,
+  withWidth,
+} from '@material-ui/core';
 import React, { Component } from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Dropzone from 'react-dropzone';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { gordonColors } from '../../theme';
 import IdCardDefault from '../IDUploader/image-default.png';
 import IdCardGreen from '../IDUploader/image-green.png';
@@ -20,7 +23,7 @@ import './IDUploader.css';
 import user from '../../services/user';
 
 const CROP_DIM = 1200; // pixels
-export default class IDUploader extends Component {
+class IDUploader extends Component {
   constructor(props) {
     super(props);
 
@@ -181,7 +184,7 @@ export default class IDUploader extends Component {
     };
 
     return (
-      <Grid container justify="center" spacing="16">
+      <Grid container justify="center" spacing={2}>
         <Grid item xs={12} md={6} lg={8}>
           <Card>
             <CardContent>
@@ -261,67 +264,61 @@ export default class IDUploader extends Component {
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
-          maxWidth="false"
         >
           <DialogTitle id="simple-dialog-title">Update ID Picture</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              {window.innerWidth < 600
+              {this.props.width === 'md' || this.props.width === 'sm' || this.props.width === 'xs'
                 ? 'Tap Image to Browse Files'
                 : 'Drag & Drop Picture, or Click to Browse Files'}
             </DialogContentText>
-            <DialogContentText>
-              <br />
-            </DialogContentText>
-            {!preview && (
-              <Grid container justify="center" spacing="16">
-                <Dropzone
-                  onDropAccepted={this.onDropAccepted.bind(this)}
-                  onDropRejected={this.onDropRejected.bind(this)}
-                  accept="image/jpeg, image/jpg, image/png"
-                >
-                  {({ getRootProps, getInputProps }) => (
-                    <section>
-                      <div className="id-dropzone" {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        <img
-                          className="rounded-corners"
-                          src={`data:image/jpg;base64,${this.state.image}`}
-                          alt=""
-                          style={{ 'max-width': '200px', 'max-height': '200px' }}
-                        />
-                      </div>
-                    </section>
-                  )}
-                </Dropzone>
-              </Grid>
-            )}
-            {preview && (
-              <Grid container justify="center" spacing="16">
-                <Cropper
-                  ref="cropper"
-                  src={preview}
-                  style={{
-                    'max-width': this.maxCropPreviewWidth(),
-                    'max-height': this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
-                  }}
-                  autoCropArea={1}
-                  viewMode={3}
-                  aspectRatio={1}
-                  highlight={false}
-                  background={false}
-                  zoom={this.onCropperZoom.bind(this)}
-                  zoomable={false}
-                  dragMode={'none'}
-                  minCropBoxWidth={this.state.cropperData.cropBoxDim}
-                  minCropBoxHeight={this.state.cropperData.cropBoxDim}
-                />
-              </Grid>
-            )}
-            {preview && <br />}
-            {preview && (
-              <Grid container justify="center" spacing="16">
+            <Grid container direction="column" justify="center" spacing={4}>
+              {!preview && (
                 <Grid item>
+                  <Dropzone
+                    onDropAccepted={this.onDropAccepted.bind(this)}
+                    onDropRejected={this.onDropRejected.bind(this)}
+                    accept="image/jpeg, image/jpg, image/png"
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <section>
+                        <div className="gc360-id-dropzone" {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          <img
+                            src={`data:image/jpg;base64,${this.state.image}`}
+                            alt=""
+                            style={{ 'max-width': '200px', 'max-height': '200px' }}
+                          />
+                        </div>
+                      </section>
+                    )}
+                  </Dropzone>
+                </Grid>
+              )}
+              {preview && (
+                <Grid item>
+                  <Cropper
+                    ref="cropper"
+                    src={preview}
+                    style={{
+                      'max-width': this.maxCropPreviewWidth(),
+                      'max-height': this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
+                    }}
+                    autoCropArea={1}
+                    viewMode={3}
+                    aspectRatio={1}
+                    highlight={false}
+                    background={false}
+                    zoom={this.onCropperZoom.bind(this)}
+                    zoomable={false}
+                    dragMode={'none'}
+                    minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                    minCropBoxHeight={this.state.cropperData.cropBoxDim}
+                  />
+                </Grid>
+              )}
+              {preview && (
+                <Grid item justify="center">
                   <Button
                     variant="contained"
                     onClick={() => this.setState({ preview: null })}
@@ -330,11 +327,11 @@ export default class IDUploader extends Component {
                     Choose Another Image
                   </Button>
                 </Grid>
-              </Grid>
-            )}
+              )}
+            </Grid>
           </DialogContent>
           <DialogActions>
-            <Grid container spacing={8} justify="flex-end">
+            <Grid container spacing={2} justify="flex-end">
               <Grid item />
               <Grid item>
                 <Button variant="contained" onClick={this.handleCloseCancel} style={style.button}>
@@ -372,7 +369,7 @@ export default class IDUploader extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Grid container spacing={8} justify="flex-end">
+            <Grid container spacing={2} justify="flex-end">
               <Grid item />
               <Grid item>
                 <Button variant="contained" onClick={this.handleCloseOkay} style={style.button}>
@@ -396,7 +393,7 @@ export default class IDUploader extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Grid container spacing={8} justify="flex-end">
+            <Grid container spacing={2} justify="flex-end">
               <Grid item />
               <Grid item>
                 <Button variant="contained" onClick={this.handleCloseOkay} style={style.button}>
@@ -410,3 +407,5 @@ export default class IDUploader extends Component {
     );
   }
 }
+
+export default withWidth()(IDUploader);
