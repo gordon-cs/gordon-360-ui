@@ -12,22 +12,16 @@ import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import user from '../../../../services/user';
-import { isAuthenticated, signOut } from '../../../../services/auth';
+import { signOut } from '../../../../services/auth';
 
 import './nav-links.css';
 import QuickLinksDialog from '../../../QuickLinksDialog';
-import { Button } from '@material-ui/core';
 
 export default class GordonNavLinks extends Component {
   constructor(props) {
@@ -147,12 +141,11 @@ export default class GordonNavLinks extends Component {
         </div>
       );
     }
-    
+
     let admin;
     let peopleButton;
     let signInOut;
     if (this.props.Authentication) {
-      
       // Creates the Admin button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         if (user.getLocalInfo().college_role === 'god') {
@@ -216,7 +209,6 @@ export default class GordonNavLinks extends Component {
           </div>
         );
       }
-
     } else {
       peopleButton = (
         <NavLink to="#" onClick={this.unAuthenticatedSearch}>
@@ -237,7 +229,7 @@ export default class GordonNavLinks extends Component {
         </NavLink>
       );
     }
-    
+
     return (
       <div>
         <List className="gordon-nav-links">
@@ -282,7 +274,7 @@ export default class GordonNavLinks extends Component {
                 <ListItemText primary="About" />
               </ListItem>
             </NavLink>
-            {FeedbackButton}
+            {feedbackButton}
             {admin}
             {signInOut}
           </List>

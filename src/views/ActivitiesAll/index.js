@@ -15,7 +15,6 @@ import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import Card from '@material-ui/core/Card';
-import { isAuthenticated } from '../../services/auth';
 
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
@@ -49,37 +48,17 @@ export default class GordonActivitiesAll extends Component {
   async componentWillMount() {
     this.setState({ loading: true });
     if (this.props.Authentication) {
-    try {
-      const profile = await user.getProfileInfo();
-      const { SessionCode: sessionCode } = await session.getCurrent();
-      this.setState({ session: sessionCode, currentSession: sessionCode });
-      if (window.location.href.includes('?')) {
-        const tempSession = window.location.href.split('?')[1];
-        this.setState({ session: tempSession, currentSession: tempSession });
-      }
-      const [activities, types, sessions] = await Promise.all([
-        activity.getAll(this.state.session),
-        activity.getTypes(this.state.session),
-        session.getAll(),
-      ]);
-      const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
-
-      this.setState({
-        profile,
-        activities,
-        allActivities: activities,
-        myInvolvements: myInvolvements,
-        sessions,
-        types,
-      });
-
-      if (activities.length === 0) {
-        var recentSession;
-        recentSession = this.state.sessions[0].SessionCode;
-        this.setState({ session: recentSession, currentSession: sessionCode });
+      try {
+        const profile = await user.getProfileInfo();
+        const { SessionCode: sessionCode } = await session.getCurrent();
+        this.setState({ session: sessionCode, currentSession: sessionCode });
+        if (window.location.href.includes('?')) {
+          const tempSession = window.location.href.split('?')[1];
+          this.setState({ session: tempSession, currentSession: tempSession });
+        }
         const [activities, types, sessions] = await Promise.all([
-          activity.getAll(recentSession),
-          activity.getTypes(recentSession),
+          activity.getAll(this.state.session),
+          activity.getTypes(this.state.session),
           session.getAll(),
         ]);
         const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
@@ -89,10 +68,31 @@ export default class GordonActivitiesAll extends Component {
           activities,
           allActivities: activities,
           myInvolvements: myInvolvements,
-          loading: false,
           sessions,
           types,
         });
+
+        if (activities.length === 0) {
+          var recentSession;
+          recentSession = this.state.sessions[0].SessionCode;
+          this.setState({ session: recentSession, currentSession: sessionCode });
+          const [activities, types, sessions] = await Promise.all([
+            activity.getAll(recentSession),
+            activity.getTypes(recentSession),
+            session.getAll(),
+          ]);
+          const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
+
+          this.setState({
+            profile,
+            activities,
+            allActivities: activities,
+            myInvolvements: myInvolvements,
+            loading: false,
+            sessions,
+            types,
+          });
+        }
       } catch (error) {
         this.setState({ error });
       }
@@ -210,46 +210,46 @@ export default class GordonActivitiesAll extends Component {
           {type}
         </MenuItem>
       ));
-      
+
       const headerStyle = {
         backgroundColor: gordonColors.primary.blue,
         color: '#FFF',
         padding: '10px',
       };
-      
+
       /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
+       *  this.state.network is compared to the message received to prevent
+       *  multiple re-renders that creates extreme performance lost.
+       *  The origin of the message is checked to prevent cross-site scripting attacks
+       */
+      window.addEventListener('message', event => {
+        if (
+          event.data === 'online' &&
+          this.state.network === 'offline' &&
+          event.origin === window.location.origin
+        ) {
+          this.setState({ network: 'online' });
+        } else if (
+          event.data === 'offline' &&
+          this.state.network === 'online' &&
+          event.origin === window.location.origin
+        ) {
+          this.setState({ network: 'offline' });
+        }
+      });
+
+      /* Gets status of current network connection for online/offline rendering
+       *  Defaults to online in case of PWA not being possible
+       */
+      const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+      // Creates the session list depending on the status of the network found in local storage
+      let sessionList;
+      if (networkStatus === 'online') {
+        sessionList = sessionOptions;
+      } else {
+        sessionList = sessionOptions[0];
       }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
-    // Creates the session list depending on the status of the network found in local storage
-    let sessionList;
-    if (networkStatus === 'online') {
-      sessionList = sessionOptions;
-    } else {
-      sessionList = sessionOptions[0];
-    }
       content = (
         <section className="activities-all">
           <Grid container justify="center" spacing={16}>

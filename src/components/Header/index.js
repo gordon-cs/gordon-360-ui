@@ -14,11 +14,6 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -28,9 +23,7 @@ import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
-import { Button } from '@material-ui/core';
 import { projectName } from '../../project-name';
-import { isAuthenticated } from '../../services/auth';
 
 const getRouteName = route => {
   if (route.name) {
@@ -119,7 +112,8 @@ export default class GordonHeader extends Component {
     let PeopleTab;
 
     if (this.props.Authentication) {
-      if (networkStatus === 'online') { // Renders online, authenticated (i.e. normal) People Tab
+      if (networkStatus === 'online') {
+        // Renders online, authenticated (i.e. normal) People Tab
         PeopleTab = (
           <Tab
             className="tab"
@@ -129,19 +123,22 @@ export default class GordonHeader extends Component {
             to="/people"
           />
         );
-      } else { //Renders offline People Tab
-         PeopleTab = (
-        <div onClick={this.openDialogBox}>
-          <Tab
-            className="tab"
-            icon={<PeopleIcon />}
-            label="People"
-            component={Button}
-            disabled={networkStatus}
-          />
-        </div>
+      } else {
+        //Renders offline People Tab
+        PeopleTab = (
+          <div onClick={this.openDialogBox}>
+            <Tab
+              className="tab"
+              icon={<PeopleIcon />}
+              label="People"
+              component={Button}
+              disabled={networkStatus}
+            />
+          </div>
+        );
       }
-    } else { // Renders Guest People Tab
+    } else {
+      // Renders Guest People Tab
       PeopleTab = (
         <Tab
           className="guestTab"

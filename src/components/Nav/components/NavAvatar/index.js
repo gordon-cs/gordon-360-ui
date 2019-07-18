@@ -5,10 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
 import './nav-avatar.css';
 import user from '../../../../services/user';
-import { isAuthenticated } from '../../../../services/auth';
 
 const styles = theme => ({
   drawerHeader: theme.mixins.toolbar,
@@ -29,8 +27,10 @@ class GordonNavAvatar extends Component {
   async componentWillMount() {
     this.loadAvatar();
   }
-  async componentWillReceiveProps() {
-    this.loadAvatar();
+  async componentWillReceiveProps(newProps) {
+    if (this.props.Authentication !== newProps.Authentication) {
+      this.loadAvatar();
+    }
   }
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
@@ -74,10 +74,10 @@ class GordonNavAvatar extends Component {
     const { classes } = this.props;
 
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -95,13 +95,13 @@ class GordonNavAvatar extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-    *  Defaults to online in case of PWA not being possible
-    */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-    
+
     let content;
+    let buttonLink;
     if (this.props.Authentication) {
-      
       let avatar = <Avatar className="avatar placeholder">{this.getInitials()}</Avatar>;
       if (this.state.image) {
         avatar = (
@@ -112,21 +112,18 @@ class GordonNavAvatar extends Component {
       // Creates the My Profile button link depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         // Link component to be used with Button component
-        const buttonLink = ({ ...props }) => (
-          <Link
-            {...props}
-            to={`/myprofile`}
-            onClick={this.props.onLinkClick}
-          />
+        buttonLink = ({ ...props }) => (
+          <Link {...props} to={`/myprofile`} onClick={this.props.onLinkClick} />
         );
       } else {
         // Link component to be used with Button component
-        const buttonLink = ({ ...props }) => (
+        buttonLink = ({ ...props }) => (
           <Link
             {...props}
             to={`/profile/${user.getLocalInfo().name.replace(' ', '.')}`}
             onClick={this.props.onLinkClick}
           />
+        );
       }
 
       content = (
@@ -147,13 +144,10 @@ class GordonNavAvatar extends Component {
           </Typography>
         </Button>
       );
-
     } else {
       let avatar = <Avatar className="avatar placeholder">Guest</Avatar>;
       // Link component to be used with Button component
-      const buttonLink = ({ ...props }) => (
-        <Link {...props} to={`/`} onClick={this.props.onLinkClick} />
-      );
+      buttonLink = ({ ...props }) => <Link {...props} to={`/`} onClick={this.props.onLinkClick} />;
 
       content = (
         <Button

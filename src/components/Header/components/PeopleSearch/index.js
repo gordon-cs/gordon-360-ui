@@ -14,7 +14,6 @@ import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
-import { isAuthenticated } from '../../../../services/auth';
 import peopleSearch from '../../../../services/people-search';
 const MIN_QUERY_LENGTH = 3;
 

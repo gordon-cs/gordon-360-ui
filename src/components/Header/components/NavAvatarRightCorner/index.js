@@ -12,7 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 
 import QuickLinksDialog from '../../../QuickLinksDialog';
-import { signOut, isAuthenticated } from '../../../../services/auth';
+import { signOut } from '../../../../services/auth';
 
 import './nav-avatar-right-corner.css';
 import user from '../../../../services/user';
@@ -76,8 +76,10 @@ export default class GordonNavAvatarRightCorner extends Component {
     this.setState({ linkopen: false });
   };
 
-  async componentWillReceiveProps() {
-    this.loadAvatar();
+  async componentWillReceiveProps(newProps) {
+    if (this.props.Authentication !== newProps.Authentication) {
+      this.loadAvatar();
+    }
   }
 
   async componentWillMount() {
@@ -132,10 +134,10 @@ export default class GordonNavAvatarRightCorner extends Component {
     const open = Boolean(this.state.anchorEl);
 
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -154,56 +156,54 @@ export default class GordonNavAvatarRightCorner extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-    *  Defaults to online in case of PWA not being possible
-    */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-    
-    
+
     // Creates the Links button depending on the status of the network found in local storage
-      let LinksButton;
-      if (networkStatus === 'online') {
-        LinksButton = (
-          <MenuItem
-            onClick={() => {
-              this.onClose();
-              this.handleLinkClickOpen();
-            }}
-            divider="true"
-          >
+    let LinksButton;
+    if (networkStatus === 'online') {
+      LinksButton = (
+        <MenuItem
+          onClick={() => {
+            this.onClose();
+            this.handleLinkClickOpen();
+          }}
+          divider="true"
+        >
+          Links
+        </MenuItem>
+      );
+    } else {
+      LinksButton = (
+        <div onClick={this.openDialogBox}>
+          <MenuItem disabled={networkStatus} divider="true">
             Links
           </MenuItem>
-        );
-      } else {
-        LinksButton = (
-          <div onClick={this.openDialogBox}>
-            <MenuItem disabled={networkStatus} divider="true">
-              Links
-            </MenuItem>
-          </div>
-        );
-      }
+        </div>
+      );
+    }
 
-      // Creates the Feedback button depending on the status of the network found in local storage
-      let FeedbackButton;
-      if (networkStatus === 'online') {
-        FeedbackButton = (
-          <Link to="/feedback">
-            <MenuItem onClick={this.onClose} divider="true">
-              Feedback
-            </MenuItem>
-          </Link>
-        );
-      } else {
-        FeedbackButton = (
-          <div onClick={this.openDialogBox}>
-            <MenuItem disabled={networkStatus} divider="true">
-              Feedback
-            </MenuItem>
-          </div>
-        );
-      }
+    // Creates the Feedback button depending on the status of the network found in local storage
+    let FeedbackButton;
+    if (networkStatus === 'online') {
+      FeedbackButton = (
+        <Link to="/feedback">
+          <MenuItem onClick={this.onClose} divider="true">
+            Feedback
+          </MenuItem>
+        </Link>
+      );
+    } else {
+      FeedbackButton = (
+        <div onClick={this.openDialogBox}>
+          <MenuItem disabled={networkStatus} divider="true">
+            Feedback
+          </MenuItem>
+        </div>
+      );
+    }
 
-    
     let avatar;
     let signInOut;
     let myProfileLink;
@@ -211,7 +211,6 @@ export default class GordonNavAvatarRightCorner extends Component {
     if (this.props.Authentication) {
       // Set authenticated values for dropdown menu
 
-      
       let myProfile;
       // Creates the My Profile button link depending on the status of the network found in local storage
       if (networkStatus === 'online') {
@@ -238,7 +237,6 @@ export default class GordonNavAvatarRightCorner extends Component {
       }
 
       // Creates the Admin button depending on the status of the network found in local storage
-      let Admin;
       if (networkStatus === 'online') {
         if (user.getLocalInfo().college_role === 'god') {
           Admin = (
@@ -259,8 +257,6 @@ export default class GordonNavAvatarRightCorner extends Component {
         );
       }
 
-      
-
       if (networkStatus === 'online') {
         signInOut = (
           <Link to="/">
@@ -278,15 +274,11 @@ export default class GordonNavAvatarRightCorner extends Component {
           </div>
         );
       }
-
-      
-    } else {  // Set unauthenticated values for dropdown menu
+    } else {
+      // Set unauthenticated values for dropdown menu
 
       avatar = <Avatar className="nav-avatar nav-avatar-placeholder">Guest</Avatar>;
 
-      
-
-      
       if (networkStatus === 'online') {
         signInOut = (
           <Link to="/">

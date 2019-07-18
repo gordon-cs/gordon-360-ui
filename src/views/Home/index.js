@@ -7,7 +7,6 @@ import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
 import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
-import { isAuthenticated, signOut } from '../../services/auth';
 import user from '../../services/user';
 import Login from '../Login';
 import './home.css';
@@ -15,10 +14,10 @@ import './home.css';
 export default class Home extends Component {
   constructor(props) {
     super(props);
-    
+
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null, network: 'online'  };
+    this.state = { personType: null, network: 'online' };
   }
 
   componentWillMount() {
@@ -43,10 +42,10 @@ export default class Home extends Component {
 
   render() {
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -64,21 +63,21 @@ export default class Home extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-  *  Defaults to online in case of PWA not being possible
-  */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-    
+
     let content;
     if (this.props.Authentication) {
       const personType = this.state.personType;
-      
+
       let requests;
       if (networkStatus === 'online') {
         requests = (
           <Grid item xs={12} md={5}>
             <Requests />
           </Grid>
-        )
+        );
       }
 
       //Only show CL&W credits if user is a student
@@ -104,7 +103,7 @@ export default class Home extends Component {
           <Grid item xs={12} md={5}>
             <DiningBalance />
           </Grid>
-        {requests}
+          {requests}
         </Grid>
       );
     } else {
@@ -114,7 +113,7 @@ export default class Home extends Component {
         </div>
       );
     }
-    
+
     return content;
   }
 }

@@ -14,7 +14,6 @@ import Button from '@material-ui/core/Button';
 import { NavLink } from 'react-router-dom';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
-import Button from '@material-ui/core/Button';
 import './profile.css';
 
 //Public profile view
@@ -56,7 +55,10 @@ export default class Profile extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.match.params.username !== newProps.match.params.username) {
+    if (
+      this.props.Authentication &&
+      this.props.match.params.username !== newProps.match.params.username
+    ) {
       this.loadProfile(newProps);
     }
   }
@@ -393,7 +395,6 @@ export default class Profile extends Component {
           </div>
         );
       } else {
-  <<<<<<< DevelopClone
         PublicProfile = (
           <Grid container justify="center" spacing="16">
             <Grid item xs={12} md={8}>
@@ -442,8 +443,7 @@ export default class Profile extends Component {
       }
 
       return PublicProfile;
-
-} else {
+    } else {
       return (
         <div>
           <GordonLoader />

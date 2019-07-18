@@ -25,7 +25,6 @@ import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
-import { isAuthenticated, signOut } from '../../services/auth';
 const CROP_DIM = 320; // pixels
 
 class ActivityProfile extends Component {
@@ -301,34 +300,34 @@ class ActivityProfile extends Component {
       throw this.state.error;
     }
 
-      /* Used to re-render the page when the network connection changes.
-      *  this.state.network is compared to the message received to prevent
-      *  multiple re-renders that creates extreme performance lost.
-      *  The origin of the message is checked to prevent cross-site scripting attacks
-      */
-      window.addEventListener('message', event => {
-        if (
-          event.data === 'online' &&
-          this.state.network === 'offline' &&
-          event.origin === window.location.origin
-        ) {
-          this.setState({ network: 'online' });
-        } else if (
-          event.data === 'offline' &&
-          this.state.network === 'online' &&
-          event.origin === window.location.origin
-        ) {
-          this.setState({ network: 'offline' });
-        }
-      });
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
 
-      /* Gets status of current network connection for online/offline rendering
-      *  Defaults to online in case of PWA not being possible
-      */
-      const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-    
+    /* Gets status of current network connection for online/offline rendering
+     *  Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
     let content;
-    
+
     // Creates the content of an activity's profile depending on the status of the network found in local storage
     if (networkStatus === 'online') {
       if (this.props.Authentication) {
@@ -385,7 +384,11 @@ class ActivityProfile extends Component {
                     </Grid>
                     <Grid container spacing={16} justify="center">
                       <Grid item>
-                        <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
+                        <Button
+                          variant="contained"
+                          onClick={this.alertRemoveImage}
+                          style={redButton}
+                        >
                           Remove image
                         </Button>
                       </Grid>
@@ -556,7 +559,12 @@ class ActivityProfile extends Component {
                     <Button variant="contained" color="primary" onClick={this.onClose} raised>
                       Cancel
                     </Button>
-                    <Button variant="contained" color="primary" onClick={this.onEditActivity} raised>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={this.onEditActivity}
+                      raised
+                    >
                       Submit
                     </Button>
                   </DialogActions>
@@ -649,7 +657,6 @@ class ActivityProfile extends Component {
           );
         }
       } else {
-        signOut();
         if (this.state.loading === true) {
           content = <GordonLoader />;
         } else {
@@ -708,53 +715,53 @@ class ActivityProfile extends Component {
           );
         }
       }
-      } else {
-        content = (
-          <Grid container justify="center" spacing="16">
-            <Grid item xs={12} md={8}>
-              <Card>
-                <CardContent
+    } else {
+      content = (
+        <Grid container justify="center" spacing="16">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <Grid
+                  item
+                  xs={2}
+                  alignItems="center"
                   style={{
-                    margin: 'auto',
-                    textAlign: 'center',
+                    display: 'block',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
                   }}
                 >
-                  <Grid
-                    item
-                    xs={2}
-                    alignItems="center"
-                    style={{
-                      display: 'block',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                    }}
-                  >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
-                  </Grid>
-                  <br />
-                  <h1>Please Re-establish Connection</h1>
-                  <h4>Viewing an involvement has been deactivated due to loss of network.</h4>
-                  <br />
-                  <br />
-                  <Button
-                    color="primary"
-                    backgroundColor="white"
-                    variant="outlined"
-                    onClick={() => {
-                      window.location.pathname = '';
-                    }}
-                  >
-                    Back To Home
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
+                  <img
+                    src={require(`${'../../NoConnection.svg'}`)}
+                    alt="Internet Connection Lost"
+                  />
+                </Grid>
+                <br />
+                <h1>Please Re-establish Connection</h1>
+                <h4>Viewing an involvement has been deactivated due to loss of network.</h4>
+                <br />
+                <br />
+                <Button
+                  color="primary"
+                  backgroundColor="white"
+                  variant="outlined"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Back To Home
+                </Button>
+              </CardContent>
+            </Card>
           </Grid>
-        );
-      }
+        </Grid>
+      );
+    }
 
     return (
       <section>
