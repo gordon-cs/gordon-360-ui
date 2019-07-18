@@ -10,7 +10,7 @@ set -euo pipefail
 # DEPLOY_PASSWORD password to log into server
 # PRODUCTION_DIR absolute path to directory for production app
 # STAGING_DIR absolute path to directory for staging app
-
+echo `date +"%m-%d-%Y-%H:%M"`
 # Variable used to create web.config
 # Note: Regular expression replaces all quotes with two quotes, i.e. " => "" (for PowerShell)
 WEB_CONFIG=`sed -e 's/\"/\"\"/g' web_config`
@@ -26,7 +26,7 @@ else
 fi
 
 BUILD_DIR="build"
-DATE = date +"%m-%d-%Y-%H:%M"
+DATE = `date +"%m-%d-%Y-%H:%M"`
 
 printf "%s\n" "Removing backup directory from previous deployment..."
 
