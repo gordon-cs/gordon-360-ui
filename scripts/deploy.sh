@@ -26,6 +26,7 @@ else
 fi
 
 BUILD_DIR="build"
+DATE = `date +"%m-%d-%Y-%H:%M"`
 
 printf "%s\n" "Removing backup directory from previous deployment..."
 
@@ -43,7 +44,7 @@ fi
 printf "%s\n" "Moving app to backup directory... "
 
 # Move app to temporary directory
-sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" cp -r "$DIR" "$DIR-backup"
+sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" mv "$DIR" "$DIR-backup-$DATE"
 
 if [ $? == 0 ]; then
   printf "%s\n" "Successfully moved app to backup directory"
@@ -51,16 +52,16 @@ else
   printf "%s\n" "Failed to move app to backup directory"
 fi
 
-printf "%s\n" "Clearing out app directory... "
+#printf "%s\n" "Clearing out app directory... "
 
 # Clear out app directory
-sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" rm -r "$DIR/*"
+#sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" rm -r "$DIR/*"
 
-if [ $? == 0 ]; then
-  printf "%s\n" "Sucessfully cleared out app directory"
-else
-  printf "%s\n" "Failed to clear out app directory"
-fi
+#if [ $? == 0 ]; then
+#  printf "%s\n" "Sucessfully cleared out app directory"
+#else
+#  printf "%s\n" "Failed to clear out app directory"
+#fi
 
 printf "%s\n" "Copying app to server... "
 
