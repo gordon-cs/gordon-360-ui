@@ -368,7 +368,7 @@ class ActivityProfile extends Component {
                       <br />
                     </DialogContentText>
                     {!preview && (
-                      <Grid container justify="center" spacing="16">
+                      <Grid container justify="center" spacing={6}>
                         <Dropzone
                           onDropAccepted={this.onDropAccepted.bind(this)}
                           onDropRejected={this.onDropRejected.bind(this)}
@@ -385,7 +385,7 @@ class ActivityProfile extends Component {
                       </Grid>
                     )}
                     {preview && (
-                      <Grid container justify="center" spacing="16">
+                      <Grid container justify="center" spacing={6}>
                         <Cropper
                           ref="cropper"
                           src={preview}
@@ -409,7 +409,7 @@ class ActivityProfile extends Component {
                     )}
                     {preview && <br />}
                     {preview && (
-                      <Grid container justify="center" spacing="16">
+                      <Grid container justify="center" spacing={6}>
                         <Grid item>
                           <Button
                             variant="contained"
@@ -600,7 +600,7 @@ class ActivityProfile extends Component {
 
     return (
       <section>
-        <Grid container justify="center" spacing="16">
+        <Grid container justify="center" spacing={6}>
           <Grid item xs={12} md={12} lg={8}>
             {content}
           </Grid>
