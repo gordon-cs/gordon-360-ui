@@ -323,7 +323,6 @@ const postIDImage = dataURI => {
   let type = blob.type.replace('image/', '');
   let headerOptions = {};
   imageData.append('canvasImage', blob, 'canvasImage.' + type);
-  console.log('blob size: ' + blob.size);
   return http.post('profiles/IDimage', imageData, headerOptions);
 };
 
@@ -369,13 +368,11 @@ function dataURItoBlob(dataURI) {
  */
 const getLocalInfo = () => {
   let token;
-
   try {
     token = storage.get('token');
   } catch (err) {
     throw new AuthError('Could not get local auth');
   }
-
   try {
     return jwtDecode(token);
   } catch (err) {
