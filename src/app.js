@@ -5,7 +5,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 
 import './app.css';
 import analytics from './services/analytics';
-import { isAuthenticated, signOut } from './services/auth';
+import { isAuthenticated } from './services/auth';
 //import GordonError from './components/Error';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
@@ -90,10 +90,11 @@ export default class App extends Component {
                     key={route.path}
                     path={route.path}
                     exact={route.exact}
-                    render={() => (
+                    render={props => (
                       <route.component
                         onLogIn={this.onAuthChange}
                         Authentication={this.state.authentication}
+                        {...props}
                       />
                     )}
                   />

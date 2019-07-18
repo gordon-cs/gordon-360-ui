@@ -454,7 +454,7 @@ const getMemberships = async id => {
 
 const getPublicMemberships = async username => {
   let memberships;
-  memberships = await http.get(`/memberships/student/username/${username}/`);
+  memberships = await http.get(`memberships/student/username/${username}/`);
   memberships.sort(compareByTitle);
   return memberships;
 };
@@ -502,6 +502,12 @@ const getCurrentMembershipsWithoutGuests = async id => {
     }
   }
   return myCurrentInvolvementsWithoutGuests;
+};
+
+const getEmployment = async () => {
+  let employments;
+  employments = await http.get(`studentemployment/`);
+  return employments;
 };
 
 //Take student's non-"Guest" memberships and filter for specifiied session only
@@ -556,14 +562,31 @@ function compareByTitle(a, b) {
 }
 
 //compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
-function compareBySession(a, b) {
+/*function compareBySession(a, b) {
   const sessA = a.SessionCode;
+  console.log(sessA)
   const sessB = b.SessionCode;
+  console.log(sessB)
 
   let comparison = 0;
   if (sessA > sessB) {
     comparison = 1;
   } else if (sessA < sessB) {
+    comparison = -1;
+  }
+  console.log(comparison)
+  return comparison;
+}*/
+
+//compares items by ActivityCode, used by getTranscriptMembershipsInfo to sort by ActivityCode
+function compareByActCode(a, b) {
+  const codeA = a.ActivityCode;
+  const codeB = b.ActivityCode;
+
+  let comparison = 0;
+  if (codeA > codeB) {
+    comparison = 1;
+  } else if (codeA < codeB) {
     comparison = -1;
   }
   return comparison;
@@ -572,11 +595,20 @@ function compareBySession(a, b) {
 //returns an array of membership objects from backend server,
 //not including Guest memberships
 //using asynchronous http.get request (via getMemberships function)
-//sorts by SessionCode
-const getTranscriptInfo = async id => {
+//sorts by SessionCode and ActivityCode
+const getTranscriptMembershipsInfo = async id => {
   let transcriptInfo = await getMembershipsWithoutGuests(id);
-  transcriptInfo.sort(compareBySession);
+  transcriptInfo.sort(compareByActCode);
   return transcriptInfo;
+};
+
+//returns an array of employment objects from backend server
+//using asynchronous http.get request (via getEmployment function)
+//sorts by
+const getEmploymentInfo = async () => {
+  let employmentInfo = await getEmployment();
+  //employmentInfo.sort(compareBySession);
+  return employmentInfo;
 };
 
 const getProfileInfo = async username => {
@@ -645,6 +677,7 @@ export default {
   resetImage,
   postImage,
   postIDImage,
-  getTranscriptInfo,
+  getTranscriptMembershipsInfo,
+  getEmploymentInfo,
   updateSocialLink,
 };

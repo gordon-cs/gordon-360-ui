@@ -14,7 +14,6 @@ import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
-import { isAuthenticated } from '../../../../services/auth';
 import peopleSearch from '../../../../services/people-search';
 const MIN_QUERY_LENGTH = 3;
 
@@ -134,11 +133,10 @@ export default class GordonPeopleSearch extends Component {
     var hasMatched = false;
     return (
       <span>
-        {parts.map(
-          part =>
-            !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
-              ? (hasMatched = true && <span class="h">{part}</span>)
-              : part,
+        {parts.map(part =>
+          !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
+            ? (hasMatched = true && <span class="h">{part}</span>)
+            : part,
         )}
       </span>
     );
@@ -252,30 +250,30 @@ export default class GordonPeopleSearch extends Component {
   }
 
   render() {
-    let placeholder = 'People Search';
+    let holder = 'People Search';
     if (window.innerWidth < this.breakpointWidth) {
-      placeholder = 'People';
+      holder = 'People';
     }
 
     let content;
     if (this.props.Authentication) {
       content = (
+        // Assign reference to Downshift to `this` for usage elsewhere in the component
         <Downshift
-          // Assign reference to Downshift to `this` for usage elsewhere in the component
           ref={downshift => {
             this.downshift = downshift;
           }}
-          render={({ getInputProps, getItemProps, isOpen }) => (
+        >
+          {({ getInputProps, getItemProps, isOpen }) => (
             <span className="gordon-people-search">
               {renderInput(
                 getInputProps({
-                  placeholder: placeholder,
+                  placeholder: holder,
                   onChange: event => this.getSuggestions(event.target.value),
-                  onKeyDown: event => {
-                    this.handleKeys(event.key);
-                  },
+                  onKeyDown: event => this.handleKeys(event.key),
                 }),
               )}
+
               {isOpen &&
               this.state.suggestions.length > 0 &&
               this.state.query.length >= MIN_QUERY_LENGTH ? (
@@ -290,7 +288,7 @@ export default class GordonPeopleSearch extends Component {
               ) : null}
             </span>
           )}
-        />
+        </Downshift>
       );
     } else {
       content = (

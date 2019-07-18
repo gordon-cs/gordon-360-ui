@@ -1,6 +1,6 @@
 import About from './views/About';
 import ActivitiesAll from './views/ActivitiesAll';
-import ActivityEdit from './views/ActivityEdit';
+//import ActivityEdit from './views/ActivityEdit';
 import ActivityProfile from './views/ActivityProfile';
 import Home from './views/Home';
 import Help from './views/Help';
@@ -75,7 +75,7 @@ export default [
   },
   {
     name: 'My Profile',
-    path: '/myprofile/',
+    path: '/myprofile',
     component: MyProfile,
   },
   {

@@ -17,6 +17,9 @@ import './login.css';
 import { authenticate } from '../../services/auth';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
+import storage from '../../services/storage.js';
+import session from '../../services/session.js';
+import { projectName } from '../../project-name';
 
 // To temporarily disable the Login Hang message, set this boolean to false
 const LOGIN_BUG_MESSAGE = true; // Login Hang
@@ -68,6 +71,26 @@ export default class Login extends Component {
 
     try {
       await authenticate(this.state.username, this.state.password);
+      console.log('Login/index.js: Successfully authenticated');
+      /* Checks to see if the Service Worker API is available before attempting to access it
+       *  This is important because if the API is not available, the site will load
+       *  but not allow you to login due to the error "undefined is not a function"
+       */
+      if (navigator.serviceWorker) {
+        // Sends a message, the token and current term code to the service worker to precache dynamic files
+        navigator.serviceWorker.controller.postMessage({
+          message: 'cache-static-dynamic-files',
+          token: storage.get('token'),
+          termCode: session.getTermCode(),
+        });
+        // Stores the current term in Local Storage for later use when updating the cache
+        storage.store('currentTerm', session.getTermCode());
+        // Saves the network state as online in local storage
+        localStorage.setItem('network-status', JSON.stringify('online'));
+      } else {
+        console.log('SERVICE WORKER IS NOT AVAILABLE');
+      }
+
       this.props.onLogIn();
     } catch (err) {
       clearTimeout(id); // Login Hang
@@ -89,9 +112,9 @@ export default class Login extends Component {
       <Grid container alignItems="center" justify="center" spacing={0}>
         <DocumentTitle title="Login | Gordon 360" />
         <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
-          <img src={GordonLogoVerticalWhite} alt="Gordon 360" />
+          <img src={GordonLogoVerticalWhite} alt={`${projectName}`} />
           <form onSubmit={this.logIn}>
-            <Typography variant="subheading">Welcome to Gordon 360!</Typography>
+            <Typography variant="subheading">Welcome to {projectName}!</Typography>
             <TextField
               id="username"
               label="Username"

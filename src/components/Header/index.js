@@ -1,4 +1,9 @@
 import AppBar from '@material-ui/core/AppBar';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -9,11 +14,6 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
@@ -23,33 +23,48 @@ import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
-import { isAuthenticated } from '../../services/auth';
+import { projectName } from '../../project-name';
 
 const getRouteName = route => {
   if (route.name) {
     return () => (
       <span>
-        <DocumentTitle title={`${route.name} | Gordon 360`} />
+        <DocumentTitle title={`${route.name} | ${projectName}`} />
         {route.name}
       </span>
     );
   }
   return () => (
     <span>
-      <DocumentTitle title="Gordon 360" />
-      Gordon 360
+      <DocumentTitle title={`${projectName}`} />
+      {projectName}
     </span>
   );
 };
 
 export default class GordonHeader extends Component {
-  state = {
-    value: null,
-    loginDialogOpen: false,
-  };
+  constructor(props) {
+    super(props);
+    this.openDialogBox = this.openDialogBox.bind(this);
+    this.closeDialogBox = this.closeDialogBox.bind(this);
+
+    this.state = {
+      value: null,
+      dialogBoxOpen: false,
+      loginDialogOpen: false,
+    };
+  }
 
   handleChange = (event, value) => {
     this.setState({ value });
+  };
+
+  openDialogBox = () => {
+    this.setState({ dialogBoxOpen: true });
+  };
+
+  closeDialogBox = () => {
+    this.setState({ dialogBoxOpen: false });
   };
 
   /**
@@ -88,19 +103,43 @@ export default class GordonHeader extends Component {
   }
 
   render() {
-    let content;
+    /* Gets status of current network connection for online/offline rendering
+     *  Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+    // Creates the People Tab depending on the status of the network found in local storage
+    let PeopleTab;
+
     if (this.props.Authentication) {
-      content = (
-        <Tab
-          className="tab"
-          icon={<PeopleIcon />}
-          label="People"
-          component={NavLink}
-          to="/people"
-        />
-      );
+      if (networkStatus === 'online') {
+        // Renders online, authenticated (i.e. normal) People Tab
+        PeopleTab = (
+          <Tab
+            className="tab"
+            icon={<PeopleIcon />}
+            label="People"
+            component={NavLink}
+            to="/people"
+          />
+        );
+      } else {
+        //Renders offline People Tab
+        PeopleTab = (
+          <div onClick={this.openDialogBox}>
+            <Tab
+              className="tab"
+              icon={<PeopleIcon />}
+              label="People"
+              component={Button}
+              disabled={networkStatus}
+            />
+          </div>
+        );
+      }
     } else {
-      content = (
+      // Renders Guest People Tab
+      PeopleTab = (
         <Tab
           className="guestTab"
           icon={<PeopleIcon />}
@@ -153,7 +192,7 @@ export default class GordonHeader extends Component {
                   component={NavLink}
                   to="/events"
                 />
-                {content}
+                {PeopleTab}
               </Tabs>
             </div>
             <GordonPeopleSearch Authentication={this.props.Authentication} />
@@ -163,6 +202,26 @@ export default class GordonHeader extends Component {
             />
           </Toolbar>
         </AppBar>
+        <Dialog
+          open={this.state.dialogBoxOpen}
+          onClose={clicked => this.closeDialogBox()}
+          aria-labelledby="disabled-feature"
+          aria-describedby="disabled-feature-description"
+        >
+          <DialogTitle id="disabled-feature">{'Offline Mode:'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="disabled-feature-description">
+              This feature is unavailable offline. Please reconnect to internet to access this
+              feature.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={clicked => this.closeDialogBox()} color="primary">
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         <Dialog
           open={this.state.loginDialogOpen}
           onClose={clicked => this.handleClose()}
