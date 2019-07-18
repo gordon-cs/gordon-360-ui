@@ -175,20 +175,6 @@ class PeopleSearch extends Component {
   }
 
   async goBackPage() {
-    this.setState({
-      firstNameSearchValue: '',
-      lastNameSearchValue: '',
-      homeCitySearchValue: '',
-      majorSearchValue: '',
-      minorSearchValue: '',
-      hallSearchValue: '',
-      classTypeSearchValue: '',
-      stateSearchValue: '',
-      countrySearchValue: '',
-      departmentSearchValue: '',
-      buildingSearchValue: '',
-    });
-
     const urlParams = new URLSearchParams(window.location.search);
     var includeAlumni = urlParams.get('includeAlumni') || false;
     var firstName = urlParams.get('firstName').trim() || '';
@@ -202,6 +188,20 @@ class PeopleSearch extends Component {
     var country = urlParams.get('country').trim() || '';
     var department = urlParams.get('department').trim() || '';
     var building = urlParams.get('building').trim() || '';
+
+    this.setState({
+      firstNameSearchValue: firstName,
+      lastNameSearchValue: lastName,
+      homeCitySearchValue: homeCity,
+      majorSearchValue: major,
+      minorSearchValue: minor,
+      hallSearchValue: hall,
+      classTypeSearchValue: classType,
+      stateSearchValue: state,
+      countrySearchValue: country,
+      departmentSearchValue: department,
+      buildingSearchValue: building,
+    });
 
     if (
       includeAlumni === false &&
@@ -308,6 +308,21 @@ class PeopleSearch extends Component {
       var country = urlParams.get('country').trim() || '';
       var department = urlParams.get('department').trim() || '';
       var building = urlParams.get('building').trim() || '';
+
+      this.setState({
+        firstNameSearchValue: firstName,
+        lastNameSearchValue: lastName,
+        homeCitySearchValue: homeCity,
+        majorSearchValue: major,
+        minorSearchValue: minor,
+        hallSearchValue: hall,
+        classTypeSearchValue: classType,
+        stateSearchValue: state,
+        countrySearchValue: country,
+        departmentSearchValue: department,
+        buildingSearchValue: building,
+      });
+
       if (
         includeAlumni === false &&
         firstName === '' &&
@@ -510,10 +525,12 @@ class PeopleSearch extends Component {
         building,
       );
 
-      this.props.history.push(`?includeAlumni=${includeAlumni}&firstName=${firstName}&lastName=
-      ${lastName}&major=${major}&minor=${minor}&hall=${hall}&classType=${classType}&homeCity=${homeCity}
-      &state=${state}&country=${country}
-      &department=${department}&building=${building}`);
+      let searchParameters =
+        `?firstName=${firstName}&lastName=${lastName}` +
+        `&major=${major}&minor=${minor}&hall=${hall}&classType=${classType}` +
+        `&homeCity=${homeCity}&state=${state}&country=${country}` +
+        `&department=${department}&building=${building}&includeAlumni=${includeAlumni}`;
+      this.props.history.push(searchParameters);
 
       if (peopleSearchResults.length === 0) {
         this.setState({
