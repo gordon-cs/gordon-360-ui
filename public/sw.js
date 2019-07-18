@@ -284,7 +284,7 @@ function timerFunction() {
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(token, termCode); // Dynamic Cache
     // Set interval to every hour
-  }, 10000);
+  }, 3600000);
 }
 
 /*********************************************** EVENT LISTENERS ***********************************************/
