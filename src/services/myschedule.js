@@ -120,7 +120,7 @@ async function makeMySchedule(myschedule) {
  */
 
 const addMySchedule = async mySchedule => {
-  return http.post(`/myschedule/`, mySchedule);
+  return http.post(`myschedule/`, mySchedule);
 };
 
 /**
@@ -130,17 +130,17 @@ const addMySchedule = async mySchedule => {
  */
 
 const updateMySchedule = async mySchedule => {
-  return http.post(`/myschedule/`, mySchedule);
+  return http.put(`myschedule/`, mySchedule);
 };
 
 /**
  * Delete mySchedule of the profile
- * @param {<MySchedule>} mySchedule of the local user
+ * @param {string} eventID of the selected event
  * @return {Promise<any>} Response body
  */
 
-const deleteMySchedule = async eventID => {
-  return http.del(`/schedule/${eventID}`);
+const deleteMySchedule = eventID => {
+  return http.del(`myschedule/${eventID}`);
 };
 
 export default {

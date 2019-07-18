@@ -9,8 +9,7 @@ import http from './http';
 
 /**
  * @global
- * @typedef Schedule
- * @property {Number} ID_NUM
+ * @typedef schedule
  * @property {String} CRS_CDE
  * @property {String} CRS_TITLE
  * @property {String} BLDG_CDE
@@ -32,7 +31,6 @@ import http from './http';
  CRS_TITLE: "CHRISTIAN THEOLOGY"
  END_TIME: "12:30:00"
  FRIDAY_CDE: " "
- ID_NUM: 50179789
  MONDAY_CDE: " "
  ROOM_CDE: "126"
  THURSDAY_CDE: " "
@@ -46,13 +44,22 @@ import http from './http';
  * @return {Promise.<Schedule[]>} returns all the course schedules
  */
 
+const getScheduleMyProf = async () => {
+  let schedule;
+  schedule = await http.get('schedule');
+  return schedule;
+};
+
+/**
+ * Get course schedule for a given user or the current user if `username` is not provided
+ * @param {String} [username] Username in firstname.lastname format
+ * @return {Promise.<Schedule[]>} returns all the course schedules
+ */
+
 const getSchedule = async username => {
   let schedule;
-  if (username) {
-    schedule = await http.get(`schedule/${username}/`);
-  } else {
-    schedule = await http.get('schedule');
-  }
+  schedule = await http.get(`schedule/${username}/`);
+
   return schedule;
 };
 
@@ -128,5 +135,6 @@ async function makeScheduleCourses(schedule) {
 
 export default {
   getSchedule,
+  getScheduleMyProf,
   makeScheduleCourses,
 };

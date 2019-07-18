@@ -16,25 +16,23 @@ export default class EditDescriptionDialog extends React.Component {
       formErrors: {
         descInput: '',
       },
+      description: '',
       editDescriptionOpen: false,
     };
     this.handleEditDescriptionClose = this.handleEditDescriptionClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  // // Update local state as parent state changes
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.descriptionText !== this.props.descriptionText) {
-  //     this.setState({ descInput: nextProps.descriptionText });
-  //   }
-  // }
+  componentWillReceiveProps(nextProps) {
+    if (this.descInput !== nextProps.descriptiontext) {
+      this.setState({ descInput: nextProps.descriptiontext });
+    }
+  }
 
   handleSubmit = e => {
     e.preventDefault();
-
     var desc = this.state.descInput;
     this.props.onDialogSubmit(desc);
-
     this.handleClose();
   };
 
@@ -48,14 +46,6 @@ export default class EditDescriptionDialog extends React.Component {
 
   handleClose = () => {
     this.props.handleEditDescriptionClose();
-
-    // // Reset changed fields
-    // if (this.state.descInput !== this.props.descriptionText) {
-    //   this.setState({
-    //     descInput: this.props.descriptionText,
-    //     formErrors: { descInput: '' },
-    //   });
-    // }
 
     this.setState({ formValid: true });
   };
@@ -74,6 +64,7 @@ export default class EditDescriptionDialog extends React.Component {
           <TextField
             id="descInput"
             label="Description"
+            defaultValue={this.state.descInput}
             value={this.state.descInput}
             onChange={this.handleChange('descInput')}
             className="desc-description"
