@@ -107,8 +107,7 @@ export default class About extends Component {
               </Typography>
               <Typography variant="body1" paragraph>
                 Carissa Church&nbsp;&apos;18 and Grace Crook&nbsp;&apos;18
-                <br />
-                Chris Carlson&nbsp;&apos;87, Student Life
+                <br />Chris Carlson&nbsp;&apos;87, Student Life
               </Typography>
               <Typography variant="subheading" gutterBottom>
                 <strong>Incubation Team</strong>
@@ -162,14 +161,12 @@ export default class About extends Component {
                 To the visionary benefactors who support the Summer Practicum in Computer Science
                 program at Gordon College, thank you!
                 <br />
-                <br />
-                And to Dr.&nbsp;D.&nbsp;Michael Lindsay, President, and Jennifer
+                <br />And to Dr.&nbsp;D.&nbsp;Michael Lindsay, President, and Jennifer
                 Jukanovich&nbsp;&apos;94, Vice President for Student Life, thank you for the
                 opportunity to apply our learning in a creative, practical way!
                 <br />
-                <br />
-                And to our mentors and coaches in development and deployment, thank you for your
-                guidance and encouragement to try new things.
+                <br />And to our mentors and coaches in development and deployment, thank you for
+                your guidance and encouragement to try new things.
               </Typography>
             </div>
             <Typography variant="subheading" gutterBottom>

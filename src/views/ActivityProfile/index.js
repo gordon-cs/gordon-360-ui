@@ -62,7 +62,6 @@ class ActivityProfile extends Component {
       openRemoveImage: false,
       emailList: [],
       participationDescription: [],
-      network: 'online',
     };
   }
 
@@ -571,118 +570,42 @@ class ActivityProfile extends Component {
           status={this.state.activityStatus}
         />
       );
-
-      /* Used to re-render the page when the network connection changes.
-      *  this.state.network is compared to the message received to prevent
-      *  multiple re-renders that creates extreme performance lost.
-      *  The origin of the message is checked to prevent cross-site scripting attacks
-      */
-      window.addEventListener('message', event => {
-        if (
-          event.data === 'online' &&
-          this.state.network === 'offline' &&
-          event.origin === window.location.origin
-        ) {
-          this.setState({ network: 'online' });
-        } else if (
-          event.data === 'offline' &&
-          this.state.network === 'online' &&
-          event.origin === window.location.origin
-        ) {
-          this.setState({ network: 'offline' });
-        }
-      });
-
-      /* Gets status of current network connection for online/offline rendering
-      *  Defaults to online in case of PWA not being possible
-      */
-      const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
-      // Creates the content of an activity's profile depending on the status of the network found in local storage
-      if (networkStatus === 'online') {
-        content = (
-          <section className="gordon-activity-profile">
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="display1">
-                  {activityDescription}
-                </Typography>
-                <Grid align="center" className="activity-image" item>
-                  <img
-                    alt={activity.activityDescription}
-                    src={activityImagePath}
-                    className="rounded-corners"
-                  />
-                </Grid>
-                <Grid item>{editActivity}</Grid>
-                <Typography variant="body1">
-                  <strong>Session: </strong>
-                  {sessionDescription}
-                </Typography>
-                {description}
-                {website}
-                {groupContacts}
-                {advisors}
-                <Typography>
-                  <strong>Special Information for Joining: </strong>
-                  {this.state.activityInfo.ActivityJoinInfo}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Current Involvement Roster: </strong>
-                  {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
-                </Typography>
-              </CardContent>
-              {membership}
-            </Card>
-          </section>
-        );
-      } else {
-        content = (
-          <Grid container justify="center" spacing="16">
-            <Grid item xs={12} md={8}>
-              <Card>
-                <CardContent
-                  style={{
-                    margin: 'auto',
-                    textAlign: 'center',
-                  }}
-                >
-                  <Grid
-                    item
-                    xs={2}
-                    alignItems="center"
-                    style={{
-                      display: 'block',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                    }}
-                  >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
-                  </Grid>
-                  <br />
-                  <h1>Please Re-establish Connection</h1>
-                  <h4>Viewing an involvement has been deactivated due to loss of network.</h4>
-                  <br />
-                  <br />
-                  <Button
-                    color="primary"
-                    backgroundColor="white"
-                    variant="outlined"
-                    onClick={() => {
-                      window.location.pathname = '';
-                    }}
-                  >
-                    Back To Home
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        );
-      }
+      content = (
+        <section className="gordon-activity-profile">
+          <Card>
+            <CardContent>
+              <Typography align="center" variant="display1">
+                {activityDescription}
+              </Typography>
+              <Grid align="center" className="activity-image" item>
+                <img
+                  alt={activity.activityDescription}
+                  src={activityImagePath}
+                  className="rounded-corners"
+                />
+              </Grid>
+              <Grid item>{editActivity}</Grid>
+              <Typography variant="body1">
+                <strong>Session: </strong>
+                {sessionDescription}
+              </Typography>
+              {description}
+              {website}
+              {groupContacts}
+              {advisors}
+              <Typography>
+                <strong>Special Information for Joining: </strong>
+                {this.state.activityInfo.ActivityJoinInfo}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Current Involvement Roster: </strong>
+                {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
+              </Typography>
+            </CardContent>
+            {membership}
+          </Card>
+        </section>
+      );
     }
 
     return (
