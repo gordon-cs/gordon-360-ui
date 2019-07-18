@@ -457,7 +457,7 @@ const getMemberships = async id => {
 
 const getPublicMemberships = async username => {
   let memberships;
-  memberships = await http.get(`memberships/student/username/${username}/`);
+  memberships = await http.get(`/memberships/student/username/${username}/`);
   memberships.sort(compareByTitle);
   return memberships;
 };
