@@ -56,6 +56,10 @@ export default class GordonNavAvatarRightCorner extends Component {
     signOut();
     this.props.onSignOut();
   }
+  onSignIn() {
+    this.onClose();
+    this.props.onSignOut();
+  }
   openDialogBox = () => {
     this.setState({ dialogBoxOpen: true });
   };
@@ -63,9 +67,6 @@ export default class GordonNavAvatarRightCorner extends Component {
   closeDialogBox = () => {
     this.setState({ dialogBoxOpen: false });
   };
-  onSignIn() {
-    this.onClose();
-  }
   handleLinkClickOpen = () => {
     this.setState({
       linkopen: true,
@@ -282,7 +283,7 @@ export default class GordonNavAvatarRightCorner extends Component {
       if (networkStatus === 'online') {
         signInOut = (
           <Link to="/">
-            <MenuItem onClick={this.onClose.bind(this)} divider={true}>
+            <MenuItem onClick={this.onSignIn.bind(this)} divider={true}>
               Sign In
             </MenuItem>
           </Link>

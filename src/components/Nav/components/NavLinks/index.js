@@ -45,6 +45,10 @@ export default class GordonNavLinks extends Component {
     this.props.onLinkClick();
     this.props.onSignOut();
   }
+  onSignIn() {
+    this.props.onLinkClick();
+    this.props.onSignOut();
+  }
 
   handleLinkClickOpen = () => {
     this.setState({
@@ -196,9 +200,11 @@ export default class GordonNavLinks extends Component {
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         signInOut = (
-          <ListItem button onClick={this.onSignOut}>
-            <ListItemText primary="Sign Out" />
-          </ListItem>
+          <NavLink exact to="/" onClick={this.onSignOut}>
+            <ListItem button>
+              <ListItemText primary="Sign Out" />
+            </ListItem>
+          </NavLink>
         );
       } else {
         signInOut = (
@@ -221,13 +227,24 @@ export default class GordonNavLinks extends Component {
         </NavLink>
       );
 
-      signInOut = (
-        <NavLink exact to="/" onClick={this.props.onSignOut}>
-          <ListItem button>
-            <ListItemText primary="Sign In" />
-          </ListItem>
-        </NavLink>
-      );
+      // Creates the Signout button depending on the status of the network found in local storage
+      if (networkStatus === 'online') {
+        signInOut = (
+          <NavLink exact to="/" onClick={this.onSignIn}>
+            <ListItem button>
+              <ListItemText primary="Sign In" />
+            </ListItem>
+          </NavLink>
+        );
+      } else {
+        signInOut = (
+          <div onClick={this.openDialogBox}>
+            <ListItem button disabled={networkStatus}>
+              <ListItemText primary="Sign In" />
+            </ListItem>
+          </div>
+        );
+      }
     }
 
     return (
