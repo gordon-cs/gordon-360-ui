@@ -13,12 +13,13 @@ export default class RemoveHoursDialog extends React.Component {
       removeOfficeHoursOpen: false,
     };
     this.handleRemoveOfficeHoursClose = this.handleRemoveOfficeHoursClose.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit = e => {
     e.preventDefault();
-    this.handleClose();
+    this.props.onDialogSubmit();
+    console.log('Happened');
+    this.props.handleRemoveOfficeHoursClose();
   };
 
   handleRemoveOfficeHoursClose = () => {
@@ -50,7 +51,7 @@ export default class RemoveHoursDialog extends React.Component {
             >
               No
             </Button>
-            <Button variant="contained" style={button}>
+            <Button variant="contained" onClick={this.handleSubmit} style={button}>
               Yes
             </Button>
           </DialogActions>

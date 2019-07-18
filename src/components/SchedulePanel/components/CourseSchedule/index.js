@@ -9,21 +9,20 @@ import schedule from './../../../../services/schedule';
 import myschedule from './../../../../services/myschedule';
 
 import './courseschedule.css';
+import user from '../../../../services/user';
 
 export default class CourseSchedule extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      myProf: false, //if my profile page
-      isSchedulePrivate: Boolean,
       loading: true,
       officeHoursOpen: false,
       disabled: true,
       selectedEvent: null,
       isDoubleClick: false,
     };
-    this.eventInfo = null;
+    this.eventInfo = [];
   }
 
   handleSelect = ({ start, end }) => {
@@ -46,16 +45,31 @@ export default class CourseSchedule extends Component {
   }
 
   loadData = async searchedUser => {
-    const schedulePromise = schedule.getSchedule(searchedUser.AD_Username);
-    const courseEventsPromise = schedule.makeScheduleCourses(schedulePromise);
-    const courseInfo = await courseEventsPromise;
+    let courseInfo = null;
+    if (this.props.myProf) {
+      const schedulePromise = schedule.getScheduleMyProf();
+      const courseEventsPromise = schedule.makeScheduleCourses(schedulePromise);
+      courseInfo = await courseEventsPromise;
+    } else {
+      try {
+        const schedulePromise = schedule.getSchedule(searchedUser.AD_Username);
+        const courseEventsPromise = schedule.makeScheduleCourses(schedulePromise);
+        courseInfo = await courseEventsPromise;
+      } catch (e) {
+        this.setState({ loading: false });
+      }
+    }
     const myschedulePromise = myschedule.getMySchedule(searchedUser.AD_Username);
     const myEventsPromise = myschedule.makeMySchedule(myschedulePromise);
-    const myscheduleInfo = await myEventsPromise;
-    this.eventInfo = courseInfo.concat(myscheduleInfo);
+    let myscheduleInfo = await myEventsPromise;
+
+    if (courseInfo) {
+      this.eventInfo = courseInfo.concat(myscheduleInfo);
+    } else {
+      this.eventInfo = myscheduleInfo;
+    }
 
     this.setState({ loading: false });
-    console.log('Event Info : ', this.eventInfo);
   };
 
   render() {

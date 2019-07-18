@@ -48,12 +48,16 @@ export default class HoursDialog extends React.Component {
     };
     this.handleOfficeHoursClose = this.handleOfficeHoursClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleReset = this.handleReset.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedEvent !== this.props.selectedEvent)
       this.setState({ selectedEvent: nextProps.selectedEvent });
+    this.checkDay();
   }
+
+  componentWillMount() {}
 
   validateField(fieldName, value) {
     let fieldValidationErrors = this.state.formErrors;
@@ -166,6 +170,7 @@ export default class HoursDialog extends React.Component {
     if (name === 'checkedC') {
       this.setState({ checkedC: e.target.checked });
       if (e.target.checked) {
+        // if allday checked
         this.setState({
           formValid:
             this.state.locationValid && this.state.descriptionValid && this.state.checkedValid,
@@ -173,6 +178,7 @@ export default class HoursDialog extends React.Component {
           endHourValid: true,
         });
       } else {
+        // if allday unchecked
         this.validateField('startHourInput', this.state.startHourInput);
         this.validateField('endHourInput', this.state.endHourInput);
       }
@@ -193,15 +199,40 @@ export default class HoursDialog extends React.Component {
   handleClose = () => {
     this.props.handleOfficeHoursClose();
 
-    // // Reset changed fields
-    // if (this.state.descInput !== this.props.descriptionText) {
-    //   this.setState({
-    //     descInput: this.props.descriptionText,
-    //     formErrors: { descInput: '' },
-    //   });
-    // }
-
     this.setState({ formValid: true });
+  };
+
+  handleReset = () => {
+    this.setState({
+      startHourInput: '08:00',
+      endHourInput: '17:00',
+      officeHoursOpen: false,
+      checkedC: false,
+      checkedDayofWeek: {
+        checkedMo: false,
+        checkedTu: false,
+        checkedWe: false,
+        checkedTh: false,
+        checkedFr: false,
+        checkedSa: false,
+        checkedSu: false,
+      },
+      selectedEvent: null,
+      descriptionInput: '',
+      locationInput: '',
+      descriptionValid: false,
+      locationValid: false,
+      startHourValid: true,
+      endHourValid: true,
+      formValid: false,
+      checkedValid: false,
+      formErrors: {
+        descriptionInput: '',
+        locationInput: '',
+        startHourValid: '',
+        endHourValid: '',
+      },
+    });
   };
 
   checkDay = () => {
@@ -429,6 +460,9 @@ export default class HoursDialog extends React.Component {
         <DialogActions className="buttons">
           <Button onClick={this.props.handleOfficeHoursClose} variant="contained" style={button}>
             Cancel
+          </Button>
+          <Button onClick={this.handleReset} variant="contained" style={button}>
+            Reset
           </Button>
           <Button
             onClick={this.handleSubmit}

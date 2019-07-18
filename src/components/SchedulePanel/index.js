@@ -19,6 +19,8 @@ import schedulecontrol from './../../services/schedulecontrol';
 import './schedulepanel.css';
 import myschedule from '../../services/myschedule';
 
+import GordonLoader from '../../components/Loader';
+
 const styles = {
   colorSwitchBase: {
     color: gordonColors.neutral.lightGray,
@@ -38,14 +40,15 @@ class GordonSchedulePanel extends Component {
     super(props);
     this.state = {
       myProf: false, //if my profile page
-      isSchedulePrivate: Boolean,
+      isSchedulePrivate: 0,
       isExpanded: Boolean,
       officeHoursOpen: false,
       disabled: true,
       selectedEvent: null,
       isDoubleClick: false,
-      description: null,
+      description: '',
       modifiedTimeStamp: null,
+      loading: true,
     };
     this.scheduleControlInfo = null;
 
@@ -59,6 +62,7 @@ class GordonSchedulePanel extends Component {
     this.handleEditDescriptionClose = this.handleEditDescriptionClose.bind(this);
     this.handleEditDescriptionButton = this.handleEditDescriptionButton.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    this.handleRemoveSubmit = this.handleRemoveSubmit.bind(this);
   }
 
   componentWillMount() {
@@ -67,15 +71,20 @@ class GordonSchedulePanel extends Component {
   }
 
   loadData = async searchedUser => {
-    const scheduleControlPromise = schedulecontrol.getScheduleControl(searchedUser.AD_Username);
-    const scheduleControlInfo = await scheduleControlPromise;
-    this.scheduleControlInfo = scheduleControlInfo;
+    try {
+      const scheduleControlPromise = schedulecontrol.getScheduleControl(searchedUser.AD_Username);
+      const scheduleControlInfo = await scheduleControlPromise;
+      this.scheduleControlInfo = scheduleControlInfo;
+    } catch (e) {
+      this.setState({ loading: false });
+    }
     if (this.scheduleControlInfo) {
       this.setState({ isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate });
       this.setState({ description: this.scheduleControlInfo.Description });
       this.setState({ modifiedTimeStamp: this.scheduleControlInfo.ModifiedTimeStamp });
     }
     console.log('Schedule Control : ', this.scheduleControlInfo);
+    this.setState({ loading: false });
   };
 
   handleOfficeHoursOpen = () => {
@@ -96,8 +105,12 @@ class GordonSchedulePanel extends Component {
   };
 
   handleRemoveButton = event => {
-    if (event.id > 1000) this.setState({ disabled: false });
-    this.setState({ selectedEvent: event });
+    if (event.id > 1000) {
+      this.setState({ disabled: false });
+    }
+    this.setState({ selectedEvent: event }, () => {
+      console.log(this.state.selectedEvent);
+    });
   };
 
   handleEditDescriptionOpen = () => {
@@ -117,9 +130,7 @@ class GordonSchedulePanel extends Component {
     window.location.reload(); // refresh to show the change
   };
 
-  handleHoursSubmit = async mySchedule => {
-    console.log('ID Num', this.props.profile.ID);
-
+  handleHoursSubmit = mySchedule => {
     let data = {
       Gordon_ID: this.props.profile.ID,
       Event_ID: null,
@@ -136,23 +147,67 @@ class GordonSchedulePanel extends Component {
       BEGIN_TIME: mySchedule.startHour,
       END_TIME: mySchedule.endHour,
     };
+    console.log('Double Click ', this.state.isDoubleClick);
 
-    await myschedule.addMySchedule(data);
     let now = new Date();
-    await schedulecontrol.setModifiedTimeStamp(now.toJSON());
-    window.location.reload();
+
+    if (this.state.isDoubleClick) {
+      myschedule
+        .updateMySchedule(data)
+        .then(value => {
+          schedulecontrol
+            .setModifiedTimeStamp(now.toJSON)
+            .then(value => {
+              window.location.reload();
+            })
+            .catch(error => {
+              alert('There was an error while updating the timestamp');
+              console.log(error);
+            });
+        })
+        .catch(error => {
+          alert('There was an error while updating the event');
+          console.log(error);
+        });
+    } else {
+      myschedule
+        .addMySchedule(data)
+        .then(value => {
+          window.location.reload();
+        })
+        .catch(error => {
+          alert('There was an error while adding the event');
+          console.log(error);
+        });
+    }
+    // await schedulecontrol.setModifiedTimeStamp(now.toJSON());
   };
+
+  handleRemoveSubmit() {
+    console.log('Selected ', this.state.selectedEvent);
+    myschedule
+      .deleteMySchedule(this.state.selectedEvent.id)
+      .then(value => {
+        window.location.reload();
+      })
+      .catch(error => {
+        alert('There was an error while removing the event');
+        console.log(error);
+      });
+    // window.location.reload(); // refresh to show the change
+  }
 
   handleDoubleClick = event => {
     if (this.props.myProf) {
-      this.setState({ officeHoursOpen: true });
-      this.setState({ selectedEvent: event });
-      this.setState({ isDoubleClick: true });
+      this.setState({ officeHoursOpen: true, selectedEvent: event, isDoubleClick: true });
     }
   };
 
   handleChangeSchedulePrivacy() {
-    this.setState({ isSchedulePrivate: !this.state.isSchedulePrivate });
+    this.setState({ isSchedulePrivate: !this.state.isSchedulePrivate }, () => {
+      schedulecontrol.setSchedulePrivacy(this.state.isSchedulePrivate);
+      console.log('Swapped Privacy : ', this.state.isSchedulePrivate);
+    });
   }
 
   handleIsExpanded() {
@@ -173,6 +228,7 @@ class GordonSchedulePanel extends Component {
         onDialogSubmit={this.handleDescriptionSubmit}
         handleEditDescriptionClose={this.handleEditDescriptionClose}
         editDescriptionOpen={this.state.editDescriptionOpen}
+        descriptiontext={this.state.description}
       />
     );
 
@@ -246,55 +302,61 @@ class GordonSchedulePanel extends Component {
 
     let panelTitle = '';
     this.state.isExpanded ? (panelTitle = 'Show') : (panelTitle = 'Hide');
-    schedulePanel = (
-      <ExpansionPanel TransitionProps={{ unmountOnExit: true }} onChange={this.handleIsExpanded}>
-        <ExpansionPanelSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <Typography>{panelTitle} the Schedule</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          {/* ///////////////////////////////////////////////////////////////////// */}
-          <div className="schedule_content">
-            {/* <Card> */}
-            {/* <CardContent> */}
+    if (this.state.loading) {
+      schedulePanel = <GordonLoader />;
+    } else {
+      schedulePanel = (
+        <ExpansionPanel TransitionProps={{ unmountOnExit: true }} onChange={this.handleIsExpanded}>
+          <ExpansionPanelSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>{panelTitle} the Schedule</Typography>
+          </ExpansionPanelSummary>
+          <ExpansionPanelDetails>
+            {/* ///////////////////////////////////////////////////////////////////// */}
+            <div className="schedule_content">
+              {/* <Card> */}
+              {/* <CardContent> */}
 
-            <div className="privacy">{privacyButton}</div>
+              <div className="privacy">{privacyButton}</div>
 
-            <div className="last-updated">
-              Last updated{' '}
-              <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
+              <div className="last-updated">
+                Last updated{' '}
+                <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
+              </div>
+
+              <div className="description">{this.state.description}</div>
+
+              <div className="edit_description">{editDescriptionButton}</div>
+
+              <div className="add_event">{addOfficeHourButton}</div>
+
+              <div className="remove_event">{removeOfficeHourButton}</div>
+
+              <div className="schedule">
+                <CourseSchedule
+                  profile={this.props.profile}
+                  myProf={this.props.myProf}
+                  handleRemoveButton={this.handleRemoveButton.bind(this)}
+                  handleEditDescriptionButton={this.handleEditDescriptionButton.bind(this)}
+                  handleDoubleClick={this.handleDoubleClick.bind(this)}
+                  handleOfficeHoursOpen={this.handleOfficeHoursOpen.bind(this)}
+                  schedulePrivacy={this.state.isSchedulePrivate}
+                />
+              </div>
+              {/* </CardContent> */}
+              {/* </Card> */}
+              {editDialog}
+              {hoursDialog}
+              {removeHoursDialog}
             </div>
-
-            <div className="description">{this.state.description}</div>
-
-            <div className="edit_description">{editDescriptionButton}</div>
-
-            <div className="add_event">{addOfficeHourButton}</div>
-
-            <div className="remove_event">{removeOfficeHourButton}</div>
-
-            <div className="schedule">
-              <CourseSchedule
-                profile={this.props.profile}
-                handleRemoveButton={this.handleRemoveButton.bind(this)}
-                handleEditDescriptionButton={this.handleEditDescriptionButton.bind(this)}
-                handleDoubleClick={this.handleDoubleClick.bind(this)}
-                handleOfficeHoursOpen={this.handleOfficeHoursOpen.bind(this)}
-              />
-            </div>
-            {/* </CardContent> */}
-            {/* </Card> */}
-            {editDialog}
-            {hoursDialog}
-            {removeHoursDialog}
-          </div>
-          {/* //////////////////////////////////////////////////////////////////// */}
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-    );
+            {/* //////////////////////////////////////////////////////////////////// */}
+          </ExpansionPanelDetails>
+        </ExpansionPanel>
+      );
+    }
 
     return <Fragment>{schedulePanel}</Fragment>;
   }
