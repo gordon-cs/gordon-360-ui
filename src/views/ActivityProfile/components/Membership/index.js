@@ -285,7 +285,6 @@ export default class Membership extends Component {
     const formControl = {
       padding: 10,
     };
-    let membership = this.state.membership;
     let content;
     let requestList;
     let confirmRoster;
@@ -344,19 +343,19 @@ export default class Membership extends Component {
           if (this.state.requests.length === 0) {
             requestList = <Typography>There are no pending requests</Typography>;
           } else {
-            requestList = <RequestDetail involvement={membership} />;
+            requestList = <RequestDetail involvement={this.state.requests[0]} />;
           }
           // Only advisors and superadmins can re-open the roster
           if (this.state.participationDetail[1] === 'Advisor' || this.state.isSuperAdmin) {
             if (this.state.status === 'OPEN') {
               confirmRoster = (
-                <Button variant="contained" color="primary" onClick={this.onConfirmRoster} raised>
+                <Button variant="contained" color="primary" onClick={this.onConfirmRoster}>
                   Confirm final roster
                 </Button>
               );
             } else {
               confirmRoster = (
-                <Button variant="contained" color="primary" onClick={this.onReopenActivity} raised>
+                <Button variant="contained" color="primary" onClick={this.onReopenActivity}>
                   Reopen roster
                 </Button>
               );
@@ -429,22 +428,12 @@ export default class Membership extends Component {
                             </Grid>
                           </Grid>
                           <Grid item xs={12} sm={6} style={formControl} justifyContent="right">
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={this.onAddMember}
-                              raised
-                            >
+                            <Button variant="contained" color="primary" onClick={this.onAddMember}>
                               Add member
                             </Button>
                           </Grid>
                           <Grid item xs={12} sm={6} style={formControl}>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={this.onClose}
-                              raised
-                            >
+                            <Button variant="contained" color="primary" onClick={this.onClose}>
                               CANCEL
                             </Button>
                           </Grid>
@@ -523,7 +512,7 @@ export default class Membership extends Component {
         if (this.state.participationDetail[1] === 'Guest') {
           // User is a guest
           subscribeButton = (
-            <Button variant="contained" color="primary" onClick={this.onUnsubscribe} raised>
+            <Button variant="contained" color="primary" onClick={this.onUnsubscribe}>
               Unsubscribe
             </Button>
           );

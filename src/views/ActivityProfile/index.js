@@ -315,17 +315,12 @@ class ActivityProfile extends Component {
             <CardContent>
               <Grid container spacing={16} justify="center">
                 <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.openEditActivityDialog}
-                    raised
-                  >
+                  <Button variant="contained" color="primary" onClick={this.openEditActivityDialog}>
                     Edit Involvement
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="contained" color="primary" onClick={this.sendEmail} raised>
+                  <Button variant="contained" color="primary" onClick={this.sendEmail}>
                     Email Members/Subscribers
                   </Button>
                 </Grid>
@@ -456,17 +451,12 @@ class ActivityProfile extends Component {
                   <DialogContent>
                     <Grid container spacing={16}>
                       <Grid item xs={6} sm={6} md={6} lg={6}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={this.onRemoveImage}
-                          raised
-                        >
+                        <Button variant="contained" color="primary" onClick={this.onRemoveImage}>
                           OK
                         </Button>
                       </Grid>
                       <Grid item xs={6} sm={6} md={6} lg={6}>
-                        <Button variant="contained" onClick={this.onClose} raised>
+                        <Button variant="contained" onClick={this.onClose}>
                           CANCEL
                         </Button>
                       </Grid>
@@ -512,10 +502,10 @@ class ActivityProfile extends Component {
               </DialogContent>
 
               <DialogActions>
-                <Button variant="contained" color="primary" onClick={this.onClose} raised>
+                <Button variant="contained" color="primary" onClick={this.onClose}>
                   Cancel
                 </Button>
-                <Button variant="contained" color="primary" onClick={this.onEditActivity} raised>
+                <Button variant="contained" color="primary" onClick={this.onEditActivity}>
                   Submit
                 </Button>
               </DialogActions>

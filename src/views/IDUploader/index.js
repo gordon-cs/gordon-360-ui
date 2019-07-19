@@ -240,7 +240,7 @@ class IDUploader extends Component {
 
         <Grid item xs={12} md={6} lg={4} justify="center">
           <Grid container justify="center">
-            <Card raised="true">
+            <Card raised={true}>
               <Grid item style={{ margin: '10px' }}>
                 <div>
                   <img
