@@ -10,6 +10,8 @@ import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
 import ProfileActivityList from './../../components/ProfileActivityList';
 import EmailIcon from '@material-ui/icons/Email';
+import Button from '@material-ui/core/Button';
+import { NavLink } from 'react-router-dom';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import GordonSchedulePanel from '../../components/SchedulePanel';
@@ -43,15 +45,22 @@ export default class Profile extends Component {
       linkedInLink: '',
       twitterLink: '',
       instagramLink: '',
+      network: 'online',
+      currentUser: '',
     };
   }
 
   componentWillMount() {
-    this.loadProfile(this.props);
+    if (this.props.Authentication) {
+      this.loadProfile(this.props);
+    }
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.match.params.username !== newProps.match.params.username) {
+    if (
+      this.props.Authentication &&
+      this.props.match.params.username !== newProps.match.params.username
+    ) {
       this.loadProfile(newProps);
     }
   }
@@ -61,12 +70,14 @@ export default class Profile extends Component {
     this.setState({ username: searchedUser.match.params.username });
     try {
       const profile = await user.getProfileInfo(searchedUser.match.params.username);
+      const curUser = await user.getProfileInfo();
       let profileinfo = (
         <ProfileList profile={profile} myProf={false}>
           {' '}
         </ProfileList>
       );
       let officeinfo = <Office profile={profile} />;
+      this.setState({ currentUser: curUser });
       this.setState({ profileinfo: profileinfo });
       this.setState({ officeinfo: officeinfo });
       this.checkPersonType(profile);
@@ -180,7 +191,12 @@ export default class Profile extends Component {
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>
-          <a href={this.state.facebookLink} className="icon" target="_blank">
+          <a
+            href={this.state.facebookLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.facebook.icon}
           </a>
         </Grid>
@@ -189,7 +205,12 @@ export default class Profile extends Component {
     if (this.state.twitterLink !== '') {
       twitterButton = (
         <Grid item>
-          <a href={this.state.twitterLink} className="icon" target="_blank">
+          <a
+            href={this.state.twitterLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.twitter.icon}
           </a>
         </Grid>
@@ -198,7 +219,12 @@ export default class Profile extends Component {
     if (this.state.linkedInLink !== '') {
       linkedInButton = (
         <Grid item>
-          <a href={this.state.linkedInLink} className="icon" target="_blank">
+          <a
+            href={this.state.linkedInLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.linkedIn.icon}
           </a>
         </Grid>
@@ -207,21 +233,59 @@ export default class Profile extends Component {
     if (this.state.instagramLink !== '') {
       instagramButton = (
         <Grid item>
-          <a href={this.state.instagramLink} className="icon" target="_blank">
+          <a
+            href={this.state.instagramLink}
+            className="icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {socialMediaInfo.instagram.icon}
           </a>
         </Grid>
       );
     }
 
-    return (
-      <div>
-        {this.state.loading && <GordonLoader />}
-        {!this.state.loading && (
-          <Grid container justify="center" spacing="16" alignItems="center">
-            <Grid item xs={12} lg={10}>
-              <Grid container spacing="16" justify="center">
-                <Grid item xs={12} lg={12}>
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    /* Gets status of current network connection for online/offline rendering
+     *  Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+    if (this.props.Authentication) {
+      // Creates the Public Profile page depending on the status of the network found in local storage
+      // If the searched profile is the current user's profile, the page will remain avaiable offline
+      let PublicProfile;
+      if (
+        networkStatus === 'online' ||
+        (networkStatus === 'offline' &&
+          this.state.profile.AD_Username === this.state.currentUser.AD_Username)
+      ) {
+        PublicProfile = (
+          <div>
+            {this.state.loading && <GordonLoader />}
+            {!this.state.loading && (
+              <Grid container justify="center" spacing="16">
+                <Grid item xs={12} lg={10}>
                   <Card>
                     <CardContent>
                       <Grid
@@ -309,10 +373,8 @@ export default class Profile extends Component {
                     </CardContent>
                   </Card>
                 </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12} lg={12} align="center">
+                
+                <Grid item xs={12} lg={12} align="center">
               <Grid container xs={12} lg={10} spacing="16" justify="center">
                 <Grid item xs={12} lg={12}>
                   <GordonSchedulePanel profile={this.state.profile} myProf={false} />
@@ -320,23 +382,18 @@ export default class Profile extends Component {
               </Grid>
             </Grid>
 
-            <Grid item xs={12} lg={12}>
-              <Grid container spacing="16" justify="center">
                 <Grid item xs={12} lg={5}>
-                  <Grid container spacing={16}>
+                  <Grid container direction="column" spacing="16">
                     {this.state.officeinfo !== null && this.state.officeinfo}
                     {this.state.profileinfo}
                   </Grid>
                 </Grid>
-
                 <Grid item xs={12} lg={5}>
-                  <Grid container>
-                    <Grid item xs={12}>
+                  <Grid container direction="column" spacing="16">
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
                       <Card>
                         <CardContent>
-                          <Grid container direction="row" alignItems="center">
-                            <CardHeader title="Involvements" />
-                          </Grid>
+                          <CardHeader title="Involvements" />
                           <List>{displayedMembershipList}</List>
                         </CardContent>
                       </Card>
@@ -344,10 +401,70 @@ export default class Profile extends Component {
                   </Grid>
                 </Grid>
               </Grid>
+            )}
+          </div>
+        );
+      } else {
+        PublicProfile = (
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} md={8}>
+              <Card>
+                <CardContent
+                  style={{
+                    margin: 'auto',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Grid
+                    item
+                    xs={2}
+                    alignItems="center"
+                    style={{
+                      display: 'block',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                  >
+                    <img
+                      src={require(`${'../../NoConnection.svg'}`)}
+                      alt="Internet Connection Lost"
+                    />
+                  </Grid>
+                  <br />
+                  <h1>Please Re-establish Connection</h1>
+                  <h4>People Search has been deactivated due to loss of network.</h4>
+                  <br />
+                  <br />
+                  <Button
+                    color="primary"
+                    backgroundColor="white"
+                    variant="outlined"
+                    onClick={() => {
+                      window.location.pathname = '';
+                    }}
+                  >
+                    Back To Home
+                  </Button>
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
-        )}
-      </div>
-    );
+        );
+      }
+
+      return PublicProfile;
+    } else {
+      return (
+        <div>
+          <GordonLoader />
+          <Typography align="center" variant="headline">
+            You must be logged in to view this profile.
+          </Typography>
+          <NavLink exact to="/">
+            <Button>Okay</Button>
+          </NavLink>
+        </div>
+      );
+    }
   }
 }

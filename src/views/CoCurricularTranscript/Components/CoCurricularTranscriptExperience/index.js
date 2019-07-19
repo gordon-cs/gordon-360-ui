@@ -55,7 +55,7 @@ export default class Experience extends Component {
       let endTime = experience.Job_End_Date;
 
       if (endTime === null) {
-        endTime = 'Present';
+        Duration = startMonth + startYear + '- Present';
       } else {
         let endMonth = this.sliceMonth(experience.Job_End_Date.split('-')[1]);
         let endYear = ' ' + experience.Job_End_Date.split('-')[0];

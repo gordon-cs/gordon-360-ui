@@ -1,9 +1,7 @@
 import React from 'react';
 
-import FacebookIcon from 'react-icons/lib/fa/facebook';
-import TwitterIcon from 'react-icons/lib/fa/twitter';
-import LinkedInIcon from 'react-icons/lib/fa/linkedin';
-import InstagramIcon from 'react-icons/lib/fa/instagram';
+import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+// see socialMedia.js for pre-packaged icons of above and fix
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
@@ -176,7 +174,7 @@ export default class LinksDialog extends React.Component {
           >
             <Grid container spacing={8} alignItems="baseline">
               <Grid item>
-                <FacebookIcon style={{ fontSize: '20px' }} />
+                <FaFacebookF style={{ fontSize: '20px' }} />
               </Grid>
               <Grid item>
                 <TextField
@@ -193,7 +191,7 @@ export default class LinksDialog extends React.Component {
             </Grid>
             <Grid container spacing={8} alignItems="baseline">
               <Grid item>
-                <TwitterIcon style={{ fontSize: '20px' }} />
+                <FaTwitter style={{ fontSize: '20px' }} />
               </Grid>
               <Grid item>
                 <TextField
@@ -210,7 +208,7 @@ export default class LinksDialog extends React.Component {
             </Grid>
             <Grid container spacing={8} alignItems="baseline">
               <Grid item>
-                <LinkedInIcon style={{ fontSize: '20px' }} />
+                <FaLinkedin style={{ fontSize: '20px' }} />
               </Grid>
               <Grid item>
                 <TextField
@@ -227,7 +225,7 @@ export default class LinksDialog extends React.Component {
             </Grid>
             <Grid container spacing={8} alignItems="baseline">
               <Grid item>
-                <InstagramIcon style={{ fontSize: '20px' }} />
+                <FaInstagram style={{ fontSize: '20px' }} />
               </Grid>
               <Grid item>
                 <TextField

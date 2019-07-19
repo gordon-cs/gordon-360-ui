@@ -6,6 +6,9 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import List from '@material-ui/core/List';
+//import ListItem from '@material-ui/core/ListItem';
+//import ListItemText from '@material-ui/core/ListItemText';
+import { NavLink } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -66,6 +69,7 @@ export default class Profile extends Component {
       twitterLink: '',
       instagramLink: '',
       isSnackBarOpen: false,
+      network: 'online',
     };
   }
 
@@ -179,7 +183,9 @@ export default class Profile extends Component {
           var maxWidth = this.maxCropPreviewWidth();
           var displayWidth = maxWidth > i.width ? i.width : maxWidth;
           var cropDim = this.minCropBoxDim(i.width, displayWidth);
-          this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
+          this.setState({
+            cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim },
+          });
           this.setState({ preview: dataURL });
         }
       }.bind(this);
@@ -207,14 +213,20 @@ export default class Profile extends Component {
     this.setState({ isSnackBarOpen: false });
   };
 
+  handleLoggedOutClose() {}
+
   componentWillMount() {
-    this.loadProfile();
+    if (this.props.Authentication) {
+      this.loadProfile();
+    }
   }
 
   hasNickName(profile) {
     let Name = String(profile.fullName);
     let FirstName = Name.split(' ')[0];
-    this.setState({ hasNickName: FirstName !== profile.NickName && profile.NickName !== '' });
+    this.setState({
+      hasNickName: FirstName !== profile.NickName && profile.NickName !== '',
+    });
   }
 
   async getInvolvementAndPrivacyDictionary(membershipsList) {
@@ -250,7 +262,12 @@ export default class Profile extends Component {
         memberships,
       );
       const image = preferredImage || defaultImage;
-      this.setState({ image, loading: false, memberships, involvementsAndTheirPrivacy });
+      this.setState({
+        image,
+        loading: false,
+        memberships,
+        involvementsAndTheirPrivacy,
+      });
       this.setState({ isImagePublic: this.state.profile.show_pic });
       this.hasNickName(profile);
     } catch (error) {
@@ -279,8 +296,6 @@ export default class Profile extends Component {
   }
 
   render() {
-    const { preview } = this.state;
-
     const style = {
       img: {
         width: '200px',
@@ -301,111 +316,161 @@ export default class Profile extends Component {
         color: gordonColors.primary.cyan,
       },
     };
-    let involvementAndPrivacyList;
-    if (this.state.memberships.length === 0) {
-      involvementAndPrivacyList = (
-        <div>
-          <Link to={`/activities`}>
-            <Typography variant="body2" className="noInvolvements">
-              No Involvements to display. Click here to see Involvements around campus!
-            </Typography>
-          </Link>
-        </div>
-      );
-    } else {
-      involvementAndPrivacyList = this.state.involvementsAndTheirPrivacy.map(
-        involvementPrivacyKeyValuePair => (
-          <MyProfileActivityList
-            Membership={involvementPrivacyKeyValuePair.key}
-            InvolvementPrivacy={involvementPrivacyKeyValuePair.value}
-          />
-        ),
-      );
-    }
 
-    let linksDialog = (
-      <LinksDialog
-        onDialogSubmit={this.onDialogSubmit}
-        handleSocialLinksClose={this.handleSocialLinksClose}
-        {...this.state}
-      />
-    );
+    if (this.props.Authentication) {
+      const { preview } = this.state;
 
-    // Define what icon buttons will display
-    // (only the sites that have links in database)
-    let facebookButton;
-    let twitterButton;
-    let linkedInButton;
-    let instagramButton;
-    let editButton;
-    let linkCount = 0; // To record whether or not any links are displayed
-    if (this.state.facebookLink !== '') {
-      facebookButton = (
-        <Grid item>
-          <a href={this.state.facebookLink} className="icon" target="_blank">
-            {socialMediaInfo.facebook.icon}
-          </a>
-        </Grid>
-      );
-      linkCount += 1;
-    }
-    if (this.state.twitterLink !== '') {
-      twitterButton = (
-        <Grid item>
-          <a href={this.state.twitterLink} className="icon" target="_blank">
-            {socialMediaInfo.twitter.icon}
-          </a>
-        </Grid>
-      );
-      linkCount += 1;
-    }
-    if (this.state.linkedInLink !== '') {
-      linkedInButton = (
-        <Grid item>
-          <a href={this.state.linkedInLink} className="icon" target="_blank">
-            {socialMediaInfo.linkedIn.icon}
-          </a>
-        </Grid>
-      );
-      linkCount += 1;
-    }
-    if (this.state.instagramLink !== '') {
-      instagramButton = (
-        <Grid item>
-          <a href={this.state.instagramLink} className="icon" target="_blank">
-            {socialMediaInfo.instagram.icon}
-          </a>
-        </Grid>
-      );
-      linkCount += 1;
-    }
-    if (linkCount > 0) {
-      editButton = (
-        <Grid item style={{ marginTop: '5px' }}>
-          <a onClick={this.handleSocialLinksOpen} className="edit-icon">
-            {socialMediaInfo.edit.icon}
-          </a>
-        </Grid>
-      );
-    } else {
-      editButton = (
-        <Grid item>
-          <Button onClick={this.handleSocialLinksOpen} style={style.uncontainedButton}>
-            EDIT SOCIAL MEDIA LINKS
-          </Button>
-        </Grid>
-      );
-    }
-
-    return (
-      <div>
-        {this.state.loading && <GordonLoader />}
-        {!this.state.loading && (
+      let involvementAndPrivacyList;
+      if (this.state.memberships.length === 0) {
+        involvementAndPrivacyList = (
           <div>
-            <Grid container justify="center" spacing="16" alignItems="center">
-              <Grid item xs={12} lg={10}>
-                <Grid container spacing="16" justify="center">
-                  <Grid item xs={12} lg={12}>
+            <Link to={`/activities`}>
+              <Typography variant="body2" className="noInvolvements">
+                No Involvements to display. Click here to see Involvements around campus!
+              </Typography>
+            </Link>
+          </div>
+        );
+      } else {
+        involvementAndPrivacyList = this.state.involvementsAndTheirPrivacy.map(
+          involvementPrivacyKeyValuePair => (
+            <MyProfileActivityList
+              Membership={involvementPrivacyKeyValuePair.key}
+              InvolvementPrivacy={involvementPrivacyKeyValuePair.value}
+            />
+          ),
+        );
+      }
+      let linksDialog = (
+        <LinksDialog
+          onDialogSubmit={this.onDialogSubmit}
+          handleSocialLinksClose={this.handleSocialLinksClose}
+          {...this.state}
+        />
+      );
+
+      // Define what icon buttons will display
+      // (only the sites that have links in database)
+      let facebookButton;
+      let twitterButton;
+      let linkedInButton;
+      let instagramButton;
+      let editButton;
+      let linkCount = 0; // To record whether or not any links are displayed
+      if (this.state.facebookLink !== '') {
+        facebookButton = (
+          <Grid item>
+            <a
+              href={this.state.facebookLink}
+              className="icon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {socialMediaInfo.facebook.icon}
+            </a>
+          </Grid>
+        );
+        linkCount += 1;
+      }
+      if (this.state.twitterLink !== '') {
+        twitterButton = (
+          <Grid item>
+            <a
+              href={this.state.twitterLink}
+              className="icon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {socialMediaInfo.twitter.icon}
+            </a>
+          </Grid>
+        );
+        linkCount += 1;
+      }
+      if (this.state.linkedInLink !== '') {
+        linkedInButton = (
+          <Grid item>
+            <a
+              href={this.state.linkedInLink}
+              className="icon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {socialMediaInfo.linkedIn.icon}
+            </a>
+          </Grid>
+        );
+        linkCount += 1;
+      }
+      if (this.state.instagramLink !== '') {
+        instagramButton = (
+          <Grid item>
+            <a
+              href={this.state.instagramLink}
+              className="icon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {socialMediaInfo.instagram.icon}
+            </a>
+          </Grid>
+        );
+        linkCount += 1;
+      }
+      if (linkCount > 0) {
+        editButton = (
+          <Grid item>
+            <IconButton onClick={this.handleSocialLinksOpen} className="edit-icon">
+              {socialMediaInfo.edit.icon}
+            </IconButton>
+          </Grid>
+        );
+      } else {
+        editButton = (
+          <Grid item>
+            <Button onClick={this.handleSocialLinksOpen} style={style.uncontainedButton}>
+              EDIT SOCIAL MEDIA LINKS
+            </Button>
+          </Grid>
+        );
+      }
+
+      /* Used to re-render the page when the network connection changes.
+       *  this.state.network is compared to the message received to prevent
+       *  multiple re-renders that creates extreme performance lost.
+       *  The origin of the message is checked to prevent cross-site scripting attacks
+       */
+      window.addEventListener('message', event => {
+        if (
+          event.data === 'online' &&
+          this.state.network === 'offline' &&
+          event.origin === window.location.origin
+        ) {
+          this.setState({ network: 'online' });
+        } else if (
+          event.data === 'offline' &&
+          this.state.network === 'online' &&
+          event.origin === window.location.origin
+        ) {
+          this.setState({ network: 'offline' });
+        }
+      });
+
+      /* Gets status of current network connection for online/offline rendering
+       *  Defaults to online in case of PWA not being possible
+       */
+      const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+      // Creates the My Profile button link depending on the status of the network found in local storage
+      let MyProfile;
+      if (networkStatus === 'online') {
+        MyProfile = (
+          <div>
+            {this.state.loading && <GordonLoader />}
+            {!this.state.loading && (
+              <div>
+                <Grid container justify="center" spacing="16">
+                  <Grid item xs={12} lg={10}>
                     <Card>
                       <CardContent>
                         <Grid
@@ -434,7 +499,10 @@ export default class Profile extends Component {
                                 src={`data:image/jpg;base64,${this.state.image}`}
                                 alt="Profile"
                                 className="rounded-corners"
-                                style={{ 'max-height': '200px', 'min-width': '160px' }}
+                                style={{
+                                  'max-height': '200px',
+                                  'min-width': '160px',
+                                }}
                               />
                               <span className="imageBackdrop" />
                               <GridListTileBar className="tile-bar" title="Photo Options" />
@@ -513,18 +581,26 @@ export default class Profile extends Component {
                                     {!preview && (
                                       <Grid container justify="center" spacing="16">
                                         <Dropzone
-                                          className="dropzone"
-                                          activeClassName="drop-overlay"
                                           onDropAccepted={this.onDropAccepted.bind(this)}
                                           onDropRejected={this.onDropRejected.bind(this)}
-                                          accept="image/jpeg,image/jpg,image/png"
+                                          accept="image/jpeg, image/jpg, image/png"
                                         >
-                                          <img
-                                            className="rounded-corners"
-                                            src={`data:image/jpg;base64,${this.state.image}`}
-                                            alt=""
-                                            style={{ maxWidth: '200px', maxHeight: '200px' }}
-                                          />
+                                          {({ getRootProps, getInputProps }) => (
+                                            <section>
+                                              <div className="prof-dropzone" {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                <img
+                                                  className="rounded-corners"
+                                                  src={`data:image/jpg;base64,${this.state.image}`}
+                                                  alt=""
+                                                  style={{
+                                                    'max-width': '200px',
+                                                    'max-height': '200px',
+                                                  }}
+                                                />
+                                              </div>
+                                            </section>
+                                          )}
                                         </Dropzone>
                                       </Grid>
                                     )}
@@ -597,7 +673,10 @@ export default class Profile extends Component {
                                           <Button
                                             variant="contained"
                                             onClick={this.handleResetImage}
-                                            style={{ background: 'tomato', color: 'white' }}
+                                            style={{
+                                              background: 'tomato',
+                                              color: 'white',
+                                            }}
                                           >
                                             Reset
                                           </Button>
@@ -625,7 +704,10 @@ export default class Profile extends Component {
                                             style={
                                               this.state.preview
                                                 ? style.button
-                                                : { background: 'darkgray', color: 'white' }
+                                                : {
+                                                    background: 'darkgray',
+                                                    color: 'white',
+                                                  }
                                             }
                                           >
                                             Submit
@@ -657,10 +739,8 @@ export default class Profile extends Component {
                       </CardContent>
                     </Card>
                   </Grid>
-                </Grid>
-              </Grid>
 
-              <Grid item xs={12} lg={12} align="center">
+                  <Grid item xs={12} lg={12} align="center">
                 <Grid container xs={12} lg={10} spacing="16" justify="center">
                   <Grid item xs={12} lg={12}>
                     <GordonSchedulePanel profile={this.state.profile} myProf={true} />
@@ -668,15 +748,12 @@ export default class Profile extends Component {
                 </Grid>
               </Grid>
 
-              <Grid item xs={12} lg={12}>
-                <Grid container spacing="16" justify="center">
                   <Grid item xs={12} lg={5}>
                     <Grid container spacing={16}>
-                      {this.state.officeinfo}
                       {this.state.profileinfo}
+                      {this.state.officeinfo}
                     </Grid>
                   </Grid>
-
                   <Grid item xs={12} lg={5}>
                     <Grid container>
                       <Grid item xs={12}>
@@ -694,6 +771,7 @@ export default class Profile extends Component {
                                 </Link>
                               </Grid>
                             </Grid>
+
                             <List>{involvementAndPrivacyList}</List>
                           </CardContent>
                         </Card>
@@ -701,46 +779,109 @@ export default class Profile extends Component {
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Grid>
 
-            <div>
-              <Snackbar
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                open={this.state.isSnackBarOpen}
-                autoHideDuration={6000}
-                onClose={this.handleClose}
-                ContentProps={{
-                  'aria-describedby': 'message-id',
-                }}
-                message={
-                  <span id="message-id">
-                    <CheckCircleIcon
-                      style={{
-                        marginBottom: '-4.5pt',
-                        marginRight: '1rem',
-                      }}
-                    />Success!
-                  </span>
-                }
-                action={[
-                  <IconButton
-                    key="close"
-                    aria-label="Close"
-                    color="inherit"
-                    onClick={this.handleClose}
-                  >
-                    <CloseIcon />
-                  </IconButton>,
-                ]}
-              />
-            </div>
+                <div>
+                  <Snackbar
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    open={this.state.isSnackBarOpen}
+                    autoHideDuration={6000}
+                    onClose={this.handleClose}
+                    ContentProps={{
+                      'aria-describedby': 'message-id',
+                    }}
+                    message={
+                      <span id="message-id">
+                        <CheckCircleIcon
+                          style={{
+                            marginBottom: '-4.5pt',
+                            marginRight: '1rem',
+                          }}
+                        />
+                        Success!
+                      </span>
+                    }
+                    action={[
+                      <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        onClick={this.handleClose}
+                      >
+                        <CloseIcon />
+                      </IconButton>,
+                    ]}
+                  />
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    );
+        );
+      } else {
+        MyProfile = (
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} md={8}>
+              <Card>
+                <CardContent
+                  style={{
+                    margin: 'auto',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Grid
+                    item
+                    xs={2}
+                    alignItems="center"
+                    style={{
+                      display: 'block',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                  >
+                    {
+                      <img
+                        src={require(`${'../../NoConnection.svg'}`)}
+                        alt="Internet Connection Lost"
+                      />
+                    }
+                  </Grid>
+                  <br />
+                  <h1>Please Re-establish Connection</h1>
+                  <h4>Editing your profile has been deactivated due to loss of network.</h4>
+                  <br />
+                  <br />
+                  <Button
+                    color="primary"
+                    backgroundColor="white"
+                    variant="outlined"
+                    onClick={() => {
+                      window.location.pathname = '';
+                    }}
+                  >
+                    Back To Home
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        );
+      }
+
+      return MyProfile;
+    } else {
+      return (
+        <div>
+          <GordonLoader />
+          <Typography align="center" variant="headline">
+            You must be logged in to view your profile.
+          </Typography>
+          <NavLink exact to="/">
+            <Button>Okay</Button>
+          </NavLink>
+        </div>
+      );
+    }
   }
 }

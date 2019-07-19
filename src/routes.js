@@ -1,6 +1,6 @@
 import About from './views/About';
 import ActivitiesAll from './views/ActivitiesAll';
-import ActivityEdit from './views/ActivityEdit';
+//import ActivityEdit from './views/ActivityEdit';
 import ActivityProfile from './views/ActivityProfile';
 import Home from './views/Home';
 import Help from './views/Help';
@@ -29,11 +29,6 @@ export default [
     component: About,
   },
   {
-    name: 'Edit Involvement',
-    path: '/activity/:activityId/edit',
-    component: ActivityEdit,
-  },
-  {
     name: 'Involvement Profile',
     path: '/activity/:sessionCode/:activityCode',
     component: ActivityProfile,
@@ -49,7 +44,7 @@ export default [
     component: Help,
   },
   {
-    name: 'Transcript',
+    name: 'Experience Transcript',
     path: '/transcript',
     component: CoCurricularTranscript,
   },
@@ -80,7 +75,7 @@ export default [
   },
   {
     name: 'My Profile',
-    path: '/myprofile/:username',
+    path: '/myprofile',
     component: MyProfile,
   },
   {
