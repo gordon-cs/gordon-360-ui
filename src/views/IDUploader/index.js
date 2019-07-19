@@ -286,18 +286,18 @@ class IDUploader extends Component {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
-          <div className="gc360-dialog">
-            <DialogTitle className="gc360-dialog_title" id="simple-dialog-title">
+          <div className="gc360-id-dialog">
+            <DialogTitle className="gc360-id-dialog_title" id="simple-dialog-title">
               Update ID Picture
             </DialogTitle>
-            <DialogContent className="gc360-dialog_content">
-              <DialogContentText className="gc360-dialog_content_text">
+            <DialogContent className="gc360-id-dialog_content">
+              <DialogContentText className="gc360-id-dialog_content_text">
                 {this.props.width === 'md' || this.props.width === 'sm' || this.props.width === 'xs'
                   ? 'Tap Image to Browse Files'
                   : 'Drag & Drop Picture, or Click to Browse Files'}
               </DialogContentText>
               {!preview && (
-                <div className="gc360-dialog_content_dropzone">
+                <div className="gc360-id-dialog_content_dropzone">
                   <Dropzone
                     onDropAccepted={this.onDropAccepted.bind(this)}
                     onDropRejected={this.onDropRejected.bind(this)}
@@ -305,12 +305,15 @@ class IDUploader extends Component {
                   >
                     {({ getRootProps, getInputProps }) => (
                       <section>
-                        <div className="gc360-dialog_content_dropzone_content" {...getRootProps()}>
+                        <div
+                          className="gc360-id-dialog_content_dropzone_content"
+                          {...getRootProps()}
+                        >
                           <input {...getInputProps()} />
                           <img
                             src={`data:image/jpg;base64,${this.state.image}`}
                             alt=""
-                            style={{ 'max-width': '200px', 'max-height': '200px' }}
+                            style={{ 'max-width': '140px', 'max-height': '140px' }}
                           />
                         </div>
                       </section>
@@ -319,7 +322,7 @@ class IDUploader extends Component {
                 </div>
               )}
               {preview && (
-                <div className="gc360-dialog_content_cropper">
+                <div className="gc360-id-dialog_content_cropper">
                   <Cropper
                     ref="cropper"
                     src={preview}
@@ -345,13 +348,13 @@ class IDUploader extends Component {
                   variant="contained"
                   onClick={() => this.setState({ preview: null })}
                   style={style.button}
-                  className="gc360-dialog_content_button"
+                  className="gc360-id-dialog_content_button"
                 >
                   Choose Another Image
                 </Button>
               )}
             </DialogContent>
-            <DialogActions className="gc360-dialog_content_actions">
+            <DialogActions className="gc360-id-dialog_actions">
               <Button variant="contained" onClick={this.handleCloseCancel} style={style.button}>
                 Cancel
               </Button>
