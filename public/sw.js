@@ -32,6 +32,9 @@ const staticCache = [
   '/static/media/campus1366.e8fc7838.jpg',
   '/static/media/gordon-logo-vertical-white.a6586885.svg',
   '/static/media/NoConnection.68275814.svg',
+	'/static/js/0.chunk.js',
+  '/static/js/main.chunk.js',
+  '/static/js/1.chunk.js',
   '/admin',
   '/myprofile',
 ];
@@ -284,7 +287,7 @@ function timerFunction() {
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(token, termCode); // Dynamic Cache
     // Set interval to every hour
-  }, 10000);
+  }, 3600000);
 }
 
 /*********************************************** EVENT LISTENERS ***********************************************/
