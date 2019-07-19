@@ -1,6 +1,6 @@
 /* Checking to see if the Cache API is available
-*  If so, check to see if the Service Worker API is available
-*/
+ *  If so, check to see if the Service Worker API is available
+ */
 if ('caches' in window) {
   // Checking to see if the Service Worker API is available
   // If so, we register our service worker and run all PWA operations
@@ -24,26 +24,12 @@ if ('caches' in window) {
         };
       })
       .catch(console.error);
-  
-  // Set interval function that will try to update cache every hour
-  function timerFunction() {
-    resetTimer = setInterval(() => {
-      navigator.serviceWorker.controller.postMessage({
-        message: 'update-cache-files',
-        token: JSON.parse(localStorage.getItem('token')),
-        termCode: JSON.parse(localStorage.getItem('currentTerm')),
-      });
-      // Set interval to every hour
-    }, 3600000);
-  }
 
-  timerFunction();
- 
     /* When a user exists out the app and re-opens it, this will check to see if they are
-      *  connected to the internet so that:
-      *     - If there's internet: Open in online mode if the current mode is offline
-      *     - If there's no internet: Open in offline mode if the current mode is online
-      */
+     *  connected to the internet so that:
+     *     - If there's internet: Open in online mode if the current mode is offline
+     *     - If there's no internet: Open in offline mode if the current mode is online
+     */
     if (JSON.parse(localStorage.getItem('network-status')) === 'offline') {
       if (navigator.onLine) {
         localStorage.setItem('network-status', JSON.stringify('online'));
@@ -64,8 +50,6 @@ if ('caches' in window) {
       // Saves the network state as offline in local storage
       localStorage.setItem('network-status', JSON.stringify('offline'));
       window.postMessage('offline', location.origin);
-      // When network goes offline, stop the interval for cache update
-      clearInterval(resetTimer);
     });
 
     // If network connectivity re-enables during application run-time
@@ -76,8 +60,6 @@ if ('caches' in window) {
       // Saves the network state as online in local storage
       localStorage.setItem('network-status', JSON.stringify('online'));
       window.postMessage('online', location.origin);
-      // If network goes back online, then restart the interval function for cache update
-      timerFunction();
     });
   } else {
     console.log('SERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE');

@@ -55,6 +55,31 @@ export default class GordonNavAvatarRightCorner extends Component {
     signOut();
     this.props.onSignOut();
   }
+  onSignIn() {
+    this.onClose();
+  }
+  openDialogBox = () => {
+    this.setState({ dialogBoxOpen: true });
+  };
+
+  closeDialogBox = () => {
+    this.setState({ dialogBoxOpen: false });
+  };
+  handleLinkClickOpen = () => {
+    this.setState({
+      linkopen: true,
+    });
+  };
+
+  handleLinkClose = () => {
+    this.setState({ linkopen: false });
+  };
+
+  async componentWillReceiveProps(newProps) {
+    if (this.props.Authentication !== newProps.Authentication) {
+      this.loadAvatar(newProps.Authentication);
+    }
+  }
 
   openDialogBox = () => {
     this.setState({ dialogBoxOpen: true });
@@ -75,22 +100,26 @@ export default class GordonNavAvatarRightCorner extends Component {
   };
 
   async componentWillMount() {
-    this.loadAvatar();
+    this.loadAvatar(this.props.Authentication);
   }
 
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
   }
 
-  async loadAvatar() {
-    const { name, user_name: username } = user.getLocalInfo();
-    this.setState({ name, username });
-    const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
-      await user.getProfileInfo(),
-      await user.getImage(),
-    ]);
-    const image = preferredImage || defaultImage;
-    this.setState({ email, image });
+  async loadAvatar(Authentication) {
+    if (Authentication) {
+      const { name, user_name: username } = user.getLocalInfo();
+      this.setState({ name, username });
+      const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
+        await user.getProfileInfo(),
+        await user.getImage(),
+      ]);
+      const image = preferredImage || defaultImage;
+      this.setState({ email, image });
+    } else {
+      this.setState({ name: 'Guest', username: 'Guest' });
+    }
   }
 
   /**
@@ -99,7 +128,7 @@ export default class GordonNavAvatarRightCorner extends Component {
    */
   checkPeer() {
     if (window.didProfilePicUpdate) {
-      this.loadAvatar();
+      this.loadAvatar(this.props.Authentication);
       window.didProfilePicUpdate = false;
     }
   }
@@ -117,23 +146,12 @@ export default class GordonNavAvatarRightCorner extends Component {
 
   render() {
     const open = Boolean(this.state.anchorEl);
-    let avatar = (
-      <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>
-    );
-    if (this.state.image) {
-      avatar = (
-        <Avatar
-          className="nav-avatar nav-avatar-image"
-          src={`data:image/jpg;base64,${this.state.image}`}
-        />
-      );
-    }
 
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -152,17 +170,9 @@ export default class GordonNavAvatarRightCorner extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-    *  Defaults to online in case of PWA not being possible
-    */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
-    // Creates the My Profile button link depending on the status of the network found in local storage
-    let myProfileLink;
-    if (networkStatus === 'online') {
-      myProfileLink = '/myprofile';
-    } else {
-      myProfileLink = `profile/${this.state.name.replace(' ', '.')}`;
-    }
 
     // Creates the Links button depending on the status of the network found in local storage
     let LinksButton;
@@ -208,44 +218,98 @@ export default class GordonNavAvatarRightCorner extends Component {
       );
     }
 
-    // Creates the Admin button depending on the status of the network found in local storage
+    let avatar;
+    let signInOut;
+    let myProfileLink;
     let Admin;
-    if (networkStatus === 'online') {
-      if (user.getLocalInfo().college_role === 'god') {
+    if (this.props.Authentication) {
+      // Set authenticated values for dropdown menu
+
+      let myProfile;
+      // Creates the My Profile button link depending on the status of the network found in local storage
+      if (networkStatus === 'online') {
+        myProfile = '/myprofile';
+      } else {
+        myProfile = `profile/${this.state.name.replace(' ', '.')}`;
+      }
+      myProfileLink = (
+        <Link to={myProfile}>
+          <MenuItem onClick={this.onClose} divider={true}>
+            My Profile
+          </MenuItem>
+        </Link>
+      );
+
+      avatar = <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>;
+      if (this.state.image) {
+        avatar = (
+          <Avatar
+            className="nav-avatar nav-avatar-image"
+            src={`data:image/jpg;base64,${this.state.image}`}
+          />
+        );
+      }
+
+      // Creates the Admin button depending on the status of the network found in local storage
+      if (networkStatus === 'online') {
+        if (user.getLocalInfo().college_role === 'god') {
+          Admin = (
+            <Link to="/admin">
+              <MenuItem onClick={this.onClose} divider="true">
+                Admin
+              </MenuItem>
+            </Link>
+          );
+        }
+      } else {
         Admin = (
-          <Link to="/admin">
-            <MenuItem onClick={this.onClose} divider="true">
+          <div onClick={this.openDialogBox}>
+            <MenuItem disabled={networkStatus} divider="true">
               Admin
+            </MenuItem>
+          </div>
+        );
+      }
+
+      if (networkStatus === 'online') {
+        signInOut = (
+          <Link to="/">
+            <MenuItem onClick={this.onSignOut.bind(this)} divider={true}>
+              Sign Out
             </MenuItem>
           </Link>
         );
+      } else {
+        signInOut = (
+          <div onClick={this.openDialogBox}>
+            <MenuItem disabled={networkStatus} divider="true">
+              Sign Out
+            </MenuItem>
+          </div>
+        );
       }
     } else {
-      Admin = (
-        <div onClick={this.openDialogBox}>
-          <MenuItem disabled={networkStatus} divider="true">
-            Admin
-          </MenuItem>
-        </div>
-      );
-    }
+      // Set unauthenticated values for dropdown menu
 
-    // Creates the Signout button depending on the status of the network found in local storage
-    let SignoutButton;
-    if (networkStatus === 'online') {
-      SignoutButton = (
-        <MenuItem onClick={this.onSignOut} divider="true">
-          Sign Out
-        </MenuItem>
-      );
-    } else {
-      SignoutButton = (
-        <div onClick={this.openDialogBox}>
-          <MenuItem disabled={networkStatus} divider="true">
-            Sign Out
-          </MenuItem>
-        </div>
-      );
+      avatar = <Avatar className="nav-avatar nav-avatar-placeholder">Guest</Avatar>;
+
+      if (networkStatus === 'online') {
+        signInOut = (
+          <Link to="/">
+            <MenuItem onClick={this.onSignIn.bind(this)} divider={true}>
+              Sign In
+            </MenuItem>
+          </Link>
+        );
+      } else {
+        signInOut = (
+          <div onClick={this.openDialogBox}>
+            <MenuItem disabled={networkStatus} divider="true">
+              Sign In
+            </MenuItem>
+          </div>
+        );
+      }
     }
 
     return (
@@ -276,25 +340,21 @@ export default class GordonNavAvatarRightCorner extends Component {
           <MenuItem onClick={this.onClose} style={{ display: 'none' }}>
             My Profile
           </MenuItem>
-          <Link to={myProfileLink}>
-            <MenuItem onClick={this.onClose} divider="true">
-              My Profile
-            </MenuItem>
-          </Link>
+          {myProfileLink}
           {LinksButton}
           <Link to="/help">
-            <MenuItem onClick={this.onClose} divider="true">
+            <MenuItem onClick={this.onClose} divider={true}>
               Help
             </MenuItem>
           </Link>
           <Link to="/about">
-            <MenuItem onClick={this.onClose} divider="true">
+            <MenuItem onClick={this.onClose} divider={true}>
               About
             </MenuItem>
           </Link>
           {FeedbackButton}
           {Admin}
-          {SignoutButton}
+          {signInOut}
         </Menu>
         <QuickLinksDialog
           handleLinkClickOpen={this.handleLinkClickOpen}
