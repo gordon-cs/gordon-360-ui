@@ -16,23 +16,22 @@
       grid-row: 1;
     }
     &_dropzone {
-      justify-items: center;
-      grid-row: 2;
-      &_content {
-        transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
-        width: 18rem;
-        height: 18rem;
-        display: flex;
-        border-style: dashed;
-        border-width: 0.2rem;
-        border-radius: 1rem;
-        border-color: darkgray;
-        justify-content: center;
-        align-items: center;
-        &:hover {
-          background-color: #dddddd;
-          box-shadow: 0 0 0 0.25rem #dddddd;
-        }
+      transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+      width: 18rem;
+      height: 18rem;
+      display: flex;
+      border-style: dashed;
+      border-width: 0.2rem;
+      border-radius: 1rem;
+      border-color: darkgray;
+      justify-content: center;
+      align-items: center;
+      &:hover {
+        background-color: #dddddd;
+        box-shadow: 0 0 0 0.25rem #dddddd;
+      }
+      &_img {
+        border-radius: 0.5rem;
       }
     }
     &_cropper {
@@ -43,7 +42,9 @@
     }
   }
   &_actions {
+    display: grid;
     grid-row: 3;
+    grid-column-gap: 10px;
   }
 }
 
@@ -51,10 +52,8 @@
   .gc360-id-dialog {
     &_content {
       &_dropzone {
-        &_content {
-          width: 10rem;
-          height: 10rem;
-        }
+        width: 10rem;
+        height: 10rem;
       }
       &_cropper {
         padding-right: 20px;

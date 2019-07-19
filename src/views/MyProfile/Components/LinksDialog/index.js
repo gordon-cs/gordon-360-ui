@@ -2,11 +2,14 @@ import React from 'react';
 
 import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 // see socialMedia.js for pre-packaged icons of above and fix
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui//core/Grid';
-import Button from '@material-ui/core/Button';
+import {
+  Button,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  TextField,
+} from '@material-ui/core';
 import { socialMediaInfo } from '../../../../socialMedia';
 import { gordonColors } from '../../../../theme';
 
@@ -166,17 +169,22 @@ export default class LinksDialog extends React.Component {
     };
 
     return (
-      <div>
-        <DialogContent>
-          <form
+      <div className="gc360-links-dialog">
+        <DialogTitle className="gc360-links-dialog_title">Edit your social media links</DialogTitle>
+        <DialogContent className="gc360-links-dialog_content">
+          <DialogContentText className="gc360-links-dialog_content_text">
+            Copy and paste your links below
+          </DialogContentText>
+          {/* <form
             onSubmit={this.handleSubmit}
             style={{ paddingLeft: '1.5rem', marginBottom: '-0.75rem', marginTop: '-1.5rem' }}
-          >
-            <Grid container spacing={8} alignItems="baseline">
-              <Grid item>
+          > */}
+          <div className="gc360-links-dialog_content_form">
+            <div className="gc360-links-dialog_content_form_facebook">
+              <div className="gc360-links-dialog_content_form_icon">
                 <FaFacebookF style={{ fontSize: '20px' }} />
-              </Grid>
-              <Grid item>
+              </div>
+              <div className="gc360-links-dialog_content_form_field">
                 <TextField
                   id="facebookInput"
                   label=" Facebook link"
@@ -187,13 +195,13 @@ export default class LinksDialog extends React.Component {
                   margin="dense"
                   fullWidth
                 />
-              </Grid>
-            </Grid>
-            <Grid container spacing={8} alignItems="baseline">
-              <Grid item>
+              </div>
+            </div>
+            <div className="gc360-links-dialog_content_form_twitter">
+              <div className="gc360-links-dialog_content_form_icon">
                 <FaTwitter style={{ fontSize: '20px' }} />
-              </Grid>
-              <Grid item>
+              </div>
+              <div className="gc360-links-dialog_content_form_field">
                 <TextField
                   id="twitterInput"
                   label=" Twitter link"
@@ -204,13 +212,13 @@ export default class LinksDialog extends React.Component {
                   margin="dense"
                   fullWidth
                 />
-              </Grid>
-            </Grid>
-            <Grid container spacing={8} alignItems="baseline">
-              <Grid item>
+              </div>
+            </div>
+            <div className="gc360-links-dialog_content_form_linkedin">
+              <div className="gc360-links-dialog_content_form_icon">
                 <FaLinkedin style={{ fontSize: '20px' }} />
-              </Grid>
-              <Grid item>
+              </div>
+              <div className="gc360-links-dialog_content_form_field">
                 <TextField
                   id="linkedInInput"
                   label=" LinkedIn link"
@@ -221,13 +229,13 @@ export default class LinksDialog extends React.Component {
                   margin="dense"
                   fullWidth
                 />
-              </Grid>
-            </Grid>
-            <Grid container spacing={8} alignItems="baseline">
-              <Grid item>
+              </div>
+            </div>
+            <div className="gc360-links-dialog_content_form_instagram">
+              <div className="gc360-links-dialog_content_form_icon">
                 <FaInstagram style={{ fontSize: '20px' }} />
-              </Grid>
-              <Grid item>
+              </div>
+              <div className="gc360-links-dialog_content_form_field">
                 <TextField
                   id="instagramInput"
                   label=" Instagram link"
@@ -238,12 +246,12 @@ export default class LinksDialog extends React.Component {
                   margin="dense"
                   fullWidth
                 />
-              </Grid>
-            </Grid>
-            <br />
-          </form>
+              </div>
+            </div>
+          </div>
+          {/* </form> */}
         </DialogContent>
-        <DialogActions>
+        <DialogActions className=".gc360-links-dialog_actions">
           <Button onClick={this.handleClose} variant="contained" style={button}>
             Cancel
           </Button>

@@ -84,7 +84,10 @@ class IDUploader extends Component {
 
   maxCropPreviewWidth() {
     /* this logic was probably great but I did not have time to learn it and fix it.
-      If you do, please: make this function better */
+       The fix it needs is replacing use of innerWidth with this.props.width (converted
+       from a string like 'xs' to a numerical size like 360
+       If you have time, please: make this function better */
+
     //const breakpointWidth = 960;
     //const smallScreenRatio = 0.75;
     //const largeScreenRatio = 0.525;
@@ -297,29 +300,25 @@ class IDUploader extends Component {
                   : 'Drag & Drop Picture, or Click to Browse Files'}
               </DialogContentText>
               {!preview && (
-                <div className="gc360-id-dialog_content_dropzone">
-                  <Dropzone
-                    onDropAccepted={this.onDropAccepted.bind(this)}
-                    onDropRejected={this.onDropRejected.bind(this)}
-                    accept="image/jpeg, image/jpg, image/png"
-                  >
-                    {({ getRootProps, getInputProps }) => (
-                      <section>
-                        <div
-                          className="gc360-id-dialog_content_dropzone_content"
-                          {...getRootProps()}
-                        >
-                          <input {...getInputProps()} />
-                          <img
-                            src={`data:image/jpg;base64,${this.state.image}`}
-                            alt=""
-                            style={{ 'max-width': '140px', 'max-height': '140px' }}
-                          />
-                        </div>
-                      </section>
-                    )}
-                  </Dropzone>
-                </div>
+                <Dropzone
+                  onDropAccepted={this.onDropAccepted.bind(this)}
+                  onDropRejected={this.onDropRejected.bind(this)}
+                  accept="image/jpeg, image/jpg, image/png"
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <section>
+                      <div className="gc360-id-dialog_content_dropzone" {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <img
+                          className="gc360-id-dialog_content_dropzone_img"
+                          src={`data:image/jpg;base64,${this.state.image}`}
+                          alt=""
+                          style={{ 'max-width': '140px', 'max-height': '140px' }}
+                        />
+                      </div>
+                    </section>
+                  )}
+                </Dropzone>
               )}
               {preview && (
                 <div className="gc360-id-dialog_content_cropper">

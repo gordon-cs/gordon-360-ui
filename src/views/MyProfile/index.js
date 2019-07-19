@@ -35,10 +35,11 @@ import IconButton from '@material-ui/core/IconButton';
 
 import './myProfile.css';
 import '../../app.css';
+import { withWidth } from '@material-ui/core';
 
 const CROP_DIM = 200; // pixels
 //MyProfile
-export default class Profile extends Component {
+class Profile extends Component {
   constructor(props) {
     super(props);
 
@@ -140,22 +141,24 @@ export default class Profile extends Component {
   }
 
   maxCropPreviewWidth() {
-    const breakpointWidth = 960;
-    const smallScreenRatio = 0.75;
-    const largeScreenRatio = 0.525;
-    const maxHeightRatio = 0.5;
-    const aspect = this.state.cropperData.aspectRatio;
-    var maxWidth =
-      window.innerWidth *
-      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
-    var correspondingHeight = maxWidth / aspect;
-    var maxHeight = window.innerHeight * maxHeightRatio;
-    var correspondingWidth = maxHeight * aspect;
-
-    if (correspondingHeight > maxHeight) {
-      return correspondingWidth;
-    } else {
-      return maxWidth;
+    // see IDUploader/index.js > maxCropPreviewWidth for commented out code
+    // that seemed to have finer tuned logic
+    const smallScreenRatio = 0.5;
+    const largeScreenRatio = 0.25;
+    const w = this.props.width;
+    switch (w) {
+      default:
+        return 960 * largeScreenRatio;
+      case 'xs':
+        return 360 * smallScreenRatio;
+      case 'sm':
+        return 600 * smallScreenRatio;
+      case 'md':
+        return 960 * largeScreenRatio;
+      case 'lg':
+        return 1280 * largeScreenRatio;
+      case 'xl':
+        return 1920 * largeScreenRatio;
     }
   }
 
@@ -510,22 +513,20 @@ export default class Profile extends Component {
                               onClose={this.handleClose}
                               aria-labelledby="alert-dialog-slide-title"
                               aria-describedby="alert-dialog-slide-description"
-                              maxWidth="false"
                             >
-                              <DialogTitle id="simple-dialog-title">
-                                Update Profile Picture
-                              </DialogTitle>
-                              <DialogContent>
-                                <DialogContentText>
-                                  {window.innerWidth < 600
-                                    ? 'Tap Image to Browse Files'
-                                    : 'Drag & Drop Picture, or Click to Browse Files'}
-                                </DialogContentText>
-                                <DialogContentText>
-                                  <br />
-                                </DialogContentText>
-                                {!preview && (
-                                  <Grid container justify="center">
+                              <div className="gc360-photo-dialog">
+                                <DialogTitle className="gc360-photo-dialog_title">
+                                  Update Profile Picture
+                                </DialogTitle>
+                                <DialogContent className="gc360-photo-dialog_content">
+                                  <DialogContentText className="gc360-photo-dialog_content_text">
+                                    {this.props.width === 'md' ||
+                                    this.props.width === 'sm' ||
+                                    this.props.width === 'xs'
+                                      ? 'Tap Image to Browse Files'
+                                      : 'Drag & Drop Picture, or Click to Browse Files'}
+                                  </DialogContentText>
+                                  {!preview && (
                                     <Dropzone
                                       onDropAccepted={this.onDropAccepted.bind(this)}
                                       onDropRejected={this.onDropRejected.bind(this)}
@@ -533,129 +534,120 @@ export default class Profile extends Component {
                                     >
                                       {({ getRootProps, getInputProps }) => (
                                         <section>
-                                          <div className="prof-dropzone" {...getRootProps()}>
+                                          <div
+                                            className="gc360-photo-dialog_content_dropzone"
+                                            {...getRootProps()}
+                                          >
                                             <input {...getInputProps()} />
                                             <img
-                                              className="rounded-corners"
+                                              className="gc360-photo-dialog_content_dropzone_img"
                                               src={`data:image/jpg;base64,${this.state.image}`}
                                               alt=""
                                               style={{
-                                                'max-width': '200px',
-                                                'max-height': '200px',
+                                                'max-width': '140px',
+                                                'max-height': '140px',
                                               }}
                                             />
                                           </div>
                                         </section>
                                       )}
                                     </Dropzone>
-                                  </Grid>
-                                )}
-                                {preview && (
-                                  <Grid container justify="center">
-                                    <Cropper
-                                      ref="cropper"
-                                      src={preview}
-                                      style={{
-                                        'max-width': this.maxCropPreviewWidth(),
-                                        'max-height':
-                                          this.maxCropPreviewWidth() /
-                                          this.state.cropperData.aspectRatio,
-                                      }}
-                                      autoCropArea={1}
-                                      viewMode={3}
-                                      aspectRatio={1}
-                                      highlight={false}
-                                      background={false}
-                                      zoom={this.onCropperZoom.bind(this)}
-                                      zoomable={false}
-                                      dragMode={'none'}
-                                      minCropBoxWidth={this.state.cropperData.cropBoxDim}
-                                      minCropBoxHeight={this.state.cropperData.cropBoxDim}
-                                    />
-                                  </Grid>
-                                )}
-                                {preview && <br />}
-                                {preview && (
-                                  <Grid container justify="center">
-                                    <Grid item>
-                                      <Button
-                                        variant="contained"
-                                        onClick={() => this.setState({ preview: null })}
-                                        style={style.button}
-                                      >
-                                        Choose Another Image
-                                      </Button>
-                                    </Grid>
-                                  </Grid>
-                                )}
-                              </DialogContent>
-                              <DialogActions>
-                                <Grid container spacing={8} justify="flex-end">
-                                  <Grid item>
-                                    <Tooltip
-                                      classes={{ tooltip: 'tooltip' }}
-                                      id="tooltip-hide"
-                                      title={
-                                        this.state.isImagePublic
-                                          ? 'Only faculty and police will see your photo'
-                                          : 'Make photo visible to other students'
-                                      }
-                                    >
-                                      <Button
-                                        variant="contained"
-                                        onClick={this.toggleImagePrivacy.bind(this)}
-                                        style={style.button}
-                                      >
-                                        {this.state.isImagePublic ? 'Hide' : 'Show'}
-                                      </Button>
-                                    </Tooltip>
-                                  </Grid>
-                                  <Grid item>
-                                    <Tooltip
-                                      classes={{ tooltip: 'tooltip' }}
-                                      id="tooltip-reset"
-                                      title="Restore your original ID photo"
-                                    >
-                                      <Button
-                                        variant="contained"
-                                        onClick={this.handleResetImage}
-                                        style={{ background: 'tomato', color: 'white' }}
-                                      >
-                                        Reset
-                                      </Button>
-                                    </Tooltip>
-                                  </Grid>
-                                  <Grid item>
+                                  )}
+                                  {preview && (
+                                    <div className="gc360-photo-dialog_content_cropper">
+                                      <Cropper
+                                        ref="cropper"
+                                        src={preview}
+                                        style={{
+                                          'max-width': this.maxCropPreviewWidth(),
+                                          'max-height':
+                                            this.maxCropPreviewWidth() /
+                                            this.state.cropperData.aspectRatio,
+                                        }}
+                                        autoCropArea={1}
+                                        viewMode={3}
+                                        aspectRatio={1}
+                                        highlight={false}
+                                        background={false}
+                                        zoom={this.onCropperZoom.bind(this)}
+                                        zoomable={false}
+                                        dragMode={'none'}
+                                        minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                                        minCropBoxHeight={this.state.cropperData.cropBoxDim}
+                                      />
+                                    </div>
+                                  )}
+                                  {preview && (
                                     <Button
                                       variant="contained"
-                                      onClick={this.handleCloseCancel}
+                                      onClick={() => this.setState({ preview: null })}
+                                      style={style.button}
+                                      className="gc360-photo-dialog_content_button"
+                                    >
+                                      Choose Another Image
+                                    </Button>
+                                  )}
+                                </DialogContent>
+                                <DialogActions className="gc360-photo-dialog_actions-top">
+                                  <Tooltip
+                                    classes={{ tooltip: 'tooltip' }}
+                                    id="tooltip-hide"
+                                    title={
+                                      this.state.isImagePublic
+                                        ? 'Only faculty and police will see your photo'
+                                        : 'Make photo visible to other students'
+                                    }
+                                  >
+                                    <Button
+                                      variant="contained"
+                                      onClick={this.toggleImagePrivacy.bind(this)}
                                       style={style.button}
                                     >
-                                      Cancel
+                                      {this.state.isImagePublic ? 'Hide' : 'Show'}
                                     </Button>
-                                  </Grid>
-                                  <Grid item>
-                                    <Tooltip
-                                      classes={{ tooltip: 'tooltip' }}
-                                      id="tooltip-submit"
-                                      title="Crop to current region and submit"
+                                  </Tooltip>
+                                  <Tooltip
+                                    classes={{ tooltip: 'tooltip' }}
+                                    id="tooltip-reset"
+                                    title="Restore your original ID photo"
+                                  >
+                                    <Button
+                                      variant="contained"
+                                      onClick={this.handleResetImage}
+                                      style={{ background: 'tomato', color: 'white' }}
                                     >
-                                      <Button
-                                        variant="contained"
-                                        onClick={this.handleCloseSubmit}
-                                        disabled={!this.state.preview}
-                                        style={
-                                          this.state.preview
-                                            ? style.button
-                                            : { background: 'darkgray', color: 'white' }
-                                        }
-                                      >
-                                        Submit
-                                      </Button>
-                                    </Tooltip>
-                                  </Grid>
-                                </Grid>
-                              </DialogActions>
+                                      Reset
+                                    </Button>
+                                  </Tooltip>
+                                </DialogActions>
+                                <DialogActions className="gc360-photo-dialog_actions-bottom">
+                                  <Button
+                                    variant="contained"
+                                    onClick={this.handleCloseCancel}
+                                    style={style.button}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Tooltip
+                                    classes={{ tooltip: 'tooltip' }}
+                                    id="tooltip-submit"
+                                    title="Crop to current region and submit"
+                                  >
+                                    <Button
+                                      variant="contained"
+                                      onClick={this.handleCloseSubmit}
+                                      disabled={!this.state.preview}
+                                      style={
+                                        this.state.preview
+                                          ? style.button
+                                          : { background: 'darkgray', color: 'white' }
+                                      }
+                                    >
+                                      Submit
+                                    </Button>
+                                  </Tooltip>
+                                </DialogActions>
+                              </div>
                             </Dialog>
                             <Dialog
                               open={this.state.socialLinksOpen}
@@ -664,12 +656,6 @@ export default class Profile extends Component {
                               aria-labelledby="alert-dialog-slide-title"
                               aria-describedby="alert-dialog-slide-description"
                             >
-                              <DialogTitle id="simple-dialog-title">
-                                Edit your social media links
-                              </DialogTitle>
-                              <Typography align="center" variant="caption">
-                                Copy and paste your links below
-                              </Typography>
                               {linksDialog}
                             </Dialog>
                           </Grid>
@@ -753,3 +739,5 @@ export default class Profile extends Component {
     );
   }
 }
+
+export default withWidth()(Profile);
