@@ -6,6 +6,7 @@
 
 import { createError } from './error';
 import storage from './storage';
+import { isAuthenticated } from './auth';
 
 const base = process.env.REACT_APP_API_URL;
 
@@ -16,23 +17,7 @@ const base = process.env.REACT_APP_API_URL;
  * @return {Headers} A headers object
  */
 const makeHeaders = headerOptions => {
-  if (headerOptions !== undefined) {
-    try {
-      const token = storage.get('token');
-      let header = new Headers({
-        Authorization: `Bearer ${token}`,
-      });
-      for (const key in headerOptions) {
-        if (headerOptions.hasOwnProperty(key)) {
-          header.append(key, headerOptions[key]);
-        }
-      }
-      return header;
-    } catch (err) {
-      throw new Error('Token is not available');
-    }
-  } else {
-    //default
+  if (isAuthenticated()) {
     try {
       const token = storage.get('token');
       return new Headers({
@@ -42,6 +27,11 @@ const makeHeaders = headerOptions => {
     } catch (err) {
       throw new Error('Token is not available');
     }
+  } else {
+    return new Headers({
+      Authorization: `Bearer `,
+      'Content-Type': 'application/json',
+    });
   }
 };
 
