@@ -8,22 +8,16 @@ import DaysLeft from './components/DaysLeft';
 import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
 import user from '../../services/user';
-import Login from '../Login';
-import './home.css';
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.logIn = this.logIn.bind(this);
-
     this.state = { personType: null, network: 'online' };
   }
 
   componentWillMount() {
-    if (this.props.Authentication) {
-      this.getPersonType();
-    }
+    this.getPersonType();
   }
 
   async getPersonType() {
@@ -32,20 +26,26 @@ export default class Home extends Component {
     this.setState({ personType });
   }
 
-  logIn() {
-    try {
-      this.props.onLogIn();
-    } catch (error) {
-      console.log('Login failed with error: ' + error);
-    }
-  }
-
   render() {
+    const personType = this.state.personType;
+    let doughnut;
+
+    //Only show CL&W credits if user is a student
+    if (String(personType).includes('stu')) {
+      doughnut = (
+        <Link to={`/attended`}>
+          <CLWCreditsDaysLeft />
+        </Link>
+      );
+    } else {
+      doughnut = <DaysLeft />;
+    }
+
     /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
+    *  this.state.network is compared to the message received to prevent
+    *  multiple re-renders that creates extreme performance lost.
+    *  The origin of the message is checked to prevent cross-site scripting attacks
+    */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -63,36 +63,14 @@ export default class Home extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
+  *  Defaults to online in case of PWA not being possible
+  */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-    let content;
-    if (this.props.Authentication) {
-      const personType = this.state.personType;
-
-      let requests;
-      if (networkStatus === 'online') {
-        requests = (
-          <Grid item xs={12} md={5}>
-            <Requests />
-          </Grid>
-        );
-      }
-
-      //Only show CL&W credits if user is a student
-      let doughnut;
-      if (String(personType).includes('stu')) {
-        doughnut = (
-          <Link to={`/attended`}>
-            <CLWCreditsDaysLeft />
-          </Link>
-        );
-      } else {
-        doughnut = <DaysLeft />;
-      }
-
-      content = (
+    // Creates the Home Page depending on the status of the network found in local storage
+    let HomePage;
+    if (networkStatus === 'online') {
+      HomePage = (
         <Grid container justify="center" spacing={16}>
           <Grid item xs={12} md={10}>
             <Carousel />
@@ -103,17 +81,26 @@ export default class Home extends Component {
           <Grid item xs={12} md={5}>
             <DiningBalance />
           </Grid>
-          {requests}
+          <Grid item xs={12} md={5}>
+            <Requests />
+          </Grid>
         </Grid>
       );
     } else {
-      content = (
-        <div className="gordon-login">
-          <Login onLogIn={this.logIn} />
-        </div>
+      HomePage = (
+        <Grid container justify="center" spacing={16}>
+          <Grid item xs={12} md={10}>
+            <Carousel />
+          </Grid>
+          <Grid item xs={12} md={5}>
+            {doughnut}
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <DiningBalance />
+          </Grid>
+        </Grid>
       );
     }
-
-    return content;
+    return HomePage;
   }
 }

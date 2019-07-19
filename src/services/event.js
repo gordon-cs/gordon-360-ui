@@ -40,8 +40,6 @@ const getAllEvents = () => http.get('events/25Live/All');
 
 const getAllCLAWEvents = () => http.get('/events/25Live/CLAW');
 
-const getAllGuestEvents = () => http.get('events/25Live/Public');
-
 function formatevent(event) {
   let beginTime;
   let endTime;
@@ -191,18 +189,6 @@ const getAllEventsFormatted = async () => {
   return events.sort(sortByTime);
 };
 
-//Calls getAllGuestEvents to get from database and then formats events
-const getAllGuestEventsFormatted = async () => {
-  const allGuest = await getAllGuestEvents();
-  const events = [];
-  allGuest.sort(sortByTime);
-  for (let i = 0; i < allGuest.length; i += 1) {
-    events.push(allGuest[i]);
-    formatevent(allGuest[i]);
-  }
-  return events.sort(sortByTime);
-};
-
 const getFilteredEvents = filters => {
   const allEvents = filters.events;
   let filteredEvents = [];
@@ -250,6 +236,4 @@ export default {
   getCLWEvents,
   getFilteredEvents,
   formatevent,
-  getAllGuestEvents,
-  getAllGuestEventsFormatted,
 };

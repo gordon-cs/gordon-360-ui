@@ -21,6 +21,7 @@ export default class GordonCollapsableEventItem extends Component {
   render() {
     const { event } = this.props;
 
+    console.log(event);
     return (
       <section>
         <Grid container onClick={this.handleExpandClick} className="event-item">

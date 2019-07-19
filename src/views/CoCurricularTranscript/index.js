@@ -82,6 +82,7 @@ export default class Transcript extends Component {
       });
     } catch (error) {
       this.setState({ error });
+      console.log('error');
     }
   }
 

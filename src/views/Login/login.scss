@@ -1,25 +1,67 @@
 @import '../../vars';
 
-.container {
-  background-color: $primary-blue;
-  border: 2px solid $primary-blue;
-  border-radius: 0.5rem;
-  opacity: 0.92;
-  box-shadow: 0 5px 22px rgba(0, 0, 0, 0.5);
-}
-img {
-  margin: 1rem;
-}
-form {
-  background-color: $neutral-light-gray;
-  padding: 2rem;
-  border-radius: 0 0 0.5rem 0.5rem;
-  opacity: 0.9;
-}
-.input {
-  // @hack to patch this bug: https://github.com/callemall/material-ui/issues/9163
-  height: 21.5px;
-}
-.submit-button {
-  margin-top: 1.5rem;
+.gordon-login {
+  height: 100%;
+  padding: 0.5rem;
+  text-align: center;
+
+  background-size: cover;
+
+  @media (min-width: 3840px) {
+    // Larger than 4K
+    background-image: url(campusFull.jpg);
+  }
+
+  @media (max-width: 3840px) {
+    // 4K or smaller
+    background-image: url(campus4K.jpg);
+  }
+
+  @media (max-width: 1920px) {
+    // 1080p Full HD or smaller
+    background-image: url(campusHD.jpg);
+  }
+
+  @media (max-width: 1366px) {
+    // 1366 x 768 or smaller
+    background-image: url(campus1366.jpg);
+  }
+
+  @media (max-width: 600px) {
+    // 600 pixels or smaller (larger mobile device)
+    background-image: url(campusMobileLG.jpg);
+  }
+
+  @media (max-width: 400px) {
+    // 400 pixels or smaller (smaller mobile device)
+    background-image: url(campusMobileSM.jpg);
+  }
+
+  .container {
+    background-color: $primary-blue;
+    border: 2px solid $primary-blue;
+    border-radius: 0.5rem;
+    opacity: 0.92;
+    box-shadow: 0 5px 22px rgba(0, 0, 0, 0.5);
+  }
+
+  img {
+    margin: 1rem;
+  }
+
+  form {
+    background-color: $neutral-light-gray;
+    padding: 2rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+    opacity: 0.9;
+  }
+
+  .input {
+    // @hack to patch this bug: https://github.com/callemall/material-ui/issues/9163
+    height: 21.5px;
+  }
+
+  .submit-button {
+    margin-top: 1.5rem;
+  }
 }
