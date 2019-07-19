@@ -90,7 +90,6 @@ export default class Login extends Component {
       } else {
         console.log('SERVICE WORKER IS NOT AVAILABLE');
       }
-
       this.props.onLogIn();
     } catch (err) {
       clearTimeout(id); // Login Hang

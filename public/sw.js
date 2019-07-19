@@ -104,7 +104,7 @@ async function fetchThenCache(request) {
       }
     })
     .catch(async () => {
-      console.log(`Getting ${request.url} from cache instead...`);
+      console.log(`\t- Getting ${request.url} from cache instead...`);
       const response = await caches.match(request);
       // If there's no response from cache, we console log that the request failed
       if (response) {

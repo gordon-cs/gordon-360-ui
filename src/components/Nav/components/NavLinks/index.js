@@ -1,4 +1,9 @@
 import List from '@material-ui/core/List';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -11,11 +16,6 @@ import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 import user from '../../../../services/user';
 import { signOut } from '../../../../services/auth';
@@ -29,6 +29,9 @@ export default class GordonNavLinks extends Component {
     this.onSignOut = this.onSignOut.bind(this);
     this.handleLinkClickOpen = this.handleLinkClickOpen.bind(this);
     this.handleLinkClose = this.handleLinkClose.bind(this);
+    this.openDialogBox = this.openDialogBox.bind(this);
+    this.closeDialogBox = this.closeDialogBox.bind(this);
+
     this.state = {
       linkopen: false,
       dialogBoxOpen: false,
@@ -71,9 +74,23 @@ export default class GordonNavLinks extends Component {
     this.setState({ dialogBoxOpen: false });
   };
 
-  offlineAlert() {
-    alert('This feature is unavailable offline');
-  }
+  handleLinkClickOpen = () => {
+    this.setState({
+      linkopen: true,
+    });
+  };
+
+  handleLinkClose = () => {
+    this.setState({ linkopen: false });
+  };
+
+  openDialogBox = () => {
+    this.setState({ dialogBoxOpen: true });
+  };
+
+  closeDialogBox = () => {
+    this.setState({ dialogBoxOpen: false });
+  };
 
   render() {
     /* Used to re-render the page when the network connection changes.
@@ -197,7 +214,7 @@ export default class GordonNavLinks extends Component {
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         signInOut = (
-          <NavLink exact to="/" onClick={this.onSignOut}>
+          <NavLink exact to="/" onClick={this.onSignOut.bind(this)}>
             <ListItem button>
               <ListItemText primary="Sign Out" />
             </ListItem>
@@ -227,7 +244,7 @@ export default class GordonNavLinks extends Component {
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         signInOut = (
-          <NavLink exact to="/" onClick={this.onSignIn}>
+          <NavLink exact to="/" onClick={this.onSignIn.bind(this)}>
             <ListItem button>
               <ListItemText primary="Sign In" />
             </ListItem>
@@ -243,6 +260,7 @@ export default class GordonNavLinks extends Component {
         );
       }
     }
+
     return (
       <div>
         <List className="gordon-nav-links">
@@ -315,6 +333,25 @@ export default class GordonNavLinks extends Component {
             linkopen={this.state.linkopen}
           />
         </div>
+        <Dialog
+          open={this.state.dialogBoxOpen}
+          onClose={clicked => this.closeDialogBox()}
+          aria-labelledby="disabled-feature"
+          aria-describedby="disabled-feature-description"
+        >
+          <DialogTitle id="disabled-feature">{'Offline Mode:'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="disabled-feature-description">
+              This feature is unavailable offline. Please reconnect to internet to access this
+              feature.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={clicked => this.closeDialogBox()} color="primary">
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
