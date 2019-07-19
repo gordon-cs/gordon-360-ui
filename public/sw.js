@@ -17,6 +17,7 @@ let token, termCode;
 
 // Static Files to cache
 const staticCache = [
+  // Documents
   '/',
   '/events',
   '/involvements',
@@ -26,14 +27,42 @@ const staticCache = [
   '/about',
   '/help',
   // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Development
+  '/admin',
+  '/myprofile',
   '/manifest.json',
   '/pwa.js',
   '/static/js/bundle.js',
   '/static/media/campus1366.e8fc7838.jpg',
   '/static/media/gordon-logo-vertical-white.a6586885.svg',
   '/static/media/NoConnection.68275814.svg',
-  '/admin',
-  '/myprofile',
+  '/static/js/0.chunk.js',
+  '/static/js/main.chunk.js',
+  '/static/js/1.chunk.js',
+  // Images
+  'public/images/android-icon-36x36.png',
+  'public/images/android-icon-48x48.png',
+  'public/images/android-icon-72x72.png',
+  'public/images/android-icon-96x96.png',
+  'public/images/android-icon-144x144.png',
+  'public/images/android-icon-192x192.png',
+  'public/images/apple-icon-57x57.png',
+  'public/images/apple-icon-60x60.png',
+  'publicimages/apple-icon-72x72.png',
+  'public/images/apple-icon-76x76.png',
+  'public/images/apple-icon-114x114.png',
+  'public/images/apple-icon-120x120.png',
+  'public/images/apple-icon-144x144.png',
+  'public/images/apple-icon-152x152.png',
+  'public/images/apple-icon-180x180.png',
+  'public/images/apple-icon-precomposed.png',
+  'public/images/apple-icon.png',
+  'public/images/favicon-16x16.png',
+  'public/images/favicon-32x32.png',
+  'public/images/favicon-96x96.png',
+  'public/images/ms-icon-70x70.png',
+  'public/images/ms-icon-144x144.png',
+  'public/images/ms-icon-150x150.png',
+  'public/images/ms-icon-310x310.png',
 ];
 
 /*********************************************** CACHING FUNCTIONS ***********************************************/
@@ -180,100 +209,103 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
  * @param {String} termCode The current semester term
  */
 async function dynamicLinksThenCache(token, termCode) {
-  // Creates the header for the request to have authenitification
-  let headers = new Headers({
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  });
-
-  // Gets the user's profile object to access their firstname.lastname and ID#
-  let profile = await fetch(
-    new Request('https://360apitrain.gordon.edu/api/profiles', { method: 'GET', headers }),
-  )
-    .then(response => {
-      return response.json();
-    })
-    .catch(error => {
-      return error.Message;
+  // Checks to make sure that the token and termCode is available before we try to fetch
+  if (token && termCode) {
+    // Creates the header for the request to have authenitification
+    let headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     });
 
-  // Gets the current session object to access the current session code
-  let currentSession = await fetch(
-    new Request('https://360apitrain.gordon.edu/api/sessions/current', {
-      method: 'GET',
-      headers,
-    }),
-  )
-    .then(response => {
-      return response.json();
-    })
-    .catch(error => {
-      return error.Message;
-    });
+    // Gets the user's profile object to access their firstname.lastname and ID#
+    let profile = await fetch(
+      new Request('https://360apitrain.gordon.edu/api/profiles', { method: 'GET', headers }),
+    )
+      .then(response => {
+        return response.json();
+      })
+      .catch(error => {
+        return error.Message;
+      });
 
-  let username = profile ? profile.AD_Username : null;
-  let id = profile ? profile.ID : null;
-  let sessionCode = currentSession ? currentSession.SessionCode : null;
+    // Gets the current session object to access the current session code
+    let currentSession = await fetch(
+      new Request('https://360apitrain.gordon.edu/api/sessions/current', {
+        method: 'GET',
+        headers,
+      }),
+    )
+      .then(response => {
+        return response.json();
+      })
+      .catch(error => {
+        return error.Message;
+      });
 
-  const dynamicCache = [
-    // Home Page Fetch URLs
-    `${apiSource}/api/cms/slider`,
-    `${apiSource}/api/dining`,
-    `${apiSource}/api/events/25Live/All`,
-    `${apiSource}/api/profiles`,
-    `${apiSource}/api/profiles/Image`,
-    `${apiSource}/api/sessions`,
-    `${apiSource}/api/sessions/current`,
-    `${apiSource}/api/sessions/daysLeft`,
-    `${apiSource}/api/studentemployment/`,
-    `${apiSource}/api/version`,
-    `${apiSource}/api/activities/session/201809`,
-    `${apiSource}/api/activities/session/${sessionCode}`,
-    `${apiSource}/api/activities/session/${sessionCode}/types`,
-    `${apiSource}/api/events/chapel/${termCode}`,
-    `${apiSource}/api/memberships/student/${id}`,
-    `${apiSource}/api/memberships/student/username/${username}/`,
-    `${apiSource}/api/profiles/${username}/`,
-    `${apiSource}/api/profiles/Image/${username}/`,
-    `${apiSource}/api/requests/student/${id}`,
-    `/profile/${username}`,
-  ];
+    let username = profile ? profile.AD_Username : null;
+    let id = profile ? profile.ID : null;
+    let sessionCode = currentSession ? currentSession.SessionCode : null;
 
-  // // Gets the involvements of the current user for the Involvement Profiles
-  // let involvements = await fetch(
-  //   new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
-  //     method: 'GET',
-  //     headers,
-  //   }),
-  // )
-  //   .then(response => {
-  //     return response.json();
-  //   })
-  //   .catch(error => {
-  //     involvement;
-  //     return error.message;
-  //   });
+    const dynamicCache = [
+      // Home Page Fetch URLs
+      `${apiSource}/api/cms/slider`,
+      `${apiSource}/api/dining`,
+      `${apiSource}/api/events/25Live/All`,
+      `${apiSource}/api/profiles`,
+      `${apiSource}/api/profiles/Image`,
+      `${apiSource}/api/sessions`,
+      `${apiSource}/api/sessions/current`,
+      `${apiSource}/api/sessions/daysLeft`,
+      `${apiSource}/api/studentemployment/`,
+      `${apiSource}/api/version`,
+      `${apiSource}/api/activities/session/201809`,
+      `${apiSource}/api/activities/session/${sessionCode}`,
+      `${apiSource}/api/activities/session/${sessionCode}/types`,
+      `${apiSource}/api/events/chapel/${termCode}`,
+      `${apiSource}/api/memberships/student/${id}`,
+      `${apiSource}/api/memberships/student/username/${username}/`,
+      `${apiSource}/api/profiles/${username}/`,
+      `${apiSource}/api/profiles/Image/${username}/`,
+      `${apiSource}/api/requests/student/${id}`,
+      `/profile/${username}`,
+    ];
 
-  // involvements.forEach(involvement => {
-  //   let activityCode = involvement ? involvement.ActivityCode : null;
-  //   let sessionCode = involvement ? involvement.SessionCode : null;
-  //   dynamicCache.push(
-  //     `${apiSource}/activities/${activityCode}`,
-  //     `${apiSource}/api/activities/${sessionCode}/${activityCode}/status`,
-  //     `${apiSource}/api/emails/activity/${activityCode}`,
-  //     `${apiSource}/api/emails/activity/${activityCode}/advisors/session/${sessionCode}`,
-  //     `${apiSource}/api/emails/activity/${activityCode}/group-admin/session/${sessionCode}`,
-  //     `${apiSource}/api/memberships/activity/${activityCode}`,
-  //     `${apiSource}/api/memberships/activity/${activityCode}/followers/${sessionCode}`,
-  //     `${apiSource}/api/memberships/activity/${activityCode}/group-admin`,
-  //     `${apiSource}/api/memberships/activity/${activityCode}/members/${sessionCode}`,
-  //     `${apiSource}/api/requests/activity/${activityCode}`,
-  //     `${apiSource}/api/sessions/${sessionCode}`,
-  //   );
-  // });
+    // // Gets the involvements of the current user for the Involvement Profiles
+    // let involvements = await fetch(
+    //   new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
+    //     method: 'GET',
+    //     headers,
+    //   }),
+    // )
+    //   .then(response => {
+    //     return response.json();
+    //   })
+    //   .catch(error => {
+    //     involvement;
+    //     return error.message;
+    //   });
 
-  fetchResult = await cacheDynamicFiles(token, dynamicCache);
-  if (fetchResult) console.log('\t- Cached Dynamic Files Successfully');
+    // involvements.forEach(involvement => {
+    //   let activityCode = involvement ? involvement.ActivityCode : null;
+    //   let sessionCode = involvement ? involvement.SessionCode : null;
+    //   dynamicCache.push(
+    //     `${apiSource}/activities/${activityCode}`,
+    //     `${apiSource}/api/activities/${sessionCode}/${activityCode}/status`,
+    //     `${apiSource}/api/emails/activity/${activityCode}`,
+    //     `${apiSource}/api/emails/activity/${activityCode}/advisors/session/${sessionCode}`,
+    //     `${apiSource}/api/emails/activity/${activityCode}/group-admin/session/${sessionCode}`,
+    //     `${apiSource}/api/memberships/activity/${activityCode}`,
+    //     `${apiSource}/api/memberships/activity/${activityCode}/followers/${sessionCode}`,
+    //     `${apiSource}/api/memberships/activity/${activityCode}/group-admin`,
+    //     `${apiSource}/api/memberships/activity/${activityCode}/members/${sessionCode}`,
+    //     `${apiSource}/api/requests/activity/${activityCode}`,
+    //     `${apiSource}/api/sessions/${sessionCode}`,
+    //   );
+    // });
+
+    fetchResult = await cacheDynamicFiles(token, dynamicCache);
+    if (fetchResult) console.log('\t- Cached Dynamic Files Successfully');
+  }
 }
 
 // Set interval function that will try to update cache every hour
