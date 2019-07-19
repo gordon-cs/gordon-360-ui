@@ -13,6 +13,7 @@ import HoursDialog from './components/OfficeHoursDialog';
 import RemoveHoursDialog from './components/RemoveHoursDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
+import Moment from 'moment';
 
 import schedulecontrol from './../../services/schedulecontrol';
 
@@ -93,7 +94,11 @@ class GordonSchedulePanel extends Component {
   };
 
   handleOfficeHoursClose = () => {
-    this.setState({ officeHoursOpen: false });
+    this.setState({
+      officeHoursOpen: false,
+      isDoubleClick: false,
+      selectedEvent: null,
+    });
   };
 
   handleRemoveOfficeHoursOpen = () => {
@@ -107,6 +112,8 @@ class GordonSchedulePanel extends Component {
   handleRemoveButton = event => {
     if (event.id > 1000) {
       this.setState({ disabled: false });
+    } else {
+      this.setState({ disabled: true });
     }
     this.setState({ selectedEvent: event }, () => {
       console.log(this.state.selectedEvent);
@@ -131,9 +138,9 @@ class GordonSchedulePanel extends Component {
   };
 
   handleHoursSubmit = mySchedule => {
-    let data = {
-      Gordon_ID: this.props.profile.ID,
+    var data = {
       Event_ID: null,
+      Gordon_ID: this.props.profile.ID,
       DESCRIPTION: mySchedule.description,
       LOCATION: mySchedule.location,
       MON_CDE: mySchedule.monday ? 'M' : null,
@@ -148,22 +155,16 @@ class GordonSchedulePanel extends Component {
       END_TIME: mySchedule.endHour,
     };
     console.log('Double Click ', this.state.isDoubleClick);
-
-    let now = new Date();
+    let now = Moment().format('YYYY-MM-DD HH!mm!ss');
+    console.log('Time Sent ', now);
 
     if (this.state.isDoubleClick) {
+      this.setState({ isDoubleClick: false });
+      data.Event_ID = this.state.selectedEvent.id;
       myschedule
         .updateMySchedule(data)
         .then(value => {
-          schedulecontrol
-            .setModifiedTimeStamp(now.toJSON)
-            .then(value => {
-              window.location.reload();
-            })
-            .catch(error => {
-              alert('There was an error while updating the timestamp');
-              console.log(error);
-            });
+          window.location.reload();
         })
         .catch(error => {
           alert('There was an error while updating the event');
@@ -180,7 +181,6 @@ class GordonSchedulePanel extends Component {
           console.log(error);
         });
     }
-    // await schedulecontrol.setModifiedTimeStamp(now.toJSON());
   };
 
   handleRemoveSubmit() {
@@ -194,11 +194,10 @@ class GordonSchedulePanel extends Component {
         alert('There was an error while removing the event');
         console.log(error);
       });
-    // window.location.reload(); // refresh to show the change
   }
 
   handleDoubleClick = event => {
-    if (this.props.myProf) {
+    if (this.props.myProf && event.id > 1000) {
       this.setState({ officeHoursOpen: true, selectedEvent: event, isDoubleClick: true });
     }
   };

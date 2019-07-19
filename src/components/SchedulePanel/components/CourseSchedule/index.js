@@ -9,7 +9,6 @@ import schedule from './../../../../services/schedule';
 import myschedule from './../../../../services/myschedule';
 
 import './courseschedule.css';
-import user from '../../../../services/user';
 
 export default class CourseSchedule extends Component {
   constructor(props) {
@@ -24,6 +23,17 @@ export default class CourseSchedule extends Component {
     };
     this.eventInfo = [];
   }
+
+  customEventPropGetter = (event, start, end, isSelected) => {
+    if (event.id > 1000) {
+      return {
+        className: 'custom-event',
+        style: {
+          backgroundColor: isSelected ? '#8d4987' : '#9b5094',
+        },
+      };
+    } else return {};
+  };
 
   handleSelect = ({ start, end }) => {
     const title = window.prompt('New Event name');
@@ -122,6 +132,7 @@ export default class CourseSchedule extends Component {
           resources={resourceMap}
           resourceIdAccessor="resourceId"
           resourceTitleAccessor="resourceTitle"
+          eventPropGetter={this.customEventPropGetter}
           formats={formats}
         />
       );

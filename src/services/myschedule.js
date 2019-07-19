@@ -42,6 +42,16 @@ const getMySchedule = async username => {
 };
 
 /**
+ * Get specific schedule for profile by event id
+ * @return {Promise.<Schedule>} returns the custom schedules
+ */
+
+const getMyScheduleEventId = async eventId => {
+  let schedule = await http.get(`myschedule/event/${eventId}/`);
+  return schedule;
+};
+
+/**
  * Find out which day of the week the event is assigned
  * @param {<MySchedule>} event an individual course
  * @return {number[]} returns array of day in the format of ResourceID
@@ -100,7 +110,7 @@ async function makeMySchedule(myschedule) {
     let eventTitle = events[i].DESCRIPTION + ' in ' + events[i].LOCATION;
     for (let j = 0; j < dayArray.length; j++) {
       const customEvent = {
-        id: events[i].EVENT_ID,
+        id: parseInt(events[i].EVENT_ID, 10),
         title: eventTitle,
         start: beginTime.toDate(),
         end: endTime.toDate(),
@@ -144,6 +154,7 @@ const deleteMySchedule = eventID => {
 };
 
 export default {
+  getMyScheduleEventId,
   getMySchedule,
   makeMySchedule,
   addMySchedule,

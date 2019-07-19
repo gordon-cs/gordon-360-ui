@@ -16,7 +16,6 @@ export default class EditDescriptionDialog extends React.Component {
       formErrors: {
         descInput: '',
       },
-      description: '',
       editDescriptionOpen: false,
     };
     this.handleEditDescriptionClose = this.handleEditDescriptionClose.bind(this);
