@@ -16,18 +16,12 @@ import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 import user from '../../../../services/user';
 import { signOut } from '../../../../services/auth';
 
 import './nav-links.css';
 import QuickLinksDialog from '../../../QuickLinksDialog';
-import { Button } from '@material-ui/core';
 
 export default class GordonNavLinks extends Component {
   constructor(props) {
@@ -80,10 +74,6 @@ export default class GordonNavLinks extends Component {
     this.setState({ dialogBoxOpen: false });
   };
 
-  offlineAlert() {
-    alert('This feature is unavailable offline');
-  }
-
   handleLinkClickOpen = () => {
     this.setState({
       linkopen: true,
@@ -101,10 +91,6 @@ export default class GordonNavLinks extends Component {
   closeDialogBox = () => {
     this.setState({ dialogBoxOpen: false });
   };
-
-  offlineAlert() {
-    alert('This feature is unavailable offline');
-  }
 
   render() {
     /* Used to re-render the page when the network connection changes.
@@ -228,7 +214,7 @@ export default class GordonNavLinks extends Component {
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         signInOut = (
-          <NavLink exact to="/" onClick={this.onSignOut}>
+          <NavLink exact to="/" onClick={this.onSignOut.bind(this)}>
             <ListItem button>
               <ListItemText primary="Sign Out" />
             </ListItem>
@@ -258,7 +244,7 @@ export default class GordonNavLinks extends Component {
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         signInOut = (
-          <NavLink exact to="/" onClick={this.onSignIn}>
+          <NavLink exact to="/" onClick={this.onSignIn.bind(this)}>
             <ListItem button>
               <ListItemText primary="Sign In" />
             </ListItem>
@@ -273,90 +259,6 @@ export default class GordonNavLinks extends Component {
           </div>
         );
       }
-    }
-
-    // Creates the Links button depending on the status of the network found in local storage
-    let LinksButton;
-    if (networkStatus === 'online') {
-      LinksButton = (
-        <ListItem
-          button
-          onClick={() => {
-            this.props.onLinkClick();
-            this.handleLinkClickOpen();
-          }}
-        >
-          <ListItemText primary="Links" />
-        </ListItem>
-      );
-    } else {
-      LinksButton = (
-        <div onClick={this.openDialogBox}>
-          <ListItem button disabled={networkStatus}>
-            <ListItemText primary="Links" />
-          </ListItem>
-        </div>
-      );
-    }
-
-    // Creates the Feedback button depending on the status of the network found in local storage
-    let FeedbackButton;
-    if (networkStatus === 'online') {
-      FeedbackButton = (
-        <NavLink exact to="/feedback" onClick={this.props.onLinkClick}>
-          <ListItem button>
-            <ListItemText primary="Feedback" />
-          </ListItem>
-        </NavLink>
-      );
-    } else {
-      FeedbackButton = (
-        <div onClick={this.openDialogBox}>
-          <ListItem button disabled={networkStatus}>
-            <ListItemText primary="Feedback" />
-          </ListItem>
-        </div>
-      );
-    }
-
-    // Creates the Admin button depending on the status of the network found in local storage
-    let Admin;
-    if (networkStatus === 'online') {
-      if (user.getLocalInfo().college_role === 'god') {
-        Admin = (
-          <NavLink exact to="/admin" onClick={this.props.onLinkClick}>
-            <ListItem button>
-              <ListItemText primary="Admin" />
-            </ListItem>
-          </NavLink>
-        );
-      }
-    } else {
-      Admin = (
-        <div onClick={this.openDialogBox}>
-          <ListItem button disabled={networkStatus}>
-            <ListItemText primary="Admin" />
-          </ListItem>
-        </div>
-      );
-    }
-
-    // Creates the Signout button depending on the status of the network found in local storage
-    let SignoutButton;
-    if (networkStatus === 'online') {
-      SignoutButton = (
-        <ListItem button onClick={this.onSignOut}>
-          <ListItemText primary="Sign Out" />
-        </ListItem>
-      );
-    } else {
-      SignoutButton = (
-        <div onClick={this.openDialogBox}>
-          <ListItem button disabled={networkStatus}>
-            <ListItemText primary="Sign Out" />
-          </ListItem>
-        </div>
-      );
     }
 
     return (

@@ -18,7 +18,7 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
 import user from '../../services/user';
-// import errorLog from '../../services/errorLog';
+import errorLog from '../../services/errorLog';
 
 const CROP_DIM = 1200; // pixels
 export default class IDUploader extends Component {
@@ -64,7 +64,7 @@ export default class IDUploader extends Component {
       ' for ' +
       profile.fullName +
       ' from ' +
-      // errorLog.parseNavigator(navigator);
+      errorLog.parseNavigator(navigator);
     try {
       await user.postIDImage(croppedImage);
       this.setState({ submitDialogOpen: true });

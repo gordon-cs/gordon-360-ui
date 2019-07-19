@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
-import QuickLinksDialog from '../../../../QuickLinksDialog';
+import QuickLinksDialog from '../../../QuickLinksDialog';
 import { signOut } from '../../../../services/auth';
 
 import './nav-avatar-right-corner.css';

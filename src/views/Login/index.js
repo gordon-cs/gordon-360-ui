@@ -19,8 +19,6 @@ import storage from '../../services/storage';
 import session from '../../services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
-import storage from '../../services/storage.js';
-import session from '../../services/session.js';
 import { projectName } from '../../project-name';
 
 // To temporarily disable the Login Hang message, set this boolean to false

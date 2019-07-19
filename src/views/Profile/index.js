@@ -14,7 +14,6 @@ import Button from '@material-ui/core/Button';
 import { NavLink } from 'react-router-dom';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
-import Button from '@material-ui/core/Button';
 import './profile.css';
 
 //Public profile view
@@ -416,10 +415,10 @@ export default class Profile extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    {/*<img
+                    <img
                       src={require(`${'../../NoConnection.svg'}`)}
                       alt="Internet Connection Lost"
-                    />*/}
+                    />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>
@@ -439,52 +438,6 @@ export default class Profile extends Component {
                 </CardContent>
               </Card>
             </Grid>
-          )}
-        </div>
-      );
-    } else {
-      PublicProfile = (
-        <Grid container justify="center" spacing="16">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <Grid
-                  item
-                  xs={2}
-                  alignItems="center"
-                  style={{
-                    display: 'block',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
-                </Grid>
-                <br />
-                <h1>Please Re-establish Connection</h1>
-                <h4>People Search has been deactivated due to loss of network.</h4>
-                <br />
-                <br />
-                <Button
-                  color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </CardContent>
-            </Card>
           </Grid>
         );
       }
