@@ -30,11 +30,6 @@ async function setSchedulePrivacy(makePrivate) {
   await http.put('schedulecontrol/privacy/' + (makePrivate ? 'Y' : 'N'));
 }
 
-async function setModifiedTimeStamp(TimeStamp) {
-  // TimeStamp should be converted to string
-  await http.put('schedulecontrol/timestamp/' + TimeStamp);
-}
-
 async function setScheduleDescription(Description) {
   await http.put('schedulecontrol/description/' + Description);
 }
@@ -57,7 +52,6 @@ const getScheduleControl = async username => {
 
 export default {
   setSchedulePrivacy,
-  setModifiedTimeStamp,
   setScheduleDescription,
   getScheduleControl,
 };
