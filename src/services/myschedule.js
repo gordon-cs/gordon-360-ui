@@ -28,7 +28,8 @@ import http from './http';
 
 /**
  * Get custom schedule for profile
- * @return {Promise.<Schedule[]>} returns all the custom schedules
+ * @param {String} [username] Username in firstname.lastname format
+ * @return {Promise.<MySchedule[]>} returns all the custom schedules
  */
 
 const getMySchedule = async username => {
@@ -43,7 +44,8 @@ const getMySchedule = async username => {
 
 /**
  * Get specific schedule for profile by event id
- * @return {Promise.<Schedule>} returns the custom schedules
+ * @param {String} eventId Event ID of myschedule
+ * @return {Promise.<MySchedule>} returns the custom schedules
  */
 
 const getMyScheduleEventId = async eventId => {
@@ -53,7 +55,7 @@ const getMyScheduleEventId = async eventId => {
 
 /**
  * Find out which day of the week the event is assigned
- * @param {<MySchedule>} event an individual course
+ * @param {Promise.<MySchedule>} event an individual course
  * @return {number[]} returns array of day in the format of ResourceID
  */
 
@@ -88,7 +90,7 @@ function checkDayofWeek(event) {
 /**
  * Format the given schedule and make event array
  * @param {Promise.<MySchedule[]>} myschedule all custom schedules
- * @return {<Promise.Event[]>} returns array of events
+ * @return {Promise.Object[]} returns array of events
  */
 
 async function makeMySchedule(myschedule) {
@@ -125,7 +127,7 @@ async function makeMySchedule(myschedule) {
 
 /**
  * Add mySchedule of the profile
- * @param {<MySchedule>} mySchedule of the local user
+ * @param {Object} mySchedule of the local user
  * @return {Promise<any>} Response body
  */
 
@@ -135,7 +137,7 @@ const addMySchedule = async mySchedule => {
 
 /**
  * Update mySchedule of the profile
- * @param {<MySchedule>} mySchedule of the local user
+ * @param {Object} mySchedule of the local user
  * @return {Promise<any>} Response body
  */
 
@@ -145,7 +147,7 @@ const updateMySchedule = async mySchedule => {
 
 /**
  * Delete mySchedule of the profile
- * @param {string} eventID of the selected event
+ * @param {String} eventID of the selected event
  * @return {Promise<any>} Response body
  */
 

@@ -9,7 +9,7 @@ import http from './http';
 
 /**
  * @global
- * @typedef schedule
+ * @typedef Schedule
  * @property {String} CRS_CDE
  * @property {String} CRS_TITLE
  * @property {String} BLDG_CDE
@@ -39,8 +39,7 @@ import http from './http';
 */
 
 /**
- * Get course schedule for a given user or the current user if `username` is not provided
- * @param {String} [username] Username in firstname.lastname format
+ * Get course schedule for the current user
  * @return {Promise.<Schedule[]>} returns all the course schedules
  */
 
@@ -51,7 +50,7 @@ const getScheduleMyProf = async () => {
 };
 
 /**
- * Get course schedule for a given user or the current user if `username` is not provided
+ * Get course schedule for a given user
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<Schedule[]>} returns all the course schedules
  */
@@ -65,7 +64,7 @@ const getSchedule = async username => {
 
 /**
  * Find out which day of the week the course is assigned
- * @param {<Schedule>} course an individual course
+ * @param {Promise.<Schedule>} course an individual course
  * @return {number[]} returns array of day in the format of ResourceID
  */
 
@@ -94,7 +93,7 @@ function checkDayofWeek(course) {
 /**
  * Format the given schedule and make event array
  * @param {Promise.<Schedule[]>} schedule all course schedules
- * @return {<Promise.Event[]>} returns array of events
+ * @return {Promise.Object[]} returns array of events
  */
 
 async function makeScheduleCourses(schedule) {
