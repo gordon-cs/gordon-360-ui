@@ -608,7 +608,7 @@ class PeopleSearch extends Component {
               <CardContent>
                 <CardActions
                   className={[classes.actions, 'card-expansion']}
-                  disableActionSpacing
+                  disableSpacing
                   onClick={this.handleAcademicsExpandClick}
                 >
                   <Typography variant="h5">Academics</Typography>
@@ -719,7 +719,7 @@ class PeopleSearch extends Component {
               <CardContent>
                 <CardActions
                   className={[classes.actions, 'card-expansion']}
-                  disableActionSpacing
+                  disableSpacing
                   onClick={this.handleHomeExpandClick}
                 >
                   <Typography variant="h5">Home</Typography>
@@ -823,7 +823,7 @@ class PeopleSearch extends Component {
               <CardContent>
                 <CardActions
                   className={[classes.actions, 'card-expansion']}
-                  disableActionSpacing
+                  disableSpacing
                   onClick={this.handleOffDepExpandClick}
                 >
                   <Typography variant="h5">Building and Department</Typography>
@@ -970,7 +970,7 @@ class PeopleSearch extends Component {
 
             <CardActions
               className={[classes.actions, 'card-expansion']}
-              disableActionSpacing
+              disableSpacing
               onClick={this.handleAdditionalOpsExpandClick}
               style={{
                 marginTop: '-16px',
