@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import { socialMediaInfo } from '../../../../socialMedia';
 import { gordonColors } from '../../../../theme';
+import './linksDialog.css';
 
 export default class LinksDialog extends React.Component {
   constructor(props) {
@@ -179,75 +180,77 @@ export default class LinksDialog extends React.Component {
             onSubmit={this.handleSubmit}
             style={{ paddingLeft: '1.5rem', marginBottom: '-0.75rem', marginTop: '-1.5rem' }}
           > */}
-          <div className="gc360-links-dialog_content_form">
-            <div className="gc360-links-dialog_content_form_facebook">
-              <div className="gc360-links-dialog_content_form_icon">
-                <FaFacebookF style={{ fontSize: '20px' }} />
-              </div>
-              <div className="gc360-links-dialog_content_form_field">
-                <TextField
-                  id="facebookInput"
-                  label=" Facebook link"
-                  value={this.state.facebookInput}
-                  onChange={this.handleChange('facebookInput')}
-                  error={!this.state.fbValid}
-                  helperText={this.state.fbValid ? '' : this.state.formErrors.facebookInput}
-                  margin="dense"
-                  fullWidth
-                />
-              </div>
+          <div className="gc360-links-dialog_content_facebook">
+            <div className="gc360-links-dialog_content_icon">
+              <FaFacebookF style={{ fontSize: '20px' }} />
             </div>
-            <div className="gc360-links-dialog_content_form_twitter">
-              <div className="gc360-links-dialog_content_form_icon">
-                <FaTwitter style={{ fontSize: '20px' }} />
-              </div>
-              <div className="gc360-links-dialog_content_form_field">
-                <TextField
-                  id="twitterInput"
-                  label=" Twitter link"
-                  value={this.state.twitterInput}
-                  onChange={this.handleChange('twitterInput')}
-                  error={!this.state.twValid}
-                  helperText={this.state.twValid ? '' : this.state.formErrors.twitterInput}
-                  margin="dense"
-                  fullWidth
-                />
-              </div>
+            {/* <div > */}
+            <TextField
+              id="facebookInput"
+              label=" Facebook link"
+              value={this.state.facebookInput}
+              onChange={this.handleChange('facebookInput')}
+              error={!this.state.fbValid}
+              helperText={this.state.fbValid ? '' : this.state.formErrors.facebookInput}
+              margin="dense"
+              fullWidth
+              className="gc360-links-dialog_content_field"
+            />
+            {/* </div> */}
+          </div>
+          <div className="gc360-links-dialog_content_twitter">
+            <div className="gc360-links-dialog_content_icon">
+              <FaTwitter style={{ fontSize: '20px' }} />
             </div>
-            <div className="gc360-links-dialog_content_form_linkedin">
-              <div className="gc360-links-dialog_content_form_icon">
-                <FaLinkedin style={{ fontSize: '20px' }} />
-              </div>
-              <div className="gc360-links-dialog_content_form_field">
-                <TextField
-                  id="linkedInInput"
-                  label=" LinkedIn link"
-                  value={this.state.linkedInInput}
-                  onChange={this.handleChange('linkedInInput')}
-                  error={!this.state.liValid}
-                  helperText={this.state.liValid ? '' : this.state.formErrors.linkedInInput}
-                  margin="dense"
-                  fullWidth
-                />
-              </div>
+            {/* <div className="gc360-links-dialog_content_field"> */}
+            <TextField
+              id="twitterInput"
+              label=" Twitter link"
+              value={this.state.twitterInput}
+              onChange={this.handleChange('twitterInput')}
+              error={!this.state.twValid}
+              helperText={this.state.twValid ? '' : this.state.formErrors.twitterInput}
+              margin="dense"
+              fullWidth
+              className="gc360-links-dialog_content_field"
+            />
+            {/* </div> */}
+          </div>
+          <div className="gc360-links-dialog_content_linkedin">
+            <div className="gc360-links-dialog_content_icon">
+              <FaLinkedin style={{ fontSize: '20px' }} />
             </div>
-            <div className="gc360-links-dialog_content_form_instagram">
-              <div className="gc360-links-dialog_content_form_icon">
-                <FaInstagram style={{ fontSize: '20px' }} />
-              </div>
-              <div className="gc360-links-dialog_content_form_field">
-                <TextField
-                  id="instagramInput"
-                  label=" Instagram link"
-                  value={this.state.instagramInput}
-                  onChange={this.handleChange('instagramInput')}
-                  error={!this.state.igValid}
-                  helperText={this.state.igValid ? '' : this.state.formErrors.instagramInput}
-                  margin="dense"
-                  fullWidth
-                />
-              </div>
+            {/* <div className="gc360-links-dialog_content_field"> */}
+            <TextField
+              id="linkedInInput"
+              label=" LinkedIn link"
+              value={this.state.linkedInInput}
+              onChange={this.handleChange('linkedInInput')}
+              error={!this.state.liValid}
+              helperText={this.state.liValid ? '' : this.state.formErrors.linkedInInput}
+              margin="dense"
+              fullWidth
+              className="gc360-links-dialog_content_field"
+            />
+            {/* </div> */}
+          </div>
+          <div className="gc360-links-dialog_content_instagram">
+            <div className="gc360-links-dialog_content_icon">
+              <FaInstagram style={{ fontSize: '20px' }} />
             </div>
+            {/* <div className="gc360-links-dialog_content_field"> */}
+            <TextField
+              id="instagramInput"
+              label=" Instagram link"
+              value={this.state.instagramInput}
+              onChange={this.handleChange('instagramInput')}
+              error={!this.state.igValid}
+              helperText={this.state.igValid ? '' : this.state.formErrors.instagramInput}
+              margin="dense"
+              fullWidth
+              className="gc360-links-dialog_content_field"
+            />
+            {/* </div> */}
           </div>
           {/* </form> */}
         </DialogContent>
