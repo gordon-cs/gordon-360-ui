@@ -15,10 +15,10 @@ import amber from '@material-ui/core/colors/amber'; // Login Hang
 
 import './login.css';
 import { authenticate } from '../../services/auth';
+import storage from '../../services/storage';
+import session from '../../services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
-import storage from '../../services/storage.js';
-import session from '../../services/session.js';
 import { projectName } from '../../project-name';
 
 // To temporarily disable the Login Hang message, set this boolean to false
@@ -58,7 +58,6 @@ export default class Login extends Component {
   }
 
   async logIn(event) {
-    console.log('Login/index.js: entering logIn() method');
     event.preventDefault();
     this.setState({ loading: true, error: null });
 
@@ -72,7 +71,7 @@ export default class Login extends Component {
 
     try {
       await authenticate(this.state.username, this.state.password);
-      console.log('Login/index.js: Successfully authenticated');
+
       /* Checks to see if the Service Worker API is available before attempting to access it
        *  This is important because if the API is not available, the site will load
        *  but not allow you to login due to the error "undefined is not a function"
@@ -91,16 +90,13 @@ export default class Login extends Component {
       } else {
         console.log('SERVICE WORKER IS NOT AVAILABLE');
       }
+
       this.props.onLogIn();
-      console.log('Login/index.js: onLogIn() returned');
     } catch (err) {
       clearTimeout(id); // Login Hang
       this.setState({ showMessageSnackbar: false });
       this.setState({ error: err.message, loading: false });
-      console.log('Login/index.js: Catch block was executed');
     }
-
-    console.log('Login/index.js: Passed try block; end of logIn() method');
   }
 
   //Temp Login Hang Fix - remove when reason for error addressed
@@ -113,8 +109,8 @@ export default class Login extends Component {
 
   render() {
     return (
-      <Grid className="gordon-login" container alignItems="center" justify="center" spacing={0}>
-        <DocumentTitle title={`Login | ${projectName}`} />
+      <Grid container alignItems="center" justify="center" spacing={0}>
+        <DocumentTitle title="Login | Gordon 360" />
         <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
           <img src={GordonLogoVerticalWhite} alt={`${projectName}`} />
           <form onSubmit={this.logIn}>

@@ -1,9 +1,4 @@
 import AppBar from '@material-ui/core/AppBar';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,6 +9,12 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
@@ -22,7 +23,6 @@ import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
-import { Button } from '@material-ui/core';
 import { projectName } from '../../project-name';
 
 const getRouteName = route => {
@@ -51,19 +51,12 @@ export default class GordonHeader extends Component {
     this.state = {
       value: null,
       dialogBoxOpen: false,
+      loginDialogOpen: false,
     };
   }
 
   handleChange = (event, value) => {
     this.setState({ value });
-  };
-
-  openDialogBox = () => {
-    this.setState({ dialogBoxOpen: true });
-  };
-
-  closeDialogBox = () => {
-    this.setState({ dialogBoxOpen: false });
   };
 
   /**
@@ -93,6 +86,22 @@ export default class GordonHeader extends Component {
     this.updateTabHighlight();
   }
 
+  unAuthenticatedSearch() {
+    this.setState({ loginDialogOpen: true });
+  }
+
+  handleClose() {
+    this.setState({ loginDialogOpen: false });
+  }
+
+  openDialogBox = () => {
+    this.setState({ dialogBoxOpen: true });
+  };
+
+  closeDialogBox = () => {
+    this.setState({ dialogBoxOpen: false });
+  };
+
   render() {
     /* Gets status of current network connection for online/offline rendering
      *  Defaults to online in case of PWA not being possible
@@ -101,27 +110,44 @@ export default class GordonHeader extends Component {
 
     // Creates the People Tab depending on the status of the network found in local storage
     let PeopleTab;
-    if (networkStatus === 'online') {
-      PeopleTab = (
-        <Tab
-          className="tab"
-          icon={<PeopleIcon />}
-          label="People"
-          component={NavLink}
-          to="/people"
-        />
-      );
-    } else {
-      PeopleTab = (
-        <div onClick={this.openDialogBox}>
+
+    if (this.props.Authentication) {
+      if (networkStatus === 'online') {
+        // Renders online, authenticated (i.e. normal) People Tab
+        PeopleTab = (
           <Tab
             className="tab"
             icon={<PeopleIcon />}
             label="People"
-            component={Button}
-            disabled={networkStatus}
+            component={NavLink}
+            to="/people"
           />
-        </div>
+        );
+      } else {
+        //Renders offline People Tab
+        PeopleTab = (
+          <div onClick={this.openDialogBox}>
+            <Tab
+              className="tab"
+              icon={<PeopleIcon />}
+              label="People"
+              component={Button}
+              disabled={networkStatus}
+            />
+          </div>
+        );
+      }
+    } else {
+      // Renders Guest People Tab
+      PeopleTab = (
+        <Tab
+          className="guestTab"
+          icon={<PeopleIcon />}
+          label="People"
+          component={NavLink}
+          to="#"
+          onClick={clicked => this.unAuthenticatedSearch()}
+        />
       );
     }
 
@@ -131,7 +157,7 @@ export default class GordonHeader extends Component {
           <Toolbar>
             <IconButton
               className="menu-button"
-              color="default"
+              color="primary"
               aria-label="open drawer"
               onClick={this.props.onDrawerToggle}
             >
@@ -169,8 +195,11 @@ export default class GordonHeader extends Component {
                 {PeopleTab}
               </Tabs>
             </div>
-            <GordonPeopleSearch />
-            <GordonNavAvatarRightCorner onSignOut={this.props.onSignOut} />
+            <GordonPeopleSearch Authentication={this.props.Authentication} />
+            <GordonNavAvatarRightCorner
+              onSignOut={this.props.onSignOut}
+              Authentication={this.props.Authentication}
+            />
           </Toolbar>
         </AppBar>
         <Dialog
@@ -188,6 +217,25 @@ export default class GordonHeader extends Component {
           </DialogContent>
           <DialogActions>
             <Button variant="contained" onClick={clicked => this.closeDialogBox()} color="primary">
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={this.state.loginDialogOpen}
+          onClose={clicked => this.handleClose()}
+          aria-labelledby="login-dialog-title"
+          aria-describedby="login-dialog-description"
+        >
+          <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="login-dialog-description">
+              You are not logged in. Please log in to use People Search.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
               Okay
             </Button>
           </DialogActions>

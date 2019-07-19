@@ -113,21 +113,6 @@ const search = (
     // workaround to avoid breaking the backend
     building = building.replace('.', '_');
   }
-  console.log(
-    'goSTALK Search params: includeAlumni: ',
-    includeAlumni,
-    firstName,
-    lastName,
-    major,
-    minor,
-    hall,
-    classType,
-    homeCity,
-    state,
-    country,
-    department,
-    building,
-  );
   return http.get(
     `accounts/advanced-people-search/${includeAlumni}/${firstName}/${lastName}/${major}/${minor}/${hall}/${classType}/${homeCity}/${state}/${country}/${department}/${building}`,
   );

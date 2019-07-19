@@ -26,9 +26,9 @@ const staticCache = [
   '/favicon.ico',
   '/about',
   '/help',
+  // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Development
   '/admin',
-  'myprofile',
-  // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Developlent
+  '/myprofile',
   '/manifest.json',
   '/pwa.js',
   '/static/js/bundle.js',
