@@ -45,6 +45,7 @@ export default class Profile extends Component {
 
     this.state = {
       username: String,
+      personType: null,
       button: String,
       isImagePublic: null,
       image: null,
@@ -238,10 +239,12 @@ export default class Profile extends Component {
           {' '}
         </ProfileList>
       );
+      const personType = String(profile.PersonType);
       let officeinfo = <Office profile={profile} />;
       this.setState({ profileinfo: profileinfo });
       this.setState({ officeinfo: officeinfo });
       this.setState({ profile });
+      this.setState({ personType: personType });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
@@ -339,6 +342,7 @@ export default class Profile extends Component {
     let instagramButton;
     let editButton;
     let linkCount = 0; // To record whether or not any links are displayed
+    let VPScore;
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>
@@ -396,6 +400,15 @@ export default class Profile extends Component {
         </Grid>
       );
     }
+    let profileCardSize = 12;
+    if (String(this.state.personType).includes('stu')) {
+      VPScore = (
+        <Grid item xs={12} md={4} lg={4}>
+          <VictoryPromiseDisplay />
+        </Grid>
+      );
+      profileCardSize = 8;
+    }
 
     return (
       <div>
@@ -413,7 +426,7 @@ export default class Profile extends Component {
                 justify="flex-start"
                 spacing="16"
               >
-                <Grid item xs={12} md={8} lg={8}>
+                <Grid item xs={12} md={profileCardSize} lg={profileCardSize}>
                   <Card>
                     <CardContent>
                       <Grid
@@ -663,9 +676,7 @@ export default class Profile extends Component {
                     </CardContent>
                   </Card>
                 </Grid>
-                <Grid item xs={12} md={4} lg={4}>
-                  <VictoryPromiseDisplay />
-                </Grid>
+                {VPScore}
               </Grid>
 
               <Grid item xs={12} lg={5}>

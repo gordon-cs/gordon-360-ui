@@ -25,7 +25,7 @@ export default class VictoryPromiseDisplay extends React.Component {
       ],
       datasets: [
         {
-          data: [1, 1, 1, 1],
+          data: [0, 0, 0, 0],
           backgroundColor: [
             gordonColors.neutral.lightGray,
             gordonColors.neutral.lightGray,
@@ -69,17 +69,29 @@ export default class VictoryPromiseDisplay extends React.Component {
     const LW = scores[0].TOTAL_VP_LW_SCORE;
     this.setState({ CC, IM, LS, LW });
 
+    var arr = [CC, IM, LS, LW];
+    const min = arr.filter(x => x > 0)[0] ? arr.filter(x => x > 0).sort()[0] : 1;
+    var emptySlice = min - 0.1;
+
     if (CC > 0) {
       this.setState({ CCColor: gordonColors.secondary.red, CC_ON: true });
+    } else {
+      this.setState({ CC: emptySlice });
     }
     if (IM > 0) {
       this.setState({ IMColor: gordonColors.secondary.green, IM_ON: true });
+    } else {
+      this.setState({ IM: emptySlice });
     }
     if (LS > 0) {
       this.setState({ LSColor: gordonColors.secondary.yellow, LS_ON: true });
+    } else {
+      this.setState({ LS: emptySlice });
     }
     if (LW > 0) {
       this.setState({ LWColor: gordonColors.primary.cyan, LW_ON: true });
+    } else {
+      this.setState({ LW: emptySlice });
     }
 
     this.setState({
@@ -99,46 +111,24 @@ export default class VictoryPromiseDisplay extends React.Component {
             maxTicksLimit: 1,
           },
         },
-      },
-    });
-
-    if (CC + IM + LS + LW === 0) {
-      this.setState({
-        CC: 1,
-        LW: 1,
-        IM: 1,
-        LS: 1,
-        options: {
-          legend: {
-            display: false,
-          },
-          scale: {
-            gridLines: {
-              display: true,
-            },
-            ticks: {
-              display: false,
-              max: 1.2,
-              min: 0,
-              maxTicksLimit: 1,
-            },
-          },
-          tooltips: {
-            callbacks: {
-              label: function(tooltipItem, data) {
-                var label = data.labels[tooltipItem.index];
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              var label = data.labels[tooltipItem.index];
+              if (Math.floor(tooltipItem.yLabel % 1) < min) {
                 return label + ': 0';
-              },
+              } else {
+                return label + ': ' + tooltipItem.yLabel;
+              }
             },
           },
         },
-      });
-    }
+      },
+    });
     this.setColor();
   }
 
   setColor() {
-    //this.canvas.parentNode.style.height = '128px';
     this.setState({
       datasets: [
         {
@@ -151,7 +141,6 @@ export default class VictoryPromiseDisplay extends React.Component {
           ],
           borderAlign: 'center',
           borderWidth: 3,
-          //borderColor: gordonColors.primary.blue,
         },
       ],
     });
@@ -167,7 +156,7 @@ export default class VictoryPromiseDisplay extends React.Component {
     let IMG_LS;
     let IMG_LW;
 
-    if (this.state.IM_ON) {
+    if (this.state.CC_ON) {
       IMG_CC = (
         <img className="vpdesign" src={require('./images/On-CC.svg')} alt="Christian Character" />
       );
