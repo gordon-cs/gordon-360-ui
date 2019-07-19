@@ -13,7 +13,7 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { personType: null, scores: null };
+    this.state = { personType: null };
   }
 
   componentWillMount() {
