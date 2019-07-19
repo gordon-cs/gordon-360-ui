@@ -450,7 +450,7 @@ class PeopleSearch extends Component {
     let aprilFools = '';
     if (this.getDate().getMonth() === 3 && this.getDate().getDate() === 1) {
       aprilFools = (
-        <Grid container spacing={8} alignItems="baseline">
+        <Grid container spacing={2} alignItems="baseline">
           <Media
             query="(min-width: 600px)"
             render={() => (
@@ -520,7 +520,7 @@ class PeopleSearch extends Component {
     }
 
     return (
-      <Grid container justify="center" spacing="16">
+      <Grid container justify="center" spacing={6}>
         <Grid item xs={12} md={8}>
           <Card>
             <CardContent
@@ -530,7 +530,7 @@ class PeopleSearch extends Component {
               }}
             >
               <Typography variant="h5">General Info</Typography>
-              <Grid container spacing={8} alignItems="flex-end">
+              <Grid container spacing={2} alignItems="flex-end">
                 <Media
                   query="(min-width: 600px)"
                   render={() => (
@@ -551,7 +551,7 @@ class PeopleSearch extends Component {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={8} alignItems="flex-end">
+              <Grid container spacing={2} alignItems="flex-end">
                 <Media
                   query="(min-width: 600px)"
                   render={() => (
@@ -570,7 +570,7 @@ class PeopleSearch extends Component {
                     onKeyDown={this.handleEnterKeyPress}
                   />
                 </Grid>
-                <Grid container spacing={8} alignItems="flex-end">
+                <Grid container spacing={2} alignItems="flex-end">
                   <Media
                     query="(min-width: 600px)"
                     render={() => (
@@ -629,7 +629,7 @@ class PeopleSearch extends Component {
                   unmountOnExit
                   style={styles.CardContent}
                 >
-                  <Grid container spacing={8} alignItems="baseline">
+                  <Grid container spacing={2} alignItems="baseline">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
@@ -655,7 +655,7 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Grid>
 
-                  <Grid container spacing={8} alignItems="baseline">
+                  <Grid container spacing={2} alignItems="baseline">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
@@ -681,7 +681,7 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Grid>
 
-                  <Grid container spacing={8} alignItems="flex-end">
+                  <Grid container spacing={2} alignItems="flex-end">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
@@ -740,7 +740,7 @@ class PeopleSearch extends Component {
                   unmountOnExit
                   style={styles.CardContent}
                 >
-                  <Grid container spacing={8} alignItems="flex-end">
+                  <Grid container spacing={2} alignItems="flex-end">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
@@ -761,7 +761,7 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Grid>
 
-                  <Grid container spacing={8} alignItems="flex-end">
+                  <Grid container spacing={2} alignItems="flex-end">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
@@ -787,7 +787,7 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Grid>
 
-                  <Grid container spacing={8} alignItems="baseline">
+                  <Grid container spacing={2} alignItems="baseline">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
@@ -844,7 +844,7 @@ class PeopleSearch extends Component {
                   unmountOnExit
                   style={styles.CardContent}
                 >
-                  <Grid container spacing={8} alignItems="baseline">
+                  <Grid container spacing={2} alignItems="baseline">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
@@ -875,7 +875,7 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Grid>
 
-                  <Grid container spacing={8} alignItems="baseline">
+                  <Grid container spacing={2} alignItems="baseline">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (

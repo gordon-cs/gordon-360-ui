@@ -423,17 +423,11 @@ export default class Profile extends Component {
         {this.state.loading && <GordonLoader />}
         {!this.state.loading && (
           <div>
-            <Grid container justify="center" spacing="16">
+            <Grid container justify="center" spacing={2}>
               <Grid item xs={12} lg={10}>
                 <Card>
                   <CardContent>
-                    <Grid
-                      container
-                      alignItems="center"
-                      align="center"
-                      justify="center"
-                      spacing="16"
-                    >
+                    <Grid container alignItems="center" align="center" justify="center" spacing={2}>
                       <Grid item xs={6}>
                         <Link
                           className="gc360-link-color"
@@ -474,7 +468,7 @@ export default class Profile extends Component {
                               }
                               subheader={this.state.profile.Class}
                             />
-                            <Grid container spacing="16" align="center" justify="center">
+                            <Grid container spacing={2} align="center" justify="center">
                               {facebookButton}
                               {twitterButton}
                               {linkedInButton}
@@ -531,7 +525,7 @@ export default class Profile extends Component {
                                   <br />
                                 </DialogContentText>
                                 {!preview && (
-                                  <Grid container justify="center" spacing="16">
+                                  <Grid container justify="center">
                                     <Dropzone
                                       onDropAccepted={this.onDropAccepted.bind(this)}
                                       onDropRejected={this.onDropRejected.bind(this)}
@@ -557,7 +551,7 @@ export default class Profile extends Component {
                                   </Grid>
                                 )}
                                 {preview && (
-                                  <Grid container justify="center" spacing="16">
+                                  <Grid container justify="center">
                                     <Cropper
                                       ref="cropper"
                                       src={preview}
@@ -582,7 +576,7 @@ export default class Profile extends Component {
                                 )}
                                 {preview && <br />}
                                 {preview && (
-                                  <Grid container justify="center" spacing="16">
+                                  <Grid container justify="center">
                                     <Grid item>
                                       <Button
                                         variant="contained"
@@ -687,7 +681,7 @@ export default class Profile extends Component {
               </Grid>
 
               <Grid item xs={12} lg={5}>
-                <Grid container spacing={16}>
+                <Grid container spacing={2}>
                   {this.state.profileinfo}
                   {this.state.officeinfo}
                 </Grid>
