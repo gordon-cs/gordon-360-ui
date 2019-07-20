@@ -10,7 +10,6 @@ import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../../../theme';
 import Checkbox from '@material-ui/core/Checkbox';
 import myschedule from './../../../../services/myschedule';
-import GordonLoader from '../../../../components/Loader';
 
 import './officehoursdialog.css';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -20,7 +19,6 @@ export default class HoursDialog extends React.Component {
     super(props);
 
     this.state = {
-      loading: true,
       startHourInput: '08:00',
       endHourInput: '17:00',
       officeHoursOpen: false,
@@ -77,7 +75,6 @@ export default class HoursDialog extends React.Component {
     } else {
       this.handleReset();
     }
-    this.setState({ loading: false });
   }
 
   validateField(fieldName, value) {
@@ -302,9 +299,6 @@ export default class HoursDialog extends React.Component {
     }
     let hoursdialog;
 
-    if (this.state.loading) {
-      hoursdialog = <GordonLoader />;
-    } else {
       hoursdialog = (
         <Dialog
           open={this.props.officeHoursOpen}
@@ -490,7 +484,7 @@ export default class HoursDialog extends React.Component {
           </DialogActions>
         </Dialog>
       );
-    }
+
     return <Fragment>{hoursdialog}</Fragment>;
   }
 }
