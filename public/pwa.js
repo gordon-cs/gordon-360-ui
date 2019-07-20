@@ -50,6 +50,7 @@ if ('caches' in window) {
       // Saves the network state as offline in local storage
       localStorage.setItem('network-status', JSON.stringify('offline'));
       window.postMessage('offline', location.origin);
+      navigator.serviceWorker.controller.postMessage('stop-cache-timer');
     });
 
     // If network connectivity re-enables during application run-time
@@ -60,6 +61,7 @@ if ('caches' in window) {
       // Saves the network state as online in local storage
       localStorage.setItem('network-status', JSON.stringify('online'));
       window.postMessage('online', location.origin);
+      navigator.serviceWorker.controller.postMessage('start-cache-timer');
     });
   } else {
     console.log('SERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE');

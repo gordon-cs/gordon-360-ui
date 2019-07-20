@@ -13,7 +13,7 @@
 // Current cache version
 let cacheVersion = 'cache-1.0';
 let apiSource = 'https://360apitrain.gordon.edu';
-let token, termCode;
+let token, termCode, cacheTimer;
 
 // Static Files to cache
 const staticCache = [
@@ -310,13 +310,13 @@ async function dynamicLinksThenCache(token, termCode) {
 
 // Set interval function that will try to update cache every hour
 function timerFunction() {
-  resetTimer = setInterval(() => {
+  cacheTimer = setInterval(() => {
     console.log('Received Message. Attempting To Update Cache.');
     // Caching All Files
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(token, termCode); // Dynamic Cache
     // Set interval to every hour
-  }, 3600000);
+  }, 10000);
 }
 
 /*********************************************** EVENT LISTENERS ***********************************************/
@@ -364,5 +364,15 @@ self.addEventListener('message', event => {
     // Caching All Files
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
+  }
+  // If the message is to start the cache timer
+  else if (event.data && event.data === 'start-cache-timer') {
+    console.log('Received message. Restarted timer to update cache.');
+    event.waitUntil(timerFunction());
+  }
+  // If the message is to stop the cache timer
+  else if (event.data && event.data === 'stop-cache-timer') {
+    console.log('Received message. Stopped timer to update cache.');
+    event.waitUntil(clearInterval(cacheTimer));
   }
 });
