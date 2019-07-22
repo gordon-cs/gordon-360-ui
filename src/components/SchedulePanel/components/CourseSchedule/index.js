@@ -127,7 +127,7 @@ export default class CourseSchedule extends Component {
           onDoubleClickEvent={event => {
             this.props.handleDoubleClick(event);
           }}
-          onSelectSlot={this.handleOfficeHoursOpen}
+          onSelectSlot={slotInfo => {this.props.handleOfficeHoursOpen(slotInfo)}}
           defaultDate={Moment(new Date())}
           resources={resourceMap}
           resourceIdAccessor="resourceId"

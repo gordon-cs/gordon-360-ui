@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 
+import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -9,7 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../../../theme';
 import Checkbox from '@material-ui/core/Checkbox';
-import myschedule from './../../../../services/myschedule';
+import myschedule from './../../../../services/myschedule'
 
 import './officehoursdialog.css';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -54,26 +55,49 @@ export default class HoursDialog extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // Case : Edit(doubleclick)
     if (this.state.selectedEvent !== nextProps.selectedEvent && nextProps.selectedEvent) {
       this.setState({ selectedEvent: nextProps.selectedEvent }, () => {
         myschedule
           .getMyScheduleEventId(this.state.selectedEvent.id)
           .then(event => {
-            console.log('Got event : ', event);
             this.checkDay(event);
             this.checkTime(event);
             let eventDescLoc = this.state.selectedEvent.title.split(' in ');
             this.setState({
               descriptionInput: eventDescLoc[0],
               locationInput: eventDescLoc[1],
+              descriptionValid: true,
+              locationValid: true,
+              startHourValid: true,
+              endHourValid: true,
+              formValid: true,
+              checkedValid: true,
             });
           })
           .catch(error => {
             console.log(error);
           });
       });
+      // Case : Add(selecslot)
     } else {
       this.handleReset();
+      this.setState({
+        checkedDayofWeek: {
+          checkedSu: nextProps.resourceId === 1 ? true : false,
+          checkedMo: nextProps.resourceId === 2 ? true : false,
+          checkedTu: nextProps.resourceId === 3 ? true : false,
+          checkedWe: nextProps.resourceId === 4 ? true : false,
+          checkedTh: nextProps.resourceId === 5 ? true : false,
+          checkedFr: nextProps.resourceId === 6 ? true : false,
+          checkedSa: nextProps.resourceId === 7 ? true : false,
+        },
+        startHourInput:nextProps.startTime,
+        endHourInput:nextProps.endTime,
+        checkedValid: true,
+        startHourValid: true,
+        endHourValid: true,
+      });
     }
   }
 
@@ -84,7 +108,7 @@ export default class HoursDialog extends React.Component {
     let startHourValid = this.state.startHourValid;
     let endHourValid = this.state.endHourValid;
 
-    // Require that content havint appropriate size
+    // Require that content havint appropriate size and format
     switch (fieldName) {
       case 'descriptionInput':
         descriptionValid = value.trim() !== '' && value.length < 50;
@@ -136,6 +160,7 @@ export default class HoursDialog extends React.Component {
         this.state.endHourValid &&
         this.state.checkedValid,
     });
+    console.log("Form Valid ", this.state.formValid);
   }
 
   handleSubmit = e => {
@@ -255,9 +280,9 @@ export default class HoursDialog extends React.Component {
     });
   };
 
+  // For Edit Only
   checkDay = event => {
     if (event) {
-      console.log('Event is here', event);
       this.setState({
         checkedC: event.IS_ALLDAY === 1 ? true : false,
         checkedDayofWeek: {
@@ -273,6 +298,8 @@ export default class HoursDialog extends React.Component {
     }
   };
 
+
+  // For Edit Only
   checkTime = event => {
     if (event) {
       let startSplit = event.BEGIN_TIME.split(':');
@@ -321,7 +348,7 @@ export default class HoursDialog extends React.Component {
                       primary
                     />
                   }
-                  label="Sunday"
+                  label={<Typography style={{fontSize: '0.9rem'}}>Sunday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -332,7 +359,8 @@ export default class HoursDialog extends React.Component {
                       primary
                     />
                   }
-                  label="Monday"
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Monday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -343,7 +371,8 @@ export default class HoursDialog extends React.Component {
                       primary
                     />
                   }
-                  label="Tuesday"
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Tuesday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -354,7 +383,8 @@ export default class HoursDialog extends React.Component {
                       primary
                     />
                   }
-                  label="Wednesday"
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Wednesday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -365,7 +395,8 @@ export default class HoursDialog extends React.Component {
                       primary
                     />
                   }
-                  label="Thursday"
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Thursday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -376,7 +407,8 @@ export default class HoursDialog extends React.Component {
                       primary
                     />
                   }
-                  label="Friday"
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Friday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -387,11 +419,13 @@ export default class HoursDialog extends React.Component {
                       primary
                     />
                   }
-                  label="Saturday"
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Saturday</Typography>}
                 />
               </FormGroup>
 
-              <div className="start_time">
+              {/* <div className="start_time"> */}
+              <div>
                 <TextField
                   label="Start time"
                   type="time"
@@ -407,8 +441,8 @@ export default class HoursDialog extends React.Component {
                     step: 300, // 5 min
                   }}
                 />
-              </div>
-              <div className="end_time">
+              {/* </div>
+              <div className="end_time"> */}
                 <TextField
                   label="End time"
                   type="time"
@@ -418,7 +452,7 @@ export default class HoursDialog extends React.Component {
                   error={!this.state.endHourValid}
                   helperText={this.state.endHourValid ? '' : this.state.formErrors.endHourInput}
                   primary
-                  style={{ marginLeft: '10%' }}
+                  style={{ marginLeft: '1.5%' }}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -426,7 +460,6 @@ export default class HoursDialog extends React.Component {
                     step: 300, // 5 min
                   }}
                 />
-              </div>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -436,9 +469,12 @@ export default class HoursDialog extends React.Component {
                     primary
                   />
                 }
-                label="All day"
+
+                label={<Typography style={{fontSize: '0.9rem'}}>All Day</Typography>}
                 className="alldaycheckbox"
+                style={{verticalAlign:'bottom', marginLeft: '1.5%' }}
               />
+              </div>
               <div className="office-hours-title">
                 <TextField
                   label="Location"

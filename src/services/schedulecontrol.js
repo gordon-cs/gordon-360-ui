@@ -31,7 +31,14 @@ async function setSchedulePrivacy(makePrivate) {
 }
 
 async function setScheduleDescription(Description) {
-  await http.put('schedulecontrol/description/' + Description);
+  var replaced;
+  var encoded;
+  replaced = Description.replace(/\//g, "SlSh");
+  replaced = replaced.replace(new RegExp(':', 'g'), "CoLn");
+  replaced = replaced.replace(/\./g, "dOT");
+  encoded = encodeURIComponent(replaced);
+  await http.put('schedulecontrol/description/' + encoded);
+  
 }
 
 /**
