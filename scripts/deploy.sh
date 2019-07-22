@@ -6,10 +6,14 @@ set -euo pipefail
 # Environment Variables
 # Set these variables at https://travis-ci.org/gordon-cs/gordon-360-ui/settings
 # HOSTNAME hostname for sending files to
+#   Normally 360react.gordon.edu
 # DEPLOY_USER username to log into server
 # DEPLOY_PASSWORD password to log into server
 # PRODUCTION_DIR absolute path to directory for production app
 # STAGING_DIR absolute path to directory for staging app
+#   Both are normally under D:\wwwroot
+
+# While hte
 
 # Variable used to create web.config
 # Note: Regular expression replaces all quotes with two quotes, i.e. " => "" (for PowerShell)
@@ -73,6 +77,8 @@ printf "%s\n" "Copying app to server... "
 # Copy built app to server
 echo sshpass -p ... scp -r build "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 sshpass -p "$DEPLOY_PASSWORD" scp -r build "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
+echo "sshpass -p ... ssh ... mv build/* ."
+sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME":"$DIR" mv build/* .
 
 
 
