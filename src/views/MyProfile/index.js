@@ -756,12 +756,14 @@ export default class Profile extends Component {
                     </Grid>
                     {VPScore}
                   </Grid>
+
                   <Grid item xs={12} lg={5}>
                     <Grid container spacing={16}>
                       {this.state.profileinfo}
                       {this.state.officeinfo}
                     </Grid>
                   </Grid>
+
                   <Grid item xs={12} lg={5}>
                     <Grid container>
                       <Grid item xs={12}>

@@ -93,7 +93,7 @@ export default class Home extends Component {
       }
 
       content = (
-        <Grid container justify="center" spacing={16}>
+        <Grid item container justify="center" spacing={16}>
           <Grid item xs={12} md={10}>
             <Carousel />
           </Grid>
