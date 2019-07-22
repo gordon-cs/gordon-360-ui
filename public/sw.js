@@ -158,7 +158,7 @@ async function cacheStaticFiles() {
  * @return {Promise<Boolean>} A boolean that determines if all links given cached successfully
  */
 async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
-  // Creates the header for the request to have authenitification
+  // Creates the header for the request to have authenitication
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
