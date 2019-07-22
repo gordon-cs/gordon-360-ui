@@ -1,20 +1,22 @@
-import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
+import {
+  Card,
+  FormControl,
+  Grid,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import React, { Component } from 'react';
 import './activities-all.css';
 import activity from '../../services/activity';
 import session from '../../services/session';
 import GordonActivityGrid from './components/ActivityGrid';
 import GordonLoader from '../../components/Loader';
-import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
-import Card from '@material-ui/core/Card';
 
 export default class GordonActivitiesAll extends Component {
   constructor(props) {

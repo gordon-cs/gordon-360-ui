@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogActions,
   DialogContent,
-  DialogContentText,
+  Typography,
   TextField,
 } from '@material-ui/core';
 import { socialMediaInfo } from '../../../../socialMedia';
@@ -173,14 +173,14 @@ export default class LinksDialog extends React.Component {
       <div className="gc360-links-dialog">
         <DialogTitle className="gc360-links-dialog_title">Edit your social media links</DialogTitle>
         <DialogContent className="gc360-links-dialog_content">
-          <DialogContentText className="gc360-links-dialog_content_text">
+          <Typography variant="body2" className="gc360-links-dialog_content_text">
             Copy and paste your links below
-          </DialogContentText>
+          </Typography>
           {/* <form
             onSubmit={this.handleSubmit}
             style={{ paddingLeft: '1.5rem', marginBottom: '-0.75rem', marginTop: '-1.5rem' }}
           > */}
-          <div className="gc360-links-dialog_content_facebook">
+          <div className="gc360-links-dialog_content_facebook gc360-links-dialog_content_media">
             <div className="gc360-links-dialog_content_icon">
               <FaFacebookF style={{ fontSize: '20px' }} />
             </div>
@@ -198,7 +198,7 @@ export default class LinksDialog extends React.Component {
             />
             {/* </div> */}
           </div>
-          <div className="gc360-links-dialog_content_twitter">
+          <div className="gc360-links-dialog_content_twitter gc360-links-dialog_content_media">
             <div className="gc360-links-dialog_content_icon">
               <FaTwitter style={{ fontSize: '20px' }} />
             </div>
@@ -216,7 +216,7 @@ export default class LinksDialog extends React.Component {
             />
             {/* </div> */}
           </div>
-          <div className="gc360-links-dialog_content_linkedin">
+          <div className="gc360-links-dialog_content_linkedin gc360-links-dialog_content_media">
             <div className="gc360-links-dialog_content_icon">
               <FaLinkedin style={{ fontSize: '20px' }} />
             </div>
@@ -234,7 +234,7 @@ export default class LinksDialog extends React.Component {
             />
             {/* </div> */}
           </div>
-          <div className="gc360-links-dialog_content_instagram">
+          <div className="gc360-links-dialog_content_instagram gc360-links-dialog_content_media">
             <div className="gc360-links-dialog_content_icon">
               <FaInstagram style={{ fontSize: '20px' }} />
             </div>
@@ -254,7 +254,7 @@ export default class LinksDialog extends React.Component {
           </div>
           {/* </form> */}
         </DialogContent>
-        <DialogActions className=".gc360-links-dialog_actions">
+        <DialogActions className="gc360-links-dialog_actions">
           <Button onClick={this.handleClose} variant="contained" style={button}>
             Cancel
           </Button>

@@ -102,7 +102,7 @@ export default class PeopleSearchResult extends Component {
             container
             direction="row"
             alignItems="center"
-            spacing={16}
+            spacing={2}
             style={{
               padding: '1rem',
             }}

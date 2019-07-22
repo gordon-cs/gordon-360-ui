@@ -12,37 +12,32 @@
     &_text {
       grid-row: 1;
       grid-column: 1;
+      justify-self: center;
+      color: #888888;
     }
     &_facebook {
-      display: grid;
       grid-row: 2;
-      grid-template-columns: 20% 80%;
-      align-items: center;
     }
     &_twitter {
-      display: grid;
       grid-row: 3;
-      grid-template-columns: 20% 80%;
-      align-items: center;
     }
     &_linkedin {
-      display: grid;
       grid-row: 4;
-      grid-template-columns: 20% 80%;
-      align-items: center;
     }
     &_instagram {
-      display: grid;
       grid-row: 5;
-      grid-template-columns: 20% 80%;
+    }
+    &_media {
+      display: grid;
+      grid-template-columns: 15% 85%;
       align-items: center;
     }
     &_icon {
       grid-column: 1;
+      padding-top: 20px;
     }
     &_field {
       grid-column: 2;
-      align-self: flex-start;
     }
   }
   &_actions {

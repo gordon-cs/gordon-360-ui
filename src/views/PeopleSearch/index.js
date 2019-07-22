@@ -1,31 +1,33 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardActions,
+  Checkbox,
+  Collapse,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import classnames from 'classnames';
 import Media from 'react-media';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PersonIcon from '@material-ui/icons/Person';
 import { FaHeart, FaBriefcase, FaBuilding, FaBook, FaGlobeAmericas } from 'react-icons/fa';
 import SchoolIcon from '@material-ui/icons/School';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
-import { Typography } from '@material-ui/core';
-import Collapse from '@material-ui/core/Collapse';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Select from '@material-ui/core/Select';
 import goStalk from '../../services/goStalk';
 import user from '../../services/user';
-import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../theme';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
@@ -35,7 +37,6 @@ import './peopleSearch.css';
 const styles = {
   FontAwesome: {
     fontSize: 20,
-    marginLeft: 2,
   },
   actions: {
     display: 'flex',
@@ -272,7 +273,7 @@ class PeopleSearch extends Component {
         department,
         building,
       );
-      console.log('Results:', peopleSearchResults);
+
       if (peopleSearchResults.length === 0) {
         this.setState({
           peopleSearchResults: (
@@ -287,7 +288,7 @@ class PeopleSearch extends Component {
       } else {
         this.setState({
           peopleSearchResults: (
-            <Media query="(min-width: 960px)">
+            <Media query="(min-width: 1025px)">
               {matches =>
                 matches
                   ? peopleSearchResults.map(person => <PeopleSearchResult Person={person} />)
@@ -450,7 +451,7 @@ class PeopleSearch extends Component {
     let aprilFools = '';
     if (this.getDate().getMonth() === 3 && this.getDate().getDate() === 1) {
       aprilFools = (
-        <Grid container spacing={2} alignItems="baseline">
+        <Grid container spacing={2} alignItems="flex-end">
           <Media
             query="(min-width: 600px)"
             render={() => (
@@ -543,7 +544,6 @@ class PeopleSearch extends Component {
                   <TextField
                     id="first-name"
                     label="First Name"
-                    max="3"
                     fullWidth
                     value={this.state.firstNameSearchValue}
                     onChange={this.handleFirstNameInputChange}
@@ -570,37 +570,34 @@ class PeopleSearch extends Component {
                     onKeyDown={this.handleEnterKeyPress}
                   />
                 </Grid>
-                <Grid container spacing={2} alignItems="flex-end">
-                  <Media
-                    query="(min-width: 600px)"
-                    render={() => (
-                      <Grid item>
-                        <FaBuilding
-                          style={{
-                            fontSize: 22,
-                            marginLeft: 6,
-                          }}
-                        />
-                      </Grid>
-                    )}
-                  />
-                  <Grid item xs={11}>
-                    <FormControl fullWidth>
-                      <InputLabel>Hall</InputLabel>
-                      <Select
-                        value={this.state.hallSearchValue}
-                        onChange={this.handleHallInputChange}
-                        input={<Input id="hall" />}
-                      >
-                        <MenuItem label="All Halls" value="">
-                          <em>All Halls</em>
-                        </MenuItem>
-                        {hallOptions}
-                      </Select>
-                    </FormControl>
-                  </Grid>
+              </Grid>
+
+              <Grid container spacing={2} alignItems="flex-end">
+                <Media
+                  query="(min-width: 600px)"
+                  render={() => (
+                    <Grid item>
+                      <FaBuilding style={styles.FontAwesome} />
+                    </Grid>
+                  )}
+                />
+                <Grid item xs={11}>
+                  <FormControl fullWidth>
+                    <InputLabel>Hall</InputLabel>
+                    <Select
+                      value={this.state.hallSearchValue}
+                      onChange={this.handleHallInputChange}
+                      input={<Input id="hall" />}
+                    >
+                      <MenuItem label="All Halls" value="">
+                        <em>All Halls</em>
+                      </MenuItem>
+                      {hallOptions}
+                    </Select>
+                  </FormControl>
                 </Grid>
               </Grid>
+
               {aprilFools}
             </CardContent>
 
@@ -629,7 +626,7 @@ class PeopleSearch extends Component {
                   unmountOnExit
                   style={styles.CardContent}
                 >
-                  <Grid container spacing={2} alignItems="baseline">
+                  <Grid container spacing={2} alignItems="flex-end">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
@@ -655,7 +652,7 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Grid>
 
-                  <Grid container spacing={2} alignItems="baseline">
+                  <Grid container spacing={2} alignItems="flex-end">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
@@ -787,17 +784,12 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Grid>
 
-                  <Grid container spacing={2} alignItems="baseline">
+                  <Grid container spacing={2} alignItems="flex-end">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <FaGlobeAmericas
-                            style={{
-                              fontSize: 22,
-                              marginLeft: 2,
-                            }}
-                          />
+                          <FaGlobeAmericas style={styles.FontAwesome} />
                         </Grid>
                       )}
                     />
@@ -844,17 +836,12 @@ class PeopleSearch extends Component {
                   unmountOnExit
                   style={styles.CardContent}
                 >
-                  <Grid container spacing={2} alignItems="baseline">
+                  <Grid container spacing={2} alignItems="flex-end">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <FaBriefcase
-                            style={{
-                              fontSize: 22,
-                              marginLeft: 2,
-                            }}
-                          />
+                          <FaBriefcase style={styles.FontAwesome} />
                         </Grid>
                       )}
                     />
@@ -875,17 +862,12 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Grid>
 
-                  <Grid container spacing={2} alignItems="baseline">
+                  <Grid container spacing={2} alignItems="flex-end">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <FaBuilding
-                            style={{
-                              fontSize: 22,
-                              marginLeft: 2,
-                            }}
-                          />
+                          <FaBuilding style={styles.FontAwesome} />
                         </Grid>
                       )}
                     />

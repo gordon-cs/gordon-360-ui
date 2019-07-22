@@ -101,7 +101,7 @@ export default class PeopleSearchResult extends Component {
           <Grid
             container
             alignItems="center"
-            spacing={16}
+            spacing={2}
             style={{
               padding: '1rem',
             }}
