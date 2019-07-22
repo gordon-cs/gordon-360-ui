@@ -58,6 +58,7 @@ export default class GordonPeopleSearch extends Component {
       query: String,
       highlightQuery: String,
       loginDialog: false,
+      network: 'online',
     };
     this.isMobileView = false;
     this.breakpointWidth = 400;
@@ -250,46 +251,110 @@ export default class GordonPeopleSearch extends Component {
   }
 
   render() {
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    /* Gets status of current network connection for online/offline rendering
+     *  Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
     let holder = 'People Search';
     if (window.innerWidth < this.breakpointWidth) {
       holder = 'People';
-    }
+      if (networkStatus === 'offline') holder = 'Offline';
+    } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
 
     let content;
     if (this.props.Authentication) {
-      content = (
-        // Assign reference to Downshift to `this` for usage elsewhere in the component
-        <Downshift
-          ref={downshift => {
-            this.downshift = downshift;
-          }}
-        >
-          {({ getInputProps, getItemProps, isOpen }) => (
-            <span className="gordon-people-search">
-              {renderInput(
-                getInputProps({
-                  placeholder: holder,
-                  onChange: event => this.getSuggestions(event.target.value),
-                  onKeyDown: event => this.handleKeys(event.key),
-                }),
-              )}
+      // Creates the People Search Bar depending on the status of the network found in local storage
+      if (networkStatus === 'online') {
+        content = (
+          // Assign reference to Downshift to `this` for usage elsewhere in the component
+          <Downshift
+            ref={downshift => {
+              this.downshift = downshift;
+            }}
+          >
+            {({ getInputProps, getItemProps, isOpen }) => (
+              <span className="gordon-people-search">
+                {renderInput(
+                  getInputProps({
+                    placeholder: holder,
+                    onChange: event => this.getSuggestions(event.target.value),
+                    onKeyDown: event => this.handleKeys(event.key),
+                  }),
+                )}
 
-              {isOpen &&
-              this.state.suggestions.length > 0 &&
-              this.state.query.length >= MIN_QUERY_LENGTH ? (
-                <Paper square className="people-search-dropdown">
-                  {this.state.suggestions.map(suggestion =>
-                    this.renderSuggestion({
-                      suggestion,
-                      itemProps: getItemProps({ item: suggestion.UserName }),
-                    }),
-                  )}
-                </Paper>
-              ) : null}
-            </span>
-          )}
-        </Downshift>
-      );
+                {isOpen &&
+                this.state.suggestions.length > 0 &&
+                this.state.query.length >= MIN_QUERY_LENGTH ? (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map(suggestion =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({ item: suggestion.UserName }),
+                      }),
+                    )}
+                  </Paper>
+                ) : null}
+              </span>
+            )}
+          </Downshift>
+        );
+      } else {
+        content = (
+          // Assign reference to Downshift to `this` for usage elsewhere in the component
+          <Downshift
+            ref={downshift => {
+              this.downshift = downshift;
+            }}
+          >
+            {({ getInputProps, getItemProps, isOpen }) => (
+              <span className="gordon-people-search">
+                {renderInput(
+                  getInputProps({
+                    placeholder: holder,
+                    style: { color: 'white' },
+                    disabled: { networkStatus },
+                  }),
+                )}
+
+                {isOpen &&
+                this.state.suggestions.length > 0 &&
+                this.state.query.length >= MIN_QUERY_LENGTH ? (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map(suggestion =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({ item: suggestion.UserName }),
+                      }),
+                    )}
+                  </Paper>
+                ) : null}
+              </span>
+            )}
+          </Downshift>
+        );
+      }
     } else {
       content = (
         <span className="gordon-people-search">

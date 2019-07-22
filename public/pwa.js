@@ -54,7 +54,6 @@ if ('caches' in window) {
         normalLogCentered,
       );
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
-      navigator.serviceWorker.controller.postMessage('stop-cache-timer');
       localStorage.setItem('network-status', JSON.stringify('offline'));
       window.postMessage('offline', location.origin);
       alert('You are offline. Information might be not up to date.');
@@ -66,7 +65,6 @@ if ('caches' in window) {
         '%c--------------------     INTERNET CONNECTION ESTABLISHED     --------------------',
         normalLogCentered,
       );
-      navigator.serviceWorker.controller.postMessage('start-cache-timer');
       localStorage.setItem('network-status', JSON.stringify('online'));
       window.postMessage('online', location.origin);
     });

@@ -415,7 +415,7 @@ self.addEventListener('message', event => {
   }
   // If the message is to start the cache timer
   else if (event.data && event.data === 'start-cache-timer') {
-    console.log('Received Message: Restarting timer to update cache.');
+    console.log('Received Message: Starting timer to update cache.');
     event.waitUntil(timerFunction());
   }
   // If the message is to stop the cache timer
