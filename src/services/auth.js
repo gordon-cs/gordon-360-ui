@@ -81,6 +81,8 @@ const isAuthenticated = () => {
       // Checks to see if Service Worker is available since these values would not exist
       // if the service worker was unavailable
       if (navigator.serviceWorker) {
+        navigator.serviceWorker.controller.postMessage('delete-token-termCode');
+        navigator.serviceWorker.controller.postMessage('cancel-fetches');
         if (localStorage.length > 0) {
           storage.remove('status');
           storage.remove('currentTerm');
@@ -90,7 +92,6 @@ const isAuthenticated = () => {
               caches.delete(key);
             });
           });
-          // navigator.serviceWorker.controller.postMessage({ message: 'cancel-fetches' });
         }
       }
     }
@@ -109,10 +110,8 @@ const signOut = () => {
     // Checks to see if Service Worker is available since these values would not exist
     // if the service worker was unavailable
     if (navigator.serviceWorker) {
-      // if (localStorage.getItem('network-status')) {
-      //   console.log('TOKEN LENGTH IS GREATER THAN 0');
-      //   navigator.serviceWorker.controller.postMessage({ message: 'cancel-fetches' });
-      // }
+      navigator.serviceWorker.controller.postMessage('delete-token-termCode');
+      navigator.serviceWorker.controller.postMessage('cancel-fetches');
       storage.remove('status');
       storage.remove('currentTerm');
       storage.remove('network-status');
