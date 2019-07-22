@@ -246,7 +246,26 @@ export default class DiningBalance extends Component {
           <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
             {this.state.loading ? '' : 'Dining Balance'}
           </Typography>
-          {content}
+          <Grid item xs={12} align="center">
+            <Typography variant="subheading" style={{ textAlign: 'center', paddingTop: 5 }}>
+              {/* {[
+                <Button
+                  onClick={() =>
+                    (window.location.href = 'https://gordon.cafebonappetit.com/#cafe-hours')
+                  }
+                  style={{ fontSize: 22, color: gordonColors.primary.blue }}
+                >
+                  Today's menu
+                </Button>,
+              ]} */}
+              {content}
+              <Grid item xs={12} align="right">
+                  <a href={`https://gordon.cafebonappetit.com/#cafe-hours`}>
+                    <Typography variant="h6" className="todaysMenu">Today's menu</Typography>
+                  </a>
+              </Grid>
+            </Typography>
+          </Grid>
         </CardContent>
       </Card>
     );
