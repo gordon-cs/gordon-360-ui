@@ -1,3 +1,7 @@
+// Console log decorations
+const unavailableLog = ['color: #0066ff'].join(';');
+const normalLogCentered = ['margin-left: auto', 'margin-right: auto'].join(';');
+
 /* Checking to see if the Cache API is available
  *  If so, check to see if the Service Worker API is available
  */
@@ -45,27 +49,30 @@ if ('caches' in window) {
 
     // If network connectivity disables during application run-time
     window.addEventListener('offline', event => {
-      console.log('--------------------     NO INTERNET CONNECTION     --------------------');
-      alert('You are offline. Information might be not up to date.');
-      // Saves the network state as offline in local storage
+      console.log(
+        '%c--------------------     NO INTERNET CONNECTION     --------------------',
+        normalLogCentered,
+      );
+      navigator.serviceWorker.controller.postMessage('cancel-fetches');
+      navigator.serviceWorker.controller.postMessage('stop-cache-timer');
       localStorage.setItem('network-status', JSON.stringify('offline'));
       window.postMessage('offline', location.origin);
-      navigator.serviceWorker.controller.postMessage('stop-cache-timer');
+      alert('You are offline. Information might be not up to date.');
     });
 
     // If network connectivity re-enables during application run-time
     window.addEventListener('online', () => {
       console.log(
-        '--------------------     INTERNET CONNECTION ESTABLISHED     --------------------',
+        '%c--------------------     INTERNET CONNECTION ESTABLISHED     --------------------',
+        normalLogCentered,
       );
-      // Saves the network state as online in local storage
+      navigator.serviceWorker.controller.postMessage('start-cache-timer');
       localStorage.setItem('network-status', JSON.stringify('online'));
       window.postMessage('online', location.origin);
-      navigator.serviceWorker.controller.postMessage('start-cache-timer');
     });
   } else {
-    console.log('SERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE');
+    console.log('%cSERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);
   }
 } else {
-  console.log('CACHE API IS NOT AVAILABLE: PWA NOT AVAILABLE');
+  console.log('%cCACHE API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);
 }

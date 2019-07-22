@@ -87,8 +87,6 @@ export default class Login extends Component {
         storage.store('currentTerm', session.getTermCode());
         // Saves the network state as online in local storage
         localStorage.setItem('network-status', JSON.stringify('online'));
-      } else {
-        console.log('SERVICE WORKER IS NOT AVAILABLE');
       }
       this.props.onLogIn();
     } catch (err) {
