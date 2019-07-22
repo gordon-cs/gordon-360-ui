@@ -29,17 +29,21 @@ BUILD_DIR="build"
 # Gets and formats the date for the backup file
 CURRDATE=`date +"%m-%d-%Y-%H-%M"`
 
-printf "%s\n" "Removing backup directory from previous deployment..."
+
+# TODO: add code to delete backups over some age (1 week?)
+printf "%s\n" "WARNING: NOT removing backup directory from previous deployment..."
+
+# NOTE: this doesn't work since backups are now named with the a timestamp
 
 # Remove temporary directory (using PowerShell commands, not Bash commands)
-sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" \
-  "if (Test-Path "$DIR-backup") { rm -r "$DIR-backup"; }"
+# sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" \
+#  "if (Test-Path "$DIR-backup") { rm -r "$DIR-backup"; }"
 
-if [ $? == 0 ]; then
-  printf "%s\n" "Successfully removed backup directory"
-else
-  printf "%s\n" "Failed to remove backup directory"
-fi
+#if [ $? == 0 ]; then
+#  printf "%s\n" "Successfully removed backup directory"
+#else
+#  printf "%s\n" "Failed to remove backup directory"
+#fi
 
 
 printf "%s\n" "Moving app to backup directory... "
@@ -82,4 +86,3 @@ if [ $? == 0 ]; then
 else
   printf "%s\n" "Failed to copy app to server"
 fi
-
