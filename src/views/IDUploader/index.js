@@ -18,6 +18,7 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
 import user from '../../services/user';
+// import errorLog from '../../services/errorLog';
 
 const CROP_DIM = 1200; // pixels
 export default class IDUploader extends Component {
@@ -55,20 +56,28 @@ export default class IDUploader extends Component {
     }
   };
 
-  async postCroppedImage(croppedImage, n) {
+  async postCroppedImage(croppedImage, attemptNumber) {
+    // let profile = await user.getProfileInfo();
+    // let logMessage =
+    //   'ID photo submission #' +
+    //   attemptNumber +
+    //   ' for ' +
+    //   profile.fullName +
+    //   ' from ' +
+    //   errorLog.parseNavigator(navigator);
     try {
-      console.log('n = ' + n);
-      console.log(await user.postIDImage(croppedImage));
+      await user.postIDImage(croppedImage);
       this.setState({ submitDialogOpen: true });
     } catch (error) {
-      if (n < 5) {
-        console.log('recursion called');
-        this.postCroppedImage(croppedImage, n + 1);
+      // let errorMessage = ', but image failed to post with error: ' + error;
+      // logMessage = errorMessage + logMessage;
+      if (attemptNumber < 5) {
+        this.postCroppedImage(croppedImage, attemptNumber + 1);
       } else {
-        console.log('recursion not called');
         this.setState({ errorDialogOpen: true });
       }
     }
+    // errorLog.postErrorMessage(logMessage);
   }
 
   handleCloseCancel = () => {
@@ -276,18 +285,23 @@ export default class IDUploader extends Component {
             {!preview && (
               <Grid container justify="center" spacing="16">
                 <Dropzone
-                  className="dropzone"
-                  activeClassName="drop-overlay"
                   onDropAccepted={this.onDropAccepted.bind(this)}
                   onDropRejected={this.onDropRejected.bind(this)}
-                  accept="image/jpeg,image/jpg,image/png"
+                  accept="image/jpeg, image/jpg, image/png"
                 >
-                  <img
-                    className="rounded-corners"
-                    src={`data:image/png;base64,${this.state.image}`}
-                    alt=""
-                    style={{ 'max-width': '200px', 'max-height': '200px' }}
-                  />
+                  {({ getRootProps, getInputProps }) => (
+                    <section>
+                      <div className="id-dropzone" {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <img
+                          className="rounded-corners"
+                          src={`data:image/jpg;base64,${this.state.image}`}
+                          alt=""
+                          style={{ 'max-width': '200px', 'max-height': '200px' }}
+                        />
+                      </div>
+                    </section>
+                  )}
                 </Dropzone>
               </Grid>
             )}

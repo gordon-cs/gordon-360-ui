@@ -323,7 +323,6 @@ const postIDImage = dataURI => {
   let type = blob.type.replace('image/', '');
   let headerOptions = {};
   imageData.append('canvasImage', blob, 'canvasImage.' + type);
-  console.log('blob size: ' + blob.size);
   return http.post('profiles/IDimage', imageData, headerOptions);
 };
 
@@ -369,13 +368,11 @@ function dataURItoBlob(dataURI) {
  */
 const getLocalInfo = () => {
   let token;
-
   try {
     token = storage.get('token');
   } catch (err) {
     throw new AuthError('Could not get local auth');
   }
-
   try {
     return jwtDecode(token);
   } catch (err) {
@@ -457,7 +454,7 @@ const getMemberships = async id => {
 
 const getPublicMemberships = async username => {
   let memberships;
-  memberships = await http.get(`/memberships/student/username/${username}/`);
+  memberships = await http.get(`memberships/student/username/${username}/`);
   memberships.sort(compareByTitle);
   return memberships;
 };
@@ -564,21 +561,7 @@ function compareByTitle(a, b) {
   return comparison;
 }
 
-//compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
-function compareBySession(a, b) {
-  const sessA = a.SessionCode;
-  const sessB = b.SessionCode;
-
-  let comparison = 0;
-  if (sessA > sessB) {
-    comparison = 1;
-  } else if (sessA < sessB) {
-    comparison = -1;
-  }
-  return comparison;
-}
-
-//compares items by ActivityCode, used by getTranscriptInfo to sort by SessionCode
+//compares items by ActivityCode, used by getTranscriptMembershipsInfo to sort by ActivityCode
 function compareByActCode(a, b) {
   const codeA = a.ActivityCode;
   const codeB = b.ActivityCode;
@@ -598,7 +581,6 @@ function compareByActCode(a, b) {
 //sorts by SessionCode and ActivityCode
 const getTranscriptMembershipsInfo = async id => {
   let transcriptInfo = await getMembershipsWithoutGuests(id);
-  transcriptInfo.sort(compareBySession);
   transcriptInfo.sort(compareByActCode);
   return transcriptInfo;
 };

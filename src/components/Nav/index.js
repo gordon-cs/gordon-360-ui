@@ -12,9 +12,16 @@ export default class GordonNav extends Component {
   render() {
     const drawer = (
       <div>
-        <GordonNavAvatar onLinkClick={this.props.onDrawerToggle} />
+        <GordonNavAvatar
+          onLinkClick={this.props.onDrawerToggle}
+          Authentication={this.props.Authentication}
+        />
         <Divider />
-        <GordonNavLinks onLinkClick={this.props.onDrawerToggle} onSignOut={this.props.onSignOut} />
+        <GordonNavLinks
+          onLinkClick={this.props.onDrawerToggle}
+          onSignOut={this.props.onSignOut}
+          Authentication={this.props.Authentication}
+        />
       </div>
     );
 

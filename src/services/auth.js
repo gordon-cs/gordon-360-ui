@@ -57,8 +57,12 @@ const getAuth = (username, password) => {
  */
 const authenticate = (username, password) =>
   getAuth(username, password)
-    .then(token => storage.store('token', token))
-    .then(console.log('auth.js: authenticate() - done'));
+    .then(token => {
+      storage.store('token', token);
+    })
+    .then(() => {
+      console.log('auth.js: authenticate() - done');
+    });
 
 /**
  * Check if current session is authenticated
@@ -66,26 +70,59 @@ const authenticate = (username, password) =>
  * @return {Promise.<boolean>} Whether session is authenticated or not
  */
 const isAuthenticated = () => {
-  console.log('auth.js: entered isAuthenticated()');
   try {
-    // Check that auth exists
     const token = storage.get('token');
-    console.log('auth.js: got token from storage');
     // Check that auth contains a token
-    console.log('auth.js: checking token length');
     return token && token.length > 0;
   } catch (err) {
     console.log('auth.js: error occured getting token');
+    // Checks to see if Cache API is available before attempting to access it
+    if ('caches' in window) {
+      // Checks to see if Service Worker is available since these values would not exist
+      // if the service worker was unavailable
+      if (navigator.serviceWorker) {
+        if (localStorage.length > 0) {
+          storage.remove('status');
+          storage.remove('currentTerm');
+          storage.remove('network-status');
+          caches.keys().then(keys => {
+            keys.forEach(key => {
+              caches.delete(key);
+            });
+          });
+          // navigator.serviceWorker.controller.postMessage({ message: 'cancel-fetches' });
+        }
+      }
+    }
     return false;
   }
 };
 
 /**
  * Sign a user out
- * @description Removes token from storage.
+ * @description Removes all data from storage and cache
  */
 const signOut = () => {
   storage.remove('token');
+  // Checks to see if Cache API is available before attempting to access it
+  if ('caches' in window) {
+    // Checks to see if Service Worker is available since these values would not exist
+    // if the service worker was unavailable
+    if (navigator.serviceWorker) {
+      // if (localStorage.getItem('network-status')) {
+      //   console.log('TOKEN LENGTH IS GREATER THAN 0');
+      //   navigator.serviceWorker.controller.postMessage({ message: 'cancel-fetches' });
+      // }
+      storage.remove('status');
+      storage.remove('currentTerm');
+      storage.remove('network-status');
+      caches.keys().then(keys => {
+        keys.forEach(key => {
+          caches.delete(key);
+        });
+      });
+    }
+  }
 };
 
 export { authenticate, isAuthenticated, signOut };

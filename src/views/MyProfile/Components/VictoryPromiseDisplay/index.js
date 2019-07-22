@@ -71,7 +71,7 @@ export default class VictoryPromiseDisplay extends React.Component {
 
     var arr = [CC, IM, LS, LW];
     const min = arr.filter(x => x > 0)[0] ? arr.filter(x => x > 0).sort()[0] : 1;
-    var emptySlice = min - 0.1;
+    var emptySlice = min - 0.9;
 
     if (CC > 0) {
       this.setState({ CCColor: gordonColors.secondary.red, CC_ON: true });
@@ -94,37 +94,72 @@ export default class VictoryPromiseDisplay extends React.Component {
       this.setState({ LW: emptySlice });
     }
 
-    this.setState({
-      options: {
-        legend: {
-          display: false,
-        },
-        scale: {
-          display: false,
-          gridLines: {
-            display: true,
-          },
-          ticks: {
+    if (CC === 0 && IM === 0 && LS === 0 && LW === 0) {
+      this.setState({
+        CC: 0.97,
+        IM: 0.97,
+        LS: 0.97,
+        LW: 0.97,
+        options: {
+          legend: {
             display: false,
-            max: Math.max(this.state.CC, this.state.IM, this.state.LS, this.state.LW) + 0.2,
-            min: 0,
-            maxTicksLimit: 1,
           },
-        },
-        tooltips: {
-          callbacks: {
-            label: function(tooltipItem, data) {
-              var label = data.labels[tooltipItem.index];
-              if (Math.floor(tooltipItem.yLabel % 1) < min) {
+          scale: {
+            display: false,
+            gridLines: {
+              display: true,
+            },
+            ticks: {
+              display: false,
+              max: 1,
+              min: 0,
+              maxTicksLimit: 1,
+            },
+          },
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var label = data.labels[tooltipItem.index];
                 return label + ': 0';
-              } else {
-                return label + ': ' + tooltipItem.yLabel;
-              }
+              },
             },
           },
         },
-      },
-    });
+      });
+    } else {
+      this.setState({
+        options: {
+          legend: {
+            display: false,
+          },
+          scale: {
+            display: false,
+            gridLines: {
+              display: true,
+            },
+            ticks: {
+              display: false,
+              max: Math.max(this.state.CC, this.state.IM, this.state.LS, this.state.LW) + 0.2,
+              min: 0,
+              maxTicksLimit: 1,
+            },
+          },
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var label = data.labels[tooltipItem.index];
+                if (tooltipItem.yLabel < min) {
+                  return label + ': 0';
+                } else {
+                  return label + ': ' + tooltipItem.yLabel;
+                }
+              },
+            },
+          },
+        },
+      });
+    }
+
     this.setColor();
   }
 
