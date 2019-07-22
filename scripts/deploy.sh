@@ -71,7 +71,10 @@ fi
 printf "%s\n" "Copying app to server... "
 
 # Copy built app to server
+echo sshpass -p ... scp -r build/* "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 sshpass -p "$DEPLOY_PASSWORD" scp -r build/* "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
+
+
 
 # Create web.config on the server
 printf "%s\n" "Creating web.config..."
