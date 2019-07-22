@@ -12,7 +12,6 @@ import http from './http';
  * @property {Number} IsSchedulePrivate
  * @property {DateTime} ModifiedTimeStamp
  * @property {String} Description
- * @property {Number} gordon_id
  */
 
 /**

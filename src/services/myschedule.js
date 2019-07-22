@@ -11,7 +11,6 @@ import http from './http';
  * @global
  * @typedef MySchedule
  * @property {number} EVENT_ID
- * @property {number} GORDON_ID
  * @property {String} LOCATION
  * @property {String} DESCRIPTION
  * @property {String} MON_CDE
