@@ -68,63 +68,49 @@ export default class GordonActivitiesAll extends Component {
           activities,
           allActivities: activities,
           myInvolvements: myInvolvements,
+          loading: false,
           sessions,
           types,
         });
-
-        if (activities.length === 0) {
-          var recentSession;
-          recentSession = this.state.sessions[0].SessionCode;
-          this.setState({ session: recentSession, currentSession: sessionCode });
-          const [activities, types, sessions] = await Promise.all([
-            activity.getAll(recentSession),
-            activity.getTypes(recentSession),
-            session.getAll(),
-          ]);
-          const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
-
-          this.setState({
-            profile,
-            activities,
-            allActivities: activities,
-            myInvolvements: myInvolvements,
-            loading: false,
-            sessions,
-            types,
-          });
-        }
       } catch (error) {
         this.setState({ error });
       }
     } else {
       try {
         const { SessionCode: sessionCode } = await session.getCurrent();
-        this.setState({ session: sessionCode, currentSession: sessionCode });
-
         const [activities, types, sessions] = await Promise.all([
           activity.getAll(sessionCode),
           activity.getTypes(sessionCode),
           session.getAll(),
         ]);
 
-        this.setState({
-          activities,
-          allActivities: activities,
-          loading: false,
-          sessions,
-          types,
-        });
-
+        var IcurrentSession;
+        var foundActivities = false;
         if (activities.length === 0) {
-          recentSession = this.state.sessions[0].SessionCode;
-          this.setState({ session: recentSession, currentSession: sessionCode });
-          const [activities, types, sessions] = await Promise.all([
-            activity.getAll(recentSession),
-            activity.getTypes(recentSession),
-            session.getAll(),
-          ]);
+          for (var i = 0; i < sessions.length; i++) {
+            if (sessionCode === sessions[i].SessionCode) {
+              IcurrentSession = i;
+              i = sessions.length;
+            }
+          }
+          for (var k = IcurrentSession - 1; k >= 0; k--) {
+            const [newActivities] = await Promise.all([activity.getAll(sessions[k].SessionCode)]);
+            if (newActivities.length !== 0) {
+              foundActivities = true;
+              this.setState({
+                session: sessions[k].SessionCode,
+                sessions,
+                activities: newActivities,
+                allActivities: newActivities,
+                loading: false,
+              });
+            }
+          }
+        }
 
+        if (!foundActivities) {
           this.setState({
+            session: sessionCode,
             activities,
             allActivities: activities,
             loading: false,
