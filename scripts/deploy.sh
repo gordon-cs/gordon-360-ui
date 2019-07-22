@@ -78,7 +78,7 @@ printf "%s\n" "Copying app to server... "
 echo sshpass -p ... scp -r build "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 sshpass -p "$DEPLOY_PASSWORD" scp -r build "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 echo "sshpass -p ... ssh ... mv build/* ."
-sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME":"$DIR" mv build/* .
+sshpass -p "$DEPLOY_PASSWORD" ssh "$DEPLOY_USER"@"$HOSTNAME" mv build/* .
 
 
 
