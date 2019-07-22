@@ -71,7 +71,7 @@ export default class VictoryPromiseDisplay extends React.Component {
 
     var arr = [CC, IM, LS, LW];
     const min = arr.filter(x => x > 0)[0] ? arr.filter(x => x > 0).sort()[0] : 1;
-    var emptySlice = min - 0.9;
+    var emptySlice = min - 0.3;
 
     if (CC > 0) {
       this.setState({ CCColor: gordonColors.secondary.red, CC_ON: true });
