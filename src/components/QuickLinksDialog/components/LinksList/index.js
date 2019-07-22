@@ -22,7 +22,7 @@ export default class GordonLinksList extends Component {
             <ListItemIcon>
               <img
                 className="gordon"
-                src="https://www.gordon.edu/favicon.ico"
+                src={require(`${'../Images/GordonFavicon.ico'}`)}
                 alt="gordon"
                 width="16"
                 height="16"
@@ -34,7 +34,7 @@ export default class GordonLinksList extends Component {
             <ListItemIcon>
               <img
                 className="mygordon"
-                src="https://my.gordon.edu/ics/favicon.ico"
+                src={require(`${'../Images/MyGordonFavicon.ico'}`)}
                 alt="my gordon"
                 width="16"
                 height="16"
@@ -46,7 +46,7 @@ export default class GordonLinksList extends Component {
             <ListItemIcon>
               <img
                 className="gogordon"
-                src="https://go.gordon.edu/favicon.ico"
+                src={require(`${'../Images/GoGordonFavicon.ico'}`)}
                 alt="go gordon"
                 width="16"
                 height="16"
@@ -58,7 +58,7 @@ export default class GordonLinksList extends Component {
             <ListItemIcon>
               <img
                 className="blackboard"
-                src="https://blackboard.gordon.edu/favicon.ico"
+                src={require(`${'../Images/BbFavicon.ico'}`)}
                 alt="blackboard learn"
                 width="16"
                 height="16"

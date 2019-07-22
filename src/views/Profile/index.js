@@ -43,6 +43,8 @@ export default class Profile extends Component {
       linkedInLink: '',
       twitterLink: '',
       instagramLink: '',
+      network: 'online',
+      currentUser: '',
     };
   }
 
@@ -66,12 +68,14 @@ export default class Profile extends Component {
     this.setState({ username: searchedUser.match.params.username });
     try {
       const profile = await user.getProfileInfo(searchedUser.match.params.username);
+      const curUser = await user.getProfileInfo();
       let profileinfo = (
         <ProfileList profile={profile} myProf={false}>
           {' '}
         </ProfileList>
       );
       let officeinfo = <Office profile={profile} />;
+      this.setState({ currentUser: curUser });
       this.setState({ profileinfo: profileinfo });
       this.setState({ officeinfo: officeinfo });
       this.checkPersonType(profile);
@@ -362,35 +366,6 @@ export default class Profile extends Component {
                               )}
                             </Grid>
                           </Grid>
-                          {this.state.profile.Email !== '' && (
-                            <div
-                              style={{
-                                marginTop: '20px',
-                                display: 'flex',
-                                justifyContent: 'center',
-                              }}
-                            >
-                              <a href={`mailto:${this.state.profile.Email}`}>
-                                <div
-                                  className="email-link-container"
-                                  style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    alignContent: 'center',
-                                    justifyContent: 'center',
-                                  }}
-                                >
-                                  <EmailIcon
-                                    className="email-link"
-                                    style={{ marginRight: '0.75rem' }}
-                                  />
-                                  <Typography className="email-link">
-                                    {this.state.profile.Email}
-                                  </Typography>
-                                </div>
-                              </a>
-                            </div>
-                          )}
                         </Grid>
                       </Grid>
                     </CardContent>
@@ -440,10 +415,10 @@ export default class Profile extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    {/*<img
+                    <img
                       src={require(`${'../../NoConnection.svg'}`)}
                       alt="Internet Connection Lost"
-                    />*/}
+                    />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>

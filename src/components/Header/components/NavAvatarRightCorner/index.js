@@ -1,17 +1,23 @@
 import Avatar from '@material-ui/core/Avatar';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
-
 import QuickLinksDialog from '../../../QuickLinksDialog';
 import { signOut } from '../../../../services/auth';
 
 import './nav-avatar-right-corner.css';
 import user from '../../../../services/user';
 import Tooltip from '@material-ui/core/Tooltip';
+
+import { Button } from '@material-ui/core';
 
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
@@ -22,6 +28,8 @@ export default class GordonNavAvatarRightCorner extends Component {
     this.onSignOut = this.onSignOut.bind(this);
     this.handleLinkClickOpen = this.handleLinkClickOpen.bind(this);
     this.handleLinkClose = this.handleLinkClose.bind(this);
+    this.openDialogBox = this.openDialogBox.bind(this);
+    this.closeDialogBox = this.closeDialogBox.bind(this);
 
     this.getInitials = this.getInitials.bind(this);
 
@@ -31,8 +39,8 @@ export default class GordonNavAvatarRightCorner extends Component {
       name: null,
       username: null,
       linkopen: false,
-
       anchorEl: null,
+      network: 'online',
     };
   }
 
@@ -72,6 +80,24 @@ export default class GordonNavAvatarRightCorner extends Component {
       this.loadAvatar(newProps.Authentication);
     }
   }
+
+  openDialogBox = () => {
+    this.setState({ dialogBoxOpen: true });
+  };
+
+  closeDialogBox = () => {
+    this.setState({ dialogBoxOpen: false });
+  };
+
+  handleLinkClickOpen = () => {
+    this.setState({
+      linkopen: true,
+    });
+  };
+
+  handleLinkClose = () => {
+    this.setState({ linkopen: false });
+  };
 
   async componentWillMount() {
     this.loadAvatar(this.props.Authentication);
@@ -335,6 +361,25 @@ export default class GordonNavAvatarRightCorner extends Component {
           handleLinkClose={this.handleLinkClose}
           linkopen={this.state.linkopen}
         />
+        <Dialog
+          open={this.state.dialogBoxOpen}
+          onClose={clicked => this.closeDialogBox()}
+          aria-labelledby="disabled-feature"
+          aria-describedby="disabled-feature-description"
+        >
+          <DialogTitle id="disabled-feature">{'Offline Mode:'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="disabled-feature-description">
+              This feature is unavailable offline. Please reconnect to internet to access this
+              feature.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={clicked => this.closeDialogBox()} color="primary">
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
       </section>
     );
   }
