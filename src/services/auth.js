@@ -80,7 +80,7 @@ const isAuthenticated = () => {
     if ('caches' in window) {
       // Checks to see if Service Worker is available since these values would not exist
       // if the service worker was unavailable
-      if (navigator.serviceWorker) {
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage('delete-token-termCode');
         navigator.serviceWorker.controller.postMessage('cancel-fetches');
         if (localStorage.length > 0) {
@@ -109,7 +109,7 @@ const signOut = () => {
   if ('caches' in window) {
     // Checks to see if Service Worker is available since these values would not exist
     // if the service worker was unavailable
-    if (navigator.serviceWorker) {
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage('delete-token-termCode');
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
       storage.remove('status');
