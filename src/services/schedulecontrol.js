@@ -14,15 +14,6 @@ import http from './http';
  * @property {String} Description
  */
 
-/**
- @example
-{
-    "IsSchedulePrivate": 0,
-    "ModifiedTimeStamp": null,
-    "Description": "It is my description",
-    "gordon_id": "50179789"
-}
-*/
 
 async function setSchedulePrivacy(makePrivate) {
   // 'Y' = private, 'N' = public

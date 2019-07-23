@@ -12,19 +12,15 @@ export default class RemoveHoursDialog extends React.Component {
     this.state = {
       removeOfficeHoursOpen: false,
     };
-    this.handleRemoveOfficeHoursClose = this.handleRemoveOfficeHoursClose.bind(this);
   }
 
   handleSubmit = e => {
     e.preventDefault();
     this.props.onDialogSubmit();
-    console.log('Happened');
     this.props.handleRemoveOfficeHoursClose();
   };
 
-  handleRemoveOfficeHoursClose = () => {
-    this.setState({ removeOfficeHoursOpen: false });
-  };
+
 
   render() {
     const button = {
@@ -41,7 +37,6 @@ export default class RemoveHoursDialog extends React.Component {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
-          {/* <Box fontSize="h6.fontSize" m={1}>Are you sure about removing this event?</Box> */}
           <DialogTitle className="title">Are you sure about removing this event?</DialogTitle>
           <DialogActions className="buttons">
             <Button

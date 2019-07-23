@@ -41,7 +41,7 @@ class GordonSchedulePanel extends Component {
     this.state = {
       myProf: false, //if my profile page
       isSchedulePrivate: 0,
-      isExpanded: Boolean,
+      isExpanded: false,
       officeHoursOpen: false,
       disabled: true,
       selectedEvent: null,
@@ -72,26 +72,22 @@ class GordonSchedulePanel extends Component {
 
   componentWillMount() {
     this.loadData(this.props.profile);
-    this.setState({ isExpanded: true });
   }
 
   loadData = async searchedUser => {
     try {
-      const scheduleControlPromise = schedulecontrol.getScheduleControl(searchedUser.AD_Username);
-      const scheduleControlInfo = await scheduleControlPromise;
+      const scheduleControlInfo = await schedulecontrol.getScheduleControl(searchedUser.AD_Username);
       this.scheduleControlInfo = scheduleControlInfo;
     } catch (e) {
       this.setState({ loading: false });
     }
     if (this.scheduleControlInfo) {
-      this.setState({ isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate });
-      this.setState({ 
+      this.setState({ isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate,
         description: this.scheduleControlInfo.Description ? 
         this.scheduleControlInfo.Description.replace(new RegExp("SlSh", 'g'), '/').replace(new RegExp("CoLn", 'g'), ':')
-      .replace(new RegExp("dOT", 'g'), '.') : ''});
-      this.setState({ modifiedTimeStamp: this.scheduleControlInfo.ModifiedTimeStamp });
+      .replace(new RegExp("dOT", 'g'), '.') : '',
+       modifiedTimeStamp: this.scheduleControlInfo.ModifiedTimeStamp });
     }
-    console.log('Schedule Control : ', this.scheduleControlInfo);
     this.setState({ loading: false });
   };
 
@@ -127,8 +123,7 @@ class GordonSchedulePanel extends Component {
 
   handleRemoveButton = event => {
     if (event.id > 1000) {
-      this.setState({ disabled: false, selectedEvent: event }, () => {
-        console.log(this.state.selectedEvent)});
+      this.setState({ disabled: false, selectedEvent: event });
     } else {
       this.setState({ disabled: true});
     }
@@ -330,10 +325,7 @@ class GordonSchedulePanel extends Component {
             <Typography>{panelTitle} the Schedule</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            {/* ///////////////////////////////////////////////////////////////////// */}
             <div className="schedule_content">
-              {/* <Card> */}
-              {/* <CardContent> */}
 
               <div className="privacy">{privacyButton}</div>
 
@@ -361,13 +353,10 @@ class GordonSchedulePanel extends Component {
                   reloadCall={this.state.reloadCall}
                 />
               </div>
-              {/* </CardContent> */}
-              {/* </Card> */}
               {editDialog}
               {hoursDialog}
               {removeHoursDialog}
             </div>
-            {/* //////////////////////////////////////////////////////////////////// */}
           </ExpansionPanelDetails>
         </ExpansionPanel>
       );

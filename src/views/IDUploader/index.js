@@ -16,7 +16,7 @@ import IdCardGreen from '../IDUploader/image-green.png';
 import IdCardTop from '../IDUploader/image-top.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import './IDUploader.scss';
+import './IDUploader.css';
 import user from '../../services/user';
 // import errorLog from '../../services/errorLog';
 

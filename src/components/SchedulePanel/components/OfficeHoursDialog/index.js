@@ -12,7 +12,6 @@ import { gordonColors } from '../../../../theme';
 import Checkbox from '@material-ui/core/Checkbox';
 import myschedule from './../../../../services/myschedule'
 
-import './officehoursdialog.css';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 export default class HoursDialog extends React.Component {

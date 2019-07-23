@@ -23,20 +23,6 @@ import http from './http';
  * @property {TimeSpan} END_TIME
  */
 
-/**
- @example
- BEGIN_TIME: "11:30:00"
- BLDG_CDE: "KOS"
- CRS_CDE: "BCM  308  H                   "
- CRS_TITLE: "CHRISTIAN THEOLOGY"
- END_TIME: "12:30:00"
- FRIDAY_CDE: " "
- MONDAY_CDE: " "
- ROOM_CDE: "126"
- THURSDAY_CDE: " "
- TUESDAY_CDE: "T"
- WEDNESDAY_CDE: " "
-*/
 
 /**
  * Get course schedule for the current user

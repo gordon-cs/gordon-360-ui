@@ -18,7 +18,6 @@ export default class EditDescriptionDialog extends React.Component {
       },
       editDescriptionOpen: false,
     };
-    this.handleEditDescriptionClose = this.handleEditDescriptionClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -39,9 +38,7 @@ export default class EditDescriptionDialog extends React.Component {
     this.setState({ [name]: e.target.value }, () => {});
   };
 
-  handleEditDescriptionClose = () => {
-    this.setState({ editDescriptionOpen: false });
-  };
+
 
   handleClose = () => {
     this.props.handleEditDescriptionClose();

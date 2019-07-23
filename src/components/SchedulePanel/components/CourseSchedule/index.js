@@ -35,20 +35,6 @@ export default class CourseSchedule extends Component {
     } else return {};
   };
 
-  handleSelect = ({ start, end }) => {
-    const title = window.prompt('New Event name');
-    if (title)
-      this.setState({
-        events: [
-          ...this.state.events,
-          {
-            start,
-            end,
-            title,
-          },
-        ],
-      });
-  };
 
   componentWillReceiveProps(nextProps){
     if (this.props.reloadCall !== nextProps.reloadCall){
@@ -67,20 +53,17 @@ export default class CourseSchedule extends Component {
     let courseInfo = null;
     if (this.props.myProf) {
       const schedulePromise = schedule.getScheduleMyProf();
-      const courseEventsPromise = schedule.makeScheduleCourses(schedulePromise);
-      courseInfo = await courseEventsPromise;
+      courseInfo = await schedule.makeScheduleCourses(schedulePromise);
     } else {
       try {
         const schedulePromise = schedule.getSchedule(searchedUser.AD_Username);
-        const courseEventsPromise = schedule.makeScheduleCourses(schedulePromise);
-        courseInfo = await courseEventsPromise;
+        courseInfo = await schedule.makeScheduleCourses(schedulePromise);
       } catch (e) {
         this.setState({ loading: false });
       }
     }
     const myschedulePromise = myschedule.getMySchedule(searchedUser.AD_Username);
-    const myEventsPromise = myschedule.makeMySchedule(myschedulePromise);
-    let myscheduleInfo = await myEventsPromise;
+    let myscheduleInfo = await myschedule.makeMySchedule(myschedulePromise);
 
     if (courseInfo) {
       this.eventInfo = courseInfo.concat(myscheduleInfo);

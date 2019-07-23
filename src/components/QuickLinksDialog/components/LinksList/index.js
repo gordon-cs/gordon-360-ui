@@ -14,20 +14,6 @@ function ListItemLink(props) {
 }
 
 // Currently all the URLs in Links tab are hardcoded in this file
-// @example
-// <List component="nav" subheader={<ListSubheader component="div">Subheader Title goes here</ListSubheader>}>
-// <ListItemLink target="_blank" rel="noopener" href="https://www.PutYourURL.com">
-//   <ListItemIcon>
-//     <img
-//       className="css, if we have one"
-//       src="https://www.GettheFavicon.com/favicon.ico"
-//       alt="Name of the website"
-//       width="16"
-//       height="16"
-//     />
-//   </ListItemIcon>
-//   <ListItemText primary="Name of the website" />
-// </ListItemLink>
 
 export default class GordonLinksList extends Component {
   render() {
