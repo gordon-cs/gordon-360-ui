@@ -14,13 +14,19 @@ import myschedule from './../../../../services/myschedule'
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+// Default values
+const STARTHOUR = '08:00';
+const ENDHOUR ='17:00';
+
 export default class HoursDialog extends React.Component {
+
+
   constructor(props) {
     super(props);
 
     this.state = {
-      startHourInput: '08:00',
-      endHourInput: '17:00',
+      startHourInput: STARTHOUR,
+      endHourInput: ENDHOUR,
       officeHoursOpen: false,
       checkedC: false,
       checkedDayofWeek: {
@@ -55,7 +61,7 @@ export default class HoursDialog extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // Case : Edit(doubleclick)
-    if (this.state.selectedEvent !== nextProps.selectedEvent && nextProps.selectedEvent) {
+    if (nextProps.selectedEvent && (this.state.selectedEvent !== nextProps.selectedEvent) ) {
       this.setState({ selectedEvent: nextProps.selectedEvent }, () => {
         myschedule
           .getMyScheduleEventId(this.state.selectedEvent.id)
@@ -107,7 +113,7 @@ export default class HoursDialog extends React.Component {
     let startHourValid = this.state.startHourValid;
     let endHourValid = this.state.endHourValid;
 
-    // Require that content havint appropriate size and format
+    // Require that content has appropriate size and format
     switch (fieldName) {
       case 'descriptionInput':
         descriptionValid = value.trim() !== '' && value.length < 50;
@@ -164,17 +170,11 @@ export default class HoursDialog extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
-    var startHour = this.state.startHourInput;
-    var endHour = this.state.endHourInput;
-    var location = this.state.locationInput;
-    var description = this.state.descriptionInput;
-
     var mySchedule = {
-      startHour: startHour,
-      endHour: endHour,
-      location: location,
-      description: description,
+      startHour: this.state.startHourInput,
+      endHour: this.state.endHourInput,
+      location: this.state.locationInput,
+      description: this.state.descriptionInput,
       monday: this.state.checkedDayofWeek.checkedMo,
       tuesday: this.state.checkedDayofWeek.checkedTu,
       wednesday: this.state.checkedDayofWeek.checkedWe,
@@ -248,8 +248,8 @@ export default class HoursDialog extends React.Component {
 
   handleReset = () => {
     this.setState({
-      startHourInput: '08:00',
-      endHourInput: '17:00',
+      startHourInput: STARTHOUR,
+      endHourInput: ENDHOUR,
       officeHoursOpen: false,
       checkedC: false,
       checkedDayofWeek: {
@@ -423,7 +423,6 @@ export default class HoursDialog extends React.Component {
                 />
               </FormGroup>
 
-              {/* <div className="start_time"> */}
               <div>
                 <TextField
                   label="Start time"
@@ -440,8 +439,7 @@ export default class HoursDialog extends React.Component {
                     step: 300, // 5 min
                   }}
                 />
-              {/* </div>
-              <div className="end_time"> */}
+
                 <TextField
                   label="End time"
                   type="time"

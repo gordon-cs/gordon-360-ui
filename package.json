@@ -14,10 +14,10 @@
     "jwt-decode": ">=2.2.0",
     "lodash": ">=4.17.11",
     "luxon": ">=0.2.12",
-    "moment": "^2.24.0",
+    "moment": ">=2.24.0",
     "prop-types": ">=15.6.0",
     "react": ">=16.2.0",
-    "react-big-calendar": "^0.21.0",
+    "react-big-calendar": ">=0.21.0",
     "react-chartjs-2": ">=2.7.4",
     "react-cropper": ">=1.0.1",
     "react-document-title": ">=2.0.3",
@@ -29,7 +29,7 @@
     "react-media": ">=1.8.0",
     "react-responsive-carousel": ">=3.1.30",
     "react-router-dom": ">=4.2.2",
-    "react-timeago": "^4.4.0",
+    "react-timeago": ">=4.4.0",
     "typescript": ">=3.5.3"
   },
   "devDependencies": {

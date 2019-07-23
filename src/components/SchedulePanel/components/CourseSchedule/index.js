@@ -52,8 +52,12 @@ export default class CourseSchedule extends Component {
   loadData = async searchedUser => {
     let courseInfo = null;
     if (this.props.myProf) {
+      try{
       const schedulePromise = schedule.getScheduleMyProf();
       courseInfo = await schedule.makeScheduleCourses(schedulePromise);
+      } catch(e){
+        this.setState({ loading: false });
+      }
     } else {
       try {
         const schedulePromise = schedule.getSchedule(searchedUser.AD_Username);
