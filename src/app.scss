@@ -49,8 +49,9 @@ a {
 .app-main {
   height: calc(100vh - #{$header-height-xs});
   margin-top: $header-height-xs;
-  overflow-y: scroll; // change this to scroll for ios to make the scroll smoothly
-  scroll-behavior: smooth;
+  overflow-y: auto; // change this to scroll for ios to make the scroll smoothly
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   padding: 1rem 0.5rem;
   width: 100%;
   background-color: #ebeaea;

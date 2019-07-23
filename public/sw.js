@@ -52,6 +52,11 @@ const staticCache = [
   '/static/css/main.01e33f3b.chunk.css',
   '/static/js/2.00596eb8.chunk.js',
   '/static/js/main.2f5d16ec.chunk.js',
+  '/static/css/main.5e616716.chunk.css.map',
+  '/static/js/2.00596eb8.chunk.js.map',
+  '/static/css/main.5e616716.chunk.css',
+  '/static/css/2.d64d1e9d.chunk.css.map',
+  '/static/js/main.2f5d16ec.chunk.js.map',
   // Images
   '/images/android-icon-36x36.png',
   '/images/android-icon-48x48.png',
@@ -284,9 +289,16 @@ async function dynamicLinksThenCache(token, termCode) {
     let id = profile ? profile.ID : null;
     let sessionCode = currentSession ? currentSession.SessionCode : null;
 
+    const imagsCache = [
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Profile-1_2018_07_26_02_26_40_2018_10_09_08_52_16.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/welcome1_2018_07_26_11_00_21_2018_10_09_08_51_52.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Help-1_2018_07_26_11_04_33_2018_10_09_08_51_12.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Events-1_2018_07_26_02_24_53_2018_10_09_08_51_24.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Feedback-1_2018_07_26_02_25_11_2018_10_09_08_50_45.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Home-1_2018_07_26_02_25_41_2018_10_09_08_51_41.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Involvements-1_2018_07_26_02_26_19_2018_10_09_08_52_02.jpg',
+    ];
     const dynamicCache = [
-      // Font CSS Document
-      `https://cloud.typography.com/7763712/6754392/css/fonts.css`,
       // Home Page Fetch URLs
       `${apiSource}/api/cms/slider`,
       `${apiSource}/api/dining`,
@@ -343,8 +355,9 @@ async function dynamicLinksThenCache(token, termCode) {
     //   );
     // });
 
-    fetchResult = await cacheDynamicFiles(token, dynamicCache);
-    if (fetchResult)
+    fetchResultOne = await cacheDynamicFiles(token, imagsCache, 'no-cors');
+    fetchResultTwo = await cacheDynamicFiles(token, dynamicCache);
+    if (fetchResultOne && fetchResultTwo)
       console.log(`%c${successfulEmoji} Cached Dynamic Files Successfully`, successfulLog);
   }
 }
