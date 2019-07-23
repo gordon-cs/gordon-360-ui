@@ -50,47 +50,45 @@ export default class GordonActivitiesAll extends Component {
     if (this.props.Authentication) {
       try {
         const profile = await user.getProfileInfo();
-        const { SessionCode: sessionCode } = await session.getCurrent();
-        this.setState({ session: sessionCode, currentSession: sessionCode });
-        if (window.location.href.includes('?')) {
-          const tempSession = window.location.href.split('?')[1];
-          this.setState({ session: tempSession, currentSession: tempSession });
-        }
-        const [activities, types, sessions] = await Promise.all([
-          activity.getAll(this.state.session),
-          activity.getTypes(this.state.session),
-          session.getAll(),
-        ]);
         const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
-
-        this.setState({
-          profile,
-          activities,
-          allActivities: activities,
-          myInvolvements: myInvolvements,
-          loading: false,
-          sessions,
-          types,
-        });
-      } catch (error) {
-        this.setState({ error });
-      }
-    } else {
-      try {
         const { SessionCode: sessionCode } = await session.getCurrent();
+        var foundActivities = false;
+        //this.setState({ session: sessionCode, currentSession: sessionCode });
         const [activities, types, sessions] = await Promise.all([
           activity.getAll(sessionCode),
           activity.getTypes(sessionCode),
           session.getAll(),
         ]);
+        if (window.location.href.includes('?')) {
+          foundActivities = true;
+          const tempSession = window.location.href.split('?')[1];
+          this.setState({ session: tempSession, currentSession: tempSession });
+          const [pastActivities, pastTypes] = await Promise.all([
+            activity.getAll(tempSession),
+            activity.getTypes(tempSession),
+          ]);
+          const myPastInvolvements = await user.getSessionMembershipsWithoutGuests(
+            profile.ID,
+            tempSession,
+          );
 
+          this.setState({
+            profile,
+            activities: pastActivities,
+            allActivities: pastActivities,
+            myInvolvements: myPastInvolvements,
+            types: pastTypes,
+            sessions: sessions,
+          });
+        }
+        //Index of the array "activities" of current session
         var IcurrentSession;
-        var foundActivities = false;
-        if (activities.length === 0) {
+
+        if (activities.length === 0 && !foundActivities) {
           for (var i = 0; i < sessions.length; i++) {
             if (sessionCode === sessions[i].SessionCode) {
               IcurrentSession = i;
-              i = sessions.length;
+              break;
             }
           }
           for (var k = IcurrentSession - 1; k >= 0; k--) {
@@ -102,22 +100,89 @@ export default class GordonActivitiesAll extends Component {
                 sessions,
                 activities: newActivities,
                 allActivities: newActivities,
-                loading: false,
+                myInvolvements: [],
+                types,
+                profile,
               });
+              break;
             }
           }
         }
+        if (!foundActivities) {
+          this.setState({
+            profile,
+            session: sessionCode,
+            activities,
+            allActivities: activities,
+            myInvolvements: myInvolvements,
+            sessions,
+            types,
+          });
+        }
 
+        this.setState({ loading: false });
+      } catch (error) {
+        this.setState({ error });
+      }
+    } else {
+      try {
+        const { SessionCode: sessionCode } = await session.getCurrent();
+        foundActivities = false;
+        const [activities, types, sessions] = await Promise.all([
+          activity.getAll(sessionCode),
+          activity.getTypes(sessionCode),
+          session.getAll(),
+        ]);
+        if (window.location.href.includes('?')) {
+          foundActivities = true;
+          const tempSession = window.location.href.split('?')[1];
+          this.setState({ session: tempSession, currentSession: tempSession });
+          const [pastActivities, pastTypes] = await Promise.all([
+            activity.getAll(tempSession),
+            activity.getTypes(tempSession),
+          ]);
+
+          this.setState({
+            activities: pastActivities,
+            allActivities: pastActivities,
+            types: pastTypes,
+            sessions: sessions,
+          });
+        }
+
+        if (activities.length === 0 && !foundActivities) {
+          for (i = 0; i < sessions.length; i++) {
+            if (sessionCode === sessions[i].SessionCode) {
+              IcurrentSession = i;
+              break;
+            }
+          }
+          for (k = IcurrentSession - 1; k >= 0; k--) {
+            const [newActivities] = await Promise.all([activity.getAll(sessions[k].SessionCode)]);
+            if (newActivities.length !== 0) {
+              foundActivities = true;
+              this.setState({
+                session: sessions[k].SessionCode,
+                sessions,
+                activities: newActivities,
+                allActivities: newActivities,
+                types,
+              });
+              break;
+            }
+          }
+        }
         if (!foundActivities) {
           this.setState({
             session: sessionCode,
             activities,
             allActivities: activities,
-            loading: false,
             sessions,
             types,
           });
         }
+
+        this.setState({ loading: false });
       } catch (error) {
         this.setState({ error });
       }
