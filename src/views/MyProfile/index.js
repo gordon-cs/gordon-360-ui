@@ -6,8 +6,6 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import List from '@material-ui/core/List';
-//import ListItem from '@material-ui/core/ListItem';
-//import ListItemText from '@material-ui/core/ListItemText';
 import { NavLink } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import Dialog from '@material-ui/core/Dialog';

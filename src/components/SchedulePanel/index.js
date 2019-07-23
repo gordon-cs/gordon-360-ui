@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
 import CourseSchedule from './components/CourseSchedule';
@@ -16,7 +17,6 @@ import TimeAgo from 'react-timeago';
 
 import schedulecontrol from './../../services/schedulecontrol';
 
-import './schedulepanel.css';
 import myschedule from '../../services/myschedule';
 
 import GordonLoader from '../../components/Loader';
@@ -282,7 +282,7 @@ class GordonSchedulePanel extends Component {
               bar: classes.colorBar,
             }}
           />
-          <Typography>
+          <Typography style={{fontSize: '0.9rem'}}>
             {this.state.isSchedulePrivate ? 'Hide my course schedule' : 'Show my course schedule'}
           </Typography>
         </Fragment>
@@ -311,7 +311,7 @@ class GordonSchedulePanel extends Component {
     }
 
     let panelTitle = '';
-    this.state.isExpanded ? (panelTitle = 'Show') : (panelTitle = 'Hide');
+    this.state.isExpanded ? (panelTitle = 'Hide') : (panelTitle = 'Show');
     if (this.state.loading) {
       schedulePanel = <GordonLoader />;
     } else {
@@ -325,22 +325,38 @@ class GordonSchedulePanel extends Component {
             <Typography>{panelTitle} the Schedule</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
-            <div className="schedule_content">
 
-              <div className="privacy">{privacyButton}</div>
+          <Grid container direction="row" xs={12} lg={12} justify="center" >
+          <Grid container direction="column" xs={12} lg={10} alignItems="flex-end" justify="flex-end">
+          {privacyButton}
+          </Grid>
 
-              <div className="last-updated">
-                Last updated{' '}
-                <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
-              </div>
+          
+          
+          <Grid container direction="column" xs={12} lg={10} alignItems="flex-end">
+          <Typography style={{fontSize: '0.9rem'}}>Last Updated</Typography>
+          <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
+          </Grid>
 
-              <div className="description">{this.state.description}</div>
 
-              <div className="edit_description">{editDescriptionButton}</div>
+          <Grid container direction="row" alignContent="center" xs={12} lg={10}>
+          <Grid item xs={12} lg={8}>
+          {this.state.description}
+          </Grid>
 
-              <div className="remove_event">{removeOfficeHourButton}</div>
+          <Grid item xs={6} lg={2}>
+          {editDescriptionButton}
+          </Grid>
 
-              <div className="schedule">
+          <Grid item xs={6} lg={2}>
+          {removeOfficeHourButton}
+          </Grid>
+
+
+
+          </Grid>
+
+          <Grid item xs={12} lg={10}>
                 <CourseSchedule
                   profile={this.props.profile}
                   myProf={this.props.myProf}
@@ -352,11 +368,15 @@ class GordonSchedulePanel extends Component {
                   reloadHandler={this.reloadHandler}
                   reloadCall={this.state.reloadCall}
                 />
-              </div>
+          </Grid>
+          </Grid>
+
+            <Fragment>
               {editDialog}
               {hoursDialog}
               {removeHoursDialog}
-            </div>
+            </Fragment>
+
           </ExpansionPanelDetails>
         </ExpansionPanel>
       );
