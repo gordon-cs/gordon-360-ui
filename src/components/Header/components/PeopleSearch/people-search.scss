@@ -4,7 +4,7 @@
   .people-search-dropdown {
     position: absolute;
     max-height: 60vh;
-    overflow-y: auto;
+    overflow-y: scroll; // make this to scroll
     overflow-x: hidden;
     right: 20px;
     border-radius: 4px;

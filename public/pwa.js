@@ -43,7 +43,7 @@ if ('caches' in window) {
       if (!navigator.onLine) {
         localStorage.setItem('network-status', JSON.stringify('offline'));
         location.reload();
-        alert('You are offline. Information might be not up to date.');
+        alert('You are offline. Information might not be up to date.');
       }
     }
 
