@@ -49,6 +49,11 @@
   color: $primary-cyan !important;
 }
 
+a:hover {
+  text-decoration: underline;
+  color: $primary-cyan !important;
+}
+
 @media (min-width: $break-md) {
   .label-text {
     font-size: 3.3vw;
@@ -58,8 +63,3 @@
 .tooltip {
   background-color: $neutral-dark-gray !important;
 }
-
-a:hover {
-  text-decoration: underline;
-  color: $primary-cyan !important;
-  }

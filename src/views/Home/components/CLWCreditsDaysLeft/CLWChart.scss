@@ -44,6 +44,16 @@
   text-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
 }
 
+.eventLink{
+  padding-left: 24px;
+  color: $primary-cyan !important;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: $primary-cyan !important;
+}
+
 @media (min-width: $break-md) {
   .centered-text {
     font-size: 3.3vw;

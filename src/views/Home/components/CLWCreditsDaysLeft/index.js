@@ -4,6 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
+import { Link } from 'react-router-dom';
 
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
@@ -185,6 +186,11 @@ export default class CLWCreditsDaysLeft extends Component {
             {this.state.currSessionDescription}
           </Typography>
           {content}
+          <Grid item xs={12} align="center">
+            <Link to={`/attended`}>
+              <Typography variant="h6" className="todaysMenu">Events you attended</Typography>
+            </Link>
+          </Grid>
         </CardContent>
       </Card>
     );
