@@ -25,6 +25,7 @@ import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
+import '../../app.js';
 
 const CROP_DIM = 320; // pixels
 
@@ -528,7 +529,10 @@ class ActivityProfile extends Component {
         website = (
           <Typography variant="body2">
             <strong>Website: </strong>
-            <a href={activityURL}> {activityURL}</a>
+            <a className="websiteLink" href={activityURL}>
+              {' '}
+              {activityURL}
+            </a>
           </Typography>
         );
       }
