@@ -13,8 +13,6 @@ set -euo pipefail
 # STAGING_DIR absolute path to directory for staging app
 #   Both are normally under D:\wwwroot
 
-# While hte
-
 # Variable used to create web.config
 # Note: Regular expression replaces all quotes with two quotes, i.e. " => "" (for PowerShell)
 WEB_CONFIG=`sed -e 's/\"/\"\"/g' web_config`
@@ -31,10 +29,11 @@ fi
 
 BUILD_DIR="build"
 # Gets and formats the date for the backup file
+# Note that the time is in GMT, so is 4-5 hours ahead of local time
 CURRDATE=`date +"%m-%d-%Y-%H-%M"`
 
 
-# TODO: add code to delete backups over some age (1 week?)
+# TODO: add code to delete backups over some age (1 month?)
 printf "%s\n" "WARNING: NOT removing backup directory from previous deployment..."
 
 # NOTE: this doesn't work since backups are now named with the a timestamp
@@ -74,7 +73,7 @@ fi
 
 printf "%s\n" "Copying app to server... "
 
-# Copy built app to server
+# Copy built app (in build) to server (without build in the path)
 cd build
 echo sshpass -p ... scp -r . "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
 sshpass -p "$DEPLOY_PASSWORD" scp -r . "$DEPLOY_USER"@"$HOSTNAME":"$DIR"
