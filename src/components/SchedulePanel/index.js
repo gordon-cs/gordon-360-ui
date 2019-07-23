@@ -15,6 +15,7 @@ import RemoveHoursDialog from './components/RemoveHoursDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
 
+
 import schedulecontrol from './../../services/schedulecontrol';
 
 import myschedule from '../../services/myschedule';
@@ -196,7 +197,7 @@ class GordonSchedulePanel extends Component {
       .deleteMySchedule(this.state.selectedEvent.id)
       .then(value => {
         this.loadData(this.props.profile);
-        this.setState({reloadCall:true});
+        this.setState({reloadCall:true, disabled:true});
       })
       .catch(error => {
         alert('There was an error while removing the event');
@@ -326,16 +327,16 @@ class GordonSchedulePanel extends Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
 
-          <Grid container direction="row" xs={12} lg={12} justify="center" >
+          <Grid container direction="row" xs={12} lg={12} justify="center">
           <Grid container direction="column" xs={12} lg={10} alignItems="flex-end" justify="flex-end">
           {privacyButton}
           </Grid>
 
-          
-          
-          <Grid container direction="column" xs={12} lg={10} alignItems="flex-end">
+          <Grid container direction="column" xs={12} lg={10} alignItems="flex-end" >
+          <div style={{color: gordonColors.primary.cyan}}>
           <Typography style={{fontSize: '0.9rem'}}>Last Updated</Typography>
           <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
+          </div>
           </Grid>
 
 

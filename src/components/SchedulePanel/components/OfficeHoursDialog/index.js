@@ -11,8 +11,9 @@ import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../../../theme';
 import Checkbox from '@material-ui/core/Checkbox';
 import myschedule from './../../../../services/myschedule'
-
+import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { FormHelperText } from '@material-ui/core';
 
 // Default values
 const STARTHOUR = '08:00';
@@ -50,6 +51,7 @@ export default class HoursDialog extends React.Component {
       formErrors: {
         descriptionInput: '',
         locationInput: '',
+        checkedInput:'',
         startHourValid: '',
         endHourValid: '',
       },
@@ -190,13 +192,17 @@ export default class HoursDialog extends React.Component {
   };
 
   validateCheck = dayofWeek => {
+    let fieldValidationErrors = this.state.formErrors;
     var valid = false;
     for (let day in dayofWeek) {
       if (dayofWeek[day]) {
         valid = true;
       }
     }
-    this.setState({ checkedValid: valid }, () => {
+    fieldValidationErrors.checkedInput = valid ? '' : 'At least one day has to be checked';
+    this.setState({ checkedValid: valid,
+      formErrors: fieldValidationErrors,
+     }, () => {
       this.validateForm();
     });
   };
@@ -337,7 +343,11 @@ export default class HoursDialog extends React.Component {
 
           <DialogContent className="dialog-content">
             <form className="info" onSubmit={this.handleSubmit}>
-              <FormGroup row="true" className="dayWeek">
+              <FormControl error={!this.state.checkedValid}>
+              <FormHelperText>
+              {this.state.checkedValid ? '' : this.state.formErrors.checkedInput}
+              </FormHelperText>
+              <FormGroup row="true" className="dayWeek"  >
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -422,6 +432,7 @@ export default class HoursDialog extends React.Component {
                   label={<Typography style={{fontSize: '0.9rem'}}>Saturday</Typography>}
                 />
               </FormGroup>
+              </FormControl>
 
               <div>
                 <TextField

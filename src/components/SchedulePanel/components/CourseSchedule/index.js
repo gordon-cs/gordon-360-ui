@@ -32,7 +32,8 @@ export default class CourseSchedule extends Component {
           backgroundColor: isSelected ? '#8d4987' : '#9b5094',
         },
       };
-    } else return {};
+    } else return {
+    };
   };
 
 
