@@ -339,3 +339,5 @@ The script deploys to either staging or production based on the branch it is run
 - There is a problem with the first login hanging after the backend starts up, this might be due to an authentication error but refreshing is currently the only fix
 
 - Edge Authentication - Fails at creation of request object in getAuth() in auth.js service. Incompatability with URLSearchParams was fixed with an update to Edge in April, but different problem with request object must exist still.
+
+- ID and photo uploader dialog boxes are a bit squished for screens as small as iPhone 5's.
