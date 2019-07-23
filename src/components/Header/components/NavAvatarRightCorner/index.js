@@ -1,9 +1,6 @@
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
+import { Avatar, IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core/Avatar';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 
 import QuickLinksDialog from '../../../QuickLinksDialog';
@@ -12,7 +9,6 @@ import { signOut } from '../../../../services/auth';
 import './nav-avatar-right-corner.css';
 import '../../../../app.css';
 import user from '../../../../services/user';
-import Tooltip from '@material-ui/core/Tooltip';
 
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
