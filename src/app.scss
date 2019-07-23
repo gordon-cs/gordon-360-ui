@@ -50,6 +50,7 @@ a {
   height: calc(100vh - #{$header-height-xs});
   margin-top: $header-height-xs;
   overflow-y: auto; // change this to scroll for ios to make the scroll smoothly
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 1rem 0.5rem;
   width: 100%;
