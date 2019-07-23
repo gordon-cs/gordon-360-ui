@@ -309,7 +309,7 @@ class Profile extends Component {
     if (this.state.memberships.length === 0) {
       involvementAndPrivacyList = (
         <div>
-          <Link className="gc360-link-color" to={`/activities`}>
+          <Link to={`/involvements`}>
             <Typography variant="body2" className="noInvolvements">
               No Involvements to display. Click here to see Involvements around campus!
             </Typography>
