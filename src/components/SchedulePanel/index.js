@@ -84,8 +84,9 @@ class GordonSchedulePanel extends Component {
     if (this.scheduleControlInfo) {
       this.setState({ isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate });
       this.setState({ 
-        description: this.scheduleControlInfo.Description.replace(new RegExp("SlSh", 'g'), '/').replace(new RegExp("CoLn", 'g'), ':')
-      .replace(new RegExp("dOT", 'g'), '.')});
+        description: this.scheduleControlInfo.Description ? 
+        this.scheduleControlInfo.Description.replace(new RegExp("SlSh", 'g'), '/').replace(new RegExp("CoLn", 'g'), ':')
+      .replace(new RegExp("dOT", 'g'), '.') : ''});
       this.setState({ modifiedTimeStamp: this.scheduleControlInfo.ModifiedTimeStamp });
     }
     console.log('Schedule Control : ', this.scheduleControlInfo);
