@@ -39,7 +39,7 @@ class GordonSchedulePanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      myProf: false, //if my profile page
+      myProf: false,  //myProf is boolean value that determines whether this is myprofile or not. this.props.profile actually contains profile data.
       isSchedulePrivate: 0,
       isExpanded: false,
       officeHoursOpen: false,
