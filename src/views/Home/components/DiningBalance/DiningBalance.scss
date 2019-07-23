@@ -58,3 +58,8 @@
 .tooltip {
   background-color: $neutral-dark-gray !important;
 }
+
+a:hover {
+  text-decoration: underline;
+  color: $primary-cyan !important;
+  }
