@@ -6,7 +6,7 @@
     max-height: 60vh;
     overflow-y: auto; // make this to scroll
     overflow-x: hidden;
-    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
     right: 20px;
     border-radius: 4px;
   }
