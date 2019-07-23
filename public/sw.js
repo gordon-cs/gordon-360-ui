@@ -13,7 +13,7 @@
 // Current cache version
 let cacheVersion = 'cache-1.0';
 const apiSource = 'https://360apitrain.gordon.edu';
-let token, termCode, cacheTimer;
+let token, termCode, cacheTimer, isSuccessful, isFetchCanceled;
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
@@ -47,6 +47,11 @@ const staticCache = [
   '/static/js/0.chunk.js',
   '/static/js/main.chunk.js',
   '/static/js/1.chunk.js',
+  // Files needed for iOS to prevent blank screen when clicking "Go Home" in offline mode
+  '/static/css/2.d64d1e9d.chunk.css',
+  '/static/css/main.01e33f3b.chunk.css',
+  '/static/js/2.00596eb8.chunk.js',
+  '/static/js/main.2f5d16ec.chunk.js',
   // Images
   '/images/android-icon-36x36.png',
   '/images/android-icon-48x48.png',
@@ -165,25 +170,12 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
   });
 
   // Variables that determines the success of caching all links
-  let isSuccessful = true;
+  isSuccessful = true;
   let fetchSuccess;
   let operationSuccess;
 
   // Variable to control cancellation of fetches
-  let isFetchCanceled = false;
-
-  // An event listener to cancel all fetches made
-  self.addEventListener('message', event => {
-    if (event.data === 'cancel-fetches') {
-      // Since this event listener is invoked multiple times, this prevents it from being
-      // console logged multiple times
-      if (isFetchCanceled === false && isSuccessful === true) {
-        console.log(`%c${errorEmoji} Received Message: Canceling All Fetches.`, errorLog);
-        isFetchCanceled = true;
-        isSuccessful = false;
-      }
-    }
-  });
+  isFetchCanceled = false;
 
   // Attempt to fetch all links
   for (let url = 0; url < dynamicLinks.length; url++) {
@@ -293,6 +285,8 @@ async function dynamicLinksThenCache(token, termCode) {
     let sessionCode = currentSession ? currentSession.SessionCode : null;
 
     const dynamicCache = [
+      // Font CSS Document
+      `https://cloud.typography.com/7763712/6754392/css/fonts.css`,
       // Home Page Fetch URLs
       `${apiSource}/api/cms/slider`,
       `${apiSource}/api/dining`,
@@ -427,5 +421,15 @@ self.addEventListener('message', event => {
   else if (event.data && event.data === 'delete-token-termCode') {
     token = null;
     termCode = null;
+  }
+  // If the message is to cancel all fetches
+  if (event.data === 'cancel-fetches') {
+    // Since this event listener is invoked multiple times, this check prevents it from
+    // console logging multiple times
+    if (isFetchCanceled === false && isSuccessful === true) {
+      console.log(`%c${errorEmoji} Received Message: Canceling All Fetches.`, errorLog);
+      isFetchCanceled = true;
+      isSuccessful = false;
+    }
   }
 });
