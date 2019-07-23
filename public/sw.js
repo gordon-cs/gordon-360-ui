@@ -47,6 +47,11 @@ const staticCache = [
   '/static/js/0.chunk.js',
   '/static/js/main.chunk.js',
   '/static/js/1.chunk.js',
+  // Files needed for iOS to prevent blank screen when clicking "Go Home" in offline mode
+  '/static/css/2.d64d1e9d.chunk.css',
+  '/static/css/main.01e33f3b.chunk.css',
+  '/static/js/2.00596eb8.chunk.js',
+  '/static/js/main.2f5d16ec.chunk.js',
   // Images
   '/images/android-icon-36x36.png',
   '/images/android-icon-48x48.png',
@@ -280,6 +285,8 @@ async function dynamicLinksThenCache(token, termCode) {
     let sessionCode = currentSession ? currentSession.SessionCode : null;
 
     const dynamicCache = [
+      // Font CSS Document
+      `https://cloud.typography.com/7763712/6754392/css/fonts.css`,
       // Home Page Fetch URLs
       `${apiSource}/api/cms/slider`,
       `${apiSource}/api/dining`,
