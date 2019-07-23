@@ -13,7 +13,7 @@
 // Current cache version
 let cacheVersion = 'cache-1.0';
 const apiSource = 'https://360apitrain.gordon.edu';
-let token, termCode, cacheTimer;
+let token, termCode, cacheTimer, isSuccessful, isFetchCanceled;
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
@@ -165,25 +165,12 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
   });
 
   // Variables that determines the success of caching all links
-  let isSuccessful = true;
+  isSuccessful = true;
   let fetchSuccess;
   let operationSuccess;
 
   // Variable to control cancellation of fetches
-  let isFetchCanceled = false;
-
-  // An event listener to cancel all fetches made
-  self.addEventListener('message', event => {
-    if (event.data === 'cancel-fetches') {
-      // Since this event listener is invoked multiple times, this prevents it from being
-      // console logged multiple times
-      if (isFetchCanceled === false && isSuccessful === true) {
-        console.log(`%c${errorEmoji} Received Message: Canceling All Fetches.`, errorLog);
-        isFetchCanceled = true;
-        isSuccessful = false;
-      }
-    }
-  });
+  isFetchCanceled = false;
 
   // Attempt to fetch all links
   for (let url = 0; url < dynamicLinks.length; url++) {
@@ -427,5 +414,15 @@ self.addEventListener('message', event => {
   else if (event.data && event.data === 'delete-token-termCode') {
     token = null;
     termCode = null;
+  }
+  // If the message is to cancel all fetches
+  if (event.data === 'cancel-fetches') {
+    // Since this event listener is invoked multiple times, this check prevents it from
+    // console logging multiple times
+    if (isFetchCanceled === false && isSuccessful === true) {
+      console.log(`%c${errorEmoji} Received Message: Canceling All Fetches.`, errorLog);
+      isFetchCanceled = true;
+      isSuccessful = false;
+    }
   }
 });
