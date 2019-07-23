@@ -35,7 +35,6 @@ const staticCache = [
   '/favicon.ico',
   '/about',
   '/help',
-  // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Development
   '/admin',
   '/myprofile',
   '/manifest.json',
@@ -47,7 +46,7 @@ const staticCache = [
   '/static/js/0.chunk.js',
   '/static/js/main.chunk.js',
   '/static/js/1.chunk.js',
-  // Files needed for iOS to prevent blank screen when clicking "Go Home" in offline mode
+  // Files needed to prevent unappealing screen from starting the app in offline mode
   '/static/css/2.d64d1e9d.chunk.css',
   '/static/css/main.01e33f3b.chunk.css',
   '/static/js/2.00596eb8.chunk.js',
@@ -57,6 +56,8 @@ const staticCache = [
   '/static/css/main.5e616716.chunk.css',
   '/static/css/2.d64d1e9d.chunk.css.map',
   '/static/js/main.2f5d16ec.chunk.js.map',
+  '/static/css/main.8e50f2fc.chunk.css',
+  '/main.89f23f7459ac700734a6.hot-update.js',
   // Images
   '/images/android-icon-36x36.png',
   '/images/android-icon-48x48.png',
@@ -120,6 +121,14 @@ async function fetchThenCache(request) {
         // caches.open(cacheVersion).then(cache => {
         //   cache.put(request, fetchResponse.clone());
         // });
+        return fetchResponse.clone();
+      }
+      // If the request is specifically Gordon 360's Font CSS
+      else if (request.url === 'https://cloud.typography.com/7763712/6754392/css/fonts.css') {
+        caches.open(cacheVersion).then(cache => {
+          cache.put(request, fetchResponse.clone());
+        });
+        console.log('FETCHED AND CACHED THE FONT CSS');
         return fetchResponse.clone();
       }
     })
