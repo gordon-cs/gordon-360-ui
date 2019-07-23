@@ -50,6 +50,15 @@ export default class CourseSchedule extends Component {
       });
   };
 
+  componentWillReceiveProps(nextProps){
+    if (this.props.reloadCall !== nextProps.reloadCall){
+      this.loadData(this.props.profile);
+      this.props.reloadHandler();
+    }
+  }
+
+
+
   componentWillMount() {
     this.loadData(this.props.profile);
   }

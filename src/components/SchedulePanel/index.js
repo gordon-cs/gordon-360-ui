@@ -52,6 +52,7 @@ class GordonSchedulePanel extends Component {
       start:'08:00',
       end:'17:00',
       resourceId: 0,
+      reloadCall: false,
     };
     this.scheduleControlInfo = null;
 
@@ -66,6 +67,7 @@ class GordonSchedulePanel extends Component {
     this.handleEditDescriptionButton = this.handleEditDescriptionButton.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
     this.handleRemoveSubmit = this.handleRemoveSubmit.bind(this);
+    this.reloadHandler = this.reloadHandler.bind(this);
   }
 
   componentWillMount() {
@@ -94,15 +96,17 @@ class GordonSchedulePanel extends Component {
   };
 
   handleOfficeHoursOpen = slotInfo => {
-    this.setState({ officeHoursOpen: true });
-    if (slotInfo){
-      let startTime = slotInfo.start.toTimeString().split(":");
-      let endTime = slotInfo.end.toTimeString().split(":");
-      this.setState({start:startTime[0] + ":" + startTime[1],
-        end:endTime[0] + ":" + endTime[1], resourceId: slotInfo.resourceId,
-      });
+    if (this.props.myProf){
+      this.setState({ officeHoursOpen: true });
+      if (slotInfo){
+        let startTime = slotInfo.start.toTimeString().split(":");
+        let endTime = slotInfo.end.toTimeString().split(":");
+        this.setState({start:startTime[0] + ":" + startTime[1],
+          end:endTime[0] + ":" + endTime[1], resourceId: slotInfo.resourceId,
+        });
+      }
+      this.setState({ isDoubleClick: false });
     }
-    this.setState({ isDoubleClick: false });
   };
 
   handleOfficeHoursClose = () => {
@@ -144,7 +148,7 @@ class GordonSchedulePanel extends Component {
 
   handleDescriptionSubmit = async descValue => {
     await schedulecontrol.setScheduleDescription(descValue);
-    window.location.reload(); // refresh to show the change
+    this.loadData(this.props.profile);
   };
 
   handleHoursSubmit = mySchedule => {
@@ -171,7 +175,8 @@ class GordonSchedulePanel extends Component {
       myschedule
         .updateMySchedule(data)
         .then(value => {
-          window.location.reload();
+        this.loadData(this.props.profile);
+        this.setState({reloadCall:true});
         })
         .catch(error => {
           alert('There was an error while updating the event');
@@ -181,7 +186,8 @@ class GordonSchedulePanel extends Component {
       myschedule
         .addMySchedule(data)
         .then(value => {
-          window.location.reload();
+        this.loadData(this.props.profile);
+        this.setState({reloadCall:true});
         })
         .catch(error => {
           alert('There was an error while adding the event');
@@ -194,7 +200,8 @@ class GordonSchedulePanel extends Component {
     myschedule
       .deleteMySchedule(this.state.selectedEvent.id)
       .then(value => {
-        window.location.reload();
+        this.loadData(this.props.profile);
+        this.setState({reloadCall:true});
       })
       .catch(error => {
         alert('There was an error while removing the event');
@@ -218,43 +225,53 @@ class GordonSchedulePanel extends Component {
     this.setState({ isExpanded: !this.state.isExpanded });
   }
 
+  reloadHandler(){
+    this.setState({reloadCall:false});
+  }
+
   render() {
     const { classes } = this.props;
     let isFaculty = String(this.props.profile.PersonType).includes('fac');
     let privacyButton,
       removeOfficeHourButton,
       editDescriptionButton,
-      schedulePanel;
+      schedulePanel,
+      editDialog,
+      hoursDialog,
+      removeHoursDialog;
 
-    let editDialog = (
-      <EditDescriptionDialog
-        onDialogSubmit={this.handleDescriptionSubmit}
-        handleEditDescriptionClose={this.handleEditDescriptionClose}
-        editDescriptionOpen={this.state.editDescriptionOpen}
-        descriptiontext={this.state.description}
-      />
-    );
+      if(this.props.myProf){
+        editDialog = (
+          <EditDescriptionDialog
+            onDialogSubmit={this.handleDescriptionSubmit}
+            handleEditDescriptionClose={this.handleEditDescriptionClose}
+            editDescriptionOpen={this.state.editDescriptionOpen}
+            descriptiontext={this.state.description}
+          />
+        );
+    
+        hoursDialog = (
+          <HoursDialog
+            onDialogSubmit={this.handleHoursSubmit}
+            handleOfficeHoursClose={this.handleOfficeHoursClose}
+            officeHoursOpen={this.state.officeHoursOpen}
+            selectedEvent={this.state.selectedEvent}
+            isDoubleClick={this.state.isDoubleClick}
+            startTime={this.state.start}
+            endTime={this.state.end}
+            resourceId={this.state.resourceId}
+          />
+        );
+    
+        removeHoursDialog = (
+          <RemoveHoursDialog
+            onDialogSubmit={this.handleRemoveSubmit}
+            handleRemoveOfficeHoursClose={this.handleRemoveOfficeHoursClose}
+            removeOfficeHoursOpen={this.state.removeOfficeHoursOpen}
+          />
+        );
+      }
 
-    let hoursDialog = (
-      <HoursDialog
-        onDialogSubmit={this.handleHoursSubmit}
-        handleOfficeHoursClose={this.handleOfficeHoursClose}
-        officeHoursOpen={this.state.officeHoursOpen}
-        selectedEvent={this.state.selectedEvent}
-        isDoubleClick={this.state.isDoubleClick}
-        startTime={this.state.start}
-        endTime={this.state.end}
-        resourceId={this.state.resourceId}
-      />
-    );
-
-    let removeHoursDialog = (
-      <RemoveHoursDialog
-        onDialogSubmit={this.handleRemoveSubmit}
-        handleRemoveOfficeHoursClose={this.handleRemoveOfficeHoursClose}
-        removeOfficeHoursOpen={this.state.removeOfficeHoursOpen}
-      />
-    );
 
     if (this.props.myProf && !isFaculty) {
       privacyButton = (
@@ -340,6 +357,8 @@ class GordonSchedulePanel extends Component {
                   handleDoubleClick={this.handleDoubleClick.bind(this)}
                   handleOfficeHoursOpen={this.handleOfficeHoursOpen.bind(this)}
                   schedulePrivacy={this.state.isSchedulePrivate}
+                  reloadHandler={this.reloadHandler}
+                  reloadCall={this.state.reloadCall}
                 />
               </div>
               {/* </CardContent> */}
