@@ -87,11 +87,9 @@ const isAuthenticated = () => {
           storage.remove('status');
           storage.remove('currentTerm');
           storage.remove('network-status');
-          caches.keys().then(keys => {
-            keys.forEach(key => {
-              caches.delete(key);
-            });
-          });
+
+          // Removes all dynamic cache
+          navigator.serviceWorker.controller.postMessage('remove-dynamic-cache');
         }
       }
     }
@@ -115,11 +113,9 @@ const signOut = () => {
       storage.remove('status');
       storage.remove('currentTerm');
       storage.remove('network-status');
-      caches.keys().then(keys => {
-        keys.forEach(key => {
-          caches.delete(key);
-        });
-      });
+
+      // Removes all dynamic cache
+      navigator.serviceWorker.controller.postMessage('remove-dynamic-cache');
     }
   }
 };

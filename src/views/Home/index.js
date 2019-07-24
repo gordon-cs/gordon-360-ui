@@ -1,6 +1,5 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
@@ -83,11 +82,7 @@ export default class Home extends Component {
       //Only show CL&W credits if user is a student
       let doughnut;
       if (String(personType).includes('stu')) {
-        doughnut = (
-          <Link to={`/attended`}>
-            <CLWCreditsDaysLeft />
-          </Link>
-        );
+        doughnut = <CLWCreditsDaysLeft />;
       } else {
         doughnut = <DaysLeft />;
       }
