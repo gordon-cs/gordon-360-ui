@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
+import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
@@ -58,6 +61,13 @@ export default class CLWCreditsDaysLeft extends Component {
     let daysColor = gordonColors.primary.blue;
     let chapelColor = gordonColors.primary.cyan;
     let emptyColor = gordonColors.neutral.lightGray;
+
+    const style = {
+      button: {
+        background: gordonColors.primary.cyan,
+        color: 'white',
+      },
+    };
 
     defaults.global.legend.display = false;
     let content;
@@ -114,7 +124,6 @@ export default class CLWCreditsDaysLeft extends Component {
             style={{ paddingTop: 5, paddingBottom: 10 }}
           >
             <Grid item>
-              {/* use body2 wherever we use body1*/}
               <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${daysLeft} Days Left`}
               </Typography>
@@ -182,9 +191,18 @@ export default class CLWCreditsDaysLeft extends Component {
     return (
       <Card>
         <CardContent>
-          <Typography variant="h5" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.currSessionDescription}
-          </Typography>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={7}>
+              <CardHeader title={this.state.currSessionDescription} />
+            </Grid>
+            <Grid item xs={5} align="right">
+              <Link to={`/attended`}>
+                <Button variant="contained" style={style.button}>
+                  ATTENDED EVENTS
+                </Button>
+              </Link>
+            </Grid>
+          </Grid>
           {content}
         </CardContent>
       </Card>
