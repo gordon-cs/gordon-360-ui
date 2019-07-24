@@ -87,11 +87,22 @@ const isAuthenticated = () => {
           storage.remove('status');
           storage.remove('currentTerm');
           storage.remove('network-status');
-          caches.keys().then(keys => {
-            keys.forEach(key => {
-              caches.delete(key);
+          caches
+            .keys()
+            .then(keys => {
+              keys.forEach(key => {
+                caches.delete(key);
+              });
+            })
+            .then(() => {
+              // After deleting all cache, we re-cache all static files. The dynamic files
+              // will not be cached due to the token and term code being undefined
+              navigator.serviceWorker.controller.postMessage({
+                message: 'cache-static-dynamic-files',
+                token: null,
+                termCode: null,
+              });
             });
-          });
         }
       }
     }
@@ -115,11 +126,22 @@ const signOut = () => {
       storage.remove('status');
       storage.remove('currentTerm');
       storage.remove('network-status');
-      caches.keys().then(keys => {
-        keys.forEach(key => {
-          caches.delete(key);
+      caches
+        .keys()
+        .then(keys => {
+          keys.forEach(key => {
+            caches.delete(key);
+          });
+        })
+        .then(() => {
+          // After deleting all cache, we re-cache all static files. The dynamic files
+          // will not be cached due to the token and term code being undefined
+          navigator.serviceWorker.controller.postMessage({
+            message: 'cache-static-dynamic-files',
+            token: null,
+            termCode: null,
+          });
         });
-      });
     }
   }
 };
