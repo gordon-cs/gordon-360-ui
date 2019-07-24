@@ -94,10 +94,23 @@ const staticCache = [
 /*********************************************** CACHING FUNCTIONS ***********************************************/
 /**
  * Cleans the cache to remove data that's no longer in use (removes outdated cache version)
+ * If there's cache with the correct cache version, it will just remove the dynamic files
  *
  * @return {Promise} A promise with the result of removing outdated cache
  */
 async function cleanCache() {
+  await caches.open(cacheVersion).then(cache => {
+    cache.keys().then(items => {
+      items.map(item => {
+        if (
+          !item.url.match(location.origin) &&
+          item.url !== 'https://cloud.typography.com/7763712/6754392/css/fonts.css'
+        ) {
+          cache.delete(item);
+        }
+      });
+    });
+  });
   await caches.keys().then(keys => {
     keys.forEach(key => {
       if (key !== cacheVersion && key.match('cache-')) {
@@ -302,9 +315,22 @@ async function dynamicLinksThenCache(token, termCode) {
         return error.Message;
       });
 
+    let sessions = await fetch(
+      new Request('https://360apitrain.gordon.edu/api/sessions', {
+        method: 'GET',
+        headers,
+      }),
+    )
+      .then(response => {
+        return response.json();
+      })
+      .catch(error => {
+        return error.Message;
+      });
+
     let username = profile ? profile.AD_Username : null;
     let id = profile ? profile.ID : null;
-    let sessionCode = currentSession ? currentSession.SessionCode : null;
+    let currSessionCode = currentSession ? currentSession.SessionCode : null;
 
     const imagesCache = [
       'https://wwwtrain.gordon.edu/images/2ColumnHero/Profile-1_2018_07_26_02_26_40_2018_10_09_08_52_16.jpg',
@@ -329,8 +355,8 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/studentemployment/`,
       `${apiSource}/api/version`,
       `${apiSource}/api/activities/session/201809`,
-      `${apiSource}/api/activities/session/${sessionCode}`,
-      `${apiSource}/api/activities/session/${sessionCode}/types`,
+      `${apiSource}/api/activities/session/${currSessionCode}`,
+      `${apiSource}/api/activities/session/${currSessionCode}/types`,
       `${apiSource}/api/events/chapel/${termCode}`,
       `${apiSource}/api/memberships/student/${id}`,
       `${apiSource}/api/memberships/student/username/${username}/`,
@@ -339,6 +365,15 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/requests/student/${id}`,
       `/profile/${username}`,
     ];
+
+    sessions.forEach(session => {
+      if (session.SessionCode > currSessionCode) {
+        dynamicCache.push(
+          `${apiSource}/api/activities/session/${session.SessionCode}`,
+          `${apiSource}/api/activities/session/${session.SessionCode}/types`,
+        );
+      }
+    });
 
     // // Gets the involvements of the current user for the Involvement Profiles
     // let involvements = await fetch(
@@ -462,5 +497,9 @@ self.addEventListener('message', event => {
       isFetchCanceled = true;
       isSuccessful = false;
     }
+  }
+  // If the message is to remove all dynamic cache
+  if (event.data === 'remove-dynamic-cache') {
+    event.waitUntil(cleanCache());
   }
 });
