@@ -35,7 +35,6 @@ const staticCache = [
   '/favicon.ico',
   '/about',
   '/help',
-  // 'https://cloud.typography.com/7763712/7294392/css/fonts.css', // Doesn't work in Development
   '/admin',
   '/myprofile',
   '/manifest.json',
@@ -47,15 +46,18 @@ const staticCache = [
   '/static/js/0.chunk.js',
   '/static/js/main.chunk.js',
   '/static/js/1.chunk.js',
-  // Files needed for iOS to prevent blank screen when clicking "Go Home" in offline mode
+  // Files needed to prevent unappealing screen from starting the app in offline mode on iOS
+  '/main.89f23f7459ac700734a6.hot-update.js',
   '/static/css/2.d64d1e9d.chunk.css',
-  '/static/css/main.01e33f3b.chunk.css',
-  '/static/js/2.00596eb8.chunk.js',
-  '/static/js/main.2f5d16ec.chunk.js',
-  '/static/css/main.5e616716.chunk.css.map',
-  '/static/js/2.00596eb8.chunk.js.map',
-  '/static/css/main.5e616716.chunk.css',
   '/static/css/2.d64d1e9d.chunk.css.map',
+  '/static/css/main.01e33f3b.chunk.css',
+  '/static/css/main.5e616716.chunk.css',
+  '/static/css/main.5e616716.chunk.css.map',
+  '/static/css/main.8e50f2fc.chunk.css',
+  '/static/css/main.8e50f2fc.chunk.css.map',
+  '/static/js/2.00596eb8.chunk.js',
+  '/static/js/2.00596eb8.chunk.js.map',
+  '/static/js/main.2f5d16ec.chunk.js',
   '/static/js/main.2f5d16ec.chunk.js.map',
   // Images
   '/images/android-icon-36x36.png',
@@ -72,6 +74,13 @@ const staticCache = [
   '/images/apple-icon-152x152.png',
   '/images/apple-icon-180x180.png',
   '/images/apple-icon-precomposed.png',
+  '/images/iphone5_splash.png',
+  '/images/iphone6_splash.png',
+  '/images/iphoneplus_splash.png',
+  '/images/iphonex_splash.png',
+  '/images/ipad_splash.png',
+  '/images/ipadpro1_splash.png',
+  '/images/ipadpro2_splash.png',
   '/images/apple-icon.png',
   '/images/favicon-16x16.png',
   '/images/favicon-32x32.png',
@@ -115,7 +124,15 @@ async function cleanCache() {
 async function fetchThenCache(request) {
   return await fetch(request)
     .then(fetchResponse => {
-      if (fetchResponse) {
+      // If the request is specifically Gordon 360's Font CSS
+      if (request.url === 'https://cloud.typography.com/7763712/6754392/css/fonts.css') {
+        caches.open(cacheVersion).then(cache => {
+          cache.put(request, fetchResponse.clone());
+        });
+        return fetchResponse.clone();
+      }
+      // If the request is a regular request
+      else if (fetchResponse) {
         /* FOR DEVELOPING PURPOSES: THIS CACHES EACH FETCH MADE */
         // caches.open(cacheVersion).then(cache => {
         //   cache.put(request, fetchResponse.clone());
@@ -289,7 +306,7 @@ async function dynamicLinksThenCache(token, termCode) {
     let id = profile ? profile.ID : null;
     let sessionCode = currentSession ? currentSession.SessionCode : null;
 
-    const imagsCache = [
+    const imagesCache = [
       'https://wwwtrain.gordon.edu/images/2ColumnHero/Profile-1_2018_07_26_02_26_40_2018_10_09_08_52_16.jpg',
       'https://wwwtrain.gordon.edu/images/2ColumnHero/welcome1_2018_07_26_11_00_21_2018_10_09_08_51_52.jpg',
       'https://wwwtrain.gordon.edu/images/2ColumnHero/Help-1_2018_07_26_11_04_33_2018_10_09_08_51_12.jpg',
@@ -298,6 +315,7 @@ async function dynamicLinksThenCache(token, termCode) {
       'https://wwwtrain.gordon.edu/images/2ColumnHero/Home-1_2018_07_26_02_25_41_2018_10_09_08_51_41.jpg',
       'https://wwwtrain.gordon.edu/images/2ColumnHero/Involvements-1_2018_07_26_02_26_19_2018_10_09_08_52_02.jpg',
     ];
+
     const dynamicCache = [
       // Home Page Fetch URLs
       `${apiSource}/api/cms/slider`,
@@ -355,7 +373,7 @@ async function dynamicLinksThenCache(token, termCode) {
     //   );
     // });
 
-    fetchResultOne = await cacheDynamicFiles(token, imagsCache, 'no-cors');
+    fetchResultOne = await cacheDynamicFiles(token, imagesCache, 'no-cors');
     fetchResultTwo = await cacheDynamicFiles(token, dynamicCache);
     if (fetchResultOne && fetchResultTwo)
       console.log(`%c${successfulEmoji} Cached Dynamic Files Successfully`, successfulLog);
