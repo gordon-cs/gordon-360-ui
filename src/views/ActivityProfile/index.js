@@ -338,7 +338,7 @@ class ActivityProfile extends Component {
                     className="rounded-corners"
                   />
                 </Grid>
-                <Grid container spacing={16} justify="center">
+                <Grid container spacing={2} justify="center">
                   <Grid item>
                     <Button variant="contained" onClick={this.alertRemoveImage} style={redButton}>
                       Remove image
@@ -368,20 +368,27 @@ class ActivityProfile extends Component {
                     <DialogContentText>
                       <br />
                     </DialogContentText>
+
                     {!preview && (
                       <Grid container justify="center" spacing={6}>
                         <Dropzone
                           onDropAccepted={this.onDropAccepted.bind(this)}
                           onDropRejected={this.onDropRejected.bind(this)}
-                          accept="image/jpeg,image/jpg,image/png"
-                          className="photoUploader"
+                          accept="image/jpeg, image/jpg, image/png"
                         >
-                          <img
-                            className="rounded-corners"
-                            src={activityImagePath}
-                            alt=""
-                            style={{ 'max-width': '320px', 'max-height': '320px' }}
-                          />
+                          {({ getRootProps, getInputProps }) => (
+                            <section>
+                              <div className="photoUploader" {...getRootProps()}>
+                                <input {...getInputProps()} />
+                                <img
+                                  className="rounded-corners"
+                                  src={activityImagePath}
+                                  alt=""
+                                  style={{ 'max-width': '320px', 'max-height': '320px' }}
+                                />
+                              </div>
+                            </section>
+                          )}
                         </Dropzone>
                       </Grid>
                     )}
@@ -450,7 +457,7 @@ class ActivityProfile extends Component {
                 <Dialog open={this.state.openRemoveImage} keepMounted align="center">
                   <DialogTitle>Are you sure you want to remove image?</DialogTitle>
                   <DialogContent>
-                    <Grid container spacing={16}>
+                    <Grid container spacing={2}>
                       <Grid item xs={6} sm={6} md={6} lg={6}>
                         <Button variant="contained" color="primary" onClick={this.onRemoveImage}>
                           OK

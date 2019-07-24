@@ -332,3 +332,5 @@ The script deploys to either staging or production based on the branch it is run
 - There is a problem with the first login hanging after the backend starts up, this might be due to an authentication error but refreshing is currently the only fix
 
 - Edge Authentication - Fails at creation of request object in getAuth() in auth.js service. Incompatability with URLSearchParams was fixed with an update to Edge in April, but different problem with request object must exist still.
+
+- The 'edit involvement' and 'change image' dialog boxes, accessible through the admin view of an involvement profile, are messy. Refer to the CSS styling and replacement of Material UI Grid in views/IDUploader/IDUploader.scss and ''/index.js for a proven fix.
