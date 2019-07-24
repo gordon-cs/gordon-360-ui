@@ -5,19 +5,19 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../../../theme';
 
-export default class RemoveHoursDialog extends React.Component {
+export default class RemoveScheduleDialog extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      removeOfficeHoursOpen: false,
+      removeMyScheduleOpen: false,
     };
   }
 
   handleSubmit = e => {
     e.preventDefault();
     this.props.onDialogSubmit();
-    this.props.handleRemoveOfficeHoursClose();
+    this.props.handleRemoveMyScheduleClose();
   };
 
 
@@ -31,16 +31,16 @@ export default class RemoveHoursDialog extends React.Component {
     return (
       <Fragment>
         <Dialog
-          open={this.props.removeOfficeHoursOpen}
+          open={this.props.removeMyScheduleOpen}
           keepMounted
-          onClose={this.props.handleRemoveOfficeHoursClose}
+          onClose={this.props.handleRemoveMyScheduleClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle className="title">Are you sure about removing this event?</DialogTitle>
           <DialogActions className="buttons">
             <Button
-              onClick={this.props.handleRemoveOfficeHoursClose}
+              onClick={this.props.handleRemoveMyScheduleClose}
               variant="contained"
               style={button}
             >

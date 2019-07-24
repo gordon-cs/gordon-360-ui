@@ -61,6 +61,7 @@ button.rbc-input::-moz-focus-inner {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: initial;
+  max-width: 100%;
 }
 
 .rbc-day-slot .rbc-event-content {
@@ -71,6 +72,40 @@ button.rbc-input::-moz-focus-inner {
   line-height: 1;
   height: 100%;
   min-height: 1em;
+}
+.rbc-time-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  border: 1px solid #ddd;
+  min-height: 0;
+}
+.rbc-time-view .rbc-time-gutter {
+  white-space: nowrap;
+}
+.rbc-time-view .rbc-allday-cell {
+  box-sizing: content-box;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.rbc-time-view .rbc-allday-cell + .rbc-allday-cell {
+  border-left: 1px solid #ddd;
+}
+.rbc-time-view .rbc-allday-events {
+  position: relative;
+  z-index: 4;
+}
+.rbc-time-view .rbc-row {
+  box-sizing: border-box;
+  min-height: 0px;
+}
+
+.rbc-time-view-resources .rbc-time-header-content {
+  min-width: 140px;
+  flex: 1 0 0;
+  flex-basis: 0px;
 }
 
 .rbc-rtl {
@@ -282,36 +317,6 @@ button.rbc-input::-moz-focus-inner {
     line-height: normal;
   }
 
-  .rbc-month-view {
-    position: relative;
-    border: 1px solid #ddd;
-    display: flex;
-    flex-direction: column;
-    flex: 1 0 0;
-    width: 100%;
-    user-select: none;
-    -webkit-user-select: none;
-    height: 100%;
-  }
-
-  .rbc-month-header {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .rbc-month-row {
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    flex: 1 0 0;
-    flex-basis: 0px;
-    overflow: hidden;
-    height: 100%;
-  }
-  .rbc-month-row + .rbc-month-row {
-    border-top: 1px solid #ddd;
-  }
-
   .rbc-date-cell {
     flex: 1 1 0;
     min-width: 0;
@@ -466,11 +471,7 @@ button.rbc-input::-moz-focus-inner {
     overflow: hidden;
   }
 
-  .rbc-time-view-resources .rbc-time-header-content {
-    min-width: auto;
-    flex: 1 0 0;
-    flex-basis: 0px;
-  }
+
 
   .rbc-time-view-resources .rbc-time-header-cell-single-day {
     display: none;
@@ -503,34 +504,6 @@ button.rbc-input::-moz-focus-inner {
     cursor: move;
   }
 
-  .rbc-time-view {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    width: 100%;
-    border: 1px solid #ddd;
-    min-height: 0;
-  }
-  .rbc-time-view .rbc-time-gutter {
-    white-space: nowrap;
-  }
-  .rbc-time-view .rbc-allday-cell {
-    box-sizing: content-box;
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
-  .rbc-time-view .rbc-allday-cell + .rbc-allday-cell {
-    border-left: 1px solid #ddd;
-  }
-  .rbc-time-view .rbc-allday-events {
-    position: relative;
-    z-index: 4;
-  }
-  .rbc-time-view .rbc-row {
-    box-sizing: border-box;
-    min-height: 0px;
-  }
 
   .rbc-time-header.rbc-overflowing {
     border-right: 1px solid #ddd;

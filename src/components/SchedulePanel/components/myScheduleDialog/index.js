@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../../../theme';
 import Checkbox from '@material-ui/core/Checkbox';
-import myschedule from './../../../../services/myschedule'
+import myschedule from '../../../../services/myschedule'
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { FormHelperText } from '@material-ui/core';
@@ -20,7 +20,7 @@ import {KeyboardTimePicker} from '@material-ui/pickers';
 const STARTHOUR = '08:00';
 const ENDHOUR ='17:00';
 
-export default class HoursDialog extends React.Component {
+export default class MyScheduleDialog extends React.Component {
 
 
   constructor(props) {
@@ -29,7 +29,7 @@ export default class HoursDialog extends React.Component {
     this.state = {
       startHourInput: STARTHOUR,
       endHourInput: ENDHOUR,
-      officeHoursOpen: false,
+      myScheduleOpen: false,
       checkedC: false,
       checkedDayofWeek: {
         checkedMo: false,
@@ -57,7 +57,7 @@ export default class HoursDialog extends React.Component {
         endHourValid: '',
       },
     };
-    this.handleOfficeHoursClose = this.handleOfficeHoursClose.bind(this);
+    this.handleMyScheduleClose = this.handleMyScheduleClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReset = this.handleReset.bind(this);
   }
@@ -258,13 +258,13 @@ export default class HoursDialog extends React.Component {
     }
   };
 
-  handleOfficeHoursClose = () => {
+  handleMyScheduleClose = () => {
     this.validateForm();
-    this.setState({ officeHoursOpen: false });
+    this.setState({ myScheduleOpen: false });
   };
 
   handleClose = () => {
-    this.props.handleOfficeHoursClose();
+    this.props.handleMyScheduleClose();
     this.setState({
       formValid: true,
       selectedEvent: null,
@@ -275,7 +275,7 @@ export default class HoursDialog extends React.Component {
     this.setState({
       startHourInput: STARTHOUR,
       endHourInput: ENDHOUR,
-      officeHoursOpen: false,
+      myScheduleOpen: false,
       checkedC: false,
       checkedDayofWeek: {
         checkedMo: false,
@@ -348,19 +348,19 @@ export default class HoursDialog extends React.Component {
     if (this.props.isDoubleClick) {
       dialogTitle = 'Edit the';
     }
-    let hoursdialog;
+    let myScheduleDialog;
 
-      hoursdialog = (
+    myScheduleDialog = (
         <Dialog
-          open={this.props.officeHoursOpen}
-          onClose={this.props.handleOfficeHoursClose}
+          open={this.props.myScheduleOpen}
+          onClose={this.props.handleMyScheduleClose}
           fullWidth="true"
           maxWidth="md"
           className="time-tile"
         >
-          <DialogTitle className="add-title">{dialogTitle} schedule item</DialogTitle>
+          <DialogTitle>{dialogTitle} schedule item</DialogTitle>
 
-          <DialogContent className="dialog-content">
+          <DialogContent>
             <form className="info" onSubmit={this.handleSubmit}>
               <FormControl error={!this.state.checkedValid}>
               <FormHelperText>
@@ -455,6 +455,7 @@ export default class HoursDialog extends React.Component {
 
               <div>
                 <KeyboardTimePicker
+                style={{width:"20%"}}
                 label="Start time"
                 ampm={false}
                 variant="inline"
@@ -466,7 +467,7 @@ export default class HoursDialog extends React.Component {
                   helperText={this.state.startHourValid ? '' : this.state.formErrors.startHourInput}
                 />
                 <KeyboardTimePicker
-                style={{marginLeft:"5px"}}
+                style={{width:"20%"}}
                 label="End time"
                 ampm={false}
                 variant="inline"
@@ -492,7 +493,7 @@ export default class HoursDialog extends React.Component {
                 style={{verticalAlign:'bottom', marginLeft: '1.5%' }}
               />
               </div>
-              <div className="office-hours-title">
+              <div>
                 <TextField
                   label="Location"
                   fullWidth
@@ -503,7 +504,7 @@ export default class HoursDialog extends React.Component {
                   onKeyDown={this.handleEnterKeyPress}
                 />
               </div>
-              <div className="office-hours-desc">
+              <div>
                 <TextField
                   label="Description"
                   fullWidth
@@ -518,8 +519,8 @@ export default class HoursDialog extends React.Component {
               </div>
             </form>
           </DialogContent>
-          <DialogActions className="buttons">
-            <Button onClick={this.props.handleOfficeHoursClose} variant="contained" style={button}>
+          <DialogActions>
+            <Button onClick={this.props.handleMyScheduleClose} variant="contained" style={button}>
               Cancel
             </Button>
             <Button onClick={this.handleReset} variant="contained" style={button}>
@@ -538,6 +539,6 @@ export default class HoursDialog extends React.Component {
         </Dialog>
       );
 
-    return <Fragment>{hoursdialog}</Fragment>;
+    return <Fragment>{myScheduleDialog}</Fragment>;
   }
 }

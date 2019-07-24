@@ -4,19 +4,19 @@ import Moment from 'moment';
 import Calendar from 'react-big-calendar/dist/react-big-calendar';
 import MomentLocalizer from 'react-big-calendar/lib/localizers/moment';
 
-import GordonLoader from '../../../../components/Loader';
-import schedule from './../../../../services/schedule';
-import myschedule from './../../../../services/myschedule';
+import GordonLoader from '../../../Loader';
+import schedule from '../../../../services/schedule';
+import myschedule from '../../../../services/myschedule';
 
-import './courseschedule.css';
+import './schedulecalendar.css';
 
-export default class CourseSchedule extends Component {
+export default class ScheduleCalendar extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       loading: true,
-      officeHoursOpen: false,
+      myScheduleOpen: false,
       disabled: true,
       selectedEvent: null,
       isDoubleClick: false,
@@ -124,7 +124,7 @@ export default class CourseSchedule extends Component {
           onDoubleClickEvent={event => {
             this.props.handleDoubleClick(event);
           }}
-          onSelectSlot={slotInfo => {this.props.handleOfficeHoursOpen(slotInfo)}}
+          onSelectSlot={slotInfo => {this.props.handleMyScheduleOpen(slotInfo)}}
           defaultDate={Moment(new Date())}
           resources={resourceMap}
           resourceIdAccessor="resourceId"
