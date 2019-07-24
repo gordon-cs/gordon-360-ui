@@ -176,15 +176,10 @@ export default class LinksDialog extends React.Component {
           <Typography variant="body2" className="gc360-links-dialog_content_text">
             Copy and paste your links below
           </Typography>
-          {/* <form
-            onSubmit={this.handleSubmit}
-            style={{ paddingLeft: '1.5rem', marginBottom: '-0.75rem', marginTop: '-1.5rem' }}
-          > */}
           <div className="gc360-links-dialog_content_facebook gc360-links-dialog_content_media">
             <div className="gc360-links-dialog_content_icon">
               <FaFacebookF style={{ fontSize: '20px' }} />
             </div>
-            {/* <div > */}
             <TextField
               id="facebookInput"
               label=" Facebook link"
@@ -196,13 +191,11 @@ export default class LinksDialog extends React.Component {
               fullWidth
               className="gc360-links-dialog_content_field"
             />
-            {/* </div> */}
           </div>
           <div className="gc360-links-dialog_content_twitter gc360-links-dialog_content_media">
             <div className="gc360-links-dialog_content_icon">
               <FaTwitter style={{ fontSize: '20px' }} />
             </div>
-            {/* <div className="gc360-links-dialog_content_field"> */}
             <TextField
               id="twitterInput"
               label=" Twitter link"
@@ -214,13 +207,11 @@ export default class LinksDialog extends React.Component {
               fullWidth
               className="gc360-links-dialog_content_field"
             />
-            {/* </div> */}
           </div>
           <div className="gc360-links-dialog_content_linkedin gc360-links-dialog_content_media">
             <div className="gc360-links-dialog_content_icon">
               <FaLinkedin style={{ fontSize: '20px' }} />
             </div>
-            {/* <div className="gc360-links-dialog_content_field"> */}
             <TextField
               id="linkedInInput"
               label=" LinkedIn link"
@@ -232,13 +223,11 @@ export default class LinksDialog extends React.Component {
               fullWidth
               className="gc360-links-dialog_content_field"
             />
-            {/* </div> */}
           </div>
           <div className="gc360-links-dialog_content_instagram gc360-links-dialog_content_media">
             <div className="gc360-links-dialog_content_icon">
               <FaInstagram style={{ fontSize: '20px' }} />
             </div>
-            {/* <div className="gc360-links-dialog_content_field"> */}
             <TextField
               id="instagramInput"
               label=" Instagram link"
@@ -250,9 +239,7 @@ export default class LinksDialog extends React.Component {
               fullWidth
               className="gc360-links-dialog_content_field"
             />
-            {/* </div> */}
           </div>
-          {/* </form> */}
         </DialogContent>
         <DialogActions className="gc360-links-dialog_actions">
           <Button onClick={this.handleClose} variant="contained" style={button}>

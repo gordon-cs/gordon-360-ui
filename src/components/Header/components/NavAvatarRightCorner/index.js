@@ -1,4 +1,4 @@
-import { Avatar, IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core/Avatar';
+import { Avatar, IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -100,12 +100,14 @@ export default class GordonNavAvatarRightCorner extends Component {
     const open = Boolean(this.state.anchorEl);
     let myProfileLink = '/myprofile';
     let avatar = (
-      <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>
+      <Avatar className="gc360-nav-avatar-rc_size gc360-nav-avatar-rc_placeholder">
+        {this.getInitials()}
+      </Avatar>
     );
     if (this.state.image) {
       avatar = (
         <Avatar
-          className="nav-avatar nav-avatar-image"
+          className="gc360-nav-avatar-rc_size"
           src={`data:image/jpg;base64,${this.state.image}`}
         />
       );
@@ -126,11 +128,7 @@ export default class GordonNavAvatarRightCorner extends Component {
       <section className="right-side-container">
         <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
           <IconButton
-            className="gordon-nav-avatar-right-corner"
-            classes={{
-              root: 'gordon-nav-avatar-right-corner nav-avatar-button',
-              label: 'nav-avatar-label',
-            }}
+            className="gc360-nav-avatar-rc"
             aria-label="More"
             aria-owns={open ? 'global-menu' : null}
             aria-haspopup="true"

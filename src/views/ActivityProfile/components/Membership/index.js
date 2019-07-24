@@ -316,7 +316,7 @@ export default class Membership extends Component {
         if (this.state.isAdmin || this.state.isSuperAdmin) {
           header = (
             <div style={headerStyle}>
-              <Grid container direction="row" spacing={16}>
+              <Grid container direction="row">
                 <Grid item xs={3}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     NAME
@@ -381,15 +381,15 @@ export default class Membership extends Component {
               </Grid>
               <Card>
                 <CardContent>
-                  <Grid container spacing={16} direction="column">
+                  <Grid container spacing={2} direction="column">
                     <Dialog open={this.state.openAddMember} keepMounted align="center">
                       <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
                       <Typography style={{ color: '#ff0000' }}>
                         {this.state.addMemberDialogError}
                       </Typography>
                       <DialogContent>
-                        <Grid container align="center" padding={6} spacing={16}>
-                          <Grid item xs={12} padding={6} align="center">
+                        <Grid container align="center">
+                          <Grid item xs={12} align="center">
                             <Typography>Username</Typography>
                             <TextField
                               error={this.state.addEmail === '' ? true : false}
@@ -454,7 +454,8 @@ export default class Membership extends Component {
                       </Button>
                     </Grid>
                     <Divider />
-                    {requestList}
+                    <Grid item>{requestList}</Grid>
+
                     <Grid item>{confirmRoster}</Grid>
                   </Grid>
                 </CardContent>
@@ -465,7 +466,7 @@ export default class Membership extends Component {
         } else {
           header = (
             <div style={headerStyle}>
-              <Grid container direction="row" spacing={16}>
+              <Grid container direction="row">
                 <Grid item xs={6}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     NAME
@@ -542,11 +543,11 @@ export default class Membership extends Component {
             </Button>
             <Dialog open={this.state.openJoin} keepMounted align="center">
               <DialogContent>
-                <Grid container align="center" padding={6} spacing={16}>
-                  <Grid item xs={12} padding={6}>
+                <Grid container align="center">
+                  <Grid item xs={12}>
                     <DialogTitle>Join {this.state.activityDescription}</DialogTitle>
                     <Typography>Participation (Required)</Typography>
-                    <Grid item padding={6} align="center">
+                    <Grid item align="center">
                       <FormControl fullWidth style={formControl}>
                         <Select
                           value={this.state.participationCode}

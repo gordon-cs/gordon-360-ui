@@ -93,6 +93,11 @@
   }
 }
 
+.noInvolvements {
+  padding-left: 24px;
+  color: $primary-cyan !important;
+}
+
 @media (min-width: $break-sm) {
   .profile-image {
     position: 'relative';

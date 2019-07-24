@@ -52,7 +52,7 @@ export default class InvolvementsStatus extends Component {
         </div>
       ));
     } else {
-      content = <Typography variant="h4">No {status} Involvements To Show</Typography>;
+      content = <Typography variant="h5">No {status} Involvements To Show</Typography>;
     }
 
     return (

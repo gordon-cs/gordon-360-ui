@@ -314,7 +314,7 @@ class ActivityProfile extends Component {
         editActivity = (
           <section align="center" padding={6}>
             <CardContent>
-              <Grid container spacing={16} justify="center">
+              <Grid container spacing={2} justify="center">
                 <Grid item>
                   <Button variant="contained" color="primary" onClick={this.openEditActivityDialog}>
                     Edit Involvement
