@@ -344,7 +344,7 @@ class GordonSchedulePanel extends Component {
 
           <Grid container direction="row" alignContent="center" xs={12} lg={10}>
           <Grid container xs={12} lg={8} alignItems="center" justify="flex-start">
-          {this.state.description}
+          <Typography>{this.state.description}</Typography>
           </Grid>
 
           <Grid container direction="column" xs={12} lg={4} alignItems="flex-end" justify="flex-end">
