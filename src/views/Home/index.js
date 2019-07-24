@@ -25,6 +25,12 @@ export default class Home extends Component {
     }
   }
 
+  componentWillReceiveProps(newProps) {
+    if (this.props.Authentication !== newProps.Authentication) {
+      this.getPersonType();
+    }
+  }
+
   async getPersonType() {
     const profile = await user.getProfileInfo();
     const personType = String(profile.PersonType);
