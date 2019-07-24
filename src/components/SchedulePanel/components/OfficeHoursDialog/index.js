@@ -15,7 +15,6 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { FormHelperText } from '@material-ui/core';
 import {KeyboardTimePicker} from '@material-ui/pickers';
-import { FaGalacticSenate } from 'react-icons/fa';
 
 // Default values
 const STARTHOUR = '08:00';
