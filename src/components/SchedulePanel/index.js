@@ -229,6 +229,10 @@ class GordonSchedulePanel extends Component {
   }
 
   render() {
+    const button = {
+      background: gordonColors.primary.cyan,
+      color: 'white',
+    };
     const { classes } = this.props;
     let isFaculty = String(this.props.profile.PersonType).includes('fac');
     let privacyButton,
@@ -296,7 +300,10 @@ class GordonSchedulePanel extends Component {
     if (this.props.myProf) {
       editDescriptionButton = (
         <Fragment>
-          <Button onClick={this.handleEditDescriptionOpen}>EDIT DESCRIPTION</Button>
+          <Button 
+            variant="contained" 
+            style={button} 
+            onClick={this.handleEditDescriptionOpen}>EDIT DESCRIPTION</Button>
         </Fragment>
       );
     }
@@ -305,6 +312,8 @@ class GordonSchedulePanel extends Component {
       removeOfficeHourButton = (
         <Fragment>
           <Button
+            variant="contained"
+            style={{backgroundColor:gordonColors.secondary.red, color:"white"}} 
             onClick={this.handleRemoveMyScheduleOpen}
             disabled={this.state.disabled} //disabled
           >
@@ -331,22 +340,17 @@ class GordonSchedulePanel extends Component {
           <ExpansionPanelDetails>
 
           <Grid container direction="row" xs={12} lg={12} justify="center">
-          <Grid container direction="column" xs={12} lg={10} alignItems="flex-end" justify="flex-end">
-          {privacyButton}
-          </Grid>
-
-          <Grid container direction="column" xs={12} lg={10} alignItems="flex-end" >
-          <div style={{color: gordonColors.primary.cyan}}>
-          <Typography style={{fontSize: '0.9rem'}}>Last Updated</Typography>
-          <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
-          </div>
-          </Grid>
 
 
           <Grid container direction="row" alignContent="center" xs={12} lg={10}>
-          <Grid item xs={12} lg={8}>
+          <Grid container xs={12} lg={8} alignItems="center" justify="flex-start">
           {this.state.description}
           </Grid>
+
+          <Grid container direction="column" xs={12} lg={4} alignItems="flex-end" justify="flex-end">
+          {privacyButton}
+          </Grid>
+
 
           <Grid item xs={6} lg={2}>
           {editDescriptionButton}
@@ -356,9 +360,19 @@ class GordonSchedulePanel extends Component {
           {removeOfficeHourButton}
           </Grid>
 
-
+          <Grid container direction="column" xs={12} lg={8} alignItems="flex-end" >
+          <div style={{color: gordonColors.primary.cyan}}>
+          <Typography style={{fontSize: '0.9rem'}}>Last Updated</Typography>
+          <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
+          </div>
+          </Grid>
 
           </Grid>
+
+
+
+
+
 
           <Grid item xs={12} lg={10}>
                 <ScheduleCalendar
