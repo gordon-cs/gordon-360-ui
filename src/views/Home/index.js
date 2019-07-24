@@ -12,6 +12,8 @@ import './home.css';
 
 import '../../app.css';
 
+import '../../app.css';
+
 export default class Home extends Component {
   constructor(props) {
     super(props);
