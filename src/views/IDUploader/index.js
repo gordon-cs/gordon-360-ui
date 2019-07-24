@@ -1,5 +1,5 @@
 import Grid from '@material-ui/core/Grid';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -18,7 +18,7 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
 import user from '../../services/user';
-// import errorLog from '../../services/errorLog';
+import errorLog from '../../services/errorLog';
 
 const CROP_DIM = 1200; // pixels
 export default class IDUploader extends Component {
@@ -57,27 +57,27 @@ export default class IDUploader extends Component {
   };
 
   async postCroppedImage(croppedImage, attemptNumber) {
-    // let profile = await user.getProfileInfo();
-    // let logMessage =
-    //   'ID photo submission #' +
-    //   attemptNumber +
-    //   ' for ' +
-    //   profile.fullName +
-    //   ' from ' +
-    //   errorLog.parseNavigator(navigator);
+    let profile = await user.getProfileInfo();
+    let logMessage =
+      'ID photo submission #' +
+      attemptNumber +
+      ' for ' +
+      profile.fullName +
+      ' from ' +
+      errorLog.parseNavigator(navigator);
     try {
       await user.postIDImage(croppedImage);
       this.setState({ submitDialogOpen: true });
     } catch (error) {
-      // let errorMessage = ', but image failed to post with error: ' + error;
-      // logMessage = errorMessage + logMessage;
+      let errorMessage = ', but image failed to post with error: ' + error;
+      logMessage = errorMessage + logMessage;
       if (attemptNumber < 5) {
         this.postCroppedImage(croppedImage, attemptNumber + 1);
       } else {
         this.setState({ errorDialogOpen: true });
       }
     }
-    // errorLog.postErrorMessage(logMessage);
+    errorLog.postErrorMessage(logMessage);
   }
 
   handleCloseCancel = () => {
@@ -189,80 +189,117 @@ export default class IDUploader extends Component {
       },
     };
 
-    return (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={6} lg={8}>
-          <Card>
-            <CardContent>
-              <Grid container justify="center" direction="column">
-                <Grid item align="center">
-                  <Typography align="center" variant="title" style={{ fontWeight: 'bold' }}>
-                    ID Photo Guidelines
-                  </Typography>
-                  <Typography align="left" variant="body1" style={style.instructionsText}>
-                    <br />
-                    1. Facial features must be identifiable. <br />
-                    2. No sunglasses or hats. <br />
-                    3. Photo must include your shoulders to the top of your head. <br />
-                    4. While this does not need to be a professional photo, it does need to be a
-                    reasonable representation of your face for an official campus ID card. As long
-                    as it meets the criteria, most cameras on a phone will work fine.
-                  </Typography>
-                </Grid>
-                <Grid item align="center">
-                  <Button
-                    variant="contained"
-                    style={style.uploadButton}
-                    onClick={this.handleUploadPhoto}
-                  >
-                    Tap to Upload
-                  </Button>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={6} lg={4} justify="center">
-          <Grid container justify="center">
-            <Card raised="true">
-              <Grid item style={{ margin: '10px' }}>
-                <div>
-                  <img
-                    src={IdCardTop}
-                    alt="ID Card"
-                    className="placeholder-id"
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                  />
-                </div>
-              </Grid>
-              <Grid item>
-                <Grid container style={{ width: '406px' }}>
-                  <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
-                    <div>
-                      <img
-                        src={this.state.IdCardPlaceholder}
-                        alt="ID Card"
-                        className="placeholder-id"
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
-                      />
-                    </div>
+    let content;
+    if (this.props.Authentication) {
+      content = (
+        <Fragment>
+          <Grid item xs={12} md={6} lg={8}>
+            <Card>
+              <CardContent>
+                <Grid container justify="center" direction="column">
+                  <Grid item align="center">
+                    <Typography align="center" variant="title" style={{ fontWeight: 'bold' }}>
+                      ID Photo Guidelines
+                    </Typography>
+                    <Typography align="left" variant="body1" style={style.instructionsText}>
+                      <br />
+                      1. Facial features must be identifiable. <br />
+                      2. No sunglasses or hats. <br />
+                      3. Photo must include your shoulders to the top of your head. <br />
+                      4. While this does not need to be a professional photo, it does need to be a
+                      reasonable representation of your face for an official campus ID card. As long
+                      as it meets the criteria, most cameras on a phone will work fine.
+                    </Typography>
                   </Grid>
-                  <Grid item style={{ marginLeft: '7px', width: '53px', marginBottom: '5px' }}>
-                    <div>
-                      <img
-                        src={IdCardGreen}
-                        alt="ID Card"
-                        className="placeholder-id"
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
-                      />
-                    </div>
+                  <Grid item align="center">
+                    <Button
+                      variant="contained"
+                      style={style.uploadButton}
+                      onClick={this.handleUploadPhoto}
+                    >
+                      Tap to Upload
+                    </Button>
                   </Grid>
                 </Grid>
-              </Grid>
+              </CardContent>
             </Card>
           </Grid>
-        </Grid>
+
+          <Grid item xs={12} md={6} lg={4} justify="center">
+            <Grid container justify="center">
+              <Card raised="true">
+                <Grid item style={{ margin: '10px' }}>
+                  <div>
+                    <img
+                      src={IdCardTop}
+                      alt="ID Card"
+                      className="placeholder-id"
+                      style={{ maxWidth: '100%', maxHeight: '100%' }}
+                    />
+                  </div>
+                </Grid>
+                <Grid item>
+                  <Grid container style={{ width: '406px' }}>
+                    <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
+                      <div>
+                        <img
+                          src={this.state.IdCardPlaceholder}
+                          alt="ID Card"
+                          className="placeholder-id"
+                          style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        />
+                      </div>
+                    </Grid>
+                    <Grid item style={{ marginLeft: '7px', width: '53px', marginBottom: '5px' }}>
+                      <div>
+                        <img
+                          src={IdCardGreen}
+                          alt="ID Card"
+                          className="placeholder-id"
+                          style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        />
+                      </div>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Card>
+            </Grid>
+          </Grid>
+        </Fragment>
+      )
+    } else {
+      content = (
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <h1>You are not logged in.</h1>
+                <br />
+                <h4>Please log in to upload an ID photo. You can press the back button or follow the URL "360.gordon.edu/id" to return to this page.</h4>
+                <br />
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Login
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+      )
+    }
+
+    return (
+      <Grid container justify="center" spacing="16">
+        {content}
+
 
         <Dialog
           open={this.state.photoOpen}
