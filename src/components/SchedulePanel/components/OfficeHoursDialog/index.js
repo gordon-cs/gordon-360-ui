@@ -14,6 +14,8 @@ import myschedule from './../../../../services/myschedule'
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { FormHelperText } from '@material-ui/core';
+import {KeyboardTimePicker} from '@material-ui/pickers';
+import { FaGalacticSenate } from 'react-icons/fa';
 
 // Default values
 const STARTHOUR = '08:00';
@@ -129,16 +131,28 @@ export default class HoursDialog extends React.Component {
         startHourValid =
           value.trim() !== '' &&
           parseInt(this.state.endHourInput, 10) > parseInt(value, 10) &&
-          parseInt(value, 10) >= 5 &&
-          parseInt(value, 10) <= 10;
+          parseInt(value.trim(), 10) > 5 &&
+          parseInt(value.trim(), 10) <= 22;
         fieldValidationErrors.startHourInput = startHourValid ? '' : 'Start Time is not Valid';
+        endHourValid =
+        this.state.endHourInput.trim() !== '' &&
+        parseInt(value.trim(), 10) < parseInt(this.state.endHourInput.trim(), 10) &&
+        parseInt(this.state.endHourInput.trim(), 10) > 5 &&
+        parseInt(this.state.endHourInput.trim(), 10) <= 22;
+      fieldValidationErrors.endHourInput = endHourValid ? '' : 'End Time is not Valid';
         break;
       case 'endHourInput':
+          startHourValid =
+          this.state.startHourInput.trim() !== '' &&
+          parseInt(value.trim(), 10) > parseInt(this.state.startHourInput.trim(), 10) &&
+          parseInt(this.state.startHourInput.trim(), 10) > 5 &&
+          parseInt(this.state.startHourInput.trim(), 10) <= 22;
+        fieldValidationErrors.startHourInput = startHourValid ? '' : 'Start Time is not Valid';
         endHourValid =
           value.trim() !== '' &&
-          parseInt(this.state.startHourInput, 10) < parseInt(value, 10) &&
-          parseInt(value, 10) >= 5 &&
-          parseInt(value, 10) <= 22;
+          parseInt(this.state.startHourInput, 10) < parseInt(value.trim(), 10) &&
+          parseInt(value.trim(), 10) > 5 &&
+          parseInt(value.trim(), 10) <= 22;
         fieldValidationErrors.endHourInput = endHourValid ? '' : 'End Time is not Valid';
         break;
       default:
@@ -206,6 +220,12 @@ export default class HoursDialog extends React.Component {
       this.validateForm();
     });
   };
+
+  handlePickerChange = name => (date, value) => {
+    this.setState({ [name]: value }, () => {
+      this.validateField(name, value);
+    });
+  }
 
   handleChange = name => e => {
     let value = e.target.value;
@@ -435,38 +455,28 @@ export default class HoursDialog extends React.Component {
               </FormControl>
 
               <div>
-                <TextField
-                  label="Start time"
-                  type="time"
-                  disabled={this.state.checkedC}
-                  value={this.state.startHourInput}
-                  onChange={this.handleChange('startHourInput')}
+                <KeyboardTimePicker
+                label="Start time"
+                ampm={false}
+                variant="inline"
+                disabled={this.state.checkedC}
+                minutesStep={5}
+                  inputValue={this.state.startHourInput}
+                  onChange={this.handlePickerChange('startHourInput')}
                   error={!this.state.startHourValid}
                   helperText={this.state.startHourValid ? '' : this.state.formErrors.startHourInput}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 300, // 5 min
-                  }}
                 />
-
-                <TextField
-                  label="End time"
-                  type="time"
-                  disabled={this.state.checkedC}
-                  value={this.state.endHourInput}
-                  onChange={this.handleChange('endHourInput')}
+                <KeyboardTimePicker
+                style={{marginLeft:"5px"}}
+                label="End time"
+                ampm={false}
+                variant="inline"
+                disabled={this.state.checkedC}
+                minutesStep={5}
+                  inputValue={this.state.endHourInput}
+                  onChange={this.handlePickerChange('endHourInput')}
                   error={!this.state.endHourValid}
                   helperText={this.state.endHourValid ? '' : this.state.formErrors.endHourInput}
-                  primary
-                  style={{ marginLeft: '1.5%' }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 300, // 5 min
-                  }}
                 />
               <FormControlLabel
                 control={
