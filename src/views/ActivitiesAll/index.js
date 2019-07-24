@@ -47,31 +47,47 @@ export default class GordonActivitiesAll extends Component {
 
   async componentWillMount() {
     this.setState({ loading: true });
+    const { SessionCode: sessionCode } = await session.getCurrent();
+    const [activities, types, sessions] = await Promise.all([
+      activity.getAll(sessionCode),
+      activity.getTypes(sessionCode),
+      session.getAll(),
+    ]);
+
+    //Index of the array "activities" of current session
+    var IcurrentSession;
+    for (var i = 0; i < sessions.length; i++) {
+      if (sessionCode === sessions[i].SessionCode) {
+        IcurrentSession = i;
+        break;
+      }
+    }
+
+    let [pastActivities, pastTypes] = [[], []];
+    let myPastInvolvements = [];
+    let tempSession;
+    var backButton = false;
+    if (window.location.href.includes('?')) {
+      backButton = true;
+      tempSession = window.location.href.split('?')[1];
+      this.setState({ session: tempSession, currentSession: tempSession });
+      [pastActivities, pastTypes] = await Promise.all([
+        activity.getAll(tempSession),
+        activity.getTypes(tempSession),
+      ]);
+    }
     if (this.props.Authentication) {
       try {
         const profile = await user.getProfileInfo();
-        const myInvolvements = await user.getCurrentMembershipsWithoutGuests(profile.ID);
-        const { SessionCode: sessionCode } = await session.getCurrent();
-        var foundActivities = false;
-        //this.setState({ session: sessionCode, currentSession: sessionCode });
-        const [activities, types, sessions] = await Promise.all([
-          activity.getAll(sessionCode),
-          activity.getTypes(sessionCode),
-          session.getAll(),
-        ]);
-        if (window.location.href.includes('?')) {
-          foundActivities = true;
-          const tempSession = window.location.href.split('?')[1];
-          this.setState({ session: tempSession, currentSession: tempSession });
-          const [pastActivities, pastTypes] = await Promise.all([
-            activity.getAll(tempSession),
-            activity.getTypes(tempSession),
-          ]);
-          const myPastInvolvements = await user.getSessionMembershipsWithoutGuests(
+        const myInvolvements = await user.getSessionMembershipsWithoutGuests(
+          profile.ID,
+          sessionCode,
+        );
+        if (backButton) {
+          myPastInvolvements = await user.getSessionMembershipsWithoutGuests(
             profile.ID,
             tempSession,
           );
-
           this.setState({
             profile,
             activities: pastActivities,
@@ -80,21 +96,10 @@ export default class GordonActivitiesAll extends Component {
             types: pastTypes,
             sessions: sessions,
           });
-        }
-        //Index of the array "activities" of current session
-        var IcurrentSession;
-
-        if (activities.length === 0 && !foundActivities) {
-          for (var i = 0; i < sessions.length; i++) {
-            if (sessionCode === sessions[i].SessionCode) {
-              IcurrentSession = i;
-              break;
-            }
-          }
+        } else if (activities.length === 0) {
           for (var k = IcurrentSession - 1; k >= 0; k--) {
             const [newActivities] = await Promise.all([activity.getAll(sessions[k].SessionCode)]);
             if (newActivities.length !== 0) {
-              foundActivities = true;
               this.setState({
                 session: sessions[k].SessionCode,
                 sessions,
@@ -107,8 +112,7 @@ export default class GordonActivitiesAll extends Component {
               break;
             }
           }
-        }
-        if (!foundActivities) {
+        } else {
           this.setState({
             profile,
             session: sessionCode,
@@ -119,48 +123,22 @@ export default class GordonActivitiesAll extends Component {
             types,
           });
         }
-
-        this.setState({ loading: false });
       } catch (error) {
         this.setState({ error });
       }
     } else {
       try {
-        const { SessionCode: sessionCode } = await session.getCurrent();
-        foundActivities = false;
-        const [activities, types, sessions] = await Promise.all([
-          activity.getAll(sessionCode),
-          activity.getTypes(sessionCode),
-          session.getAll(),
-        ]);
-        if (window.location.href.includes('?')) {
-          foundActivities = true;
-          const tempSession = window.location.href.split('?')[1];
-          this.setState({ session: tempSession, currentSession: tempSession });
-          const [pastActivities, pastTypes] = await Promise.all([
-            activity.getAll(tempSession),
-            activity.getTypes(tempSession),
-          ]);
-
+        if (backButton) {
           this.setState({
             activities: pastActivities,
             allActivities: pastActivities,
             types: pastTypes,
             sessions: sessions,
           });
-        }
-
-        if (activities.length === 0 && !foundActivities) {
-          for (i = 0; i < sessions.length; i++) {
-            if (sessionCode === sessions[i].SessionCode) {
-              IcurrentSession = i;
-              break;
-            }
-          }
+        } else if (activities.length === 0) {
           for (k = IcurrentSession - 1; k >= 0; k--) {
             const [newActivities] = await Promise.all([activity.getAll(sessions[k].SessionCode)]);
             if (newActivities.length !== 0) {
-              foundActivities = true;
               this.setState({
                 session: sessions[k].SessionCode,
                 sessions,
@@ -171,8 +149,7 @@ export default class GordonActivitiesAll extends Component {
               break;
             }
           }
-        }
-        if (!foundActivities) {
+        } else {
           this.setState({
             session: sessionCode,
             activities,
@@ -181,12 +158,11 @@ export default class GordonActivitiesAll extends Component {
             types,
           });
         }
-
-        this.setState({ loading: false });
       } catch (error) {
         this.setState({ error });
       }
     }
+    this.setState({ loading: false });
   }
 
   async changeSession(event) {

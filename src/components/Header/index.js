@@ -81,6 +81,7 @@ export default class GordonHeader extends Component {
     for (let i = 0; i < urls.length; i++) {
       if (urls[i].test(currentPath)) {
         this.value = i;
+        break;
       }
     }
   }
