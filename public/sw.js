@@ -15,7 +15,16 @@ let cacheVersion = 'cache-1.0';
 const apiSource = 'https://360apitrain.gordon.edu';
 let failedDynamicCacheLinks = [];
 let failedDynamicImageLinks = [];
-let token, termCode, cacheTimer, isSuccessful, isFetchCanceled, dynamicCache, networkStatus;
+let token,
+  termCode,
+  cacheTimer,
+  isSuccessful,
+  isFetchCanceled,
+  dynamicCache,
+  networkStatus,
+  username,
+  id,
+  currSessionCode;
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
@@ -101,18 +110,29 @@ const staticCache = [
  * @return {Promise} A promise with the result of removing outdated cache
  */
 async function cleanCache() {
+  // If the cache version is the same, we remove all dynamic files cached
   await caches.open(cacheVersion).then(cache => {
     cache.keys().then(items => {
       items.map(item => {
+        // Removes all remote files except for the font key css
         if (
           !item.url.match(location.origin) &&
           item.url !== 'https://cloud.typography.com/7763712/6754392/css/fonts.css'
         ) {
           cache.delete(item);
         }
+        // Removes '/myprofile' and '/profile/firstName.lastName' since they were made when the user
+        // was caching dynamic files but appears to be from location.origin instead of remote
+        else if (
+          item.url.match(location.origin) &&
+          (item.url.includes(`/profile/${username}`) || item.url.includes('/myprofile'))
+        ) {
+          cache.delete(item);
+        }
       });
     });
   });
+  // If there's outdated cache
   await caches.keys().then(keys => {
     keys.forEach(key => {
       if (key !== cacheVersion && key.match('cache-')) {
@@ -192,6 +212,8 @@ async function cacheStaticFiles() {
  *  @return {Promise} A promise with the result of re-caching the failed dynamic files
  */
 async function recacheDynamicFiles() {
+  console.log('FAILED DYNAMIC: ', failedDynamicCacheLinks);
+  console.log('FAILED IMAGES: ', failedDynamicImageLinks);
   if (token && (failedDynamicCacheLinks.length > 0 || failedDynamicImageLinks > 0)) {
     const cacheOne = await cacheDynamicFiles(token, failedDynamicCacheLinks);
     const cacheTwo = await cacheDynamicFiles(token, failedDynamicImageLinks, 'no-cors');
@@ -391,9 +413,9 @@ async function dynamicLinksThenCache(token, termCode) {
         return error.Message;
       });
 
-    let username = profile ? profile.AD_Username : null;
-    let id = profile ? profile.ID : null;
-    let currSessionCode = currentSession ? currentSession.SessionCode : null;
+    username = profile ? profile.AD_Username : null;
+    id = profile ? profile.ID : null;
+    currSessionCode = currentSession ? currentSession.SessionCode : null;
 
     const imagesCache = [
       'https://wwwtrain.gordon.edu/images/2ColumnHero/Profile-1_2018_07_26_02_26_40_2018_10_09_08_52_16.jpg',
