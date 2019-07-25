@@ -70,6 +70,11 @@ if ('caches' in window) {
       );
       localStorage.setItem('network-status', JSON.stringify('online'));
       navigator.serviceWorker.controller.postMessage('online');
+      navigator.serviceWorker.controller.postMessage({
+        message: 'update-cache-files',
+        token: JSON.parse(localStorage.getItem('token')),
+        termCode: JSON.parse(localStorage.getItem('currentTerm')),
+      });
       event.waitUntil(window.postMessage('online', location.origin));
     });
   } else {

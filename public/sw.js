@@ -388,7 +388,6 @@ async function dynamicLinksThenCache(token, termCode) {
       .catch(error => {
         return error.Message;
       });
-    console.log('Profile: ', profile);
     username = profile ? profile.AD_Username : null;
     id = profile ? profile.ID : null;
     currSessionCode = currentSession ? currentSession.SessionCode : null;
