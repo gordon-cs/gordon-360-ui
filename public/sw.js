@@ -439,7 +439,11 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/memberships/student/username/${username}/`,
       `${apiSource}/api/profiles/${username}/`,
       `${apiSource}/api/profiles/Image/${username}/`,
-      `${apiSource}/api/requests/student/${id}`,
+      `${apiSource}/browseable/uploads/ASF/canvasImage.jpeg`,
+      `${apiSource}/browseable/uploads/BADM/canvasImage.jpeg`,
+      `${apiSource}/browseable/uploads/BARN/canvasImage.jpeg`,
+      `${apiSource}/browseable/uploads/REC/canvasImage.jpeg`,
+      `${apiSource}/browseable/uploads/CLAR/canvasImage.jpeg`,
       `/profile/${username}`,
       `/myprofile`,
     ];
@@ -452,8 +456,8 @@ async function dynamicLinksThenCache(token, termCode) {
         );
       }
     });
-
-    // // Gets the involvements of the current user for the Involvement Profiles
+    // This is commented out because we do not want users to be able to click into an involvement offline
+    // Gets the involvements of the current user for the Involvement Profiles
     // let involvements = await fetch(
     //   new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
     //     method: 'GET',
@@ -571,7 +575,6 @@ self.addEventListener('message', event => {
     username = null;
     id = null;
     currSessionCode = null;
-    dynamicCache = null;
   }
   // If the message is to cancel all fetches
   if (event.data === 'cancel-fetches') {
