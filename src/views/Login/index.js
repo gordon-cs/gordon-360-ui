@@ -76,19 +76,19 @@ export default class Login extends Component {
        *  This is important because if the API is not available, the site will load
        *  but not allow you to login due to the error "undefined is not a function"
        */
-      if (navigator.serviceWorker) {
-        // Sends a message, the token and current term code to the service worker to precache dynamic files
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        // Sends a message, the token and current term code to the service worker to precache
+        // dynamic files and start the update-cache timer
         navigator.serviceWorker.controller.postMessage({
           message: 'cache-static-dynamic-files',
           token: storage.get('token'),
           termCode: session.getTermCode(),
         });
+        navigator.serviceWorker.controller.postMessage('start-cache-timer');
         // Stores the current term in Local Storage for later use when updating the cache
         storage.store('currentTerm', session.getTermCode());
         // Saves the network state as online in local storage
         localStorage.setItem('network-status', JSON.stringify('online'));
-      } else {
-        console.log('SERVICE WORKER IS NOT AVAILABLE');
       }
       this.props.onLogIn();
     } catch (err) {
