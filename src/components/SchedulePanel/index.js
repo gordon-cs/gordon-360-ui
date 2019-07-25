@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
-import ScheduleCalendar from './components/ScheduleCalendar';
+import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -392,7 +392,7 @@ class GordonSchedulePanel extends Component {
           </Grid>
 
           <Grid item xs={12} lg={10}>
-                <ScheduleCalendar
+                <GordonScheduleCalendar
                   profile={this.props.profile}
                   myProf={this.props.myProf}
                   handleRemoveButton={this.handleRemoveButton.bind(this)}
