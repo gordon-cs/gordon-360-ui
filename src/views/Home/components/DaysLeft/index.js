@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -74,7 +75,7 @@ export default class DaysLeft extends Component {
             style={{ paddingTop: 5, paddingBottom: 10 }}
           >
             <Grid item>
-              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${daysleft} Days Left`}
               </Typography>
             </Grid>
@@ -109,9 +110,9 @@ export default class DaysLeft extends Component {
     return (
       <Card>
         <CardContent>
-          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.currSessionDescription}
-          </Typography>
+          <Grid container direction="row" alignItems="center">
+            <CardHeader title={this.state.currSessionDescription} />
+          </Grid>
           {content}
         </CardContent>
       </Card>

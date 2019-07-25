@@ -57,7 +57,7 @@ export default class Admin extends Component {
     if (networkStatus === 'online') {
       if (this.state.isSuperAdmin) {
         Admin = (
-          <Grid container justify="center" spacing={16}>
+          <Grid container justify="center" spacing={2}>
             <Grid item xs={12} lg={8}>
               <InvolvementsStatus status={'Open'} />
             </Grid>

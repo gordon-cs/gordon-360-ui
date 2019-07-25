@@ -167,7 +167,7 @@ export default class GordonPeopleSearch extends Component {
             : 'people-search-suggestion'
         }
       >
-        <Typography variant="body1">
+        <Typography variant="body2">
           {/* If the query contains a space or a period, only highlight occurrences of the first
               name part of the query in the first name, and only highlight occurrences of the last
               name part of the query in the last name. Otherwise, highlight occurrences of the

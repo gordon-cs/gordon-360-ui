@@ -25,6 +25,8 @@ import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
+//import '../../app.js';
+
 const CROP_DIM = 320; // pixels
 
 class ActivityProfile extends Component {
@@ -355,19 +357,18 @@ class ActivityProfile extends Component {
             editActivity = (
               <section align="center" padding={6}>
                 <CardContent>
-                  <Grid container spacing={16} justify="center">
+                  <Grid container spacing={2} justify="center">
                     <Grid item>
                       <Button
                         variant="contained"
                         color="primary"
                         onClick={this.openEditActivityDialog}
-                        raised
                       >
                         Edit Involvement
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Button variant="contained" color="primary" onClick={this.sendEmail} raised>
+                      <Button variant="contained" color="primary" onClick={this.sendEmail}>
                         Email Members/Subscribers
                       </Button>
                     </Grid>
@@ -384,7 +385,7 @@ class ActivityProfile extends Component {
                         className="rounded-corners"
                       />
                     </Grid>
-                    <Grid container spacing={16} justify="center">
+                    <Grid container spacing={2} justify="center">
                       <Grid item>
                         <Button
                           variant="contained"
@@ -419,24 +420,30 @@ class ActivityProfile extends Component {
                           <br />
                         </DialogContentText>
                         {!preview && (
-                          <Grid container justify="center" spacing="16">
+                          <Grid container justify="center" spacing={6}>
                             <Dropzone
                               onDropAccepted={this.onDropAccepted.bind(this)}
                               onDropRejected={this.onDropRejected.bind(this)}
-                              accept="image/jpeg,image/jpg,image/png"
-                              className="photoUploader"
+                              accept="image/jpeg, image/jpg, image/png"
                             >
-                              <img
-                                className="rounded-corners"
-                                src={activityImagePath}
-                                alt=""
-                                style={{ 'max-width': '320px', 'max-height': '320px' }}
-                              />
+                              {({ getRootProps, getInputProps }) => (
+                                <section>
+                                  <div className="photoUploader" {...getRootProps()}>
+                                    <input {...getInputProps()} />
+                                    <img
+                                      className="rounded-corners"
+                                      src={activityImagePath}
+                                      alt=""
+                                      style={{ 'max-width': '320px', 'max-height': '320px' }}
+                                    />
+                                  </div>
+                                </section>
+                              )}
                             </Dropzone>
                           </Grid>
                         )}
                         {preview && (
-                          <Grid container justify="center" spacing="16">
+                          <Grid container justify="center" spacing={6}>
                             <Cropper
                               ref="cropper"
                               src={preview}
@@ -460,7 +467,7 @@ class ActivityProfile extends Component {
                         )}
                         {preview && <br />}
                         {preview && (
-                          <Grid container justify="center" spacing="16">
+                          <Grid container justify="center" spacing={6}>
                             <Grid item>
                               <Button
                                 variant="contained"
@@ -500,7 +507,7 @@ class ActivityProfile extends Component {
                     <Dialog open={this.state.openRemoveImage} keepMounted align="center">
                       <DialogTitle>Are you sure you want to remove image?</DialogTitle>
                       <DialogContent>
-                        <Grid container spacing={16}>
+                        <Grid container spacing={2}>
                           <Grid item xs={6} sm={6} md={6} lg={6}>
                             <Button
                               variant="contained"
@@ -558,15 +565,10 @@ class ActivityProfile extends Component {
                   </DialogContent>
 
                   <DialogActions>
-                    <Button variant="contained" color="primary" onClick={this.onClose} raised>
+                    <Button variant="contained" color="primary" onClick={this.onClose}>
                       Cancel
                     </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={this.onEditActivity}
-                      raised
-                    >
+                    <Button variant="contained" color="primary" onClick={this.onEditActivity}>
                       Submit
                     </Button>
                   </DialogActions>
@@ -578,7 +580,7 @@ class ActivityProfile extends Component {
           let description;
           if (activityBlurb.length !== 0) {
             description = (
-              <Typography variant="body1">
+              <Typography variant="body2">
                 <strong>Description: </strong>
                 {activityBlurb}
               </Typography>
@@ -587,7 +589,7 @@ class ActivityProfile extends Component {
           let website;
           if (activityURL.length !== 0) {
             website = (
-              <Typography variant="body1">
+              <Typography variant="body2">
                 <strong>Website: </strong>
                 <a href={activityURL}> {activityURL}</a>
               </Typography>
@@ -636,7 +638,7 @@ class ActivityProfile extends Component {
                     />
                   </Grid>
                   <Grid item>{editActivity}</Grid>
-                  <Typography variant="body1">
+                  <Typography variant="body2">
                     <strong>Session: </strong>
                     {sessionDescription}
                   </Typography>
@@ -648,7 +650,7 @@ class ActivityProfile extends Component {
                     <strong>Special Information for Joining: </strong>
                     {this.state.activityInfo.ActivityJoinInfo}
                   </Typography>
-                  <Typography variant="body1">
+                  <Typography variant="body2">
                     <strong>Current Involvement Roster: </strong>
                     {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
                   </Typography>
@@ -684,7 +686,7 @@ class ActivityProfile extends Component {
           let website;
           if (activityURL.length !== 0) {
             website = (
-              <Typography variant="body1">
+              <Typography variant="body2">
                 <strong>Website: </strong>
                 <a href={activityURL}> {activityURL}</a>
               </Typography>
@@ -767,7 +769,7 @@ class ActivityProfile extends Component {
 
     return (
       <section>
-        <Grid container justify="center" spacing="16">
+        <Grid container justify="center" spacing={6}>
           <Grid item xs={12} md={12} lg={8}>
             {content}
           </Grid>

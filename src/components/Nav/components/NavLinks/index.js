@@ -170,7 +170,12 @@ export default class GordonNavLinks extends Component {
       if (networkStatus === 'online') {
         if (user.getLocalInfo().college_role === 'god') {
           admin = (
-            <NavLink exact to="/admin" onClick={this.props.onLinkClick}>
+            <NavLink
+              exact
+              to="/admin"
+              onClick={this.props.onLinkClick}
+              className="gc360-link-color"
+            >
               <ListItem button>
                 <ListItemText primary="Admin" />
               </ListItem>
@@ -191,7 +196,7 @@ export default class GordonNavLinks extends Component {
 
       if (networkStatus === 'online') {
         peopleButton = (
-          <NavLink exact to="/people" onClick={this.props.onLinkClick}>
+          <NavLink exact to="/people" onClick={this.props.onLinkClick} className="gc360-link-color">
             <ListItem button>
               <ListItemIcon>
                 <PeopleIcon />
@@ -216,7 +221,7 @@ export default class GordonNavLinks extends Component {
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         signInOut = (
-          <NavLink exact to="/" onClick={this.onSignOut.bind(this)}>
+          <NavLink exact to="/" onClick={this.onSignOut.bind(this)} className="gc360-link-color">
             <ListItem button>
               <ListItemText primary="Sign Out" />
             </ListItem>
@@ -233,7 +238,7 @@ export default class GordonNavLinks extends Component {
       }
     } else {
       peopleButton = (
-        <NavLink to="#" onClick={this.unAuthenticatedSearch}>
+        <NavLink to="#" onClick={this.unAuthenticatedSearch} className="gc360-link-color">
           <ListItem button>
             <ListItemIcon>
               <PeopleIcon />
@@ -246,7 +251,7 @@ export default class GordonNavLinks extends Component {
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         signInOut = (
-          <NavLink exact to="/" onClick={this.onSignIn.bind(this)}>
+          <NavLink exact to="/" onClick={this.onSignIn.bind(this)} className="gc360-link-color">
             <ListItem button>
               <ListItemText primary="Sign In" />
             </ListItem>
@@ -266,7 +271,7 @@ export default class GordonNavLinks extends Component {
     return (
       <div>
         <List className="gordon-nav-links">
-          <NavLink exact to="/" onClick={this.props.onLinkClick}>
+          <NavLink className="gc360-link-color" exact to="/" onClick={this.props.onLinkClick}>
             <ListItem button>
               <ListItemIcon>
                 <HomeIcon />
@@ -274,7 +279,12 @@ export default class GordonNavLinks extends Component {
               <ListItemText primary="Home" />
             </ListItem>
           </NavLink>
-          <NavLink exact to="/involvements" onClick={this.props.onLinkClick}>
+          <NavLink
+            className="gc360-link-color"
+            exact
+            to="/involvements"
+            onClick={this.props.onLinkClick}
+          >
             <ListItem button>
               <ListItemIcon>
                 <LocalActivityIcon />
@@ -282,7 +292,7 @@ export default class GordonNavLinks extends Component {
               <ListItemText primary="Involvements" />
             </ListItem>
           </NavLink>
-          <NavLink exact to="/events" onClick={this.props.onLinkClick}>
+          <NavLink className="gc360-link-color" exact to="/events" onClick={this.props.onLinkClick}>
             <ListItem button>
               <ListItemIcon>
                 <EventIcon />
@@ -297,12 +307,17 @@ export default class GordonNavLinks extends Component {
         <div>
           <List className="gordon-nav-links-bottom">
             {linksButton}
-            <NavLink exact to="/help" onClick={this.props.onLinkClick}>
+            <NavLink exact to="/help" onClick={this.props.onLinkClick} className="gc360-link-color">
               <ListItem button>
                 <ListItemText primary="Help" />
               </ListItem>
             </NavLink>
-            <NavLink exact to="/about" onClick={this.props.onLinkClick}>
+            <NavLink
+              className="gc360-link-color"
+              exact
+              to="/about"
+              onClick={this.props.onLinkClick}
+            >
               <ListItem button>
                 <ListItemText primary="About" />
               </ListItem>

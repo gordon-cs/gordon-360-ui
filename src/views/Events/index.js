@@ -165,7 +165,7 @@ export default class Events extends Component {
     } else {
       content = (
         <Grid item>
-          <Typography variant="display1">No Events To Show</Typography>
+          <Typography variant="h4">No Events To Show</Typography>
         </Grid>
       );
     }

@@ -56,6 +56,12 @@ a {
   width: 100%;
   background-color: #ebeaea;
 }
+
+// color for all material-ui <Link> components
+.gc360-link-color {
+  color: black;
+}
+
 @media (min-width: $break-sm) {
   .app-main {
     height: calc(100vh - #{$header-height-sm});

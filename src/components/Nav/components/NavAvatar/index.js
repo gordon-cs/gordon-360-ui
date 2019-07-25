@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './nav-avatar.css';
+import '../../../../app.css';
 import user from '../../../../services/user';
 
 const styles = theme => ({
@@ -115,7 +116,12 @@ class GordonNavAvatar extends Component {
       if (networkStatus === 'online') {
         // Link component to be used with Button component
         buttonLink = ({ ...props }) => (
-          <Link {...props} to={`/myprofile`} onClick={this.props.onLinkClick} />
+          <Link
+            {...props}
+            to={`/myprofile`}
+            onClick={this.props.onLinkClick}
+            className="gc360-link-color"
+          />
         );
       } else {
         // Link component to be used with Button component
@@ -124,6 +130,7 @@ class GordonNavAvatar extends Component {
             {...props}
             to={`/profile/${user.getLocalInfo().name.replace(' ', '.')}`}
             onClick={this.props.onLinkClick}
+            className="gc360-link-color"
           />
         );
       }
@@ -149,7 +156,9 @@ class GordonNavAvatar extends Component {
     } else {
       let avatar = <Avatar className="avatar placeholder">Guest</Avatar>;
       // Link component to be used with Button component
-      buttonLink = ({ ...props }) => <Link {...props} to={`/`} onClick={this.props.onLinkClick} />;
+      buttonLink = ({ ...props }) => (
+        <Link {...props} to={`/`} onClick={this.props.onLinkClick} className="gc360-link-color" />
+      );
 
       content = (
         <Button

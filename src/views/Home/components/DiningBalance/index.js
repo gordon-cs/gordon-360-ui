@@ -167,7 +167,7 @@ export default class DiningBalance extends Component {
               style={{ paddingTop: 5, paddingBottom: 10 }}
             >
               <Grid item>
-                <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+                <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
                   {this.diningInfo.ChoiceDescription}
                 </Typography>
               </Grid>
@@ -251,16 +251,16 @@ export default class DiningBalance extends Component {
       <Card>
         <CardContent>
           <Grid item xs={12} align="right">
-            <Typography variant="subheading" style={{ textAlign: 'right', paddingTop: 5 }}>
+            <Typography variant="subtitle1" style={{ textAlign: 'right', paddingTop: 5 }}>
               <Grid container direction="row" alignItems="center">
-                <Grid item xs={7} align='left'>
+                <Grid item xs={7} align="left">
                   <CardHeader title="Dining Balance" />
                 </Grid>
                 <Grid item xs={5} align="right">
                   <Button
                     variant="contained"
                     style={style.button}
-                    onClick={() => (window.location.href = 'https://gordon.cafebonappetit.com/')}
+                    onClick={() => (window.open('https://gordon.cafebonappetit.com/', '_blank'))}
                     >
                     TODAY'S MENU
                   </Button>

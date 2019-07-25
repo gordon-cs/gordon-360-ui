@@ -1,21 +1,24 @@
-import Avatar from '@material-ui/core/Avatar';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
+import {
+  Avatar,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from '@material-ui/core';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 import QuickLinksDialog from '../../../QuickLinksDialog';
 import { signOut } from '../../../../services/auth';
 
 import './nav-avatar-right-corner.css';
+import '../../../../app.css';
 import user from '../../../../services/user';
-import Tooltip from '@material-ui/core/Tooltip';
 
 import { Button } from '@material-ui/core';
 
@@ -204,7 +207,7 @@ export default class GordonNavAvatarRightCorner extends Component {
     let FeedbackButton;
     if (networkStatus === 'online') {
       FeedbackButton = (
-        <Link to="/feedback">
+        <Link to="/feedback" className="gc360-link-color">
           <MenuItem onClick={this.onClose} divider="true">
             Feedback
           </MenuItem>
@@ -232,21 +235,25 @@ export default class GordonNavAvatarRightCorner extends Component {
       if (networkStatus === 'online') {
         myProfile = '/myprofile';
       } else {
-        myProfile = `profile/${this.state.name.replace(' ', '.')}`;
+        myProfile = `/profile/${this.state.name.replace(' ', '.')}`;
       }
       myProfileLink = (
-        <Link to={myProfile}>
+        <Link to={myProfile} className="gc360-link-color">
           <MenuItem onClick={this.onClose} divider={true}>
             My Profile
           </MenuItem>
         </Link>
       );
 
-      avatar = <Avatar className="nav-avatar nav-avatar-placeholder">{this.getInitials()}</Avatar>;
+      avatar = (
+        <Avatar className="gc360-nav-avatar-rc_size gc360-nav-avatar-rc_placeholder">
+          {this.getInitials()}
+        </Avatar>
+      );
       if (this.state.image) {
         avatar = (
           <Avatar
-            className="nav-avatar nav-avatar-image"
+            className="gc360-nav-avatar-rc_size"
             src={`data:image/jpg;base64,${this.state.image}`}
           />
         );
@@ -256,7 +263,7 @@ export default class GordonNavAvatarRightCorner extends Component {
       if (networkStatus === 'online') {
         if (user.getLocalInfo().college_role === 'god') {
           Admin = (
-            <Link to="/admin">
+            <Link to="/admin" className="gc360-link-color">
               <MenuItem onClick={this.onClose} divider="true">
                 Admin
               </MenuItem>
@@ -277,7 +284,7 @@ export default class GordonNavAvatarRightCorner extends Component {
 
       if (networkStatus === 'online') {
         signInOut = (
-          <Link to="/">
+          <Link to="/" className="gc360-link-color">
             <MenuItem onClick={this.onSignOut.bind(this)} divider={true}>
               Sign Out
             </MenuItem>
@@ -299,7 +306,7 @@ export default class GordonNavAvatarRightCorner extends Component {
 
       if (networkStatus === 'online') {
         signInOut = (
-          <Link to="/">
+          <Link to="/" className="gc360-link-color">
             <MenuItem onClick={this.onSignIn.bind(this)} divider={true}>
               Sign In
             </MenuItem>
@@ -320,11 +327,7 @@ export default class GordonNavAvatarRightCorner extends Component {
       <section className="right-side-container">
         <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
           <IconButton
-            className="gordon-nav-avatar-right-corner"
-            classes={{
-              root: 'gordon-nav-avatar-right-corner nav-avatar-button',
-              label: 'nav-avatar-label',
-            }}
+            className="gc360-nav-avatar-rc"
             aria-label="More"
             aria-owns={open ? 'global-menu' : null}
             aria-haspopup="true"
@@ -346,12 +349,12 @@ export default class GordonNavAvatarRightCorner extends Component {
           </MenuItem>
           {myProfileLink}
           {LinksButton}
-          <Link to="/help">
+          <Link to="/help" className="gc360-link-color">
             <MenuItem onClick={this.onClose} divider={true}>
               Help
             </MenuItem>
           </Link>
-          <Link to="/about">
+          <Link to="/about" className="gc360-link-color">
             <MenuItem onClick={this.onClose} divider={true}>
               About
             </MenuItem>
