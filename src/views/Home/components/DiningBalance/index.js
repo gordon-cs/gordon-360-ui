@@ -260,8 +260,8 @@ export default class DiningBalance extends Component {
                   <Button
                     variant="contained"
                     style={style.button}
-                    onClick={() => (window.location.href = 'https://gordon.cafebonappetit.com/')}
-                  >
+                    onClick={() => (window.open('https://gordon.cafebonappetit.com/', '_blank'))}
+                    >
                     TODAY'S MENU
                   </Button>
                 </Grid>
