@@ -340,4 +340,8 @@ The script deploys to either staging or production based on the branch it is run
 
 - Edge Authentication - Fails at creation of request object in getAuth() in auth.js service. Incompatability with URLSearchParams was fixed with an update to Edge in April, but different problem with request object must exist still.
 
+- The 'edit involvement' and 'change image' dialog boxes, accessible through the admin view of an involvement profile, are messy. Refer to the CSS styling and replacement of Material UI Grid in views/IDUploader/IDUploader.scss and ''/index.js for a proven fix.
+
 - ID and photo uploader dialog boxes are a bit squished for screens as small as iPhone 5's.
+
+- An admin is able to remove themselves (on admin view), which causes major issues.

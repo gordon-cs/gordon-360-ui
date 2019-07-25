@@ -59,7 +59,7 @@ const setActivityImage = (activityCode, dataURI) => {
   let imageData = new FormData();
   let blob = dataURItoBlob(dataURI);
   let type = blob.type.replace('image/', '');
-  let headerOptions = {};
+  let headerOptions = { key: 'this is a post' };
   imageData.append('canvasImage', blob, 'canvasImage.' + type);
   return http.post(`activities/${activityCode}/image/`, imageData, headerOptions);
 };

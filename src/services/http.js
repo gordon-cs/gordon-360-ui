@@ -18,14 +18,25 @@ const base = process.env.REACT_APP_API_URL;
  */
 const makeHeaders = headerOptions => {
   if (isAuthenticated()) {
-    try {
-      const token = storage.get('token');
-      return new Headers({
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      });
-    } catch (err) {
-      throw new Error('Token is not available');
+    if (headerOptions === undefined) {
+      try {
+        const token = storage.get('token');
+        return new Headers({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+      } catch (err) {
+        throw new Error('Token is not available');
+      }
+    } else {
+      try {
+        const token = storage.get('token');
+        return new Headers({
+          Authorization: `Bearer ${token}`,
+        });
+      } catch (err) {
+        throw new Error('Token is not available');
+      }
     }
   } else {
     return new Headers({

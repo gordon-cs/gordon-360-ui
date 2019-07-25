@@ -42,7 +42,7 @@ export default class RequestSent extends Component {
     }
 
     return (
-      <Grid container direction="column" spacing={16}>
+      <Grid container direction="column" spacing={2}>
         <br />
         <Grid item>
           <Grid container alignItems="center">

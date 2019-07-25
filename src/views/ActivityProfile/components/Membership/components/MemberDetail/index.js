@@ -156,7 +156,7 @@ export default class MemberDetail extends Component {
       options = (
         <Grid container>
           <Grid item>
-            <Button style={redButton} onClick={this.alertLeave} raised>
+            <Button style={redButton} onClick={this.alertLeave} variant="contained">
               LEAVE
             </Button>
             <Dialog
@@ -169,12 +169,12 @@ export default class MemberDetail extends Component {
               <DialogContent>
                 <Grid container>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button color="primary" onClick={this.onClose} raised>
+                    <Button color="primary" onClick={this.onClose} variant="contained">
                       No, stay
                     </Button>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button raised onClick={this.confirmLeave} style={redButton}>
+                    <Button variant="contained" onClick={this.confirmLeave} style={redButton}>
                       Yes, leave
                     </Button>
                   </Grid>
@@ -204,7 +204,7 @@ export default class MemberDetail extends Component {
       options = (
         <Grid container>
           <Grid item>
-            <Button color="primary" onClick={this.openEditMember} raised>
+            <Button color="primary" onClick={this.openEditMember} variant="contained">
               Edit
             </Button>
             <Dialog open={this.state.openEdit} keepMounted align="center">
@@ -239,12 +239,12 @@ export default class MemberDetail extends Component {
                       />
                     </Grid>
                     <Grid item style={formControl}>
-                      <Button color="primary" onClick={this.onEditMember} raised>
+                      <Button color="primary" onClick={this.onEditMember} variant="contained">
                         SUBMIT CHANGES
                       </Button>
                     </Grid>
                     <Grid item xs={12} sm={12} style={formControl}>
-                      <Button color="primary" onClick={this.onClose} raised>
+                      <Button color="primary" onClick={this.onClose} variant="contained">
                         CANCEL
                       </Button>
                     </Grid>
@@ -254,24 +254,24 @@ export default class MemberDetail extends Component {
             </Dialog>
           </Grid>
           <Grid item>
-            <Button style={redButton} onClick={this.onRemove} raised>
+            <Button style={redButton} onClick={this.onRemove} variant="contained">
               Remove
             </Button>
             <Dialog open={this.state.alertRemove} keepMounted align="center">
               <DialogTitle>
                 Are you sure you want to remove {this.props.member.FirstName}{' '}
-                {this.props.member.LastName} (
-                {this.props.member.ParticipationDescription}) from this activity?
+                {this.props.member.LastName} ({this.props.member.ParticipationDescription}) from
+                this activity?
               </DialogTitle>
               <DialogContent>
                 <Grid container>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button color="primary" onClick={this.confirmLeave} raised>
+                    <Button color="primary" onClick={this.confirmLeave} variant="contained">
                       OK
                     </Button>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button onClick={this.onClose} raised>
+                    <Button onClick={this.onClose} variant="contained">
                       CANCEL
                     </Button>
                   </Grid>

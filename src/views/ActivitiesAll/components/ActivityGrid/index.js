@@ -1,14 +1,10 @@
-import Grid from '@material-ui/core/Grid';
-import GridList from '@material-ui/core/GridList';
-import Typography from '@material-ui/core/Typography';
-import withWidth from '@material-ui/core/withWidth';
+import { GridList, GridListTile, Paper, Typography, withWidth } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 
 import './activity-grid.css';
+import '../../../../app.css';
 
 let network = 'online';
 
@@ -31,13 +27,30 @@ const gridListCols = width => {
   }
 };
 
+const gridListCellHeight = width => {
+  switch (width) {
+    default:
+      return 250;
+    case 'xs':
+      return 100;
+    case 'sm':
+      return 250;
+    case 'md':
+      return 250;
+    case 'lg':
+      return 250;
+    case 'xl':
+      return 250;
+  }
+};
+
 class GordonActivityGrid extends Component {
   render() {
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -55,122 +68,130 @@ class GordonActivityGrid extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-    *  Defaults to online in case of PWA not being possible
-    */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-    let Content;
+    let content;
 
     if (Array.isArray(this.props.myInvolvements) && this.props.myInvolvements.length === 0) {
-      Content = (
-        <Grid item xs={12}>
-          <Typography variant="headline" align="center">
+      content = (
+        <GridListTile cols={gridListCols(this.props.width)} rows="auto">
+          <Typography variant="h5" align="center">
             {this.props.noInvolvementsText}
           </Typography>
-        </Grid>
+        </GridListTile>
       );
     } else if (Array.isArray(this.props.myInvolvements) && this.props.myInvolvements.length > 0) {
       // Creates the My Involvements cards depending on the status of the network found in local storage
       if (networkStatus === 'online') {
-        Content = this.props.myInvolvements.map(activity => (
-          <div className="container">
-            <Link
-              to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
-              className="item"
-            >
-              <div>
+        content = this.props.myInvolvements.map(activity => (
+          <GridListTile className="container" rows="1">
+            <Paper className="paper" elevation={0}>
+              <Link
+                className="link"
+                to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
+              >
                 <img
-                  className="picture"
+                  className="img-item"
                   src={activity.ActivityImagePath}
                   alt={activity.ActivityDescription}
                   height="150"
                   width="150"
                 />
-                <div className="item-title">{activity.ActivityDescription}</div>
-              </div>
-            </Link>
-          </div>
+                <div className="title-item">{activity.ActivityDescription}</div>
+              </Link>
+            </Paper>
+          </GridListTile>
         ));
       } else {
-        Content = this.props.myInvolvements.map(activity => (
-          <div className="container">
-            <Card>
-              <CardContent>
-                <div>
-                  <img
-                    className="picture"
-                    src={activity.ActivityImagePath}
-                    alt={activity.ActivityDescription}
-                    height="150"
-                    width="150"
-                  />
-                  <div className="item-title">{activity.ActivityDescription}</div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+        // exactly the same as content of 'if' block above besides disabled=...
+        content = this.props.myInvolvements.map(activity => (
+          <GridListTile className="container" rows="1">
+            <Paper className="paper" elevation={0}>
+              <Link
+                className="link"
+                to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
+                disabled={networkStatus}
+              >
+                <img
+                  className="img-item"
+                  src={activity.ActivityImagePath}
+                  alt={activity.ActivityDescription}
+                  height="150"
+                  width="150"
+                />
+                <div className="title-item">{activity.ActivityDescription}</div>
+              </Link>
+            </Paper>
+          </GridListTile>
         ));
       }
     }
 
     if (Array.isArray(this.props.activities) && this.props.activities.length === 0) {
-      Content = (
-        <Grid item xs={12}>
-          <Typography variant="headline" align="center">
+      content = (
+        <GridListTile cols={gridListCols(this.props.width)} rows="auto">
+          <Typography variant="h5" align="center">
             No results for the selected session and type.
           </Typography>
-        </Grid>
+        </GridListTile>
       );
     } else if (Array.isArray(this.props.activities) && this.props.activities.length > 0) {
       // Creates the Involvements cards depending on the status of the network found in local storage
       if (networkStatus === 'online') {
-        Content = this.props.activities.map(activity => (
-          <div className="container">
-            <Link
-              to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
-              className="item"
-            >
-              <div>
+        content = this.props.activities.map(activity => (
+          <GridListTile className="container" rows="1">
+            <Paper className="paper" elevation={0}>
+              <Link
+                className="link"
+                to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
+              >
                 <img
-                  className="picture"
+                  className="img-item"
                   src={activity.ActivityImagePath}
                   alt={activity.ActivityDescription}
                   height="150"
                   width="150"
                 />
-                <div className="item-title">{activity.ActivityDescription}</div>
-              </div>
-            </Link>
-          </div>
+                <div className="title-item">{activity.ActivityDescription}</div>
+              </Link>
+            </Paper>
+          </GridListTile>
         ));
       } else {
-        Content = this.props.activities.map(activity => (
-          <div className="container">
-            <Card>
-              <CardContent>
+        // exactly the same as content of 'if' block above besides disabled=...
+        content = this.props.activities.map(activity => (
+          <GridListTile className="container" rows="1">
+            <Paper className="paper" elevation={0}>
+              <Link
+                className="link"
+                to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
+                disabled={networkStatus}
+              >
                 <img
-                  className="picture"
+                  className="img-item"
                   src={activity.ActivityImagePath}
                   alt={activity.ActivityDescription}
                   height="150"
                   width="150"
                 />
-                <div className="item-title">{activity.ActivityDescription}</div>
-              </CardContent>
-            </Card>
-          </div>
+                <div className="title-item">{activity.ActivityDescription}</div>
+              </Link>
+            </Paper>
+          </GridListTile>
         ));
       }
     }
 
     return (
       <GridList
-        cellHeight={250}
-        spacing={16}
+        cellHeight={gridListCellHeight(this.props.width)}
+        spacing={10}
         cols={gridListCols(this.props.width)}
-        className="gordon-activity-grid"
+        className="gc360-activity-grid"
       >
-        {Content}
+        {content}
       </GridList>
     );
   }
