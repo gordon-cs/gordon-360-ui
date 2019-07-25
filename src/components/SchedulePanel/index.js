@@ -258,7 +258,13 @@ class GordonSchedulePanel extends Component {
       schedulePanel,
       editDialog,
       myScheduleDialog,
-      removeScheduleDialog;
+      removeScheduleDialog,
+      lastUpdate;
+
+      lastUpdate = <div style={{color: gordonColors.primary.cyan}}>
+      <Typography style={{fontSize: '0.9rem'}}>Last Updated</Typography>
+      <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
+      </div>
 
       if(this.props.myProf){
         editDialog = (
@@ -292,6 +298,8 @@ class GordonSchedulePanel extends Component {
         );
       }
 
+      
+
 
     if (this.props.myProf && !isFaculty) {
       privacyButton = (
@@ -308,7 +316,7 @@ class GordonSchedulePanel extends Component {
             }}
           />
           <Typography style={{fontSize: '0.9rem'}}>
-            {this.state.isSchedulePrivate ? 'Hide my course schedule' : 'Show my course schedule'}
+            {this.state.isSchedulePrivate ? 'Course Schedule : Private' : 'Course Schedule : Public'}
           </Typography>
         </Fragment>
       );
@@ -359,7 +367,7 @@ class GordonSchedulePanel extends Component {
           <Grid container direction="row" xs={12} lg={12} justify="center">
 
 
-          <Grid container direction="row" alignContent="center" xs={12} lg={10}>
+          <Grid container direction="row"  xs={12} lg={10}>
           <Grid container xs={12} lg={8} alignItems="center" justify="flex-start">
           <Markup content={replaced} />
           </Grid>
@@ -377,11 +385,8 @@ class GordonSchedulePanel extends Component {
           {removeOfficeHourButton}
           </Grid>
 
-          <Grid container direction="column" xs={12} lg={8} alignItems="flex-end" >
-          <div style={{color: gordonColors.primary.cyan}}>
-          <Typography style={{fontSize: '0.9rem'}}>Last Updated</Typography>
-          <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
-          </div>
+          <Grid container direction="column" xs={12} lg={8} alignItems="flex-end" justify="flex-end" >
+          {lastUpdate}
           </Grid>
 
           </Grid>
