@@ -10,6 +10,10 @@ import user from '../../services/user';
 import Login from '../Login';
 import './home.css';
 
+import '../../app.css';
+
+import '../../app.css';
+
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -88,7 +92,7 @@ export default class Home extends Component {
       }
 
       content = (
-        <Grid container justify="center" spacing={16}>
+        <Grid container justify="center" spacing={2}>
           <Grid item xs={12} md={10}>
             <Carousel />
           </Grid>

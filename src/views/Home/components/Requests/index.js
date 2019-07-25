@@ -84,7 +84,7 @@ export default class Requests extends Component {
         <Grid item>
           <Grid container spacing={8} direction="column">
             <Grid item>
-              <Typography variant="title">Requests Received</Typography>
+              <Typography variant="h6">Requests Received</Typography>
             </Grid>
             <Grid item>
               <Grid container direction="column">
@@ -99,7 +99,12 @@ export default class Requests extends Component {
     // For each request sent, render RequestSent component
     let sent;
     if (this.state.requestsSent.length === 0) {
-      sent = <Typography>No Requests to Show</Typography>;
+      // this is a very specific change that just looks better, but also replace all "variant=title"
+      sent = (
+        <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
+          No Requests to Show
+        </Typography>
+      );
     } else {
       sent = this.state.requestsSent
         .slice(0) // Render requests in order of newest to oldest
@@ -125,7 +130,7 @@ export default class Requests extends Component {
             <Grid item xs={12} sm={12}>
               <Grid container alignItems="baseline" direction="row" spacing={8}>
                 <Grid item>
-                  <Typography variant="title">Requests Sent </Typography>
+                  <Typography variant="subtitle1">Requests Sent </Typography>
                 </Grid>
                 <Grid item>
                   <Button size="small" style={button} onClick={this.handleExpandClick}>

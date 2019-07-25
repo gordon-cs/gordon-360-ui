@@ -75,7 +75,7 @@ export default class DaysLeft extends Component {
             style={{ paddingTop: 5, paddingBottom: 10 }}
           >
             <Grid item>
-              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${daysleft} Days Left`}
               </Typography>
             </Grid>
@@ -113,9 +113,6 @@ export default class DaysLeft extends Component {
           <Grid container direction="row" alignItems="center">
             <CardHeader title={this.state.currSessionDescription} />
           </Grid>
-          {/* <Typography variant="headline" style={{ textAlign: 'left', paddingTop: 5 }}>
-            {this.state.currSessionDescription}
-          </Typography> */}
           {content}
         </CardContent>
       </Card>
