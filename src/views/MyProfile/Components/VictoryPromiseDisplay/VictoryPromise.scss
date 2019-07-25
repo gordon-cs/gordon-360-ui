@@ -1,0 +1,17 @@
+.vpdesign {
+  &:hover {
+    transition: box-shadow 0.2s;
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.2);
+  }
+
+  &:not(:hover) {
+    transition: box-shadow 0.3s;
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+  }
+}
+
+.victory-promise-layout {
+  background-color: #014983;
+  padding: 10%;
+  border-radius: 0.5rem;
+}
