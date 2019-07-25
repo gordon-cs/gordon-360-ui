@@ -13,6 +13,8 @@ function ListItemLink(props) {
   return <ListItem component="a" {...props} />;
 }
 
+// Currently all the URLs in Links tab are hardcoded in this file
+
 export default class GordonLinksList extends Component {
   render() {
     return (
@@ -28,7 +30,7 @@ export default class GordonLinksList extends Component {
                 height="16"
               />
             </ListItemIcon>
-            <ListItemText primary="Gordon College Official" />
+            <ListItemText primary="Gordon College" />
           </ListItemLink>
           <ListItemLink target="_blank" rel="noopener" href="https://my.gordon.edu">
             <ListItemIcon>

@@ -2,13 +2,17 @@ import React from 'react';
 
 import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 // see socialMedia.js for pre-packaged icons of above and fix
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui//core/Grid';
-import Button from '@material-ui/core/Button';
+import {
+  Button,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  Typography,
+  TextField,
+} from '@material-ui/core';
 import { socialMediaInfo } from '../../../../socialMedia';
 import { gordonColors } from '../../../../theme';
+import './linksDialog.css';
 
 export default class LinksDialog extends React.Component {
   constructor(props) {
@@ -166,84 +170,78 @@ export default class LinksDialog extends React.Component {
     };
 
     return (
-      <div>
-        <DialogContent>
-          <form
-            onSubmit={this.handleSubmit}
-            style={{ paddingLeft: '1.5rem', marginBottom: '-0.75rem', marginTop: '-1.5rem' }}
-          >
-            <Grid container spacing={8} alignItems="baseline">
-              <Grid item>
-                <FaFacebookF style={{ fontSize: '20px' }} />
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="facebookInput"
-                  label=" Facebook link"
-                  value={this.state.facebookInput}
-                  onChange={this.handleChange('facebookInput')}
-                  error={!this.state.fbValid}
-                  helperText={this.state.fbValid ? '' : this.state.formErrors.facebookInput}
-                  margin="dense"
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-            <Grid container spacing={8} alignItems="baseline">
-              <Grid item>
-                <FaTwitter style={{ fontSize: '20px' }} />
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="twitterInput"
-                  label=" Twitter link"
-                  value={this.state.twitterInput}
-                  onChange={this.handleChange('twitterInput')}
-                  error={!this.state.twValid}
-                  helperText={this.state.twValid ? '' : this.state.formErrors.twitterInput}
-                  margin="dense"
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-            <Grid container spacing={8} alignItems="baseline">
-              <Grid item>
-                <FaLinkedin style={{ fontSize: '20px' }} />
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="linkedInInput"
-                  label=" LinkedIn link"
-                  value={this.state.linkedInInput}
-                  onChange={this.handleChange('linkedInInput')}
-                  error={!this.state.liValid}
-                  helperText={this.state.liValid ? '' : this.state.formErrors.linkedInInput}
-                  margin="dense"
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-            <Grid container spacing={8} alignItems="baseline">
-              <Grid item>
-                <FaInstagram style={{ fontSize: '20px' }} />
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="instagramInput"
-                  label=" Instagram link"
-                  value={this.state.instagramInput}
-                  onChange={this.handleChange('instagramInput')}
-                  error={!this.state.igValid}
-                  helperText={this.state.igValid ? '' : this.state.formErrors.instagramInput}
-                  margin="dense"
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-            <br />
-          </form>
+      <div className="gc360-links-dialog">
+        <DialogTitle className="gc360-links-dialog_title">Edit your social media links</DialogTitle>
+        <DialogContent className="gc360-links-dialog_content">
+          <Typography variant="body2" className="gc360-links-dialog_content_text">
+            Copy and paste your links below
+          </Typography>
+          <div className="gc360-links-dialog_content_facebook gc360-links-dialog_content_media">
+            <div className="gc360-links-dialog_content_icon">
+              <FaFacebookF style={{ fontSize: '20px' }} />
+            </div>
+            <TextField
+              id="facebookInput"
+              label=" Facebook link"
+              value={this.state.facebookInput}
+              onChange={this.handleChange('facebookInput')}
+              error={!this.state.fbValid}
+              helperText={this.state.fbValid ? '' : this.state.formErrors.facebookInput}
+              margin="dense"
+              fullWidth
+              className="gc360-links-dialog_content_field"
+            />
+          </div>
+          <div className="gc360-links-dialog_content_twitter gc360-links-dialog_content_media">
+            <div className="gc360-links-dialog_content_icon">
+              <FaTwitter style={{ fontSize: '20px' }} />
+            </div>
+            <TextField
+              id="twitterInput"
+              label=" Twitter link"
+              value={this.state.twitterInput}
+              onChange={this.handleChange('twitterInput')}
+              error={!this.state.twValid}
+              helperText={this.state.twValid ? '' : this.state.formErrors.twitterInput}
+              margin="dense"
+              fullWidth
+              className="gc360-links-dialog_content_field"
+            />
+          </div>
+          <div className="gc360-links-dialog_content_linkedin gc360-links-dialog_content_media">
+            <div className="gc360-links-dialog_content_icon">
+              <FaLinkedin style={{ fontSize: '20px' }} />
+            </div>
+            <TextField
+              id="linkedInInput"
+              label=" LinkedIn link"
+              value={this.state.linkedInInput}
+              onChange={this.handleChange('linkedInInput')}
+              error={!this.state.liValid}
+              helperText={this.state.liValid ? '' : this.state.formErrors.linkedInInput}
+              margin="dense"
+              fullWidth
+              className="gc360-links-dialog_content_field"
+            />
+          </div>
+          <div className="gc360-links-dialog_content_instagram gc360-links-dialog_content_media">
+            <div className="gc360-links-dialog_content_icon">
+              <FaInstagram style={{ fontSize: '20px' }} />
+            </div>
+            <TextField
+              id="instagramInput"
+              label=" Instagram link"
+              value={this.state.instagramInput}
+              onChange={this.handleChange('instagramInput')}
+              error={!this.state.igValid}
+              helperText={this.state.igValid ? '' : this.state.formErrors.instagramInput}
+              margin="dense"
+              fullWidth
+              className="gc360-links-dialog_content_field"
+            />
+          </div>
         </DialogContent>
-        <DialogActions>
+        <DialogActions className="gc360-links-dialog_actions">
           <Button onClick={this.handleClose} variant="contained" style={button}>
             Cancel
           </Button>
