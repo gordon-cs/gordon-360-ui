@@ -15,12 +15,12 @@ let cacheVersion = 'cache-1.0';
 const apiSource = 'https://360apitrain.gordon.edu';
 let failedDynamicCacheLinks = [];
 let failedDynamicImageLinks = [];
+let dynamicCache = [];
 let token,
   termCode,
   cacheTimer,
   isSuccessful,
   isFetchCanceled,
-  dynamicCache,
   networkStatus,
   username,
   id,
@@ -47,7 +47,6 @@ const staticCache = [
   '/about',
   '/help',
   '/admin',
-  '/myprofile',
   '/manifest.json',
   '/pwa.js',
   '/static/js/bundle.js',
@@ -159,21 +158,17 @@ async function cleanCache() {
 async function fetchThenCache(request) {
   return await fetch(request)
     .then(fetchResponse => {
-      // If the request is specifically Gordon 360's Font CSS
-      if (request.url === 'https://cloud.typography.com/7763712/6754392/css/fonts.css') {
+      // If the request is specifically Gordon 360's Font CSS or a dynamic file that's needed for offline
+      if (
+        request.url === 'https://cloud.typography.com/7763712/6754392/css/fonts.css' ||
+        dynamicCache.includes(request.url)
+      ) {
         caches.open(cacheVersion).then(cache => {
           cache.put(request, fetchResponse.clone());
         });
         return fetchResponse.clone();
       }
-      // If the request is a regular request
-      else if (fetchResponse) {
-        /* FOR DEVELOPING PURPOSES: THIS CACHES EACH FETCH MADE */
-        // caches.open(cacheVersion).then(cache => {
-        //   cache.put(request, fetchResponse.clone());
-        // });
-        return fetchResponse.clone();
-      }
+      return fetchResponse.clone();
     })
     .catch(async () => {
       console.log(`%c- Getting ${request.url} from cache instead...`, cacheLog);
@@ -212,8 +207,6 @@ async function cacheStaticFiles() {
  *  @return {Promise} A promise with the result of re-caching the failed dynamic files
  */
 async function recacheDynamicFiles() {
-  console.log('FAILED DYNAMIC: ', failedDynamicCacheLinks);
-  console.log('FAILED IMAGES: ', failedDynamicImageLinks);
   if (token && (failedDynamicCacheLinks.length > 0 || failedDynamicImageLinks > 0)) {
     const cacheOne = await cacheDynamicFiles(token, failedDynamicCacheLinks);
     const cacheTwo = await cacheDynamicFiles(token, failedDynamicImageLinks, 'no-cors');
@@ -448,6 +441,7 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/profiles/Image/${username}/`,
       `${apiSource}/api/requests/student/${id}`,
       `/profile/${username}`,
+      `/myprofile`,
     ];
 
     sessions.forEach(session => {
@@ -502,7 +496,7 @@ async function dynamicLinksThenCache(token, termCode) {
 // Set interval function that will try to update cache every hour
 function timerFunction() {
   cacheTimer = setInterval(() => {
-    console.log('Received Message: Attempting To Update Cache.');
+    console.log('Attempting To Update Cache.');
     // Caching All Files
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(token, termCode); // Dynamic Cache
@@ -539,7 +533,7 @@ self.addEventListener('fetch', event => {
 self.addEventListener('message', event => {
   // If the message is to cache all static/dynamic files, all of those files are cached
   if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
-    console.log('Received Message: Attempting to cache all files');
+    console.log('Attempting to cache all files');
     // Sets variable to prevent the lost of this data when a new service worker installs
     token = event.data.token;
     termCode = event.data.termCode;
@@ -549,7 +543,7 @@ self.addEventListener('message', event => {
   }
   // If the message is to update the cache
   else if (event.data.message && event.data.message === 'update-cache-files') {
-    console.log('Received Message: Attempting to update cache.');
+    console.log('Attempting to update cache.');
     // Sets variable to prevent the lost of this data when a new service worker installs
     token = event.data.token;
     termCode = event.data.termCode;
@@ -559,28 +553,32 @@ self.addEventListener('message', event => {
   }
   // If the message is to start the cache timer
   else if (event.data && event.data === 'start-cache-timer') {
-    console.log('Received Message: Starting timer to update cache.');
+    console.log('Starting timer to update cache.');
     event.waitUntil(timerFunction());
   }
   // If the message is to stop the cache timer
   else if (event.data && event.data === 'stop-cache-timer') {
-    console.log('Received Message: Stopping timer to update cache.');
+    console.log('Stopping timer to update cache.');
     event.waitUntil(clearInterval(cacheTimer));
   }
   // If the message is to delete the token and current term code due to loss of authentification
   else if (event.data && event.data === 'delete-global-variables') {
     token = null;
     termCode = null;
+    dynamicCache = [];
+    failedDynamicCacheLinks = [];
+    failedDynamicImageLinks = [];
+    username = null;
+    id = null;
+    currSessionCode = null;
     dynamicCache = null;
-    failedDynamicCacheLinks = null;
-    failedDynamicImageLinks = null;
   }
   // If the message is to cancel all fetches
   if (event.data === 'cancel-fetches') {
     // Since this event listener is invoked multiple times, this check prevents it from
     // console logging multiple times
     if (isFetchCanceled === false && isSuccessful === true) {
-      console.log(`%c${errorEmoji} Received Message: Canceling All Fetches.`, errorLog);
+      console.log(`%c${errorEmoji} Canceling Any Currently Running Fetches.`, errorLog);
       isFetchCanceled = true;
       isSuccessful = false;
     }
