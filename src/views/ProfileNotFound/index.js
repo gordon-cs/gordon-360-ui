@@ -8,7 +8,7 @@ export default class ProfileNotFound extends Component {
       <Grid item>
         <br />
         <br />
-        <Typography variant="display1" align="center">
+        <Typography variant="h4" align="center">
           No profile exists for this user
         </Typography>
       </Grid>
