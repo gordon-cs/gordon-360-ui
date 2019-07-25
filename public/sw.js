@@ -439,7 +439,6 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/memberships/student/username/${username}/`,
       `${apiSource}/api/profiles/${username}/`,
       `${apiSource}/api/profiles/Image/${username}/`,
-      `${apiSource}/api/requests/student/${id}`,
       `/profile/${username}`,
       `/myprofile`,
     ];
@@ -571,7 +570,6 @@ self.addEventListener('message', event => {
     username = null;
     id = null;
     currSessionCode = null;
-    dynamicCache = null;
   }
   // If the message is to cancel all fetches
   if (event.data === 'cancel-fetches') {
