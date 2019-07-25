@@ -235,7 +235,12 @@ class GordonSchedulePanel extends Component {
   render() {
     const replaced = this.state.description
   .replace(urlRegex({strict: false}), function(url) {
-  return '<a href= "'+ url + '">' + url + "</a>";
+    if ((url.split('://')[0] !== 'http') || url.split('://')[0] !== 'https'){
+     return '<a href="https://'+ url + '">' + url + "</a>";
+    }
+    else{
+  return '<a href="'+ url + '">' + url + "</a>";
+    }
   });
 
 
