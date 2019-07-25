@@ -439,11 +439,14 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/memberships/student/username/${username}/`,
       `${apiSource}/api/profiles/${username}/`,
       `${apiSource}/api/profiles/Image/${username}/`,
+<<<<<<< HEAD
       `${apiSource}/browseable/uploads/ASF/canvasImage.jpeg`,
       `${apiSource}/browseable/uploads/BADM/canvasImage.jpeg`,
       `${apiSource}/browseable/uploads/BARN/canvasImage.jpeg`,
       `${apiSource}/browseable/uploads/REC/canvasImage.jpeg`,
       `${apiSource}/browseable/uploads/CLAR/canvasImage.jpeg`,
+=======
+>>>>>>> fc1a0760160b76d1d41ddd21047e30477b9b1c65
       `/profile/${username}`,
       `/myprofile`,
     ];
