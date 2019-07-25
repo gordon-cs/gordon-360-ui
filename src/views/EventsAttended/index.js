@@ -34,7 +34,7 @@ export default class EventsAttended extends Component {
         <Grid item>
           <br />
           <br />
-          <Typography variant="display1" align="center">
+          <Typography variant="h4" align="center">
             No Events To Show
           </Typography>
         </Grid>

@@ -11,43 +11,23 @@
 }
 
 @media (min-width: $break-md) {
-  .gordon-nav-avatar-right-corner {
+  .gc360-nav-avatar-rc {
+    // Override button centering content
+    padding: 0rem !important;
     &:hover {
       transition: box-shadow 0.2s;
       box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.5);
     }
-
     &:not(:hover) {
       transition: box-shadow 0.3s;
       box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5);
     }
-
-    .label {
-      display: inline;
+    &_placeholder {
+      background-color: $primary-cyan !important;
     }
-
-    .nav-avatar-placeholder {
-      background-color: $primary-cyan;
-    }
-
-    .nav-avatar > img {
-      object-fit: cover;
-      height: 100%;
-    }
-
-    .nav-avatar {
-      height: 3rem;
-      width: 3rem;
-    }
-
-    // Override button centering content
-    // &.nav-avatar-button {
-    //   padding: 1rem;
-    // }
-
-    // Override button changing text to uppercase
-    .text {
-      text-transform: initial;
+    &_size {
+      height: 50px !important;
+      width: 50px !important;
     }
   }
 }

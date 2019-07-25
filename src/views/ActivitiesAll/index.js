@@ -1,20 +1,22 @@
-import Grid from '@material-ui/core/Grid';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
+import {
+  Card,
+  FormControl,
+  Grid,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import React, { Component } from 'react';
 import './activities-all.css';
 import activity from '../../services/activity';
 import session from '../../services/session';
 import GordonActivityGrid from './components/ActivityGrid';
 import GordonLoader from '../../components/Loader';
-import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
-import Card from '@material-ui/core/Card';
 
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
@@ -252,9 +254,9 @@ export default class GordonActivitiesAll extends Component {
       }
       content = (
         <section className="activities-all">
-          <Grid container justify="center" spacing={16}>
+          <Grid container justify="center" spacing={0}>
             <Grid item xs={12} md={12} lg={8}>
-              <Grid container className="activities-filter" spacing={16}>
+              <Grid container className="activities-filter" spacing={2}>
                 <Grid item xs={12} md={12} lg={6}>
                   <TextField
                     id="search"
@@ -296,7 +298,7 @@ export default class GordonActivitiesAll extends Component {
             </Grid>
           </Grid>
 
-          <Grid container align="center" spacing={32} justify="center">
+          <Grid container align="center" spacing={4} justify="center">
             <Grid item xs={12} lg={8} fullWidth>
               <Card>
                 <div style={headerStyle}>
