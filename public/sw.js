@@ -13,7 +13,9 @@
 // Current cache version
 let cacheVersion = 'cache-1.0';
 const apiSource = 'https://360apitrain.gordon.edu';
-let token, termCode, cacheTimer, isSuccessful, isFetchCanceled;
+let failedDynamicCacheLinks = [];
+let failedDynamicImageLinks = [];
+let token, termCode, cacheTimer, isSuccessful, isFetchCanceled, dynamicCache, networkStatus;
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
@@ -185,6 +187,26 @@ async function cacheStaticFiles() {
 }
 
 /**
+ * Re-Caches all of the dynamic files that failed to fetch
+ *
+ *  @return {Promise} A promise with the result of re-caching the failed dynamic files
+ */
+async function recacheDynamicFiles() {
+  if (token && (failedDynamicCacheLinks.length > 0 || failedDynamicImageLinks > 0)) {
+    const cacheOne = await cacheDynamicFiles(token, failedDynamicCacheLinks);
+    const cacheTwo = await cacheDynamicFiles(token, failedDynamicImageLinks, 'no-cors');
+    // If all failed dynamic files successfully cache, we then empty the array
+    if (cacheOne) failedDynamicCacheLinks = [];
+    // If all failed image files successfully cache, we then empty the array
+    if (cacheTwo) failedDynamicImageLinks = [];
+    // Checks to see if both all failed links successfully cached
+    if (cacheOne && cacheTwo) {
+      console.log(`%c${successfulEmoji} Cached Failed Dynamic Files Successfully`, successfulLog);
+    }
+  }
+}
+
+/**
  * Fetches and caches all the dynamic files that are listed in the passed-in array
  *
  * For each URL in the passed-in array, a fetch is made. If the fetch is
@@ -224,22 +246,63 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
     for (let attempt = 1; attempt <= 3; attempt++) {
       fetchSuccess = await fetch(request)
         .then(fetchResponse => {
-          // Checks to see if all fetches should be aborted before trying to cache the response
-          if (fetchResponse && isFetchCanceled === false) {
+          // IF THE FETCH WAS SUCCESSFUL AND WAS NOT CANCELED
+          if (isFetchCanceled === false) {
             // Adds fetch response to cache
             caches.open(cacheVersion).then(cache => {
               cache.put(request, fetchResponse.clone());
             });
             return fetchResponse;
-          } else {
+          }
+          // IF THE FETCH WAS SUCCESSFUL AND WAS CANCELED
+          else {
+            /* If the fetch was canceled due to the user going offline, we will still cache the
+             * successful response
+             */
+            if (networkStatus === 'offline') {
+              // Adds fetch response to cache
+              caches.open(cacheVersion).then(cache => {
+                cache.put(request, fetchResponse.clone());
+              });
+              return fetchResponse;
+            }
+            // Returns the response of an aborted request
             return 'The user aborted a request.';
           }
         })
         .catch(error => {
-          // Checks to see if all fetches should be aborted before trying return the error's message
+          // IF THE FETCH FAILED AND WAS NOT CANCELED
           if (isFetchCanceled === false) {
+            /* We save the failed request's URL for future caching. Since we attempt to fetch a request
+             * multiple times, we check to make sure we haven't saved the request's URL already
+             */
+            if (request.url.includes('https://wwwtrain.gordon.edu/images/2ColumnHero')) {
+              if (!failedDynamicImageLinks.includes(request.url))
+                failedDynamicImageLinks.push(request.url);
+            } else {
+              if (!failedDynamicCacheLinks.includes(request.url))
+                failedDynamicCacheLinks.push(request.url);
+            }
+            // Returns the original failed request's response
             return error.message;
-          } else {
+          }
+          // IF THE FETCH FAILED AND WAS CANCELED
+          else {
+            /* If the fetch was canceled due to the user going offline, we will remember the
+             * request's URL for future caching. Since we attempt to fetch a request
+             * multiple times, we check to make sure we haven't saved the request's URL already
+             */
+            if (
+              networkStatus === 'offline' &&
+              request.url.includes('https://wwwtrain.gordon.edu/images/2ColumnHero')
+            ) {
+              if (!failedDynamicImageLinks.includes(request.url))
+                failedDynamicImageLinks.push(request.url);
+            } else if (networkStatus === 'offline') {
+              if (!failedDynamicCacheLinks.includes(request.url))
+                failedDynamicCacheLinks.push(request.url);
+            }
+            // Returns the response of an aborted request
             return 'The user aborted a request.';
           }
         });
@@ -342,7 +405,7 @@ async function dynamicLinksThenCache(token, termCode) {
       'https://wwwtrain.gordon.edu/images/2ColumnHero/Involvements-1_2018_07_26_02_26_19_2018_10_09_08_52_02.jpg',
     ];
 
-    const dynamicCache = [
+    dynamicCache = [
       // Home Page Fetch URLs
       `${apiSource}/api/cms/slider`,
       `${apiSource}/api/dining`,
@@ -354,7 +417,6 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/sessions/daysLeft`,
       `${apiSource}/api/studentemployment/`,
       `${apiSource}/api/version`,
-      `${apiSource}/api/activities/session/201809`,
       `${apiSource}/api/activities/session/${currSessionCode}`,
       `${apiSource}/api/activities/session/${currSessionCode}/types`,
       `${apiSource}/api/events/chapel/${termCode}`,
@@ -484,9 +546,12 @@ self.addEventListener('message', event => {
     event.waitUntil(clearInterval(cacheTimer));
   }
   // If the message is to delete the token and current term code due to loss of authentification
-  else if (event.data && event.data === 'delete-token-termCode') {
+  else if (event.data && event.data === 'delete-global-variables') {
     token = null;
     termCode = null;
+    dynamicCache = null;
+    failedDynamicCacheLinks = null;
+    failedDynamicImageLinks = null;
   }
   // If the message is to cancel all fetches
   if (event.data === 'cancel-fetches') {
@@ -501,5 +566,13 @@ self.addEventListener('message', event => {
   // If the message is to remove all dynamic cache
   if (event.data === 'remove-dynamic-cache') {
     event.waitUntil(cleanCache());
+  }
+  // If the message is to set network status as online
+  if (event.data === 'online') {
+    event.waitUntil((networkStatus = 'online'), recacheDynamicFiles());
+  }
+  // If the message is to set network status as offline
+  if (event.data === 'offline') {
+    event.waitUntil((networkStatus = 'offline'));
   }
 });

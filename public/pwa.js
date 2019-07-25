@@ -53,6 +53,7 @@ if ('caches' in window) {
         '%c--------------------     NO INTERNET CONNECTION     --------------------',
         normalLogCentered,
       );
+      navigator.serviceWorker.controller.postMessage('offline');
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
       localStorage.setItem('network-status', JSON.stringify('offline'));
       window.postMessage('offline', location.origin);
@@ -69,6 +70,7 @@ if ('caches' in window) {
       );
       localStorage.setItem('network-status', JSON.stringify('online'));
       window.postMessage('online', location.origin);
+      navigator.serviceWorker.controller.postMessage('online');
     });
   } else {
     console.log('%cSERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);

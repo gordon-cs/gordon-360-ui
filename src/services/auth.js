@@ -81,7 +81,7 @@ const isAuthenticated = () => {
       // Checks to see if Service Worker is available since these values would not exist
       // if the service worker was unavailable
       if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage('delete-token-termCode');
+        navigator.serviceWorker.controller.postMessage('delete-global-variables');
         navigator.serviceWorker.controller.postMessage('cancel-fetches');
         if (localStorage.length > 0) {
           storage.remove('status');
@@ -108,7 +108,7 @@ const signOut = () => {
     // Checks to see if Service Worker is available since these values would not exist
     // if the service worker was unavailable
     if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage('delete-token-termCode');
+      navigator.serviceWorker.controller.postMessage('delete-global-variables');
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
       storage.remove('status');
       storage.remove('currentTerm');
