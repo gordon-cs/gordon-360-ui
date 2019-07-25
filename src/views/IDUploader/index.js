@@ -324,7 +324,7 @@ class IDUploader extends Component {
     }
 
     return (
-      <Grid container justify="center" spacing="16">
+      <Grid container justify="center" spacing="2">
         {content}
 
 
