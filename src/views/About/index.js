@@ -159,9 +159,9 @@ export default class About extends Component {
                 <strong>Software Development Team, Summer 2019</strong>
               </Typography>
               <Typography variant="body1" paragraph>
-                Evan Platzer&nbsp;&apos;20, Isaac Bleecker&nbsp;&apos;21, Yi (Edward) Zhou
-                &nbsp;&apos;20, Hyeok Chin (Jake) Moon&nbsp;&apos;19, Phil Lee&nbsp;&apos;20, Joshua
-                Rogers&nbsp;&apos;21, Yerang Lim&nbsp;&apos;21, Jahnuel Dorelus&nbsp;&apos;21, and
+                Hyeok Chin (Jake) Moon&nbsp;&apos;19, Evan Platzer&nbsp;&apos;20, Yi (Edward)
+                Zhou&nbsp;&apos;20, Phil Lee&nbsp;&apos;20, Joshua Rogers&nbsp;&apos;21, Isaac
+                Bleecker&nbsp;&apos;21, Yerang Lim&nbsp;&apos;21, Jahnuel Dorelus&nbsp;&apos;21, and
                 SeHee Hyung&nbsp;&apos;22
                 <br />
                 Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning&nbsp;&apos;85, Summer Practicum in
