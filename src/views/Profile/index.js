@@ -284,7 +284,7 @@ export default class Profile extends Component {
           <div>
             {this.state.loading && <GordonLoader />}
             {!this.state.loading && (
-              <Grid container justify="center" spacing="16">
+              <Grid container justify="center" spacing={2}>
                 <Grid item xs={12} lg={10}>
                   <Card>
                     <CardContent>
@@ -293,9 +293,9 @@ export default class Profile extends Component {
                         alignItems="center"
                         align="center"
                         justify="center"
-                        spacing="16"
+                        spacing={2}
                       >
-                        <Grid container alignItems="center" spacing="16">
+                        <Grid container alignItems="center" spacing={2}>
                           <Grid item xs={12} sm={12} md={12} lg={12}>
                             {this.state.prefImage && (
                               <img
@@ -317,7 +317,7 @@ export default class Profile extends Component {
                           </Grid>
                         </Grid>
                         <Grid item xs={12} sm={6} md={6} lg={4}>
-                          <Grid container align="center" alignItems="center" spacing="16">
+                          <Grid container align="center" alignItems="center" spacing={2}>
                             <Grid item xs={12}>
                               <CardHeader
                                 title={
@@ -331,7 +331,7 @@ export default class Profile extends Component {
                                 subheader={this.state.subheaderInfo}
                               />
 
-                              <Grid container spacing="16" align="center" justify="center">
+                              <Grid container spacing={2} align="center" justify="center">
                                 {facebookButton}
                                 {twitterButton}
                                 {linkedInButton}
@@ -383,13 +383,13 @@ export default class Profile extends Component {
             </Grid>
 
                 <Grid item xs={12} lg={5}>
-                  <Grid container direction="column" spacing="16">
+                  <Grid container direction="column" spacing={2}>
                     {this.state.officeinfo !== null && this.state.officeinfo}
                     {this.state.profileinfo}
                   </Grid>
                 </Grid>
                 <Grid item xs={12} lg={5}>
-                  <Grid container direction="column" spacing="16">
+                  <Grid container direction="column" spacing={2}>
                     <Grid item xs={12} sm={12} md={12} lg={12}>
                       <Card>
                         <CardContent>
@@ -406,7 +406,7 @@ export default class Profile extends Component {
         );
       } else {
         PublicProfile = (
-          <Grid container justify="center" spacing="16">
+          <Grid container justify="center" spacing={2}>
             <Grid item xs={12} md={8}>
               <Card>
                 <CardContent
