@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -109,9 +110,12 @@ export default class DaysLeft extends Component {
     return (
       <Card>
         <CardContent>
-          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
+          <Grid container direction="row" alignItems="center">
+            <CardHeader title={this.state.currSessionDescription} />
+          </Grid>
+          {/* <Typography variant="headline" style={{ textAlign: 'left', paddingTop: 5 }}>
             {this.state.currSessionDescription}
-          </Typography>
+          </Typography> */}
           {content}
         </CardContent>
       </Card>
