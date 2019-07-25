@@ -12,6 +12,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import ListItem from '@material-ui/core/ListItem';
 import { gordonColors } from '../../theme';
 import '../ProfileList/profileList.css';
+import '../../app.css';
 
 const styles = {
   colorSwitchBase: {
@@ -64,6 +65,7 @@ class MyProfileActivityList extends Component {
               <List>
                 <ListItem>
                   <Link
+                    className="gc360-link-color"
                     to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
                     style={membershipItemStyle}
                   >
@@ -91,7 +93,7 @@ class MyProfileActivityList extends Component {
                     classes={{
                       switchBase: classes.colorSwitchBase,
                       checked: classes.colorChecked,
-                      bar: classes.colorBar,
+                      track: classes.colorBar,
                     }}
                   />
                 </Grid>
@@ -104,6 +106,7 @@ class MyProfileActivityList extends Component {
             </Grid>
             <Grid item xs={2}>
               <Link
+                className="gc360-link-color"
                 to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
                 style={membershipItemStyle}
               >
@@ -123,6 +126,7 @@ class MyProfileActivityList extends Component {
               <List>
                 <ListItem>
                   <Link
+                    className="gc360-link-color"
                     to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
                     style={membershipItemStyle}
                   >
@@ -153,6 +157,7 @@ class MyProfileActivityList extends Component {
             </Grid>
             <Grid item xs={2}>
               <Link
+                className="gc360-link-color"
                 to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
                 style={membershipItemStyle}
               >

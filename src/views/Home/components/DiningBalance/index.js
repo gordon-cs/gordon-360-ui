@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-//import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-import Grid from '@material-ui/core/Grid';
+import CardHeader from '@material-ui/core/CardHeader';
 import { Doughnut, defaults } from 'react-chartjs-2';
-//import { Button } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import GordonLoader from '../../../../components/Loader';
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
@@ -50,6 +50,13 @@ export default class DiningBalance extends Component {
     let dollarsColor = gordonColors.secondary.yellow;
     let guestColor = gordonColors.secondary.orange;
     let emptyColor = gordonColors.neutral.lightGray;
+
+    const style = {
+      button: {
+        background: gordonColors.primary.cyan,
+        color: 'white',
+      },
+    };
 
     defaults.global.legend.display = false;
     let content;
@@ -160,7 +167,7 @@ export default class DiningBalance extends Component {
               style={{ paddingTop: 5, paddingBottom: 10 }}
             >
               <Grid item>
-                <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+                <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
                   {this.diningInfo.ChoiceDescription}
                 </Typography>
               </Grid>
@@ -243,10 +250,25 @@ export default class DiningBalance extends Component {
     return (
       <Card>
         <CardContent>
-          <Typography variant="headline" style={{ textAlign: 'center', paddingTop: 5 }}>
-            {this.state.loading ? '' : 'Dining Balance'}
-          </Typography>
-          {content}
+          <Grid item xs={12} align="right">
+            <Typography variant="subtitle1" style={{ textAlign: 'right', paddingTop: 5 }}>
+              <Grid container direction="row" alignItems="center">
+                <Grid item xs={7} align="left">
+                  <CardHeader title="Dining Balance" />
+                </Grid>
+                <Grid item xs={5} align="right">
+                  <Button
+                    variant="contained"
+                    style={style.button}
+                    onClick={() => (window.location.href = 'https://gordon.cafebonappetit.com/')}
+                  >
+                    TODAY'S MENU
+                  </Button>
+                </Grid>
+              </Grid>
+              {content}
+            </Typography>
+          </Grid>
         </CardContent>
       </Card>
     );
