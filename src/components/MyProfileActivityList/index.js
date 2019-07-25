@@ -65,7 +65,7 @@ class MyProfileActivityList extends Component {
               <List>
                 <ListItem>
                   <Link
-                    className="gc360-link-color"
+                    className="gc360-link"
                     to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
                     style={membershipItemStyle}
                   >
@@ -106,7 +106,7 @@ class MyProfileActivityList extends Component {
             </Grid>
             <Grid item xs={2}>
               <Link
-                className="gc360-link-color"
+                className="gc360-link"
                 to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
                 style={membershipItemStyle}
               >
@@ -126,7 +126,7 @@ class MyProfileActivityList extends Component {
               <List>
                 <ListItem>
                   <Link
-                    className="gc360-link-color"
+                    className="gc360-link"
                     to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
                     style={membershipItemStyle}
                   >
@@ -157,7 +157,7 @@ class MyProfileActivityList extends Component {
             </Grid>
             <Grid item xs={2}>
               <Link
-                className="gc360-link-color"
+                className="gc360-link"
                 to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
                 style={membershipItemStyle}
               >

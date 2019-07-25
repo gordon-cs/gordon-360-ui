@@ -15,6 +15,7 @@ import { NavLink } from 'react-router-dom';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import './profile.css';
+import '../../app.css';
 
 //Public profile view
 export default class Profile extends Component {
@@ -191,7 +192,7 @@ export default class Profile extends Component {
         <Grid item>
           <a
             href={this.state.facebookLink}
-            className="icon"
+            className="gc360-profile_icon"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -205,7 +206,7 @@ export default class Profile extends Component {
         <Grid item>
           <a
             href={this.state.twitterLink}
-            className="icon"
+            className="gc360-profile_icon"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -219,7 +220,7 @@ export default class Profile extends Component {
         <Grid item>
           <a
             href={this.state.linkedInLink}
-            className="icon"
+            className="gc360-profile_icon"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -233,7 +234,7 @@ export default class Profile extends Component {
         <Grid item>
           <a
             href={this.state.instagramLink}
-            className="icon"
+            className="gc360-profile_icon"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -343,9 +344,12 @@ export default class Profile extends Component {
                                     justifyContent: 'center',
                                   }}
                                 >
-                                  <a href={`mailto:${this.state.profile.Email}`}>
+                                  <a
+                                    href={`mailto:${this.state.profile.Email}`}
+                                    className="gc360-text-link"
+                                  >
                                     <div
-                                      className="email-link-container"
+                                      //className="email-link-container"
                                       style={{
                                         display: 'flex',
                                         alignItems: 'center',
@@ -354,12 +358,10 @@ export default class Profile extends Component {
                                       }}
                                     >
                                       <EmailIcon
-                                        className="email-link"
+                                        className="gc360-profile_icon"
                                         style={{ marginRight: '0.75rem' }}
                                       />
-                                      <Typography className="email-link">
-                                        {this.state.profile.Email}
-                                      </Typography>
+                                      <Typography>{this.state.profile.Email}</Typography>
                                     </div>
                                   </a>
                                 </div>
@@ -450,7 +452,7 @@ export default class Profile extends Component {
           <Typography align="center" variant="headline">
             You must be logged in to view this profile.
           </Typography>
-          <NavLink exact to="/">
+          <NavLink exact to="/" className="gc360-link">
             <Button>Okay</Button>
           </NavLink>
         </div>

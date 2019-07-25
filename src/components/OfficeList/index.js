@@ -7,6 +7,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import List from '@material-ui/core/List';
+import '../../app.css';
 
 export default class Office extends Component {
   render() {
@@ -32,7 +33,7 @@ export default class Office extends Component {
                 <Grid item xs={9} sm={6} md={9} lg={6} justify="right">
                   <a href={'tel:978867' + this.props.profile.OnCampusPhone}>
                     {' '}
-                    <Typography className="linkColor">
+                    <Typography className="gc360-text-link">
                       {' '}
                       {'(978) 867-' + this.props.profile.OnCampusPhone}
                     </Typography>

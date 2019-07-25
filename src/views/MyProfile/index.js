@@ -366,7 +366,7 @@ class Profile extends Component {
           <Grid item>
             <a
               href={this.state.facebookLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -381,7 +381,7 @@ class Profile extends Component {
           <Grid item>
             <a
               href={this.state.twitterLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -396,7 +396,7 @@ class Profile extends Component {
           <Grid item>
             <a
               href={this.state.linkedInLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -411,7 +411,7 @@ class Profile extends Component {
           <Grid item>
             <a
               href={this.state.instagramLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -486,7 +486,7 @@ class Profile extends Component {
                         >
                           <Grid item xs={6}>
                             <Link
-                              className="gc360-link-color"
+                              className="gc360-link"
                               to={`/profile/${this.state.profile.AD_Username}`}
                             >
                               <Button style={style.uncontainedButton}>
@@ -544,9 +544,11 @@ class Profile extends Component {
                                       justifyContent: 'center',
                                     }}
                                   >
-                                    <a href={`mailto:${this.state.profile.Email}`}>
+                                    <a
+                                      href={`mailto:${this.state.profile.Email}`}
+                                      className="gc360-text-link"
+                                    >
                                       <div
-                                        className="email-link-container"
                                         style={{
                                           display: 'flex',
                                           alignItems: 'center',
@@ -555,12 +557,10 @@ class Profile extends Component {
                                         }}
                                       >
                                         <EmailIcon
-                                          className="email-link"
+                                          className="gc360-my-profile_icon"
                                           style={{ marginRight: '0.75rem' }}
                                         />
-                                        <Typography className="email-link">
-                                          {this.state.profile.Email}
-                                        </Typography>
+                                        <Typography>{this.state.profile.Email}</Typography>
                                       </div>
                                     </a>
                                   </div>
@@ -740,7 +740,7 @@ class Profile extends Component {
                                 <CardHeader title="Involvements" />
                               </Grid>
                               <Grid item xs={5} align="right">
-                                <Link className="gc360-link-color" to="/transcript">
+                                <Link className="gc360-link" to="/transcript">
                                   <Button variant="contained" style={style.button}>
                                     Co-Curricular Transcript
                                   </Button>
@@ -853,7 +853,7 @@ class Profile extends Component {
           <Typography align="center" variant="headline">
             You must be logged in to view your profile.
           </Typography>
-          <NavLink exact to="/">
+          <NavLink exact to="/" className="gc360-link">
             <Button>Okay</Button>
           </NavLink>
         </div>

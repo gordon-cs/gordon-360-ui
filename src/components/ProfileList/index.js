@@ -14,6 +14,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import './profileList.css';
 import { withStyles } from '@material-ui/core/styles';
 import { gordonColors } from '../../theme';
+import '../../app.css';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -153,16 +154,15 @@ class ProfileList extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
-                {this.props.profile.HomePhone !== PRIVATE_INFO &&
-                  !this.props.myProf && (
-                    <a href={'tel:' + this.props.profile.HomePhone}>
-                      <Typography
-                        className={this.state.homePhoneDisclaimer ? 'disclaimer' : 'linkColor'}
-                      >
-                        {this.formatPhone(this.props.profile.HomePhone)}
-                      </Typography>
-                    </a>
-                  )}
+                {this.props.profile.HomePhone !== PRIVATE_INFO && !this.props.myProf && (
+                  <a href={'tel:' + this.props.profile.HomePhone}>
+                    <Typography
+                      className={this.state.homePhoneDisclaimer ? 'disclaimer' : 'gc360-text-link'}
+                    >
+                      {this.formatPhone(this.props.profile.HomePhone)}
+                    </Typography>
+                  </a>
+                )}
                 {this.props.profile.HomePhone === PRIVATE_INFO && (
                   <Typography>Private as requested</Typography>
                 )}
@@ -190,7 +190,9 @@ class ProfileList extends Component {
                 {this.props.profile.MobilePhone !== PRIVATE_INFO && (
                   <a href={'tel:' + this.props.profile.MobilePhone}>
                     <Typography
-                      className={this.state.mobilePhoneDisclaimer ? 'disclaimer' : 'linkColor'}
+                      className={
+                        this.state.mobilePhoneDisclaimer ? 'disclaimer' : 'gc360-text-link'
+                      }
                     >
                       {this.formatPhone(this.props.profile.MobilePhone)}
                     </Typography>
