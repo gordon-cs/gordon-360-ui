@@ -11,8 +11,12 @@
 
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
-let cacheVersion = 'cache-1.0';
+const cacheVersion = 'cache-1.0';
 const apiSource = 'https://360apitrain.gordon.edu';
+/* Uncomment For Development Only (aka develop) */
+// const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
+/* Uncomment For Production Only (aka master) */
+const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
 let failedDynamicCacheLinks = [];
 let dynamicCache = [];
 let token,
@@ -55,7 +59,7 @@ const staticCache = [
   '/static/js/0.chunk.js',
   '/static/js/main.chunk.js',
   '/static/js/1.chunk.js',
-  // Files needed to prevent unappealing screen from starting the app in offline mode on iOS
+  // Files needed to prevent blank pages occuring offline
   '/main.89f23f7459ac700734a6.hot-update.js',
   '/static/css/2.d64d1e9d.chunk.css',
   '/static/css/2.d64d1e9d.chunk.css.map',
@@ -68,6 +72,10 @@ const staticCache = [
   '/static/js/2.00596eb8.chunk.js.map',
   '/static/js/main.2f5d16ec.chunk.js',
   '/static/js/main.2f5d16ec.chunk.js.map',
+  '/static/css/main.02025315.chunk.css',
+  '/static/css/2.3fd9a278.chunk.css',
+  '/static/js/2.8e1c3293.chunk.js',
+  '/static/js/main.c192f25f.chunk.js',
   // Images
   '/images/android-icon-36x36.png',
   '/images/android-icon-48x48.png',
@@ -113,10 +121,7 @@ async function cleanCache() {
     cache.keys().then(items => {
       items.map(item => {
         // Removes all remote files except for the font key css
-        if (
-          !item.url.match(location.origin) &&
-          item.url !== 'https://cloud.typography.com/7763712/6754392/css/fonts.css'
-        ) {
+        if (!item.url.match(location.origin) && item.url !== fontKeySource) {
           cache.delete(item);
         }
         // Removes '/myprofile' and '/profile/firstName.lastName' since they were made when the user
@@ -158,10 +163,7 @@ async function fetchThenCache(request) {
   return await fetch(request)
     .then(fetchResponse => {
       // If the request is specifically Gordon 360's Font CSS or a dynamic file that's needed for offline
-      if (
-        request.url === 'https://cloud.typography.com/7763712/6754392/css/fonts.css' ||
-        dynamicCache.includes(request.url)
-      ) {
+      if (request.url === fontKeySource || dynamicCache.includes(request.url)) {
         caches.open(cacheVersion).then(cache => {
           cache.put(request, fetchResponse.clone());
         });
@@ -352,9 +354,7 @@ async function dynamicLinksThenCache(token, termCode) {
     });
 
     // Gets the user's profile object to access their firstname.lastname and ID#
-    let profile = await fetch(
-      new Request('https://360apitrain.gordon.edu/api/profiles', { method: 'GET', headers }),
-    )
+    let profile = await fetch(new Request(`${apiSource}/api/profiles`, { method: 'GET', headers }))
       .then(response => {
         return response.json();
       })
@@ -364,7 +364,7 @@ async function dynamicLinksThenCache(token, termCode) {
 
     // Gets the current session object to access the current session code
     let currentSession = await fetch(
-      new Request('https://360apitrain.gordon.edu/api/sessions/current', {
+      new Request(`${apiSource}/api/sessions/current`, {
         method: 'GET',
         headers,
       }),
@@ -377,7 +377,7 @@ async function dynamicLinksThenCache(token, termCode) {
       });
 
     let sessions = await fetch(
-      new Request('https://360apitrain.gordon.edu/api/sessions', {
+      new Request(`${apiSource}/api/sessions`, {
         method: 'GET',
         headers,
       }),
@@ -388,7 +388,7 @@ async function dynamicLinksThenCache(token, termCode) {
       .catch(error => {
         return error.Message;
       });
-
+    console.log('Profile: ', profile);
     username = profile ? profile.AD_Username : null;
     id = profile ? profile.ID : null;
     currSessionCode = currentSession ? currentSession.SessionCode : null;
@@ -412,11 +412,6 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/memberships/student/username/${username}/`,
       `${apiSource}/api/profiles/${username}/`,
       `${apiSource}/api/profiles/Image/${username}/`,
-      `${apiSource}/browseable/uploads/ASF/canvasImage.jpeg`,
-      `${apiSource}/browseable/uploads/BADM/canvasImage.jpeg`,
-      `${apiSource}/browseable/uploads/BARN/canvasImage.jpeg`,
-      `${apiSource}/browseable/uploads/REC/canvasImage.jpeg`,
-      `${apiSource}/browseable/uploads/CLAR/canvasImage.jpeg`,
       `/profile/${username}`,
       `/myprofile`,
     ];

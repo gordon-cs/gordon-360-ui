@@ -63,14 +63,14 @@ if ('caches' in window) {
     });
 
     // If network connectivity re-enables during application run-time
-    window.addEventListener('online', () => {
+    window.addEventListener('online', event => {
       console.log(
         '%c--------------------     INTERNET CONNECTION ESTABLISHED     --------------------',
         normalLogCentered,
       );
       localStorage.setItem('network-status', JSON.stringify('online'));
-      window.postMessage('online', location.origin);
       navigator.serviceWorker.controller.postMessage('online');
+      event.waitUntil(window.postMessage('online', location.origin));
     });
   } else {
     console.log('%cSERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);

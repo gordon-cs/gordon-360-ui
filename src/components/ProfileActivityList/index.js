@@ -23,16 +23,18 @@ export default class ProfileActivityList extends Component {
     };
 
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
         event.origin === window.location.origin
       ) {
+        // We set the state twice due to a bug where react won't re-render on time
+        this.setState({ network: 'online' });
         this.setState({ network: 'online' });
       } else if (
         event.data === 'offline' &&
@@ -44,8 +46,8 @@ export default class ProfileActivityList extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-  *  Defaults to online in case of PWA not being possible
-  */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     // Creates the My Profile button link depending on the status of the network found in local storage
