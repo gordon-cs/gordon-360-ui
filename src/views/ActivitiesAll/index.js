@@ -248,7 +248,9 @@ export default class GordonActivitiesAll extends Component {
       if (networkStatus === 'online') {
         sessionList = sessionOptions;
       } else {
-        sessionList = sessionOptions[0];
+        sessionOptions.forEach(session => {
+          if (session.props.value === this.state.currentSession) sessionList = session;
+        });
       }
       content = (
         <section className="activities-all">

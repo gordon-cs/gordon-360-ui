@@ -14,7 +14,6 @@
 let cacheVersion = 'cache-1.0';
 const apiSource = 'https://360apitrain.gordon.edu';
 let failedDynamicCacheLinks = [];
-let failedDynamicImageLinks = [];
 let dynamicCache = [];
 let token,
   termCode,
@@ -207,15 +206,12 @@ async function cacheStaticFiles() {
  *  @return {Promise} A promise with the result of re-caching the failed dynamic files
  */
 async function recacheDynamicFiles() {
-  if (token && (failedDynamicCacheLinks.length > 0 || failedDynamicImageLinks > 0)) {
+  if (token && failedDynamicCacheLinks.length > 0) {
     const cacheOne = await cacheDynamicFiles(token, failedDynamicCacheLinks);
-    const cacheTwo = await cacheDynamicFiles(token, failedDynamicImageLinks, 'no-cors');
     // If all failed dynamic files successfully cache, we then empty the array
     if (cacheOne) failedDynamicCacheLinks = [];
-    // If all failed image files successfully cache, we then empty the array
-    if (cacheTwo) failedDynamicImageLinks = [];
     // Checks to see if both all failed links successfully cached
-    if (cacheOne && cacheTwo) {
+    if (cacheOne) {
       console.log(`%c${successfulEmoji} Cached Failed Dynamic Files Successfully`, successfulLog);
     }
   }
@@ -291,13 +287,8 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
             /* We save the failed request's URL for future caching. Since we attempt to fetch a request
              * multiple times, we check to make sure we haven't saved the request's URL already
              */
-            if (request.url.includes('https://wwwtrain.gordon.edu/images/2ColumnHero')) {
-              if (!failedDynamicImageLinks.includes(request.url))
-                failedDynamicImageLinks.push(request.url);
-            } else {
-              if (!failedDynamicCacheLinks.includes(request.url))
-                failedDynamicCacheLinks.push(request.url);
-            }
+            if (!failedDynamicCacheLinks.includes(request.url))
+              failedDynamicCacheLinks.push(request.url);
             // Returns the original failed request's response
             return error.message;
           }
@@ -307,16 +298,8 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
              * request's URL for future caching. Since we attempt to fetch a request
              * multiple times, we check to make sure we haven't saved the request's URL already
              */
-            if (
-              networkStatus === 'offline' &&
-              request.url.includes('https://wwwtrain.gordon.edu/images/2ColumnHero')
-            ) {
-              if (!failedDynamicImageLinks.includes(request.url))
-                failedDynamicImageLinks.push(request.url);
-            } else if (networkStatus === 'offline') {
-              if (!failedDynamicCacheLinks.includes(request.url))
-                failedDynamicCacheLinks.push(request.url);
-            }
+            if (!failedDynamicCacheLinks.includes(request.url))
+              failedDynamicCacheLinks.push(request.url);
             // Returns the response of an aborted request
             return 'The user aborted a request.';
           }
@@ -410,16 +393,6 @@ async function dynamicLinksThenCache(token, termCode) {
     id = profile ? profile.ID : null;
     currSessionCode = currentSession ? currentSession.SessionCode : null;
 
-    const imagesCache = [
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Profile-1_2018_07_26_02_26_40_2018_10_09_08_52_16.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/welcome1_2018_07_26_11_00_21_2018_10_09_08_51_52.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Help-1_2018_07_26_11_04_33_2018_10_09_08_51_12.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Events-1_2018_07_26_02_24_53_2018_10_09_08_51_24.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Feedback-1_2018_07_26_02_25_11_2018_10_09_08_50_45.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Home-1_2018_07_26_02_25_41_2018_10_09_08_51_41.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Involvements-1_2018_07_26_02_26_19_2018_10_09_08_52_02.jpg',
-    ];
-
     dynamicCache = [
       // Home Page Fetch URLs
       `${apiSource}/api/cms/slider`,
@@ -493,9 +466,8 @@ async function dynamicLinksThenCache(token, termCode) {
     //   );
     // });
 
-    fetchResultOne = await cacheDynamicFiles(token, imagesCache, 'no-cors');
-    fetchResultTwo = await cacheDynamicFiles(token, dynamicCache);
-    if (fetchResultOne && fetchResultTwo)
+    let fetchResultOne = await cacheDynamicFiles(token, dynamicCache);
+    if (fetchResultOne)
       console.log(`%c${successfulEmoji} Cached Dynamic Files Successfully`, successfulLog);
   }
 }
@@ -574,7 +546,6 @@ self.addEventListener('message', event => {
     termCode = null;
     dynamicCache = [];
     failedDynamicCacheLinks = [];
-    failedDynamicImageLinks = [];
     username = null;
     id = null;
     currSessionCode = null;
