@@ -274,8 +274,8 @@ export default class MemberList extends Component {
               <Dialog open={this.state.alertRemove} keepMounted align="center">
                 <DialogTitle>
                   Are you sure you want to remove {this.props.member.FirstName}{' '}
-                  {this.props.member.LastName} (
-                  {this.props.member.ParticipationDescription}) from this activity?
+                  {this.props.member.LastName} ({this.props.member.ParticipationDescription}) from
+                  this activity?
                 </DialogTitle>
                 <DialogContent>
                   <Grid container>
@@ -381,7 +381,7 @@ export default class MemberList extends Component {
     } else {
       content = (
         <section>
-          <Grid container style={rowStyle} direction="row" alignItems="center" spacing={16}>
+          <Grid container style={rowStyle} direction="row" alignItems="center">
             <Grid item xs={6} sm={6} style={rowStyle}>
               <Typography>
                 {this.props.member.FirstName} {this.props.member.LastName}

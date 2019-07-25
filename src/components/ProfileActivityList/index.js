@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 
+import '../../app.css';
+
 //Public Profile Involvements List
 export default class ProfileActivityList extends Component {
   constructor(props) {
@@ -23,10 +25,10 @@ export default class ProfileActivityList extends Component {
     };
 
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -44,8 +46,8 @@ export default class ProfileActivityList extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-  *  Defaults to online in case of PWA not being possible
-  */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     // Creates the My Profile button link depending on the status of the network found in local storage
@@ -57,7 +59,10 @@ export default class ProfileActivityList extends Component {
             <Grid item xs={10}>
               <List>
                 <ListItem>
-                  <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
+                  <Link
+                    to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}
+                    className="gc360-link-color"
+                  >
                     <Typography>
                       <b>{Activity.ActivityDescription}</b>
                     </Typography>
@@ -68,7 +73,10 @@ export default class ProfileActivityList extends Component {
               </List>
             </Grid>
             <Grid item xs={2}>
-              <Link to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}>
+              <Link
+                to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}
+                className="gc360-link-color"
+              >
                 <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
               </Link>
             </Grid>

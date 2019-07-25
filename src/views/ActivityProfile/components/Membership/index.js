@@ -285,7 +285,6 @@ export default class Membership extends Component {
     const formControl = {
       padding: 10,
     };
-    let membership = this.state.membership;
     let content;
     let requestList;
     let confirmRoster;
@@ -317,7 +316,7 @@ export default class Membership extends Component {
         if (this.state.isAdmin || this.state.isSuperAdmin) {
           header = (
             <div style={headerStyle}>
-              <Grid container direction="row" spacing={16}>
+              <Grid container direction="row">
                 <Grid item xs={3}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     NAME
@@ -344,19 +343,19 @@ export default class Membership extends Component {
           if (this.state.requests.length === 0) {
             requestList = <Typography>There are no pending requests</Typography>;
           } else {
-            requestList = <RequestDetail involvement={membership} />;
+            requestList = <RequestDetail involvement={this.state.requests[0]} />;
           }
           // Only advisors and superadmins can re-open the roster
           if (this.state.participationDetail[1] === 'Advisor' || this.state.isSuperAdmin) {
             if (this.state.status === 'OPEN') {
               confirmRoster = (
-                <Button variant="contained" color="primary" onClick={this.onConfirmRoster} raised>
+                <Button variant="contained" color="primary" onClick={this.onConfirmRoster}>
                   Confirm final roster
                 </Button>
               );
             } else {
               confirmRoster = (
-                <Button variant="contained" color="primary" onClick={this.onReopenActivity} raised>
+                <Button variant="contained" color="primary" onClick={this.onReopenActivity}>
                   Reopen roster
                 </Button>
               );
@@ -382,15 +381,15 @@ export default class Membership extends Component {
               </Grid>
               <Card>
                 <CardContent>
-                  <Grid container spacing={16} direction="column">
+                  <Grid container spacing={2} direction="column">
                     <Dialog open={this.state.openAddMember} keepMounted align="center">
                       <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
                       <Typography style={{ color: '#ff0000' }}>
                         {this.state.addMemberDialogError}
                       </Typography>
                       <DialogContent>
-                        <Grid container align="center" padding={6} spacing={16}>
-                          <Grid item xs={12} padding={6} align="center">
+                        <Grid container align="center">
+                          <Grid item xs={12} align="center">
                             <Typography>Username</Typography>
                             <TextField
                               error={this.state.addEmail === '' ? true : false}
@@ -429,22 +428,12 @@ export default class Membership extends Component {
                             </Grid>
                           </Grid>
                           <Grid item xs={12} sm={6} style={formControl} justifyContent="right">
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={this.onAddMember}
-                              raised
-                            >
+                            <Button variant="contained" color="primary" onClick={this.onAddMember}>
                               Add member
                             </Button>
                           </Grid>
                           <Grid item xs={12} sm={6} style={formControl}>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={this.onClose}
-                              raised
-                            >
+                            <Button variant="contained" color="primary" onClick={this.onClose}>
                               CANCEL
                             </Button>
                           </Grid>
@@ -465,7 +454,8 @@ export default class Membership extends Component {
                       </Button>
                     </Grid>
                     <Divider />
-                    {requestList}
+                    <Grid item>{requestList}</Grid>
+
                     <Grid item>{confirmRoster}</Grid>
                   </Grid>
                 </CardContent>
@@ -476,7 +466,7 @@ export default class Membership extends Component {
         } else {
           header = (
             <div style={headerStyle}>
-              <Grid container direction="row" spacing={16}>
+              <Grid container direction="row">
                 <Grid item xs={6}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     NAME
@@ -523,7 +513,7 @@ export default class Membership extends Component {
         if (this.state.participationDetail[1] === 'Guest') {
           // User is a guest
           subscribeButton = (
-            <Button variant="contained" color="primary" onClick={this.onUnsubscribe} raised>
+            <Button variant="contained" color="primary" onClick={this.onUnsubscribe}>
               Unsubscribe
             </Button>
           );
@@ -553,11 +543,11 @@ export default class Membership extends Component {
             </Button>
             <Dialog open={this.state.openJoin} keepMounted align="center">
               <DialogContent>
-                <Grid container align="center" padding={6} spacing={16}>
-                  <Grid item xs={12} padding={6}>
+                <Grid container align="center">
+                  <Grid item xs={12}>
                     <DialogTitle>Join {this.state.activityDescription}</DialogTitle>
                     <Typography>Participation (Required)</Typography>
-                    <Grid item padding={6} align="center">
+                    <Grid item align="center">
                       <FormControl fullWidth style={formControl}>
                         <Select
                           value={this.state.participationCode}

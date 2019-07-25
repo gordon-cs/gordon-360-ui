@@ -25,10 +25,10 @@ export default class Admin extends Component {
 
   render() {
     /* Used to re-render the page when the network connection changes.
-    *  this.state.network is compared to the message received to prevent
-    *  multiple re-renders that creates extreme performance lost.
-    *  The origin of the message is checked to prevent cross-site scripting attacks
-    */
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -46,8 +46,8 @@ export default class Admin extends Component {
     });
 
     /* Gets status of current network connection for online/offline rendering
-  *  Defaults to online in case of PWA not being possible
-  */
+     *  Defaults to online in case of PWA not being possible
+     */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     // Creates the My Profile button link depending on the status of the network found in local storage
@@ -55,7 +55,7 @@ export default class Admin extends Component {
     if (networkStatus === 'online') {
       if (this.state.isSuperAdmin) {
         Admin = (
-          <Grid container justify="center" spacing={16}>
+          <Grid container justify="center" spacing={2}>
             <Grid item xs={12} lg={8}>
               <InvolvementsStatus status={'Open'} />
             </Grid>

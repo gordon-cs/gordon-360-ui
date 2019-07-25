@@ -124,12 +124,12 @@ export default class CLWCreditsDaysLeft extends Component {
             style={{ paddingTop: 5, paddingBottom: 10 }}
           >
             <Grid item>
-              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${daysLeft} Days Left`}
               </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="body1" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${remaining} CL&W Credit` + (remaining === 1 ? '' : 's') + ' Left'}
               </Typography>
             </Grid>
@@ -192,16 +192,13 @@ export default class CLWCreditsDaysLeft extends Component {
       <Card>
         <CardContent>
           <Grid container direction="row" alignItems="center">
-              <Grid item xs={7}>
-                <CardHeader title={this.state.currSessionDescription} />
-              </Grid>
+            <Grid item xs={7}>
+              <CardHeader title={this.state.currSessionDescription} />
+            </Grid>
             <Grid item xs={5} align="right">
               <Link to={`/attended`}>
-                <Button
-                  variant="contained"
-                  style={style.button}
-                  >
-                  VIEW ATTENDED EVENTS
+                <Button variant="contained" style={style.button}>
+                  ATTENDED EVENTS
                 </Button>
               </Link>
             </Grid>
