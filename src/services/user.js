@@ -285,12 +285,10 @@ function setClass(profile) {
 
 /**
  * Get chapel events attended by the user
- * @param {String} username username of the user
  * @param {String} termCode code for the semester
  * @return {Promise.<AttendedEvent[]>} An object of all CL&W events attended by the user
  */
-const getAttendedChapelEvents = (username, termCode) =>
-  http.get(`events/chapel/${username}/${termCode}`);
+const getAttendedChapelEvents = termCode => http.get(`events/chapel/${termCode}`);
 
 /**
  * Get image for a given user or the current user if `username` is not provided
@@ -323,7 +321,7 @@ const postIDImage = dataURI => {
   let imageData = new FormData();
   let blob = dataURItoBlob(dataURI);
   let type = blob.type.replace('image/', '');
-  let headerOptions = {};
+  let headerOptions = { key: 'this is a post' };
   imageData.append('canvasImage', blob, 'canvasImage.' + type);
   return http.post('profiles/IDimage', imageData, headerOptions);
 };
@@ -337,7 +335,7 @@ const postImage = dataURI => {
   let imageData = new FormData();
   let blob = dataURItoBlob(dataURI);
   let type = blob.type.replace('image/', '');
-  let headerOptions = {};
+  let headerOptions = { key: 'this is a post' };
   imageData.append('canvasImage', blob, 'canvasImage.' + type);
   return http.post('profiles/image', imageData, headerOptions);
 };
@@ -370,13 +368,11 @@ function dataURItoBlob(dataURI) {
  */
 const getLocalInfo = () => {
   let token;
-
   try {
     token = storage.get('token');
   } catch (err) {
     throw new AuthError('Could not get local auth');
   }
-
   try {
     return jwtDecode(token);
   } catch (err) {
@@ -386,9 +382,8 @@ const getLocalInfo = () => {
 
 //Call function to retrieve events from database then format them
 const getAttendedChapelEventsFormatted = async () => {
-  const { user_name: username } = getLocalInfo();
   const termCode = session.getTermCode();
-  const attendedEvents = await getAttendedChapelEvents(username, termCode);
+  const attendedEvents = await getAttendedChapelEvents(termCode);
   const events = [];
   attendedEvents.sort(gordonEvent.sortByTime);
   for (let i = 0; i < attendedEvents.length; i += 1) {
@@ -403,9 +398,8 @@ const getAttendedChapelEventsFormatted = async () => {
  * @return {Promise.<CLWCredits>} An Object of their current and requiered number of CL&W events,
  */
 const getChapelCredits = async () => {
-  const { user_name: username } = getLocalInfo();
   const termCode = session.getTermCode();
-  const attendedEvents = await getAttendedChapelEvents(username, termCode);
+  const attendedEvents = await getAttendedChapelEvents(termCode);
 
   // Get required number of CL&W credits for the user, defaulting to thirty
   let required = 30;
@@ -424,15 +418,7 @@ const getChapelCredits = async () => {
  * @return {Promise.<DiningInfo>} Dining plan info object
  */
 const getDiningInfo = async () => {
-  //const id = 999999003;
-  //const id = 999999001;
-  //const id = 40000097;
-  const { id } = getLocalInfo();
-  const { SessionCode: sessionCode } = await session.getCurrent();
-  //const sessionCode = '201809';
-  const role = getLocalInfo().college_role;
-  //console.log(id + ' ' + sessionCode + ' ' + role);
-  return await http.get(`dining/${role}/${id}/${sessionCode}`);
+  return await http.get('dining');
 };
 
 /**
@@ -468,7 +454,7 @@ const getMemberships = async id => {
 
 const getPublicMemberships = async username => {
   let memberships;
-  memberships = await http.get(`/memberships/student/username/${username}/`);
+  memberships = await http.get(`memberships/student/username/${username}/`);
   memberships.sort(compareByTitle);
   return memberships;
 };
@@ -516,6 +502,12 @@ const getCurrentMembershipsWithoutGuests = async id => {
     }
   }
   return myCurrentInvolvementsWithoutGuests;
+};
+
+const getEmployment = async () => {
+  let employments;
+  employments = await http.get(`studentemployment/`);
+  return employments;
 };
 
 //Take student's non-"Guest" memberships and filter for specifiied session only
@@ -569,15 +561,15 @@ function compareByTitle(a, b) {
   return comparison;
 }
 
-//compares items by SessionCode, used by getTranscriptInfo to sort by SessionCode
-function compareBySession(a, b) {
-  const sessA = a.SessionCode;
-  const sessB = b.SessionCode;
+//compares items by ActivityCode, used by getTranscriptMembershipsInfo to sort by ActivityCode
+function compareByActCode(a, b) {
+  const codeA = a.ActivityCode;
+  const codeB = b.ActivityCode;
 
   let comparison = 0;
-  if (sessA > sessB) {
+  if (codeA > codeB) {
     comparison = 1;
-  } else if (sessA < sessB) {
+  } else if (codeA < codeB) {
     comparison = -1;
   }
   return comparison;
@@ -586,11 +578,20 @@ function compareBySession(a, b) {
 //returns an array of membership objects from backend server,
 //not including Guest memberships
 //using asynchronous http.get request (via getMemberships function)
-//sorts by SessionCode
-const getTranscriptInfo = async id => {
+//sorts by SessionCode and ActivityCode
+const getTranscriptMembershipsInfo = async id => {
   let transcriptInfo = await getMembershipsWithoutGuests(id);
-  transcriptInfo.sort(compareBySession);
+  transcriptInfo.sort(compareByActCode);
   return transcriptInfo;
+};
+
+//returns an array of employment objects from backend server
+//using asynchronous http.get request (via getEmployment function)
+//sorts by
+const getEmploymentInfo = async () => {
+  let employmentInfo = await getEmployment();
+  //employmentInfo.sort(compareBySession);
+  return employmentInfo;
 };
 
 const getProfileInfo = async username => {
@@ -659,6 +660,7 @@ export default {
   resetImage,
   postImage,
   postIDImage,
-  getTranscriptInfo,
+  getTranscriptMembershipsInfo,
+  getEmploymentInfo,
   updateSocialLink,
 };

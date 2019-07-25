@@ -15,8 +15,11 @@ import amber from '@material-ui/core/colors/amber'; // Login Hang
 
 import './login.css';
 import { authenticate } from '../../services/auth';
+import storage from '../../services/storage';
+import session from '../../services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
+import { projectName } from '../../project-name';
 
 // To temporarily disable the Login Hang message, set this boolean to false
 const LOGIN_BUG_MESSAGE = true; // Login Hang
@@ -55,7 +58,6 @@ export default class Login extends Component {
   }
 
   async logIn(event) {
-    console.log('Login/index.js: entering logIn() method');
     event.preventDefault();
     this.setState({ loading: true, error: null });
 
@@ -69,17 +71,31 @@ export default class Login extends Component {
 
     try {
       await authenticate(this.state.username, this.state.password);
-      console.log('Login/index.js: Successfully authenticated');
+
+      /* Checks to see if the Service Worker API is available before attempting to access it
+       *  This is important because if the API is not available, the site will load
+       *  but not allow you to login due to the error "undefined is not a function"
+       */
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        // Sends a message, the token and current term code to the service worker to precache
+        // dynamic files and start the update-cache timer
+        navigator.serviceWorker.controller.postMessage({
+          message: 'cache-static-dynamic-files',
+          token: storage.get('token'),
+          termCode: session.getTermCode(),
+        });
+        navigator.serviceWorker.controller.postMessage('start-cache-timer');
+        // Stores the current term in Local Storage for later use when updating the cache
+        storage.store('currentTerm', session.getTermCode());
+        // Saves the network state as online in local storage
+        localStorage.setItem('network-status', JSON.stringify('online'));
+      }
       this.props.onLogIn();
-      console.log('Login/index.js: onLogIn() returned');
     } catch (err) {
       clearTimeout(id); // Login Hang
       this.setState({ showMessageSnackbar: false });
       this.setState({ error: err.message, loading: false });
-      console.log('Login/index.js: Catch block was executed');
     }
-
-    console.log('Login/index.js: Passed try block; end of logIn() method');
   }
 
   //Temp Login Hang Fix - remove when reason for error addressed
@@ -93,11 +109,11 @@ export default class Login extends Component {
   render() {
     return (
       <Grid className="gordon-login" container alignItems="center" justify="center" spacing={0}>
-        <DocumentTitle title="Login | Gordon 360" />
+        <DocumentTitle title={`Login | ${projectName}`} />
         <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
-          <img src={GordonLogoVerticalWhite} alt="Gordon 360" />
+          <img src={GordonLogoVerticalWhite} alt={`${projectName}`} />
           <form onSubmit={this.logIn}>
-            <Typography variant="subheading">Welcome to Gordon 360!</Typography>
+            <Typography variant="subtitle1">Welcome to {projectName}!</Typography>
             <TextField
               id="username"
               label="Username"
@@ -129,7 +145,7 @@ export default class Login extends Component {
                 },
               }}
             />
-            <Typography className="error" variant="body1" color="error">
+            <Typography className="error" variant="body2" color="error">
               {this.state.error}
             </Typography>
             <section className="button-wrapper">

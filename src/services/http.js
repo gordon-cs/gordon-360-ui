@@ -6,6 +6,7 @@
 
 import { createError } from './error';
 import storage from './storage';
+import { isAuthenticated } from './auth';
 
 const base = process.env.REACT_APP_API_URL;
 
@@ -16,32 +17,32 @@ const base = process.env.REACT_APP_API_URL;
  * @return {Headers} A headers object
  */
 const makeHeaders = headerOptions => {
-  if (headerOptions !== undefined) {
-    try {
-      const token = storage.get('token');
-      let header = new Headers({
-        Authorization: `Bearer ${token}`,
-      });
-      for (const key in headerOptions) {
-        if (headerOptions.hasOwnProperty(key)) {
-          header.append(key, headerOptions[key]);
-        }
+  if (isAuthenticated()) {
+    if (headerOptions === undefined) {
+      try {
+        const token = storage.get('token');
+        return new Headers({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+      } catch (err) {
+        throw new Error('Token is not available');
       }
-      return header;
-    } catch (err) {
-      throw new Error('Token is not available');
+    } else {
+      try {
+        const token = storage.get('token');
+        return new Headers({
+          Authorization: `Bearer ${token}`,
+        });
+      } catch (err) {
+        throw new Error('Token is not available');
+      }
     }
   } else {
-    //default
-    try {
-      const token = storage.get('token');
-      return new Headers({
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      });
-    } catch (err) {
-      throw new Error('Token is not available');
-    }
+    return new Headers({
+      Authorization: `Bearer `,
+      'Content-Type': 'application/json',
+    });
   }
 };
 

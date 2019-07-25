@@ -2,30 +2,29 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-
 import { gordonColors } from '../../theme';
-import session from '../../services/session';
 import Activity from './Components/CoCurricularTranscriptActivity';
+import Experience from './Components/CoCurricularTranscriptExperience';
 import user from './../../services/user';
 import GordonLoader from './../../components/Loader';
 import './coCurricularTranscript.css';
 
-//This component creates the overall interface for the CoCurricularTranscript (card, heading, download button),
-//and contains a InvolvementsList object for displaying the content
+//This component creates the overall interface for the CoCurricularTranscript (card, heading,
+//download button), and contains a InvolvementsList object for displaying the content
 
 export default class Transcript extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activities: [],
+      categorizedMemberships: {},
       loading: true,
       profile: {},
+      otherInvolvements: false,
+      honorsLeadership: false,
+      serviceLearning: false,
+      experiences: false,
     };
-    //Variable used by groupActivityBySession to determine when activies in the list are part of a new session
-    //Necessary in order to remember session info about previous item in list while looping though
-    this.prevSessionVal = '';
   }
 
   handleDownload() {
@@ -39,87 +38,314 @@ export default class Transcript extends Component {
   async loadTranscript() {
     this.setState({ loading: true });
     try {
-      const currentSession = await session.getCurrent();
-
+      /* Retrieve data from server */
       const profile = await user.getProfileInfo();
-      const activities = await user.getTranscriptInfo(profile.ID);
-      this.setState({ loading: false, activities, currentSession, profile });
+
+      const memberships = await user.getTranscriptMembershipsInfo(profile.ID);
+      let categorizedMemberships = this.filterMemberships(memberships);
+
+      let otherInvolvements = false;
+      if (!(categorizedMemberships.activities.length === 0)) {
+        otherInvolvements = true;
+      }
+
+      let honorsLeadership = false;
+      if (!(categorizedMemberships.honors.length === 0)) {
+        honorsLeadership = true;
+      }
+
+      let serviceLearning = false;
+      if (!(categorizedMemberships.service.length === 0)) {
+        serviceLearning = true;
+      }
+
+      categorizedMemberships.experience.employments = await user.getEmploymentInfo();
+
+      let experiences = false;
+      if (
+        !(
+          categorizedMemberships.experience.experiences.length === 0 &&
+          categorizedMemberships.experience.employments.length === 0
+        )
+      ) {
+        experiences = true;
+      }
+
+      this.setState({
+        loading: false,
+        categorizedMemberships,
+        profile,
+        otherInvolvements,
+        honorsLeadership,
+        serviceLearning,
+        experiences,
+      });
     } catch (error) {
       this.setState({ error });
-      console.log('error');
     }
   }
 
-  //Compares activity from activityList to previous activity' session to to determine how to group.
-  //isUnique value is passed as a prop, along with Activity object, to TranscriptActivity Component
-  //Returns TranscriptActivity component which should be passed into activityList
-  groupActivityBySession = activity => {
-    //bool to keep track of when an zctivity is part of a new session, passed to TranscriptActivity
-    let isUniqueSession = true;
+  // Sorts a list of activity components in order of most recent end date to least recent end date.
+  // Param: activities - an array of Activity components with props Activity and Sessions
+  // Returns: the same array, sorted in order of most recent (newest) to least recent
+  sortNewestFirst = activities => {
+    let sorted = activities.sort(function(a, b) {
+      let lastSessA = a.props.Sessions[a.props.Sessions.length - 1];
+      let lastSessB = b.props.Sessions[b.props.Sessions.length - 1];
+      return lastSessB - lastSessA;
+    });
+    return sorted;
+  };
 
-    if (activity.SessionDescription === this.prevSessionVal) {
-      isUniqueSession = false;
-    } else {
-      isUniqueSession = true;
+  // For each activity in an array of activities, this finds all other activities of the same Code
+  // and keeps an array of all the sessions during which the student was involved in this activity.
+  // One Activity component is created with that ActivityDescription and the array of sessions.
+  // Once all Activity components have been made, they are sorted from most to least recent.
+
+  // Param: activities - a list of activity objects ("Memberships" as defined in gordon-360-api)
+  // Returns: array of Activity components with props Activity and Sessions.
+  groupActivityByCode = activities => {
+    let condensedActs = [];
+
+    // sort activities by ActivityCode
+    while (activities.length > 0) {
+      let curAct = activities.shift();
+      let sessions = [];
+      let leaderSessions = [];
+
+      // keep track of the activity code which will be used to identify all activities of the same
+      // code so they can be grouped into one activity component
+      let curActCode = curAct.ActivityCode;
+
+      // For each other activity matching curActCode, if it is consecutive to the current end date,
+      // save its end date as the new end date, otherwise, add the current start and end dates to
+      // the string 'duration' (because the streak is broken) and prepare to start a new streak.
+      // Loop assumes activities will be sorted by session and Activity Code.
+      sessions.push(curAct.SessionCode);
+      if (curAct.Participation === 'LEAD') {
+        leaderSessions.push(curAct.SessionCode);
+      }
+      while (activities.length > 0 && activities[0].ActivityCode === curActCode) {
+        sessions.push(activities[0].SessionCode);
+        if (activities[0].Participation === 'LEAD') {
+          leaderSessions.push(activities[0].SessionCode);
+        }
+        activities.shift();
+      }
+
+      let sessionsOrdered = sessions.sort();
+
+      let leaderSessionsOrdered = leaderSessions.sort();
+
+      // add the new TranscriptItem component to the array
+      condensedActs.push(
+        <Activity
+          key={curAct.ActivityCode}
+          Activity={curAct}
+          Sessions={sessionsOrdered}
+          LeaderSessions={leaderSessionsOrdered}
+        />,
+      );
     }
-    this.prevSessionVal = activity.SessionDescription;
-    return <Activity isUnique={isUniqueSession} Activity={activity} />;
+
+    let sorted = this.sortNewestFirst(condensedActs);
+
+    return sorted;
+  };
+
+  // Filters general memberships from the 360 Database into one of four categories
+  //        1. Honors, Leadership, and Research
+  //        2. Experience
+  //        3. Service and Service Learning
+  //        4. Activities (the catch-all)
+  // Memberships ars sorted based on their Activity Code, although this is not a perfect indicator
+  // of which category a membership should belong to.
+  // Params: memberships - An array of membership objects retrieved from the database.
+  // Returns: An array of four arrays-one per category-into which the  memberships have been filtered
+  filterMemberships = memberships => {
+    let filtered = {
+      honors: [],
+      experience: {
+        experiences: [],
+        employments: [],
+      },
+      service: [],
+      activities: [],
+    };
+
+    let honorsTypes = ['LEA', 'SCH', 'SGV'];
+    let serviceTypes = ['SLP', 'MIN'];
+    let experienceTypes = ['RES'];
+
+    while (memberships.length > 0) {
+      let membership = memberships.shift();
+
+      // Filter memberships into either Honors, Experience, Service, or Activities
+      if (honorsTypes.includes(membership.ActivityType)) {
+        filtered.honors.push(membership);
+      } else if (experienceTypes.includes(membership.ActivityType)) {
+        filtered.experience.experiences.push(membership);
+      } else if (serviceTypes.includes(membership.ActivityType)) {
+        filtered.service.push(membership);
+      } else {
+        filtered.activities.push(membership);
+      }
+    }
+
+    return filtered;
+  };
+
+  // Returns: the graduation date of the current user, or nothing if they have no declared grad date
+  getGradCohort() {
+    let gradDate = this.state.profile.GradDate;
+    if (gradDate === undefined || gradDate === '') {
+      return null;
+    } else {
+      return 'Class of ' + gradDate.split(' ')[3];
+    }
+  }
+
+  // Formats an array of major objects into a string for display on the transcript
+  // Params: majors - An array of major objects
+  // Returns: A string of all the current user's majors.
+  getMajors = majors => {
+    let majorsString = 'Majors: ';
+
+    //If majors is empty or not loaded, return null majors without iterating to avoid crashing
+    if (majors === undefined || majors.length === 0) {
+      return null;
+    } else {
+      for (let major of majors) {
+        majorsString += major + ', ';
+      }
+    }
+
+    return majorsString.substr(0, majorsString.length - 2);
+  };
+
+  // Formats an array of minor objects into a string for display on the transcript
+  // Params: minors - An array of minor objects
+  // Returns: A string of all the current user's minors.
+  getMinors = minors => {
+    let minorsString = 'Minors: ';
+
+    //If minors is empty or not loaded, return null minors without iterating to avoid crashing
+    if (minors === undefined || minors.length === 0) {
+      return null;
+    } else {
+      for (let minor of minors) {
+        minorsString += minor + ', ';
+      }
+    }
+
+    return minorsString.substr(0, minorsString.length - 2);
   };
 
   render() {
     let activityList;
-
-    if (!this.state.activities) {
+    if (!this.state.categorizedMemberships.activities) {
       activityList = <GordonLoader />;
     } else {
-      activityList = this.state.activities.map(this.groupActivityBySession);
+      activityList = this.groupActivityByCode(this.state.categorizedMemberships.activities);
     }
 
-    const button = {
+    let honorsList;
+    if (!this.state.categorizedMemberships.honors) {
+      honorsList = <GordonLoader />;
+    } else {
+      honorsList = this.groupActivityByCode(this.state.categorizedMemberships.honors);
+    }
+
+    let serviceList;
+    if (!this.state.categorizedMemberships.service) {
+      serviceList = <GordonLoader />;
+    } else {
+      serviceList = this.groupActivityByCode(this.state.categorizedMemberships.service);
+    }
+
+    let experienceList;
+    if (!this.state.categorizedMemberships.experience) {
+      experienceList = <GordonLoader />;
+    } else {
+      experienceList = this.groupActivityByCode(
+        this.state.categorizedMemberships.experience.experiences,
+      );
+      experienceList = experienceList.concat(
+        this.state.categorizedMemberships.experience.employments
+          .map(employment => <Experience Experience={employment} />)
+          .reverse(),
+      );
+    }
+
+    const buttonColors = {
+      /* not in style sheet so that gordonColors is accessible */
       background: gordonColors.primary.cyan,
       color: 'white',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fullWidth: true,
     };
 
+    const honorsLeadership = this.state.honorsLeadership;
+    const experiences = this.state.experiences;
+    const serviceLearning = this.state.serviceLearning;
+    const otherInvolvements = this.state.otherInvolvements;
+
     return (
-      <Grid container className="co-curricular-transcript" alignItems="center" justify="center" spacing="16">
-        <Grid xs={12} sm={12} md={8} lg={6}>
-          <Card elevation="10">
-            <CardContent>
-              <Grid item xs={12} className="print-only">
-                {/* <img src={require('./logo.png')} alt="" /> */}
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  raised
-                  style={button}
-                  justify="center"
-                  onClick={this.handleDownload}
-                >
-                  Print Co-Curricular Transcript
-                </Button>
-              </Grid>
-              <Grid item xs={12} margin="normal" className="heading">
-                <div>
-                  <Typography variant="headline">
-                    <b> Co-Curricular Transcript - {this.state.profile.fullName} </b>
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid item xs={12} class="print">
-                <Grid container spacing={0}>
-                  <Grid item xs={12}>
-                    {activityList}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <div className="co-curricular-transcript">
+        <Card className="card" elevation={10}>
+          <CardContent className="card-content">
+            <div className="print-only">{/* <img src={require('./logo.png')} alt="" /> */}</div>
+            <div>
+              <Button
+                className="button"
+                onClick={this.handleDownload}
+                style={buttonColors}
+                variant="contained"
+              >
+                Print Co-Curricular Transcript
+              </Button>
+            </div>
+            <div>Gordon College Experience Transcript</div>
+            <div className="subtitle">
+              {' '}
+              <b>{this.state.profile.fullName}</b>{' '}
+            </div>
+            <div className="subtitle">{this.getGradCohort()}</div>
+            <div className="subtitle">{this.getMajors(this.state.profile.Majors)}</div>
+            <div className="subtitle">{this.getMinors(this.state.profile.Minors)}</div>
+            {honorsLeadership && (
+              <div className="subtitle">
+                <Typography variant="h5">
+                  <b>Honors, Leadership, and Research</b>
+                </Typography>
+              </div>
+            )}
+            <div className="activity-list">{honorsList}</div>
+            {experiences && (
+              <div className="subtitle">
+                <Typography variant="h5">
+                  <b>Experience</b>
+                </Typography>
+              </div>
+            )}
+            <div className="activity-list">{experienceList}</div>
+            {serviceLearning && (
+              <div className="subtitle">
+                <Typography variant="h5">
+                  <b>Service Learning</b>
+                </Typography>
+              </div>
+            )}
+            <div className="activity-list">{serviceList}</div>
+            {otherInvolvements && (
+              <div className="subtitle">
+                <Typography variant="h5">
+                  <b>Activities</b>
+                </Typography>
+              </div>
+            )}
+            <div className="activity-list">{activityList}</div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 }

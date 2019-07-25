@@ -21,12 +21,11 @@ export default class GordonCollapsableEventItem extends Component {
   render() {
     const { event } = this.props;
 
-    console.log(event);
     return (
       <section>
         <Grid container onClick={this.handleExpandClick} className="event-item">
           <Grid item xs={12}>
-            <Typography variant="title" className="event-heading">
+            <Typography variant="h6" className="event-heading">
               {' '}
               {event.title}{' '}
             </Typography>

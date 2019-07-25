@@ -1,15 +1,18 @@
-import Grid from '@material-ui/core/Grid';
-import React, { Component } from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import {
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  CardContent,
+  Grid,
+  Typography,
+  withWidth,
+} from '@material-ui/core';
+import React, { Component, Fragment } from 'react';
 import Dropzone from 'react-dropzone';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { gordonColors } from '../../theme';
 import IdCardDefault from '../IDUploader/image-default.png';
 import IdCardGreen from '../IDUploader/image-green.png';
@@ -21,7 +24,7 @@ import user from '../../services/user';
 import errorLog from '../../services/errorLog';
 
 const CROP_DIM = 1200; // pixels
-export default class IDUploader extends Component {
+class IDUploader extends Component {
   constructor(props) {
     super(props);
 
@@ -89,22 +92,46 @@ export default class IDUploader extends Component {
   };
 
   maxCropPreviewWidth() {
-    const breakpointWidth = 960;
-    const smallScreenRatio = 0.75;
-    const largeScreenRatio = 0.525;
-    const maxHeightRatio = 0.5;
-    const aspect = this.state.cropperData.aspectRatio;
-    var maxWidth =
-      window.innerWidth *
-      (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
-    var correspondingHeight = maxWidth / aspect;
-    var maxHeight = window.innerHeight * maxHeightRatio;
-    var correspondingWidth = maxHeight * aspect;
+    /* this logic was probably great but I did not have time to learn it and fix it.
+       The fix it needs is replacing use of innerWidth with this.props.width (converted
+       from a string like 'xs' to a numerical size like 360
+       If you have time, please: make this function better */
 
-    if (correspondingHeight > maxHeight) {
-      return correspondingWidth;
-    } else {
-      return maxWidth;
+    //const breakpointWidth = 960;
+    //const smallScreenRatio = 0.75;
+    //const largeScreenRatio = 0.525;
+    //const maxHeightRatio = 0.5;
+
+    // const aspect = this.state.cropperData.aspectRatio;
+    // var maxWidth =
+    //   window.innerWidth *
+    //   (window.innerWidth < breakpointWidth ? smallScreenRatio : largeScreenRatio);
+    // var correspondingHeight = maxWidth / aspect;
+    // var maxHeight = window.innerHeight * maxHeightRatio;
+    // var correspondingWidth = maxHeight * aspect;
+
+    // if (correspondingHeight > maxHeight) {
+    //   return correspondingWidth;
+    // } else {
+    //   return maxWidth;
+    // }
+
+    const smallScreenRatio = 0.5;
+    const largeScreenRatio = 0.25;
+    const w = this.props.width;
+    switch (w) {
+      default:
+        return 960 * largeScreenRatio;
+      case 'xs':
+        return 360 * smallScreenRatio;
+      case 'sm':
+        return 600 * smallScreenRatio;
+      case 'md':
+        return 960 * largeScreenRatio;
+      case 'lg':
+        return 1280 * largeScreenRatio;
+      case 'xl':
+        return 1920 * largeScreenRatio;
     }
   }
 
@@ -189,80 +216,117 @@ export default class IDUploader extends Component {
       },
     };
 
-    return (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={6} lg={8}>
-          <Card>
-            <CardContent>
-              <Grid container justify="center" direction="column">
-                <Grid item align="center">
-                  <Typography align="center" variant="title" style={{ fontWeight: 'bold' }}>
-                    ID Photo Guidelines
-                  </Typography>
-                  <Typography align="left" variant="body1" style={style.instructionsText}>
-                    <br />
-                    1. Facial features must be identifiable. <br />
-                    2. No sunglasses or hats. <br />
-                    3. Photo must include your shoulders to the top of your head. <br />
-                    4. While this does not need to be a professional photo, it does need to be a
-                    reasonable representation of your face for an official campus ID card. As long
-                    as it meets the criteria, most cameras on a phone will work fine.
-                  </Typography>
-                </Grid>
-                <Grid item align="center">
-                  <Button
-                    variant="contained"
-                    style={style.uploadButton}
-                    onClick={this.handleUploadPhoto}
-                  >
-                    Tap to Upload
-                  </Button>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={6} lg={4} justify="center">
-          <Grid container justify="center">
-            <Card raised="true">
-              <Grid item style={{ margin: '10px' }}>
-                <div>
-                  <img
-                    src={IdCardTop}
-                    alt="ID Card"
-                    className="placeholder-id"
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                  />
-                </div>
-              </Grid>
-              <Grid item>
-                <Grid container style={{ width: '406px' }}>
-                  <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
-                    <div>
-                      <img
-                        src={this.state.IdCardPlaceholder}
-                        alt="ID Card"
-                        className="placeholder-id"
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
-                      />
-                    </div>
+    let content;
+    if (this.props.Authentication) {
+      content = (
+        <Fragment>
+          <Grid item xs={12} md={6} lg={8}>
+            <Card>
+              <CardContent>
+                <Grid container justify="center" direction="column">
+                  <Grid item align="center">
+                    <Typography align="center" variant="h6" style={{ fontWeight: 'bold' }}>
+                      ID Photo Guidelines
+                    </Typography>
+                    <Typography align="left" variant="body2" style={style.instructionsText}>
+                      <br />
+                      1. Facial features must be identifiable. <br />
+                      2. No sunglasses or hats. <br />
+                      3. Photo must include your shoulders to the top of your head. <br />
+                      4. While this does not need to be a professional photo, it does need to be a
+                      reasonable representation of your face for an official campus ID card. As long
+                      as it meets the criteria, most cameras on a phone will work fine.
+                    </Typography>
                   </Grid>
-                  <Grid item style={{ marginLeft: '7px', width: '53px', marginBottom: '5px' }}>
-                    <div>
-                      <img
-                        src={IdCardGreen}
-                        alt="ID Card"
-                        className="placeholder-id"
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
-                      />
-                    </div>
+                  <Grid item align="center">
+                    <Button
+                      variant="contained"
+                      style={style.uploadButton}
+                      onClick={this.handleUploadPhoto}
+                    >
+                      Tap to Upload
+                    </Button>
                   </Grid>
                 </Grid>
-              </Grid>
+              </CardContent>
             </Card>
           </Grid>
-        </Grid>
+
+          <Grid item xs={12} md={6} lg={4} justify="center">
+            <Grid container justify="center">
+              <Card raised={true}>
+                <Grid item style={{ margin: '10px' }}>
+                  <div>
+                    <img
+                      src={IdCardTop}
+                      alt="ID Card"
+                      className="placeholder-id"
+                      style={{ maxWidth: '100%', maxHeight: '100%' }}
+                    />
+                  </div>
+                </Grid>
+                <Grid item>
+                  <Grid container style={{ width: '406px' }}>
+                    <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
+                      <div>
+                        <img
+                          src={this.state.IdCardPlaceholder}
+                          alt="ID Card"
+                          className="placeholder-id"
+                          style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        />
+                      </div>
+                    </Grid>
+                    <Grid item style={{ marginLeft: '7px', width: '53px', marginBottom: '5px' }}>
+                      <div>
+                        <img
+                          src={IdCardGreen}
+                          alt="ID Card"
+                          className="placeholder-id"
+                          style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        />
+                      </div>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Card>
+            </Grid>
+          </Grid>
+        </Fragment>
+      )
+    } else {
+      content = (
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <h1>You are not logged in.</h1>
+                <br />
+                <h4>Please log in to upload an ID photo. You can press the back button or follow the URL "360.gordon.edu/id" to return to this page.</h4>
+                <br />
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Login
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+      )
+    }
+
+    return (
+      <Grid container justify="center" spacing="2">
+        {content}
+
 
         <Dialog
           open={this.state.photoOpen}
@@ -270,95 +334,87 @@ export default class IDUploader extends Component {
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
-          maxWidth="false"
         >
-          <DialogTitle id="simple-dialog-title">Update ID Picture</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              {window.innerWidth < 600
-                ? 'Tap Image to Browse Files'
-                : 'Drag & Drop Picture, or Click to Browse Files'}
-            </DialogContentText>
-            <DialogContentText>
-              <br />
-            </DialogContentText>
-            {!preview && (
-              <Grid container justify="center" spacing="16">
+          <div className="gc360-id-dialog">
+            <DialogTitle className="gc360-id-dialog_title" id="simple-dialog-title">
+              Update ID Picture
+            </DialogTitle>
+            <DialogContent className="gc360-id-dialog_content">
+              <DialogContentText className="gc360-id-dialog_content_text">
+                {this.props.width === 'md' || this.props.width === 'sm' || this.props.width === 'xs'
+                  ? 'Tap Image to Browse Files'
+                  : 'Drag & Drop Picture, or Click to Browse Files'}
+              </DialogContentText>
+              {!preview && (
                 <Dropzone
-                  className="dropzone"
-                  activeClassName="drop-overlay"
                   onDropAccepted={this.onDropAccepted.bind(this)}
                   onDropRejected={this.onDropRejected.bind(this)}
-                  accept="image/jpeg,image/jpg,image/png"
+                  accept="image/jpeg, image/jpg, image/png"
                 >
-                  <img
-                    className="rounded-corners"
-                    src={`data:image/png;base64,${this.state.image}`}
-                    alt=""
-                    style={{ 'max-width': '200px', 'max-height': '200px' }}
-                  />
+                  {({ getRootProps, getInputProps }) => (
+                    <section>
+                      <div className="gc360-id-dialog_content_dropzone" {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <img
+                          className="gc360-id-dialog_content_dropzone_img"
+                          src={`data:image/jpg;base64,${this.state.image}`}
+                          alt=""
+                          style={{ 'max-width': '140px', 'max-height': '140px' }}
+                        />
+                      </div>
+                    </section>
+                  )}
                 </Dropzone>
-              </Grid>
-            )}
-            {preview && (
-              <Grid container justify="center" spacing="16">
-                <Cropper
-                  ref="cropper"
-                  src={preview}
-                  style={{
-                    'max-width': this.maxCropPreviewWidth(),
-                    'max-height': this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
-                  }}
-                  autoCropArea={1}
-                  viewMode={3}
-                  aspectRatio={1}
-                  highlight={false}
-                  background={false}
-                  zoom={this.onCropperZoom.bind(this)}
-                  zoomable={false}
-                  dragMode={'none'}
-                  minCropBoxWidth={this.state.cropperData.cropBoxDim}
-                  minCropBoxHeight={this.state.cropperData.cropBoxDim}
-                />
-              </Grid>
-            )}
-            {preview && <br />}
-            {preview && (
-              <Grid container justify="center" spacing="16">
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    onClick={() => this.setState({ preview: null })}
-                    style={style.button}
-                  >
-                    Choose Another Image
-                  </Button>
-                </Grid>
-              </Grid>
-            )}
-          </DialogContent>
-          <DialogActions>
-            <Grid container spacing={8} justify="flex-end">
-              <Grid item />
-              <Grid item>
-                <Button variant="contained" onClick={this.handleCloseCancel} style={style.button}>
-                  Cancel
-                </Button>
-              </Grid>
-              <Grid item>
+              )}
+              {preview && (
+                <div className="gc360-id-dialog_content_cropper">
+                  <Cropper
+                    ref="cropper"
+                    src={preview}
+                    style={{
+                      'max-width': this.maxCropPreviewWidth(),
+                      'max-height': this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
+                    }}
+                    autoCropArea={1}
+                    viewMode={3}
+                    aspectRatio={1}
+                    highlight={false}
+                    background={false}
+                    zoom={this.onCropperZoom.bind(this)}
+                    zoomable={false}
+                    dragMode={'none'}
+                    minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                    minCropBoxHeight={this.state.cropperData.cropBoxDim}
+                  />
+                </div>
+              )}
+              {preview && (
                 <Button
                   variant="contained"
-                  onClick={this.handleCloseSubmit}
-                  disabled={!this.state.preview}
-                  style={
-                    this.state.preview ? style.button : { background: 'darkgray', color: 'white' }
-                  }
+                  onClick={() => this.setState({ preview: null })}
+                  style={style.button}
+                  className="gc360-id-dialog_content_button"
                 >
-                  Submit
+                  Choose Another Image
                 </Button>
-              </Grid>
-            </Grid>
-          </DialogActions>
+              )}
+            </DialogContent>
+            <DialogActions className="gc360-id-dialog_actions">
+              <Button variant="contained" onClick={this.handleCloseCancel} style={style.button}>
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={this.handleCloseSubmit}
+                disabled={!this.state.preview}
+                style={
+                  this.state.preview ? style.button : { background: 'darkgray', color: 'white' }
+                }
+              >
+                Submit
+              </Button>
+            </DialogActions>
+          </div>
         </Dialog>
 
         <Dialog
@@ -376,7 +432,7 @@ export default class IDUploader extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Grid container spacing={8} justify="flex-end">
+            <Grid container spacing={2} justify="flex-end">
               <Grid item />
               <Grid item>
                 <Button variant="contained" onClick={this.handleCloseOkay} style={style.button}>
@@ -400,7 +456,7 @@ export default class IDUploader extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Grid container spacing={8} justify="flex-end">
+            <Grid container spacing={2} justify="flex-end">
               <Grid item />
               <Grid item>
                 <Button variant="contained" onClick={this.handleCloseOkay} style={style.button}>
@@ -414,3 +470,5 @@ export default class IDUploader extends Component {
     );
   }
 }
+
+export default withWidth()(IDUploader);

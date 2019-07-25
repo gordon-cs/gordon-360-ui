@@ -4,9 +4,30 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import { gordonColors } from '../../theme';
+import Version from '../../services/version';
+import { projectName } from '../../project-name';
 import './about.css';
 
 export default class About extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      version: null,
+    };
+  }
+
+  componentWillMount() {
+    this.loadData();
+  }
+
+  async loadData() {
+    const versionPromise = Version.getVersion();
+    const version = await versionPromise;
+
+    this.setState({ loading: false, version });
+  }
+
   render() {
     const style = {
       color: gordonColors.primary.blue,
@@ -16,13 +37,14 @@ export default class About extends Component {
       color: '#FFF',
       padding: '10px',
     };
+
     return (
       <section>
-        <Grid container justify="center" spacing="16">
+        <Grid container justify="center">
           <Grid item xs={12} md={12} lg={8}>
             <br />
             <hr style={style} />
-            <Typography variant="headline" gutterBottom align="center">
+            <Typography variant="h5" gutterBottom align="center">
               Conceived and Built at Gordon College - By Students for Students
             </Typography>
             <hr style={style} />
@@ -31,12 +53,13 @@ export default class About extends Component {
               <Card>
                 <div style={headerStyle}>
                   <Typography variant="body2" style={headerStyle}>
-                    GORDON&apos;S 360 MOBILE INVOLVEMENTS PLATFORM: THE SCOTTIE FAIRE IN YOUR HAND
+                    {projectName}: THE SCOTTIE FAIRE IN YOUR HAND
+                    {/*GORDON&apos;S 360 MOBILE INVOLVEMENTS PLATFORM: THE SCOTTIE FAIRE IN YOUR HAND*/}
                   </Typography>
                 </div>
               </Card>
             </Grid>
-            <Typography variant="body1" gutterBottom component="ul">
+            <Typography variant="body2" gutterBottom component="ul">
               <br />
               <li>Mobile-friendly, responsive web portal</li>
               <li>Promotional access to student Involvement and leadership</li>
@@ -57,7 +80,7 @@ export default class About extends Component {
                 </div>
               </Card>
             </Grid>
-            <Typography variant="body1" gutterBottom component="ul">
+            <Typography variant="body2" gutterBottom component="ul">
               <br />
               <li>In-house Student Record relationship</li>
               <li>
@@ -79,32 +102,33 @@ export default class About extends Component {
             </Grid>
             <div class="indent">
               <br />
-              <Typography variant="subheading" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 <strong>Concept and Imagineering</strong>
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body2" paragraph>
                 Carissa Church&nbsp;&apos;18 and Grace Crook&nbsp;&apos;18
-                <br />Chris Carlson&nbsp;&apos;87, Student Life
+                <br />
+                Chris Carlson&nbsp;&apos;87, Student Life
               </Typography>
-              <Typography variant="subheading" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 <strong>Incubation Team</strong>
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body2" paragraph>
                 Ezeanyinabia &lsquo;Eze&rsquo; Anyanwu&nbsp;&apos;17, Adam
                 Bartholomew&nbsp;&apos;17, and James Kempf&nbsp;&apos;17
                 <br /> Dr.&nbsp;Russ Tuck, Summer Practicum in Computer Science (2016)
               </Typography>
-              <Typography variant="subheading" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 <strong>Product Deployment and Support</strong>
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body2" paragraph>
                 Emmanuel Roussel&nbsp;&apos;17 and Stephanie Powers&nbsp;&apos;17
                 <br /> Chris Hansen, Jason Whitehouse&nbsp;&apos;99, Information Systems Group
               </Typography>
-              <Typography variant="subheading" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 <strong>Software Development Team, Summer 2017</strong>
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body2" paragraph>
                 Bradley Boutcher&nbsp;&apos;18, Matthew Felgate&nbsp;&apos;18, Jenny
                 Kim&nbsp;&apos;19, Sam Nguyen&nbsp;&apos;19, Chris Qiao&nbsp;&apos;17, and Joseph
                 Ross
@@ -112,18 +136,18 @@ export default class About extends Component {
                 Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning&nbsp;&apos;85, Summer Practicum in
                 Computer Science (2017)
               </Typography>
-              <Typography variant="subheading" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 <strong>Software Development Team, 2017/2018</strong>
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body2" paragraph>
                 Addison Abbot&nbsp;&apos;20, Matt Felgate&nbsp;&apos;18, and Rebekah
                 Stauffer&nbsp;&apos;19
                 <br /> Chris Hansen, Jason Whitehouse&nbsp;&apos;99, Information Systems Group
               </Typography>
-              <Typography variant="subheading" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 <strong>Software Development Team, Summer 2018</strong>
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body2" paragraph>
                 Addison Abbot&nbsp;&apos;20, Nikki Adevai&nbsp;&apos;19, Emily Bishop&nbsp;&apos;20,
                 Stephen Macomber&nbsp;&apos;19, Max Moniz&nbsp;&apos;19, and Nathaniel
                 Rudenberg&nbsp;&apos;20
@@ -131,26 +155,32 @@ export default class About extends Component {
                 Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning&nbsp;&apos;85, Summer Practicum in
                 Computer Science (2018)
               </Typography>
-              <Typography variant="subheading" gutterBottom>
+              <Typography variant="subtitle1" gutterBottom>
                 <strong>Beneficent Philanthropes</strong>
               </Typography>
-              <Typography variant="body1" paragraph>
+              <Typography variant="body2" paragraph>
                 To the visionary benefactors who support the Summer Practicum in Computer Science
                 program at Gordon College, thank you!
                 <br />
-                <br />And to Dr.&nbsp;D.&nbsp;Michael Lindsay, President, and Jennifer
+                <br />
+                And to Dr.&nbsp;D.&nbsp;Michael Lindsay, President, and Jennifer
                 Jukanovich&nbsp;&apos;94, Vice President for Student Life, thank you for the
                 opportunity to apply our learning in a creative, practical way!
                 <br />
-                <br />And to our mentors and coaches in development and deployment, thank you for
-                your guidance and encouragement to try new things.
+                <br />
+                And to our mentors and coaches in development and deployment, thank you for your
+                guidance and encouragement to try new things.
               </Typography>
             </div>
-            <Typography variant="subheading" gutterBottom>
+            <Typography variant="subtitle1" gutterBottom>
               <br /> Found a bug?
               <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
                 <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
               </a>
+            </Typography>
+            <hr style={style} />
+            <Typography variant="body2" paragraph>
+              Api Version - {this.state.version}
             </Typography>
           </Grid>
         </Grid>

@@ -5,6 +5,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
@@ -51,6 +57,8 @@ export default class GordonPeopleSearch extends Component {
       suggestionIndex: -1,
       query: String,
       highlightQuery: String,
+      loginDialog: false,
+      network: 'online',
     };
     this.isMobileView = false;
     this.breakpointWidth = 400;
@@ -67,7 +75,7 @@ export default class GordonPeopleSearch extends Component {
     if (!query || query.length < MIN_QUERY_LENGTH) {
       return;
     }
-    
+
     //so apparently everything breaks if the first letter is capital, which is what happens on mobile
     //sometimes and then you spend four hours trying to figure out why downshift is not working
     //but really its just that its capitalized what the heck
@@ -126,11 +134,10 @@ export default class GordonPeopleSearch extends Component {
     var hasMatched = false;
     return (
       <span>
-        {parts.map(
-          part =>
-            !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
-              ? (hasMatched = true && <span class="h">{part}</span>)
-              : part,
+        {parts.map(part =>
+          !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
+            ? (hasMatched = true && <span class="h">{part}</span>)
+            : part,
         )}
       </span>
     );
@@ -160,7 +167,7 @@ export default class GordonPeopleSearch extends Component {
             : 'people-search-suggestion'
         }
       >
-        <Typography variant="body1">
+        <Typography variant="body2">
           {/* If the query contains a space or a period, only highlight occurrences of the first
               name part of the query in the first name, and only highlight occurrences of the last
               name part of the query in the last name. Otherwise, highlight occurrences of the
@@ -184,9 +191,9 @@ export default class GordonPeopleSearch extends Component {
         <Typography variant="caption" component="p">
           {/* If the first name matches either part (first or last name) of the query, don't
               highlight occurrences of the query in the first name part of the username.
-              
+
               If the username contains a period, add it back in.
-              
+
               If the username contains a period,
               If the last name matches either part (first of last name) of the query, don't
               highlight occurrences of the query in the last name part of the username. */}
@@ -235,44 +242,161 @@ export default class GordonPeopleSearch extends Component {
     window.removeEventListener('resize', this.resize);
   }
 
+  unauthenticatedSearch() {
+    this.setState({ loginDialog: true });
+  }
+
+  handleClose() {
+    this.setState({ loginDialog: false });
+  }
+
   render() {
-    let placeholder = 'People Search';
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    /* Gets status of current network connection for online/offline rendering
+     *  Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+    let holder = 'People Search';
     if (window.innerWidth < this.breakpointWidth) {
-      placeholder = 'People';
-    }
-    return (
-      <Downshift
-        // Assign reference to Downshift to `this` for usage elsewhere in the component
-        ref={downshift => {
-          this.downshift = downshift;
-        }}
-        render={({ getInputProps, getItemProps, isOpen }) => (
-          <span className="gordon-people-search">
-            {renderInput(
-              getInputProps({
-                placeholder: placeholder,
-                onChange: event => this.getSuggestions(event.target.value),
-                onKeyDown: event => {
-                  this.handleKeys(event.key);
-                },
-              }),
-            )}
-            {isOpen &&
-            this.state.suggestions.length > 0 &&
-            this.state.query.length >= MIN_QUERY_LENGTH ? (
-              <Paper square className="people-search-dropdown">
-                { 
-                  this.state.suggestions.map(suggestion =>
-                  this.renderSuggestion({
-                    suggestion,
-                    itemProps: getItemProps({ item: suggestion.UserName }),
+      holder = 'People';
+      if (networkStatus === 'offline') holder = 'Offline';
+    } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
+
+    let content;
+    if (this.props.Authentication) {
+      // Creates the People Search Bar depending on the status of the network found in local storage
+      if (networkStatus === 'online') {
+        content = (
+          // Assign reference to Downshift to `this` for usage elsewhere in the component
+          <Downshift
+            ref={downshift => {
+              this.downshift = downshift;
+            }}
+          >
+            {({ getInputProps, getItemProps, isOpen }) => (
+              <span className="gordon-people-search">
+                {renderInput(
+                  getInputProps({
+                    placeholder: holder,
+                    onChange: event => this.getSuggestions(event.target.value),
+                    onKeyDown: event => this.handleKeys(event.key),
                   }),
                 )}
-              </Paper>
-            ) : null}
-          </span>
-        )}
-      />
-    );
+
+                {isOpen &&
+                this.state.suggestions.length > 0 &&
+                this.state.query.length >= MIN_QUERY_LENGTH ? (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map(suggestion =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({ item: suggestion.UserName }),
+                      }),
+                    )}
+                  </Paper>
+                ) : null}
+              </span>
+            )}
+          </Downshift>
+        );
+      } else {
+        content = (
+          // Assign reference to Downshift to `this` for usage elsewhere in the component
+          <Downshift
+            ref={downshift => {
+              this.downshift = downshift;
+            }}
+          >
+            {({ getInputProps, getItemProps, isOpen }) => (
+              <span className="gordon-people-search">
+                {renderInput(
+                  getInputProps({
+                    placeholder: holder,
+                    style: { color: 'white' },
+                    disabled: { networkStatus },
+                  }),
+                )}
+
+                {isOpen &&
+                this.state.suggestions.length > 0 &&
+                this.state.query.length >= MIN_QUERY_LENGTH ? (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map(suggestion =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({ item: suggestion.UserName }),
+                      }),
+                    )}
+                  </Paper>
+                ) : null}
+              </span>
+            )}
+          </Downshift>
+        );
+      }
+    } else {
+      content = (
+        <span className="gordon-people-search">
+          <TextField
+            placeholder="People Search"
+            value={''}
+            onChange={event => this.unauthenticatedSearch()}
+            className={'text-field'}
+            InputProps={{
+              disableUnderline: true,
+              classes: {
+                root: 'people-search-root',
+                input: 'people-search-input',
+              },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Dialog
+            open={this.state.loginDialog}
+            onClose={clicked => this.handleClose()}
+            aria-labelledby="login-dialog-title"
+            aria-describedby="login-dialog-description"
+          >
+            <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="login-dialog-description">
+                You are not logged in. Please log in to use People Search.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
+                Okay
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </span>
+      );
+    }
+    return content;
   }
 }
