@@ -12,7 +12,7 @@
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
 let cacheVersion = 'cache-1.0';
-const apiSource = 'https://360apitrain.gordon.edu';
+const apiSource = 'https://360api.gordon.edu';
 let token, termCode, cacheTimer, isSuccessful, isFetchCanceled;
 
 // Console log decorations
