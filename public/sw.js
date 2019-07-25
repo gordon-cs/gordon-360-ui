@@ -13,7 +13,7 @@
 // Current cache version
 let cacheVersion = 'cache-1.0';
 const apiSource = 'https://360apitrain.gordon.edu';
-let token, termCode, cacheTimer;
+let token, termCode, cacheTimer, isSuccessful, isFetchCanceled;
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
@@ -47,6 +47,16 @@ const staticCache = [
   '/static/js/0.chunk.js',
   '/static/js/main.chunk.js',
   '/static/js/1.chunk.js',
+  // Files needed for iOS to prevent blank screen when clicking "Go Home" in offline mode
+  '/static/css/2.d64d1e9d.chunk.css',
+  '/static/css/main.01e33f3b.chunk.css',
+  '/static/js/2.00596eb8.chunk.js',
+  '/static/js/main.2f5d16ec.chunk.js',
+  '/static/css/main.5e616716.chunk.css.map',
+  '/static/js/2.00596eb8.chunk.js.map',
+  '/static/css/main.5e616716.chunk.css',
+  '/static/css/2.d64d1e9d.chunk.css.map',
+  '/static/js/main.2f5d16ec.chunk.js.map',
   // Images
   '/images/android-icon-36x36.png',
   '/images/android-icon-48x48.png',
@@ -165,25 +175,12 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
   });
 
   // Variables that determines the success of caching all links
-  let isSuccessful = true;
+  isSuccessful = true;
   let fetchSuccess;
   let operationSuccess;
 
   // Variable to control cancellation of fetches
-  let isFetchCanceled = false;
-
-  // An event listener to cancel all fetches made
-  self.addEventListener('message', event => {
-    if (event.data === 'cancel-fetches') {
-      // Since this event listener is invoked multiple times, this prevents it from being
-      // console logged multiple times
-      if (isFetchCanceled === false && isSuccessful === true) {
-        console.log(`%c${errorEmoji} Received Message: Canceling All Fetches.`, errorLog);
-        isFetchCanceled = true;
-        isSuccessful = false;
-      }
-    }
-  });
+  isFetchCanceled = false;
 
   // Attempt to fetch all links
   for (let url = 0; url < dynamicLinks.length; url++) {
@@ -292,6 +289,15 @@ async function dynamicLinksThenCache(token, termCode) {
     let id = profile ? profile.ID : null;
     let sessionCode = currentSession ? currentSession.SessionCode : null;
 
+    const imagsCache = [
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Profile-1_2018_07_26_02_26_40_2018_10_09_08_52_16.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/welcome1_2018_07_26_11_00_21_2018_10_09_08_51_52.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Help-1_2018_07_26_11_04_33_2018_10_09_08_51_12.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Events-1_2018_07_26_02_24_53_2018_10_09_08_51_24.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Feedback-1_2018_07_26_02_25_11_2018_10_09_08_50_45.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Home-1_2018_07_26_02_25_41_2018_10_09_08_51_41.jpg',
+      'https://wwwtrain.gordon.edu/images/2ColumnHero/Involvements-1_2018_07_26_02_26_19_2018_10_09_08_52_02.jpg',
+    ];
     const dynamicCache = [
       // Home Page Fetch URLs
       `${apiSource}/api/cms/slider`,
@@ -349,8 +355,9 @@ async function dynamicLinksThenCache(token, termCode) {
     //   );
     // });
 
-    fetchResult = await cacheDynamicFiles(token, dynamicCache);
-    if (fetchResult)
+    fetchResultOne = await cacheDynamicFiles(token, imagsCache, 'no-cors');
+    fetchResultTwo = await cacheDynamicFiles(token, dynamicCache);
+    if (fetchResultOne && fetchResultTwo)
       console.log(`%c${successfulEmoji} Cached Dynamic Files Successfully`, successfulLog);
   }
 }
@@ -427,5 +434,15 @@ self.addEventListener('message', event => {
   else if (event.data && event.data === 'delete-token-termCode') {
     token = null;
     termCode = null;
+  }
+  // If the message is to cancel all fetches
+  if (event.data === 'cancel-fetches') {
+    // Since this event listener is invoked multiple times, this check prevents it from
+    // console logging multiple times
+    if (isFetchCanceled === false && isSuccessful === true) {
+      console.log(`%c${errorEmoji} Received Message: Canceling All Fetches.`, errorLog);
+      isFetchCanceled = true;
+      isSuccessful = false;
+    }
   }
 });
