@@ -1,13 +1,11 @@
 import Grid from '@material-ui/core/Grid';
-import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import List from '@material-ui/core/List';
-//import ListItem from '@material-ui/core/ListItem';
-//import ListItemText from '@material-ui/core/ListItemText';
 import { NavLink } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import Dialog from '@material-ui/core/Dialog';
@@ -35,6 +33,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import GordonSchedulePanel from '../../components/SchedulePanel';
 
 import './myProfile.css';
 import '../../app.css';
@@ -723,6 +722,14 @@ class Profile extends Component {
                       </CardContent>
                     </Card>
                   </Grid>
+
+                  <Grid item xs={12} lg={12} align="center">
+                    <Grid container xs={12} lg={10} spacing="16" justify="center">
+                       <Grid item xs={12} lg={12}>
+                          <GordonSchedulePanel profile={this.state.profile} myProf={true} />
+                       </Grid>
+                     </Grid>
+                   </Grid>
 
                   <Grid item xs={12} lg={5}>
                     <Grid container spacing={2}>

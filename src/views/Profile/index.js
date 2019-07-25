@@ -14,6 +14,8 @@ import Button from '@material-ui/core/Button';
 import { NavLink } from 'react-router-dom';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
+import GordonSchedulePanel from '../../components/SchedulePanel';
+
 import './profile.css';
 
 //Public profile view
@@ -370,6 +372,14 @@ export default class Profile extends Component {
                       </Grid>
                     </CardContent>
                   </Card>
+                </Grid>
+                
+                <Grid item xs={12} lg={12} align="center">
+                   <Grid container xs={12} lg={10} spacing="16" justify="center">
+                      <Grid item xs={12} lg={12}>
+                        <GordonSchedulePanel profile={this.state.profile} myProf={false} />
+                       </Grid>
+                    </Grid>
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
