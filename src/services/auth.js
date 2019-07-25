@@ -86,7 +86,6 @@ const isAuthenticated = () => {
         if (localStorage.length > 0) {
           storage.remove('status');
           storage.remove('currentTerm');
-          storage.remove('network-status');
 
           // Removes all dynamic cache
           navigator.serviceWorker.controller.postMessage('remove-dynamic-cache');
@@ -112,7 +111,6 @@ const signOut = () => {
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
       storage.remove('status');
       storage.remove('currentTerm');
-      storage.remove('network-status');
 
       // Removes all dynamic cache
       navigator.serviceWorker.controller.postMessage('remove-dynamic-cache');

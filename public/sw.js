@@ -362,20 +362,6 @@ async function dynamicLinksThenCache(token, termCode) {
         return error.Message;
       });
 
-    // Gets the current session object to access the current session code
-    let currentSession = await fetch(
-      new Request(`${apiSource}/api/sessions/current`, {
-        method: 'GET',
-        headers,
-      }),
-    )
-      .then(response => {
-        return response.json();
-      })
-      .catch(error => {
-        return error.Message;
-      });
-
     let sessions = await fetch(
       new Request(`${apiSource}/api/sessions`, {
         method: 'GET',
@@ -390,7 +376,6 @@ async function dynamicLinksThenCache(token, termCode) {
       });
     username = profile ? profile.AD_Username : null;
     id = profile ? profile.ID : null;
-    currSessionCode = currentSession ? currentSession.SessionCode : null;
 
     dynamicCache = [
       // Home Page Fetch URLs
@@ -416,13 +401,12 @@ async function dynamicLinksThenCache(token, termCode) {
     ];
 
     sessions.forEach(session => {
-      if (session.SessionCode > currSessionCode) {
-        dynamicCache.push(
-          `${apiSource}/api/activities/session/${session.SessionCode}`,
-          `${apiSource}/api/activities/session/${session.SessionCode}/types`,
-        );
-      }
+      dynamicCache.push(
+        `${apiSource}/api/activities/session/${session.SessionCode}`,
+        `${apiSource}/api/activities/session/${session.SessionCode}/types`,
+      );
     });
+
     // This is commented out because we do not want users to be able to click into an involvement offline
     // Gets the involvements of the current user for the Involvement Profiles
     // let involvements = await fetch(

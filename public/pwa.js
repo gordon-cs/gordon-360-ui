@@ -18,6 +18,7 @@ if ('caches' in window) {
           const installingWorker = reg.installing;
           installingWorker.onstatechange = () => {
             if (installingWorker.state === 'activated') {
+              localStorage.setItem('network-status', JSON.stringify('online'));
               navigator.serviceWorker.controller.postMessage({
                 message: 'update-cache-files',
                 token: JSON.parse(localStorage.getItem('token')),
