@@ -7,6 +7,7 @@ import MomentLocalizer from 'react-big-calendar/lib/localizers/moment';
 import GordonLoader from '../../../Loader';
 import schedule from '../../../../services/schedule';
 import myschedule from '../../../../services/myschedule';
+import session from '../../../../services/session';
 
 import './schedulecalendar.css';
 
@@ -22,6 +23,7 @@ export default class ScheduleCalendar extends Component {
       isDoubleClick: false,
     };
     this.eventInfo = [];
+    this.currentSession = '';
   }
 
   customEventPropGetter = (event, start, end, isSelected) => {
@@ -76,6 +78,9 @@ export default class ScheduleCalendar extends Component {
       this.eventInfo = myscheduleInfo;
     }
 
+    this.currentSession = await session.getCurrent();
+
+
     this.setState({ loading: false });
   };
 
@@ -93,7 +98,7 @@ export default class ScheduleCalendar extends Component {
     // Localizer is always required for react-big-calendar initialization
     let formats = {
       dayHeaderFormat: (date, localizer = MomentLocalizer(Moment)) =>
-        localizer.format(date, 'MMMM YYYY'), // [] makes string to escape from parser (use this for session display)
+        localizer.format(date, '[' + this.currentSession.SessionDescription + ']'), // [] makes string to escape from parser (use this for session display)
     };
 
     const dayStart = new Date();

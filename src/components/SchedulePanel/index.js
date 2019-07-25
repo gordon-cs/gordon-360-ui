@@ -15,6 +15,8 @@ import RemoveScheduleDialog from './components/RemoveScheduleDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
 import schedulecontrol from './../../services/schedulecontrol';
+import urlRegex from 'url-regex'
+import { Markup } from 'interweave';
 
 import myschedule from '../../services/myschedule';
 
@@ -228,13 +230,23 @@ class GordonSchedulePanel extends Component {
     this.setState({reloadCall:false});
   }
 
+
+
   render() {
+    const replaced = this.state.description
+  .replace(urlRegex({strict: false}), function(url) {
+  return '<a href= "'+ url + '">' + url + "</a>";
+  });
+
+
     const button = {
       background: gordonColors.primary.cyan,
       color: 'white',
     };
     const { classes } = this.props;
     let isFaculty = String(this.props.profile.PersonType).includes('fac');
+
+
     let privacyButton,
       removeOfficeHourButton,
       editDescriptionButton,
@@ -344,7 +356,7 @@ class GordonSchedulePanel extends Component {
 
           <Grid container direction="row" alignContent="center" xs={12} lg={10}>
           <Grid container xs={12} lg={8} alignItems="center" justify="flex-start">
-          <Typography>{this.state.description}</Typography>
+          <Markup content={replaced} />
           </Grid>
 
           <Grid container direction="column" xs={12} lg={4} alignItems="flex-end" justify="flex-end">
@@ -368,11 +380,6 @@ class GordonSchedulePanel extends Component {
           </Grid>
 
           </Grid>
-
-
-
-
-
 
           <Grid item xs={12} lg={10}>
                 <ScheduleCalendar
