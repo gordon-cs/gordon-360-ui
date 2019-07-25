@@ -332,16 +332,6 @@ async function dynamicLinksThenCache(token, termCode) {
     let id = profile ? profile.ID : null;
     let currSessionCode = currentSession ? currentSession.SessionCode : null;
 
-    const imagesCache = [
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Profile-1_2018_07_26_02_26_40_2018_10_09_08_52_16.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/welcome1_2018_07_26_11_00_21_2018_10_09_08_51_52.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Help-1_2018_07_26_11_04_33_2018_10_09_08_51_12.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Events-1_2018_07_26_02_24_53_2018_10_09_08_51_24.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Feedback-1_2018_07_26_02_25_11_2018_10_09_08_50_45.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Home-1_2018_07_26_02_25_41_2018_10_09_08_51_41.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Involvements-1_2018_07_26_02_26_19_2018_10_09_08_52_02.jpg',
-    ];
-
     const dynamicCache = [
       // Home Page Fetch URLs
       `${apiSource}/api/cms/slider`,
@@ -408,9 +398,8 @@ async function dynamicLinksThenCache(token, termCode) {
     //   );
     // });
 
-    fetchResultOne = await cacheDynamicFiles(token, imagesCache, 'no-cors');
-    fetchResultTwo = await cacheDynamicFiles(token, dynamicCache);
-    if (fetchResultOne && fetchResultTwo)
+    let fetchResultOne = await cacheDynamicFiles(token, dynamicCache);
+    if (fetchResultOne)
       console.log(`%c${successfulEmoji} Cached Dynamic Files Successfully`, successfulLog);
   }
 }
