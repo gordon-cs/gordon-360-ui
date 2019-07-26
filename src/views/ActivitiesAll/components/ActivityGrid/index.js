@@ -109,20 +109,14 @@ class GordonActivityGrid extends Component {
         content = this.props.myInvolvements.map(activity => (
           <GridListTile className="container" rows="1">
             <Paper className="paper" elevation={0}>
-              <Link
-                className="link"
-                to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
-                disabled={networkStatus}
-              >
-                <img
-                  className="img-item"
-                  src={activity.ActivityImagePath}
-                  alt={activity.ActivityDescription}
-                  height="150"
-                  width="150"
-                />
-                <div className="title-item">{activity.ActivityDescription}</div>
-              </Link>
+              <img
+                className="img-item"
+                src={activity.ActivityImagePath}
+                alt={activity.ActivityDescription}
+                height="150"
+                width="150"
+              />
+              <div className="title-item">{activity.ActivityDescription}</div>
             </Paper>
           </GridListTile>
         ));
@@ -164,20 +158,14 @@ class GordonActivityGrid extends Component {
         content = this.props.activities.map(activity => (
           <GridListTile className="container" rows="1">
             <Paper className="paper" elevation={0}>
-              <Link
-                className="link"
-                to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
-                disabled={networkStatus}
-              >
-                <img
-                  className="img-item"
-                  src={activity.ActivityImagePath}
-                  alt={activity.ActivityDescription}
-                  height="150"
-                  width="150"
-                />
-                <div className="title-item">{activity.ActivityDescription}</div>
-              </Link>
+              <img
+                className="img-item"
+                src={activity.ActivityImagePath}
+                alt={activity.ActivityDescription}
+                height="150"
+                width="150"
+              />
+              <div className="title-item">{activity.ActivityDescription}</div>
             </Paper>
           </GridListTile>
         ));

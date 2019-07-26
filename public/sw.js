@@ -29,6 +29,8 @@ let token,
   id,
   currSessionCode;
 
+const showDeveloperConsoleLog = true;
+
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
 const successfulEmoji = `\u{2705}`;
@@ -172,12 +174,16 @@ async function fetchThenCache(request) {
       return fetchResponse.clone();
     })
     .catch(async () => {
-      console.log(`%c- Getting ${request.url} from cache instead...`, cacheLog);
+      if (showDeveloperConsoleLog) {
+        console.log(`%c- Getting ${request.url} from cache instead...`, cacheLog);
+      }
       const response = await caches.match(request);
       // If there's no response from cache, we console log that the request failed
       if (response) {
         return response;
-      } else console.log(`%c${errorEmoji} Failed to get ${request.url} from cache`, errorLog);
+      } else if (showDeveloperConsoleLog) {
+        console.log(`%c${errorEmoji} Failed to get ${request.url} from cache`, errorLog);
+      }
     });
 }
 
@@ -207,7 +213,7 @@ async function cacheStaticFiles() {
  *
  *  @return {Promise} A promise with the result of re-caching the failed dynamic files
  */
-async function recacheDynamicFiles() {
+async function recacheFailedDynamicFiles() {
   if (token && failedDynamicCacheLinks.length > 0) {
     const cacheOne = await cacheDynamicFiles(token, failedDynamicCacheLinks);
     // If all failed dynamic files successfully cache, we then empty the array
@@ -314,19 +320,23 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
     // If the fetch resulted in error
     if (fetchSuccess === 'Failed to fetch') {
       isSuccessful = false;
-      console.log(
-        `%c${errorEmoji} Failed to fetch and cache Dynamic File: ${dynamicLinks[url]}`,
-        errorLog,
-      );
+      if (showDeveloperConsoleLog) {
+        console.log(
+          `%c${errorEmoji} Failed to fetch and cache Dynamic File: ${dynamicLinks[url]}`,
+          errorLog,
+        );
+      }
     }
 
     // If the fetch resulted in a bad response
     else if (fetchSuccess.statusText && fetchSuccess.statusText !== 'OK') {
       isSuccessful = false;
-      console.log(
-        `%c${warningEmoji} Bad Response: Status - ${fetchSuccess.status} \n\t\tURL: ${dynamicLinks[url]}`,
-        warningLog,
-      );
+      if (showDeveloperConsoleLog) {
+        console.log(
+          `%c${warningEmoji} Bad Response: Status - ${fetchSuccess.status} \n\t\tURL: ${dynamicLinks[url]}`,
+          warningLog,
+        );
+      }
     }
   }
 
@@ -396,9 +406,9 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/memberships/student/username/${username}/`,
       `${apiSource}/api/profiles/${username}/`,
       `${apiSource}/api/profiles/Image/${username}/`,
-      // `${apiSource}/api/myschedule/${username}/`,
-      // `${apiSource}/api/schedule/${username}/`,
-      // `${apiSource}/api/schedulecontrol/${username}/`,
+      `${apiSource}/api/schedule/${username}/`,
+      `${apiSource}/api/myschedule/${username}/`,
+      `${apiSource}/api/schedulecontrol/${username}/`,
       `/profile/${username}`,
       `/myprofile`,
     ];
@@ -444,8 +454,8 @@ async function dynamicLinksThenCache(token, termCode) {
     //   );
     // });
 
-    let fetchResultOne = await cacheDynamicFiles(token, dynamicCache);
-    if (fetchResultOne)
+    let fetchResult = await cacheDynamicFiles(token, dynamicCache);
+    if (fetchResult)
       console.log(`%c${successfulEmoji} Cached Dynamic Files Successfully`, successfulLog);
   }
 }
@@ -476,12 +486,14 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   /* FOR DEVELOPING PURPOSES: THIS CONSOLE LOGS EACH FETCH REQUEST MADE */
   // If request is from Local, console log the URL
-  // if (event.request.url.match(location.origin)) {
+  // if (event.request.url.match(location.origin) && showDeveloperConsoleLog) {
   //   console.log(`Fetching request from LOCAL: ${event.request.url}`);
   // }
   // // If request is from Remote, console log the URL
   // else {
+  //   if (showDeveloperConsoleLog) {
   //   console.log(`Fetching request from REMOTE LOCATION: ${event.request.url}`);
+  //   }
   // }
 
   event.respondWith(fetchThenCache(event.request));
@@ -518,7 +530,7 @@ self.addEventListener('message', event => {
     console.log('Stopping timer to update cache.');
     event.waitUntil(clearInterval(cacheTimer));
   }
-  // If the message is to delete the token and current term code due to loss of authentification
+  // If the message is to reset global variables due to signing out or lost of authentication
   else if (event.data && event.data === 'delete-global-variables') {
     token = null;
     termCode = null;
@@ -544,7 +556,7 @@ self.addEventListener('message', event => {
   }
   // If the message is to set network status as online
   if (event.data === 'online') {
-    event.waitUntil((networkStatus = 'online'), recacheDynamicFiles());
+    event.waitUntil((networkStatus = 'online'), recacheFailedDynamicFiles());
   }
   // If the message is to set network status as offline
   if (event.data === 'offline') {
