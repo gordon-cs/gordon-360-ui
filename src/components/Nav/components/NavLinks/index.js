@@ -160,6 +160,9 @@ export default class GordonNavLinks extends Component {
       );
     }
 
+    let homeButton;
+    let involvementsButton;
+    let eventsButton;
     let admin;
     let peopleButton;
     let signInOut;
@@ -192,6 +195,7 @@ export default class GordonNavLinks extends Component {
         }
       }
 
+      // Creates the People button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         peopleButton = (
           <NavLink exact to="/people" onClick={this.props.onLinkClick} className="gc360-link-color">
@@ -216,6 +220,47 @@ export default class GordonNavLinks extends Component {
         );
       }
 
+      // Creates the Involvements button
+      involvementsButton = (
+        <NavLink
+          className="gc360-link-color"
+          exact
+          to="/involvements"
+          onClick={this.props.onLinkClick}
+        >
+          <ListItem button>
+            <ListItemIcon>
+              <LocalActivityIcon />
+            </ListItemIcon>
+            <ListItemText primary="Involvements" />
+          </ListItem>
+        </NavLink>
+      );
+
+      // Creates the Events button
+      eventsButton = (
+        <NavLink className="gc360-link-color" exact to="/events" onClick={this.props.onLinkClick}>
+          <ListItem button>
+            <ListItemIcon>
+              <EventIcon />
+            </ListItemIcon>
+            <ListItemText primary="Events" />
+          </ListItem>
+        </NavLink>
+      );
+
+      // Creates the Home button
+      homeButton = (
+        <NavLink className="gc360-link-color" exact to="/" onClick={this.props.onLinkClick}>
+          <ListItem button>
+            <ListItemIcon>
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItem>
+        </NavLink>
+      );
+
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         signInOut = (
@@ -234,17 +279,101 @@ export default class GordonNavLinks extends Component {
           </div>
         );
       }
-    } else {
-      peopleButton = (
-        <NavLink to="#" onClick={this.unAuthenticatedSearch} className="gc360-link-color">
+    }
+
+    // IF YOU ARE NOT AUTHENTICATED
+    else {
+      // Creates the People button depending on the status of the network found in local storage
+      if (networkStatus === 'online') {
+        peopleButton = (
+          <NavLink exact onClick={this.unAuthenticatedSearch} className="gc360-link-color">
+            <ListItem button disabled={networkStatus}>
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary="People" />
+            </ListItem>
+          </NavLink>
+        );
+      } else {
+        peopleButton = (
+          <div onClick={this.openDialogBox}>
+            <ListItem button disabled={networkStatus}>
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary="People" />
+            </ListItem>
+          </div>
+        );
+      }
+
+      // Creates the Home button
+      homeButton = (
+        <NavLink className="gc360-link-color" exact to="/" onClick={this.props.onLinkClick}>
           <ListItem button>
             <ListItemIcon>
-              <PeopleIcon />
+              <HomeIcon />
             </ListItemIcon>
-            <ListItemText primary="People" />
+            <ListItemText primary="Home" />
           </ListItem>
         </NavLink>
       );
+
+      // Creates the Involvements button depending on the status of the network found in local storage
+      if (networkStatus === 'online') {
+        involvementsButton = (
+          <NavLink
+            className="gc360-link-color"
+            exact
+            to="/involvements"
+            onClick={this.props.onLinkClick}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <LocalActivityIcon />
+              </ListItemIcon>
+              <ListItemText primary="Involvements" />
+            </ListItem>
+          </NavLink>
+        );
+      } else {
+        involvementsButton = (
+          <NavLink className="gc360-link-color" exact onClick={this.openDialogBox}>
+            <ListItem button disabled={networkStatus}>
+              <ListItemIcon>
+                <LocalActivityIcon />
+              </ListItemIcon>
+              <ListItemText primary="Involvements" />
+            </ListItem>
+          </NavLink>
+        );
+      }
+
+      // Creates the Events button depending on the status of the network found in local storage
+      if (networkStatus === 'online') {
+        eventsButton = (
+          <NavLink className="gc360-link-color" exact to="/events" onClick={this.props.onLinkClick}>
+            <ListItem button>
+              <ListItemIcon>
+                <EventIcon />
+              </ListItemIcon>
+              <ListItemText primary="Events" />
+            </ListItem>
+          </NavLink>
+        );
+      } else {
+        eventsButton = (
+          <NavLink className="gc360-link-color" onClick={this.openDialogBox}>
+            <ListItem button disabled={networkStatus}>
+              <ListItemIcon>
+                <EventIcon />
+              </ListItemIcon>
+              <ListItemText primary="Events" />
+            </ListItem>
+          </NavLink>
+        );
+      }
 
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
@@ -269,35 +398,9 @@ export default class GordonNavLinks extends Component {
     return (
       <div>
         <List className="gordon-nav-links">
-          <NavLink className="gc360-link-color" exact to="/" onClick={this.props.onLinkClick}>
-            <ListItem button>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
-          </NavLink>
-          <NavLink
-            className="gc360-link-color"
-            exact
-            to="/involvements"
-            onClick={this.props.onLinkClick}
-          >
-            <ListItem button>
-              <ListItemIcon>
-                <LocalActivityIcon />
-              </ListItemIcon>
-              <ListItemText primary="Involvements" />
-            </ListItem>
-          </NavLink>
-          <NavLink className="gc360-link-color" exact to="/events" onClick={this.props.onLinkClick}>
-            <ListItem button>
-              <ListItemIcon>
-                <EventIcon />
-              </ListItemIcon>
-              <ListItemText primary="Events" />
-            </ListItem>
-          </NavLink>
+          {homeButton}
+          {involvementsButton}
+          {eventsButton}
           {peopleButton}
         </List>
         <Divider />
