@@ -108,7 +108,7 @@ export default class Login extends Component {
 
   render() {
     return (
-      <Grid className="gordon-login" container alignItems="center" justify="center" spacing={0}>
+      <Grid  container alignItems="center" justify="center" spacing={0}>
         <DocumentTitle title={`Login | ${projectName}`} />
         <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
           <img src={GordonLogoVerticalWhite} alt={`${projectName}`} />

@@ -33,14 +33,6 @@ const gridListCellHeight = width => {
       return 250;
     case 'xs':
       return 100;
-    case 'sm':
-      return 250;
-    case 'md':
-      return 250;
-    case 'lg':
-      return 250;
-    case 'xl':
-      return 250;
   }
 };
 
@@ -86,42 +78,42 @@ class GordonActivityGrid extends Component {
       // Creates the My Involvements cards depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         content = this.props.myInvolvements.map(activity => (
-          <GridListTile className="container" rows="1">
-            <Paper className="paper" elevation={0}>
+          <GridListTile className="gc360-act-grid_container" rows="1">
+            <Paper className="gc360-act-grid_paper" elevation={0}>
               <Link
-                className="link"
+                className="gc360-act-grid_link gc360-link"
                 to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
               >
                 <img
-                  className="img-item"
+                  className="gc360-act-grid_img"
                   src={activity.ActivityImagePath}
                   alt={activity.ActivityDescription}
                   height="150"
                   width="150"
                 />
-                <div className="title-item">{activity.ActivityDescription}</div>
+                <div className="gc360-act-grid_title">{activity.ActivityDescription}</div>
               </Link>
             </Paper>
           </GridListTile>
         ));
       } else {
-        // exactly the same as content of 'if' block above besides disabled=...
+        // exactly the same as the content of the 'if' block above, besides disabled=...
         content = this.props.myInvolvements.map(activity => (
-          <GridListTile className="container" rows="1">
-            <Paper className="paper" elevation={0}>
+          <GridListTile className="gc360-act-grid_container">
+            <Paper className="gc360-act-grid_paper" elevation={0}>
               <Link
-                className="link"
+                className="gc360-act-grid_link gc360-link"
                 to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
                 disabled={networkStatus}
               >
                 <img
-                  className="img-item"
+                  className="gc360-act-grid_img"
                   src={activity.ActivityImagePath}
                   alt={activity.ActivityDescription}
                   height="150"
                   width="150"
                 />
-                <div className="title-item">{activity.ActivityDescription}</div>
+                <div className="gc360-act-grid_title">{activity.ActivityDescription}</div>
               </Link>
             </Paper>
           </GridListTile>
@@ -141,42 +133,42 @@ class GordonActivityGrid extends Component {
       // Creates the Involvements cards depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         content = this.props.activities.map(activity => (
-          <GridListTile className="container" rows="1">
-            <Paper className="paper" elevation={0}>
+          <GridListTile className="gc360-act-grid_container">
+            <Paper className="gc360-act-grid_paper" elevation={0}>
               <Link
-                className="link"
+                className="gc360-act-grid_link gc360-link"
                 to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
               >
                 <img
-                  className="img-item"
+                  className="gc360-act-grid_img"
                   src={activity.ActivityImagePath}
                   alt={activity.ActivityDescription}
                   height="150"
                   width="150"
                 />
-                <div className="title-item">{activity.ActivityDescription}</div>
+                <div className="gc360-act-grid_title">{activity.ActivityDescription}</div>
               </Link>
             </Paper>
           </GridListTile>
         ));
       } else {
-        // exactly the same as content of 'if' block above besides disabled=...
+        // exactly the same as the content of the 'if' block above, besides disabled=...
         content = this.props.activities.map(activity => (
-          <GridListTile className="container" rows="1">
-            <Paper className="paper" elevation={0}>
+          <GridListTile className="gc360-act-grid_container" rows="1">
+            <Paper className="gc360-act-grid_paper" elevation={0}>
               <Link
-                className="link"
+                className="gc360-act-grid_link gc360-link"
                 to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
                 disabled={networkStatus}
               >
                 <img
-                  className="img-item"
+                  className="gc360-act-grid_img"
                   src={activity.ActivityImagePath}
                   alt={activity.ActivityDescription}
                   height="150"
                   width="150"
                 />
-                <div className="title-item">{activity.ActivityDescription}</div>
+                <div className="gc360-act-grid_title">{activity.ActivityDescription}</div>
               </Link>
             </Paper>
           </GridListTile>
@@ -189,7 +181,6 @@ class GordonActivityGrid extends Component {
         cellHeight={gridListCellHeight(this.props.width)}
         spacing={10}
         cols={gridListCols(this.props.width)}
-        className="gc360-activity-grid"
       >
         {content}
       </GridList>

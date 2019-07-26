@@ -205,7 +205,7 @@ export default class GordonNavAvatarRightCorner extends Component {
     let FeedbackButton;
     if (networkStatus === 'online') {
       FeedbackButton = (
-        <Link to="/feedback" className="gc360-link-color">
+        <Link to="/feedback" className="gc360-link">
           <MenuItem onClick={this.onClose} divider="true">
             Feedback
           </MenuItem>
@@ -236,7 +236,7 @@ export default class GordonNavAvatarRightCorner extends Component {
         myProfile = `/profile/${this.state.name.replace(' ', '.')}`;
       }
       myProfileLink = (
-        <Link to={myProfile} className="gc360-link-color">
+        <Link to={myProfile} className="gc360-link">
           <MenuItem onClick={this.onClose} divider={true}>
             My Profile
           </MenuItem>
@@ -261,7 +261,7 @@ export default class GordonNavAvatarRightCorner extends Component {
       if (networkStatus === 'online') {
         if (user.getLocalInfo().college_role === 'god') {
           Admin = (
-            <Link to="/admin" className="gc360-link-color">
+            <Link to="/admin" className="gc360-link">
               <MenuItem onClick={this.onClose} divider="true">
                 Admin
               </MenuItem>
@@ -282,7 +282,7 @@ export default class GordonNavAvatarRightCorner extends Component {
 
       if (networkStatus === 'online') {
         signInOut = (
-          <Link to="/" className="gc360-link-color">
+          <Link to="/" className="gc360-link">
             <MenuItem onClick={this.onSignOut.bind(this)} divider={true}>
               Sign Out
             </MenuItem>
@@ -304,7 +304,7 @@ export default class GordonNavAvatarRightCorner extends Component {
 
       if (networkStatus === 'online') {
         signInOut = (
-          <Link to="/" className="gc360-link-color">
+          <Link to="/" className="gc360-link">
             <MenuItem onClick={this.onSignIn.bind(this)} divider={true}>
               Sign In
             </MenuItem>
@@ -347,12 +347,12 @@ export default class GordonNavAvatarRightCorner extends Component {
           </MenuItem>
           {myProfileLink}
           {LinksButton}
-          <Link to="/help" className="gc360-link-color">
+          <Link to="/help" className="gc360-link">
             <MenuItem onClick={this.onClose} divider={true}>
               Help
             </MenuItem>
           </Link>
-          <Link to="/about" className="gc360-link-color">
+          <Link to="/about" className="gc360-link">
             <MenuItem onClick={this.onClose} divider={true}>
               About
             </MenuItem>

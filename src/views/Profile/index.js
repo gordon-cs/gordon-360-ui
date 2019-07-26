@@ -11,12 +11,12 @@ import Office from './../../components/OfficeList';
 import ProfileActivityList from './../../components/ProfileActivityList';
 import EmailIcon from '@material-ui/icons/Email';
 import Button from '@material-ui/core/Button';
-import { NavLink } from 'react-router-dom';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import GordonSchedulePanel from '../../components/SchedulePanel';
 
 import './profile.css';
+import '../../app.css';
 
 //Public profile view
 export default class Profile extends Component {
@@ -193,7 +193,7 @@ export default class Profile extends Component {
         <Grid item>
           <a
             href={this.state.facebookLink}
-            className="icon"
+            className="gc360-profile_icon"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -207,7 +207,7 @@ export default class Profile extends Component {
         <Grid item>
           <a
             href={this.state.twitterLink}
-            className="icon"
+            className="gc360-profile_icon"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -221,7 +221,7 @@ export default class Profile extends Component {
         <Grid item>
           <a
             href={this.state.linkedInLink}
-            className="icon"
+            className="gc360-profile_icon"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -235,7 +235,7 @@ export default class Profile extends Component {
         <Grid item>
           <a
             href={this.state.instagramLink}
-            className="icon"
+            className="gc360-profile_icon"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -338,33 +338,15 @@ export default class Profile extends Component {
                                 {instagramButton}
                               </Grid>
                               {this.state.profile.Email !== '' && (
-                                <div
-                                  style={{
-                                    marginTop: '20px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                  }}
+                                <a
+                                  href={`mailto:${this.state.profile.Email}`}
+                                  className="gc360-text-link gc360-profile_email"
                                 >
-                                  <a href={`mailto:${this.state.profile.Email}`}>
-                                    <div
-                                      className="email-link-container"
-                                      style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        alignContent: 'center',
-                                        justifyContent: 'center',
-                                      }}
-                                    >
-                                      <EmailIcon
-                                        className="email-link"
-                                        style={{ marginRight: '0.75rem' }}
-                                      />
-                                      <Typography className="email-link">
-                                        {this.state.profile.Email}
-                                      </Typography>
-                                    </div>
-                                  </a>
-                                </div>
+                                  <EmailIcon className="gc360-profile_email_icon" />
+                                  <Typography className="gc360-profile_email_text">
+                                    {this.state.profile.Email}
+                                  </Typography>
+                                </a>
                               )}
                             </Grid>
                           </Grid>
@@ -455,15 +437,32 @@ export default class Profile extends Component {
       return PublicProfile;
     } else {
       return (
-        <div>
-          <GordonLoader />
-          <Typography align="center" variant="headline">
-            You must be logged in to view this profile.
-          </Typography>
-          <NavLink exact to="/">
-            <Button>Okay</Button>
-          </NavLink>
-        </div>
+        <Grid container justify="center">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <h1>You are not logged in.</h1>
+                <br />
+                <h4>You must be logged in to view this profile.</h4>
+                <br />
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Login
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       );
     }
   }
