@@ -52,6 +52,7 @@ const staticCache = [
   '/about',
   '/help',
   '/admin',
+  '/attended',
   '/manifest.json',
   '/pwa.js',
   '/static/js/bundle.js',
