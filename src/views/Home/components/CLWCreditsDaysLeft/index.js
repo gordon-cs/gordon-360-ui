@@ -198,7 +198,7 @@ export default class CLWCreditsDaysLeft extends Component {
                   <Button
                     variant="contained"
                     style={style.button}
-                    onClick={() => (window.location.href = 'https://360.gordon.edu/attended/')}
+                    onClick={() => (window.location.pathname = '/attended')}
                     >
                     ATTENDED EVENTS
                   </Button>
