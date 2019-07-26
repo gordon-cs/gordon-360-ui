@@ -262,8 +262,6 @@ export default class GordonPeopleSearch extends Component {
         this.state.network === 'offline' &&
         event.origin === window.location.origin
       ) {
-        // We set the state twice due to a bug where react won't re-render on time
-        this.setState({ network: 'online' });
         this.setState({ network: 'online' });
       } else if (
         event.data === 'offline' &&

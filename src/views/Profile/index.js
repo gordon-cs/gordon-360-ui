@@ -256,8 +256,6 @@ export default class Profile extends Component {
         this.state.network === 'offline' &&
         event.origin === window.location.origin
       ) {
-        // We set the state twice due to a bug where react won't re-render on time
-        this.setState({ network: 'online' });
         this.setState({ network: 'online' });
       } else if (
         event.data === 'offline' &&
@@ -375,13 +373,13 @@ export default class Profile extends Component {
                     </CardContent>
                   </Card>
                 </Grid>
-                
+
                 <Grid item xs={12} lg={12} align="center">
-                   <Grid container xs={12} lg={10} spacing="16" justify="center">
-                      <Grid item xs={12} lg={12}>
-                        <GordonSchedulePanel profile={this.state.profile} myProf={false} />
-                       </Grid>
+                  <Grid container xs={12} lg={10} spacing="16" justify="center">
+                    <Grid item xs={12} lg={12}>
+                      <GordonSchedulePanel profile={this.state.profile} myProf={false} />
                     </Grid>
+                  </Grid>
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
