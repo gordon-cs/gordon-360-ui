@@ -11,7 +11,7 @@ import session from '../../../../services/session';
 
 import './schedulecalendar.css';
 
-export default class ScheduleCalendar extends Component {
+export default class GordonScheduleCalendar extends Component {
   constructor(props) {
     super(props);
 
@@ -21,9 +21,9 @@ export default class ScheduleCalendar extends Component {
       disabled: true,
       selectedEvent: null,
       isDoubleClick: false,
+      currentSession: [],
     };
     this.eventInfo = [];
-    this.currentSession = '';
   }
 
   customEventPropGetter = (event, start, end, isSelected) => {
@@ -53,6 +53,7 @@ export default class ScheduleCalendar extends Component {
   }
 
   loadData = async searchedUser => {
+    this.setState({ loading: true});
     let courseInfo = null;
     if (this.props.myProf) {
       try{
@@ -78,10 +79,9 @@ export default class ScheduleCalendar extends Component {
       this.eventInfo = myscheduleInfo;
     }
 
-    this.currentSession = await session.getCurrent();
-
-
-    this.setState({ loading: false });
+    let currentSession = await session.getCurrent();
+    
+    this.setState({ loading: false, currentSession });
   };
 
   render() {
@@ -98,7 +98,7 @@ export default class ScheduleCalendar extends Component {
     // Localizer is always required for react-big-calendar initialization
     let formats = {
       dayHeaderFormat: (date, localizer = MomentLocalizer(Moment)) =>
-        localizer.format(date, '[' + this.currentSession.SessionDescription + ']'), // [] makes string to escape from parser (use this for session display)
+        localizer.format(date, '[' + this.state.currentSession.SessionDescription + ']'), // [] makes string to escape from parser (use this for session display)
     };
 
     const dayStart = new Date();
