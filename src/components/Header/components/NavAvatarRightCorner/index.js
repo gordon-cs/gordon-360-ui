@@ -269,13 +269,15 @@ export default class GordonNavAvatarRightCorner extends Component {
           );
         }
       } else {
-        Admin = (
-          <div onClick={this.openDialogBox}>
-            <MenuItem disabled={networkStatus} divider="true">
-              Admin
-            </MenuItem>
-          </div>
-        );
+        if (user.getLocalInfo().college_role === 'god') {
+          Admin = (
+            <div onClick={this.openDialogBox}>
+              <MenuItem disabled={networkStatus} divider="true">
+                Admin
+              </MenuItem>
+            </div>
+          );
+        }
       }
 
       if (networkStatus === 'online') {

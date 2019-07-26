@@ -11,9 +11,10 @@ import Office from './../../components/OfficeList';
 import ProfileActivityList from './../../components/ProfileActivityList';
 import EmailIcon from '@material-ui/icons/Email';
 import Button from '@material-ui/core/Button';
-import { NavLink } from 'react-router-dom';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
+import GordonSchedulePanel from '../../components/SchedulePanel';
+
 import './profile.css';
 import '../../app.css';
 
@@ -374,6 +375,14 @@ export default class Profile extends Component {
                   </Card>
                 </Grid>
 
+                <Grid item xs={12} lg={12} align="center">
+                  <Grid container xs={12} lg={10} spacing="16" justify="center">
+                    <Grid item xs={12} lg={12}>
+                      <GordonSchedulePanel profile={this.state.profile} myProf={false} />
+                    </Grid>
+                  </Grid>
+                </Grid>
+
                 <Grid item xs={12} lg={5}>
                   <Grid container direction="column" spacing={2}>
                     {this.state.officeinfo !== null && this.state.officeinfo}
@@ -447,15 +456,32 @@ export default class Profile extends Component {
       return PublicProfile;
     } else {
       return (
-        <div>
-          <GordonLoader />
-          <Typography align="center" variant="headline">
-            You must be logged in to view this profile.
-          </Typography>
-          <NavLink exact to="/" className="gc360-link">
-            <Button>Okay</Button>
-          </NavLink>
-        </div>
+        <Grid container justify="center">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <h1>You are not logged in.</h1>
+                <br />
+                <h4>You must be logged in to view this profile.</h4>
+                <br />
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Login
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       );
     }
   }

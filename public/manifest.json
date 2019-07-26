@@ -4,7 +4,7 @@
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#014983",
-  "background_color": "#014983",
+  "background_color": "white",
   "orientation": "portrait",
   "categories": ["lifestyle", "school"],
   "description": "A progressive web application for Gordon 360",
