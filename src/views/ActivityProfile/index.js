@@ -589,7 +589,10 @@ class ActivityProfile extends Component {
             website = (
               <Typography variant="body2">
                 <strong>Website: </strong>
-                <a href={activityURL}> {activityURL}</a>
+                <a href={activityURL} className="gc360-text-link">
+                  {' '}
+                  {activityURL}
+                </a>
               </Typography>
             );
           }

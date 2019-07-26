@@ -118,7 +118,7 @@ class GordonNavAvatar extends Component {
             {...props}
             to={`/myprofile`}
             onClick={this.props.onLinkClick}
-            className="gc360-link-color"
+            className="gc360-link"
           />
         );
       } else {
@@ -128,7 +128,7 @@ class GordonNavAvatar extends Component {
             {...props}
             to={`/profile/${user.getLocalInfo().name.replace(' ', '.')}`}
             onClick={this.props.onLinkClick}
-            className="gc360-link-color"
+            className="gc360-link"
           />
         );
       }
@@ -155,7 +155,7 @@ class GordonNavAvatar extends Component {
       let avatar = <Avatar className="avatar placeholder">Guest</Avatar>;
       // Link component to be used with Button component
       buttonLink = ({ ...props }) => (
-        <Link {...props} to={`/`} onClick={this.props.onLinkClick} className="gc360-link-color" />
+        <Link {...props} to={`/`} onClick={this.props.onLinkClick} className="gc360-link" />
       );
 
       content = (

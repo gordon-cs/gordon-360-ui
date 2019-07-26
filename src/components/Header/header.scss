@@ -18,6 +18,10 @@ $drawer-width: 240px;
     color: $neutral-white;
     text-transform: capitalize;
     min-width: 90px;
+    &:hover {
+      color: $neutral-white !important;
+      text-decoration: none !important;
+    }
   }
 
   .guestTab {
