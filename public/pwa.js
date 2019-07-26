@@ -18,6 +18,7 @@ if ('caches' in window) {
           const installingWorker = reg.installing;
           installingWorker.onstatechange = () => {
             if (installingWorker.state === 'activated') {
+              localStorage.setItem('network-status', JSON.stringify('online'));
               navigator.serviceWorker.controller.postMessage({
                 message: 'update-cache-files',
                 token: JSON.parse(localStorage.getItem('token')),
@@ -53,6 +54,7 @@ if ('caches' in window) {
         '%c--------------------     NO INTERNET CONNECTION     --------------------',
         normalLogCentered,
       );
+      navigator.serviceWorker.controller.postMessage('offline');
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
       localStorage.setItem('network-status', JSON.stringify('offline'));
       window.postMessage('offline', location.origin);
@@ -62,13 +64,19 @@ if ('caches' in window) {
     });
 
     // If network connectivity re-enables during application run-time
-    window.addEventListener('online', () => {
+    window.addEventListener('online', event => {
       console.log(
         '%c--------------------     INTERNET CONNECTION ESTABLISHED     --------------------',
         normalLogCentered,
       );
       localStorage.setItem('network-status', JSON.stringify('online'));
-      window.postMessage('online', location.origin);
+      navigator.serviceWorker.controller.postMessage('online');
+      navigator.serviceWorker.controller.postMessage({
+        message: 'update-cache-files',
+        token: JSON.parse(localStorage.getItem('token')),
+        termCode: JSON.parse(localStorage.getItem('currentTerm')),
+      });
+      event.waitUntil(window.postMessage('online', location.origin));
     });
   } else {
     console.log('%cSERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);
