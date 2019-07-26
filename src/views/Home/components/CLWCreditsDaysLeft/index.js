@@ -5,7 +5,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
-import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 
 import { gordonColors } from '../../../../theme';
@@ -192,17 +191,19 @@ export default class CLWCreditsDaysLeft extends Component {
       <Card>
         <CardContent>
           <Grid container direction="row" alignItems="center">
-            <Grid item xs={7}>
+            <Grid item xs={7} align="left">
               <CardHeader title={this.state.currSessionDescription} />
             </Grid>
             <Grid item xs={5} align="right">
-              <Link to={`/attended`}>
-                <Button variant="contained" style={style.button}>
-                  ATTENDED EVENTS
-                </Button>
-              </Link>
-            </Grid>
-          </Grid>
+                  <Button
+                    variant="contained"
+                    style={style.button}
+                    onClick={() => (window.location.pathname = '/attended')}
+                    >
+                    ATTENDED EVENTS
+                  </Button>
+                </Grid>
+              </Grid>
           {content}
         </CardContent>
       </Card>
