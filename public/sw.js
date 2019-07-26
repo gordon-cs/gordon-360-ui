@@ -11,25 +11,9 @@
 
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
-const cacheVersion = 'cache-1.0';
-const apiSource = 'https://360apitrain.gordon.edu';
-/* Uncomment For Development Only (aka develop) */
-// const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
-/* Uncomment For Production Only (aka master) */
-const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
-let failedDynamicCacheLinks = [];
-let dynamicCache = [];
-let token,
-  termCode,
-  cacheTimer,
-  isSuccessful,
-  isFetchCanceled,
-  networkStatus,
-  username,
-  id,
-  currSessionCode;
-
-const showDeveloperConsoleLog = false;
+let cacheVersion = 'cache-1.0';
+const apiSource = 'https://360api.gordon.edu';
+let token, termCode, cacheTimer, isSuccessful, isFetchCanceled;
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
