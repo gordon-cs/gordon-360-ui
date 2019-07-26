@@ -5,7 +5,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
-import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 
 import { gordonColors } from '../../../../theme';
@@ -199,7 +198,7 @@ export default class CLWCreditsDaysLeft extends Component {
                   <Button
                     variant="contained"
                     style={style.button}
-                    onClick={() => (window.open('https://360.gordon.edu/attended/', '_blank'))}
+                    onClick={() => (window.location.href = 'https://360.gordon.edu/attended/')}
                     >
                     ATTENDED EVENTS
                   </Button>
