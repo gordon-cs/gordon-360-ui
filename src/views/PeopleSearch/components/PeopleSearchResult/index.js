@@ -97,7 +97,7 @@ export default class PeopleSearchResult extends Component {
     return (
       <section>
         <Divider />
-        <Link className="gc360-link-color" to={`profile/${Person.AD_Username}`}>
+        <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
           <Grid
             container
             direction="row"
