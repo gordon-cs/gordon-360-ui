@@ -12,7 +12,7 @@
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
 const cacheVersion = 'cache-1.0';
-const apiSource = 'https://360apitrain.gordon.edu';
+const apiSource = 'https://360api.gordon.edu';
 /* Uncomment For Development Only (aka develop) */
 // const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
 /* Uncomment For Production Only (aka master) */
@@ -26,8 +26,7 @@ let token,
   isFetchCanceled,
   networkStatus,
   username,
-  id,
-  currSessionCode;
+  id;
 
 const showDeveloperConsoleLog = false;
 
@@ -400,8 +399,6 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/sessions/daysLeft`,
       `${apiSource}/api/studentemployment/`,
       `${apiSource}/api/version`,
-      `${apiSource}/api/activities/session/${currSessionCode}`,
-      `${apiSource}/api/activities/session/${currSessionCode}/types`,
       `${apiSource}/api/events/chapel/${termCode}`,
       `${apiSource}/api/memberships/student/${id}`,
       `${apiSource}/api/memberships/student/username/${username}/`,
@@ -539,7 +536,6 @@ self.addEventListener('message', event => {
     failedDynamicCacheLinks = [];
     username = null;
     id = null;
-    currSessionCode = null;
   }
   // If the message is to cancel all fetches
   if (event.data === 'cancel-fetches') {
