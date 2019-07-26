@@ -6,8 +6,6 @@ import { Link } from 'react-router-dom';
 import './activity-grid.css';
 import '../../../../app.css';
 
-let network = 'online';
-
 const gridListCols = width => {
   switch (width) {
     default:
@@ -38,32 +36,6 @@ const gridListCellHeight = width => {
 
 class GordonActivityGrid extends Component {
   render() {
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        network = 'online';
-      } else if (
-        event.data === 'offline' &&
-        network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        network = 'offline';
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
     let content;
 
     if (Array.isArray(this.props.myInvolvements) && this.props.myInvolvements.length === 0) {
@@ -75,50 +47,26 @@ class GordonActivityGrid extends Component {
         </GridListTile>
       );
     } else if (Array.isArray(this.props.myInvolvements) && this.props.myInvolvements.length > 0) {
-      // Creates the My Involvements cards depending on the status of the network found in local storage
-      if (networkStatus === 'online') {
-        content = this.props.myInvolvements.map(activity => (
-          <GridListTile className="gc360-act-grid_container" rows="1">
-            <Paper className="gc360-act-grid_paper" elevation={0}>
-              <Link
-                className="gc360-act-grid_link gc360-link"
-                to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
-              >
-                <img
-                  className="gc360-act-grid_img"
-                  src={activity.ActivityImagePath}
-                  alt={activity.ActivityDescription}
-                  height="150"
-                  width="150"
-                />
-                <div className="gc360-act-grid_title">{activity.ActivityDescription}</div>
-              </Link>
-            </Paper>
-          </GridListTile>
-        ));
-      } else {
-        // exactly the same as the content of the 'if' block above, besides disabled=...
-        content = this.props.myInvolvements.map(activity => (
-          <GridListTile className="gc360-act-grid_container">
-            <Paper className="gc360-act-grid_paper" elevation={0}>
-              <Link
-                className="gc360-act-grid_link gc360-link"
-                to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
-                disabled={networkStatus}
-              >
-                <img
-                  className="gc360-act-grid_img"
-                  src={activity.ActivityImagePath}
-                  alt={activity.ActivityDescription}
-                  height="150"
-                  width="150"
-                />
-                <div className="gc360-act-grid_title">{activity.ActivityDescription}</div>
-              </Link>
-            </Paper>
-          </GridListTile>
-        ));
-      }
+      // Creates the My Involvements cards
+      content = this.props.myInvolvements.map(activity => (
+        <GridListTile className="gc360-act-grid_container" rows="1">
+          <Paper className="gc360-act-grid_paper" elevation={0}>
+            <Link
+              className="gc360-act-grid_link gc360-link"
+              to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
+            >
+              <img
+                className="gc360-act-grid_img"
+                src={activity.ActivityImagePath}
+                alt={activity.ActivityDescription}
+                height="150"
+                width="150"
+              />
+              <div className="gc360-act-grid_title">{activity.ActivityDescription}</div>
+            </Link>
+          </Paper>
+        </GridListTile>
+      ));
     }
 
     if (Array.isArray(this.props.activities) && this.props.activities.length === 0) {
@@ -130,50 +78,26 @@ class GordonActivityGrid extends Component {
         </GridListTile>
       );
     } else if (Array.isArray(this.props.activities) && this.props.activities.length > 0) {
-      // Creates the Involvements cards depending on the status of the network found in local storage
-      if (networkStatus === 'online') {
-        content = this.props.activities.map(activity => (
-          <GridListTile className="gc360-act-grid_container">
-            <Paper className="gc360-act-grid_paper" elevation={0}>
-              <Link
-                className="gc360-act-grid_link gc360-link"
-                to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
-              >
-                <img
-                  className="gc360-act-grid_img"
-                  src={activity.ActivityImagePath}
-                  alt={activity.ActivityDescription}
-                  height="150"
-                  width="150"
-                />
-                <div className="gc360-act-grid_title">{activity.ActivityDescription}</div>
-              </Link>
-            </Paper>
-          </GridListTile>
-        ));
-      } else {
-        // exactly the same as the content of the 'if' block above, besides disabled=...
-        content = this.props.activities.map(activity => (
-          <GridListTile className="gc360-act-grid_container" rows="1">
-            <Paper className="gc360-act-grid_paper" elevation={0}>
-              <Link
-                className="gc360-act-grid_link gc360-link"
-                to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
-                disabled={networkStatus}
-              >
-                <img
-                  className="gc360-act-grid_img"
-                  src={activity.ActivityImagePath}
-                  alt={activity.ActivityDescription}
-                  height="150"
-                  width="150"
-                />
-                <div className="gc360-act-grid_title">{activity.ActivityDescription}</div>
-              </Link>
-            </Paper>
-          </GridListTile>
-        ));
-      }
+      // Creates the Involvements cards
+      content = this.props.activities.map(activity => (
+        <GridListTile className="gc360-act-grid_container">
+          <Paper className="gc360-act-grid_paper" elevation={0}>
+            <Link
+              className="gc360-act-grid_link gc360-link"
+              to={`/activity/${this.props.sessionCode}/${activity.ActivityCode}`}
+            >
+              <img
+                className="gc360-act-grid_img"
+                src={activity.ActivityImagePath}
+                alt={activity.ActivityDescription}
+                height="150"
+                width="150"
+              />
+              <div className="gc360-act-grid_title">{activity.ActivityDescription}</div>
+            </Link>
+          </Paper>
+        </GridListTile>
+      ));
     }
 
     return (
