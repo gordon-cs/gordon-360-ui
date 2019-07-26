@@ -250,8 +250,6 @@ export default class DiningBalance extends Component {
     return (
       <Card>
         <CardContent>
-          <Grid item xs={12} align="right">
-            <Typography variant="subtitle1" style={{ textAlign: 'right', paddingTop: 5 }}>
               <Grid container direction="row" alignItems="center">
                 <Grid item xs={7} align="left">
                   <CardHeader title="Dining Balance" />
@@ -267,8 +265,6 @@ export default class DiningBalance extends Component {
                 </Grid>
               </Grid>
               {content}
-            </Typography>
-          </Grid>
         </CardContent>
       </Card>
     );

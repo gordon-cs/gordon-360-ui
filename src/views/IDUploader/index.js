@@ -296,6 +296,7 @@ class IDUploader extends Component {
       )
     } else {
       content = (
+        <Grid container justify="center">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent
@@ -320,6 +321,7 @@ class IDUploader extends Component {
               </CardContent>
             </Card>
           </Grid>
+        </Grid>
       )
     }
 

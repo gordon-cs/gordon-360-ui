@@ -19,8 +19,10 @@ export default class Admin extends Component {
   }
 
   async componentWillMount() {
-    const college_role = await user.getLocalInfo().college_role;
-    this.setState({ isSuperAdmin: college_role === 'god' ? true : false });
+    if (this.props.Authentication) {
+      const college_role = await user.getLocalInfo().college_role;
+      this.setState({ isSuperAdmin: college_role === 'god' ? true : false });
+    }
   }
 
   render() {
@@ -52,29 +54,78 @@ export default class Admin extends Component {
 
     // Creates the My Profile button link depending on the status of the network found in local storage
     let Admin;
-    if (networkStatus === 'online') {
-      if (this.state.isSuperAdmin) {
+
+    if (this.props.Authentication) {
+      if (networkStatus === 'online') {
+        if (this.state.isSuperAdmin) {
+          Admin = (
+            <Grid container justify="center" spacing={2}>
+              <Grid item xs={12} lg={8}>
+                <InvolvementsStatus status={'Open'} />
+              </Grid>
+
+              <Grid item xs={12} lg={8}>
+                <InvolvementsStatus status={'Closed'} />
+              </Grid>
+
+              <Grid item xs={12} lg={8}>
+                <SuperAdmin />
+              </Grid>
+            </Grid>
+          );
+        } else {
+          Admin = <div />;
+        }
+      } else {
         Admin = (
-          <Grid container justify="center" spacing={2}>
-            <Grid item xs={12} lg={8}>
-              <InvolvementsStatus status={'Open'} />
-            </Grid>
-
-            <Grid item xs={12} lg={8}>
-              <InvolvementsStatus status={'Closed'} />
-            </Grid>
-
-            <Grid item xs={12} lg={8}>
-              <SuperAdmin />
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} md={8}>
+              <Card>
+                <CardContent
+                  style={{
+                    margin: 'auto',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Grid
+                    item
+                    xs={2}
+                    alignItems="center"
+                    style={{
+                      display: 'block',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                  >
+                    <img
+                      src={require(`${'../../NoConnection.svg'}`)}
+                      alt="Internet Connection Lost"
+                    />
+                  </Grid>
+                  <br />
+                  <h1>Please Re-establish Connection</h1>
+                  <h4>Revision of administrators has been deactivated due to loss of network.</h4>
+                  <br />
+                  <br />
+                  <Button
+                    color="primary"
+                    backgroundColor="white"
+                    variant="outlined"
+                    onClick={() => {
+                      window.location.pathname = '';
+                    }}
+                  >
+                    Back To Home
+                  </Button>
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
         );
-      } else {
-        Admin = <div />;
       }
     } else {
       Admin = (
-        <Grid container justify="center" spacing="16">
+        <Grid container justify="center">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent
@@ -83,42 +134,27 @@ export default class Admin extends Component {
                   textAlign: 'center',
                 }}
               >
-                <Grid
-                  item
-                  xs={2}
-                  alignItems="center"
-                  style={{
-                    display: 'block',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
-                </Grid>
+                <h1>You are not logged in.</h1>
                 <br />
-                <h1>Please Re-establish Connection</h1>
-                <h4>Revision of administrators has been deactivated due to loss of network.</h4>
-                <br />
+                <h4>You must be logged in to view this page.</h4>
                 <br />
                 <Button
                   color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
+                  variant="contained"
                   onClick={() => {
                     window.location.pathname = '';
                   }}
                 >
-                  Back To Home
+                  Login
                 </Button>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
-      );
+      )
     }
+
+
     return Admin;
   }
 }
