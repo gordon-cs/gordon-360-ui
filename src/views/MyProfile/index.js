@@ -567,9 +567,9 @@ class MyProfile extends Component {
                                         justifyContent: 'center',
                                       }}
                                     >
-                                      <a 
-                                         href={`mailto:${this.state.profile.Email}`} 
-                                         className="gc360-text-link"
+                                      <a
+                                        href={`mailto:${this.state.profile.Email}`}
+                                        className="gc360-text-link"
                                       >
                                         <div
                                           style={{
@@ -583,9 +583,7 @@ class MyProfile extends Component {
                                             className="gc360-my-profile_icon"
                                             style={{ marginRight: '0.75rem' }}
                                           />
-                                          <Typography>
-                                            {this.state.profile.Email}
-                                          </Typography>
+                                          <Typography>{this.state.profile.Email}</Typography>
                                         </div>
                                       </a>
                                     </div>
@@ -778,7 +776,7 @@ class MyProfile extends Component {
                               <Grid item xs={5} align="right">
                                 <Link className="gc360-link" to="/transcript">
                                   <Button variant="contained" style={style.button}>
-                                    Co-Curricular Transcript
+                                    Experience Transcript
                                   </Button>
                                 </Link>
                               </Grid>

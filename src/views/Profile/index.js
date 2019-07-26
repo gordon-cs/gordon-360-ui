@@ -338,34 +338,15 @@ export default class Profile extends Component {
                                 {instagramButton}
                               </Grid>
                               {this.state.profile.Email !== '' && (
-                                <div
-                                  style={{
-                                    marginTop: '20px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                  }}
+                                <a
+                                  href={`mailto:${this.state.profile.Email}`}
+                                  className="gc360-text-link gc360-profile_email"
                                 >
-                                  <a
-                                    href={`mailto:${this.state.profile.Email}`}
-                                    className="gc360-text-link"
-                                  >
-                                    <div
-                                      //className="email-link-container"
-                                      style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        alignContent: 'center',
-                                        justifyContent: 'center',
-                                      }}
-                                    >
-                                      <EmailIcon
-                                        className="gc360-profile_icon"
-                                        style={{ marginRight: '0.75rem' }}
-                                      />
-                                      <Typography>{this.state.profile.Email}</Typography>
-                                    </div>
-                                  </a>
-                                </div>
+                                  <EmailIcon className="gc360-profile_email_icon" />
+                                  <Typography className="gc360-profile_email_text">
+                                    {this.state.profile.Email}
+                                  </Typography>
+                                </a>
                               )}
                             </Grid>
                           </Grid>

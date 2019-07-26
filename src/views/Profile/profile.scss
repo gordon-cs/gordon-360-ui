@@ -17,6 +17,18 @@
       color: $primary-cyan !important;
     }
   }
+  &_email {
+    display: grid;
+    grid-template-columns: 10% 10% 70% 10%;
+    justify-items: center;
+    &_icon {
+      grid-column: 2;
+      font-size: 28px;
+    }
+    &_text {
+      grid-column: 3;
+    }
+  }
 }
 
 .edit-icon {
