@@ -160,7 +160,7 @@ export default class About extends Component {
               </Typography>
               <Typography variant="body1" paragraph>
                 Hyeok Chin (Jake) Moon&nbsp;&apos;19, Evan Platzer&nbsp;&apos;20, Yi (Edward)
-                Zhou&nbsp;&apos;20, Phil Lee&nbsp;&apos;20, Joshua Rogers&nbsp;&apos;21, Isaac
+                Zhou&nbsp;&apos;20, Phil Lee, Joshua Rogers&nbsp;&apos;21, Isaac
                 Bleecker&nbsp;&apos;21, Yerang Lim&nbsp;&apos;21, Jahnuel Dorelus&nbsp;&apos;21, and
                 SeHee Hyung&nbsp;&apos;22
                 <br />
