@@ -6,7 +6,6 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import List from '@material-ui/core/List';
-import { NavLink } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -881,15 +880,32 @@ class MyProfile extends Component {
       return MyProfile;
     } else {
       return (
-        <div>
-          <GordonLoader />
-          <Typography align="center" variant="headline">
-            You must be logged in to view your profile.
-          </Typography>
-          <NavLink exact to="/">
-            <Button>Okay</Button>
-          </NavLink>
-        </div>
+        <Grid container justify="center">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <h1>You are not logged in.</h1>
+                <br />
+                <h4>You must be logged in to view your profile.</h4>
+                <br />
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Login
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       );
     }
   }
