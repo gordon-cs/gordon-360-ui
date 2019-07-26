@@ -192,17 +192,19 @@ export default class CLWCreditsDaysLeft extends Component {
       <Card>
         <CardContent>
           <Grid container direction="row" alignItems="center">
-            <Grid item xs={7}>
+            <Grid item xs={7} align="left">
               <CardHeader title={this.state.currSessionDescription} />
             </Grid>
             <Grid item xs={5} align="right">
-              <Link to={`/attended`}>
-                <Button variant="contained" style={style.button}>
-                  ATTENDED EVENTS
-                </Button>
-              </Link>
-            </Grid>
-          </Grid>
+                  <Button
+                    variant="contained"
+                    style={style.button}
+                    onClick={() => (window.open('https://360.gordon.edu/attended/', '_blank'))}
+                    >
+                    ATTENDED EVENTS
+                  </Button>
+                </Grid>
+              </Grid>
           {content}
         </CardContent>
       </Card>
