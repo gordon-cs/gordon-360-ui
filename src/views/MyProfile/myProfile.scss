@@ -7,30 +7,14 @@
   }
 }
 
-.email-link {
-  color: #000;
-  font-size: 28px;
-  transition: color 200ms;
-}
-
-.email-link-container:hover .email-link {
-  transition: color 200ms;
-  color: $primary-cyan;
-}
-
-.email-link-container:not(:hover) .email-link {
-  transition: color 200ms;
-  color: #000;
-}
-
-.icon {
-  color: #000;
-  font-size: 28px;
-  transition: color 200ms;
-
-  &:hover {
-    color: $primary-cyan;
-    cursor: pointer;
+.gc360-my-profile {
+  &_icon {
+    font-size: 28px;
+    color: black;
+    transition: color 200ms;
+    &:hover {
+      color: $primary-cyan !important;
+    }
   }
 }
 
@@ -94,8 +78,8 @@
 }
 
 .noInvolvements {
-  padding-left: 24px;
-  color: $primary-cyan !important;
+  padding-left: 16px;
+  color: $primary-cyan;
 }
 
 @media (min-width: $break-sm) {

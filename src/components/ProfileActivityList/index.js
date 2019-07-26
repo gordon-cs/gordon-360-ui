@@ -61,7 +61,7 @@ export default class ProfileActivityList extends Component {
                 <ListItem>
                   <Link
                     to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}
-                    className="gc360-link-color"
+                    className="gc360-link"
                   >
                     <Typography>
                       <b>{Activity.ActivityDescription}</b>
@@ -75,7 +75,7 @@ export default class ProfileActivityList extends Component {
             <Grid item xs={2}>
               <Link
                 to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}
-                className="gc360-link-color"
+                className="gc360-link"
               >
                 <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
               </Link>
