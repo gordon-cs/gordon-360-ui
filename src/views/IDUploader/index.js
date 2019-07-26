@@ -22,6 +22,7 @@ import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
 import user from '../../services/user';
 import errorLog from '../../services/errorLog';
+import Login from '../Login'
 
 const CROP_DIM = 1200; // pixels
 class IDUploader extends Component {
@@ -309,7 +310,7 @@ class IDUploader extends Component {
                 <br />
                 <h4>Please log in to upload an ID photo. You can press the back button or follow the URL "360.gordon.edu/id" to return to this page.</h4>
                 <br />
-                <Button
+                {/*<Button
                   color="primary"
                   variant="contained"
                   onClick={() => {
@@ -317,7 +318,8 @@ class IDUploader extends Component {
                   }}
                 >
                   Login
-                </Button>
+                </Button>*/}
+                <Login onLogIn={this.props.onLogIn} />
               </CardContent>
             </Card>
           </Grid>
