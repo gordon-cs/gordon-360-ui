@@ -1,14 +1,11 @@
 import Grid from '@material-ui/core/Grid';
-import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import List from '@material-ui/core/List';
-//import ListItem from '@material-ui/core/ListItem';
-//import ListItemText from '@material-ui/core/ListItemText';
-import { NavLink } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -35,14 +32,16 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import GordonSchedulePanel from '../../components/SchedulePanel';
 
 import './myProfile.css';
 import '../../app.css';
 import { withWidth } from '@material-ui/core';
+import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
 
 const CROP_DIM = 200; // pixels
 //MyProfile
-class Profile extends Component {
+class MyProfile extends Component {
   constructor(props) {
     super(props);
 
@@ -50,6 +49,7 @@ class Profile extends Component {
 
     this.state = {
       username: String,
+      personType: null,
       button: String,
       isImagePublic: null,
       image: null,
@@ -254,10 +254,12 @@ class Profile extends Component {
           {' '}
         </ProfileList>
       );
+      const personType = String(profile.PersonType);
       let officeinfo = <Office profile={profile} />;
       this.setState({ profileinfo: profileinfo });
       this.setState({ officeinfo: officeinfo });
       this.setState({ profile });
+      this.setState({ personType: personType });
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(),
       ]);
@@ -361,12 +363,14 @@ class Profile extends Component {
       let instagramButton;
       let editButton;
       let linkCount = 0; // To record whether or not any links are displayed
+      let VPScore;
+
       if (this.state.facebookLink !== '') {
         facebookButton = (
           <Grid item>
             <a
               href={this.state.facebookLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -381,7 +385,7 @@ class Profile extends Component {
           <Grid item>
             <a
               href={this.state.twitterLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -396,7 +400,7 @@ class Profile extends Component {
           <Grid item>
             <a
               href={this.state.linkedInLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -411,7 +415,7 @@ class Profile extends Component {
           <Grid item>
             <a
               href={this.state.instagramLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -437,6 +441,15 @@ class Profile extends Component {
             </Button>
           </Grid>
         );
+      }
+      let profileCardSize = 12;
+      if (String(this.state.personType).includes('stu')) {
+        VPScore = (
+          <Grid item xs={12} md={4} lg={4}>
+            <VictoryPromiseDisplay />
+          </Grid>
+        );
+        profileCardSize = 8;
       }
 
       /* Used to re-render the page when the network connection changes.
@@ -474,254 +487,274 @@ class Profile extends Component {
             {!this.state.loading && (
               <div>
                 <Grid container justify="center" spacing={2}>
-                  <Grid item xs={12} lg={10}>
-                    <Card>
-                      <CardContent>
-                        <Grid
-                          container
-                          alignItems="center"
-                          align="center"
-                          justify="center"
-                          spacing={2}
-                        >
-                          <Grid item xs={6}>
-                            <Link
-                              className="gc360-link-color"
-                              to={`/profile/${this.state.profile.AD_Username}`}
-                            >
-                              <Button style={style.uncontainedButton}>
-                                View My Public Profile
-                              </Button>
-                            </Link>
-                          </Grid>
-                          <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <ButtonBase
-                              onClick={this.handlePhotoOpen}
-                              focusRipple
-                              alt=""
-                              className="profile-image"
-                              style={{ 'border-radius': '0.5rem' }}
-                            >
-                              <img
-                                src={`data:image/jpg;base64,${this.state.image}`}
-                                alt="Profile"
-                                className="rounded-corners"
-                                style={{
-                                  'max-height': '200px',
-                                  'min-width': '160px',
-                                }}
-                              />
-                              <span className="imageBackdrop" />
-                              <GridListTileBar className="tile-bar" title="Photo Options" />
-                            </ButtonBase>
-                          </Grid>
-                          <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <Grid container align="center" alignItems="center">
-                              <Grid item xs={12}>
-                                <CardHeader
-                                  title={
-                                    this.state.hasNickName
-                                      ? this.state.profile.fullName +
-                                        ' (' +
-                                        this.state.profile.NickName +
-                                        ')'
-                                      : this.state.profile.fullName
-                                  }
-                                  subheader={this.state.profile.Class}
+                  <Grid
+                    item
+                    xs={12}
+                    lg={10}
+                    container
+                    alignItems="flex-start"
+                    align="flex-start"
+                    justify="flex-start"
+                    spacing={2}
+                  >
+                    <Grid item xs={12} md={profileCardSize} lg={profileCardSize}>
+                      <Card>
+                        <CardContent>
+                          <Grid
+                            container
+                            alignItems="center"
+                            align="center"
+                            justify="center"
+                            spacing={2}
+                          >
+                            <Grid item xs={6}>
+                              <Link
+                                className="gc360-link"
+                                to={`/profile/${this.state.profile.AD_Username}`}
+                              >
+                                <Button style={style.uncontainedButton}>
+                                  View My Public Profile
+                                </Button>
+                              </Link>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                              <ButtonBase
+                                onClick={this.handlePhotoOpen}
+                                focusRipple
+                                alt=""
+                                className="profile-image"
+                                style={{ 'border-radius': '0.5rem' }}
+                              >
+                                <img
+                                  src={`data:image/jpg;base64,${this.state.image}`}
+                                  alt="Profile"
+                                  className="rounded-corners"
+                                  style={{
+                                    'max-height': '200px',
+                                    'min-width': '160px',
+                                  }}
                                 />
-                                <Grid container spacing={2} align="center" justify="center">
-                                  {facebookButton}
-                                  {twitterButton}
-                                  {linkedInButton}
-                                  {instagramButton}
-                                  {editButton}
-                                </Grid>
-                                {this.state.profile.Email !== '' && (
-                                  <div
-                                    style={{
-                                      marginTop: '20px',
-                                      display: 'flex',
-                                      justifyContent: 'center',
-                                    }}
-                                  >
-                                    <a href={`mailto:${this.state.profile.Email}`}>
-                                      <div
-                                        className="email-link-container"
-                                        style={{
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          alignContent: 'center',
-                                          justifyContent: 'center',
-                                        }}
+                                <span className="imageBackdrop" />
+                                <GridListTileBar className="tile-bar" title="Photo Options" />
+                              </ButtonBase>
+                            </Grid>
+                            <Grid item xs={12} sm={12} md={12} lg={12}>
+                              <Grid container align="center" alignItems="center">
+                                <Grid item xs={12}>
+                                  <CardHeader
+                                    title={
+                                      this.state.hasNickName
+                                        ? this.state.profile.fullName +
+                                          ' (' +
+                                          this.state.profile.NickName +
+                                          ')'
+                                        : this.state.profile.fullName
+                                    }
+                                    subheader={this.state.profile.Class}
+                                  />
+                                  <Grid container spacing={2} align="center" justify="center">
+                                    {facebookButton}
+                                    {twitterButton}
+                                    {linkedInButton}
+                                    {instagramButton}
+                                    {editButton}
+                                  </Grid>
+                                  {this.state.profile.Email !== '' && (
+                                    <div
+                                      style={{
+                                        marginTop: '20px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                      }}
+                                    >
+                                      <a
+                                        href={`mailto:${this.state.profile.Email}`}
+                                        className="gc360-text-link"
                                       >
-                                        <EmailIcon
-                                          className="email-link"
-                                          style={{ marginRight: '0.75rem' }}
-                                        />
-                                        <Typography className="email-link">
-                                          {this.state.profile.Email}
-                                        </Typography>
-                                      </div>
-                                    </a>
-                                  </div>
-                                )}
-                                <Dialog
-                                  open={this.state.photoOpen}
-                                  keepMounted
-                                  onClose={this.handleClose}
-                                  aria-labelledby="alert-dialog-slide-title"
-                                  aria-describedby="alert-dialog-slide-description"
-                                >
-                                  <div className="gc360-photo-dialog">
-                                    <DialogTitle className="gc360-photo-dialog_title">
-                                      Update Profile Picture
-                                    </DialogTitle>
-                                    <DialogContent className="gc360-photo-dialog_content">
-                                      <DialogContentText className="gc360-photo-dialog_content_text">
-                                        {this.props.width === 'md' ||
-                                        this.props.width === 'sm' ||
-                                        this.props.width === 'xs'
-                                          ? 'Tap Image to Browse Files'
-                                          : 'Drag & Drop Picture, or Click to Browse Files'}
-                                      </DialogContentText>
-                                      {!preview && (
-                                        <Dropzone
-                                          onDropAccepted={this.onDropAccepted.bind(this)}
-                                          onDropRejected={this.onDropRejected.bind(this)}
-                                          accept="image/jpeg, image/jpg, image/png"
+                                        <div
+                                          style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            alignContent: 'center',
+                                            justifyContent: 'center',
+                                          }}
                                         >
-                                          {({ getRootProps, getInputProps }) => (
-                                            <section>
-                                              <div
-                                                className="gc360-photo-dialog_content_dropzone"
-                                                {...getRootProps()}
-                                              >
-                                                <input {...getInputProps()} />
-                                                <img
-                                                  className="gc360-photo-dialog_content_dropzone_img"
-                                                  src={`data:image/jpg;base64,${this.state.image}`}
-                                                  alt=""
-                                                  style={{
-                                                    'max-width': '140px',
-                                                    'max-height': '140px',
-                                                  }}
-                                                />
-                                              </div>
-                                            </section>
-                                          )}
-                                        </Dropzone>
-                                      )}
-                                      {preview && (
-                                        <div className="gc360-photo-dialog_content_cropper">
-                                          <Cropper
-                                            ref="cropper"
-                                            src={preview}
-                                            style={{
-                                              'max-width': this.maxCropPreviewWidth(),
-                                              'max-height':
-                                                this.maxCropPreviewWidth() /
-                                                this.state.cropperData.aspectRatio,
-                                            }}
-                                            autoCropArea={1}
-                                            viewMode={3}
-                                            aspectRatio={1}
-                                            highlight={false}
-                                            background={false}
-                                            zoom={this.onCropperZoom.bind(this)}
-                                            zoomable={false}
-                                            dragMode={'none'}
-                                            minCropBoxWidth={this.state.cropperData.cropBoxDim}
-                                            minCropBoxHeight={this.state.cropperData.cropBoxDim}
+                                          <EmailIcon
+                                            className="gc360-my-profile_icon"
+                                            style={{ marginRight: '0.75rem' }}
                                           />
+                                          <Typography>{this.state.profile.Email}</Typography>
                                         </div>
-                                      )}
-                                      {preview && (
-                                        <Button
-                                          variant="contained"
-                                          onClick={() => this.setState({ preview: null })}
-                                          style={style.button}
-                                          className="gc360-photo-dialog_content_button"
-                                        >
-                                          Choose Another Image
-                                        </Button>
-                                      )}
-                                    </DialogContent>
-                                    <DialogActions className="gc360-photo-dialog_actions-top">
-                                      <Tooltip
-                                        classes={{ tooltip: 'tooltip' }}
-                                        id="tooltip-hide"
-                                        title={
-                                          this.state.isImagePublic
-                                            ? 'Only faculty and police will see your photo'
-                                            : 'Make photo visible to other students'
-                                        }
-                                      >
-                                        <Button
-                                          variant="contained"
-                                          onClick={this.toggleImagePrivacy.bind(this)}
-                                          style={style.button}
-                                        >
-                                          {this.state.isImagePublic ? 'Hide' : 'Show'}
-                                        </Button>
-                                      </Tooltip>
-                                      <Tooltip
-                                        classes={{ tooltip: 'tooltip' }}
-                                        id="tooltip-reset"
-                                        title="Restore your original ID photo"
-                                      >
-                                        <Button
-                                          variant="contained"
-                                          onClick={this.handleResetImage}
-                                          style={{ background: 'tomato', color: 'white' }}
-                                        >
-                                          Reset
-                                        </Button>
-                                      </Tooltip>
-                                    </DialogActions>
-                                    <DialogActions className="gc360-photo-dialog_actions-bottom">
-                                      <Button
-                                        variant="contained"
-                                        onClick={this.handleCloseCancel}
-                                        style={style.button}
-                                      >
-                                        Cancel
-                                      </Button>
-                                      <Tooltip
-                                        classes={{ tooltip: 'tooltip' }}
-                                        id="tooltip-submit"
-                                        title="Crop to current region and submit"
-                                      >
-                                        <Button
-                                          variant="contained"
-                                          onClick={this.handleCloseSubmit}
-                                          disabled={!this.state.preview}
-                                          style={
-                                            this.state.preview
-                                              ? style.button
-                                              : { background: 'darkgray', color: 'white' }
+                                      </a>
+                                    </div>
+                                  )}
+                                  <Dialog
+                                    open={this.state.photoOpen}
+                                    keepMounted
+                                    onClose={this.handleClose}
+                                    aria-labelledby="alert-dialog-slide-title"
+                                    aria-describedby="alert-dialog-slide-description"
+                                  >
+                                    <div className="gc360-photo-dialog">
+                                      <DialogTitle className="gc360-photo-dialog_title">
+                                        Update Profile Picture
+                                      </DialogTitle>
+                                      <DialogContent className="gc360-photo-dialog_content">
+                                        <DialogContentText className="gc360-photo-dialog_content_text">
+                                          {this.props.width === 'md' ||
+                                          this.props.width === 'sm' ||
+                                          this.props.width === 'xs'
+                                            ? 'Tap Image to Browse Files'
+                                            : 'Drag & Drop Picture, or Click to Browse Files'}
+                                        </DialogContentText>
+                                        {!preview && (
+                                          <Dropzone
+                                            onDropAccepted={this.onDropAccepted.bind(this)}
+                                            onDropRejected={this.onDropRejected.bind(this)}
+                                            accept="image/jpeg, image/jpg, image/png"
+                                          >
+                                            {({ getRootProps, getInputProps }) => (
+                                              <section>
+                                                <div
+                                                  className="gc360-photo-dialog_content_dropzone"
+                                                  {...getRootProps()}
+                                                >
+                                                  <input {...getInputProps()} />
+                                                  <img
+                                                    className="gc360-photo-dialog_content_dropzone_img"
+                                                    src={`data:image/jpg;base64,${this.state.image}`}
+                                                    alt=""
+                                                    style={{
+                                                      'max-width': '140px',
+                                                      'max-height': '140px',
+                                                    }}
+                                                  />
+                                                </div>
+                                              </section>
+                                            )}
+                                          </Dropzone>
+                                        )}
+                                        {preview && (
+                                          <div className="gc360-photo-dialog_content_cropper">
+                                            <Cropper
+                                              ref="cropper"
+                                              src={preview}
+                                              style={{
+                                                'max-width': this.maxCropPreviewWidth(),
+                                                'max-height':
+                                                  this.maxCropPreviewWidth() /
+                                                  this.state.cropperData.aspectRatio,
+                                              }}
+                                              autoCropArea={1}
+                                              viewMode={3}
+                                              aspectRatio={1}
+                                              highlight={false}
+                                              background={false}
+                                              zoom={this.onCropperZoom.bind(this)}
+                                              zoomable={false}
+                                              dragMode={'none'}
+                                              minCropBoxWidth={this.state.cropperData.cropBoxDim}
+                                              minCropBoxHeight={this.state.cropperData.cropBoxDim}
+                                            />
+                                          </div>
+                                        )}
+                                        {preview && (
+                                          <Button
+                                            variant="contained"
+                                            onClick={() => this.setState({ preview: null })}
+                                            style={style.button}
+                                            className="gc360-photo-dialog_content_button"
+                                          >
+                                            Choose Another Image
+                                          </Button>
+                                        )}
+                                      </DialogContent>
+                                      <DialogActions className="gc360-photo-dialog_actions-top">
+                                        <Tooltip
+                                          classes={{ tooltip: 'tooltip' }}
+                                          id="tooltip-hide"
+                                          title={
+                                            this.state.isImagePublic
+                                              ? 'Only faculty and police will see your photo'
+                                              : 'Make photo visible to other students'
                                           }
                                         >
-                                          Submit
+                                          <Button
+                                            variant="contained"
+                                            onClick={this.toggleImagePrivacy.bind(this)}
+                                            style={style.button}
+                                          >
+                                            {this.state.isImagePublic ? 'Hide' : 'Show'}
+                                          </Button>
+                                        </Tooltip>
+                                        <Tooltip
+                                          classes={{ tooltip: 'tooltip' }}
+                                          id="tooltip-reset"
+                                          title="Restore your original ID photo"
+                                        >
+                                          <Button
+                                            variant="contained"
+                                            onClick={this.handleResetImage}
+                                            style={{ background: 'tomato', color: 'white' }}
+                                          >
+                                            Reset
+                                          </Button>
+                                        </Tooltip>
+                                      </DialogActions>
+                                      <DialogActions className="gc360-photo-dialog_actions-bottom">
+                                        <Button
+                                          variant="contained"
+                                          onClick={this.handleCloseCancel}
+                                          style={style.button}
+                                        >
+                                          Cancel
                                         </Button>
-                                      </Tooltip>
-                                    </DialogActions>
-                                  </div>
-                                </Dialog>
-                                <Dialog
-                                  open={this.state.socialLinksOpen}
-                                  keepMounted
-                                  onClose={this.handleSocialLinksClose}
-                                  aria-labelledby="alert-dialog-slide-title"
-                                  aria-describedby="alert-dialog-slide-description"
-                                >
-                                  {linksDialog}
-                                </Dialog>
+                                        <Tooltip
+                                          classes={{ tooltip: 'tooltip' }}
+                                          id="tooltip-submit"
+                                          title="Crop to current region and submit"
+                                        >
+                                          <Button
+                                            variant="contained"
+                                            onClick={this.handleCloseSubmit}
+                                            disabled={!this.state.preview}
+                                            style={
+                                              this.state.preview
+                                                ? style.button
+                                                : { background: 'darkgray', color: 'white' }
+                                            }
+                                          >
+                                            Submit
+                                          </Button>
+                                        </Tooltip>
+                                      </DialogActions>
+                                    </div>
+                                  </Dialog>
+                                  <Dialog
+                                    open={this.state.socialLinksOpen}
+                                    keepMounted
+                                    onClose={this.handleSocialLinksClose}
+                                    aria-labelledby="alert-dialog-slide-title"
+                                    aria-describedby="alert-dialog-slide-description"
+                                  >
+                                    {linksDialog}
+                                  </Dialog>
+                                </Grid>
                               </Grid>
                             </Grid>
                           </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    {VPScore}
+                  </Grid>
+
+                  <Grid item xs={12} lg={12} align="center">
+                    <Grid container xs={12} lg={10} spacing={2} justify="center">
+                      <Grid item xs={12} lg={12}>
+                        <GordonSchedulePanel profile={this.state.profile} myProf={true} />
+                      </Grid>
+                    </Grid>
                   </Grid>
 
                   <Grid item xs={12} lg={5}>
@@ -730,6 +763,7 @@ class Profile extends Component {
                       {this.state.officeinfo}
                     </Grid>
                   </Grid>
+
                   <Grid item xs={12} lg={5}>
                     <Grid container>
                       <Grid item xs={12}>
@@ -740,14 +774,13 @@ class Profile extends Component {
                                 <CardHeader title="Involvements" />
                               </Grid>
                               <Grid item xs={5} align="right">
-                                <Link className="gc360-link-color" to="/transcript">
+                                <Link className="gc360-link" to="/transcript">
                                   <Button variant="contained" style={style.button}>
-                                    Co-Curricular Transcript
+                                    Experience Transcript
                                   </Button>
                                 </Link>
                               </Grid>
                             </Grid>
-
                             <List>{involvementAndPrivacyList}</List>
                           </CardContent>
                         </Card>
@@ -755,7 +788,6 @@ class Profile extends Component {
                     </Grid>
                   </Grid>
                 </Grid>
-
                 <div>
                   <Snackbar
                     anchorOrigin={{
@@ -848,18 +880,35 @@ class Profile extends Component {
       return MyProfile;
     } else {
       return (
-        <div>
-          <GordonLoader />
-          <Typography align="center" variant="headline">
-            You must be logged in to view your profile.
-          </Typography>
-          <NavLink exact to="/">
-            <Button>Okay</Button>
-          </NavLink>
-        </div>
+        <Grid container justify="center">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <h1>You are not logged in.</h1>
+                <br />
+                <h4>You must be logged in to view your profile.</h4>
+                <br />
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Login
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       );
     }
   }
 }
 
-export default withWidth()(Profile);
+export default withWidth()(MyProfile);

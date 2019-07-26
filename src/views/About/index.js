@@ -155,6 +155,18 @@ export default class About extends Component {
                 Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning&nbsp;&apos;85, Summer Practicum in
                 Computer Science (2018)
               </Typography>
+              <Typography variant="subheading" gutterBottom>
+                <strong>Software Development Team, Summer 2019</strong>
+              </Typography>
+              <Typography variant="body2" paragraph>
+                Hyeok Chin (Jake) Moon&nbsp;&apos;19, Evan Platzer&nbsp;&apos;20, Yi (Edward)
+                Zhou&nbsp;&apos;20, Phil Lee, Joshua Rogers&nbsp;&apos;21, Isaac
+                Bleecker&nbsp;&apos;21, Yerang Lim&nbsp;&apos;21, Jahnuel Dorelus&nbsp;&apos;21, and
+                SeHee Hyung&nbsp;&apos;22
+                <br />
+                Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning&nbsp;&apos;85, Summer Practicum in
+                Computer Science (2019)
+              </Typography>
               <Typography variant="subtitle1" gutterBottom>
                 <strong>Beneficent Philanthropes</strong>
               </Typography>

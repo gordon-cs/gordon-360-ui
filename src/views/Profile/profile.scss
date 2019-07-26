@@ -1,9 +1,5 @@
 @import '../../vars';
 
-.linkColor {
-  color: $primary-cyan !important;
-}
-
 .alignPicCenter {
   padding-top: 8%;
 }
@@ -12,30 +8,26 @@
   border-radius: 0.5rem;
 }
 
-.email-link {
-  color: #000;
-  font-size: 28px;
-  transition: color 200ms;
-}
-
-.email-link-container:hover .email-link {
-  transition: color 200ms;
-  color: $primary-cyan;
-}
-
-.email-link-container:not(:hover) .email-link {
-  transition: color 200ms;
-  color: #000;
-}
-
-.icon {
-  color: #000;
-  font-size: 28px;
-  transition: color 200ms;
-
-  &:hover {
-    color: $primary-cyan;
-    cursor: pointer;
+.gc360-profile {
+  &_icon {
+    font-size: 28px;
+    color: black;
+    transition: color 200ms;
+    &:hover {
+      color: $primary-cyan !important;
+    }
+  }
+  &_email {
+    display: grid;
+    grid-template-columns: 10% 10% 70% 10%;
+    justify-items: center;
+    &_icon {
+      grid-column: 2;
+      font-size: 28px;
+    }
+    &_text {
+      grid-column: 3;
+    }
   }
 }
 
@@ -51,11 +43,6 @@
 
 .personal-office-grid {
   grid-row-gap: 100px;
-}
-
-.noInvolvements {
-  padding-left: 24px;
-  color: $primary-cyan !important;
 }
 
 @media (max-width: 420px) {

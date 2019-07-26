@@ -31,8 +31,8 @@ export default class Requests extends Component {
     let requestsSent;
     let involvementsLeading;
     const id = user.getLocalInfo().id;
-    involvementsLeading = await user.getLeaderPositions(user.getLocalInfo().id);
-    requestsSent = await user.getSentMembershipRequests(id);
+    involvementsLeading = await user.getLeaderPositions(id);
+    requestsSent = await user.getSentMembershipRequests();
 
     this.setState({ requestsSent, involvementsLeading });
   }

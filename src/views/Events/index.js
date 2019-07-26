@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography';
 import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 //import './event.css';
 
@@ -41,6 +43,7 @@ export default class Events extends Component {
       filteredEvents: [],
       includePast: false,
       loading: true,
+      network: 'online',
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
@@ -126,6 +129,33 @@ export default class Events extends Component {
 
   render() {
     let content;
+
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    /* Gets status of current network connection for online/offline rendering
+     *  Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else if (this.state.events.length > 0) {
@@ -210,53 +240,107 @@ export default class Events extends Component {
       );
     }
 
-    return (
-      <section>
-        <Grid container justify="center">
-          <Grid item xs={12} md={12} lg={8}>
-            <Grid container alignItems="baseline" style={styles.searchBar} spacing={8}>
-              <Grid item xs={7} sm={10} md={6} lg={6}>
-                <TextField
-                  id="search"
-                  label="Search"
-                  value={this.state.search}
-                  onChange={this.search('search')}
-                  margin="none"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={4} sm={2} md={2} lg={2} align="center">
-                <Button variant="contained" color="primary" onClick={this.handleExpandClick}>
-                  Filters
-                </Button>
-              </Grid>
-              <Grid item xs={6} sm={4} md={2} lg={2}>
-                <FormControlLabel
-                  control={<Switch onChange={this.togglePastEvents} />}
-                  label="Include Past"
-                />
-              </Grid>
-              <Grid item xs={6} sm={4} md={2} lg={2}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={this.state.chapelCredits}
-                      onChange={this.filterEvents('chapelCredits')}
-                      aria-label="chapelCredits"
-                    />
-                  }
-                  label="CL&amp;W Only"
-                />
+    let events;
+    // If the user is online
+    if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
+      events = (
+        <section>
+          <Grid container justify="center">
+            <Grid item xs={12} md={12} lg={8}>
+              <Grid container alignItems="baseline" style={styles.searchBar} spacing={8}>
+                <Grid item xs={7} sm={10} md={6} lg={6}>
+                  <TextField
+                    id="search"
+                    label="Search"
+                    value={this.state.search}
+                    onChange={this.search('search')}
+                    margin="none"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={4} sm={2} md={2} lg={2} align="center">
+                  <Button variant="contained" color="primary" onClick={this.handleExpandClick}>
+                    Filters
+                  </Button>
+                </Grid>
+                <Grid item xs={6} sm={4} md={2} lg={2}>
+                  <FormControlLabel
+                    control={<Switch onChange={this.togglePastEvents} />}
+                    label="Include Past"
+                  />
+                </Grid>
+                <Grid item xs={6} sm={4} md={2} lg={2}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={this.state.chapelCredits}
+                        onChange={this.filterEvents('chapelCredits')}
+                        aria-label="chapelCredits"
+                      />
+                    }
+                    label="CL&amp;W Only"
+                  />
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
 
-          <Grid item xs={12} md={12} lg={8}>
-            {filter}
-            {content}
+            <Grid item xs={12} md={12} lg={8}>
+              {filter}
+              {content}
+            </Grid>
+          </Grid>
+        </section>
+      );
+    }
+    // If the user is offline
+    else {
+      events = (
+        <Grid container justify="center" spacing="16">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <Grid
+                  item
+                  xs={2}
+                  alignItems="center"
+                  style={{
+                    display: 'block',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
+                >
+                  <img
+                    src={require(`${'../../NoConnection.svg'}`)}
+                    alt="Internet Connection Lost"
+                  />
+                </Grid>
+                <br />
+                <h1>Please Re-establish Connection</h1>
+                <h4>Viewing Events has been deactivated due to loss of network.</h4>
+                <br />
+                <br />
+                <Button
+                  color="primary"
+                  backgroundColor="white"
+                  variant="outlined"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Back To Home
+                </Button>
+              </CardContent>
+            </Card>
           </Grid>
         </Grid>
-      </section>
-    );
+      );
+    }
+
+    return events;
   }
 }

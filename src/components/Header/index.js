@@ -52,6 +52,7 @@ export default class GordonHeader extends Component {
       value: null,
       dialogBoxOpen: false,
       loginDialogOpen: false,
+      network: 'online',
     };
   }
 
@@ -111,6 +112,27 @@ export default class GordonHeader extends Component {
   };
 
   render() {
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
     /* Gets status of current network connection for online/offline rendering
      *  Defaults to online in case of PWA not being possible
      */
@@ -120,8 +142,8 @@ export default class GordonHeader extends Component {
     let PeopleTab;
 
     if (this.props.Authentication) {
+      // Renders online, authenticated (i.e. normal) People Tab
       if (networkStatus === 'online') {
-        // Renders online, authenticated (i.e. normal) People Tab
         PeopleTab = (
           <Tab
             className="tab"
@@ -132,7 +154,7 @@ export default class GordonHeader extends Component {
           />
         );
       } else {
-        //Renders offline People Tab
+        // Renders offline People Tab
         PeopleTab = (
           <div onClick={this.openDialogBox}>
             <Tab
@@ -140,23 +162,45 @@ export default class GordonHeader extends Component {
               icon={<PeopleIcon />}
               label="People"
               component={Button}
+              style={{ color: 'white' }}
               disabled={networkStatus}
             />
           </div>
         );
       }
-    } else {
-      // Renders Guest People Tab
-      PeopleTab = (
-        <Tab
-          className="guestTab"
-          icon={<PeopleIcon />}
-          label="People"
-          component={NavLink}
-          to="#"
-          onClick={clicked => this.unAuthenticatedSearch()}
-        />
-      );
+    }
+    // IF YOU ARE NOT AUTHENTICATED
+    else {
+      // Renders online Guest People Tab
+      if (networkStatus === 'online') {
+        PeopleTab = (
+          <div onClick={clicked => this.unAuthenticatedSearch()}>
+            <Tab
+              className="tab"
+              icon={<PeopleIcon />}
+              label="People"
+              component={Button}
+              style={{ color: 'white' }}
+              disabled={networkStatus}
+            />
+          </div>
+        );
+      }
+      // Renders offline Guest People Tab
+      else {
+        PeopleTab = (
+          <div onClick={this.openDialogBox}>
+            <Tab
+              className="tab"
+              icon={<PeopleIcon />}
+              label="People"
+              component={Button}
+              style={{ color: 'white' }}
+              disabled={networkStatus}
+            />
+          </div>
+        );
+      }
     }
 
     return (
