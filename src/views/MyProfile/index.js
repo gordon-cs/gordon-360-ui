@@ -488,14 +488,16 @@ class MyProfile extends Component {
             {!this.state.loading && (
               <div>
                 <Grid container justify="center" spacing={2}>
-                  <Grid 
-                    item xs={12} 
+                  <Grid
+                    item
+                    xs={12}
                     lg={10}
                     container
                     alignItems="flex-start"
                     align="flex-start"
                     justify="flex-start"
-                    spacing={2}>
+                    spacing={2}
+                  >
                     <Grid item xs={12} md={profileCardSize} lg={profileCardSize}>
                       <Card>
                         <CardContent>
@@ -655,89 +657,89 @@ class MyProfile extends Component {
                                               minCropBoxWidth={this.state.cropperData.cropBoxDim}
                                               minCropBoxHeight={this.state.cropperData.cropBoxDim}
                                             />
-                                        </div>
-                                      )}
-                                      {preview && (
-                                        <Button
-                                          variant="contained"
-                                          onClick={() => this.setState({ preview: null })}
-                                          style={style.button}
-                                          className="gc360-photo-dialog_content_button"
-                                        >
-                                          Choose Another Image
-                                        </Button>
-                                      )}
-                                    </DialogContent>
-                                    <DialogActions className="gc360-photo-dialog_actions-top">
-                                      <Tooltip
-                                        classes={{ tooltip: 'tooltip' }}
-                                        id="tooltip-hide"
-                                        title={
-                                          this.state.isImagePublic
-                                            ? 'Only faculty and police will see your photo'
-                                            : 'Make photo visible to other students'
-                                        }
-                                      >
-                                        <Button
-                                          variant="contained"
-                                          onClick={this.toggleImagePrivacy.bind(this)}
-                                          style={style.button}
-                                        >
-                                          {this.state.isImagePublic ? 'Hide' : 'Show'}
-                                        </Button>
-                                      </Tooltip>
-                                      <Tooltip
-                                        classes={{ tooltip: 'tooltip' }}
-                                        id="tooltip-reset"
-                                        title="Restore your original ID photo"
-                                      >
-                                        <Button
-                                          variant="contained"
-                                          onClick={this.handleResetImage}
-                                          style={{ background: 'tomato', color: 'white' }}
-                                        >
-                                          Reset
-                                        </Button>
-                                      </Tooltip>
-                                    </DialogActions>
-                                    <DialogActions className="gc360-photo-dialog_actions-bottom">
-                                      <Button
-                                        variant="contained"
-                                        onClick={this.handleCloseCancel}
-                                        style={style.button}
-                                      >
-                                        Cancel
-                                      </Button>
-                                      <Tooltip
-                                        classes={{ tooltip: 'tooltip' }}
-                                        id="tooltip-submit"
-                                        title="Crop to current region and submit"
-                                      >
-                                        <Button
-                                          variant="contained"
-                                          onClick={this.handleCloseSubmit}
-                                          disabled={!this.state.preview}
-                                          style={
-                                            this.state.preview
-                                              ? style.button
-                                              : { background: 'darkgray', color: 'white' }
+                                          </div>
+                                        )}
+                                        {preview && (
+                                          <Button
+                                            variant="contained"
+                                            onClick={() => this.setState({ preview: null })}
+                                            style={style.button}
+                                            className="gc360-photo-dialog_content_button"
+                                          >
+                                            Choose Another Image
+                                          </Button>
+                                        )}
+                                      </DialogContent>
+                                      <DialogActions className="gc360-photo-dialog_actions-top">
+                                        <Tooltip
+                                          classes={{ tooltip: 'tooltip' }}
+                                          id="tooltip-hide"
+                                          title={
+                                            this.state.isImagePublic
+                                              ? 'Only faculty and police will see your photo'
+                                              : 'Make photo visible to other students'
                                           }
                                         >
-                                          Submit
+                                          <Button
+                                            variant="contained"
+                                            onClick={this.toggleImagePrivacy.bind(this)}
+                                            style={style.button}
+                                          >
+                                            {this.state.isImagePublic ? 'Hide' : 'Show'}
+                                          </Button>
+                                        </Tooltip>
+                                        <Tooltip
+                                          classes={{ tooltip: 'tooltip' }}
+                                          id="tooltip-reset"
+                                          title="Restore your original ID photo"
+                                        >
+                                          <Button
+                                            variant="contained"
+                                            onClick={this.handleResetImage}
+                                            style={{ background: 'tomato', color: 'white' }}
+                                          >
+                                            Reset
+                                          </Button>
+                                        </Tooltip>
+                                      </DialogActions>
+                                      <DialogActions className="gc360-photo-dialog_actions-bottom">
+                                        <Button
+                                          variant="contained"
+                                          onClick={this.handleCloseCancel}
+                                          style={style.button}
+                                        >
+                                          Cancel
                                         </Button>
-                                      </Tooltip>
-                                    </DialogActions>
-                                  </div>
-                                </Dialog>
+                                        <Tooltip
+                                          classes={{ tooltip: 'tooltip' }}
+                                          id="tooltip-submit"
+                                          title="Crop to current region and submit"
+                                        >
+                                          <Button
+                                            variant="contained"
+                                            onClick={this.handleCloseSubmit}
+                                            disabled={!this.state.preview}
+                                            style={
+                                              this.state.preview
+                                                ? style.button
+                                                : { background: 'darkgray', color: 'white' }
+                                            }
+                                          >
+                                            Submit
+                                          </Button>
+                                        </Tooltip>
+                                      </DialogActions>
+                                    </div>
+                                  </Dialog>
                                   <Dialog
-                                  open={this.state.socialLinksOpen}
-                                  keepMounted
-                                  onClose={this.handleSocialLinksClose}
-                                  aria-labelledby="alert-dialog-slide-title"
-                                  aria-describedby="alert-dialog-slide-description"
-                                >
-                                  {linksDialog}
-                                </Dialog>
+                                    open={this.state.socialLinksOpen}
+                                    keepMounted
+                                    onClose={this.handleSocialLinksClose}
+                                    aria-labelledby="alert-dialog-slide-title"
+                                    aria-describedby="alert-dialog-slide-description"
+                                  >
+                                    {linksDialog}
+                                  </Dialog>
                                 </Grid>
                               </Grid>
                             </Grid>
@@ -745,16 +747,16 @@ class MyProfile extends Component {
                         </CardContent>
                       </Card>
                     </Grid>
-                  {VPScore}
-                </Grid>
+                    {VPScore}
+                  </Grid>
 
                   <Grid item xs={12} lg={12} align="center">
                     <Grid container xs={12} lg={10} spacing={2} justify="center">
-                       <Grid item xs={12} lg={12}>
-                          <GordonSchedulePanel profile={this.state.profile} myProf={true} />
-                       </Grid>
-                     </Grid>
-                   </Grid>
+                      <Grid item xs={12} lg={12}>
+                        <GordonSchedulePanel profile={this.state.profile} myProf={true} />
+                      </Grid>
+                    </Grid>
+                  </Grid>
 
                   <Grid item xs={12} lg={5}>
                     <Grid container spacing={2}>

@@ -11,9 +11,23 @@
 
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
-let cacheVersion = 'cache-1.0';
+const cacheVersion = 'cache-1.0';
 const apiSource = 'https://360apitrain.gordon.edu';
-let token, termCode, cacheTimer, isSuccessful, isFetchCanceled;
+/* Uncomment For Development Only (aka develop) */
+// const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
+/* Uncomment For Production Only (aka master) */
+const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
+let failedDynamicCacheLinks = [];
+let dynamicCache = [];
+let token,
+  termCode,
+  cacheTimer,
+  isSuccessful,
+  isFetchCanceled,
+  networkStatus,
+  username,
+  id,
+  currSessionCode;
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
@@ -36,7 +50,6 @@ const staticCache = [
   '/about',
   '/help',
   '/admin',
-  '/myprofile',
   '/manifest.json',
   '/pwa.js',
   '/static/js/bundle.js',
@@ -46,7 +59,7 @@ const staticCache = [
   '/static/js/0.chunk.js',
   '/static/js/main.chunk.js',
   '/static/js/1.chunk.js',
-  // Files needed to prevent unappealing screen from starting the app in offline mode on iOS
+  // Files needed to prevent blank pages occuring offline
   '/main.89f23f7459ac700734a6.hot-update.js',
   '/static/css/2.d64d1e9d.chunk.css',
   '/static/css/2.d64d1e9d.chunk.css.map',
@@ -59,6 +72,10 @@ const staticCache = [
   '/static/js/2.00596eb8.chunk.js.map',
   '/static/js/main.2f5d16ec.chunk.js',
   '/static/js/main.2f5d16ec.chunk.js.map',
+  '/static/css/main.02025315.chunk.css',
+  '/static/css/2.3fd9a278.chunk.css',
+  '/static/js/2.8e1c3293.chunk.js',
+  '/static/js/main.c192f25f.chunk.js',
   // Images
   '/images/android-icon-36x36.png',
   '/images/android-icon-48x48.png',
@@ -99,18 +116,26 @@ const staticCache = [
  * @return {Promise} A promise with the result of removing outdated cache
  */
 async function cleanCache() {
+  // If the cache version is the same, we remove all dynamic files cached
   await caches.open(cacheVersion).then(cache => {
     cache.keys().then(items => {
       items.map(item => {
-        if (
-          !item.url.match(location.origin) &&
-          item.url !== 'https://cloud.typography.com/7763712/6754392/css/fonts.css'
+        // Removes all remote files except for the font key css
+        if (!item.url.match(location.origin) && item.url !== fontKeySource) {
+          cache.delete(item);
+        }
+        // Removes '/myprofile' and '/profile/firstName.lastName' since they were made when the user
+        // was caching dynamic files but appears to be from location.origin instead of remote
+        else if (
+          item.url.match(location.origin) &&
+          (item.url.includes(`/profile/${username}`) || item.url.includes('/myprofile'))
         ) {
           cache.delete(item);
         }
       });
     });
   });
+  // If there's outdated cache
   await caches.keys().then(keys => {
     keys.forEach(key => {
       if (key !== cacheVersion && key.match('cache-')) {
@@ -137,21 +162,14 @@ async function cleanCache() {
 async function fetchThenCache(request) {
   return await fetch(request)
     .then(fetchResponse => {
-      // If the request is specifically Gordon 360's Font CSS
-      if (request.url === 'https://cloud.typography.com/7763712/6754392/css/fonts.css') {
+      // If the request is specifically Gordon 360's Font CSS or a dynamic file that's needed for offline
+      if (request.url === fontKeySource || dynamicCache.includes(request.url)) {
         caches.open(cacheVersion).then(cache => {
           cache.put(request, fetchResponse.clone());
         });
         return fetchResponse.clone();
       }
-      // If the request is a regular request
-      else if (fetchResponse) {
-        /* FOR DEVELOPING PURPOSES: THIS CACHES EACH FETCH MADE */
-        // caches.open(cacheVersion).then(cache => {
-        //   cache.put(request, fetchResponse.clone());
-        // });
-        return fetchResponse.clone();
-      }
+      return fetchResponse.clone();
     })
     .catch(async () => {
       console.log(`%c- Getting ${request.url} from cache instead...`, cacheLog);
@@ -182,6 +200,23 @@ async function cacheStaticFiles() {
         console.log(`%c${errorEmoji} Caching Static Files Failed`, errorLog);
       });
   });
+}
+
+/**
+ * Re-Caches all of the dynamic files that failed to fetch
+ *
+ *  @return {Promise} A promise with the result of re-caching the failed dynamic files
+ */
+async function recacheDynamicFiles() {
+  if (token && failedDynamicCacheLinks.length > 0) {
+    const cacheOne = await cacheDynamicFiles(token, failedDynamicCacheLinks);
+    // If all failed dynamic files successfully cache, we then empty the array
+    if (cacheOne) failedDynamicCacheLinks = [];
+    // Checks to see if both all failed links successfully cached
+    if (cacheOne) {
+      console.log(`%c${successfulEmoji} Cached Failed Dynamic Files Successfully`, successfulLog);
+    }
+  }
 }
 
 /**
@@ -224,22 +259,50 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
     for (let attempt = 1; attempt <= 3; attempt++) {
       fetchSuccess = await fetch(request)
         .then(fetchResponse => {
-          // Checks to see if all fetches should be aborted before trying to cache the response
-          if (fetchResponse && isFetchCanceled === false) {
+          // IF THE FETCH WAS SUCCESSFUL AND WAS NOT CANCELED
+          if (isFetchCanceled === false) {
             // Adds fetch response to cache
             caches.open(cacheVersion).then(cache => {
               cache.put(request, fetchResponse.clone());
             });
             return fetchResponse;
-          } else {
+          }
+          // IF THE FETCH WAS SUCCESSFUL AND WAS CANCELED
+          else {
+            /* If the fetch was canceled due to the user going offline, we will still cache the
+             * successful response
+             */
+            if (networkStatus === 'offline') {
+              // Adds fetch response to cache
+              caches.open(cacheVersion).then(cache => {
+                cache.put(request, fetchResponse.clone());
+              });
+              return fetchResponse;
+            }
+            // Returns the response of an aborted request
             return 'The user aborted a request.';
           }
         })
         .catch(error => {
-          // Checks to see if all fetches should be aborted before trying return the error's message
+          // IF THE FETCH FAILED AND WAS NOT CANCELED
           if (isFetchCanceled === false) {
+            /* We save the failed request's URL for future caching. Since we attempt to fetch a request
+             * multiple times, we check to make sure we haven't saved the request's URL already
+             */
+            if (!failedDynamicCacheLinks.includes(request.url))
+              failedDynamicCacheLinks.push(request.url);
+            // Returns the original failed request's response
             return error.message;
-          } else {
+          }
+          // IF THE FETCH FAILED AND WAS CANCELED
+          else {
+            /* If the fetch was canceled due to the user going offline, we will remember the
+             * request's URL for future caching. Since we attempt to fetch a request
+             * multiple times, we check to make sure we haven't saved the request's URL already
+             */
+            if (!failedDynamicCacheLinks.includes(request.url))
+              failedDynamicCacheLinks.push(request.url);
+            // Returns the response of an aborted request
             return 'The user aborted a request.';
           }
         });
@@ -291,23 +354,7 @@ async function dynamicLinksThenCache(token, termCode) {
     });
 
     // Gets the user's profile object to access their firstname.lastname and ID#
-    let profile = await fetch(
-      new Request('https://360apitrain.gordon.edu/api/profiles', { method: 'GET', headers }),
-    )
-      .then(response => {
-        return response.json();
-      })
-      .catch(error => {
-        return error.Message;
-      });
-
-    // Gets the current session object to access the current session code
-    let currentSession = await fetch(
-      new Request('https://360apitrain.gordon.edu/api/sessions/current', {
-        method: 'GET',
-        headers,
-      }),
-    )
+    let profile = await fetch(new Request(`${apiSource}/api/profiles`, { method: 'GET', headers }))
       .then(response => {
         return response.json();
       })
@@ -316,7 +363,7 @@ async function dynamicLinksThenCache(token, termCode) {
       });
 
     let sessions = await fetch(
-      new Request('https://360apitrain.gordon.edu/api/sessions', {
+      new Request(`${apiSource}/api/sessions`, {
         method: 'GET',
         headers,
       }),
@@ -327,22 +374,10 @@ async function dynamicLinksThenCache(token, termCode) {
       .catch(error => {
         return error.Message;
       });
+    username = profile ? profile.AD_Username : null;
+    id = profile ? profile.ID : null;
 
-    let username = profile ? profile.AD_Username : null;
-    let id = profile ? profile.ID : null;
-    let currSessionCode = currentSession ? currentSession.SessionCode : null;
-
-    const imagesCache = [
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Profile-1_2018_07_26_02_26_40_2018_10_09_08_52_16.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/welcome1_2018_07_26_11_00_21_2018_10_09_08_51_52.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Help-1_2018_07_26_11_04_33_2018_10_09_08_51_12.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Events-1_2018_07_26_02_24_53_2018_10_09_08_51_24.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Feedback-1_2018_07_26_02_25_11_2018_10_09_08_50_45.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Home-1_2018_07_26_02_25_41_2018_10_09_08_51_41.jpg',
-      'https://wwwtrain.gordon.edu/images/2ColumnHero/Involvements-1_2018_07_26_02_26_19_2018_10_09_08_52_02.jpg',
-    ];
-
-    const dynamicCache = [
+    dynamicCache = [
       // Home Page Fetch URLs
       `${apiSource}/api/cms/slider`,
       `${apiSource}/api/dining`,
@@ -354,7 +389,6 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/sessions/daysLeft`,
       `${apiSource}/api/studentemployment/`,
       `${apiSource}/api/version`,
-      `${apiSource}/api/activities/session/201809`,
       `${apiSource}/api/activities/session/${currSessionCode}`,
       `${apiSource}/api/activities/session/${currSessionCode}/types`,
       `${apiSource}/api/events/chapel/${termCode}`,
@@ -362,20 +396,22 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/memberships/student/username/${username}/`,
       `${apiSource}/api/profiles/${username}/`,
       `${apiSource}/api/profiles/Image/${username}/`,
-      `${apiSource}/api/requests/student/${id}`,
+      // `${apiSource}/api/myschedule/${username}/`,
+      // `${apiSource}/api/schedule/${username}/`,
+      // `${apiSource}/api/schedulecontrol/${username}/`,
       `/profile/${username}`,
+      `/myprofile`,
     ];
 
     sessions.forEach(session => {
-      if (session.SessionCode > currSessionCode) {
-        dynamicCache.push(
-          `${apiSource}/api/activities/session/${session.SessionCode}`,
-          `${apiSource}/api/activities/session/${session.SessionCode}/types`,
-        );
-      }
+      dynamicCache.push(
+        `${apiSource}/api/activities/session/${session.SessionCode}`,
+        `${apiSource}/api/activities/session/${session.SessionCode}/types`,
+      );
     });
 
-    // // Gets the involvements of the current user for the Involvement Profiles
+    // This is commented out because we do not want users to be able to click into an involvement offline
+    // Gets the involvements of the current user for the Involvement Profiles
     // let involvements = await fetch(
     //   new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
     //     method: 'GET',
@@ -408,9 +444,8 @@ async function dynamicLinksThenCache(token, termCode) {
     //   );
     // });
 
-    fetchResultOne = await cacheDynamicFiles(token, imagesCache, 'no-cors');
-    fetchResultTwo = await cacheDynamicFiles(token, dynamicCache);
-    if (fetchResultOne && fetchResultTwo)
+    let fetchResultOne = await cacheDynamicFiles(token, dynamicCache);
+    if (fetchResultOne)
       console.log(`%c${successfulEmoji} Cached Dynamic Files Successfully`, successfulLog);
   }
 }
@@ -418,7 +453,7 @@ async function dynamicLinksThenCache(token, termCode) {
 // Set interval function that will try to update cache every hour
 function timerFunction() {
   cacheTimer = setInterval(() => {
-    console.log('Received Message: Attempting To Update Cache.');
+    console.log('Attempting To Update Cache.');
     // Caching All Files
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(token, termCode); // Dynamic Cache
@@ -455,7 +490,7 @@ self.addEventListener('fetch', event => {
 self.addEventListener('message', event => {
   // If the message is to cache all static/dynamic files, all of those files are cached
   if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
-    console.log('Received Message: Attempting to cache all files');
+    console.log('Attempting to cache all files');
     // Sets variable to prevent the lost of this data when a new service worker installs
     token = event.data.token;
     termCode = event.data.termCode;
@@ -465,7 +500,7 @@ self.addEventListener('message', event => {
   }
   // If the message is to update the cache
   else if (event.data.message && event.data.message === 'update-cache-files') {
-    console.log('Received Message: Attempting to update cache.');
+    console.log('Attempting to update cache.');
     // Sets variable to prevent the lost of this data when a new service worker installs
     token = event.data.token;
     termCode = event.data.termCode;
@@ -475,25 +510,30 @@ self.addEventListener('message', event => {
   }
   // If the message is to start the cache timer
   else if (event.data && event.data === 'start-cache-timer') {
-    console.log('Received Message: Starting timer to update cache.');
+    console.log('Starting timer to update cache.');
     event.waitUntil(timerFunction());
   }
   // If the message is to stop the cache timer
   else if (event.data && event.data === 'stop-cache-timer') {
-    console.log('Received Message: Stopping timer to update cache.');
+    console.log('Stopping timer to update cache.');
     event.waitUntil(clearInterval(cacheTimer));
   }
   // If the message is to delete the token and current term code due to loss of authentification
-  else if (event.data && event.data === 'delete-token-termCode') {
+  else if (event.data && event.data === 'delete-global-variables') {
     token = null;
     termCode = null;
+    dynamicCache = [];
+    failedDynamicCacheLinks = [];
+    username = null;
+    id = null;
+    currSessionCode = null;
   }
   // If the message is to cancel all fetches
   if (event.data === 'cancel-fetches') {
     // Since this event listener is invoked multiple times, this check prevents it from
     // console logging multiple times
     if (isFetchCanceled === false && isSuccessful === true) {
-      console.log(`%c${errorEmoji} Received Message: Canceling All Fetches.`, errorLog);
+      console.log(`%c${errorEmoji} Canceling Any Currently Running Fetches.`, errorLog);
       isFetchCanceled = true;
       isSuccessful = false;
     }
@@ -501,5 +541,13 @@ self.addEventListener('message', event => {
   // If the message is to remove all dynamic cache
   if (event.data === 'remove-dynamic-cache') {
     event.waitUntil(cleanCache());
+  }
+  // If the message is to set network status as online
+  if (event.data === 'online') {
+    event.waitUntil((networkStatus = 'online'), recacheDynamicFiles());
+  }
+  // If the message is to set network status as offline
+  if (event.data === 'offline') {
+    event.waitUntil((networkStatus = 'offline'));
   }
 });
