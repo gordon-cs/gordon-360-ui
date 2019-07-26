@@ -255,7 +255,7 @@ export default class VictoryPromiseDisplay extends React.Component {
 
     if (this.state.defaultVPMode) {
       content = (
-        <Grid item xs={12} container justify="center">
+        <Grid item xs={12} container justify="center" className="box-layout">
           <Grid>
             <HoverText
               title={
