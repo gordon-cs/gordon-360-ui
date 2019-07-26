@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import Img from 'react-graceful-image'
 
 import cms from '../../../../services/cms';
 import '../../../../../node_modules/react-responsive-carousel/lib/styles/carousel.css';
 import GordonLoader from '../../../../components/Loader';
+import './carousel.css'
 
 export default class GordonCarousel extends Component {
   constructor(props) {
@@ -34,19 +36,17 @@ export default class GordonCarousel extends Component {
       throw this.state.error;
     }
 
+
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
       content = (
-        <div>
-          <img
-            src={this.state.carouselContent[0].ImagePath}
-            alt={this.state.carouselContent[0].AltTag}
-          />
-        </div>
+          <div >
+            <Img className="imageDisplay" src={this.state.carouselContent[0].ImagePath} alt={this.state.carouselContent[0].AltTag}></Img>
+          </div>
       );
     }
-    return <div>{content}</div>;
+    return <section>{content}</section>;
   }
 }
