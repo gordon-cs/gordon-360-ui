@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Moment from 'moment';
 
-import Calendar from 'react-big-calendar/dist/react-big-calendar';
-import MomentLocalizer from 'react-big-calendar/lib/localizers/moment';
+import {Calendar, momentLocalizer} from 'react-big-calendar';
 
 import GordonLoader from '../../../Loader';
 import schedule from '../../../../services/schedule';
@@ -95,7 +94,7 @@ export default class GordonScheduleCalendar extends Component {
 
     // Localizer is always required for react-big-calendar initialization
     let formats = {
-      dayHeaderFormat: (date, localizer = MomentLocalizer(Moment)) =>
+      dayHeaderFormat: (date, localizer = momentLocalizer(Moment)) =>
         localizer.format(date, '[' + this.state.currentSession.SessionDescription + ']'), // [] makes string to escape from parser (use this for session display)
     };
 
@@ -110,7 +109,7 @@ export default class GordonScheduleCalendar extends Component {
       content = <GordonLoader />;
     } else {
       // Calendar API can be controlled here with these properties
-      let Resource = ({ localizer = MomentLocalizer(Moment) }) => (
+      let Resource = ({ localizer = momentLocalizer(Moment) }) => (
         <Calendar
           selectable
           events={this.eventInfo}
@@ -136,7 +135,7 @@ export default class GordonScheduleCalendar extends Component {
           formats={formats}
         />
       );
-      content = Resource(MomentLocalizer(Moment));
+      content = Resource(momentLocalizer(Moment));
     }
 
     return <Fragment>{content}</Fragment>;
