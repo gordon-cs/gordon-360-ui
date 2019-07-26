@@ -373,13 +373,13 @@ export default class Profile extends Component {
                     </CardContent>
                   </Card>
                 </Grid>
-                
+
                 <Grid item xs={12} lg={12} align="center">
-                   <Grid container xs={12} lg={10} spacing="16" justify="center">
-                      <Grid item xs={12} lg={12}>
-                        <GordonSchedulePanel profile={this.state.profile} myProf={false} />
-                       </Grid>
+                  <Grid container xs={12} lg={10} spacing="16" justify="center">
+                    <Grid item xs={12} lg={12}>
+                      <GordonSchedulePanel profile={this.state.profile} myProf={false} />
                     </Grid>
+                  </Grid>
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
