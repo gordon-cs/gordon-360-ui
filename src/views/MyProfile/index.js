@@ -6,7 +6,6 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import List from '@material-ui/core/List';
-import { NavLink } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -371,7 +370,7 @@ class MyProfile extends Component {
           <Grid item>
             <a
               href={this.state.facebookLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -386,7 +385,7 @@ class MyProfile extends Component {
           <Grid item>
             <a
               href={this.state.twitterLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -401,7 +400,7 @@ class MyProfile extends Component {
           <Grid item>
             <a
               href={this.state.linkedInLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -416,7 +415,7 @@ class MyProfile extends Component {
           <Grid item>
             <a
               href={this.state.instagramLink}
-              className="icon"
+              className="gc360-my-profile_icon"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -510,7 +509,7 @@ class MyProfile extends Component {
                           >
                             <Grid item xs={6}>
                               <Link
-                                className="gc360-link-color"
+                                className="gc360-link"
                                 to={`/profile/${this.state.profile.AD_Username}`}
                               >
                                 <Button style={style.uncontainedButton}>
@@ -568,9 +567,11 @@ class MyProfile extends Component {
                                         justifyContent: 'center',
                                       }}
                                     >
-                                      <a href={`mailto:${this.state.profile.Email}`}>
+                                      <a
+                                        href={`mailto:${this.state.profile.Email}`}
+                                        className="gc360-text-link"
+                                      >
                                         <div
-                                          className="email-link-container"
                                           style={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -579,12 +580,10 @@ class MyProfile extends Component {
                                           }}
                                         >
                                           <EmailIcon
-                                            className="email-link"
+                                            className="gc360-my-profile_icon"
                                             style={{ marginRight: '0.75rem' }}
                                           />
-                                          <Typography className="email-link">
-                                            {this.state.profile.Email}
-                                          </Typography>
+                                          <Typography>{this.state.profile.Email}</Typography>
                                         </div>
                                       </a>
                                     </div>
@@ -775,9 +774,9 @@ class MyProfile extends Component {
                                 <CardHeader title="Involvements" />
                               </Grid>
                               <Grid item xs={5} align="right">
-                                <Link className="gc360-link-color" to="/transcript">
+                                <Link className="gc360-link" to="/transcript">
                                   <Button variant="contained" style={style.button}>
-                                    Co-Curricular Transcript
+                                    Experience Transcript
                                   </Button>
                                 </Link>
                               </Grid>
@@ -881,15 +880,32 @@ class MyProfile extends Component {
       return MyProfile;
     } else {
       return (
-        <div>
-          <GordonLoader />
-          <Typography align="center" variant="headline">
-            You must be logged in to view your profile.
-          </Typography>
-          <NavLink exact to="/">
-            <Button>Okay</Button>
-          </NavLink>
-        </div>
+        <Grid container justify="center">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <h1>You are not logged in.</h1>
+                <br />
+                <h4>You must be logged in to view your profile.</h4>
+                <br />
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Login
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       );
     }
   }

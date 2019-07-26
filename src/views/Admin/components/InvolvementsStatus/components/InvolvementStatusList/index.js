@@ -31,7 +31,7 @@ export default class InvolvementStatusList extends Component {
             <Grid container alignItems="center">
               <Grid item xs={4}>
                 <Link
-                  className="gc360-link-color"
+                  className="gc360-link"
                   to={`/activity/${this.state.currentSession}/${this.props.Activity.ActivityCode}`}
                 >
                   <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
@@ -39,7 +39,7 @@ export default class InvolvementStatusList extends Component {
               </Grid>
               <Grid item xs={8}>
                 <Link
-                  className="gc360-link-color"
+                  className="gc360-link"
                   to={`/activity/${this.state.currentSession}/${this.props.Activity.ActivityCode}`}
                 >
                   <Typography>
