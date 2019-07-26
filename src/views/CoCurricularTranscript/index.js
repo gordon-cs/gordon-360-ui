@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -32,7 +33,9 @@ export default class Transcript extends Component {
   }
 
   componentWillMount() {
-    this.loadTranscript();
+    if (this.props.Authentication) {
+      this.loadTranscript();
+    }
   }
 
   async loadTranscript() {
@@ -242,110 +245,143 @@ export default class Transcript extends Component {
   };
 
   render() {
-    let activityList;
-    if (!this.state.categorizedMemberships.activities) {
-      activityList = <GordonLoader />;
-    } else {
-      activityList = this.groupActivityByCode(this.state.categorizedMemberships.activities);
-    }
 
-    let honorsList;
-    if (!this.state.categorizedMemberships.honors) {
-      honorsList = <GordonLoader />;
-    } else {
-      honorsList = this.groupActivityByCode(this.state.categorizedMemberships.honors);
-    }
+    if (this.props.Authentication) {
+      let activityList;
+      if (!this.state.categorizedMemberships.activities) {
+        activityList = <GordonLoader />;
+      } else {
+        activityList = this.groupActivityByCode(this.state.categorizedMemberships.activities);
+      }
 
-    let serviceList;
-    if (!this.state.categorizedMemberships.service) {
-      serviceList = <GordonLoader />;
-    } else {
-      serviceList = this.groupActivityByCode(this.state.categorizedMemberships.service);
-    }
+      let honorsList;
+      if (!this.state.categorizedMemberships.honors) {
+        honorsList = <GordonLoader />;
+      } else {
+        honorsList = this.groupActivityByCode(this.state.categorizedMemberships.honors);
+      }
 
-    let experienceList;
-    if (!this.state.categorizedMemberships.experience) {
-      experienceList = <GordonLoader />;
-    } else {
-      experienceList = this.groupActivityByCode(
-        this.state.categorizedMemberships.experience.experiences,
+      let serviceList;
+      if (!this.state.categorizedMemberships.service) {
+        serviceList = <GordonLoader />;
+      } else {
+        serviceList = this.groupActivityByCode(this.state.categorizedMemberships.service);
+      }
+
+      let experienceList;
+      if (!this.state.categorizedMemberships.experience) {
+        experienceList = <GordonLoader />;
+      } else {
+        experienceList = this.groupActivityByCode(
+          this.state.categorizedMemberships.experience.experiences,
+        );
+        experienceList = experienceList.concat(
+          this.state.categorizedMemberships.experience.employments
+            .map(employment => <Experience Experience={employment} />)
+            .reverse(),
+        );
+      }
+
+      const buttonColors = {
+        /* not in style sheet so that gordonColors is accessible */
+        background: gordonColors.primary.cyan,
+        color: 'white',
+      };
+
+      const honorsLeadership = this.state.honorsLeadership;
+      const experiences = this.state.experiences;
+      const serviceLearning = this.state.serviceLearning;
+      const otherInvolvements = this.state.otherInvolvements;
+
+      return (
+        <div className="co-curricular-transcript">
+          <Card className="card" elevation={10}>
+            <CardContent className="card-content">
+              <div className="print-only">{/* <img src={require('./logo.png')} alt="" /> */}</div>
+              <div>
+                <Button
+                  className="button"
+                  onClick={this.handleDownload}
+                  style={buttonColors}
+                  variant="contained"
+                >
+                  Print Co-Curricular Transcript
+                </Button>
+              </div>
+              <div>Gordon College Experience Transcript</div>
+              <div className="subtitle">
+                {' '}
+                <b>{this.state.profile.fullName}</b>{' '}
+              </div>
+              <div className="subtitle">{this.getGradCohort()}</div>
+              <div className="subtitle">{this.getMajors(this.state.profile.Majors)}</div>
+              <div className="subtitle">{this.getMinors(this.state.profile.Minors)}</div>
+              {honorsLeadership && (
+                <div className="subtitle">
+                  <Typography variant="h5">
+                    <b>Honors, Leadership, and Research</b>
+                  </Typography>
+                </div>
+              )}
+              <div className="activity-list">{honorsList}</div>
+              {experiences && (
+                <div className="subtitle">
+                  <Typography variant="h5">
+                    <b>Experience</b>
+                  </Typography>
+                </div>
+              )}
+              <div className="activity-list">{experienceList}</div>
+              {serviceLearning && (
+                <div className="subtitle">
+                  <Typography variant="h5">
+                    <b>Service Learning</b>
+                  </Typography>
+                </div>
+              )}
+              <div className="activity-list">{serviceList}</div>
+              {otherInvolvements && (
+                <div className="subtitle">
+                  <Typography variant="h5">
+                    <b>Activities</b>
+                  </Typography>
+                </div>
+              )}
+              <div className="activity-list">{activityList}</div>
+            </CardContent>
+          </Card>
+        </div>
       );
-      experienceList = experienceList.concat(
-        this.state.categorizedMemberships.experience.employments
-          .map(employment => <Experience Experience={employment} />)
-          .reverse(),
-      );
-    }
-
-    const buttonColors = {
-      /* not in style sheet so that gordonColors is accessible */
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    };
-
-    const honorsLeadership = this.state.honorsLeadership;
-    const experiences = this.state.experiences;
-    const serviceLearning = this.state.serviceLearning;
-    const otherInvolvements = this.state.otherInvolvements;
-
-    return (
-      <div className="co-curricular-transcript">
-        <Card className="card" elevation={10}>
-          <CardContent className="card-content">
-            <div className="print-only">{/* <img src={require('./logo.png')} alt="" /> */}</div>
-            <div>
-              <Button
-                className="button"
-                onClick={this.handleDownload}
-                style={buttonColors}
-                variant="contained"
+    } else {
+      return (
+        <Grid container justify="center">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
               >
-                Print Co-Curricular Transcript
-              </Button>
-            </div>
-            <div>Gordon College Experience Transcript</div>
-            <div className="subtitle">
-              {' '}
-              <b>{this.state.profile.fullName}</b>{' '}
-            </div>
-            <div className="subtitle">{this.getGradCohort()}</div>
-            <div className="subtitle">{this.getMajors(this.state.profile.Majors)}</div>
-            <div className="subtitle">{this.getMinors(this.state.profile.Minors)}</div>
-            {honorsLeadership && (
-              <div className="subtitle">
-                <Typography variant="h5">
-                  <b>Honors, Leadership, and Research</b>
-                </Typography>
-              </div>
-            )}
-            <div className="activity-list">{honorsList}</div>
-            {experiences && (
-              <div className="subtitle">
-                <Typography variant="h5">
-                  <b>Experience</b>
-                </Typography>
-              </div>
-            )}
-            <div className="activity-list">{experienceList}</div>
-            {serviceLearning && (
-              <div className="subtitle">
-                <Typography variant="h5">
-                  <b>Service Learning</b>
-                </Typography>
-              </div>
-            )}
-            <div className="activity-list">{serviceList}</div>
-            {otherInvolvements && (
-              <div className="subtitle">
-                <Typography variant="h5">
-                  <b>Activities</b>
-                </Typography>
-              </div>
-            )}
-            <div className="activity-list">{activityList}</div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+                <h1>You are not logged in.</h1>
+                <br />
+                <h4>You must be logged in to view your experience transcript.</h4>
+                <br />
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => {
+                    window.location.pathname = '';
+                  }}
+                >
+                  Login
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      )
+    }
+
   }
 }
