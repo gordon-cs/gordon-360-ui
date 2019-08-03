@@ -142,13 +142,15 @@ class GordonNavAvatar extends Component {
           }}
           component={buttonLink}
         >
-          {avatar}
-          <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
-            {this.state.name}
-          </Typography>
-          <Typography variant="caption" className="avatar-text" align="left" gutterBottom>
-            {this.state.email}
-          </Typography>
+          <div className="gordon-nav-avatar">
+            {avatar}
+            <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
+              {this.state.name}
+            </Typography>
+            <Typography variant="caption" className="avatar-text" align="left" gutterBottom>
+              {this.state.email}
+            </Typography>
+          </div>
         </Button>
       );
     } else {
@@ -167,10 +169,12 @@ class GordonNavAvatar extends Component {
           }}
           component={buttonLink}
         >
-          {avatar}
-          <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
-            Guest
-          </Typography>
+          <div className="gordon-nav-avatar">
+            {avatar}
+            <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
+              Guest
+            </Typography>
+          </div>
         </Button>
       );
     }
