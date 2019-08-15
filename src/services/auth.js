@@ -34,13 +34,17 @@ const getAuth = (username, password) => {
   if (username.includes('@gordon.edu')) username = username.replace('@gordon.edu', '');
   else if (username.includes('Gordon.edu')) username = username.replace('@Gordon.edu', '');
 
-  const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-  const body = new URLSearchParams({
+  const loginInfo = new URLSearchParams({
     username,
     password,
-    grant_type: 'password',
+    grant_type: 'password'
   });
-  const request = new Request(`${base}token`, { method: 'post', headers, body });
+  const request = new Request(`${base}token`, {
+    method: 'post', 
+    headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+    mode: 'no-cors',
+    body: loginInfo
+  });
 
   return fetch(request)
     .then(parseResponse)
