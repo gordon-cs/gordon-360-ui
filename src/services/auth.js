@@ -53,7 +53,7 @@ const getAuth = (username, password) => {
   
   const request = new Request(`${base}token`, {
     method: 'post', 
-    headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     mode: 'no-cors',
     credentials: 'include',
     body: loginInfo3
