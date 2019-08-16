@@ -55,7 +55,7 @@ const getAuth = (username, password) => {
     method: 'post', 
     headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
     mode: 'no-cors',
-    body: loginInfo
+    body: loginInfo3
   });
   console.log(request);
 
