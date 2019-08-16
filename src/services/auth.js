@@ -39,22 +39,23 @@ const getAuth = (username, password) => {
     password,
     grant_type: 'password'
   });
-  console.log(loginInfo);
+  //console.log(loginInfo);
   
   const loginInfo2 = new URLSearchParams({
     'username': username,
     'password': password,
     grant_type: 'password'
   });
-  console.log(loginInfo2);
+  //console.log(loginInfo2);
   
   const loginInfo3 = 'username='+username+'&password='+password+'&grant_type=password';
-  console.log(loginInfo3);
+  //console.log(loginInfo3);
   
   const request = new Request(`${base}token`, {
     method: 'post', 
     headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
     mode: 'no-cors',
+    credentials: 'include',
     body: loginInfo3
   });
   console.log(request);
