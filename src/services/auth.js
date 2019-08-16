@@ -40,18 +40,24 @@ const getAuth = (username, password) => {
     grant_type: 'password'
   });
   console.log(loginInfo);
+  
   const loginInfo2 = new URLSearchParams({
     'username': username,
     'password': password,
     grant_type: 'password'
   });
   console.log(loginInfo2);
+  
+  coonst loginInfo3 = {"username="+username+"&password="+password+"&grant_type=password"};
+  console.log(loginInfo3);
+  
   const request = new Request(`${base}token`, {
     method: 'post', 
     headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
     mode: 'no-cors',
     body: loginInfo
   });
+  console.log(request);
 
   return fetch(request)
     .then(parseResponse)
