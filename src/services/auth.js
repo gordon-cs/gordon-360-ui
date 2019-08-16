@@ -48,7 +48,7 @@ const getAuth = (username, password) => {
   });
   console.log(loginInfo2);
   
-  coonst loginInfo3 = {"username="+username+"&password="+password+"&grant_type=password"};
+  const loginInfo3 = 'username='+username+'&password='+password+'&grant_type=password';
   console.log(loginInfo3);
   
   const request = new Request(`${base}token`, {
