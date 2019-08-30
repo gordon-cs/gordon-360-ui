@@ -48,15 +48,15 @@ const getAuth = (username, password) => {
   });
   console.log(loginInfo2);
   
-  const loginInfo3 = 'username='+username+'&password='+password+'&grant_type=password';
+  //const loginInfo3 = 'username='+username+'&password='+password+'&grant_type=password';
   //console.log(loginInfo3);
   
   const request = new Request(`${base}token`, {
     method: 'post', 
-    headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     mode: 'no-cors',
     credentials: 'include',
-    body: loginInfo3
+    body: loginInfo
   });
   console.log(request);
 
