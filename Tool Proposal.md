@@ -1,8 +1,8 @@
-language(s) - React.JS (front-end), C\# (back-end)
-OS - Any web browser that runs JS
-Database - AdminTrainSQL
-Style guide - airbnb
-Coding Programs - Visual Studio, Visual Studio Code
+language(s) - React.JS (front-end), C\# (back-end)  
+OS - Any web browser that runs JS 
+Database - AdminTrainSQL  
+Style guide - airbnb  
+Coding Programs - Visual Studio, Visual Studio Code 
 
 End to End Hello World Proposal
 Our milestone is to connect to the backend by modifying the front end and send data to the backend and get a response. There is a lot of code that was shared with us so we will try to go through and understand it before writing our own version.
