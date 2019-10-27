@@ -4,7 +4,7 @@ Our milestone is to connect to the backend by modifying the front end and send d
 There is a lot of code that was shared with us so we will try to go through and understand it before writing our own version.
 
 ## Changes to the UI
-We will add a simple button to the homepage. When the button is clicked, it will send a request to the API, which will then fetch data from the database and send it back to the front-end as a response
+We will add a simple button to the homepage. When the button is clicked, it will send a request to the API, which will then send back a response.
 ## Changes to the API
 We will create a new API route specifically for this test: `[api-root]/jobs/hello-world`.
 ## Location of test servers
