@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-
+import E2eButton from './components/EndToEndTest';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
@@ -99,6 +99,9 @@ export default class Home extends Component {
 
       content = (
         <Grid container justify="center" spacing={2}>
+          <Grid item xs={8}>
+            <E2eButton />
+          </Grid>
           <Grid item xs={12} md={10}>
             <Carousel />
           </Grid>
