@@ -14,6 +14,7 @@ import PeopleSearch from './views/PeopleSearch';
 import ProfileNotFound from './views/ProfileNotFound';
 import IDUploader from './views/IDUploader';
 import Admin from './views/Admin';
+import Timesheets from './views/Timesheets';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 export default [
@@ -93,4 +94,9 @@ export default [
     path: '/admin',
     component: Admin,
   },
+  {
+    name: 'Timesheets',
+    path: '/timesheets',
+    component: Timesheets,
+  }
 ];
