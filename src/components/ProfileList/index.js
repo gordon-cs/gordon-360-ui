@@ -100,6 +100,7 @@ class ProfileList extends Component {
     let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
+    let mailloc;
     let studentID;
 
     if (this.props.profile.HomeCity === PRIVATE_INFO) {
@@ -286,6 +287,24 @@ class ProfileList extends Component {
       }
     }
 
+    if (String(this.props.profile.PersonType).includes('stu')) {
+      mailloc = (
+        <div>
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={6} sm={6} md={3} lg={6}>
+                <Typography>Mail Location:</Typography>
+              </Grid>
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+                <Typography>{this.props.profile.Mail_Location}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    }
+
     if (this.props.myProf && String(this.props.profile.PersonType).includes('stu')) {
       studentID = (
         <div>
@@ -319,6 +338,7 @@ class ProfileList extends Component {
             {majors}
             {minors}
             {residence}
+            {mailloc}
             {Department}
             {mobilephone}
             {studentID}
