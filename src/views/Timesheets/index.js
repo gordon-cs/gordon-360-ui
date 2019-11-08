@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import 'date-fns';
-import { Grid, Card, CardContent, CardActions } from '@material-ui/core/';
+import { Grid, Card, CardContent } from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import Typography from '@material-ui/core/Typography';
 
 export default function Timesheets() {
   const [selectedDate, setSelectedDate] = React.useState(new Date('2019-01-18T21:11:54'));

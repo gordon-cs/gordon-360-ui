@@ -1,13 +1,6 @@
 import React, { Component } from 'react';
-import { Doughnut } from 'react-chartjs-2';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import Button from '@material-ui/core/Button';
-import { gordonColors } from '../../../../theme';
-import user from '../../../../services/user';
 import jobs from '../../../../services/jobs';
-import GordonLoader from '../../../../components/Loader';
 import Typography from '@material-ui/core/Typography';
 
 export default class End2EndTest extends Component {
