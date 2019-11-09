@@ -12,6 +12,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
+import WorkIcon from '@material-ui/icons/Work';
 import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
@@ -166,6 +167,7 @@ export default class GordonNavLinks extends Component {
     let admin;
     let peopleButton;
     let signInOut;
+    let timesheetButton;
     if (this.props.Authentication) {
       // Creates the Admin button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
@@ -235,6 +237,18 @@ export default class GordonNavLinks extends Component {
               <EventIcon />
             </ListItemIcon>
             <ListItemText primary="Events" />
+          </ListItem>
+        </NavLink>
+      );
+
+      // Creates the Timesheets button
+      timesheetButton = (
+        <NavLink className="gc360-link" exact to="/timesheets" onClick={this.props.onLinkClick}>
+          <ListItem button>
+            <ListItemIcon>
+              <WorkIcon />
+            </ListItemIcon>
+            <ListItemText primary="Timesheets" />
           </ListItem>
         </NavLink>
       );
@@ -360,6 +374,30 @@ export default class GordonNavLinks extends Component {
         );
       }
 
+      if (networkStatus === 'online') {
+        timesheetButton = (
+          <NavLink className="gc360-link" exact to="/timesheets" onClick={this.props.onLinkClick}>
+            <ListItem button>
+              <ListItemIcon>
+                <WorkIcon />
+              </ListItemIcon>
+              <ListItemText primary="Timesheets" />
+            </ListItem>
+          </NavLink>
+        );
+      } else {
+        timesheetButton = (
+          <NavLink className="gc360-link" onClick={this.openDialogBox}>
+            <ListItem button disabled={networkStatus}>
+              <ListItemIcon>
+                <WorkIcon />
+              </ListItemIcon>
+              <ListItemText primary="Timesheets" />
+            </ListItem>
+          </NavLink>
+        );
+      }
+
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         signInOut = (
@@ -387,6 +425,7 @@ export default class GordonNavLinks extends Component {
           {involvementsButton}
           {eventsButton}
           {peopleButton}
+          {timesheetButton}
         </List>
         <Divider />
 
