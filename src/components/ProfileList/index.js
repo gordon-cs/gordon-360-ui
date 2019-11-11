@@ -100,7 +100,7 @@ class ProfileList extends Component {
     let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
-    let mailloc;
+    let mailloc, dorminfo;
     let studentID;
 
     if (this.props.profile.HomeCity === PRIVATE_INFO) {
@@ -267,6 +267,30 @@ class ProfileList extends Component {
         );
       }
     }
+
+    if (
+      String(this.props.profile.PersonType).includes('stu') &&
+      this.props.profile.OnOffCampus !== ''
+    ) {
+      dorminfo = (
+        <div>
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={6} sm={6} md={3} lg={6}>
+                <Typography>Dorm Location: </Typography>
+              </Grid>
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+                <Typography>
+                  {this.props.profile.OnCampusBuilding + ' ' + this.props.profile.OnCampusRoom}
+                </Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    }
+
     if (String(this.props.profile.PersonType).includes('fac')) {
       if (this.props.profile.OnCampusDepartment !== '') {
         Department = (
@@ -338,6 +362,7 @@ class ProfileList extends Component {
             {majors}
             {minors}
             {residence}
+            {dorminfo}
             {mailloc}
             {Department}
             {mobilephone}
