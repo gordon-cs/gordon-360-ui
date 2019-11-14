@@ -7,12 +7,20 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import './timesheets.css';
 
 export default function Timesheets() {
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2019-01-18T21:11:54'));
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate2, setSelectedDate2] = React.useState(new Date());
+  const clockIcon = <ScheduleIcon />;
 
-  const handleDateChange = date => {
+  const handleDateChange1 = date => {
     setSelectedDate(date);
+  };
+
+  const handleDateChange2 = date => {
+    setSelectedDate2(date);
   };
 
   return (
@@ -24,42 +32,51 @@ export default function Timesheets() {
             marginTop: 8,
           }}
         >
-          <Grid container spacing={2} alignItems="center" justify="center">
-            <Grid item xs={12} md={3}>
+          <Grid
+            container
+            spacing={2}
+            justify="space-around"
+            alignItems="center"
+            alignContent="center"
+          >
+            <Grid item xs={12} sm={3}>
               <KeyboardDatePicker
                 margin="normal"
                 id="date-picker-dialog"
                 label="Date"
                 format="MM/dd/yyyy"
                 value={selectedDate}
-                onChange={handleDateChange}
+                onChange={handleDateChange1}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} sm={3}>
               <KeyboardTimePicker
                 margin="normal"
                 id="time-picker-in"
                 label="Time In"
                 value={selectedDate}
-                onChange={handleDateChange}
+                onChange={handleDateChange1}
                 KeyboardButtonProps={{
                   'aria-label': 'change time',
                 }}
+                keyboardIcon={clockIcon}
               />
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} sm={3}>
               <KeyboardTimePicker
+                ampm={false}
                 margin="normal"
                 id="time-picker-out"
                 label="Time Out"
-                value={selectedDate}
-                onChange={handleDateChange}
+                value={selectedDate2}
+                onChange={handleDateChange2}
                 KeyboardButtonProps={{
                   'aria-label': 'change time',
                 }}
+                keyboardIcon={clockIcon}
               />
             </Grid>
           </Grid>
