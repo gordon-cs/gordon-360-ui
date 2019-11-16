@@ -155,6 +155,14 @@ export default class About extends Component {
                 Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning&nbsp;&apos;85, Summer Practicum in
                 Computer Science (2018)
               </Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                <strong>Software Development Team, 2018/2019</strong>
+              </Typography>
+              <Typography variant="body2" paragraph>
+                Addison Abbot&nbsp;&apos;20, Nikki Adevai&nbsp;&apos;19, Emily Bishop&nbsp;&apos;20,
+                Nathaniel Rudenberg&nbsp;&apos;20, and Sam Nguyen&nbsp;&apos;19,
+                <br /> Chris Hansen, Jason Whitehouse&nbsp;&apos;99, Information Systems Group
+              </Typography>
               <Typography variant="subheading" gutterBottom>
                 <strong>Software Development Team, Summer 2019</strong>
               </Typography>
@@ -166,6 +174,14 @@ export default class About extends Component {
                 <br />
                 Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning&nbsp;&apos;85, Summer Practicum in
                 Computer Science (2019)
+              </Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                <strong>Software Development Team, 2019/2020</strong>
+              </Typography>
+              <Typography variant="body2" paragraph>
+                Ben Abbett&nbsp;&apos;21 Addison Abbot&nbsp;&apos;20, Nathaniel
+                Rudenberg&nbsp;&apos;20, Jessica Guan&nbsp;&apos;21 and Joshua Rogers&nbsp;&apos;21
+                <br /> Chris Hansen, Jason Whitehouse&nbsp;&apos;99, Information Systems Group
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
                 <strong>Beneficent Philanthropes</strong>
