@@ -102,6 +102,7 @@ class ProfileList extends Component {
     let minors, majors, residence;
     let mailloc, dorminfo;
     let studentID;
+    const { profile } = this.props;
 
     if (this.props.profile.HomeCity === PRIVATE_INFO) {
       address = 'Private as requested';
@@ -270,18 +271,18 @@ class ProfileList extends Component {
 
     if (
       String(this.props.profile.PersonType).includes('stu') &&
-      this.props.profile.OnOffCampus !== ''
+      (profile.BuildingDescription || profile.Hall)
     ) {
       dorminfo = (
         <div>
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={6} sm={6} md={3} lg={6}>
-                <Typography>Dorm Location: </Typography>
+                <Typography>Dormitory: </Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 <Typography>
-                  {this.props.profile.OnCampusBuilding + ' ' + this.props.profile.OnCampusRoom}
+                  {profile.BuildingDescription ? profile.BuildingDescription : profile.Hall}
                 </Typography>
               </Grid>
             </Grid>
@@ -311,13 +312,16 @@ class ProfileList extends Component {
       }
     }
 
-    if (String(this.props.profile.PersonType).includes('stu')) {
+    if (
+      String(this.props.profile.PersonType).includes('stu') &&
+      this.props.profile.Mail_Location !== ''
+    ) {
       mailloc = (
         <div>
           <ListItem>
             <Grid container justify="center">
               <Grid item xs={6} sm={6} md={3} lg={6}>
-                <Typography>Mail Location:</Typography>
+                <Typography>Mailbox:</Typography>
               </Grid>
               <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                 <Typography>{this.props.profile.Mail_Location}</Typography>
