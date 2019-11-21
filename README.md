@@ -1,5 +1,5 @@
 # MVP Outline
-https://docs.google.com/document/d/1ExHbYr7blx3LrLpHrpVMDdwHDLI7PCopM3YGyrqShG0/edit
+https://docs.google.com/document/d/1ExHbYr7blx3LrLpHrpVMDdwHDLI7PCopM3YGyrqShG0/edit?usp=sharing
 
 # Gordon 360 User Interface
 
