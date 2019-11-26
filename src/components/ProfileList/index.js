@@ -314,7 +314,7 @@ class ProfileList extends Component {
 
     if (
       String(this.props.profile.PersonType).includes('stu') &&
-      this.props.profile.Mail_Location !== ''
+      (this.props.profile.Mail_Location !== '' && this.props.profile.Mail_Location !== undefined)
     ) {
       mailloc = (
         <div>
