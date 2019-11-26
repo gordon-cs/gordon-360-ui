@@ -472,14 +472,19 @@ export default class Membership extends Component {
           header = (
             <div style={headerStyle}>
               <Grid container direction="row">
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     NAME
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     PARTICIPATION
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    MAILBOX
                   </Typography>
                 </Grid>
               </Grid>

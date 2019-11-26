@@ -388,13 +388,16 @@ export default class MemberList extends Component {
       content = (
         <section>
           <Grid container style={rowStyle} direction="row" alignItems="center">
-            <Grid item xs={6} sm={6} style={rowStyle}>
+            <Grid item xs={4} sm={4} style={rowStyle}>
               <Typography>
                 {this.props.member.FirstName} {this.props.member.LastName}
               </Typography>
             </Grid>
-            <Grid item xs={6} sm={4} style={rowStyle}>
+            <Grid item xs={4} sm={4} style={rowStyle}>
               <Typography>{this.state.participationDescription}</Typography>
+            </Grid>
+            <Grid item xs={4} sm={2} style={rowStyle}>
+              <Typography>Box #{this.props.member.Mail_Location}</Typography>
             </Grid>
             <Grid item xs={2} sm={2} style={rowStyle}>
               {options}
