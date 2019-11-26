@@ -94,7 +94,11 @@ export default class PeopleSearchResult extends Component {
       personClassJobTitle = Person.JobTitle;
     }
     // set mailbox up
-    if (Person.Mail_Location !== undefined) {
+    if (
+      Person.Mail_Location !== undefined &&
+      Person.Mail_Location !== null &&
+      Person.Mail_Location !== ''
+    ) {
       personMailLocation = 'Mailbox #' + Person.Mail_Location;
     }
 
