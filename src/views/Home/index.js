@@ -100,7 +100,7 @@ export default class Home extends Component {
       content = (
         <Grid container justify="center" spacing={2}>
           <Grid item xs={12} md={10}>
-            <StudentNews />
+            <Carousel/>
           </Grid>
           <Grid item xs={12} md={5}>
             {doughnut}
@@ -109,6 +109,7 @@ export default class Home extends Component {
             <DiningBalance />
           </Grid>
           {requests}
+          <StudentNews />
         </Grid>
       );
     } else {

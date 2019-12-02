@@ -22,6 +22,11 @@ export default class StudentNews extends Component {
   }
 
   render() {
+    const headerStyle = {
+      backgroundColor: gordonColors.primary.blue,
+      color: '#FFF',
+      padding: '10px',
+    };
     const content = (
         <div>
           <Grid
@@ -41,9 +46,13 @@ export default class StudentNews extends Component {
 
     return (
       <Card>
+        <div style={headerStyle}>
+              <Typography variant="body2" style={headerStyle}>
+                Student News
+              </Typography>
+            </div>
         <CardContent>
-          <CardHeader title="Student News"/>
-            {content}
+          {content}
         </CardContent>
       </Card>
     );
