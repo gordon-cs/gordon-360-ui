@@ -147,6 +147,22 @@ class IDUploader extends Component {
       var dataURL = reader.result.toString();
       var i = new Image();
       i.onload = function() {
+        // Keyboard support for cropping
+        document.addEventListener('keypress', e => {
+          if (e.code === 'ArrowUp') {
+            console.log('Up pressed');
+          } else if (e.code === 'ArrowDown') {
+            console.log('Down pressed');
+          } else if (e.code === 'ArrowRight') {
+            console.log('Right pressed');
+          } else if (e.code === 'ArrowLeft') {
+            console.log('Left pressed');
+          } else if (e.code === 'Equal') {
+            console.log('Equal/Plus pressed');
+          } else if (e.code === 'Minus') {
+            console.log('Minus pressed');
+          }
+        });
         if (i.width < CROP_DIM || i.height < CROP_DIM) {
           alert(
             'Sorry, your image is too small! Image dimensions must be at least 1200 x 1200 pixels.',
@@ -260,7 +276,7 @@ class IDUploader extends Component {
                   <div>
                     <img
                       src={IdCardTop}
-                      alt="ID card top with Gordon College logo"
+                      alt="ID card top with Gordon College logo."
                       className="placeholder-id"
                       style={{ maxWidth: '100%', maxHeight: '100%' }}
                     />
@@ -272,7 +288,7 @@ class IDUploader extends Component {
                       <div>
                         <img
                           src={this.state.IdCardPlaceholder}
-                          alt="Placeholder ID Photo"
+                          alt="Placeholder ID Photo."
                           className="placeholder-id"
                           style={{ maxWidth: '100%', maxHeight: '100%' }}
                         />
@@ -282,7 +298,7 @@ class IDUploader extends Component {
                       <div>
                         <img
                           src={IdCardGreen}
-                          alt="Green Bar with text 'student'"
+                          alt="Green Bar with text 'student'."
                           className="placeholder-id"
                           style={{ maxWidth: '100%', maxHeight: '100%' }}
                         />
