@@ -22,7 +22,7 @@ import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
 import user from '../../services/user';
 import errorLog from '../../services/errorLog';
-import Login from '../Login'
+import Login from '../Login';
 
 const CROP_DIM = 1200; // pixels
 class IDUploader extends Component {
@@ -260,7 +260,7 @@ class IDUploader extends Component {
                   <div>
                     <img
                       src={IdCardTop}
-                      alt="ID Card"
+                      alt="ID card top with Gordon College logo"
                       className="placeholder-id"
                       style={{ maxWidth: '100%', maxHeight: '100%' }}
                     />
@@ -272,7 +272,7 @@ class IDUploader extends Component {
                       <div>
                         <img
                           src={this.state.IdCardPlaceholder}
-                          alt="ID Card"
+                          alt="Placeholder ID Photo"
                           className="placeholder-id"
                           style={{ maxWidth: '100%', maxHeight: '100%' }}
                         />
@@ -282,7 +282,7 @@ class IDUploader extends Component {
                       <div>
                         <img
                           src={IdCardGreen}
-                          alt="ID Card"
+                          alt="Green Bar with text 'student'"
                           className="placeholder-id"
                           style={{ maxWidth: '100%', maxHeight: '100%' }}
                         />
@@ -294,7 +294,7 @@ class IDUploader extends Component {
             </Grid>
           </Grid>
         </Fragment>
-      )
+      );
     } else {
       content = (
         <Grid container justify="center">
@@ -308,7 +308,10 @@ class IDUploader extends Component {
               >
                 <h1>You are not logged in.</h1>
                 <br />
-                <h4>Please log in to upload an ID photo. You can press the back button or follow the URL "360.gordon.edu/id" to return to this page.</h4>
+                <h4>
+                  Please log in to upload an ID photo. You can press the back button or follow the
+                  URL "360.gordon.edu/id" to return to this page.
+                </h4>
                 <br />
                 {/*<Button
                   color="primary"
@@ -324,13 +327,12 @@ class IDUploader extends Component {
             </Card>
           </Grid>
         </Grid>
-      )
+      );
     }
 
     return (
       <Grid container justify="center" spacing="2">
         {content}
-
 
         <Dialog
           open={this.state.photoOpen}
