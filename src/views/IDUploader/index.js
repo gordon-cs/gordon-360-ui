@@ -148,7 +148,7 @@ class IDUploader extends Component {
       var i = new Image();
       i.onload = function() {
         // Keyboard support for cropping
-        document.addEventListener('keypress', e => {
+        document.addEventListener('keydown', e => {
           if (e.code === 'ArrowUp') {
             console.log('Up pressed');
           } else if (e.code === 'ArrowDown') {
@@ -161,6 +161,8 @@ class IDUploader extends Component {
             console.log('Equal/Plus pressed');
           } else if (e.code === 'Minus') {
             console.log('Minus pressed');
+          } else {
+            console.log(e.code);
           }
         });
         if (i.width < CROP_DIM || i.height < CROP_DIM) {
