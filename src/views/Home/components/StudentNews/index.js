@@ -7,12 +7,13 @@ import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
-
+import NewsItem from './components/NewsItem';
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
 import session from '../../../../services/session';
 import GordonLoader from '../../../../components/Loader';
 import List from '@material-ui/core/List';
+import './student-news.css';
 
 export default class StudentNews extends Component {
   constructor(props) {
@@ -33,53 +34,62 @@ export default class StudentNews extends Component {
     };
 
     const header = (
-      <div style={headerStyle}>
-        <Grid container direction="row">
-          <Grid item xs={4}>
-            <Typography variant="body2" style={headerStyle}>
-              EVENT
-            </Typography>
+      <Card>
+        <div style={headerStyle}>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={4} align="left">
+              <Typography variant="body2" style={headerStyle}>
+                STUDENT NEWS
+              </Typography>
+            </Grid>
+            <Grid item xs={8} align="right">
+              <Button
+                variant="contained"
+                color="secondary"
+                style={{
+                  color: 'white',
+                }}
+                onClick={() => {
+                  window.location.pathname = '/student-news-submissions';
+                }}
+              >
+                New Submission
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <Typography variant="body2" style={headerStyle}>
-              DATE
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography variant="body2" style={headerStyle}>
-              NAME
-            </Typography>
-          </Grid>
-        </Grid>
-      </div>
+        </div>
+      </Card>
     );
 
     const content = (
-      <section>
-      <Card onClick={this.handleExpandClick}>
-        <CardContent>
-          <Typography>Christmas Gala Ticket For Sale</Typography>
-          <Typography type="caption">SeHee Hyung</Typography>
-        </CardContent>
-        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-          <CardContent>
-            <Typography>Description</Typography>
-            <Typography type="caption">Hi All, I'm selling a Christmas Gala Ticket.</Typography>
-            {/* {content} */}
-          </CardContent>
-        </Collapse>
-      </Card>
-    </section>
+      <div className="event-list">
+        <NewsItem
+          subject="Selling Christmas Gala Ticket"
+          submittedBy="SeHee Hyung"
+          description="If you want to buy Christmas Gala ticket, email SeHee Hyung"
+        />
+        <NewsItem
+          subject="Need more meme videos"
+          submittedBy="Michael Xiao"
+          description="Plz send me your meme videos so I can make meme compilation thx bye"
+        />
+        <NewsItem
+          subject="We need help"
+          submittedBy="Student News"
+          description="Who do we talk to so we can pull student news items"
+        />
+      </div>
     );
 
     return (
       <section>
-        <Card>
-          {header}
-          <Grid>
-            <List className="event-list">{content}</List>
-          </Grid>
-        </Card>
+        {/* <Card onClick={this.handleExpandClick}> */}
+        {header}
+        <Grid>
+          {/* <List className="event-list">{content}</List> */}
+          {content}
+        </Grid>
+        {/* </Card> */}
       </section>
     );
   }
