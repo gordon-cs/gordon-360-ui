@@ -14,7 +14,7 @@ export default class VerseOfTheDay extends Component {
     this.state = {
       error: null,
       loading: true,
-      verse: 'This is a test of a verse',
+      verse: '',
     };
   }
   componentDidMount() {
@@ -35,7 +35,7 @@ export default class VerseOfTheDay extends Component {
       },
     )
       .then(response => {
-        console.log(response.json());
+        this.setState({ verse: response.json() });
       })
       .catch(err => {
         console.log(err);
@@ -48,7 +48,7 @@ export default class VerseOfTheDay extends Component {
       <Card>
         <CardContent>
           <CardHeader title="Verse Of The Day" />
-          {'verseOfTheDay'}
+          {verseOfTheDay}
         </CardContent>
       </Card>
     );

@@ -8,6 +8,7 @@ import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
 import user from '../../services/user';
 import Login from '../Login';
+import VerseOfTheDay from './components/VerseBox/index';
 import './home.css';
 
 import '../../app.css';
@@ -101,6 +102,15 @@ export default class Home extends Component {
         <Grid container justify="center" spacing={2}>
           <Grid item xs={12} md={10}>
             <Carousel />
+          </Grid>
+          <Grid item xs={12} md={12}>
+            {' '}
+          </Grid>
+          <Grid item xs={12} md={10}>
+            <VerseOfTheDay />
+          </Grid>
+          <Grid item xs={12} md={12}>
+            {' '}
           </Grid>
           <Grid item xs={12} md={5}>
             {doughnut}
