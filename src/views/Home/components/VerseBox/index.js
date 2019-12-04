@@ -14,11 +14,15 @@ export default class VerseOfTheDay extends Component {
     this.state = {
       error: null,
       loading: true,
-      verse: '',
+      verse: null,
+      book: null,
+      chapter: null,
+      verseFrom: null,
+      verseTo: null,
     };
   }
   componentDidMount() {
-    console.log('Made it here boss');
+    this.loadVerse();
   }
 
   async loadVerse() {
@@ -35,7 +39,17 @@ export default class VerseOfTheDay extends Component {
       },
     )
       .then(response => {
-        this.setState({ verse: response.json() });
+        return response.json();
+      })
+      .then(result => {
+        console.log(result);
+        this.setState({
+          verse: result.Output,
+          book: result.Book,
+          chapter: result.Chapter,
+          verseFrom: result.VerseFrom,
+          verseTo: result.VerseTo,
+        });
       })
       .catch(err => {
         console.log(err);
@@ -44,11 +58,18 @@ export default class VerseOfTheDay extends Component {
 
   render() {
     let verseOfTheDay = this.state.verse;
+    let title =
+      this.state.book +
+      ' ' +
+      this.state.chapter +
+      ': ' +
+      this.state.verseFrom +
+      '-' +
+      this.state.verseTo;
     return (
       <Card>
         <CardContent>
-          <CardHeader title="Verse Of The Day" />
-          {verseOfTheDay}
+          <CardHeader title={title} />"{verseOfTheDay}"
         </CardContent>
       </Card>
     );
