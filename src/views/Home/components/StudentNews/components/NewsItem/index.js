@@ -1,8 +1,7 @@
 // import { ListItem, ListItemText } from 'material-ui/List';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Card, CardContent, Typography, Collapse } from '@material-ui/core';
-// import './event-item.css';
+import '../../student-news.css';
 
 export default class GordonNewsItem extends Component {
   constructor(props) {
@@ -16,23 +15,23 @@ export default class GordonNewsItem extends Component {
     this.setState({ open: !this.state.open });
   }
   render() {
-    const { subject, submittedBy, description } = this.props;
+    const { subject, submittedBy, description, dateSubmitted } = this.props;
     return (
-      <section>
-        <Card onClick={this.handleExpandClick}>
+      <Card onClick={this.handleExpandClick} className="news-item">
+        <CardContent>
+          <Typography variant="h6">{subject}</Typography>
+          <Typography variant="subtitle2">
+            {submittedBy} on {dateSubmitted}
+          </Typography>
+        </CardContent>
+        <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography>{subject}</Typography>
-            <Typography type="caption">{submittedBy}</Typography>
+            <Typography variant="overline">Description</Typography>
+            <Typography variant="body1">{description}</Typography>
+            {/* {content} */}
           </CardContent>
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography>Description</Typography>
-              <Typography type="caption">{description}</Typography>
-              {/* {content} */}
-            </CardContent>
-          </Collapse>
-        </Card>
-      </section>
+        </Collapse>
+      </Card>
     );
   }
 }

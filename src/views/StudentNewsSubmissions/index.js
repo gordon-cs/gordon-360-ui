@@ -1,4 +1,3 @@
-import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import {
@@ -9,8 +8,6 @@ import {
   Button,
   OutlinedInput,
 } from '@material-ui/core/';
-import { gordonColors } from '../../theme';
-import TextField from '@material-ui/core/TextField';
 
 export default class StudentNewsSubmissions extends Component {
   constructor(props) {
