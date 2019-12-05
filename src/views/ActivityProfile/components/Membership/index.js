@@ -327,14 +327,9 @@ export default class Membership extends Component {
                     PARTICIPATION
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={3}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     TITLE/COMMENT
-                  </Typography>
-                </Grid>
-                <Grid item xs={1}>
-                  <Typography variant="body2" className="header" style={headerStyle}>
-                    MAIL #
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
