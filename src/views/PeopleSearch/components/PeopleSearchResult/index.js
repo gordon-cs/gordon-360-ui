@@ -51,7 +51,7 @@ export default class PeopleSearchResult extends Component {
 
   render() {
     const { Person } = this.props;
-    let personClassJobTitle, nickname;
+    let personClassJobTitle, nickname, personMailLocation;
 
     // set nicknames up
     if (
@@ -93,6 +93,14 @@ export default class PeopleSearchResult extends Component {
     } else if (Person.Type !== 'Student' && Person.JobTitle !== undefined) {
       personClassJobTitle = Person.JobTitle;
     }
+    // set mailbox up
+    if (
+      Person.Mail_Location !== undefined &&
+      Person.Mail_Location !== null &&
+      Person.Mail_Location !== ''
+    ) {
+      personMailLocation = '#' + Person.Mail_Location;
+    }
 
     return (
       <section>
@@ -132,6 +140,7 @@ export default class PeopleSearchResult extends Component {
             </Grid>
             <Grid item xs={2}>
               <Typography>{Person.AD_Username}</Typography>
+              <Typography>{personMailLocation}</Typography>
             </Grid>
           </Grid>
         </Link>
