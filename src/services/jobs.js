@@ -13,4 +13,12 @@ const getE2eTestResult = () => {
   return http.get(`jobs/hello-world`);
 };
 
-export default { getE2eTestResult };
+/**
+ * Get active jobs for current user
+ * @return {Promise.<String>} User's active jobs
+ */
+const getActiveJobsForUser = userID => {
+  return http.get(`jobs/getJobs/${userID}`);
+};
+
+export default { getE2eTestResult, getActiveJobsForUser };
