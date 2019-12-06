@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import 'date-fns';
-import { Grid, Card, CardContent } from '@material-ui/core/';
+import {
+  Grid,
+  Card,
+  CardContent,
+  FormControl,
+  InputLabel,
+  Select,
+  Input,
+  MenuItem,
+} from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
 import {
@@ -13,14 +22,16 @@ import './timesheets.css';
 
 export default function Timesheets() {
   const [userJobs, setUserJobs] = useState([]);
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate2, setSelectedDate2] = React.useState(new Date());
+  const [selectedJob, setSelectedJob] = React.useState('');
+
   useEffect(() => {
     jobs.getActiveJobsForUser('50193229').then(result => {
       setUserJobs(result);
     });
   }, []);
 
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [selectedDate2, setSelectedDate2] = React.useState(new Date());
   const clockIcon = <ScheduleIcon />;
 
   const handleDateChange1 = date => {
@@ -32,10 +43,33 @@ export default function Timesheets() {
   };
 
   const jobsMenuItems = userJobs.map(job => (
-    <option value={job.EML_DESCRIPTION} key={job.ID}>
+    <MenuItem value={job.EML_DESCRIPTION} key={job.ID}>
       {job.EML_DESCRIPTION}
-    </option>
+    </MenuItem>
   ));
+
+  const jobDropdown = (
+    <FormControl
+      style={{
+        width: 252,
+      }}
+    >
+      <InputLabel>Jobs</InputLabel>
+      <Select
+        value={selectedJob}
+        onChange={e => {
+          setSelectedJob(e.target.value);
+        }}
+        input={<Input id="job" />}
+      >
+        <MenuItem label="None" value="">
+          <em>None</em>
+        </MenuItem>
+        {jobsMenuItems}
+      </Select>
+    </FormControl>
+  );
+
   return (
     <>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -46,7 +80,6 @@ export default function Timesheets() {
               marginTop: 8,
             }}
           >
-            <select>{jobsMenuItems}</select>
             <Grid
               container
               spacing={2}
@@ -82,7 +115,6 @@ export default function Timesheets() {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <KeyboardTimePicker
-                  ampm={false}
                   margin="normal"
                   id="time-picker-out"
                   label="Time Out"
@@ -93,6 +125,9 @@ export default function Timesheets() {
                   }}
                   keyboardIcon={clockIcon}
                 />
+              </Grid>
+              <Grid item xs={12} lg={3}>
+                {jobDropdown}
               </Grid>
             </Grid>
           </CardContent>
