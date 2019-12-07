@@ -9,6 +9,8 @@ import {
   Select,
   Input,
   MenuItem,
+  Button,
+  Typography,
 } from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
@@ -18,6 +20,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import user from './../../services/user';
 import './timesheets.css';
 
 export default function Timesheets() {
@@ -25,31 +28,38 @@ export default function Timesheets() {
   const [selectedDate1, setSelectedDate1] = React.useState(new Date());
   const [selectedDate2, setSelectedDate2] = React.useState(new Date());
   const [selectedJob, setSelectedJob] = React.useState('');
-  // const [day2PushedForward, setDay2CPushedForward] = React.useState(false);
+  const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = React.useState(false);
 
-  // const handleHourDifference = (timeIn, timeOut) => {
-  //   let timeDiff = timeOut.getTime() - timeIn.getTime();
-  //   if(timeDiff < 0){
-  //     selectedDate2.setTime(selectedDate2.getTime() + 86400000);
-  //     console.log("Day In = " + selectedDate.getDay());
-  //     console.log("Day Out = " + selectedDate2.getDay());
-  //     console.log("overnightHourDiff = " + (selectedDate2.getTime() - selectedDate.getTime()) / 1000 / 60 / 60 )
-  //   } else {
-  //     console.log("It's a regular hour difference my dude", (selectedDate2.getTime() - selectedDate.getTime()) / 1000 / 60 / 60);
-  //   }
-  // }
+  const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
+    let timeDiff = timeOut.getTime() - timeIn.getTime();
+    if (timeDiff < 0) {
+      setTimeOutIsBeforeTimeIn(true);
+    } else {
+      setTimeOutIsBeforeTimeIn(false);
+    }
+  };
 
   useEffect(() => {
-    jobs.getActiveJobsForUser('50193229').then(result => {
-      setUserJobs(result);
-    });
+    try {
+      user.getProfileInfo().then(result => {
+        let profile = result;
+        getActiveJobsForUser(profile.ID);
+      });
+    } catch (error) {
+      //
+    }
   }, []);
 
   const clockIcon = <ScheduleIcon />;
 
+  const getActiveJobsForUser = userID => {
+    jobs.getActiveJobsForUser(userID).then(result => {
+      setUserJobs(result);
+    });
+  };
+
   const handleDateChange1 = date => {
-    // let timeDiff = selectedDate2.getTime() - selectedDate.getTime();
-    // handleHourDifference(date, selectedDate2);
+    handleTimeOutIsBeforeTimeIn(date, selectedDate2);
     setSelectedDate1(date);
     setSelectedDate2(date);
   };
@@ -57,6 +67,7 @@ export default function Timesheets() {
   const handleDateChange2 = date => {
     // let timeDiff = selectedDate2.getTime() - selectedDate.getTime();
     // handleHourDifference(selectedDate, date);
+    handleTimeOutIsBeforeTimeIn(selectedDate1, date);
     setSelectedDate2(date);
   };
 
@@ -92,6 +103,14 @@ export default function Timesheets() {
         {jobsMenuItems}
       </Select>
     </FormControl>
+  );
+
+  const errorText = timeOutIsBeforeTimeIn ? (
+    <Typography variant="overline" color="error">
+      A shift cannot end before it starts.
+    </Typography>
+  ) : (
+    <></>
   );
 
   return (
@@ -167,6 +186,23 @@ export default function Timesheets() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 {jobDropdown}
+              </Grid>
+              <Grid items xs={12}>
+                <Grid container>
+                  <Grid item xs={12}>
+                    {errorText}
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button variant="contained" color="primary">
+                      Save
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button variant="contained" color="primary">
+                      Submit
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </CardContent>
