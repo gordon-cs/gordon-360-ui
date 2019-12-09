@@ -13,6 +13,7 @@ export default class GordonNewsItem extends Component {
   }
   handleExpandClick() {
     this.setState({ open: !this.state.open });
+    this.props.onClick();
   }
   render() {
     const { subject, submittedBy, description, dateSubmitted } = this.props;

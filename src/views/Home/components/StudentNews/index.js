@@ -21,10 +21,10 @@ export default class StudentNews extends Component {
 
   componentDidMount() {
     studentNewsService.get().then(response => {
-      console.log('Student news:', response);
-      // this.setState({
-      //   studentNews: response,
-      // });
+      console.log('Student news:', response.studentNews);
+      this.setState({
+        studentNews: response.studentNews,
+      });
     });
   }
 
@@ -34,8 +34,8 @@ export default class StudentNews extends Component {
   }
 
   async getStudentNews() {
-    const news = await news.getStudentNews();
-    console.log(news);
+    const theNews = await news.getStudentNews();
+    console.log(theNews);
   }
 
   render() {
@@ -44,6 +44,22 @@ export default class StudentNews extends Component {
       color: '#FFF',
       padding: '10px',
     };
+    const { studentNews } = this.state;
+    const newsItems = studentNews ? (
+      studentNews.map(newsItem => (
+        <NewsItem
+          subject={newsItem.subject}
+          submittedBy={newsItem.submittedBy}
+          description={newsItem.description}
+          dateSubmitted={newsItem.dateSubmitted}
+          onClick={() => {
+            this.handleExpandClick();
+          }}
+        />
+      ))
+    ) : (
+      <></>
+    );
 
     const header = (
       <Card>
@@ -73,28 +89,7 @@ export default class StudentNews extends Component {
       </Card>
     );
 
-    const content = (
-      <div className="news-list">
-        <NewsItem
-          subject="Selling Christmas Gala Ticket"
-          submittedBy="SeHee Hyung"
-          description="If you want to buy Christmas Gala ticket, email SeHee Hyung"
-          dateSubmitted="12/2/2019"
-        />
-        <NewsItem
-          subject="Need more meme videos"
-          submittedBy="Michael Xiao"
-          description="Plz send me your meme videos so I can make meme compilation thx bye"
-          dateSubmitted="12/1/2019"
-        />
-        <NewsItem
-          subject="We need help"
-          submittedBy="Student News"
-          description="Who do we talk to so we can pull student news items"
-          dateSubmitted="11/28/2019"
-        />
-      </div>
-    );
+    const content = <div className="news-list">{newsItems}</div>;
 
     return (
       <section>
