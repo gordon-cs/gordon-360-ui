@@ -5,13 +5,26 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import NewsItem from './components/NewsItem';
 import { gordonColors } from '../../../../theme';
+import studentNewsService from '../../../../services/studentNewsService';
 import './student-news.css';
 
 export default class StudentNews extends Component {
   constructor(props) {
     super(props);
     this.handleExpandClick = this.handleExpandClick.bind(this);
-    this.state = { open: false };
+    this.state = {
+      open: false,
+      studentNews: null,
+    };
+  }
+
+  componentDidMount() {
+    studentNewsService.get().then(response => {
+      console.log('Student news:', response);
+      // this.setState({
+      //   studentNews: response,
+      // });
+    });
   }
 
   handleExpandClick() {
