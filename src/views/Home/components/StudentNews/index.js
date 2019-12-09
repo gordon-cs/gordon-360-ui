@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import NewsItem from './components/NewsItem';
 import { gordonColors } from '../../../../theme';
 import './student-news.css';
+import news from '../../../../services/news';
 
 export default class StudentNews extends Component {
   constructor(props) {
@@ -16,6 +17,11 @@ export default class StudentNews extends Component {
 
   handleExpandClick() {
     this.setState({ open: !this.state.open });
+  }
+
+  async getStudentNews() {
+    const news = await news.getStudentNews();
+    console.log(news);
   }
 
   render() {
