@@ -32,6 +32,10 @@ export default class StudentNewsSubmissions extends Component {
                 multiline
               />
             </CardContent>
+            <CardHeader title="Subject" />
+            <CardContent>
+              <OutlinedInput autoFocus fullWidth multiline />
+            </CardContent>
             <CardActions>
               <Button
                 variant="contained"
