@@ -16,8 +16,17 @@ export default class StudentNewsSubmissions extends Component {
       loading: true,
       version: null,
     };
+    this.data = null;
   }
 
+  postData = () => {
+    console.log(this.data);
+    
+      //user.postImage(croppedImage);
+      
+  };
+
+  
   render() {
     return (
       <Grid container justify="center">
@@ -30,6 +39,8 @@ export default class StudentNewsSubmissions extends Component {
                 // style={styles.textField}
                 fullWidth
                 multiline
+                value = {this.data}
+                onChange = { (event) => {this.data = event.target.value}}
               />
             </CardContent>
             <CardActions>
@@ -39,6 +50,7 @@ export default class StudentNewsSubmissions extends Component {
                 style={{
                   marginLeft: 'auto',
                 }}
+                onClick={this.postData}
               >
                 Submit
               </Button>
