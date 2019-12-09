@@ -17,6 +17,7 @@ export default class StudentNews extends Component {
 
   handleExpandClick() {
     this.setState({ open: !this.state.open });
+    this.getStudentNews();
   }
 
   async getStudentNews() {
