@@ -24,7 +24,13 @@ const getActiveJobsForUser = userID => {
 
 /**
  * Get active jobs for current user
- * @param {String} userID The Gordon id of the user whose jobs to fetch
+ * @param {Number} studentID The student's id under which to submit the shift
+ * @param {Number} eml we don't know what this means yet
+ * @param {DateTime} shiftStart The start time of the shift
+ * @param {DateTime} shiftEnd The end time of the shift
+ * @param {Number} hoursWorked The number of hours worked
+ * @param {String} shiftNotes Shift notes
+ * @param {String} lastChangedBy The person who last updated the shift
  * @return {Promise.<String>} User's active jobs
  */
 const submitShiftForUser = async (
