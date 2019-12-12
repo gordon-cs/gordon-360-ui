@@ -27,13 +27,16 @@ export default function Timesheets() {
   const [userJobs, setUserJobs] = useState([]);
   const [selectedDate1, setSelectedDate1] = React.useState(new Date());
   const [selectedDate2, setSelectedDate2] = React.useState(new Date());
-  const [selectedJob, setSelectedJob] = React.useState('');
+  const [selectedJob, setSelectedJob] = React.useState({});
   const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = React.useState(false);
   const [timeWorked, setTimeWorked] = React.useState('');
+  const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = React.useState(0.0);
+  const [userId, setUserId] = React.useState('');
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
     let timeDiff = timeOut.getTime() - timeIn.getTime();
     let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
+    setHoursWorkedInDecimal(calculatedTimeDiff);
     let hoursWorked = Math.floor(calculatedTimeDiff);
     let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60);
 
@@ -55,6 +58,7 @@ export default function Timesheets() {
       user.getProfileInfo().then(result => {
         let profile = result;
         getActiveJobsForUser(profile.ID);
+        setUserId(profile.ID);
       });
     } catch (error) {
       //
@@ -80,8 +84,40 @@ export default function Timesheets() {
     setSelectedDate2(date);
   };
 
+  const handleSaveButtonClick = () => {
+    saveShift(
+      userId,
+      '93222',
+      selectedDate1.toDateString(),
+      selectedDate2.toDateString(),
+      hoursWorkedInDecimal,
+      'Test shift',
+      'nathaniel.rudenberg',
+    );
+  };
+
+  const saveShift = async (
+    studentID,
+    eml,
+    shiftStart,
+    shiftEnd,
+    hoursWorked,
+    shiftNotes,
+    lastChangedBy,
+  ) => {
+    await jobs.submitShiftForUser(
+      studentID,
+      eml,
+      shiftStart,
+      shiftEnd,
+      hoursWorked,
+      shiftNotes,
+      lastChangedBy,
+    );
+  };
+
   const jobsMenuItems = userJobs.map(job => (
-    <MenuItem value={job.EML_DESCRIPTION} key={job.ID}>
+    <MenuItem value={job.EML_DESCRIPTION} key={job.EML}>
       {job.EML_DESCRIPTION}
     </MenuItem>
   ));
@@ -205,7 +241,7 @@ export default function Timesheets() {
                     {errorText}
                   </Grid>
                   <Grid item xs={6}>
-                    <Button variant="contained" color="primary">
+                    <Button variant="contained" color="primary" onClick={handleSaveButtonClick}>
                       Save
                     </Button>
                   </Grid>
