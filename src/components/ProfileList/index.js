@@ -100,7 +100,9 @@ class ProfileList extends Component {
     let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
+    let mailloc, dorminfo;
     let studentID;
+    const { profile } = this.props;
 
     if (this.props.profile.HomeCity === PRIVATE_INFO) {
       address = 'Private as requested';
@@ -266,6 +268,30 @@ class ProfileList extends Component {
         );
       }
     }
+
+    if (
+      String(this.props.profile.PersonType).includes('stu') &&
+      (profile.BuildingDescription || profile.Hall)
+    ) {
+      dorminfo = (
+        <div>
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={6} sm={6} md={3} lg={6}>
+                <Typography>Dormitory: </Typography>
+              </Grid>
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+                <Typography>
+                  {profile.BuildingDescription ? profile.BuildingDescription : profile.Hall}
+                </Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    }
+
     if (String(this.props.profile.PersonType).includes('fac')) {
       if (this.props.profile.OnCampusDepartment !== '') {
         Department = (
@@ -284,6 +310,27 @@ class ProfileList extends Component {
           </div>
         );
       }
+    }
+
+    if (
+      String(this.props.profile.PersonType).includes('stu') &&
+      (this.props.profile.Mail_Location !== '' && this.props.profile.Mail_Location !== undefined)
+    ) {
+      mailloc = (
+        <div>
+          <ListItem>
+            <Grid container justify="center">
+              <Grid item xs={6} sm={6} md={3} lg={6}>
+                <Typography>Mailbox:</Typography>
+              </Grid>
+              <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+                <Typography>{this.props.profile.Mail_Location}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+          <Divider />
+        </div>
+      );
     }
 
     if (this.props.myProf && String(this.props.profile.PersonType).includes('stu')) {
@@ -319,6 +366,8 @@ class ProfileList extends Component {
             {majors}
             {minors}
             {residence}
+            {dorminfo}
+            {mailloc}
             {Department}
             {mobilephone}
             {studentID}
