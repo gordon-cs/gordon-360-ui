@@ -29,13 +29,24 @@ export default function Timesheets() {
   const [selectedDate2, setSelectedDate2] = React.useState(new Date());
   const [selectedJob, setSelectedJob] = React.useState('');
   const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = React.useState(false);
+  const [timeWorked, setTimeWorked] = React.useState('');
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
     let timeDiff = timeOut.getTime() - timeIn.getTime();
+    let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
+    let hoursWorked = Math.floor(calculatedTimeDiff);
+    let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60);
+
+    console.log('Caclulated Time difference:', timeDiff);
+    console.log('Hours worked:', hoursWorked);
+    console.log('Minutes worked:', minutesWorked);
     if (timeDiff < 0) {
       setTimeOutIsBeforeTimeIn(true);
+      console.log('Time difference:', timeWorked);
     } else {
       setTimeOutIsBeforeTimeIn(false);
+      setTimeWorked(hoursWorked + ':' + minutesWorked);
+      console.log('Time difference:', timeWorked);
     }
   };
 
@@ -65,8 +76,6 @@ export default function Timesheets() {
   };
 
   const handleDateChange2 = date => {
-    // let timeDiff = selectedDate2.getTime() - selectedDate.getTime();
-    // handleHourDifference(selectedDate, date);
     handleTimeOutIsBeforeTimeIn(selectedDate1, date);
     setSelectedDate2(date);
   };
@@ -183,6 +192,9 @@ export default function Timesheets() {
                   }}
                   keyboardIcon={clockIcon}
                 />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <Typography>Hours worked: {timeWorked}</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 {jobDropdown}
