@@ -184,25 +184,20 @@ class IDUploader extends Component {
       let data = this.refs.cropper.getCropBoxData();
       if (e.code === 'ArrowUp') {
         data.top -= 5;
-        this.refs.cropper.setCropBoxData(data);
       } else if (e.code === 'ArrowDown') {
         data.top += 5;
-        this.refs.cropper.setCropBoxData(data);
       } else if (e.code === 'ArrowRight') {
         data.left += 5;
-        this.refs.cropper.setCropBoxData(data);
       } else if (e.code === 'ArrowLeft') {
         data.left -= 5;
-        this.refs.cropper.setCropBoxData(data);
       } else if (e.code === 'Equal') {
         data.height += 5;
         data.width += 5;
-        this.refs.cropper.setCropBoxData(data);
       } else if (e.code === 'Minus') {
         data.height -= 5;
         data.width -= 5;
-        this.refs.cropper.setCropBoxData(data);
       }
+      this.refs.cropper.setCropBoxData(data);
     });
   }
 
