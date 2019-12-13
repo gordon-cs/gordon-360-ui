@@ -1,6 +1,5 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
@@ -8,6 +7,7 @@ import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
 import user from '../../services/user';
 import Login from '../Login';
+
 import './home.css';
 
 import '../../app.css';
@@ -55,6 +55,7 @@ export default class Home extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
+
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
