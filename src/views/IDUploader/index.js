@@ -176,32 +176,32 @@ class IDUploader extends Component {
       event.preventDefault();
       this.refs.cropper.zoomTo(1);
     }
-      document.addEventListener('keydown', e => {
-        if (e.code === 'Equal') {
-          console.log('Equal/Plus pressed');
-          this.refs.cropper.zoom(1.1);
-        } else if (e.code === 'Minus') {
-          console.log('Minus pressed');
-          this.refs.cropper.zoom(0.9);
-        }
-    });
   }
 
   onCropperMove() {
     // Keyboard support for cropping
     document.addEventListener('keydown', e => {
+      let data = this.refs.cropper.getCropBoxData();
       if (e.code === 'ArrowUp') {
-        console.log('Up pressed');
-        this.refs.cropper.move(0, 1);
+        data.top -= 5;
+        this.refs.cropper.setCropBoxData(data);
       } else if (e.code === 'ArrowDown') {
-        console.log('Down pressed');
-        this.refs.cropper.move(0, -1);
+        data.top += 5;
+        this.refs.cropper.setCropBoxData(data);
       } else if (e.code === 'ArrowRight') {
-        console.log('Right pressed');
-        this.refs.cropper.move(-1, 0);
+        data.left += 5;
+        this.refs.cropper.setCropBoxData(data);
       } else if (e.code === 'ArrowLeft') {
-        console.log('Left pressed');
-        this.refs.cropper.move(1, 0);
+        data.left -= 5;
+        this.refs.cropper.setCropBoxData(data);
+      } else if (e.code === 'Equal') {
+        data.height += 5;
+        data.width += 5;
+        this.refs.cropper.setCropBoxData(data);
+      } else if (e.code === 'Minus') {
+        data.height -= 5;
+        data.width -= 5;
+        this.refs.cropper.setCropBoxData(data);
       }
     });
   }
