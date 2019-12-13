@@ -296,7 +296,7 @@ class IDUploader extends Component {
                       <div>
                         <img
                           src={this.state.IdCardPlaceholder}
-                          alt="Placeholder ID Photo."
+                          alt="Placeholder ID."
                           className="placeholder-id"
                           style={{ maxWidth: '100%', maxHeight: '100%' }}
                         />
