@@ -306,7 +306,7 @@ class IDUploader extends Component {
                       <div>
                         <img
                           src={IdCardGreen}
-                          alt="Green Bar with text 'student'."
+                          alt="Colored bar with text 'student'."
                           className="placeholder-id"
                           style={{ maxWidth: '100%', maxHeight: '100%' }}
                         />
