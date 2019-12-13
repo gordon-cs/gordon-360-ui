@@ -147,22 +147,6 @@ class IDUploader extends Component {
       var dataURL = reader.result.toString();
       var i = new Image();
       i.onload = function() {
-        // Keyboard support for cropping
-        document.addEventListener('keypress', e => {
-          if (e.code === 'ArrowUp') {
-            console.log('Up pressed');
-          } else if (e.code === 'ArrowDown') {
-            console.log('Down pressed');
-          } else if (e.code === 'ArrowRight') {
-            console.log('Right pressed');
-          } else if (e.code === 'ArrowLeft') {
-            console.log('Left pressed');
-          } else if (e.code === 'Equal') {
-            console.log('Equal/Plus pressed');
-          } else if (e.code === 'Minus') {
-            console.log('Minus pressed');
-          }
-        });
         if (i.width < CROP_DIM || i.height < CROP_DIM) {
           alert(
             'Sorry, your image is too small! Image dimensions must be at least 1200 x 1200 pixels.',
@@ -175,6 +159,7 @@ class IDUploader extends Component {
           var cropDim = this.minCropBoxDim(i.width, displayWidth);
           this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
           this.setState({ preview: dataURL });
+          this.onCropperMove();
         }
       }.bind(this);
       i.src = dataURL;
@@ -191,6 +176,33 @@ class IDUploader extends Component {
       event.preventDefault();
       this.refs.cropper.zoomTo(1);
     }
+  }
+
+  onCropperMove() {
+    // Keyboard support for cropping
+    document.addEventListener('keydown', e => {
+      if (e.code === 'ArrowUp') {
+        console.log('Up pressed');
+        this.refs.cropper.move(0, 20);
+      } else if (e.code === 'ArrowDown') {
+        console.log('Down pressed');
+        this.refs.cropper.move(0, -1);
+      } else if (e.code === 'ArrowRight') {
+        console.log('Right pressed');
+        this.refs.cropper.move(1, 0);
+      } else if (e.code === 'ArrowLeft') {
+        console.log('Left pressed');
+        this.refs.cropper.move(-1, 0);
+      } else if (e.code === 'Equal') {
+        console.log('Equal/Plus pressed');
+        this.refs.cropper.scale(2);
+      } else if (e.code === 'Minus') {
+        console.log('Minus pressed');
+        this.refs.cropper.scale(0.9);
+      } else {
+        console.log(e.code);
+      }
+    });
   }
 
   render() {
@@ -405,6 +417,7 @@ class IDUploader extends Component {
                     zoom={this.onCropperZoom.bind(this)}
                     zoomable={false}
                     dragMode={'none'}
+                    move={this.onCropperMove.bind(this)}
                     minCropBoxWidth={this.state.cropperData.cropBoxDim}
                     minCropBoxHeight={this.state.cropperData.cropBoxDim}
                   />
