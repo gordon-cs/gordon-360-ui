@@ -4,6 +4,7 @@ import {
   Grid,
   Card,
   CardContent,
+  CardHeader,
   FormControl,
   InputLabel,
   Select,
@@ -11,6 +12,7 @@ import {
   MenuItem,
   Button,
   Typography,
+  Divider,
 } from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
@@ -20,11 +22,13 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import SavedShiftsList from './components/SavedShiftsList';
 import user from './../../services/user';
 import './timesheets.css';
 
 export default function Timesheets() {
   const [userJobs, setUserJobs] = useState([]);
+  const [savedShifts, setSavedShifts] = useState([]);
   const [selectedDate1, setSelectedDate1] = React.useState(new Date());
   const [selectedDate2, setSelectedDate2] = React.useState(new Date());
   const [selectedJob, setSelectedJob] = React.useState({});
@@ -57,6 +61,7 @@ export default function Timesheets() {
     try {
       user.getProfileInfo().then(result => {
         let profile = result;
+        console.log('Profile.ID:', profile.ID);
         getActiveJobsForUser(profile.ID);
         setUserId(profile.ID);
       });
@@ -72,6 +77,16 @@ export default function Timesheets() {
       setUserJobs(result);
     });
   };
+
+  const getSavedShiftsForUser = userID => {
+    return jobs.getSavedShiftsForUser(userID);
+    // .then(result => {
+    //   savedShifts = result;
+    // });
+  };
+
+  let savedShiftsListComponent =
+    userId !== '' ? <SavedShiftsList getShifts={getSavedShiftsForUser} userID={userId} /> : <></>;
 
   const handleDateChange1 = date => {
     handleTimeOutIsBeforeTimeIn(date, selectedDate2);
@@ -168,6 +183,7 @@ export default function Timesheets() {
               marginTop: 8,
             }}
           >
+            <CardHeader title="Enter a shift" />
             <Grid
               container
               spacing={2}
@@ -252,6 +268,25 @@ export default function Timesheets() {
                   </Grid>
                 </Grid>
               </Grid>
+            </Grid>
+          </CardContent>
+          <Divider
+            style={{
+              backgroundColor: 'black',
+            }}
+          />
+          <CardContent>
+            <CardHeader title="Saved Shifts" />
+            <Grid
+              container
+              spacing={2}
+              justify="space-around"
+              alignItems="center"
+              alignContent="center"
+            >
+              {/* <Grid item xs={12} sm={6} md={3}> */}
+              {savedShiftsListComponent}
+              {/* </Grid> */}
             </Grid>
           </CardContent>
         </Card>
