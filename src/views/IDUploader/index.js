@@ -374,6 +374,8 @@ class IDUploader extends Component {
                 {this.props.width === 'md' || this.props.width === 'sm' || this.props.width === 'xs'
                   ? 'Tap Image to Browse Files'
                   : 'Drag & Drop Picture, or Click to Browse Files'}
+                <br /> Use the arrow keys to move the crop box.
+                <br /> Use + or - to resize.
               </DialogContentText>
               {!preview && (
                 <Dropzone
