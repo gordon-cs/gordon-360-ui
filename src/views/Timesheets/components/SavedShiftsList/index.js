@@ -24,9 +24,23 @@ export default class SavedShiftsList extends Component {
     });
   }
 
+  reloadDataAfterDelete() {
+    const { userID } = this.props;
+    this.setState({
+      shifts: [],
+    });
+    this.props.getShifts(userID).then(shifts => {
+      this.setState({
+        shifts: shifts,
+      });
+    });
+  }
+
   render() {
     const deleteShiftForUser = (rowID, userID) => {
-      let result = jobs.deleteShiftForUser(rowID, userID);
+      let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
+        this.reloadDataAfterDelete();
+      });
       return result;
     };
 
@@ -35,30 +49,32 @@ export default class SavedShiftsList extends Component {
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
-              <Typography variant="body2">JOB</Typography>
+              <Typography variant="body2" style={styles.headerItem}>
+                JOB
+              </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyles}>
+              <Typography variant="body2" style={styles.headerItem}>
                 TIME IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyles}>
+              <Typography variant="body2" style={styles.headerItem}>
                 TIME OUT
               </Typography>
             </Grid>
             <Grid item xs={1}>
-              <Typography variant="body2" style={styles.headerStyles}>
+              <Typography variant="body2" style={styles.headerItem}>
                 RATE
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyles}>
+              <Typography variant="body2" style={styles.headerItem}>
                 HOURS WORKED
               </Typography>
             </Grid>
             <Grid item xs={1}>
-              <Typography variant="body2" style={styles.headerStyles}>
+              <Typography variant="body2" style={styles.headerItem}>
                 STATUS
               </Typography>
             </Grid>
@@ -129,6 +145,10 @@ const styles = {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
     padding: '10px',
+  },
+  headerItem: {
+    marginTop: '10px',
+    marginBottom: '10px',
   },
   boxShadow: {
     boxShadow: '0px 1px 2px 1px rgba(0, 0, 0, .2)',
