@@ -1,5 +1,18 @@
 import React, { Component } from 'react';
-import { Typography, Grid, CardContent, CardHeader, Divider } from '@material-ui/core';
+import {
+  Typography,
+  Grid,
+  CardContent,
+  CardHeader,
+  CardActions,
+  Button,
+  Divider,
+  FormControl,
+  Input,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
 import ShiftItem from '../ShiftItem';
 import { gordonColors } from '../../../../theme';
 import jobs from '../../../../services/jobs';
@@ -18,8 +31,12 @@ export default class SavedShiftsList extends Component {
   componentDidMount() {
     const { userID } = this.props;
     this.props.getShifts(userID).then(shifts => {
+      console.log('Shift:', shifts[0]);
       this.setState({
         shifts: shifts,
+      });
+      jobs.getSupervisorNameForJob(shifts[0].SUPERVISOR).then(response => {
+        console.log('Get supervisor response:', response);
       });
     });
   }
@@ -63,7 +80,7 @@ export default class SavedShiftsList extends Component {
                 TIME OUT
               </Typography>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
                 RATE
               </Typography>
@@ -71,11 +88,6 @@ export default class SavedShiftsList extends Component {
             <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
                 HOURS WORKED
-              </Typography>
-            </Grid>
-            <Grid item xs={1}>
-              <Typography variant="body2" style={styles.headerItem}>
-                STATUS
               </Typography>
             </Grid>
           </Grid>
@@ -86,6 +98,28 @@ export default class SavedShiftsList extends Component {
     let shiftsList = this.state.shifts.map(shift => (
       <ShiftItem deleteShift={deleteShiftForUser} value={shift} key={shift.EML_DESCRIPTION} />
     ));
+
+    const supervisorDropdown = (
+      <FormControl
+        style={{
+          width: 252,
+        }}
+      >
+        <InputLabel>Submit To</InputLabel>
+        <Select
+          value={'selectedJob'}
+          // onChange={e => {
+          //   setSelectedJob(e.target.value);
+          // }}
+          input={<Input id="supervisor" />}
+        >
+          <MenuItem label="None" value="">
+            <em>None</em>
+          </MenuItem>
+          {/* {jobsMenuItems} */}
+        </Select>
+      </FormControl>
+    );
 
     let content;
     if (this.state.shifts.length === null) {
@@ -130,6 +164,18 @@ export default class SavedShiftsList extends Component {
               {/* </div> */}
             </Grid>
           </CardContent>
+          <CardActions>
+            <Grid container>
+              <Grid item xs={6}>
+                {supervisorDropdown}
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary">
+                  Submit All Shifts
+                </Button>
+              </Grid>
+            </Grid>
+          </CardActions>
         </>
       );
     } else {
