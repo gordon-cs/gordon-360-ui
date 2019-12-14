@@ -34,7 +34,7 @@ export default class ShiftItem extends Component {
       <Grid item xs={12} className="shift-item">
         <div>
           <Grid container direction="row" alignItems="center">
-            <Grid item xs={2}>
+            <Grid item xs={3}>
               <Typography variant="body2">{EML_DESCRIPTION}</Typography>
             </Grid>
             <Grid item xs={2}>
@@ -43,7 +43,7 @@ export default class ShiftItem extends Component {
             <Grid item xs={2}>
               <Typography variant="body2">{dateTimeOut}</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={1}>
               <Typography variant="body2">{HOURLY_RATE}</Typography>
             </Grid>
             <Grid item xs={2}>

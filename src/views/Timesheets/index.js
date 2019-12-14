@@ -268,8 +268,15 @@ export default function Timesheets() {
               <Grid item xs={12} sm={6} md={3}>
                 {jobDropdown}
               </Grid>
-              <Grid items xs={12}>
-                <Grid container>
+              <Grid
+                items
+                xs={12}
+                style={{
+                  marginTop: '8px',
+                  marginBottom: '10px',
+                }}
+              >
+                <Grid container justify="center">
                   <Grid item xs={12}>
                     {errorText}
                   </Grid>

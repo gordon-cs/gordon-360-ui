@@ -34,7 +34,7 @@ export default class SavedShiftsList extends Component {
       <Grid item xs={12} style={styles.headerStyle}>
         <div>
           <Grid container direction="row">
-            <Grid item xs={2}>
+            <Grid item xs={3}>
               <Typography variant="body2">JOB</Typography>
             </Grid>
             <Grid item xs={2}>
@@ -47,7 +47,7 @@ export default class SavedShiftsList extends Component {
                 TIME OUT
               </Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={1}>
               <Typography variant="body2" style={styles.headerStyles}>
                 RATE
               </Typography>
@@ -78,8 +78,8 @@ export default class SavedShiftsList extends Component {
           <Divider
             style={{
               backgroundColor: '#adadad',
-              marginLeft: '18px',
-              marginRight: '18px',
+              marginLeft: '8px',
+              marginRight: '8px',
             }}
           />
           <CardContent>
@@ -93,8 +93,8 @@ export default class SavedShiftsList extends Component {
           <Divider
             style={{
               backgroundColor: '#adadad',
-              marginLeft: '18px',
-              marginRight: '18px',
+              marginLeft: '8px',
+              marginRight: '8px',
             }}
           />
           <CardContent>
