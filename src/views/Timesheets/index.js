@@ -25,10 +25,10 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import SavedShiftsList from './components/SavedShiftsList';
 import user from './../../services/user';
 import './timesheets.css';
+import GordonLoader from '../../components/Loader';
 
 export default function Timesheets() {
   const [userJobs, setUserJobs] = useState([]);
-  const [savedShifts, setSavedShifts] = useState([]);
   const [selectedDate1, setSelectedDate1] = React.useState(new Date());
   const [selectedDate2, setSelectedDate2] = React.useState(new Date());
   const [selectedJob, setSelectedJob] = React.useState({});
@@ -36,6 +36,7 @@ export default function Timesheets() {
   const [timeWorked, setTimeWorked] = React.useState('');
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = React.useState(0.0);
   const [userId, setUserId] = React.useState('');
+  const [fetchedShifts, setFetchedShifts] = React.useState(true);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
     let timeDiff = timeOut.getTime() - timeIn.getTime();
@@ -44,24 +45,22 @@ export default function Timesheets() {
     let hoursWorked = Math.floor(calculatedTimeDiff);
     let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60);
 
-    console.log('Caclulated Time difference:', timeDiff);
-    console.log('Hours worked:', hoursWorked);
-    console.log('Minutes worked:', minutesWorked);
     if (timeDiff < 0) {
       setTimeOutIsBeforeTimeIn(true);
-      console.log('Time difference:', timeWorked);
     } else {
       setTimeOutIsBeforeTimeIn(false);
       setTimeWorked(hoursWorked + ':' + minutesWorked);
-      console.log('Time difference:', timeWorked);
     }
+  };
+
+  const setIsFetched = isFetched => {
+    setFetchedShifts(isFetched);
   };
 
   useEffect(() => {
     try {
       user.getProfileInfo().then(result => {
         let profile = result;
-        console.log('Profile.ID:', profile.ID);
         getActiveJobsForUser(profile.ID);
         setUserId(profile.ID);
       });
@@ -80,14 +79,29 @@ export default function Timesheets() {
 
   const getSavedShiftsForUser = userID => {
     return jobs.getSavedShiftsForUser(userID);
-    // .then(result => {
-    //   savedShifts = result;
-    // });
   };
 
   let savedShiftsListComponent =
-    userId !== '' ? <SavedShiftsList getShifts={getSavedShiftsForUser} userID={userId} /> : <></>;
-
+    userId !== '' ? (
+      <SavedShiftsList
+        setIsFetched={setIsFetched}
+        getShifts={getSavedShiftsForUser}
+        userID={userId}
+      />
+    ) : (
+      <>
+        <Divider
+          style={{
+            backgroundColor: '#adadad',
+            marginLeft: '18px',
+            marginRight: '18px',
+          }}
+        />
+        <CardContent>
+          <GordonLoader />
+        </CardContent>
+      </>
+    );
   const handleDateChange1 = date => {
     handleTimeOutIsBeforeTimeIn(date, selectedDate2);
     setSelectedDate1(date);
@@ -100,11 +114,14 @@ export default function Timesheets() {
   };
 
   const handleSaveButtonClick = () => {
+    let timeIn = selectedDate1.toLocaleString();
+    let timeOut = selectedDate2.toLocaleString();
+
     saveShift(
       userId,
       '93222',
-      selectedDate1.toDateString(),
-      selectedDate2.toDateString(),
+      timeIn,
+      timeOut,
       hoursWorkedInDecimal,
       'Test shift',
       'nathaniel.rudenberg',
@@ -257,7 +274,12 @@ export default function Timesheets() {
                     {errorText}
                   </Grid>
                   <Grid item xs={6}>
-                    <Button variant="contained" color="primary" onClick={handleSaveButtonClick}>
+                    <Button
+                      disabled={timeOutIsBeforeTimeIn}
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSaveButtonClick}
+                    >
                       Save
                     </Button>
                   </Grid>
@@ -270,25 +292,7 @@ export default function Timesheets() {
               </Grid>
             </Grid>
           </CardContent>
-          <Divider
-            style={{
-              backgroundColor: 'black',
-            }}
-          />
-          <CardContent>
-            <CardHeader title="Saved Shifts" />
-            <Grid
-              container
-              spacing={2}
-              justify="space-around"
-              alignItems="center"
-              alignContent="center"
-            >
-              {/* <Grid item xs={12} sm={6} md={3}> */}
-              {savedShiftsListComponent}
-              {/* </Grid> */}
-            </Grid>
-          </CardContent>
+          {savedShiftsListComponent}
         </Card>
       </MuiPickersUtilsProvider>
     </>

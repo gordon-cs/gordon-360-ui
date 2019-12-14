@@ -64,12 +64,7 @@ const submitShiftForUser = async (
 };
 
 const deleteShiftForUser = async (rowID, studentID) => {
-  let shiftDetails = {
-    ROW_NUM: rowID,
-    ID_NUM: studentID,
-  };
-
-  return await http.del(`jobs/deleteShift/`, shiftDetails);
+  return await http.del(`jobs/deleteShift/${rowID}/${studentID}`);
 };
 
 export default {
@@ -77,4 +72,5 @@ export default {
   getActiveJobsForUser,
   getSavedShiftsForUser,
   submitShiftForUser,
+  deleteShiftForUser,
 };
