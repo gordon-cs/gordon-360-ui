@@ -23,6 +23,15 @@ const getActiveJobsForUser = userID => {
 };
 
 /**
+ * Get saved shifts for current user
+ * @param {String} userID The Gordon id of the user whose jobs to fetch
+ * @return {Promise.<String>} User's active jobs
+ */
+const getSavedShiftsForUser = userID => {
+  return http.get(`jobs/getSavedShifts/${userID}`);
+};
+
+/**
  * Get active jobs for current user
  * @param {Number} studentID The student's id under which to submit the shift
  * @param {Number} eml we don't know what this means yet
@@ -54,4 +63,14 @@ const submitShiftForUser = async (
   return await http.post(`jobs/submitShift/`, shiftDetails);
 };
 
-export default { getE2eTestResult, getActiveJobsForUser, submitShiftForUser };
+const deleteShiftForUser = async (rowID, studentID) => {
+  return await http.del(`jobs/deleteShift/${rowID}/${studentID}`);
+};
+
+export default {
+  getE2eTestResult,
+  getActiveJobsForUser,
+  getSavedShiftsForUser,
+  submitShiftForUser,
+  deleteShiftForUser,
+};
