@@ -281,11 +281,6 @@ export default function Timesheets() {
                       Save
                     </Button>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Button variant="contained" color="primary">
-                      Submit
-                    </Button>
-                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

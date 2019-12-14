@@ -1,5 +1,18 @@
 import React, { Component } from 'react';
-import { Typography, Grid, CardContent, CardHeader, Divider } from '@material-ui/core';
+import {
+  Typography,
+  Grid,
+  CardContent,
+  CardHeader,
+  CardActions,
+  Button,
+  Divider,
+  FormControl,
+  Input,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
 import ShiftItem from '../ShiftItem';
 import { gordonColors } from '../../../../theme';
 import jobs from '../../../../services/jobs';
@@ -12,6 +25,9 @@ export default class SavedShiftsList extends Component {
 
     this.state = {
       shifts: [],
+      directSupervisor: null,
+      reportingSupervisor: null,
+      selectedSupervisor: null,
     };
   }
 
@@ -21,10 +37,30 @@ export default class SavedShiftsList extends Component {
       this.setState({
         shifts: shifts,
       });
+      jobs.getSupervisorNameForJob(shifts[0].SUPERVISOR).then(response => {
+        let supervisor =
+          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
+        this.setState({
+          directSupervisor: {
+            name: supervisor,
+            id: shifts[0].SUPERVISOR,
+          },
+        });
+      });
+      jobs.getSupervisorNameForJob(shifts[0].COMP_SUPERVISOR).then(response => {
+        let supervisor =
+          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
+        this.setState({
+          reportingSupervisor: {
+            name: supervisor,
+            id: shifts[0].COMP_SUPERVISOR,
+          },
+        });
+      });
     });
   }
 
-  reloadDataAfterDelete() {
+  reloadShiftData() {
     const { userID } = this.props;
     this.setState({
       shifts: [],
@@ -36,10 +72,16 @@ export default class SavedShiftsList extends Component {
     });
   }
 
+  submitShiftsToSupervisor(shifts, supervisorID) {
+    jobs.submitShiftsForUser(shifts, supervisorID).then(response => {
+      this.reloadShiftData();
+    });
+  }
+
   render() {
     const deleteShiftForUser = (rowID, userID) => {
       let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
-        this.reloadDataAfterDelete();
+        this.reloadShiftData();
       });
       return result;
     };
@@ -63,7 +105,7 @@ export default class SavedShiftsList extends Component {
                 TIME OUT
               </Typography>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
                 RATE
               </Typography>
@@ -71,11 +113,6 @@ export default class SavedShiftsList extends Component {
             <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
                 HOURS WORKED
-              </Typography>
-            </Grid>
-            <Grid item xs={1}>
-              <Typography variant="body2" style={styles.headerItem}>
-                STATUS
               </Typography>
             </Grid>
           </Grid>
@@ -86,6 +123,36 @@ export default class SavedShiftsList extends Component {
     let shiftsList = this.state.shifts.map(shift => (
       <ShiftItem deleteShift={deleteShiftForUser} value={shift} key={shift.EML_DESCRIPTION} />
     ));
+
+    const supervisorDropdown = (
+      <FormControl
+        style={{
+          width: 252,
+        }}
+      >
+        <InputLabel>Submit To</InputLabel>
+        <Select
+          value={this.state.selectedSupervisor}
+          onChange={e => {
+            this.setState({
+              selectedSupervisor: e.target.value,
+            });
+          }}
+          input={<Input id="supervisor" />}
+        >
+          <MenuItem label="direct supervisor" value={this.state.directSupervisor}>
+            <Typography>
+              {this.state.directSupervisor !== null && this.state.directSupervisor.name}
+            </Typography>
+          </MenuItem>
+          <MenuItem label="reporting supervisor" value={this.state.reportingSupervisor}>
+            <Typography>
+              {this.state.reportingSupervisor !== null && this.state.reportingSupervisor.name}
+            </Typography>
+          </MenuItem>
+        </Select>
+      </FormControl>
+    );
 
     let content;
     if (this.state.shifts.length === null) {
@@ -130,6 +197,27 @@ export default class SavedShiftsList extends Component {
               {/* </div> */}
             </Grid>
           </CardContent>
+          <CardActions>
+            <Grid container>
+              <Grid item xs={6}>
+                {supervisorDropdown}
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    this.submitShiftsToSupervisor(
+                      this.state.shifts,
+                      this.state.selectedSupervisor.id,
+                    );
+                  }}
+                >
+                  Submit All Shifts
+                </Button>
+              </Grid>
+            </Grid>
+          </CardActions>
         </>
       );
     } else {
