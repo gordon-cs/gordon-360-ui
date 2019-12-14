@@ -36,7 +36,6 @@ export default function Timesheets() {
   const [timeWorked, setTimeWorked] = React.useState('');
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = React.useState(0.0);
   const [userId, setUserId] = React.useState('');
-  const [fetchedShifts, setFetchedShifts] = React.useState(true);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
     let timeDiff = timeOut.getTime() - timeIn.getTime();
@@ -51,10 +50,6 @@ export default function Timesheets() {
       setTimeOutIsBeforeTimeIn(false);
       setTimeWorked(hoursWorked + ':' + minutesWorked);
     }
-  };
-
-  const setIsFetched = isFetched => {
-    setFetchedShifts(isFetched);
   };
 
   useEffect(() => {
@@ -83,11 +78,7 @@ export default function Timesheets() {
 
   let savedShiftsListComponent =
     userId !== '' ? (
-      <SavedShiftsList
-        setIsFetched={setIsFetched}
-        getShifts={getSavedShiftsForUser}
-        userID={userId}
-      />
+      <SavedShiftsList getShifts={getSavedShiftsForUser} userID={userId} />
     ) : (
       <>
         <Divider
