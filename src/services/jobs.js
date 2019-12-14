@@ -68,11 +68,10 @@ const deleteShiftForUser = async (rowID, studentID) => {
 };
 
 const getSupervisorNameForJob = supervisorID => {
-  console.log('Supervisor id:', supervisorID);
   return http.get(`jobs/supervisorName/${supervisorID}`);
 };
 
-const submitShiftsForUser = async (shiftsToSubmit, submittedTo) => {
+const submitShiftsForUser = (shiftsToSubmit, submittedTo) => {
   let shifts = [];
   for (let i = 0; i < shiftsToSubmit.length; i++) {
     shifts.push({
@@ -83,8 +82,7 @@ const submitShiftsForUser = async (shiftsToSubmit, submittedTo) => {
       LAST_CHANGED_BY: shiftsToSubmit[i].LAST_CHANGED_BY,
     });
   }
-  console.log('Shifts to submit:', shifts);
-  return await http.post(`jobs/submitShifts`, shifts);
+  return http.post(`jobs/submitShifts`, shifts);
 };
 
 export default {
@@ -94,4 +92,5 @@ export default {
   submitShiftForUser: saveShiftForUser,
   deleteShiftForUser,
   getSupervisorNameForJob,
+  submitShiftsForUser,
 };

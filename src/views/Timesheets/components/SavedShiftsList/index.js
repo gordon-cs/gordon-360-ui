@@ -25,23 +25,42 @@ export default class SavedShiftsList extends Component {
 
     this.state = {
       shifts: [],
+      directSupervisor: null,
+      reportingSupervisor: null,
+      selectedSupervisor: null,
     };
   }
 
   componentDidMount() {
     const { userID } = this.props;
     this.props.getShifts(userID).then(shifts => {
-      console.log('Shift:', shifts[0]);
       this.setState({
         shifts: shifts,
       });
       jobs.getSupervisorNameForJob(shifts[0].SUPERVISOR).then(response => {
-        console.log('Get supervisor response:', response);
+        let supervisor =
+          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
+        this.setState({
+          directSupervisor: {
+            name: supervisor,
+            id: shifts[0].SUPERVISOR,
+          },
+        });
+      });
+      jobs.getSupervisorNameForJob(shifts[0].COMP_SUPERVISOR).then(response => {
+        let supervisor =
+          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
+        this.setState({
+          reportingSupervisor: {
+            name: supervisor,
+            id: shifts[0].COMP_SUPERVISOR,
+          },
+        });
       });
     });
   }
 
-  reloadDataAfterDelete() {
+  reloadShiftData() {
     const { userID } = this.props;
     this.setState({
       shifts: [],
@@ -53,10 +72,16 @@ export default class SavedShiftsList extends Component {
     });
   }
 
+  submitShiftsToSupervisor(shifts, supervisorID) {
+    jobs.submitShiftsForUser(shifts, supervisorID).then(response => {
+      this.reloadShiftData();
+    });
+  }
+
   render() {
     const deleteShiftForUser = (rowID, userID) => {
       let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
-        this.reloadDataAfterDelete();
+        this.reloadShiftData();
       });
       return result;
     };
@@ -107,16 +132,24 @@ export default class SavedShiftsList extends Component {
       >
         <InputLabel>Submit To</InputLabel>
         <Select
-          value={'selectedJob'}
-          // onChange={e => {
-          //   setSelectedJob(e.target.value);
-          // }}
+          value={this.state.selectedSupervisor}
+          onChange={e => {
+            this.setState({
+              selectedSupervisor: e.target.value,
+            });
+          }}
           input={<Input id="supervisor" />}
         >
-          <MenuItem label="None" value="">
-            <em>None</em>
+          <MenuItem label="direct supervisor" value={this.state.directSupervisor}>
+            <Typography>
+              {this.state.directSupervisor !== null && this.state.directSupervisor.name}
+            </Typography>
           </MenuItem>
-          {/* {jobsMenuItems} */}
+          <MenuItem label="reporting supervisor" value={this.state.reportingSupervisor}>
+            <Typography>
+              {this.state.reportingSupervisor !== null && this.state.reportingSupervisor.name}
+            </Typography>
+          </MenuItem>
         </Select>
       </FormControl>
     );
@@ -170,7 +203,16 @@ export default class SavedShiftsList extends Component {
                 {supervisorDropdown}
               </Grid>
               <Grid item xs={6}>
-                <Button variant="contained" color="primary">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    this.submitShiftsToSupervisor(
+                      this.state.shifts,
+                      this.state.selectedSupervisor.id,
+                    );
+                  }}
+                >
                   Submit All Shifts
                 </Button>
               </Grid>

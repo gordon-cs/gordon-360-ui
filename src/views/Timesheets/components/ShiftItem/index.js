@@ -14,6 +14,7 @@ export default class ShiftItem extends Component {
       SHIFT_END_DATETIME,
       HOURLY_RATE,
       HOURS_WORKED,
+      STATUS,
     } = shift;
 
     const yearIn = SHIFT_START_DATETIME.substring(2, 4);
@@ -42,11 +43,14 @@ export default class ShiftItem extends Component {
             <Grid item xs={2}>
               <Typography variant="body2">{dateTimeOut}</Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={1}>
               <Typography variant="body2">{HOURLY_RATE}</Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2">{HOURS_WORKED}</Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <Typography variant="body2">{STATUS}</Typography>
             </Grid>
             <Grid item xs={1}>
               <Typography variant="body2">
