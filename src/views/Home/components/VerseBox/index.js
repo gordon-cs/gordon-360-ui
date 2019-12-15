@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import Grid from '@material-ui/core/Grid';
 import { gordonColors } from '../../../../theme';
 import GordonLoader from '../../../../components/Loader';
 import "./verseBox.css"
+import Button from '@material-ui/core/Button';
 
 export default class VerseOfTheDay extends Component {
   constructor(props) {
@@ -62,16 +64,39 @@ export default class VerseOfTheDay extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      content = this.state.verse;
+      content = this.state.verse.replace(/"/g, "'");
       title =
-        this.state.book +
-        ' ' +
-        this.state.reference
+        this.state.reference +
+        ' (' +
+        this.state.book + ')'
     }
+
+    // Styling used for button to retrieve a new verse
+    const style = {
+      button: {
+        background: gordonColors.primary.cyan,
+        color: 'white',
+      },
+    };
+
     return (
       <Card>
         <CardContent id="verse">
-          <CardHeader id="title" title={title} />"{content}"
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={7} align="left">
+            <CardHeader id="title" title={title} />
+            </Grid>
+            <Grid item xs={5} align="right">
+                  <Button
+                    variant="contained"
+                    style={style.button}
+                    onClick={() => this.loadVerse()}
+                    >
+                    New Verse
+                  </Button>
+                </Grid>
+              </Grid>
+          " {content} "
         </CardContent>
       </Card>
     );
