@@ -29,48 +29,70 @@ export default class VerseOfTheDay extends Component {
   async loadVerse() {
     this.setState({ loading: true });
     console.log('TRUE');
-    fetch(
-      'https://ajith-holy-bible.p.rapidapi.com/GetVerses?Book=Luke&chapter=1&VerseFrom=5&VerseTo=8',
-      {
-        method: 'GET',
-        headers: {
-          'x-rapidapi-host': 'ajith-holy-bible.p.rapidapi.com',
-          'x-rapidapi-key': '680f1d67bfmshf998753267a5dd6p150946jsn6e2c7cd6e30f',
+    try {
+      fetch(
+        'https://ajith-holy-bible.p.rapidapi.com/GetVerses?Book=Luke&chapter=1&VerseFrom=5&VerseTo=8',
+        {
+          method: 'GET',
+          headers: {
+            'x-rapidapi-host': 'ajith-holy-bible.p.rapidapi.com',
+            'x-rapidapi-key': '680f1d67bfmshf998753267a5dd6p150946jsn6e2c7cd6e30f',
+          },
         },
-      },
-    )
-      .then(response => {
-        return response.json();
-      })
-      .then(result => {
-        console.log(result);
-        this.setState({
-          verse: result.Output,
-          book: result.Book,
-          chapter: result.Chapter,
-          verseFrom: result.VerseFrom,
-          verseTo: result.VerseTo,
+      )
+        .then(response => {
+          return response.json();
+        })
+        .then(result => {
+          console.log(result);
+          this.setState({
+            verse: result.Output,
+            book: result.Book,
+            chapter: result.Chapter,
+            verseFrom: result.VerseFrom,
+            verseTo: result.VerseTo,
+            loading: false,
+          });
+        })
+        .catch(err => {
+          console.log(err);
         });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    } catch (error) {
+      this.setState({ error });
+    }
   }
 
   render() {
-    let verseOfTheDay = this.state.verse;
-    let title =
-      this.state.book +
-      ' ' +
-      this.state.chapter +
-      ': ' +
-      this.state.verseFrom +
-      '-' +
-      this.state.verseTo;
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
+    let content;
+    let title;
+
+    if (this.state.loading === true) {
+      content = <GordonLoader />;
+    } else {
+      content = this.state.verse;
+      title =
+        this.state.book +
+        ' ' +
+        this.state.chapter +
+        ': ' +
+        this.state.verseFrom +
+        '-' +
+        this.state.verseTo;
+    }
     return (
       <Card>
+<<<<<<< HEAD
         <CardContent id="verse">
           <CardHeader id="title" title={title} />"{verseOfTheDay}"
+=======
+        <CardContent>
+          <CardHeader title={title} />
+          {content}
+>>>>>>> 01b9c214a4e09502196dceeed47357b641762162
         </CardContent>
       </Card>
     );
