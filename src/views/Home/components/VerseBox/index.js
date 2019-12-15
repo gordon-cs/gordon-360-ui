@@ -4,6 +4,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import { gordonColors } from '../../../../theme';
 import GordonLoader from '../../../../components/Loader';
+import "./verseBox.css"
 
 export default class VerseOfTheDay extends Component {
   constructor(props) {
@@ -68,8 +69,8 @@ export default class VerseOfTheDay extends Component {
       this.state.verseTo;
     return (
       <Card>
-        <CardContent>
-          <CardHeader title={title} />"{verseOfTheDay}"
+        <CardContent id="verse">
+          <CardHeader id="title" title={title} />"{verseOfTheDay}"
         </CardContent>
       </Card>
     );
