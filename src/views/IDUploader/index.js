@@ -181,23 +181,25 @@ class IDUploader extends Component {
   onCropperMove() {
     // Keyboard support for cropping
     document.addEventListener('keydown', e => {
-      let data = this.refs.cropper.getCropBoxData();
-      if (e.code === 'ArrowUp') {
-        data.top -= 5;
-      } else if (e.code === 'ArrowDown') {
-        data.top += 5;
-      } else if (e.code === 'ArrowRight') {
-        data.left += 5;
-      } else if (e.code === 'ArrowLeft') {
-        data.left -= 5;
-      } else if (e.code === 'Equal') {
-        data.height += 5;
-        data.width += 5;
-      } else if (e.code === 'Minus') {
-        data.height -= 5;
-        data.width -= 5;
+      if (this.refs.cropper != null) {
+        let data = this.refs.cropper.getCropBoxData();
+        if (e.code === 'ArrowUp') {
+          data.top -= 5;
+        } else if (e.code === 'ArrowDown') {
+          data.top += 5;
+        } else if (e.code === 'ArrowRight') {
+          data.left += 5;
+        } else if (e.code === 'ArrowLeft') {
+          data.left -= 5;
+        } else if (e.code === 'Equal') {
+          data.height += 5;
+          data.width += 5;
+        } else if (e.code === 'Minus') {
+          data.height -= 5;
+          data.width -= 5;
+        }
+        this.refs.cropper.setCropBoxData(data);
       }
-      this.refs.cropper.setCropBoxData(data);
     });
   }
 
