@@ -17,9 +17,7 @@ export default class VerseOfTheDay extends Component {
       loading: true,
       verse: null,
       book: null,
-      chapter: null,
-      verseFrom: null,
-      verseTo: null,
+      reference: null,
     };
   }
   componentDidMount() {
@@ -31,14 +29,7 @@ export default class VerseOfTheDay extends Component {
     console.log('TRUE');
     try {
       fetch(
-        'https://ajith-holy-bible.p.rapidapi.com/GetVerses?Book=Luke&chapter=1&VerseFrom=5&VerseTo=8',
-        {
-          method: 'GET',
-          headers: {
-            'x-rapidapi-host': 'ajith-holy-bible.p.rapidapi.com',
-            'x-rapidapi-key': '680f1d67bfmshf998753267a5dd6p150946jsn6e2c7cd6e30f',
-          },
-        },
+        'https://beta.ourmanna.com/api/v1/get/?format=json&order=random'
       )
         .then(response => {
           return response.json();
@@ -46,11 +37,9 @@ export default class VerseOfTheDay extends Component {
         .then(result => {
           console.log(result);
           this.setState({
-            verse: result.Output,
-            book: result.Book,
-            chapter: result.Chapter,
-            verseFrom: result.VerseFrom,
-            verseTo: result.VerseTo,
+            verse: result.verse.details.text,
+            book: result.verse.details.version,
+            reference: result.verse.details.reference,
             loading: false,
           });
         })
@@ -77,11 +66,7 @@ export default class VerseOfTheDay extends Component {
       title =
         this.state.book +
         ' ' +
-        this.state.chapter +
-        ': ' +
-        this.state.verseFrom +
-        '-' +
-        this.state.verseTo;
+        this.state.reference
     }
     return (
       <Card>
