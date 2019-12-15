@@ -85,14 +85,8 @@ export default class VerseOfTheDay extends Component {
     }
     return (
       <Card>
-<<<<<<< HEAD
         <CardContent id="verse">
-          <CardHeader id="title" title={title} />"{verseOfTheDay}"
-=======
-        <CardContent>
-          <CardHeader title={title} />
-          {content}
->>>>>>> 01b9c214a4e09502196dceeed47357b641762162
+          <CardHeader id="title" title={title} />"{content}"
         </CardContent>
       </Card>
     );
