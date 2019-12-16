@@ -22,8 +22,10 @@ class App extends React.Component {
     );
     const data = await API_CALL.json();
     //console.log("This is the data:", data);
-    //This is the icon of the weather
+    //This is the discrption of the weather
     this.setState({
+      temperature: Math.floor(((data.list[0].main.temp - 273.15) * 9) / 5 + 32),
+      description: data.list[0].weather[0].description,
       icon: `http://openweathermap.org/img/wn/` + data.list[0].weather[0].icon + `@2x.png`,
     });
     /*console.log("temp: ", this.state.temperature)
@@ -37,9 +39,10 @@ class App extends React.Component {
       <head>
 
 </head>
-      <div class="weather">
-      <img src={this.state.icon} width="50" height="50"></img>
-</div>  
+      <div class="information" >
+      {this.state.temperature}°F {this.state.description}
+
+    </div>  
 </html>
     );
   }
