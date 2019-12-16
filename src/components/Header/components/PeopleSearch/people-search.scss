@@ -108,14 +108,14 @@
     }
     .people-search-root {
       align-self: flex-end;
-      width: 13rem;
+      width: 11rem;
       &:focus-within {
-        width: 15rem;
+        width: 12rem;
       }
     }
     .people-search-suggestion,
     .people-search-suggestion-selected {
-      width: 12.25rem;
+      width: 10rem;
     }
   }
   @media (min-width: 960px) {
@@ -136,7 +136,7 @@
       align-self: flex-end;
       width: 13.5rem;
       &:focus-within {
-        width: 16rem;
+        width: 15rem;
       }
     }
     .people-search-suggestion,
