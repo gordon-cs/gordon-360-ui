@@ -54,6 +54,7 @@ export default class StudentNewsSubmissions extends Component {
                 fullWidth
               />
             </CardContent>
+
             <CardHeader title="Write Your Student News Submission" />
             <CardContent>
               <OutlinedInput
