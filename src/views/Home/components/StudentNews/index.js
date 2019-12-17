@@ -82,8 +82,11 @@ export default class StudentNews extends Component {
     );
 
     let style = null;
-    console.log(this.studentNews);
-    if (this.studentNews === undefined || this.studentNews === null) {
+    let styleChangeConditions =
+      this.state.studentNews === undefined ||
+      this.state.studentNews === null ||
+      this.state.studentNews.length < 4;
+    if (styleChangeConditions) {
       style = {
         height: '450px',
       };

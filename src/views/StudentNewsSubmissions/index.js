@@ -23,9 +23,14 @@ export default class StudentNewsSubmissions extends Component {
   }
 
   render() {
+    const shouldDisableButton =
+      this.state.subject === null ||
+      this.state.data === null ||
+      this.state.subject === '' ||
+      this.state.data === '';
     const postData = () => {
       let currentTime = new Date().toLocaleString();
-      const profile = user.getProfileInfo().then(response => {
+      user.getProfileInfo().then(response => {
         let username = response.AD_Username;
         let data = {
           subject: this.state.subject,
@@ -33,7 +38,9 @@ export default class StudentNewsSubmissions extends Component {
           time: currentTime,
           name: username,
         };
-        studentNewsService.submitStudentNews(data);
+        studentNewsService.submitStudentNews(data).then(() => {
+          window.location.reload();
+        });
       });
     };
 
@@ -44,7 +51,7 @@ export default class StudentNewsSubmissions extends Component {
             <CardHeader title="Subject" />
             <CardContent>
               <OutlinedInput
-                value={this.subject}
+                value={this.state.subject}
                 onChange={event => {
                   this.setState({
                     subject: event.target.value,
@@ -55,10 +62,9 @@ export default class StudentNewsSubmissions extends Component {
               />
             </CardContent>
 
-            <CardHeader title="Write Your Student News Submission" />
+            <CardHeader title="Description" />
             <CardContent>
               <OutlinedInput
-                autoFocus
                 // style={styles.textField}
                 fullWidth
                 multiline
@@ -72,6 +78,7 @@ export default class StudentNewsSubmissions extends Component {
             </CardContent>
             <CardActions>
               <Button
+                disabled={shouldDisableButton}
                 variant="contained"
                 color="primary"
                 style={{
