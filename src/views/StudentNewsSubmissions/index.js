@@ -17,33 +17,42 @@ export default class StudentNewsSubmissions extends Component {
     this.state = {
       loading: true,
       version: null,
+      data: null,
+      subject: null,
     };
-    this.data = null;
-  }
-
-  async postData() {
-    console.log(this.data);
-    let currentTime = new Date();
-    const profile = user.getProfileInfo();
-    const username = profile ? profile.AD_Username : null;
-
-    let data = {
-      NEWS: this.data,
-      TIME: currentTime,
-      NAME: username,
-    };
-
-    studentNewsService.submitStudentNews(data);
   }
 
   render() {
+    const postData = () => {
+      let currentTime = new Date().toLocaleString();
+      const profile = user.getProfileInfo().then(response => {
+        let username = response.AD_Username;
+        let data = {
+          subject: this.state.subject,
+          news: this.state.data,
+          time: currentTime,
+          name: username,
+        };
+        studentNewsService.submitStudentNews(data);
+      });
+    };
+
     return (
       <Grid container justify="center">
         <Grid item xs={12} md={10}>
           <Card style={styles.container}>
             <CardHeader title="Subject" />
             <CardContent>
-              <OutlinedInput autoFocus fullWidth multiline />
+              <OutlinedInput
+                value={this.subject}
+                onChange={event => {
+                  this.setState({
+                    subject: event.target.value,
+                  });
+                }}
+                autoFocus
+                fullWidth
+              />
             </CardContent>
             <CardHeader title="Write Your Student News Submission" />
             <CardContent>
@@ -52,9 +61,11 @@ export default class StudentNewsSubmissions extends Component {
                 // style={styles.textField}
                 fullWidth
                 multiline
-                value={this.data}
+                value={this.state.data}
                 onChange={event => {
-                  this.data = event.target.value;
+                  this.setState({
+                    data: event.target.value,
+                  });
                 }}
               />
             </CardContent>
@@ -65,7 +76,7 @@ export default class StudentNewsSubmissions extends Component {
                 style={{
                   marginLeft: 'auto',
                 }}
-                onClick={this.postData}
+                onClick={postData}
               >
                 Submit
               </Button>

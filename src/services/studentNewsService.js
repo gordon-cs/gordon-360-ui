@@ -25,8 +25,7 @@ const getStudentNews = async () => {
  * @return {Promise<any>} Response body
  */
 const submitStudentNews = async data => {
-  let headerOptions = { key: 'this is a post' };
-  return await http.post(`student-news`, data, headerOptions);
+  return await http.post(`student-news/submit`, data);
 };
 
 export default {

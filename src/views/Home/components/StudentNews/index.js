@@ -14,27 +14,20 @@ export default class StudentNews extends Component {
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.state = {
       open: false,
-      studentNews: null,
+      studentNews: [],
     };
   }
 
   componentDidMount() {
     studentNewsService.get().then(response => {
-      console.log('Student news:', response.studentNews);
       this.setState({
-        studentNews: response.studentNews,
+        studentNews: response,
       });
     });
   }
 
   handleExpandClick() {
     this.setState({ open: !this.state.open });
-    this.getStudentNews();
-  }
-
-  async getStudentNews() {
-    const theNews = await studentNewsService.getStudentNews();
-    console.log(theNews);
   }
 
   render() {
@@ -48,9 +41,9 @@ export default class StudentNews extends Component {
       studentNews.map(newsItem => (
         <NewsItem
           subject={newsItem.subject}
-          submittedBy={newsItem.submittedBy}
-          description={newsItem.description}
-          dateSubmitted={newsItem.dateSubmitted}
+          submittedBy={newsItem.name}
+          description={newsItem.news}
+          dateSubmitted={newsItem.time}
           onClick={() => {
             this.handleExpandClick();
           }}
