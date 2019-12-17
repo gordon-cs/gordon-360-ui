@@ -7,7 +7,6 @@ import NewsItem from './components/NewsItem';
 import { gordonColors } from '../../../../theme';
 import studentNewsService from '../../../../services/studentNewsService';
 import './student-news.css';
-import studentNewsService from '../../../../services/studentNewsService';
 
 export default class StudentNews extends Component {
   constructor(props) {
