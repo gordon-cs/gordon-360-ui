@@ -11,6 +11,7 @@
     "classnames": ">=2.2.5",
     "cropperjs": ">=1.4.1",
     "downshift": ">=1.22.3",
+    "express": "^4.17.1",
     "history": ">=4.7.2",
     "http-proxy-middleware": ">=0.19.1",
     "interweave": ">=11.1.0",

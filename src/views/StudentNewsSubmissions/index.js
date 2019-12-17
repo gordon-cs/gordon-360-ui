@@ -43,6 +43,10 @@ export default class StudentNewsSubmissions extends Component {
                 onChange = { (event) => {this.data = event.target.value}}
               />
             </CardContent>
+            <CardHeader title="Subject" />
+            <CardContent>
+              <OutlinedInput autoFocus fullWidth multiline />
+            </CardContent>
             <CardActions>
               <Button
                 variant="contained"

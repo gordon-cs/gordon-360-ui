@@ -20,11 +20,9 @@
   color: #fff;
 }
 
-
 .news-list {
-  height: 250px;
-  overflow: scroll;
-  
+  height: 450px;
+  overflow-y: scroll;
 }
 
 // Make rows alternate white and grey
@@ -44,6 +42,5 @@
     cursor: pointer;
   }
 }
-
 
 /* stylelint-enable */
