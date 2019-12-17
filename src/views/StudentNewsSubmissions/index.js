@@ -21,7 +21,7 @@ export default class StudentNewsSubmissions extends Component {
     this.data = null;
   }
 
-  postData = () => {
+  async postData() {
     console.log(this.data);
     let currentTime = new Date();
     const profile = user.getProfileInfo();
@@ -34,7 +34,7 @@ export default class StudentNewsSubmissions extends Component {
     };
 
     studentNewsService.submitStudentNews(data);
-  };
+  }
 
   render() {
     return (
