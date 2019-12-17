@@ -21,17 +21,19 @@ export default class StudentNewsSubmissions extends Component {
 
   postData = () => {
     console.log(this.data);
-    
-      //user.postImage(croppedImage);
-      
+
+    //user.postImage(croppedImage);
   };
 
-  
   render() {
     return (
       <Grid container justify="center">
         <Grid item xs={12} md={10}>
           <Card style={styles.container}>
+            <CardHeader title="Subject" />
+            <CardContent>
+              <OutlinedInput autoFocus fullWidth multiline />
+            </CardContent>
             <CardHeader title="Write Your Student News Submission" />
             <CardContent>
               <OutlinedInput
@@ -39,13 +41,11 @@ export default class StudentNewsSubmissions extends Component {
                 // style={styles.textField}
                 fullWidth
                 multiline
-                value = {this.data}
-                onChange = { (event) => {this.data = event.target.value}}
+                value={this.data}
+                onChange={event => {
+                  this.data = event.target.value;
+                }}
               />
-            </CardContent>
-            <CardHeader title="Subject" />
-            <CardContent>
-              <OutlinedInput autoFocus fullWidth multiline />
             </CardContent>
             <CardActions>
               <Button
