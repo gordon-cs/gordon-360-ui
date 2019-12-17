@@ -17,26 +17,28 @@ export default class StudentNewsSubmissions extends Component {
     this.state = {
       loading: true,
       version: null,
-      subject: null,
     };
+    this.postData = this.postData.bind(this);
     this.data = null;
+    this.subject = null;
   }
 
-  async postData() {
-    console.log(this.data);
-    let currentTime = new Date();
-    const profile = user.getProfileInfo();
-    const username = profile ? profile.AD_Username : null;
-
-    let data = {
-      SUBJECT: this.subject,
-      NEWS: this.data,
-      TIME: currentTime,
-      NAME: username,
+    async postData() {
+      console.log(this.data);
+      let currentTime = new Date();
+      const profile = user.getProfileInfo();
+      const username = profile ? profile.AD_Username : null;
+      
+      let data = {
+        SUBJECT: this.subject,
+        NEWS: this.data,
+        TIME: currentTime,
+        NAME: username,
     };
 
     studentNewsService.submitStudentNews(data);
-  }
+    
+  };
 
   render() {
     return (
@@ -55,6 +57,7 @@ export default class StudentNewsSubmissions extends Component {
               }}
               />
             </CardContent>
+            
             <CardHeader title="Write Your Student News Submission" />
             <CardContent>
               <OutlinedInput
@@ -68,7 +71,6 @@ export default class StudentNewsSubmissions extends Component {
                 }}
               />
             </CardContent>
-            
             <CardActions>
               <Button
                 variant="contained"

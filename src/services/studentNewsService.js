@@ -15,16 +15,16 @@ const get = () => {
   return http.get(`student-news`);
 };
 
-
 const getStudentNews = async () => {
   return await http.get(`student-news`);
 };
 
 /**
  * Submits a student news
- * @return {Promis<any>} Response body
+ * @param {any} data The data which makes up the student news item
+ * @return {Promise<any>} Response body
  */
-const submitStudentNews = async (data) => {
+const submitStudentNews = async data => {
   let headerOptions = { key: 'this is a post' };
   return await http.post(`student-news`, data, headerOptions);
 };

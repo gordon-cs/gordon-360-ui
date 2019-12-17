@@ -24,7 +24,7 @@
 // Make rows alternate white and grey
 /* stylelint-disable */
 .news-list > .news-item:nth-child(even) {
-  background: #d3d3d3;
+  background: #dfdfdf;
   &:hover {
     background-color: $primary-cyan;
     cursor: pointer;
