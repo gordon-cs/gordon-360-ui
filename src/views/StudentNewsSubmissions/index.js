@@ -17,6 +17,7 @@ export default class StudentNewsSubmissions extends Component {
     this.state = {
       loading: true,
       version: null,
+      subject: null,
     };
     this.data = null;
   }
@@ -28,6 +29,7 @@ export default class StudentNewsSubmissions extends Component {
     const username = profile ? profile.AD_Username : null;
 
     let data = {
+      SUBJECT: this.subject,
       NEWS: this.data,
       TIME: currentTime,
       NAME: username,
@@ -41,6 +43,18 @@ export default class StudentNewsSubmissions extends Component {
       <Grid container justify="center">
         <Grid item xs={12} md={10}>
           <Card style={styles.container}>
+            <CardHeader title="Subject" />
+            <CardContent>
+              <OutlinedInput 
+              autoFocus 
+              fullWidth 
+              multiline 
+              value = {this.subject}
+              onChange={event => {
+                this.subject = event.target.value;
+              }}
+              />
+            </CardContent>
             <CardHeader title="Write Your Student News Submission" />
             <CardContent>
               <OutlinedInput
@@ -54,10 +68,7 @@ export default class StudentNewsSubmissions extends Component {
                 }}
               />
             </CardContent>
-            <CardHeader title="Subject" />
-            <CardContent>
-              <OutlinedInput autoFocus fullWidth multiline />
-            </CardContent>
+            
             <CardActions>
               <Button
                 variant="contained"

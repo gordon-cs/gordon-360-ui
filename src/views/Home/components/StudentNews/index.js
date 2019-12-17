@@ -88,7 +88,21 @@ export default class StudentNews extends Component {
       </Card>
     );
 
-    const content = <div className="news-list">{newsItems}</div>;
+    let style = null;
+    console.log(this.studentNews);
+    if(this.studentNews === undefined || this.studentNews === null)
+    {
+      style = {
+        height: "450px",
+      };
+    }
+    else 
+    {
+      style = {
+        height: "450px", overflowY: "scroll",
+      };
+    }
+    const content = <div style={style}>{newsItems}</div>;
 
     return (
       <section>
