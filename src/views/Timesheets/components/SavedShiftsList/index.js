@@ -37,26 +37,28 @@ export default class SavedShiftsList extends Component {
       this.setState({
         shifts: shifts,
       });
-      jobs.getSupervisorNameForJob(shifts[0].SUPERVISOR).then(response => {
-        let supervisor =
-          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
-        this.setState({
-          directSupervisor: {
-            name: supervisor,
-            id: shifts[0].SUPERVISOR,
-          },
+      if (shifts.length > 0) {
+        jobs.getSupervisorNameForJob(shifts[0].SUPERVISOR).then(response => {
+          let supervisor =
+            response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
+          this.setState({
+            directSupervisor: {
+              name: supervisor,
+              id: shifts[0].SUPERVISOR,
+            },
+          });
         });
-      });
-      jobs.getSupervisorNameForJob(shifts[0].COMP_SUPERVISOR).then(response => {
-        let supervisor =
-          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
-        this.setState({
-          reportingSupervisor: {
-            name: supervisor,
-            id: shifts[0].COMP_SUPERVISOR,
-          },
+        jobs.getSupervisorNameForJob(shifts[0].COMP_SUPERVISOR).then(response => {
+          let supervisor =
+            response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
+          this.setState({
+            reportingSupervisor: {
+              name: supervisor,
+              id: shifts[0].COMP_SUPERVISOR,
+            },
+          });
         });
-      });
+      }
     });
   }
 
@@ -105,7 +107,7 @@ export default class SavedShiftsList extends Component {
                 TIME OUT
               </Typography>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={1}>
               <Typography variant="body2" style={styles.headerItem}>
                 RATE
               </Typography>
@@ -113,6 +115,11 @@ export default class SavedShiftsList extends Component {
             <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
                 HOURS WORKED
+              </Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <Typography variant="body2" style={styles.headerItem}>
+                STATUS
               </Typography>
             </Grid>
           </Grid>
@@ -204,6 +211,7 @@ export default class SavedShiftsList extends Component {
               </Grid>
               <Grid item xs={6}>
                 <Button
+                  disabled={this.state.selectedSupervisor === null}
                   variant="contained"
                   color="primary"
                   onClick={() => {

@@ -18,8 +18,8 @@ const getE2eTestResult = () => {
  * @param {String} userID The Gordon id of the user whose jobs to fetch
  * @return {Promise.<String>} User's active jobs
  */
-const getActiveJobsForUser = userID => {
-  return http.get(`jobs/getJobs/${userID}`);
+const getActiveJobsForUser = details => {
+  return http.post(`jobs/getJobs`, details);
 };
 
 /**

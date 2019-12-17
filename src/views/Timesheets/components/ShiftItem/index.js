@@ -55,11 +55,13 @@ export default class ShiftItem extends Component {
             <Grid item xs={1}>
               <Typography variant="body2">
                 <IconButton>
-                  <DeleteForeverOutlinedIcon
-                    onClick={() => {
-                      deleteShift(ID, ID_NUM);
-                    }}
-                  />
+                  {STATUS !== 'Submitted' && STATUS !== 'Approved' && (
+                    <DeleteForeverOutlinedIcon
+                      onClick={() => {
+                        deleteShift(ID, ID_NUM);
+                      }}
+                    />
+                  )}
                 </IconButton>
               </Typography>
             </Grid>
