@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import NewsItem from './components/NewsItem';
 import { gordonColors } from '../../../../theme';
-import studentNewsService from '../../../../services/studentNewsService';
 import './student-news.css';
 import studentNewsService from '../../../../services/studentNewsService';
 

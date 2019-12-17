@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import user from './../../services/user';
-import studentNewsService from '../../../../services/studentNewsService';
+import studentNewsService from './../../services/studentNewsService';
 import {
   Card,
   CardActions,
@@ -24,19 +24,18 @@ export default class StudentNewsSubmissions extends Component {
   postData = () => {
     console.log(this.data);
     let currentTime = new Date();
-    const profile = await user.getProfileInfo();
+    const profile = user.getProfileInfo();
     const username = profile ? profile.AD_Username : null;
-    
+
     let data = {
       NEWS: this.data,
       TIME: currentTime,
-      NAME: username
+      NAME: username,
     };
 
     studentNewsService.submitStudentNews(data);
   };
 
-  
   render() {
     return (
       <Grid container justify="center">
@@ -49,8 +48,10 @@ export default class StudentNewsSubmissions extends Component {
                 // style={styles.textField}
                 fullWidth
                 multiline
-                value = {this.data}
-                onChange = { (event) => {this.data = event.target.value}}
+                value={this.data}
+                onChange={event => {
+                  this.data = event.target.value;
+                }}
               />
             </CardContent>
             <CardHeader title="Subject" />
