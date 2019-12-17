@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
+import user from './../../services/user';
+import studentNewsService from '../../services/studentNewsService';
 import {
   Card,
   CardActions,
@@ -19,10 +21,19 @@ export default class StudentNewsSubmissions extends Component {
     this.data = null;
   }
 
-  postData = () => {
+  async postData() {
     console.log(this.data);
+    let currentTime = new Date();
+    const profile = await user.getProfileInfo();
+    const username = profile ? profile.AD_Username : null;
 
-    //user.postImage(croppedImage);
+    let data = {
+      NEWS: this.data,
+      TIME: currentTime,
+      NAME: username
+    };
+
+    studentNewsService.submitStudentNews(data);
   };
 
   render() {

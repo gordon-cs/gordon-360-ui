@@ -7,7 +7,6 @@ import NewsItem from './components/NewsItem';
 import { gordonColors } from '../../../../theme';
 import studentNewsService from '../../../../services/studentNewsService';
 import './student-news.css';
-import news from '../../../../services/news';
 
 export default class StudentNews extends Component {
   constructor(props) {
@@ -34,7 +33,7 @@ export default class StudentNews extends Component {
   }
 
   async getStudentNews() {
-    const theNews = await news.getStudentNews();
+    const theNews = await studentNewsService.getStudentNews();
     console.log(theNews);
   }
 
