@@ -13,6 +13,7 @@ import {
   Button,
   Typography,
   Divider,
+  TextField,
 } from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
@@ -37,6 +38,7 @@ export default function Timesheets() {
   const [timeWorked, setTimeWorked] = React.useState('');
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = React.useState(0.0);
   const [userId, setUserId] = React.useState('');
+  const [userShiftNotes, setUserShiftNotes] = React.useState('');
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -135,7 +137,7 @@ export default function Timesheets() {
       timeIn,
       timeOut,
       hoursWorkedInDecimal,
-      'Test shift',
+      userShiftNotes,
       userId,
     );
     window.location.reload();
@@ -223,6 +225,10 @@ export default function Timesheets() {
     }
   };
 
+  const handleShiftNotesChanged = event => {
+    setUserShiftNotes(event.target.value);
+  };
+
   return (
     <>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -302,6 +308,18 @@ export default function Timesheets() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <Typography>Hours worked: {timeWorked}</Typography>
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  style={{
+                    width: 252,
+                  }}
+                  label="Shift Notes"
+                  multiline
+                  rowsMax="3"
+                  value={userShiftNotes}
+                  onChange={handleShiftNotesChanged}
+                />
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 {jobDropdown}
