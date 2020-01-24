@@ -15,7 +15,7 @@ const getE2eTestResult = () => {
 
 /**
  * Get active jobs for current user
- * @param {String} userID The Gordon id of the user whose jobs to fetch
+ * @param {String} details The user's details
  * @return {Promise.<String>} User's active jobs
  */
 const getActiveJobsForUser = details => {
