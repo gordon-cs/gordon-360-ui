@@ -29,26 +29,39 @@ import GordonLoader from '../../components/Loader';
 
 export default function Timesheets() {
   const [userJobs, setUserJobs] = useState([]);
-  const [selectedDate1, setSelectedDate1] = React.useState(new Date());
-  const [selectedDate2, setSelectedDate2] = React.useState(new Date());
-  const [selectedJob, setSelectedJob] = React.useState({});
+  const [selectedDate1, setSelectedDate1] = React.useState(null);
+  const [selectedDate2, setSelectedDate2] = React.useState(null);
+  const [selectedJob, setSelectedJob] = React.useState(null);
+  const [shiftTooLong, setShiftTooLong] = React.useState(false);
   const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = React.useState(false);
   const [timeWorked, setTimeWorked] = React.useState('');
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = React.useState(0.0);
   const [userId, setUserId] = React.useState('');
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
-    let timeDiff = timeOut.getTime() - timeIn.getTime();
-    let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
-    setHoursWorkedInDecimal(calculatedTimeDiff);
-    let hoursWorked = Math.floor(calculatedTimeDiff);
-    let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60);
+    if (timeIn !== null && timeOut !== null) {
+      let timeDiff = timeOut.getTime() - timeIn.getTime();
+      let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
+      setHoursWorkedInDecimal(calculatedTimeDiff);
+      let hoursWorked = Math.floor(calculatedTimeDiff);
+      let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60);
 
-    if (timeDiff < 0) {
-      setTimeOutIsBeforeTimeIn(true);
-    } else {
-      setTimeOutIsBeforeTimeIn(false);
-      setTimeWorked(hoursWorked + ':' + minutesWorked);
+      if (minutesWorked >= 60) {
+        hoursWorked++;
+        minutesWorked = 0;
+      }
+
+      if (timeDiff < 0) {
+        setTimeOutIsBeforeTimeIn(true);
+      } else {
+        setTimeOutIsBeforeTimeIn(false);
+        setTimeWorked(hoursWorked + ':' + minutesWorked);
+      }
+      if (calculatedTimeDiff > 20) {
+        setShiftTooLong(true);
+      } else {
+        setShiftTooLong(false);
+      }
     }
   };
 
@@ -56,7 +69,7 @@ export default function Timesheets() {
     try {
       user.getProfileInfo().then(result => {
         let profile = result;
-        getActiveJobsForUser(profile.ID);
+        // getActiveJobsForUser(profile.ID);
         setUserId(profile.ID);
       });
     } catch (error) {
@@ -66,8 +79,15 @@ export default function Timesheets() {
 
   const clockIcon = <ScheduleIcon />;
 
-  const getActiveJobsForUser = userID => {
-    jobs.getActiveJobsForUser(userID).then(result => {
+  const getActiveJobsForUser = () => {
+    let details = {
+      shift_start_datetime: selectedDate1.toLocaleString(),
+      shift_end_datetime: selectedDate2.toLocaleString(),
+      id_num: userId,
+    };
+    console.log('fetching jobs', details);
+    jobs.getActiveJobsForUser(details).then(result => {
+      console.log('jobs:', result);
       setUserJobs(result);
     });
   };
@@ -96,12 +116,13 @@ export default function Timesheets() {
   const handleDateChange1 = date => {
     handleTimeOutIsBeforeTimeIn(date, selectedDate2);
     setSelectedDate1(date);
-    setSelectedDate2(date);
+    handleTimeEntered(date, selectedDate2);
   };
 
   const handleDateChange2 = date => {
     handleTimeOutIsBeforeTimeIn(selectedDate1, date);
     setSelectedDate2(date);
+    handleTimeEntered(selectedDate1, date);
   };
 
   const handleSaveButtonClick = () => {
@@ -110,13 +131,14 @@ export default function Timesheets() {
 
     saveShift(
       userId,
-      '93222',
+      selectedJob.EMLID,
       timeIn,
       timeOut,
       hoursWorkedInDecimal,
       'Test shift',
-      'nathaniel.rudenberg',
+      userId,
     );
+    window.location.reload();
   };
 
   const saveShift = async (
@@ -139,11 +161,15 @@ export default function Timesheets() {
     );
   };
 
-  const jobsMenuItems = userJobs.map(job => (
-    <MenuItem value={job.EML_DESCRIPTION} key={job.EML}>
-      {job.EML_DESCRIPTION}
-    </MenuItem>
-  ));
+  const jobsMenuItems = userJobs ? (
+    userJobs.map(job => (
+      <MenuItem label={job.POSTITLE} value={job} key={job.EMLID}>
+        {job.POSTITLE}
+      </MenuItem>
+    ))
+  ) : (
+    <></>
+  );
 
   const disableDisallowedDays = date => {
     let dayIn = selectedDate1.getDate();
@@ -153,6 +179,7 @@ export default function Timesheets() {
 
   const jobDropdown = (
     <FormControl
+      disabled={userJobs === null || userJobs.length === 0}
       style={{
         width: 252,
       }}
@@ -173,13 +200,28 @@ export default function Timesheets() {
     </FormControl>
   );
 
-  const errorText = timeOutIsBeforeTimeIn ? (
-    <Typography variant="overline" color="error">
-      A shift cannot end before it starts.
-    </Typography>
-  ) : (
-    <></>
-  );
+  let errorText;
+  if (timeOutIsBeforeTimeIn) {
+    errorText = (
+      <Typography variant="overline" color="error">
+        A shift cannot end before it starts.
+      </Typography>
+    );
+  } else if (shiftTooLong) {
+    errorText = (
+      <Typography variant="overline" color="error">
+        A shift cannot be longer than 20 hours.
+      </Typography>
+    );
+  } else {
+    errorText = <></>;
+  }
+
+  const handleTimeEntered = (timeIn, timeOut) => {
+    if (selectedDate1 !== null && selectedDate2 !== null && userId !== null) {
+      getActiveJobsForUser();
+    }
+  };
 
   return (
     <>
@@ -201,6 +243,8 @@ export default function Timesheets() {
             >
               <Grid item xs={12} sm={6} md={3}>
                 <KeyboardDatePicker
+                  autoOk
+                  variant="inline"
                   margin="normal"
                   id="date-picker-in-dialog"
                   label="Date In"
@@ -214,6 +258,7 @@ export default function Timesheets() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <KeyboardTimePicker
+                  variant="dialog"
                   margin="normal"
                   id="time-picker-in"
                   label="Time In"
@@ -227,7 +272,8 @@ export default function Timesheets() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <KeyboardDatePicker
-                  hintText="Weekends disabled"
+                  autoOk
+                  variant="dialog"
                   shouldDisableDate={disableDisallowedDays}
                   margin="normal"
                   id="date-picker-out-dialog"
@@ -242,6 +288,7 @@ export default function Timesheets() {
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
                 <KeyboardTimePicker
+                  variant="dialog"
                   margin="normal"
                   id="time-picker-out"
                   label="Time Out"
@@ -273,7 +320,13 @@ export default function Timesheets() {
                   </Grid>
                   <Grid item xs={6}>
                     <Button
-                      disabled={timeOutIsBeforeTimeIn}
+                      disabled={
+                        timeOutIsBeforeTimeIn ||
+                        shiftTooLong ||
+                        selectedDate1 === null ||
+                        selectedDate2 === null ||
+                        selectedJob === null
+                      }
                       variant="contained"
                       color="primary"
                       onClick={handleSaveButtonClick}
