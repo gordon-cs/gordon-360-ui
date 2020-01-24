@@ -242,7 +242,7 @@ export default class GordonNavLinks extends Component {
           </ListItem>
         </NavLink>
       );
-
+      // Re-Enable when adding the link to the timesheet page
       // Creates the Timesheets button
       //timesheetButton = (
       //  <NavLink className="gc360-link" exact to="/timesheets" onClick={this.props.onLinkClick}>
@@ -376,6 +376,7 @@ export default class GordonNavLinks extends Component {
         );
       }
 
+      //Re-enable when adding the link to timesheets page
       // Creates the Timesheet button depending on the status of the network found in local storage
       //if (networkStatus === 'online') {
       //  timesheetButton = (
