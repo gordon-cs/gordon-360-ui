@@ -314,7 +314,7 @@ export default function Timesheets() {
                   style={{
                     width: 252,
                   }}
-                  label="Shift Notes"
+                  label="Shift Notes (optional)"
                   multiline
                   rowsMax="3"
                   value={userShiftNotes}
@@ -343,7 +343,8 @@ export default function Timesheets() {
                         shiftTooLong ||
                         selectedDate1 === null ||
                         selectedDate2 === null ||
-                        selectedJob === null
+                        selectedJob === null ||
+                        selectedJob === ''
                       }
                       variant="contained"
                       color="primary"
