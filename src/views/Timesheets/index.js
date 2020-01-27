@@ -25,8 +25,8 @@ import GordonLoader from '../../components/Loader';
 
 export default function Timesheets() {
   const [userJobs, setUserJobs] = useState([]);
-  const [selectedDate1, setSelectedDate1] = React.useState(null);
-  const [selectedDate2, setSelectedDate2] = React.useState(null);
+  const [selectedDateIn, setSelectedDateIn] = React.useState(null);
+  const [selectedDateOut, setSelectedDateOut] = React.useState(null);
   const [selectedJob, setSelectedJob] = React.useState(null);
   const [shiftTooLong, setShiftTooLong] = React.useState(false);
   const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = React.useState(false);
@@ -78,8 +78,8 @@ export default function Timesheets() {
 
   const getActiveJobsForUser = () => {
     let details = {
-      shift_start_datetime: selectedDate1.toLocaleString(),
-      shift_end_datetime: selectedDate2.toLocaleString(),
+      shift_start_datetime: selectedDateIn.toLocaleString(),
+      shift_end_datetime: selectedDateOut.toLocaleString(),
       id_num: userId,
     };
     console.log('fetching jobs', details);
@@ -104,20 +104,20 @@ export default function Timesheets() {
       </>
     );
   const handleDateChange1 = date => {
-    handleTimeOutIsBeforeTimeIn(date, selectedDate2);
-    setSelectedDate1(date);
-    handleTimeEntered(date, selectedDate2);
+    handleTimeOutIsBeforeTimeIn(date, selectedDateOut);
+    setSelectedDateIn(date);
+    handleTimeEntered(date, selectedDateOut);
   };
 
   const handleDateChange2 = date => {
-    handleTimeOutIsBeforeTimeIn(selectedDate1, date);
-    setSelectedDate2(date);
-    handleTimeEntered(selectedDate1, date);
+    handleTimeOutIsBeforeTimeIn(selectedDateIn, date);
+    setSelectedDateOut(date);
+    handleTimeEntered(selectedDateIn, date);
   };
 
   const handleSaveButtonClick = () => {
-    let timeIn = selectedDate1.toLocaleString();
-    let timeOut = selectedDate2.toLocaleString();
+    let timeIn = selectedDateIn.toLocaleString();
+    let timeOut = selectedDateOut.toLocaleString();
 
     saveShift(
       userId,
@@ -161,9 +161,108 @@ export default function Timesheets() {
     <></>
   );
 
+  const isLeapYear = date => {
+    if (date.getFullYear() % 4 === 0) {
+      if (date.getFullYear() % 100 === 0) {
+        if (date.getFullYear() % 400 !== 0) {
+          return 'false';
+        }
+        if (date.getFullYear() % 400 === 0) {
+          return 'true';
+        }
+      }
+      if (date.getFullYear() % 100 !== 0) {
+        return 'true';
+      }
+    }
+    if (date.getFullYear() % 4 !== 0) {
+      return 'false';
+    }
+  };
+
+  const getNextDate = date => {
+    let is30DayMonth =
+      date.getMonth() === 3 ||
+      date.getMonth() === 5 ||
+      date.getMonth() === 8 ||
+      date.getMonth() === 10;
+
+    let isFebruary = date.getMonth() === 1;
+    let isDecember = date.getMonth() === 11;
+    let nextDate;
+    let monthToReturn;
+    let yearToReturn;
+
+    if (isFebruary) {
+      if (isLeapYear) {
+        if (date.getDate() === 29) {
+          nextDate = 1;
+          monthToReturn = 2;
+          yearToReturn = date.getFullYear();
+        } else {
+          nextDate = date.getDate() + 1;
+          monthToReturn = date.getMonth();
+          yearToReturn = date.getFullYear();
+        }
+      } else if (date.getDate() === 28) {
+        nextDate = 1;
+        monthToReturn = 2;
+        yearToReturn = date.getFullYear();
+      } else {
+        nextDate = date.getDate() + 1;
+        monthToReturn = date.getMonth();
+        yearToReturn = date.getFullYear();
+      }
+    } else if (isDecember) {
+      if (date.getDate() === 31) {
+        nextDate = 1;
+        monthToReturn = 0;
+        yearToReturn = date.getFullYear() + 1;
+      } else {
+        nextDate = date.getDate() + 1;
+        monthToReturn = date.getMonth();
+        yearToReturn = date.getFullYear();
+      }
+    } else if (is30DayMonth) {
+      if (date.getDate() === 30) {
+        nextDate = 1;
+        monthToReturn = (date.getMonth() + 1) % 12;
+        yearToReturn = date.getFullYear();
+      } else {
+        nextDate = date.getDate() + 1;
+        monthToReturn = date.getMonth();
+        yearToReturn = date.getFullYear();
+      }
+    } else if (!is30DayMonth) {
+      if (date.getDate() === 31) {
+        nextDate = 1;
+        monthToReturn = (date.getMonth() + 1) % 12;
+        yearToReturn = date.getFullYear();
+      } else {
+        nextDate = date.getDate() + 1;
+        monthToReturn = date.getMonth();
+        yearToReturn = date.getFullYear();
+      }
+    }
+
+    return {
+      date: nextDate,
+      month: monthToReturn,
+      year: yearToReturn,
+    };
+  };
+
   const disableDisallowedDays = date => {
-    let dayIn = selectedDate1.getDate();
-    let shouldDisableDate = !(date.getDate() === dayIn || date.getDate() === dayIn + 1);
+    let dayIn = selectedDateIn;
+    let nextDate = getNextDate(dayIn);
+    let shouldDisableDate = !(
+      (date.getDate() === dayIn.getDate() &&
+        date.getMonth() === dayIn.getMonth() &&
+        date.getYear() === dayIn.getYear()) ||
+      (date.getDate() === nextDate.date &&
+        date.getMonth() === nextDate.month &&
+        date.getFullYear() === nextDate.year)
+    );
     return shouldDisableDate;
   };
 
@@ -208,7 +307,7 @@ export default function Timesheets() {
   }
 
   const handleTimeEntered = (timeIn, timeOut) => {
-    if (selectedDate1 !== null && selectedDate2 !== null && userId !== null) {
+    if (selectedDateIn !== null && selectedDateOut !== null && userId !== null) {
       getActiveJobsForUser();
     }
   };
@@ -245,7 +344,7 @@ export default function Timesheets() {
                       id="date-picker-in-dialog"
                       label="Date In"
                       format="MM/dd/yyyy"
-                      value={selectedDate1}
+                      value={selectedDateIn}
                       onChange={handleDateChange1}
                       KeyboardButtonProps={{
                         'aria-label': 'change date',
@@ -258,7 +357,7 @@ export default function Timesheets() {
                       margin="normal"
                       id="time-picker-in"
                       label="Time In"
-                      value={selectedDate1}
+                      value={selectedDateIn}
                       onChange={date => {
                         let dateToChange = date;
                         handleDateChange1(dateToChange);
@@ -273,13 +372,13 @@ export default function Timesheets() {
                     <DatePicker
                       autoOk
                       variant="dialog"
-                      disabled={selectedDate1 === null}
+                      disabled={selectedDateIn === null}
                       shouldDisableDate={disableDisallowedDays}
                       margin="normal"
                       id="date-picker-out-dialog"
                       label="Date Out"
                       format="MM/dd/yyyy"
-                      value={selectedDate2}
+                      value={selectedDateOut}
                       onChange={handleDateChange2}
                       KeyboardButtonProps={{
                         'aria-label': 'change date',
@@ -289,11 +388,11 @@ export default function Timesheets() {
                   <Grid item xs={12} sm={6} md={3}>
                     <TimePicker
                       variant="dialog"
-                      disabled={selectedDate1 === null}
+                      disabled={selectedDateIn === null}
                       margin="normal"
                       id="time-picker-out"
                       label="Time Out"
-                      value={selectedDate2}
+                      value={selectedDateOut}
                       onChange={handleDateChange2}
                       KeyboardButtonProps={{
                         'aria-label': 'change time',
@@ -319,35 +418,25 @@ export default function Timesheets() {
                   <Grid item xs={12} sm={6} md={3}>
                     {jobDropdown}
                   </Grid>
-                  <Grid
-                    items
-                    xs={12}
-                    style={{
-                      marginTop: '8px',
-                      marginBottom: '10px',
-                    }}
-                  >
-                    <Grid container justify="center">
-                      <Grid item xs={12}>
-                        {errorText}
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Button
-                          disabled={
-                            timeOutIsBeforeTimeIn ||
-                            shiftTooLong ||
-                            selectedDate1 === null ||
-                            selectedDate2 === null ||
-                            selectedJob === null
-                          }
-                          variant="contained"
-                          color="primary"
-                          onClick={handleSaveButtonClick}
-                        >
-                          Save
-                        </Button>
-                      </Grid>
-                    </Grid>
+                  <Grid item xs={12}>
+                    {errorText}
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      disabled={
+                        timeOutIsBeforeTimeIn ||
+                        shiftTooLong ||
+                        selectedDateIn === null ||
+                        selectedDateOut === null ||
+                        selectedJob === null ||
+                        selectedJob === ''
+                      }
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSaveButtonClick}
+                    >
+                      Save
+                    </Button>
                   </Grid>
                 </Grid>
               </CardContent>
