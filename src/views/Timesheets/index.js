@@ -116,8 +116,6 @@ export default function Timesheets() {
       </>
     );
   const handleDateChange1 = date => {
-    console.log('Is leap year:', isLeapYear(date));
-    console.log('Selected month:', date.getMonth());
     handleTimeOutIsBeforeTimeIn(date, selectedDateOut);
     setSelectedDateIn(date);
     handleTimeEntered(date, selectedDateOut);
@@ -259,8 +257,6 @@ export default function Timesheets() {
       }
     }
 
-    // console.log(nextDate, monthToReturn, yearToReturn);
-
     return {
       date: nextDate,
       month: monthToReturn,
@@ -271,10 +267,6 @@ export default function Timesheets() {
   const disableDisallowedDays = date => {
     let dayIn = selectedDateIn;
     let nextDate = getNextDate(dayIn);
-    console.log('Current date:', dayIn.getDate());
-    console.log('Next date:', nextDate.date);
-    console.log('Next month:', nextDate.month);
-    console.log('Next year', nextDate.year);
     let shouldDisableDate = !(
       (date.getDate() === dayIn.getDate() &&
         date.getMonth() === dayIn.getMonth() &&
