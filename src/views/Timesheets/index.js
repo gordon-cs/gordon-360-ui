@@ -12,16 +12,11 @@ import {
   MenuItem,
   Button,
   Typography,
-  Divider,
   TextField,
 } from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import SavedShiftsList from './components/SavedShiftsList';
 import user from './../../services/user';
@@ -103,13 +98,6 @@ export default function Timesheets() {
       <SavedShiftsList getShifts={getSavedShiftsForUser} userID={userId} />
     ) : (
       <>
-        <Divider
-          style={{
-            backgroundColor: '#adadad',
-            marginLeft: '18px',
-            marginRight: '18px',
-          }}
-        />
         <CardContent>
           <GordonLoader />
         </CardContent>
@@ -231,134 +219,145 @@ export default function Timesheets() {
 
   return (
     <>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Card>
-          <CardContent
-            style={{
-              marginLeft: 8,
-              marginTop: 8,
-            }}
-          >
-            <CardHeader title="Enter a shift" />
-            <Grid
-              container
-              spacing={2}
-              justify="space-around"
-              alignItems="center"
-              alignContent="center"
-            >
-              <Grid item xs={12} sm={6} md={3}>
-                <KeyboardDatePicker
-                  autoOk
-                  variant="inline"
-                  margin="normal"
-                  id="date-picker-in-dialog"
-                  label="Date In"
-                  format="MM/dd/yyyy"
-                  value={selectedDate1}
-                  onChange={handleDateChange1}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <KeyboardTimePicker
-                  variant="dialog"
-                  margin="normal"
-                  id="time-picker-in"
-                  label="Time In"
-                  value={selectedDate1}
-                  onChange={handleDateChange1}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change time',
-                  }}
-                  keyboardIcon={clockIcon}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <KeyboardDatePicker
-                  autoOk
-                  variant="dialog"
-                  shouldDisableDate={disableDisallowedDays}
-                  margin="normal"
-                  id="date-picker-out-dialog"
-                  label="Date Out"
-                  format="MM/dd/yyyy"
-                  value={selectedDate2}
-                  onChange={handleDateChange2}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <KeyboardTimePicker
-                  variant="dialog"
-                  margin="normal"
-                  id="time-picker-out"
-                  label="Time Out"
-                  value={selectedDate2}
-                  onChange={handleDateChange2}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change time',
-                  }}
-                  keyboardIcon={clockIcon}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Typography>Hours worked: {timeWorked}</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  style={{
-                    width: 252,
-                  }}
-                  label="Shift Notes"
-                  multiline
-                  rowsMax="3"
-                  value={userShiftNotes}
-                  onChange={handleShiftNotesChanged}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                {jobDropdown}
-              </Grid>
-              <Grid
-                items
-                xs={12}
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Card>
+              <CardContent
                 style={{
-                  marginTop: '8px',
-                  marginBottom: '10px',
+                  marginLeft: 8,
+                  marginTop: 8,
                 }}
               >
-                <Grid container justify="center">
-                  <Grid item xs={12}>
-                    {errorText}
+                <CardHeader title="Enter a shift" />
+                <Grid
+                  container
+                  spacing={2}
+                  justify="space-around"
+                  alignItems="center"
+                  alignContent="center"
+                >
+                  <Grid item xs={12} sm={6} md={3}>
+                    <DatePicker
+                      autoOk
+                      variant="inline"
+                      margin="normal"
+                      id="date-picker-in-dialog"
+                      label="Date In"
+                      format="MM/dd/yyyy"
+                      value={selectedDate1}
+                      onChange={handleDateChange1}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                    />
                   </Grid>
-                  <Grid item xs={6}>
-                    <Button
-                      disabled={
-                        timeOutIsBeforeTimeIn ||
-                        shiftTooLong ||
-                        selectedDate1 === null ||
-                        selectedDate2 === null ||
-                        selectedJob === null
-                      }
-                      variant="contained"
-                      color="primary"
-                      onClick={handleSaveButtonClick}
-                    >
-                      Save
-                    </Button>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <TimePicker
+                      variant="dialog"
+                      margin="normal"
+                      id="time-picker-in"
+                      label="Time In"
+                      value={selectedDate1}
+                      onChange={date => {
+                        let dateToChange = date;
+                        handleDateChange1(dateToChange);
+                      }}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change time',
+                      }}
+                      keyboardIcon={clockIcon}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <DatePicker
+                      autoOk
+                      variant="dialog"
+                      disabled={selectedDate1 === null}
+                      shouldDisableDate={disableDisallowedDays}
+                      margin="normal"
+                      id="date-picker-out-dialog"
+                      label="Date Out"
+                      format="MM/dd/yyyy"
+                      value={selectedDate2}
+                      onChange={handleDateChange2}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <TimePicker
+                      variant="dialog"
+                      disabled={selectedDate1 === null}
+                      margin="normal"
+                      id="time-picker-out"
+                      label="Time Out"
+                      value={selectedDate2}
+                      onChange={handleDateChange2}
+                      KeyboardButtonProps={{
+                        'aria-label': 'change time',
+                      }}
+                      keyboardIcon={clockIcon}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Typography>Hours worked: {timeWorked}</Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <TextField
+                      style={{
+                        width: 252,
+                      }}
+                      label="Shift Notes"
+                      multiline
+                      rowsMax="3"
+                      value={userShiftNotes}
+                      onChange={handleShiftNotesChanged}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={3}>
+                    {jobDropdown}
+                  </Grid>
+                  <Grid
+                    items
+                    xs={12}
+                    style={{
+                      marginTop: '8px',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    <Grid container justify="center">
+                      <Grid item xs={12}>
+                        {errorText}
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Button
+                          disabled={
+                            timeOutIsBeforeTimeIn ||
+                            shiftTooLong ||
+                            selectedDate1 === null ||
+                            selectedDate2 === null ||
+                            selectedJob === null
+                          }
+                          variant="contained"
+                          color="primary"
+                          onClick={handleSaveButtonClick}
+                        >
+                          Save
+                        </Button>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Grid>
-          </CardContent>
+              </CardContent>
+            </Card>
+          </MuiPickersUtilsProvider>
+        </Grid>
+        <Grid item xs={12}>
           {savedShiftsListComponent}
-        </Card>
-      </MuiPickersUtilsProvider>
+        </Grid>
+      </Grid>
     </>
   );
 }

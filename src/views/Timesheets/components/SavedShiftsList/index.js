@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import {
   Typography,
   Grid,
+  Card,
   CardContent,
   CardHeader,
   CardActions,
   Button,
-  Divider,
   FormControl,
   Input,
   InputLabel,
@@ -164,29 +164,15 @@ export default class SavedShiftsList extends Component {
     let content;
     if (this.state.shifts.length === null) {
       content = (
-        <>
-          <Divider
-            style={{
-              backgroundColor: '#adadad',
-              marginLeft: '8px',
-              marginRight: '8px',
-            }}
-          />
+        <Card>
           <CardContent>
             <GordonLoader />
           </CardContent>
-        </>
+        </Card>
       );
     } else if (this.state.shifts.length > 0) {
       content = (
-        <>
-          <Divider
-            style={{
-              backgroundColor: '#adadad',
-              marginLeft: '8px',
-              marginRight: '8px',
-            }}
-          />
+        <Card>
           <CardContent>
             <CardHeader title="Saved Shifts" />
             <Grid
@@ -226,7 +212,7 @@ export default class SavedShiftsList extends Component {
               </Grid>
             </Grid>
           </CardActions>
-        </>
+        </Card>
       );
     } else {
       content = <></>;
