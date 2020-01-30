@@ -14,6 +14,7 @@ import PeopleSearch from './views/PeopleSearch';
 import ProfileNotFound from './views/ProfileNotFound';
 import IDUploader from './views/IDUploader';
 import Admin from './views/Admin';
+import BannerSubmission from './views/BannerSubmission';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 export default [
@@ -92,5 +93,10 @@ export default [
     name: 'Admin',
     path: '/admin',
     component: Admin,
+  },
+  {
+    name: 'Banner',
+    path: '/banner',
+    component: BannerSubmission,
   },
 ];
