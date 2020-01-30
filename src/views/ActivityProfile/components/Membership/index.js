@@ -327,9 +327,14 @@ export default class Membership extends Component {
                     PARTICIPATION
                   </Typography>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     TITLE/COMMENT
+                  </Typography>
+                </Grid>
+                <Grid item xs={1}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    MAIL #
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
@@ -467,16 +472,21 @@ export default class Membership extends Component {
           header = (
             <div style={headerStyle}>
               <Grid container direction="row">
-                <Grid item xs={6/*4*/}>
+                <Grid item xs={4}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     NAME
                   </Typography>
                 </Grid>
-                <Grid item xs={6/*4*/}>
+                <Grid item xs={4}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     PARTICIPATION
                   </Typography>
                 </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    MAIL #
+                  </Typography>
+                </Grid>               
               </Grid>
             </div>
           );
