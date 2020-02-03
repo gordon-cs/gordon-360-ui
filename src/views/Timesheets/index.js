@@ -353,7 +353,7 @@ export default function Timesheets() {
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
                     <TimePicker
-                      variant="dialog"
+                      variant="inline"
                       margin="normal"
                       id="time-picker-in"
                       label="Time In"
@@ -371,7 +371,7 @@ export default function Timesheets() {
                   <Grid item xs={12} sm={6} md={3}>
                     <DatePicker
                       autoOk
-                      variant="dialog"
+                      variant="inline"
                       disabled={selectedDateIn === null}
                       shouldDisableDate={disableDisallowedDays}
                       margin="normal"
@@ -387,7 +387,7 @@ export default function Timesheets() {
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
                     <TimePicker
-                      variant="dialog"
+                      variant="inline"
                       disabled={selectedDateIn === null}
                       margin="normal"
                       id="time-picker-out"
