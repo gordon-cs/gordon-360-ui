@@ -25,9 +25,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import user from '../../../../services/user';
 import { gordonColors } from '../../../../theme';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import Error from '@material-ui/icons/Error';
 //import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 import AddPersonIcon from '@material-ui/icons/PersonAdd';
 import Divider from '@material-ui/core/Divider';
+import { icons } from 'react-icons/lib/cjs';
 
 export default class Membership extends Component {
   constructor(props) {
@@ -141,7 +143,7 @@ export default class Membership extends Component {
       return;
     }
 
-    this.setState({ isSnackBarOpen: false });
+    this.setState({ isSnackBarOpen: false, isFailSnackBarOpen: false});
   };
 
   onClose() {
@@ -165,20 +167,32 @@ export default class Membership extends Component {
       if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
         memberEmail = memberEmail + '@gordon.edu';
       }
-      let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
+      
+      // Try to add member
+      try {
+        let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
         return result.GordonID;
-      });
-      let data = {
-        ACT_CDE: this.props.activityCode,
-        SESS_CDE: this.state.sessionInfo.SessionCode,
-        ID_NUM: addID,
-        PART_CDE: this.state.participationCode,
-        COMMENT_TXT: this.state.titleComment,
-        GRP_ADMIN: false,
-      };
-      await membership.addMembership(data);
-      this.onClose();
-      this.refresh();
+        });
+        let data = {
+          ACT_CDE: this.props.activityCode,
+          SESS_CDE: this.state.sessionInfo.SessionCode,
+          ID_NUM: addID,
+          PART_CDE: this.state.participationCode,
+          COMMENT_TXT: this.state.titleComment,
+          GRP_ADMIN: false,
+        };
+        await membership.addMembership(data);
+      } catch (error) { 
+        switch (error.name) {
+          case "NotFoundError":
+            this.setState({ isFailSnackBarOpen: true });             
+            break;
+          
+          default:
+            console.log("Something went wrong");
+            break;
+        }
+      }
     }
   }
 
@@ -635,6 +649,34 @@ export default class Membership extends Component {
                   }}
                 />
                 Success!
+              </span>
+            }
+            action={[
+              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
+                <CloseIcon />
+              </IconButton>,
+            ]}
+          />
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.isFailSnackBarOpen}
+            autoHideDuration={6000}
+            onClose={this.handleClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={
+              <span id="message-id">
+                <Error
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '1rem',
+                  }}
+                />
+                Nobody with that username found.
               </span>
             }
             action={[
