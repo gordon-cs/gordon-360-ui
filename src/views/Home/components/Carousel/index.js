@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import Img from 'react-graceful-image'
 
 import cms from '../../../../services/cms';
-import '../../../../../node_modules/react-responsive-carousel/lib/styles/carousel.css';
+import ImageGallery from 'react-image-gallery';
 import GordonLoader from '../../../../components/Loader';
-import './carousel.css'
 
 export default class GordonCarousel extends Component {
   constructor(props) {
     super(props);
+
     this.loadCarousel = this.loadCarousel.bind(this);
 
     this.state = {
@@ -16,18 +15,26 @@ export default class GordonCarousel extends Component {
       loading: true,
       carouselContent: {},
     };
+
+    this.linkArray = [];
   }
   componentWillMount() {
     this.loadCarousel();
   }
-
   async loadCarousel() {
     this.setState({ loading: true });
     try {
       const carouselContent = await cms.getSlides();
       this.setState({ loading: false, carouselContent });
+      this.state.carouselContent.map(slide => this.linkArray.push(slide.ActionLink));
     } catch (error) {
       this.setState({ error });
+    }
+  }
+
+  handleClickSlide() {
+    if (this.state.carouselContent[this._imageGallery.getCurrentIndex()].ActionLink !== '') {
+      window.location = this.state.carouselContent[this._imageGallery.getCurrentIndex()].ActionLink;
     }
   }
 
@@ -36,17 +43,34 @@ export default class GordonCarousel extends Component {
       throw this.state.error;
     }
 
-
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
+      const images = [];
+      this.state.carouselContent.map(slide =>
+        images.push({
+          original: slide.ImagePath,
+          originalAlt: slide.AltTag,
+          originalTitle: slide.Title,
+        }),
+      );
+
       content = (
-          <div >
-            <Img className="imageDisplay" src={this.state.carouselContent[0].ImagePath} alt={this.state.carouselContent[0].AltTag}></Img>
-          </div>
+        <ImageGallery
+          ref={i => (this._imageGallery = i)}
+          showThumbnails={false}
+          showFullscreenButton={false}
+          showPlayButton={false}
+          showBullets={true}
+          autoPlay={true}
+          showNav={false}
+          slideInterval={5000}
+          items={images}
+          onClick={this.handleClickSlide.bind(this)}
+        />
       );
     }
-    return <section>{content}</section>;
+    return <div>{content}</div>;
   }
 }
