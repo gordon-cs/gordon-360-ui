@@ -76,6 +76,9 @@ export default class SavedShiftsList extends Component {
 
   submitShiftsToSupervisor(shifts, supervisorID) {
     jobs.submitShiftsForUser(shifts, supervisorID).then(response => {
+      this.setState({
+        selectedSupervisor: null,
+      });
       this.reloadShiftData();
     });
   }
