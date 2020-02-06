@@ -3,11 +3,12 @@ import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import GordonLoader from '../../components/Loader';
 import EventList from './../../components/EventList';
+import { gordonColors } from '../../theme';
 
 export default class EventsAttended extends Component {
   constructor(props) {
@@ -31,11 +32,35 @@ export default class EventsAttended extends Component {
   render() {
     let content;
 
+    const style = {
+      button: {
+        background: gordonColors.primary.cyan,
+        color: 'white',
+      },
+    };
+
     if (this.props.Authentication) {
       if (this.state.loading === true) {
         content = <GordonLoader />;
       } else if (this.state.events.length > 0) {
-        content = <EventList events={this.state.events} />;
+        content = (
+          <Grid container direction="row" justify="center" spacing="2">
+            <Grid item align="center">
+              <Button
+                variant="contained"
+                style={style.button}
+                onClick={() => {
+                  window.location.pathname = '/events';
+                }}
+              >
+                Need More Chapel Credits?
+              </Button>
+            </Grid>
+            <Grid item>
+              <EventList events={this.state.events} />
+            </Grid>
+          </Grid>
+        );
       } else {
         content = (
           <Grid item>
@@ -44,27 +69,30 @@ export default class EventsAttended extends Component {
             <Typography variant="h4" align="center">
               No Events To Show
             </Typography>
+            <Button
+              variant="contained"
+              style={style.button}
+              onClick={() => {
+                window.location.pathname = '/events';
+              }}
+            >
+              Need More Chapel Credits?
+            </Button>
           </Grid>
         );
       }
     } else {
       content = (
-        <Grid container justify="center">
+        <Grid container justify="center" spacing="2">
           <Grid item xs={12} md={8}>
             <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
+              <CardContent class="cardContent">
                 <h1>You are not logged in.</h1>
                 <br />
                 <h4>You must be logged in to view your attended events.</h4>
                 <br />
                 <Button
-                  color="primary"
-                  variant="contained"
+                  style={style.button}
                   onClick={() => {
                     window.location.pathname = '';
                   }}
@@ -75,7 +103,7 @@ export default class EventsAttended extends Component {
             </Card>
           </Grid>
         </Grid>
-      )
+      );
     }
 
     return (

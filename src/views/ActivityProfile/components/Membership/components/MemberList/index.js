@@ -324,7 +324,7 @@ export default class MemberList extends Component {
             <Grid item xs={2} style={rowStyle}>
               <Typography>{this.state.participationDescription}</Typography>
             </Grid>
-            <Grid item xs={3} style={rowStyle}>
+            <Grid item xs={/*2*/ 3} style={rowStyle}>
               <Typography>{this.state.titleComment}</Typography>
             </Grid>
             <Grid item xs={4} style={rowStyle}>
@@ -359,7 +359,7 @@ export default class MemberList extends Component {
           <ExpansionPanel defaultExpanded={showLeaveButton || this.state.admin}>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Grid container>
-                <Grid item xs={8} sm={9} md={10}>
+                <Grid item xs={/*6*/ 8} sm={/*7*/ 9} md={/*8*/ 10}>
                   <Typography>
                     {this.props.member.FirstName} {this.props.member.LastName}
                   </Typography>
@@ -382,12 +382,12 @@ export default class MemberList extends Component {
       content = (
         <section>
           <Grid container style={rowStyle} direction="row" alignItems="center">
-            <Grid item xs={6} sm={6} style={rowStyle}>
+            <Grid item xs={/*4*/ 6} sm={/*4*/ 6} style={rowStyle}>
               <Typography>
                 {this.props.member.FirstName} {this.props.member.LastName}
               </Typography>
             </Grid>
-            <Grid item xs={6} sm={4} style={rowStyle}>
+            <Grid item xs={/*4*/ 6} sm={4} style={rowStyle}>
               <Typography>{this.state.participationDescription}</Typography>
             </Grid>
             <Grid item xs={2} sm={2} style={rowStyle}>
