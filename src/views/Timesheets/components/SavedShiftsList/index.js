@@ -22,7 +22,6 @@ import './SavedShiftsList.css';
 export default class SavedShiftsList extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       shifts: [],
       directSupervisor: null,
@@ -164,7 +163,7 @@ export default class SavedShiftsList extends Component {
       </FormControl>
     );
 
-    let content;
+    let content = <></>;
     if (this.state.shifts.length === null) {
       content = (
         <Card>
@@ -188,9 +187,7 @@ export default class SavedShiftsList extends Component {
               style={styles.boxShadow}
             >
               {header}
-              {/* <div className="shift-list"> */}
               {shiftsList}
-              {/* </div> */}
             </Grid>
           </CardContent>
           <CardActions>
@@ -217,10 +214,7 @@ export default class SavedShiftsList extends Component {
           </CardActions>
         </Card>
       );
-    } else {
-      content = <></>;
     }
-
     return <>{content}</>;
   }
 }

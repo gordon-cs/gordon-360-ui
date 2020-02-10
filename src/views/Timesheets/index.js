@@ -66,11 +66,9 @@ export default function Timesheets() {
     try {
       user.getProfileInfo().then(result => {
         let profile = result;
-        // getActiveJobsForUser(profile.ID);
         setUserId(profile.ID);
       });
     } catch (error) {
-      //
     }
   }, []);
 
