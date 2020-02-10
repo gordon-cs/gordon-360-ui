@@ -114,6 +114,7 @@ import gordonEvent from './event';
  * @property {String} OnCampusPhone On campus phone
  * @property {String} OnCampusPrivatePhone On campus private phone
  * @property {String} OnCampusFax On campus fax
+ * @property {String} Mail_Location On campus mail location
  * @property {String} OffCampusStreet1 Off campus street 1
  * @property {String} OffCampusStreet2 Off campus street 2
  * @property {String} OffCampusCity Off campus city
