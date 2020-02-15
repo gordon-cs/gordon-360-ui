@@ -40,7 +40,8 @@ export default function Timesheets() {
     if (timeIn !== null && timeOut !== null) {
       let timeDiff = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
-      setHoursWorkedInDecimal(calculatedTimeDiff);
+      let roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+      setHoursWorkedInDecimal(roundedHourDifference);
       let hoursWorked = Math.floor(calculatedTimeDiff);
       let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60);
 
@@ -458,7 +459,7 @@ export default function Timesheets() {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
-                    <Typography>Hours worked: {timeWorked}</Typography>
+                    <Typography>Hours worked: {hoursWorkedInDecimal}</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
                     <TextField
