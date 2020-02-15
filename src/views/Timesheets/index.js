@@ -35,6 +35,7 @@ export default function Timesheets() {
   const [userId, setUserId] = React.useState('');
   const [userShiftNotes, setUserShiftNotes] = React.useState('');
   const [isOverlappingShift, setIsOverlappingShift] = React.useState(false);
+  const [shiftListComponent, setShiftListComponent] = React.useState(null);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -112,7 +113,7 @@ export default function Timesheets() {
 
   let savedShiftsListComponent =
     userId !== '' ? (
-      <SavedShiftsList getShifts={getSavedShiftsForUser} userID={userId} />
+      <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} />
     ) : (
       <>
         <CardContent>
@@ -177,8 +178,13 @@ export default function Timesheets() {
       roundedHourDifference,
       userShiftNotes,
       userId,
-    );
-    window.location.reload();
+    ).then(result => {
+      shiftListComponent.reloadShiftData()
+      setSelectedDateOut(null);
+      setSelectedDateIn(null);
+      setUserJobs([]);
+      setHoursWorkedInDecimal(0);
+    });
   };
 
   const saveShift = async (
