@@ -97,7 +97,7 @@ export default [
   },
   {
     name: 'Timesheets',
-    path: '/timesheets',
+    path: '/t1m35433t5',
     component: Timesheets,
   },
   {
