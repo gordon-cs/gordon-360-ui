@@ -34,6 +34,7 @@ export default function Timesheets() {
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = React.useState(0.0);
   const [userId, setUserId] = React.useState('');
   const [userShiftNotes, setUserShiftNotes] = React.useState('');
+  const [isOverlappingShift, setIsOverlappingShift] = React.useState(false);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -87,6 +88,23 @@ export default function Timesheets() {
     });
   };
 
+  const checkForOverlappingShift = () => {
+    let details = {
+      id_num: userId,
+      shift_start_datetime: selectedDateIn.toLocaleString(),
+      shift_end_datetime: selectedDateOut.toLocaleString(),
+    };
+
+    jobs.checkForOverlappingShift(details).then(result => {
+      console.log('Overlap status:', result);
+      if (result.length > 0) {
+        setIsOverlappingShift(true);
+      } else {
+        setIsOverlappingShift(false);
+      }
+    })
+  }
+
   const getSavedShiftsForUser = userID => {
     return jobs.getSavedShiftsForUser(userID);
   };
@@ -114,15 +132,48 @@ export default function Timesheets() {
   };
 
   const handleSaveButtonClick = () => {
-    let timeIn = selectedDateIn.toLocaleString();
-    let timeOut = selectedDateOut.toLocaleString();
+    let timeIn = selectedDateIn;
+    let timeOut = selectedDateOut;
+
+    if (selectedDateIn.getDay() === 6 && selectedDateOut.getDay() === 0) {
+      let timeOut2 = new Date(timeOut.getTime());
+      let timeIn2 = new Date(timeOut.getTime());
+      timeIn2.setHours(0);
+      timeIn2.setMinutes(0);
+      timeIn2.setSeconds(0);
+      timeIn2.setMilliseconds(0);
+
+      timeOut.setDate(timeIn.getDate());
+      timeOut.setHours(23);
+      timeOut.setMinutes(59);
+      timeOut.setSeconds(0);
+      timeOut.setMilliseconds(0);
+
+      let timeDiff2 = timeOut2.getTime() - timeIn2.getTime();
+      let calculatedTimeDiff2 = timeDiff2 / 1000 / 60 / 60;
+      let roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 4) / 4).toFixed(2);
+
+      saveShift(
+        userId,
+        selectedJob.EMLID,
+        timeIn2.toLocaleString(),
+        timeOut2.toLocaleString(),
+        roundedHourDifference2,
+        userShiftNotes,
+        userId,
+      );
+    }
+
+    let timeDiff1 = timeOut.getTime() - timeIn.getTime();
+    let calculatedTimeDiff = timeDiff1 / 1000 / 60 / 60;
+    let roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
 
     saveShift(
       userId,
       selectedJob.EMLID,
-      timeIn,
-      timeOut,
-      hoursWorkedInDecimal,
+      timeIn.toLocaleString(),
+      timeOut.toLocaleString(),
+      roundedHourDifference,
       userShiftNotes,
       userId,
     );
@@ -300,13 +351,21 @@ export default function Timesheets() {
         A shift cannot be longer than 20 hours.
       </Typography>
     );
-  } else {
+  } else if (isOverlappingShift) {
+    errorText = (
+      <Typography variant="overline" color="error">
+        A shift cannot overlap a saved shift.
+      </Typography>
+    );
+  }
+  else {
     errorText = <></>;
   }
 
   const handleTimeEntered = (timeIn, timeOut) => {
     if (selectedDateIn !== null && selectedDateOut !== null && userId !== null) {
       getActiveJobsForUser();
+      checkForOverlappingShift();
     }
   };
 
@@ -423,6 +482,7 @@ export default function Timesheets() {
                     <Button
                       disabled={
                         timeOutIsBeforeTimeIn ||
+                        isOverlappingShift ||
                         shiftTooLong ||
                         selectedDateIn === null ||
                         selectedDateOut === null ||
