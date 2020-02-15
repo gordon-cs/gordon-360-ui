@@ -13,7 +13,9 @@ import {
   Button,
   Typography,
   TextField,
+  Snackbar,
 } from '@material-ui/core/';
+import MuiAlert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
 import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
@@ -36,6 +38,7 @@ export default function Timesheets() {
   const [userShiftNotes, setUserShiftNotes] = React.useState('');
   const [isOverlappingShift, setIsOverlappingShift] = React.useState(false);
   const [shiftListComponent, setShiftListComponent] = React.useState(null);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -76,6 +79,10 @@ export default function Timesheets() {
   }, []);
 
   const clockIcon = <ScheduleIcon />;
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   const getActiveJobsForUser = () => {
     let details = {
@@ -163,7 +170,9 @@ export default function Timesheets() {
         roundedHourDifference2,
         userShiftNotes,
         userId,
-      );
+      ).then(result => {
+        setSnackbarOpen(true);
+      });
     }
 
     let timeDiff1 = timeOut.getTime() - timeIn.getTime();
@@ -320,6 +329,14 @@ export default function Timesheets() {
         date.getFullYear() === nextDate.year)
     );
     return shouldDisableDate;
+  };
+  
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarOpen(false);
   };
 
   const jobDropdown = (
@@ -512,6 +529,11 @@ export default function Timesheets() {
           {savedShiftsListComponent}
         </Grid>
       </Grid>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="info">
+          Your entered shift spanned two pay weeks, so it was automatically split into two shifts.
+        </Alert>
+      </Snackbar>
     </>
   );
 }
