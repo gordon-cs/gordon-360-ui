@@ -24,7 +24,7 @@ const getActiveJobsForUser = details => {
 
 /**
  * 
- * @param {String} deails The shift start/end and user id
+ * @param {String} details The shift start/end and user id
  * @return {Promise.<String>} The id of the overlapping shift, or null if none 
  */
 const checkForOverlappingShift = details => {
