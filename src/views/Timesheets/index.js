@@ -32,7 +32,7 @@ export default function Timesheets() {
   const [selectedJob, setSelectedJob] = React.useState(null);
   const [shiftTooLong, setShiftTooLong] = React.useState(false);
   const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = React.useState(false);
-  const [timeWorked, setTimeWorked] = React.useState('');
+
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = React.useState(0.0);
   const [userId, setUserId] = React.useState('');
   const [userShiftNotes, setUserShiftNotes] = React.useState('');
