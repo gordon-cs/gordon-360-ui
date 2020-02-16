@@ -13,7 +13,9 @@ import {
   Button,
   Typography,
   TextField,
+  Snackbar,
 } from '@material-ui/core/';
+import MuiAlert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
 import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
@@ -30,16 +32,20 @@ export default function Timesheets() {
   const [selectedJob, setSelectedJob] = React.useState(null);
   const [shiftTooLong, setShiftTooLong] = React.useState(false);
   const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = React.useState(false);
-  const [timeWorked, setTimeWorked] = React.useState('');
+
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = React.useState(0.0);
   const [userId, setUserId] = React.useState('');
   const [userShiftNotes, setUserShiftNotes] = React.useState('');
+  const [isOverlappingShift, setIsOverlappingShift] = React.useState(false);
+  const [shiftListComponent, setShiftListComponent] = React.useState(null);
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
       let timeDiff = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
-      setHoursWorkedInDecimal(calculatedTimeDiff);
+      let roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+      setHoursWorkedInDecimal(roundedHourDifference);
       let hoursWorked = Math.floor(calculatedTimeDiff);
       let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60);
 
@@ -52,7 +58,7 @@ export default function Timesheets() {
         setTimeOutIsBeforeTimeIn(true);
       } else {
         setTimeOutIsBeforeTimeIn(false);
-        setTimeWorked(hoursWorked + ':' + minutesWorked);
+
       }
       if (calculatedTimeDiff > 20) {
         setShiftTooLong(true);
@@ -74,6 +80,10 @@ export default function Timesheets() {
 
   const clockIcon = <ScheduleIcon />;
 
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
   const getActiveJobsForUser = () => {
     let details = {
       shift_start_datetime: selectedDateIn.toLocaleString(),
@@ -87,13 +97,30 @@ export default function Timesheets() {
     });
   };
 
+  const checkForOverlappingShift = () => {
+    let details = {
+      id_num: userId,
+      shift_start_datetime: selectedDateIn.toLocaleString(),
+      shift_end_datetime: selectedDateOut.toLocaleString(),
+    };
+
+    jobs.checkForOverlappingShift(details).then(result => {
+      console.log('Overlap status:', result);
+      if (result.length > 0) {
+        setIsOverlappingShift(true);
+      } else {
+        setIsOverlappingShift(false);
+      }
+    })
+  }
+
   const getSavedShiftsForUser = userID => {
     return jobs.getSavedShiftsForUser(userID);
   };
 
   let savedShiftsListComponent =
     userId !== '' ? (
-      <SavedShiftsList getShifts={getSavedShiftsForUser} userID={userId} />
+      <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} />
     ) : (
       <>
         <CardContent>
@@ -114,19 +141,59 @@ export default function Timesheets() {
   };
 
   const handleSaveButtonClick = () => {
-    let timeIn = selectedDateIn.toLocaleString();
-    let timeOut = selectedDateOut.toLocaleString();
+    let timeIn = selectedDateIn;
+    let timeOut = selectedDateOut;
+
+    if (selectedDateIn.getDay() === 6 && selectedDateOut.getDay() === 0) {
+      let timeOut2 = new Date(timeOut.getTime());
+      let timeIn2 = new Date(timeOut.getTime());
+      timeIn2.setHours(0);
+      timeIn2.setMinutes(0);
+      timeIn2.setSeconds(0);
+      timeIn2.setMilliseconds(0);
+
+      timeOut.setDate(timeIn.getDate());
+      timeOut.setHours(23);
+      timeOut.setMinutes(59);
+      timeOut.setSeconds(0);
+      timeOut.setMilliseconds(0);
+
+      let timeDiff2 = timeOut2.getTime() - timeIn2.getTime();
+      let calculatedTimeDiff2 = timeDiff2 / 1000 / 60 / 60;
+      let roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 4) / 4).toFixed(2);
+
+      saveShift(
+        userId,
+        selectedJob.EMLID,
+        timeIn2.toLocaleString(),
+        timeOut2.toLocaleString(),
+        roundedHourDifference2,
+        userShiftNotes,
+        userId,
+      ).then(result => {
+        setSnackbarOpen(true);
+      });
+    }
+
+    let timeDiff1 = timeOut.getTime() - timeIn.getTime();
+    let calculatedTimeDiff = timeDiff1 / 1000 / 60 / 60;
+    let roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
 
     saveShift(
       userId,
       selectedJob.EMLID,
-      timeIn,
-      timeOut,
-      hoursWorkedInDecimal,
+      timeIn.toLocaleString(),
+      timeOut.toLocaleString(),
+      roundedHourDifference,
       userShiftNotes,
       userId,
-    );
-    window.location.reload();
+    ).then(result => {
+      shiftListComponent.reloadShiftData()
+      setSelectedDateOut(null);
+      setSelectedDateIn(null);
+      setUserJobs([]);
+      setHoursWorkedInDecimal(0);
+    });
   };
 
   const saveShift = async (
@@ -263,6 +330,14 @@ export default function Timesheets() {
     );
     return shouldDisableDate;
   };
+  
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarOpen(false);
+  };
 
   const jobDropdown = (
     <FormControl
@@ -300,13 +375,21 @@ export default function Timesheets() {
         A shift cannot be longer than 20 hours.
       </Typography>
     );
-  } else {
+  } else if (isOverlappingShift) {
+    errorText = (
+      <Typography variant="overline" color="error">
+        A shift cannot overlap a saved shift.
+      </Typography>
+    );
+  }
+  else {
     errorText = <></>;
   }
 
   const handleTimeEntered = (timeIn, timeOut) => {
     if (selectedDateIn !== null && selectedDateOut !== null && userId !== null) {
       getActiveJobsForUser();
+      checkForOverlappingShift();
     }
   };
 
@@ -399,7 +482,7 @@ export default function Timesheets() {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
-                    <Typography>Hours worked: {timeWorked}</Typography>
+                    <Typography>Hours worked: {hoursWorkedInDecimal}</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
                     <TextField
@@ -423,6 +506,7 @@ export default function Timesheets() {
                     <Button
                       disabled={
                         timeOutIsBeforeTimeIn ||
+                        isOverlappingShift ||
                         shiftTooLong ||
                         selectedDateIn === null ||
                         selectedDateOut === null ||
@@ -445,6 +529,11 @@ export default function Timesheets() {
           {savedShiftsListComponent}
         </Grid>
       </Grid>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="info">
+          Your entered shift spanned two pay weeks, so it was automatically split into two shifts.
+        </Alert>
+      </Snackbar>
     </>
   );
 }

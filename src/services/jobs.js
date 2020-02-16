@@ -23,6 +23,15 @@ const getActiveJobsForUser = details => {
 };
 
 /**
+ * 
+ * @param {String} details The shift start/end and user id
+ * @return {Promise.<String>} The id of the overlapping shift, or null if none 
+ */
+const checkForOverlappingShift = details => {
+  return http.post(`jobs/overlapShiftCheck`, details);
+}
+
+/**
  * Get saved shifts for current user
  * @param {String} userID The Gordon id of the user whose jobs to fetch
  * @return {Promise.<String>} User's active jobs
@@ -88,6 +97,7 @@ const submitShiftsForUser = (shiftsToSubmit, submittedTo) => {
 export default {
   getE2eTestResult,
   getActiveJobsForUser,
+  checkForOverlappingShift,
   getSavedShiftsForUser,
   submitShiftForUser: saveShiftForUser,
   deleteShiftForUser,
