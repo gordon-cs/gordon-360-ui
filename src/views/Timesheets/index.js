@@ -58,7 +58,7 @@ export default function Timesheets() {
         setTimeOutIsBeforeTimeIn(true);
       } else {
         setTimeOutIsBeforeTimeIn(false);
-        setTimeWorked(hoursWorked + ':' + minutesWorked);
+
       }
       if (calculatedTimeDiff > 20) {
         setShiftTooLong(true);
