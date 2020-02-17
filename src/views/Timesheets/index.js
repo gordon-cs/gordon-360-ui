@@ -105,7 +105,6 @@ export default function Timesheets() {
     };
 
     jobs.checkForOverlappingShift(details).then(result => {
-      console.log('Overlap status:', result);
       if (result.length > 0) {
         setIsOverlappingShift(true);
       } else {
