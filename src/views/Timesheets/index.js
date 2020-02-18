@@ -169,7 +169,9 @@ export default function Timesheets() {
         roundedHourDifference2,
         userShiftNotes,
         userId,
-      )
+      ).then(result => {
+        setSnackbarOpen(true);
+      });
     }
 
     let timeDiff1 = timeOut.getTime() - timeIn.getTime();
@@ -186,9 +188,9 @@ export default function Timesheets() {
       userId,
     ).then(result => {
       shiftListComponent.reloadShiftData()
-      setSnackbarOpen(true);
       setSelectedDateOut(null);
       setSelectedDateIn(null);
+      setUserShiftNotes('');
       setUserJobs([]);
       setHoursWorkedInDecimal(0);
     });
