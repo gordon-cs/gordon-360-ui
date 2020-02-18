@@ -27,18 +27,18 @@ import GordonLoader from '../../components/Loader';
 
 export default function Timesheets() {
   const [userJobs, setUserJobs] = useState([]);
-  const [selectedDateIn, setSelectedDateIn] = React.useState(null);
-  const [selectedDateOut, setSelectedDateOut] = React.useState(null);
-  const [selectedJob, setSelectedJob] = React.useState(null);
-  const [shiftTooLong, setShiftTooLong] = React.useState(false);
-  const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = React.useState(false);
-
-  const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = React.useState(0.0);
-  const [userId, setUserId] = React.useState('');
-  const [userShiftNotes, setUserShiftNotes] = React.useState('');
-  const [isOverlappingShift, setIsOverlappingShift] = React.useState(false);
-  const [shiftListComponent, setShiftListComponent] = React.useState(null);
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [selectedDateIn, setSelectedDateIn] = useState(null);
+  const [selectedDateOut, setSelectedDateOut] = useState(null);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [shiftTooLong, setShiftTooLong] = useState(false);
+  const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = useState(false);
+  const [enteredFutureTime, setEnteredFutureTime] = useState(false);
+  const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = useState(0.0);
+  const [userId, setUserId] = useState('');
+  const [userShiftNotes, setUserShiftNotes] = useState('');
+  const [isOverlappingShift, setIsOverlappingShift] = useState(false);
+  const [shiftListComponent, setShiftListComponent] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -67,6 +67,16 @@ export default function Timesheets() {
       }
     }
   };
+
+  const checkForFutureDate = () => {
+    let now = Date.now();
+    console.log("now:", now);
+    console.log('in:', selectedDateIn.getTime() > now);
+    console.log('out:', selectedDateOut.getTime() > now);
+    console.log('all together now:', (selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
+    setEnteredFutureTime((selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
+    console.log('isFuture in date function:', enteredFutureTime);
+  }
 
   useEffect(() => {
     try {
@@ -128,14 +138,14 @@ export default function Timesheets() {
       </>
     );
   const handleDateChange1 = date => {
-    handleTimeOutIsBeforeTimeIn(date, selectedDateOut);
     setSelectedDateIn(date);
+    handleTimeOutIsBeforeTimeIn(date, selectedDateOut);
     handleTimeEntered(date, selectedDateOut);
   };
 
   const handleDateChange2 = date => {
-    handleTimeOutIsBeforeTimeIn(selectedDateIn, date);
     setSelectedDateOut(date);
+    handleTimeOutIsBeforeTimeIn(selectedDateIn, date);
     handleTimeEntered(selectedDateIn, date);
   };
 
@@ -363,7 +373,13 @@ export default function Timesheets() {
   );
 
   let errorText;
-  if (timeOutIsBeforeTimeIn) {
+  if (enteredFutureTime) {
+    errorText = (
+      <Typography variant="overline" color="error">
+        A shift cannot begin or end in the future.
+      </Typography>
+    );
+  } else if (timeOutIsBeforeTimeIn) {
     errorText = (
       <Typography variant="overline" color="error">
         A shift cannot end before it starts.
@@ -390,6 +406,8 @@ export default function Timesheets() {
     if (selectedDateIn !== null && selectedDateOut !== null && userId !== null) {
       getActiveJobsForUser();
       checkForOverlappingShift();
+      checkForFutureDate();
+      console.log("Future date entered:", enteredFutureTime);
     }
   };
 
@@ -434,6 +452,7 @@ export default function Timesheets() {
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
                     <TimePicker
+                      autoOk
                       variant="inline"
                       margin="normal"
                       id="time-picker-in"
@@ -468,6 +487,7 @@ export default function Timesheets() {
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
                     <TimePicker
+                      autoOk
                       variant="inline"
                       disabled={selectedDateIn === null}
                       margin="normal"
@@ -505,6 +525,7 @@ export default function Timesheets() {
                   <Grid item xs={6}>
                     <Button
                       disabled={
+                        enteredFutureTime ||
                         timeOutIsBeforeTimeIn ||
                         isOverlappingShift ||
                         shiftTooLong ||
