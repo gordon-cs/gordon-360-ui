@@ -13,10 +13,15 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
+import Snackbar from '@material-ui/core/Snackbar';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import Error from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import { gordonColors } from '../../../../../../theme';
 import user from '../../../../../../services/user';
@@ -34,6 +39,7 @@ export default class MemberList extends Component {
       participation: '',
       alertRemove: false,
       titleComment: '',
+      leaveSnackbar: '',
     };
     this.confirmLeave = this.confirmLeave.bind(this);
     this.handleToggleGroupAdmin = this.handleToggleGroupAdmin.bind(this);
@@ -131,9 +137,24 @@ export default class MemberList extends Component {
   // Called when user confirms removal
   async confirmLeave() {
     await membership.remove(this.props.member.MembershipID);
+    // Once we fix the bug preventing this, remove comment to use snackbar
+    // if (success) {
+    //   this.setState.leaveSnackbar = 'success';
+    // } else {
+    //   this.setState.leaveSnackbar = 'failure';
+    // }
     this.onClose();
     this.refresh();
   }
+
+  // Called when snackbar is closed
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ leaveSnackbar: '' });
+  };
 
   // Opens dialog box asking if certain admin wants to remove member
   onRemove() {
@@ -409,7 +430,67 @@ export default class MemberList extends Component {
         </section>
       );
     }
-    return <Grid>{content}</Grid>;
+    return (
+      <section>
+        <Grid>{content}</Grid>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.leaveSnackbar == 'success'}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={
+            <span id="message-id">
+              <CheckCircleIcon
+                style={{
+                  marginBottom: '-4.5pt',
+                  marginRight: '1rem',
+                }}
+              />
+              You have left this involvement
+            </span>
+          }
+          action={[
+            <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.leaveSnackbar == 'failure'}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={
+            <span id="message-id">
+              <Error
+                style={{
+                  marginBottom: '-4.5pt',
+                  marginRight: '1rem',
+                }}
+              />
+              Unable to leave involvement
+            </span>
+          }
+          action={[
+            <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+      </section>
+    );
   }
 }
 
