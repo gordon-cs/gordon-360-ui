@@ -147,7 +147,7 @@ export default class MemberList extends Component {
   render() {
     // Only display mailLoc if they have a mailbox
     let mailLoc = 'Box #' + this.props.member.Mail_Location;
-    mailLoc = mailLoc == 'Box #' ? '' : mailLoc;
+    mailLoc = mailLoc === 'Box #' ? '' : mailLoc;
 
     let content;
     const rowStyle = {
