@@ -127,7 +127,7 @@ class PeopleSearch extends Component {
         {matches =>
           matches ? (
             <div style={styles.headerStyle}>
-              <Grid container direction="row">
+              <Grid container direction="row" alignItems="center">
                 <Grid item xs={1} />
                 <Grid item xs={2}>
                   <Typography variant="body2" style={styles.headerStyle}>
@@ -152,6 +152,8 @@ class PeopleSearch extends Component {
                 <Grid item xs={2}>
                   <Typography variant="body2" style={styles.headerStyle}>
                     @GORDON.EDU
+                    <br />
+                    MAILBOX #
                   </Typography>
                 </Grid>
               </Grid>
@@ -281,7 +283,15 @@ class PeopleSearch extends Component {
       try {
         const profile = await user.getProfileInfo();
         const personType = profile.PersonType;
-        const [majors, minors, halls, states, countries, departments, buildings] = await Promise.all([
+        const [
+          majors,
+          minors,
+          halls,
+          states,
+          countries,
+          departments,
+          buildings,
+        ] = await Promise.all([
           goStalk.getMajors(),
           goStalk.getMinors(),
           goStalk.getHalls(),
@@ -401,7 +411,6 @@ class PeopleSearch extends Component {
         }
       }
     }
-
   }
 
   handleAdditionalOpsExpandClick = () => {
@@ -642,8 +651,6 @@ class PeopleSearch extends Component {
         {building}
       </MenuItem>
     ));
-
-
 
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent

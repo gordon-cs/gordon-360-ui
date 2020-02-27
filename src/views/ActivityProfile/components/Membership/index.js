@@ -327,9 +327,14 @@ export default class Membership extends Component {
                     PARTICIPATION
                   </Typography>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     TITLE/COMMENT
+                  </Typography>
+                </Grid>
+                <Grid item xs={1}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    MAIL #
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
@@ -346,20 +351,21 @@ export default class Membership extends Component {
             requestList = <RequestDetail involvement={this.state.requests[0]} />;
           }
           // Only advisors and superadmins can re-open the roster
+
+          if (this.state.status === 'OPEN') {
+            confirmRoster = (
+              <Button variant="contained" color="primary" onClick={this.onConfirmRoster}>
+                Confirm final roster
+              </Button>
+            );
+          } else if (this.state.participationDetail[1] === 'Advisor' || this.state.isSuperAdmin) {
+            confirmRoster = (
+              <Button variant="contained" color="primary" onClick={this.onReopenActivity}>
+                Reopen roster
+              </Button>
+            );
+          }
           if (this.state.participationDetail[1] === 'Advisor' || this.state.isSuperAdmin) {
-            if (this.state.status === 'OPEN') {
-              confirmRoster = (
-                <Button variant="contained" color="primary" onClick={this.onConfirmRoster}>
-                  Confirm final roster
-                </Button>
-              );
-            } else {
-              confirmRoster = (
-                <Button variant="contained" color="primary" onClick={this.onReopenActivity}>
-                  Reopen roster
-                </Button>
-              );
-            }
             ferpaAsterisks = (
               <Card>
                 <CardContent>
@@ -467,14 +473,19 @@ export default class Membership extends Component {
           header = (
             <div style={headerStyle}>
               <Grid container direction="row">
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     NAME
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <Typography variant="body2" className="header" style={headerStyle}>
                     PARTICIPATION
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="body2" className="header" style={headerStyle}>
+                    MAIL #
                   </Typography>
                 </Grid>
               </Grid>
