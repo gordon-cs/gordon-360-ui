@@ -105,7 +105,7 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
 - After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
 
-  - CLone the UI repository if you do not have it open on the virtual machine already.
+  - Clone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
   - Open `setupProxy.js`:
 
