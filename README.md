@@ -22,12 +22,13 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
-Make sure Node.js is set up on your machine (https://nodejs.org/en/)
-
-To run the app for the first time, run the following commands:
-
-- `npm install`
-- `npm start`
+Make sure Node.js is set up on your machine. The project uses version `9.11.1` as later versions break it.
+- Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
+    - Extract the file and run it, making sure to install it to the account you are logged into (example: if you're logged in as anthony.aardvark, make sure it installs to anthony.aardvark and not cct.service). If it says Node is already installed, proceed anyway.
+    - After the installation completes, open a terminal and run these commands in order:
+      - `nvm install 9.11.1`
+      - `nvm use 9.11.1`
+    - Close the terminal.
 
 The app will open in a browser at <http://localhost:3000>.
 
@@ -104,15 +105,7 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
 - After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
 
-  - You may have to install Node.js on your user account. This project uses version `9.11.1`; later versions break it.
-    - Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
-    - Extract the file and run it, making sure to install it to the account you are logged into (example: if you're logged in as anthony.aardvark, make sure it installs to anthony.aardvark and not cct.service). If it says Node is already installed, proceed anyway.
-    - After the installation completes, open a terminal and run these commands in order:
-      - `nvm install 9.11.1`
-      - `nvm use 9.11.1`
-    - Close the terminal.
-
-  - Pull the UI repository, if you do not have it open on the virtual machine already.
+  - CLone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
   - Open `setupProxy.js`:
 
