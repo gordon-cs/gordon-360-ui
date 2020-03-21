@@ -6,14 +6,6 @@
 import http from './http';
 
 /**
- * Activate our hello world test
- * @return {Promise.<String>} E2e test result
- */
-const getE2eTestResult = () => {
-  return http.get(`jobs/hello-world`);
-};
-
-/**
  * Get active jobs for current user
  * @param {String} details The user's details
  * @return {Promise.<String>} User's active jobs
@@ -72,6 +64,18 @@ const saveShiftForUser = async (
   return await http.post(`jobs/saveShift/`, shiftDetails);
 };
 
+const editShift = async (rowID, newShiftStart, newShiftEnd, newHoursWorked) => {
+  let newShiftDetails = {
+    ID_NUM: null,
+    EML: null,
+    SHIFT_START_DATETIME: newShiftStart,
+    SHIFT_END_DATETIME: newShiftEnd,
+    HOURS_WORKED: newHoursWorked,
+    SHIFT_NOTES: null,
+    LAST_CHANGED_BY: null,
+  }
+};
+
 const deleteShiftForUser = async (rowID, studentID) => {
   return await http.del(`jobs/deleteShift/${rowID}/${studentID}`);
 };
@@ -95,7 +99,6 @@ const submitShiftsForUser = (shiftsToSubmit, submittedTo) => {
 };
 
 export default {
-  getE2eTestResult,
   getActiveJobsForUser,
   checkForOverlappingShift,
   getSavedShiftsForUser,

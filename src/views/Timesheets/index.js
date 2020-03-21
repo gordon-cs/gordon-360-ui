@@ -70,11 +70,11 @@ export default function Timesheets() {
 
   const checkForFutureDate = () => {
     let now = Date.now();
-    console.log("now:", now);
-    console.log('in:', selectedDateIn.getTime() > now);
-    console.log('out:', selectedDateOut.getTime() > now);
-    console.log('all together now:', (selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
-    setEnteredFutureTime((selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
+    // console.log("now:", now);
+    // console.log('in:', selectedDateIn.getTime() >= now);
+    // console.log('out:', selectedDateOut.getTime() >= now);
+    console.log('all together now:', (selectedDateIn.getTime() >= now) || (selectedDateOut.getTime() >= now));
+    setEnteredFutureTime((selectedDateIn.getTime() >= now) || (selectedDateOut.getTime() >= now));
     console.log('isFuture in date function:', enteredFutureTime);
   }
 
@@ -144,8 +144,10 @@ export default function Timesheets() {
   };
 
   const handleDateChange2 = date => {
+    console.log('date2 changed', date);
     setSelectedDateOut(date);
     handleTimeOutIsBeforeTimeIn(selectedDateIn, date);
+    console.log('handling time entered')
     handleTimeEntered(selectedDateIn, date);
   };
 
@@ -403,6 +405,8 @@ export default function Timesheets() {
   }
 
   const handleTimeEntered = (timeIn, timeOut) => {
+    console.log('in:', selectedDateIn);
+    console.log('out:', selectedDateOut);
     if (selectedDateIn !== null && selectedDateOut !== null && userId !== null) {
       getActiveJobsForUser();
       checkForOverlappingShift();
