@@ -1,8 +1,32 @@
 import React, { Component } from 'react';
-import { Typography, Grid, IconButton } from '@material-ui/core';
+import {
+  Typography,
+  Grid,
+  Button,
+  IconButton,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@material-ui/core';
+import { gordonColors } from '../../../../theme';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 
 export default class ShiftItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showDeleteConfirmation: false,
+    };
+  }
+
+  handleSubmitButtonClick = () => {
+    this.setState({ showDeleteConfirmation: true });
+  }
+
+  onClose = () => {
+    this.setState({ showDeleteConfirmation: false });
+  }
+
   render() {
     const shift = this.props.value;
     const { deleteShift } = this.props;
@@ -30,8 +54,44 @@ export default class ShiftItem extends Component {
     const dateTimeIn = monthIn + '/' + dateIn + '/' + yearIn + ' ' + timeIn;
     const dateTimeOut = monthOut + '/' + dateOut + '/' + yearOut + ' ' + timeOut;
 
+    let confirmationBox = (
+      <Grid container>
+        <Grid item>
+          <Dialog
+            open={this.state.showDeleteConfirmation}
+            keepMounted
+            align="center"
+            onBackdropClick={this.onClose}
+          >
+            <DialogTitle>Are you sure you want to delete this shift?</DialogTitle>
+            <DialogContent>
+              <Grid container>
+                <Grid item xs={6} sm={6} md={6} lg={6}>
+                  <Button color="primary" onClick={this.onClose} variant="contained">
+                    No
+                  </Button>
+                </Grid>
+                <Grid item xs={6} sm={6} md={6} lg={6}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      deleteShift(ID, ID_NUM)
+                    }}
+                    style={styles.redButton}>
+                    Yes
+                  </Button>
+                </Grid>
+              </Grid>
+            </DialogContent>
+          </Dialog>
+        </Grid>
+      </Grid>
+    );
+
+
     return (
       <Grid item xs={12} className="shift-item">
+        {confirmationBox}
         <div>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={3}>
@@ -57,9 +117,7 @@ export default class ShiftItem extends Component {
                 <IconButton>
                   {STATUS !== 'Submitted' && STATUS !== 'Approved' && (
                     <DeleteForeverOutlinedIcon
-                      onClick={() => {
-                        deleteShift(ID, ID_NUM);
-                      }}
+                      onClick={this.handleSubmitButtonClick}
                     />
                   )}
                 </IconButton>
@@ -70,4 +128,11 @@ export default class ShiftItem extends Component {
       </Grid>
     );
   }
+}
+
+const styles = {
+  redButton: {
+    background: gordonColors.secondary.red,
+    color: 'white',
+  },
 }

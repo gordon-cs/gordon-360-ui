@@ -78,7 +78,6 @@ export default class SavedShiftsList extends Component {
   }
 
   handleSubmitButtonClick = () => {
-    console.log("submit button clicked");
     this.setState({ showSubmissionConfirmation: true });
   }
 
@@ -104,12 +103,9 @@ export default class SavedShiftsList extends Component {
       });
       return result;
     };
-      let confirmationBoxOptions = (
+      let confirmationBox = (
         <Grid container>
           <Grid item>
-            {/* <Button style={styles.redButton} onClick={this.submitShiftsToSupervisor} variant="contained">
-              Submit Shifts
-            </Button> */}
             <Dialog
               open={this.state.showSubmissionConfirmation}
               keepMounted
@@ -226,7 +222,7 @@ export default class SavedShiftsList extends Component {
     } else if (this.state.shifts.length > 0) {
       content = (
         <>
-          {confirmationBoxOptions}
+          {confirmationBox}
           <Card>
             <CardContent>
               <CardHeader title="Saved Shifts" />
