@@ -136,7 +136,7 @@ export default class SavedShiftsList extends Component {
                 <Grid container>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
                     <Button style={styles.redButton} onClick={this.onClose} variant="contained">
-                      No, don't submit shifts
+                      Cancel
                     </Button>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
@@ -146,7 +146,7 @@ export default class SavedShiftsList extends Component {
                         this.submitShiftsToSupervisor(this.state.shifts, this.state.selectedSupervisor.id)
                       }}
                       color="primary">
-                      Yes, submit shifts
+                      Submit
                     </Button>
                   </Grid>
                 </Grid>
