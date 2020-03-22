@@ -99,10 +99,11 @@ export default class SavedShiftsList extends Component {
   }
 
   render() {
+    console.log(this.state)
     let { cardTitle } = this.props;
     const deleteShiftForUser = (rowID, userID) => {
       let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
-        this.reloadShiftData();
+        this.loadShiftData();
       });
       return result;
     };

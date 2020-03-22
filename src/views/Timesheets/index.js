@@ -37,7 +37,10 @@ export default function Timesheets() {
   const [userId, setUserId] = useState('');
   const [userShiftNotes, setUserShiftNotes] = useState('');
   const [isOverlappingShift, setIsOverlappingShift] = useState(false);
-  const [shiftListComponent, setShiftListComponent] = useState(null);
+  const [savedShiftListComponent, setSavedShiftListComponent] = useState(null);
+  const [submittedShiftListComponent, setSubmittedShiftListComponent] = useState(null);
+  const [rejectedShiftListComponent, setRejectedShiftListComponent] = useState(null);
+  const [approvedShiftListComponent, setApprovedShiftListComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
@@ -122,9 +125,9 @@ export default function Timesheets() {
     return jobs.getSavedShiftsForUser(userID);
   };
 
-  let savedShiftsListComponent =
+  let savedShiftsList =
     userId !== '' ? (
-      <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Saved Shifts" />
+      <SavedShiftsList ref={setSavedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Saved Shifts" />
     ) : (
       <>
         <CardContent>
@@ -133,9 +136,9 @@ export default function Timesheets() {
       </>
     );
 
-  let submittedShiftsListComponent = 
+  let submittedShiftsList = 
   userId !== '' ? (
-    <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Submitted Shifts" />
+    <SavedShiftsList ref={setSubmittedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Submitted Shifts" />
   ) : (
     <>
       <CardContent>
@@ -144,9 +147,9 @@ export default function Timesheets() {
     </>
   );
 
-  let approvedShiftsListComponent = 
+  let approvedShiftsList = 
   userId !== '' ? (
-    <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Approved Shifts" />
+    <SavedShiftsList ref={setApprovedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Approved Shifts" />
   ) : (
     <>
       <CardContent>
@@ -155,9 +158,9 @@ export default function Timesheets() {
     </>
   );
 
-  let rejectedShiftsListComponent = 
+  let rejectedShiftsList = 
   userId !== '' ? (
-    <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Rejected Shifts" />
+    <SavedShiftsList ref={setRejectedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Rejected Shifts" />
   ) : (
     <>
       <CardContent>
@@ -226,7 +229,7 @@ export default function Timesheets() {
       userShiftNotes,
       userId,
     ).then(result => {
-      shiftListComponent.reloadShiftData()
+      savedShiftListComponent.loadShiftData()
       setSelectedDateOut(null);
       setSelectedDateIn(null);
       setUserShiftNotes('');
@@ -575,16 +578,16 @@ export default function Timesheets() {
           </MuiPickersUtilsProvider>
         </Grid>
         <Grid item xs={12}>
-          {savedShiftsListComponent}
+          {savedShiftsList}
         </Grid>
         <Grid item xs={12}>
-          {submittedShiftsListComponent}
+          {submittedShiftsList}
         </Grid>
         <Grid item xs={12}>
-          {rejectedShiftsListComponent}
+          {rejectedShiftsList}
         </Grid>
         <Grid item xs={12}>
-          {approvedShiftsListComponent}
+          {approvedShiftsList}
         </Grid>        
       </Grid>
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
