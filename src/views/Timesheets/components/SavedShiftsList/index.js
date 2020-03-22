@@ -31,10 +31,26 @@ export default class SavedShiftsList extends Component {
   }
 
   componentDidMount() {
-    const { userID } = this.props;
+    this.loadShiftData()
+  }
+
+  loadShiftData() {
+    const { userID, cardTitle } = this.props;
     this.props.getShifts(userID).then(shifts => {
+      let shiftsToKeep = []
+      for (let i = 0; i < shifts.length; i++) {
+        if (cardTitle === "Saved Shifts") {
+          if (shifts[i].STATUS === "Saved") { shiftsToKeep.push(shifts[i]) }
+        } else if (cardTitle === "Submitted Shifts") {
+          if (shifts[i].STATUS === "Submitted") { shiftsToKeep.push(shifts[i]) }
+        } else if (cardTitle === "Rejected Shifts") {
+          if (shifts[i].STATUS === "Rejected") { shiftsToKeep.push(shifts[i]) }
+        } else if (cardTitle === "Approved Shifts") {
+          if (shifts[i].STATUS === "Approved") { shiftsToKeep.push(shifts[i]) }
+        }
+      }
       this.setState({
-        shifts: shifts,
+        shifts: shiftsToKeep,
       });
       if (shifts.length > 0) {
         jobs.getSupervisorNameForJob(shifts[0].SUPERVISOR).then(response => {
@@ -78,12 +94,12 @@ export default class SavedShiftsList extends Component {
       this.setState({
         selectedSupervisor: null,
       });
-      this.reloadShiftData();
+      this.loadShiftData();
     });
   }
 
   render() {
-    let {cardTitle} = this.props;
+    let { cardTitle } = this.props;
     const deleteShiftForUser = (rowID, userID) => {
       let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
         this.reloadShiftData();
@@ -110,7 +126,7 @@ export default class SavedShiftsList extends Component {
                 TIME OUT
               </Typography>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
                 RATE
               </Typography>
@@ -118,11 +134,6 @@ export default class SavedShiftsList extends Component {
             <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
                 HOURS WORKED
-              </Typography>
-            </Grid>
-            <Grid item xs={1}>
-              <Typography variant="body2" style={styles.headerItem}>
-                STATUS
               </Typography>
             </Grid>
           </Grid>
@@ -192,7 +203,7 @@ export default class SavedShiftsList extends Component {
             </Grid>
           </CardContent>
           <CardActions>
-            <Grid container>
+            {cardTitle === "Saved Shifts" && <Grid container>
               <Grid item xs={6}>
                 {supervisorDropdown}
               </Grid>
@@ -211,7 +222,7 @@ export default class SavedShiftsList extends Component {
                   Submit All Shifts
                 </Button>
               </Grid>
-            </Grid>
+            </Grid>}
           </CardActions>
         </Card>
       );

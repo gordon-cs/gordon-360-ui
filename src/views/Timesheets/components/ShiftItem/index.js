@@ -27,8 +27,8 @@ export default class ShiftItem extends Component {
     const dateOut = SHIFT_END_DATETIME.substring(8, 10);
     const timeOut = SHIFT_END_DATETIME.substring(11, 16);
 
-    const dateTimeIn = monthIn + '/' + dateIn + '/' + yearIn + ' ' + timeIn;
-    const dateTimeOut = monthOut + '/' + dateOut + '/' + yearOut + ' ' + timeOut;
+    const dateTimeIn = monthIn + '/' + dateIn + "\n" + /* '/' + yearIn + ' ' + */ timeIn;
+    const dateTimeOut = monthOut + '/' + dateOut + "\n" + /* '/' + yearOut + ' ' + */ timeOut;
 
     return (
       <Grid item xs={12} className="shift-item">
@@ -43,14 +43,11 @@ export default class ShiftItem extends Component {
             <Grid item xs={2}>
               <Typography variant="body2">{dateTimeOut}</Typography>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <Typography variant="body2">{HOURLY_RATE}</Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2">{HOURS_WORKED}</Typography>
-            </Grid>
-            <Grid item xs={1}>
-              <Typography variant="body2">{STATUS}</Typography>
             </Grid>
             <Grid item xs={1}>
               <Typography variant="body2">
