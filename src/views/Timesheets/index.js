@@ -70,12 +70,7 @@ export default function Timesheets() {
 
   const checkForFutureDate = () => {
     let now = Date.now();
-    console.log("now:", now);
-    console.log('in:', selectedDateIn.getTime() > now);
-    console.log('out:', selectedDateOut.getTime() > now);
-    console.log('all together now:', (selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
     setEnteredFutureTime((selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
-    console.log('isFuture in date function:', enteredFutureTime);
   }
 
   useEffect(() => {
@@ -441,7 +436,6 @@ export default function Timesheets() {
       getActiveJobsForUser();
       checkForOverlappingShift();
       checkForFutureDate();
-      console.log("Future date entered:", enteredFutureTime);
     }
   };
 
