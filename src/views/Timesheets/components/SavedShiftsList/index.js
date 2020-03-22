@@ -108,6 +108,9 @@ export default class SavedShiftsList extends Component {
         showSubmissionConfirmation: false,
       });
       this.loadShiftData();
+      if(this.props.submittedList !== null) {
+        this.props.submittedList.loadShiftData();
+      }
     });
   }
 
@@ -132,7 +135,7 @@ export default class SavedShiftsList extends Component {
               <DialogContent>
                 <Grid container>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button color="primary" onClick={this.onClose} variant="contained">
+                    <Button style={styles.redButton} onClick={this.onClose} variant="contained">
                       No, don't submit shifts
                     </Button>
                   </Grid>
@@ -142,7 +145,7 @@ export default class SavedShiftsList extends Component {
                       onClick={() => {
                         this.submitShiftsToSupervisor(this.state.shifts, this.state.selectedSupervisor.id)
                       }}
-                      style={styles.redButton}>
+                      color="primary">
                       Yes, submit shifts
                     </Button>
                   </Grid>

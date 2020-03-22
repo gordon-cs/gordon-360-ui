@@ -127,7 +127,7 @@ export default function Timesheets() {
 
   let savedShiftsList =
     userId !== '' ? (
-      <SavedShiftsList ref={setSavedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Saved Shifts" />
+      <SavedShiftsList ref={setSavedShiftListComponent} submittedList={submittedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Saved Shifts" />
     ) : (
       <>
         <CardContent>
@@ -149,7 +149,7 @@ export default function Timesheets() {
 
   let approvedShiftsList = 
   userId !== '' ? (
-    <SavedShiftsList ref={setApprovedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Approved Shifts" />
+    <SavedShiftsList ref={setApprovedShiftListComponent} getShifts={getSavedShiftsForUser}  userID={userId} cardTitle="Approved Shifts" />
   ) : (
     <>
       <CardContent>
