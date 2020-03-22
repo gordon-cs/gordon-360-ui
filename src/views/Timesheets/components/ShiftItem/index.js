@@ -75,7 +75,8 @@ export default class ShiftItem extends Component {
                   <Button
                     variant="contained"
                     onClick={() => {
-                      deleteShift(ID, ID_NUM)
+                      deleteShift(ID, ID_NUM);
+                      this.onClose();
                     }}
                     style={styles.redButton}>
                     Yes
