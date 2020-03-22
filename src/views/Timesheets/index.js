@@ -39,8 +39,9 @@ export default function Timesheets() {
   const [isOverlappingShift, setIsOverlappingShift] = useState(false);
   const [savedShiftListComponent, setSavedShiftListComponent] = useState(null);
   const [submittedShiftListComponent, setSubmittedShiftListComponent] = useState(null);
+  // Remove these comments when the variable below is used!
+  // eslint-disable-next-line
   const [rejectedShiftListComponent, setRejectedShiftListComponent] = useState(null);
-  const [approvedShiftListComponent, setApprovedShiftListComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
@@ -149,7 +150,7 @@ export default function Timesheets() {
 
   let approvedShiftsList = 
   userId !== '' ? (
-    <SavedShiftsList ref={setApprovedShiftListComponent} getShifts={getSavedShiftsForUser}  userID={userId} cardTitle="Approved Shifts" />
+    <SavedShiftsList getShifts={getSavedShiftsForUser}  userID={userId} cardTitle="Approved Shifts" />
   ) : (
     <>
       <CardContent>

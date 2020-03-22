@@ -41,18 +41,16 @@ export default class ShiftItem extends Component {
       STATUS,
     } = shift;
 
-    const yearIn = SHIFT_START_DATETIME.substring(2, 4);
     const monthIn = SHIFT_START_DATETIME.substring(5, 7);
     const dateIn = SHIFT_START_DATETIME.substring(8, 10);
     const timeIn = SHIFT_START_DATETIME.substring(11, 16);
 
-    const yearOut = SHIFT_END_DATETIME.substring(2, 4);
     const monthOut = SHIFT_END_DATETIME.substring(5, 7);
     const dateOut = SHIFT_END_DATETIME.substring(8, 10);
     const timeOut = SHIFT_END_DATETIME.substring(11, 16);
 
-    const dateTimeIn = monthIn + '/' + dateIn + "\n" + /* '/' + yearIn + ' ' + */ timeIn;
-    const dateTimeOut = monthOut + '/' + dateOut + "\n" + /* '/' + yearOut + ' ' + */ timeOut;
+    const dateTimeIn = monthIn + '/' + dateIn + "\n" + timeIn;
+    const dateTimeOut = monthOut + '/' + dateOut + "\n" + timeOut;
 
     let confirmationBox = (
       <Grid container>
