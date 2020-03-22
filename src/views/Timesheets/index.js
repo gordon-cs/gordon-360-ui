@@ -129,7 +129,7 @@ export default function Timesheets() {
 
   let savedShiftsListComponent =
     userId !== '' ? (
-      <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} />
+      <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Saved Shifts" />
     ) : (
       <>
         <CardContent>
@@ -137,6 +137,40 @@ export default function Timesheets() {
         </CardContent>
       </>
     );
+
+  let submittedShiftsListComponent = 
+  userId !== '' ? (
+    <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Submitted Shifts" />
+  ) : (
+    <>
+      <CardContent>
+        <GordonLoader />
+      </CardContent>
+    </>
+  );
+
+  let approvedShiftsListComponent = 
+  userId !== '' ? (
+    <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Approved Shifts" />
+  ) : (
+    <>
+      <CardContent>
+        <GordonLoader />
+      </CardContent>
+    </>
+  );
+
+  let rejectedShiftsListComponent = 
+  userId !== '' ? (
+    <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Rejected Shifts" />
+  ) : (
+    <>
+      <CardContent>
+        <GordonLoader />
+      </CardContent>
+    </>
+  );
+
   const handleDateChange1 = date => {
     setSelectedDateIn(date);
     handleTimeOutIsBeforeTimeIn(date, selectedDateOut);
@@ -549,6 +583,15 @@ export default function Timesheets() {
         <Grid item xs={12}>
           {savedShiftsListComponent}
         </Grid>
+        <Grid item xs={12}>
+          {submittedShiftsListComponent}
+        </Grid>
+        <Grid item xs={12}>
+          {rejectedShiftsListComponent}
+        </Grid>
+        <Grid item xs={12}>
+          {approvedShiftsListComponent}
+        </Grid>        
       </Grid>
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <Alert onClose={handleCloseSnackbar} severity="info">

@@ -83,6 +83,7 @@ export default class SavedShiftsList extends Component {
   }
 
   render() {
+    let {cardTitle} = this.props;
     const deleteShiftForUser = (rowID, userID) => {
       let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
         this.reloadShiftData();
@@ -176,7 +177,7 @@ export default class SavedShiftsList extends Component {
       content = (
         <Card>
           <CardContent>
-            <CardHeader title="Saved Shifts" />
+            <CardHeader title={cardTitle} />
             <Grid
               className="shift-list"
               container
