@@ -231,16 +231,19 @@ const Timesheets = (props) => {
         userShiftNotes,
         userId,
       ).then(result => {
+        console.log("Job save response:", result);
         savedShiftListComponent.loadShiftData()
         setSelectedDateOut(null);
         setSelectedDateIn(null);
         setUserShiftNotes('');
         setUserJobs([]);
         setHoursWorkedInDecimal(0);
+      }).catch(err => {
+        console.log("Job save error:", err.ok);
       });
     };
 
-    const saveShift = async (
+    const saveShift = (
       studentID,
       eml,
       shiftStart,
@@ -249,7 +252,7 @@ const Timesheets = (props) => {
       shiftNotes,
       lastChangedBy,
     ) => {
-      await jobs.submitShiftForUser(
+      return jobs.submitShiftForUser(
         studentID,
         eml,
         shiftStart,
@@ -257,7 +260,7 @@ const Timesheets = (props) => {
         hoursWorked,
         shiftNotes,
         lastChangedBy,
-      );
+      )
     };
 
     const jobsMenuItems = userJobs ? (
@@ -439,7 +442,6 @@ const Timesheets = (props) => {
     const handleTimeEntered = (timeIn, timeOut) => {
       if (selectedDateIn !== null && selectedDateOut !== null && userId !== null) {
         getActiveJobsForUser();
-        checkForOverlappingShift();
         checkForFutureDate();
       }
     };
