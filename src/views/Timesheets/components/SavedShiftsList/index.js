@@ -114,8 +114,18 @@ export default class SavedShiftsList extends Component {
     });
   }
 
+  getTotalHours = (total, currentShift) => {
+    return total + currentShift.HOURS_WORKED;
+  }
+
+  getEstimatedPay = (total, currentShift) => {
+    return total + (currentShift.HOURS_WORKED * currentShift.HOURLY_RATE);
+  }
+
   render() {
     let { cardTitle } = this.props;
+    let totalHoursWorked = this.state.shifts.reduce(this.getTotalHours, 0);
+    let totalEstimatedPay = this.state.shifts.reduce(this.getEstimatedPay, 0);
     const deleteShiftForUser = (rowID, userID) => {
       let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
         this.loadShiftData();
@@ -253,6 +263,18 @@ export default class SavedShiftsList extends Component {
               {shiftsList}
             </Grid>
           </CardContent>
+          {cardTitle === "Submitted Shifts" &&
+              <CardContent>
+                <Grid container>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6">Total hours worked: {totalHoursWorked}</Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6">Estimated gross pay: ${totalEstimatedPay}</Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+          }
           <CardActions>
             {cardTitle === "Saved Shifts" && <Grid container>
               <Grid container>
