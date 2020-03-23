@@ -37,7 +37,11 @@ export default function Timesheets() {
   const [userId, setUserId] = useState('');
   const [userShiftNotes, setUserShiftNotes] = useState('');
   const [isOverlappingShift, setIsOverlappingShift] = useState(false);
-  const [shiftListComponent, setShiftListComponent] = useState(null);
+  const [savedShiftListComponent, setSavedShiftListComponent] = useState(null);
+  const [submittedShiftListComponent, setSubmittedShiftListComponent] = useState(null);
+  // Remove these comments when the variable below is used!
+  // eslint-disable-next-line
+  const [rejectedShiftListComponent, setRejectedShiftListComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
@@ -70,12 +74,7 @@ export default function Timesheets() {
 
   const checkForFutureDate = () => {
     let now = Date.now();
-    console.log("now:", now);
-    console.log('in:', selectedDateIn.getTime() > now);
-    console.log('out:', selectedDateOut.getTime() > now);
-    console.log('all together now:', (selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
     setEnteredFutureTime((selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
-    console.log('isFuture in date function:', enteredFutureTime);
   }
 
   useEffect(() => {
@@ -127,9 +126,9 @@ export default function Timesheets() {
     return jobs.getSavedShiftsForUser(userID);
   };
 
-  let savedShiftsListComponent =
+  let savedShiftsList =
     userId !== '' ? (
-      <SavedShiftsList ref={setShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} />
+      <SavedShiftsList ref={setSavedShiftListComponent} submittedList={submittedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Saved Shifts" />
     ) : (
       <>
         <CardContent>
@@ -137,6 +136,40 @@ export default function Timesheets() {
         </CardContent>
       </>
     );
+
+  let submittedShiftsList = 
+  userId !== '' ? (
+    <SavedShiftsList ref={setSubmittedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Submitted Shifts" />
+  ) : (
+    <>
+      <CardContent>
+        <GordonLoader />
+      </CardContent>
+    </>
+  );
+
+  let approvedShiftsList = 
+  userId !== '' ? (
+    <SavedShiftsList getShifts={getSavedShiftsForUser}  userID={userId} cardTitle="Approved Shifts" />
+  ) : (
+    <>
+      <CardContent>
+        <GordonLoader />
+      </CardContent>
+    </>
+  );
+
+  let rejectedShiftsList = 
+  userId !== '' ? (
+    <SavedShiftsList ref={setRejectedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Rejected Shifts" />
+  ) : (
+    <>
+      <CardContent>
+        <GordonLoader />
+      </CardContent>
+    </>
+  );
+
   const handleDateChange1 = date => {
     setSelectedDateIn(date);
     handleTimeOutIsBeforeTimeIn(date, selectedDateOut);
@@ -197,7 +230,7 @@ export default function Timesheets() {
       userShiftNotes,
       userId,
     ).then(result => {
-      shiftListComponent.reloadShiftData()
+      savedShiftListComponent.loadShiftData()
       setSelectedDateOut(null);
       setSelectedDateIn(null);
       setUserShiftNotes('');
@@ -407,7 +440,6 @@ export default function Timesheets() {
       getActiveJobsForUser();
       checkForOverlappingShift();
       checkForFutureDate();
-      console.log("Future date entered:", enteredFutureTime);
     }
   };
 
@@ -547,8 +579,17 @@ export default function Timesheets() {
           </MuiPickersUtilsProvider>
         </Grid>
         <Grid item xs={12}>
-          {savedShiftsListComponent}
+          {savedShiftsList}
         </Grid>
+        <Grid item xs={12}>
+          {submittedShiftsList}
+        </Grid>
+        <Grid item xs={12}>
+          {rejectedShiftsList}
+        </Grid>
+        <Grid item xs={12}>
+          {approvedShiftsList}
+        </Grid>        
       </Grid>
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <Alert onClose={handleCloseSnackbar} severity="info">

@@ -35,10 +35,26 @@ export default class SavedShiftsList extends Component {
   }
 
   componentDidMount() {
-    const { userID } = this.props;
+    this.loadShiftData()
+  }
+
+  loadShiftData() {
+    const { userID, cardTitle } = this.props;
     this.props.getShifts(userID).then(shifts => {
+      let shiftsToKeep = []
+      for (let i = 0; i < shifts.length; i++) {
+        if (cardTitle === "Saved Shifts") {
+          if (shifts[i].STATUS === "Saved") { shiftsToKeep.push(shifts[i]) }
+        } else if (cardTitle === "Submitted Shifts") {
+          if (shifts[i].STATUS === "Submitted") { shiftsToKeep.push(shifts[i]) }
+        } else if (cardTitle === "Rejected Shifts") {
+          if (shifts[i].STATUS === "Rejected") { shiftsToKeep.push(shifts[i]) }
+        } else if (cardTitle === "Approved Shifts") {
+          if (shifts[i].STATUS === "Approved") { shiftsToKeep.push(shifts[i]) }
+        }
+      }
       this.setState({
-        shifts: shifts,
+        shifts: shiftsToKeep,
       });
       if (shifts.length > 0) {
         jobs.getSupervisorNameForJob(shifts[0].SUPERVISOR).then(response => {
@@ -91,15 +107,18 @@ export default class SavedShiftsList extends Component {
         selectedSupervisor: null,
         showSubmissionConfirmation: false,
       });
-      this.reloadShiftData();
+      this.loadShiftData();
+      if(this.props.submittedList !== null) {
+        this.props.submittedList.loadShiftData();
+      }
     });
   }
 
   render() {
-    console.log("showConfirmationBox:", this.state.showSubmissionConfirmation);
+    let { cardTitle } = this.props;
     const deleteShiftForUser = (rowID, userID) => {
       let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
-        this.reloadShiftData();
+        this.loadShiftData();
       });
       return result;
     };
@@ -116,8 +135,8 @@ export default class SavedShiftsList extends Component {
               <DialogContent>
                 <Grid container>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button color="primary" onClick={this.onClose} variant="contained">
-                      No, don't submit shifts
+                    <Button style={styles.redButton} onClick={this.onClose} variant="contained">
+                      Cancel
                     </Button>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} lg={6}>
@@ -126,8 +145,8 @@ export default class SavedShiftsList extends Component {
                       onClick={() => {
                         this.submitShiftsToSupervisor(this.state.shifts, this.state.selectedSupervisor.id)
                       }}
-                      style={styles.redButton}>
-                      Yes, submit shifts
+                      color="primary">
+                      Submit
                     </Button>
                   </Grid>
                 </Grid>
@@ -156,7 +175,7 @@ export default class SavedShiftsList extends Component {
                 TIME OUT
               </Typography>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
                 RATE
               </Typography>
@@ -164,11 +183,6 @@ export default class SavedShiftsList extends Component {
             <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
                 HOURS WORKED
-              </Typography>
-            </Grid>
-            <Grid item xs={1}>
-              <Typography variant="body2" style={styles.headerItem}>
-                STATUS
               </Typography>
             </Grid>
           </Grid>
@@ -223,23 +237,24 @@ export default class SavedShiftsList extends Component {
       content = (
         <>
           {confirmationBox}
-          <Card>
-            <CardContent>
-              <CardHeader title="Saved Shifts" />
-              <Grid
-                className="shift-list"
-                container
-                spacing={2}
-                justify="space-around"
-                alignItems="center"
-                alignContent="center"
-                style={styles.boxShadow}
-              >
-                {header}
-                {shiftsList}
-              </Grid>
-            </CardContent>
-            <CardActions>
+        <Card>
+          <CardContent>
+            <CardHeader title={cardTitle} />
+            <Grid
+              className="shift-list"
+              container
+              spacing={2}
+              justify="space-around"
+              alignItems="center"
+              alignContent="center"
+              style={styles.boxShadow}
+            >
+              {header}
+              {shiftsList}
+            </Grid>
+          </CardContent>
+          <CardActions>
+            {cardTitle === "Saved Shifts" && <Grid container>
               <Grid container>
                 <Grid item xs={6}>
                   {supervisorDropdown}
@@ -250,19 +265,14 @@ export default class SavedShiftsList extends Component {
                     variant="contained"
                     color="primary"
                     onClick={this.handleSubmitButtonClick}
-                  // onClick={() => {
-                  //   this.submitShiftsToSupervisor(
-                  //     this.state.shifts,
-                  //     this.state.selectedSupervisor.id,
-                  //   );
-                  // }}
                   >
                     Submit All Shifts
                 </Button>
                 </Grid>
               </Grid>
-            </CardActions>
-          </Card>
+            </Grid>}
+          </CardActions>
+        </Card>
         </>
       );
     }
