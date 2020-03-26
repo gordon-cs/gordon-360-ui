@@ -143,7 +143,11 @@ export default class Membership extends Component {
       return;
     }
 
-    this.setState({ isSnackBarOpen: false, isFailSnackBarOpen: false});
+    this.setState({
+      isSnackBarOpen: false,
+      isFailSnackBarOpen: false,
+      isUserAlreadyMemberSnackBarOpen: false,
+    });
   };
 
   onClose() {
@@ -167,11 +171,11 @@ export default class Membership extends Component {
       if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
         memberEmail = memberEmail + '@gordon.edu';
       }
-      
+
       // Try to add member
       try {
         let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
-        return result.GordonID;
+          return result.GordonID;
         });
         let data = {
           ACT_CDE: this.props.activityCode,
@@ -181,15 +185,21 @@ export default class Membership extends Component {
           COMMENT_TXT: this.state.titleComment,
           GRP_ADMIN: false,
         };
-        await membership.addMembership(data);
-      } catch (error) { 
+        // if a user is already a member of an involvement, attempting addMembership(data)
+        // will return 'undefined'. So, if this happens, alert the user
+        let alreadyIn = await membership.addMembership(data);
+        if (typeof stuff === 'undefined') {
+          // User is already a member of this involvement
+          this.setState({ isUserAlreadyMemberSnackBarOpen: true });
+        }
+      } catch (error) {
         switch (error.name) {
-          case "NotFoundError":
-            this.setState({ isFailSnackBarOpen: true });             
+          case 'NotFoundError':
+            this.setState({ isFailSnackBarOpen: true });
             break;
-          
+
           default:
-            console.log("Something went wrong");
+            console.log('Something went wrong');
             break;
         }
       }
@@ -500,7 +510,7 @@ export default class Membership extends Component {
                   <Typography variant="body2" className="header" style={headerStyle}>
                     MAIL #
                   </Typography>
-                </Grid>               
+                </Grid>
               </Grid>
             </div>
           );
@@ -677,6 +687,34 @@ export default class Membership extends Component {
                   }}
                 />
                 Nobody with that username found.
+              </span>
+            }
+            action={[
+              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
+                <CloseIcon />
+              </IconButton>,
+            ]}
+          />
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.isUserAlreadyMemberSnackBarOpen}
+            autoHideDuration={6000}
+            onClose={this.handleClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            message={
+              <span id="message-id">
+                <Error
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '1rem',
+                  }}
+                />
+                User already in involvement.
               </span>
             }
             action={[
