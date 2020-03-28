@@ -21,6 +21,7 @@ import jobs from '../../services/jobs';
 import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import SavedShiftsList from './components/SavedShiftsList';
+import ShiftDisplay from './components/ShiftDisplay';
 import user from './../../services/user';
 import './timesheets.css';
 import GordonLoader from '../../components/Loader';
@@ -127,49 +128,7 @@ const Timesheets = (props) => {
       return jobs.getSavedShiftsForUser(userID);
     };
 
-    let savedShiftsList =
-      userId !== '' ? (
-        <SavedShiftsList ref={setSavedShiftListComponent} submittedList={submittedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Saved Shifts" />
-      ) : (
-          <>
-            <CardContent>
-              <GordonLoader />
-            </CardContent>
-          </>
-        );
 
-    let submittedShiftsList =
-      userId !== '' ? (
-        <SavedShiftsList ref={setSubmittedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Submitted Shifts" />
-      ) : (
-          <>
-            <CardContent>
-              <GordonLoader />
-            </CardContent>
-          </>
-        );
-
-    let approvedShiftsList =
-      userId !== '' ? (
-        <SavedShiftsList getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Approved Shifts" />
-      ) : (
-          <>
-            <CardContent>
-              <GordonLoader />
-            </CardContent>
-          </>
-        );
-
-    let rejectedShiftsList =
-      userId !== '' ? (
-        <SavedShiftsList ref={setRejectedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Rejected Shifts" />
-      ) : (
-          <>
-            <CardContent>
-              <GordonLoader />
-            </CardContent>
-          </>
-        );
 
     const handleDateChange1 = date => {
       setSelectedDateIn(date);
@@ -579,18 +538,12 @@ const Timesheets = (props) => {
               </Card>
             </MuiPickersUtilsProvider>
           </Grid>
-          <Grid item xs={12}>
-            {savedShiftsList}
-          </Grid>
-          <Grid item xs={12}>
-            {submittedShiftsList}
-          </Grid>
-          <Grid item xs={12}>
-            {rejectedShiftsList}
-          </Grid>
-          <Grid item xs={12}>
-            {approvedShiftsList}
-          </Grid>
+          <ShiftDisplay
+            userId={userId}
+            getSavedShiftsForUser={getSavedShiftsForUser}
+            savedShiftListComponent={savedShiftListComponent}
+            setSavedShiftListComponent={setSavedShiftListComponent}
+            />
         </Grid>
         <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
           <Alert onClose={handleCloseSnackbar} severity="info">
