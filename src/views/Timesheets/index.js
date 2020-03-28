@@ -20,11 +20,9 @@ import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
 import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import SavedShiftsList from './components/SavedShiftsList';
 import ShiftDisplay from './components/ShiftDisplay';
 import user from './../../services/user';
 import './timesheets.css';
-import GordonLoader from '../../components/Loader';
 
 const Timesheets = (props) => {
   const [userJobs, setUserJobs] = useState([]);
@@ -39,7 +37,6 @@ const Timesheets = (props) => {
   const [userShiftNotes, setUserShiftNotes] = useState('');
   const [isOverlappingShift, setIsOverlappingShift] = useState(false);
   const [savedShiftListComponent, setSavedShiftListComponent] = useState(null);
-  const [submittedShiftListComponent, setSubmittedShiftListComponent] = useState(null);
   // Remove these comments when the variable below is used!
   // eslint-disable-next-line
   const [rejectedShiftListComponent, setRejectedShiftListComponent] = useState(null);

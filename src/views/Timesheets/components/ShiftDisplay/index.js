@@ -5,14 +5,17 @@ import {
     Card,
     CardContent,
     CardHeader,
-    CardActions,
+    Tabs,
+    Tab,
 } from '@material-ui/core';
 import SavedShiftsList from '../../components/SavedShiftsList';
 import GordonLoader from '../../../../components/Loader';
+import './ShiftDisplay.css'
 
 const ShiftDisplay = (props) => {
     const [submittedShiftListComponent, setSubmittedShiftListComponent] = useState(null);
     const [rejectedShiftListComponent, setRejectedShiftListComponent] = useState(null);
+    const [tabValue, setTabValue] = useState(0);
 
     const {userId, getSavedShiftsForUser, setSavedShiftListComponent} = props;
 
@@ -56,12 +59,39 @@ const ShiftDisplay = (props) => {
         </>
     );
 
+    let handleTabChange = (event, value) => {
+        setTabValue(value);
+    }
+
 
     return (
         <Grid item xs={12}>
             <Card>
                 <CardContent>
                     <CardHeader title="Display shifts for:" />
+                    <Tabs centered value={tabValue} onChange={handleTabChange} fullWidth={false} className="job-tabs">
+                        <Tab
+                            className="tab"
+                            // icon={<LocalActivityIcon />}
+                            label="code nerd"
+                            // component={NavLink}
+                            // to="/t1m35433t5"
+                        />
+                        <Tab
+                            className="tab"
+                            // icon={<LocalActivityIcon />}
+                            label="media nerd"
+                            // component={NavLink}
+                            // to="/t1m35433t5"
+                        />
+                        <Tab
+                            className="tab"
+                            // icon={<LocalActivityIcon />}
+                            label="DML"
+                            // component={NavLink}
+                            // to="/t1m35433t5"
+                        />
+                    </Tabs>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             {savedShiftsList}
