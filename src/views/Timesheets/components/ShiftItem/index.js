@@ -87,6 +87,18 @@ export default class ShiftItem extends Component {
       </Grid>
     );
 
+    let shiftItemIcon = (STATUS !== 'Submitted' && STATUS !== 'Approved') ? (
+      <IconButton>
+          <DeleteForeverOutlinedIcon
+            onClick={this.handleSubmitButtonClick}
+          />
+      </IconButton>
+    ) : (
+      <IconButton style={{visibility: 'hidden'}}>
+          <DeleteForeverOutlinedIcon />
+      </IconButton>
+    )
+
 
     return (
       <Grid item xs={12} className="shift-item">
@@ -110,13 +122,7 @@ export default class ShiftItem extends Component {
             </Grid>
             <Grid item xs={1}>
               <Typography variant="body2">
-                <IconButton>
-                  {STATUS !== 'Submitted' && STATUS !== 'Approved' && (
-                    <DeleteForeverOutlinedIcon
-                      onClick={this.handleSubmitButtonClick}
-                    />
-                  )}
-                </IconButton>
+                {shiftItemIcon}
               </Typography>
             </Grid>
           </Grid>

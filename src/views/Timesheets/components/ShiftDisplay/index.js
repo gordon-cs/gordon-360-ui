@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-    Typography,
     Grid,
     Card,
     CardContent,
@@ -14,6 +13,7 @@ import './ShiftDisplay.css'
 
 const ShiftDisplay = (props) => {
     const [submittedShiftListComponent, setSubmittedShiftListComponent] = useState(null);
+    //eslint-disable-next-line
     const [rejectedShiftListComponent, setRejectedShiftListComponent] = useState(null);
     const [tabValue, setTabValue] = useState(0);
 
@@ -65,50 +65,54 @@ const ShiftDisplay = (props) => {
 
 
     return (
-        <Grid item xs={12}>
-            <Card>
-                <CardContent>
-                    <CardHeader title="Display shifts for:" />
-                    <Tabs centered value={tabValue} onChange={handleTabChange} fullWidth={false} className="job-tabs">
-                        <Tab
-                            className="tab"
-                            // icon={<LocalActivityIcon />}
-                            label="code nerd"
+        <>
+            <Grid item xs={12}>
+                <Card>
+                    <CardContent>
+                        <CardHeader title="Display shifts for:" />
+                        <Tabs centered value={tabValue} onChange={handleTabChange} fullWidth={false} className="job-tabs">
+                            <Tab
+                                className="job-tab"
+                                // icon={<LocalActivityIcon />}
+                                label="code nerd"
                             // component={NavLink}
                             // to="/t1m35433t5"
-                        />
-                        <Tab
-                            className="tab"
-                            // icon={<LocalActivityIcon />}
-                            label="media nerd"
+                            />
+                            <Tab
+                                className="job-tab"
+                                // icon={<LocalActivityIcon />}
+                                label="media nerd"
                             // component={NavLink}
                             // to="/t1m35433t5"
-                        />
-                        <Tab
-                            className="tab"
-                            // icon={<LocalActivityIcon />}
-                            label="DML"
+                            />
+                            <Tab
+                                className="job-tab"
+                                // icon={<LocalActivityIcon />}
+                                label="DML"
                             // component={NavLink}
                             // to="/t1m35433t5"
-                        />
-                    </Tabs>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            {savedShiftsList}
-                        </Grid>
-                        <Grid item xs={12}>
-                            {submittedShiftsList}
-                        </Grid>
-                        <Grid item xs={12}>
-                            {rejectedShiftsList}
-                        </Grid>
-                        <Grid item xs={12}>
-                            {approvedShiftsList}
-                        </Grid>
+                            />
+                        </Tabs>
+                    </CardContent>
+                </Card>
+            </Grid>
+            <Grid item xs={12}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        {savedShiftsList}
                     </Grid>
-                </CardContent>
-            </Card>
-        </Grid>
+                    <Grid item xs={12}>
+                        {submittedShiftsList}
+                    </Grid>
+                    <Grid item xs={12}>
+                        {rejectedShiftsList}
+                    </Grid>
+                    <Grid item xs={12}>
+                        {approvedShiftsList}
+                    </Grid>
+                </Grid>
+            </Grid>
+        </>
     )
 }
 
