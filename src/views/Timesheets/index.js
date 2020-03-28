@@ -107,22 +107,6 @@ const Timesheets = (props) => {
       });
     };
 
-    const checkForOverlappingShift = () => {
-      let details = {
-        id_num: userId,
-        shift_start_datetime: selectedDateIn.toLocaleString(),
-        shift_end_datetime: selectedDateOut.toLocaleString(),
-      };
-
-      jobs.checkForOverlappingShift(details).then(result => {
-        if (result.length > 0) {
-          setIsOverlappingShift(true);
-        } else {
-          setIsOverlappingShift(false);
-        }
-      })
-    }
-
     const getSavedShiftsForUser = userID => {
       return jobs.getSavedShiftsForUser(userID);
     };
@@ -237,10 +221,14 @@ const Timesheets = (props) => {
         setUserShiftNotes('');
         setUserJobs([]);
         setHoursWorkedInDecimal(0);
+      }).catch(err => {
+        if (err.toLowerCase().includes('overlap')) {
+          setIsOverlappingShift(true);
+        }
       });
     };
 
-    const saveShift = async (
+    const saveShift = (
       studentID,
       eml,
       shiftStart,
@@ -249,7 +237,7 @@ const Timesheets = (props) => {
       shiftNotes,
       lastChangedBy,
     ) => {
-      await jobs.submitShiftForUser(
+      return jobs.saveShiftForUser(
         studentID,
         eml,
         shiftStart,
@@ -257,7 +245,7 @@ const Timesheets = (props) => {
         hoursWorked,
         shiftNotes,
         lastChangedBy,
-      );
+      )
     };
 
     const jobsMenuItems = userJobs ? (
@@ -437,9 +425,9 @@ const Timesheets = (props) => {
     }
 
     const handleTimeEntered = (timeIn, timeOut) => {
+      setIsOverlappingShift(false);
       if (selectedDateIn !== null && selectedDateOut !== null && userId !== null) {
         getActiveJobsForUser();
-        checkForOverlappingShift();
         checkForFutureDate();
       }
     };
