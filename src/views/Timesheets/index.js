@@ -215,7 +215,6 @@ const Timesheets = (props) => {
         userShiftNotes,
         userId,
       ).then(result => {
-        console.log("Job save response:", result);
         savedShiftListComponent.loadShiftData()
         setSelectedDateOut(null);
         setSelectedDateIn(null);
