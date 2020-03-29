@@ -186,11 +186,13 @@ export default class Membership extends Component {
           GRP_ADMIN: false,
         };
         // if a user is already a member of an involvement, attempting addMembership(data)
-        // will return 'undefined'. So, if this happens, alert the user
+        //  will return 'undefined'. So, if this happens, alert the user
         let alreadyIn = await membership.addMembership(data);
         if (typeof alreadyIn === 'undefined') {
           // User is already a member of this involvement
           this.setState({ isUserAlreadyMemberSnackBarOpen: true });
+        } else {
+          this.setState({ isSnackBarOpen: true });
         }
       } catch (error) {
         switch (error.name) {
