@@ -13,7 +13,8 @@ import './ShiftDisplay.css'
 
 const ShiftDisplay = (props) => {
     const [submittedShiftListComponent, setSubmittedShiftListComponent] = useState(null);
-    //eslint-disable-next-line
+    // Remove these comments when the variable below is used!
+    // eslint-disable-next-line
     const [rejectedShiftListComponent, setRejectedShiftListComponent] = useState(null);
     const [tabValue, setTabValue] = useState(0);
 
@@ -73,24 +74,15 @@ const ShiftDisplay = (props) => {
                         <Tabs centered value={tabValue} onChange={handleTabChange} fullWidth={false} className="job-tabs">
                             <Tab
                                 className="job-tab"
-                                // icon={<LocalActivityIcon />}
                                 label="code nerd"
-                            // component={NavLink}
-                            // to="/t1m35433t5"
                             />
                             <Tab
                                 className="job-tab"
-                                // icon={<LocalActivityIcon />}
                                 label="media nerd"
-                            // component={NavLink}
-                            // to="/t1m35433t5"
                             />
                             <Tab
                                 className="job-tab"
-                                // icon={<LocalActivityIcon />}
                                 label="DML"
-                            // component={NavLink}
-                            // to="/t1m35433t5"
                             />
                         </Tabs>
                     </CardContent>

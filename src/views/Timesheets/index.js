@@ -37,9 +37,6 @@ const Timesheets = (props) => {
   const [userShiftNotes, setUserShiftNotes] = useState('');
   const [isOverlappingShift, setIsOverlappingShift] = useState(false);
   const [savedShiftListComponent, setSavedShiftListComponent] = useState(null);
-  // Remove these comments when the variable below is used!
-  // eslint-disable-next-line
-  const [rejectedShiftListComponent, setRejectedShiftListComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
