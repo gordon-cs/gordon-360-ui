@@ -20,7 +20,8 @@ export default class GordonEventItem extends Component {
   }
   render() {
     const { event } = this.props;
-
+    let eventDescription = event.Description;
+    eventDescription = eventDescription === '' ? 'No description available' : eventDescription;
     return (
       <section>
         <Grid container direction="row" onClick={this.handleExpandClick} className="event-item">
@@ -40,7 +41,7 @@ export default class GordonEventItem extends Component {
             <CardContent>
               <Typography className="descriptionText">Description:</Typography>
               <Typography type="caption" className="descriptionText">
-                {event.Description}
+                {eventDescription}
               </Typography>
             </CardContent>
           </Collapse>
