@@ -56,24 +56,25 @@ export default class SavedShiftsList extends Component {
       this.setState({
         shifts: shiftsToKeep,
       });
-      if (shifts.length > 0) {
-        jobs.getSupervisorNameForJob(shifts[0].SUPERVISOR).then(response => {
+      console.log('shifts:', this.state.shifts);
+      if (this.state.shifts.length > 0) {
+        jobs.getSupervisorNameForJob(this.state.shifts[0].SUPERVISOR).then(response => {
           let supervisor =
             response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
           this.setState({
             directSupervisor: {
               name: supervisor,
-              id: shifts[0].SUPERVISOR,
+              id: this.state.shifts[0].SUPERVISOR,
             },
           });
         });
-        jobs.getSupervisorNameForJob(shifts[0].COMP_SUPERVISOR).then(response => {
+        jobs.getSupervisorNameForJob(this.state.shifts[0].COMP_SUPERVISOR).then(response => {
           let supervisor =
             response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
           this.setState({
             reportingSupervisor: {
               name: supervisor,
-              id: shifts[0].COMP_SUPERVISOR,
+              id: this.state.shifts[0].COMP_SUPERVISOR,
             },
           });
         });
