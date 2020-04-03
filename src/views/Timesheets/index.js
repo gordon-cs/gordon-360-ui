@@ -118,8 +118,8 @@ const Timesheets = (props) => {
       })
     }
 
-    const getSavedShiftsForUser = userID => {
-      return jobs.getSavedShiftsForUser(userID);
+    const getSavedShiftsForUser = () => {
+      return jobs.getSavedShiftsForUser();
     };
 
 

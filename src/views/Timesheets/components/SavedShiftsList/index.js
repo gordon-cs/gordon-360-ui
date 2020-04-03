@@ -39,8 +39,8 @@ export default class SavedShiftsList extends Component {
   }
 
   loadShiftData() {
-    const { userID, cardTitle } = this.props;
-    this.props.getShifts(userID).then(shifts => {
+    const {cardTitle } = this.props;
+    this.props.getShifts().then(shifts => {
       let shiftsToKeep = []
       for (let i = 0; i < shifts.length; i++) {
         if (cardTitle === "Saved Shifts") {
@@ -82,11 +82,10 @@ export default class SavedShiftsList extends Component {
   }
 
   reloadShiftData() {
-    const { userID } = this.props;
     this.setState({
       shifts: [],
     });
-    this.props.getShifts(userID).then(shifts => {
+    this.props.getShifts().then(shifts => {
       this.setState({
         shifts: shifts,
       });

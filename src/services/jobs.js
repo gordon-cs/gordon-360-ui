@@ -33,11 +33,10 @@ const checkForOverlappingShift = details => {
 
 /**
  * Get saved shifts for current user
- * @param {String} userID The Gordon id of the user whose jobs to fetch
  * @return {Promise.<String>} User's active jobs
  */
-const getSavedShiftsForUser = userID => {
-  return http.get(`jobs/getSavedShifts/${userID}`);
+const getSavedShiftsForUser = () => {
+  return http.get(`jobs/getSavedShifts/`);
 };
 
 /**
