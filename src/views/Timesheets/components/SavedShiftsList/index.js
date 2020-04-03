@@ -125,7 +125,7 @@ export default class SavedShiftsList extends Component {
   render() {
     let { cardTitle } = this.props;
     let totalHoursWorked = this.state.shifts.reduce(this.getTotalHours, 0);
-    let totalEstimatedPay = this.state.shifts.reduce(this.getEstimatedPay, 0);
+    let totalEstimatedPay = this.state.shifts.reduce(this.getEstimatedPay, 0).toFixed(2);
     const deleteShiftForUser = (rowID, userID) => {
       let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
         this.loadShiftData();
