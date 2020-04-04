@@ -34,10 +34,6 @@ export default class SavedShiftsList extends Component {
     };
   }
 
-  componentDidMount() {
-    this.loadShiftData()
-  }
-
   loadShiftData() {
     const {cardTitle } = this.props;
     this.props.getShifts().then(shifts => {
@@ -81,17 +77,6 @@ export default class SavedShiftsList extends Component {
     });
   }
 
-  reloadShiftData() {
-    this.setState({
-      shifts: [],
-    });
-    this.props.getShifts().then(shifts => {
-      this.setState({
-        shifts: shifts,
-      });
-    });
-  }
-
   handleSubmitButtonClick = () => {
     this.setState({ showSubmissionConfirmation: true });
   }
@@ -106,10 +91,7 @@ export default class SavedShiftsList extends Component {
         selectedSupervisor: null,
         showSubmissionConfirmation: false,
       });
-      this.loadShiftData();
-      if(this.props.submittedList !== null) {
-        this.props.submittedList.loadShiftData();
-      }
+      this.props.loadShifts();
     });
   }
 
@@ -121,49 +103,80 @@ export default class SavedShiftsList extends Component {
     return total + (currentShift.HOURS_WORKED * currentShift.HOURLY_RATE);
   }
 
-  render() {
-    let { cardTitle } = this.props;
-    let totalHoursWorked = this.state.shifts.reduce(this.getTotalHours, 0);
-    let totalEstimatedPay = this.state.shifts.reduce(this.getEstimatedPay, 0).toFixed(2);
-    const deleteShiftForUser = (rowID, userID) => {
-      let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
-        this.loadShiftData();
+  getSupervisors() {
+    // console.log('Getting Supervisors...');
+    if (this.props.shifts.length > 0) {
+      jobs.getSupervisorNameForJob(this.props.shifts[0].SUPERVISOR).then(response => {
+        let supervisor =
+          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
+          // console.log(response);
+        this.setState({
+          directSupervisor: {
+            name: supervisor,
+            id: this.props.shifts[0].SUPERVISOR,
+          },
+        });
       });
-      return result;
-    };
-      let confirmationBox = (
-        <Grid container>
-          <Grid item>
-            <Dialog
-              open={this.state.showSubmissionConfirmation}
-              keepMounted
-              align="center"
-              onBackdropClick={this.onClose}
-            >
-              <DialogTitle>Are you sure you want to submit your shifts?</DialogTitle>
-              <DialogContent>
-                <Grid container>
-                  <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button style={styles.redButton} onClick={this.onClose} variant="contained">
-                      Cancel
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        this.submitShiftsToSupervisor(this.state.shifts, this.state.selectedSupervisor.id)
-                      }}
-                      color="primary">
-                      Submit
-                    </Button>
-                  </Grid>
+      jobs.getSupervisorNameForJob(this.props.shifts[0].COMP_SUPERVISOR).then(response => {
+        let supervisor =
+          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
+          // console.log(response);
+        this.setState({
+          reportingSupervisor: {
+            name: supervisor,
+            id: this.props.shifts[0].COMP_SUPERVISOR,
+          },
+        });
+      });
+    }
+  }
+
+  // componentDidUpdate() {
+  //   if (this.props.cardTitle === "Saved Shifts") {
+  //     console.log('getting supervisors...')
+  //     this.getSupervisors();
+  //   }
+  // }
+
+  render() {
+    console.log('rendering')
+    let { cardTitle } = this.props;
+    let totalHoursWorked = this.props.shifts.reduce(this.getTotalHours, 0);
+    let totalEstimatedPay = this.props.shifts.reduce(this.getEstimatedPay, 0).toFixed(2);
+    
+    let confirmationBox = (
+      <Grid container>
+        <Grid item>
+          <Dialog
+            open={this.state.showSubmissionConfirmation}
+            keepMounted
+            align="center"
+            onBackdropClick={this.onClose}
+          >
+            <DialogTitle>Are you sure you want to submit your shifts?</DialogTitle>
+            <DialogContent>
+              <Grid container>
+                <Grid item xs={6} sm={6} md={6} lg={6}>
+                  <Button style={styles.redButton} onClick={this.onClose} variant="contained">
+                    Cancel
+                  </Button>
                 </Grid>
-              </DialogContent>
-            </Dialog>
-          </Grid>
+                <Grid item xs={6} sm={6} md={6} lg={6}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      this.submitShiftsToSupervisor(this.props.shifts, this.state.selectedSupervisor.id)
+                    }}
+                    color="primary">
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+            </DialogContent>
+          </Dialog>
         </Grid>
-      );
+      </Grid>
+    );
 
     let header = (
       <Grid item xs={12} style={styles.headerStyle}>
@@ -199,9 +212,14 @@ export default class SavedShiftsList extends Component {
       </Grid>
     );
 
-    let shiftsList = this.state.shifts.map(shift => (
-      <ShiftItem deleteShift={deleteShiftForUser} value={shift} key={shift.EML_DESCRIPTION} />
+    let shiftsList = null;
+    shiftsList = this.props.shifts.map((shift, index) => (
+      <ShiftItem deleteShift={this.props.deleteShift} value={shift} key={index} />
     ));
+    if (cardTitle === 'Saved Shifts') {
+      console.log(this.props.shifts);
+      console.log(shiftsList);
+    }
 
     const supervisorDropdown = (
       <FormControl
@@ -234,7 +252,7 @@ export default class SavedShiftsList extends Component {
     );
 
     let content = <></>;
-    if (this.state.shifts.length === null) {
+    if (this.props.shifts.length === null) {
       content = (
         <Card>
           <CardContent>
@@ -242,7 +260,7 @@ export default class SavedShiftsList extends Component {
           </CardContent>
         </Card>
       );
-    } else if (this.state.shifts.length > 0) {
+    } else if (this.props.shifts.length > 0) {
       content = (
         <>
           {confirmationBox}

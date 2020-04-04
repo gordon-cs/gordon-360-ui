@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import SavedShiftsList from '../../components/SavedShiftsList';
 import GordonLoader from '../../../../components/Loader';
+import jobs from '../../../../services/jobs';
 import './ShiftDisplay.css'
 
 export default class ShiftDisplay extends Component {
@@ -17,19 +18,22 @@ export default class ShiftDisplay extends Component {
         this.state = {
             tabValue: 0,
             shifts: [],
+            selectedJob: '',
         };
         this.jobNamesSet = new Set();
         this.jobNamesArray = null;
-        this.submittedShiftListComponent = null;
-        this.rejectedShiftListComponent = null;
+        
+        this.savedShifts = [];
+        this.submittedShifts = [];
+        this.rejectedShifts = [];
+        this.approvedShifts = [];
     }
 
     componentDidMount() {
-        console.log()
-        this.loadSavedShifts();
+        this.loadShifts();
     }
 
-    loadSavedShifts() {
+    loadShifts() {
         const {getSavedShiftsForUser} = this.props;
         getSavedShiftsForUser().then(data => {
             this.setState({
@@ -39,61 +43,47 @@ export default class ShiftDisplay extends Component {
                 this.jobNamesSet.add(this.state.shifts[i].EML_DESCRIPTION);
             }
             this.jobNamesArray = Array.from(this.jobNamesSet);
-            console.log('job names:', this.jobNamesArray);
+            // console.log('job names:', this.jobNamesArray);
         });
     };
+
+    deleteShiftForUser(rowID, userID) {
+        let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
+          this.loadShifts();
+        });
+        return result;
+      };
 
     handleTabChange = (event, value) => {
         this.setState({tabValue: value});
     }
 
+    handleTabSelect(emlDescription) {
+        this.setState({selectedJob: emlDescription});
+    }
+
     render() {
-        const {userId, getSavedShiftsForUser, setSavedShiftListComponent} = this.props;
-        let savedShiftsList =  userId !== '' ? (
-            <SavedShiftsList ref={setSavedShiftListComponent} submittedList={this.submittedShiftListComponent} getShifts={getSavedShiftsForUser} cardTitle="Saved Shifts" />
-        ) : (
-            <>
-                <CardContent>
-                    <GordonLoader />
-                </CardContent>
-            </>
-        );
+        const { shifts } = this.state;
+        this.savedShifts.length = 0;
+        this.submittedShifts.length = 0;
+        this.rejectedShifts.length = 0;
+        this.approvedShifts.length = 0;
 
-        let submittedShiftsList = userId !== '' ? (
-            <SavedShiftsList ref={comp => {this.submittedShiftListComponent = comp}} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Submitted Shifts" />
-        ) : (
-            <>
-                <CardContent>
-                    <GordonLoader />
-                </CardContent>
-            </>
-        );
+        for (let i = 0; i < shifts.length; i++) {
+            if (shifts[i].EML_DESCRIPTION === this.state.selectedJob) {
+                if (shifts[i].STATUS === "Saved") { this.savedShifts.push(shifts[i]) }
+                if (shifts[i].STATUS === "Submitted") { this.submittedShifts.push(shifts[i]) }
+                if (shifts[i].STATUS === "Rejected") { this.rejectedShifts.push(shifts[i]) }
+                if (shifts[i].STATUS === "Approved") { this.approvedShifts.push(shifts[i]) }
+            }
+        }
 
-        let approvedShiftsList = userId !== '' ? (
-            <SavedShiftsList getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Approved Shifts" />
-        ) : (
-            <>
-                <CardContent>
-                    <GordonLoader />
-                </CardContent>
-            </>
-        );
-
-        let rejectedShiftsList = userId !== '' ? (
-            <SavedShiftsList ref={comp => {this.rejectedShiftListComponent = comp}} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Rejected Shifts" />
-        ) : (
-            <>
-                <CardContent>
-                    <GordonLoader />
-                </CardContent>
-            </>
-        );
-
-        let jobTabs = this.jobNamesArray ? (
+        let jobTabs = this.jobNamesArray && this.jobNamesArray.length > 1 ? (
             this.jobNamesArray.map(jobName => (
                 <Tab
                     className="job-tab"
                     label={jobName}
+                    onClick={() => this.handleTabSelect(jobName)}
                 />
             ))
         ) : (
@@ -121,16 +111,16 @@ export default class ShiftDisplay extends Component {
                 <Grid item xs={12}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            {savedShiftsList}
+                            <SavedShiftsList shifts={this.savedShifts} loadShifts={this.loadShifts} deleteShift={this.deleteShiftForUser.bind(this)} cardTitle="Saved Shifts" />
                         </Grid>
                         <Grid item xs={12}>
-                            {submittedShiftsList}
+                            <SavedShiftsList shifts={this.submittedShifts} loadShifts={this.loadShifts} deleteShift={this.deleteShiftForUser.bind(this)} cardTitle="Submitted Shifts" />
                         </Grid>
                         <Grid item xs={12}>
-                            {rejectedShiftsList}
+                            <SavedShiftsList shifts={this.rejectedShifts} loadShifts={this.loadShifts} deleteShift={this.deleteShiftForUser.bind(this)} cardTitle="Rejected Shifts" />
                         </Grid>
                         <Grid item xs={12}>
-                            {approvedShiftsList}
+                            <SavedShiftsList shifts={this.approvedShifts} loadShifts={this.loadShifts} deleteShift={this.deleteShiftForUser.bind(this)} cardTitle="Approved Shifts" />
                         </Grid>
                     </Grid>
                 </Grid>

@@ -36,7 +36,7 @@ const Timesheets = (props) => {
   const [userId, setUserId] = useState('');
   const [userShiftNotes, setUserShiftNotes] = useState('');
   const [isOverlappingShift, setIsOverlappingShift] = useState(false);
-  const [savedShiftListComponent, setSavedShiftListComponent] = useState(null);
+  const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
@@ -184,7 +184,7 @@ const Timesheets = (props) => {
         userShiftNotes,
         userId,
       ).then(result => {
-        savedShiftListComponent.loadShiftData()
+        shiftDisplayComponent.loadShifts()
         setSelectedDateOut(null);
         setSelectedDateIn(null);
         setUserShiftNotes('');
@@ -533,10 +533,9 @@ const Timesheets = (props) => {
             </MuiPickersUtilsProvider>
           </Grid>
           <ShiftDisplay
+            ref={setShiftDisplayComponent}
             userId={userId}
             getSavedShiftsForUser={getSavedShiftsForUser}
-            savedShiftListComponent={savedShiftListComponent}
-            setSavedShiftListComponent={setSavedShiftListComponent}
             />
         </Grid>
         <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
