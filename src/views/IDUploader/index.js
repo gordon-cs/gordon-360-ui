@@ -22,7 +22,7 @@ import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
 import user from '../../services/user';
 import errorLog from '../../services/errorLog';
-import Login from '../Login'
+import Login from '../Login';
 
 const CROP_DIM = 1200; // pixels
 class IDUploader extends Component {
@@ -159,6 +159,7 @@ class IDUploader extends Component {
           var cropDim = this.minCropBoxDim(i.width, displayWidth);
           this.setState({ cropperData: { aspectRatio: aRatio, cropBoxDim: cropDim } });
           this.setState({ preview: dataURL });
+          this.onCropperMove();
         }
       }.bind(this);
       i.src = dataURL;
@@ -175,6 +176,31 @@ class IDUploader extends Component {
       event.preventDefault();
       this.refs.cropper.zoomTo(1);
     }
+  }
+
+  onCropperMove() {
+    // Keyboard support for cropping
+    document.addEventListener('keydown', e => {
+      if (this.refs.cropper != null) {
+        let data = this.refs.cropper.getCropBoxData();
+        if (e.code === 'ArrowUp') {
+          data.top -= 5;
+        } else if (e.code === 'ArrowDown') {
+          data.top += 5;
+        } else if (e.code === 'ArrowRight') {
+          data.left += 5;
+        } else if (e.code === 'ArrowLeft') {
+          data.left -= 5;
+        } else if (e.code === 'Equal') {
+          data.height += 5;
+          data.width += 5;
+        } else if (e.code === 'Minus') {
+          data.height -= 5;
+          data.width -= 5;
+        }
+        this.refs.cropper.setCropBoxData(data);
+      }
+    });
   }
 
   render() {
@@ -260,7 +286,7 @@ class IDUploader extends Component {
                   <div>
                     <img
                       src={IdCardTop}
-                      alt="ID Card"
+                      alt="ID card top with Gordon College logo."
                       className="placeholder-id"
                       style={{ maxWidth: '100%', maxHeight: '100%' }}
                     />
@@ -272,7 +298,7 @@ class IDUploader extends Component {
                       <div>
                         <img
                           src={this.state.IdCardPlaceholder}
-                          alt="ID Card"
+                          alt="Placeholder ID."
                           className="placeholder-id"
                           style={{ maxWidth: '100%', maxHeight: '100%' }}
                         />
@@ -282,7 +308,7 @@ class IDUploader extends Component {
                       <div>
                         <img
                           src={IdCardGreen}
-                          alt="ID Card"
+                          alt="Colored bar with text 'student'."
                           className="placeholder-id"
                           style={{ maxWidth: '100%', maxHeight: '100%' }}
                         />
@@ -294,7 +320,7 @@ class IDUploader extends Component {
             </Grid>
           </Grid>
         </Fragment>
-      )
+      );
     } else {
       content = (
         <Grid container justify="center">
@@ -308,7 +334,10 @@ class IDUploader extends Component {
               >
                 <h1>You are not logged in.</h1>
                 <br />
-                <h4>Please log in to upload an ID photo. You can press the back button or follow the URL "360.gordon.edu/id" to return to this page.</h4>
+                <h4>
+                  Please log in to upload an ID photo. You can press the back button or follow the
+                  URL "360.gordon.edu/id" to return to this page.
+                </h4>
                 <br />
                 {/*<Button
                   color="primary"
@@ -324,13 +353,12 @@ class IDUploader extends Component {
             </Card>
           </Grid>
         </Grid>
-      )
+      );
     }
 
     return (
       <Grid container justify="center" spacing="2">
         {content}
-
 
         <Dialog
           open={this.state.photoOpen}
@@ -348,6 +376,8 @@ class IDUploader extends Component {
                 {this.props.width === 'md' || this.props.width === 'sm' || this.props.width === 'xs'
                   ? 'Tap Image to Browse Files'
                   : 'Drag & Drop Picture, or Click to Browse Files'}
+                <br /> Use the arrow keys to move the crop box.
+                <br /> Use + or - to resize.
               </DialogContentText>
               {!preview && (
                 <Dropzone
@@ -387,6 +417,7 @@ class IDUploader extends Component {
                     zoom={this.onCropperZoom.bind(this)}
                     zoomable={false}
                     dragMode={'none'}
+                    move={this.onCropperMove.bind(this)}
                     minCropBoxWidth={this.state.cropperData.cropBoxDim}
                     minCropBoxHeight={this.state.cropperData.cropBoxDim}
                   />
