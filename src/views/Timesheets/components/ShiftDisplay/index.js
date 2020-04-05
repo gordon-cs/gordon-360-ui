@@ -18,10 +18,10 @@ export default class ShiftDisplay extends Component {
         this.state = {
             tabValue: 0,
             shifts: [],
+            jobNames: [],
             selectedJob: '',
         };
         this.jobNamesSet = new Set();
-        this.jobNamesArray = null;
         this.supervisors = [];
         this.savedShifts = [];
         this.submittedShifts = [];
@@ -31,9 +31,9 @@ export default class ShiftDisplay extends Component {
 
     componentDidMount() {
         this.loadShifts().then(() => {
-            if (this.jobNamesArray.length > 0) {
+            if (this.state.jobNames.length > 0) {
                 this.setState({
-                    selectedJob: this.jobNamesArray[0],
+                    selectedJob: this.state.jobNames[0],
                 })
             }
         });
@@ -42,19 +42,35 @@ export default class ShiftDisplay extends Component {
     loadShifts() {
         const {getSavedShiftsForUser} = this.props;
         return getSavedShiftsForUser().then(data => {
+            for (let i = 0; i < data.length; i++) {
+                this.jobNamesSet.add(data[i].EML_DESCRIPTION);
+            }
+
+            let jobsArray = Array.from(this.jobNamesSet);
+
+            if (!this.jobNamesSet.has(this.state.selectedJob)) {
+                if (jobsArray.length > 0) {
+                    this.setState({
+                        tabValue: 0,
+                        selectedJob: jobsArray[0],
+                    });
+                } else {
+                    this.setState({
+                        selectedJob: '',
+                    })
+                }
+            }
             this.setState({
                 shifts: data,
+                jobNames: jobsArray,
             });
-            for (let i = 0; i < this.state.shifts.length; i++) {
-                this.jobNamesSet.add(this.state.shifts[i].EML_DESCRIPTION);
-            }
-            this.jobNamesArray = Array.from(this.jobNamesSet);
         });
     };
 
-    deleteShiftForUser(rowID) {
+    deleteShiftForUser(rowID, emlDesc) {
         let result = jobs.deleteShiftForUser(rowID).then(response => {
-          this.loadShifts();
+            this.jobNamesSet.delete(emlDesc);
+            this.loadShifts();
         });
         return result;
       };
@@ -113,36 +129,43 @@ export default class ShiftDisplay extends Component {
         }
         let directSupervisor = this.savedShifts.length > 0 ? this.savedShifts[0].SUPERVISOR : null;
         let reportingSupervisor = this.savedShifts.length > 0 ? this.savedShifts[0].COMP_SUPERVISOR : null;
-        let jobTabs = this.jobNamesArray && this.jobNamesArray.length > 1 ? (
-            this.jobNamesArray.map(jobName => (
+        let jobTabs = this.state.jobNames && this.state.jobNames.length > 1 ? (
+            this.state.jobNames.map((jobName, index) => (
                 <Tab
                     className="job-tab"
                     label={jobName}
                     onClick={() => this.handleTabSelect(jobName)}
+                    key={index}
                 />
             ))
         ) : (
             <></>
         );
 
+        let tabsCard = this.state.jobNames && this.state.jobNames.length > 1 ? (
+            <Grid item xs={12}>
+                <Card>
+                    <CardContent>
+                        <CardHeader title="Display shifts for:" />
+                        <Tabs
+                            centered
+                            value={this.state.tabValue}
+                            onChange={this.handleTabChange}
+                            fullWidth={false}
+                            className="job-tabs"
+                        >
+                            {jobTabs}
+                        </Tabs>
+                    </CardContent>
+                </Card>
+            </Grid>
+        ) : (
+            <></>
+        );
+
         return (
             <>
-                <Grid item xs={12}>
-                    <Card>
-                        <CardContent>
-                            <CardHeader title="Display shifts for:" />
-                            <Tabs
-                                centered
-                                value={this.state.tabValue}
-                                onChange={this.handleTabChange}
-                                fullWidth={false}
-                                className="job-tabs"
-                                >
-                                {jobTabs}
-                            </Tabs>
-                        </CardContent>
-                    </Card>
-                </Grid>
+                {tabsCard}
                 <Grid item xs={12}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
