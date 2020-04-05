@@ -22,7 +22,7 @@ export default class ShiftDisplay extends Component {
         };
         this.jobNamesSet = new Set();
         this.jobNamesArray = null;
-        
+        this.supervisors = [];
         this.savedShifts = [];
         this.submittedShifts = [];
         this.rejectedShifts = [];
@@ -30,12 +30,18 @@ export default class ShiftDisplay extends Component {
     }
 
     componentDidMount() {
-        this.loadShifts();
+        this.loadShifts().then(() => {
+            if (this.jobNamesArray.length > 0) {
+                this.setState({
+                    selectedJob: this.jobNamesArray[0],
+                })
+            }
+        });
     }
 
     loadShifts() {
         const {getSavedShiftsForUser} = this.props;
-        getSavedShiftsForUser().then(data => {
+        return getSavedShiftsForUser().then(data => {
             this.setState({
                 shifts: data,
             });
@@ -43,7 +49,6 @@ export default class ShiftDisplay extends Component {
                 this.jobNamesSet.add(this.state.shifts[i].EML_DESCRIPTION);
             }
             this.jobNamesArray = Array.from(this.jobNamesSet);
-            // console.log('job names:', this.jobNamesArray);
         });
     };
 
@@ -62,6 +67,31 @@ export default class ShiftDisplay extends Component {
         this.setState({selectedJob: emlDescription});
     }
 
+    getSupervisors(direct, reporting) {
+        this.supervisors = [];
+        jobs.getSupervisorNameForJob(direct).then(response => {
+            let directSupervisor = response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
+            let directSupervisorObject = {
+                name: directSupervisor,
+                id: direct,
+            };
+            this.supervisors.push(directSupervisorObject);
+
+            jobs.getSupervisorNameForJob(reporting).then(response => {
+                let reportingSupervisor = response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
+                let reportingSupervisorObject = {
+                    name: reportingSupervisor,
+                    id: reporting,
+                }
+                this.supervisors.push(reportingSupervisorObject);
+                return this.supervisors;
+            });
+        }).catch(error => {
+            console.log('Error:', error);
+            return this.supervisors;
+        });
+    }
+
     render() {
         const { shifts } = this.state;
         this.savedShifts.length = 0;
@@ -78,6 +108,11 @@ export default class ShiftDisplay extends Component {
             }
         }
 
+        if (this.savedShifts.length > 0) {
+            this.getSupervisors(this.savedShifts[0].SUPERVISOR, this.savedShifts[0].COMP_SUPERVISOR);
+        }
+        let directSupervisor = this.savedShifts.length > 0 ? this.savedShifts[0].SUPERVISOR : null;
+        let reportingSupervisor = this.savedShifts.length > 0 ? this.savedShifts[0].COMP_SUPERVISOR : null;
         let jobTabs = this.jobNamesArray && this.jobNamesArray.length > 1 ? (
             this.jobNamesArray.map(jobName => (
                 <Tab
@@ -111,16 +146,34 @@ export default class ShiftDisplay extends Component {
                 <Grid item xs={12}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <SavedShiftsList shifts={this.savedShifts} loadShifts={this.loadShifts} deleteShift={this.deleteShiftForUser.bind(this)} cardTitle="Saved Shifts" />
+                            <SavedShiftsList
+                                shifts={this.savedShifts}
+                                loadShifts={this.loadShifts.bind(this)}
+                                deleteShift={this.deleteShiftForUser.bind(this)}
+                                cardTitle="Saved Shifts"
+                                directSupervisor={directSupervisor}
+                                reportingSupervisor={reportingSupervisor} />
                         </Grid>
                         <Grid item xs={12}>
-                            <SavedShiftsList shifts={this.submittedShifts} loadShifts={this.loadShifts} deleteShift={this.deleteShiftForUser.bind(this)} cardTitle="Submitted Shifts" />
+                            <SavedShiftsList
+                                shifts={this.submittedShifts}
+                                loadShifts={this.loadShifts.bind(this)}
+                                deleteShift={this.deleteShiftForUser.bind(this)}
+                                cardTitle="Submitted Shifts" />
                         </Grid>
                         <Grid item xs={12}>
-                            <SavedShiftsList shifts={this.rejectedShifts} loadShifts={this.loadShifts} deleteShift={this.deleteShiftForUser.bind(this)} cardTitle="Rejected Shifts" />
+                            <SavedShiftsList
+                                shifts={this.rejectedShifts}
+                                loadShifts={this.loadShifts.bind(this)}
+                                deleteShift={this.deleteShiftForUser.bind(this)}
+                                cardTitle="Rejected Shifts" />
                         </Grid>
                         <Grid item xs={12}>
-                            <SavedShiftsList shifts={this.approvedShifts} loadShifts={this.loadShifts} deleteShift={this.deleteShiftForUser.bind(this)} cardTitle="Approved Shifts" />
+                            <SavedShiftsList
+                                shifts={this.approvedShifts}
+                                loadShifts={this.loadShifts.bind(this)}
+                                deleteShift={this.deleteShiftForUser.bind(this)}
+                                cardTitle="Approved Shifts" />
                         </Grid>
                     </Grid>
                 </Grid>
