@@ -246,6 +246,18 @@ export default class SavedShiftsList extends Component {
                 </Grid>
               </CardContent>
           }
+          {cardTitle === "Approved Shifts" &&
+              <CardContent>
+                <Grid container>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6">Total hours worked: {totalHoursWorked}</Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6">Estimated gross pay: ${totalEstimatedPay}</Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+          }
           <CardActions>
             {cardTitle === "Saved Shifts" && <Grid container>
               <Grid container>
