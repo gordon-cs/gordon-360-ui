@@ -29,6 +29,7 @@ const Timesheets = (props) => {
   const [selectedDateOut, setSelectedDateOut] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
   const [shiftTooLong, setShiftTooLong] = useState(false);
+  const [shiftTooShort, setShiftTooShort] = useState(false);
   const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = useState(false);
   const [enteredFutureTime, setEnteredFutureTime] = useState(false);
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = useState(0.0);
@@ -61,6 +62,12 @@ const Timesheets = (props) => {
         setShiftTooLong(true);
       } else {
         setShiftTooLong(false);
+      }
+
+      if (calculatedTimeDiff < 0.25) {
+        setShiftTooShort(true);
+      } else {
+        setShiftTooShort(false);
       }
     }
   };
@@ -339,6 +346,12 @@ const Timesheets = (props) => {
           A shift cannot be longer than 20 hours.
       </Typography>
       );
+    } else if (shiftTooShort) {
+      errorText = (
+        <Typography variant="overline" color="error">
+          A shift cannot be shorter than 15 minutes.
+      </Typography>
+      );
     } else if (isOverlappingShift) {
       errorText = (
         <Typography variant="overline" color="error">
@@ -480,6 +493,7 @@ const Timesheets = (props) => {
                           timeOutIsBeforeTimeIn ||
                           isOverlappingShift ||
                           shiftTooLong ||
+                          shiftTooShort ||
                           selectedDateIn === null ||
                           selectedDateOut === null ||
                           selectedJob === null ||
