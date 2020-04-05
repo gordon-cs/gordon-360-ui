@@ -52,8 +52,8 @@ export default class ShiftDisplay extends Component {
         });
     };
 
-    deleteShiftForUser(rowID, userID) {
-        let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
+    deleteShiftForUser(rowID) {
+        let result = jobs.deleteShiftForUser(rowID).then(response => {
           this.loadShifts();
         });
         return result;

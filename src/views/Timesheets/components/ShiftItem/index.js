@@ -32,7 +32,6 @@ export default class ShiftItem extends Component {
     const { deleteShift } = this.props;
     const {
       ID,
-      ID_NUM,
       EML_DESCRIPTION,
       SHIFT_START_DATETIME,
       SHIFT_END_DATETIME,
@@ -73,7 +72,7 @@ export default class ShiftItem extends Component {
                   <Button
                     variant="contained"
                     onClick={() => {
-                      deleteShift(ID, ID_NUM);
+                      deleteShift(ID);
                       this.onClose();
                     }}
                     style={styles.redButton}>
