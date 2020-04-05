@@ -32,6 +32,8 @@ export default class SavedShiftsList extends Component {
       selectedSupervisor: null,
       showSubmissionConfirmation: false,
     };
+
+    this.currentJob = null
   }
 
   loadShiftData() {
@@ -109,7 +111,6 @@ export default class SavedShiftsList extends Component {
       jobs.getSupervisorNameForJob(this.props.shifts[0].SUPERVISOR).then(response => {
         let supervisor =
           response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
-          // console.log(response);
         this.setState({
           directSupervisor: {
             name: supervisor,
@@ -120,7 +121,6 @@ export default class SavedShiftsList extends Component {
       jobs.getSupervisorNameForJob(this.props.shifts[0].COMP_SUPERVISOR).then(response => {
         let supervisor =
           response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
-          // console.log(response);
         this.setState({
           reportingSupervisor: {
             name: supervisor,
@@ -131,12 +131,20 @@ export default class SavedShiftsList extends Component {
     }
   }
 
-  // componentDidUpdate() {
-  //   if (this.props.cardTitle === "Saved Shifts") {
-  //     console.log('getting supervisors...')
-  //     this.getSupervisors();
-  //   }
-  // }
+  componentDidUpdate() {
+    let {shifts} = this.props;
+    let shouldGetSupervisors; 
+    if (shifts.length > 0) {
+      shouldGetSupervisors = shifts[0].EML !== this.currentJob || (this.props.cardTitle === "Saved Shifts" && (!this.state.directSupervisor || !this.state.reportingSupervisor));
+      this.currentJob = shifts[0].EML
+    } else {
+      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && (!this.state.directSupervisor || !this.state.reportingSupervisor);
+    }
+    if (shouldGetSupervisors) {
+      console.log('getting supervisors...')
+      this.getSupervisors();
+    }
+  }
 
   render() {
     console.log('rendering')
