@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import 'date-fns';
 import {
   Grid,
@@ -82,9 +82,7 @@ const Timesheets = (props) => {
         shift_start_datetime: selectedDateIn.toLocaleString(),
         shift_end_datetime: selectedDateOut.toLocaleString(),
       };
-      console.log('fetching jobs', details);
       jobs.getActiveJobsForUser(details).then(result => {
-        console.log('jobs:', result);
         setUserJobs(result);
       });
     };
@@ -93,18 +91,14 @@ const Timesheets = (props) => {
       return jobs.getSavedShiftsForUser();
     };
 
-
-
     const handleDateChange1 = date => {
       setSelectedDateIn(date);
       handleTimeOutIsBeforeTimeIn(date, selectedDateOut);
-      handleTimeEntered(date, selectedDateOut);
     };
 
     const handleDateChange2 = date => {
       setSelectedDateOut(date);
       handleTimeOutIsBeforeTimeIn(selectedDateIn, date);
-      handleTimeEntered(selectedDateIn, date);
     };
 
     const handleSaveButtonClick = () => {
@@ -151,7 +145,6 @@ const Timesheets = (props) => {
         roundedHourDifference,
         userShiftNotes,
       ).then(result => {
-        console.log(result);
         shiftDisplayComponent.loadShifts()
         setSelectedDateOut(null);
         setSelectedDateIn(null);
@@ -357,13 +350,13 @@ const Timesheets = (props) => {
       errorText = <></>;
     }
 
-    const handleTimeEntered = (timeIn, timeOut) => {
+    const onDatetimeSelectorClose = () => {
       setIsOverlappingShift(false);
       if (selectedDateIn !== null && selectedDateOut !== null) {
         getActiveJobsForUser();
         checkForFutureDate();
       }
-    };
+    }
 
     const handleShiftNotesChanged = event => {
       setUserShiftNotes(event.target.value);
@@ -399,6 +392,7 @@ const Timesheets = (props) => {
                         format="MM/dd/yyyy"
                         value={selectedDateIn}
                         onChange={handleDateChange1}
+                        onClose={onDatetimeSelectorClose}
                         KeyboardButtonProps={{
                           'aria-label': 'change date',
                         }}
@@ -416,6 +410,7 @@ const Timesheets = (props) => {
                           let dateToChange = date;
                           handleDateChange1(dateToChange);
                         }}
+                        onClose={onDatetimeSelectorClose}
                         KeyboardButtonProps={{
                           'aria-label': 'change time',
                         }}
@@ -434,6 +429,7 @@ const Timesheets = (props) => {
                         format="MM/dd/yyyy"
                         value={selectedDateOut}
                         onChange={handleDateChange2}
+                        onClose={onDatetimeSelectorClose}
                         KeyboardButtonProps={{
                           'aria-label': 'change date',
                         }}
@@ -449,14 +445,12 @@ const Timesheets = (props) => {
                         label="Time Out"
                         value={selectedDateOut}
                         onChange={handleDateChange2}
+                        onClose={onDatetimeSelectorClose}
                         KeyboardButtonProps={{
                           'aria-label': 'change time',
                         }}
                         keyboardIcon={clockIcon}
                       />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Typography>Hours worked: {hoursWorkedInDecimal}</Typography>
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                       <TextField
@@ -472,6 +466,9 @@ const Timesheets = (props) => {
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                       {jobDropdown}
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Typography>Hours worked: {hoursWorkedInDecimal}</Typography>
                     </Grid>
                     <Grid item xs={12}>
                       {errorText}
