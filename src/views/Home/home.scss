@@ -1,7 +1,11 @@
+@import '../../../node_modules/react-image-gallery/styles/scss/image-gallery.scss';
+@import '../../vars';
+
 .gordon-login {
-  height: 100%;
-  padding: 0.8rem;
+  height: calc(100% + 2rem);
+  padding: 2rem;
   text-align: center;
+  margin: -1rem;
 
   background-size: cover;
   background-origin: border-box;
