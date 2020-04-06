@@ -8,7 +8,6 @@ import {
     Tab,
 } from '@material-ui/core';
 import SavedShiftsList from '../../components/SavedShiftsList';
-import GordonLoader from '../../../../components/Loader';
 import jobs from '../../../../services/jobs';
 import './ShiftDisplay.css'
 
