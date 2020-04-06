@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import 'date-fns';
 import {
   Grid,
@@ -20,10 +20,8 @@ import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
 import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import SavedShiftsList from './components/SavedShiftsList';
-import user from './../../services/user';
+import ShiftDisplay from './components/ShiftDisplay';
 import './timesheets.css';
-import GordonLoader from '../../components/Loader';
 
 const Timesheets = (props) => {
   const [userJobs, setUserJobs] = useState([]);
@@ -31,17 +29,13 @@ const Timesheets = (props) => {
   const [selectedDateOut, setSelectedDateOut] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
   const [shiftTooLong, setShiftTooLong] = useState(false);
+  const [shiftTooShort, setShiftTooShort] = useState(false);
   const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = useState(false);
   const [enteredFutureTime, setEnteredFutureTime] = useState(false);
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = useState(0.0);
-  const [userId, setUserId] = useState('');
   const [userShiftNotes, setUserShiftNotes] = useState('');
   const [isOverlappingShift, setIsOverlappingShift] = useState(false);
-  const [savedShiftListComponent, setSavedShiftListComponent] = useState(null);
-  const [submittedShiftListComponent, setSubmittedShiftListComponent] = useState(null);
-  // Remove these comments when the variable below is used!
-  // eslint-disable-next-line
-  const [rejectedShiftListComponent, setRejectedShiftListComponent] = useState(null);
+  const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
@@ -69,6 +63,12 @@ const Timesheets = (props) => {
       } else {
         setShiftTooLong(false);
       }
+
+      if (calculatedTimeDiff < 0.25) {
+        setShiftTooShort(true);
+      } else {
+        setShiftTooShort(false);
+      }
     }
   };
 
@@ -76,16 +76,6 @@ const Timesheets = (props) => {
     let now = Date.now();
     setEnteredFutureTime((selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
   }
-
-  useEffect(() => {
-    try {
-      user.getProfileInfo().then(result => {
-        let profile = result;
-        setUserId(profile.ID);
-      });
-    } catch (error) {
-    }
-  }, []);
 
   if (props.Authentication) {
     const clockIcon = <ScheduleIcon />;
@@ -98,73 +88,24 @@ const Timesheets = (props) => {
       let details = {
         shift_start_datetime: selectedDateIn.toLocaleString(),
         shift_end_datetime: selectedDateOut.toLocaleString(),
-        id_num: userId,
       };
-      console.log('fetching jobs', details);
       jobs.getActiveJobsForUser(details).then(result => {
-        console.log('jobs:', result);
         setUserJobs(result);
       });
     };
 
-    const getSavedShiftsForUser = userID => {
-      return jobs.getSavedShiftsForUser(userID);
+    const getSavedShiftsForUser = () => {
+      return jobs.getSavedShiftsForUser();
     };
-
-    let savedShiftsList =
-      userId !== '' ? (
-        <SavedShiftsList ref={setSavedShiftListComponent} submittedList={submittedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Saved Shifts" />
-      ) : (
-          <>
-            <CardContent>
-              <GordonLoader />
-            </CardContent>
-          </>
-        );
-
-    let submittedShiftsList =
-      userId !== '' ? (
-        <SavedShiftsList ref={setSubmittedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Submitted Shifts" />
-      ) : (
-          <>
-            <CardContent>
-              <GordonLoader />
-            </CardContent>
-          </>
-        );
-
-    let approvedShiftsList =
-      userId !== '' ? (
-        <SavedShiftsList getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Approved Shifts" />
-      ) : (
-          <>
-            <CardContent>
-              <GordonLoader />
-            </CardContent>
-          </>
-        );
-
-    let rejectedShiftsList =
-      userId !== '' ? (
-        <SavedShiftsList ref={setRejectedShiftListComponent} getShifts={getSavedShiftsForUser} userID={userId} cardTitle="Rejected Shifts" />
-      ) : (
-          <>
-            <CardContent>
-              <GordonLoader />
-            </CardContent>
-          </>
-        );
 
     const handleDateChange1 = date => {
       setSelectedDateIn(date);
       handleTimeOutIsBeforeTimeIn(date, selectedDateOut);
-      handleTimeEntered(date, selectedDateOut);
     };
 
     const handleDateChange2 = date => {
       setSelectedDateOut(date);
       handleTimeOutIsBeforeTimeIn(selectedDateIn, date);
-      handleTimeEntered(selectedDateIn, date);
     };
 
     const handleSaveButtonClick = () => {
@@ -190,13 +131,11 @@ const Timesheets = (props) => {
         let roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 4) / 4).toFixed(2);
 
         saveShift(
-          userId,
           selectedJob.EMLID,
           timeIn2.toLocaleString(),
           timeOut2.toLocaleString(),
           roundedHourDifference2,
           userShiftNotes,
-          userId,
         ).then(result => {
           setSnackbarOpen(true);
         });
@@ -207,15 +146,13 @@ const Timesheets = (props) => {
       let roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
 
       saveShift(
-        userId,
         selectedJob.EMLID,
         timeIn.toLocaleString(),
         timeOut.toLocaleString(),
         roundedHourDifference,
         userShiftNotes,
-        userId,
       ).then(result => {
-        savedShiftListComponent.loadShiftData()
+        shiftDisplayComponent.loadShifts()
         setSelectedDateOut(null);
         setSelectedDateIn(null);
         setUserShiftNotes('');
@@ -228,24 +165,20 @@ const Timesheets = (props) => {
       });
     };
 
-    const saveShift = (
-      studentID,
+    const saveShift = async (
       eml,
       shiftStart,
       shiftEnd,
       hoursWorked,
       shiftNotes,
-      lastChangedBy,
     ) => {
-      return jobs.saveShiftForUser(
-        studentID,
+      await jobs.saveShiftForUser(
         eml,
         shiftStart,
         shiftEnd,
         hoursWorked,
         shiftNotes,
-        lastChangedBy,
-      )
+      );
     };
 
     const jobsMenuItems = userJobs ? (
@@ -413,10 +346,16 @@ const Timesheets = (props) => {
           A shift cannot be longer than 20 hours.
       </Typography>
       );
+    } else if (shiftTooShort) {
+      errorText = (
+        <Typography variant="overline" color="error">
+          A shift cannot be shorter than 15 minutes.
+      </Typography>
+      );
     } else if (isOverlappingShift) {
       errorText = (
         <Typography variant="overline" color="error">
-          A shift cannot overlap a saved shift.
+          The entered shift conflicts with a previous shift.
       </Typography>
       );
     }
@@ -424,13 +363,13 @@ const Timesheets = (props) => {
       errorText = <></>;
     }
 
-    const handleTimeEntered = (timeIn, timeOut) => {
+    const onDatetimeSelectorClose = () => {
       setIsOverlappingShift(false);
-      if (selectedDateIn !== null && selectedDateOut !== null && userId !== null) {
+      if (selectedDateIn !== null && selectedDateOut !== null) {
         getActiveJobsForUser();
         checkForFutureDate();
       }
-    };
+    }
 
     const handleShiftNotesChanged = event => {
       setUserShiftNotes(event.target.value);
@@ -466,6 +405,7 @@ const Timesheets = (props) => {
                         format="MM/dd/yyyy"
                         value={selectedDateIn}
                         onChange={handleDateChange1}
+                        onClose={onDatetimeSelectorClose}
                         KeyboardButtonProps={{
                           'aria-label': 'change date',
                         }}
@@ -483,6 +423,7 @@ const Timesheets = (props) => {
                           let dateToChange = date;
                           handleDateChange1(dateToChange);
                         }}
+                        onClose={onDatetimeSelectorClose}
                         KeyboardButtonProps={{
                           'aria-label': 'change time',
                         }}
@@ -501,6 +442,7 @@ const Timesheets = (props) => {
                         format="MM/dd/yyyy"
                         value={selectedDateOut}
                         onChange={handleDateChange2}
+                        onClose={onDatetimeSelectorClose}
                         KeyboardButtonProps={{
                           'aria-label': 'change date',
                         }}
@@ -516,14 +458,12 @@ const Timesheets = (props) => {
                         label="Time Out"
                         value={selectedDateOut}
                         onChange={handleDateChange2}
+                        onClose={onDatetimeSelectorClose}
                         KeyboardButtonProps={{
                           'aria-label': 'change time',
                         }}
                         keyboardIcon={clockIcon}
                       />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Typography>Hours worked: {hoursWorkedInDecimal}</Typography>
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                       <TextField
@@ -540,6 +480,9 @@ const Timesheets = (props) => {
                     <Grid item xs={12} sm={6} md={3}>
                       {jobDropdown}
                     </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Typography>Hours worked: {hoursWorkedInDecimal}</Typography>
+                    </Grid>
                     <Grid item xs={12}>
                       {errorText}
                     </Grid>
@@ -550,6 +493,7 @@ const Timesheets = (props) => {
                           timeOutIsBeforeTimeIn ||
                           isOverlappingShift ||
                           shiftTooLong ||
+                          shiftTooShort ||
                           selectedDateIn === null ||
                           selectedDateOut === null ||
                           selectedJob === null ||
@@ -567,18 +511,10 @@ const Timesheets = (props) => {
               </Card>
             </MuiPickersUtilsProvider>
           </Grid>
-          <Grid item xs={12}>
-            {savedShiftsList}
-          </Grid>
-          <Grid item xs={12}>
-            {submittedShiftsList}
-          </Grid>
-          <Grid item xs={12}>
-            {rejectedShiftsList}
-          </Grid>
-          <Grid item xs={12}>
-            {approvedShiftsList}
-          </Grid>
+          <ShiftDisplay
+            ref={setShiftDisplayComponent}
+            getSavedShiftsForUser={getSavedShiftsForUser}
+            />
         </Grid>
         <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
           <Alert onClose={handleCloseSnackbar} severity="info">

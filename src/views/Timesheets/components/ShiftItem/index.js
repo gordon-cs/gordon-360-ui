@@ -32,7 +32,6 @@ export default class ShiftItem extends Component {
     const { deleteShift } = this.props;
     const {
       ID,
-      ID_NUM,
       EML_DESCRIPTION,
       SHIFT_START_DATETIME,
       SHIFT_END_DATETIME,
@@ -73,7 +72,7 @@ export default class ShiftItem extends Component {
                   <Button
                     variant="contained"
                     onClick={() => {
-                      deleteShift(ID, ID_NUM);
+                      deleteShift(ID, EML_DESCRIPTION);
                       this.onClose();
                     }}
                     style={styles.redButton}>
@@ -86,6 +85,18 @@ export default class ShiftItem extends Component {
         </Grid>
       </Grid>
     );
+
+    let shiftItemIcon = (STATUS !== 'Submitted' && STATUS !== 'Approved') ? (
+      <IconButton>
+          <DeleteForeverOutlinedIcon
+            onClick={this.handleSubmitButtonClick}
+          />
+      </IconButton>
+    ) : (
+      <IconButton style={{visibility: 'hidden'}}>
+          <DeleteForeverOutlinedIcon />
+      </IconButton>
+    )
 
 
     return (
@@ -110,13 +121,7 @@ export default class ShiftItem extends Component {
             </Grid>
             <Grid item xs={1}>
               <Typography variant="body2">
-                <IconButton>
-                  {STATUS !== 'Submitted' && STATUS !== 'Approved' && (
-                    <DeleteForeverOutlinedIcon
-                      onClick={this.handleSubmitButtonClick}
-                    />
-                  )}
-                </IconButton>
+                {shiftItemIcon}
               </Typography>
             </Grid>
           </Grid>
