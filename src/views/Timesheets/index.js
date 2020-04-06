@@ -413,7 +413,6 @@ const Timesheets = (props) => {
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                       <TimePicker
-                        autoOk
                         variant="inline"
                         margin="normal"
                         id="time-picker-in"
@@ -450,7 +449,6 @@ const Timesheets = (props) => {
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                       <TimePicker
-                        autoOk
                         variant="inline"
                         disabled={selectedDateIn === null}
                         margin="normal"
