@@ -1,6 +1,5 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';

@@ -12,6 +12,8 @@ import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
+//Add back in when we re-enable timesheet link
+//import WorkIcon from '@material-ui/icons/Work';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
@@ -203,6 +205,14 @@ export default class GordonHeader extends Component {
       }
     }
 
+    //Add to return statement when re-enabling work link
+    //<Tab
+    //              className="tab"
+    //              icon={<WorkIcon />}
+    //              label="Timesheets"
+    //              component={NavLink}
+    //              to="/timesheets"
+    //            />
     return (
       <section className="gordon-header">
         <AppBar className="app-bar" position="static">
