@@ -41,6 +41,7 @@ export default class ShiftDisplay extends Component {
     loadShifts() {
         const {getSavedShiftsForUser} = this.props;
         return getSavedShiftsForUser().then(data => {
+            console.log('shifts fetched from api:', data);
             for (let i = 0; i < data.length; i++) {
                 this.jobNamesSet.add(data[i].EML_DESCRIPTION);
             }
@@ -82,31 +83,6 @@ export default class ShiftDisplay extends Component {
         this.setState({selectedJob: emlDescription});
     }
 
-    getSupervisors(direct, reporting) {
-        this.supervisors = [];
-        jobs.getSupervisorNameForJob(direct).then(response => {
-            let directSupervisor = response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
-            let directSupervisorObject = {
-                name: directSupervisor,
-                id: direct,
-            };
-            this.supervisors.push(directSupervisorObject);
-
-            jobs.getSupervisorNameForJob(reporting).then(response => {
-                let reportingSupervisor = response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
-                let reportingSupervisorObject = {
-                    name: reportingSupervisor,
-                    id: reporting,
-                }
-                this.supervisors.push(reportingSupervisorObject);
-                return this.supervisors;
-            });
-        }).catch(error => {
-            console.log('Error:', error);
-            return this.supervisors;
-        });
-    }
-
     render() {
         const { shifts } = this.state;
         this.savedShifts.length = 0;
@@ -123,9 +99,6 @@ export default class ShiftDisplay extends Component {
             }
         }
 
-        if (this.savedShifts.length > 0) {
-            this.getSupervisors(this.savedShifts[0].SUPERVISOR, this.savedShifts[0].COMP_SUPERVISOR);
-        }
         let directSupervisor = this.savedShifts.length > 0 ? this.savedShifts[0].SUPERVISOR : null;
         let reportingSupervisor = this.savedShifts.length > 0 ? this.savedShifts[0].COMP_SUPERVISOR : null;
         let jobTabs = this.state.jobNames && this.state.jobNames.length > 1 ? (

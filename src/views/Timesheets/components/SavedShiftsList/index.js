@@ -84,13 +84,14 @@ export default class SavedShiftsList extends Component {
   }
 
   componentDidUpdate() {
-    let {shifts} = this.props;
+    let {shifts, directSupervisor, reportingSupervisor} = this.props;
+    let supervisorIdsReady = directSupervisor && reportingSupervisor;
     let shouldGetSupervisors; 
     if (shifts.length > 0) {
       shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && (shifts[0].EML !== this.prevJob || (!this.state.directSupervisor || !this.state.reportingSupervisor));
       this.prevJob = shifts[0].EML
     } else {
-      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && (!this.state.directSupervisor || !this.state.reportingSupervisor);
+      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && supervisorIdsReady && (!this.state.directSupervisor || !this.state.reportingSupervisor) && shifts !== null;
     }
     if (shouldGetSupervisors) {
       this.getSupervisors();
