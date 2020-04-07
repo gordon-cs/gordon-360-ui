@@ -19,7 +19,6 @@ import MuiAlert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
 import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
-import ScheduleIcon from '@material-ui/icons/Schedule';
 import ShiftDisplay from './components/ShiftDisplay';
 import './timesheets.css';
 
@@ -78,8 +77,6 @@ const Timesheets = (props) => {
   }
 
   if (props.Authentication) {
-    const clockIcon = <ScheduleIcon />;
-
     function Alert(props) {
       return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
@@ -406,9 +403,6 @@ const Timesheets = (props) => {
                         value={selectedDateIn}
                         onChange={handleDateChange1}
                         onClose={onDatetimeSelectorClose}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date',
-                        }}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
@@ -423,10 +417,6 @@ const Timesheets = (props) => {
                           handleDateChange1(dateToChange);
                         }}
                         onClose={onDatetimeSelectorClose}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change time',
-                        }}
-                        keyboardIcon={clockIcon}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
@@ -442,9 +432,6 @@ const Timesheets = (props) => {
                         value={selectedDateOut}
                         onChange={handleDateChange2}
                         onClose={onDatetimeSelectorClose}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change date',
-                        }}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
@@ -457,10 +444,6 @@ const Timesheets = (props) => {
                         value={selectedDateOut}
                         onChange={handleDateChange2}
                         onClose={onDatetimeSelectorClose}
-                        KeyboardButtonProps={{
-                          'aria-label': 'change time',
-                        }}
-                        keyboardIcon={clockIcon}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>

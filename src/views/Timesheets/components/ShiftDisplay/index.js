@@ -41,6 +41,7 @@ export default class ShiftDisplay extends Component {
     loadShifts() {
         const {getSavedShiftsForUser} = this.props;
         return getSavedShiftsForUser().then(data => {
+            console.log('shifts fetched from api:', data);
             for (let i = 0; i < data.length; i++) {
                 this.jobNamesSet.add(data[i].EML_DESCRIPTION);
             }
@@ -123,9 +124,9 @@ export default class ShiftDisplay extends Component {
             }
         }
 
-        if (this.savedShifts.length > 0) {
-            this.getSupervisors(this.savedShifts[0].SUPERVISOR, this.savedShifts[0].COMP_SUPERVISOR);
-        }
+        // if (this.savedShifts.length > 0) {
+        //     this.getSupervisors(this.savedShifts[0].SUPERVISOR, this.savedShifts[0].COMP_SUPERVISOR);
+        // }
         let directSupervisor = this.savedShifts.length > 0 ? this.savedShifts[0].SUPERVISOR : null;
         let reportingSupervisor = this.savedShifts.length > 0 ? this.savedShifts[0].COMP_SUPERVISOR : null;
         let jobTabs = this.state.jobNames && this.state.jobNames.length > 1 ? (
