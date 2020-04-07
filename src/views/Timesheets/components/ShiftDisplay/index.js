@@ -41,7 +41,6 @@ export default class ShiftDisplay extends Component {
     loadShifts() {
         const {getSavedShiftsForUser} = this.props;
         return getSavedShiftsForUser().then(data => {
-            console.log('shifts fetched from api:', data);
             for (let i = 0; i < data.length; i++) {
                 this.jobNamesSet.add(data[i].EML_DESCRIPTION);
             }
@@ -123,7 +122,7 @@ export default class ShiftDisplay extends Component {
                             centered
                             value={this.state.tabValue}
                             onChange={this.handleTabChange}
-                            fullWidth={false}
+                            variant="fullWidth"
                             className="job-tabs"
                         >
                             {jobTabs}
