@@ -12,6 +12,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from '@material-ui/core';
 import ShiftItem from '../ShiftItem';
 import { gordonColors } from '../../../../theme';
@@ -27,68 +30,112 @@ export default class SavedShiftsList extends Component {
       directSupervisor: null,
       reportingSupervisor: null,
       selectedSupervisor: null,
+      showSubmissionConfirmation: false,
     };
+
+    this.prevJob = null
   }
 
-  componentDidMount() {
-    const { userID } = this.props;
-    this.props.getShifts(userID).then(shifts => {
-      this.setState({
-        shifts: shifts,
-      });
-      if (shifts.length > 0) {
-        jobs.getSupervisorNameForJob(shifts[0].SUPERVISOR).then(response => {
-          let supervisor =
-            response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
-          this.setState({
-            directSupervisor: {
-              name: supervisor,
-              id: shifts[0].SUPERVISOR,
-            },
-          });
-        });
-        jobs.getSupervisorNameForJob(shifts[0].COMP_SUPERVISOR).then(response => {
-          let supervisor =
-            response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
-          this.setState({
-            reportingSupervisor: {
-              name: supervisor,
-              id: shifts[0].COMP_SUPERVISOR,
-            },
-          });
-        });
-      }
-    });
+  handleSubmitButtonClick = () => {
+    this.setState({ showSubmissionConfirmation: true });
   }
 
-  reloadShiftData() {
-    const { userID } = this.props;
-    this.setState({
-      shifts: [],
-    });
-    this.props.getShifts(userID).then(shifts => {
-      this.setState({
-        shifts: shifts,
-      });
-    });
+  onClose = () => {
+    this.setState({ showSubmissionConfirmation: false });
   }
 
-  submitShiftsToSupervisor(shifts, supervisorID) {
+  submitShiftsToSupervisor = (shifts, supervisorID) => {
     jobs.submitShiftsForUser(shifts, supervisorID).then(response => {
       this.setState({
         selectedSupervisor: null,
+        showSubmissionConfirmation: false,
       });
-      this.reloadShiftData();
+      this.props.loadShifts();
     });
   }
 
-  render() {
-    const deleteShiftForUser = (rowID, userID) => {
-      let result = jobs.deleteShiftForUser(rowID, userID).then(response => {
-        this.reloadShiftData();
+  getTotalHours = (total, currentShift) => {
+    return total + currentShift.HOURS_WORKED;
+  }
+
+  getEstimatedPay = (total, currentShift) => {
+    return total + (currentShift.HOURS_WORKED * currentShift.HOURLY_RATE);
+  }
+
+  getSupervisors() {
+    jobs.getSupervisorNameForJob(this.props.directSupervisor).then(response => {
+      let directSupervisor = response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
+      let directSupervisorObject = {
+        name: directSupervisor,
+        id: this.props.directSupervisor,
+      };
+
+      jobs.getSupervisorNameForJob(this.props.reportingSupervisor).then(response => {
+        let supervisor = response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
+        this.setState({
+          directSupervisor: directSupervisorObject,
+          reportingSupervisor: {
+            name: supervisor,
+            id: this.props.reportingSupervisor,
+          },
+        });
       });
-      return result;
-    };
+    });
+  }
+
+  componentDidUpdate() {
+    let {shifts, directSupervisor, reportingSupervisor} = this.props;
+    let supervisorIdsReady = directSupervisor && reportingSupervisor;
+    let shouldGetSupervisors; 
+    if (shifts.length > 0) {
+      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && (shifts[0].EML !== this.prevJob || (!this.state.directSupervisor || !this.state.reportingSupervisor));
+      this.prevJob = shifts[0].EML
+    } else {
+      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && supervisorIdsReady && (!this.state.directSupervisor || !this.state.reportingSupervisor) && shifts !== null;
+    }
+    if (shouldGetSupervisors) {
+      this.getSupervisors();
+    }
+  }
+
+  render() {
+    let { cardTitle } = this.props;
+    let totalHoursWorked = this.props.shifts.reduce(this.getTotalHours, 0);
+    let totalEstimatedPay = this.props.shifts.reduce(this.getEstimatedPay, 0).toFixed(2);
+    
+    let confirmationBox = (
+      <Grid container>
+        <Grid item>
+          <Dialog
+            open={this.state.showSubmissionConfirmation}
+            keepMounted
+            align="center"
+            onBackdropClick={this.onClose}
+          >
+            <DialogTitle>Are you sure you want to submit your shifts?</DialogTitle>
+            <DialogContent>
+              <Grid container>
+                <Grid item xs={6} sm={6} md={6} lg={6}>
+                  <Button style={styles.redButton} onClick={this.onClose} variant="contained">
+                    Cancel
+                  </Button>
+                </Grid>
+                <Grid item xs={6} sm={6} md={6} lg={6}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      this.submitShiftsToSupervisor(this.props.shifts, this.state.selectedSupervisor.id)
+                    }}
+                    color="primary">
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+            </DialogContent>
+          </Dialog>
+        </Grid>
+      </Grid>
+    );
 
     let header = (
       <Grid item xs={12} style={styles.headerStyle}>
@@ -109,7 +156,7 @@ export default class SavedShiftsList extends Component {
                 TIME OUT
               </Typography>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
                 RATE
               </Typography>
@@ -119,18 +166,14 @@ export default class SavedShiftsList extends Component {
                 HOURS WORKED
               </Typography>
             </Grid>
-            <Grid item xs={1}>
-              <Typography variant="body2" style={styles.headerItem}>
-                STATUS
-              </Typography>
-            </Grid>
           </Grid>
         </div>
       </Grid>
     );
 
-    let shiftsList = this.state.shifts.map(shift => (
-      <ShiftItem deleteShift={deleteShiftForUser} value={shift} key={shift.EML_DESCRIPTION} />
+    let shiftsList = null;
+    shiftsList = this.props.shifts.map((shift, index) => (
+      <ShiftItem deleteShift={this.props.deleteShift} value={shift} key={index} />
     ));
 
     const supervisorDropdown = (
@@ -164,7 +207,7 @@ export default class SavedShiftsList extends Component {
     );
 
     let content = <></>;
-    if (this.state.shifts.length === null) {
+    if (this.props.shifts.length === null) {
       content = (
         <Card>
           <CardContent>
@@ -172,11 +215,13 @@ export default class SavedShiftsList extends Component {
           </CardContent>
         </Card>
       );
-    } else if (this.state.shifts.length > 0) {
+    } else if (this.props.shifts.length > 0) {
       content = (
+        <>
+          {confirmationBox}
         <Card>
           <CardContent>
-            <CardHeader title="Saved Shifts" />
+            <CardHeader title={cardTitle} />
             <Grid
               className="shift-list"
               container
@@ -190,29 +235,51 @@ export default class SavedShiftsList extends Component {
               {shiftsList}
             </Grid>
           </CardContent>
+          {cardTitle === "Submitted Shifts" &&
+              <CardContent>
+                <Grid container>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6">Total hours worked: {totalHoursWorked}</Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6">Estimated gross pay: ${totalEstimatedPay}</Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+          }
+          {cardTitle === "Approved Shifts" &&
+              <CardContent>
+                <Grid container>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6">Total hours worked: {totalHoursWorked}</Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Typography variant="h6">Estimated gross pay: ${totalEstimatedPay}</Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+          }
           <CardActions>
-            <Grid container>
-              <Grid item xs={6}>
-                {supervisorDropdown}
-              </Grid>
-              <Grid item xs={6}>
-                <Button
-                  disabled={this.state.selectedSupervisor === null}
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    this.submitShiftsToSupervisor(
-                      this.state.shifts,
-                      this.state.selectedSupervisor.id,
-                    );
-                  }}
-                >
-                  Submit All Shifts
+            {cardTitle === "Saved Shifts" && <Grid container>
+              <Grid container>
+                <Grid item xs={6}>
+                  {supervisorDropdown}
+                </Grid>
+                <Grid item xs={6}>
+                  <Button
+                    disabled={this.state.selectedSupervisor === null}
+                    variant="contained"
+                    color="primary"
+                    onClick={this.handleSubmitButtonClick}
+                  >
+                    Submit All Shifts
                 </Button>
+                </Grid>
               </Grid>
-            </Grid>
+            </Grid>}
           </CardActions>
         </Card>
+        </>
       );
     }
     return <>{content}</>;
@@ -220,6 +287,10 @@ export default class SavedShiftsList extends Component {
 }
 
 const styles = {
+  redButton: {
+    background: gordonColors.secondary.red,
+    color: 'white',
+  },
   headerStyle: {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',

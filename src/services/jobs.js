@@ -15,26 +15,15 @@ const getActiveJobsForUser = details => {
 };
 
 /**
- * 
- * @param {String} details The shift start/end and user id
- * @return {Promise.<String>} The id of the overlapping shift, or null if none 
- */
-const checkForOverlappingShift = details => {
-  return http.post(`jobs/overlapShiftCheck`, details);
-}
-
-/**
  * Get saved shifts for current user
- * @param {String} userID The Gordon id of the user whose jobs to fetch
  * @return {Promise.<String>} User's active jobs
  */
-const getSavedShiftsForUser = userID => {
-  return http.get(`jobs/getSavedShifts/${userID}`);
+const getSavedShiftsForUser = () => {
+  return http.get(`jobs/getSavedShifts/`);
 };
 
 /**
  * Get active jobs for current user
- * @param {Number} studentID The student's id under which to submit the shift
  * @param {Number} eml we don't know what this means yet
  * @param {DateTime} shiftStart The start time of the shift
  * @param {DateTime} shiftEnd The end time of the shift
@@ -44,22 +33,18 @@ const getSavedShiftsForUser = userID => {
  * @return {Promise.<String>} User's active jobs
  */
 const saveShiftForUser = async (
-  studentID,
   eml,
   shiftStart,
   shiftEnd,
   hoursWorked,
   shiftNotes,
-  lastChangedBy,
 ) => {
   let shiftDetails = {
-    ID_NUM: studentID,
     EML: eml,
     SHIFT_START_DATETIME: shiftStart,
     SHIFT_END_DATETIME: shiftEnd,
     HOURS_WORKED: hoursWorked,
     SHIFT_NOTES: shiftNotes,
-    LAST_CHANGED_BY: lastChangedBy,
   };
   return await http.post(`jobs/saveShift/`, shiftDetails);
 };
@@ -76,8 +61,8 @@ const editShift = async (rowID, newShiftStart, newShiftEnd, newHoursWorked) => {
   }
 };
 
-const deleteShiftForUser = async (rowID, studentID) => {
-  return await http.del(`jobs/deleteShift/${rowID}/${studentID}`);
+const deleteShiftForUser = async (rowID) => {
+  return await http.del(`jobs/deleteShift/${rowID}`);
 };
 
 const getSupervisorNameForJob = supervisorID => {
@@ -100,9 +85,8 @@ const submitShiftsForUser = (shiftsToSubmit, submittedTo) => {
 
 export default {
   getActiveJobsForUser,
-  checkForOverlappingShift,
   getSavedShiftsForUser,
-  submitShiftForUser: saveShiftForUser,
+  saveShiftForUser,
   deleteShiftForUser,
   getSupervisorNameForJob,
   submitShiftsForUser,

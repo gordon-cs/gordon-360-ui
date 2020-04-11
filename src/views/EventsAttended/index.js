@@ -63,12 +63,13 @@ export default class EventsAttended extends Component {
         );
       } else {
         content = (
-          <Grid item>
+          <Grid item align="center">
             <br />
             <br />
             <Typography variant="h4" align="center">
               No Events To Show
             </Typography>
+            <br />
             <Button
               variant="contained"
               style={style.button}
