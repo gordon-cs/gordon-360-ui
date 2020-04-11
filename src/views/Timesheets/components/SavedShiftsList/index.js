@@ -148,12 +148,12 @@ export default class SavedShiftsList extends Component {
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
-                TIME IN
+                IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
-                TIME OUT
+                OUT
               </Typography>
             </Grid>
             <Grid item xs={2}>
@@ -163,7 +163,7 @@ export default class SavedShiftsList extends Component {
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerItem}>
-                HOURS WORKED
+                HOURS
               </Typography>
             </Grid>
           </Grid>
