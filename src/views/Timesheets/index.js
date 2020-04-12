@@ -414,10 +414,7 @@ const Timesheets = (props) => {
                         id="time-picker-in"
                         label="Time In"
                         value={selectedDateIn}
-                        onChange={date => {
-                          let dateToChange = date;
-                          handleDateChangeIn(dateToChange);
-                        }}
+                        onChange={handleDateChangeIn}
                         onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
