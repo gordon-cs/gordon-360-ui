@@ -36,6 +36,7 @@ const Timesheets = (props) => {
   const [isOverlappingShift, setIsOverlappingShift] = useState(false);
   const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [network, setNetwork] = useState('online');
 
   const handleTimeErrors = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -304,6 +305,32 @@ const Timesheets = (props) => {
       setSnackbarOpen(false);
     };
 
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        setNetwork('online');
+      } else if (
+        event.data === 'offline' &&
+        network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        setNetwork('offline');
+      }
+    });
+
+    /* Gets status of current network connection for online/offline rendering
+     *  Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
     const jobDropdown = (
       <FormControl
         disabled={userJobs === null || userJobs.length === 0}
@@ -374,7 +401,7 @@ const Timesheets = (props) => {
       setUserShiftNotes(event.target.value);
     };
 
-    return (
+    return networkStatus === 'online' ? (
       <>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -494,7 +521,7 @@ const Timesheets = (props) => {
           <ShiftDisplay
             ref={setShiftDisplayComponent}
             getSavedShiftsForUser={getSavedShiftsForUser}
-            />
+          />
         </Grid>
         <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
           <Alert onClose={handleCloseSnackbar} severity="info">
@@ -502,6 +529,50 @@ const Timesheets = (props) => {
         </Alert>
         </Snackbar>
       </>
+    ) : (
+      <Grid container justify="center" spacing="16">
+      <Grid item xs={12} md={8}>
+        <Card>
+          <CardContent
+            style={{
+              margin: 'auto',
+              textAlign: 'center',
+            }}
+          >
+            <Grid
+              item
+              xs={2}
+              alignItems="center"
+              style={{
+                display: 'block',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+              }}
+            >
+              <img
+                src={require(`${'../../NoConnection.svg'}`)}
+                alt="Internet Connection Lost"
+              />
+            </Grid>
+            <br />
+            <h1>Please re-establish connection</h1>
+            <h4>Timesheets entry has been disabled due to loss of network.</h4>
+            <br />
+            <br />
+            <Button
+              color="primary"
+              backgroundColor="white"
+              variant="outlined"
+              onClick={() => {
+                window.location.pathname = '';
+              }}
+            >
+              Back To Home
+            </Button>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
     );
   } else {
     return (
