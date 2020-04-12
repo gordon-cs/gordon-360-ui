@@ -28,8 +28,8 @@ const Timesheets = (props) => {
   const [selectedDateOut, setSelectedDateOut] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
   const [shiftTooLong, setShiftTooLong] = useState(false);
-  const [shiftTooShort, setShiftTooShort] = useState(false);
   const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = useState(false);
+  const [isZeroLengthShift, setIsZeroLengthShift] = useState(false);
   const [enteredFutureTime, setEnteredFutureTime] = useState(false);
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = useState(0.0);
   const [userShiftNotes, setUserShiftNotes] = useState('');
@@ -41,7 +41,12 @@ const Timesheets = (props) => {
     if (timeIn !== null && timeOut !== null) {
       let timeDiff = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
-      let roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+      let roundedHourDifference = 0;
+      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.25) {
+        roundedHourDifference = 0.25;
+      } else if (calculatedTimeDiff >= 0.25) {
+        roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+      }
       setHoursWorkedInDecimal(roundedHourDifference);
       let hoursWorked = Math.floor(calculatedTimeDiff);
       let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60);
@@ -51,23 +56,9 @@ const Timesheets = (props) => {
         minutesWorked = 0;
       }
 
-      if (timeDiff < 0) {
-        setTimeOutIsBeforeTimeIn(true);
-      } else {
-        setTimeOutIsBeforeTimeIn(false);
-
-      }
-      if (calculatedTimeDiff > 20) {
-        setShiftTooLong(true);
-      } else {
-        setShiftTooLong(false);
-      }
-
-      if (calculatedTimeDiff < 0.25) {
-        setShiftTooShort(true);
-      } else {
-        setShiftTooShort(false);
-      }
+      setTimeOutIsBeforeTimeIn(timeDiff < 0);
+      setIsZeroLengthShift(timeDiff === 0);
+      setShiftTooLong(calculatedTimeDiff > 20);
     }
   };
 
@@ -96,11 +87,15 @@ const Timesheets = (props) => {
     };
 
     const handleDateChange1 = date => {
+      date.setSeconds(0);
+      date.setMilliseconds(0);
       setSelectedDateIn(date);
       handleTimeErrors(date, selectedDateOut);
     };
 
     const handleDateChange2 = date => {
+      date.setSeconds(0);
+      date.setMilliseconds(0);
       setSelectedDateOut(date);
       handleTimeErrors(selectedDateIn, date);
     };
@@ -114,33 +109,42 @@ const Timesheets = (props) => {
         let timeIn2 = new Date(timeOut.getTime());
         timeIn2.setHours(0);
         timeIn2.setMinutes(0);
-        timeIn2.setSeconds(0);
-        timeIn2.setMilliseconds(0);
 
         timeOut.setDate(timeIn.getDate());
         timeOut.setHours(23);
         timeOut.setMinutes(59);
-        timeOut.setSeconds(0);
-        timeOut.setMilliseconds(0);
 
         let timeDiff2 = timeOut2.getTime() - timeIn2.getTime();
         let calculatedTimeDiff2 = timeDiff2 / 1000 / 60 / 60;
-        let roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 4) / 4).toFixed(2);
+        let roundedHourDifference2 = 0;
+        if (calculatedTimeDiff2 > 0 && calculatedTimeDiff2 < 0.25) {
+          roundedHourDifference2 = 0.25;
+        } else if (calculatedTimeDiff2 >= 0.25) {
+          roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 4) / 4).toFixed(2);
+        }
 
-        saveShift(
-          selectedJob.EMLID,
-          timeIn2.toLocaleString(),
-          timeOut2.toLocaleString(),
-          roundedHourDifference2,
-          userShiftNotes,
-        ).then(result => {
-          setSnackbarOpen(true);
-        });
+        // Do not save the shift if it has zero length
+        if (calculatedTimeDiff2 > 0) {
+          saveShift(
+            selectedJob.EMLID,
+            timeIn2.toLocaleString(),
+            timeOut2.toLocaleString(),
+            roundedHourDifference2,
+            userShiftNotes,
+          ).then(result => {
+            setSnackbarOpen(true);
+          });
+        }
       }
 
       let timeDiff1 = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff1 / 1000 / 60 / 60;
-      let roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+      let roundedHourDifference;
+      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.25) {
+        roundedHourDifference = 0.25;
+      } else {
+        roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+      }
 
       saveShift(
         selectedJob.EMLID,
@@ -337,16 +341,16 @@ const Timesheets = (props) => {
           A shift cannot end before it starts.
       </Typography>
       );
+    } else if (isZeroLengthShift) {
+      errorText = (
+        <Typography variant="overline" color="error">
+          A shift cannot have zero length.
+      </Typography>
+      );
     } else if (shiftTooLong) {
       errorText = (
         <Typography variant="overline" color="error">
           A shift cannot be longer than 20 hours.
-      </Typography>
-      );
-    } else if (shiftTooShort) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          A shift cannot be shorter than 15 minutes.
       </Typography>
       );
     } else if (isOverlappingShift) {
@@ -474,7 +478,7 @@ const Timesheets = (props) => {
                           timeOutIsBeforeTimeIn ||
                           isOverlappingShift ||
                           shiftTooLong ||
-                          shiftTooShort ||
+                          isZeroLengthShift ||
                           selectedDateIn === null ||
                           selectedDateOut === null ||
                           selectedJob === null ||
