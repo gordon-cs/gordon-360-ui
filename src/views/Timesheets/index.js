@@ -197,16 +197,13 @@ const Timesheets = (props) => {
         if (date.getFullYear() % 100 === 0) {
           if (date.getFullYear() % 400 !== 0) {
             return 'false';
-          }
-          if (date.getFullYear() % 400 === 0) {
+          } else {
             return 'true';
           }
-        }
-        if (date.getFullYear() % 100 !== 0) {
+        } else {
           return 'true';
         }
-      }
-      if (date.getFullYear() % 4 !== 0) {
+      } else {
         return 'false';
       }
     };
