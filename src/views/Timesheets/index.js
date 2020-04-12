@@ -254,7 +254,7 @@ const Timesheets = (props) => {
       } else if (is30DayMonth) {
         if (date.getDate() === 30) {
           nextDate = 1;
-          monthToReturn = (date.getMonth() + 1) % 12;
+          monthToReturn = date.getMonth() + 1;
           yearToReturn = date.getFullYear();
         } else {
           nextDate = date.getDate() + 1;
@@ -264,7 +264,7 @@ const Timesheets = (props) => {
       } else {
         if (date.getDate() === 31) {
           nextDate = 1;
-          monthToReturn = (date.getMonth() + 1) % 12;
+          monthToReturn = date.getMonth() + 1;
           yearToReturn = date.getFullYear();
         } else {
           nextDate = date.getDate() + 1;
