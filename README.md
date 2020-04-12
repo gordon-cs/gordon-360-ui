@@ -24,7 +24,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Make sure Node.js is set up on your machine. The project uses version `9.11.1` as later versions break it.
 - Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
-    - Extract the file and run it, making sure to install it to the account you are logged into (example: if you're logged in as anthony.aardvark, make sure it installs to anthony.aardvark and not cct.service). If it says Node is already installed, proceed anyway.
+    - Extract the file and run it, making sure to install it to the account you are logged into (example: if you're logged in as anthony.aardvark, make sure it installs to anthony.aardvark and not zelda.zebra). If it says Node is already installed, proceed anyway.
     - After the installation completes, open a terminal and run these commands in order:
       - `nvm install 9.11.1`
       - `nvm use 9.11.1`
