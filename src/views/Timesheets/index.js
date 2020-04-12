@@ -261,7 +261,7 @@ const Timesheets = (props) => {
           monthToReturn = date.getMonth();
           yearToReturn = date.getFullYear();
         }
-      } else if (!is30DayMonth) {
+      } else {
         if (date.getDate() === 31) {
           nextDate = 1;
           monthToReturn = (date.getMonth() + 1) % 12;
