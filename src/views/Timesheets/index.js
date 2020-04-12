@@ -90,6 +90,7 @@ const Timesheets = (props) => {
       date.setSeconds(0);
       date.setMilliseconds(0);
       setSelectedDateIn(date);
+      setIsOverlappingShift(false);
       handleTimeErrors(date, selectedDateOut);
     };
 
@@ -97,6 +98,7 @@ const Timesheets = (props) => {
       date.setSeconds(0);
       date.setMilliseconds(0);
       setSelectedDateOut(date);
+      setIsOverlappingShift(false);
       handleTimeErrors(selectedDateIn, date);
     };
 
@@ -362,7 +364,6 @@ const Timesheets = (props) => {
     }
 
     const onDatetimeSelectorClose = () => {
-      setIsOverlappingShift(false);
       if (selectedDateIn !== null && selectedDateOut !== null) {
         getActiveJobsForUser();
         checkForFutureDate();
