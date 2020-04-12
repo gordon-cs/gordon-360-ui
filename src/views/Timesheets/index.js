@@ -196,15 +196,15 @@ const Timesheets = (props) => {
       if (date.getFullYear() % 4 === 0) {
         if (date.getFullYear() % 100 === 0) {
           if (date.getFullYear() % 400 !== 0) {
-            return 'false';
+            return false;
           } else {
-            return 'true';
+            return true;
           }
         } else {
-          return 'true';
+          return true;
         }
       } else {
-        return 'false';
+        return false;
       }
     };
 
@@ -222,7 +222,7 @@ const Timesheets = (props) => {
       let yearToReturn;
 
       if (isFebruary) {
-        if (isLeapYear) {
+        if (isLeapYear(date)) {
           if (date.getDate() === 29) {
             nextDate = 1;
             monthToReturn = 2;
