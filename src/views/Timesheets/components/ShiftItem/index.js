@@ -39,6 +39,11 @@ export default class ShiftItem extends Component {
       editing: false,
       dateTimeIn: null,
       dateTimeOut: null,
+      dateInIsFuture: false,
+      dateOutIsFuture: false,
+      enteredFutureTime: false,
+      errorText: '',
+      isOverlappingShift: false,
     };
   }
 
@@ -54,12 +59,54 @@ export default class ShiftItem extends Component {
     this.setState({ editing: !this.state.editing })
   }
 
+  checkForError = () => {
+    let now = Date.now();
+    let enteredFutureTime = false;
+    let timeOutIsBeforeTimeIn = false
+    let zeroLengthShift = false;
+    let shiftTooLong = false;
+    let isOverlappingShift = false;
+    let timeDiff;
+    if (this.state.dateTimeIn && this.state.dateTimeOut) {
+      enteredFutureTime = (this.state.dateTimeIn.getTime() > now) || (this.state.dateTimeOut.getTime() > now);
+      timeDiff = this.state.dateTimeOut.getTime() - this.state.dateTimeIn.getTime();
+      timeOutIsBeforeTimeIn = timeDiff < 0;
+      zeroLengthShift = timeDiff === 0;
+      shiftTooLong = timeDiff / 1000 / 60 / 60 > 20;
+
+      this.setState({
+        dateInIsFuture: this.state.dateTimeIn.getTime() > now,
+        dateOutIsFuture: this.state.dateTimeOut.getTime() > now,
+        enteredFutureTime: enteredFutureTime,
+      })
+    }
+
+
+    if (enteredFutureTime) {
+      this.setState({errorText: 'Future time entered.'});
+    } else if (timeOutIsBeforeTimeIn) {
+      this.setState({errorText: 'A shift cannot end before it starts.'});
+    } else if (zeroLengthShift) {
+      this.setState({errorText: 'Shift has no length'});
+    } else if (shiftTooLong) {
+      this.setState({errorText: 'A shift cannot be longer than 20 hours.'});
+    } else if (isOverlappingShift) {
+      this.setState({errorText: 'The entered shift conflicts with a previous shift.'});
+    }
+    else {
+      this.setState({errorText: ''});
+    }
+
+    console.log(enteredFutureTime, timeOutIsBeforeTimeIn, zeroLengthShift, shiftTooLong, isOverlappingShift, timeDiff);
+    console.log(this.state.errorText);
+  }
+
   handleDateInChange = date => {
-    this.setState({dateTimeIn: date});
+    this.setState({dateTimeIn: date}, this.checkForError);
   }
 
   handleDateOutChange = date => {
-    this.setState({dateTimeOut: date});
+    this.setState({dateTimeOut: date}, this.checkForError);
   }
 
   render() {
@@ -74,6 +121,7 @@ export default class ShiftItem extends Component {
       HOURS_WORKED,
       STATUS,
     } = shift;
+    const { errorText } = this.state;
 
     const monthIn = SHIFT_START_DATETIME.substring(5, 7);
     const dateIn = SHIFT_START_DATETIME.substring(8, 10);
@@ -108,6 +156,7 @@ export default class ShiftItem extends Component {
           variant="inline"
           value={this.state.dateTimeOut}
           onChange={this.handleDateOutChange}
+          onClose={this.checkForError}
           format="MM/dd HH:mm"
           TextFieldComponent={PickerInput}
         />
@@ -152,12 +201,13 @@ export default class ShiftItem extends Component {
     );
     
     let shiftItemIcons;
+    console.log(errorText !== '')
     if (STATUS === 'Saved' || STATUS === 'Rejected') {
       if (this.state.editing) {
         shiftItemIcons = (
           <Grid container direction='row'>
             <Grid item xs={12} md={6}>
-              <IconButton>
+              <IconButton disabled={errorText !== ''}>
                 <CheckOutlinedIcon />
               </IconButton>
             </Grid>
@@ -203,6 +253,12 @@ export default class ShiftItem extends Component {
       );
     }
 
+    let descColumn = errorText === '' ? (
+      <Typography variant="body2">{EML_DESCRIPTION}</Typography>
+    ) : (
+      <Typography variant="body2">{errorText}</Typography>
+    );
+
     return (
       <Grid item xs={12} className="shift-item">
         {confirmationBox}
@@ -210,7 +266,7 @@ export default class ShiftItem extends Component {
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container direction="row" alignItems="center">
               <Grid item xs={3}>
-                <Typography variant="body2">{EML_DESCRIPTION}</Typography>
+                <Typography variant="body2">{descColumn}</Typography>
               </Grid>
               <Grid item xs={2}>
                 {timeInDisp}
