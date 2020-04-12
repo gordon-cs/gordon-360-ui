@@ -87,10 +87,10 @@ export default class ShiftItem extends Component {
     );
 
     let shiftItemIcon = (STATUS === 'Saved' || STATUS === 'Rejected') ? (
-      <IconButton>
-          <DeleteForeverOutlinedIcon
-            onClick={this.handleSubmitButtonClick}
-          />
+      <IconButton
+        onClick={this.handleSubmitButtonClick}
+      >
+          <DeleteForeverOutlinedIcon/>
       </IconButton>
     ) : (
       <IconButton style={{visibility: 'hidden'}}>
