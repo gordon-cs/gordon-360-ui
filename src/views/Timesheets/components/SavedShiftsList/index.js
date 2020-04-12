@@ -179,8 +179,9 @@ export default class SavedShiftsList extends Component {
     const supervisorDropdown = (
       <FormControl
         style={{
-          width: 252,
+          maxWidth: 252,
         }}
+        fullWidth
       >
         <InputLabel>Submit To</InputLabel>
         <Select
@@ -262,7 +263,7 @@ export default class SavedShiftsList extends Component {
           <CardActions>
             {cardTitle === "Saved Shifts" && <Grid container>
               <Grid container>
-                <Grid item xs={6}>
+                <Grid item xs={6} style={{paddingLeft: 4, paddingRight: 4}}>
                   {supervisorDropdown}
                 </Grid>
                 <Grid item xs={6}>

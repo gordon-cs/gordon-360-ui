@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   Typography,
+  TextField,
   Grid,
   Button,
   IconButton,
@@ -16,7 +17,20 @@ import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import './ShiftItem.css';
 
+const PickerInput = (props) => {
+  return (
+  <>
+    <TextField
+      {...props}
+      variant={'outlined'}
+      multiline
+      rowsMax={2}
+      />
+  </>
+  )
+}
 export default class ShiftItem extends Component {
   constructor(props) {
     super(props);
@@ -79,6 +93,8 @@ export default class ShiftItem extends Component {
           variant="inline"
           value={this.state.dateTimeIn}
           onChange={this.handleDateInChange}
+          format="MM/dd HH:mm"
+          TextFieldComponent={PickerInput}
         />
       )
     } else {
@@ -92,6 +108,8 @@ export default class ShiftItem extends Component {
           variant="inline"
           value={this.state.dateTimeOut}
           onChange={this.handleDateOutChange}
+          format="MM/dd HH:mm"
+          TextFieldComponent={PickerInput}
         />
       )
     } else {
