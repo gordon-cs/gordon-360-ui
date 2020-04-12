@@ -86,14 +86,14 @@ const Timesheets = (props) => {
       return jobs.getSavedShiftsForUser();
     };
 
-    const handleDateChange1 = date => {
+    const handleDateChangeIn = date => {
       date.setSeconds(0);
       date.setMilliseconds(0);
       setSelectedDateIn(date);
       handleTimeErrors(date, selectedDateOut);
     };
 
-    const handleDateChange2 = date => {
+    const handleDateChangeOut = date => {
       date.setSeconds(0);
       date.setMilliseconds(0);
       setSelectedDateOut(date);
@@ -405,7 +405,7 @@ const Timesheets = (props) => {
                         label="Date In"
                         format="MM/dd/yyyy"
                         value={selectedDateIn}
-                        onChange={handleDateChange1}
+                        onChange={handleDateChangeIn}
                         onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
@@ -418,7 +418,7 @@ const Timesheets = (props) => {
                         value={selectedDateIn}
                         onChange={date => {
                           let dateToChange = date;
-                          handleDateChange1(dateToChange);
+                          handleDateChangeIn(dateToChange);
                         }}
                         onClose={onDatetimeSelectorClose}
                       />
@@ -434,7 +434,7 @@ const Timesheets = (props) => {
                         label="Date Out"
                         format="MM/dd/yyyy"
                         value={selectedDateOut}
-                        onChange={handleDateChange2}
+                        onChange={handleDateChangeOut}
                         onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
@@ -446,7 +446,7 @@ const Timesheets = (props) => {
                         id="time-picker-out"
                         label="Time Out"
                         value={selectedDateOut}
-                        onChange={handleDateChange2}
+                        onChange={handleDateChangeOut}
                         onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
