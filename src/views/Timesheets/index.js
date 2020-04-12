@@ -37,7 +37,7 @@ const Timesheets = (props) => {
   const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const handleTimeOutIsBeforeTimeIn = (timeIn, timeOut) => {
+  const handleTimeErrors = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
       let timeDiff = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
@@ -97,12 +97,12 @@ const Timesheets = (props) => {
 
     const handleDateChange1 = date => {
       setSelectedDateIn(date);
-      handleTimeOutIsBeforeTimeIn(date, selectedDateOut);
+      handleTimeErrors(date, selectedDateOut);
     };
 
     const handleDateChange2 = date => {
       setSelectedDateOut(date);
-      handleTimeOutIsBeforeTimeIn(selectedDateIn, date);
+      handleTimeErrors(selectedDateIn, date);
     };
 
     const handleSaveButtonClick = () => {
