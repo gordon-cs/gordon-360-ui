@@ -6,11 +6,24 @@ import {
   IconButton,
   Dialog,
   DialogContent,
+  Tooltip,
   DialogTitle,
 } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import { gordonColors } from '../../../../theme';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import './ShiftItem.css'
 
+const CustomTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.black,
+    color: 'rgba(255, 255, 255, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}))(Tooltip);
 export default class ShiftItem extends Component {
   constructor(props) {
     super(props);
@@ -35,6 +48,8 @@ export default class ShiftItem extends Component {
       EML_DESCRIPTION,
       SHIFT_START_DATETIME,
       SHIFT_END_DATETIME,
+      SHIFT_NOTES,
+      COMMENTS,
       HOURLY_RATE,
       HOURS_WORKED,
       STATUS,
@@ -90,14 +105,31 @@ export default class ShiftItem extends Component {
       <IconButton
         onClick={this.handleSubmitButtonClick}
       >
-          <DeleteForeverOutlinedIcon/>
+          <DeleteForeverOutlinedIcon style={{color: gordonColors.secondary.red}} />
       </IconButton>
     ) : (
       <IconButton style={{visibility: 'hidden'}}>
           <DeleteForeverOutlinedIcon />
       </IconButton>
     )
+    
+    let shiftNotesTooltip = <></>;
+    if (SHIFT_NOTES !== '') {
+      shiftNotesTooltip = (
+        <CustomTooltip className='shift-note-tooltip' style={{position: 'absolute'}} title={'Shift note: ' + SHIFT_NOTES} placement='top'>
+          <InfoOutlinedIcon style={{ fontSize: 18 }} color='primary' />
+        </CustomTooltip>
+      )
+    }
 
+    let shiftCommentTooltip = <></>;
+    if (COMMENTS === null) {
+      shiftCommentTooltip = (
+        <CustomTooltip className='shift-comment-tooltip' title={SHIFT_NOTES} placement='top'>
+          <ErrorOutlineIcon style={{ fontSize: 18 }}/>
+        </CustomTooltip>
+      )
+    }
 
     return (
       <Grid item xs={12} className="shift-item">
@@ -105,7 +137,10 @@ export default class ShiftItem extends Component {
         <div>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={3}>
-              <Typography variant="body2">{EML_DESCRIPTION}</Typography>
+              <Grid container direction='row' justify='center'>
+                <Typography variant="body2">{EML_DESCRIPTION}</Typography>
+                {shiftCommentTooltip}
+              </Grid>
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2">{dateTimeIn}</Typography>
@@ -117,7 +152,8 @@ export default class ShiftItem extends Component {
               <Typography variant="body2">{HOURLY_RATE}</Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="body2">{HOURS_WORKED}</Typography>
+                <Typography variant="body2">{HOURS_WORKED}</Typography>
+                {shiftNotesTooltip}
             </Grid>
             <Grid item xs={1}>
               <Typography variant="body2">
