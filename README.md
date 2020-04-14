@@ -22,15 +22,20 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
-Make sure Node.js is set up on your machine. The project uses version `9.11.1` as later versions break it.
+Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well.
+
+#### Windows:
 - Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
-    - Extract the file and run it, making sure to install it to the account you are logged into (example: if you're logged in as anthony.aardvark, make sure it installs to anthony.aardvark and not cct.service). If it says Node is already installed, proceed anyway.
+    - Extract the file and run it.
+    - The installer will ask you where to install NVM. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
     - After the installation completes, open a terminal and run these commands in order:
       - `nvm install 9.11.1`
       - `nvm use 9.11.1`
-    - Close the terminal.
 
-The app will open in a browser at <http://localhost:3000>.
+#### Linux: 
+Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, run `nvm install 9.11.1` then run `nvm use 9.11.1`.
+
+When running the app, it will open in a browser at <http://localhost:3000>.
 
 ### Editor Recommendations
 
