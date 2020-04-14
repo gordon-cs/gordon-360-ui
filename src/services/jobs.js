@@ -29,7 +29,6 @@ const getSavedShiftsForUser = () => {
  * @param {DateTime} shiftEnd The end time of the shift
  * @param {Number} hoursWorked The number of hours worked
  * @param {String} shiftNotes Shift notes
- * @param {String} lastChangedBy The person who last updated the shift
  * @return {Promise.<String>} User's active jobs
  */
 const saveShiftForUser = async (
