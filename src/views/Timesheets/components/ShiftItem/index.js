@@ -47,7 +47,7 @@ export default class ShiftItem extends Component {
     };
   }
 
-  handleSubmitButtonClick = () => {
+  handleDeleteButtonClick = () => {
     this.setState({ showDeleteConfirmation: true });
   }
 
@@ -58,6 +58,111 @@ export default class ShiftItem extends Component {
   toggleEditing = () => {
     this.setState({ editing: !this.state.editing })
   }
+
+  isLeapYear = date => {
+    if (date.getFullYear() % 4 === 0) {
+      if (date.getFullYear() % 100 === 0) {
+        if (date.getFullYear() % 400 !== 0) {
+          return false;
+        }
+        if (date.getFullYear() % 400 === 0) {
+          return true;
+        }
+      }
+      if (date.getFullYear() % 100 !== 0) {
+        return true;
+      }
+    }
+    if (date.getFullYear() % 4 !== 0) {
+      return false;
+    }
+  };
+
+  getNextDate = date => {
+    let is30DayMonth =
+      date.getMonth() === 3 ||
+      date.getMonth() === 5 ||
+      date.getMonth() === 8 ||
+      date.getMonth() === 10;
+
+    let isFebruary = date.getMonth() === 1;
+    let isDecember = date.getMonth() === 11;
+    let nextDate;
+    let monthToReturn;
+    let yearToReturn;
+
+    if (isFebruary) {
+      if (this.isLeapYear(date)) {
+        if (date.getDate() === 29) {
+          nextDate = 1;
+          monthToReturn = 2;
+          yearToReturn = date.getFullYear();
+        } else {
+          nextDate = date.getDate() + 1;
+          monthToReturn = date.getMonth();
+          yearToReturn = date.getFullYear();
+        }
+      } else if (date.getDate() === 28) {
+        nextDate = 1;
+        monthToReturn = 2;
+        yearToReturn = date.getFullYear();
+      } else {
+        nextDate = date.getDate() + 1;
+        monthToReturn = date.getMonth();
+        yearToReturn = date.getFullYear();
+      }
+    } else if (isDecember) {
+      if (date.getDate() === 31) {
+        nextDate = 1;
+        monthToReturn = 0;
+        yearToReturn = date.getFullYear() + 1;
+      } else {
+        nextDate = date.getDate() + 1;
+        monthToReturn = date.getMonth();
+        yearToReturn = date.getFullYear();
+      }
+    } else if (is30DayMonth) {
+      if (date.getDate() === 30) {
+        nextDate = 1;
+        monthToReturn = (date.getMonth() + 1) % 12;
+        yearToReturn = date.getFullYear();
+      } else {
+        nextDate = date.getDate() + 1;
+        monthToReturn = date.getMonth();
+        yearToReturn = date.getFullYear();
+      }
+    } else if (!is30DayMonth) {
+      if (date.getDate() === 31) {
+        nextDate = 1;
+        monthToReturn = (date.getMonth() + 1) % 12;
+        yearToReturn = date.getFullYear();
+      } else {
+        nextDate = date.getDate() + 1;
+        monthToReturn = date.getMonth();
+        yearToReturn = date.getFullYear();
+      }
+    }
+
+    return {
+      date: nextDate,
+      month: monthToReturn,
+      year: yearToReturn,
+    };
+  };
+
+  disableDisallowedDays = date => {
+    let dayIn = this.state.dateTimeIn;
+    let nextDate = this.getNextDate(dayIn);
+    let shouldDisableDate = !(
+      (date.getDate() === dayIn.getDate() &&
+        date.getMonth() === dayIn.getMonth() &&
+        date.getYear() === dayIn.getYear()) ||
+      (date.getDate() === nextDate.date &&
+        date.getMonth() === nextDate.month &&
+        date.getFullYear() === nextDate.year)
+    );
+    return shouldDisableDate;
+  };
 
   checkForError = () => {
     let now = Date.now();
@@ -81,7 +186,6 @@ export default class ShiftItem extends Component {
       })
     }
 
-
     if (enteredFutureTime) {
       this.setState({errorText: 'Future time entered.'});
     } else if (timeOutIsBeforeTimeIn) {
@@ -100,6 +204,8 @@ export default class ShiftItem extends Component {
     console.log(enteredFutureTime, timeOutIsBeforeTimeIn, zeroLengthShift, shiftTooLong, isOverlappingShift, timeDiff);
     console.log(this.state.errorText);
   }
+
+
 
   handleDateInChange = date => {
     this.setState({dateTimeIn: date}, this.checkForError);
@@ -139,6 +245,7 @@ export default class ShiftItem extends Component {
       timeInDisp = (
         <DateTimePicker
           variant="inline"
+          disableFuture
           value={this.state.dateTimeIn}
           onChange={this.handleDateInChange}
           format="MM/dd HH:mm"
@@ -154,7 +261,9 @@ export default class ShiftItem extends Component {
       timeOutDisp = (
         <DateTimePicker
           variant="inline"
+          disableFuture
           value={this.state.dateTimeOut}
+          shouldDisableDate={this.disableDisallowedDays}
           onChange={this.handleDateOutChange}
           onClose={this.checkForError}
           format="MM/dd HH:mm"
@@ -208,13 +317,13 @@ export default class ShiftItem extends Component {
           <Grid container direction='row'>
             <Grid item xs={12} md={6}>
               <IconButton disabled={errorText !== ''}>
-                <CheckOutlinedIcon />
+                <CheckOutlinedIcon style={{color: 'green'}} />
               </IconButton>
             </Grid>
             <Grid item xs={12} md={6}>
-              <IconButton>
+              <IconButton onClick={this.toggleEditing}>
                 <ClearOutlinedIcon
-                  onClick={this.toggleEditing}
+                  style={{color: gordonColors.secondary.red}}
                 />
               </IconButton>
             </Grid>
@@ -224,21 +333,20 @@ export default class ShiftItem extends Component {
         shiftItemIcons = (
           <Grid container direction='row'>
             <Grid item xs={12} md={6}>
-              <IconButton>
-                <EditOutlinedIcon
+              <IconButton
                   onClick={() => {
                     this.setState({
                       editing: !this.state.editing,
                       dateTimeIn: new Date(SHIFT_START_DATETIME),
                       dateTimeOut: new Date(SHIFT_END_DATETIME),
                     })
-                  }} />
+                  }}>
+                <EditOutlinedIcon />
               </IconButton>
             </Grid>
             <Grid item xs={12} md={6}>
-              <IconButton>
+              <IconButton onClick={this.handleDeleteButtonClick}>
                 <DeleteForeverOutlinedIcon
-                  onClick={this.handleSubmitButtonClick}
                 />
               </IconButton>
             </Grid>
