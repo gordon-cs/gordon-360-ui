@@ -23,6 +23,7 @@ const PickerInput = (props) => {
   return (
   <>
     <TextField
+      className='shift-edit-picker'
       {...props}
       variant={'outlined'}
       multiline
@@ -45,6 +46,21 @@ export default class ShiftItem extends Component {
       errorText: '',
       isOverlappingShift: false,
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.value.EML !== prevProps.value.EML) {
+      this.setState({
+        editing: false,
+        dateTimeIn: null,
+        dateTimeOut: null,
+        dateInIsFuture: false,
+        dateOutIsFuture: false,
+        enteredFutureTime: false,
+        errorText: '',
+        isOverlappingShift: false,
+      })
+    }
   }
 
   handleDeleteButtonClick = () => {
@@ -200,9 +216,6 @@ export default class ShiftItem extends Component {
     else {
       this.setState({errorText: ''});
     }
-
-    console.log(enteredFutureTime, timeOutIsBeforeTimeIn, zeroLengthShift, shiftTooLong, isOverlappingShift, timeDiff);
-    console.log(this.state.errorText);
   }
 
 
@@ -263,6 +276,7 @@ export default class ShiftItem extends Component {
           variant="inline"
           disableFuture
           value={this.state.dateTimeOut}
+          initialFocusedDate={this.state.dateTimeIn}
           shouldDisableDate={this.disableDisallowedDays}
           onChange={this.handleDateOutChange}
           onClose={this.checkForError}
@@ -310,7 +324,6 @@ export default class ShiftItem extends Component {
     );
     
     let shiftItemIcons;
-    console.log(errorText !== '')
     if (STATUS === 'Saved' || STATUS === 'Rejected') {
       if (this.state.editing) {
         shiftItemIcons = (
@@ -364,7 +377,7 @@ export default class ShiftItem extends Component {
     let descColumn = errorText === '' ? (
       <Typography variant="body2">{EML_DESCRIPTION}</Typography>
     ) : (
-      <Typography variant="body2">{errorText}</Typography>
+      <Typography style={{color: gordonColors.secondary.red}} variant="body2">{errorText}</Typography>
     );
 
     return (
