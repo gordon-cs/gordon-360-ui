@@ -52,13 +52,13 @@ const editShift = async (rowID, newShiftStart, newShiftEnd, newHoursWorked) => {
   let newShiftDetails = {
     ID: rowID,
     EML: null,
-    SHIFT_START_DATETIME: newShiftStart,
-    SHIFT_END_DATETIME: newShiftEnd,
+    SHIFT_START_DATETIME: newShiftStart.toLocaleString(),
+    SHIFT_END_DATETIME: newShiftEnd.toLocaleString(),
     HOURS_WORKED: newHoursWorked,
     SHIFT_NOTES: null,
     LAST_CHANGED_BY: null,
   }
-  return http.post(`jobs/editShift`, newShiftDetails);
+  return await http.put(`jobs/editShift/`, newShiftDetails);
 };
 
 const deleteShiftForUser = async (rowID) => {

@@ -173,7 +173,11 @@ export default class SavedShiftsList extends Component {
 
     let shiftsList = null;
     shiftsList = this.props.shifts.map((shift, index) => (
-      <ShiftItem deleteShift={this.props.deleteShift} value={shift} key={index} />
+      <ShiftItem
+        deleteShift={this.props.deleteShift}
+        editShift={this.props.editShift}
+        value={shift}
+        key={index} />
     ));
 
     const supervisorDropdown = (
