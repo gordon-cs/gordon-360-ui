@@ -399,8 +399,7 @@ export default class ShiftItem extends Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <IconButton onClick={this.handleDeleteButtonClick}>
-                <DeleteForeverOutlinedIcon
-                />
+                <DeleteForeverOutlinedIcon style={{color: gordonColors.secondary.red}} />
               </IconButton>
             </Grid>
           </Grid>
@@ -417,8 +416,10 @@ export default class ShiftItem extends Component {
     let shiftNotesTooltip = <></>;
     if (SHIFT_NOTES !== '') {
       shiftNotesTooltip = (
-        <CustomTooltip className='shift-note-tooltip' style={{position: 'absolute'}} title={'Shift note: ' + SHIFT_NOTES} placement='top'>
-          <InfoOutlinedIcon style={{ fontSize: 18 }} color='primary' />
+        <CustomTooltip className='tooltip-icon' style={{position: 'absolute'}} title={'Shift note: ' + SHIFT_NOTES} placement='top'>
+          <InfoOutlinedIcon style={{
+            fontSize: 16
+            }} />
         </CustomTooltip>
       )
     }
@@ -426,8 +427,8 @@ export default class ShiftItem extends Component {
     let shiftCommentTooltip = <></>;
     if (COMMENTS) {
       shiftCommentTooltip = (
-        <CustomTooltip className='shift-comment-tooltip' title={SHIFT_NOTES} placement='top'>
-          <ErrorOutlineIcon style={{ fontSize: 18 }}/>
+        <CustomTooltip className='tooltip-icon' title={SHIFT_NOTES} placement='top'>
+          <ErrorOutlineIcon style={{ fontSize: 16 }}/>
         </CustomTooltip>
       )
     }
@@ -445,10 +446,10 @@ export default class ShiftItem extends Component {
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container direction="row" alignItems="center">
               <Grid item xs={3}>
-                <Grid container direction='row' justify='center'>
+                <div className='tooltip-container'>
                   <Typography variant="body2">{descColumn}</Typography>
                   {shiftCommentTooltip}
-                </Grid>
+                </div>
               </Grid>
               <Grid item xs={2}>
                 <Typography variant="body2">{timeInDisp}</Typography>
