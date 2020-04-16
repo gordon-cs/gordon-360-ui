@@ -48,6 +48,19 @@ const saveShiftForUser = async (
   return await http.post(`jobs/saveShift/`, shiftDetails);
 };
 
+const editShift = async (rowID, newShiftStart, newShiftEnd, newHoursWorked) => {
+  let newShiftDetails = {
+    ID: rowID,
+    EML: null,
+    SHIFT_START_DATETIME: newShiftStart.toLocaleString(),
+    SHIFT_END_DATETIME: newShiftEnd.toLocaleString(),
+    HOURS_WORKED: newHoursWorked,
+    SHIFT_NOTES: null,
+    LAST_CHANGED_BY: null,
+  }
+  return await http.put(`jobs/editShift/`, newShiftDetails);
+};
+
 const deleteShiftForUser = async (rowID) => {
   return await http.del(`jobs/deleteShift/${rowID}`);
 };
@@ -74,6 +87,7 @@ export default {
   getActiveJobsForUser,
   getSavedShiftsForUser,
   saveShiftForUser,
+  editShift,
   deleteShiftForUser,
   getSupervisorNameForJob,
   submitShiftsForUser,
