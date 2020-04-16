@@ -370,7 +370,7 @@ const Timesheets = (props) => {
     } else if (isZeroLengthShift) {
       errorText = (
         <Typography variant="overline" color="error">
-          A shift cannot have zero length.
+          The entered shift has zero length.
       </Typography>
       );
     } else if (shiftTooLong) {
@@ -382,7 +382,7 @@ const Timesheets = (props) => {
     } else if (isOverlappingShift) {
       errorText = (
         <Typography variant="overline" color="error">
-          The entered shift conflicts with a previous shift.
+          You have already entered hours that fall within this time frame.
       </Typography>
       );
     }
@@ -450,6 +450,7 @@ const Timesheets = (props) => {
                         autoOk
                         variant="inline"
                         disabled={selectedDateIn === null}
+                        initialFocusedDate={selectedDateIn}
                         shouldDisableDate={disableDisallowedDays}
                         margin="normal"
                         id="date-picker-out-dialog"
