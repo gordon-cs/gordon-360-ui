@@ -123,7 +123,7 @@ export default class ShiftItem extends Component {
     }
 
     let shiftCommentTooltip = <></>;
-    if (COMMENTS === null) {
+    if (COMMENTS) {
       shiftCommentTooltip = (
         <CustomTooltip className='shift-comment-tooltip' title={SHIFT_NOTES} placement='top'>
           <ErrorOutlineIcon style={{ fontSize: 18 }}/>
@@ -152,8 +152,10 @@ export default class ShiftItem extends Component {
               <Typography variant="body2">{HOURLY_RATE}</Typography>
             </Grid>
             <Grid item xs={2}>
+              <div className='tooltip-container'>
                 <Typography variant="body2">{HOURS_WORKED}</Typography>
                 {shiftNotesTooltip}
+              </div>
             </Grid>
             <Grid item xs={1}>
               <Typography variant="body2">
