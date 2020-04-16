@@ -38,8 +38,9 @@ export default class ShiftItem extends Component {
     this.state = {
       showDeleteConfirmation: false,
       editing: false,
-      dateTimeIn: null,
-      dateTimeOut: null,
+      newDateTimeIn: null,
+      newDateTimeOut: null,
+      newHoursWorked: null,
       dateInIsFuture: false,
       dateOutIsFuture: false,
       enteredFutureTime: false,
@@ -52,8 +53,9 @@ export default class ShiftItem extends Component {
     if (this.props.value.EML !== prevProps.value.EML) {
       this.setState({
         editing: false,
-        dateTimeIn: null,
-        dateTimeOut: null,
+        newDateTimeIn: null,
+        newDateTimeOut: null,
+        newHoursWorked: null,
         dateInIsFuture: false,
         dateOutIsFuture: false,
         enteredFutureTime: false,
@@ -167,7 +169,7 @@ export default class ShiftItem extends Component {
   };
 
   disableDisallowedDays = date => {
-    let dayIn = this.state.dateTimeIn;
+    let dayIn = this.state.newDateTimeIn;
     let nextDate = this.getNextDate(dayIn);
     let shouldDisableDate = !(
       (date.getDate() === dayIn.getDate() &&
@@ -188,16 +190,25 @@ export default class ShiftItem extends Component {
     let shiftTooLong = false;
     let isOverlappingShift = false;
     let timeDiff;
-    if (this.state.dateTimeIn && this.state.dateTimeOut) {
-      enteredFutureTime = (this.state.dateTimeIn.getTime() > now) || (this.state.dateTimeOut.getTime() > now);
-      timeDiff = this.state.dateTimeOut.getTime() - this.state.dateTimeIn.getTime();
+    let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
+    if (this.state.newDateTimeIn && this.state.newDateTimeOut) {
+      enteredFutureTime = (this.state.newDateTimeIn.getTime() > now) || (this.state.newDateTimeOut.getTime() > now);
+      timeDiff = this.state.newDateTimeOut.getTime() - this.state.newDateTimeIn.getTime();
+      calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
       timeOutIsBeforeTimeIn = timeDiff < 0;
       zeroLengthShift = timeDiff === 0;
-      shiftTooLong = timeDiff / 1000 / 60 / 60 > 20;
+      shiftTooLong = calculatedTimeDiff > 20;
+      let roundedHourDifference = 0;
+      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.25) {
+        roundedHourDifference = 0.25;
+      } else if (calculatedTimeDiff >= 0.25) {
+        roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+      }
 
       this.setState({
-        dateInIsFuture: this.state.dateTimeIn.getTime() > now,
-        dateOutIsFuture: this.state.dateTimeOut.getTime() > now,
+        newHoursWorked: roundedHourDifference,
+        dateInIsFuture: this.state.newDateTimeIn.getTime() > now,
+        dateOutIsFuture: this.state.newDateTimeOut.getTime() > now,
         enteredFutureTime: enteredFutureTime,
       })
     }
@@ -218,19 +229,17 @@ export default class ShiftItem extends Component {
     }
   }
 
-
-
   handleDateInChange = date => {
-    this.setState({dateTimeIn: date}, this.checkForError);
+    this.setState({newDateTimeIn: date}, this.checkForError);
   }
 
   handleDateOutChange = date => {
-    this.setState({dateTimeOut: date}, this.checkForError);
+    this.setState({newDateTimeOut: date}, this.checkForError);
   }
 
   render() {
     const shift = this.props.value;
-    const { deleteShift } = this.props;
+    const { deleteShift, editShift } = this.props;
     const {
       ID,
       EML_DESCRIPTION,
@@ -254,38 +263,36 @@ export default class ShiftItem extends Component {
     const dateTimeOut = monthOut + '/' + dateOut + "\n" + timeOut;
 
     let timeInDisp;
+    let timeOutDisp;
+    let hoursWorkedDisp;
     if (this.state.editing) {
       timeInDisp = (
         <DateTimePicker
           variant="inline"
           disableFuture
-          value={this.state.dateTimeIn}
+          value={this.state.newDateTimeIn}
           onChange={this.handleDateInChange}
           format="MM/dd HH:mm"
           TextFieldComponent={PickerInput}
         />
-      )
-    } else {
-      timeInDisp = <Typography variant="body2">{dateTimeIn}</Typography>
-    }
-
-    let timeOutDisp;
-    if (this.state.editing) {
+      );
       timeOutDisp = (
         <DateTimePicker
           variant="inline"
           disableFuture
-          value={this.state.dateTimeOut}
-          initialFocusedDate={this.state.dateTimeIn}
+          value={this.state.newDateTimeOut}
           shouldDisableDate={this.disableDisallowedDays}
           onChange={this.handleDateOutChange}
           onClose={this.checkForError}
           format="MM/dd HH:mm"
           TextFieldComponent={PickerInput}
         />
-      )
+      );
+      hoursWorkedDisp = (<Typography variant="body2">{this.state.newHoursWorked}</Typography>)
     } else {
+      timeInDisp = <Typography variant="body2">{dateTimeIn}</Typography>
       timeOutDisp = <Typography variant="body2">{dateTimeOut}</Typography>
+      hoursWorkedDisp = <Typography variant="body2">{HOURS_WORKED}</Typography>
     }
 
     let confirmationBox = (
@@ -329,7 +336,24 @@ export default class ShiftItem extends Component {
         shiftItemIcons = (
           <Grid container direction='row'>
             <Grid item xs={12} md={6}>
-              <IconButton disabled={errorText !== ''}>
+              <IconButton
+                disabled={errorText !== ''}
+                onClick={() => {
+                  editShift(ID, this.state.newDateTimeIn, this.state.newDateTimeOut, this.state.newHoursWorked)
+                    .then(response => {
+                      this.setState({
+                        editing: false,
+                        newDateTimeIn: null,
+                        newDateTimeOut: null,
+                        newHoursWorked: null,
+                        dateInIsFuture: false,
+                        dateOutIsFuture: false,
+                        enteredFutureTime: false,
+                        errorText: '',
+                        isOverlappingShift: false,
+                      });
+                    });
+                }}>
                 <CheckOutlinedIcon style={{color: 'green'}} />
               </IconButton>
             </Grid>
@@ -350,8 +374,9 @@ export default class ShiftItem extends Component {
                   onClick={() => {
                     this.setState({
                       editing: !this.state.editing,
-                      dateTimeIn: new Date(SHIFT_START_DATETIME),
-                      dateTimeOut: new Date(SHIFT_END_DATETIME),
+                      newDateTimeIn: new Date(SHIFT_START_DATETIME),
+                      newDateTimeOut: new Date(SHIFT_END_DATETIME),
+                      newHoursWorked: HOURS_WORKED,
                     })
                   }}>
                 <EditOutlinedIcon />
@@ -399,7 +424,7 @@ export default class ShiftItem extends Component {
                 <Typography variant="body2">{HOURLY_RATE}</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography variant="body2">{HOURS_WORKED}</Typography>
+                {hoursWorkedDisp}
               </Grid>
               <Grid item xs={1}>
                 <Typography variant="body2">
