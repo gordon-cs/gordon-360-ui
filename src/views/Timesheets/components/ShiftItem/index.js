@@ -281,7 +281,6 @@ export default class ShiftItem extends Component {
           variant="inline"
           disableFuture
           value={this.state.newDateTimeOut}
-          // initialFocusedDate={this.state.newDateTimeIn}
           shouldDisableDate={this.disableDisallowedDays}
           onChange={this.handleDateOutChange}
           onClose={this.checkForError}
