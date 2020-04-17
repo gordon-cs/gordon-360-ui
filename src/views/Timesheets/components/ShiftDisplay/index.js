@@ -11,6 +11,7 @@ import {
 import SavedShiftsList from '../../components/SavedShiftsList';
 import jobs from '../../../../services/jobs';
 import MuiAlert from '@material-ui/lab/Alert';
+import Media from 'react-media';
 import './ShiftDisplay.css'
 
 const Alert = (props) => {
@@ -141,20 +142,39 @@ export default class ShiftDisplay extends Component {
             <></>
         );
 
-        let tabsCard = this.state.jobNames && this.state.jobNames.length > 1 ? (
-            <Grid item xs={12}>
-                <Card>
-                    <CardContent>
-                        <CardHeader title="Display shifts for:" />
+        let theTabs = (
+            <Media query="(min-width: 600px)">
+                {matches => matches ? (
+                    <Tabs
+                        centered
+                        value={this.state.tabValue}
+                        onChange={this.handleTabChange}
+                        variant="fullWidth"
+                        className="job-tabs"
+                    >
+                        {jobTabs}
+                    </Tabs>
+                ) : (
                         <Tabs
                             centered
                             value={this.state.tabValue}
                             onChange={this.handleTabChange}
+                            orientation='vertical'
                             variant="fullWidth"
                             className="job-tabs"
                         >
                             {jobTabs}
                         </Tabs>
+                    )}
+            </Media>
+        );
+
+        let tabsCard = this.state.jobNames && this.state.jobNames.length > 1 ? (
+            <Grid item xs={12}>
+                <Card>
+                    <CardContent>
+                        <CardHeader title="Display shifts for:" />
+                        {theTabs}
                     </CardContent>
                 </Card>
             </Grid>

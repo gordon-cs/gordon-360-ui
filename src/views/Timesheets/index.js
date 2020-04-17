@@ -50,7 +50,7 @@ const Timesheets = (props) => {
       }
       setHoursWorkedInDecimal(roundedHourDifference);
       let hoursWorked = Math.floor(calculatedTimeDiff);
-      let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60);
+      let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60).toFixed(2);
 
       if (minutesWorked >= 60) {
         hoursWorked++;
@@ -455,6 +455,7 @@ const Timesheets = (props) => {
                         id="date-picker-out-dialog"
                         label="End Time"
                         format="MM/dd/yy hh:mm a"
+                        openTo="hours"
                         value={selectedDateOut}
                         onChange={handleDateChangeOut}
                         onClose={onDatetimeSelectorClose}

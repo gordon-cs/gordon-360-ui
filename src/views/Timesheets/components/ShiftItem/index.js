@@ -16,7 +16,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import { gordonColors } from '../../../../theme';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import MessageOutlinedIcon from '@material-ui/icons/MessageOutlined';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
@@ -307,7 +307,7 @@ export default class ShiftItem extends Component {
     } else {
       timeInDisp = <Typography variant="body2">{dateTimeIn}</Typography>
       timeOutDisp = <Typography variant="body2">{dateTimeOut}</Typography>
-      hoursWorkedDisp = <Typography variant="body2">{HOURS_WORKED}</Typography>
+      hoursWorkedDisp = <Typography variant="body2">{HOURS_WORKED.toFixed(2)}</Typography>
     }
 
     let confirmationBox = (
@@ -417,7 +417,7 @@ export default class ShiftItem extends Component {
     if (SHIFT_NOTES !== '') {
       shiftNotesTooltip = (
         <CustomTooltip className='tooltip-icon' style={{position: 'absolute'}} title={'Shift note: ' + SHIFT_NOTES} placement='top'>
-          <InfoOutlinedIcon style={{
+          <MessageOutlinedIcon style={{
             fontSize: 16
             }} />
         </CustomTooltip>
@@ -427,8 +427,8 @@ export default class ShiftItem extends Component {
     let shiftCommentTooltip = <></>;
     if (COMMENTS) {
       shiftCommentTooltip = (
-        <CustomTooltip className='tooltip-icon' title={SHIFT_NOTES} placement='top'>
-          <ErrorOutlineIcon style={{ fontSize: 16 }}/>
+        <CustomTooltip className='tooltip-icon' title={COMMENTS} placement='top'>
+          <InfoOutlinedIcon style={{ fontSize: 16 }}/>
         </CustomTooltip>
       )
     }
@@ -458,7 +458,7 @@ export default class ShiftItem extends Component {
                 <Typography variant="body2">{timeOutDisp}</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography variant="body2">{HOURLY_RATE}</Typography>
+                <Typography variant="body2">{HOURLY_RATE.toFixed(2)}</Typography>
               </Grid>
               <Grid item xs={2}>
                 <div className='tooltip-container'>
