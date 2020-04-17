@@ -391,7 +391,7 @@ export default class ShiftItem extends Component {
                       editing: !this.state.editing,
                       newDateTimeIn: new Date(SHIFT_START_DATETIME),
                       newDateTimeOut: new Date(SHIFT_END_DATETIME),
-                      newHoursWorked: HOURS_WORKED,
+                      newHoursWorked: HOURS_WORKED.toFixed(2),
                     })
                   }}>
                 <EditOutlinedIcon />
