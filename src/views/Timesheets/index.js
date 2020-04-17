@@ -18,7 +18,7 @@ import {
 import MuiAlert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
-import { MuiPickersUtilsProvider, TimePicker, DatePicker } from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import ShiftDisplay from './components/ShiftDisplay';
 import './timesheets.css';
 
@@ -88,19 +88,23 @@ const Timesheets = (props) => {
     };
 
     const handleDateChangeIn = date => {
-      date.setSeconds(0);
-      date.setMilliseconds(0);
-      setSelectedDateIn(date);
-      setIsOverlappingShift(false);
-      handleTimeErrors(date, selectedDateOut);
+      if (date) {
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        setSelectedDateIn(date);
+        setIsOverlappingShift(false);
+        handleTimeErrors(date, selectedDateOut);
+      }
     };
 
     const handleDateChangeOut = date => {
-      date.setSeconds(0);
-      date.setMilliseconds(0);
-      setSelectedDateOut(date);
-      setIsOverlappingShift(false);
-      handleTimeErrors(selectedDateIn, date);
+      if (date) {
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        setSelectedDateOut(date);
+        setIsOverlappingShift(false);
+        handleTimeErrors(selectedDateIn, date);
+      }
     };
 
     const handleSaveButtonClick = () => {
@@ -422,56 +426,42 @@ const Timesheets = (props) => {
                     alignContent="center"
                   >
                     <Grid item xs={12} sm={6} md={3}>
-                      <DatePicker
-                        autoOk
+                      <KeyboardDateTimePicker
+                        style={{
+                          width: 252,
+                        }}
                         variant="inline"
+                        disableFuture
                         margin="normal"
                         id="date-picker-in-dialog"
-                        label="Date In"
-                        format="MM/dd/yyyy"
+                        label="Start Time"
+                        format="MM/dd/yy hh:mm a"
                         value={selectedDateIn}
                         onChange={handleDateChangeIn}
                         onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
-                      <TimePicker
-                        variant="inline"
-                        margin="normal"
-                        id="time-picker-in"
-                        label="Time In"
-                        value={selectedDateIn}
-                        onChange={handleDateChangeIn}
-                        onClose={onDatetimeSelectorClose}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <DatePicker
-                        autoOk
+                      <KeyboardDateTimePicker
+                        style={{
+                          width: 252,
+                        }}
                         variant="inline"
                         disabled={selectedDateIn === null}
                         initialFocusedDate={selectedDateIn}
                         shouldDisableDate={disableDisallowedDays}
+                        disableFuture
                         margin="normal"
                         id="date-picker-out-dialog"
-                        label="Date Out"
-                        format="MM/dd/yyyy"
+                        label="End Time"
+                        format="MM/dd/yy hh:mm a"
                         value={selectedDateOut}
                         onChange={handleDateChangeOut}
                         onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
-                      <TimePicker
-                        variant="inline"
-                        disabled={selectedDateIn === null}
-                        margin="normal"
-                        id="time-picker-out"
-                        label="Time Out"
-                        value={selectedDateOut}
-                        onChange={handleDateChangeOut}
-                        onClose={onDatetimeSelectorClose}
-                      />
+                      {jobDropdown}
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                       <TextField
@@ -484,9 +474,6 @@ const Timesheets = (props) => {
                         value={userShiftNotes}
                         onChange={handleShiftNotesChanged}
                       />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      {jobDropdown}
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
                       <Typography>Hours worked: {hoursWorkedInDecimal}</Typography>
