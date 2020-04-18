@@ -4,12 +4,19 @@ import {
     Card,
     CardContent,
     CardHeader,
+    Snackbar,
     Tabs,
     Tab,
 } from '@material-ui/core';
 import SavedShiftsList from '../../components/SavedShiftsList';
 import jobs from '../../../../services/jobs';
+import MuiAlert from '@material-ui/lab/Alert';
+import Media from 'react-media';
 import './ShiftDisplay.css'
+
+const Alert = (props) => {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default class ShiftDisplay extends Component {
     constructor(props) {
@@ -19,6 +26,7 @@ export default class ShiftDisplay extends Component {
             shifts: [],
             jobNames: [],
             selectedJob: '',
+            snackbarOpen: false,
         };
         this.jobNamesSet = new Set();
         this.supervisors = [];
@@ -37,6 +45,14 @@ export default class ShiftDisplay extends Component {
             }
         });
     }
+
+    handleCloseSnackbar = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      this.setState({ snackbarOpen: false })
+    };
 
     loadShifts() {
         const {getSavedShiftsForUser} = this.props;
@@ -65,6 +81,19 @@ export default class ShiftDisplay extends Component {
             });
         });
     };
+
+    editShift = (rowID, startTime, endTime, hoursWorked) => {
+        let promise = jobs.editShift(rowID, startTime, endTime, hoursWorked);
+        promise.then(response => {
+            this.loadShifts();
+        })
+        promise.catch(error => {
+            if (error.toLowerCase().includes('overlap')) {
+                this.setState({ snackbarOpen: true });
+            }
+        });
+        return promise;
+    }
 
     deleteShiftForUser(rowID, emlDesc) {
         let result = jobs.deleteShiftForUser(rowID).then(response => {
@@ -113,20 +142,39 @@ export default class ShiftDisplay extends Component {
             <></>
         );
 
-        let tabsCard = this.state.jobNames && this.state.jobNames.length > 1 ? (
-            <Grid item xs={12}>
-                <Card>
-                    <CardContent>
-                        <CardHeader title="Display shifts for:" />
+        let theTabs = (
+            <Media query="(min-width: 600px)">
+                {matches => matches ? (
+                    <Tabs
+                        centered
+                        value={this.state.tabValue}
+                        onChange={this.handleTabChange}
+                        variant="fullWidth"
+                        className="job-tabs"
+                    >
+                        {jobTabs}
+                    </Tabs>
+                ) : (
                         <Tabs
                             centered
                             value={this.state.tabValue}
                             onChange={this.handleTabChange}
+                            orientation='vertical'
                             variant="fullWidth"
                             className="job-tabs"
                         >
                             {jobTabs}
                         </Tabs>
+                    )}
+            </Media>
+        );
+
+        let tabsCard = this.state.jobNames && this.state.jobNames.length > 1 ? (
+            <Grid item xs={12}>
+                <Card>
+                    <CardContent>
+                        <CardHeader title="Display shifts for:" />
+                        {theTabs}
                     </CardContent>
                 </Card>
             </Grid>
@@ -144,6 +192,7 @@ export default class ShiftDisplay extends Component {
                                 shifts={this.savedShifts}
                                 loadShifts={this.loadShifts.bind(this)}
                                 deleteShift={this.deleteShiftForUser.bind(this)}
+                                editShift={this.editShift}
                                 cardTitle="Saved Shifts"
                                 directSupervisor={directSupervisor}
                                 reportingSupervisor={reportingSupervisor} />
@@ -160,6 +209,7 @@ export default class ShiftDisplay extends Component {
                                 shifts={this.rejectedShifts}
                                 loadShifts={this.loadShifts.bind(this)}
                                 deleteShift={this.deleteShiftForUser.bind(this)}
+                                editShift={this.editShift}
                                 cardTitle="Rejected Shifts" />
                         </Grid>
                         <Grid item xs={12}>
@@ -171,6 +221,11 @@ export default class ShiftDisplay extends Component {
                         </Grid>
                     </Grid>
                 </Grid>
+                <Snackbar open={this.state.snackbarOpen} autoHideDuration={10000} onClose={this.handleCloseSnackbar}>
+                    <Alert onClose={this.handleCloseSnackbar} severity="error">
+                        You have already entered hours that fall within this time frame. Please review the times you entered above and try again.
+                    </Alert>
+                </Snackbar>
             </>
         )
     }
