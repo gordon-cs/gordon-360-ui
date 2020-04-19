@@ -483,7 +483,12 @@ export default class ShiftItem extends Component {
     let shiftNotesTooltip = <></>;
     if (SHIFT_NOTES !== '') {
       shiftNotesTooltip = (
-        <CustomTooltip className='tooltip-icon' style={{position: 'absolute'}} title={'Shift note: ' + SHIFT_NOTES} placement='top'>
+        <CustomTooltip
+          disableFocusListener
+          disableTouchListener
+          className='tooltip-icon'
+          title={'Shift note: ' + SHIFT_NOTES}
+          placement='top'>
           <MessageOutlinedIcon style={{
             fontSize: 16
             }} />
@@ -494,7 +499,12 @@ export default class ShiftItem extends Component {
     let shiftCommentTooltip = <></>;
     if (COMMENTS) {
       shiftCommentTooltip = (
-        <CustomTooltip className='tooltip-icon' title={COMMENTS} placement='top'>
+        <CustomTooltip
+          disableFocusListener
+          disableTouchListener
+          className='tooltip-icon'
+          title={COMMENTS}
+          placement='top'>
           <InfoOutlinedIcon style={{ fontSize: 16 }}/>
         </CustomTooltip>
       )
@@ -515,22 +525,22 @@ export default class ShiftItem extends Component {
               <Grid container direction="row" alignItems="center">
                 <Grid item xs={3}>
                   <div className='tooltip-container'>
-                    <Typography variant="body2">{descColumn}</Typography>
+                    <Typography className='disable-select' variant="body2">{descColumn}</Typography>
                     {shiftCommentTooltip}
                   </div>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography variant="body2">{timeInDisp}</Typography>
+                  <Typography className='disable-select' variant="body2">{timeInDisp}</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography variant="body2">{timeOutDisp}</Typography>
+                  <Typography className='disable-select' variant="body2">{timeOutDisp}</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography variant="body2">{HOURLY_RATE.toFixed(2)}</Typography>
+                  <Typography className='disable-select' variant="body2">{HOURLY_RATE.toFixed(2)}</Typography>
                 </Grid>
                 <Grid item xs={2}>
                   <div className='tooltip-container'>
-                    <Typography variant="body2">{hoursWorkedDisp}</Typography>
+                    <Typography className='disable-select' variant="body2">{hoursWorkedDisp}</Typography>
                     {shiftNotesTooltip}
                   </div>
                 </Grid>

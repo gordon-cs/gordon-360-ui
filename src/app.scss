@@ -99,3 +99,7 @@ strong {
   font-weight: bold;
   margin-top: 20px;
 }
+
+.disable-select {
+  user-select: none;
+}
