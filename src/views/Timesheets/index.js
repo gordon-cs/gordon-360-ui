@@ -5,6 +5,8 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Link,
+  Tooltip,
   FormControl,
   InputLabel,
   Select,
@@ -13,14 +15,26 @@ import {
   Button,
   Typography,
   TextField,
-  Snackbar,
 } from '@material-ui/core/';
-import MuiAlert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import ShiftDisplay from './components/ShiftDisplay';
+import { withStyles } from '@material-ui/core/styles';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { gordonColors } from '../../theme';
 import './timesheets.css';
+import GordonLoader from '../../components/Loader';
+import SimpleSnackbar from '../../components/Snackbar';
+
+const CustomTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.black,
+    color: 'rgba(255, 255, 255, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}))(Tooltip);
 
 const Timesheets = (props) => {
   const [userJobs, setUserJobs] = useState([]);
@@ -37,6 +51,9 @@ const Timesheets = (props) => {
   const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [network, setNetwork] = useState('online');
+  const [saving, setSaving] = useState(false);
+  const [snackbarText, setSnackbarText] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('');
 
   const handleTimeErrors = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -69,10 +86,6 @@ const Timesheets = (props) => {
   }
 
   if (props.Authentication) {
-    function Alert(props) {
-      return <MuiAlert elevation={6} variant="filled" {...props} />;
-    }
-
     const getActiveJobsForUser = () => {
       let details = {
         shift_start_datetime: selectedDateIn.toLocaleString(),
@@ -110,6 +123,7 @@ const Timesheets = (props) => {
     const handleSaveButtonClick = () => {
       let timeIn = selectedDateIn;
       let timeOut = selectedDateOut;
+      setSaving(true);
 
       if (selectedDateIn.getDay() === 6 && selectedDateOut.getDay() === 0) {
         let timeOut2 = new Date(timeOut.getTime());
@@ -138,8 +152,23 @@ const Timesheets = (props) => {
             timeOut2.toLocaleString(),
             roundedHourDifference2,
             userShiftNotes,
-          ).then(result => {
+          )
+          .then(() => {
+            setSnackbarSeverity('info');
+            setSnackbarText('Your entered shift spanned two pay weeks, so it was automatically split into two shifts.');
             setSnackbarOpen(true);
+          })
+          .catch(err => {
+            setSaving(false);
+            if (typeof(err) === 'string' && err.toLowerCase().includes('overlap')) {
+              setSnackbarText('The shift was automatically split because it spanned a pay week, but one of the two derived shifts conflicted with a previously entered one. Please review your saved shifts.');
+              setSnackbarSeverity('error');
+              setSnackbarOpen(true);
+            } else {
+              setSnackbarText('There was a problem saving the shift.');
+              setSnackbarSeverity('error');
+              setSnackbarOpen(true);
+            }
           });
         }
       }
@@ -166,9 +195,17 @@ const Timesheets = (props) => {
         setUserShiftNotes('');
         setUserJobs([]);
         setHoursWorkedInDecimal(0);
+        setSaving(false);
       }).catch(err => {
-        if (err.toLowerCase().includes('overlap')) {
-          setIsOverlappingShift(true);
+        setSaving(false);
+        if (typeof(err) === 'string' && err.toLowerCase().includes('overlap')) {
+          setSnackbarText('You have already entered hours that fall within this time frame. Please review the times you entered above and try again.');
+          setSnackbarSeverity('warning');
+          setSnackbarOpen(true);
+        } else {
+          setSnackbarText('There was a problem saving the shift.');
+          setSnackbarSeverity('error');
+          setSnackbarOpen(true);
         }
       });
     };
@@ -305,7 +342,6 @@ const Timesheets = (props) => {
       if (reason === 'clickaway') {
         return;
       }
-
       setSnackbarOpen(false);
     };
 
@@ -342,7 +378,7 @@ const Timesheets = (props) => {
           width: 252,
         }}
       >
-        <InputLabel>Jobs</InputLabel>
+        <InputLabel className='disable-select'>Jobs</InputLabel>
         <Select
           value={selectedJob}
           onChange={e => {
@@ -405,6 +441,29 @@ const Timesheets = (props) => {
       setUserShiftNotes(event.target.value);
     };
 
+    const saveButton = saving ? (
+      <GordonLoader size={32} />
+    ) : (
+        <Button
+          disabled={
+            enteredFutureTime ||
+            timeOutIsBeforeTimeIn ||
+            isOverlappingShift ||
+            shiftTooLong ||
+            isZeroLengthShift ||
+            selectedDateIn === null ||
+            selectedDateOut === null ||
+            selectedJob === null ||
+            selectedJob === ''
+          }
+          variant="contained"
+          color="primary"
+          onClick={handleSaveButtonClick}
+        >
+          Save
+                    </Button>
+    );
+
     return networkStatus === 'online' ? (
       <>
         <Grid container spacing={2}>
@@ -417,7 +476,25 @@ const Timesheets = (props) => {
                     marginTop: 8,
                   }}
                 >
-                  <CardHeader title="Enter a shift" />
+                  <div className='header-tooltip-container'>
+                    <CardHeader className='disable-select' title="Enter a shift" />
+                    <CustomTooltip
+                      interactive
+                      disableFocusListener
+                      disableTouchListener
+                      title={'Student employees are not permitted to work more than 20 total hours\
+                      per work week, or more than 40 hours during winter, spring, and summer breaks.\
+                      \
+                      To request permission for a special circumstance, please email\
+                      student-employment@gordon.edu before exceeding this limit.'}
+                      placement='bottom'>
+                      <InfoOutlinedIcon
+                        className='tooltip-icon'
+                        style={{
+                          fontSize: 18
+                        }} />
+                    </CustomTooltip>
+                  </div>
                   <Grid
                     container
                     spacing={2}
@@ -425,8 +502,9 @@ const Timesheets = (props) => {
                     alignItems="center"
                     alignContent="center"
                   >
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} md={6} lg={3}>
                       <KeyboardDateTimePicker
+                        className='disable-select'
                         style={{
                           width: 252,
                         }}
@@ -435,14 +513,16 @@ const Timesheets = (props) => {
                         margin="normal"
                         id="date-picker-in-dialog"
                         label="Start Time"
+                        helperText="MM-DD-YY HH-MM AM/PM"
                         format="MM/dd/yy hh:mm a"
                         value={selectedDateIn}
                         onChange={handleDateChangeIn}
                         onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} md={6} lg={3}>
                       <KeyboardDateTimePicker
+                        className='disable-select'
                         style={{
                           width: 252,
                         }}
@@ -454,6 +534,7 @@ const Timesheets = (props) => {
                         margin="normal"
                         id="date-picker-out-dialog"
                         label="End Time"
+                        helperText="MM-DD-YY HH-MM AM/PM"
                         format="MM/dd/yy hh:mm a"
                         openTo="hours"
                         value={selectedDateOut}
@@ -461,11 +542,12 @@ const Timesheets = (props) => {
                         onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} md={6} lg={3}>
                       {jobDropdown}
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} md={6} lg={3}>
                       <TextField
+                        className='disable-select'
                         style={{
                           width: 252,
                         }}
@@ -476,31 +558,33 @@ const Timesheets = (props) => {
                         onChange={handleShiftNotesChanged}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                      <Typography>Hours worked: {hoursWorkedInDecimal}</Typography>
+                    <Grid item xs={12} md={6} lg={3}>
+                      <Typography className='disable-select'>Hours worked: {hoursWorkedInDecimal}</Typography>
                     </Grid>
                     <Grid item xs={12}>
                       {errorText}
                     </Grid>
                     <Grid item xs={6}>
-                      <Button
-                        disabled={
-                          enteredFutureTime ||
-                          timeOutIsBeforeTimeIn ||
-                          isOverlappingShift ||
-                          shiftTooLong ||
-                          isZeroLengthShift ||
-                          selectedDateIn === null ||
-                          selectedDateOut === null ||
-                          selectedJob === null ||
-                          selectedJob === ''
-                        }
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSaveButtonClick}
-                      >
-                        Save
-                    </Button>
+                      {saveButton}
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography>
+                        <Link
+                          className='disable-select'
+                          style={{
+                            borderBottom: '1px solid currentColor',
+                            textDecoration: 'none',
+                            color: gordonColors.primary.blueShades.A700
+                          }}
+                          href='https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period'
+                          underline='always'
+                          target="_blank"
+                          rel="noopener"
+
+                        >
+                          View historical paid time
+                        </Link>
+                      </Typography>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -512,11 +596,11 @@ const Timesheets = (props) => {
             getSavedShiftsForUser={getSavedShiftsForUser}
           />
         </Grid>
-        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-          <Alert onClose={handleCloseSnackbar} severity="info">
-            Your entered shift spanned two pay weeks, so it was automatically split into two shifts.
-        </Alert>
-        </Snackbar>
+        <SimpleSnackbar
+          text={snackbarText}
+          severity={snackbarSeverity}
+          open={snackbarOpen}
+          onClose={handleCloseSnackbar} />
       </>
     ) : (
       <Grid container justify="center" spacing="16">
