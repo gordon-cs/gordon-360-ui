@@ -39,6 +39,8 @@ const Timesheets = (props) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [network, setNetwork] = useState('online');
   const [saving, setSaving] = useState(false);
+  const [snackbarText, setSnackbarText] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('');
 
   const handleTimeErrors = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -141,8 +143,23 @@ const Timesheets = (props) => {
             timeOut2.toLocaleString(),
             roundedHourDifference2,
             userShiftNotes,
-          ).then(result => {
+          )
+          .then(() => {
+            setSnackbarSeverity('info');
+            setSnackbarText('Your entered shift spanned two pay weeks, so it was automatically split into two shifts.');
             setSnackbarOpen(true);
+          })
+          .catch(err => {
+            setSaving(false);
+            if (typeof(err) === 'string' && err.toLowerCase().includes('overlap')) {
+              setSnackbarText('The shift was automatically split because it spanned a pay week, but one of the two derived shifts conflicted with a previously entered one. Please review your saved shifts.');
+              setSnackbarSeverity('error');
+              setSnackbarOpen(true);
+            } else {
+              setSnackbarText('There was a problem saving the shift.');
+              setSnackbarSeverity('error');
+              setSnackbarOpen(true);
+            }
           });
         }
       }
@@ -172,8 +189,14 @@ const Timesheets = (props) => {
         setSaving(false);
       }).catch(err => {
         setSaving(false);
-        if (err.toLowerCase().includes('overlap')) {
-          setIsOverlappingShift(true);
+        if (typeof(err) === 'string' && err.toLowerCase().includes('overlap')) {
+          setSnackbarText('You have already entered hours that fall within this time frame. Please review the times you entered above and try again.');
+          setSnackbarSeverity('error');
+          setSnackbarOpen(true);
+        } else {
+          setSnackbarText('There was a problem saving the shift.');
+          setSnackbarSeverity('error');
+          setSnackbarOpen(true);
         }
       });
     };
@@ -310,8 +333,9 @@ const Timesheets = (props) => {
       if (reason === 'clickaway') {
         return;
       }
-
       setSnackbarOpen(false);
+      setSnackbarSeverity('');
+      setSnackbarText('');
     };
 
     /* Used to re-render the page when the network connection changes.
@@ -524,9 +548,9 @@ const Timesheets = (props) => {
           />
         </Grid>
         <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-          <Alert onClose={handleCloseSnackbar} severity="info">
-            Your entered shift spanned two pay weeks, so it was automatically split into two shifts.
-        </Alert>
+          <Alert style={{textAlign: 'center'}} onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+            {snackbarText}
+          </Alert>
         </Snackbar>
       </>
     ) : (
