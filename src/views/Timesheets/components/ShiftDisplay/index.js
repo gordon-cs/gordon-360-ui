@@ -36,12 +36,12 @@ export default class ShiftDisplay extends Component {
         this.submittedShifts = [];
         this.rejectedShifts = [];
         this.approvedShifts = [];
+        this.snackbarText = '';
     }
 
     componentDidMount() {
         this.setState({loading: true}, () => {
             this.loadShifts().then(() => {
-                console.log('loaded shifts');
                 if (this.state.jobNames.length > 0) {
                     this.setState({
                         selectedJob: this.state.jobNames[0],
@@ -58,6 +58,7 @@ export default class ShiftDisplay extends Component {
       }
   
       this.setState({ snackbarOpen: false })
+      this.snackbarText = ''
     };
 
     loadShifts() {
@@ -94,17 +95,25 @@ export default class ShiftDisplay extends Component {
             this.loadShifts();
         })
         promise.catch(error => {
-            if (error.toLowerCase().includes('overlap')) {
-                this.setState({ snackbarOpen: true });
+            if (typeof(error) === 'string' && error.toLowerCase().includes('overlap')) {
+                this.snackbarText = 'You have already entered hours that fall within this time frame. Please review the times you entered above and try again.';
+            } else {
+                this.snackbarText = 'There was a problem updating the shift.';
             }
+                this.setState({ snackbarOpen: true });
         });
         return promise;
     }
 
     deleteShiftForUser(rowID, emlDesc) {
-        let result = jobs.deleteShiftForUser(rowID).then(response => {
+        let result = jobs.deleteShiftForUser(rowID)
+        .then(() => {
             this.jobNamesSet.delete(emlDesc);
             this.loadShifts();
+        })
+        .catch(() => {
+            this.snackbarText = 'There was a problem deleting the shift.';
+            this.setState({ snackbarOpen: true });
         });
         return result;
       };
@@ -229,7 +238,7 @@ export default class ShiftDisplay extends Component {
                 </Grid>
                 <Snackbar open={this.state.snackbarOpen} autoHideDuration={10000} onClose={this.handleCloseSnackbar}>
                     <Alert onClose={this.handleCloseSnackbar} severity="error">
-                        You have already entered hours that fall within this time frame. Please review the times you entered above and try again.
+                        {this.snackbarText}
                     </Alert>
                 </Snackbar>
             </>
