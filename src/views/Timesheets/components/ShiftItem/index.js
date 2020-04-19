@@ -6,7 +6,7 @@ import {
   Button,
   IconButton,
   Dialog,
-  Snackbar,
+  // Snackbar,
   DialogContent,
   Tooltip,
   DialogTitle,
@@ -14,7 +14,6 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
-import MuiAlert from '@material-ui/lab/Alert';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import { gordonColors } from '../../../../theme';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -25,6 +24,7 @@ import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import './ShiftItem.css'
 import GordonLoader from '../../../../components/Loader';
+import SimpleSnackbar from '../../../../components/Snackbar';
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
@@ -47,10 +47,6 @@ const PickerInput = (props) => {
       />
   </>
   )
-}
-
-const Alert = (props) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 export default class ShiftItem extends Component {
@@ -269,8 +265,6 @@ export default class ShiftItem extends Component {
     }
 
     this.setState({ snackbarOpen: false })
-    this.snackbarText = '';
-    this.snackbarSeverity = '';
   };
 
   onCheckButtonClick = () => {
@@ -550,11 +544,11 @@ export default class ShiftItem extends Component {
             </MuiPickersUtilsProvider>
           </div>
         </Grid>
-        <Snackbar open={this.state.snackbarOpen} autoHideDuration={10000} onClose={this.handleCloseSnackbar}>
-          <Alert style={{ textAlign: 'center' }} onClose={this.handleCloseSnackbar} severity={this.snackbarSeverity}>
-            {this.snackbarText}
-          </Alert>
-        </Snackbar>
+        <SimpleSnackbar
+          text={this.snackbarText}
+          severity={this.snackbarSeverity}
+          open={this.state.snackbarOpen}
+          onClose={this.handleCloseSnackbar} />
       </>
     );
   }

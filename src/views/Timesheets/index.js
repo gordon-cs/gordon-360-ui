@@ -13,15 +13,14 @@ import {
   Button,
   Typography,
   TextField,
-  Snackbar,
 } from '@material-ui/core/';
-import MuiAlert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import ShiftDisplay from './components/ShiftDisplay';
 import './timesheets.css';
 import GordonLoader from '../../components/Loader';
+import SimpleSnackbar from '../../components/Snackbar';
 
 const Timesheets = (props) => {
   const [userJobs, setUserJobs] = useState([]);
@@ -73,10 +72,6 @@ const Timesheets = (props) => {
   }
 
   if (props.Authentication) {
-    function Alert(props) {
-      return <MuiAlert elevation={6} variant="filled" {...props} />;
-    }
-
     const getActiveJobsForUser = () => {
       let details = {
         shift_start_datetime: selectedDateIn.toLocaleString(),
@@ -191,7 +186,7 @@ const Timesheets = (props) => {
         setSaving(false);
         if (typeof(err) === 'string' && err.toLowerCase().includes('overlap')) {
           setSnackbarText('You have already entered hours that fall within this time frame. Please review the times you entered above and try again.');
-          setSnackbarSeverity('error');
+          setSnackbarSeverity('warning');
           setSnackbarOpen(true);
         } else {
           setSnackbarText('There was a problem saving the shift.');
@@ -334,8 +329,6 @@ const Timesheets = (props) => {
         return;
       }
       setSnackbarOpen(false);
-      setSnackbarSeverity('');
-      setSnackbarText('');
     };
 
     /* Used to re-render the page when the network connection changes.
@@ -547,11 +540,11 @@ const Timesheets = (props) => {
             getSavedShiftsForUser={getSavedShiftsForUser}
           />
         </Grid>
-        <Snackbar open={snackbarOpen} autoHideDuration={10000} onClose={handleCloseSnackbar}>
-          <Alert style={{textAlign: 'center'}} onClose={handleCloseSnackbar} severity={snackbarSeverity}>
-            {snackbarText}
-          </Alert>
-        </Snackbar>
+        <SimpleSnackbar
+          text={snackbarText}
+          severity={snackbarSeverity}
+          open={snackbarOpen}
+          onClose={handleCloseSnackbar} />
       </>
     ) : (
       <Grid container justify="center" spacing="16">

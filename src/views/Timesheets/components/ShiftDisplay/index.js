@@ -4,20 +4,15 @@ import {
     Card,
     CardContent,
     CardHeader,
-    Snackbar,
     Tabs,
     Tab,
 } from '@material-ui/core';
 import GordonLoader from '../../../../components/Loader'
 import SavedShiftsList from '../../components/SavedShiftsList';
 import jobs from '../../../../services/jobs';
-import MuiAlert from '@material-ui/lab/Alert';
+import SimpleSnackbar from '../../../../components/Snackbar';
 import Media from 'react-media';
 import './ShiftDisplay.css'
-
-const Alert = (props) => {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 export default class ShiftDisplay extends Component {
     constructor(props) {
@@ -58,7 +53,6 @@ export default class ShiftDisplay extends Component {
       }
   
       this.setState({ snackbarOpen: false })
-      this.snackbarText = ''
     };
 
     loadShifts() {
@@ -228,11 +222,11 @@ export default class ShiftDisplay extends Component {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Snackbar open={this.state.snackbarOpen} autoHideDuration={10000} onClose={this.handleCloseSnackbar}>
-                    <Alert style={{textAlign: 'center'}} onClose={this.handleCloseSnackbar} severity="error">
-                        {this.snackbarText}
-                    </Alert>
-                </Snackbar>
+                <SimpleSnackbar
+                    text={this.snackbarText}
+                    severity={'error'}
+                    open={this.state.snackbarOpen}
+                    onClose={this.handleCloseSnackbar} />
             </>
         ) : (
             <Grid item xs={12}>
