@@ -6,6 +6,7 @@ import {
   Button,
   IconButton,
   Dialog,
+  Snackbar,
   DialogContent,
   Tooltip,
   DialogTitle,
@@ -13,6 +14,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
+import MuiAlert from '@material-ui/lab/Alert';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import { gordonColors } from '../../../../theme';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -46,6 +48,11 @@ const PickerInput = (props) => {
   </>
   )
 }
+
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 export default class ShiftItem extends Component {
   constructor(props) {
     super(props);
@@ -64,6 +71,8 @@ export default class ShiftItem extends Component {
       updating: false,
     };
     this.loaderSize = 20;
+    this.snackbarText = '';
+    this.snackbarSeverity = '';
   }
 
   componentDidUpdate(prevProps) {
@@ -254,26 +263,57 @@ export default class ShiftItem extends Component {
     this.setState({newDateTimeOut: date}, this.checkForError);
   }
 
+  handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ snackbarOpen: false })
+    this.snackbarText = '';
+    this.snackbarSeverity = '';
+  };
+
   onCheckButtonClick = () => {
-    this.setState({updating: true});
-    this.props.editShift(this.props.value.ID, this.state.newDateTimeIn, this.state.newDateTimeOut, this.state.newHoursWorked)
-      .then(() => {
-        this.setState({
-          editing: false,
-          newDateTimeIn: null,
-          newDateTimeOut: null,
-          newHoursWorked: null,
-          dateInIsFuture: false,
-          dateOutIsFuture: false,
-          enteredFutureTime: false,
-          errorText: '',
-          isOverlappingShift: false,
-          updating: false,
-        });
-      })
-      .catch(() => {
-        this.setState({updating: false});
+    this.setState({ updating: true });
+    // Split the shift if it spans pay week boundaries
+    if (this.state.newDateTimeIn.getDay() === 6 && this.state.newDateTimeOut.getDay() === 0) {
+      this.snackbarText = (
+        'The edited shift crosses the pay week boundary. You must split it into two shifts, one that ends at 11:59 pm Saturday and one that begins at 12:00 am Sunday. Please edit/save your shifts to reflect this. '
+      );
+      this.snackbarSeverity = 'warning';
+      this.setState({
+        snackbarOpen: true,
+        updating: false,
       });
+
+    } else {
+      this.props.editShift(this.props.value.ID, this.state.newDateTimeIn, this.state.newDateTimeOut, this.state.newHoursWorked)
+        .then(() => {
+          this.setState({
+            editing: false,
+            newDateTimeIn: null,
+            newDateTimeOut: null,
+            newHoursWorked: null,
+            dateInIsFuture: false,
+            dateOutIsFuture: false,
+            enteredFutureTime: false,
+            errorText: '',
+            isOverlappingShift: false,
+            updating: false,
+          });
+        })
+        .catch(error => {
+          this.setState({ updating: false });
+          if (typeof (error) === 'string' && error.toLowerCase().includes('overlap')) {
+            this.snackbarSeverity = 'warning';
+            this.snackbarText = 'You have already entered hours that fall within this time frame. Please review the times you entered above and try again.';
+          } else {
+            this.snackbarSeverity = 'error';
+            this.snackbarText = 'There was a problem updating the shift.';
+          }
+          this.setState({ snackbarOpen: true });
+        });
+    }
   };
 
   render() {
@@ -474,41 +514,48 @@ export default class ShiftItem extends Component {
     );
 
     return (
-      <Grid item xs={12} className="shift-item">
-        {confirmationBox}
-        <div>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container direction="row" alignItems="center">
-              <Grid item xs={3}>
-                <div className='tooltip-container'>
-                  <Typography variant="body2">{descColumn}</Typography>
-                  {shiftCommentTooltip}
-                </div>
+      <>
+        <Grid item xs={12} className="shift-item">
+          {confirmationBox}
+          <div>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Grid container direction="row" alignItems="center">
+                <Grid item xs={3}>
+                  <div className='tooltip-container'>
+                    <Typography variant="body2">{descColumn}</Typography>
+                    {shiftCommentTooltip}
+                  </div>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body2">{timeInDisp}</Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body2">{timeOutDisp}</Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <Typography variant="body2">{HOURLY_RATE.toFixed(2)}</Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <div className='tooltip-container'>
+                    <Typography variant="body2">{hoursWorkedDisp}</Typography>
+                    {shiftNotesTooltip}
+                  </div>
+                </Grid>
+                <Grid item xs={1}>
+                  <Typography variant="body2">
+                    {shiftItemIcons}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body2">{timeInDisp}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body2">{timeOutDisp}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body2">{HOURLY_RATE.toFixed(2)}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <div className='tooltip-container'>
-                  <Typography variant="body2">{hoursWorkedDisp}</Typography>
-                  {shiftNotesTooltip}
-                </div>
-              </Grid>
-              <Grid item xs={1}>
-                <Typography variant="body2">
-                  {shiftItemIcons}
-                </Typography>
-              </Grid>
-            </Grid>
-          </MuiPickersUtilsProvider>
-        </div>
-      </Grid>
+            </MuiPickersUtilsProvider>
+          </div>
+        </Grid>
+        <Snackbar open={this.state.snackbarOpen} autoHideDuration={10000} onClose={this.handleCloseSnackbar}>
+          <Alert style={{ textAlign: 'center' }} onClose={this.handleCloseSnackbar} severity={this.snackbarSeverity}>
+            {this.snackbarText}
+          </Alert>
+        </Snackbar>
+      </>
     );
   }
 }

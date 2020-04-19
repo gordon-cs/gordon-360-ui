@@ -94,14 +94,6 @@ export default class ShiftDisplay extends Component {
         promise.then(response => {
             this.loadShifts();
         })
-        promise.catch(error => {
-            if (typeof(error) === 'string' && error.toLowerCase().includes('overlap')) {
-                this.snackbarText = 'You have already entered hours that fall within this time frame. Please review the times you entered above and try again.';
-            } else {
-                this.snackbarText = 'There was a problem updating the shift.';
-            }
-                this.setState({ snackbarOpen: true });
-        });
         return promise;
     }
 
