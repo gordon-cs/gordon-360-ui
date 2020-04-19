@@ -15,9 +15,7 @@ import {
   Button,
   Typography,
   TextField,
-  Snackbar,
 } from '@material-ui/core/';
-import MuiAlert from '@material-ui/lab/Alert';
 import DateFnsUtils from '@date-io/date-fns';
 import jobs from '../../services/jobs';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
@@ -26,6 +24,8 @@ import { withStyles } from '@material-ui/core/styles';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { gordonColors } from '../../theme';
 import './timesheets.css';
+import GordonLoader from '../../components/Loader';
+import SimpleSnackbar from '../../components/Snackbar';
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
@@ -51,6 +51,9 @@ const Timesheets = (props) => {
   const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [network, setNetwork] = useState('online');
+  const [saving, setSaving] = useState(false);
+  const [snackbarText, setSnackbarText] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('');
 
   const handleTimeErrors = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -83,10 +86,6 @@ const Timesheets = (props) => {
   }
 
   if (props.Authentication) {
-    function Alert(props) {
-      return <MuiAlert elevation={6} variant="filled" {...props} />;
-    }
-
     const getActiveJobsForUser = () => {
       let details = {
         shift_start_datetime: selectedDateIn.toLocaleString(),
@@ -124,6 +123,7 @@ const Timesheets = (props) => {
     const handleSaveButtonClick = () => {
       let timeIn = selectedDateIn;
       let timeOut = selectedDateOut;
+      setSaving(true);
 
       if (selectedDateIn.getDay() === 6 && selectedDateOut.getDay() === 0) {
         let timeOut2 = new Date(timeOut.getTime());
@@ -152,8 +152,23 @@ const Timesheets = (props) => {
             timeOut2.toLocaleString(),
             roundedHourDifference2,
             userShiftNotes,
-          ).then(result => {
+          )
+          .then(() => {
+            setSnackbarSeverity('info');
+            setSnackbarText('Your entered shift spanned two pay weeks, so it was automatically split into two shifts.');
             setSnackbarOpen(true);
+          })
+          .catch(err => {
+            setSaving(false);
+            if (typeof(err) === 'string' && err.toLowerCase().includes('overlap')) {
+              setSnackbarText('The shift was automatically split because it spanned a pay week, but one of the two derived shifts conflicted with a previously entered one. Please review your saved shifts.');
+              setSnackbarSeverity('error');
+              setSnackbarOpen(true);
+            } else {
+              setSnackbarText('There was a problem saving the shift.');
+              setSnackbarSeverity('error');
+              setSnackbarOpen(true);
+            }
           });
         }
       }
@@ -180,9 +195,17 @@ const Timesheets = (props) => {
         setUserShiftNotes('');
         setUserJobs([]);
         setHoursWorkedInDecimal(0);
+        setSaving(false);
       }).catch(err => {
-        if (err.toLowerCase().includes('overlap')) {
-          setIsOverlappingShift(true);
+        setSaving(false);
+        if (typeof(err) === 'string' && err.toLowerCase().includes('overlap')) {
+          setSnackbarText('You have already entered hours that fall within this time frame. Please review the times you entered above and try again.');
+          setSnackbarSeverity('warning');
+          setSnackbarOpen(true);
+        } else {
+          setSnackbarText('There was a problem saving the shift.');
+          setSnackbarSeverity('error');
+          setSnackbarOpen(true);
         }
       });
     };
@@ -319,7 +342,6 @@ const Timesheets = (props) => {
       if (reason === 'clickaway') {
         return;
       }
-
       setSnackbarOpen(false);
     };
 
@@ -418,6 +440,29 @@ const Timesheets = (props) => {
     const handleShiftNotesChanged = event => {
       setUserShiftNotes(event.target.value);
     };
+
+    const saveButton = saving ? (
+      <GordonLoader size={32} />
+    ) : (
+        <Button
+          disabled={
+            enteredFutureTime ||
+            timeOutIsBeforeTimeIn ||
+            isOverlappingShift ||
+            shiftTooLong ||
+            isZeroLengthShift ||
+            selectedDateIn === null ||
+            selectedDateOut === null ||
+            selectedJob === null ||
+            selectedJob === ''
+          }
+          variant="contained"
+          color="primary"
+          onClick={handleSaveButtonClick}
+        >
+          Save
+                    </Button>
+    );
 
     return networkStatus === 'online' ? (
       <>
@@ -520,24 +565,7 @@ const Timesheets = (props) => {
                       {errorText}
                     </Grid>
                     <Grid item xs={6}>
-                      <Button
-                        disabled={
-                          enteredFutureTime ||
-                          timeOutIsBeforeTimeIn ||
-                          isOverlappingShift ||
-                          shiftTooLong ||
-                          isZeroLengthShift ||
-                          selectedDateIn === null ||
-                          selectedDateOut === null ||
-                          selectedJob === null ||
-                          selectedJob === ''
-                        }
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSaveButtonClick}
-                      >
-                        Save
-                    </Button>
+                      {saveButton}
                     </Grid>
                     <Grid item xs={12}>
                       <Typography>
@@ -568,11 +596,11 @@ const Timesheets = (props) => {
             getSavedShiftsForUser={getSavedShiftsForUser}
           />
         </Grid>
-        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-          <Alert onClose={handleCloseSnackbar} severity="info">
-            Your entered shift spanned two pay weeks, so it was automatically split into two shifts.
-        </Alert>
-        </Snackbar>
+        <SimpleSnackbar
+          text={snackbarText}
+          severity={snackbarSeverity}
+          open={snackbarOpen}
+          onClose={handleCloseSnackbar} />
       </>
     ) : (
       <Grid container justify="center" spacing="16">
