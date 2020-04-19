@@ -237,7 +237,7 @@ export default class ShiftDisplay extends Component {
                     </Grid>
                 </Grid>
                 <Snackbar open={this.state.snackbarOpen} autoHideDuration={10000} onClose={this.handleCloseSnackbar}>
-                    <Alert onClose={this.handleCloseSnackbar} severity="error">
+                    <Alert style={{textAlign: 'center'}} onClose={this.handleCloseSnackbar} severity="error">
                         {this.snackbarText}
                     </Alert>
                 </Snackbar>
