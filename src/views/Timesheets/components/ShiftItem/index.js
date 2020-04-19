@@ -22,6 +22,7 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import './ShiftItem.css'
+import GordonLoader from '../../../../components/Loader';
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
@@ -59,7 +60,10 @@ export default class ShiftItem extends Component {
       enteredFutureTime: false,
       errorText: '',
       isOverlappingShift: false,
+      deleting: false,
+      updating: false,
     };
+    this.loaderSize = 20;
   }
 
   componentDidUpdate(prevProps) {
@@ -250,9 +254,31 @@ export default class ShiftItem extends Component {
     this.setState({newDateTimeOut: date}, this.checkForError);
   }
 
+  onCheckButtonClick = () => {
+    this.setState({updating: true});
+    this.props.editShift(this.state.ID, this.state.newDateTimeIn, this.state.newDateTimeOut, this.state.newHoursWorked)
+      .then(() => {
+        this.setState({
+          editing: false,
+          newDateTimeIn: null,
+          newDateTimeOut: null,
+          newHoursWorked: null,
+          dateInIsFuture: false,
+          dateOutIsFuture: false,
+          enteredFutureTime: false,
+          errorText: '',
+          isOverlappingShift: false,
+          updating: false,
+        });
+      })
+      .catch(() => {
+        this.setState({updating: false});
+      });
+  };
+
   render() {
     const shift = this.props.value;
-    const { deleteShift, editShift } = this.props;
+    const { deleteShift } = this.props;
     const {
       ID,
       EML_DESCRIPTION,
@@ -331,7 +357,10 @@ export default class ShiftItem extends Component {
                   <Button
                     variant="contained"
                     onClick={() => {
-                      deleteShift(ID, EML_DESCRIPTION);
+                      this.setState({deleting: true});
+                      deleteShift(ID, EML_DESCRIPTION).then(() => {
+                        this.setState({deleting: false});
+                      });
                       this.onClose();
                     }}
                     style={styles.redButton}>
@@ -344,6 +373,32 @@ export default class ShiftItem extends Component {
         </Grid>
       </Grid>
     );
+
+    let loaderButton = (
+      <IconButton disabled>
+        <GordonLoader size={this.loaderSize} />
+      </IconButton>
+    )
+    let deleteButton = (
+      <IconButton onClick={this.handleDeleteButtonClick}>
+        <DeleteForeverOutlinedIcon style={{ color: gordonColors.secondary.red }} />
+      </IconButton>
+    );
+    if (this.state.deleting) {
+      
+      deleteButton = loaderButton;
+    }
+
+    let checkButton = (
+      <IconButton
+        disabled={errorText !== ''}
+        onClick={this.onCheckButtonClick}>
+        <CheckOutlinedIcon style={{ color: 'green' }} />
+      </IconButton>
+    );
+    if (this.state.updating) {
+      checkButton = loaderButton;
+    }
     
     let shiftItemIcons;
     if (STATUS === 'Saved' || STATUS === 'Rejected') {
@@ -351,26 +406,7 @@ export default class ShiftItem extends Component {
         shiftItemIcons = (
           <Grid container direction='row'>
             <Grid item xs={12} md={6}>
-              <IconButton
-                disabled={errorText !== ''}
-                onClick={() => {
-                  editShift(ID, this.state.newDateTimeIn, this.state.newDateTimeOut, this.state.newHoursWorked)
-                    .then(response => {
-                      this.setState({
-                        editing: false,
-                        newDateTimeIn: null,
-                        newDateTimeOut: null,
-                        newHoursWorked: null,
-                        dateInIsFuture: false,
-                        dateOutIsFuture: false,
-                        enteredFutureTime: false,
-                        errorText: '',
-                        isOverlappingShift: false,
-                      });
-                    });
-                }}>
-                <CheckOutlinedIcon style={{color: 'green'}} />
-              </IconButton>
+              {checkButton}
             </Grid>
             <Grid item xs={12} md={6}>
               <IconButton onClick={this.toggleEditing}>
@@ -398,9 +434,7 @@ export default class ShiftItem extends Component {
               </IconButton>
             </Grid>
             <Grid item xs={12} md={6}>
-              <IconButton onClick={this.handleDeleteButtonClick}>
-                <DeleteForeverOutlinedIcon style={{color: gordonColors.secondary.red}} />
-              </IconButton>
+              {deleteButton}
             </Grid>
           </Grid>
         );
