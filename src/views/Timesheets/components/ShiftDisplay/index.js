@@ -8,6 +8,7 @@ import {
     Tabs,
     Tab,
 } from '@material-ui/core';
+import GordonLoader from '../../../../components/Loader'
 import SavedShiftsList from '../../components/SavedShiftsList';
 import jobs from '../../../../services/jobs';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -22,6 +23,7 @@ export default class ShiftDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             tabValue: 0,
             shifts: [],
             jobNames: [],
@@ -37,13 +39,17 @@ export default class ShiftDisplay extends Component {
     }
 
     componentDidMount() {
-        this.loadShifts().then(() => {
-            if (this.state.jobNames.length > 0) {
-                this.setState({
-                    selectedJob: this.state.jobNames[0],
-                })
-            }
-        });
+        this.setState({loading: true}, () => {
+            this.loadShifts().then(() => {
+                console.log('loaded shifts');
+                if (this.state.jobNames.length > 0) {
+                    this.setState({
+                        selectedJob: this.state.jobNames[0],
+                    });
+                }
+                this.setState({loading: false})
+            });
+        })
     }
 
     handleCloseSnackbar = (event, reason) => {
@@ -182,7 +188,7 @@ export default class ShiftDisplay extends Component {
             <></>
         );
 
-        return (
+        return ( !this.state.loading ? (
             <>
                 {tabsCard}
                 <Grid item xs={12}>
@@ -227,6 +233,11 @@ export default class ShiftDisplay extends Component {
                     </Alert>
                 </Snackbar>
             </>
+        ) : (
+            <Grid item xs={12}>
+                <GordonLoader />
+            </Grid>
+        )
         )
     }
 }
