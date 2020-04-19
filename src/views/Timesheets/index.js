@@ -21,6 +21,7 @@ import jobs from '../../services/jobs';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import ShiftDisplay from './components/ShiftDisplay';
 import './timesheets.css';
+import GordonLoader from '../../components/Loader';
 
 const Timesheets = (props) => {
   const [userJobs, setUserJobs] = useState([]);
@@ -37,6 +38,7 @@ const Timesheets = (props) => {
   const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [network, setNetwork] = useState('online');
+  const [saving, setSaving] = useState(false);
 
   const handleTimeErrors = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -110,6 +112,7 @@ const Timesheets = (props) => {
     const handleSaveButtonClick = () => {
       let timeIn = selectedDateIn;
       let timeOut = selectedDateOut;
+      setSaving(true);
 
       if (selectedDateIn.getDay() === 6 && selectedDateOut.getDay() === 0) {
         let timeOut2 = new Date(timeOut.getTime());
@@ -166,7 +169,9 @@ const Timesheets = (props) => {
         setUserShiftNotes('');
         setUserJobs([]);
         setHoursWorkedInDecimal(0);
+        setSaving(false);
       }).catch(err => {
+        setSaving(false);
         if (err.toLowerCase().includes('overlap')) {
           setIsOverlappingShift(true);
         }
@@ -405,6 +410,29 @@ const Timesheets = (props) => {
       setUserShiftNotes(event.target.value);
     };
 
+    const saveButton = saving ? (
+      <GordonLoader size={32} />
+    ) : (
+        <Button
+          disabled={
+            enteredFutureTime ||
+            timeOutIsBeforeTimeIn ||
+            isOverlappingShift ||
+            shiftTooLong ||
+            isZeroLengthShift ||
+            selectedDateIn === null ||
+            selectedDateOut === null ||
+            selectedJob === null ||
+            selectedJob === ''
+          }
+          variant="contained"
+          color="primary"
+          onClick={handleSaveButtonClick}
+        >
+          Save
+                    </Button>
+    );
+
     return networkStatus === 'online' ? (
       <>
         <Grid container spacing={2}>
@@ -483,24 +511,7 @@ const Timesheets = (props) => {
                       {errorText}
                     </Grid>
                     <Grid item xs={6}>
-                      <Button
-                        disabled={
-                          enteredFutureTime ||
-                          timeOutIsBeforeTimeIn ||
-                          isOverlappingShift ||
-                          shiftTooLong ||
-                          isZeroLengthShift ||
-                          selectedDateIn === null ||
-                          selectedDateOut === null ||
-                          selectedJob === null ||
-                          selectedJob === ''
-                        }
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSaveButtonClick}
-                      >
-                        Save
-                    </Button>
+                      {saveButton}
                     </Grid>
                   </Grid>
                 </CardContent>
