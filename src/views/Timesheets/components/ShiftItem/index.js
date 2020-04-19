@@ -256,7 +256,7 @@ export default class ShiftItem extends Component {
 
   onCheckButtonClick = () => {
     this.setState({updating: true});
-    this.props.editShift(this.state.ID, this.state.newDateTimeIn, this.state.newDateTimeOut, this.state.newHoursWorked)
+    this.props.editShift(this.props.value.ID, this.state.newDateTimeIn, this.state.newDateTimeOut, this.state.newHoursWorked)
       .then(() => {
         this.setState({
           editing: false,
