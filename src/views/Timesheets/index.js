@@ -547,7 +547,7 @@ const Timesheets = (props) => {
             getSavedShiftsForUser={getSavedShiftsForUser}
           />
         </Grid>
-        <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Snackbar open={snackbarOpen} autoHideDuration={10000} onClose={handleCloseSnackbar}>
           <Alert style={{textAlign: 'center'}} onClose={handleCloseSnackbar} severity={snackbarSeverity}>
             {snackbarText}
           </Alert>
