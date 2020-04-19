@@ -225,7 +225,7 @@ export default class GordonHeader extends Component {
             >
               <MenuIcon className="menu-button-icon" />
             </IconButton>
-            <Typography className="title" variant="h6" color="inherit">
+            <Typography className="title disable-select" variant="h6" color="inherit">
               <Switch>
                 {routes.map(route => (
                   <Route
