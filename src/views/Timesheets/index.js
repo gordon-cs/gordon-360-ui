@@ -468,7 +468,7 @@ const Timesheets = (props) => {
                         margin="normal"
                         id="date-picker-in-dialog"
                         label="Start Time"
-                        helperText="MM/DD/YY HH/MM AM/PM"
+                        helperText="MM-DD-YY HH-MM AM/PM"
                         format="MM/dd/yy hh:mm a"
                         value={selectedDateIn}
                         onChange={handleDateChangeIn}
@@ -489,7 +489,7 @@ const Timesheets = (props) => {
                         margin="normal"
                         id="date-picker-out-dialog"
                         label="End Time"
-                        helperText="MM/DD/YY HH/MM AM/PM"
+                        helperText="MM-DD-YY HH-MM AM/PM"
                         format="MM/dd/yy hh:mm a"
                         openTo="hours"
                         value={selectedDateOut}
