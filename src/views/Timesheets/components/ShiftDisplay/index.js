@@ -4,24 +4,21 @@ import {
     Card,
     CardContent,
     CardHeader,
-    Snackbar,
     Tabs,
     Tab,
 } from '@material-ui/core';
+import GordonLoader from '../../../../components/Loader'
 import SavedShiftsList from '../../components/SavedShiftsList';
 import jobs from '../../../../services/jobs';
-import MuiAlert from '@material-ui/lab/Alert';
+import SimpleSnackbar from '../../../../components/Snackbar';
 import Media from 'react-media';
 import './ShiftDisplay.css'
-
-const Alert = (props) => {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 export default class ShiftDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             tabValue: 0,
             shifts: [],
             jobNames: [],
@@ -34,16 +31,20 @@ export default class ShiftDisplay extends Component {
         this.submittedShifts = [];
         this.rejectedShifts = [];
         this.approvedShifts = [];
+        this.snackbarText = '';
     }
 
     componentDidMount() {
-        this.loadShifts().then(() => {
-            if (this.state.jobNames.length > 0) {
-                this.setState({
-                    selectedJob: this.state.jobNames[0],
-                })
-            }
-        });
+        this.setState({loading: true}, () => {
+            this.loadShifts().then(() => {
+                if (this.state.jobNames.length > 0) {
+                    this.setState({
+                        selectedJob: this.state.jobNames[0],
+                    });
+                }
+                this.setState({loading: false})
+            });
+        })
     }
 
     handleCloseSnackbar = (event, reason) => {
@@ -87,18 +88,18 @@ export default class ShiftDisplay extends Component {
         promise.then(response => {
             this.loadShifts();
         })
-        promise.catch(error => {
-            if (error.toLowerCase().includes('overlap')) {
-                this.setState({ snackbarOpen: true });
-            }
-        });
         return promise;
     }
 
     deleteShiftForUser(rowID, emlDesc) {
-        let result = jobs.deleteShiftForUser(rowID).then(response => {
+        let result = jobs.deleteShiftForUser(rowID)
+        .then(() => {
             this.jobNamesSet.delete(emlDesc);
             this.loadShifts();
+        })
+        .catch(() => {
+            this.snackbarText = 'There was a problem deleting the shift.';
+            this.setState({ snackbarOpen: true });
         });
         return result;
       };
@@ -182,7 +183,7 @@ export default class ShiftDisplay extends Component {
             <></>
         );
 
-        return (
+        return ( !this.state.loading ? (
             <>
                 {tabsCard}
                 <Grid item xs={12}>
@@ -221,12 +222,17 @@ export default class ShiftDisplay extends Component {
                         </Grid>
                     </Grid>
                 </Grid>
-                <Snackbar open={this.state.snackbarOpen} autoHideDuration={10000} onClose={this.handleCloseSnackbar}>
-                    <Alert onClose={this.handleCloseSnackbar} severity="error">
-                        You have already entered hours that fall within this time frame. Please review the times you entered above and try again.
-                    </Alert>
-                </Snackbar>
+                <SimpleSnackbar
+                    text={this.snackbarText}
+                    severity={'error'}
+                    open={this.state.snackbarOpen}
+                    onClose={this.handleCloseSnackbar} />
             </>
+        ) : (
+            <Grid item xs={12}>
+                <GordonLoader />
+            </Grid>
+        )
         )
     }
 }
