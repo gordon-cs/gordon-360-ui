@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import 'date-fns';
 import {
   Grid,
@@ -25,14 +25,21 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { gordonColors } from '../../theme';
 import './timesheets.css';
 import GordonLoader from '../../components/Loader';
+import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
+
+const useStyles = makeStyles((theme) => ({
+  customWidth: {
+    maxWidth: 500,
+  },
+}));
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
     boxShadow: theme.shadows[1],
-    fontSize: 11,
+    fontSize: 12,
   },
 }))(Tooltip);
 
@@ -54,6 +61,9 @@ const Timesheets = (props) => {
   const [saving, setSaving] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
+
+  const tooltipRef = useRef();
+  const classes = useStyles();
 
   const handleTimeErrors = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
@@ -477,8 +487,8 @@ const Timesheets = (props) => {
                   }}
                 >
                   <div className='header-tooltip-container'>
-                    <CardHeader className='disable-select' title="Enter a shift" />
                     <CustomTooltip
+                      classes={{ tooltip: classes.customWidth }}
                       interactive
                       disableFocusListener
                       disableTouchListener
@@ -488,11 +498,14 @@ const Timesheets = (props) => {
                       To request permission for a special circumstance, please email\
                       student-employment@gordon.edu before exceeding this limit.'}
                       placement='bottom'>
-                      <InfoOutlinedIcon
-                        className='tooltip-icon'
-                        style={{
-                          fontSize: 18
-                        }} />
+                      <div ref={tooltipRef}>
+                        <CardHeader className='disable-select' title="Enter a shift" />
+                        <InfoOutlinedIcon
+                          className='tooltip-icon'
+                          style={{
+                            fontSize: 18
+                          }} />
+                      </div>
                     </CustomTooltip>
                   </div>
                   <Grid
