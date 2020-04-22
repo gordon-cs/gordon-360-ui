@@ -67,6 +67,7 @@ const Timesheets = (props) => {
 
   const handleTimeErrors = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
+      checkForFutureDate(timeIn, timeOut);
       let timeDiff = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
       let roundedHourDifference = 0;
@@ -90,9 +91,10 @@ const Timesheets = (props) => {
     }
   };
 
-  const checkForFutureDate = () => {
+  const checkForFutureDate = (dateIn, dateOut) => {
+    console.log('checking for future date');
     let now = Date.now();
-    setEnteredFutureTime((selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
+    setEnteredFutureTime((dateIn.getTime() > now) || (dateOut.getTime() > now));
   }
 
   if (props.Authentication) {
@@ -443,7 +445,6 @@ const Timesheets = (props) => {
     const onDatetimeSelectorClose = () => {
       if (selectedDateIn !== null && selectedDateOut !== null) {
         getActiveJobsForUser();
-        checkForFutureDate();
       }
     }
 
