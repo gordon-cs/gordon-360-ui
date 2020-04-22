@@ -14,6 +14,7 @@ import PeopleSearch from './views/PeopleSearch';
 import ProfileNotFound from './views/ProfileNotFound';
 import IDUploader from './views/IDUploader';
 import Admin from './views/Admin';
+import Timesheets from './views/Timesheets';
 import BannerSubmission from './views/BannerSubmission';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
@@ -95,8 +96,13 @@ export default [
     component: Admin,
   },
   {
+    name: 'Timesheets',
+    path: '/t1m35433t5',
+    component: Timesheets,
+  },
+  {
     name: 'Banner',
     path: '/banner',
     component: BannerSubmission,
-  },
+  }
 ];
