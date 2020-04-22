@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import 'date-fns';
 import {
   Grid,
@@ -25,14 +25,21 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { gordonColors } from '../../theme';
 import './timesheets.css';
 import GordonLoader from '../../components/Loader';
+import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
+
+const useStyles = makeStyles((theme) => ({
+  customWidth: {
+    maxWidth: 500,
+  },
+}));
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
     boxShadow: theme.shadows[1],
-    fontSize: 11,
+    fontSize: 12,
   },
 }))(Tooltip);
 
@@ -55,8 +62,12 @@ const Timesheets = (props) => {
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
 
+  const tooltipRef = useRef();
+  const classes = useStyles();
+
   const handleTimeErrors = (timeIn, timeOut) => {
     if (timeIn !== null && timeOut !== null) {
+      checkForFutureDate(timeIn, timeOut);
       let timeDiff = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
       let roundedHourDifference = 0;
@@ -80,16 +91,17 @@ const Timesheets = (props) => {
     }
   };
 
-  const checkForFutureDate = () => {
+  const checkForFutureDate = (dateIn, dateOut) => {
+    console.log('checking for future date');
     let now = Date.now();
-    setEnteredFutureTime((selectedDateIn.getTime() > now) || (selectedDateOut.getTime() > now));
+    setEnteredFutureTime((dateIn.getTime() > now) || (dateOut.getTime() > now));
   }
 
   if (props.Authentication) {
-    const getActiveJobsForUser = () => {
+    const getActiveJobsForUser = (dateIn, dateOut) => {
       let details = {
-        shift_start_datetime: selectedDateIn.toLocaleString(),
-        shift_end_datetime: selectedDateOut.toLocaleString(),
+        shift_start_datetime: dateIn.toLocaleString(),
+        shift_end_datetime: dateOut.toLocaleString(),
       };
       jobs.getActiveJobsForUser(details).then(result => {
         setUserJobs(result);
@@ -107,6 +119,9 @@ const Timesheets = (props) => {
         setSelectedDateIn(date);
         setIsOverlappingShift(false);
         handleTimeErrors(date, selectedDateOut);
+        if (selectedDateOut !== null) {
+          getActiveJobsForUser(date, selectedDateOut);
+        }
       }
     };
 
@@ -117,6 +132,9 @@ const Timesheets = (props) => {
         setSelectedDateOut(date);
         setIsOverlappingShift(false);
         handleTimeErrors(selectedDateIn, date);
+        if (selectedDateIn !== null) {
+          getActiveJobsForUser(selectedDateIn, date);
+        }
       }
     };
 
@@ -430,13 +448,6 @@ const Timesheets = (props) => {
       errorText = <></>;
     }
 
-    const onDatetimeSelectorClose = () => {
-      if (selectedDateIn !== null && selectedDateOut !== null) {
-        getActiveJobsForUser();
-        checkForFutureDate();
-      }
-    }
-
     const handleShiftNotesChanged = event => {
       setUserShiftNotes(event.target.value);
     };
@@ -477,8 +488,8 @@ const Timesheets = (props) => {
                   }}
                 >
                   <div className='header-tooltip-container'>
-                    <CardHeader className='disable-select' title="Enter a shift" />
                     <CustomTooltip
+                      classes={{ tooltip: classes.customWidth }}
                       interactive
                       disableFocusListener
                       disableTouchListener
@@ -488,11 +499,14 @@ const Timesheets = (props) => {
                       To request permission for a special circumstance, please email\
                       student-employment@gordon.edu before exceeding this limit.'}
                       placement='bottom'>
-                      <InfoOutlinedIcon
-                        className='tooltip-icon'
-                        style={{
-                          fontSize: 18
-                        }} />
+                      <div ref={tooltipRef}>
+                        <CardHeader className='disable-select' title="Enter a shift" />
+                        <InfoOutlinedIcon
+                          className='tooltip-icon'
+                          style={{
+                            fontSize: 18
+                          }} />
+                      </div>
                     </CustomTooltip>
                   </div>
                   <Grid
@@ -517,7 +531,6 @@ const Timesheets = (props) => {
                         format="MM/dd/yy hh:mm a"
                         value={selectedDateIn}
                         onChange={handleDateChangeIn}
-                        onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3}>
@@ -539,7 +552,6 @@ const Timesheets = (props) => {
                         openTo="hours"
                         value={selectedDateOut}
                         onChange={handleDateChangeOut}
-                        onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3}>
