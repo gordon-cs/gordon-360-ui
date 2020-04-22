@@ -98,10 +98,10 @@ const Timesheets = (props) => {
   }
 
   if (props.Authentication) {
-    const getActiveJobsForUser = () => {
+    const getActiveJobsForUser = (dateIn, dateOut) => {
       let details = {
-        shift_start_datetime: selectedDateIn.toLocaleString(),
-        shift_end_datetime: selectedDateOut.toLocaleString(),
+        shift_start_datetime: dateIn.toLocaleString(),
+        shift_end_datetime: dateOut.toLocaleString(),
       };
       jobs.getActiveJobsForUser(details).then(result => {
         setUserJobs(result);
@@ -119,6 +119,9 @@ const Timesheets = (props) => {
         setSelectedDateIn(date);
         setIsOverlappingShift(false);
         handleTimeErrors(date, selectedDateOut);
+        if (selectedDateOut !== null) {
+          getActiveJobsForUser(date, selectedDateOut);
+        }
       }
     };
 
@@ -129,6 +132,9 @@ const Timesheets = (props) => {
         setSelectedDateOut(date);
         setIsOverlappingShift(false);
         handleTimeErrors(selectedDateIn, date);
+        if (selectedDateIn !== null) {
+          getActiveJobsForUser(selectedDateIn, date);
+        }
       }
     };
 
@@ -442,12 +448,6 @@ const Timesheets = (props) => {
       errorText = <></>;
     }
 
-    const onDatetimeSelectorClose = () => {
-      if (selectedDateIn !== null && selectedDateOut !== null) {
-        getActiveJobsForUser();
-      }
-    }
-
     const handleShiftNotesChanged = event => {
       setUserShiftNotes(event.target.value);
     };
@@ -531,7 +531,6 @@ const Timesheets = (props) => {
                         format="MM/dd/yy hh:mm a"
                         value={selectedDateIn}
                         onChange={handleDateChangeIn}
-                        onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3}>
@@ -553,7 +552,6 @@ const Timesheets = (props) => {
                         openTo="hours"
                         value={selectedDateOut}
                         onChange={handleDateChangeOut}
-                        onClose={onDatetimeSelectorClose}
                       />
                     </Grid>
                     <Grid item xs={12} md={6} lg={3}>
