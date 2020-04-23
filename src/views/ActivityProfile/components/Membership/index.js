@@ -377,20 +377,21 @@ export default class Membership extends Component {
             requestList = <RequestDetail involvement={this.state.requests[0]} />;
           }
           // Only advisors and superadmins can re-open the roster
+
+          if (this.state.status === 'OPEN') {
+            confirmRoster = (
+              <Button variant="contained" color="primary" onClick={this.onConfirmRoster}>
+                Confirm final roster
+              </Button>
+            );
+          } else if (this.state.participationDetail[1] === 'Advisor' || this.state.isSuperAdmin) {
+            confirmRoster = (
+              <Button variant="contained" color="primary" onClick={this.onReopenActivity}>
+                Reopen roster
+              </Button>
+            );
+          }
           if (this.state.participationDetail[1] === 'Advisor' || this.state.isSuperAdmin) {
-            if (this.state.status === 'OPEN') {
-              confirmRoster = (
-                <Button variant="contained" color="primary" onClick={this.onConfirmRoster}>
-                  Confirm final roster
-                </Button>
-              );
-            } else {
-              confirmRoster = (
-                <Button variant="contained" color="primary" onClick={this.onReopenActivity}>
-                  Reopen roster
-                </Button>
-              );
-            }
             ferpaAsterisks = (
               <Card>
                 <CardContent>

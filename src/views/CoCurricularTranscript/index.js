@@ -305,7 +305,7 @@ export default class Transcript extends Component {
                   style={buttonColors}
                   variant="contained"
                 >
-                  Print Co-Curricular Transcript
+                  Print Experience Transcript
                 </Button>
               </div>
               <div>Gordon College Experience Transcript</div>

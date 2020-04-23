@@ -166,6 +166,10 @@ export default class MemberList extends Component {
   }
 
   render() {
+    // Only display mailLoc if they have a mailbox
+    let mailLoc = 'Box #' + this.props.member.Mail_Location;
+    mailLoc = mailLoc === 'Box #' ? '' : mailLoc;
+
     let content;
     const rowStyle = {
       padding: '10px',
@@ -392,7 +396,7 @@ export default class MemberList extends Component {
                   <Typography>{this.props.member.ParticipationDescription} </Typography>
                 </Grid>
                 <Grid item xs={2} sm={2} md={2}>
-                  <Typography>Box #{this.props.member.Mail_Location}</Typography>
+                  <Typography>{mailLoc}</Typography>
                 </Grid>
               </Grid>
             </ExpansionPanelSummary>
@@ -418,7 +422,7 @@ export default class MemberList extends Component {
               <Typography>{this.state.participationDescription}</Typography>
             </Grid>
             <Grid item xs={4} sm={2} style={rowStyle}>
-              <Typography>Box #{this.props.member.Mail_Location}</Typography>
+              <Typography>{mailLoc}</Typography>
             </Grid>
             <Grid item xs={2} sm={2} style={rowStyle}>
               {options}
