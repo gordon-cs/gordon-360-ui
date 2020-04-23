@@ -9,7 +9,7 @@ export default class GordonLoader extends Component {
     return (
       <Grid className="gordon-loader" container justify="center" alignItems="center">
         <Grid item>
-          <CircularProgress size={100} />
+          <CircularProgress size={this.props.size || 100} />
         </Grid>
       </Grid>
     );

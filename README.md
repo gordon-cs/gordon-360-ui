@@ -22,14 +22,20 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
-Make sure Node.js is set up on your machine (https://nodejs.org/en/)
+Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well.
 
-To run the app for the first time, run the following commands:
+#### Windows:
+- Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
+    - Extract the file and run it.
+    - The installer will ask you where to install NVM. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
+    - After the installation completes, open a terminal and run these commands in order:
+      - `nvm install 9.11.1`
+      - `nvm use 9.11.1`
 
-- `npm install`
-- `npm start`
+#### Linux: 
+Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, run `nvm install 9.11.1` then run `nvm use 9.11.1`.
 
-The app will open in a browser at <http://localhost:3000>.
+When running the app, it will open in a browser at <http://localhost:3000>.
 
 ### Editor Recommendations
 
@@ -104,7 +110,8 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
 - After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
 
-  - Pull the UI repository, if you do not have it open on the virtual machine already.
+  - Clone the UI repository if you do not have it open on the virtual machine already.
+  - Open the repo in Visual Studio Code (VS Code).
   - Open `setupProxy.js`:
 
     - You will see two nearly identical function calls that start with `app.use(proxy...`. In both calls, change the string following the word `target` to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the string to say `'http://localhost:5555/'` in both.
@@ -326,6 +333,8 @@ The foundations for a testing suite made up of Jasmine, Karma, and Travis CI hav
 Secondly, there is a github account, `gordon-360-ci`, made solely for Travis CI and continuous integration services like it. Specifically, it was from this account that Travis' environment variable `GITHUB_TOKEN` was generated. The login credentials for this account can be found in a file called `ci-credentials` on the CS-RDSH-02 virtual machine, specifically in `C:\Users\Public\Public Documents\` (or `/c/users/public/documents\` when in git-bash).
 
 The process for setting up this testing environment can be continued by following the directions [here](https://www.sitepoint.com/testing-javascript-jasmine-travis-karma/) and the advice [here](https://www.arroyolabs.com/2016/08/unit-testing-your-javascipt-with-jasmine-karmajs-travis-ci/) about using Chromium instead of Chrome. Note that some steps from the first link have been completed, from the step about running `karma init my.conf.js` to the beginning, exclusively. Also, there is already a `.travis.yml` file in the project folder, but it may need some lines of code that the .yml in the directions has.
+
+Timesheets page testing [here](https://docs.google.com/document/d/1fi7_iwTQa7JFVRR3LtSDU3-MGpupOfbqhH-kEU5eMew/edit?usp=sharing)
 
 ## Deployment
 
