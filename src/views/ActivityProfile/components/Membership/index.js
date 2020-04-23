@@ -29,7 +29,6 @@ import Error from '@material-ui/icons/Error';
 //import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 import AddPersonIcon from '@material-ui/icons/PersonAdd';
 import Divider from '@material-ui/core/Divider';
-import { icons } from 'react-icons/lib/cjs';
 
 export default class Membership extends Component {
   constructor(props) {

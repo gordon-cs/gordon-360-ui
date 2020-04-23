@@ -442,7 +442,7 @@ export default class MemberList extends Component {
             vertical: 'bottom',
             horizontal: 'left',
           }}
-          open={this.state.leaveSnackbar == 'success'}
+          open={this.state.leaveSnackbar === 'success'}
           autoHideDuration={6000}
           onClose={this.handleClose}
           ContentProps={{
@@ -470,7 +470,7 @@ export default class MemberList extends Component {
             vertical: 'bottom',
             horizontal: 'left',
           }}
-          open={this.state.leaveSnackbar == 'failure'}
+          open={this.state.leaveSnackbar === 'failure'}
           autoHideDuration={6000}
           onClose={this.handleClose}
           ContentProps={{
