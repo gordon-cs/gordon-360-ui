@@ -137,12 +137,13 @@ export default class MemberList extends Component {
   // Called when user confirms removal
   async confirmLeave() {
     await membership.remove(this.props.member.MembershipID);
-    // Once we fix the bug preventing this, remove comment to use snackbar
-    // if (success) {
-    //   this.setState.leaveSnackbar = 'success';
-    // } else {
-    //   this.setState.leaveSnackbar = 'failure';
-    // }
+    // Search to see if the member is still in the involvement after removing
+    let inInvolvement = await membership.search(this.props.member.IDNumber, this.props.member.SessionCode, this.props.member.ActivityCode)[0];
+    if (inInvolvement) {
+      this.setState({ leaveSnackbar: 'failure' });
+    } else {
+      this.setState({ leaveSnackbar: 'success' });;
+    }
     this.onClose();
     this.refresh();
   }
@@ -152,7 +153,6 @@ export default class MemberList extends Component {
     if (reason === 'clickaway') {
       return;
     }
-
     this.setState({ leaveSnackbar: '' });
   };
 
