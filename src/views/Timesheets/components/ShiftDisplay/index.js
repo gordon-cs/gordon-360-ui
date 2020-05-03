@@ -1,3 +1,4 @@
+//Handles the fetching and preperation for displaying of shifts
 import React, { Component } from 'react';
 import {
     Grid,

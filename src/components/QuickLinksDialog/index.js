@@ -64,7 +64,7 @@ export default class GordonQuickLinksDialog extends Component {
       >
         <DialogTitle id="useful-links">Useful links</DialogTitle>
         <DialogContent dividers="true">
-          <GordonLinksList />
+          <GordonLinksList onClose={this.props.handleLinkClose}/>
         </DialogContent>
       </GordonDialog>
     );
