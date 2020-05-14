@@ -627,7 +627,7 @@ class ActivityProfile extends Component {
           content = (
             <section className="gordon-activity-profile">
               <Card>
-                <CardContent>
+                <CardContent >
                   <Typography align="center" variant="display1">
                     {activityDescription}
                   </Typography>
@@ -639,22 +639,39 @@ class ActivityProfile extends Component {
                     />
                   </Grid>
                   <Grid item>{editActivity}</Grid>
-                  <Typography variant="body2">
-                    <strong>Session: </strong>
-                    {sessionDescription}
-                  </Typography>
-                  {description}
-                  {website}
-                  {groupContacts}
-                  {advisors}
-                  <Typography>
-                    <strong>Special Information for Joining: </strong>
-                    {this.state.activityInfo.ActivityJoinInfo}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Current Involvement Roster: </strong>
-                    {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
-                  </Typography>
+                  <Grid item justify="center">
+                    <Grid container lg={6} direction="column" align="left">
+                      <Grid container direction="column" align="left">
+                        <Grid item xs={12} md={12} lg={12}>
+                          <Typography variant="body2">
+                            <strong>Session: </strong>
+                            {sessionDescription}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={12} lg={12}>
+                        {description}
+                        </Grid>
+                        <Grid item xs={12} md={12} lg={12}>
+                          {website}
+                        </Grid>
+                        <Grid item xs={12} md={12} lg={12}>
+                        {groupContacts}
+                        </Grid>
+                        <Grid item xs={12} md={12} lg={12}>
+                        {advisors}
+                        </Grid>
+                                          
+                        <Typography>
+                          <strong>Special Information for Joining: </strong>
+                          {this.state.activityInfo.ActivityJoinInfo}
+                        </Typography>
+                        <Typography variant="body2">
+                          <strong>Current Involvement Roster: </strong>
+                          {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </CardContent>
                 {membership}
               </Card>
