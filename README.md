@@ -370,3 +370,7 @@ The script deploys to either staging or production based on the branch it is run
 - ID and photo uploader dialog boxes are a bit squished for screens as small as iPhone 5's.
 
 - An admin is able to remove themselves (on admin view), which causes major issues.
+
+## History
+- The student timesheets project was done as a senior project by a trio of seniors Nathanial Rudenberg, Adam Princiotta, and Jacob Bradley. The design document and handoff documentation have been built into this README. The handoff documentation for this project was a revision and update to the existing documentation.
+- https://docs.google.com/presentation/d/162V-DLuaEUyHDS2Diu09k5f4Tpo2iuoMtIDUyowa7eQ/edit?usp=sharing
