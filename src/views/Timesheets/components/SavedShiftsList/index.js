@@ -1,3 +1,4 @@
+//Displays shifts and sets up buttons for submitting shifts
 import React, { Component } from 'react';
 import {
   Typography,
@@ -81,6 +82,21 @@ export default class SavedShiftsList extends Component {
         });
       });
     });
+  }
+
+  componentDidMount() {
+    let {shifts, directSupervisor, reportingSupervisor} = this.props;
+    let supervisorIdsReady = directSupervisor && reportingSupervisor;
+    let shouldGetSupervisors; 
+    if (shifts.length > 0) {
+      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && (shifts[0].EML !== this.prevJob || (!this.state.directSupervisor || !this.state.reportingSupervisor));
+      this.prevJob = shifts[0].EML
+    } else {
+      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && supervisorIdsReady && (!this.state.directSupervisor || !this.state.reportingSupervisor) && shifts !== null;
+    }
+    if (shouldGetSupervisors) {
+      this.getSupervisors();
+    }
   }
 
   componentDidUpdate() {
@@ -240,7 +256,7 @@ export default class SavedShiftsList extends Component {
               {shiftsList}
             </Grid>
           </CardContent>
-            {(cardTitle === "Approved Shifts" || cardTitle === "Submitted Shifts") &&
+            {(cardTitle === "Saved Shifts" || cardTitle === "Approved Shifts" || cardTitle === "Submitted Shifts") &&
               <CardContent>
                 <Grid container>
                   <Grid item xs={12} sm={6}>
