@@ -1,3 +1,4 @@
+//Main student timesheets page
 import React, { useState, useRef } from 'react';
 import 'date-fns';
 import {
@@ -92,7 +93,6 @@ const Timesheets = (props) => {
   };
 
   const checkForFutureDate = (dateIn, dateOut) => {
-    console.log('checking for future date');
     let now = Date.now();
     setEnteredFutureTime((dateIn.getTime() > now) || (dateOut.getTime() > now));
   }
