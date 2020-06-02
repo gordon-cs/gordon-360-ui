@@ -17,13 +17,14 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 - [Environment Variables](#environment-variables)
 - [Testing](#testing)
 - [Deployment](#deployment)
+  - [Contributing](#contributing)
 - [Known Issues](#known-issues)
 
 ## Getting Started
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
-Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well. The following methods will install nvm, a node.js version manager onto your machine. An npm installation may also work.
+Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow installation of this particular version to be used.
 
 #### Windows:
 - Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
@@ -38,15 +39,17 @@ Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubu
 
 <!-- ### Front End Development (Note) -->
 <h3 id="front-end">Front End Development (Note)</h3>
+
 When running the app, it will open in a browser at <http://localhost:3000>.
-After cloning, and after any major changes to local code (like changing branches):
+
+After cloning this repo, and after any major changes to local code (like changing branches) run:
 - `npm install` (This gets the right packages installed in the directory)
 - `npm start` (This starts a local server, and prints the local URL)
 
 <!--### Connect Local Backend To React-->
 <h3 id="connect-local-backend-to-react">Back End Development (Connect Local Backend To React)</h3>
 
-Without this, React will default to the live server backend. If you would like to run the backend locally and connect to the UI repository, use the following steps:
+By default, React will use the live server backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI repository, use the following steps:
 
 - After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
 
@@ -363,6 +366,12 @@ The script deploys to either staging or production based on the branch it is run
 1.  Add reviewers. The pull request must be approved before it can be merged.
 1.  Click "Create pull request."
 1.  When the pull request is approved, merge it. This will trigger a build that will automatically deploy `master` to production.
+
+### Contributing
+1. Clone the repository to the local machine
+2. Create a new branch with a meaningful name (pertaining to the specific change being implemented). Add a description to further explain the change request.
+3. Commit to this branch, with changes focused solely on the branch's nominal purpose
+4. Follow steps under "Deploying to Production" to create a pull request to merge this branch into production.
 
 ## Known Issues
 
