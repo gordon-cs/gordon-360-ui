@@ -497,7 +497,7 @@ class MyProfile extends Component {
                     justify="flex-start"
                     spacing={2}
                   >
-                    <Grid item xs={12} md={profileCardSize} lg={profileCardSize}>
+                    <Grid item xs={12} md={profileCardSize} lg={8}>
                       <Card>
                         <CardContent>
                           <Grid
@@ -750,7 +750,7 @@ class MyProfile extends Component {
                   </Grid>
                 
                   <Grid item xs={12} lg={10} align="center">
-                    <Grid container xs={12} lg={14} spacing={0} justify="center">
+                    <Grid container xs={12} lg={12} spacing={0} justify="center">
                       <Grid item xs={12} lg={12} justifyContent = "center">
                         <GordonSchedulePanel profile={this.state.profile} myProf={true} />
                       </Grid>
