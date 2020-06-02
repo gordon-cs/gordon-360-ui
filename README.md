@@ -369,7 +369,7 @@ The script deploys to either staging or production based on the branch it is run
 
 ### Contributing
 1. Clone the repository to the local machine
-2. Create a new branch with a meaningful name (pertaining to the specific change being implemented). Add a description to further explain the change request.
+2. Create a new branch with a meaningful name (pertaining to the specific change being implemented).
 3. Commit to this branch, with changes focused solely on the branch's nominal purpose
 4. Follow steps under "Deploying to Production" to create a pull request to merge this branch into production.
 
