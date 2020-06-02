@@ -70,6 +70,7 @@ class MyProfile extends Component {
       linkedInLink: '',
       twitterLink: '',
       instagramLink: '',
+      handshakeLink: '',
       isSnackBarOpen: false,
       network: 'online',
     };
@@ -115,7 +116,7 @@ class MyProfile extends Component {
     this.setState({ socialLinksOpen: false });
   };
 
-  onDialogSubmit(fb, tw, li, ig) {
+  onDialogSubmit(fb, tw, li, ig, hs) {
     // For links that have changed, update this.state
     // and send change to database.
     if (fb !== this.state.facebookLink) {
@@ -133,6 +134,10 @@ class MyProfile extends Component {
     if (ig !== this.state.instagramLink) {
       this.setState({ instagramLink: ig });
       user.updateSocialLink('instagram', ig);
+    }
+    if (hs !== this.state.handshakeLink) {
+      this.setState({ handshakeLink: hs });
+      user.updateSocialLink('handshake', hs);
     }
   }
 
@@ -298,6 +303,10 @@ class MyProfile extends Component {
         this.state.profile.Instagram === null || this.state.profile.Instagram === ''
           ? ''
           : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
+      handshakeLink:
+        this.state.profile.Handshake === null || this.state.profile.Handshake === ''
+          ? ''
+          : socialMediaInfo.handshake.prefix + this.state.profile.Handshake,
     });
   }
 
@@ -361,6 +370,7 @@ class MyProfile extends Component {
       let twitterButton;
       let linkedInButton;
       let instagramButton;
+      let handshakeButton;
       let editButton;
       let linkCount = 0; // To record whether or not any links are displayed
       let VPScore;
@@ -420,6 +430,21 @@ class MyProfile extends Component {
               rel="noopener noreferrer"
             >
               {socialMediaInfo.instagram.icon}
+            </a>
+          </Grid>
+        );
+        linkCount += 1;
+      }
+      if (this.state.handshakeLink !== '') {
+        handshakeButton = (
+          <Grid item>
+            <a
+              href={this.state.handshakeLink}
+              className="gc360-my-profile_icon"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {socialMediaInfo.handshake.icon}
             </a>
           </Grid>
         );
@@ -557,6 +582,7 @@ class MyProfile extends Component {
                                     {twitterButton}
                                     {linkedInButton}
                                     {instagramButton}
+                                    {handshakeButton}
                                     {editButton}
                                   </Grid>
                                   {this.state.profile.Email !== '' && (

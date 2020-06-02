@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram, FaHandshake } from 'react-icons/fa';
 // see socialMedia.js for pre-packaged icons of above and fix
 import {
   Button,
@@ -23,16 +23,19 @@ export default class LinksDialog extends React.Component {
       twitterInput: '',
       linkedInInput: '',
       instagramInput: '',
+      handshakeInput: '',
       formErrors: {
         facebookInput: '',
         twitterInput: '',
         linkedInInput: '',
         instagramInput: '',
+        handshakeInput: '',
       },
       fbValid: true,
       twValid: true,
       liValid: true,
       igValid: true,
+      hsValid: true,
       formValid: true,
     };
   }
@@ -55,6 +58,9 @@ export default class LinksDialog extends React.Component {
     if (nextProps.instagramLink !== this.props.instagramLink) {
       this.setState({ instagramInput: nextProps.instagramLink });
     }
+    if (nextProps.handshakeLink !== this.props.handshakeLink) {
+      this.setState({ handshakeInput: nextProps.handshakeLink });
+    }
   }
 
   validateField(fieldName, value) {
@@ -63,11 +69,13 @@ export default class LinksDialog extends React.Component {
     let twValid = this.state.twValid;
     let liValid = this.state.liValid;
     let igValid = this.state.igValid;
+    let hsValid = this.state.hsValid;
 
     let facebook = socialMediaInfo.facebook;
     let twitter = socialMediaInfo.twitter;
     let linkedIn = socialMediaInfo.linkedIn;
     let instagram = socialMediaInfo.instagram;
+    let handshake = socialMediaInfo.handshake;
 
     // Require that content begins with appropriate domain name if not empty
     switch (fieldName) {
@@ -87,6 +95,10 @@ export default class LinksDialog extends React.Component {
         igValid = value === '' || value.indexOf(instagram.prefix) === 0;
         fieldValidationErrors.instagramInput = igValid ? '' : instagram.error;
         break;
+      case 'handshakeInput':
+        hsValid = value === '' || value.indexOf(handshake.prefix) === 0;
+        fieldValidationErrors.handshakeInput = hsValid ? '' : handshake.error;
+          break;
       default:
         break;
     }
@@ -97,6 +109,7 @@ export default class LinksDialog extends React.Component {
         twValid: twValid,
         liValid: liValid,
         igValid: igValid,
+        hsValid: hsValid,
       },
       this.validateForm,
     );
@@ -105,7 +118,7 @@ export default class LinksDialog extends React.Component {
   validateForm() {
     this.setState({
       formValid:
-        this.state.fbValid && this.state.twValid && this.state.liValid && this.state.igValid,
+        this.state.fbValid && this.state.twValid && this.state.liValid && this.state.igValid && this.state.hsValid,
     });
   }
 
@@ -116,8 +129,9 @@ export default class LinksDialog extends React.Component {
     var tw = this.state.twitterInput;
     var li = this.state.linkedInInput;
     var ig = this.state.instagramInput;
+    var hs = this.state.handshakeInput;
 
-    this.props.onDialogSubmit(fb, tw, li, ig);
+    this.props.onDialogSubmit(fb, tw, li, ig, hs);
     this.handleClose();
   };
 
@@ -158,6 +172,13 @@ export default class LinksDialog extends React.Component {
         instagramInput: this.props.instagramLink,
         igValid: true,
         formErrors: { instagramInput: '' },
+      });
+    }
+    if (this.state.handshakeInput !== this.props.handshakeLink) {
+      this.setState({
+        handshakeInput: this.props.handshakeLink,
+        igValid: true,
+        formErrors: { handshakeInput: '' },
       });
     }
     this.setState({ formValid: true });
@@ -240,6 +261,22 @@ export default class LinksDialog extends React.Component {
               className="gc360-links-dialog_content_field"
             />
           </div>
+          <div className="gc360-links-dialog_content_handshake gc360-links-dialog_content_media">
+            <div className="gc360-links-dialog_content_icon">
+              <FaHandshake style={{ fontSize: '20px' }} />
+            </div>
+             <TextField
+              id="handshakeInput"
+              label=" Handshake link"
+              value={this.state.handshakeInput}
+              onChange={this.handleChange('handshakeInput')}
+              error={!this.state.hsValid}
+              helperText={this.state.hsValid ? '' : this.state.formErrors.handshakeInput}
+              margin="dense"
+              fullWidth
+              className="gc360-links-dialog_content_field"
+            />
+          </div> 
         </DialogContent>
         <DialogActions className="gc360-links-dialog_actions">
           <Button onClick={this.handleClose} variant="contained" style={button}>
