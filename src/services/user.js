@@ -73,6 +73,7 @@ import gordonEvent from './event';
  * @property {String} HomeStreet2 Street address line 2
  * @property {String} ID ID
  * @property {String} Instagram Instagram
+ * @property {String} Handshake Handshake
  * @property {String} JobTitle Job title
  * @property {String} KeepPrivate Keep private
  * @property {String} LastName Last name
@@ -164,6 +165,7 @@ import gordonEvent from './event';
  * @property {String} Facebook Facebook
  * @property {String} Twitter Twitter
  * @property {String} Instagram Instagram
+ * @property {String} Hanshake Handshake
  * @property {String} LinkedIn LinkedIn
  * @property {String} PersonType Type of person
  */
@@ -628,6 +630,9 @@ function updateSocialLink(type, link) {
       break;
     case 'instagram':
       linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
+      break;
+    case 'handshake':
+      linkToSend = link.substring(socialMediaInfo.handshake.prefix.length);
       break;
     default:
       break;
