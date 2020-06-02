@@ -8,6 +8,7 @@ import DiningBalance from './components/DiningBalance';
 import user from '../../services/user';
 import Login from '../Login';
 import './home.css';
+import Question from './components/Question'
 
 import '../../app.css';
 
@@ -19,7 +20,10 @@ export default class Home extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null, network: 'online' };
+    this.state = { personType: null,
+       network: 'online',
+       answered: false, };
+
   }
 
   componentWillMount() {
@@ -76,48 +80,60 @@ export default class Home extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     let content;
-    if (this.props.Authentication) {
-      const personType = this.state.personType;
 
-      let requests;
-      if (networkStatus === 'online') {
-        requests = (
-          <Grid item xs={12} md={5}>
-            <Requests />
+    if(this.state.answered === false){
+      return content = (
+        <Grid container justify="center" spacing={2}>
+            <Grid item xs={10} md={4}>
+              <Question />
+            </Grid>
+        </Grid>
+      );
+    }
+    else{
+      if (this.props.Authentication) {
+        const personType = this.state.personType;
+
+        let requests;
+        if (networkStatus === 'online') {
+          requests = (
+            <Grid item xs={12} md={5}>
+              <Requests />
+            </Grid>
+          );
+        }
+
+        //Only show CL&W credits if user is a student
+        let doughnut;
+        if (String(personType).includes('stu')) {
+          doughnut = <CLWCreditsDaysLeft />;
+        } else {
+          doughnut = <DaysLeft />;
+        }
+
+        content = (
+          <Grid container justify="center" spacing={2}>
+            <Grid item xs={12} md={10}>
+              <Carousel />
+            </Grid>
+            <Grid item xs={12} md={5}>
+              {doughnut}
+            </Grid>
+            <Grid item xs={12} md={5}>
+              <DiningBalance />
+            </Grid>
+            {requests}
           </Grid>
+        );
+      } else {
+        content = (
+          <div className="gordon-login">
+            <Login onLogIn={this.logIn} />
+          </div>
         );
       }
 
-      //Only show CL&W credits if user is a student
-      let doughnut;
-      if (String(personType).includes('stu')) {
-        doughnut = <CLWCreditsDaysLeft />;
-      } else {
-        doughnut = <DaysLeft />;
-      }
-
-      content = (
-        <Grid container justify="center" spacing={2}>
-          <Grid item xs={12} md={10}>
-            <Carousel />
-          </Grid>
-          <Grid item xs={12} md={5}>
-            {doughnut}
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <DiningBalance />
-          </Grid>
-          {requests}
-        </Grid>
-      );
-    } else {
-      content = (
-        <div className="gordon-login">
-          <Login onLogIn={this.logIn} />
-        </div>
-      );
-    }
-
     return content;
   }
+ }
 }
