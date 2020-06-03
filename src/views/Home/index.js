@@ -51,13 +51,17 @@ export default class Home extends Component {
       console.log('Login failed with error: ' + error);
     }
   }
+   callBack = (data)=>{
+    this.setState({answered: data});
+    console.log(this.state.answered)
+  }
 
   render() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
+     */  
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -81,11 +85,14 @@ export default class Home extends Component {
 
     let content;
 
+    /* Renders the wellness check question instead of the home page if the question
+     *  has not been answered yet
+     */
     if(this.state.answered === false){
       return content = (
         <Grid container justify="center" spacing={2}>
             <Grid item xs={10} md={4}>
-              <Question />
+              <Question call = {this.callBack} />
             </Grid>
         </Grid>
       );

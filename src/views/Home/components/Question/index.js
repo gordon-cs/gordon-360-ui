@@ -8,6 +8,7 @@ import "./Question.css";
 export default class Question extends Component {
   constructor(props) {
     super(props);
+
     
     this.loadQuestion = this.loadQuestion.bind(this);
 
@@ -16,11 +17,13 @@ export default class Question extends Component {
       loading: true,
       answered:false,
       questionToAsk:"",
+
     };
 
   }
   componentWillMount() {
     this.loadQuestion();
+    this.props.call(this.state.answered);
   }
   async loadQuestion() {
     this.setState({ loading: true });
@@ -32,7 +35,15 @@ export default class Question extends Component {
     }
   }
 
+  submitHandler = (e) => {
+    this.setState({answered: true});
+    this.props.call(true);
+    e.preventDefault();
+    console.log(this.state.answered)
+  };
+
   render() {
+
     if (this.state.error) {
       throw this.state.error;
     }
@@ -45,20 +56,24 @@ export default class Question extends Component {
         <Card>
         <CardContent>
           <CardHeader title="Question" />
-        <form>
-            <div className="radio">
-            <label>
-              <input type="radio" value="I am not symptomatic" checked={true} />
-              I am not symptomatic
-           </label>
-        </div>
+        <form onSubmit = {this.submitHandler}>
           <div className="radio">
-            <label>
-              <input type="radio" value="I am symptomatic" />
-              Option 2
-            </label>
+              <label>
+                <input type="radio" value="I am not symptomatic" name = "radio"/>
+                I am not symptomatic
+              </label>
           </div>
-      </form>
+          <div className="radio">
+              <label>
+                <input type="radio" value="I am symptomatic" name ="radio"/>
+                I am symptomatic
+              </label>
+          </div>
+          <div className="submit">
+                <input type="submit" name="radio"></input>
+          </div>
+
+        </form>
 
         </CardContent>
       </Card>
