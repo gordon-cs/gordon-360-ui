@@ -109,6 +109,7 @@ export default class PeopleSearchResult extends Component {
           <Grid
             container
             alignItems="center"
+            justify="center"
             spacing={2}
             style={{
               padding: '1rem',
@@ -123,7 +124,12 @@ export default class PeopleSearchResult extends Component {
                 placeholderColor="#FFF"
               />
             </Grid>
-            <Grid item>
+            <Grid
+              item
+              style={{
+                width: '250px',
+              }}
+            >
               <Typography variant="h5">{fullName}</Typography>
               <Typography variant="body2">{nickname}</Typography>
               <Typography variant="body2">{personClassJobTitle}</Typography>
