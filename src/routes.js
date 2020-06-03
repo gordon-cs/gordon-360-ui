@@ -96,8 +96,8 @@ export default [
     component: Admin,
   },
   {
-    name: 'Timesheets',
-    path: '/t1m35433t5',
+    name: 'Student Timesheets',
+    path: '/student-timesheets',
     component: Timesheets,
   },
   {

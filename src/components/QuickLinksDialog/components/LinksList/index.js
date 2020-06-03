@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-
+import { Link } from 'react-router-dom';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import LinkIcon from '@material-ui/icons/InsertLink';
+import WorkIcon from '@material-ui/icons/Work';
 import Typography from '@material-ui/core/Typography';
 
 import { ListItemIcon } from '@material-ui/core';
@@ -90,6 +91,20 @@ export default class GordonLinksList extends Component {
             </ListItemIcon>
             <ListItemText primary="Blackboard Learn" />
           </ListItemLink>
+        </List>
+        <List component="nav" subheader={<ListSubheader component="div">Employment</ListSubheader>}>
+          <Link
+            to='/student-timesheets'
+            className="gc360-text-link"
+            onClick={this.props.onClose}
+          >
+            <ListItem>
+              <ListItemIcon>
+                <WorkIcon />
+              </ListItemIcon>
+              <ListItemText primary="Student Timesheets" />
+            </ListItem>
+          </Link>
         </List>
         <List
           component="nav"
