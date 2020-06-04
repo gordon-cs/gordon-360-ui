@@ -64,11 +64,15 @@ export default class StudentNews extends Component {
     this.setState({ openPostActivity: true });
     }
 
-    onClose() {
-        this.setState({
-          openPostActivity: false,
-        });
-      }
+  onClose() {
+    this.setState({
+      openPostActivity: false,
+    });
+  }
+
+  onSubmit() {
+    
+  }
   
   search(name) {
     return async event => {
@@ -151,28 +155,29 @@ export default class StudentNews extends Component {
     if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
       news = (
         <section>
+          <Fab
+            variant="extended"
+            color="primary"
+            onClick={this.handlePostClick}
+            style={styles.fab}
+          >
+            <PostAddIcon />
+            Post Listing
+          </Fab>
           <Grid container justify="center">
-            <Grid item xs={12} md={12} lg={8}>
-              <Grid container alignItems="baseline" style={styles.searchBar} spacing={8}>
-              <Grid item xs={4} sm={2} md={2} lg={2} align="center">
-                <Fab variant="extended" color="primary"
-                      onClick={this.handlePostClick}
-                      style ={styles.fab}>
-                    <PostAddIcon />
-                        Post Listing
-                </Fab>
-                </Grid>
-                <Grid item xs={10} sm={8} md={8} lg={6}>
+            <Grid item xs={8} md={6} lg={6}>
+              {/* <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={8}>
+                <Grid item xs={10} sm={8} md={8} lg={6}> */}
                   <TextField
                     id="search"
                     label="Search"
                     value={this.state.search}
                     onChange={this.search('search')}
-                    margin="none"
+                    margin="normal"
                     fullWidth
                   />
-                </Grid>
-              </Grid>
+                {/* </Grid>
+              </Grid> */}
             </Grid>
 
             <Dialog open={this.state.openPostActivity} fullWidth>
@@ -184,15 +189,11 @@ export default class StudentNews extends Component {
                         <Grid item>
                             <FormControl style={styles.formControl}>
                                 <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                >
-                                <MenuItem value={10}>General Information</MenuItem>
-                                <MenuItem value={20}>Lost Items</MenuItem>
-                                <MenuItem value={30}>Found Items</MenuItem>
-                                <MenuItem value={40}>Wanted</MenuItem>
-
+                                <Select>
+                                  <MenuItem value={"general information"}>General Information</MenuItem>
+                                  <MenuItem value={"lost items"}>Lost Items</MenuItem>
+                                  <MenuItem value={"found items"}>Found Items</MenuItem>
+                                  <MenuItem value={"wanted"}>Wanted</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
