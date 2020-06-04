@@ -56,8 +56,8 @@ export default class StudentNews extends Component {
     this.breakpointWidth = 540;
   }
   componentWillMount() {
-      this.setState({ loading: false })
-    //this.loadNews();
+    this.setState({ loading: false })
+    this.loadNews();
   }
 
   handlePostClick() {
@@ -72,6 +72,18 @@ export default class StudentNews extends Component {
 
   onSubmit() {
     
+  }
+
+  //This should be the only time we pull from the database
+  async loadNews() {
+    this.setState({ loading: true });
+    if (this.props.Authentication) {
+      // const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
+      // const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
+      // this.setState({ allEvents, events, loading: false, filteredEvents: events });
+    } else {
+      // alert("Please sign in to access student news");
+    }
   }
   
   search(name) {
@@ -138,110 +150,162 @@ export default class StudentNews extends Component {
      */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-    if (this.state.loading === true) {
-      content = <GordonLoader />;
-    } else if (this.state.news.length > 0) {
-      content = <NewsList />;
-    } else {
-      content = (
-        <Grid item>
-          <Typography variant="h4">No News To Show</Typography>
-        </Grid>
-      );
-    }
 
-    let news;
-    // If the user is online
-    if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
-      news = (
-        <section>
-          <Fab
-            variant="extended"
-            color="primary"
-            onClick={this.handlePostClick}
-            style={styles.fab}
-          >
-            <PostAddIcon />
-            Post Listing
-          </Fab>
-          <Grid container justify="center">
-            <Grid item xs={8} md={6} lg={6}>
-              {/* <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={8}>
-                <Grid item xs={10} sm={8} md={8} lg={6}> */}
-                  <TextField
-                    id="search"
-                    label="Search"
-                    value={this.state.search}
-                    onChange={this.search('search')}
-                    margin="normal"
-                    fullWidth
-                  />
-                {/* </Grid>
-              </Grid> */}
+    if(this.props.Authentication) {
+
+      if (this.state.loading === true) {
+        content = <GordonLoader />;
+      } else if (this.state.news.length > 0) {
+        content = <NewsList />;
+      } else {
+        content = (
+          <Grid item>
+            <Typography variant="h4">No News To Show</Typography>
+          </Grid>
+        );
+      }
+
+      let news;
+      // If the user is online
+      if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
+        news = (
+          <section>
+            <Fab
+              variant="extended"
+              color="primary"
+              onClick={this.handlePostClick}
+              style={styles.fab}
+            >
+              <PostAddIcon />
+              Post Listing
+            </Fab>
+            <Grid container justify="center">
+              <Grid item xs={8} md={6} lg={6}>
+                {/* <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={8}>
+                  <Grid item xs={10} sm={8} md={8} lg={6}> */}
+                    <TextField
+                      id="search"
+                      label="Search"
+                      value={this.state.search}
+                      onChange={this.search('search')}
+                      margin="normal"
+                      fullWidth
+                    />
+                  {/* </Grid>
+                </Grid> */}
+              </Grid>
+
+              <Dialog open={this.state.openPostActivity} fullWidth>
+                    <DialogTitle> Post on Student News </DialogTitle>
+                    <DialogContent>
+                      
+                      <form style={styles.newNewsForm} onSubmit={this.handleSubmit}>
+                        <Grid container>
+                          <Grid item>
+                              <FormControl style={styles.formControl}>
+                                  <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                                  <Select>
+                                    <MenuItem value={"general information"}>General Information</MenuItem>
+                                    <MenuItem value={"lost items"}>Lost Items</MenuItem>
+                                    <MenuItem value={"found items"}>Found Items</MenuItem>
+                                    <MenuItem value={"wanted"}>Wanted</MenuItem>
+                                  </Select>
+                              </FormControl>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TextField
+                              label="Subject"
+                              margin="dense"
+                              fullWidth
+                              //onChange={this.handleChange('tempActivityBlurb')}
+                            />
+                          </Grid>
+
+                          <Grid item xs={12}>
+                            <TextField
+                              label="Body"
+                              margin="normal"
+                              multiline
+                              fullWidth
+                              rows={4}
+                              variant="outlined"
+                              //onChange={this.handleChange('tempActivityJoinInfo')}
+                            />
+                          </Grid>
+                        </Grid>
+                      </form>
+                    </DialogContent>
+
+                    <DialogActions>
+                      <Button variant="contained" color="primary" onClick={this.onClose}>
+                        Cancel
+                      </Button>
+                      <Button variant="contained" color="primary" onClick={this.onEditActivity}>
+                        Submit
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+
+              <Grid item xs={12} md={12} lg={8}>
+                {content}
+              </Grid>
             </Grid>
-
-            <Dialog open={this.state.openPostActivity} fullWidth>
-                  <DialogTitle> Post on Student News </DialogTitle>
-                  <DialogContent>
-                    
-                    <form style={styles.newNewsForm} onSubmit={this.handleSubmit}>
-                      <Grid container>
-                        <Grid item>
-                            <FormControl style={styles.formControl}>
-                                <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                                <Select>
-                                  <MenuItem value={"general information"}>General Information</MenuItem>
-                                  <MenuItem value={"lost items"}>Lost Items</MenuItem>
-                                  <MenuItem value={"found items"}>Found Items</MenuItem>
-                                  <MenuItem value={"wanted"}>Wanted</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <TextField
-                            label="Subject"
-                            margin="dense"
-                            fullWidth
-                            //onChange={this.handleChange('tempActivityBlurb')}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12}>
-                          <TextField
-                            label="Body"
-                            margin="normal"
-                            multiline
-                            fullWidth
-                            rows={4}
-                            variant="outlined"
-                            //onChange={this.handleChange('tempActivityJoinInfo')}
-                          />
-                        </Grid>
-                      </Grid>
-                    </form>
-                  </DialogContent>
-
-                  <DialogActions>
-                    <Button variant="contained" color="primary" onClick={this.onClose}>
-                      Cancel
-                    </Button>
-                    <Button variant="contained" color="primary" onClick={this.onEditActivity}>
-                      Submit
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-
-            <Grid item xs={12} md={12} lg={8}>
-              {content}
+          </section>
+        );
+      }
+      // If the user is offline
+      else {
+        news = (
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} md={8}>
+              <Card>
+                <CardContent
+                  style={{
+                    margin: 'auto',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Grid
+                    item
+                    xs={2}
+                    alignItems="center"
+                    style={{
+                      display: 'block',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                    }}
+                  >
+                    <img
+                      src={require(`${'../../NoConnection.svg'}`)}
+                      alt="Internet Connection Lost"
+                    />
+                  </Grid>
+                  <br />
+                  <h1>Please Re-establish Connection</h1>
+                  <h4>Viewing Events has been deactivated due to loss of network.</h4>
+                  <br />
+                  <br />
+                  <Button
+                    color="primary"
+                    backgroundColor="white"
+                    variant="outlined"
+                    onClick={() => {
+                      window.location.pathname = '';
+                    }}
+                  >
+                    Back To Home
+                  </Button>
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
-        </section>
-      );
+        );
+      }
+      return news;
     }
-    // If the user is offline
     else {
-      news = (
-        <Grid container justify="center" spacing="16">
+      return (
+        <Grid container justify="center">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent
@@ -250,35 +314,18 @@ export default class StudentNews extends Component {
                   textAlign: 'center',
                 }}
               >
-                <Grid
-                  item
-                  xs={2}
-                  alignItems="center"
-                  style={{
-                    display: 'block',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
-                </Grid>
+                <h1>You are not logged in.</h1>
                 <br />
-                <h1>Please Re-establish Connection</h1>
-                <h4>Viewing Events has been deactivated due to loss of network.</h4>
-                <br />
+                <h4>You must be logged in to view use People Search.</h4>
                 <br />
                 <Button
                   color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
+                  variant="contained"
                   onClick={() => {
                     window.location.pathname = '';
                   }}
                 >
-                  Back To Home
+                  Login
                 </Button>
               </CardContent>
             </Card>
@@ -286,7 +333,5 @@ export default class StudentNews extends Component {
         </Grid>
       );
     }
-
-    return news;
   }
 }
