@@ -51,9 +51,9 @@ export default class Home extends Component {
       console.log('Login failed with error: ' + error);
     }
   }
-   callBack = (data)=>{
+   
+  callBack = (data)=>{
     this.setState({answered: data});
-    console.log(this.state.answered)
   }
 
   render() {

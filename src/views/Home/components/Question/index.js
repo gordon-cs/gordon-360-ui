@@ -17,6 +17,7 @@ export default class Question extends Component {
       loading: true,
       answered:false,
       questionToAsk:"",
+      currentStatus:"",
 
     };
 
@@ -37,10 +38,17 @@ export default class Question extends Component {
 
   submitHandler = (e) => {
     this.setState({answered: true});
+    this.setState({currentStatus: this.state.selected})
     this.props.call(true);
     e.preventDefault();
-    console.log(this.state.answered)
+    //console.log(this.state.currentStatus);
   };
+
+  handleChange= (e) => {
+    //console.log(e.target.value);
+    this.setState({currentStatus: e.target.value});
+  };
+
 
   render() {
 
@@ -59,13 +67,13 @@ export default class Question extends Component {
         <form onSubmit = {this.submitHandler}>
           <div className="radio">
               <label>
-                <input type="radio" value="I am not symptomatic" name = "radio"/>
+                <input type="radio" value="I am not symptomatic" name="radio" onClick={this.handleChange}/>
                 I am not symptomatic
               </label>
           </div>
           <div className="radio">
               <label>
-                <input type="radio" value="I am symptomatic" name ="radio"/>
+                <input type="radio" value="I am symptomatic" name="radio" onClick={this.handleChange}/>
                 I am symptomatic
               </label>
           </div>
