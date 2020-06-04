@@ -45,6 +45,7 @@ export default class Profile extends Component {
       linkedInLink: '',
       twitterLink: '',
       instagramLink: '',
+      handshakeLink: '',
       network: 'online',
       currentUser: '',
     };
@@ -114,6 +115,10 @@ export default class Profile extends Component {
         this.state.profile.Instagram === null || this.state.profile.Instagram === ''
           ? ''
           : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
+      handshakeLink:
+        this.state.profile.Handshake === null || this.state.profile.Handshake === ''
+          ? ''
+          : socialMediaInfo.handshake.prefix + this.state.profile.Handshake,
     });
   }
   checkPersonType(profile) {
@@ -188,6 +193,7 @@ export default class Profile extends Component {
     let twitterButton;
     let linkedInButton;
     let instagramButton;
+    let handshakeButton;
     if (this.state.facebookLink !== '') {
       facebookButton = (
         <Grid item>
@@ -240,6 +246,20 @@ export default class Profile extends Component {
             rel="noopener noreferrer"
           >
             {socialMediaInfo.instagram.icon}
+          </a>
+        </Grid>
+      );
+    }
+    if (this.state.handshakeLink !== '') {
+      handshakeButton = (
+        <Grid item>
+          <a
+            href={this.state.handshakeLink}
+            className="gc360-profile_icon"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {socialMediaInfo.handshake.icon}
           </a>
         </Grid>
       );
@@ -336,6 +356,7 @@ export default class Profile extends Component {
                                 {twitterButton}
                                 {linkedInButton}
                                 {instagramButton}
+                                {handshakeButton}
                               </Grid>
                               {this.state.profile.Email !== '' && (
                                 <a
@@ -356,8 +377,8 @@ export default class Profile extends Component {
                   </Card>
                 </Grid>
 
-                <Grid item xs={12} lg={12} align="center">
-                  <Grid container xs={12} lg={10} spacing={2} justify="center">
+                <Grid item xs={12} lg={10} align="center">
+                  <Grid container xs={12} lg={12} justify="center">
                     <Grid item xs={12} lg={12}>
                       <GordonSchedulePanel profile={this.state.profile} myProf={false} />
                     </Grid>
