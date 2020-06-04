@@ -50,7 +50,7 @@ export default class DailyNews extends Component {
 
     categories = this.state.newsCategories
       .map(item => (
-        <CategorizedNews cateogry={item.categoryID} />
+        <CategorizedNews category={item.categoryID} />
       ));
 
     return (

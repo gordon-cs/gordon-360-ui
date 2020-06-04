@@ -26,6 +26,9 @@ const styles = {
   formControl: {
     minWidth: 120,
   },
+  newNewsForm: {
+    backgroundColor: '#fff',
+  },
   fab: {
     margin: 0,
     top: 'auto',
@@ -176,7 +179,7 @@ export default class StudentNews extends Component {
                   <DialogTitle> Post on Student News </DialogTitle>
                   <DialogContent>
                     
-                    <form onSubmit={this.handleSubmit}>
+                    <form style={styles.newNewsForm} onSubmit={this.handleSubmit}>
                       <Grid container>
                         <Grid item>
                             <FormControl style={styles.formControl}>
@@ -197,7 +200,6 @@ export default class StudentNews extends Component {
                           <TextField
                             label="Subject"
                             margin="dense"
-                            multiline
                             fullWidth
                             //onChange={this.handleChange('tempActivityBlurb')}
                           />
@@ -206,11 +208,11 @@ export default class StudentNews extends Component {
                         <Grid item xs={12}>
                           <TextField
                             label="Body"
-                            margin="dense"
+                            margin="normal"
                             multiline
                             fullWidth
                             rows={4}
-                            variant="filled"
+                            variant="outlined"
                             //onChange={this.handleChange('tempActivityJoinInfo')}
                           />
                         </Grid>
