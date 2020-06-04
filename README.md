@@ -112,7 +112,7 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
   - Clone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
-  - Open `setupProxy.js`:
+  - Open `setupProxy.js`in src:
 
     - You will see two nearly identical function calls that start with `app.use(proxy...`. In both calls, change the string following the word `target` to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the string to say `'http://localhost:5555/'` in both.
 
