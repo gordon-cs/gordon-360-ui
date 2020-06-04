@@ -58,9 +58,6 @@ if ('caches' in window) {
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
       localStorage.setItem('network-status', JSON.stringify('offline'));
       window.postMessage('offline', location.origin);
-      // We wait until the alert box is closed so that the user is not alerted
-      // multiple times if they go offline and online many times outside the app
-      event.waitUntil(alert('You are offline. Information might not be up to date.'));
     });
 
     // If network connectivity re-enables during application run-time

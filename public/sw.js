@@ -19,14 +19,7 @@ const apiSource = 'https://360api.gordon.edu';
 const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
 let failedDynamicCacheLinks = [];
 let dynamicCache = [];
-let token,
-  termCode,
-  cacheTimer,
-  isSuccessful,
-  isFetchCanceled,
-  networkStatus,
-  username,
-  id;
+let token, termCode, cacheTimer, isSuccessful, isFetchCanceled, networkStatus, username, id;
 
 const showDeveloperConsoleLog = false;
 
@@ -349,13 +342,16 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
 }
 
 /**
- * Pre-caches main set of dynamic files that requies a Request with its property mode set to "cors"
+ * Creates the list of Dynamic URLs to fetch
+ *
+ * Before the list is created, several fetches are made to retrieve the current user's info which is
+ * used to create the list of URLs where their info is encapsulated within the URLs
  *
  * @param {String} token The token from Local Storage to authenticate each request made
  * @param {String} termCode The current semester term
  */
 async function dynamicLinksThenCache(token, termCode) {
-  // Checks to make sure that the token and termCode is available before we try to fetch
+  // Checks to make sure that the token and termCode is available before trying to commit fetches
   if (token && termCode) {
     // Creates the header for the request to have authenitification
     let headers = new Headers({
@@ -363,7 +359,7 @@ async function dynamicLinksThenCache(token, termCode) {
       'Content-Type': 'application/json',
     });
 
-    // Gets the user's profile object to access their firstname.lastname and ID#
+    // Gets the current user's profile info to access their firstname.lastname and ID#
     let profile = await fetch(new Request(`${apiSource}/api/profiles`, { method: 'GET', headers }))
       .then(response => {
         return response.json();
@@ -372,8 +368,13 @@ async function dynamicLinksThenCache(token, termCode) {
         return error.Message;
       });
 
-    let sessions = await fetch(
-      new Request(`${apiSource}/api/sessions`, {
+    // Checks to make sure that the current user's info exists
+    username = profile ? profile.AD_Username : null;
+    id = profile ? profile.ID : null;
+
+    // Gets the current session term
+    let currentSession = await fetch(
+      new Request(`${apiSource}/api/sessions/current`, {
         method: 'GET',
         headers,
       }),
@@ -384,9 +385,11 @@ async function dynamicLinksThenCache(token, termCode) {
       .catch(error => {
         return error.Message;
       });
-    username = profile ? profile.AD_Username : null;
-    id = profile ? profile.ID : null;
 
+    /* Sets the URLs to the dynamicCache list variable. Instead of pushing the urls to the variable,
+     * we create a new list every time to prevent duplicates and to always have an updated URL list
+     * according to the current user
+     */
     dynamicCache = [
       // Home Page Fetch URLs
       `${apiSource}/api/cms/slider`,
@@ -396,6 +399,8 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/profiles/Image`,
       `${apiSource}/api/sessions`,
       `${apiSource}/api/sessions/current`,
+      `${apiSource}/api/activities/session/${currentSession.SessionCode}`, ////////
+      `${apiSource}/api/activities/session/${currentSession.SessionCode}/types`, ///////
       `${apiSource}/api/sessions/daysLeft`,
       `${apiSource}/api/studentemployment/`,
       `${apiSource}/api/version`,
@@ -411,54 +416,21 @@ async function dynamicLinksThenCache(token, termCode) {
       `/myprofile`,
     ];
 
-    sessions.forEach(session => {
-      dynamicCache.push(
-        `${apiSource}/api/activities/session/${session.SessionCode}`,
-        `${apiSource}/api/activities/session/${session.SessionCode}/types`,
-      );
-    });
-
-    // This is commented out because we do not want users to be able to click into an involvement offline
-    // Gets the involvements of the current user for the Involvement Profiles
-    // let involvements = await fetch(
-    //   new Request(`https://360apitrain.gordon.edu/api/memberships/student/${id}`, {
-    //     method: 'GET',
-    //     headers,
-    //   }),
-    // )
-    //   .then(response => {
-    //     return response.json();
-    //   })
-    //   .catch(error => {
-    //     involvement;
-    //     return error.message;
-    //   });
-
-    // involvements.forEach(involvement => {
-    //   let activityCode = involvement ? involvement.ActivityCode : null;
-    //   let sessionCode = involvement ? involvement.SessionCode : null;
-    //   dynamicCache.push(
-    //     `${apiSource}/activities/${activityCode}`,
-    //     `${apiSource}/api/activities/${sessionCode}/${activityCode}/status`,
-    //     `${apiSource}/api/emails/activity/${activityCode}`,
-    //     `${apiSource}/api/emails/activity/${activityCode}/advisors/session/${sessionCode}`,
-    //     `${apiSource}/api/emails/activity/${activityCode}/group-admin/session/${sessionCode}`,
-    //     `${apiSource}/api/memberships/activity/${activityCode}`,
-    //     `${apiSource}/api/memberships/activity/${activityCode}/followers/${sessionCode}`,
-    //     `${apiSource}/api/memberships/activity/${activityCode}/group-admin`,
-    //     `${apiSource}/api/memberships/activity/${activityCode}/members/${sessionCode}`,
-    //     `${apiSource}/api/requests/activity/${activityCode}`,
-    //     `${apiSource}/api/sessions/${sessionCode}`,
-    //   );
-    // });
-
+    // Waits until all URLs in the dynamicCache list created above has been attempted to be fetched
     let fetchResult = await cacheDynamicFiles(token, dynamicCache);
+
+    /* If the result of attempting to fetch every URL in the list dynamicCache succeeded, it's logged
+     * to the console. If not, there was an error with one or more fetches in which the error
+     * message(s) has been logged to the console
+     */
     if (fetchResult)
       console.log(`%c${successfulEmoji} Cached Dynamic Files Successfully`, successfulLog);
   }
 }
 
-// Set interval function that will try to update cache every hour
+/**
+ * An interval function that will attempt to update the cache every hour
+ */
 function timerFunction() {
   cacheTimer = setInterval(() => {
     console.log('Attempting To Update Cache.');
@@ -498,26 +470,26 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('message', event => {
-  // If the message is to cache all static/dynamic files, all of those files are cached
-  if (event.data.message && event.data.message === 'cache-static-dynamic-files') {
-    console.log('Attempting to cache all files');
-    // Sets variable to prevent the lost of this data when a new service worker installs
-    token = event.data.token;
-    termCode = event.data.termCode;
+  // Sets variable to prevent the lost of this data when a new service worker installs
+  token = event.data.token;
+  termCode = event.data.termCode;
+
+  // If the message is to cache all static/dynamic files or update the cache
+  if (
+    (event.data.message && event.data.message === 'cache-static-dynamic-files') ||
+    event.data.message === 'update-cache-files'
+  ) {
+    // Console logs the current action depending on the message received
+    event.data.message === 'cache-static-dynamic-files'
+      ? console.log('Attempting to cache all files')
+      : console.log('Attempting to update cache.');
     // Caching All Files
-    cacheStaticFiles(); // Static Cache
-    dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
+    event.waitUntil(
+      cacheStaticFiles(), // Static Cache
+      dynamicLinksThenCache(event.data.token, event.data.termCode), // Dynamic Cache
+    );
   }
-  // If the message is to update the cache
-  else if (event.data.message && event.data.message === 'update-cache-files') {
-    console.log('Attempting to update cache.');
-    // Sets variable to prevent the lost of this data when a new service worker installs
-    token = event.data.token;
-    termCode = event.data.termCode;
-    // Caching All Files
-    cacheStaticFiles(); // Static Cache
-    dynamicLinksThenCache(event.data.token, event.data.termCode); // Dynamic Cache
-  }
+
   // If the message is to start the cache timer
   else if (event.data && event.data === 'start-cache-timer') {
     console.log('Starting timer to update cache.');
@@ -538,7 +510,7 @@ self.addEventListener('message', event => {
     id = null;
   }
   // If the message is to cancel all fetches
-  if (event.data === 'cancel-fetches') {
+  else if (event.data === 'cancel-fetches') {
     // Since this event listener is invoked multiple times, this check prevents it from
     // console logging multiple times
     if (isFetchCanceled === false && isSuccessful === true) {
@@ -548,15 +520,15 @@ self.addEventListener('message', event => {
     }
   }
   // If the message is to remove all dynamic cache
-  if (event.data === 'remove-dynamic-cache') {
+  else if (event.data === 'remove-dynamic-cache') {
     event.waitUntil(cleanCache());
   }
   // If the message is to set network status as online
-  if (event.data === 'online') {
+  else if (event.data === 'online') {
     event.waitUntil((networkStatus = 'online'), recacheFailedDynamicFiles());
   }
   // If the message is to set network status as offline
-  if (event.data === 'offline') {
+  else if (event.data === 'offline') {
     event.waitUntil((networkStatus = 'offline'));
   }
 });

@@ -26,6 +26,7 @@ import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
 import routes from '../../routes';
 import { projectName } from '../../project-name';
+import storage from '../../services/storage';
 
 const getRouteName = route => {
   if (route.name) {
@@ -47,27 +48,24 @@ const getRouteName = route => {
 export default class GordonHeader extends Component {
   constructor(props) {
     super(props);
-    this.openDialogBox = this.openDialogBox.bind(this);
-    this.closeDialogBox = this.closeDialogBox.bind(this);
+    this.openNetworkDialogBox = this.openNetworkDialogBox.bind(this);
+    this.closeNetworkDialogBox = this.closeNetworkDialogBox.bind(this);
+    this.updateTabHighlight = this.updateTabHighlight.bind(this);
+    this.openUnAuthSearchDialogBox = this.openUnAuthSearchDialogBox.bind(this);
+    this.closeUnAuthSearchDialogBox = this.closeUnAuthSearchDialogBox.bind(this);
+    this.createPeopleTab = this.createPeopleTab.bind(this);
+    this.createDialogBoxes = this.createDialogBoxes.bind(this);
 
     this.state = {
       value: null,
-      dialogBoxOpen: false,
-      loginDialogOpen: false,
+      dialogBoxNetworkOpen: false,
+      dialogBoxLoginOpen: false,
       network: 'online',
     };
   }
 
   handleChange = (event, value) => {
     this.setState({ value });
-  };
-
-  openDialogBox = () => {
-    this.setState({ dialogBoxOpen: true });
-  };
-
-  closeDialogBox = () => {
-    this.setState({ dialogBoxOpen: false });
   };
 
   /**
@@ -97,23 +95,7 @@ export default class GordonHeader extends Component {
     this.updateTabHighlight();
   }
 
-  unAuthenticatedSearch() {
-    this.setState({ loginDialogOpen: true });
-  }
-
-  handleClose() {
-    this.setState({ loginDialogOpen: false });
-  }
-
-  openDialogBox = () => {
-    this.setState({ dialogBoxOpen: true });
-  };
-
-  closeDialogBox = () => {
-    this.setState({ dialogBoxOpen: false });
-  };
-
-  render() {
+  componentDidMount() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
@@ -135,16 +117,53 @@ export default class GordonHeader extends Component {
       }
     });
 
+    // Saves the network's status to this component's state
+    this.setState({ network: storage.get('network-status') });
+  }
+
+  /**
+   * Opens the dialog box when an unauthenticated user attempts to access the People tab
+   */
+  openUnAuthSearchDialogBox() {
+    this.setState({ dialogBoxLoginOpen: true });
+  }
+
+  /**
+   * Closes the dialog box for an unauthenticated user
+   */
+  closeUnAuthSearchDialogBox() {
+    this.setState({ dialogBoxLoginOpen: false });
+  }
+
+  /**
+   * Opens the dialog box for when the user attempts to access the People tab while offline
+   */
+  openNetworkDialogBox() {
+    this.setState({ dialogBoxNetworkOpen: true });
+  }
+
+  /**
+   * Closes the dialog box for an offline user
+   */
+  closeNetworkDialogBox() {
+    this.setState({ dialogBoxNetworkOpen: false });
+  }
+
+  /**
+   * Creates the People Tab depending on the status of the network found in local storage and if
+   * the user is authenticated
+   */
+  createPeopleTab() {
     /* Gets status of current network connection for online/offline rendering
      *  Defaults to online in case of PWA not being possible
      */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+    const networkStatus = this.state.network || 'online';
 
-    // Creates the People Tab depending on the status of the network found in local storage
     let PeopleTab;
 
+    // Checks if user is authenticated
     if (this.props.Authentication) {
-      // Renders online, authenticated (i.e. normal) People Tab
+      // Online People Tab
       if (networkStatus === 'online') {
         PeopleTab = (
           <Tab
@@ -156,55 +175,99 @@ export default class GordonHeader extends Component {
           />
         );
       } else {
-        // Renders offline People Tab
+        // Offline People Tab
         PeopleTab = (
-          <div onClick={this.openDialogBox}>
+          <div onClick={this.openNetworkDialogBox}>
             <Tab
               className="tab"
               icon={<PeopleIcon />}
               label="People"
               component={Button}
               style={{ color: 'white' }}
-              disabled={networkStatus}
+              disabled={true}
             />
           </div>
         );
       }
     }
-    // IF YOU ARE NOT AUTHENTICATED
+    // If the user is not authenticated
     else {
-      // Renders online Guest People Tab
-      if (networkStatus === 'online') {
-        PeopleTab = (
-          <div onClick={clicked => this.unAuthenticatedSearch()}>
-            <Tab
-              className="tab"
-              icon={<PeopleIcon />}
-              label="People"
-              component={Button}
-              style={{ color: 'white' }}
-              disabled={networkStatus}
-            />
-          </div>
-        );
-      }
-      // Renders offline Guest People Tab
-      else {
-        PeopleTab = (
-          <div onClick={this.openDialogBox}>
-            <Tab
-              className="tab"
-              icon={<PeopleIcon />}
-              label="People"
-              component={Button}
-              style={{ color: 'white' }}
-              disabled={networkStatus}
-            />
-          </div>
-        );
-      }
+      PeopleTab = (
+        <div onClick={clicked => this.openUnAuthSearchDialogBox()}>
+          <Tab
+            className="tab"
+            icon={<PeopleIcon />}
+            label="People"
+            component={Button}
+            style={{ color: 'white' }}
+            disabled={networkStatus}
+          />
+        </div>
+      );
     }
 
+    return PeopleTab;
+  }
+
+  /**
+   * Creates the dialog boxes that's used for offline and unauthenticated users
+   */
+  createDialogBoxes() {
+    return (
+      <div>
+        {/* DIALOG BOX FOR OFFLINE MODE */}
+        <Dialog
+          open={this.state.dialogBoxNetworkOpen}
+          onClose={clicked => this.closeNetworkDialogBox()}
+          aria-labelledby="disabled-feature"
+          aria-describedby="disabled-feature-description"
+        >
+          <DialogTitle id="disabled-feature">{'Offline Mode:'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="disabled-feature-description">
+              This feature is unavailable offline. Please reconnect to internet to access this
+              feature.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              onClick={clicked => this.closeNetworkDialogBox()}
+              color="primary"
+            >
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* DIALOG BOX FOR UNAUTHORIZED USERS */}
+        <Dialog
+          open={this.state.dialogBoxLoginOpen}
+          onClose={clicked => this.closeUnAuthSearchDialogBox()}
+          aria-labelledby="login-dialog-title"
+          aria-describedby="login-dialog-description"
+        >
+          <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="login-dialog-description">
+              You are not logged in. Please log in to use People Search.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              onClick={clicked => this.closeUnAuthSearchDialogBox()}
+              color="primary"
+            >
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
+
+  render() {
     //Add to return statement when re-enabling work link
     //<Tab
     //              className="tab"
@@ -254,7 +317,7 @@ export default class GordonHeader extends Component {
                   component={NavLink}
                   to="/events"
                 />
-                {PeopleTab}
+                {this.createPeopleTab()}
               </Tabs>
             </div>
             <GordonPeopleSearch Authentication={this.props.Authentication} />
@@ -264,48 +327,12 @@ export default class GordonHeader extends Component {
             />
           </Toolbar>
         </AppBar>
-        <Dialog
-          open={this.state.dialogBoxOpen}
-          onClose={clicked => this.closeDialogBox()}
-          aria-labelledby="disabled-feature"
-          aria-describedby="disabled-feature-description"
-        >
-          <DialogTitle id="disabled-feature">{'Offline Mode:'}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="disabled-feature-description">
-              This feature is unavailable offline. Please reconnect to internet to access this
-              feature.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button variant="contained" onClick={clicked => this.closeDialogBox()} color="primary">
-              Okay
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        <Dialog
-          open={this.state.loginDialogOpen}
-          onClose={clicked => this.handleClose()}
-          aria-labelledby="login-dialog-title"
-          aria-describedby="login-dialog-description"
-        >
-          <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="login-dialog-description">
-              You are not logged in. Please log in to use People Search.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
-              Okay
-            </Button>
-          </DialogActions>
-        </Dialog>
+        {this.createDialogBoxes()}
       </section>
     );
   }
 }
+
 GordonHeader.propTypes = {
   onDrawerToggle: PropTypes.func.isRequired,
   onSignOut: PropTypes.func.isRequired,
