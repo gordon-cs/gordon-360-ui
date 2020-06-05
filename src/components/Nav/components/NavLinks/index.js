@@ -166,6 +166,8 @@ export default class GordonNavLinks extends Component {
     let admin;
     let peopleButton;
     let signInOut;
+    let wellnessCheck;
+
     if (this.props.Authentication) {
       // Creates the Admin button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
@@ -207,13 +209,48 @@ export default class GordonNavLinks extends Component {
           <div onClick={this.openDialogBox}>
             <ListItem button disabled={networkStatus}>
               <ListItemIcon>
-                <PeopleIcon />
+                <LocalActivityIcon />
               </ListItemIcon>
               <ListItemText primary="People" />
             </ListItem>
           </div>
         );
       }
+
+      if (networkStatus === 'online') {
+        wellnessCheck = (
+          <NavLink exact to="/wellness" onClick={this.props.onLinkClick} className="gc360-link">
+            <ListItem button>
+              <ListItemIcon>
+                <LocalActivityIcon />
+              </ListItemIcon>
+              <ListItemText primary="Wellness Check" />
+            </ListItem>
+          </NavLink>
+        );
+      } else {
+        wellnessCheck = (
+          <div onClick={this.openDialogBox}>
+            <ListItem button disabled={networkStatus}>
+              <ListItemIcon>
+                <LocalActivityIcon />
+              </ListItemIcon>
+              <ListItemText primary="Wellness Check" />
+            </ListItem>
+          </div>
+        );
+      }
+
+      wellnessCheck = (
+        <NavLink exact to="/wellness" onClick={this.props.onLinkClick} className="gc360-link">
+          <ListItem button>
+            <ListItemIcon>
+              <LocalActivityIcon />
+            </ListItemIcon>
+            <ListItemText primary="Wellness Check" />
+          </ListItem>
+        </NavLink>
+      );
 
       // Creates the Involvements button
       involvementsButton = (
@@ -389,6 +426,7 @@ export default class GordonNavLinks extends Component {
           {involvementsButton}
           {eventsButton}
           {peopleButton}
+          {wellnessCheck}
         </List>
 
         <Divider />

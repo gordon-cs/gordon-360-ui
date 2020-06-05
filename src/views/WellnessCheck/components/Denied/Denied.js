@@ -1,0 +1,69 @@
+import Grid from '@material-ui/core/Grid';
+import React, { Component } from 'react';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import "./Denied.css"
+
+
+export default class Home extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+        network: 'online',
+     };
+  }
+
+  logIn() {
+    try {
+      this.props.onLogIn();
+    } catch (error) {
+      console.log('Login failed with error: ' + error);
+    }
+  }
+
+  render() {
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */  
+
+    console.log(this.state.currentStatus);
+
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+   
+    let content;
+
+        content = (
+                 <Grid spacing={2}>
+                    <Card className="card">
+                         <CardHeader title="Denied"/>
+                         <CardContent>
+                             <div id = "denied">
+                             </div>
+                         </CardContent>
+                    </Card>
+                 </Grid>
+    
+        );
+
+    return content;
+  }
+}

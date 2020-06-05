@@ -245,6 +245,14 @@ export default class GordonHeader extends Component {
                   to="/events"
                 />
                 {PeopleTab}
+
+                <Tab
+                  className="tab"
+                  icon={<LocalActivityIcon />}
+                  label="Wellness Check"
+                  component={NavLink}
+                  to="/wellness"
+                />
               </Tabs>
             </div>
             <GordonPeopleSearch Authentication={this.props.Authentication} />

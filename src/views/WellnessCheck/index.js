@@ -1,20 +1,19 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import Carousel from './components/Carousel';
-import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
-import DaysLeft from './components/DaysLeft';
-import Requests from './components/Requests';
-import DiningBalance from './components/DiningBalance';
 import user from '../../services/user';
 import Login from '../Login';
-import './home.css';
-import Question from './components/Question'
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Approved from './components/Approved/Approved';
+import Denied from './components/Denied/Denied';
+import './WellnessCheck.css'
 
 import '../../app.css';
 
 import '../../app.css';
 
-export default class Home extends Component {
+export default class WellnessCheck extends Component {
   constructor(props) {
     super(props);
 
@@ -84,58 +83,35 @@ export default class Home extends Component {
       }
     });
 
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
     let content;
 
     /* Renders the wellness check question instead of the home page if the question
      *  has not been answered yet
      */
-    if(this.state.answered === false){
-      return content = (
-        <Grid container justify="center" spacing={2}>
-            <Grid item xs={10} md={4}>
-              <Question call = {this.callBack}/>
-            </Grid>
-        </Grid>
-      );
-    }
-    else{
       if (this.props.Authentication) {
-        const personType = this.state.personType;
 
-        let requests;
-        if (networkStatus === 'online') {
-          requests = (
-            <Grid item xs={12} md={5}>
-              <Requests />
-            </Grid>
-          );
+        let status;
+
+        if(this.state.currentStatus === "I am not symptomatic"){
+            status = (<Approved/>); 
         }
 
-        //Only show CL&W credits if user is a student
-        let doughnut;
-        if (String(personType).includes('stu')) {
-          doughnut = <CLWCreditsDaysLeft />;
-        } else {
-          doughnut = <DaysLeft />;
+        else{
+            status = (<Denied/>);
         }
+        
 
         content = (
           <Grid container justify="center" spacing={2}>
+            
             <Grid item xs={12} md={10}>
-              <Carousel />
+                <Card className="card">
+                    <CardContent>
+                        <CardHeader title="Current Status" />
+                         {status}
+                    </CardContent>
+                </Card>
             </Grid>
-            <Grid item xs={12} md={5}>
-              {doughnut}
-            </Grid>
-            <Grid item xs={12} md={5}>
-              <DiningBalance />
-            </Grid>
-            {requests}
           </Grid>
         );
       } else {
@@ -148,5 +124,4 @@ export default class Home extends Component {
 
     return content;
   }
- }
 }

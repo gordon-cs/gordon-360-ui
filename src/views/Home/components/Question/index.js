@@ -3,13 +3,13 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import GordonLoader from '../../../../components/Loader';
-import "./Question.css";
 
 export default class Question extends Component {
   constructor(props) {
     super(props);
-
     
+    this.submitHandler = this.submitHandler.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.loadQuestion = this.loadQuestion.bind(this);
 
     this.state = {
@@ -39,9 +39,10 @@ export default class Question extends Component {
   submitHandler = (e) => {
     this.setState({answered: true});
     this.setState({currentStatus: this.state.selected})
-    this.props.call(true);
+    this.props.call(true,this.state.currentStatus);
     e.preventDefault();
     //console.log(this.state.currentStatus);
+
   };
 
   handleChange= (e) => {
