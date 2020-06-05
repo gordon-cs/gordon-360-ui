@@ -15,7 +15,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
 import peopleSearch from '../../../../services/people-search';
-const MIN_QUERY_LENGTH = 3;
+const MIN_QUERY_LENGTH = 2;
 
 //  TextBox Input Field
 const renderInput = inputProps => {
@@ -49,6 +49,7 @@ export default class GordonPeopleSearch extends Component {
   constructor(props) {
     super(props);
     this.getSuggestions = this.getSuggestions.bind(this);
+    this.renderNoResult = this.renderNoResult.bind(this);
     this.renderSuggestion = this.renderSuggestion.bind(this);
     this.reset = this.reset.bind(this);
     this.handleKeys = this.handleKeys.bind(this);
@@ -147,13 +148,23 @@ export default class GordonPeopleSearch extends Component {
     );
   }
 
+  renderNoResult() {
+    return(
+    <MenuItem className="people-search-suggestion" style=
+    {{paddingBottom: '5px'}}>
+      <Typography className="no-results" variant="body2">
+        No results
+      </Typography>
+    </MenuItem>)
+  }
+
   renderSuggestion(params) {
     const { suggestion, itemProps } = params;
     let suggestionIndex = this.state.suggestionIndex;
     let suggestionList = this.state.suggestions;
     // Bail if any required properties are missing
     if (!suggestion.UserName || !suggestion.FirstName || !suggestion.LastName) {
-      return;
+      return null;
     }
     return (
        <MenuItem
@@ -324,12 +335,7 @@ export default class GordonPeopleSearch extends Component {
                   // Styling copied from how renderSuggestion is done with
                   // only bottom padding changed and 'no-results' class used
                     <Paper square className="people-search-dropdown">
-                      <MenuItem className="people-search-suggestion" style=
-                      {{paddingBottom: '5px'}}>
-                        <Typography className="no-results" variant="body2">
-                         No results
-                        </Typography>
-                      </MenuItem>
+                      {this.renderNoResult()}
                     </Paper>) : null}
               </span>
             )}
@@ -369,12 +375,7 @@ export default class GordonPeopleSearch extends Component {
                   // Styling copied from how renderSuggestion is done with
                   // only bottom padding changed and 'no-results' class used
                   <Paper square className="people-search-dropdown">
-                    <MenuItem className="people-search-suggestion" style=
-                    {{paddingBottom: '5px'}}>
-                      <Typography className="no-results" variant="body2">
-                       No results
-                      </Typography>
-                    </MenuItem>
+                    {this.renderNoResult()}
                   </Paper>) : null}
               </span>
             )}
