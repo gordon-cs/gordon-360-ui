@@ -38,13 +38,12 @@ if ('caches' in window) {
     if (JSON.parse(localStorage.getItem('network-status')) === 'offline') {
       if (navigator.onLine) {
         localStorage.setItem('network-status', JSON.stringify('online'));
-        location.reload();
+        window.postMessage('online', location.origin);
       }
     } else {
       if (!navigator.onLine) {
         localStorage.setItem('network-status', JSON.stringify('offline'));
-        location.reload();
-        alert('You are offline. Information might not be up to date.');
+        window.postMessage('offline', location.origin);
       }
     }
 
@@ -73,7 +72,7 @@ if ('caches' in window) {
         token: JSON.parse(localStorage.getItem('token')),
         termCode: JSON.parse(localStorage.getItem('currentTerm')),
       });
-      event.waitUntil(window.postMessage('online', location.origin));
+      window.postMessage('online', location.origin);
     });
   } else {
     console.log('%cSERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);

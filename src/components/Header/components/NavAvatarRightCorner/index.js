@@ -1,26 +1,23 @@
+import { IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core';
 import {
-  Avatar,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-  Menu,
-  MenuItem,
-  Tooltip,
-} from '@material-ui/core';
+  createAboutButton,
+  createAdminButton,
+  createAvatarButton,
+  createFeedbackButton,
+  createHelpButton,
+  createLinksButton,
+  createMyProfileButton,
+  createSignInOutButton,
+} from './navButtons';
+import GordonDialogBox from '../../../GordonDialogBox/index';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import QuickLinksDialog from '../../../QuickLinksDialog';
 import { signOut } from '../../../../services/auth';
-
+import storage from '../../../../services/storage';
 import './nav-avatar-right-corner.css';
 import '../../../../app.css';
 import user from '../../../../services/user';
-
-import { Button } from '@material-ui/core';
 
 export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
@@ -29,11 +26,11 @@ export default class GordonNavAvatarRightCorner extends Component {
     this.onClick = this.onClick.bind(this);
     this.onClose = this.onClose.bind(this);
     this.onSignOut = this.onSignOut.bind(this);
+    this.onSignIn = this.onSignIn.bind(this);
     this.handleLinkClickOpen = this.handleLinkClickOpen.bind(this);
     this.handleLinkClose = this.handleLinkClose.bind(this);
     this.openDialogBox = this.openDialogBox.bind(this);
     this.closeDialogBox = this.closeDialogBox.bind(this);
-
     this.getInitials = this.getInitials.bind(this);
 
     this.state = {
@@ -43,40 +40,56 @@ export default class GordonNavAvatarRightCorner extends Component {
       username: null,
       linkopen: false,
       anchorEl: null,
+      dialogBoxOpen: false,
+      dialogType: '',
+      dialogReason: '',
       network: 'online',
     };
   }
 
+  /**
+   * Handles the event of an option being clicked on in the menu
+   */
   onClick(event) {
     this.setState({ anchorEl: event.currentTarget });
   }
+
+  /**
+   * Closes the menu
+   */
   onClose() {
     this.setState({ anchorEl: null });
   }
+
+  /**
+   * Closes the menu and logs out the user
+   */
   onSignOut() {
     this.onClose();
     signOut();
     this.props.onSignOut();
   }
+
+  /**
+   * Closes the menu
+   */
   onSignIn() {
     this.onClose();
   }
-  openDialogBox = () => {
-    this.setState({ dialogBoxOpen: true });
-  };
 
-  closeDialogBox = () => {
-    this.setState({ dialogBoxOpen: false });
-  };
-  handleLinkClickOpen = () => {
-    this.setState({
-      linkopen: true,
-    });
-  };
+  /**
+   * Opens the dialog box containing external links
+   */
+  handleLinkClickOpen() {
+    this.setState({ linkopen: true });
+  }
 
-  handleLinkClose = () => {
+  /**
+   * Closes the dialog box containing external links
+   */
+  handleLinkClose() {
     this.setState({ linkopen: false });
-  };
+  }
 
   async componentWillReceiveProps(newProps) {
     if (this.props.Authentication !== newProps.Authentication) {
@@ -84,32 +97,57 @@ export default class GordonNavAvatarRightCorner extends Component {
     }
   }
 
-  openDialogBox = () => {
-    this.setState({ dialogBoxOpen: true });
-  };
-
-  closeDialogBox = () => {
-    this.setState({ dialogBoxOpen: false });
-  };
-
-  handleLinkClickOpen = () => {
-    this.setState({
-      linkopen: true,
-    });
-  };
-
-  handleLinkClose = () => {
-    this.setState({ linkopen: false });
-  };
-
   async componentWillMount() {
     this.loadAvatar(this.props.Authentication);
   }
 
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
+
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    let network;
+    /* Attempts to get the network status from local storage.
+     * If not found, the default value is online
+     */
+    try {
+      network = storage.get('network-status');
+    } catch (error) {
+      // Defaults the network to online if not found in local storage
+      network = 'online';
+    }
+
+    // Saves the network's status to this component's state
+    this.setState({ network });
   }
 
+  componentWillUnmount() {
+    // Removes the window's event listener before unmounting the component
+    window.removeEventListener('message');
+  }
+
+  /**
+   * Creates the avatar
+   */
   async loadAvatar(Authentication) {
     if (Authentication) {
       const { name, user_name: username } = user.getLocalInfo();
@@ -136,6 +174,9 @@ export default class GordonNavAvatarRightCorner extends Component {
     }
   }
 
+  /**
+   * Gets the initials of the current user
+   */
   getInitials() {
     if (this.state.username) {
       return this.state.username
@@ -147,179 +188,122 @@ export default class GordonNavAvatarRightCorner extends Component {
     return '';
   }
 
+  /**
+   * Creates a dialog box.
+   *
+   * Depending on the dialog box's type saved in the state, the dialog box and it's content is created.
+   */
+  createDialogBox() {
+    // Type - Offline
+    if (this.state.dialogType === 'offline') {
+      return (
+        <GordonDialogBox
+          open={this.state.dialogBoxOpened}
+          onClose={this.closeDialogBox}
+          labelledby={'offline-dialog'}
+          describedby={'feature-deactivated'}
+          title={'Offline Mode'}
+          text={
+            'This feature is unavailable offline. Please reconnect to internet to access this feature.'
+          }
+          buttonClicked={this.closeDialogBox}
+          buttonName={'Okay'}
+        />
+      );
+    }
+    // Type - Unauthorized
+    else if (this.state.dialogType === 'unauthorized') {
+      return (
+        <GordonDialogBox
+          open={this.state.dialogBoxOpened}
+          onClose={this.closeDialogBox}
+          labelledby={'unauthorized-dialog'}
+          describedby={'feature-unavailable'}
+          title={'Credentials Needed'}
+          text={`This feature is unavailable while not logged in. Please log in to ${this.state.dialogReason}.`}
+          buttonClicked={this.closeDialogBox}
+          buttonName={'Okay'}
+        />
+      );
+    }
+  }
+
+  /**
+   * Opens the dialog box.
+   *
+   * Depending on the type and reason for opening the dialog box, the dialog box's content is made.
+   *
+   * @param {String} type The type of dialog box requested
+   * @param {String} feature The feature the user attempted to access
+   */
+  openDialogBox(type, feature) {
+    let reason = '';
+    if (feature === 'admin view') {
+      reason = 'edit administrator privileges';
+    } else if (feature === 'my profile view') {
+      reason = 'view your profile';
+    } else {
+      reason = '';
+    }
+
+    this.setState({ dialogBoxOpened: true, dialogType: type, dialogReason: reason });
+  }
+
+  /**
+   * Closes the dialog box.
+   *
+   * While closing the dialog box, all of its text content is erased.
+   */
+  closeDialogBox() {
+    this.setState({ dialogBoxOpened: false, dialogType: '', dialogReason: '' });
+  }
+
   render() {
     const open = Boolean(this.state.anchorEl);
 
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-        this.handleLinkClose();
-      }
-    });
+    // Avatar Button
+    let avatar = createAvatarButton(this.props.Authentication, this.state.image, this.getInitials);
 
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+    // My Profile Button
+    let myProfileButton = createMyProfileButton(
+      this.state.network,
+      this.props.Authentication,
+      this.onClose,
+      this.openDialogBox,
+      this.state.name,
+    );
 
-    // Creates the Links button depending on the status of the network found in local storage
-    let LinksButton;
-    if (networkStatus === 'online') {
-      LinksButton = (
-        <MenuItem
-          onClick={() => {
-            this.onClose();
-            this.handleLinkClickOpen();
-          }}
-          divider="true"
-        >
-          Links
-        </MenuItem>
-      );
-    } else {
-      LinksButton = (
-        <div onClick={this.openDialogBox}>
-          <MenuItem disabled={networkStatus} divider="true">
-            Links
-          </MenuItem>
-        </div>
-      );
-    }
+    // Links Button
+    let linksButton = createLinksButton(
+      this.state.network,
+      this.onClose,
+      this.handleLinkClickOpen,
+      this.openDialogBox,
+    );
 
-    // Creates the Feedback button depending on the status of the network found in local storage
-    let FeedbackButton;
-    if (networkStatus === 'online') {
-      FeedbackButton = (
-        <Link to="/feedback" className="gc360-link">
-          <MenuItem onClick={this.onClose} divider="true">
-            Feedback
-          </MenuItem>
-        </Link>
-      );
-    } else {
-      FeedbackButton = (
-        <div onClick={this.openDialogBox}>
-          <MenuItem disabled={networkStatus} divider="true">
-            Feedback
-          </MenuItem>
-        </div>
-      );
-    }
+    // Help Button
+    let helpButton = createHelpButton(this.onClose);
 
-    let avatar;
-    let signInOut;
-    let myProfileLink;
-    let Admin;
-    if (this.props.Authentication) {
-      // Set authenticated values for dropdown menu
+    // About Button
+    let aboutButton = createAboutButton(this.onClose);
 
-      let myProfile;
-      // Creates the My Profile button link depending on the status of the network found in local storage
-      if (networkStatus === 'online') {
-        myProfile = '/myprofile';
-      } else {
-        myProfile = `/profile/${this.state.name.replace(' ', '.')}`;
-      }
-      myProfileLink = (
-        <Link to={myProfile} className="gc360-link">
-          <MenuItem onClick={this.onClose} divider={true}>
-            My Profile
-          </MenuItem>
-        </Link>
-      );
+    // Feedback Button
+    let feedbackButton = createFeedbackButton(this.state.network, this.onClose, this.openDialogBox);
 
-      avatar = (
-        <Avatar className="gc360-nav-avatar-rc_size gc360-nav-avatar-rc_placeholder">
-          {this.getInitials()}
-        </Avatar>
-      );
-      if (this.state.image) {
-        avatar = (
-          <Avatar
-            className="gc360-nav-avatar-rc_size"
-            src={`data:image/jpg;base64,${this.state.image}`}
-          />
-        );
-      }
+    // Admin Button
+    let adminButton = createAdminButton(
+      this.state.network,
+      this.props.Authentication,
+      this.onClose,
+      this.openDialogBox,
+    );
 
-      // Creates the Admin button depending on the status of the network found in local storage
-      if (networkStatus === 'online') {
-        if (user.getLocalInfo().college_role === 'god') {
-          Admin = (
-            <Link to="/admin" className="gc360-link">
-              <MenuItem onClick={this.onClose} divider="true">
-                Admin
-              </MenuItem>
-            </Link>
-          );
-        }
-      } else {
-        if (user.getLocalInfo().college_role === 'god') {
-          Admin = (
-            <div onClick={this.openDialogBox}>
-              <MenuItem disabled={networkStatus} divider="true">
-                Admin
-              </MenuItem>
-            </div>
-          );
-        }
-      }
-
-      if (networkStatus === 'online') {
-        signInOut = (
-          <Link to="/" className="gc360-link">
-            <MenuItem onClick={this.onSignOut.bind(this)} divider={true}>
-              Sign Out
-            </MenuItem>
-          </Link>
-        );
-      } else {
-        signInOut = (
-          <div onClick={this.openDialogBox}>
-            <MenuItem disabled={networkStatus} divider="true">
-              Sign Out
-            </MenuItem>
-          </div>
-        );
-      }
-    } else {
-      // Set unauthenticated values for dropdown menu
-
-      avatar = <Avatar className="nav-avatar nav-avatar-placeholder">Guest</Avatar>;
-
-      if (networkStatus === 'online') {
-        signInOut = (
-          <Link to="/" className="gc360-link">
-            <MenuItem onClick={this.onSignIn.bind(this)} divider={true}>
-              Sign In
-            </MenuItem>
-          </Link>
-        );
-      } else {
-        signInOut = (
-          <div onClick={this.openDialogBox}>
-            <MenuItem disabled={networkStatus} divider="true">
-              Sign In
-            </MenuItem>
-          </div>
-        );
-      }
-    }
+    // Sign In & Out Button
+    let signInOutButton = createSignInOutButton(
+      this.props.Authentication,
+      this.onSignOut,
+      this.onSignIn,
+    );
 
     return (
       <section className="right-side-container">
@@ -334,6 +318,7 @@ export default class GordonNavAvatarRightCorner extends Component {
             {avatar}
           </IconButton>
         </Tooltip>
+
         <Menu
           id="nav-avatar-right-corner"
           anchorEl={this.state.anchorEl}
@@ -345,46 +330,22 @@ export default class GordonNavAvatarRightCorner extends Component {
           <MenuItem onClick={this.onClose} style={{ display: 'none' }}>
             My Profile
           </MenuItem>
-          {myProfileLink}
-          {LinksButton}
-          <Link to="/help" className="gc360-link">
-            <MenuItem onClick={this.onClose} divider={true}>
-              Help
-            </MenuItem>
-          </Link>
-          <Link to="/about" className="gc360-link">
-            <MenuItem onClick={this.onClose} divider={true}>
-              About
-            </MenuItem>
-          </Link>
-          {FeedbackButton}
-          {Admin}
-          {signInOut}
+          {myProfileButton}
+          {linksButton}
+          {helpButton}
+          {aboutButton}
+          {feedbackButton}
+          {adminButton}
+          {signInOutButton}
         </Menu>
+
         <QuickLinksDialog
           handleLinkClickOpen={this.handleLinkClickOpen}
           handleLinkClose={this.handleLinkClose}
           linkopen={this.state.linkopen}
         />
-        <Dialog
-          open={this.state.dialogBoxOpen}
-          onClose={clicked => this.closeDialogBox()}
-          aria-labelledby="disabled-feature"
-          aria-describedby="disabled-feature-description"
-        >
-          <DialogTitle id="disabled-feature">{'Offline Mode:'}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="disabled-feature-description">
-              This feature is unavailable offline. Please reconnect to internet to access this
-              feature.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button variant="contained" onClick={clicked => this.closeDialogBox()} color="primary">
-              Okay
-            </Button>
-          </DialogActions>
-        </Dialog>
+
+        {this.createDialogBox()}
       </section>
     );
   }

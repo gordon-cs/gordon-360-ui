@@ -11,7 +11,7 @@
 
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
-const cacheVersion = 'cache-1.0';
+const cacheVersion = 'cache v1.1';
 const apiSource = 'https://360api.gordon.edu';
 /* Uncomment For Development Only (aka develop) */
 // const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
@@ -48,9 +48,6 @@ const staticCache = [
   '/manifest.json',
   '/pwa.js',
   '/static/js/bundle.js',
-  '/static/media/campus1366.e8fc7838.jpg',
-  '/static/media/gordon-logo-vertical-white.a6586885.svg',
-  '/static/media/NoConnection.68275814.svg',
   '/static/js/0.chunk.js',
   '/static/js/main.chunk.js',
   '/static/js/1.chunk.js',
@@ -101,6 +98,20 @@ const staticCache = [
   '/images/ms-icon-144x144.png',
   '/images/ms-icon-150x150.png',
   '/images/ms-icon-310x310.png',
+  '/static/media/campus1366.e8fc7838.jpg',
+  '/static/media/gordon-logo-vertical-white.a6586885.svg',
+  '/static/media/NoConnection.68275814.svg',
+  '/static/media/GordonFavicon.3e563128.ico',
+  '/static/media/MyGordonFavicon.7433864b.ico',
+  '/static/media/GoGordonFavicon.3e563128.ico',
+  '/static/media/BbFavicon.ba837cb2.ico ',
+];
+
+// Files that needed to be cached but don't involve user data
+const dynamicCacheTwo = [
+  'https://360api.gordon.edu/api/events/25Live/All',
+  'https://360api.gordon.edu/api/sessions/current',
+  'https://360api.gordon.edu/api/activities/session/202005',
 ];
 
 /*********************************************** CACHING FUNCTIONS ***********************************************/
@@ -181,24 +192,96 @@ async function fetchThenCache(request) {
 }
 
 /**
- * Caches all of the static files that are listed in the array staticCache
+ * Caches all of the static files
  *
- * If all files are cached successfuly, its success is console logged
- * Else, console log that caching all files failed
- *
- *  @return {Promise} A promise with the result of caching the static files
+ * The files cached are the static files' links in the staticCache array and the Guest view data.
+ * This data includes both events and involvements for the current session. If all files are cached
+ * successfuly, its success is console logged. Vice versa if it fails.
  */
 async function cacheStaticFiles() {
-  return await caches.open(cacheVersion).then(cache => {
-    cache
-      .addAll(staticCache)
-      .then(() => {
-        console.log(`%c${successfulEmoji} Cached Static Files Successfully`, successfulLog);
-      })
-      .catch(() => {
-        console.log(`%c${errorEmoji} Caching Static Files Failed`, errorLog);
-      });
+  // Determines if all files were successfully cached
+  let cachedSuccessfully = true;
+
+  // CACHES LOCAL FILES
+  await caches.open(cacheVersion).then(cache => {
+    cache.addAll(staticCache).catch(error => {
+      cachedSuccessfully = false;
+      if (showDeveloperConsoleLog) console.log(`%c${errorEmoji} Error: ${error.message}`, errorLog);
+    });
   });
+
+  // RETRIEVES EVENTS DATA
+  await fetch((request = new Request('https://360api.gordon.edu/api/events/25Live/Public')))
+    .then(async fetchResponse => {
+      // Checks to make sure the resposne of the fetch is okay
+      if (fetchResponse.statusText === 'OK') {
+        // Adds fetch response to cache
+        await caches.open(cacheVersion).then(cache => {
+          cache.put(request, fetchResponse);
+        });
+      } else {
+        cachedSuccessfully = false;
+        if (showDeveloperConsoleLog) {
+          console.log(
+            `%c${warningEmoji} Bad Response: Status - ${fetchResponse.status} \n\t\tURL: ${fetchResponse.url}`,
+            warningLog,
+          );
+        }
+      }
+    })
+    // Catches any errors from the fetch
+    .catch(error => {
+      cachedSuccessfully = false;
+      if (showDeveloperConsoleLog)
+        console.log(`%c${errorEmoji} Error: ${error.message} \n\t\tURL: ${request.url}`, errorLog);
+    });
+
+  // RETRIEVES INVOLVEMENTS DATA
+  // Gets the current session to display on the involvements page
+  let currentSession = await fetch('https://360api.gordon.edu/api/sessions/current')
+    .then(fetchResponse => {
+      return fetchResponse.json();
+    })
+    // Catches any errors from the fetch
+    .catch(error => {
+      cachedSuccessfully = false;
+      if (showDeveloperConsoleLog)
+        console.log(`%c${errorEmoji} Error: ${error.message} \n\t\tURL: ${request.url}`, errorLog);
+    });
+
+  await fetch(
+    (request = new Request(
+      `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}`,
+    )),
+  )
+    .then(async fetchResponse => {
+      // Checks to make sure the resposne of the fetch is okay
+      if (fetchResponse.statusText === 'OK') {
+        // Adds fetch response to cache
+        await caches.open(cacheVersion).then(cache => {
+          cache.put(request, fetchResponse);
+        });
+      } else {
+        cachedSuccessfully = false;
+        if (showDeveloperConsoleLog) {
+          console.log(
+            `%c${warningEmoji} Bad Response: Status - ${fetchResponse.status} \n\t\tURL: ${fetchResponse.url}`,
+            warningLog,
+          );
+        }
+      }
+    })
+    // Catches any errors from the fetch
+    .catch(error => {
+      cachedSuccessfully = false;
+      if (showDeveloperConsoleLog)
+        console.log(`%c${errorEmoji} Error: ${error.message} \n\t\tURL: ${request.url}`, errorLog);
+    });
+
+  // Console logs the result of the attempt to cache all static files
+  cachedSuccessfully
+    ? console.log(`%c${successfulEmoji} Cached Static Files Successfully`, successfulLog)
+    : console.log(`%c${errorEmoji} Caching Static Files Failed`, errorLog);
 }
 
 /**
@@ -365,7 +448,7 @@ async function dynamicLinksThenCache(token, termCode) {
         return response.json();
       })
       .catch(error => {
-        return error.Message;
+        return error.message;
       });
 
     // Checks to make sure that the current user's info exists
@@ -383,7 +466,7 @@ async function dynamicLinksThenCache(token, termCode) {
         return response.json();
       })
       .catch(error => {
-        return error.Message;
+        return error.message;
       });
 
     /* Sets the URLs to the dynamicCache list variable. Instead of pushing the urls to the variable,
@@ -433,7 +516,7 @@ async function dynamicLinksThenCache(token, termCode) {
  */
 function timerFunction() {
   cacheTimer = setInterval(() => {
-    console.log('Attempting To Update Cache.');
+    console.log('Attempting to update cache.');
     // Caching All Files
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(token, termCode); // Dynamic Cache
@@ -462,7 +545,7 @@ self.addEventListener('fetch', event => {
   // // If request is from Remote, console log the URL
   // else {
   //   if (showDeveloperConsoleLog) {
-  //   console.log(`Fetching request from REMOTE LOCATION: ${event.request.url}`);
+  //     console.log(`Fetching request from REMOTE LOCATION: ${event.request.origin}`);
   //   }
   // }
 
