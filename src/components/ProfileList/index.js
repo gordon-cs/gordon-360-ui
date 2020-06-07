@@ -100,6 +100,7 @@ class ProfileList extends Component {
     let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
+    let majoradvisors, minoradvisors;
     let mailloc, dorminfo;
     let studentID;
     const { profile } = this.props;
@@ -268,7 +269,40 @@ class ProfileList extends Component {
         );
       }
     }
-
+    if (String(this.props.profile.PersonType).includes('stu')) {
+      majoradvisors=(
+      <div>
+            <ListItem>
+              <Grid container justify="center">
+                <Grid item xs={6} sm={6} md={3} lg={6}>
+                  <Typography>Major Adviosr:</Typography>
+                </Grid>
+                <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+                  <Typography>{}</Typography>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <Divider />
+          </div>
+        );
+        if (String(this.props.profile.Minors).length !== 0) {
+          minoradvisors = (
+            <div>
+                  <ListItem>
+                    <Grid container justify="center">
+                      <Grid item xs={6} sm={6} md={3} lg={6}>
+                        <Typography>Minor Adviosr:</Typography>
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
+                        <Typography>{}</Typography>
+                      </Grid>
+                    </Grid>
+                  </ListItem>
+                  <Divider />
+                </div>
+              );
+          }
+    }
     if (
       String(this.props.profile.PersonType).includes('stu') &&
       (profile.BuildingDescription || profile.Hall)
@@ -364,7 +398,9 @@ class ProfileList extends Component {
           <CardContent>
             <CardHeader title="Personal Information" />
             {majors}
+            {majoradvisors}
             {minors}
+            {minoradvisors}
             {residence}
             {dorminfo}
             {mailloc}
