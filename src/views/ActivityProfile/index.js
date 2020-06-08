@@ -639,22 +639,36 @@ class ActivityProfile extends Component {
                     />
                   </Grid>
                   <Grid item>{editActivity}</Grid>
-                  <Typography variant="body2">
-                    <strong>Session: </strong>
-                    {sessionDescription}
-                  </Typography>
-                  {description}
-                  {website}
-                  {groupContacts}
-                  {advisors}
-                  <Typography>
-                    <strong>Special Information for Joining: </strong>
-                    {this.state.activityInfo.ActivityJoinInfo}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Current Involvement Roster: </strong>
-                    {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
-                  </Typography>
+                  {/* Activity Description */}
+                  <Grid item justify="center" align="left">
+                    <Grid container lg={12} direction="column" align="left">
+                        <Typography variant="body2">
+                          <strong>Session: </strong>
+                          {sessionDescription}
+                        </Typography>
+                        <Typography variant="body2">
+                          {description}
+                        </Typography>
+                        <Typography variant="body2">
+                          {website}
+                        </Typography>
+                        <Typography variant="body2">
+                          {groupContacts}
+                        </Typography>
+                        <Typography variant="body2">
+                          {advisors}
+                        </Typography>
+                                          
+                        <Typography variant="body2">
+                          <strong>Special Information for Joining: </strong>
+                          {this.state.activityInfo.ActivityJoinInfo}
+                        </Typography>
+                        <Typography variant="body2">
+                          <strong>Current Involvement Roster: </strong>
+                          {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
+                        </Typography>
+                    </Grid>
+                  </Grid>
                 </CardContent>
                 {membership}
               </Card>
