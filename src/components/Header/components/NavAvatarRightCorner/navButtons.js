@@ -123,7 +123,11 @@ export function createAdminButton(networkStatus, authenticated, onLinkClick, ope
     } else {
       // Authenticated - Network Status: Offline
       adminButton = (
-        <div onClick={openDialogBox('offline', '')}>
+        <div
+          onClick={() => {
+            openDialogBox('offline', '');
+          }}
+        >
           <MenuItem disabled={true} divider="true">
             Admin
           </MenuItem>
@@ -226,7 +230,12 @@ export function createSignInOutButton(authenticated, onSignOut, onSignIn) {
   if (authenticated) {
     signInOutButton = (
       <Link to="/" className="gc360-link">
-        <MenuItem onClick={onSignOut} divider={true}>
+        <MenuItem
+          onClick={() => {
+            onSignOut();
+          }}
+          divider={true}
+        >
           Sign Out
         </MenuItem>
       </Link>
@@ -236,7 +245,12 @@ export function createSignInOutButton(authenticated, onSignOut, onSignIn) {
   else {
     signInOutButton = (
       <Link to="/" className="gc360-link">
-        <MenuItem onClick={onSignIn} divider={true}>
+        <MenuItem
+          onClick={() => {
+            onSignIn();
+          }}
+          divider={true}
+        >
           Sign In
         </MenuItem>
       </Link>
