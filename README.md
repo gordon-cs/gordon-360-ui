@@ -24,7 +24,7 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
-Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow installation of this particular version to be used.
+Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
 
 #### Windows:
 - Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
@@ -55,7 +55,7 @@ By default, React will use the live server backend to allow seamless front end d
 
   - Clone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
-  - Open `setupProxy.js`:
+  - Open `setupProxy.js` in src:
 
     - You will see two nearly identical function calls that start with `app.use(proxy...`. In both calls, change the string following the word `target` to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the string to say `'http://localhost:5555/'` in both.
 
@@ -389,3 +389,7 @@ The script deploys to either staging or production based on the branch it is run
 - ID and photo uploader dialog boxes are a bit squished for screens as small as iPhone 5's.
 
 - An admin is able to remove themselves (on admin view), which causes major issues.
+
+## History
+- The student timesheets project was done as a senior project by a trio of seniors Nathanial Rudenberg, Adam Princiotta, and Jacob Bradley. The handoff documentation for this project was a revision and update to the existing documentation which is in the [Connect Local Backend to React](#connect-local-backend-to-react) section of the README. The design document can be found [here](https://docs.google.com/document/d/1CepyCiMzBXQVM--JwKKstniU_H1TodzxHLuCqcHxLjk/edit?usp=sharing)
+- [Student Timesheets Final Presentation](https://docs.google.com/presentation/d/162V-DLuaEUyHDS2Diu09k5f4Tpo2iuoMtIDUyowa7eQ/edit?usp=sharing)
