@@ -1,7 +1,25 @@
-#denied{
+#denied-box{
     height: 250px;
     background-color: red;
+    animation-name: animation;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate-reverse;
   }
   .card{
       align-self: center;
-  } 
+  }
+
+#denied-x {
+  font-size: 25px;
+  color: white;
+  animation-name: animation;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes animation {
+  from {color: white;}
+  to {color: red;}
+}
