@@ -3,11 +3,12 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import GordonLoader from '../../../../components/Loader';
+import {getQuestions} from "./questionData";
 
 export default class Question extends Component {
   constructor(props) {
     super(props);
-    
+
     this.submitHandler = this.submitHandler.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.loadQuestion = this.loadQuestion.bind(this);
@@ -16,6 +17,8 @@ export default class Question extends Component {
       error: null,
       loading: true,
       answered:false,
+      qOneAnswered: false,
+      qTwoAnswered: false,
       questionToAsk:"",
       currentStatus:"",
 
@@ -37,6 +40,7 @@ export default class Question extends Component {
   }
 
   submitHandler = (e) => {
+
     this.setState({answered: true});
     this.setState({currentStatus: this.state.selected})
     this.props.call(true,this.state.currentStatus);
@@ -52,6 +56,7 @@ export default class Question extends Component {
 
 
   render() {
+    getQuestions();
 
     if (this.state.error) {
       throw this.state.error;
@@ -64,7 +69,7 @@ export default class Question extends Component {
       content = (
         <Card>
         <CardContent>
-          <CardHeader title="Question" />
+          <CardHeader title="Wellness Check" />
         <form onSubmit = {this.submitHandler}>
           <div className="radio">
               <label>
@@ -88,7 +93,7 @@ export default class Question extends Component {
       </Card>
 
       );
-      
+
     }
     return <div>{content}</div>;
   }

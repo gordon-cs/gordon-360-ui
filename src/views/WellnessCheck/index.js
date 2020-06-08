@@ -52,7 +52,7 @@ export default class WellnessCheck extends Component {
       console.log('Login failed with error: ' + error);
     }
   }
-   
+
   callBack = (data,data2)=>{
     this.setState({answered: data});
     this.setState({currentStatus: data2});
@@ -63,7 +63,7 @@ export default class WellnessCheck extends Component {
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
-     */  
+     */
 
     console.log(this.state.currentStatus);
 
@@ -91,19 +91,20 @@ export default class WellnessCheck extends Component {
       if (this.props.Authentication) {
 
         let status;
+        console.log("User: ", user);
 
         if(this.state.currentStatus === "I am not symptomatic"){
-            status = (<Approved/>); 
+            status = (<Approved/>);
         }
 
         else{
             status = (<Denied/>);
         }
-        
+
 
         content = (
-          <Grid container justify="center" spacing={2}>
-            
+          <Grid container justify="left" spacing={2}>
+
             <Grid item xs={12} md={10}>
                 <Card className="card">
                     <CardContent>

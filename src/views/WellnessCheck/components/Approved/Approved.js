@@ -19,7 +19,7 @@ export default class Home extends Component {
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
-     */  
+     */
 
     console.log(this.state.currentStatus);
 
@@ -51,7 +51,7 @@ export default class Home extends Component {
                          </CardContent>
                     </Card>
                 </Grid>
-    
+
         );
 
     return content;
