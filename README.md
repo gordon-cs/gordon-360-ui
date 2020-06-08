@@ -5,24 +5,26 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 ## Contents
 
 - [Getting Started](#getting-started)
-- [Editor Recommendations](#editor-recommendations)
-- [Libraries](#libraries)
-- [Connect Local Backend to React](#connect-local-backend-to-react)
-- [Server Notes](#server-notes)
+  - [Front End Development](#front-end)
+  - [Back End Development](#connect-local-backend-to-react)
+  - [Server Notes](#server-notes)
+  - [Editor Recommendations](#editor-recommendations)
+  - [Libraries](#libraries)
 
 - [Code Style](#code-style)
 - [Dependencies](#dependencies)
 - [Project File Organization](#file-organization)
-- [Enviroment Variables](#environment-variables)
+- [Environment Variables](#environment-variables)
 - [Testing](#testing)
 - [Deployment](#deployment)
+  - [Contributing](#contributing)
 - [Known Issues](#known-issues)
 
 ## Getting Started
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
-Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well.
+Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
 
 #### Windows:
 - Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
@@ -35,7 +37,61 @@ Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; la
 #### Linux: 
 Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, run `nvm install 9.11.1` then run `nvm use 9.11.1`.
 
+<!-- ### Front End Development (Note) -->
+<h3 id="front-end">Front End Development (Note)</h3>
+
 When running the app, it will open in a browser at <http://localhost:3000>.
+
+After cloning this repo, and after any major changes to local code (like changing branches) run:
+- `npm install` (This gets the right packages installed in the directory)
+- `npm start` (This starts a local server, and prints the local URL)
+
+<!--### Connect Local Backend To React-->
+<h3 id="connect-local-backend-to-react">Back End Development (Connect Local Backend To React)</h3>
+
+By default, React will use the live server backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI repository, use the following steps:
+
+- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
+
+  - Clone the UI repository if you do not have it open on the virtual machine already.
+  - Open the repo in Visual Studio Code (VS Code).
+  - Open `setupProxy.js` in src:
+
+    - You will see two nearly identical function calls that start with `app.use(proxy...`. In both calls, change the string following the word `target` to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the string to say `'http://localhost:5555/'` in both.
+
+  - Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file.
+  - Do the same with `.env.development`.
+
+- Now, you are ready to work on the frontend. Although, you may need to install npm, as shown [here](#getting-started).
+  Also, note that it is better to run npm start in a VS Code terminal. It then knows to warn you if someone is already using port 3000. Type `y` if it does say 'Something is already running on port 3000...'.
+
+- In some scenarios, (for example, when someone has made custom changes to the backend which you also want to use) it is preferable to skip setting up your own backend and connect to someone else's. To do this, make sure you are on the virtual machine. Then, just follow the above directions, replacing each instance of the port number you chose with the port number on which their backend is listening.
+
+### Server Notes
+
+The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu` (used by Travis CI), `360train.gordon.edu`, and `360.gordon.edu`.
+
+The backend server is hosted on `cts-360.gordon.edu`. This machine is also known as `360Api.gordon.edu` and `360ApiTrain.gordon.edu` (it also runs the frontend server for the old Ember site, and is thus also known as `360old.gordon.edu`).
+
+#### Making Refresh, URL Entry, and Forward/Back Buttons Work
+
+As noted earlier, gordon-360-ui uses React Router for routing URLs to different views. This works as expected when running the front-end locally with `npm start`. However, when the production build is running on the IIS Server, React Router only handles link clicks; manual URL entry and use of browser navigation buttons results in a 404 error. This is because URLs are sent to the IIS Server (as HTTP requests) before they are handled by React Router. Because none of the URLs correspond to actual directories on the server root, a 404 error results.
+
+To remedy this, a `web.config` file with [these contents](https://gist.githubusercontent.com/lcostea/f17663ebf041b103d98989b6b52d8353/raw/6744846d241c9b785df9054fecbcfc4f2e5dda80/web.config) can be placed in the server's root directory (`D:\wwwroot\360train.gordon.edu`). This file is read by the IIS Server. It provides commands to the URL Rewrite extension (which must be installed in the "Internet Information Services (IIS) Manager" program and can be downloaded from [The Official Microsoft IIS Site](https://www.iis.net/downloads/microsoft/url-rewrite)) which tells the server to reroute all invalid URLs to the server's root directory, eliminating the 404 errors and allowing React Router to handle URLs as expected.
+
+##### The Bad News, and a Workaround
+
+Unfortunately, due to some yet-to-be-fathomed fluke, our attempts to make this `web.config` file be automatically copied to the server root upon deployment have as of yet been foiled. When placed in the `public` directory of our repository (along with other files which are automatically copied over to the server root by an `scp` command in `deploy.sh`), the `web.config` file is copied to the `static` directory on the server rather than to the server root, and the contents of the file are erased (the file is empty). We theorize that this issue is caused by a hiccup in the implementation of `scp` within [PowerShell Server](https://www.nsoftware.com/powershell/server/), a third-party, proprietary program used on the server to facilitate `ssh` connections. (This behavior also occurred with a small number of arbitrarily-named test files, so it is not specific to the "`web.config`" filename.) The file can be placed in the server root directory manually, but it will be removed upon the next deployment (by the deployment script).
+
+Currently, a reasonably elegant workaround has been created by adding a couple of lines to the `deploy.sh` script in the `scripts` directory of the repository. The contents of the `web_config` file (located in the root of the repo) are loaded into a shell variable at the beginning of script execution, and the contents of the file are transferred to the server using an `ssh` connection. This is done by simply echoing the contents of the file (from the aforementioned variable) and redirecting console output (in PowerShell on the server) into a (new) file called `web.config`. This solution achieves the desired result, and allows the contents of the file to be stored in the repo (in the `web_config` file), making future editing much easier than if the file was stored only on the server.
+
+##### Previous Workaround
+
+Our original workaround was in the form of a PowerShell script which automatically copies `web.config` to the server root whenever it is removed. The script is located at `D:\scripts\webconfig\webconfig-filecheck.ps1` and contains a constantly-running while loop. A task has been created in Windows Task Scheduler which, if enabled, starts running the script every morning at 2:00 AM, but automatic execution of this task has been disabled since the creation of the new workaround described above. This task still exists and can be restarted if it is ever needed. (The back-up `web.config` file is located in the same directory as the script.)
+
+Currently, the script and task only exist on the server for the development site (`360train.gordon.edu`). Analogous changes must be made to the server root directories for the production site (`360.gordon.edu`) if this functionality is desired there.
+
+(The current workaround described earlier should work on any server and does not need the PowerShell script or the task in order to work.)
 
 ### Editor Recommendations
 
@@ -105,50 +161,6 @@ Links to the homepages of libraries used in this project, listed here for easy r
 - [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
 
   Provides easy routing, allowing transitions between views with back button support and URL management.
-
-### Connect Local Backend To React
-
-- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
-
-  - Clone the UI repository if you do not have it open on the virtual machine already.
-  - Open the repo in Visual Studio Code (VS Code).
-  - Open `setupProxy.js`in src:
-
-    - You will see two nearly identical function calls that start with `app.use(proxy...`. In both calls, change the string following the word `target` to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the string to say `'http://localhost:5555/'` in both.
-
-  - Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file.
-  - Do the same with `.env.development`.
-
-- Now, you are ready to work on the frontend. Although, you may need to install npm, as shown [here](#getting-started).
-  Also, note that it is better to run npm start in a VS Code terminal. It then knows to warn you if someone is already using port 3000. Type `y` if it does say 'Something is already running on port 3000...'.
-
-- In some scenarios, (for example, when someone has made custom changes to the backend which you also want to use) it is preferable to skip setting up your own backend and connect to someone else's. To do this, make sure you are on the virtual machine. Then, just follow the above directions, replacing each instance of the port number you chose with the port number on which their backend is listening.
-
-### Server Notes
-
-The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu` (used by Travis CI), `360train.gordon.edu`, and `360.gordon.edu`.
-
-The backend server is hosted on `cts-360.gordon.edu`. This machine is also known as `360Api.gordon.edu` and `360ApiTrain.gordon.edu` (it also runs the frontend server for the old Ember site, and is thus also known as `360old.gordon.edu`).
-
-#### Making Refresh, URL Entry, and Forward/Back Buttons Work
-
-As noted earlier, gordon-360-ui uses React Router for routing URLs to different views. This works as expected when running the front-end locally with `npm start`. However, when the production build is running on the IIS Server, React Router only handles link clicks; manual URL entry and use of browser navigation buttons results in a 404 error. This is because URLs are sent to the IIS Server (as HTTP requests) before they are handled by React Router. Because none of the URLs correspond to actual directories on the server root, a 404 error results.
-
-To remedy this, a `web.config` file with [these contents](https://gist.githubusercontent.com/lcostea/f17663ebf041b103d98989b6b52d8353/raw/6744846d241c9b785df9054fecbcfc4f2e5dda80/web.config) can be placed in the server's root directory (`D:\wwwroot\360train.gordon.edu`). This file is read by the IIS Server. It provides commands to the URL Rewrite extension (which must be installed in the "Internet Information Services (IIS) Manager" program and can be downloaded from [The Official Microsoft IIS Site](https://www.iis.net/downloads/microsoft/url-rewrite)) which tells the server to reroute all invalid URLs to the server's root directory, eliminating the 404 errors and allowing React Router to handle URLs as expected.
-
-##### The Bad News, and a Workaround
-
-Unfortunately, due to some yet-to-be-fathomed fluke, our attempts to make this `web.config` file be automatically copied to the server root upon deployment have as of yet been foiled. When placed in the `public` directory of our repository (along with other files which are automatically copied over to the server root by an `scp` command in `deploy.sh`), the `web.config` file is copied to the `static` directory on the server rather than to the server root, and the contents of the file are erased (the file is empty). We theorize that this issue is caused by a hiccup in the implementation of `scp` within [PowerShell Server](https://www.nsoftware.com/powershell/server/), a third-party, proprietary program used on the server to facilitate `ssh` connections. (This behavior also occurred with a small number of arbitrarily-named test files, so it is not specific to the "`web.config`" filename.) The file can be placed in the server root directory manually, but it will be removed upon the next deployment (by the deployment script).
-
-Currently, a reasonably elegant workaround has been created by adding a couple of lines to the `deploy.sh` script in the `scripts` directory of the repository. The contents of the `web_config` file (located in the root of the repo) are loaded into a shell variable at the beginning of script execution, and the contents of the file are transferred to the server using an `ssh` connection. This is done by simply echoing the contents of the file (from the aforementioned variable) and redirecting console output (in PowerShell on the server) into a (new) file called `web.config`. This solution achieves the desired result, and allows the contents of the file to be stored in the repo (in the `web_config` file), making future editing much easier than if the file was stored only on the server.
-
-##### Previous Workaround
-
-Our original workaround was in the form of a PowerShell script which automatically copies `web.config` to the server root whenever it is removed. The script is located at `D:\scripts\webconfig\webconfig-filecheck.ps1` and contains a constantly-running while loop. A task has been created in Windows Task Scheduler which, if enabled, starts running the script every morning at 2:00 AM, but automatic execution of this task has been disabled since the creation of the new workaround described above. This task still exists and can be restarted if it is ever needed. (The back-up `web.config` file is located in the same directory as the script.)
-
-Currently, the script and task only exist on the server for the development site (`360train.gordon.edu`). Analogous changes must be made to the server root directories for the production site (`360.gordon.edu`) if this functionality is desired there.
-
-(The current workaround described earlier should work on any server and does not need the PowerShell script or the task in order to work.)
 
 ## Code Style
 
@@ -354,6 +366,13 @@ The script deploys to either staging or production based on the branch it is run
 1.  Add reviewers. The pull request must be approved before it can be merged.
 1.  Click "Create pull request."
 1.  When the pull request is approved, merge it. This will trigger a build that will automatically deploy `master` to production.
+
+### Contributing
+1. Clone the repository to the local machine.
+2. Create a new branch with a meaningful name (pertaining to the specific change being implemented).
+3. Commit to this branch, with changes focused solely on the branch's nominal purpose.
+4. Follow similar steps under "Deploying to Production" to create a pull request; however set the "base" branch to develop and the "compare" branch to the new branch.
+5. Once the pull request has been created and approved, the branch changes will be staged onto the develop branch for production.
 
 ## Known Issues
 
