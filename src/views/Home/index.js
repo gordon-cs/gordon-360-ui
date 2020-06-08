@@ -6,6 +6,7 @@ import DaysLeft from './components/DaysLeft';
 import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
 import user from '../../services/user';
+import wellness from '../../services/wellness';
 import Login from '../Login';
 import './home.css';
 import Question from './components/Question'
@@ -31,12 +32,29 @@ export default class Home extends Component {
   componentWillMount() {
     if (this.props.Authentication) {
       this.getPersonType();
+      this.getStatus();
     }
   }
 
   componentWillReceiveProps(newProps) {
     if (this.props.Authentication !== newProps.Authentication) {
       this.getPersonType();
+    }
+  }
+
+  async getStatus(){
+    const answer = await wellness.getStatus();
+    if(answer === true){
+      this.setState({currentStatus: "I am symptomatic"});
+      this.setState({answered: true});
+    }
+    if(answer === false){
+      this.setState({currentStatus: "I am not symptomatic"});
+      this.setState({answered: true});
+    }
+    else{
+      this.setState({answered: false});
+
     }
   }
 
