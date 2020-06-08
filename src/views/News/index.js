@@ -6,6 +6,7 @@ import Fab from '@material-ui/core/Fab';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Typography from '@material-ui/core/Typography';
 import gordonEvent from './../../services/event';
+import news from './../../services/news';
 import NewsList from '../News/components/NewsList';
 import GordonLoader from '../../components/Loader';
 import Card from '@material-ui/core/Card';
@@ -18,6 +19,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import IDUploader from '../IDUploader';
+import Dropzone from 'react-dropzone';
 
 const styles = {
   searchBar: {
@@ -57,7 +60,7 @@ export default class StudentNews extends Component {
   }
   componentWillMount() {
     this.setState({ loading: false })
-    this.loadNews();
+    // this.loadNews();
   }
 
   handlePostClick() {
@@ -76,14 +79,17 @@ export default class StudentNews extends Component {
 
   //This should be the only time we pull from the database
   async loadNews() {
-    this.setState({ loading: true });
+    console.log(await news.getCategories());
+    /*this.setState({ loading: true });
     if (this.props.Authentication) {
+      const allNews = await news.getCategories();
+      this.setState({ loading: false, news: allNews });
       // const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
       // const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       // this.setState({ allEvents, events, loading: false, filteredEvents: events });
     } else {
       // alert("Please sign in to access student news");
-    }
+    }*/
   }
   
   search(name) {
@@ -156,7 +162,7 @@ export default class StudentNews extends Component {
       if (this.state.loading === true) {
         content = <GordonLoader />;
       } else if (this.state.news.length > 0) {
-        content = <NewsList />;
+        content = <NewsList news={this.state.news} />;
       } else {
         content = (
           <Grid item>
@@ -232,6 +238,10 @@ export default class StudentNews extends Component {
                               //onChange={this.handleChange('tempActivityJoinInfo')}
                             />
                           </Grid>
+                          {/* Image dropzone will be added here */}
+                          {/* <Grid item xs={12}>
+                            <Dropzone></Dropzone>
+                          </Grid> */}
                         </Grid>
                       </form>
                     </DialogContent>
