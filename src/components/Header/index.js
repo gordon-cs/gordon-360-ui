@@ -128,7 +128,7 @@ export default class GordonHeader extends Component {
 
   componentWillUnmount() {
     // Removes the window's event listener before unmounting the component
-    window.removeEventListener('message');
+    window.removeEventListener('message', () => {});
   }
 
   /************************** TESTING ***************************/
@@ -371,7 +371,7 @@ export default class GordonHeader extends Component {
                 />
                 {this.createPeopleTab()}
                 {/* Uncomment when re-enabling timesheets link */}
-                {/* {this.createTimesheetsTab()} */}
+                {this.createTimesheetsTab()}
               </Tabs>
             </div>
 

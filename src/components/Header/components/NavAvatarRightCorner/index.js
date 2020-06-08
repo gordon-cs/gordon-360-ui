@@ -142,7 +142,7 @@ export default class GordonNavAvatarRightCorner extends Component {
 
   componentWillUnmount() {
     // Removes the window's event listener before unmounting the component
-    window.removeEventListener('message');
+    window.removeEventListener('message', () => {});
   }
 
   /**
