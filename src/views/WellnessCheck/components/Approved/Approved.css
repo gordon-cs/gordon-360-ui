@@ -7,15 +7,15 @@
   }
 
 #approved-x {
-  font-size: 25px;
+  font-size: calc(14px + 1.5vw);
   color: white;
   padding-bottom: 30px;
 }
 
 #check-mark {
-  font-size: 85px;
-  height: 100px;
-  width: 100px;
+  font-size: calc(34.8px + 2.61vw);
+  height: calc(40px + 3vw);
+  width: calc(40px + 3vw);
   background-color: rgb(0, 85, 0);
   color: white;
   border-radius: 50%;
