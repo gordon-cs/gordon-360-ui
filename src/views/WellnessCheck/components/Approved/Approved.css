@@ -1,4 +1,25 @@
-#approved{
-    height: 200px;
+#approved-box{
+    height: 250px;
     background-color: green;
-  }  
+    animation-name: animation;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate-reverse;
+  }
+  .card{
+      align-self: center;
+  }
+
+#approved-x {
+  font-size: 25px;
+  color: white;
+  animation-name: animationA;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes animationA {
+  from {color: white;}
+  to {color: green;}
+}
