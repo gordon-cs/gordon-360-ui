@@ -73,6 +73,9 @@ export default class Home extends Component {
                              <div id = "denied-x">
                                {this.state.time}
                              </div>
+                             <div id= "cross-mark">
+                              &#10005;
+                             </div>
                          </CardContent>
                     </Card>
                  </Grid>
