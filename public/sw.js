@@ -11,7 +11,7 @@
 
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
-const cacheVersion = 'cache v1.1';
+const cacheVersion = 'cache v1.2';
 const apiSource = 'https://360api.gordon.edu';
 /* Uncomment For Development Only (aka develop) */
 // const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
@@ -19,7 +19,15 @@ const apiSource = 'https://360api.gordon.edu';
 const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
 let failedDynamicCacheLinks = [];
 let dynamicCache = [];
-let token, termCode, cacheTimer, isSuccessful, isFetchCanceled, networkStatus, username, id;
+let token,
+  termCode,
+  cacheTimer,
+  isSuccessful,
+  isFetchCanceled,
+  networkStatus,
+  username,
+  id,
+  currentSession;
 
 const showDeveloperConsoleLog = false;
 
@@ -107,7 +115,7 @@ const staticCache = [
   '/static/media/BbFavicon.ba837cb2.ico ',
 ];
 
-/* Files that needed to be cached to view involvements and events page as guests
+/* Files that needed to be cached to view involvements and events page as guests.
  * 2 other links needed for involvements are added to this in cacheStaticFiles()
  */
 const dynamicCacheTwo = [
@@ -135,7 +143,10 @@ async function cleanCache() {
           item.url !== 'https://360api.gordon.edu/api/events/25Live/Public' &&
           item.url !== 'https://360api.gordon.edu/api/sessions' &&
           item.url !== 'https://360api.gordon.edu/api/sessions/current' &&
-          !item.url.includes('https://360api.gordon.edu/api/activities/session/')
+          item.url !==
+            `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}` &&
+          item.url !==
+            `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}/types`
         ) {
           cache.delete(item);
         }
@@ -143,7 +154,7 @@ async function cleanCache() {
         // was caching dynamic files but appears to be from location.origin instead of remote
         else if (
           item.url.match(location.origin) &&
-          (item.url.includes(`/profile/${username}`) || item.url.includes('/myprofile'))
+          (item.url.includes('/profile/') || item.url.includes('/myprofile'))
         ) {
           cache.delete(item);
         }
@@ -153,7 +164,7 @@ async function cleanCache() {
   // If there's outdated cache
   await caches.keys().then(keys => {
     keys.forEach(key => {
-      if (key !== cacheVersion && key.match('cache-')) {
+      if (key !== cacheVersion) {
         return caches.delete(key).then(() => {
           console.log(
             `%c${successfulEmoji} Previous cache has been removed (outdated cache version)`,
@@ -245,12 +256,13 @@ async function cacheStaticFiles() {
         }
       }
     })
-    .then(currentSession => {
+    .then(session => {
+      currentSession = session;
       dynamicCacheTwo.push(
-        `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}`,
+        `https://360api.gordon.edu/api/activities/session/${session.SessionCode}`,
       );
       dynamicCacheTwo.push(
-        `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}/types`,
+        `https://360api.gordon.edu/api/activities/session/${session.SessionCode}/types`,
       );
     })
     // Catches any errors from the fetch
@@ -582,6 +594,7 @@ self.addEventListener('message', event => {
       : console.log('Attempting to update cache.');
     // Caching All Files
     event.waitUntil(
+      cleanCache(), // Cleans the cache before updating it
       cacheStaticFiles(), // Static Cache
       dynamicLinksThenCache(event.data.token, event.data.termCode), // Dynamic Cache
     );
