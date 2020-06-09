@@ -72,6 +72,9 @@ export default class Home extends Component {
                              <div id = "approved-x">
                               {this.state.time}
                              </div>
+                             <div id= "check-mark">
+                              &#10003;
+                             </div>
                          </CardContent>
                     </Card>
                 </Grid>
