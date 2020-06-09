@@ -384,7 +384,11 @@ export default class MemberList extends Component {
           </Grid>
         );
         content = (
-          <ExpansionPanel defaultExpanded={(showLeaveButton || this.state.admin) && (!(window.innerWidth < this.breakpointWidth))}>
+          <ExpansionPanel
+            defaultExpanded={
+              (showLeaveButton || this.state.admin) && !(window.innerWidth < this.breakpointWidth)
+            }
+          >
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
               <Grid container>
                 <Grid item xs={6} sm={7} md={8}>
