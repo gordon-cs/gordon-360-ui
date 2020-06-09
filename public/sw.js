@@ -291,6 +291,11 @@ async function cacheStaticFiles() {
           );
       });
   });
+
+  // Console logs the result of the attempt to cache all static files
+  cachedSuccessfully
+    ? console.log(`%c${successfulEmoji} Cached Static Files Successfully`, successfulLog)
+    : console.log(`%c${errorEmoji} Caching Static Files Failed`, errorLog);
 }
 
 /**
@@ -573,7 +578,7 @@ self.addEventListener('message', event => {
   ) {
     // Console logs the current action depending on the message received
     event.data.message === 'cache-static-dynamic-files'
-      ? console.log('Attempting to cache all files')
+      ? console.log('Attempting to cache all files.')
       : console.log('Attempting to update cache.');
     // Caching All Files
     event.waitUntil(
