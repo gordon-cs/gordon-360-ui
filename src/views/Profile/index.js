@@ -356,8 +356,9 @@ export default class Profile extends Component {
                   </Card>
                 </Grid>
 
-                <Grid item xs={12} lg={12} align="center">
-                  <Grid container xs={12} lg={10} spacing={2} justify="center">
+                <Grid item xs={12} lg={10} align="center">
+                  {/* max width style necessary because of poorly used margins */}
+                  <Grid container xs={12} lg={12} spacing={2} justify="center" style={{'max-width': 'calc(100% + 16px)',}}>
                     <Grid item xs={12} lg={12}>
                       <GordonSchedulePanel profile={this.state.profile} myProf={false} />
                     </Grid>
