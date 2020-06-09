@@ -13,13 +13,13 @@
 #denied-x {
   font-size: 25px;
   color: white;
-  animation-name: animation;
+  animation-name: animationD;
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
 
-@keyframes animation {
+@keyframes animationD {
   from {color: white;}
   to {color: red;}
 }
