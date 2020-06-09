@@ -111,9 +111,8 @@ export default class GordonPeopleSearch extends Component {
       if (suggestionIndex === -1) suggestionIndex = suggestionList.length - 1;
       this.setState({ suggestionIndex });
     }
-    if (key === 'Backspace') { // Bug fixed where suggestions are remembered after backspacing
-      const suggestions = [];
-      this.setState({suggestions});
+    if (key === 'Backspace') {
+      this.setState({suggestions: []});
     }
   };
 
@@ -167,69 +166,67 @@ export default class GordonPeopleSearch extends Component {
       return null;
     }
     return (
-       <MenuItem
-         {...itemProps}
-         key={suggestion.UserName}
-         component={Link}
-         to={`/profile/${suggestion.UserName}`}
-         onClick={this.reset}
-         className={
-           suggestionList && suggestionList[suggestionIndex] !== undefined
-             ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
-               suggestionIndex !== -1
-               ? 'people-search-suggestion-selected '
-               : 'people-search-suggestion'
-             : 'people-search-suggestion'
-         }
-       >
-         <Typography variant="body2"> {
-         }
-           {/* If the query contains a space or a period, only highlight occurrences of the first
-               name part of the query in the first name, and only highlight occurrences of the last
-               name part of the query in the last name. Otherwise, highlight occurrences of the
-               query in the first and last name. */}
-           {this.state.highlightQuery.match(/ |\./)
-             ? [
-                 this.getHighlightedText(
-                   suggestion.FirstName + ' ',
-                   this.state.highlightQuery.split(/ |\./)[0],
-                 ),
-                 this.getHighlightedText(
-                   suggestion.LastName,
-                   this.state.highlightQuery.split(/ |\./)[1],
-                 ),
-               ].map(e => <span>{e}</span>)
-             : this.getHighlightedText(
-                 suggestion.FirstName + ' ' + suggestion.LastName,
-                 this.state.highlightQuery,
-               )}
-         </Typography>
-         <Typography variant="caption" component="p"> {
-         }
-           {/* If the first name matches either part (first or last name) of the query, don't
-               highlight occurrences of the query in the first name part of the username.
-               If the username contains a period, add it back in.
-               If the username contains a period,
-               If the last name matches either part (first of last name) of the query, don't
-               highlight occurrences of the query in the last name part of the username. */}
-            {!suggestion.FirstName.match(
+      <MenuItem
+        {...itemProps}
+        key={suggestion.UserName}
+        component={Link}
+        to={`/profile/${suggestion.UserName}`}
+        onClick={this.reset}
+        className={
+          suggestionList && suggestionList[suggestionIndex] !== undefined
+            ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
+              suggestionIndex !== -1
+              ? 'people-search-suggestion-selected '
+              : 'people-search-suggestion'
+            : 'people-search-suggestion'
+        }
+      >
+        <Typography variant="body2">
+          {/* If the query contains a space or a period, only highlight occurrences of the first
+              name part of the query in the first name, and only highlight occurrences of the last
+              name part of the query in the last name. Otherwise, highlight occurrences of the
+              query in the first and last name. */}
+          {this.state.highlightQuery.match(/ |\./)
+            ? [
+                this.getHighlightedText(
+                  suggestion.FirstName + ' ',
+                  this.state.highlightQuery.split(/ |\./)[0],
+                ),
+                this.getHighlightedText(
+                  suggestion.LastName,
+                  this.state.highlightQuery.split(/ |\./)[1],
+                ),
+              ].map(e => <span>{e}</span>)
+            : this.getHighlightedText(
+                suggestion.FirstName + ' ' + suggestion.LastName,
+                this.state.highlightQuery,
+              )}
+        </Typography>
+        <Typography variant="caption" component="p">
+          {/* If the first name matches either part (first or last name) of the query, don't
+              highlight occurrences of the query in the first name part of the username.
+              If the username contains a period, add it back in.
+              If the username contains a period,
+              If the last name matches either part (first of last name) of the query, don't
+              highlight occurrences of the query in the last name part of the username. */}
+          {!suggestion.FirstName.match(
             new RegExp(`(${this.highlightParse(this.state.highlightQuery)})`, 'i'),
+          )
+            ? this.getHighlightedText(suggestion.UserName.split('.')[0], this.state.highlightQuery)
+            : suggestion.UserName.split('.')[0]}
+          {suggestion.UserName.includes('.') && '.'}
+          {suggestion.UserName.includes('.') &&
+            (!suggestion.LastName.match(
+              new RegExp(`(${this.highlightParse(this.state.highlightQuery)})`, 'i'),
             )
-             ? this.getHighlightedText(suggestion.UserName.split('.')[0], this.state.highlightQuery)
-             : suggestion.UserName.split('.')[0]}
-           {suggestion.UserName.includes('.') && '.'}
-           {suggestion.UserName.includes('.') &&
-             (!suggestion.LastName.match(
-               new RegExp(`(${this.highlightParse(this.state.highlightQuery)})`, 'i'),
-             )
-               ? this.getHighlightedText(
-                   suggestion.UserName.split('.')[1],
-                   this.state.highlightQuery,
-                 )
-               : suggestion.UserName.split('.')[1])}
-         </Typography>
-       </MenuItem>
-     );
+              ? this.getHighlightedText(
+                  suggestion.UserName.split('.')[1],
+                  this.state.highlightQuery,
+                )
+              : suggestion.UserName.split('.')[1])}
+        </Typography>
+      </MenuItem>
+    );
   }
 
   //Makes People Search placeholder switch to People to avoid cutting it off
