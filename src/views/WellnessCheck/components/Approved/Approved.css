@@ -1,4 +1,4 @@
-#approved-box{
+.approved-box{
     height: 250px;
     background-color: rgb(0, 85, 0);
   }
@@ -6,13 +6,13 @@
       align-self: center;
   }
 
-#approved-x {
+.approved-x {
   font-size: calc(14px + 1.5vw);
   color: white;
   padding-bottom: 30px;
 }
 
-#check-mark {
+.check-mark {
   font-size: calc(43.4px + 2.61vw);
   height: calc(50px + 3vw);
   width: calc(50px + 3vw);
