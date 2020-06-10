@@ -131,11 +131,12 @@ export default class GordonHeader extends Component {
     window.removeEventListener('message', () => {});
   }
 
-  /************************** TESTING ***************************/
   /**
    * Creates a dialog box.
    *
    * Depending on the dialog box's type saved in the state, the dialog box and it's content is created
+   *
+   * @returns {JSX} The JSX of the dialog box
    */
   createDialogBox() {
     // Type - Offline
@@ -201,7 +202,6 @@ export default class GordonHeader extends Component {
   closeDialogBox() {
     this.setState({ dialogBoxOpened: false, dialogType: '', dialogReason: '' });
   }
-  /************************** TESTING ***************************/
 
   /**
    * Creates the People Tab.

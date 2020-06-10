@@ -11,10 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-
-//import './event.css';
 
 const styles = {
   searchBar: {

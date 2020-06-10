@@ -49,6 +49,8 @@ export default class GordonNavAvatarRightCorner extends Component {
 
   /**
    * Handles the event of an option being clicked on in the menu
+   *
+   * @param {Event} event The event object
    */
   onClick(event) {
     this.setState({ anchorEl: event.currentTarget });
@@ -147,9 +149,11 @@ export default class GordonNavAvatarRightCorner extends Component {
 
   /**
    * Creates the avatar
+   *
+   * @param {Boolean} authentication Determines if the user is authenticated
    */
-  async loadAvatar(Authentication) {
-    if (Authentication) {
+  async loadAvatar(authentication) {
+    if (authentication) {
       const { name, user_name: username } = user.getLocalInfo();
       this.setState({ name, username });
       const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
@@ -176,6 +180,8 @@ export default class GordonNavAvatarRightCorner extends Component {
 
   /**
    * Gets the initials of the current user
+   *
+   * @returns {String} The initials of the user if available
    */
   getInitials() {
     if (this.state.username) {
@@ -192,6 +198,8 @@ export default class GordonNavAvatarRightCorner extends Component {
    * Creates a dialog box.
    *
    * Depending on the dialog box's type saved in the state, the dialog box and it's content is created.
+   *
+   * @returns {JSX} The JSX of the dialog box
    */
   createDialogBox() {
     // Type - Offline

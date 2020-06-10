@@ -209,11 +209,7 @@ export function createPeopleButton(networkStatus, authenticated, onLinkClick, op
  *
  * Depending on the status of the network and authentication, the Involvements button is created.
  *
- * @param {String} networkStatus The status of the network. Either 'online' or 'offline'.
- * @param {Boolean} authenticated Determines if the user is logged in.
  * @param {Function} onLinkClick Determines what occurs when the user clicks on this button.
- * @param {Function} openDialogBox Sets the data of a dialog box to be shown if the user clicks on
- *                                this button.
  *
  * @return {JSX} The JSX of the Involvements button.
  */
@@ -237,11 +233,7 @@ export function createInvolvementsButton(onLinkClick) {
  *
  * Depending on the status of the network and authentication, the Events button is created.
  *
- * @param {String} networkStatus The status of the network. Either 'online' or 'offline'.
- * @param {Boolean} authenticated Determines if the user is logged in.
  * @param {Function} onLinkClick Determines what occurs when the user clicks on this button.
- * @param {Function} openDialogBox Sets the data of a dialog box to be shown if the user clicks on
- *                                this button.
  *
  * @return {JSX} The JSX of the Events button.
  */

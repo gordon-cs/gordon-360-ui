@@ -118,6 +118,8 @@ export default class GordonNavLinks extends Component {
    * Creates a dialog box.
    *
    * Depending on the dialog box's type saved in the state, the dialog box and it's content is created.
+   *
+   * @returns {JSX} The JSX of the dialog box
    */
   createDialogBox() {
     // Type - Offline
