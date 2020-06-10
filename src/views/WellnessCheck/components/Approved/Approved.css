@@ -1,12 +1,13 @@
 .approved-box{
     height: 250px;
     background-color: rgb(0, 85, 0);
-  }
-  .card{
-      align-self: center;
-  }
+}
 
-.approved-x {
+.card{
+      align-self: center;
+}
+
+.approved-time {
   font-size: calc(14px + 1.5vw);
   color: white;
   padding-bottom: 30px;

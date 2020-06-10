@@ -1,21 +1,22 @@
-#denied-box{
+.denied-box{
     height: 250px;
     background-color: rgb(163, 0, 0);
-  }
-  .card{
-      align-self: center;
-  }
+}
 
-#denied-x {
+.card{
+      align-self: center;
+}
+
+.denied-time {
   font-size: calc(14px + 1vw);
   color: white;
   padding-bottom: 30px;
 }
 
-#cross-mark {
-  font-size: calc(34.8px + 2.61vw);
-  height: calc(40px + 3vw);
-  width: calc(40px + 3vw);
+.cross-mark {
+  font-size: calc(43.4px + 2.61vw);
+  height: calc(50px + 3vw);
+  width: calc(50px + 3vw);
   background-color: rgb(163, 0, 0);
   color: white;
   border-radius: 50%;

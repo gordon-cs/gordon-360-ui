@@ -69,7 +69,7 @@ export default class Home extends Component {
                     <Card className="card">
                          <CardHeader className="Approved"/>
                          <CardContent className = "approved-box">
-                             <div className = "approved-x">
+                             <div className = "approved-time">
                               {this.state.time}
                              </div>
                              <div className= "check-mark">
