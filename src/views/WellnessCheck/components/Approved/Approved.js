@@ -66,8 +66,8 @@ export default class Home extends Component {
 
         content = (
                  <Grid spacing={2}>
-                    <Card className="card">
-                         <CardHeader className="Approved"/>
+                    <Card>
+                         <CardHeader title="Approved"/>
                          <CardContent className = "approved-box">
                              <div className = "approved-time">
                               {this.state.time}
