@@ -12,7 +12,22 @@ export default class Home extends Component {
 
     this.state = {
         network: 'online',
+        time: new Date().toLocaleString([], {hour: '2-digit', minute: '2-digit'})
      };
+  }
+
+  componentDidMount() {
+    this.intervalID = setInterval(
+      () => this.tick(), 1000
+    );
+  }
+
+  componentWillMount() {
+    clearInterval(this.intervalID);
+  }
+
+  tick() {
+    this.setState({time: new Date().toLocaleString([], {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'})});
   }
 
   logIn() {
@@ -28,7 +43,7 @@ export default class Home extends Component {
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
-     */  
+     */
 
     console.log(this.state.currentStatus);
 
@@ -48,20 +63,23 @@ export default class Home extends Component {
       }
     });
 
-   
     let content;
 
         content = (
                  <Grid spacing={2}>
-                    <Card className="card">
+                    <Card>
                          <CardHeader title="Denied"/>
-                         <CardContent>
-                             <div id = "denied">
+                         <CardContent className = "denied-box">
+                             <div className = "denied-time">
+                               {this.state.time}
+                             </div>
+                             <div className = "cross-mark">
+                              &#10005;
                              </div>
                          </CardContent>
                     </Card>
                  </Grid>
-    
+
         );
 
     return content;

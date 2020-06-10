@@ -82,6 +82,7 @@ export default class WellnessCheck extends Component {
     /* Renders the wellness check question instead of the home page if the question
      *  has not been answered yet
      */
+
     if (this.props.Authentication) {
       let status;
       console.log('User: ', user);

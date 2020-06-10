@@ -1,4 +1,29 @@
-#approved{
-    height: 200px;
-    background-color: green;
-  }  
+.approved-box{
+    height: 250px;
+    background-color: rgb(0, 85, 0);
+}
+
+.approved-time {
+  font-size: calc(14px + 1.5vw);
+  color: white;
+  padding-bottom: 30px;
+}
+
+.check-mark {
+  font-size: calc(43.4px + 2.61vw);
+  height: calc(50px + 3vw);
+  width: calc(50px + 3vw);
+  background-color: rgb(0, 85, 0);
+  color: white;
+  border-radius: 50%;
+  display: inline-block;
+  animation-name: animationCheck;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes animationCheck{
+  from {background-color: rgb(0, 85, 0); color: white;}
+  to {background-color: white; color: rgb(0, 85, 0)}
+}

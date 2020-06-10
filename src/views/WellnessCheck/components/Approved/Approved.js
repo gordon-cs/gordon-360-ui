@@ -11,7 +11,30 @@ export default class Home extends Component {
 
     this.state = {
         network: 'online',
+        time: new Date().toLocaleString([], {hour: '2-digit', minute: '2-digit'})
      };
+  }
+
+  componentDidMount() {
+    this.intervalID = setInterval(
+      () => this.tick(), 1000
+    );
+  }
+
+  componentWillMount() {
+    clearInterval(this.intervalID);
+  }
+
+  tick() {
+    this.setState({time: new Date().toLocaleString([], {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'})});
+  }
+
+  logIn() {
+    try {
+      this.props.onLogIn();
+    } catch (error) {
+      console.log('Login failed with error: ' + error);
+    }
   }
 
   render() {
@@ -43,10 +66,14 @@ export default class Home extends Component {
 
         content = (
                  <Grid spacing={2}>
-                    <Card className="card">
+                    <Card>
                          <CardHeader title="Approved"/>
-                         <CardContent>
-                             <div id = "approved">
+                         <CardContent className = "approved-box">
+                             <div className = "approved-time">
+                              {this.state.time}
+                             </div>
+                             <div className= "check-mark">
+                              &#10003;
                              </div>
                          </CardContent>
                     </Card>
