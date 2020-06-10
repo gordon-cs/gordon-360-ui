@@ -39,7 +39,11 @@ export default class Question extends Component {
     this.loadQuestion();
     this.props.call(this.state.answered);
   }
-
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.qTwoAnswer !== this.state.qTwoAnswer) {
+      this.setState({ qThreeAnswer: null });
+    }
+  }
   async componentDidMount() {
     this.setState({ questions: await getQuestions() });
   }
@@ -169,14 +173,32 @@ export default class Question extends Component {
                 <br />
                 <RadioGroup>
                   <FormControlLabel
+                    checked={
+                      this.state.qThreeAnswer !== null &&
+                      this.state.qThreeAnswer === this.state.questions.qTwo.yes.optionOne
+                        ? true
+                        : false
+                    }
                     value="optionOne"
                     control={<Radio />}
                     label={this.state.questions.qTwo.yes.optionOne}
+                    onChange={() => {
+                      this.setState({ qThreeAnswer: this.state.questions.qTwo.yes.optionOne });
+                    }}
                   />
                   <FormControlLabel
+                    checked={
+                      this.state.qThreeAnswer !== null &&
+                      this.state.qThreeAnswer === this.state.questions.qTwo.yes.optionTwo
+                        ? true
+                        : false
+                    }
                     value="optionTwo"
                     control={<Radio />}
                     label={this.state.questions.qTwo.yes.optionTwo}
+                    onChange={() => {
+                      this.setState({ qThreeAnswer: this.state.questions.qTwo.yes.optionTwo });
+                    }}
                   />
                 </RadioGroup>
               </FormControl>
@@ -195,6 +217,11 @@ export default class Question extends Component {
                     value="optionOne"
                     control={<Checkbox />}
                     label={this.state.questions.qTwo.no.option}
+                    onChange={event => {
+                      event.target.checked
+                        ? this.setState({ qThreeAnswer: this.state.questions.qTwo.no.option })
+                        : this.setState({ qThreeAnswer: null });
+                    }}
                   />
                 </RadioGroup>
               </FormControl>
@@ -208,7 +235,23 @@ export default class Question extends Component {
     }
   }
 
-  showSubmitButton() {}
+  showSubmitButton(buttonStyle) {
+    // Shows submit button
+    if (this.state.questions && this.state.qThreeAnswer) {
+      return (
+        <div>
+          <br />
+          <Button variant="contained" style={buttonStyle.button} onClick={this.submitHandler}>
+            Submit
+          </Button>{' '}
+          <br />
+          <br />
+        </div>
+      );
+    }
+    // Doesn't show submit button
+    return <div></div>;
+  }
 
   render() {
     // Styles the header
@@ -225,7 +268,7 @@ export default class Question extends Component {
     };
 
     // Styles the submit button
-    const style = {
+    const buttonStyle = {
       button: {
         background: gordonColors.primary.cyan,
         color: 'white',
@@ -257,12 +300,8 @@ export default class Question extends Component {
           {this.createQuestionTwo(questionStyle)}
           <Divider />
           {this.createQuestionThree(questionStyle)}
-          <br />
-          <Button variant="contained" style={style.button} onClick={this.submitHandler}>
-            Submit
-          </Button>
-          <br />
-          <br />
+          {this.showSubmitButton(buttonStyle)}
+
           {/* <form onSubmit = {this.submitHandler}>
           <div className="radio">
               <label>
