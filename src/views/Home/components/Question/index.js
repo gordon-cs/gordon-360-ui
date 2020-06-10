@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import GordonLoader from '../../../../components/Loader';
 import { getQuestions } from './questionData';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import Grid from '@material-ui/core/Grid';
@@ -86,11 +84,17 @@ export default class Question extends Component {
                   value="phone"
                   control={<Radio />}
                   label={`Phone: ${phoneNumber}`}
+                  onChange={() => {
+                    this.setState({ qOneAnswer: 'Phone' });
+                  }}
                 />
                 <FormControlLabel
                   value="email"
                   control={<Radio />}
                   label={`Email: ${this.state.questions.qOne.email}`}
+                  onChange={() => {
+                    this.setState({ qOneAnswer: 'Email' });
+                  }}
                 />
               </RadioGroup>
             </FormControl>
@@ -107,7 +111,7 @@ export default class Question extends Component {
   // Creates the second question of the wellness check
   createQuestionTwo(questionStyle) {
     // Checks to make sure the questions are found in the state before
-    if (this.state.questions !== null) {
+    if (this.state.questions && this.state.qOneAnswer) {
       // Goes through each symptom and creates JSX out of it
       let symptomsJSX = this.state.questions.qTwo.symptoms.map(item => {
         return <FormLabel>- {item}</FormLabel>;
@@ -127,7 +131,7 @@ export default class Question extends Component {
                   control={<Radio />}
                   label="No"
                   onChange={() => {
-                    this.setState({ qTwoAnswer: 'no' });
+                    this.setState({ qTwoAnswer: 'No' });
                   }}
                 />
                 <FormControlLabel
@@ -135,7 +139,7 @@ export default class Question extends Component {
                   control={<Radio />}
                   label="Yes"
                   onChange={() => {
-                    this.setState({ qTwoAnswer: 'yes' });
+                    this.setState({ qTwoAnswer: 'Yes' });
                   }}
                 />
               </RadioGroup>
@@ -144,17 +148,13 @@ export default class Question extends Component {
         </CardContent>
       );
     }
-    // Shows the Gordon Loader if the data has not yet been found in the state
-    else {
-      return <GordonLoader />;
-    }
   }
 
   // Creates the third question of the wellness check
   createQuestionThree(questionStyle) {
     // Checks to make sure the questions are found in the state before
     if (this.state.questions !== null) {
-      if (this.state.qTwoAnswer === 'yes') {
+      if (this.state.qTwoAnswer === 'Yes') {
         return (
           <CardContent>
             <div style={questionStyle}>
@@ -183,7 +183,7 @@ export default class Question extends Component {
             </div>
           </CardContent>
         );
-      } else if (this.state.qTwoAnswer === 'no') {
+      } else if (this.state.qTwoAnswer === 'No') {
         return (
           <CardContent>
             <div style={questionStyle}>
@@ -202,12 +202,9 @@ export default class Question extends Component {
           </CardContent>
         );
       } else {
+        // Returns and empty div if the second question has not been answered yet
         return <div></div>;
       }
-    }
-    // Shows the Gordon Loader if the data has not yet been found in the state
-    else {
-      return <GordonLoader />;
     }
   }
 

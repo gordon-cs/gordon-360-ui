@@ -9,7 +9,7 @@ import user from '../../services/user';
 import wellness from '../../services/wellness';
 import Login from '../Login';
 import './home.css';
-import Question from './components/Question'
+import Question from './components/Question';
 
 import '../../app.css';
 
@@ -21,12 +21,7 @@ export default class Home extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null,
-       network: 'online',
-       answered: false,
-       currentStatus:"",
-     };
-
+    this.state = { personType: null, network: 'online', answered: false, currentStatus: '' };
   }
 
   componentWillMount() {
@@ -42,19 +37,17 @@ export default class Home extends Component {
     }
   }
 
-  async getStatus(){
+  async getStatus() {
     const answer = await wellness.getStatus();
-    if(answer === true){
-      this.setState({currentStatus: "I am symptomatic"});
-      this.setState({answered: true});
+    if (answer === true) {
+      this.setState({ currentStatus: 'I am symptomatic' });
+      this.setState({ answered: true });
     }
-    if(answer === false){
-      this.setState({currentStatus: "I am not symptomatic"});
-      this.setState({answered: true});
-    }
-    else{
-      this.setState({answered: false});
-
+    if (answer === false) {
+      this.setState({ currentStatus: 'I am not symptomatic' });
+      this.setState({ answered: true });
+    } else {
+      this.setState({ answered: false });
     }
   }
 
@@ -71,18 +64,18 @@ export default class Home extends Component {
       console.log('Login failed with error: ' + error);
     }
   }
-   
-  callBack = (data,data2)=>{
-    this.setState({answered: data});
-    this.setState({currentStatus: data2});
-  }
+
+  callBack = (data, data2) => {
+    this.setState({ answered: data });
+    this.setState({ currentStatus: data2 });
+  };
 
   render() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
-     */  
+     */
 
     console.log(this.state.currentStatus);
 
@@ -112,17 +105,10 @@ export default class Home extends Component {
     /* Renders the wellness check question instead of the home page if the question
      *  has not been answered yet
      */
-    if(this.state.answered === false){
-      return content = (
-        <Grid container justify="center" spacing={2}>
-            <Grid item xs={10} md={4}>
-              <Question call = {this.callBack}/>
-            </Grid>
-        </Grid>
-      );
-    }
-    else{
-      if (this.props.Authentication) {
+    // Authenticated
+    if (this.props.Authentication) {
+      // Authenticated - Questions Answered
+      if (this.state.answered) {
         const personType = this.state.personType;
 
         let requests;
@@ -156,15 +142,27 @@ export default class Home extends Component {
             {requests}
           </Grid>
         );
-      } else {
+      }
+      // Authenticated - Questions Not Answered
+      else {
         content = (
-          <div className="gordon-login">
-            <Login onLogIn={this.logIn} />
-          </div>
+          <Grid container justify="center" spacing={2}>
+            <Grid item xs={10} md={4}>
+              <Question call={this.callBack} />
+            </Grid>
+          </Grid>
         );
       }
+    }
+    // Not Authenticated
+    else {
+      content = (
+        <div className="gordon-login">
+          <Login onLogIn={this.logIn} />
+        </div>
+      );
+    }
 
     return content;
   }
- }
 }
