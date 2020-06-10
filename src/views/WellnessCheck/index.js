@@ -7,7 +7,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Approved from './components/Approved/Approved';
 import Denied from './components/Denied/Denied';
-import './WellnessCheck.css'
 
 import '../../app.css';
 
@@ -22,7 +21,7 @@ export default class WellnessCheck extends Component {
     this.state = { personType: null,
        network: 'online',
        answered: false,
-       currentStatus:"",
+       currentStatus:"I am symptomatic",
      };
 
   }
@@ -52,7 +51,7 @@ export default class WellnessCheck extends Component {
       console.log('Login failed with error: ' + error);
     }
   }
-   
+
   callBack = (data,data2)=>{
     this.setState({answered: data});
     this.setState({currentStatus: data2});
@@ -63,7 +62,7 @@ export default class WellnessCheck extends Component {
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
-     */  
+     */
 
     console.log(this.state.currentStatus);
 
@@ -93,17 +92,15 @@ export default class WellnessCheck extends Component {
         let status;
 
         if(this.state.currentStatus === "I am not symptomatic"){
-            status = (<Approved/>); 
+            status = (<Approved/>);
         }
 
         else{
             status = (<Denied/>);
         }
-        
 
         content = (
           <Grid container justify="center" spacing={2}>
-            
             <Grid item xs={12} md={10}>
                 <Card className="card">
                     <CardContent>
