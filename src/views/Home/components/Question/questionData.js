@@ -1,4 +1,4 @@
-let user, qOne, qTwo, qThree, qTwoNo, qTwoYes;
+let user, qOne, qTwo;
 
 /*
  * Fetches the user's data
