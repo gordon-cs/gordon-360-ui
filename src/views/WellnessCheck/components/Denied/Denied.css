@@ -1,10 +1,6 @@
 .denied-box{
-    height: 250px;
-    background-color: rgb(163, 0, 0);
-}
-
-.card{
-      align-self: center;
+  height: 250px;
+  background-color: rgb(163, 0, 0);
 }
 
 .denied-time {

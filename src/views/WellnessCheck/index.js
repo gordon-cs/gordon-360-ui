@@ -7,7 +7,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Approved from './components/Approved/Approved';
 import Denied from './components/Denied/Denied';
-import './WellnessCheck.css'
 
 import '../../app.css';
 
@@ -22,7 +21,7 @@ export default class WellnessCheck extends Component {
     this.state = { personType: null,
        network: 'online',
        answered: false,
-       currentStatus:"",
+       currentStatus:"I am symptomatic",
      };
 
   }
@@ -100,11 +99,8 @@ export default class WellnessCheck extends Component {
         else{
             status = (<Denied/>);
         }
-
-
         content = (
-          <Grid container justify="left" spacing={2}>
-
+          <Grid container justify="center" spacing={2}>
             <Grid item xs={12} md={10}>
                 <Card className="card">
                     <CardContent>

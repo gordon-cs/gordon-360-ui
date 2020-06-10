@@ -3,10 +3,6 @@
     background-color: rgb(0, 85, 0);
 }
 
-.card{
-      align-self: center;
-}
-
 .approved-time {
   font-size: calc(14px + 1.5vw);
   color: white;

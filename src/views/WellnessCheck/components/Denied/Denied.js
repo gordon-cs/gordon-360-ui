@@ -67,7 +67,7 @@ export default class Home extends Component {
 
         content = (
                  <Grid spacing={2}>
-                    <Card className="card">
+                    <Card>
                          <CardHeader title="Denied"/>
                          <CardContent className = "denied-box">
                              <div className = "denied-time">
