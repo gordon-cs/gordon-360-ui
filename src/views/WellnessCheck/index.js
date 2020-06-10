@@ -7,7 +7,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Approved from './components/Approved/Approved';
 import Denied from './components/Denied/Denied';
-import './WellnessCheck.css'
 
 import '../../app.css';
 
@@ -19,12 +18,7 @@ export default class WellnessCheck extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null,
-       network: 'online',
-       answered: false,
-       currentStatus:"",
-     };
-
+    this.state = { personType: null, network: 'online', answered: false, currentStatus: '' };
   }
 
   componentWillMount() {
@@ -53,10 +47,10 @@ export default class WellnessCheck extends Component {
     }
   }
 
-  callBack = (data,data2)=>{
-    this.setState({answered: data});
-    this.setState({currentStatus: data2});
-  }
+  callBack = (data, data2) => {
+    this.setState({ answered: data });
+    this.setState({ currentStatus: data2 });
+  };
 
   render() {
     /* Used to re-render the page when the network connection changes.
@@ -88,40 +82,35 @@ export default class WellnessCheck extends Component {
     /* Renders the wellness check question instead of the home page if the question
      *  has not been answered yet
      */
-      if (this.props.Authentication) {
+    if (this.props.Authentication) {
+      let status;
+      console.log('User: ', user);
 
-        let status;
-        console.log("User: ", user);
-
-        if(this.state.currentStatus === "I am not symptomatic"){
-            status = (<Approved/>);
-        }
-
-        else{
-            status = (<Denied/>);
-        }
-
-
-        content = (
-          <Grid container justify="left" spacing={2}>
-
-            <Grid item xs={12} md={10}>
-                <Card className="card">
-                    <CardContent>
-                        <CardHeader title="Current Status" />
-                         {status}
-                    </CardContent>
-                </Card>
-            </Grid>
-          </Grid>
-        );
+      if (this.state.currentStatus === 'I am not symptomatic') {
+        status = <Approved />;
       } else {
-        content = (
-          <div className="gordon-login">
-            <Login onLogIn={this.logIn} />
-          </div>
-        );
+        status = <Denied />;
       }
+
+      content = (
+        <Grid container justify="left" spacing={2}>
+          <Grid item xs={12} md={10}>
+            <Card className="card">
+              <CardContent>
+                <CardHeader title="Current Status" />
+                {status}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      );
+    } else {
+      content = (
+        <div className="gordon-login">
+          <Login onLogIn={this.logIn} />
+        </div>
+      );
+    }
 
     return content;
   }
