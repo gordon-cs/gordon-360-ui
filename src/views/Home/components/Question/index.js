@@ -39,7 +39,11 @@ export default class Question extends Component {
     this.loadQuestion();
     this.props.call(this.state.answered);
   }
-
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.qTwoAnswer !== this.state.qTwoAnswer) {
+      this.setState({ qThreeAnswer: null });
+    }
+  }
   async componentDidMount() {
     this.setState({ questions: await getQuestions() });
   }
@@ -169,6 +173,12 @@ export default class Question extends Component {
                 <br />
                 <RadioGroup>
                   <FormControlLabel
+                    checked={
+                      this.state.qThreeAnswer !== null &&
+                      this.state.qThreeAnswer === this.state.questions.qTwo.yes.optionOne
+                        ? true
+                        : false
+                    }
                     value="optionOne"
                     control={<Radio />}
                     label={this.state.questions.qTwo.yes.optionOne}
@@ -177,6 +187,12 @@ export default class Question extends Component {
                     }}
                   />
                   <FormControlLabel
+                    checked={
+                      this.state.qThreeAnswer !== null &&
+                      this.state.qThreeAnswer === this.state.questions.qTwo.yes.optionTwo
+                        ? true
+                        : false
+                    }
                     value="optionTwo"
                     control={<Radio />}
                     label={this.state.questions.qTwo.yes.optionTwo}
@@ -201,8 +217,10 @@ export default class Question extends Component {
                     value="optionOne"
                     control={<Checkbox />}
                     label={this.state.questions.qTwo.no.option}
-                    onChange={() => {
-                      this.setState({ qThreeAnswer: this.state.questions.qTwo.no.option });
+                    onChange={event => {
+                      event.target.checked
+                        ? this.setState({ qThreeAnswer: this.state.questions.qTwo.no.option })
+                        : this.setState({ qThreeAnswer: null });
                     }}
                   />
                 </RadioGroup>
