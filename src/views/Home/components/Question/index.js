@@ -172,11 +172,17 @@ export default class Question extends Component {
                     value="optionOne"
                     control={<Radio />}
                     label={this.state.questions.qTwo.yes.optionOne}
+                    onChange={() => {
+                      this.setState({ qThreeAnswer: this.state.questions.qTwo.yes.optionOne });
+                    }}
                   />
                   <FormControlLabel
                     value="optionTwo"
                     control={<Radio />}
                     label={this.state.questions.qTwo.yes.optionTwo}
+                    onChange={() => {
+                      this.setState({ qThreeAnswer: this.state.questions.qTwo.yes.optionTwo });
+                    }}
                   />
                 </RadioGroup>
               </FormControl>
@@ -195,6 +201,9 @@ export default class Question extends Component {
                     value="optionOne"
                     control={<Checkbox />}
                     label={this.state.questions.qTwo.no.option}
+                    onChange={() => {
+                      this.setState({ qThreeAnswer: this.state.questions.qTwo.no.option });
+                    }}
                   />
                 </RadioGroup>
               </FormControl>
@@ -208,7 +217,23 @@ export default class Question extends Component {
     }
   }
 
-  showSubmitButton() {}
+  showSubmitButton(buttonStyle) {
+    // Shows submit button
+    if (this.state.questions && this.state.qThreeAnswer) {
+      return (
+        <div>
+          <br />
+          <Button variant="contained" style={buttonStyle.button} onClick={this.submitHandler}>
+            Submit
+          </Button>{' '}
+          <br />
+          <br />
+        </div>
+      );
+    }
+    // Doesn't show submit button
+    return <div></div>;
+  }
 
   render() {
     // Styles the header
@@ -225,7 +250,7 @@ export default class Question extends Component {
     };
 
     // Styles the submit button
-    const style = {
+    const buttonStyle = {
       button: {
         background: gordonColors.primary.cyan,
         color: 'white',
@@ -257,12 +282,8 @@ export default class Question extends Component {
           {this.createQuestionTwo(questionStyle)}
           <Divider />
           {this.createQuestionThree(questionStyle)}
-          <br />
-          <Button variant="contained" style={style.button} onClick={this.submitHandler}>
-            Submit
-          </Button>
-          <br />
-          <br />
+          {this.showSubmitButton(buttonStyle)}
+
           {/* <form onSubmit = {this.submitHandler}>
           <div className="radio">
               <label>
