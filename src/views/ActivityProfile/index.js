@@ -579,7 +579,7 @@ class ActivityProfile extends Component {
           if (activityBlurb.length !== 0) {
             description = (
               <Typography variant="body2">
-                <strong>Description: </strong>
+                {/* <strong>Description: </strong> */}
                 {activityBlurb}
               </Typography>
             );
@@ -588,8 +588,8 @@ class ActivityProfile extends Component {
           if (activityURL.length !== 0) {
             website = (
               <Typography variant="body2">
-                <strong>Website: </strong>
-                <a href={activityURL} className="gc360-text-link">
+                {/* <strong>Website: </strong> */}
+                <a href={activityURL} className="gc360-text-link" style={{fontWeight:"bold"}}>
                   {' '}
                   {activityURL}
                 </a>
@@ -628,8 +628,11 @@ class ActivityProfile extends Component {
             <section className="gordon-activity-profile">
               <Card>
                 <CardContent>
-                  <Typography align="center" variant="display1">
+                  <Typography align="center" variant="h5">
                     {activityDescription}
+                  </Typography>
+                  <Typography variant="subtitle1" style={{color: "#777"}}>
+                    {sessionDescription}
                   </Typography>
                   <Grid align="center" className="activity-image" item>
                     <img
@@ -639,26 +642,26 @@ class ActivityProfile extends Component {
                     />
                   </Grid>
                   <Grid item>{editActivity}</Grid>
+                  <Typography variant="body2">
+                    {description}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    {website}
+                  </Typography>
+
+                  <br></br>
+                  <hr width="70%"></hr>
+                  <br></br>
+
                   {/* Activity Description */}
                   <Grid item justify="center" align="left">
                     <Grid container lg={12} direction="column" align="left">
-                        <Typography variant="body2">
-                          <strong>Session: </strong>
-                          {sessionDescription}
-                        </Typography>
-                        <Typography variant="body2">
-                          {description}
-                        </Typography>
-                        <Typography variant="body2">
-                          {website}
-                        </Typography>
                         <Typography variant="body2">
                           {groupContacts}
                         </Typography>
                         <Typography variant="body2">
                           {advisors}
                         </Typography>
-                                          
                         <Typography variant="body2">
                           <strong>Special Information for Joining: </strong>
                           {this.state.activityInfo.ActivityJoinInfo}
@@ -667,10 +670,12 @@ class ActivityProfile extends Component {
                           <strong>Current Involvement Roster: </strong>
                           {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
                         </Typography>
+                        <div style={{marginLeft: "-8px", padding: "8px 0"}}>
+                          {membership}
+                        </div>
                     </Grid>
                   </Grid>
                 </CardContent>
-                {membership}
               </Card>
             </section>
           );
