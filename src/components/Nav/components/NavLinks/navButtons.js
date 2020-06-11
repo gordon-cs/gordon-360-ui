@@ -369,7 +369,7 @@ export function createTimesheetsButton(networkStatus, authenticated, onLinkClick
     // Network Status: Online - Authenticated
     if (authenticated) {
       timesheetsButton = (
-        <NavLink className="gc360-link" exact to="/timesheets" onClick={onLinkClick}>
+        <NavLink className="gc360-link" exact to="/student-timesheets" onClick={onLinkClick}>
           <ListItem button>
             <ListItemIcon>
               <WorkIcon />

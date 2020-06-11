@@ -286,7 +286,7 @@ export default class GordonHeader extends Component {
             icon={<WorkIcon />}
             label="Timesheets"
             component={NavLink}
-            to="/timesheets"
+            to="/student-timesheets"
           />
         );
       }
