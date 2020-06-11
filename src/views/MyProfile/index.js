@@ -748,10 +748,10 @@ class MyProfile extends Component {
                     </Grid>
                     {VPScore}
                   </Grid>
-                
+
                   <Grid item xs={12} lg={10} align="center">
                     <Grid container xs={12} lg={12} spacing={0} justify="center">
-                      <Grid item xs={12} lg={12} justifyContent = "center">
+                      <Grid item xs={12} lg={12}>
                         <GordonSchedulePanel profile={this.state.profile} myProf={true} />
                       </Grid>
                     </Grid>

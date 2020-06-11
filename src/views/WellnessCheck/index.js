@@ -7,10 +7,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Approved from './components/Approved/Approved';
 import Denied from './components/Denied/Denied';
-import './WellnessCheck.css'
-
-import '../../app.css';
-
 import '../../app.css';
 
 export default class WellnessCheck extends Component {
@@ -19,12 +15,21 @@ export default class WellnessCheck extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null,
-       network: 'online',
-       answered: false,
-       currentStatus:"",
-     };
+    this.state = {
+      personType: null,
+      network: 'online',
+      answered: false,
+      currentStatus: 'I am not symptomatic',
+      currentUser: null,
+      image: null,
+    };
+  }
 
+  async componentDidMount() {
+    await this.getUserData();
+    user.getImage().then(data => {
+      this.setState({ image: data });
+    });
   }
 
   componentWillMount() {
@@ -37,6 +42,35 @@ export default class WellnessCheck extends Component {
     if (this.props.Authentication !== newProps.Authentication) {
       this.getPersonType();
     }
+  }
+
+  /*
+   * Fetches the user's data
+   *
+   * @return {JSON} The JSON data of the current user
+   */
+  async getUserData() {
+    // Gets the token from local storage to prove authentication for fetch
+    let token = JSON.parse(localStorage.getItem('token'));
+
+    // Creates the header for the request to get the user's info
+    let headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return await fetch(
+      new Request('https://360api.gordon.edu/api/profiles', { method: 'GET', headers }),
+    )
+      .then(result => {
+        return result.json();
+      })
+      .then(data => {
+        this.setState({ currentUser: data });
+      })
+      .catch(error => {
+        console.log(error.message);
+      });
   }
 
   async getPersonType() {
@@ -52,20 +86,18 @@ export default class WellnessCheck extends Component {
       console.log('Login failed with error: ' + error);
     }
   }
-   
-  callBack = (data,data2)=>{
-    this.setState({answered: data});
-    this.setState({currentStatus: data2});
-  }
+
+  callBack = (data, data2) => {
+    this.setState({ answered: data });
+    this.setState({ currentStatus: data2 });
+  };
 
   render() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
-     */  
-
-    console.log(this.state.currentStatus);
+     */
 
     window.addEventListener('message', event => {
       if (
@@ -88,39 +120,40 @@ export default class WellnessCheck extends Component {
     /* Renders the wellness check question instead of the home page if the question
      *  has not been answered yet
      */
-      if (this.props.Authentication) {
 
-        let status;
+    if (this.props.Authentication) {
+      let status;
+      console.log('User: ', user);
 
-        if(this.state.currentStatus === "I am not symptomatic"){
-            status = (<Approved/>); 
-        }
-
-        else{
-            status = (<Denied/>);
-        }
-        
-
-        content = (
-          <Grid container justify="center" spacing={2}>
-            
-            <Grid item xs={12} md={10}>
-                <Card className="card">
-                    <CardContent>
-                        <CardHeader title="Current Status" />
-                         {status}
-                    </CardContent>
-                </Card>
-            </Grid>
-          </Grid>
-        );
+      if (this.state.currentStatus === 'I am not symptomatic') {
+        status = <Approved />;
       } else {
-        content = (
-          <div className="gordon-login">
-            <Login onLogIn={this.logIn} />
-          </div>
-        );
+        status = <Denied />;
       }
+
+      content = (
+        <Grid container justify="center" spacing={2}>
+          <Grid item xs={12} md={10}>
+            <Card className="card">
+              <CardContent>
+                <CardHeader
+                  title={`${this.state.currentUser ? this.state.currentUser.FirstName : ''} ${
+                    this.state.currentUser ? this.state.currentUser.LastName : ''
+                  }`}
+                />
+                {status}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      );
+    } else {
+      content = (
+        <div className="gordon-login">
+          <Login onLogIn={this.logIn} />
+        </div>
+      );
+    }
 
     return content;
   }

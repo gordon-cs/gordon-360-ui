@@ -3,16 +3,36 @@ import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import "./Denied.css"
-
+import './Denied.css';
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-        network: 'online',
-     };
+      network: 'online',
+      time: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+  }
+
+  componentDidMount() {
+    this.intervalID = setInterval(() => this.tick(), 1000);
+  }
+
+  componentWillMount() {
+    clearInterval(this.intervalID);
+  }
+
+  tick() {
+    this.setState({
+      time: new Date().toLocaleString([], {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    });
   }
 
   logIn() {
@@ -28,7 +48,7 @@ export default class Home extends Component {
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
-     */  
+     */
 
     console.log(this.state.currentStatus);
 
@@ -48,21 +68,23 @@ export default class Home extends Component {
       }
     });
 
-   
     let content;
 
-        content = (
-                 <Grid spacing={2}>
-                    <Card className="card">
-                         <CardHeader title="Denied"/>
-                         <CardContent>
-                             <div id = "denied">
-                             </div>
-                         </CardContent>
-                    </Card>
-                 </Grid>
-    
-        );
+    content = (
+      <Grid spacing={2}>
+        <Card>
+          <CardContent className="denied-box">
+            <div className="denied-time">{this.state.time}</div>
+            <div className="cross-mark">&#10005;</div>
+            <CardHeader
+              className="denied-time"
+              title="Sorry you’re not feeling well. Do not go to work, school, or public areas."
+            />
+          </CardContent>
+          <CardHeader title="Please notify the health center: (978)867-4300" />
+        </Card>
+      </Grid>
+    );
 
     return content;
   }
