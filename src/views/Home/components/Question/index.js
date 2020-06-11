@@ -131,19 +131,19 @@ export default class Question extends Component {
               <br />
               <RadioGroup>
                 <FormControlLabel
-                  value="answer_no"
-                  control={<Radio />}
-                  label="No"
-                  onChange={() => {
-                    this.setState({ qTwoAnswer: 'No' });
-                  }}
-                />
-                <FormControlLabel
                   value="answer_yes"
                   control={<Radio />}
                   label="Yes"
                   onChange={() => {
                     this.setState({ qTwoAnswer: 'Yes' });
+                  }}
+                />
+                <FormControlLabel
+                  value="answer_no"
+                  control={<Radio />}
+                  label="No"
+                  onChange={() => {
+                    this.setState({ qTwoAnswer: 'No' });
                   }}
                 />
               </RadioGroup>
@@ -165,7 +165,7 @@ export default class Question extends Component {
               <FormControl>
                 <FormLabel>
                   {this.state.questions.qTwo.yes.question[0]}
-                  <a href=" https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html">
+                  <a href=" https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html#cdc-chat-bot-open">
                     {this.state.questions.qTwo.yes.question[1]}
                   </a>
                   {this.state.questions.qTwo.yes.question[2]}
@@ -301,6 +301,7 @@ export default class Question extends Component {
           <Divider />
           {this.createQuestionThree(questionStyle)}
           {this.showSubmitButton(buttonStyle)}
+          <div style={headerStyle}>Health Center: (978)867-4300 </div>
 
           {/* <form onSubmit = {this.submitHandler}>
           <div className="radio">
