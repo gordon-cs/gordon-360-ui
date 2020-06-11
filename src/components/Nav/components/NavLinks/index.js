@@ -9,6 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
+import WellnessIcon from '@material-ui/icons/LocalHospital';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
@@ -166,7 +167,7 @@ export default class GordonNavLinks extends Component {
     let admin;
     let peopleButton;
     let signInOut;
-    let wellnessCheck;
+    let wellnessButton;
 
     if (this.props.Authentication) {
       // Creates the Admin button depending on the status of the network found in local storage
@@ -218,36 +219,36 @@ export default class GordonNavLinks extends Component {
       }
 
       if (networkStatus === 'online') {
-        wellnessCheck = (
-          <NavLink exact to="/wellness" onClick={this.props.onLinkClick} className="gc360-link">
+        wellnessButton = (
+          <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
             <ListItem button>
               <ListItemIcon>
-                <LocalActivityIcon />
+                <WellnessIcon />
               </ListItemIcon>
-              <ListItemText primary="Wellness Check" />
+              <ListItemText primary="Wellness" />
             </ListItem>
           </NavLink>
         );
       } else {
-        wellnessCheck = (
+        wellnessButton = (
           <div onClick={this.openDialogBox}>
             <ListItem button disabled={networkStatus}>
               <ListItemIcon>
-                <LocalActivityIcon />
+                <WellnessIcon />
               </ListItemIcon>
-              <ListItemText primary="Wellness Check" />
+              <ListItemText primary="Wellness" />
             </ListItem>
           </div>
         );
       }
-
-      wellnessCheck = (
-        <NavLink exact to="/wellness" onClick={this.props.onLinkClick} className="gc360-link">
+      // Creates the Wellness button
+      wellnessButton = (
+        <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
           <ListItem button>
             <ListItemIcon>
-              <LocalActivityIcon />
+              <WellnessIcon />
             </ListItemIcon>
-            <ListItemText primary="Wellness Check" />
+            <ListItemText primary="Wellness" />
           </ListItem>
         </NavLink>
       );
@@ -426,7 +427,7 @@ export default class GordonNavLinks extends Component {
           {involvementsButton}
           {eventsButton}
           {peopleButton}
-          {wellnessCheck}
+          {wellnessButton}
         </List>
 
         <Divider />
