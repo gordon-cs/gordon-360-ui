@@ -1,3 +1,6 @@
+/* eslint-disable no-loop-func */
+/* eslint-disable no-undef */
+/* eslint-disable no-restricted-globals */
 /**
  * Caches files and responds to network requests when offline.
  *
@@ -17,7 +20,7 @@ const apiSource = 'https://360api.gordon.edu';
 // const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
 /* Uncomment For Production Only (aka master) */
 const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
-let failedDynamicCacheLinks = [];
+// let failedDynamicCacheLinks = [];
 let dynamicCache = [];
 let token,
   termCode,
@@ -128,39 +131,40 @@ const dynamicCacheTwo = [
 /**
  * Cleans the cache to remove data that's no longer in use (removes outdated cache version)
  * If there's cache with the correct cache version, it will just remove the dynamic files
- *
- * @return {Promise} A promise with the result of removing outdated cache
  */
 async function cleanCache() {
-  // If the cache version is the same, we remove all dynamic files cached
-  await caches.open(cacheVersion).then(cache => {
-    cache.keys().then(items => {
-      items.map(item => {
-        // Removes all remote files except for the font key css, the involvements for the current term and the events
-        if (
-          !item.url.match(location.origin) &&
-          item.url !== fontKeySource &&
-          item.url !== 'https://360api.gordon.edu/api/events/25Live/Public' &&
-          item.url !== 'https://360api.gordon.edu/api/sessions' &&
-          item.url !== 'https://360api.gordon.edu/api/sessions/current' &&
-          item.url !==
-            `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}` &&
-          item.url !==
-            `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}/types`
-        ) {
-          cache.delete(item);
-        }
-        // Removes '/myprofile' and '/profile/firstName.lastName' since they were made when the user
-        // was caching dynamic files but appears to be from location.origin instead of remote
-        else if (
-          item.url.match(location.origin) &&
-          (item.url.includes('/profile/') || item.url.includes('/myprofile'))
-        ) {
-          cache.delete(item);
-        }
+  // Checks to make sure the current session is available before removing cache
+  if (currentSession) {
+    // If the cache version is the same, we remove all dynamic files cached
+    await caches.open(cacheVersion).then(cache => {
+      cache.keys().then(items => {
+        items.forEach(item => {
+          // Removes all remote files except for the font key css, the involvements for the current term and the events
+          if (
+            !item.url.match(location.origin) &&
+            item.url !== fontKeySource &&
+            item.url !== 'https://360api.gordon.edu/api/events/25Live/Public' &&
+            item.url !== 'https://360api.gordon.edu/api/sessions' &&
+            item.url !== 'https://360api.gordon.edu/api/sessions/current' &&
+            item.url !==
+              `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}` &&
+            item.url !==
+              `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}/types`
+          ) {
+            cache.delete(item);
+          }
+          // Removes '/myprofile' and '/profile/firstName.lastName' since they were made when the user
+          // was caching dynamic files but appears to be from location.origin instead of remote
+          else if (
+            item.url.match(location.origin) &&
+            (item.url.includes('/profile/') || item.url.includes('/myprofile'))
+          ) {
+            cache.delete(item);
+          }
+        });
       });
     });
-  });
+  }
   // If there's outdated cache
   await caches.keys().then(keys => {
     keys.forEach(key => {
@@ -306,26 +310,27 @@ async function cacheStaticFiles() {
 
   // Console logs the result of the attempt to cache all static files
   cachedSuccessfully
-    ? console.log(`%c${successfulEmoji} Cached Static Files Successfully`, successfulLog)
-    : console.log(`%c${errorEmoji} Caching Static Files Failed`, errorLog);
+    ? console.log(`%c${successfulEmoji} Cached All Static Files Successfully`, successfulLog)
+    : console.log(`%c${errorEmoji} Caching All Static Files Failed`, errorLog);
 }
 
-/**
- * Re-Caches all of the dynamic files that failed to fetch
- *
- *  @return {Promise} A promise with the result of re-caching the failed dynamic files
- */
-async function recacheFailedDynamicFiles() {
-  if (token && failedDynamicCacheLinks.length > 0) {
-    const cacheOne = await cacheDynamicFiles(token, failedDynamicCacheLinks);
-    // If all failed dynamic files successfully cache, we then empty the array
-    if (cacheOne) failedDynamicCacheLinks = [];
-    // Checks to see if both all failed links successfully cached
-    if (cacheOne) {
-      console.log(`%c${successfulEmoji} Cached Failed Dynamic Files Successfully`, successfulLog);
-    }
-  }
-}
+// /**
+//  * Re-Caches all of the dynamic files that failed to fetch
+//  *
+//  *  @return {Promise} A promise with the result of re-caching the failed dynamic files
+//  */
+// async function recacheFailedDynamicFiles() {
+//   if (token && failedDynamicCacheLinks.length > 0) {
+//     const cacheOne = await cacheDynamicFiles(token, failedDynamicCacheLinks);
+//     console.log('Failed Links: ', cacheOne);
+//     // If all failed dynamic files successfully cache, we then empty the array
+//     if (cacheOne) failedDynamicCacheLinks = [];
+//     // Checks to see if both all failed links successfully cached
+//     if (cacheOne) {
+//       console.log(`%c${successfulEmoji} Cached Failed Dynamic Files Successfully`, successfulLog);
+//     }
+//   }
+// }
 
 /**
  * Fetches and caches all the dynamic files that are listed in the passed-in array
@@ -444,7 +449,7 @@ async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
 
   // The promise to return with a boolean value determining if all links cached successfully
   operationSuccess = await new Promise((resolve, reject) => {
-    isSuccessful === true ? resolve(true) : reject(false);
+    isSuccessful === true ? resolve(true) : resolve(false);
   });
 
   return operationSuccess;
@@ -511,14 +516,14 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/activities/session/${currentSession.SessionCode}`, ////////
       `${apiSource}/api/activities/session/${currentSession.SessionCode}/types`, ///////
       `${apiSource}/api/sessions/daysLeft`,
-      `${apiSource}/api/studentemployment/`,
+      // `${apiSource}/api/studentemployment/`,
       `${apiSource}/api/version`,
       `${apiSource}/api/events/chapel/${termCode}`,
       `${apiSource}/api/memberships/student/${id}`,
       `${apiSource}/api/memberships/student/username/${username}/`,
       `${apiSource}/api/profiles/${username}/`,
       `${apiSource}/api/profiles/Image/${username}/`,
-      `${apiSource}/api/schedule/${username}/`,
+      // `${apiSource}/api/schedule/${username}/`,
       `${apiSource}/api/myschedule/${username}/`,
       `${apiSource}/api/schedulecontrol/${username}/`,
       `/profile/${username}`,
@@ -532,8 +537,11 @@ async function dynamicLinksThenCache(token, termCode) {
      * to the console. If not, there was an error with one or more fetches in which the error
      * message(s) has been logged to the console
      */
-    if (fetchResult)
-      console.log(`%c${successfulEmoji} Cached Dynamic Files Successfully`, successfulLog);
+    if (fetchResult) {
+      console.log(`%c${successfulEmoji} Cached All Dynamic Files Successfully`, successfulLog);
+    } else {
+      console.log(`%c${errorEmoji} Caching All Dynamic Files Failed`, errorLog);
+    }
   }
 }
 
@@ -635,7 +643,7 @@ self.addEventListener('message', event => {
   }
   // If the message is to set network status as online
   else if (event.data === 'online') {
-    event.waitUntil((networkStatus = 'online'), recacheFailedDynamicFiles());
+    event.waitUntil((networkStatus = 'online'));
   }
   // If the message is to set network status as offline
   else if (event.data === 'offline') {
