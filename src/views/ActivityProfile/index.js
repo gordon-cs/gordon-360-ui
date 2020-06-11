@@ -25,6 +25,7 @@ import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
+import { CardHeader } from '@material-ui/core';
 //import '../../app.js';
 
 const CROP_DIM = 320; // pixels
@@ -579,7 +580,6 @@ class ActivityProfile extends Component {
           if (activityBlurb.length !== 0) {
             description = (
               <Typography variant="body2">
-                {/* <strong>Description: </strong> */}
                 {activityBlurb}
               </Typography>
             );
@@ -588,7 +588,6 @@ class ActivityProfile extends Component {
           if (activityURL.length !== 0) {
             website = (
               <Typography variant="body2">
-                {/* <strong>Website: </strong> */}
                 <a href={activityURL} className="gc360-text-link" style={{fontWeight:"bold"}}>
                   {' '}
                   {activityURL}
@@ -628,12 +627,10 @@ class ActivityProfile extends Component {
             <section className="gordon-activity-profile">
               <Card>
                 <CardContent>
-                  <Typography align="center" variant="h5">
-                    {activityDescription}
-                  </Typography>
-                  <Typography variant="subtitle1" style={{color: "#777"}}>
-                    {sessionDescription}
-                  </Typography>
+                  <CardHeader
+                    title={activityDescription}
+                    subheader={sessionDescription}
+                  />
                   <Grid align="center" className="activity-image" item>
                     <img
                       alt={activity.activityDescription}
@@ -642,14 +639,15 @@ class ActivityProfile extends Component {
                     />
                   </Grid>
                   <Grid item>{editActivity}</Grid>
-                  <Typography variant="body2">
-                    {description}
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    {website}
-                  </Typography>
+                  <Grid item style={{padding:"16px"}}>
+                    <Typography variant="body2">
+                      {description}
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      {website}
+                    </Typography>
+                  </Grid>
 
-                  <br></br>
                   <hr width="70%"></hr>
                   <br></br>
 
@@ -670,6 +668,8 @@ class ActivityProfile extends Component {
                           <strong>Current Involvement Roster: </strong>
                           {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
                         </Typography>
+                        {/* negative margin necessary because of default padding on Membership */}
+                        {/* perhaps defaults can be changed eventually if all use cases checked */}
                         <div style={{marginLeft: "-8px", padding: "8px 0"}}>
                           {membership}
                         </div>
