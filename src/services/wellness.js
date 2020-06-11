@@ -14,7 +14,7 @@ import http from './http';
  */
 
 /**
- * Get victory promise scores
+ * returns current status of student
  * @return {Wellness.<status>} scores
  */
 const getStatus = async () => {

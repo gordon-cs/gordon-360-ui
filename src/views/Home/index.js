@@ -24,7 +24,7 @@ export default class Home extends Component {
     this.state = { personType: null, network: 'online', answered: false, currentStatus: '' };
   }
 
-  componentWillMount() {
+   componentWillMount() {
     if (this.props.Authentication) {
       this.getPersonType();
       this.getStatus();
@@ -39,15 +39,14 @@ export default class Home extends Component {
 
   async getStatus() {
     const answer = await wellness.getStatus();
-    if (answer === true) {
+    if (answer.currentStatus === true) {
       this.setState({ currentStatus: 'I am symptomatic' });
       this.setState({ answered: true });
+      console.log(this.state.answered);
     }
-    if (answer === false) {
+    if (answer.currentStatus === false) {
       this.setState({ currentStatus: 'I am not symptomatic' });
       this.setState({ answered: true });
-    } else {
-      this.setState({ answered: false });
     }
   }
 
@@ -76,8 +75,6 @@ export default class Home extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-
-    console.log(this.state.currentStatus);
 
     window.addEventListener('message', event => {
       if (
@@ -127,21 +124,21 @@ export default class Home extends Component {
         } else {
           doughnut = <DaysLeft />;
         }
-
-        content = (
-          <Grid container justify="center" spacing={2}>
-            <Grid item xs={12} md={10}>
-              <Carousel />
+     
+          content = (
+            <Grid container justify="center" spacing={2}>
+              <Grid item xs={12} md={10}>
+                <Carousel />
+              </Grid>
+              <Grid item xs={12} md={5}>
+                {doughnut}
+              </Grid>
+              <Grid item xs={12} md={5}>
+                <DiningBalance />
+              </Grid>
+              {requests}
             </Grid>
-            <Grid item xs={12} md={5}>
-              {doughnut}
-            </Grid>
-            <Grid item xs={12} md={5}>
-              <DiningBalance />
-            </Grid>
-            {requests}
-          </Grid>
-        );
+          );
       }
       // Authenticated - Questions Not Answered
       else {

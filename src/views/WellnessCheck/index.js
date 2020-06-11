@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Approved from './components/Approved/Approved';
 import Denied from './components/Denied/Denied';
+import wellness from '../../services/wellness';
 import '../../app.css';
 
 export default class WellnessCheck extends Component {
@@ -18,7 +19,6 @@ export default class WellnessCheck extends Component {
     this.state = {
       personType: null,
       network: 'online',
-      answered: false,
       currentStatus: 'I am not symptomatic',
       currentUser: null,
       image: null,
@@ -27,6 +27,7 @@ export default class WellnessCheck extends Component {
 
   async componentDidMount() {
     await this.getUserData();
+    await this.getStatus();
     user.getImage().then(data => {
       this.setState({ image: data });
     });
@@ -41,6 +42,16 @@ export default class WellnessCheck extends Component {
   componentWillReceiveProps(newProps) {
     if (this.props.Authentication !== newProps.Authentication) {
       this.getPersonType();
+    }
+  }
+
+  async getStatus() {
+    const answer = await wellness.getStatus();
+    if (answer.currentStatus === true) {
+      this.setState({ currentStatus: 'I am symptomatic' });
+    }
+    if (answer.currentStatus === false) {
+      this.setState({ currentStatus: 'I am not symptomatic' });
     }
   }
 
