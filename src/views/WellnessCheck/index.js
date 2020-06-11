@@ -90,6 +90,7 @@ export default class WellnessCheck extends Component {
       if (this.props.Authentication) {
 
         let status;
+        console.log("User: ", user);
 
         if(this.state.currentStatus === "I am not symptomatic"){
             status = (<Approved/>);
@@ -98,7 +99,6 @@ export default class WellnessCheck extends Component {
         else{
             status = (<Denied/>);
         }
-
         content = (
           <Grid container justify="center" spacing={2}>
             <Grid item xs={12} md={10}>
