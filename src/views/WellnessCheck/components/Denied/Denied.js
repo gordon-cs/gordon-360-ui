@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import ClearIcon from '@material-ui/icons/Clear';
 import "./Denied.css"
 
 
@@ -12,18 +13,31 @@ export default class Home extends Component {
 
     this.state = {
         network: 'online',
-        time: new Date().toLocaleString([], {hour: '2-digit', minute: '2-digit'})
-     };
+        time: new Date().toLocaleString([], {hour: '2-digit', minute: '2-digit'}),
+        width: 0
+      };
+      this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+      this.resizeIcon = this.resizeIcon.bind(this);
   }
 
   componentDidMount() {
     this.intervalID = setInterval(
       () => this.tick(), 1000
     );
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
   }
 
   componentWillMount() {
     clearInterval(this.intervalID);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth });
   }
 
   tick() {
@@ -36,6 +50,10 @@ export default class Home extends Component {
     } catch (error) {
       console.log('Login failed with error: ' + error);
     }
+  }
+
+  resizeIcon() {
+    return(this.state.width * 0.03 + 50)
   }
 
   render() {
@@ -73,8 +91,8 @@ export default class Home extends Component {
                              <div className = "denied-time">
                                {this.state.time}
                              </div>
-                             <div className = "cross-mark">
-                              &#10005;
+                             <div className = "circle-cross">
+                             <ClearIcon style={{fontSize: this.resizeIcon()}}/>
                              </div>
                          </CardContent>
                     </Card>
