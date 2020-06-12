@@ -8,6 +8,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import Approved from './components/Approved/Approved';
 import Denied from './components/Denied/Denied';
 import wellness from '../../services/wellness';
+import GordonLoader from '../../components/Loader';
 import '../../app.css';
 
 export default class WellnessCheck extends Component {
@@ -22,26 +23,38 @@ export default class WellnessCheck extends Component {
       currentStatus: 'I am not symptomatic',
       currentUser: null,
       image: null,
+      loading: true,
     };
   }
 
   async componentDidMount() {
     await this.getUserData();
-    await this.getStatus();
     user.getImage().then(data => {
       this.setState({ image: data });
     });
+    await this.getStatus();
   }
 
   componentWillMount() {
     if (this.props.Authentication) {
       this.getPersonType();
+      this.loadFunction();
     }
   }
 
   componentWillReceiveProps(newProps) {
     if (this.props.Authentication !== newProps.Authentication) {
       this.getPersonType();
+    }
+  }
+
+  async loadFunction() {
+    this.setState({ loading: true });
+    try {
+      this.setUserImage();
+      this.setState({ loading: false });
+    } catch (error) {
+      this.setState({ error });
     }
   }
 
@@ -131,7 +144,6 @@ export default class WellnessCheck extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -147,47 +159,48 @@ export default class WellnessCheck extends Component {
         this.setState({ network: 'offline' });
       }
     });
-
     let content;
-
-    /* Renders the wellness check question instead of the home page if the question
-     *  has not been answered yet
-     */
-
-    if (this.props.Authentication) {
-      let status;
-
-      if (this.state.currentStatus === 'I am not symptomatic') {
-        status = <Approved />;
-      } else {
-        status = <Denied />;
-      }
-
-      content = (
-        <Grid container justify="center" spacing={2}>
-          <Grid item xs={12} md={8}>
-            <Card className="card">
-              <CardContent>
-                <CardHeader
-                  title={`${this.state.currentUser ? this.state.currentUser.FirstName : ''} ${
-                    this.state.currentUser ? this.state.currentUser.LastName : ''
-                  }`}
-                />
-                <Card> {this.setUserImage()}</Card>
-                {status}
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
+    if (this.state.loading) {
+      content = <GordonLoader />;
     } else {
-      content = (
-        <div className="gordon-login">
-          <Login onLogIn={this.logIn} />
-        </div>
-      );
-    }
+      /* Renders the wellness check question instead of the home page if the question
+       *  has not been answered yet
+       */
 
+      if (this.props.Authentication) {
+        let status;
+
+        if (this.state.currentStatus === 'I am not symptomatic') {
+          status = <Approved />;
+        } else {
+          status = <Denied />;
+        }
+
+        content = (
+          <Grid container justify="center" spacing={2}>
+            <Grid item xs={12} md={8}>
+              <Card className="card">
+                <CardContent>
+                  <CardHeader
+                    title={`${this.state.currentUser ? this.state.currentUser.FirstName : ''} ${
+                      this.state.currentUser ? this.state.currentUser.LastName : ''
+                    }`}
+                  />
+                  <Card> {this.setUserImage()}</Card>
+                  {status}
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        );
+      } else {
+        content = (
+          <div className="gordon-login">
+            <Login onLogIn={this.logIn} />
+          </div>
+        );
+      }
+    }
     return content;
   }
 }
