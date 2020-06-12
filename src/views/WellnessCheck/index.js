@@ -165,7 +165,7 @@ export default class WellnessCheck extends Component {
 
       content = (
         <Grid container justify="center" spacing={2}>
-          <Grid item xs={12} md={10}>
+          <Grid item xs={12} md={8}>
             <Card className="card">
               <CardContent>
                 <CardHeader
