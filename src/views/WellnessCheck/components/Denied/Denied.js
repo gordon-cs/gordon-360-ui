@@ -3,24 +3,42 @@ import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import './Denied.css';
+
+import ClearIcon from '@material-ui/icons/Clear';
+import "./Denied.css"
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      network: 'online',
-      time: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit' }),
-    };
+
+        network: 'online',
+        time: new Date().toLocaleString([], {hour: '2-digit', minute: '2-digit'}),
+        width: 0
+      };
+      this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+      this.resizeIcon = this.resizeIcon.bind(this);
   }
 
   componentDidMount() {
-    this.intervalID = setInterval(() => this.tick(), 1000);
+    this.intervalID = setInterval(
+      () => this.tick(), 1000
+    );
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
   }
 
   componentWillMount() {
     clearInterval(this.intervalID);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth });
   }
 
   tick() {
@@ -41,6 +59,10 @@ export default class Home extends Component {
     } catch (error) {
       console.log('Login failed with error: ' + error);
     }
+  }
+
+  resizeIcon() {
+    return(this.state.width * 0.03 + 50)
   }
 
   render() {
@@ -69,24 +91,25 @@ export default class Home extends Component {
     });
 
     let content;
+        content = (
+                 <Grid spacing={2}>
+                    <Card>
+                         <CardHeader title="Denied"/>
+                         <CardContent className = "denied-box">
+                             <div className = "denied-time">
+                               {this.state.time}
+                             </div>
+                             <div className = "circle-cross">
+                             <ClearIcon style={{fontSize: this.resizeIcon()}}/>
+                             </div>
+                             <CardHeader className="denied-time"
+                              title="Please notify the health center: (978)867-4300"
+                              />
+                         </CardContent>
+                    </Card>
+                 </Grid>
 
-    content = (
-      <Grid>
-        <Card>
-          <CardContent className="denied-box">
-            <div></div>
-            <div className="denied-time">{this.state.time}</div>
-            <div className="cross-mark">&#10005;</div>
-            <CardHeader
-              className="denied-time"
-              title="Please notify the health center: (978)867-4300"
-            />
-            <CardHeader className="denied-time" />
-          </CardContent>
-        </Card>
-      </Grid>
-    );
-
+        );
     return content;
   }
 }
