@@ -1,6 +1,6 @@
-.approved-box{
-    height: 250px;
-    background-color: rgb(0, 85, 0);
+.approved-box {
+  height: 250px;
+  background-color: rgb(0, 85, 0);
 }
 
 .approved-time {
@@ -23,7 +23,13 @@
   animation-direction: alternate;
 }
 
-@keyframes animationCheck{
-  from {background-color: rgb(0, 85, 0); color: white;}
-  to {background-color: white; color: rgb(0, 85, 0)}
+@keyframes animationCheck {
+  from {
+    background-color: rgb(0, 85, 0);
+    color: white;
+  }
+  to {
+    background-color: white;
+    color: rgb(0, 85, 0);
+  }
 }

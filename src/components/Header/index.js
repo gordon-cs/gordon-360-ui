@@ -12,6 +12,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
+import WellnessIcon from '@material-ui/icons/LocalHospital';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
@@ -248,8 +249,8 @@ export default class GordonHeader extends Component {
 
                 <Tab
                   className="tab"
-                  icon={<LocalActivityIcon />}
-                  label="Wellness Check"
+                  icon={<WellnessIcon />}
+                  label="Wellness"
                   component={NavLink}
                   to="/wellness"
                 />

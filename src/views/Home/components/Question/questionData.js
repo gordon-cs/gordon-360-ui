@@ -59,9 +59,9 @@ export async function getQuestions() {
     },
     yes: {
       question: [
-        'Since you have some sick symptoms, please notify the Health Center and discuss working from home.  You should not come to Gordon if you are sick.  In addition, please visit the',
-        ' CDC Webpage ',
-        'and use the "Self-Checker" to check your symptoms. Confirm below:',
+        'Since you have some sick symptoms, please notify the Health Center and discuss working from home.  You should not come to Gordon if you are sick.  In addition, please use the',
+        ' CDC Self-Checker ',
+        'to check your symptoms. Confirm below:',
       ],
       optionOne: 'I used the CDC "Self Checker" and have contacted the health center',
       optionTwo:

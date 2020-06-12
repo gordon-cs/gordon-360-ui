@@ -1,4 +1,4 @@
-.denied-box{
+.denied-box {
   height: 250px;
   background-color: rgb(163, 0, 0);
 }
@@ -24,6 +24,12 @@
 }
 
 @keyframes animationCross {
-  from {background-color: rgb(163, 0, 0); color: white;}
-  to {background-color: white; color: rgb(163, 0, 0);}
+  from {
+    background-color: rgb(163, 0, 0);
+    color: white;
+  }
+  to {
+    background-color: white;
+    color: rgb(163, 0, 0);
+  }
 }

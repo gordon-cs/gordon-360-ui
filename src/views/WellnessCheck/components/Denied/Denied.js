@@ -3,15 +3,16 @@ import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+
 import ClearIcon from '@material-ui/icons/Clear';
 import "./Denied.css"
-
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+
         network: 'online',
         time: new Date().toLocaleString([], {hour: '2-digit', minute: '2-digit'}),
         width: 0
@@ -41,7 +42,15 @@ export default class Home extends Component {
   }
 
   tick() {
-    this.setState({time: new Date().toLocaleString([], {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'})});
+    this.setState({
+      time: new Date().toLocaleString([], {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    });
   }
 
   logIn() {

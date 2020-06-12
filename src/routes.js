@@ -32,7 +32,7 @@ export default [
     component: About,
   },
   {
-    name: 'Wellness Check',
+    name: 'Wellness',
     path: '/wellness',
     component: WellnessCheck,
   },
@@ -110,5 +110,5 @@ export default [
     name: 'Banner',
     path: '/banner',
     component: BannerSubmission,
-  }
+  },
 ];
