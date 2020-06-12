@@ -6,7 +6,8 @@
 .denied-time {
   font-size: calc(14px + 1vw);
   color: white;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
+  padding-top: 20px;
 }
 
 .cross-mark {

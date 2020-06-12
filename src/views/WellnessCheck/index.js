@@ -162,7 +162,7 @@ export default class WellnessCheck extends Component {
                     this.state.currentUser ? this.state.currentUser.LastName : ''
                   }`}
                 />
-                {this.setUserImage()}
+                <Card> {this.setUserImage()}</Card>
                 {status}
               </CardContent>
             </Card>
