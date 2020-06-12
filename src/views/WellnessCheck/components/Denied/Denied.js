@@ -71,17 +71,18 @@ export default class Home extends Component {
     let content;
 
     content = (
-      <Grid spacing={2}>
+      <Grid>
         <Card>
           <CardContent className="denied-box">
+            <div></div>
             <div className="denied-time">{this.state.time}</div>
             <div className="cross-mark">&#10005;</div>
             <CardHeader
               className="denied-time"
-              title="Sorry you’re not feeling well. Do not go to work, school, or public areas."
+              title="Please notify the health center: (978)867-4300"
             />
+            <CardHeader className="denied-time" />
           </CardContent>
-          <CardHeader title="Please notify the health center: (978)867-4300" />
         </Card>
       </Grid>
     );

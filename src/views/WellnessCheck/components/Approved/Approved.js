@@ -2,23 +2,20 @@ import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import './Approved.css'
+import './Approved.css';
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-        network: 'online',
-        time: new Date().toLocaleString([], {hour: '2-digit', minute: '2-digit'})
-     };
+      network: 'online',
+      time: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit' }),
+    };
   }
 
   componentDidMount() {
-    this.intervalID = setInterval(
-      () => this.tick(), 1000
-    );
+    this.intervalID = setInterval(() => this.tick(), 1000);
   }
 
   componentWillMount() {
@@ -26,7 +23,15 @@ export default class Home extends Component {
   }
 
   tick() {
-    this.setState({time: new Date().toLocaleString([], {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'})});
+    this.setState({
+      time: new Date().toLocaleString([], {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    });
   }
 
   logIn() {
@@ -64,22 +69,16 @@ export default class Home extends Component {
 
     let content;
 
-        content = (
-                 <Grid spacing={2}>
-                    <Card>
-                         <CardHeader title="Approved"/>
-                         <CardContent className = "approved-box">
-                             <div className = "approved-time">
-                              {this.state.time}
-                             </div>
-                             <div className= "check-mark">
-                              &#10003;
-                             </div>
-                         </CardContent>
-                    </Card>
-                </Grid>
-
-        );
+    content = (
+      <Grid spacing={2}>
+        <Card>
+          <CardContent className="approved-box">
+            <div className="approved-time">{this.state.time}</div>
+            <div className="check-mark">&#10003;</div>
+          </CardContent>
+        </Card>
+      </Grid>
+    );
 
     return content;
   }

@@ -103,6 +103,28 @@ export default class WellnessCheck extends Component {
     this.setState({ currentStatus: data2 });
   };
 
+  setUserImage() {
+    if (this.state.image && this.state.image.pref && this.state.currentUser) {
+      return (
+        <img
+          className="rounded-corners"
+          src={`data:image/jpg;base64,${this.state.image.pref}`}
+          alt={`${this.state.currentUser.FirstName} ${this.state.currentUser.LastName}`}
+          style={{ 'max-height': '200px', 'min-width': '160px' }}
+        />
+      );
+    } else if (this.state.image && this.state.image.def && this.state.currentUser) {
+      return (
+        <img
+          className="rounded-corners"
+          src={`data:image/jpg;base64,${this.state.image.def}`}
+          alt={`${this.state.currentUser.FirstName} ${this.state.currentUser.LastName}`}
+          style={{ 'max-height': '200px', 'min-width': '160px' }}
+        />
+      );
+    }
+  }
+
   render() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
@@ -134,7 +156,6 @@ export default class WellnessCheck extends Component {
 
     if (this.props.Authentication) {
       let status;
-      console.log('User: ', user);
 
       if (this.state.currentStatus === 'I am not symptomatic') {
         status = <Approved />;
@@ -152,6 +173,7 @@ export default class WellnessCheck extends Component {
                     this.state.currentUser ? this.state.currentUser.LastName : ''
                   }`}
                 />
+                <Card> {this.setUserImage()}</Card>
                 {status}
               </CardContent>
             </Card>
