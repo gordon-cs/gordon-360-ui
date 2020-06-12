@@ -91,7 +91,6 @@ export default class Home extends Component {
     });
 
     let content;
-
         content = (
                  <Grid spacing={2}>
                     <Card>
@@ -103,12 +102,14 @@ export default class Home extends Component {
                              <div className = "circle-cross">
                              <ClearIcon style={{fontSize: this.resizeIcon()}}/>
                              </div>
+                             <CardHeader className="denied-time"
+                              title="Please notify the health center: (978)867-4300"
+                              />
                          </CardContent>
                     </Card>
                  </Grid>
 
         );
-
     return content;
   }
 }

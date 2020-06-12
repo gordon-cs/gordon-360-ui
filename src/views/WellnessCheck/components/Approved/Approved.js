@@ -40,7 +40,15 @@ export default class Home extends Component {
   }
 
   tick() {
-    this.setState({time: new Date().toLocaleString([], {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'})});
+    this.setState({
+      time: new Date().toLocaleString([], {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    });
   }
 
   logIn() {
@@ -81,7 +89,6 @@ export default class Home extends Component {
     });
 
     let content;
-
         content = (
                  <Grid spacing={2}>
                     <Card>
@@ -98,7 +105,6 @@ export default class Home extends Component {
                 </Grid>
 
         );
-
     return content;
   }
 }
