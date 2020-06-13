@@ -632,7 +632,7 @@ self.addEventListener('message', event => {
     // Since this event listener is invoked multiple times, this check prevents it from
     // console logging multiple times
     if (isFetchCanceled === false && isSuccessful === true) {
-      console.log(`%c${errorEmoji} Canceling Any Currently Running Fetches.`, errorLog);
+      console.log(`%c${warningEmoji} Canceling Any Currently Running Fetches.`, warningLog);
       isFetchCanceled = true;
       isSuccessful = false;
     }
