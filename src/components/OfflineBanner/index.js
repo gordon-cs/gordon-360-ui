@@ -48,6 +48,11 @@ export default class OfflineBanner extends Component {
     this.setState({ network });
   }
 
+  /**
+   * Creates the classes for the offline banner depending on the current page
+   *
+   * @returns {String} The classes to be applied to the offline banner
+   */
   getClass() {
     // Class for Home view
     if (this.props.currentPath === '/') {
