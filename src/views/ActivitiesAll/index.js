@@ -17,6 +17,7 @@ import GordonActivityGrid from './components/ActivityGrid';
 import GordonLoader from '../../components/Loader';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
+import storage from '../../services/storage';
 
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
@@ -37,6 +38,7 @@ export default class GordonActivitiesAll extends Component {
       sessions: [],
       type: '',
       types: [],
+      network: 'online',
     };
   }
 
@@ -166,6 +168,43 @@ export default class GordonActivitiesAll extends Component {
     this.setState({ loading: false });
   }
 
+  componentDidMount() {
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline', linkopen: false });
+      }
+    });
+
+    let network;
+    /* Attempts to get the network status from local storage.
+     * If not found, the default value is online
+     */
+    try {
+      network = storage.get('network-status');
+    } catch (error) {
+      // Defaults the network to online if not found in local storage
+      network = 'online';
+    }
+
+    // Saves the network's status to this component's state
+    this.setState({ network });
+  }
+
   async changeSession(event) {
     await this.setState({ session: event.target.value, loading: true });
     if (this.props.Authentication) {
@@ -244,13 +283,26 @@ export default class GordonActivitiesAll extends Component {
         );
       }
 
-      const sessionOptions = this.state.sessions.map(
-        ({ SessionDescription: description, SessionCode: code }) => (
-          <MenuItem label={description} value={code} key={code}>
-            {description}
-          </MenuItem>
-        ),
-      );
+      /**
+       * Checks to see if the network is online. If so, retrieve the full list of sessions available.
+       * If the network is offline, only show the current session
+       */
+      const sessionOptions =
+        this.state.network === 'online'
+          ? this.state.sessions.map(({ SessionDescription: description, SessionCode: code }) => (
+              <MenuItem label={description} value={code} key={code}>
+                {description}
+              </MenuItem>
+            ))
+          : this.state.sessions
+              .filter(object => {
+                return object.SessionCode === this.state.session;
+              })
+              .map(({ SessionDescription: description, SessionCode: code }) => (
+                <MenuItem label={description} value={code} key={code}>
+                  {description}
+                </MenuItem>
+              ));
 
       const typeOptions = this.state.types.map(type => (
         <MenuItem value={type} key={type}>
@@ -286,6 +338,7 @@ export default class GordonActivitiesAll extends Component {
                       value={this.state.session}
                       onChange={this.changeSession}
                       input={<Input id="activity-session" />}
+                      disabled={this.state.network === 'online' ? false : true}
                     >
                       {sessionOptions}
                     </Select>
