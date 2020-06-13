@@ -32,7 +32,7 @@ let token,
   id,
   currentSession;
 
-const showDeveloperConsoleLog = false;
+const showDeveloperConsoleLog = true;
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');

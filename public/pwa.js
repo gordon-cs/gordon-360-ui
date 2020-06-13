@@ -38,12 +38,12 @@ if ('caches' in window) {
     if (JSON.parse(localStorage.getItem('network-status')) === 'offline') {
       if (navigator.onLine) {
         localStorage.setItem('network-status', JSON.stringify('online'));
-        window.postMessage('online', location.origin);
+        window.postMessage('online', window.location.origin);
       }
     } else {
       if (!navigator.onLine) {
         localStorage.setItem('network-status', JSON.stringify('offline'));
-        window.postMessage('offline', location.origin);
+        window.postMessage('offline', window.location.origin);
       }
     }
 
@@ -56,7 +56,7 @@ if ('caches' in window) {
       navigator.serviceWorker.controller.postMessage('offline');
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
       localStorage.setItem('network-status', JSON.stringify('offline'));
-      window.postMessage('offline', location.origin);
+      window.postMessage('offline', window.location.origin);
     });
 
     // If network connectivity re-enables during application run-time
@@ -72,7 +72,7 @@ if ('caches' in window) {
         token: JSON.parse(localStorage.getItem('token')),
         termCode: JSON.parse(localStorage.getItem('currentTerm')),
       });
-      window.postMessage('online', location.origin);
+      window.postMessage('online', window.location.origin);
     });
   } else {
     console.log('%cSERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);
