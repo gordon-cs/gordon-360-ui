@@ -15,7 +15,7 @@
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
 const cacheVersion = 'cache v1.2';
-const apiSource = 'https://360apitrain.gordon.edu';
+const apiSource = 'https://360Api.gordon.edu';
 /* Uncomment For Development Only (aka develop) */
 const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
 /* Uncomment For Production Only (aka master) */
