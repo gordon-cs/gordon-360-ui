@@ -15,11 +15,11 @@
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
 const cacheVersion = 'cache v1.2';
-const apiSource = 'https://360api.gordon.edu';
+const apiSource = 'https://360apitrain.gordon.edu';
 /* Uncomment For Development Only (aka develop) */
-// const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
+const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
 /* Uncomment For Production Only (aka master) */
-const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
+// const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
 // let failedDynamicCacheLinks = [];
 let dynamicCache = [];
 let token,
@@ -32,7 +32,7 @@ let token,
   id,
   currentSession;
 
-const showDeveloperConsoleLog = true;
+const showDeveloperConsoleLog = false;
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
@@ -523,7 +523,7 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/memberships/student/username/${username}/`,
       `${apiSource}/api/profiles/${username}/`,
       `${apiSource}/api/profiles/Image/${username}/`,
-      // `${apiSource}/api/schedule/${username}/`,
+      `${apiSource}/api/schedule/${username}/`,
       `${apiSource}/api/myschedule/${username}/`,
       `${apiSource}/api/schedulecontrol/${username}/`,
       `/profile/${username}`,
