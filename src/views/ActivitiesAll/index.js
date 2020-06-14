@@ -26,7 +26,7 @@ export default class GordonActivitiesAll extends Component {
     this.filter = this.filter.bind(this);
 
     this.state = {
-      currentSession: '',
+      currentAcademicSession: '',
       profile: '',
       activities: [],
       allActivities: [],
@@ -49,7 +49,7 @@ export default class GordonActivitiesAll extends Component {
   }
 
   async componentWillMount() {
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
     const { SessionCode: sessionCode } = await session.getCurrent();
     const [activities, types, sessions] = await Promise.all([
       activity.getAll(sessionCode),
@@ -73,7 +73,7 @@ export default class GordonActivitiesAll extends Component {
     if (window.location.href.includes('?')) {
       backButton = true;
       tempSession = window.location.href.split('?')[1];
-      this.setState({ session: tempSession, currentSession: tempSession });
+      this.setState({ session: tempSession, currentAcademicSession: tempSession });
       [pastActivities, pastTypes] = await Promise.all([
         activity.getAll(tempSession),
         activity.getTypes(tempSession),
@@ -240,254 +240,172 @@ export default class GordonActivitiesAll extends Component {
       await this.setState({ activities: activity.filter(allActivities, type, search) });
     };
   }
-  render() {
-    let content;
 
+  /**
+   * Creates the My Involvements text for both the header and if the user has no involvements
+   *
+   * @param {String} myInvolvementsHeadingText The My Involvements current session description
+   * @param {String} myInvolvementsNoneText The My Involvements text if user has no involvements
+   * @returns {Object} An object that contains both MyInvolvements header and no-involvements text
+   */
+  createMyInvolvementsText(myInvolvementsHeadingText, myInvolvementsNoneText) {
+    // If the current session is the current academic session
+    if (this.state.session === this.state.currentAcademicSession) {
+      myInvolvementsHeadingText = 'CURRENT';
+      myInvolvementsNoneText =
+        "It looks like you're not currently a member of any Involvements. Get connected below!";
+    }
+    // If the current session is not the current academic session
+    else {
+      // Gets the description of the session
+      let involvementDescription = this.state.sessions.filter(session => {
+        return this.state.session === session.SessionCode;
+      })[0].SessionDescription;
+      myInvolvementsHeadingText = involvementDescription.toUpperCase();
+      myInvolvementsNoneText = 'No Involvements found for ' + involvementDescription;
+    }
+
+    return { headingText: myInvolvementsHeadingText, noneText: myInvolvementsNoneText };
+  }
+
+  render() {
+    // If an error occured while getting user's involvements, throw an error
     if (this.state.error) {
       throw this.state.error;
     }
 
-    let allInvolvements;
-    let myInvolvements;
-    let involvementsHeading;
-    let noInvolvementsText;
+    // Grid Header Style
+    const headerStyle = {
+      backgroundColor: gordonColors.primary.blue,
+      color: '#FFF',
+      padding: '10px',
+    };
 
-    if (this.props.Authentication) {
-      if (this.state.session === this.state.currentSession) {
-        involvementsHeading = 'CURRENT';
-        noInvolvementsText =
-          "It looks like you're not currently a member of any Involvements. Get connected below!";
-      } else {
-        for (var i = 0; i < this.state.sessions.length; i++) {
-          if (this.state.session === this.state.sessions[i].SessionCode) {
-            involvementsHeading = this.state.sessions[i].SessionDescription.toString();
-          }
-        }
-        noInvolvementsText = 'No Involvements found for ' + involvementsHeading;
-        involvementsHeading = involvementsHeading.toUpperCase();
-      }
+    // The user's involvements are defaulted to the Gordon loader until their data is fetched
 
-      if (this.state.loading === true) {
-        allInvolvements = <GordonLoader />;
-        myInvolvements = <GordonLoader />;
-      } else {
-        allInvolvements = (
-          <GordonActivityGrid activities={this.state.activities} sessionCode={this.state.session} />
-        );
-        myInvolvements = (
-          <GordonActivityGrid
-            myInvolvements={this.state.myInvolvements}
-            sessionCode={this.state.session}
-            noInvolvementsText={noInvolvementsText}
-          />
-        );
-      }
+    // Creates My Involvements
+    let myInvolvements = <GordonLoader />; // Defaulted to the Gordon loader until user data is fetched
+    let myInvolvementsText = this.createMyInvolvementsText();
+    let myInvolvementsHeaderText = myInvolvementsText.headingText;
+    let myInvolvementsNoneText = myInvolvementsText.noneText;
 
-      /**
-       * Checks to see if the network is online. If so, retrieve the full list of sessions available.
-       * If the network is offline, only show the current session
-       */
-      const sessionOptions =
-        this.state.network === 'online'
-          ? this.state.sessions.map(({ SessionDescription: description, SessionCode: code }) => (
-              <MenuItem label={description} value={code} key={code}>
-                {description}
-              </MenuItem>
-            ))
-          : this.state.sessions
-              .filter(object => {
-                return object.SessionCode === this.state.session;
-              })
-              .map(({ SessionDescription: description, SessionCode: code }) => (
-                <MenuItem label={description} value={code} key={code}>
-                  {description}
-                </MenuItem>
-              ));
+    // Creates All Involvements
+    let allInvolvements = <GordonLoader />; // Defaulted to the Gordon loader until user data is fetched
 
-      const typeOptions = this.state.types.map(type => (
-        <MenuItem value={type} key={type}>
-          {type}
+    // Creates the involvements grids if the user's info was retrieved
+    if (!this.state.loading) {
+      myInvolvements = (
+        <GordonActivityGrid
+          myInvolvements={this.state.myInvolvements}
+          sessionCode={this.state.session}
+          noInvolvementsText={myInvolvementsNoneText}
+        />
+      );
+      allInvolvements = (
+        <GordonActivityGrid activities={this.state.activities} sessionCode={this.state.session} />
+      );
+    }
+
+    // Creates the sessions list
+    const sessionOptions = this.state.sessions.map(
+      ({ SessionDescription: description, SessionCode: code }) => (
+        <MenuItem label={description} value={code} key={code}>
+          {description}
         </MenuItem>
-      ));
+      ),
+    );
 
-      const headerStyle = {
-        backgroundColor: gordonColors.primary.blue,
-        color: '#FFF',
-        padding: '10px',
-      };
+    // Creates the session types list
+    const typeOptions = this.state.types.map(type => (
+      <MenuItem value={type} key={type}>
+        {type}
+      </MenuItem>
+    ));
 
-      content = (
-        <section className="activities-all">
-          <Grid container justify="center" spacing={0}>
-            <Grid item xs={12} md={12} lg={8}>
-              <Grid container className="activities-filter" spacing={2}>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    id="search"
-                    label="Search"
-                    value={this.state.search}
-                    onChange={this.filter('search')}
-                    margin="none"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <FormControl fullWidth>
-                    <InputLabel htmlFor="activity-session">Session</InputLabel>
-                    <Select
-                      value={this.state.session}
-                      onChange={this.changeSession}
-                      input={<Input id="activity-session" />}
-                      disabled={this.state.network === 'online' ? false : true}
-                    >
-                      {sessionOptions}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <FormControl fullWidth>
-                    <InputLabel htmlFor="activity-type">Type of Involvement</InputLabel>
-                    <Select
-                      value={this.state.type}
-                      onChange={this.filter('type')}
-                      input={<Input id="activity-type" />}
-                    >
-                      <MenuItem label="All" value="">
-                        <em>All</em>
-                      </MenuItem>
-                      {typeOptions}
-                    </Select>
-                  </FormControl>
-                </Grid>
+    let fullContent = (
+      <section className="activities-all">
+        <Grid container justify="center" spacing={0}>
+          <Grid item xs={12} md={12} lg={8}>
+            <Grid container className="activities-filter" spacing={2}>
+              <Grid item xs={12} md={12} lg={6}>
+                <TextField
+                  id="search"
+                  label="Search"
+                  value={this.state.search}
+                  onChange={this.filter('search')}
+                  margin="none"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} md={6} lg={3}>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="activity-session">Session</InputLabel>
+                  <Select
+                    value={this.state.session}
+                    onChange={this.changeSession}
+                    input={<Input id="activity-session" />}
+                  >
+                    {sessionOptions}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6} lg={3}>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="activity-type">Type of Involvement</InputLabel>
+                  <Select
+                    value={this.state.type}
+                    onChange={this.filter('type')}
+                    input={<Input id="activity-type" />}
+                  >
+                    <MenuItem label="All" value="">
+                      <em>All</em>
+                    </MenuItem>
+                    {typeOptions}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </Grid>
+        </Grid>
 
-          <Grid container align="center" spacing={4} justify="center">
+        <Grid container align="center" spacing={4} justify="center">
+          {/* Shows My Involvements Header if the user is authenticated */}
+          {this.props.Authentication && (
             <Grid item xs={12} lg={8} fullWidth>
               <Card>
                 <div style={headerStyle}>
                   <Typography variant="body2" style={headerStyle}>
-                    MY {involvementsHeading} INVOLVEMENTS
+                    MY {myInvolvementsHeaderText} INVOLVEMENTS
                   </Typography>
                 </div>
               </Card>
             </Grid>
+          )}
 
+          {/* Shows My Involvements Content if the user is authenticated */}
+          {this.props.Authentication && (
             <Grid item xs={12} lg={8}>
               {myInvolvements}
             </Grid>
+          )}
 
-            <Grid item xs={12} lg={8}>
-              <Card>
-                <div style={headerStyle}>
-                  <Typography variant="body2" style={headerStyle}>
-                    ALL INVOLVEMENTS
-                  </Typography>
-                </div>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} lg={8}>
-              {allInvolvements}
-            </Grid>
-          </Grid>
-        </section>
-      );
-    } else {
-      if (this.state.loading === true) {
-        allInvolvements = <GordonLoader />;
-      } else {
-        allInvolvements = (
-          <GordonActivityGrid activities={this.state.activities} sessionCode={this.state.session} />
-        );
-      }
-
-      const sessionOptions = this.state.sessions.map(
-        ({ SessionDescription: description, SessionCode: code }) => (
-          <MenuItem label={description} value={code} key={code}>
-            {description}
-          </MenuItem>
-        ),
-      );
-
-      const typeOptions = this.state.types.map(type => (
-        <MenuItem value={type} key={type}>
-          {type}
-        </MenuItem>
-      ));
-
-      const headerStyle = {
-        backgroundColor: gordonColors.primary.blue,
-        color: '#FFF',
-        padding: '10px',
-      };
-
-      content = (
-        <section className="activities-all">
-          <Grid container justify="center" spacing={16}>
-            <Grid item xs={12} md={12} lg={8}>
-              <Grid container className="activities-filter" spacing={16}>
-                <Grid item xs={12} md={12} lg={6}>
-                  <TextField
-                    id="search"
-                    label="Search"
-                    value={this.state.search}
-                    onChange={this.filter('search')}
-                    margin="none"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <FormControl fullWidth>
-                    <InputLabel htmlFor="activity-session">Session</InputLabel>
-                    <Select
-                      value={this.state.session}
-                      onChange={this.changeSession}
-                      input={<Input id="activity-session" />}
-                    >
-                      {sessionOptions}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <FormControl fullWidth>
-                    <InputLabel htmlFor="activity-type">Type of Involvement</InputLabel>
-                    <Select
-                      value={this.state.type}
-                      onChange={this.filter('type')}
-                      input={<Input id="activity-type" />}
-                    >
-                      <MenuItem label="All" value="">
-                        <em>All</em>
-                      </MenuItem>
-                      {typeOptions}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </Grid>
+          <Grid item xs={12} lg={8}>
+            <Card>
+              <div style={headerStyle}>
+                <Typography variant="body2" style={headerStyle}>
+                  ALL INVOLVEMENTS
+                </Typography>
+              </div>
+            </Card>
           </Grid>
 
-          <Grid container align="center" spacing={32} justify="center">
-            <Grid item xs={12} lg={8}>
-              <Card>
-                <div style={headerStyle}>
-                  <Typography variant="body2" style={headerStyle}>
-                    ALL ACTIVITIES
-                  </Typography>
-                </div>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12} lg={8}>
-              {allInvolvements}
-            </Grid>
+          <Grid item xs={12} lg={8}>
+            {allInvolvements}
           </Grid>
-        </section>
-      );
-    }
+        </Grid>
+      </section>
+    );
 
-    return <div>{content}</div>;
+    return <div>{fullContent}</div>;
   }
 }
