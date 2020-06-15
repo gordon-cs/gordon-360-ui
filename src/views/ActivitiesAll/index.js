@@ -205,44 +205,49 @@ export default class GordonActivitiesAll extends Component {
     this.setState({ network });
   }
 
+  /**
+   * Gets the information of the new selected session to display to the user.
+   *
+   * @param {Event} event The event of a session being changed. It contains the value of the new
+   *                      selected session.
+   */
   async changeSession(event) {
-    await this.setState({ session: event.target.value, loading: true });
-    if (this.props.Authentication) {
+    this.setState({ session: event.target.value, loading: true }, async () => {
+      // Saves the selected session in React's history to allow the browser to navigate through past
+      // selected sessions in its history through the Back button
       this.props.history.push(`?${this.state.session}`);
-      const allActivities = await activity.getAll(this.state.session);
-      const myInvolvements = await user.getSessionMembershipsWithoutGuests(
-        this.state.profile.ID,
-        this.state.session,
-      );
-      const { type, search } = this.state;
-      await this.setState({
-        activities: activity.filter(allActivities, type, search),
-        allActivities,
-        myInvolvements,
-        loading: false,
-      });
-    } else {
-      this.props.history.push(`?${this.state.session}`);
+
       const allActivities = await activity.getAll(this.state.session);
       const { type, search } = this.state;
-      await this.setState({
+      this.setState({
         activities: activity.filter(allActivities, type, search),
         allActivities,
+        // If authenticated, gets the user's involvements for the selected session
+        myInvolvements: this.props.Authentication
+          ? await user.getSessionMembershipsWithoutGuests(this.state.profile.ID, this.state.session)
+          : [],
         loading: false,
       });
-    }
+    });
   }
 
+  /**
+   * Filters the activities list by the current/selected Activity-Type and the user search.
+   *
+   * @param {String} name The type of event that occured. Either a 'Search' or 'Type'. A 'Search' is
+   *                      a user search and a 'Type' is a selected Activity-Type
+   * @returns {Function} An asynchronous function that filters the activities based upon an event's data
+   */
   filter(name) {
-    return async event => {
-      await this.setState({ [name]: event.target.value });
+    return event => {
+      this.setState({ [name]: event.target.value });
       const { allActivities, type, search } = this.state;
-      await this.setState({ activities: activity.filter(allActivities, type, search) });
+      this.setState({ activities: activity.filter(allActivities, type, search) });
     };
   }
 
   /**
-   * Creates the My Involvements text for both the header and if the user has no involvements
+   * Creates the My Involvements text for both the header and if the user has no involvements.
    *
    * @param {String} myInvolvementsHeadingText The My Involvements current session description
    * @param {String} myInvolvementsNoneText The My Involvements text if user has no involvements
@@ -281,8 +286,6 @@ export default class GordonActivitiesAll extends Component {
       padding: '10px',
     };
 
-    // The user's involvements are defaulted to the Gordon loader until their data is fetched
-
     // Creates My Involvements
     let myInvolvements = <GordonLoader />; // Defaulted to the Gordon loader until user data is fetched
     let myInvolvementsText = this.createMyInvolvementsText();
@@ -315,7 +318,7 @@ export default class GordonActivitiesAll extends Component {
       ),
     );
 
-    // Creates the session types list
+    // Creates the current session's types list
     const typeOptions = this.state.types.map(type => (
       <MenuItem value={type} key={type}>
         {type}
