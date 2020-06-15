@@ -497,7 +497,7 @@ class MyProfile extends Component {
                     justify="flex-start"
                     spacing={2}
                   >
-                    <Grid item xs={12} md={profileCardSize} lg={profileCardSize}>
+                    <Grid item xs={12} md={profileCardSize} lg={8}>
                       <Card>
                         <CardContent>
                           <Grid

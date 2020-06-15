@@ -8,6 +8,7 @@ import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import WorkIcon from '@material-ui/icons/Work';
+import WellnessIcon from '@material-ui/icons/LocalHospital';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
@@ -325,6 +326,50 @@ export default class GordonHeader extends Component {
     return timesheetsTab;
   }
 
+  /**
+   * FOR JOHN, HERE'S THE CODE FOR THE WELLNESS CHECK TABS.
+   * YOU CAN FOLLOW THE SAME FORMAT WITH THE OTHER TABS BY CREATING A FUNCTION.
+   * ASK JAHNUEL FOR HELP IF YOU'RE CONFUSED.
+   *
+   *
+    // Authenticated and Network Status is Online
+    wellnessButton = (
+      <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
+        <ListItem button>
+          <ListItemIcon>
+            <WellnessIcon />
+          </ListItemIcon>
+          <ListItemText primary="Wellness" />
+        </ListItem>
+      </NavLink>
+    );
+   *
+   *
+   *
+    // Authenticated and Network Status is Offline
+    wellnessButton = (
+      <div onClick={this.openDialogBox}>
+        <ListItem button disabled={networkStatus}>
+          <ListItemIcon>
+            <WellnessIcon />
+          </ListItemIcon>
+          <ListItemText primary="Wellness" />
+        </ListItem>
+      </div>
+    );
+   *
+   *
+   *
+    // Wellness Check Tab
+    <Tab
+      className="tab"
+      icon={<WellnessIcon />}
+      label="Wellness"
+      component={NavLink}
+      to="/wellness"
+    />
+   */
+
   render() {
     return (
       <section className="gordon-header">
@@ -371,7 +416,7 @@ export default class GordonHeader extends Component {
                 />
                 {this.createPeopleTab()}
                 {/* Uncomment when re-enabling timesheets link */}
-                {this.createTimesheetsTab()}
+                {/* {this.createTimesheetsTab()} */}
               </Tabs>
             </div>
 
