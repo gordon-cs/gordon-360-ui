@@ -9,6 +9,7 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import user from '../../../../services/user';
 import WorkIcon from '@material-ui/icons/Work';
+import WellnessIcon from '@material-ui/icons/LocalHospital';
 
 /**
  * Creates the Links button.
@@ -416,6 +417,40 @@ export function createTimesheetsButton(networkStatus, authenticated, onLinkClick
       </NavLink>
     );
   }
+
+  /**
+   * FOR JOHN, HERE'S THE CODE FOR THE WELLNESS CHECK TABS.
+   * YOU CAN FOLLOW THE SAME FORMAT WITH THE OTHER TABS BY CREATING A FUNCTION THAT CHECKS TO SEE
+   * IF THE USER IS AUTHENTICATED AND ONLINE/OFFLINE. ASK JAHNUEL FOR HELP IF YOU'RE CONFUSED ON HOW
+   * THIS WORKS.
+   *
+   *
+    // Authenticated and Network Status is Online
+    wellnessButton = (
+      <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
+        <ListItem button>
+          <ListItemIcon>
+            <WellnessIcon />
+          </ListItemIcon>
+          <ListItemText primary="Wellness" />
+        </ListItem>
+      </NavLink>
+    );
+   *
+   *
+   *
+    // Authenticated and Network Status is Offline
+    wellnessButton = (
+      <div onClick={this.openDialogBox}>
+        <ListItem button disabled={networkStatus}>
+          <ListItemIcon>
+            <WellnessIcon />
+          </ListItemIcon>
+          <ListItemText primary="Wellness" />
+        </ListItem>
+      </div>
+    );
+   */
 
   return timesheetsButton;
 }
