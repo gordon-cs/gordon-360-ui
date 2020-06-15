@@ -326,7 +326,7 @@ export default class StudentNews extends Component {
               >
                 <h1>You are not logged in.</h1>
                 <br />
-                <h4>You must be logged in to view use People Search.</h4>
+                <h4>You must be logged in to view use Student News.</h4>
                 <br />
                 <Button
                   color="primary"
