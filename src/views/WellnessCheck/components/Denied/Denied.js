@@ -3,30 +3,29 @@ import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import GordonLoader from '../../../../components/Loader';
 
 import ClearIcon from '@material-ui/icons/Clear';
-import "./Denied.css"
+import './Denied.css';
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-
-        network: 'online',
-        time: new Date().toLocaleString([], {hour: '2-digit', minute: '2-digit'}),
-        width: 0
-      };
-      this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-      this.resizeIcon = this.resizeIcon.bind(this);
+      network: 'online',
+      time: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit' }),
+      width: 0,
+    };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.resizeIcon = this.resizeIcon.bind(this);
   }
 
   componentDidMount() {
-    this.intervalID = setInterval(
-      () => this.tick(), 1000
-    );
+    this.intervalID = setInterval(() => this.tick(), 1000);
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
+    this.loadQuestion();
   }
 
   componentWillMount() {
@@ -62,9 +61,17 @@ export default class Home extends Component {
   }
 
   resizeIcon() {
-    return(this.state.width * 0.03 + 50)
+    return this.state.width * 0.03 + 50;
   }
-
+  async loadQuestion() {
+    this.setState({ loading: true });
+    try {
+      this.tick();
+      this.setState({ loading: false });
+    } catch (error) {
+      this.setState({ error });
+    }
+  }
   render() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
@@ -91,25 +98,27 @@ export default class Home extends Component {
     });
 
     let content;
-        content = (
-                 <Grid spacing={2}>
-                    <Card>
-                         <CardHeader title="Denied"/>
-                         <CardContent className = "denied-box">
-                             <div className = "denied-time">
-                               {this.state.time}
-                             </div>
-                             <div className = "circle-cross">
-                             <ClearIcon style={{fontSize: this.resizeIcon()}}/>
-                             </div>
-                             <CardHeader className="denied-time"
-                              title="Please notify the health center: (978)867-4300"
-                              />
-                         </CardContent>
-                    </Card>
-                 </Grid>
-
-        );
-    return content;
+    if (this.state.loading) {
+      content = <GordonLoader />;
+    } else {
+      content = (
+        <Grid spacing={2}>
+          <Card>
+            <CardHeader title="Denied" />
+            <CardContent className="denied-box">
+              <div className="denied-time">{this.state.time}</div>
+              <div className="circle-cross">
+                <ClearIcon style={{ fontSize: this.resizeIcon() }} />
+              </div>
+              <CardHeader
+                className="denied-time"
+                title="Please notify the health center: (978)867-4300"
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+      );
+      return content;
+    }
   }
 }

@@ -4,27 +4,28 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CheckIcon from '@material-ui/icons/Check';
-import './Approved.css'
+import GordonLoader from '../../../../components/Loader';
+import './Approved.css';
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-        network: 'online',
-        time: new Date().toLocaleString([], {hour: '2-digit', minute: '2-digit'}),
-        width: 0
-     };
-     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-     this.resizeIcon = this.resizeIcon.bind(this);
+      network: 'online',
+      time: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit' }),
+      width: 0,
+      loading: true,
+    };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.resizeIcon = this.resizeIcon.bind(this);
   }
 
   componentDidMount() {
-    this.intervalID = setInterval(
-      () => this.tick(), 1000
-    );
+    this.intervalID = setInterval(() => this.tick(), 1000);
     this.updateWindowDimensions();
     window.addEventListener('resize', this.updateWindowDimensions);
+    this.loadQuestion();
   }
 
   componentWillMount() {
@@ -60,7 +61,17 @@ export default class Home extends Component {
   }
 
   resizeIcon() {
-    return(this.state.width * 0.03 + 69)
+    return this.state.width * 0.03 + 69;
+  }
+
+  async loadQuestion() {
+    this.setState({ loading: true });
+    try {
+      this.tick();
+      this.setState({ loading: false });
+    } catch (error) {
+      this.setState({ error });
+    }
   }
 
   render() {
@@ -89,22 +100,23 @@ export default class Home extends Component {
     });
 
     let content;
-        content = (
-                 <Grid spacing={2}>
-                    <Card>
-                         <CardHeader title="Approved"/>
-                         <CardContent className = "approved-box">
-                             <div className = "approved-time">
-                              {this.state.time}
-                             </div>
-                             <div className="circle-check">
-                             <CheckIcon style={{fontSize: this.resizeIcon()}}/>
-                             </div>
-                         </CardContent>
-                    </Card>
-                </Grid>
-
-        );
+    if (this.state.loading) {
+      content = <GordonLoader />;
+    } else {
+      content = (
+        <Grid spacing={2}>
+          <Card>
+            <CardHeader title="Approved" />
+            <CardContent className="approved-box">
+              <div className="approved-time">{this.state.time}</div>
+              <div className="circle-check">
+                <CheckIcon style={{ fontSize: this.resizeIcon() }} />
+              </div>
+            </CardContent>
+          </Card>
+        </Grid>
+      );
+    }
     return content;
   }
 }
