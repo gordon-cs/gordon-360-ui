@@ -28,33 +28,26 @@ export default class WellnessCheck extends Component {
   }
 
   async componentDidMount() {
-    await this.getUserData();
+    try {
+      await this.getUserData();
+      await this.getStatus();
+    } catch (error) {
+      // Do nothing
+    }
     user.getImage().then(data => {
-      this.setState({ image: data });
+      this.setState({ image: data, loading: false });
     });
-    await this.getStatus();
   }
 
   componentWillMount() {
     if (this.props.Authentication) {
       this.getPersonType();
-      this.loadFunction();
     }
   }
 
   componentWillReceiveProps(newProps) {
     if (this.props.Authentication !== newProps.Authentication) {
       this.getPersonType();
-    }
-  }
-
-  async loadFunction() {
-    this.setState({ loading: true });
-    try {
-      this.setUserImage();
-      this.setState({ loading: false });
-    } catch (error) {
-      this.setState({ error });
     }
   }
 

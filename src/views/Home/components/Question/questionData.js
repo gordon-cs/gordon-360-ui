@@ -46,9 +46,7 @@ export async function getQuestions() {
       'Chills',
     ],
     no: {
-      question:
-        'By submitting I, ${user.FirstName} ${user.LastName}, hereby certify that the above statements are true and correct to the best of my knowledge.',
-      option: `I, ${user.FirstName} ${user.LastName}, hereby certify that the above statements are true and correct to the best of my knowledge.`,
+      question: `By submitting I, ${user.FirstName} ${user.LastName}, hereby certify that the above statements are true and correct to the best of my knowledge.`,
     },
     yes: {
       question: [
@@ -56,9 +54,6 @@ export async function getQuestions() {
         ' CDC Self-Checker ',
         'to check your symptoms. Confirm below:',
       ],
-      optionOne: 'I used the CDC "Self Checker" and have contacted the health center',
-      optionTwo:
-        'The "Self Checker" website was not working, but I have notified the health center',
     },
     //phone: user.MobilePhone,
     //email: user.Email,

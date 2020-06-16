@@ -138,37 +138,6 @@ export default class Question extends Component {
                   </a>
                   {this.state.questions.qOne.yes.question[2]}
                 </FormLabel>
-                <br />
-                <RadioGroup>
-                  <FormControlLabel
-                    checked={
-                      this.state.qTwoAnswer !== null &&
-                      this.state.qTwoAnswer === this.state.questions.qOne.yes.optionOne
-                        ? true
-                        : false
-                    }
-                    value="optionOne"
-                    control={<Radio />}
-                    label={this.state.questions.qOne.yes.optionOne}
-                    onChange={() => {
-                      this.setState({ qTwoAnswer: this.state.questions.qOne.yes.optionOne });
-                    }}
-                  />
-                  <FormControlLabel
-                    checked={
-                      this.state.qTwoAnswer !== null &&
-                      this.state.qTwoAnswer === this.state.questions.qOne.yes.optionTwo
-                        ? true
-                        : false
-                    }
-                    value="optionTwo"
-                    control={<Radio />}
-                    label={this.state.questions.qOne.yes.optionTwo}
-                    onChange={() => {
-                      this.setState({ qTwoAnswer: this.state.questions.qOne.yes.optionTwo });
-                    }}
-                  />
-                </RadioGroup>
               </FormControl>
             </div>
           </CardContent>
@@ -179,19 +148,6 @@ export default class Question extends Component {
             <div style={questionStyle}>
               <FormControl>
                 <FormLabel>{this.state.questions.qOne.no.question}</FormLabel>
-                <br />
-                <RadioGroup>
-                  <FormControlLabel
-                    value="optionOne"
-                    control={<Checkbox />}
-                    label={this.state.questions.qOne.no.option}
-                    onChange={event => {
-                      event.target.checked
-                        ? this.setState({ qTwoAnswer: this.state.questions.qOne.no.option })
-                        : this.setState({ qTwoAnswer: null });
-                    }}
-                  />
-                </RadioGroup>
               </FormControl>
             </div>
           </CardContent>
