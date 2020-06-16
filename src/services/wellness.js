@@ -21,6 +21,17 @@ const getStatus = async () => {
   return await http.get(`wellness`);
 };
 
+/**
+ * add answer to the wellness question to the back end
+ * @param {Object} data Data passed in
+ * @return {Promise<any>} Response
+ */
+function postAnswer(data) {
+  return http.post('wellness', data).catch(reason => {
+    console.log(reason);
+  });
+}
+
 export default {
-  getStatus,
+  getStatus, postAnswer,
 };

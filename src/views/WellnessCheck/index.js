@@ -27,10 +27,10 @@ export default class WellnessCheck extends Component {
 
   async componentDidMount() {
     await this.getUserData();
-    await this.getStatus();
     user.getImage().then(data => {
       this.setState({ image: data });
     });
+    await this.getStatus();
   }
 
   componentWillMount() {
@@ -164,9 +164,9 @@ export default class WellnessCheck extends Component {
       }
 
       content = (
-        <Grid container justify="center" spacing={2}>
+        <Grid container justify="center" spacing={0}>
           <Grid item xs={12} md={8}>
-            <Card className="card">
+            <Card>
               <CardContent>
                 <CardHeader
                   title={`${this.state.currentUser ? this.state.currentUser.FirstName : ''} ${

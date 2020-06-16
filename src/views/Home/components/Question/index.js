@@ -15,6 +15,7 @@ import { Button } from '@material-ui/core';
 import { gordonColors } from '../../../../theme';
 import './index.scss';
 import { Checkbox } from '@material-ui/core';
+import wellness from '../../../../services/wellness.js';
 
 export default class Question extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class Question extends Component {
       qOneAnswer: null,
       qTwoAnswer: null,
       qThreeAnswer: null,
-      currentStatus: '',
+      currentStatus: null,
       questions: null,
     };
   }
@@ -58,10 +59,11 @@ export default class Question extends Component {
     }
   }
 
-  submitHandler = e => {
+  async submitHandler(e) {
     this.setState({ answered: true });
     this.setState({ currentStatus: this.state.selected });
     this.props.call(true, this.state.currentStatus);
+    await wellness.postAnswer(this.state.currentStatus);
     e.preventDefault();
     //console.log(this.state.currentStatus);
   };
@@ -135,7 +137,7 @@ export default class Question extends Component {
                   control={<Radio />}
                   label="Yes"
                   onChange={() => {
-                    this.setState({ qTwoAnswer: 'Yes' });
+                    this.setState({ qTwoAnswer: 'Yes', currentStatus: true });//if current status = true then student is symptomatic
                   }}
                 />
                 <FormControlLabel
@@ -143,7 +145,7 @@ export default class Question extends Component {
                   control={<Radio />}
                   label="No"
                   onChange={() => {
-                    this.setState({ qTwoAnswer: 'No' });
+                    this.setState({ qTwoAnswer: 'No', currentStatus: false });//if current status = false then student is not symptomatic
                   }}
                 />
               </RadioGroup>
