@@ -188,6 +188,8 @@ export default class GordonHeader extends Component {
       reason = 'use People Search';
     } else if (feature === 'timesheets view') {
       reason = 'view Timesheets';
+    } else if (feature === 'wellness check') {
+      reason = 'check Wellness';
     } else {
       reason = '';
     }
@@ -327,49 +329,62 @@ export default class GordonHeader extends Component {
   }
 
   /**
-   * FOR JOHN, HERE'S THE CODE FOR THE WELLNESS CHECK TABS.
-   * YOU CAN FOLLOW THE SAME FORMAT WITH THE OTHER TABS BY CREATING A FUNCTION.
-   * ASK JAHNUEL FOR HELP IF YOU'RE CONFUSED.
-   *
-   *
-    // Authenticated and Network Status is Online
-    wellnessButton = (
-      <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
-        <ListItem button>
-          <ListItemIcon>
-            <WellnessIcon />
-          </ListItemIcon>
-          <ListItemText primary="Wellness" />
-        </ListItem>
-      </NavLink>
-    );
-   *
-   *
-   *
-    // Authenticated and Network Status is Offline
-    wellnessButton = (
-      <div onClick={this.openDialogBox}>
-        <ListItem button disabled={networkStatus}>
-          <ListItemIcon>
-            <WellnessIcon />
-          </ListItemIcon>
-          <ListItemText primary="Wellness" />
-        </ListItem>
-      </div>
-    );
-   *
-   *
-   *
-    // Wellness Check Tab
-    <Tab
-      className="tab"
-      icon={<WellnessIcon />}
-      label="Wellness"
-      component={NavLink}
-      to="/wellness"
-    />
+   * THE CODE FOR THE WELLNESS CHECK TABS.
    */
+  createWellnessTab(){
+    let wellnessTab;
+    // Network Status: Online
+    if (this.state.network === 'online') {
+      // Network Status: Online - Authenticated
+      if (this.props.Authentication) {
+        wellnessTab = (
+          <Tab
+            className="tab"
+            icon={<WellnessIcon />}
+            label="Wellness"
+            component={NavLink}
+            to="/wellness"
+          />
+        );
+      }
+      // Network Status: Online -  Not Authenticated
+      else {
+        wellnessTab = (
+          <div onClick={clicked => this.openDialogBox('unauthorized', 'wellness check')}>
+            <Tab
+              className="tab"
+              icon={<WellnessIcon />}
+              label="Wellness"
+              component={Button}
+              style={{ color: 'white' }}
+              disabled={true}
+            />
+          </div>
+        );
+      }
+    }
+    // Network Status: Offline
+    else {
+      wellnessTab = (
+        <div
+          onClick={clicked => {
+            this.openDialogBox('offline', '');
+          }}
+        >
+          <Tab
+            className="tab"
+            icon={<WellnessIcon />}
+            label="Wellness"
+            component={Button}
+            style={{ color: 'white' }}
+            disabled={true}
+          />
+        </div>
+      );
+    }
 
+    return wellnessTab;
+  }
   render() {
     return (
       <section className="gordon-header">
@@ -416,7 +431,8 @@ export default class GordonHeader extends Component {
                 />
                 {this.createPeopleTab()}
                 {/* Uncomment when re-enabling timesheets link */}
-                {/* {this.createTimesheetsTab()} */}
+                {/* this.createTimesheetsTab() */}
+                {this.createWellnessTab()}
               </Tabs>
             </div>
 
