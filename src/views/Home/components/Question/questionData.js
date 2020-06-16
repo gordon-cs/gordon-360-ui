@@ -34,14 +34,6 @@ export async function getQuestions() {
 
   // Question 1
   qOne = {
-    question:
-      'What is the best way to reach you? (if you have another preference please contact CTS)',
-    phone: user.MobilePhone,
-    email: user.Email,
-  };
-
-  // Question 2
-  qTwo = {
     question: 'Are you currently sick or have symptoms that could be related to COVID-19 such as:',
     symptoms: [
       'Temperature higher than 100.4',
@@ -54,7 +46,8 @@ export async function getQuestions() {
       'Chills',
     ],
     no: {
-      question: 'Based on your responses, you are cleared to come to Gordon College today.',
+      question:
+        'By submitting I, ${user.FirstName} ${user.LastName}, hereby certify that the above statements are true and correct to the best of my knowledge.',
       option: `I, ${user.FirstName} ${user.LastName}, hereby certify that the above statements are true and correct to the best of my knowledge.`,
     },
     yes: {
@@ -67,6 +60,8 @@ export async function getQuestions() {
       optionTwo:
         'The "Self Checker" website was not working, but I have notified the health center',
     },
+    //phone: user.MobilePhone,
+    //email: user.Email,
   };
 
   let questions = {
