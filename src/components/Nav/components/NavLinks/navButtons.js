@@ -418,17 +418,58 @@ export function createTimesheetsButton(networkStatus, authenticated, onLinkClick
     );
   }
 
-  /**
-   * FOR JOHN, HERE'S THE CODE FOR THE WELLNESS CHECK TABS.
-   * YOU CAN FOLLOW THE SAME FORMAT WITH THE OTHER TABS BY CREATING A FUNCTION THAT CHECKS TO SEE
-   * IF THE USER IS AUTHENTICATED AND ONLINE/OFFLINE. ASK JAHNUEL FOR HELP IF YOU'RE CONFUSED ON HOW
-   * THIS WORKS.
+  return timesheetsButton;
+}
+ /**
+   * THE CODE FOR THE WELLNESS CHECK TABS.
    *
-   *
-    // Authenticated and Network Status is Online
+   */
+export function createWellnessButton(networkStatus, authenticated, onLinkClick, openDialogBox) {
+  let wellnessButton;
+  // Network Status: Online
+  if (networkStatus === 'online') {
+  // Network Status: Online - Authenticated
+    if (authenticated) {      
+      wellnessButton = (
+        <NavLink className="gc360-link" exact to="/Wellness" onClick={onLinkClick} >
+          <ListItem button>
+            <ListItemIcon>
+              <WellnessIcon />
+            </ListItemIcon>
+            <ListItemText primary="Wellness" />
+          </ListItem>
+        </NavLink>
+      );
+    }
+    // Network Status: Online - Not Authenticated
+    else{
+      wellnessButton = (
+        <NavLink
+          className="gc360-link"
+          onClick={() => {
+            openDialogBox('unauthorized', 'wellness check');
+          }}
+        >
+          <ListItem button disabled={true}>
+            <ListItemIcon>
+              <WellnessIcon />
+            </ListItemIcon>
+            <ListItemText primary="Wellness" />
+          </ListItem>
+        </NavLink>
+      );
+    }
+  } 
+  // Network Status: Offline
+  else {
     wellnessButton = (
-      <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
-        <ListItem button>
+      <NavLink
+        className="gc360-link"
+        onClick={() => {
+          openDialogBox('offline', '');
+        }}
+      >
+        <ListItem button disabled={true}>
           <ListItemIcon>
             <WellnessIcon />
           </ListItemIcon>
@@ -436,21 +477,7 @@ export function createTimesheetsButton(networkStatus, authenticated, onLinkClick
         </ListItem>
       </NavLink>
     );
-   *
-   *
-   *
-    // Authenticated and Network Status is Offline
-    wellnessButton = (
-      <div onClick={this.openDialogBox}>
-        <ListItem button disabled={networkStatus}>
-          <ListItemIcon>
-            <WellnessIcon />
-          </ListItemIcon>
-          <ListItemText primary="Wellness" />
-        </ListItem>
-      </div>
-    );
-   */
-
-  return timesheetsButton;
+  }
+      
+  return wellnessButton;
 }

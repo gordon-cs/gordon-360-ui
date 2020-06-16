@@ -18,6 +18,7 @@ import {
   createHelpButton,
   createAboutButton,
   createTimesheetsButton,
+  createWellnessButton,
 } from './navButtons.js';
 import './nav-links.css';
 
@@ -170,6 +171,8 @@ export default class GordonNavLinks extends Component {
       reason = 'use People Search';
     } else if (feature === 'timesheets view') {
       reason = 'view Timesheets';
+    } else if (feature === 'wellness check') {
+      reason = 'check Wellness';
     } else {
       reason = '';
     }
@@ -206,6 +209,13 @@ export default class GordonNavLinks extends Component {
 
     // Timesheets Button
     let timesheetsButton = createTimesheetsButton(
+      this.state.network,
+      this.props.Authentication,
+      this.props.onLinkClick,
+      this.openDialogBox,
+    );
+    // Wellness Button
+    let wellnessButton = createWellnessButton(
       this.state.network,
       this.props.Authentication,
       this.props.onLinkClick,
@@ -255,6 +265,7 @@ export default class GordonNavLinks extends Component {
           {eventsButton}
           {peopleButton}
           {timesheetsButton}
+          {wellnessButton}
         </List>
 
         <Divider />
