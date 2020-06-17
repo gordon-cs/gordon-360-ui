@@ -14,7 +14,6 @@ import Divider from '@material-ui/core/Divider';
 import { Button } from '@material-ui/core';
 import { gordonColors } from '../../../../theme';
 import './index.scss';
-import { Checkbox } from '@material-ui/core';
 
 export default class Question extends Component {
   constructor(props) {
@@ -133,7 +132,10 @@ export default class Question extends Component {
               <FormControl>
                 <FormLabel>
                   {this.state.questions.qOne.yes.question[0]}
-                  <a href=" https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html#cdc-chat-bot-open">
+                  <a
+                    href=" https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html#cdc-chat-bot-open"
+                    target="_blank"
+                  >
                     {this.state.questions.qOne.yes.question[1]}
                   </a>
                   {this.state.questions.qOne.yes.question[2]}

@@ -10,6 +10,7 @@ import Denied from './components/Denied/Denied';
 import wellness from '../../services/wellness';
 import GordonLoader from '../../components/Loader';
 import '../../app.css';
+import { gordonColors } from './../../theme';
 
 export default class WellnessCheck extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ export default class WellnessCheck extends Component {
     this.state = {
       personType: null,
       network: 'online',
-      currentStatus: 'I am not symptomatic',
+      currentStatus: 'I am symptomatic',
       currentUser: null,
       image: null,
       loading: true,
@@ -137,6 +138,14 @@ export default class WellnessCheck extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
+    // Styles the header
+    const headerStyle = {
+      backgroundColor: gordonColors.primary.blue,
+      color: '#FFF',
+      padding: '10px',
+      fontSize: 20,
+    };
+
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -182,6 +191,7 @@ export default class WellnessCheck extends Component {
                   <Card> {this.setUserImage()}</Card>
                   {status}
                 </CardContent>
+                <div style={headerStyle}>Questions? Health Center: (978)867-4300 </div>
               </Card>
             </Grid>
           </Grid>
