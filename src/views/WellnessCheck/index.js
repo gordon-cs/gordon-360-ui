@@ -21,7 +21,7 @@ export default class WellnessCheck extends Component {
     this.state = {
       personType: null,
       network: 'online',
-      currentStatus: 'I am symptomatic',
+      currentStatus: 'I am not symptomatic',
       currentUser: null,
       image: null,
       loading: true,
@@ -191,7 +191,7 @@ export default class WellnessCheck extends Component {
                   <Card> {this.setUserImage()}</Card>
                   {status}
                 </CardContent>
-                <div style={headerStyle}>Questions? Health Center: (978)867-4300 </div>
+                <div style={headerStyle}>Questions? Health Center: (978) 867-4300 </div>
               </Card>
             </Grid>
           </Grid>

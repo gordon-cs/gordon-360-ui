@@ -222,7 +222,7 @@ export default class Question extends Component {
           <Divider />
           {this.createQuestionTwo(questionStyle)}
           {this.showSubmitButton(buttonStyle)}
-          <div style={headerStyle}>Health Center: (978)867-4300 </div>
+          <div style={headerStyle}>Health Center: (978) 867-4300 </div>
         </Card>
       );
     }
