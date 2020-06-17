@@ -50,12 +50,12 @@ export async function getQuestions() {
       'Chills',
     ],
     no: {
-      question: `By submitting I, ${user.FirstName} ${user.LastName}, hereby certify that the above statements are true and correct to the best of my knowledge.`,
+      question: `By submitting I, ${user.FirstName} ${user.LastName}, hereby certify that the above response is true and correct to the best of my knowledge.`,
     },
     yes: {
       question: [
-        `By submitting I, ${user.FirstName} ${user.LastName}, understand that I should not leave my residence until I am contacted by the Health Center at ${phoneNumber}, and that I will use the
-        ` CDC Self-Checker `.
+        `By submitting I, ${user.FirstName} ${user.LastName}, understand that I should not leave my residence until I am contacted by the Health Center at ${phoneNumber}, and that I will use the`,
+        ` CDC Self-Checker.`,
       ],
     },
     //phone: user.MobilePhone,
