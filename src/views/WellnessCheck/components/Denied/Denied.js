@@ -79,8 +79,6 @@ export default class Home extends Component {
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
 
-    console.log(this.state.currentStatus);
-
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
