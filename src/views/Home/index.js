@@ -41,20 +41,22 @@ export default class Home extends Component {
     const answer = await wellness.getStatus();
     console.log("this is what i get back: " + answer[0].timestamp)
 
-    if (answer[0].answerValid === true) {
-      this.setState({ answered: true });
-      
-      if(answer[0].userAnswer === true){
-        this.setState({ currentStatus: 'I am symptomatic' });
-      }
-      else{
-        this.setState({ currentStatus: 'I am not symptomatic' });
-      }
+    if(answer.length > 0){
+        if (answer[0].answerValid === true) {
+          this.setState({ answered: true });
+          
+          if(answer[0].userAnswer === true){
+            this.setState({ currentStatus: 'I am symptomatic' });
+          }
+          else{
+            this.setState({ currentStatus: 'I am not symptomatic' });
+          }
+        }
+        if (answer[0].answerValid === false) {
+          this.setState({ answered: false });
+          this.setState({ currentStatus: 'I am symptomatic' });
+        }
     }
-    if (answer[0].answerValid === false) {
-      this.setState({ answered: false });
-      this.setState({ currentStatus: 'I am symptomatic' });
-   }
   }
 
   async getPersonType() {

@@ -55,11 +55,16 @@ export default class WellnessCheck extends Component {
 
   async getStatus() {
     const answer = await wellness.getStatus();
-    if (answer[0].userAnswer === true) {
-      this.setState({ currentStatus: 'I am symptomatic' });
-    }
-    if (answer[0].userAnswer === false) {
-      this.setState({ currentStatus: 'I am not symptomatic' });
+
+    if(answer.length > 0){
+        if (answer[0].userAnswer === true) {
+          this.setState({ currentStatus: 'I am symptomatic' });
+        }
+        if (answer[0].userAnswer === false) {
+          this.setState({ currentStatus: 'I am not symptomatic' });
+        }
+    } else{
+       this.setState({ currentStatus: 'I am not symptomatic' });
     }
   }
 
