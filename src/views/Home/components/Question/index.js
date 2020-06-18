@@ -77,29 +77,39 @@ export default class Question extends Component {
   createQuestionOne(questionStyle) {
     // Checks to make sure the questions are imported before attempting to access its data
     if (this.state.questions !== null) {
-      let num = this.state.questions.qOne.phone;
-      let phoneNumber = `(${num.substring(0, 3)}) ${num.substring(3, 6)}-${num.substring(6)}`;
+      //let num = this.state.questions.qOne.phone;
+      //let phoneNumber = `(${num.substring(0, 3)}) ${num.substring(3, 6)}-${num.substring(6)}`;
+      let symptomsJSX = this.state.questions.qOne.symptoms.map(item => {
+        return <FormLabel>- {item}</FormLabel>;
+      });
       return (
         <CardContent>
           <div style={questionStyle}>
             <FormControl>
               <FormLabel>{this.state.questions.qOne.question}</FormLabel>
+              <div style={{ height: '10px' }}></div>
+              {symptomsJSX}
               <br />
               <RadioGroup>
                 <FormControlLabel
-                  value="phone"
+                  //value="phone"
+                  value="No"
                   control={<Radio />}
-                  label={`Phone: ${phoneNumber}`}
+                  //label={`Phone: ${phoneNumber}`}
+                  label={'No'}
                   onChange={() => {
-                    this.setState({ qOneAnswer: 'Phone' });
+                    //this.setState({ qOneAnswer: 'Phone' });
+                    this.setState({ qOneAnswer: 'No' });
                   }}
                 />
                 <FormControlLabel
-                  value="email"
+                  //value="email"
+                  value="Yes"
                   control={<Radio />}
-                  label={`Email: ${this.state.questions.qOne.email}`}
+                  //label={`Email: ${this.state.questions.qOne.email}`}
+                  label={`Yes`}
                   onChange={() => {
-                    this.setState({ qOneAnswer: 'Email' });
+                    this.setState({ qOneAnswer: 'Yes' });
                   }}
                 />
               </RadioGroup>
@@ -117,129 +127,43 @@ export default class Question extends Component {
   // Creates the second question of the wellness check
   createQuestionTwo(questionStyle) {
     // Checks to make sure the questions are found in the state before
-    if (this.state.questions && this.state.qOneAnswer) {
-      // Goes through each symptom and creates JSX out of it
-      let symptomsJSX = this.state.questions.qTwo.symptoms.map(item => {
-        return <FormLabel>- {item}</FormLabel>;
-      });
-
-      return (
-        <CardContent>
-          <div style={questionStyle}>
-            <FormControl>
-              <FormLabel>{this.state.questions.qTwo.question}</FormLabel>
-              <div style={{ height: '10px' }}></div>
-              {symptomsJSX}
-              <br />
-              <RadioGroup>
-                <FormControlLabel
-                  value="answer_yes"
-                  control={<Radio />}
-                  label="Yes"
-                  onChange={() => {
-                    this.setState({ qTwoAnswer: 'Yes', currentStatus: true });//if current status = true then student is symptomatic
-                  }}
-                />
-                <FormControlLabel
-                  value="answer_no"
-                  control={<Radio />}
-                  label="No"
-                  onChange={() => {
-                    this.setState({ qTwoAnswer: 'No', currentStatus: false });//if current status = false then student is not symptomatic
-                  }}
-                />
-              </RadioGroup>
-            </FormControl>
-          </div>
-        </CardContent>
-      );
-    }
-  }
-
-  // Creates the third question of the wellness check
-  createQuestionThree(questionStyle) {
-    // Checks to make sure the questions are found in the state before
     if (this.state.questions !== null) {
-      if (this.state.qTwoAnswer === 'Yes') {
+      if (this.state.qOneAnswer === 'Yes') {
         return (
           <CardContent>
             <div style={questionStyle}>
               <FormControl>
                 <FormLabel>
-                  {this.state.questions.qTwo.yes.question[0]}
-                  <a href=" https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html#cdc-chat-bot-open">
-                    {this.state.questions.qTwo.yes.question[1]}
+                  {this.state.questions.qOne.yes.question[0]}
+                  <a
+                    href=" https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html#cdc-chat-bot-open"
+                    target="_blank"
+                  >
+                    {this.state.questions.qOne.yes.question[1]}
                   </a>
-                  {this.state.questions.qTwo.yes.question[2]}
+                  {this.state.questions.qOne.yes.question[2]}
                 </FormLabel>
-                <br />
-                <RadioGroup>
-                  <FormControlLabel
-                    checked={
-                      this.state.qThreeAnswer !== null &&
-                      this.state.qThreeAnswer === this.state.questions.qTwo.yes.optionOne
-                        ? true
-                        : false
-                    }
-                    value="optionOne"
-                    control={<Radio />}
-                    label={this.state.questions.qTwo.yes.optionOne}
-                    onChange={() => {
-                      this.setState({ qThreeAnswer: this.state.questions.qTwo.yes.optionOne });
-                    }}
-                  />
-                  <FormControlLabel
-                    checked={
-                      this.state.qThreeAnswer !== null &&
-                      this.state.qThreeAnswer === this.state.questions.qTwo.yes.optionTwo
-                        ? true
-                        : false
-                    }
-                    value="optionTwo"
-                    control={<Radio />}
-                    label={this.state.questions.qTwo.yes.optionTwo}
-                    onChange={() => {
-                      this.setState({ qThreeAnswer: this.state.questions.qTwo.yes.optionTwo });
-                    }}
-                  />
-                </RadioGroup>
               </FormControl>
             </div>
           </CardContent>
         );
-      } else if (this.state.qTwoAnswer === 'No') {
+      } else if (this.state.qOneAnswer === 'No') {
         return (
           <CardContent>
             <div style={questionStyle}>
               <FormControl>
-                <FormLabel>{this.state.questions.qTwo.no.question}</FormLabel>
-                <br />
-                <RadioGroup>
-                  <FormControlLabel
-                    value="optionOne"
-                    control={<Checkbox />}
-                    label={this.state.questions.qTwo.no.option}
-                    onChange={event => {
-                      event.target.checked
-                        ? this.setState({ qThreeAnswer: this.state.questions.qTwo.no.option })
-                        : this.setState({ qThreeAnswer: null });
-                    }}
-                  />
-                </RadioGroup>
+                <FormLabel>{this.state.questions.qOne.no.question}</FormLabel>
               </FormControl>
             </div>
           </CardContent>
         );
-      } else {
-        // Returns and empty div if the second question has not been answered yet
-        return <div></div>;
       }
     }
   }
 
   showSubmitButton(buttonStyle) {
     // Shows submit button
-    if (this.state.questions && this.state.qThreeAnswer) {
+    if (this.state.questions && this.state.qOneAnswer) {
       return (
         <div>
           <br />
@@ -300,28 +224,8 @@ export default class Question extends Component {
           {this.createQuestionOne(questionStyle)}
           <Divider />
           {this.createQuestionTwo(questionStyle)}
-          <Divider />
-          {this.createQuestionThree(questionStyle)}
           {this.showSubmitButton(buttonStyle)}
-          <div style={headerStyle}>Health Center: (978)867-4300 </div>
-
-          {/* <form onSubmit = {this.submitHandler}>
-          <div className="radio">
-              <label>
-                <input type="radio" value="I am not symptomatic" name="radio" onClick={this.handleChange}/>
-                I am not symptomatic
-              </label>
-          </div>
-          <div className="radio">
-              <label>
-                <input type="radio" value="I am symptomatic" name="radio" onClick={this.handleChange}/>
-                I am symptomatic
-              </label>
-          </div>
-          <div className="submit">
-                <input type="submit" name="radio"></input>
-          </div>
-        </form> */}
+          <div style={headerStyle}>Health Center: (978) 867-4300 </div>
         </Card>
       );
     }

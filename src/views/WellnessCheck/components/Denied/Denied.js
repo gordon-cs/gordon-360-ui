@@ -61,7 +61,7 @@ export default class Home extends Component {
   }
 
   resizeIcon() {
-    return this.state.width * 0.03 + 50;
+    return this.state.width * 0.03 + 69;
   }
   async loadQuestion() {
     this.setState({ loading: true });
@@ -102,16 +102,14 @@ export default class Home extends Component {
       content = (
         <Grid spacing={2}>
           <Card>
-            <CardHeader title="Denied" />
+            {
+              // <CardHeader title="Denied" />
+            }
             <CardContent className="denied-box">
               <div className="denied-time">{this.state.time}</div>
               <div className="circle-cross">
                 <ClearIcon style={{ fontSize: this.resizeIcon() }} />
               </div>
-              <CardHeader
-                className="denied-time"
-                title="Please notify the health center: (978)867-4300"
-              />
             </CardContent>
           </Card>
         </Grid>

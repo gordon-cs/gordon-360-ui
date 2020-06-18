@@ -33,15 +33,11 @@ export async function getQuestions() {
   await getUserData();
 
   // Question 1
+  let phoneNumber = `(${user.MobilePhone.substring(0, 3)}) ${user.MobilePhone.substring(
+    3,
+    6,
+  )}-${user.MobilePhone.substring(6)}`;
   qOne = {
-    question:
-      'What is the best way to reach you? (if you have another preference please contact CTS)',
-    phone: user.MobilePhone,
-    email: user.Email,
-  };
-
-  // Question 2
-  qTwo = {
     question: 'Are you currently sick or have symptoms that could be related to COVID-19 such as:',
     symptoms: [
       'Temperature higher than 100.4',
@@ -54,19 +50,16 @@ export async function getQuestions() {
       'Chills',
     ],
     no: {
-      question: 'Based on your responses, you are cleared to come to Gordon College today.',
-      option: `I, ${user.FirstName} ${user.LastName}, hereby certify that the above statements are true and correct to the best of my knowledge.`,
+      question: `By submitting I, ${user.FirstName} ${user.LastName}, hereby certify that the above response is true and correct to the best of my knowledge.`,
     },
     yes: {
       question: [
-        'Since you have some sick symptoms, please notify the Health Center and discuss working from home.  You should not come to Gordon if you are sick.  In addition, please use the',
-        ' CDC Self-Checker ',
-        'to check your symptoms. Confirm below:',
+        `By submitting I, ${user.FirstName} ${user.LastName}, understand that I should not leave my residence until I am contacted by the Health Center at ${phoneNumber}, and that I will use the`,
+        ` CDC Self-Checker.`,
       ],
-      optionOne: 'I used the CDC "Self Checker" and have contacted the health center',
-      optionTwo:
-        'The "Self Checker" website was not working, but I have notified the health center',
     },
+    //phone: user.MobilePhone,
+    //email: user.Email,
   };
 
   let questions = {
