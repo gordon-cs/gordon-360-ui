@@ -2,7 +2,6 @@ import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import GordonLoader from '../../../../components/Loader';
 
 import ClearIcon from '@material-ui/icons/Clear';

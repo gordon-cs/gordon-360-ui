@@ -14,7 +14,6 @@ import Divider from '@material-ui/core/Divider';
 import { Button } from '@material-ui/core';
 import { gordonColors } from '../../../../theme';
 import './index.scss';
-import { Checkbox } from '@material-ui/core';
 import wellness from '../../../../services/wellness.js';
 
 export default class Question extends Component {
@@ -99,7 +98,7 @@ export default class Question extends Component {
                   label={'No'}
                   onChange={() => {
                     //this.setState({ qOneAnswer: 'Phone' });
-                    this.setState({ qOneAnswer: 'No' });
+                    this.setState({ qOneAnswer: 'No', currentStatus: false });
                   }}
                 />
                 <FormControlLabel
@@ -109,7 +108,7 @@ export default class Question extends Component {
                   //label={`Email: ${this.state.questions.qOne.email}`}
                   label={`Yes`}
                   onChange={() => {
-                    this.setState({ qOneAnswer: 'Yes' });
+                    this.setState({ qOneAnswer: 'Yes', currentStatus: true});
                   }}
                 />
               </RadioGroup>
