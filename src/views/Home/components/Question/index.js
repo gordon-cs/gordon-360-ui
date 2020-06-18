@@ -14,6 +14,8 @@ import Divider from '@material-ui/core/Divider';
 import { Button } from '@material-ui/core';
 import { gordonColors } from '../../../../theme';
 import './index.scss';
+import { Checkbox } from '@material-ui/core';
+import wellness from '../../../../services/wellness.js';
 
 export default class Question extends Component {
   constructor(props) {
@@ -30,7 +32,7 @@ export default class Question extends Component {
       qOneAnswer: null,
       qTwoAnswer: null,
       qThreeAnswer: null,
-      currentStatus: '',
+      currentStatus: null,
       questions: null,
     };
   }
@@ -57,10 +59,11 @@ export default class Question extends Component {
     }
   }
 
-  submitHandler = e => {
+  async submitHandler(e) {
     this.setState({ answered: true });
     this.setState({ currentStatus: this.state.selected });
     this.props.call(true, this.state.currentStatus);
+    await wellness.postAnswer(this.state.currentStatus);
     e.preventDefault();
     //console.log(this.state.currentStatus);
   };

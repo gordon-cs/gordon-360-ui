@@ -34,14 +34,6 @@ Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; la
       - `nvm install 9.11.1`
       - `nvm use 9.11.1`
 
-- If the `nvm` or `npm` commands are not working after the installation, check the environment variables of your virtual machine.
-    - Locate the `Environment Variables` settings.
-      - Go to `Control Panel` - `System and Security` - `System` - `Advanced system settings` - `Environment Variables`.
-      - You can also search `Environment Variables` in the Windows searchbar.
-    - Under the `System variables`, look for `NVM_HOME` and make sure its value is set to `C:\Users\cct.service\AppData\Roaming\nvm`.
-    - If you have `NVM_HOME` under `User variables`, delete it.
-    - Close and reopen your developer enviroment and terminal to try the commands again.
-
 #### Linux: 
 Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, run `nvm install 9.11.1` then run `nvm use 9.11.1`.
 

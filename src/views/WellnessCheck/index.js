@@ -21,7 +21,7 @@ export default class WellnessCheck extends Component {
     this.state = {
       personType: null,
       network: 'online',
-      currentStatus: 'I am not symptomatic',
+      currentStatus: 'I am symptomatic',
       currentUser: null,
       image: null,
       loading: true,
@@ -38,6 +38,7 @@ export default class WellnessCheck extends Component {
     user.getImage().then(data => {
       this.setState({ image: data, loading: false });
     });
+    await this.getStatus();
   }
 
   componentWillMount() {
@@ -54,10 +55,10 @@ export default class WellnessCheck extends Component {
 
   async getStatus() {
     const answer = await wellness.getStatus();
-    if (answer.currentStatus === true) {
+    if (answer[0].userAnswer === true) {
       this.setState({ currentStatus: 'I am symptomatic' });
     }
-    if (answer.currentStatus === false) {
+    if (answer[0].userAnswer === false) {
       this.setState({ currentStatus: 'I am not symptomatic' });
     }
   }
