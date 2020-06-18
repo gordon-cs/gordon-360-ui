@@ -29,8 +29,6 @@ export default class Question extends Component {
       loading: true,
       answered: false,
       qOneAnswer: null,
-      qTwoAnswer: null,
-      qThreeAnswer: null,
       currentStatus: null,
       questions: null,
     };
@@ -38,11 +36,6 @@ export default class Question extends Component {
   componentWillMount() {
     this.loadQuestion();
     this.props.call(this.state.answered);
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.qTwoAnswer !== this.state.qTwoAnswer) {
-      this.setState({ qThreeAnswer: null });
-    }
   }
   async componentDidMount() {
     this.setState({ questions: await getQuestions() });
@@ -64,11 +57,9 @@ export default class Question extends Component {
     this.props.call(true, this.state.currentStatus);
     await wellness.postAnswer(this.state.currentStatus);
     e.preventDefault();
-    //console.log(this.state.currentStatus);
-  };
+  }
 
-  handleChange = e => {
-    //console.log(e.target.value);
+  handleChange = (e) => {
     this.setState({ currentStatus: e.target.value });
   };
 
@@ -76,9 +67,7 @@ export default class Question extends Component {
   createQuestionOne(questionStyle) {
     // Checks to make sure the questions are imported before attempting to access its data
     if (this.state.questions !== null) {
-      //let num = this.state.questions.qOne.phone;
-      //let phoneNumber = `(${num.substring(0, 3)}) ${num.substring(3, 6)}-${num.substring(6)}`;
-      let symptomsJSX = this.state.questions.qOne.symptoms.map(item => {
+      let symptomsJSX = this.state.questions.qOne.symptoms.map((item) => {
         return <FormLabel>- {item}</FormLabel>;
       });
       return (
@@ -91,24 +80,19 @@ export default class Question extends Component {
               <br />
               <RadioGroup>
                 <FormControlLabel
-                  //value="phone"
                   value="No"
                   control={<Radio />}
-                  //label={`Phone: ${phoneNumber}`}
                   label={'No'}
                   onChange={() => {
-                    //this.setState({ qOneAnswer: 'Phone' });
                     this.setState({ qOneAnswer: 'No', currentStatus: false });
                   }}
                 />
                 <FormControlLabel
-                  //value="email"
                   value="Yes"
                   control={<Radio />}
-                  //label={`Email: ${this.state.questions.qOne.email}`}
                   label={`Yes`}
                   onChange={() => {
-                    this.setState({ qOneAnswer: 'Yes', currentStatus: true});
+                    this.setState({ qOneAnswer: 'Yes', currentStatus: true });
                   }}
                 />
               </RadioGroup>

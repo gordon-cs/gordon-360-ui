@@ -1,4 +1,4 @@
-let user, qOne, qTwo;
+let user, qOne;
 
 /*
  * Fetches the user's data
@@ -18,13 +18,13 @@ async function getUserData() {
   return await fetch(
     new Request('https://360api.gordon.edu/api/profiles', { method: 'GET', headers }),
   )
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .then(data => {
+    .then((data) => {
       user = data;
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error.message);
     });
 }
@@ -64,7 +64,6 @@ export async function getQuestions() {
 
   let questions = {
     qOne,
-    qTwo,
   };
 
   return questions;
