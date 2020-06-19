@@ -41,7 +41,7 @@ export default class Question extends Component {
   }
   componentWillMount() {
     this.loadQuestion();
-    this.props.call(this.state.answered);
+    this.props.setAnswered(this.state.answered);
   }
   async componentDidMount() {
     this.setState({ questions: await getQuestions() });
@@ -60,7 +60,7 @@ export default class Question extends Component {
   async submitHandler(e) {
     this.setState({ answered: true });
     this.setState({ currentStatus: this.state.selected });
-    this.props.call(true, this.state.currentStatus);
+    this.props.setAnswered(true, this.state.currentStatus);
     await wellness.postAnswer(this.state.currentStatus);
     e.preventDefault();
   }

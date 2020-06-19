@@ -73,7 +73,7 @@ export default class Home extends Component {
     }
   }
 
-  callBack = (data, data2) => {
+  setAnswered = (data, data2) => {
     this.setState({ answered: data });
     this.setState({ currentStatus: data2 });
   };
@@ -154,7 +154,7 @@ export default class Home extends Component {
         content = (
           <Grid container justify="center" spacing={2}>
             <Grid item xs={10} md={4}>
-              <Question call={this.callBack} />
+              <Question setAnswered={this.setAnswered} />
             </Grid>
           </Grid>
         );

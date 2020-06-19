@@ -21,7 +21,7 @@ export default class WellnessCheck extends Component {
     this.state = {
       personType: null,
       network: 'online',
-      currentStatus: 'I am symptomatic',
+      currentStatus: true,
       currentUser: null,
       image: null,
       loading: true,
@@ -55,16 +55,18 @@ export default class WellnessCheck extends Component {
 
   async getStatus() {
     const answer = await wellness.getStatus();
+    const SYMPTOMS = true;
+    const NO_SYMPTOMS = false;
 
     if(answer.length > 0){
         if (answer[0].userAnswer === true) {
-          this.setState({ currentStatus: 'I am symptomatic' });
+          this.setState({ currentStatus: SYMPTOMS });
         }
         if (answer[0].userAnswer === false) {
-          this.setState({ currentStatus: 'I am not symptomatic' });
+          this.setState({ currentStatus: NO_SYMPTOMS });
         }
     } else{
-       this.setState({ currentStatus: 'I am not symptomatic' });
+       this.setState({ currentStatus: NO_SYMPTOMS });
     }
   }
 
@@ -178,7 +180,7 @@ export default class WellnessCheck extends Component {
       if (this.props.Authentication) {
         let status;
 
-        if (this.state.currentStatus === 'I am not symptomatic') {
+        if (this.state.currentStatus === false ) {
           status = <Approved />;
         } else {
           status = <Denied />;
