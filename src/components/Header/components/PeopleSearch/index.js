@@ -15,7 +15,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
 import peopleSearch from '../../../../services/people-search';
-const MIN_QUERY_LENGTH = 3;
+const MIN_QUERY_LENGTH = 2;
 
 //  TextBox Input Field
 const renderInput = inputProps => {
@@ -49,6 +49,7 @@ export default class GordonPeopleSearch extends Component {
   constructor(props) {
     super(props);
     this.getSuggestions = this.getSuggestions.bind(this);
+    this.renderNoResult = this.renderNoResult.bind(this);
     this.renderSuggestion = this.renderSuggestion.bind(this);
     this.reset = this.reset.bind(this);
     this.handleKeys = this.handleKeys.bind(this);
@@ -110,6 +111,9 @@ export default class GordonPeopleSearch extends Component {
       if (suggestionIndex === -1) suggestionIndex = suggestionList.length - 1;
       this.setState({ suggestionIndex });
     }
+    if (key === 'Backspace') {
+      this.setState({suggestions: []});
+    }
   };
 
   reset() {
@@ -141,6 +145,16 @@ export default class GordonPeopleSearch extends Component {
         )}
       </span>
     );
+  }
+
+  renderNoResult() {
+    return(
+    <MenuItem className="people-search-suggestion" style=
+    {{paddingBottom: '5px'}}>
+      <Typography className="no-results" variant="body2">
+        No results
+      </Typography>
+    </MenuItem>)
   }
 
   renderSuggestion(params) {
@@ -191,9 +205,7 @@ export default class GordonPeopleSearch extends Component {
         <Typography variant="caption" component="p">
           {/* If the first name matches either part (first or last name) of the query, don't
               highlight occurrences of the query in the first name part of the username.
-
               If the username contains a period, add it back in.
-
               If the username contains a period,
               If the last name matches either part (first of last name) of the query, don't
               highlight occurrences of the query in the last name part of the username. */}
@@ -315,7 +327,13 @@ export default class GordonPeopleSearch extends Component {
                       }),
                     )}
                   </Paper>
-                ) : null}
+                ) : isOpen && this.state.suggestions.length === 0 &&
+                  this.state.query.length >= MIN_QUERY_LENGTH ? (
+                  // Styling copied from how renderSuggestion is done with
+                  // only bottom padding changed and 'no-results' class used
+                    <Paper square className="people-search-dropdown">
+                      {this.renderNoResult()}
+                    </Paper>) : null}
               </span>
             )}
           </Downshift>
@@ -349,7 +367,13 @@ export default class GordonPeopleSearch extends Component {
                       }),
                     )}
                   </Paper>
-                ) : null}
+                ) : isOpen && this.state.suggestions.length === 0 &&
+                  this.state.query.length >= MIN_QUERY_LENGTH ? (
+                  // Styling copied from how renderSuggestion is done with
+                  // only bottom padding changed and 'no-results' class used
+                  <Paper square className="people-search-dropdown">
+                    {this.renderNoResult()}
+                  </Paper>) : null}
               </span>
             )}
           </Downshift>
