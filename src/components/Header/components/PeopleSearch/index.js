@@ -60,6 +60,8 @@ export default class GordonPeopleSearch extends Component {
       highlightQuery: String,
       loginDialog: false,
       network: 'online',
+      time: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit' }),
+      loading: true,
     };
     this.isMobileView = false;
     this.breakpointWidth = 400;
@@ -148,13 +150,16 @@ export default class GordonPeopleSearch extends Component {
   }
 
   renderNoResult() {
-    return(
-    <MenuItem className="people-search-suggestion" style=
-    {{paddingBottom: '5px'}}>
-      <Typography className="no-results" variant="body2">
-        No results
-      </Typography>
-    </MenuItem>)
+      return(
+        <MenuItem className="people-search-suggestion" style=
+        {{paddingBottom: '5px'}}>
+          <Typography className="no-results" variant="body2">
+            No results
+          </Typography>
+          <Typography className="loading" variant="body2">
+            Loading...
+          </Typography>
+        </MenuItem>)
   }
 
   renderSuggestion(params) {
