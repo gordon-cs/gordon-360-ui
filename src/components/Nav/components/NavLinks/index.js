@@ -60,7 +60,7 @@ export default class GordonNavLinks extends Component {
   handleLinkClose = () => {
     this.setState({ linkopen: false });
   };
-  unAuthenticatedSearch = e => {
+  unAuthenticatedSearch = (e) => {
     e.preventDefault();
     this.setState({ loginDialogOpen: true });
   };
@@ -99,7 +99,7 @@ export default class GordonNavLinks extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -210,7 +210,7 @@ export default class GordonNavLinks extends Component {
           <div onClick={this.openDialogBox}>
             <ListItem button disabled={networkStatus}>
               <ListItemIcon>
-                <LocalActivityIcon />
+                <PeopleIcon />
               </ListItemIcon>
               <ListItemText primary="People" />
             </ListItem>
@@ -451,7 +451,7 @@ export default class GordonNavLinks extends Component {
           </List>
           <Dialog
             open={this.state.loginDialogOpen}
-            onClose={clicked => this.handleClose()}
+            onClose={(clicked) => this.handleClose()}
             aria-labelledby="login-dialog-title"
             aria-describedby="login-dialog-description"
           >
@@ -462,7 +462,7 @@ export default class GordonNavLinks extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
+              <Button variant="contained" onClick={(clicked) => this.handleClose()} color="primary">
                 Okay
               </Button>
             </DialogActions>
@@ -475,7 +475,7 @@ export default class GordonNavLinks extends Component {
         </div>
         <Dialog
           open={this.state.dialogBoxOpen}
-          onClose={clicked => this.closeDialogBox()}
+          onClose={(clicked) => this.closeDialogBox()}
           aria-labelledby="disabled-feature"
           aria-describedby="disabled-feature-description"
         >
@@ -487,7 +487,11 @@ export default class GordonNavLinks extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button variant="contained" onClick={clicked => this.closeDialogBox()} color="primary">
+            <Button
+              variant="contained"
+              onClick={(clicked) => this.closeDialogBox()}
+              color="primary"
+            >
               Okay
             </Button>
           </DialogActions>
