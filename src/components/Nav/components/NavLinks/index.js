@@ -210,7 +210,7 @@ export default class GordonNavLinks extends Component {
           <div onClick={this.openDialogBox}>
             <ListItem button disabled={networkStatus}>
               <ListItemIcon>
-                <LocalActivityIcon />
+              <PeopleIcon />
               </ListItemIcon>
               <ListItemText primary="People" />
             </ListItem>

@@ -16,6 +16,12 @@ import { gordonColors } from '../../../../theme';
 import './index.scss';
 import wellness from '../../../../services/wellness.js';
 
+/**
+ * Creates the question for the health check feature
+ *
+ * 
+ */
+
 export default class Question extends Component {
   constructor(props) {
     super(props);
@@ -51,8 +57,8 @@ export default class Question extends Component {
   async loadQuestion() {
     this.setState({ loading: true });
     try {
-      let questionToAsk = 'What were gonna ask ?';
-      this.setState({ loading: false, questionToAsk });
+      //call to get question from the back end
+      this.setState({ loading: false});
     } catch (error) {
       this.setState({ error });
     }

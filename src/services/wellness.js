@@ -1,6 +1,6 @@
 /**
- * wellness check
- *
+ * Wellness Check API call functions
+ * establishes the functions necessary to make calls to the back end.
  * @module wellness
  */
 
