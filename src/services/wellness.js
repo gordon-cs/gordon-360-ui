@@ -1,5 +1,5 @@
 /**
- * wellness check
+ * wellness check API call functions. Establishes the functions necessary to make calls to the back end.
  *
  * @module wellness
  */
@@ -10,7 +10,7 @@ import http from './http';
  * @global
  * @typedef boolean
  * @property {status}//a boolean that tells if a student is symptomatic
- * 
+ *
  */
 
 /**
@@ -27,11 +27,12 @@ const getStatus = async () => {
  * @return {Promise<any>} Response
  */
 function postAnswer(data) {
-  return http.post('wellness', data).catch(reason => {
+  return http.post('wellness', data).catch((reason) => {
     console.log(reason);
   });
 }
 
 export default {
-  getStatus, postAnswer,
+  getStatus,
+  postAnswer,
 };

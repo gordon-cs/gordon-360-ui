@@ -16,6 +16,7 @@ import { gordonColors } from '../../../../theme';
 import './index.scss';
 import wellness from '../../../../services/wellness.js';
 
+/* creates the question for the health check feature */
 export default class Question extends Component {
   constructor(props) {
     super(props);
