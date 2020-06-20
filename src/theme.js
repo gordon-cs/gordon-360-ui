@@ -88,6 +88,15 @@ export const gordonColors = {
   },
 };
 
+// Material-UI breakpoints
+export const windowBreakWidths = {
+  breakXS: 360,
+  breakSM: 600,
+  breakMD: 960,
+  breakLG: 1280,
+  breakXL: 1920,
+};
+
 const theme = createMuiTheme({
   palette: {
     primary: gordonColors.primary.blueShades,

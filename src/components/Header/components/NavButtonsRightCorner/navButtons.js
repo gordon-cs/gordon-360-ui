@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Avatar, MenuItem } from '@material-ui/core';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import { NavLink } from 'react-router-dom';
 import user from '../../../../services/user';
 
 /**
@@ -13,7 +14,7 @@ import user from '../../../../services/user';
  * @param {Function} onLinkClickTwo Determines what occurs when the user clicks on this button
  *                                  after onLinkClickOne occurs.
  * @param {Function} openDialogBox Sets the data of a dialog box to be shown if the user clicks on
- *                                  this button.
+ *                                this button.
  *
  * @return {JSX} The JSX of the Links button.
  */
@@ -21,15 +22,16 @@ export function createLinksButton(networkStatus, onLinkClickOne, onLinkClickTwo,
   let linksButton =
     // Network Status: Online
     networkStatus === 'online' ? (
-      <MenuItem
+      <ListItem
+        divider
+        button
         onClick={() => {
           onLinkClickOne();
           onLinkClickTwo();
         }}
-        divider="true"
       >
-        Links
-      </MenuItem>
+        <ListItemText primary="Links" />
+      </ListItem>
     ) : (
       // Network Status: Offline
       <div
@@ -37,9 +39,9 @@ export function createLinksButton(networkStatus, onLinkClickOne, onLinkClickTwo,
           openDialogBox('offline', '');
         }}
       >
-        <MenuItem disabled={true} divider="true">
-          Links
-        </MenuItem>
+        <ListItem divider button disabled={true}>
+          <ListItemText primary="Links" />
+        </ListItem>
       </div>
     );
 
@@ -62,16 +64,11 @@ export function createFeedbackButton(networkStatus, onLinkClick, openDialogBox) 
   let feedbackButton =
     // Network Status: Online
     networkStatus === 'online' ? (
-      <Link to="/feedback" className="gc360-link">
-        <MenuItem
-          onClick={() => {
-            onLinkClick();
-          }}
-          divider="true"
-        >
-          Feedback
-        </MenuItem>
-      </Link>
+      <NavLink exact to="/feedback" onClick={onLinkClick} className="gc360-link">
+        <ListItem divider button>
+          <ListItemText primary="Feedback" />
+        </ListItem>
+      </NavLink>
     ) : (
       // Network Status: Offline
       <div
@@ -79,9 +76,9 @@ export function createFeedbackButton(networkStatus, onLinkClick, openDialogBox) 
           openDialogBox('offline', '');
         }}
       >
-        <MenuItem disabled={true} divider="true">
-          Feedback
-        </MenuItem>
+        <ListItem divider button disabled={true}>
+          <ListItemText primary="Feedback" />
+        </ListItem>
       </div>
     );
 
@@ -109,16 +106,11 @@ export function createAdminButton(networkStatus, authenticated, onLinkClick, ope
     // Authenticated - Network Status: Online
     if (networkStatus === 'online') {
       adminButton = (
-        <Link to="/admin" className="gc360-link">
-          <MenuItem
-            onClick={() => {
-              onLinkClick();
-            }}
-            divider="true"
-          >
-            Admin
-          </MenuItem>
-        </Link>
+        <NavLink exact to="/admin" onClick={onLinkClick} className="gc360-link">
+          <ListItem divider button>
+            <ListItemText primary="Admin" />
+          </ListItem>
+        </NavLink>
       );
     } else {
       // Authenticated - Network Status: Offline
@@ -128,15 +120,76 @@ export function createAdminButton(networkStatus, authenticated, onLinkClick, ope
             openDialogBox('offline', '');
           }}
         >
-          <MenuItem disabled={true} divider="true">
-            Admin
-          </MenuItem>
+          <ListItem divider button disabled={true}>
+            <ListItemText primary="Admin" />
+          </ListItem>
         </div>
       );
     }
   }
 
   return adminButton;
+}
+
+/**
+ * Creates the Timesheets button.
+ *
+ * Depending on the status of the network, authentication, and user role, the Timesheets
+ * button is created.
+ *
+ * @param {String} networkStatus The status of the network. Either 'online' or 'offline'.
+ * @param {Boolean} authenticated Determines if the user is logged in.
+ * @param {Function} onLinkClick Determines what occurs when the user clicks on this button.
+ * @param {Function} openDialogBox Sets the data of a dialog box to be shown if the user clicks on
+ *                                this button.
+ *
+ * @return {JSX} The JSX of the Timesheets button.
+ */
+export function createTimesheetsButton(networkStatus, authenticated, onLinkClick, openDialogBox) {
+  let timesheetsButton;
+  // Network Status: Online
+  if (networkStatus === 'online') {
+    // Network Status: Online - Authenticated
+    if (authenticated) {
+      timesheetsButton = (
+        <NavLink exact to="/student-timesheets" onClick={onLinkClick} className="gc360-link">
+          <ListItem divider button>
+            <ListItemText primary="Timesheets" />
+          </ListItem>
+        </NavLink>
+      );
+    }
+    // Network Status: Online - Not Authenticated
+    else {
+      timesheetsButton = (
+        <div
+          onClick={() => {
+            openDialogBox('unauthorized', 'timesheets view');
+          }}
+        >
+          <ListItem divider button disabled={true}>
+            <ListItemText primary="Timesheets" />
+          </ListItem>
+        </div>
+      );
+    }
+  }
+  // Network Status: Offline
+  else {
+    timesheetsButton = (
+      <div
+        onClick={() => {
+          openDialogBox('offline', '');
+        }}
+      >
+        <ListItem divider button disabled={true}>
+          <ListItemText primary="Timesheets" />
+        </ListItem>
+      </div>
+    );
+  }
+
+  return timesheetsButton;
 }
 
 /**
@@ -149,17 +202,10 @@ export function createAdminButton(networkStatus, authenticated, onLinkClick, ope
  * @param {Function} onLinkClick Determines what occurs when the user clicks on this button.
  * @param {Function} openDialogBox Sets the data of a dialog box to be shown if the user clicks on
  *                                  this button.
- * @param {Function} currentUser The name of the current user
  *
  * @return {JSX} The JSX of the My Profile button.
  */
-export function createMyProfileButton(
-  networkStatus,
-  authenticated,
-  onLinkClick,
-  openDialogBox,
-  currentUser,
-) {
+export function createMyProfileButton(networkStatus, authenticated, onLinkClick, openDialogBox) {
   let myProfileButton;
 
   // Authenticated
@@ -168,19 +214,16 @@ export function createMyProfileButton(
      * they're directed to their public profile
      */
     let profileLink =
-      networkStatus === 'online' ? '/myprofile' : `/profile/${currentUser.replace(' ', '.')}`;
+      networkStatus === 'online'
+        ? '/myprofile'
+        : `/profile/${user.getLocalInfo().name.replace(' ', '.')}`;
 
     myProfileButton = (
-      <Link to={profileLink} className="gc360-link">
-        <MenuItem
-          onClick={() => {
-            onLinkClick();
-          }}
-          divider={true}
-        >
-          My Profile
-        </MenuItem>
-      </Link>
+      <NavLink exact to={profileLink} onClick={onLinkClick} className="gc360-link">
+        <ListItem divider button>
+          <ListItemText primary="My Profile" />
+        </ListItem>
+      </NavLink>
     );
   }
   // Not Authenticated
@@ -195,15 +238,9 @@ export function createMyProfileButton(
               openDialogBox('offline', '');
         }}
       >
-        <MenuItem
-          disabled={true}
-          onClick={() => {
-            onLinkClick();
-          }}
-          divider={true}
-        >
-          My Profile
-        </MenuItem>
+        <ListItem divider button disabled={true}>
+          <ListItemText primary="My Profile" />
+        </ListItem>
       </div>
     );
   }
@@ -217,10 +254,8 @@ export function createMyProfileButton(
  * Depending on authentication, the Sign In/Out button is created.
  *
  * @param {Boolean} authenticated Determines if the user is logged in.
- * @param {Function} onSignOut Function that occurs upon clicking this button. Either this
- *                              or onSignIn will occur.
- * @param {Function} onSignIn Function that occurs upon clicking this button. Either this
- *                            or onSignOut will occur.
+ * @param {Function} onSignOut Function that occurs upon clicking this button.
+ * @param {Function} onSignIn Function that occurs upon clicking this button.
  *
  * @return {JSX} The JSX of the Sign In/Out button.
  */
@@ -229,73 +264,25 @@ export function createSignInOutButton(authenticated, onSignOut, onSignIn) {
   // Authenticated
   if (authenticated) {
     signInOutButton = (
-      <Link to="/" className="gc360-link">
-        <MenuItem
-          onClick={() => {
-            onSignOut();
-          }}
-          divider={true}
-        >
-          Sign Out
-        </MenuItem>
-      </Link>
+      <NavLink exact to="/" onClick={onSignOut} className="gc360-link">
+        <ListItem button>
+          <ListItemText primary="Sign Out" />
+        </ListItem>
+      </NavLink>
     );
   }
   // Not Authenticated
   else {
     signInOutButton = (
-      <Link to="/" className="gc360-link">
-        <MenuItem
-          onClick={() => {
-            onSignIn();
-          }}
-          divider={true}
-        >
-          Sign In
-        </MenuItem>
-      </Link>
+      <NavLink exact to="/" onClick={onSignIn} className="gc360-link">
+        <ListItem button>
+          <ListItemText primary="Sign In" />
+        </ListItem>
+      </NavLink>
     );
   }
 
   return signInOutButton;
-}
-
-/**
- * Creates the Avatar button.
- *
- * Depending on authentication, the Avatar button is created.
- *
- * @param {Boolean} authenticated Determines if the user is logged in.
- * @param {String} avatarImage The profile image of the user if available
- * @param {Function} getInitials Gets the initials of the current user
- *
- * @return {JSX} The JSX of the Avatar button.
- */
-export function createAvatarButton(authenticated, avatarImage, getInitials) {
-  let avatarButton;
-  // Authenticated
-  if (authenticated) {
-    // Authenticated - Profile Image Available
-    if (avatarImage) {
-      avatarButton = (
-        <Avatar className="gc360-nav-avatar-rc_size" src={`data:image/jpg;base64,${avatarImage}`} />
-      );
-    }
-    // Authenticated - Profile Image Unavailable
-    else {
-      avatarButton = (
-        <Avatar className="gc360-nav-avatar-rc_size gc360-nav-avatar-rc_placeholder">
-          {getInitials()}
-        </Avatar>
-      );
-    }
-  }
-  // Not Authenticated
-  else {
-    avatarButton = <Avatar className="nav-avatar nav-avatar-placeholder">Guest</Avatar>;
-  }
-
-  return avatarButton;
 }
 
 /**
@@ -307,16 +294,11 @@ export function createAvatarButton(authenticated, avatarImage, getInitials) {
  */
 export function createHelpButton(onLinkClick) {
   let helpButton = (
-    <Link to="/help" className="gc360-link">
-      <MenuItem
-        onClick={() => {
-          onLinkClick();
-        }}
-        divider={true}
-      >
-        Help
-      </MenuItem>
-    </Link>
+    <NavLink exact to="/help" onClick={onLinkClick} className="gc360-link">
+      <ListItem divider button>
+        <ListItemText primary="Help" />
+      </ListItem>
+    </NavLink>
   );
 
   return helpButton;
@@ -331,16 +313,11 @@ export function createHelpButton(onLinkClick) {
  */
 export function createAboutButton(onLinkClick) {
   let aboutButton = (
-    <Link to="/about" className="gc360-link">
-      <MenuItem
-        onClick={() => {
-          onLinkClick();
-        }}
-        divider={true}
-      >
-        About
-      </MenuItem>
-    </Link>
+    <NavLink className="gc360-link" exact to="/about" onClick={onLinkClick}>
+      <ListItem divider button>
+        <ListItemText primary="About" />
+      </ListItem>
+    </NavLink>
   );
 
   return aboutButton;
