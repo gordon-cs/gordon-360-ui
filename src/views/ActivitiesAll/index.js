@@ -165,7 +165,11 @@ export default class GordonActivitiesAll extends Component {
         this.setState({ error });
       }
     }
-    this.setState({ loading: false });
+    this.setState({
+      loading: false,
+      currentAcademicSession:
+        this.state.currentAcademicSession === '' ? sessionCode : this.state.currentAcademicSession,
+    });
   }
 
   componentDidMount() {
@@ -186,7 +190,7 @@ export default class GordonActivitiesAll extends Component {
         this.state.network === 'online' &&
         event.origin === window.location.origin
       ) {
-        this.setState({ network: 'offline', linkopen: false });
+        this.setState({ network: 'offline' });
       }
     });
 
@@ -310,13 +314,20 @@ export default class GordonActivitiesAll extends Component {
     }
 
     // Creates the sessions list
-    const sessionOptions = this.state.sessions.map(
-      ({ SessionDescription: description, SessionCode: code }) => (
-        <MenuItem label={description} value={code} key={code}>
-          {description}
-        </MenuItem>
-      ),
-    );
+    const sessionOptions =
+      this.state.network === 'online'
+        ? this.state.sessions.map(({ SessionDescription: description, SessionCode: code }) => (
+            <MenuItem label={description} value={code} key={code}>
+              {description}
+            </MenuItem>
+          ))
+        : this.state.sessions
+            .filter(item => item.SessionCode === this.state.session)
+            .map(({ SessionDescription: description, SessionCode: code }) => (
+              <MenuItem label={description} value={code} key={code}>
+                {description}
+              </MenuItem>
+            ));
 
     // Creates the current session's types list
     const typeOptions = this.state.types.map(type => (
