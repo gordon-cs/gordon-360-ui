@@ -170,10 +170,11 @@ async function cleanCache() {
     keys.forEach(key => {
       if (key !== cacheVersion) {
         return caches.delete(key).then(() => {
-          console.log(
-            `%c${successfulEmoji} Previous cache has been removed (outdated cache version)`,
-            successfulLog,
-          );
+          if (showDeveloperConsoleLog)
+            console.log(
+              `%c${successfulEmoji} Previous cache has been removed (outdated cache version)`,
+              successfulLog,
+            );
         });
       }
     });
@@ -202,9 +203,9 @@ async function fetchThenCache(request) {
       return fetchResponse.clone();
     })
     .catch(async () => {
-      if (showDeveloperConsoleLog) {
+      if (showDeveloperConsoleLog)
         console.log(`%c- Getting ${request.url} from cache instead...`, cacheLog);
-      }
+
       // const response = await caches.match(request.url);
       const response = await caches.open(cacheVersion).then(cache => {
         return cache.match(request.url).then(response => {
@@ -214,9 +215,8 @@ async function fetchThenCache(request) {
       // If there's no response from cache, we console log that the request failed
       if (response) {
         return response;
-      } else if (showDeveloperConsoleLog) {
+      } else if (showDeveloperConsoleLog)
         console.log(`%c${errorEmoji} Failed to get ${request.url} from cache`, errorLog);
-      }
     });
 }
 
@@ -308,10 +308,11 @@ async function cacheStaticFiles() {
       });
   });
 
-  // Console logs the result of the attempt to cache all static files
-  cachedSuccessfully
-    ? console.log(`%c${successfulEmoji} Cached All Static Files Successfully`, successfulLog)
-    : console.log(`%c${errorEmoji} Caching All Static Files Failed`, errorLog);
+  if (showDeveloperConsoleLog)
+    // Console logs the result of the attempt to cache all static files
+    cachedSuccessfully
+      ? console.log(`%c${successfulEmoji} Cached All Static Files Successfully`, successfulLog)
+      : console.log(`%c${errorEmoji} Caching All Static Files Failed`, errorLog);
 }
 
 // /**
@@ -322,11 +323,12 @@ async function cacheStaticFiles() {
 // async function recacheFailedDynamicFiles() {
 //   if (token && failedDynamicCacheLinks.length > 0) {
 //     const cacheOne = await cacheDynamicFiles(token, failedDynamicCacheLinks);
+//     if (showDeveloperConsoleLog)
 //     console.log('Failed Links: ', cacheOne);
 //     // If all failed dynamic files successfully cache, we then empty the array
 //     if (cacheOne) failedDynamicCacheLinks = [];
 //     // Checks to see if both all failed links successfully cached
-//     if (cacheOne) {
+//     if (cacheOne && showDeveloperConsoleLog) {
 //       console.log(`%c${successfulEmoji} Cached Failed Dynamic Files Successfully`, successfulLog);
 //     }
 //   }
@@ -537,10 +539,12 @@ async function dynamicLinksThenCache(token, termCode) {
      * to the console. If not, there was an error with one or more fetches in which the error
      * message(s) has been logged to the console
      */
-    if (fetchResult) {
-      console.log(`%c${successfulEmoji} Cached All Dynamic Files Successfully`, successfulLog);
-    } else {
-      console.log(`%c${errorEmoji} Caching All Dynamic Files Failed`, errorLog);
+    if (showDeveloperConsoleLog) {
+      if (fetchResult) {
+        console.log(`%c${successfulEmoji} Cached All Dynamic Files Successfully`, successfulLog);
+      } else {
+        console.log(`%c${errorEmoji} Caching All Dynamic Files Failed`, errorLog);
+      }
     }
   }
 }
@@ -550,7 +554,7 @@ async function dynamicLinksThenCache(token, termCode) {
  */
 function timerFunction() {
   cacheTimer = setInterval(() => {
-    console.log('Attempting to update cache.');
+    if (showDeveloperConsoleLog) console.log('Attempting to update cache.');
     // Caching All Files
     cacheStaticFiles(); // Static Cache
     dynamicLinksThenCache(token, termCode); // Dynamic Cache
@@ -596,10 +600,11 @@ self.addEventListener('message', event => {
     (event.data.message && event.data.message === 'cache-static-dynamic-files') ||
     event.data.message === 'update-cache-files'
   ) {
-    // Console logs the current action depending on the message received
-    event.data.message === 'cache-static-dynamic-files'
-      ? console.log('Attempting to cache all files.')
-      : console.log('Attempting to update cache.');
+    if (showDeveloperConsoleLog)
+      // Console logs the current action depending on the message received
+      event.data.message === 'cache-static-dynamic-files'
+        ? console.log('Attempting to cache all files.')
+        : console.log('Attempting to update cache.');
     // Caching All Files
     event.waitUntil(
       cleanCache(), // Cleans the cache before updating it
@@ -610,12 +615,12 @@ self.addEventListener('message', event => {
 
   // If the message is to start the cache timer
   else if (event.data && event.data === 'start-cache-timer') {
-    console.log('Starting timer to update cache.');
+    if (showDeveloperConsoleLog) console.log('Starting timer to update cache.');
     event.waitUntil(timerFunction());
   }
   // If the message is to stop the cache timer
   else if (event.data && event.data === 'stop-cache-timer') {
-    console.log('Stopping timer to update cache.');
+    if (showDeveloperConsoleLog) console.log('Stopping timer to update cache.');
     event.waitUntil(clearInterval(cacheTimer));
   }
   // If the message is to reset global variables due to signing out or lost of authentication
@@ -632,7 +637,8 @@ self.addEventListener('message', event => {
     // Since this event listener is invoked multiple times, this check prevents it from
     // console logging multiple times
     if (isFetchCanceled === false && isSuccessful === true) {
-      console.log(`%c${warningEmoji} Canceling Any Currently Running Fetches.`, warningLog);
+      if (showDeveloperConsoleLog)
+        console.log(`%c${warningEmoji} Canceling Any Currently Running Fetches.`, warningLog);
       isFetchCanceled = true;
       isSuccessful = false;
     }

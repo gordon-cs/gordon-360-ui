@@ -1,20 +1,6 @@
-import { IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core';
-import {
-  createAboutButton,
-  createAdminButton,
-  createAvatarButton,
-  createFeedbackButton,
-  createHelpButton,
-  createLinksButton,
-  createMyProfileButton,
-  createSignInOutButton,
-} from './navButtons';
-import GordonDialogBox from '../../../GordonDialogBox/index';
+import { Avatar, IconButton, Tooltip } from '@material-ui/core';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import QuickLinksDialog from '../../../QuickLinksDialog';
-import { signOut } from '../../../../services/auth';
-import storage from '../../../../services/storage';
 import './nav-avatar-right-corner.css';
 import '../../../../app.css';
 import user from '../../../../services/user';
@@ -23,74 +9,17 @@ export default class GordonNavAvatarRightCorner extends Component {
   constructor(props) {
     super(props);
 
-    this.onClick = this.onClick.bind(this);
-    this.onClose = this.onClose.bind(this);
-    this.onSignOut = this.onSignOut.bind(this);
-    this.onSignIn = this.onSignIn.bind(this);
-    this.handleLinkClickOpen = this.handleLinkClickOpen.bind(this);
-    this.handleLinkClose = this.handleLinkClose.bind(this);
-    this.openDialogBox = this.openDialogBox.bind(this);
-    this.closeDialogBox = this.closeDialogBox.bind(this);
     this.getInitials = this.getInitials.bind(this);
+    this.checkPeer = this.checkPeer.bind(this);
+    this.createAvatarButton = this.createAvatarButton.bind(this);
+    this.loadAvatar = this.loadAvatar.bind(this);
 
     this.state = {
       email: null,
       image: null,
       name: null,
       username: null,
-      linkopen: false,
-      anchorEl: null,
-      dialogBoxOpen: false,
-      dialogType: '',
-      dialogReason: '',
-      network: 'online',
     };
-  }
-
-  /**
-   * Handles the event of an option being clicked on in the menu
-   *
-   * @param {Event} event The event object
-   */
-  onClick(event) {
-    this.setState({ anchorEl: event.currentTarget });
-  }
-
-  /**
-   * Closes the menu
-   */
-  onClose() {
-    this.setState({ anchorEl: null });
-  }
-
-  /**
-   * Closes the menu and logs out the user
-   */
-  onSignOut() {
-    this.onClose();
-    signOut();
-    this.props.onSignOut();
-  }
-
-  /**
-   * Closes the menu
-   */
-  onSignIn() {
-    this.onClose();
-  }
-
-  /**
-   * Opens the dialog box containing external links
-   */
-  handleLinkClickOpen() {
-    this.setState({ linkopen: true });
-  }
-
-  /**
-   * Closes the dialog box containing external links
-   */
-  handleLinkClose() {
-    this.setState({ linkopen: false });
   }
 
   async componentWillReceiveProps(newProps) {
@@ -105,46 +34,6 @@ export default class GordonNavAvatarRightCorner extends Component {
 
   componentDidMount() {
     setInterval(this.checkPeer.bind(this), 1500);
-
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    let network;
-    /* Attempts to get the network status from local storage.
-     * If not found, the default value is online
-     */
-    try {
-      network = storage.get('network-status');
-    } catch (error) {
-      // Defaults the network to online if not found in local storage
-      network = 'online';
-    }
-
-    // Saves the network's status to this component's state
-    this.setState({ network });
-  }
-
-  componentWillUnmount() {
-    // Removes the window's event listener before unmounting the component
-    window.removeEventListener('message', () => {});
   }
 
   /**
@@ -195,165 +84,85 @@ export default class GordonNavAvatarRightCorner extends Component {
   }
 
   /**
-   * Creates a dialog box.
+   * Creates the Avatar button.
    *
-   * Depending on the dialog box's type saved in the state, the dialog box and it's content is created.
+   * Depending on authentication, the Avatar button is created.
    *
-   * @returns {JSX} The JSX of the dialog box
+   * @param {Boolean} authenticated Determines if the user is logged in.
+   * @param {String} avatarImage The profile image of the user if available
+   * @param {Function} getInitials Gets the initials of the current user
+   *
+   * @return {JSX} The JSX of the Avatar button.
    */
-  createDialogBox() {
-    // Type - Offline
-    if (this.state.dialogType === 'offline') {
-      return (
-        <GordonDialogBox
-          open={this.state.dialogBoxOpened}
-          onClose={this.closeDialogBox}
-          labelledby={'offline-dialog'}
-          describedby={'feature-deactivated'}
-          title={'Offline Mode'}
-          text={
-            'This feature is unavailable offline. Please reconnect to internet to access this feature.'
-          }
-          buttonClicked={this.closeDialogBox}
-          buttonName={'Okay'}
-        />
-      );
+  createAvatarButton(authenticated, avatarImage, getInitials) {
+    let avatarButton;
+    // Authenticated
+    if (authenticated) {
+      // Authenticated - Profile Image Available
+      if (avatarImage) {
+        avatarButton = (
+          <Avatar
+            className="gc360-nav-avatar-rc_size"
+            src={`data:image/jpg;base64,${avatarImage}`}
+          />
+        );
+      }
+      // Authenticated - Profile Image Unavailable
+      else {
+        avatarButton = (
+          <Avatar className="gc360-nav-avatar-rc_size gc360-nav-avatar-rc_placeholder">
+            {getInitials()}
+          </Avatar>
+        );
+      }
     }
-    // Type - Unauthorized
-    else if (this.state.dialogType === 'unauthorized') {
-      return (
-        <GordonDialogBox
-          open={this.state.dialogBoxOpened}
-          onClose={this.closeDialogBox}
-          labelledby={'unauthorized-dialog'}
-          describedby={'feature-unavailable'}
-          title={'Credentials Needed'}
-          text={`This feature is unavailable while not logged in. Please log in to ${this.state.dialogReason}.`}
-          buttonClicked={this.closeDialogBox}
-          buttonName={'Okay'}
-        />
-      );
-    }
-  }
-
-  /**
-   * Opens the dialog box.
-   *
-   * Depending on the type and reason for opening the dialog box, the dialog box's content is made.
-   *
-   * @param {String} type The type of dialog box requested
-   * @param {String} feature The feature the user attempted to access
-   */
-  openDialogBox(type, feature) {
-    let reason = '';
-    if (feature === 'admin view') {
-      reason = 'edit administrator privileges';
-    } else if (feature === 'my profile view') {
-      reason = 'view your profile';
-    } else {
-      reason = '';
+    // Not Authenticated
+    else {
+      avatarButton = <Avatar className="nav-avatar nav-avatar-placeholder">Guest</Avatar>;
     }
 
-    this.setState({ dialogBoxOpened: true, dialogType: type, dialogReason: reason });
-  }
-
-  /**
-   * Closes the dialog box.
-   *
-   * While closing the dialog box, all of its text content is erased.
-   */
-  closeDialogBox() {
-    this.setState({ dialogBoxOpened: false, dialogType: '', dialogReason: '' });
+    return avatarButton;
   }
 
   render() {
     const open = Boolean(this.state.anchorEl);
 
     // Avatar Button
-    let avatar = createAvatarButton(this.props.Authentication, this.state.image, this.getInitials);
-
-    // My Profile Button
-    let myProfileButton = createMyProfileButton(
-      this.state.network,
+    let avatar = this.createAvatarButton(
       this.props.Authentication,
-      this.onClose,
-      this.openDialogBox,
-      this.state.name,
-    );
-
-    // Links Button
-    let linksButton = createLinksButton(
-      this.state.network,
-      this.onClose,
-      this.handleLinkClickOpen,
-      this.openDialogBox,
-    );
-
-    // Help Button
-    let helpButton = createHelpButton(this.onClose);
-
-    // About Button
-    let aboutButton = createAboutButton(this.onClose);
-
-    // Feedback Button
-    let feedbackButton = createFeedbackButton(this.state.network, this.onClose, this.openDialogBox);
-
-    // Admin Button
-    let adminButton = createAdminButton(
-      this.state.network,
-      this.props.Authentication,
-      this.onClose,
-      this.openDialogBox,
-    );
-
-    // Sign In & Out Button
-    let signInOutButton = createSignInOutButton(
-      this.props.Authentication,
-      this.onSignOut,
-      this.onSignIn,
+      this.state.image,
+      this.getInitials,
     );
 
     return (
       <section className="right-side-container">
-        <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
+        {/* If the menu is closed, the Tooltip will display when hovering over the user's avatar.
+         Otherwise, it will not display */}
+        {!this.props.menuOpened ? (
+          <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
+            <IconButton
+              className="gc360-nav-avatar-rc"
+              aria-label="More"
+              aria-owns={open ? 'global-menu' : null}
+              aria-haspopup="true"
+              onClick={event => {
+                // Handles opening the menu
+                this.props.onClick();
+              }}
+            >
+              {avatar}
+            </IconButton>
+          </Tooltip>
+        ) : (
           <IconButton
             className="gc360-nav-avatar-rc"
             aria-label="More"
             aria-owns={open ? 'global-menu' : null}
             aria-haspopup="true"
-            onClick={this.onClick}
           >
             {avatar}
           </IconButton>
-        </Tooltip>
-
-        <Menu
-          id="nav-avatar-right-corner"
-          anchorEl={this.state.anchorEl}
-          open={open}
-          onClose={this.onClose}
-          disableRestoreFocus // Prevent tooltip from sticking
-        >
-          {/*This first MenuItem is hidden just to hide the React bug that leaves the first option perpeutally highlighted.*/}
-          <MenuItem onClick={this.onClose} style={{ display: 'none' }}>
-            My Profile
-          </MenuItem>
-          {myProfileButton}
-          {linksButton}
-          {helpButton}
-          {aboutButton}
-          {feedbackButton}
-          {adminButton}
-          {signInOutButton}
-        </Menu>
-
-        <QuickLinksDialog
-          handleLinkClickOpen={this.handleLinkClickOpen}
-          handleLinkClose={this.handleLinkClose}
-          linkopen={this.state.linkopen}
-        />
-
-        {this.createDialogBox()}
+        )}
       </section>
     );
   }

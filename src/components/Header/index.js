@@ -8,7 +8,8 @@ import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import WorkIcon from '@material-ui/icons/Work';
-import WellnessIcon from '@material-ui/icons/LocalHospital';
+/* Uncomment when re-enabling timesheets link */
+// import WellnessIcon from '@material-ui/icons/LocalHospital';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
@@ -19,10 +20,12 @@ import { Route, Switch, NavLink } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
+import { GordonNavButtonsRightCorner } from './components/NavButtonsRightCorner';
 import routes from '../../routes';
 import { projectName } from '../../project-name';
 import storage from '../../services/storage';
 import GordonDialogBox from '../GordonDialogBox/index';
+import { windowBreakWidths } from '../../theme';
 
 const getRouteName = route => {
   if (route.name) {
@@ -48,15 +51,15 @@ export default class GordonHeader extends Component {
     this.createPeopleTab = this.createPeopleTab.bind(this);
     this.openDialogBox = this.openDialogBox.bind(this);
     this.closeDialogBox = this.closeDialogBox.bind(this);
+    this.handleRightSideMenu = this.handleRightSideMenu.bind(this);
 
     this.state = {
       value: null,
-      dialogBoxNetworkOpen: false,
-      dialogBoxLoginOpen: false,
       dialogBoxOpened: false,
       dialogType: '',
       dialogReason: '',
       network: 'online',
+      openRightSideMenu: false,
     };
   }
 
@@ -125,11 +128,29 @@ export default class GordonHeader extends Component {
     }
     // Saves the network's status to this component's state
     this.setState({ network });
+
+    window.addEventListener('resize', event => {
+      if (event.target.innerWidth < windowBreakWidths.breakMD) {
+        if (this.state.openRightSideMenu) {
+          this.setState({ openRightSideMenu: false });
+        }
+      }
+    });
   }
 
   componentWillUnmount() {
-    // Removes the window's event listener before unmounting the component
+    // Removes the window's event listeners before unmounting the component
     window.removeEventListener('message', () => {});
+    window.removeEventListener('resize', () => {});
+  }
+
+  /**
+   * Sets the state of whether the menu should open or not. It also saves its opener HTML anchor.
+   */
+  handleRightSideMenu() {
+    this.state.openRightSideMenu === false
+      ? this.setState({ openRightSideMenu: true })
+      : this.setState({ openRightSideMenu: false });
   }
 
   /**
@@ -205,7 +226,11 @@ export default class GordonHeader extends Component {
    * While closing the dialog box, all of its text content is erased.
    */
   closeDialogBox() {
-    this.setState({ dialogBoxOpened: false, dialogType: '', dialogReason: '' });
+    this.setState({
+      dialogBoxOpened: false,
+      dialogType: '',
+      dialogReason: '',
+    });
   }
 
   /**
@@ -441,8 +466,17 @@ export default class GordonHeader extends Component {
             <GordonPeopleSearch Authentication={this.props.Authentication} />
 
             <GordonNavAvatarRightCorner
+              Authentication={this.props.Authentication}
+              onClick={this.handleRightSideMenu}
+              menuOpened={this.state.openRightSideMenu}
+            />
+
+            <GordonNavButtonsRightCorner
+              open={this.state.openRightSideMenu}
+              openDialogBox={this.openDialogBox}
               onSignOut={this.props.onSignOut}
               Authentication={this.props.Authentication}
+              onClose={this.handleRightSideMenu}
             />
 
             {this.createDialogBox()}

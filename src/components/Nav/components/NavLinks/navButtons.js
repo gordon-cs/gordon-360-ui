@@ -9,7 +9,7 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import user from '../../../../services/user';
 import WorkIcon from '@material-ui/icons/Work';
-import WellnessIcon from '@material-ui/icons/LocalHospital';
+// import WellnessIcon from '@material-ui/icons/LocalHospital';
 
 /**
  * Creates the Links button.
