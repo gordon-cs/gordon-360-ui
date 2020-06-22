@@ -190,6 +190,8 @@ export default class GordonHeader extends Component {
       reason = 'view Timesheets';
     } else if (feature === 'wellness check') {
       reason = 'check Wellness';
+    } else if (feature === 'my profile view') {
+      reason = 'view your personal profile';
     } else {
       reason = '';
     }
