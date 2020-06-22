@@ -39,6 +39,9 @@
     background-color: white;
   }
 
+
+  // .loading is shown first. After 350ms, .loading opacity and font-size go to 0. This is done
+  // to give space for .no-results to increase in font size and change to normal opacity.
   .no-results {
     font-size: 0;
     opacity: 0;

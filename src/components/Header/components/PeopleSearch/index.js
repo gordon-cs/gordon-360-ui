@@ -60,8 +60,6 @@ export default class GordonPeopleSearch extends Component {
       highlightQuery: String,
       loginDialog: false,
       network: 'online',
-      time: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit' }),
-      loading: true,
     };
     this.isMobileView = false;
     this.breakpointWidth = 400;
