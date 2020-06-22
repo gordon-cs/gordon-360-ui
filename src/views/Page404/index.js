@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import mascot from './mascot.svg';
+import ScottieDog from './components/ScottieDog';
 
 const message = "Hmmm... We're not quite sure what you're looking for";
 
@@ -28,7 +29,7 @@ const styles = {
 export default class ProfileNotFound extends Component {
 
   render() {
-    return (
+    return (      
       <Grid container
         justify="center" alignContent="center"
         direction="column"
@@ -42,8 +43,11 @@ export default class ProfileNotFound extends Component {
         <Grid item style={styles.image}>
           <img src={mascot} alt="Gordon Mascot" style={styles.mascot}></img>
         </Grid>
+        <div style={{position: "fixed", bottom: "0px", height: "100px", width:"100%", fontSize: "15px"}}>
+          <ScottieDog></ScottieDog>
+        </div>
       </Grid>
     );
-  }
+    }
 
 }
