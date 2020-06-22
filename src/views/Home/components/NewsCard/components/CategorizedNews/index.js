@@ -34,7 +34,7 @@ export default class CategorizedNews extends Component {
     //isn't written
     todaysNews = await NewsService.getTodaysNews(this.props.categoryID);
 
-    this.setstate({ todaysNews });
+    this.setState({ todaysNews });
   }
 
   // opens or closes the expansions

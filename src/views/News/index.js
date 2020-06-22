@@ -50,6 +50,7 @@ export default class StudentNews extends Component {
       search: '',
       openPostActivity: false,
       loading: true,
+      categories: [],
       news: [],
       network: 'online',
     };
@@ -60,7 +61,7 @@ export default class StudentNews extends Component {
   }
   componentWillMount() {
     this.setState({ loading: false })
-    // this.loadNews();
+    this.loadNews();
   }
 
   handlePostClick() {
@@ -79,17 +80,19 @@ export default class StudentNews extends Component {
 
   //This should be the only time we pull from the database
   async loadNews() {
-    console.log(await news.getCategories());
-    /*this.setState({ loading: true });
+    this.setState({ loading: true });
+
     if (this.props.Authentication) {
-      const allNews = await news.getCategories();
-      this.setState({ loading: false, news: allNews });
+      const newsCategories = await news.getCategories();
+      const allNews = await news.getTodaysNews();
+      this.setState({ loading: false, categories: newsCategories, news: allNews });
+      // example code from events may be helpful
       // const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
       // const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       // this.setState({ allEvents, events, loading: false, filteredEvents: events });
     } else {
       // alert("Please sign in to access student news");
-    }*/
+    }
   }
   
   search(name) {
@@ -211,10 +214,14 @@ export default class StudentNews extends Component {
                               <FormControl style={styles.formControl}>
                                   <InputLabel id="demo-simple-select-label">Category</InputLabel>
                                   <Select>
-                                    <MenuItem value={"general information"}>General Information</MenuItem>
-                                    <MenuItem value={"lost items"}>Lost Items</MenuItem>
-                                    <MenuItem value={"found items"}>Found Items</MenuItem>
-                                    <MenuItem value={"wanted"}>Wanted</MenuItem>
+                                    {console.log(this.state.categories)}
+                                    {this.state.categories.map((category) => 
+                                      <MenuItem 
+                                        key={category.categoryID}
+                                        value={category.categoryID}>
+                                        {category.categoryName}
+                                      </MenuItem>
+                                    )}
                                   </Select>
                               </FormControl>
                           </Grid>
