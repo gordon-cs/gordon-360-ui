@@ -5,10 +5,9 @@ import Login from '../Login';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import Approved from './components/Approved/Approved';
-import Denied from './components/Denied/Denied';
 import wellness from '../../services/wellness';
 import GordonLoader from '../../components/Loader';
+import HealthStatus from './components/HealthStatus/HealthStatus';
 import '../../app.css';
 import { gordonColors } from './../../theme';
 
@@ -142,7 +141,7 @@ export default class WellnessCheck extends Component {
   render() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
+     *  multiple re-renders that creates extreme performance loss.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
     // Styles the header
@@ -177,13 +176,13 @@ export default class WellnessCheck extends Component {
        */
 
       if (this.props.Authentication) {
-        let status;
+        let status = <HealthStatus />
 
-        if (this.state.currentStatus === false ) {
-          status = <Approved />;
-        } else {
-          status = <Denied />;
-        }
+        // if (this.state.currentStatus === false ) {
+        //   status = <Approved />;
+        // } else {
+        //   status = <Denied />;
+        // }
 
         content = (
           <Grid container justify="center" spacing={2}>
