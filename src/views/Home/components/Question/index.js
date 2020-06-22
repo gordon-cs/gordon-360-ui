@@ -18,8 +18,6 @@ import wellness from '../../../../services/wellness.js';
 
 /**
  * Creates the question for the health check feature
- *
- * 
  */
 
 export default class Question extends Component {
@@ -27,7 +25,6 @@ export default class Question extends Component {
     super(props);
 
     this.submitHandler = this.submitHandler.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.loadQuestion = this.loadQuestion.bind(this);
 
     this.state = {
@@ -39,10 +36,12 @@ export default class Question extends Component {
       questions: null,
     };
   }
+
   componentWillMount() {
     this.loadQuestion();
     this.props.setAnswered(this.state.answered);
   }
+
   async componentDidMount() {
     this.setState({ questions: await getQuestions() });
   }
@@ -50,7 +49,7 @@ export default class Question extends Component {
   async loadQuestion() {
     this.setState({ loading: true });
     try {
-      //call to get question from the back end
+      //TODO: create call to get question from the back end
       this.setState({ loading: false});
     } catch (error) {
       this.setState({ error });
@@ -65,12 +64,8 @@ export default class Question extends Component {
     e.preventDefault();
   }
 
-  handleChange = (e) => {
-    this.setState({ currentStatus: e.target.value });
-  };
-
-  // Creates the first question of the wellness check
-  createQuestionOne(questionStyle) {
+  // Creates wellness check question
+  createQuestion(questionStyle) {
     // Checks to make sure the questions are imported before attempting to access its data
     if (this.state.questions !== null) {
       let symptomsJSX = this.state.questions.qOne.symptoms.map((item) => {
@@ -113,8 +108,8 @@ export default class Question extends Component {
     }
   }
 
-  // Creates the second question of the wellness check
-  createQuestionTwo(questionStyle) {
+  // creates prompt after the first question is answered
+  createPrompt(questionStyle) {
     // Checks to make sure the questions are found in the state before
     if (this.state.questions !== null) {
       if (this.state.qOneAnswer === 'Yes') {
@@ -210,9 +205,9 @@ export default class Question extends Component {
               </Grid>
             </Grid>
           </div>
-          {this.createQuestionOne(questionStyle)}
+          {this.createQuestion(questionStyle)}
           <Divider />
-          {this.createQuestionTwo(questionStyle)}
+          {this.createPrompt(questionStyle)}
           {this.showSubmitButton(buttonStyle)}
           <div style={headerStyle}>Health Center: (978) 867-4300 </div>
         </Card>

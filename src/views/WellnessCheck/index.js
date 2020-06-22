@@ -38,7 +38,6 @@ export default class WellnessCheck extends Component {
     user.getImage().then(data => {
       this.setState({ image: data, loading: false });
     });
-    await this.getStatus();
   }
 
   componentWillMount() {
