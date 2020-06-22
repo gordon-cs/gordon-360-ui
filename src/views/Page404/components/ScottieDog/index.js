@@ -12,7 +12,7 @@ export default class ScottieDog extends Component {
                 <div className="dog-eye"></div>
                 <div className="dog-nose"></div>
                 <div className="dog-ear"></div>
-                <div className="dog-collar"></div>
+                <div className="dog-collar">GORDON 360</div>
             </div>
             <div className="dog-leg dog-leg1"></div>
             <div className="dog-leg dog-leg2"></div>

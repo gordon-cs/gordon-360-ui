@@ -66,8 +66,13 @@ $dog-body-height: 5em;
     bottom: 0;
     right: 0;
     width: 50%;
-    height: 15%;
+    height: 2.5em;
     transform: rotate(-8deg);
+    font-size: 0.3em;
+    line-height: 2.5em;
+    color: #fff;
+    text-align: center;
+    font-family: monospace;
 }
 .dog-leg {
     background-color: $dog-color;
