@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
+import List from '@material-ui/core/List';
 
 import NewsItem from '../NewsItem';
 import { gordonColors } from '../../../../theme';
@@ -58,13 +59,16 @@ export default class NewsList extends Component {
       padding: '10px',
     };
 
+    /********** HEADER ***********/
+    // Show single 'news' column for narrrow viewports
     if (window.innerWidth < this.breakpointWidth) {
       // content = news.map(currPosting => (
       //   <NewsItem posting={currPosting} key={currPosting.Posting_ID} />
       // ));
 
-    } else if (!news) {
-      //content = news.map(currPosting => <NewsItem posting={currPosting} key={currPosting.Posting_ID} />);
+    // Show full news columns in header for larger viewports
+    } else if (news) {
+      content = news.map(currPosting => <NewsItem posting={currPosting} key={currPosting.Posting_ID} />);
 
       header = (
         <div style={headerStyle}>
@@ -99,7 +103,7 @@ export default class NewsList extends Component {
         <Card>
           {header}
           <Grid>
-            {/* <List >{content}</List> */}
+            <List >{content}</List>
           </Grid>
         </Card>
       </section>

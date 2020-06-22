@@ -6,6 +6,7 @@ import { CardContent } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { gordonColors } from '../../../../theme';
 import NewsService from '../../../../services/news';
+import NewsItem from '../../../News/components/NewsItem';
 
 import CategorizedNews from './components/CategorizedNews';
 
@@ -17,6 +18,7 @@ export default class DailyNews extends Component {
 
     this.state = {
       newsCategories: [],
+      news: [],
     };
   }
 
@@ -27,10 +29,11 @@ export default class DailyNews extends Component {
   // loads the news by category
   async loadNews() {
     let newsCategories;
-
     newsCategories = await NewsService.getCategories();
 
-    this.setState({ newsCategories });
+    let todaysNews = await NewsService.getTodaysNews();
+
+    this.setState({ newsCategories: newsCategories, news: todaysNews});
   }
 
   // opens or closes the expansions
@@ -40,6 +43,7 @@ export default class DailyNews extends Component {
 
   render() {
     let categories;
+    let news;
 
     const button = {
       color: 'white',
@@ -53,6 +57,11 @@ export default class DailyNews extends Component {
         <CategorizedNews category={item.categoryID} />
       ));
 
+    news = this.state.news
+      .map(currPosting => (
+        <NewsItem posting={currPosting} key={currPosting.Posting_ID} />
+      ));
+
     return (
       <Card>
           <CardContent>
@@ -62,13 +71,14 @@ export default class DailyNews extends Component {
               </Grid>
               <Grid item xs={5} align="right">
                 <Button variant="contained" style={button}
-                    onClick={() => (window.location.pathname = '/news')}
-                    >
-                    All News
+                  onClick={() => (window.location.pathname = '/news')}
+                >
+                  All News
                 </Button>
               </Grid>
             </Grid>
-          {categories}
+          {/* {categories} */}
+          {news}
         </CardContent>
       </Card>
     );

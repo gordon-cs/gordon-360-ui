@@ -19,8 +19,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import IDUploader from '../IDUploader';
-import Dropzone from 'react-dropzone';
+// testing for future feature to upload image
+// import IDUploader from '../IDUploader';
+// import Dropzone from 'react-dropzone';
 
 const styles = {
   searchBar: {
@@ -172,6 +173,8 @@ export default class StudentNews extends Component {
             <Typography variant="h4">No News To Show</Typography>
           </Grid>
         );
+        //for testing
+        content = <NewsList news={this.state.news} />;
       }
 
       let news;
@@ -189,9 +192,9 @@ export default class StudentNews extends Component {
               Post Listing
             </Fab>
             <Grid container justify="center">
-              <Grid item xs={8} md={6} lg={6}>
-                {/* <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={8}>
-                  <Grid item xs={10} sm={8} md={8} lg={6}> */}
+              <Grid item xs={12} md={12} lg={8}>
+                <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={8}>
+                  <Grid item xs={10} sm={8} md={8} lg={6}>
                     <TextField
                       id="search"
                       label="Search"
@@ -200,8 +203,8 @@ export default class StudentNews extends Component {
                       margin="normal"
                       fullWidth
                     />
-                  {/* </Grid>
-                </Grid> */}
+                  </Grid>
+                </Grid>
               </Grid>
 
               <Dialog open={this.state.openPostActivity} fullWidth>
@@ -214,7 +217,6 @@ export default class StudentNews extends Component {
                               <FormControl style={styles.formControl}>
                                   <InputLabel id="demo-simple-select-label">Category</InputLabel>
                                   <Select>
-                                    {console.log(this.state.categories)}
                                     {this.state.categories.map((category) => 
                                       <MenuItem 
                                         key={category.categoryID}
