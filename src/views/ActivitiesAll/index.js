@@ -73,7 +73,7 @@ export default class GordonActivitiesAll extends Component {
     if (window.location.href.includes('?')) {
       backButton = true;
       tempSession = window.location.href.split('?')[1];
-      this.setState({ session: tempSession, currentAcademicSession: tempSession });
+      this.setState({ session: tempSession });
       [pastActivities, pastTypes] = await Promise.all([
         activity.getAll(tempSession),
         activity.getTypes(tempSession),
@@ -222,10 +222,12 @@ export default class GordonActivitiesAll extends Component {
       this.props.history.push(`?${this.state.session}`);
 
       const allActivities = await activity.getAll(this.state.session);
+      const types = await activity.getTypes(this.state.session);
       const { type, search } = this.state;
       this.setState({
         activities: activity.filter(allActivities, type, search),
         allActivities,
+        types,
         // If authenticated, gets the user's involvements for the selected session
         myInvolvements: this.props.Authentication
           ? await user.getSessionMembershipsWithoutGuests(this.state.profile.ID, this.state.session)
@@ -253,13 +255,13 @@ export default class GordonActivitiesAll extends Component {
   /**
    * Creates the My Involvements text for both the header and if the user has no involvements.
    *
-   * @param {String} myInvolvementsHeadingText The My Involvements current session description
-   * @param {String} myInvolvementsNoneText The My Involvements text if user has no involvements
    * @returns {Object} An object that contains both MyInvolvements header and no-involvements text
    */
-  createMyInvolvementsText(myInvolvementsHeadingText, myInvolvementsNoneText) {
+  createMyInvolvementsText() {
+    let myInvolvementsHeadingText = '';
+    let myInvolvementsNoneText = '';
     // If the current session is the current academic session
-    if (this.state.session === this.state.currentAcademicSession) {
+    if (this.state.session !== '' && this.state.session === this.state.currentAcademicSession) {
       myInvolvementsHeadingText = 'CURRENT';
       myInvolvementsNoneText =
         "It looks like you're not currently a member of any Involvements. Get connected below!";
@@ -267,11 +269,15 @@ export default class GordonActivitiesAll extends Component {
     // If the current session is not the current academic session
     else {
       // Gets the description of the session
-      let involvementDescription = this.state.sessions.filter(session => {
-        return this.state.session === session.SessionCode;
-      })[0].SessionDescription;
-      myInvolvementsHeadingText = involvementDescription.toUpperCase();
-      myInvolvementsNoneText = 'No Involvements found for ' + involvementDescription;
+      try {
+        let involvementDescription = this.state.sessions.filter(session => {
+          return this.state.session === session.SessionCode;
+        })[0].SessionDescription;
+        myInvolvementsHeadingText = involvementDescription.toUpperCase();
+        myInvolvementsNoneText = 'No Involvements found for ' + involvementDescription;
+      } catch (error) {
+        // Do nothing with error
+      }
     }
 
     return { headingText: myInvolvementsHeadingText, noneText: myInvolvementsNoneText };
