@@ -74,27 +74,8 @@ export default class WellnessCheck extends Component {
    * @return {JSON} The JSON data of the current user
    */
   async getUserData() {
-    // Gets the token from local storage to prove authentication for fetch
-    let token = JSON.parse(localStorage.getItem('token'));
-
-    // Creates the header for the request to get the user's info
-    let headers = new Headers({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
-
-    return await fetch(
-      new Request('https://360api.gordon.edu/api/profiles', { method: 'GET', headers }),
-    )
-      .then(result => {
-        return result.json();
-      })
-      .then(data => {
-        this.setState({ currentUser: data });
-      })
-      .catch(error => {
-        console.log(error.message);
-      });
+    const data = await user.getProfileInfo();
+    this.setState({ currentUser: data});
   }
 
   async getPersonType() {

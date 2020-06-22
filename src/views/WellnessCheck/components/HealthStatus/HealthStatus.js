@@ -13,6 +13,12 @@ export default class HealthStatus extends Component {
   constructor(props) {
     super(props);
 
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.tick = this.tick.bind(this);
+    this.resizeIcon = this.resizeIcon.bind(this);
+    this.getStatus = this.getStatus.bind(this);
+    this.loadPage = this.loadPage.bind(this);
+
     this.state = {
       currentStatus: true,
       loading: true,

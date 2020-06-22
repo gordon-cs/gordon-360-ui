@@ -24,10 +24,10 @@ export default class Home extends Component {
     this.state = { personType: null, network: 'online', answered: false, currentStatus: '' };
   }
 
-   componentWillMount() {
+   async componentWillMount() {
     if (this.props.Authentication) {
       this.getPersonType();
-      this.getStatus();
+     await this.getStatus();
     }
   }
 
