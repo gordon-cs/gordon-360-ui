@@ -342,8 +342,7 @@ export default class GordonPeopleSearch extends Component {
             )}
           </Downshift>
         );
-                  }
-      else {
+    } else {
       content = (
         <span className="gordon-people-search">
           <TextField
