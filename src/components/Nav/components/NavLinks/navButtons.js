@@ -9,7 +9,7 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import user from '../../../../services/user';
 import WorkIcon from '@material-ui/icons/Work';
-// import WellnessIcon from '@material-ui/icons/LocalHospital';
+import WellnessIcon from '@material-ui/icons/LocalHospital';
 
 /**
  * Creates the Links button.
@@ -420,18 +420,18 @@ export function createTimesheetsButton(networkStatus, authenticated, onLinkClick
 
   return timesheetsButton;
 }
- /**
-   * THE CODE FOR THE WELLNESS CHECK TABS.
-   *
-   */
+/**
+ * THE CODE FOR THE WELLNESS CHECK TABS.
+ *
+ */
 export function createWellnessButton(networkStatus, authenticated, onLinkClick, openDialogBox) {
   let wellnessButton;
   // Network Status: Online
   if (networkStatus === 'online') {
-  // Network Status: Online - Authenticated
-    if (authenticated) {      
+    // Network Status: Online - Authenticated
+    if (authenticated) {
       wellnessButton = (
-        <NavLink className="gc360-link" exact to="/Wellness" onClick={onLinkClick} >
+        <NavLink className="gc360-link" exact to="/Wellness" onClick={onLinkClick}>
           <ListItem button>
             <ListItemIcon>
               <WellnessIcon />
@@ -442,7 +442,7 @@ export function createWellnessButton(networkStatus, authenticated, onLinkClick, 
       );
     }
     // Network Status: Online - Not Authenticated
-    else{
+    else {
       wellnessButton = (
         <NavLink
           className="gc360-link"
@@ -459,7 +459,7 @@ export function createWellnessButton(networkStatus, authenticated, onLinkClick, 
         </NavLink>
       );
     }
-  } 
+  }
   // Network Status: Offline
   else {
     wellnessButton = (
@@ -478,6 +478,6 @@ export function createWellnessButton(networkStatus, authenticated, onLinkClick, 
       </NavLink>
     );
   }
-      
+
   return wellnessButton;
 }

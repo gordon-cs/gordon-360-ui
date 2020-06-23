@@ -1,68 +1,64 @@
 import { Avatar, IconButton, Tooltip } from '@material-ui/core';
-import React, { Component } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { gordonColors } from '../../../../theme';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './nav-avatar-right-corner.css';
 import '../../../../app.css';
 import user from '../../../../services/user';
 
-export default class GordonNavAvatarRightCorner extends Component {
-  constructor(props) {
-    super(props);
+export const GordonNavAvatarRightCorner = props => {
+  const [name, setName] = useState(null);
+  const [username, setUsername] = useState(null);
+  const [image, setImage] = useState(null);
 
-    this.getInitials = this.getInitials.bind(this);
-    this.checkPeer = this.checkPeer.bind(this);
-    this.createAvatarButton = this.createAvatarButton.bind(this);
-    this.loadAvatar = this.loadAvatar.bind(this);
+  GordonNavAvatarRightCorner.propTypes = {
+    onSignOut: PropTypes.func.isRequired,
+  };
 
-    this.state = {
-      email: null,
-      image: null,
-      name: null,
-      username: null,
-    };
-  }
+  // Creates the styling of the Avatar
+  const useStyles = makeStyles({
+    root: {
+      width: '50px',
+      height: '50px',
+      padding: '0rem',
+      '&:hover': {
+        transition: 'box-shadow 0.2s',
+        boxShadow: '0px 3px 10px 0px rgba(0, 0, 0, 0.5)',
+      },
+      '&:not(:hover)': {
+        transition: 'box-shadow 0.3s',
+        boxShadow: '0px 1px 2px 0px rgba(0, 0, 0, 0.5)',
+      },
+      '&_placeholder': {
+        backgroundColor: gordonColors.primary.cyan,
+      },
+    },
+    tooltip: {
+      backgroundColor: gordonColors.neutral.darkGray,
+    },
+  });
+  const classes = useStyles();
 
-  async componentWillReceiveProps(newProps) {
-    if (this.props.Authentication !== newProps.Authentication) {
-      this.loadAvatar(newProps.Authentication);
-    }
-  }
+  // Re-creates the Avatar whenever authentication changes
+  useEffect(() => {
+    loadAvatar(props.Authentication);
+  }, [props.Authentication]);
 
-  async componentWillMount() {
-    this.loadAvatar(this.props.Authentication);
-  }
+  useEffect(() => {
+    setInterval(checkPeer(), 1500);
+  });
 
-  componentDidMount() {
-    setInterval(this.checkPeer.bind(this), 1500);
-  }
-
-  /**
-   * Creates the avatar
-   *
-   * @param {Boolean} authentication Determines if the user is authenticated
-   */
-  async loadAvatar(authentication) {
-    if (authentication) {
-      const { name, user_name: username } = user.getLocalInfo();
-      this.setState({ name, username });
-      const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
-        await user.getProfileInfo(),
-        await user.getImage(),
-      ]);
-      const image = preferredImage || defaultImage;
-      this.setState({ email, image });
-    } else {
-      this.setState({ name: 'Guest', username: 'Guest' });
-    }
-  }
+  // Avatar Button
+  let avatar = createAvatarButton(props.Authentication, image, getInitials);
 
   /**
    * This method checks a peer component Profile
    * and rerenders the avatar if the Profile picture is updated
    */
-  checkPeer() {
+  function checkPeer() {
     if (window.didProfilePicUpdate) {
-      this.loadAvatar(this.props.Authentication);
+      loadAvatar(props.Authentication);
       window.didProfilePicUpdate = false;
     }
   }
@@ -72,9 +68,9 @@ export default class GordonNavAvatarRightCorner extends Component {
    *
    * @returns {String} The initials of the user if available
    */
-  getInitials() {
-    if (this.state.username) {
-      return this.state.username
+  function getInitials() {
+    if (username) {
+      return username
         .split('.') // Split name into separate words
         .map(name => name[0]) // Get first letter of each part of name
         .join('')
@@ -94,7 +90,7 @@ export default class GordonNavAvatarRightCorner extends Component {
    *
    * @return {JSX} The JSX of the Avatar button.
    */
-  createAvatarButton(authenticated, avatarImage, getInitials) {
+  function createAvatarButton(authenticated, avatarImage, getInitials) {
     let avatarButton;
     // Authenticated
     if (authenticated) {
@@ -102,15 +98,18 @@ export default class GordonNavAvatarRightCorner extends Component {
       if (avatarImage) {
         avatarButton = (
           <Avatar
-            className="gc360-nav-avatar-rc_size"
+            className={`gc360-nav-avatar-rc_size ${classes.root}`}
             src={`data:image/jpg;base64,${avatarImage}`}
+            sizes="70px"
           />
         );
       }
       // Authenticated - Profile Image Unavailable
       else {
         avatarButton = (
-          <Avatar className="gc360-nav-avatar-rc_size gc360-nav-avatar-rc_placeholder">
+          <Avatar
+            className={`gc360-nav-avatar-rc_size gc360-nav-avatar-rc_placeholder ${classes.root}`}
+          >
             {getInitials()}
           </Avatar>
         );
@@ -118,56 +117,49 @@ export default class GordonNavAvatarRightCorner extends Component {
     }
     // Not Authenticated
     else {
-      avatarButton = <Avatar className="nav-avatar nav-avatar-placeholder">Guest</Avatar>;
+      avatarButton = (
+        <Avatar className={`nav-avatar nav-avatar-placeholder ${classes.root}`}>Guest</Avatar>
+      );
     }
 
     return avatarButton;
   }
 
-  render() {
-    const open = Boolean(this.state.anchorEl);
-
-    // Avatar Button
-    let avatar = this.createAvatarButton(
-      this.props.Authentication,
-      this.state.image,
-      this.getInitials,
-    );
-
-    return (
-      <section className="right-side-container">
-        {/* If the menu is closed, the Tooltip will display when hovering over the user's avatar.
-         Otherwise, it will not display */}
-        {!this.props.menuOpened ? (
-          <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-avatar" title={this.state.name}>
-            <IconButton
-              className="gc360-nav-avatar-rc"
-              aria-label="More"
-              aria-owns={open ? 'global-menu' : null}
-              aria-haspopup="true"
-              onClick={event => {
-                // Handles opening the menu
-                this.props.onClick();
-              }}
-            >
-              {avatar}
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <IconButton
-            className="gc360-nav-avatar-rc"
-            aria-label="More"
-            aria-owns={open ? 'global-menu' : null}
-            aria-haspopup="true"
-          >
-            {avatar}
-          </IconButton>
-        )}
-      </section>
-    );
+  /**
+   * Creates the Avatar image of the current user
+   *
+   * @param {Boolean} authentication Determines if the user is authenticated
+   */
+  async function loadAvatar(authentication) {
+    if (authentication) {
+      const { name, user_name: username } = user.getLocalInfo();
+      setName(name);
+      setUsername(username);
+      const { def: defaultImage, pref: preferredImage } = await user.getImage();
+      const image = preferredImage || defaultImage;
+      setImage(image);
+    } else {
+      setName('Guest');
+      setUsername('Guest');
+    }
   }
-}
 
-GordonNavAvatarRightCorner.propTypes = {
-  onSignOut: PropTypes.func.isRequired,
+  return (
+    <section className="right-side-container">
+      <Tooltip classes={classes} id="tooltip-avatar" title={name}>
+        <IconButton
+          className={`gc360-nav-avatar-rc ${classes.root}`}
+          aria-label="More"
+          aria-owns={'global-menu'}
+          aria-haspopup="true"
+          onClick={event => {
+            // Handles opening the menu
+            props.onClick();
+          }}
+        >
+          {avatar}
+        </IconButton>
+      </Tooltip>
+    </section>
+  );
 };

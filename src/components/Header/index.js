@@ -9,7 +9,7 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import WorkIcon from '@material-ui/icons/Work';
 /* Uncomment when re-enabling timesheets link */
-// import WellnessIcon from '@material-ui/icons/LocalHospital';
+import WellnessIcon from '@material-ui/icons/LocalHospital';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
@@ -19,7 +19,7 @@ import DocumentTitle from 'react-document-title';
 import { Route, Switch, NavLink } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
-import GordonNavAvatarRightCorner from './components/NavAvatarRightCorner';
+import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import { GordonNavButtonsRightCorner } from './components/NavButtonsRightCorner';
 import routes from '../../routes';
 import { projectName } from '../../project-name';
@@ -358,7 +358,7 @@ export default class GordonHeader extends Component {
   /**
    * THE CODE FOR THE WELLNESS CHECK TABS.
    */
-  createWellnessTab(){
+  createWellnessTab() {
     let wellnessTab;
     // Network Status: Online
     if (this.state.network === 'online') {
