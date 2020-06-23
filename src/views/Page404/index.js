@@ -26,7 +26,7 @@ const styles = {
   },
 };
 
-export default class ProfileNotFound extends Component {
+export default class Page404 extends Component {
 
   render() {
     return (      
@@ -35,14 +35,17 @@ export default class ProfileNotFound extends Component {
         direction="column"
         style={styles.main}
       >
+        {/* 404 message */}
         <Grid item style={styles.message}>
           <Typography variant="h4" align="center" style={{fontSize: "calc(0.2vw + 0.8em)", color: "rgba(0, 0, 0, 0.54)", fontWeight: "bold"}}>
             {message}
           </Typography>
         </Grid>
+        {/* Gordon mascot image */}
         <Grid item style={styles.image}>
           <img src={mascot} alt="Gordon Mascot" style={styles.mascot}></img>
         </Grid>
+        {/* Scottie dog walking across bottom animation */}
         <div style={{position: "fixed", bottom: "0px", height: "100px", width:"100%", fontSize: "15px"}}>
           <ScottieDog></ScottieDog>
         </div>

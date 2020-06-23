@@ -9,8 +9,8 @@ $dog-body-height: 5em;
 
     /*** Used for walking across screen animation (optional) ***/
     animation: dog-walk linear 30s;
-    animation-delay: 5s;
-    left: 150%;
+    animation-delay: 5s; // plus time to 'walk' from off screen to screen
+    left: calc(100% + 10em); // 10em buffer to make sure head is off the screen at start
 }
 @keyframes dog-walk {
     100% {
