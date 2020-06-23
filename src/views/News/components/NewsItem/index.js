@@ -29,22 +29,15 @@ export default class NewsItem extends Component {
     if(size === "single") {
       return (
         <section>
-          <Grid container onClick={this.handleExpandClick} className="event-item">
+          <Grid container onClick={this.handleExpandClick} className="news-item">
             <Grid item xs={12}>
-              <Typography variant="h6" className="event-heading">
-                
-              </Typography>
-              <Typography className="news-subject"> {posting.Subject} </Typography>
-              <Typography className="event-content"> {newsItem.ADUN} </Typography>
+              <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
+              <Typography className="news-content" style={{textTransform: "capitalize"}}> {posting.author} ({posting.datePosted}) </Typography>
             </Grid>
-            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{textAlign: "left"}}>
               <CardContent>
-                <Typography className="event-content ">{newsItem.Body}</Typography>
-                <Typography className="event-content">{newsItem.Posting_Category}</Typography>
-                <p>
-                  <nbsp />
-                </p>
-                <Typography className="event-content">{newsItem.Posting_TimeStamp}</Typography>
+                <Typography className="news-content">"{posting.categoryName}"</Typography>
+                <Typography className="news-content ">{posting.Body}</Typography>
               </CardContent>
             </Collapse>
           </Grid>
@@ -56,19 +49,20 @@ export default class NewsItem extends Component {
       return (
         <section>
           <Grid container direction="row" onClick={this.handleExpandClick} className="news-item">
-            <Grid item xs={4}>
-              <Typography className="news-column">{posting.Subject}</Typography>
+            <Grid item xs={2}>
+              <Typography className="news-column">{posting.categoryName}</Typography>
             </Grid>
-            <Grid item xs={4}>
-              <Typography className="news-column">{posting.ADUN}</Typography>
+            <Grid item xs={5}>
+              <Typography className="news-column" style={{fontWeight: "bold"}}>{posting.Subject}</Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography className="news-column" style={{textTransform: "capitalize"}}>{posting.author}</Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="news-column">{posting.Entered}</Typography>
+              <Typography className="news-column">{posting.dayPosted}</Typography>
             </Grid>
-            <Grid item xs={2}>
-              <Typography className="news-column">{posting.categoryID}</Typography>
-            </Grid>
-            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+            
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{textAlign: "left"}}>
               <CardContent>
                 <Typography className="descriptionText">Description:</Typography>
                 <Typography type="caption" className="descriptionText">
@@ -85,13 +79,13 @@ export default class NewsItem extends Component {
 }
 
 NewsItem.propTypes = {
-  newsItem: PropTypes.shape({
-    Posting_ID: PropTypes.string.isRequired,
-    Posting_Subject: PropTypes.string.isRequired,
-    Posting_Poster: PropTypes.string.isRequired,
-    Posting_TimeStamp: PropTypes.string.isRequired,
-    Posting_Category: PropTypes.string.isRequired,
-    Posting_Body: PropTypes.string.isRequired,
-    Posting_Expiration: PropTypes.string.isRequired,
+  posting: PropTypes.shape({
+    SNID: PropTypes.number.isRequired,
+    Subject: PropTypes.string.isRequired,
+    ADUN: PropTypes.string.isRequired,
+    Entered: PropTypes.string.isRequired,
+    categoryName: PropTypes.string.isRequired,
+    Body: PropTypes.string.isRequired,
+    // Expiration: PropTypes.string.isRequired,
   }).isRequired,
 };

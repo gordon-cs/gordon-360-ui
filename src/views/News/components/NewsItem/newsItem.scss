@@ -11,10 +11,9 @@
 //   padding-right: 10px;
 }
 
-.news-item:hover .news-column {
-  color: #fff;
-}
-
-.news-item:hover .descriptionText {
-  color: #fff;
+.news-item:hover .news-column,
+.news-item:hover .descriptionText,
+.news-item:hover .news-content,
+.news-item:hover .news-heading {
+    color: #fff;
 }

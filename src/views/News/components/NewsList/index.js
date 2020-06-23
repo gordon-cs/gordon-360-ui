@@ -59,12 +59,12 @@ export default class NewsList extends Component {
       color: '#FFF',
       padding: '10px',
     };
-
+    
     /********** HEADER ***********/
     // Show single 'news' column for narrrow viewports
     if (window.innerWidth < this.breakpointWidth) {
       content = news.map(currPosting => (
-        <NewsItem posting={currPosting} key={currPosting.Posting_ID} size="single" />
+        <NewsItem posting={currPosting} key={currPosting.SNID} size="single" />
       ));
 
       header = (
@@ -82,18 +82,23 @@ export default class NewsList extends Component {
 
     // Show full news columns in header for larger viewports
     else if (news) {
-      content = news.map(currPosting => 
-        <NewsItem posting={currPosting} key={currPosting.Posting_ID} size="full" />);
-
+      content = news.map(posting => 
+        <NewsItem posting={posting} key={posting.SNID} size="full" />);
+      console.log(news);
       header = (
         <div style={headerStyle}>
           <Grid container direction="row">
-            <Grid item xs={4}>
+            <Grid item xs={2}>
+              <Typography variant="body2" style={headerStyle}>
+                CATEGORY
+              </Typography>
+            </Grid>
+            <Grid item xs={5}>
               <Typography variant="body2" style={headerStyle}>
                 SUBJECT
               </Typography>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <Typography variant="body2" style={headerStyle}>
                 POSTED BY
               </Typography>
@@ -101,11 +106,6 @@ export default class NewsList extends Component {
             <Grid item xs={2}>
               <Typography variant="body2" style={headerStyle}>
                 POSTED
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={headerStyle}>
-                CATEGORY
               </Typography>
             </Grid>
           </Grid>

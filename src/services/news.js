@@ -3,9 +3,9 @@
  *
  * @module studentNews
  */
-
- //Written by Jessica Guan
-
+ // Written by Jessica Guan
+ // Modified by Cameron Abbot
+import { DateTime } from 'luxon';
 import http from './http';
 
 /**
@@ -41,9 +41,41 @@ import http from './http';
 
 const getNotExpired = () => http.get(`news/not-expired`);
 
-const getNewNews = async () => await http.get(`news/new`);
+const getNewNews = () => http.get(`news/new`);
 
 const getCategories = () => http.get(`news/categories`);
+
+function formatPosting(posting) {
+  const timestamp = new DateTime(posting.Entered);
+  posting.dayPosted = timestamp.weekdayShort + ", "
+                     + timestamp.monthLong + " "
+                     + timestamp.daysInMonth;
+  posting.yearPosted = timestamp.year;
+  posting.datePosted = timestamp.month + "/"
+                     + timestamp.day;
+  
+  let author = posting.ADUN;
+  let fname, lname;
+  if(author.includes(".")) {
+    fname = author.substring(0,author.indexOf("."));
+    lname = author.substring(author.indexOf(".") + 1);
+  }
+  posting.author = fname + " " + lname;
+}
+
+/**
+ * Gets all unexpired news
+ * for use on the News Page
+ */
+const getNotExpiredFormatted = async () => {
+  let unexpiredNews = await getNewNews();
+  const news = [];
+  for (let i = 0; i < unexpiredNews.length; i +=1) {
+    news.push(unexpiredNews[i]);
+    formatPosting(unexpiredNews[i]);
+  }
+  return news;
+}
 
 /**
  * Gets today's news for given category
@@ -52,7 +84,7 @@ const getCategories = () => http.get(`news/categories`);
  */
 const getTodaysNews = async category => {
   let news;
-  news = getNewNews();
+  news = await getNewNews();
   const categoryNews = [];
   for (let i = 0; i < news.length; i +=1) {
     if(news[i].categoryID === category) {
@@ -69,7 +101,7 @@ const getTodaysNews = async category => {
  */
 const getNewsByCategory = async category => {
   let news;
-  news = getNotExpired();
+  news = await getNotExpired();
   const categoryNews = [];
   for (let i = 0; i < news.length; i +=1) {
     if(news[i].categoryID === category) {
@@ -93,5 +125,6 @@ export default {
   submitStudentNews,
   getCategories,
   getTodaysNews,
-  getNewNews
+  getNewNews,
+  getNotExpiredFormatted
 };
