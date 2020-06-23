@@ -6,6 +6,7 @@ import List from '@material-ui/core/List';
 
 import NewsItem from '../NewsItem';
 import { gordonColors } from '../../../../theme';
+import './newsList.scss';
 
 
 export default class NewsList extends Component {
@@ -62,13 +63,27 @@ export default class NewsList extends Component {
     /********** HEADER ***********/
     // Show single 'news' column for narrrow viewports
     if (window.innerWidth < this.breakpointWidth) {
-      // content = news.map(currPosting => (
-      //   <NewsItem posting={currPosting} key={currPosting.Posting_ID} />
-      // ));
+      content = news.map(currPosting => (
+        <NewsItem posting={currPosting} key={currPosting.Posting_ID} size="single" />
+      ));
+
+      header = (
+        <div style={headerStyle}>
+          <Grid container direction="row">
+            <Grid item xs={12}>
+              <Typography variant="body2" style={headerStyle}>
+                NEWS
+              </Typography>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    }
 
     // Show full news columns in header for larger viewports
-    } else if (news) {
-      content = news.map(currPosting => <NewsItem posting={currPosting} key={currPosting.Posting_ID} />);
+    else if (news) {
+      content = news.map(currPosting => 
+        <NewsItem posting={currPosting} key={currPosting.Posting_ID} size="full" />);
 
       header = (
         <div style={headerStyle}>
@@ -103,7 +118,7 @@ export default class NewsList extends Component {
         <Card>
           {header}
           <Grid>
-            <List >{content}</List>
+            <List className="news-list" disablePadding>{content}</List>
           </Grid>
         </Card>
       </section>

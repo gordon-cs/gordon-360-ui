@@ -92,5 +92,6 @@ export default {
   getNewsByCategory,
   submitStudentNews,
   getCategories,
-  getTodaysNews
+  getTodaysNews,
+  getNewNews
 };

@@ -85,12 +85,16 @@ export default class StudentNews extends Component {
 
     if (this.props.Authentication) {
       const newsCategories = await news.getCategories();
-      const allNews = await news.getTodaysNews();
-      this.setState({ loading: false, categories: newsCategories, news: allNews });
+      const newNews = await news.getNewNews();
+      this.setState({ loading: false, categories: newsCategories, news: newNews });
       // example code from events may be helpful
       // const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
       // const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       // this.setState({ allEvents, events, loading: false, filteredEvents: events });
+
+      // For Testing Purposes
+      console.log("News:");
+      console.log(newNews);
     } else {
       // alert("Please sign in to access student news");
     }
@@ -173,8 +177,6 @@ export default class StudentNews extends Component {
             <Typography variant="h4">No News To Show</Typography>
           </Grid>
         );
-        //for testing
-        content = <NewsList news={this.state.news} />;
       }
 
       let news;

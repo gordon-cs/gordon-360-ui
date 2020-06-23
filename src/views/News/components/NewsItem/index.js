@@ -5,6 +5,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Collapse from '@material-ui/core/Collapse';
 import Grid from '@material-ui/core/Grid';
 
+import './newsItem.scss';
+
 //Switched to table rows
 export default class NewsItem extends Component {
   constructor(props) {
@@ -19,30 +21,66 @@ export default class NewsItem extends Component {
   }
   render() {
     const { posting: newsItem } = this.props;
+    const { posting } = this.props;
+    const { size } = this.props;
+    const postingDescription = posting.Body;
 
-    return (
-      <section>
-        <Grid container onClick={this.handleExpandClick} className="event-item">
-          <Grid item xs={12}>
-            <Typography variant="h6" className="event-heading">
-              
-            </Typography>
-            <Typography className="event-content"> {newsItem.Posting_Subject} </Typography>
-            <Typography className="event-content"> {newsItem.Posting_Poster} </Typography>
+    // SINGLE SIZE - single column per news item
+    if(size === "single") {
+      return (
+        <section>
+          <Grid container onClick={this.handleExpandClick} className="event-item">
+            <Grid item xs={12}>
+              <Typography variant="h6" className="event-heading">
+                
+              </Typography>
+              <Typography className="news-subject"> {posting.Subject} </Typography>
+              <Typography className="event-content"> {newsItem.ADUN} </Typography>
+            </Grid>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+              <CardContent>
+                <Typography className="event-content ">{newsItem.Body}</Typography>
+                <Typography className="event-content">{newsItem.Posting_Category}</Typography>
+                <p>
+                  <nbsp />
+                </p>
+                <Typography className="event-content">{newsItem.Posting_TimeStamp}</Typography>
+              </CardContent>
+            </Collapse>
           </Grid>
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography className="event-content ">{newsItem.Posting_Body}</Typography>
-              <Typography className="event-content">{newsItem.Posting_Category}</Typography>
-              <p>
-                <nbsp />
-              </p>
-              <Typography className="event-content">{newsItem.Posting_TimeStamp}</Typography>
-            </CardContent>
-          </Collapse>
-        </Grid>
-      </section>
-    );
+        </section>
+      );
+    }
+    // FULL SIZE - many columns per news item
+    else if(size === "full") {
+      return (
+        <section>
+          <Grid container direction="row" onClick={this.handleExpandClick} className="news-item">
+            <Grid item xs={4}>
+              <Typography className="news-column">{posting.Subject}</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography className="news-column">{posting.ADUN}</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography className="news-column">{posting.Entered}</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography className="news-column">{posting.categoryID}</Typography>
+            </Grid>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+              <CardContent>
+                <Typography className="descriptionText">Description:</Typography>
+                <Typography type="caption" className="descriptionText">
+                  {postingDescription}
+                </Typography>
+              </CardContent>
+            </Collapse>
+          </Grid>
+        </section>
+      );
+    }
+    
   }
 }
 

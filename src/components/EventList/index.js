@@ -117,7 +117,7 @@ export default class EventList extends Component {
         <Card>
           {header}
           <Grid>
-            <List className="event-list">{content}</List>
+            <List className="event-list" disablePadding>{content}</List>
           </Grid>
         </Card>
       </section>
