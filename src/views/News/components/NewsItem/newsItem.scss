@@ -4,11 +4,13 @@
     padding: 10px;
     display: flex;
     align-items: center;
+    transition: background-color 150ms;
 }
 
-.news-column {
-//   padding-left: 10px;
-//   padding-right: 10px;
+.news-item:hover {
+    background-color: $primary-cyan;
+    cursor: pointer;
+    transition: background-color 150ms;
 }
 
 .news-item:hover .news-column,

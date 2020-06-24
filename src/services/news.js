@@ -4,7 +4,7 @@
  * @module studentNews
  */
  // Written by Jessica Guan
- // Modified by Cameron Abbot
+
 import { DateTime } from 'luxon';
 import http from './http';
 
@@ -46,10 +46,10 @@ const getNewNews = () => http.get(`news/new`);
 const getCategories = () => http.get(`news/categories`);
 
 function formatPosting(posting) {
-  const timestamp = new DateTime(posting.Entered);
+  const timestamp = DateTime.fromISO(posting.Entered);
   posting.dayPosted = timestamp.weekdayShort + ", "
                      + timestamp.monthLong + " "
-                     + timestamp.daysInMonth;
+                     + timestamp.day;
   posting.yearPosted = timestamp.year;
   posting.datePosted = timestamp.month + "/"
                      + timestamp.day;

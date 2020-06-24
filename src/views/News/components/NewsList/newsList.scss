@@ -4,18 +4,9 @@
 /* stylelint-disable */
 .news-list > section:nth-child(even) {
     background: #ebeaea;
-    &:hover {
-      background-color: $primary-cyan;
-      cursor: pointer;
-    }
 }
   
 .news-list > section:nth-child(odd) {
     background: #ffffff;
-    &:hover {
-      background-color: $primary-cyan;
-      cursor: pointer;
-    }
 }
 /* stylelint-enable */
-  

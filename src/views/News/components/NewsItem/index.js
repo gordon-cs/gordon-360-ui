@@ -20,7 +20,7 @@ export default class NewsItem extends Component {
     this.setState({ open: !this.state.open });
   }
   render() {
-    const { posting: newsItem } = this.props;
+    // const { posting: newsItem } = this.props;
     const { posting } = this.props;
     const { size } = this.props;
     const postingDescription = posting.Body;
@@ -28,7 +28,7 @@ export default class NewsItem extends Component {
     // SINGLE SIZE - single column per news item
     if(size === "single") {
       return (
-        <section>
+        <section style={this.props.style}>
           <Grid container onClick={this.handleExpandClick} className="news-item">
             <Grid item xs={12}>
               <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
