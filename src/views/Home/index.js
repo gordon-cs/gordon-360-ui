@@ -21,7 +21,9 @@ export default class Home extends Component {
 
     this.logIn = this.logIn.bind(this);
 
+
     this.state = { personType: null, network: 'online', answered: false, };
+
   }
 
    async componentWillMount() {
@@ -41,6 +43,7 @@ export default class Home extends Component {
     const answer = await wellness.getStatus();
 
     if(answer.length > 0){
+
         if (answer[0].answerValid === true) {
           this.setState({ answered: true });
         }
@@ -49,6 +52,7 @@ export default class Home extends Component {
         }
     }
   }
+ }
 
   async getPersonType() {
     const profile = await user.getProfileInfo();
