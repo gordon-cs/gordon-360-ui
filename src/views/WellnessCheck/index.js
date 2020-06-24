@@ -18,6 +18,7 @@ export default class WellnessCheck extends Component {
     this.logIn = this.logIn.bind(this);
 
     this.state = {
+      personType: null,
       network: 'online',
       currentStatus: true,
       currentUser: null,
@@ -29,6 +30,7 @@ export default class WellnessCheck extends Component {
   async componentDidMount() {
     try {
       await this.getUserData();
+      await this.getStatus();
     } catch (error) {
       // Do nothing
     }
@@ -37,14 +39,17 @@ export default class WellnessCheck extends Component {
     });
   }
 
-  async componentWillMount() {
-    try {
-      await this.getStatus();
-    } catch (error) {
-      // Do nothing
+  componentWillMount() {
+    if (this.props.Authentication) {
+      this.getPersonType();
     }
   }
 
+  componentWillReceiveProps(newProps) {
+    if (this.props.Authentication !== newProps.Authentication) {
+      this.getPersonType();
+    }
+  }
 
   async getStatus() {
     const answer = await wellness.getStatus();
@@ -73,6 +78,11 @@ export default class WellnessCheck extends Component {
     this.setState({ currentUser: data});
   }
 
+  async getPersonType() {
+    const profile = await user.getProfileInfo();
+    const personType = String(profile.PersonType);
+    this.setState({ personType });
+  }
 
   logIn() {
     try {
@@ -148,6 +158,12 @@ export default class WellnessCheck extends Component {
 
       if (this.props.Authentication) {
         let status = <HealthStatus />
+
+        // if (this.state.currentStatus === false ) {
+        //   status = <Approved />;
+        // } else {
+        //   status = <Denied />;
+        // }
 
         content = (
           <Grid container justify="center" spacing={2}>
