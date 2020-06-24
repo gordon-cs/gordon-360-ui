@@ -184,7 +184,8 @@ export default class StudentNews extends Component {
       if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
         news = (
           <section>
-            <Fab
+            {/* Button to Create Posting */}
+            {/* <Fab
               variant="extended"
               color="primary"
               onClick={this.handlePostClick}
@@ -192,9 +193,14 @@ export default class StudentNews extends Component {
             >
               <PostAddIcon />
               Post Listing
-            </Fab>
+            </Fab> */}
+            
+            <div style={{padding: "10px"}}></div>
+
             <Grid container justify="center">
-              <Grid item xs={12} md={12} lg={8}>
+              
+              {/* Search */}
+              {/* <Grid item xs={12} md={12} lg={8}>
                 <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={8}>
                   <Grid item xs={10} sm={8} md={8} lg={6}>
                     <TextField
@@ -207,8 +213,9 @@ export default class StudentNews extends Component {
                     />
                   </Grid>
                 </Grid>
-              </Grid>
+              </Grid> */}
 
+              {/* Create Posting */}
               <Dialog open={this.state.openPostActivity} fullWidth>
                     <DialogTitle> Post on Student News </DialogTitle>
                     <DialogContent>

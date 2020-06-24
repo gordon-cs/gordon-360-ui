@@ -68,7 +68,7 @@ function formatPosting(posting) {
  * for use on the News Page
  */
 const getNotExpiredFormatted = async () => {
-  let unexpiredNews = await getNewNews();
+  let unexpiredNews = await getNotExpired();
   const news = [];
   for (let i = 0; i < unexpiredNews.length; i +=1) {
     news.push(unexpiredNews[i]);
@@ -78,21 +78,35 @@ const getNotExpiredFormatted = async () => {
 }
 
 /**
+ * Gets today's news
+ * for use on the Home Page card
+ */
+const getTodaysNews = async () => {
+  let news = await getNewNews();
+  const todaysNews = [];
+  for (let i = 0; i < news.length; i +=1) {
+    todaysNews.push(news[i]);
+    formatPosting(news[i]);
+  }
+  return todaysNews;
+}
+
+/**
  * Gets today's news for given category
  * for use on the Home Page card
  * @param {Number} category the category of news
  */
-const getTodaysNews = async category => {
-  let news;
-  news = await getNewNews();
-  const categoryNews = [];
-  for (let i = 0; i < news.length; i +=1) {
-    if(news[i].categoryID === category) {
-      categoryNews.push(news[i]);
-    }
-  }
-  return categoryNews;
-}
+// const getTodaysNews = async category => {
+//   let news;
+//   news = await getNewNews();
+//   const categoryNews = [];
+//   for (let i = 0; i < news.length; i +=1) {
+//     if(news[i].categoryID === category) {
+//       categoryNews.push(news[i]);
+//     }
+//   }
+//   return categoryNews;
+// }
 
 /**
  * Get all unexpired news for given category

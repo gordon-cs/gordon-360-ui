@@ -31,7 +31,7 @@ export default class DailyNews extends Component {
     let newsCategories;
     newsCategories = await NewsService.getCategories();
 
-    let todaysNews = await NewsService.getNotExpiredFormatted();
+    let todaysNews = await NewsService.getTodaysNews();
 
     this.setState({ newsCategories: newsCategories, news: todaysNews});
   }
