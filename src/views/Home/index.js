@@ -21,7 +21,9 @@ export default class Home extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null, network: 'online', answered: false, currentStatus: null };
+
+    this.state = { personType: null, network: 'online', answered: false, };
+
   }
 
    async componentWillMount() {
@@ -41,13 +43,14 @@ export default class Home extends Component {
     const answer = await wellness.getStatus();
 
     if(answer.length > 0){
-      if (answer[0].answerValid === true) {
-        this.setState({ answered: true });
-        
-      }
-      if (answer[0].answerValid === false) {
-        this.setState({ answered: false });
-      }
+
+        if (answer[0].answerValid === true) {
+          this.setState({ answered: true });
+        }
+        if (answer[0].answerValid === false) {
+          this.setState({ answered: false });
+        }
+    }
   }
  }
 
@@ -65,9 +68,8 @@ export default class Home extends Component {
     }
   }
 
-  setAnswered = (data, data2) => {
+  setAnswered = (data) => {
     this.setState({ answered: data });
-    this.setState({ currentStatus: data2 });
   };
 
   render() {
