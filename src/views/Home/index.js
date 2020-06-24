@@ -43,16 +43,13 @@ export default class Home extends Component {
     const answer = await wellness.getStatus();
 
     if(answer.length > 0){
-
-        if (answer[0].answerValid === true) {
-          this.setState({ answered: true });
-        }
-        if (answer[0].answerValid === false) {
-          this.setState({ answered: false });
-        }
+      this.setState({answered: answer[0].answerValid});
+    } else {
+      this.setState({answered: false});
     }
+  
   }
- }
+ 
 
   async getPersonType() {
     const profile = await user.getProfileInfo();
