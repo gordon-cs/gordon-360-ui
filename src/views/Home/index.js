@@ -21,7 +21,7 @@ export default class Home extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null, network: 'online', answered: false, currentStatus: '' };
+    this.state = { personType: null, network: 'online', answered: false, currentStatus: null };
   }
 
    async componentWillMount() {
@@ -39,22 +39,14 @@ export default class Home extends Component {
 
   async getStatus() {
     const answer = await wellness.getStatus();
-    console.log("this is what i get back: " + answer[0].timestamp)
 
     if(answer.length > 0){
         if (answer[0].answerValid === true) {
           this.setState({ answered: true });
           
-          if(answer[0].userAnswer === true){
-            this.setState({ currentStatus: 'I am symptomatic' });
-          }
-          else{
-            this.setState({ currentStatus: 'I am not symptomatic' });
-          }
         }
         if (answer[0].answerValid === false) {
           this.setState({ answered: false });
-          this.setState({ currentStatus: 'I am symptomatic' });
         }
     }
   }

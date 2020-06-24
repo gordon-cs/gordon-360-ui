@@ -6,8 +6,8 @@ import wellness from '../../../../services/wellness';
 import GordonLoader from '../../../../components/Loader';
 import CheckIcon from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
-import './denied.scss';
-import './approved.scss';
+import './denied.css';
+import './approved.css';
 
 export default class HealthStatus extends Component {
   constructor(props) {

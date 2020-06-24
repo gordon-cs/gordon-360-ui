@@ -34,6 +34,9 @@ export default class Question extends Component {
       qOneAnswer: null,
       currentStatus: null,
       questions: null,
+      backendQuestion:"",
+      yesPrompt:"",
+      noPrompt:"",
     };
   }
 
@@ -49,7 +52,10 @@ export default class Question extends Component {
   async loadQuestion() {
     this.setState({ loading: true });
     try {
-      //TODO: create call to get question from the back end
+      let questions = await wellness.getQuestion();
+      console.log("question: "+questions[0].question+" yes prompt: " +questions[0].yesPrompt+ " no Prompt: "+questions[0].noPrompt)
+
+
       this.setState({ loading: false});
     } catch (error) {
       this.setState({ error });
@@ -71,6 +77,7 @@ export default class Question extends Component {
       let symptomsJSX = this.state.questions.qOne.symptoms.map((item) => {
         return <FormLabel>- {item}</FormLabel>;
       });
+      
       return (
         <CardContent>
           <div style={questionStyle}>

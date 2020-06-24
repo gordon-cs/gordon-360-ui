@@ -1,3 +1,4 @@
+import wellness from '../../../../services/wellness.js';
 let user, qOne;
 
 /*
@@ -30,15 +31,34 @@ async function getUserData() {
 }
 
 export async function getQuestions() {
+  
   await getUserData();
+  let backendQuestions = await wellness.getQuestion();
 
-  // Question 1
   let phoneNumber = `(${user.MobilePhone.substring(0, 3)}) ${user.MobilePhone.substring(
     3,
     6,
   )}-${user.MobilePhone.substring(6)}`;
+
+  //comment below disables the eslint warning so we can execute dynamic string parsing without warnings
+  
+  /* eslint-disable no-template-curly-in-string */
+  let wellnessQuestion = backendQuestions[0].question.replace("${user.FirstName}", `${user.FirstName}`);
+  wellnessQuestion = wellnessQuestion.replace("${user.LastName}", `${user.LastName}`);
+  wellnessQuestion = wellnessQuestion.replace("${phoneNumber}", `${phoneNumber}`);
+
+  let yesPrompt = backendQuestions[0].yesPrompt.replace("${user.FirstName}", `${user.FirstName}`);
+  yesPrompt = yesPrompt.replace("${user.LastName}", `${user.LastName}`);
+  yesPrompt = yesPrompt.replace("${phoneNumber}", `${phoneNumber}`);
+
+  let noPrompt = backendQuestions[0].noPrompt.replace("${user.FirstName}", `${user.FirstName}`);
+  noPrompt = noPrompt.replace("${user.LastName}", `${user.LastName}`);
+  noPrompt = noPrompt.replace("${phoneNumber}", `${phoneNumber}`);
+  /* eslint-enable no-template-curly-in-string */
+
+
   qOne = {
-    question: 'Are you currently sick or have symptoms that could be related to COVID-19 such as:',
+    question: wellnessQuestion,
     symptoms: [
       'Temperature higher than 100.4',
       'New loss of taste or smell',
@@ -50,12 +70,12 @@ export async function getQuestions() {
       'Chills',
     ],
     no: {
-      question: `By submitting I, ${user.FirstName} ${user.LastName}, hereby certify that the above response is true and correct to the best of my knowledge.`,
+      question: noPrompt,
     },
     yes: {
       question: [
-        `By submitting I, ${user.FirstName} ${user.LastName}, understand that I should not leave my residence until I am contacted by the Health Center at ${phoneNumber}, and that I will use the`,
-        ` CDC Self-Checker.`,
+        yesPrompt
+
       ],
     },
     //phone: user.MobilePhone,
