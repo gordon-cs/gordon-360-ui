@@ -28,15 +28,16 @@ export default class Question extends Component {
     this.loadQuestion = this.loadQuestion.bind(this);
 
     this.state = {
-      error: null,
+      error: null, 
       loading: true,
-      answered: false,
-      qOneAnswer: null,
-      currentStatus: null,
-      questions: null,
-      backendQuestion:"",
-      yesPrompt:"",
-      noPrompt:"",
+      answered: false,  //true if student answered the question, initiallized to false for safety
+      primaryQuestionAnswer: null, // keeps track of the answer to the wellness check question
+      currentStatus: null, //holds the the symptomatic status of the students to pass up to parent
+      questions: null, //holds the prompts for the questions and responses
+      backendQuestion:"", //holds the main wellness check question coming from backend 
+      yesPrompt:"", //holds the yes answer prompt from back end
+      noPrompt:"", //holds the no answer prompt from back end
+
     };
   }
 
@@ -61,8 +62,7 @@ export default class Question extends Component {
 
   async submitHandler(e) {
     this.setState({ answered: true });
-    this.setState({ currentStatus: this.state.selected });
-    this.props.setAnswered(true, this.state.currentStatus);
+    this.props.setAnswered(true);
     await wellness.postAnswer(this.state.currentStatus);
     e.preventDefault();
   }
@@ -89,7 +89,7 @@ export default class Question extends Component {
                   control={<Radio />}
                   label={'No'}
                   onChange={() => {
-                    this.setState({ qOneAnswer: 'No', currentStatus: false });
+                    this.setState({ primaryQuestionAnswer: 'No', currentStatus: false });
                   }}
                 />
                 <FormControlLabel
@@ -97,7 +97,7 @@ export default class Question extends Component {
                   control={<Radio />}
                   label={`Yes`}
                   onChange={() => {
-                    this.setState({ qOneAnswer: 'Yes', currentStatus: true });
+                    this.setState({ primaryQuestionAnswer: 'Yes', currentStatus: true });
                   }}
                 />
               </RadioGroup>
@@ -116,7 +116,7 @@ export default class Question extends Component {
   createPrompt(questionStyle) {
     // Checks to make sure the questions are found in the state before
     if (this.state.questions !== null) {
-      if (this.state.qOneAnswer === 'Yes') {
+      if (this.state.primaryQuestionAnswer === 'Yes') {
         return (
           <CardContent>
             <div style={questionStyle}>
@@ -135,7 +135,7 @@ export default class Question extends Component {
             </div>
           </CardContent>
         );
-      } else if (this.state.qOneAnswer === 'No') {
+      } else if (this.state.primaryQuestionAnswer === 'No') {
         return (
           <CardContent>
             <div style={questionStyle}>
@@ -151,7 +151,7 @@ export default class Question extends Component {
 
   showSubmitButton(buttonStyle) {
     // Shows submit button
-    if (this.state.questions && this.state.qOneAnswer) {
+    if (this.state.questions && this.state.primaryQuestionAnswer) {
       return (
         <div>
           <br />
