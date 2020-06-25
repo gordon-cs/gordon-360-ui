@@ -487,28 +487,40 @@ const Timesheets = (props) => {
                     marginTop: 8,
                   }}
                 >
-                  <div className='header-tooltip-container'>
-                    <CustomTooltip
-                      classes={{ tooltip: classes.customWidth }}
-                      interactive
-                      disableFocusListener
-                      disableTouchListener
-                      title={'Student employees are not permitted to work more than 20 total hours\
-                      per work week, or more than 40 hours during winter, spring, and summer breaks.\
-                      \
-                      To request permission for a special circumstance, please email\
-                      student-employment@gordon.edu before exceeding this limit.'}
-                      placement='bottom'>
-                      <div ref={tooltipRef}>
-                        <CardHeader className='disable-select' title="Enter a shift" />
-                        <InfoOutlinedIcon
-                          className='tooltip-icon'
-                          style={{
-                            fontSize: 18
-                          }} />
-                      </div>
-                    </CustomTooltip>
-                  </div>
+                  <Grid
+                  container spacing={2}
+                  alignItems="center"
+                  alignContent="center">
+
+                    <Grid item md={2}>
+                      <Button> Clock In </Button>
+                    </Grid>
+                    <Grid item md={8}>
+
+                    <div className='header-tooltip-container'>
+                      <CustomTooltip
+                        classes={{ tooltip: classes.customWidth }}
+                        interactive
+                        disableFocusListener
+                        disableTouchListener
+                        title={'Student employees are not permitted to work more than 20 total hours\
+                        per work week, or more than 40 hours during winter, spring, and summer breaks.\
+                        \
+                        To request permission for a special circumstance, please email\
+                        student-employment@gordon.edu before exceeding this limit.'}
+                        placement='bottom'>
+                        <div ref={tooltipRef}>
+                          <CardHeader className='disable-select' title="Enter a shift" />
+                          <InfoOutlinedIcon
+                            className='tooltip-icon'
+                            style={{
+                              fontSize: 18
+                            }} />
+                        </div>
+                      </CustomTooltip>
+                    </div>
+                    </Grid>
+                  </Grid>
                   <Grid
                     container
                     spacing={2}
