@@ -210,7 +210,7 @@ export default class GordonNavLinks extends Component {
           <div onClick={this.openDialogBox}>
             <ListItem button disabled={networkStatus}>
               <ListItemIcon>
-              <PeopleIcon />
+                <PeopleIcon />
               </ListItemIcon>
               <ListItemText primary="People" />
             </ListItem>
@@ -241,17 +241,17 @@ export default class GordonNavLinks extends Component {
           </div>
         );
       }
-      // Creates the Wellness button
-      wellnessButton = (
-        <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
-          <ListItem button>
-            <ListItemIcon>
-              <WellnessIcon />
-            </ListItemIcon>
-            <ListItemText primary="Wellness" />
-          </ListItem>
-        </NavLink>
-      );
+      // // Creates the Wellness button
+      // wellnessButton = (
+      //   <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
+      //     <ListItem button>
+      //       <ListItemIcon>
+      //         <WellnessIcon />
+      //       </ListItemIcon>
+      //       <ListItemText primary="Wellness" />
+      //     </ListItem>
+      //   </NavLink>
+      // );
 
       // Creates the Involvements button
       involvementsButton = (

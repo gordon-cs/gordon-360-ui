@@ -78,15 +78,15 @@ export default class HealthStatus extends Component {
     if(answer.length > 0){
         if(answer[0].answerValid){
             if (answer[0].userAnswer === true) {
-            this.setState({ currentStatus: SYMPTOMS });
+              this.setState({ currentStatus: SYMPTOMS });
             }
             if (answer[0].userAnswer === false) {
-            this.setState({ currentStatus: NO_SYMPTOMS });
+              this.setState({ currentStatus: NO_SYMPTOMS });
             }
         }else{
             this.setState({ currentStatus: SYMPTOMS });
           }
-    } else{
+    }else{
        this.setState({ currentStatus: SYMPTOMS });
     }
   }
