@@ -365,32 +365,30 @@ export default class Profile extends Component {
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
-                    <Grid container spacing={2}>
-                      {this.state.profileinfo}
-                      {this.state.officeinfo}
-                    </Grid>
+                  <Grid container spacing={2}>
+                    {this.state.profileinfo}
+                    {this.state.officeinfo}
                   </Grid>
+                </Grid>
 
-                  <Grid item xs={12} lg={5}>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <Card>
-                          <CardContent>
-                            <Grid container direction="row" alignItems="center">
-                              <Grid item xs={7}>
-                                <CardHeader title="Involvements" />
-                              </Grid>
-                              <Grid item xs={5} align="right">
-                                
-                              </Grid>
+                <Grid item xs={12} lg={5}>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <Card>
+                        <CardContent>
+                          <Grid container direction="row" alignItems="center">
+                            <Grid item xs={7}>
+                              <CardHeader title="Involvements" />
                             </Grid>
-                            <List>{displayedMembershipList}</List>
-                          </CardContent>
-                        </Card>
-                      </Grid>
+                            <Grid item xs={5} align="right"></Grid>
+                          </Grid>
+                          <List>{displayedMembershipList}</List>
+                        </CardContent>
+                      </Card>
                     </Grid>
                   </Grid>
                 </Grid>
+              </Grid>
             )}
           </div>
         );

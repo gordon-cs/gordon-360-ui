@@ -9,6 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
+import WellnessIcon from '@material-ui/icons/LocalHospital';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
@@ -166,6 +167,8 @@ export default class GordonNavLinks extends Component {
     let admin;
     let peopleButton;
     let signInOut;
+    let wellnessButton;
+
     if (this.props.Authentication) {
       // Creates the Admin button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
@@ -214,6 +217,41 @@ export default class GordonNavLinks extends Component {
           </div>
         );
       }
+
+      if (networkStatus === 'online') {
+        wellnessButton = (
+          <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
+            <ListItem button>
+              <ListItemIcon>
+                <WellnessIcon />
+              </ListItemIcon>
+              <ListItemText primary="Wellness" />
+            </ListItem>
+          </NavLink>
+        );
+      } else {
+        wellnessButton = (
+          <div onClick={this.openDialogBox}>
+            <ListItem button disabled={networkStatus}>
+              <ListItemIcon>
+                <WellnessIcon />
+              </ListItemIcon>
+              <ListItemText primary="Wellness" />
+            </ListItem>
+          </div>
+        );
+      }
+      // // Creates the Wellness button
+      // wellnessButton = (
+      //   <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
+      //     <ListItem button>
+      //       <ListItemIcon>
+      //         <WellnessIcon />
+      //       </ListItemIcon>
+      //       <ListItemText primary="Wellness" />
+      //     </ListItem>
+      //   </NavLink>
+      // );
 
       // Creates the Involvements button
       involvementsButton = (
@@ -389,6 +427,7 @@ export default class GordonNavLinks extends Component {
           {involvementsButton}
           {eventsButton}
           {peopleButton}
+          {wellnessButton}
         </List>
 
         <Divider />
