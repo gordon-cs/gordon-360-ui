@@ -52,10 +52,7 @@ export default class Question extends Component {
   async loadQuestion() {
     this.setState({ loading: true });
     try {
-      let questions = await wellness.getQuestion();
-      console.log("question: "+questions[0].question+" yes prompt: " +questions[0].yesPrompt+ " no Prompt: "+questions[0].noPrompt)
-
-
+      await wellness.getQuestion();
       this.setState({ loading: false});
     } catch (error) {
       this.setState({ error });

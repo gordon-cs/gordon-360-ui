@@ -15,7 +15,7 @@ import http from './http';
 
 /**
  * returns current status of student
- * @return {Wellness.<status>}
+ * @return {Promise<any>} Response
  */
 const getStatus = async () => {
   return await http.get(`wellness`);
@@ -23,7 +23,7 @@ const getStatus = async () => {
 
 /**
  * returns questions to be displayed in the UI
- * @return strings
+ * @return {Promise<any>} list of questions from backend
  */
 const getQuestion = async () => {
   return await http.get(`wellness/question`);
