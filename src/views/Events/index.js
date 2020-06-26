@@ -30,7 +30,7 @@ export default class Events extends Component {
       search: '',
       chapelCredits: false,
       art: false,
-      sports: false,
+      athletics: false,
       academics: false,
       cec: false,
       studentLife: false,
@@ -50,22 +50,83 @@ export default class Events extends Component {
     this.isMobileView = false;
     this.breakpointWidth = 540;
   }
-  async goBackPage() {
-    const urlParams = new URLSearchParams(window.location.search);
-    console.log(urlParams);
+
+  componentDidUpdate() {
+    window.onpopstate = () => {
+      if (!window.location.href.includes('?')) {
+        window.location.reload();
+      } else {
+        this.loadEvents();
+      }
+    };
   }
-  componentWillMount() {
+
+  componentDidMount() {
     this.loadEvents();
-    this.goBackPage();
+    window.addEventListener('resize', this.resize);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
+
+  async loadPrevious() {
+    if (window.location.href.includes('?')) {
+      const urlParams = new URLSearchParams(this.props.location.search);
+      let includePast = urlParams.get('Past') === 'true' ? true : false;
+      let chapelCredits = urlParams.get('CLW') === 'true' ? true : false;
+      let academics = urlParams.get('Academics') === 'true' ? true : false;
+      let admissions = urlParams.get('Admissions') === 'true' ? true : false;
+      let art = urlParams.get('Arts') === 'true' ? true : false;
+      let athletics = urlParams.get('Athletics') === 'true' ? true : false;
+      let calendar = urlParams.get('Calendar') === 'true' ? true : false;
+      let cec = urlParams.get('CEC') === 'true' ? true : false;
+      let fair = urlParams.get('Fair') === 'true' ? true : false;
+      let chapelOffice = urlParams.get('ChapelOffice') === 'true' ? true : false;
+      let studentLife = urlParams.get('StudentLife') === 'true' ? true : false;
+
+      this.setState({
+        includePast,
+        chapelCredits,
+        academics,
+        admissions,
+        art,
+        athletics,
+        calendar,
+        cec,
+        fair,
+        chapelOffice,
+        studentLife,
+      });
+
+      this.setState({ loading: true });
+      const events = await gordonEvent.getFilteredEvents(this.state);
+      this.setState({ filteredEvents: events, loading: false });
+    }
+  }
+
   filterEvents(name) {
     return async (event) => {
       this.setState({ loading: true });
       await this.setState({ [name]: event.target.checked });
       const events = await gordonEvent.getFilteredEvents(this.state);
       this.setState({ filteredEvents: events, loading: false });
+      this.createURLParameters();
     };
   }
+
+  /**
+   * Creates an updated URL depending on the state
+   *
+   * A new URL is created when a filter is applied. This new url is added to the browser's history
+   * to allow the user to use the back button and view previous search results
+   */
+  createURLParameters() {
+    this.props.history.push(
+      `?Past=${this.state.includePast}&CLW=${this.state.chapelCredits}&Academics=${this.state.academics}&Admissions=${this.state.admissions}&Arts=${this.state.art}&Athletics=${this.state.athletics}&Calendar=${this.state.calendar}&CEC=${this.state.cec}&ChapelOffice=${this.state.chapelOffice}&Fair=${this.state.fair}&StudentLife=${this.state.studentLife}`,
+    );
+  }
+
   handleExpandClick() {
     this.setState({ open: !this.state.open });
   }
@@ -89,6 +150,7 @@ export default class Events extends Component {
       const futureEvents = gordonEvent.getFutureEvents(this.state.allEvents);
       await this.setState({ events: futureEvents });
     }
+    this.createURLParameters();
     //filter events to reflect boxes still checked
     const events = gordonEvent.getFilteredEvents(this.state);
     this.setState({ filteredEvents: events, loading: false });
@@ -106,6 +168,7 @@ export default class Events extends Component {
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
     }
+    this.loadPrevious();
   }
 
   //Has to rerender on screen resize in order for table to switch to the mobile view
@@ -124,17 +187,8 @@ export default class Events extends Component {
     else return false;
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
-  }
-
   render() {
     let content;
-
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
@@ -203,7 +257,10 @@ export default class Events extends Component {
             />
             <FormControlLabel
               control={
-                <Checkbox checked={this.state.sports} onChange={this.filterEvents('sports')} />
+                <Checkbox
+                  checked={this.state.athletics}
+                  onChange={this.filterEvents('athletics')}
+                />
               }
               label="Athletics"
             />
@@ -211,7 +268,7 @@ export default class Events extends Component {
               control={
                 <Checkbox checked={this.state.calendar} onChange={this.filterEvents('calendar')} />
               }
-              label="Calendar Events"
+              label="Calendar"
             />
             <FormControlLabel
               control={<Checkbox checked={this.state.cec} onChange={this.filterEvents('cec')} />}
@@ -270,6 +327,7 @@ export default class Events extends Component {
                 </Grid>
                 <Grid item xs={6} sm={4} md={2} lg={2}>
                   <FormControlLabel
+                    checked={this.state.includePast}
                     control={<Switch onChange={this.togglePastEvents} />}
                     label="Include Past"
                   />

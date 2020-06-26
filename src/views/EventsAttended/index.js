@@ -50,7 +50,7 @@ export default class EventsAttended extends Component {
                 variant="contained"
                 style={style.button}
                 onClick={() => {
-                  window.location.pathname = '/events';
+                  this.props.history.push('/events?CLW=true');
                 }}
               >
                 Need More Chapel Credits?
@@ -74,7 +74,7 @@ export default class EventsAttended extends Component {
               variant="contained"
               style={style.button}
               onClick={() => {
-                window.location.pathname = '/events';
+                this.props.history.push('/events?CLW=true');
               }}
             >
               Need More Chapel Credits?
