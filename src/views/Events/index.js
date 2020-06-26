@@ -54,7 +54,7 @@ export default class Events extends Component {
     this.loadEvents();
   }
   filterEvents(name) {
-    return async event => {
+    return async (event) => {
       this.setState({ loading: true });
       await this.setState({ [name]: event.target.checked });
       const events = await gordonEvent.getFilteredEvents(this.state);
@@ -65,7 +65,7 @@ export default class Events extends Component {
     this.setState({ open: !this.state.open });
   }
   search(name) {
-    return async event => {
+    return async (event) => {
       await this.setState({
         [name]: event.target.value,
       });
@@ -135,7 +135,7 @@ export default class Events extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -342,5 +342,14 @@ export default class Events extends Component {
     }
 
     return events;
+  }
+  componentDidUpdate() {
+    window.onpopstate = () => {
+      if (!window.location.href.includes('?')) {
+        window.location.reload();
+      } else {
+        this.goBackPage();
+      }
+    };
   }
 }
