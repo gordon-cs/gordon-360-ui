@@ -102,6 +102,16 @@ export default class Events extends Component {
       this.setState({ loading: true });
       const events = await gordonEvent.getFilteredEvents(this.state);
       this.setState({ filteredEvents: events, loading: false });
+
+      // If the include past filter is on, we get the events from the past
+      if (this.state.includePast) {
+        /* When togglePastEvents() runs, it changes the state of includePast to its opposite.
+         * So, when includePast is true, we set it to false so that togglePastEvents() will set it
+         * back to true
+         */
+        this.setState({ includePast: false });
+        this.togglePastEvents();
+      }
     }
   }
 
@@ -122,9 +132,19 @@ export default class Events extends Component {
    * to allow the user to use the back button and view previous search results
    */
   createURLParameters() {
-    this.props.history.push(
-      `?Past=${this.state.includePast}&CLW=${this.state.chapelCredits}&Academics=${this.state.academics}&Admissions=${this.state.admissions}&Arts=${this.state.art}&Athletics=${this.state.athletics}&Calendar=${this.state.calendar}&CEC=${this.state.cec}&ChapelOffice=${this.state.chapelOffice}&Fair=${this.state.fair}&StudentLife=${this.state.studentLife}`,
-    );
+    let url = '?';
+    if (this.state.includePast) url += '&Past=true';
+    if (this.state.chapelCredits) url += '&CLW=true';
+    if (this.state.academics) url += '&Academics=true';
+    if (this.state.admissions) url += '&Admissions=true';
+    if (this.state.art) url += '&Arts=true';
+    if (this.state.athletics) url += '&Athletics=true';
+    if (this.state.calendar) url += '&Calendar=true';
+    if (this.state.cec) url += '&CEC=true';
+    if (this.state.chapelOffice) url += '&ChapelOffice=true';
+    if (this.state.fair) url += '&Fair=true';
+    if (this.state.studentLife) url += '&StudentLife=true';
+    this.props.history.push(url);
   }
 
   handleExpandClick() {
