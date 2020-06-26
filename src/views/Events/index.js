@@ -50,8 +50,13 @@ export default class Events extends Component {
     this.isMobileView = false;
     this.breakpointWidth = 540;
   }
+  async goBackPage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log(urlParams);
+  }
   componentWillMount() {
     this.loadEvents();
+    this.goBackPage();
   }
   filterEvents(name) {
     return async (event) => {
@@ -342,14 +347,5 @@ export default class Events extends Component {
     }
 
     return events;
-  }
-  componentDidUpdate() {
-    window.onpopstate = () => {
-      if (!window.location.href.includes('?')) {
-        window.location.reload();
-      } else {
-        this.goBackPage();
-      }
-    };
   }
 }
