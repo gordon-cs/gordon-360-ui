@@ -1,5 +1,5 @@
 //Main student timesheets page
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import 'date-fns';
 import {
   Grid,
@@ -62,7 +62,45 @@ const Timesheets = (props) => {
   const [saving, setSaving] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  const [clockInOut, setClockInOut] = useState('Clock In');
+  
 
+  useEffect(async ()=>{
+    console.log("it worked");
+    await getClockInOutStatus();
+  
+
+  },[])
+
+  const getClockInOutStatus = async () =>{
+  try{
+        let status = await jobs.clockOut();
+        console.log(status);
+        
+        if(status[0].currentState){
+          setClockInOut("Clock Out");
+          //
+          handleDateChangeInClock(new Date(status[0].timestamp));
+
+        } else {
+          setClockInOut("Clock In");
+        }
+     } catch(error) {
+        console.log("did not work")
+     }
+  }
+
+  const handleDateChangeInClock = date => {
+    if (date) {
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      setSelectedDateIn(date);
+      setIsOverlappingShift(false);
+      handleTimeErrors(date, selectedDateOut);
+    }
+  };
+  
+  
   const tooltipRef = useRef();
   const classes = useStyles();
 
@@ -356,6 +394,40 @@ const Timesheets = (props) => {
       return shouldDisableDate;
     };
 
+    // const getClockInOutStatus = () =>{
+    //   let status = jobs.clockOut();
+      
+    //   if(status.currentState){
+    //     setClockInOut("Clock Out");
+    //   } else {
+    //     setClockInOut("Clock In");
+    //   }
+    // }
+
+    const clockIn = () =>{
+
+      if(clockInOut === "Clock In"){
+        setClockInOut("Clock Out")
+        jobs.clockIn(true);
+        let clockInDate = new Date();
+        handleDateChangeIn(clockInDate);
+
+      } 
+      if(clockInOut === "Clock Out") {
+          setClockInOut("Reset");
+          jobs.clockIn(false);
+          let clockOutDate = new Date();
+          handleDateChangeOut(clockOutDate);
+      } 
+      if(clockInOut === "Reset") {
+          setClockInOut("Clock In");
+          setSelectedDateIn(null);
+          setSelectedDateOut(null);
+
+      }
+
+    };
+
     const handleCloseSnackbar = (event, reason) => {
       if (reason === 'clickaway') {
         return;
@@ -493,7 +565,7 @@ const Timesheets = (props) => {
                   alignContent="center">
 
                     <Grid item md={2}>
-                      <Button> Clock In </Button>
+                      <Button onClick={clockIn}> {clockInOut}</Button>
                     </Grid>
                     <Grid item md={8}>
 
