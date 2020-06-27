@@ -21,8 +21,7 @@ export default class Home extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-
-    this.state = { personType: null, network: 'online', answered: false, };
+    this.state = { personType: null, network: 'online', answered: false, currentStatus: null };
 
   }
 
@@ -43,6 +42,7 @@ export default class Home extends Component {
     const answer = await wellness.getStatus();
 
     if(answer.length > 0){
+
       this.setState({answered: answer[0].answerValid});
     } else {
       this.setState({answered: false});

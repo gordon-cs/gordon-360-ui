@@ -30,10 +30,14 @@ export default class Question extends Component {
     this.state = {
       error: null, 
       loading: true,
-      answered: false,  //true if student answered the question, initiallized to false for safety                       
+      answered: false,  //true if student answered the question, initiallized to false for safety
       primaryQuestionAnswer: null, // keeps track of the answer to the wellness check question
       currentStatus: null, //holds the the symptomatic status of the students to pass up to parent
       questions: null, //holds the prompts for the questions and responses
+      backendQuestion:"", //holds the main wellness check question coming from backend 
+      yesPrompt:"", //holds the yes answer prompt from back end
+      noPrompt:"", //holds the no answer prompt from back end
+
     };
   }
 
@@ -49,7 +53,7 @@ export default class Question extends Component {
   async loadQuestion() {
     this.setState({ loading: true });
     try {
-      //TODO: create call to get question from the back end
+      await wellness.getQuestion();
       this.setState({ loading: false});
     } catch (error) {
       this.setState({ error });
@@ -70,6 +74,7 @@ export default class Question extends Component {
       let symptomsJSX = this.state.questions.qOne.symptoms.map((item) => {
         return <FormLabel>- {item}</FormLabel>;
       });
+      
       return (
         <CardContent>
           <div style={questionStyle}>
