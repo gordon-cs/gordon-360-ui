@@ -1,3 +1,4 @@
+//Handles the fetching and preperation for displaying of shifts
 import React, { Component } from 'react';
 import {
     Grid,
@@ -7,18 +8,23 @@ import {
     Tabs,
     Tab,
 } from '@material-ui/core';
+import GordonLoader from '../../../../components/Loader'
 import SavedShiftsList from '../../components/SavedShiftsList';
 import jobs from '../../../../services/jobs';
+import SimpleSnackbar from '../../../../components/Snackbar';
+import Media from 'react-media';
 import './ShiftDisplay.css'
 
 export default class ShiftDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             tabValue: 0,
             shifts: [],
             jobNames: [],
             selectedJob: '',
+            snackbarOpen: false,
         };
         this.jobNamesSet = new Set();
         this.supervisors = [];
@@ -26,17 +32,29 @@ export default class ShiftDisplay extends Component {
         this.submittedShifts = [];
         this.rejectedShifts = [];
         this.approvedShifts = [];
+        this.snackbarText = '';
     }
 
     componentDidMount() {
-        this.loadShifts().then(() => {
-            if (this.state.jobNames.length > 0) {
-                this.setState({
-                    selectedJob: this.state.jobNames[0],
-                })
-            }
-        });
+        this.setState({loading: true}, () => {
+            this.loadShifts().then(() => {
+                if (this.state.jobNames.length > 0) {
+                    this.setState({
+                        selectedJob: this.state.jobNames[0],
+                    });
+                }
+                this.setState({loading: false})
+            });
+        })
     }
+
+    handleCloseSnackbar = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      this.setState({ snackbarOpen: false })
+    };
 
     loadShifts() {
         const {getSavedShiftsForUser} = this.props;
@@ -66,10 +84,23 @@ export default class ShiftDisplay extends Component {
         });
     };
 
+    editShift = (rowID, startTime, endTime, hoursWorked) => {
+        let promise = jobs.editShift(rowID, startTime, endTime, hoursWorked);
+        promise.then(response => {
+            this.loadShifts();
+        })
+        return promise;
+    }
+
     deleteShiftForUser(rowID, emlDesc) {
-        let result = jobs.deleteShiftForUser(rowID).then(response => {
+        let result = jobs.deleteShiftForUser(rowID)
+        .then(() => {
             this.jobNamesSet.delete(emlDesc);
             this.loadShifts();
+        })
+        .catch(() => {
+            this.snackbarText = 'There was a problem deleting the shift.';
+            this.setState({ snackbarOpen: true });
         });
         return result;
       };
@@ -113,20 +144,39 @@ export default class ShiftDisplay extends Component {
             <></>
         );
 
-        let tabsCard = this.state.jobNames && this.state.jobNames.length > 1 ? (
-            <Grid item xs={12}>
-                <Card>
-                    <CardContent>
-                        <CardHeader title="Display shifts for:" />
+        let theTabs = (
+            <Media query="(min-width: 600px)">
+                {matches => matches ? (
+                    <Tabs
+                        centered
+                        value={this.state.tabValue}
+                        onChange={this.handleTabChange}
+                        variant="fullWidth"
+                        className="job-tabs"
+                    >
+                        {jobTabs}
+                    </Tabs>
+                ) : (
                         <Tabs
                             centered
                             value={this.state.tabValue}
                             onChange={this.handleTabChange}
+                            orientation='vertical'
                             variant="fullWidth"
                             className="job-tabs"
                         >
                             {jobTabs}
                         </Tabs>
+                    )}
+            </Media>
+        );
+
+        let tabsCard = this.state.jobNames && this.state.jobNames.length > 1 ? (
+            <Grid item xs={12}>
+                <Card>
+                    <CardContent>
+                        <CardHeader className='disable-select' title="Display shifts for:" />
+                        {theTabs}
                     </CardContent>
                 </Card>
             </Grid>
@@ -134,7 +184,7 @@ export default class ShiftDisplay extends Component {
             <></>
         );
 
-        return (
+        return ( !this.state.loading ? (
             <>
                 {tabsCard}
                 <Grid item xs={12}>
@@ -144,6 +194,7 @@ export default class ShiftDisplay extends Component {
                                 shifts={this.savedShifts}
                                 loadShifts={this.loadShifts.bind(this)}
                                 deleteShift={this.deleteShiftForUser.bind(this)}
+                                editShift={this.editShift}
                                 cardTitle="Saved Shifts"
                                 directSupervisor={directSupervisor}
                                 reportingSupervisor={reportingSupervisor} />
@@ -160,6 +211,7 @@ export default class ShiftDisplay extends Component {
                                 shifts={this.rejectedShifts}
                                 loadShifts={this.loadShifts.bind(this)}
                                 deleteShift={this.deleteShiftForUser.bind(this)}
+                                editShift={this.editShift}
                                 cardTitle="Rejected Shifts" />
                         </Grid>
                         <Grid item xs={12}>
@@ -171,7 +223,17 @@ export default class ShiftDisplay extends Component {
                         </Grid>
                     </Grid>
                 </Grid>
+                <SimpleSnackbar
+                    text={this.snackbarText}
+                    severity={'error'}
+                    open={this.state.snackbarOpen}
+                    onClose={this.handleCloseSnackbar} />
             </>
+        ) : (
+            <Grid item xs={12}>
+                <GordonLoader />
+            </Grid>
+        )
         )
     }
 }

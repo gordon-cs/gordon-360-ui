@@ -1,3 +1,4 @@
+//Displays shifts and sets up buttons for submitting shifts
 import React, { Component } from 'react';
 import {
   Typography,
@@ -83,6 +84,21 @@ export default class SavedShiftsList extends Component {
     });
   }
 
+  componentDidMount() {
+    let {shifts, directSupervisor, reportingSupervisor} = this.props;
+    let supervisorIdsReady = directSupervisor && reportingSupervisor;
+    let shouldGetSupervisors; 
+    if (shifts.length > 0) {
+      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && (shifts[0].EML !== this.prevJob || (!this.state.directSupervisor || !this.state.reportingSupervisor));
+      this.prevJob = shifts[0].EML
+    } else {
+      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && supervisorIdsReady && (!this.state.directSupervisor || !this.state.reportingSupervisor) && shifts !== null;
+    }
+    if (shouldGetSupervisors) {
+      this.getSupervisors();
+    }
+  }
+
   componentDidUpdate() {
     let {shifts, directSupervisor, reportingSupervisor} = this.props;
     let supervisorIdsReady = directSupervisor && reportingSupervisor;
@@ -142,28 +158,28 @@ export default class SavedShiftsList extends Component {
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
-              <Typography variant="body2" style={styles.headerItem}>
+              <Typography className='disable-select' variant="body2" style={styles.headerItem}>
                 JOB
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerItem}>
-                TIME IN
+              <Typography className='disable-select' variant="body2" style={styles.headerItem}>
+                IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerItem}>
-                TIME OUT
+              <Typography className='disable-select' variant="body2" style={styles.headerItem}>
+                OUT
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerItem}>
+              <Typography className='disable-select' variant="body2" style={styles.headerItem}>
                 RATE
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerItem}>
-                HOURS WORKED
+              <Typography className='disable-select' variant="body2" style={styles.headerItem}>
+                HOURS
               </Typography>
             </Grid>
           </Grid>
@@ -173,16 +189,21 @@ export default class SavedShiftsList extends Component {
 
     let shiftsList = null;
     shiftsList = this.props.shifts.map((shift, index) => (
-      <ShiftItem deleteShift={this.props.deleteShift} value={shift} key={index} />
+      <ShiftItem
+        deleteShift={this.props.deleteShift}
+        editShift={this.props.editShift}
+        value={shift}
+        key={index} />
     ));
 
     const supervisorDropdown = (
       <FormControl
         style={{
-          width: 252,
+          maxWidth: 252,
         }}
+        fullWidth
       >
-        <InputLabel>Submit To</InputLabel>
+        <InputLabel className='disable-select'>Submit To</InputLabel>
         <Select
           value={this.state.selectedSupervisor}
           onChange={e => {
@@ -221,7 +242,7 @@ export default class SavedShiftsList extends Component {
           {confirmationBox}
         <Card>
           <CardContent>
-            <CardHeader title={cardTitle} />
+            <CardHeader className='disable-select' title={cardTitle} />
             <Grid
               className="shift-list"
               container
@@ -235,14 +256,14 @@ export default class SavedShiftsList extends Component {
               {shiftsList}
             </Grid>
           </CardContent>
-            {(cardTitle === "Approved Shifts" || cardTitle === "Submitted Shifts") &&
+            {(cardTitle === "Saved Shifts" || cardTitle === "Approved Shifts" || cardTitle === "Submitted Shifts") &&
               <CardContent>
                 <Grid container>
                   <Grid item xs={12} sm={6}>
-                    <Typography variant="h6">Total hours worked: {totalHoursWorked}</Typography>
+                    <Typography className='disable-select' variant="h6">Total hours worked: {totalHoursWorked}</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Typography variant="h6">Estimated gross pay: ${totalEstimatedPay}</Typography>
+                    <Typography className='disable-select' variant="h6">Estimated gross pay: ${totalEstimatedPay}</Typography>
                   </Grid>
                 </Grid>
               </CardContent>
@@ -250,7 +271,7 @@ export default class SavedShiftsList extends Component {
           <CardActions>
             {cardTitle === "Saved Shifts" && <Grid container>
               <Grid container>
-                <Grid item xs={6}>
+                <Grid item xs={6} style={{paddingLeft: 4, paddingRight: 4}}>
                   {supervisorDropdown}
                 </Grid>
                 <Grid item xs={6}>

@@ -9,11 +9,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
+import WellnessIcon from '@material-ui/icons/LocalHospital';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
-//re-enable when we add back links to work page
-//import WorkIcon from '@material-ui/icons/Work';
 import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
@@ -168,8 +167,8 @@ export default class GordonNavLinks extends Component {
     let admin;
     let peopleButton;
     let signInOut;
-    //Add this back when Timesheets link re-enabled.
-    //let timesheetButton;
+    let wellnessButton;
+
     if (this.props.Authentication) {
       // Creates the Admin button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
@@ -219,6 +218,41 @@ export default class GordonNavLinks extends Component {
         );
       }
 
+      if (networkStatus === 'online') {
+        wellnessButton = (
+          <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
+            <ListItem button>
+              <ListItemIcon>
+                <WellnessIcon />
+              </ListItemIcon>
+              <ListItemText primary="Wellness" />
+            </ListItem>
+          </NavLink>
+        );
+      } else {
+        wellnessButton = (
+          <div onClick={this.openDialogBox}>
+            <ListItem button disabled={networkStatus}>
+              <ListItemIcon>
+                <WellnessIcon />
+              </ListItemIcon>
+              <ListItemText primary="Wellness" />
+            </ListItem>
+          </div>
+        );
+      }
+      // // Creates the Wellness button
+      // wellnessButton = (
+      //   <NavLink exact to="/Wellness" onClick={this.props.onLinkClick} className="gc360-link">
+      //     <ListItem button>
+      //       <ListItemIcon>
+      //         <WellnessIcon />
+      //       </ListItemIcon>
+      //       <ListItemText primary="Wellness" />
+      //     </ListItem>
+      //   </NavLink>
+      // );
+
       // Creates the Involvements button
       involvementsButton = (
         <NavLink className="gc360-link" exact to="/involvements" onClick={this.props.onLinkClick}>
@@ -242,18 +276,6 @@ export default class GordonNavLinks extends Component {
           </ListItem>
         </NavLink>
       );
-      // Re-Enable when adding the link to the timesheet page
-      // Creates the Timesheets button
-      //timesheetButton = (
-      //  <NavLink className="gc360-link" exact to="/timesheets" onClick={this.props.onLinkClick}>
-      //    <ListItem button>
-      //      <ListItemIcon>
-      //        <WorkIcon />
-      //      </ListItemIcon>
-      //      <ListItemText primary="Timesheets" />
-      //    </ListItem>
-      //  </NavLink>
-      //);
 
       // Creates the Home button
       homeButton = (
@@ -376,32 +398,6 @@ export default class GordonNavLinks extends Component {
         );
       }
 
-      //Re-enable when adding the link to timesheets page
-      // Creates the Timesheet button depending on the status of the network found in local storage
-      //if (networkStatus === 'online') {
-      //  timesheetButton = (
-      //    <NavLink className="gc360-link" exact to="/timesheets" onClick={this.props.onLinkClick}>
-      //      <ListItem button>
-      //        <ListItemIcon>
-      //          <WorkIcon />
-      //        </ListItemIcon>
-      //        <ListItemText primary="Timesheets" />
-      //      </ListItem>
-      //    </NavLink>
-      //  );
-      //} else {
-      //  timesheetButton = (
-      //    <NavLink className="gc360-link" onClick={this.openDialogBox}>
-      //      <ListItem button disabled={networkStatus}>
-      //        <ListItemIcon>
-      //          <WorkIcon />
-      //        </ListItemIcon>
-      //        <ListItemText primary="Timesheets" />
-      //      </ListItem>
-      //    </NavLink>
-      //  );
-      //}
-
       // Creates the Signout button depending on the status of the network found in local storage
       if (networkStatus === 'online') {
         signInOut = (
@@ -431,6 +427,7 @@ export default class GordonNavLinks extends Component {
           {involvementsButton}
           {eventsButton}
           {peopleButton}
+          {wellnessButton}
         </List>
 
         <Divider />

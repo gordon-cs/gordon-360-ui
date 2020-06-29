@@ -3,6 +3,7 @@ import ActivitiesAll from './views/ActivitiesAll';
 //import ActivityEdit from './views/ActivityEdit';
 import ActivityProfile from './views/ActivityProfile';
 import Home from './views/Home';
+import WellnessCheck from './views/WellnessCheck';
 import Help from './views/Help';
 import CoCurricularTranscript from './views/CoCurricularTranscript';
 import Events from './views/Events';
@@ -17,6 +18,7 @@ import Admin from './views/Admin';
 import Timesheets from './views/Timesheets';
 import BannerSubmission from './views/BannerSubmission';
 import News from './views/News';
+import Page404 from './views/Page404';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 export default [
@@ -30,6 +32,11 @@ export default [
     name: 'About',
     path: '/about',
     component: About,
+  },
+  {
+    name: 'Wellness',
+    path: '/wellness',
+    component: WellnessCheck,
   },
   {
     name: 'Involvement Profile',
@@ -97,8 +104,8 @@ export default [
     component: Admin,
   },
   {
-    name: 'Timesheets',
-    path: '/t1m35433t5',
+    name: 'Student Timesheets',
+    path: '/student-timesheets',
     component: Timesheets,
   },
   {
@@ -110,5 +117,10 @@ export default [
     name: 'News',
     path: '/news',
     component: News,
+  },
+  {
+    name: 'Page Not Found',
+    path: '*',
+    component: Page404,
   }
 ];
