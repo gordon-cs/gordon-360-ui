@@ -64,32 +64,35 @@ const Timesheets = (props) => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [clockInOut, setClockInOut] = useState('Clock In');
   
-
+  // disabled lint in some lines in order to remove warning about race condition that does not apply
+  // in our current case
+  // eslint-disable-next-line
   useEffect(async ()=>{
-    console.log("it worked");
-    await getClockInOutStatus();
+    // updates ui with the current status of the users clocked in feature
+    // either clocked in and ready to clock out or the apposite
+    async function getClockInOutStatus(){
+      try{
+            let status = await jobs.clockOut();
+            
+            if(status[0].currentState){
+              setClockInOut("Clock Out");
+              //
+              handleDateChangeInClock(new Date(status[0].timestamp));
+    
+            } else {
+              setClockInOut("Clock In");
+              }
+         } catch(error) {
+            //did nothing
+           }
+    }
+
+    getClockInOutStatus();
   
-
-  },[])
-
-  const getClockInOutStatus = async () =>{
-  try{
-        let status = await jobs.clockOut();
-        console.log(status);
-        
-        if(status[0].currentState){
-          setClockInOut("Clock Out");
-          //
-          handleDateChangeInClock(new Date(status[0].timestamp));
-
-        } else {
-          setClockInOut("Clock In");
-        }
-     } catch(error) {
-        console.log("did not work")
-     }
-  }
-
+  // eslint-disable-next-line
+  },[]);
+  //had to be defined outside of the authentication condition so that the ui could update
+  // before cheking to see if user is authenticated
   const handleDateChangeInClock = date => {
     if (date) {
       date.setSeconds(0);
@@ -404,20 +407,21 @@ const Timesheets = (props) => {
     //   }
     // }
 
-    const clockIn = () =>{
+    const clockIn = async() =>{
 
       if(clockInOut === "Clock In"){
         setClockInOut("Clock Out")
-        jobs.clockIn(true);
+        await jobs.clockIn(true);
         let clockInDate = new Date();
         handleDateChangeIn(clockInDate);
 
       } 
       if(clockInOut === "Clock Out") {
           setClockInOut("Reset");
-          jobs.clockIn(false);
+          await jobs.clockIn(false);
           let clockOutDate = new Date();
           handleDateChangeOut(clockOutDate);
+          await jobs.deleteClockIn();
       } 
       if(clockInOut === "Reset") {
           setClockInOut("Clock In");

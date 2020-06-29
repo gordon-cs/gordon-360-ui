@@ -91,6 +91,10 @@ const clockOut = () => {
   return http.get(`jobs/clockOut`);
 };
 
+const deleteClockIn = () => {
+  return http.get(`jobs/deleteClockIn`);
+};
+
 export default {
   getActiveJobsForUser,
   getSavedShiftsForUser,
@@ -101,4 +105,5 @@ export default {
   submitShiftsForUser,
   clockIn,
   clockOut,
+  deleteClockIn
 };
