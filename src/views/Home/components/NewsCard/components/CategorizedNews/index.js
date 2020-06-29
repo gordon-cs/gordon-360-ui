@@ -1,3 +1,9 @@
+// SUMMER 2020 NOTE:
+// This file is currently not being used.
+// Instead, the NewsItem.js file in the "News" view is being used
+// This file is being preserved for now as the news features are still in development
+
+
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';

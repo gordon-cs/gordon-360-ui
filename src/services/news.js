@@ -43,6 +43,8 @@ const getNotExpired = () => http.get(`news/not-expired`);
 
 const getNewNews = () => http.get(`news/new`);
 
+const getPersonalUnapproved = () => http.get('news/personal-unexpired');
+
 const getCategories = () => http.get(`news/categories`);
 
 function formatPosting(posting) {
@@ -89,6 +91,20 @@ const getTodaysNews = async () => {
     formatPosting(news[i]);
   }
   return todaysNews;
+}
+
+/**
+ * Gets today's news
+ * for use on the Home Page card
+ */
+const getPersonalUnapprovedFormatted = async () => {
+  let news = await getPersonalUnapproved();
+  const personalUnapproved = [];
+  for (let i = 0; i < news.length; i +=1) {
+    personalUnapproved.push(news[i]);
+    formatPosting(news[i]);
+  }
+  return personalUnapproved;
 }
 
 /**

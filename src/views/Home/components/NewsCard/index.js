@@ -1,3 +1,10 @@
+// SUMMER 2020 NOTE:
+// Sorting news by category is currently not being used
+// This was a feature deemed desirable to the original news team
+// But currently it is not being implemented (commented out)
+// May be a potential future feature, but not sure
+
+
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -7,17 +14,16 @@ import { Button } from '@material-ui/core';
 import { gordonColors } from '../../../../theme';
 import NewsService from '../../../../services/news';
 import NewsItem from '../../../News/components/NewsItem';
-
 // import CategorizedNews from './components/CategorizedNews';
 
 export default class DailyNews extends Component {
   constructor(props) {
     super(props);
 
-    this.handleExpandClick = this.handleExpandClick.bind(this);
+    // this.handleExpandClick = this.handleExpandClick.bind(this);
 
     this.state = {
-      newsCategories: [],
+      // newsCategories: [],
       news: [],
     };
   }
@@ -26,20 +32,21 @@ export default class DailyNews extends Component {
    this.loadNews();
   }
 
-  // loads the news by category
+  // loads the news (not currently "by category")
   async loadNews() {
-    let newsCategories;
-    newsCategories = await NewsService.getCategories();
-
+    // let newsCategories = await NewsService.getCategories();
     let todaysNews = await NewsService.getTodaysNews();
 
-    this.setState({ newsCategories: newsCategories, news: todaysNews});
+    this.setState({ 
+      // newsCategories: newsCategories, 
+      news: todaysNews
+    });
   }
 
   // opens or closes the expansions
-  handleExpandClick() {
-    this.setState({ open: !this.state.open });
-  }
+  // handleExpandClick() {
+  //   this.setState({ open: !this.state.open });
+  // }
 
   render() {
     // let categories;
@@ -58,8 +65,8 @@ export default class DailyNews extends Component {
     //   ));
 
     news = this.state.news
-      .map(currPosting => (
-        <NewsItem posting={currPosting} key={currPosting.SNID} size="single" style={{backgroundColor: "#ebeaea"}} />
+      .map(item => (
+        <NewsItem posting={item} key={item.SNID} size="single" style={{border: "2px solid #bbb", marginBottom: "-2px"}} />
       ));
 
     return (
