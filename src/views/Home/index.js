@@ -21,13 +21,14 @@ export default class Home extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null, network: 'online', answered: false, currentStatus: '' };
+    this.state = { personType: null, network: 'online', answered: false, currentStatus: null };
+
   }
 
-   componentWillMount() {
+   async componentWillMount() {
     if (this.props.Authentication) {
       this.getPersonType();
-      this.getStatus();
+     await this.getStatus();
     }
   }
 
@@ -39,16 +40,16 @@ export default class Home extends Component {
 
   async getStatus() {
     const answer = await wellness.getStatus();
-    if (answer.currentStatus === true) {
-      this.setState({ currentStatus: 'I am symptomatic' });
-      this.setState({ answered: true });
-      console.log(this.state.answered);
+
+    if(answer.length > 0){
+
+      this.setState({answered: answer[0].answerValid});
+    } else {
+      this.setState({answered: false});
     }
-    if (answer.currentStatus === false) {
-      this.setState({ currentStatus: 'I am not symptomatic' });
-      this.setState({ answered: true });
-    }
+  
   }
+ 
 
   async getPersonType() {
     const profile = await user.getProfileInfo();
@@ -64,9 +65,8 @@ export default class Home extends Component {
     }
   }
 
-  callBack = (data, data2) => {
+  setAnswered = (data) => {
     this.setState({ answered: data });
-    this.setState({ currentStatus: data2 });
   };
 
   render() {
@@ -145,7 +145,7 @@ export default class Home extends Component {
         content = (
           <Grid container justify="center" spacing={2}>
             <Grid item xs={10} md={4}>
-              <Question call={this.callBack} />
+              <Question setAnswered={this.setAnswered} />
             </Grid>
           </Grid>
         );

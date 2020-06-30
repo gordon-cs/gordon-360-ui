@@ -39,6 +39,11 @@
     background-color: white;
   }
 
+  .no-results {
+    font-style: italic;
+    color: gray;
+  }
+
   @media (min-width: 0px) {
     .people-search-root {
       width: 7rem;

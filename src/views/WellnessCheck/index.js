@@ -5,11 +5,11 @@ import Login from '../Login';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import Approved from './components/Approved/Approved';
-import Denied from './components/Denied/Denied';
 import wellness from '../../services/wellness';
 import GordonLoader from '../../components/Loader';
+import HealthStatus from './components/HealthStatus/HealthStatus';
 import '../../app.css';
+import { gordonColors } from './../../theme';
 
 export default class WellnessCheck extends Component {
   constructor(props) {
@@ -20,7 +20,7 @@ export default class WellnessCheck extends Component {
     this.state = {
       personType: null,
       network: 'online',
-      currentStatus: 'I am not symptomatic',
+      currentStatus: true,
       currentUser: null,
       image: null,
       loading: true,
@@ -28,17 +28,20 @@ export default class WellnessCheck extends Component {
   }
 
   async componentDidMount() {
-    await this.getUserData();
+    try {
+      await this.getUserData();
+      await this.getStatus();
+    } catch (error) {
+      // Do nothing
+    }
     user.getImage().then(data => {
-      this.setState({ image: data });
+      this.setState({ image: data, loading: false });
     });
-    await this.getStatus();
   }
 
   componentWillMount() {
     if (this.props.Authentication) {
       this.getPersonType();
-      this.loadFunction();
     }
   }
 
@@ -48,23 +51,20 @@ export default class WellnessCheck extends Component {
     }
   }
 
-  async loadFunction() {
-    this.setState({ loading: true });
-    try {
-      this.setUserImage();
-      this.setState({ loading: false });
-    } catch (error) {
-      this.setState({ error });
-    }
-  }
-
   async getStatus() {
     const answer = await wellness.getStatus();
-    if (answer.currentStatus === true) {
-      this.setState({ currentStatus: 'I am symptomatic' });
-    }
-    if (answer.currentStatus === false) {
-      this.setState({ currentStatus: 'I am not symptomatic' });
+    const SYMPTOMS = true;
+    const NO_SYMPTOMS = false;
+
+    if(answer.length > 0){
+        if (answer[0].userAnswer === true) {
+          this.setState({ currentStatus: SYMPTOMS });
+        }
+        if (answer[0].userAnswer === false) {
+          this.setState({ currentStatus: NO_SYMPTOMS });
+        }
+    } else{
+       this.setState({ currentStatus: NO_SYMPTOMS });
     }
   }
 
@@ -74,27 +74,8 @@ export default class WellnessCheck extends Component {
    * @return {JSON} The JSON data of the current user
    */
   async getUserData() {
-    // Gets the token from local storage to prove authentication for fetch
-    let token = JSON.parse(localStorage.getItem('token'));
-
-    // Creates the header for the request to get the user's info
-    let headers = new Headers({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
-
-    return await fetch(
-      new Request('https://360api.gordon.edu/api/profiles', { method: 'GET', headers }),
-    )
-      .then(result => {
-        return result.json();
-      })
-      .then(data => {
-        this.setState({ currentUser: data });
-      })
-      .catch(error => {
-        console.log(error.message);
-      });
+    const data = await user.getProfileInfo();
+    this.setState({ currentUser: data});
   }
 
   async getPersonType() {
@@ -141,9 +122,17 @@ export default class WellnessCheck extends Component {
   render() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
+     *  multiple re-renders that creates extreme performance loss.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
+    // Styles the header
+    const headerStyle = {
+      backgroundColor: gordonColors.primary.blue,
+      color: '#FFF',
+      padding: '10px',
+      fontSize: 20,
+    };
+
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -168,13 +157,7 @@ export default class WellnessCheck extends Component {
        */
 
       if (this.props.Authentication) {
-        let status;
-
-        if (this.state.currentStatus === 'I am not symptomatic') {
-          status = <Approved />;
-        } else {
-          status = <Denied />;
-        }
+        let status = <HealthStatus />
 
         content = (
           <Grid container justify="center" spacing={2}>
@@ -189,6 +172,7 @@ export default class WellnessCheck extends Component {
                   <Card> {this.setUserImage()}</Card>
                   {status}
                 </CardContent>
+                <div style={headerStyle}>Questions? Health Center: (978) 867-4300 </div>
               </Card>
             </Grid>
           </Grid>

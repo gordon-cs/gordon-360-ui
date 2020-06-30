@@ -214,6 +214,7 @@ export default class GordonNavLinks extends Component {
       this.props.onLinkClick,
       this.openDialogBox,
     );
+
     // Wellness Button
     let wellnessButton = createWellnessButton(
       this.state.network,
