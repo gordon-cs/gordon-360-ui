@@ -60,7 +60,31 @@ const MyProfile = props => {
   const [involvementsAndTheirPrivacy, setInvolvementsAndTheirPrivacy] = useState([]);
   const [network, setNetwork] = useState('online');
 
+  /**
+   * Loads the user's profile info only once (at start)
+   */
   useEffect(() => {
+    async function loadProfile() {
+      setLoading(true);
+      let profile;
+      try {
+        profile = await user.getProfileInfo();
+        let profileInfo = <ProfileList profile={profile} myProf={true} />;
+        const personType = String(profile.PersonType);
+        let officeInfo = <Office profile={profile} />;
+        setProfileInfo(profileInfo);
+        setOfficeInfo(officeInfo);
+        setProfile(profile);
+        setPersonType(personType);
+        const memberships = await user.getMembershipsAlphabetically(profile.ID);
+        const involvementsAndTheirPrivacy = await getInvolvementAndPrivacyDictionary(memberships);
+        setLoading(false);
+        setMemberships(memberships);
+        setInvolvementsAndTheirPrivacy(involvementsAndTheirPrivacy);
+      } catch (error) {
+        // Do Nothing
+      }
+    }
     loadProfile();
   }, []);
 
@@ -114,28 +138,6 @@ const MyProfile = props => {
       });
     }
     return involvementAndPrivacyDictionary;
-  }
-
-  async function loadProfile() {
-    setLoading(true);
-    let profile;
-    try {
-      profile = await user.getProfileInfo();
-      let profileInfo = <ProfileList profile={profile} myProf={true} />;
-      const personType = String(profile.PersonType);
-      let officeInfo = <Office profile={profile} />;
-      setProfileInfo(profileInfo);
-      setOfficeInfo(officeInfo);
-      setProfile(profile);
-      setPersonType(personType);
-      const memberships = await user.getMembershipsAlphabetically(profile.ID);
-      const involvementsAndTheirPrivacy = await getInvolvementAndPrivacyDictionary(memberships);
-      setLoading(false);
-      setMemberships(memberships);
-      setInvolvementsAndTheirPrivacy(involvementsAndTheirPrivacy);
-    } catch (error) {
-      // Do Nothing
-    }
   }
 
   // AUTHENTICATED
