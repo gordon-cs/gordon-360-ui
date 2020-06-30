@@ -583,7 +583,7 @@ self.addEventListener('fetch', event => {
   // // If request is from Remote, console log the URL
   // else {
   //   if (showDeveloperConsoleLog) {
-  //     console.log(`Fetching request from REMOTE LOCATION: ${event.request.origin}`);
+  //     console.log(`Fetching request from REMOTE LOCATION: ${event.request.url}`);
   //   }
   // }
 
