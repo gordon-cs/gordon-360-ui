@@ -246,9 +246,10 @@ export default class GordonActivitiesAll extends Component {
    */
   filter(name) {
     return event => {
-      this.setState({ [name]: event.target.value });
-      const { allActivities, type, search } = this.state;
-      this.setState({ activities: activity.filter(allActivities, type, search) });
+      this.setState({ [name]: event.target.value }, () => {
+        const { allActivities, type, search } = this.state;
+        this.setState({ activities: activity.filter(allActivities, type, search) });
+      });
     };
   }
 
