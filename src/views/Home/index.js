@@ -115,7 +115,7 @@ export default class Home extends Component {
      */
     // Authenticated
     if (this.props.Authentication) {
-      // Authenticated - Questions Answered
+      // Authenticated - Questions Answered or Network Status: Offline
       if (this.state.answered || this.state.network === 'offline') {
         const personType = this.state.personType;
 
