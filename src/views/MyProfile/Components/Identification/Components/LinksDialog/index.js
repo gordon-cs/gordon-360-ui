@@ -126,7 +126,7 @@ export default class LinksDialog extends React.Component {
           this.state.fbValid && this.state.twValid && this.state.liValid && this.state.igValid,
       },
       () => {
-        // If the form is valid and the links changed, display the submit button
+        // If the form is valid and the links changed
         if (
           this.state.formValid &&
           (this.props.facebookLink !== this.state.facebookInput ||
@@ -179,8 +179,10 @@ export default class LinksDialog extends React.Component {
    * @param {Event} event The event of a text input changing
    */
   handleChange = (name, event) => {
-    let value = event.target.value;
-    this.setState({ [name]: event.target.value }, () => {
+    // Removes and spaces within the link and trailing it afterwards. To the user, they will find
+    // that they cannot input a space at all in any text input
+    let value = event.target.value.replace(' ', '').trim();
+    this.setState({ [name]: value }, () => {
       this.validateField(name, value);
     });
   };

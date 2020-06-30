@@ -15,7 +15,7 @@
 ///*********************************************** VARIABLES ***********************************************/
 // Current cache version
 const cacheVersion = 'cache v1.2';
-const apiSource = 'https://360Api.gordon.edu';
+const apiSource = 'https://360apitrain.gordon.edu';
 /* Uncomment For Development Only (aka develop) */
 const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
 /* Uncomment For Production Only (aka master) */
@@ -122,9 +122,9 @@ const staticCache = [
  * 2 other links needed for involvements are added to this in cacheStaticFiles()
  */
 const dynamicCacheTwo = [
-  'https://360api.gordon.edu/api/events/25Live/Public',
-  'https://360api.gordon.edu/api/sessions',
-  'https://360api.gordon.edu/api/sessions/current',
+  `${apiSource}/api/events/25Live/Public`,
+  `${apiSource}/api/sessions`,
+  `${apiSource}/api/sessions/current`,
 ];
 
 /*********************************************** CACHING FUNCTIONS ***********************************************/
@@ -143,13 +143,11 @@ async function cleanCache() {
           if (
             !item.url.match(location.origin) &&
             item.url !== fontKeySource &&
-            item.url !== 'https://360api.gordon.edu/api/events/25Live/Public' &&
-            item.url !== 'https://360api.gordon.edu/api/sessions' &&
-            item.url !== 'https://360api.gordon.edu/api/sessions/current' &&
-            item.url !==
-              `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}` &&
-            item.url !==
-              `https://360api.gordon.edu/api/activities/session/${currentSession.SessionCode}/types`
+            item.url !== `${apiSource}/api/events/25Live/Public` &&
+            item.url !== `${apiSource}/api/sessions` &&
+            item.url !== `${apiSource}/api/sessions/current` &&
+            item.url !== `${apiSource}/api/activities/session/${currentSession.SessionCode}` &&
+            item.url !== `${apiSource}/api/activities/session/${currentSession.SessionCode}/types`
           ) {
             cache.delete(item);
           }
@@ -194,7 +192,12 @@ async function fetchThenCache(request) {
   return await fetch(request)
     .then(fetchResponse => {
       // If the request is specifically Gordon 360's Font CSS or a dynamic file that's needed for offline
-      if (request.url === fontKeySource || dynamicCache.includes(request.url)) {
+      // or an Involvements picture
+      if (
+        request.url === fontKeySource ||
+        dynamicCache.includes(request.url) ||
+        request.url.includes('/browseable/uploads/')
+      ) {
         caches.open(cacheVersion).then(cache => {
           cache.put(request.url, fetchResponse.clone());
         });
@@ -240,7 +243,7 @@ async function cacheStaticFiles() {
   });
 
   // GETS THE CURRENT SESSION
-  await fetch((request = new Request('https://360api.gordon.edu/api/sessions/current')))
+  await fetch((request = new Request(`${apiSource}/api/sessions/current`)))
     .then(async fetchResponse => {
       // Checks to make sure the response of the fetch is okay
       if (fetchResponse.statusText === 'OK') {
@@ -262,12 +265,8 @@ async function cacheStaticFiles() {
     })
     .then(session => {
       currentSession = session;
-      dynamicCacheTwo.push(
-        `https://360api.gordon.edu/api/activities/session/${session.SessionCode}`,
-      );
-      dynamicCacheTwo.push(
-        `https://360api.gordon.edu/api/activities/session/${session.SessionCode}/types`,
-      );
+      dynamicCacheTwo.push(`${apiSource}/api/activities/session/${session.SessionCode}`);
+      dynamicCacheTwo.push(`${apiSource}/api/activities/session/${session.SessionCode}/types`);
     })
     // Catches any errors from the fetch
     .catch(error => {
@@ -518,6 +517,7 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/activities/session/${currentSession.SessionCode}`, ////////
       `${apiSource}/api/activities/session/${currentSession.SessionCode}/types`, ///////
       `${apiSource}/api/sessions/daysLeft`,
+      `${apiSource}/api/wellness/question`,
       // `${apiSource}/api/studentemployment/`,
       `${apiSource}/api/version`,
       `${apiSource}/api/events/chapel/${termCode}`,
