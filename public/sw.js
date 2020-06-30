@@ -517,7 +517,6 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/activities/session/${currentSession.SessionCode}`, ////////
       `${apiSource}/api/activities/session/${currentSession.SessionCode}/types`, ///////
       `${apiSource}/api/sessions/daysLeft`,
-      `${apiSource}/api/wellness/question`,
       // `${apiSource}/api/studentemployment/`,
       `${apiSource}/api/version`,
       `${apiSource}/api/events/chapel/${termCode}`,

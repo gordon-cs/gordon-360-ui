@@ -102,7 +102,7 @@ export default class OfflineBanner extends Component {
 
 const styles = {
   card: {
-    backgroundColor: gordonColors.primary.cyan,
+    backgroundColor: gordonColors.primary.blue,
     color: 'white',
     marginBottom: '10px',
     padding: '5px',
