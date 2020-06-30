@@ -13,6 +13,7 @@ import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import { gordonColors } from './../../theme';
 
 //import './event.css';
 
@@ -323,26 +324,40 @@ export default class Events extends Component {
     }
 
     let events;
+    const style = {
+      button: {
+        background: gordonColors.primary.cyan,
+        color: 'white',
+      },
+    };
     // If the user is online
     if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
       events = (
         <section>
           <Grid container justify="center">
             <Grid item xs={12} md={12} lg={8}>
-              <Grid container alignItems="baseline" style={styles.searchBar} spacing={8}>
-                <Grid item xs={7} sm={10} md={6} lg={6}>
+              <Grid container alignItems="baseline" style={styles.searchBar} spacing={4}>
+                <Grid item xs={12} md={12} lg={8}>
                   <TextField
                     id="search"
                     label="Search"
                     value={this.state.search}
                     onChange={this.search('search')}
-                    margin="none"
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={4} sm={2} md={2} lg={2} align="center">
-                  <Button variant="contained" color="primary" onClick={this.handleExpandClick}>
+                <Grid item xs={4} align="center">
+                  <Button variant="contained" style={style.button} onClick={this.handleExpandClick}>
                     Filters
+                  </Button>
+                </Grid>
+                <Grid item tem xs={5} align="center">
+                  <Button
+                    variant="contained"
+                    style={style.button}
+                    onClick={() => (window.location.pathname = '/attended')}
+                  >
+                    ATTENDED EVENTS
                   </Button>
                 </Grid>
                 <Grid item xs={6} sm={4} md={2} lg={2}>

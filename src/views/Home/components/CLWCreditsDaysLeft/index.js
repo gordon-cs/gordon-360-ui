@@ -82,7 +82,7 @@ export default class CLWCreditsDaysLeft extends Component {
           // Allow different tooltips for different datasets within the same pie;
           callbacks: {
             // Code taken from https://github.com/chartjs/Chart.js/issues/1417
-            label: function(item, data) {
+            label: function (item, data) {
               return (
                 data.datasets[item.datasetIndex].label[item.index] +
                 ': ' +
@@ -195,15 +195,15 @@ export default class CLWCreditsDaysLeft extends Component {
               <CardHeader title={this.state.currSessionDescription} />
             </Grid>
             <Grid item xs={5} align="right">
-                  <Button
-                    variant="contained"
-                    style={style.button}
-                    onClick={() => (window.location.pathname = '/attended')}
-                    >
-                    ATTENDED EVENTS
-                  </Button>
-                </Grid>
-              </Grid>
+              <Button
+                variant="contained"
+                style={style.button}
+                onClick={(event) => (window.location.href = '/events?CLW=true')}
+              >
+                NEED MORE CHAPEL CREDITS?
+              </Button>
+            </Grid>
+          </Grid>
           {content}
         </CardContent>
       </Card>
