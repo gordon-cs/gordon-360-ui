@@ -88,7 +88,8 @@ export const gordonColors = {
   },
 };
 
-// Material-UI breakpoints
+// Material-UI breakpoints. This is to allow components to use Material-UI's breakpoints since
+// you cannot import variables from a vars.scss to a JS file.
 export const windowBreakWidths = {
   breakXS: 360,
   breakSM: 600,

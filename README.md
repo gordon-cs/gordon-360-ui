@@ -38,8 +38,6 @@ Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; la
 
 #### Linux:
 
-#### Linux:
-
 Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, run `nvm install 9.11.1` then run `nvm use 9.11.1`.
 
 <!-- ### Front End Development (Note) -->

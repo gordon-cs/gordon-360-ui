@@ -8,7 +8,6 @@ import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import WorkIcon from '@material-ui/icons/Work';
-/* Uncomment when re-enabling timesheets link */
 import WellnessIcon from '@material-ui/icons/LocalHospital';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';

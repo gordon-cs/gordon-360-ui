@@ -75,7 +75,7 @@ export const GordonNavButtonsRightCorner = props => {
     props.openDialogBox,
   );
 
-  // Links Button
+  // Timesheets Button
   let timesheetsButton = createTimesheetsButton(
     network,
     props.Authentication,
