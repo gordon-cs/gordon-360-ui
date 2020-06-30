@@ -34,14 +34,19 @@ export async function getQuestions() {
   
   await getUserData();
   let backendQuestions = await wellness.getQuestion();
-
-  let phoneNumber = `(${user.MobilePhone.substring(0, 3)}) ${user.MobilePhone.substring(
-    3,
-    6,
-  )}-${user.MobilePhone.substring(6)}`;
-
-  //comment below disables the eslint warning so we can execute dynamic string parsing without warnings
   
+  let phoneNumber;
+  
+  if(user.MobilePhone === undefined){
+     phoneNumber = "your phone number";
+  } else{
+    phoneNumber = `(${user.MobilePhone.substring(0, 3)}) ${user.MobilePhone.substring(
+        3,
+        6,
+       )}-${user.MobilePhone.substring(6)}`;
+  }
+  
+
   /* eslint-disable no-template-curly-in-string */
   let wellnessQuestion = backendQuestions[0].question.replace("${user.FirstName}", `${user.FirstName}`);
   wellnessQuestion = wellnessQuestion.replace("${user.LastName}", `${user.LastName}`);
