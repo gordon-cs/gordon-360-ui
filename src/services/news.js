@@ -33,10 +33,6 @@ import http from './http';
  */
 
 
-/**
- * Get today's student news
- * @return {Promise.<String{}>} Student news
- */
 
 
 const getNotExpired = () => http.get(`news/not-expired`);
@@ -47,6 +43,14 @@ const getPersonalUnapproved = () => http.get('news/personal-unexpired');
 
 const getCategories = () => http.get(`news/categories`);
 
+/**
+ * Format a news posting by adding fields:
+ * - day posted
+ * - date posted
+ * - year posted
+ * - posting author
+ * @param {*} posting The news posting to format
+ */
 function formatPosting(posting) {
   const timestamp = DateTime.fromISO(posting.Entered);
   posting.dayPosted = timestamp.weekdayShort + ", "
@@ -68,6 +72,7 @@ function formatPosting(posting) {
 /**
  * Gets all unexpired news
  * for use on the News Page
+ * @return {Promise<any>} Student news
  */
 const getNotExpiredFormatted = async () => {
   let unexpiredNews = await getNotExpired();
@@ -82,6 +87,7 @@ const getNotExpiredFormatted = async () => {
 /**
  * Gets today's news
  * for use on the Home Page card
+ * @return {Promise<any>} Student news
  */
 const getTodaysNews = async () => {
   let news = await getNewNews();
@@ -91,20 +97,6 @@ const getTodaysNews = async () => {
     formatPosting(news[i]);
   }
   return todaysNews;
-}
-
-/**
- * Gets today's news
- * for use on the Home Page card
- */
-const getPersonalUnapprovedFormatted = async () => {
-  let news = await getPersonalUnapproved();
-  const personalUnapproved = [];
-  for (let i = 0; i < news.length; i +=1) {
-    personalUnapproved.push(news[i]);
-    formatPosting(news[i]);
-  }
-  return personalUnapproved;
 }
 
 /**
@@ -125,9 +117,25 @@ const getPersonalUnapprovedFormatted = async () => {
 // }
 
 /**
+ * Get today's student news
+ * for use on the Home Page card
+ * @return {Promise<any>} Student news
+ */
+const getPersonalUnapprovedFormatted = async () => {
+  let news = await getPersonalUnapproved();
+  const personalUnapproved = [];
+  for (let i = 0; i < news.length; i +=1) {
+    personalUnapproved.push(news[i]);
+    formatPosting(news[i]);
+  }
+  return personalUnapproved;
+}
+
+/**
  * Get all unexpired news for given category
  * For use on the News Page
  * @param {Number} category the category that
+ * @return {Promise<any>} Student news
  */
 const getNewsByCategory = async category => {
   let news;
@@ -155,6 +163,7 @@ export default {
   submitStudentNews,
   getCategories,
   getTodaysNews,
+  getPersonalUnapprovedFormatted,
   getNewNews,
   getNotExpiredFormatted
 };
