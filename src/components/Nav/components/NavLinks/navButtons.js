@@ -420,9 +420,19 @@ export function createTimesheetsButton(networkStatus, authenticated, onLinkClick
 
   return timesheetsButton;
 }
+
 /**
- * THE CODE FOR THE WELLNESS CHECK TABS.
+ * Creates the Wellness Check button.
  *
+ * Depending on the status of the network and authentication, the Wellness Check button is created.
+ *
+ * @param {String} networkStatus The status of the network. Either 'online' or 'offline'.
+ * @param {Boolean} authenticated Determines if the user is logged in.
+ * @param {Function} onLinkClick Determines what occurs when the user clicks on this button.
+ * @param {Function} openDialogBox Sets the data of a dialog box to be shown if the user clicks on
+ *                                this button.
+ *
+ * @return {JSX} The JSX of the Wellness Check button.
  */
 export function createWellnessButton(networkStatus, authenticated, onLinkClick, openDialogBox) {
   let wellnessButton;

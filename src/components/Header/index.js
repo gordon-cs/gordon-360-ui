@@ -356,7 +356,11 @@ export default class GordonHeader extends Component {
   }
 
   /**
-   * THE CODE FOR THE WELLNESS CHECK TABS.
+   * Creates the Wellness Check button.
+   *
+   * Depending on the status of the network and authentication, the Wellness Check button is created.
+   *
+   * @return {JSX} The JSX of the Wellness Check button.
    */
   createWellnessTab() {
     let wellnessTab;
