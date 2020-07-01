@@ -164,7 +164,7 @@ const MyProfile = props => {
       );
     }
 
-    // Creates the My Profile button link depending on the status of the network found in local storage
+    // Creates the My Profile Page
     let MyProfile;
     // AUTHENTICATED - NETWORK STATUS: ONLINE
     if (network === 'online') {

@@ -118,13 +118,14 @@ $image-width-desktop: 230px;
         padding: 1rem 1rem 0rem 1rem;
         &-container {
           max-width: 800px;
+          margin: auto 2rem;
           &-photo {
             border-radius: $image-border-radius;
             overflow: hidden;
             width: $image-width-desktop;
             height: $image-height-desktop;
             transition: width 500ms, height 500ms;
-            margin: 1rem 1.5rem 2rem 1.5rem !important;
+            margin: 1rem 2rem 2rem 2rem !important;
             border: 1px solid $primary-blue;
             &-button {
               &-image {
@@ -143,6 +144,7 @@ $image-width-desktop: 230px;
             }
           }
           &-info {
+            max-width: 600px;
             transition: width 500ms;
             margin: auto 1rem;
             color: rgba(0, 0, 0, 0.87);
@@ -198,14 +200,13 @@ $image-width-desktop: 230px;
           font-size: 1rem !important;
           color: white !important;
           background-color: $primary-blue !important;
-          margin-bottom: 0.5rem !important;
+          margin-bottom: 1rem !important;
         }
       }
     }
   }
 }
 
-// MOBILE VIEW SIZE
 @media (max-width: $break-sm) {
   .gc360-photo-dialog {
     height: 100%;
@@ -242,7 +243,6 @@ $image-width-desktop: 230px;
             }
             &-info {
               width: 90%;
-              max-width: 340px;
               &-email {
                 &-container {
                   &-icon {
