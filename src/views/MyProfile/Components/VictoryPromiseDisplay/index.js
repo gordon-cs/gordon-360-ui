@@ -371,10 +371,14 @@ export default class VictoryPromiseDisplay extends React.Component {
               <Grid container xs className="victory-promise-container-card-container-content">
                 {content}
               </Grid>
-              <Grid item justify="center">
+              <Grid
+                container
+                justify="center"
+                className="victory-promise-container-card-container-link"
+              >
                 <Typography
                   variant="body1"
-                  className="victory-promise-container-card-container-link"
+                  className="victory-promise-container-card-container-link-text"
                   onClick={() => this.openVPLink()}
                 >
                   Click here for more information!

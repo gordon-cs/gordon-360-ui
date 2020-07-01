@@ -46,9 +46,11 @@
           }
         }
         &-link {
-          cursor: pointer;
           color: $primary-cyan;
           margin-top: 2rem !important;
+          &-text {
+            cursor: pointer;
+          }
         }
       }
     }
@@ -72,8 +74,6 @@
             padding: 1rem;
           }
           &-link {
-            cursor: pointer;
-            color: $primary-cyan;
             margin-top: 1.5rem !important;
           }
         }
