@@ -34,6 +34,7 @@
             max-width: 100%;
             max-height: auto;
             margin: 0%;
+            flex-flow: row nowrap !important;
             &-vpdesign {
               max-width: 100%;
               max-height: auto;
@@ -50,6 +51,27 @@
           margin-top: 2rem !important;
           &-text {
             cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+  * This makes the 2 grids containing the icons in the Victory Promise become columns after the
+  * breakpoint. The breakpoint is calculated with 1px subtracted to prevent the Victory Promise
+  * icons aligning in one single column right before the breakpoint occurs.
+*/
+@media (max-width: calc(#{$break-md} - 1px)) {
+  .victory-promise {
+    &-container {
+      &-card {
+        &-container {
+          &-content {
+            &-box-layout {
+              flex-flow: column nowrap !important;
+            }
           }
         }
       }
