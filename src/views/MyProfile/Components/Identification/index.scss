@@ -121,12 +121,13 @@ $image-width-desktop: 230px;
           margin: auto 2rem;
           &-photo {
             border-radius: $image-border-radius;
-            overflow: hidden;
+            overflow: hidden !important;
             width: $image-width-desktop;
             height: $image-height-desktop;
             transition: width 500ms, height 500ms;
             margin: 1rem 2rem 2rem 2rem !important;
             border: 1px solid $primary-blue;
+            z-index: 1;
             &-button {
               &-image {
                 width: $image-width-desktop;
