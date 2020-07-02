@@ -1,0 +1,21 @@
+@import '../../../../vars';
+
+.news-item {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    transition: background-color 150ms;
+}
+
+.news-item:hover {
+    background-color: $primary-cyan;
+    cursor: pointer;
+    transition: background-color 150ms;
+}
+
+.news-item:hover .news-column,
+.news-item:hover .descriptionText,
+.news-item:hover .news-content,
+.news-item:hover .news-heading {
+    color: #fff;
+}
