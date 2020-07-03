@@ -1,10 +1,16 @@
 @import '../../../../vars';
 
 $image-border-radius: 50%;
-$image-height-mobile: 200px;
-$image-height-desktop: 230px;
-$image-width-mobile: 200px;
-$image-width-desktop: 230px;
+// Main Image
+$image-main-height-mobile: 200px;
+$image-main-height-desktop: 230px;
+$image-main-width-mobile: 200px;
+$image-main-width-desktop: 230px;
+// Side Image
+$image-side-height-mobile: 80px;
+$image-side-height-desktop: 90px;
+$image-side-width-mobile: 80px;
+$image-side-width-desktop: 90px;
 
 // SNACKBAR STYLES
 
@@ -107,6 +113,7 @@ $image-width-desktop: 230px;
       background-color: $primary-blue;
       color: white;
       padding-left: 1rem;
+      hyphens: auto;
     }
     &-content {
       height: 100%;
@@ -115,32 +122,79 @@ $image-width-desktop: 230px;
       justify-content: center;
       flex-direction: column;
       &-card {
-        padding: 1rem 1rem 0rem 1rem;
+        padding: 2rem 1rem 0rem 1rem;
         &-container {
           max-width: 800px;
           margin: auto 2rem;
           &-photo {
-            border-radius: $image-border-radius;
-            overflow: hidden !important;
-            width: $image-width-desktop;
-            height: $image-height-desktop;
-            transition: width 500ms, height 500ms;
             margin: 1rem 2rem 2rem 2rem !important;
-            border: 1px solid $primary-blue;
-            z-index: 1;
-            &-button {
-              &-image {
-                width: $image-width-desktop;
-                height: $image-height-desktop;
+            position: relative;
+            &-main {
+              border-radius: $image-border-radius !important;
+              transition: width 500ms, height 500ms !important;
+              border: 1px solid $primary-blue !important;
+              z-index: 1 !important;
+              overflow: hidden !important;
+              width: $image-main-width-desktop;
+              height: $image-main-height-desktop;
+              position: relative;
+              &-container {
+                position: absolute;
+                &-image {
+                  width: $image-main-width-desktop;
+                  height: $image-main-height-desktop;
+                }
+                &-tile-bar {
+                  position: absolute;
+                  margin: 0rem;
+                  padding: 0.5rem 0rem 2rem 0rem;
+                  top: 89%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  width: 100%;
+                  color: white;
+                  background: transparentize(
+                    $primary-blue,
+                    0.5
+                  ); // Make titles more readable over image background
+                  // Make space for a two-line title
+                  text-align: center;
+                }
               }
-              &-tile-bar {
-                padding-bottom: 0.5rem;
-                background: transparentize(
-                  $primary-blue,
-                  0.4
-                ); // Make titles more readable over image background
-                // Make space for a two-line title
-                text-align: center;
+              &-button {
+                position: absolute;
+                background-color: transparent;
+                border-radius: $image-border-radius;
+                width: $image-main-width-desktop;
+                height: $image-main-height-desktop;
+                &:hover {
+                  cursor: pointer;
+                }
+              }
+            }
+            &-side {
+              position: absolute;
+              z-index: 2;
+              border: 1px solid $primary-blue;
+              display: flex;
+              box-sizing: border-box;
+              border-radius: $image-border-radius;
+              transform: translate(-35%, -270%);
+              overflow: hidden !important;
+              &-image {
+                border-radius: $image-border-radius;
+                width: $image-side-width-desktop;
+                height: $image-side-height-desktop;
+              }
+              &-button {
+                position: absolute;
+                background-color: transparent;
+                border-radius: $image-border-radius;
+                width: $image-side-width-desktop;
+                height: $image-side-height-desktop;
+                &:hover {
+                  cursor: pointer;
+                }
               }
             }
           }
@@ -233,12 +287,34 @@ $image-width-desktop: 230px;
         &-card {
           &-container {
             &-photo {
-              width: $image-width-mobile;
-              height: $image-height-mobile;
-              &-button {
+              width: $image-main-width-mobile;
+              height: $image-main-height-mobile;
+              &-main {
+                width: $image-main-width-mobile;
+                height: $image-main-height-mobile;
+                &-container {
+                  &-image {
+                    width: $image-main-width-mobile;
+                    height: $image-main-height-mobile;
+                  }
+                  &-tile-bar {
+                    top: 85%;
+                    padding: 0.5rem 0rem 1.5rem 0rem;
+                  }
+                }
+                &-button {
+                  width: $image-main-width-mobile;
+                  height: $image-main-height-mobile;
+                }
+              }
+              &-side {
                 &-image {
-                  width: $image-width-mobile;
-                  height: $image-height-mobile;
+                  // transform: translateY(-50%);
+                  width: $image-side-width-mobile;
+                  height: $image-side-height-mobile;
+                }
+                &:hover {
+                  cursor: pointer;
                 }
               }
             }

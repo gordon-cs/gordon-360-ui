@@ -9,8 +9,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Typography from '@material-ui/core/Typography';
 import EmailIcon from '@material-ui/icons/Email';
 import user from './../../../../services/user';
@@ -21,16 +19,22 @@ import { Link } from 'react-router-dom';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
+import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import './index.css';
 import GordonLoader from '../../../../components/Loader';
+import defaultGordonImage from './defaultGordonImage';
 
 export const Identification = props => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState(null);
-  const [image, setImage] = useState(null);
+  const [defaultUserImage, setDefaultUserImage] = useState(null);
+  const [preferredUserImage, setPreferredUserImage] = useState(null);
+  const [hasPreferredImage, seHasPreferredImage] = useState(true);
+  const [switchPhotos, setSwitchPhotos] = useState(false);
   const [showCropper, setShowCropper] = useState(null);
   const [hasNickName, setHasNickname] = useState(Boolean);
   const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
@@ -44,22 +48,13 @@ export const Identification = props => {
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState(false);
   const [snackbarKey, setSnackbarKey] = useState(0); // A key to make every snackbar display unique
+  const [snackbarType, setSnackbarType] = useState(''); // Either success or error
+  const [userProfile, setUserProfile] = useState(null);
   const cropper = useRef();
   let photoDialogErrorTimeout = null;
 
   // Styles used throughout this component
   const style = {
-    img: {
-      width: '200px',
-      height: '200px',
-    },
-
-    centerGridContainer: {
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
-    },
-
     button: {
       background: gordonColors.primary.blue,
       color: 'white',
@@ -90,46 +85,49 @@ export const Identification = props => {
   };
 
   /**
-   * Loads the user's profile info only once (at start)
+   * Loads the user's profile info at start
    */
   useEffect(() => {
     async function loadUserProfile() {
       try {
-        const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-          await user.getImage(),
-        ]);
-        const image = preferredImage || defaultImage;
-        setImage(image);
-        setIsImagePublic(props.profile.show_pic);
-        createNickname(props.profile);
+        const { def: defaultImage, pref: preferredImage } = await user.getImage();
+        const profile = await user.getProfileInfo();
+        console.log('Profile: ', profile);
+        setUserProfile(profile);
+        setPreferredUserImage(preferredImage);
+        seHasPreferredImage(preferredImage ? true : false);
+        setDefaultUserImage(defaultImage || defaultGordonImage);
+        setIsImagePublic(profile.show_pic);
+        createNickname(profile);
+        // Set state of social media links to database values after load.
+        // If not empty, null, or undefined, add domain name back in for display and buttons.
+        setFacebookLink(
+          !profile.Facebook || profile.Facebook === ''
+            ? ''
+            : socialMediaInfo.facebook.prefix + profile.Facebook,
+        );
+        setTwitterLink(
+          !profile.Twitter || profile.Twitter === ''
+            ? ''
+            : socialMediaInfo.twitter.prefix + profile.Twitter,
+        );
+        setLinkedInLink(
+          !profile.LinkedIn || profile.LinkedIn === ''
+            ? ''
+            : socialMediaInfo.linkedIn.prefix + profile.LinkedIn,
+        );
+        setInstagramLink(
+          !profile.Instagram || profile.Instagram === ''
+            ? ''
+            : socialMediaInfo.instagram.prefix + profile.Instagram,
+        );
       } catch (error) {
         // Do Nothing
       }
-      // Set state of social media links to database values after load.
-      // If not empty, null, or undefined, add domain name back in for display and buttons.
-      setFacebookLink(
-        !props.profile.Facebook || props.profile.Facebook === ''
-          ? ''
-          : socialMediaInfo.facebook.prefix + props.profile.Facebook,
-      );
-      setTwitterLink(
-        !props.profile.Twitter || props.profile.Twitter === ''
-          ? ''
-          : socialMediaInfo.twitter.prefix + props.profile.Twitter,
-      );
-      setLinkedInLink(
-        !props.profile.LinkedIn || props.profile.LinkedIn === ''
-          ? ''
-          : socialMediaInfo.linkedIn.prefix + props.profile.LinkedIn,
-      );
-      setInstagramLink(
-        !props.profile.Instagram || props.profile.Instagram === ''
-          ? ''
-          : socialMediaInfo.instagram.prefix + props.profile.Instagram,
-      );
     }
+
     loadUserProfile();
-  }, [props.profile]);
+  }, []);
 
   /**
    * Handles opening the Photo Updater Dialog Box
@@ -143,17 +141,24 @@ export const Identification = props => {
    */
   function handleCloseSubmit() {
     if (showCropper != null) {
-      setOpenPhotoDialog(false);
-      setShowCropper(null);
-      var croppedImage = cropper.current.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-      var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-      setImage(imageNoHeader);
-      user.postImage(croppedImage);
-      window.didProfilePicUpdate = true;
-      setSnackbarMessage('Photo Submitted');
-      // Sets the snackbar key as either 0 or 1. This prevents a high number being made.
-      setSnackbarKey((snackbarKey + 1) % 2);
-      setIsSnackbarOpen(true);
+      let croppedImage = cropper.current.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+      let response = user.postImage(croppedImage);
+      response
+        .then(() => {
+          setPreferredUserImage(newImage);
+          seHasPreferredImage(true);
+          // Displays to the user that their photo has been submitted
+          createSnackbar('Photo Submitted', 'Success');
+          // Closes out the Photo Updater
+          setOpenPhotoDialog(false);
+          setShowCropper(null);
+          window.didProfilePicUpdate = true;
+        })
+        .catch(() => {
+          // Displays to the user that their photo failed to submit
+          createSnackbar('Photo Submission Failed', 'Error');
+        });
     }
   }
 
@@ -167,30 +172,56 @@ export const Identification = props => {
   }
 
   /**
+   * Handles the switch of showing the default and preferred image
+   */
+  function handlePhotoSwitch() {
+    setSwitchPhotos(!switchPhotos);
+  }
+
+  /**
    * Handles when the user chooses to reset their image to the original picture
    */
   async function handleResetImage() {
     // Creates a promise to allow async to force for the user's image to reset before fetching it
-    let imageSet = new Promise((resolve, reject) => {
-      resolve(user.resetImage());
-    });
-    // Once the promise resolves, a fetch is made to receive the user's original photo
-    await imageSet.then(async () => {
-      try {
-        const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-          await user.getImage(),
-        ]);
-        const image = preferredImage || defaultImage;
-        setImage(image);
-      } catch (error) {
-        // Do Nothing
-      }
-    });
-    window.didProfilePicUpdate = true;
-    setOpenPhotoDialog(false);
-    setShowCropper(null);
-    await clearPhotoDialogErrorTimeout();
-    setSnackbarMessage('Original Photo Restored');
+    // Does a post to the server in attempt to reset the user's image
+    let response = user.resetImage();
+
+    // Promised Resolved - Fetch for user's original image
+    await response
+      .then(async () => {
+        // Attempts to get the user's image since it has been reset
+        try {
+          const { def: defaultImage } = await user.getImage();
+          setDefaultUserImage(defaultImage);
+          // Displays to the user that their photo has been restored
+          createSnackbar('Original Photo Restored', 'Success');
+        } catch {
+          setDefaultUserImage(defaultGordonImage);
+          // Displays to the user that getting their original photo failed
+          createSnackbar('Failed Retrieving Photo', 'Error');
+        }
+        // Deletes the preferred image, clears any timeouts errors and closes out of the photo updater
+        await clearPhotoDialogErrorTimeout();
+        setPreferredUserImage(null);
+        seHasPreferredImage(false);
+        setOpenPhotoDialog(false);
+        window.didProfilePicUpdate = true;
+      })
+      // Promised Rejected - Display error to the user
+      .catch(() => {
+        // Displays to the user that resetting their photo failed
+        createSnackbar('Failed To Reset Photo', 'Error');
+      });
+  }
+
+  /**
+   * Displays the snackbar to the user.
+   * @param {String} message The message to display to the user
+   * @param {String} messageType The message's type. Either a success or error
+   */
+  function createSnackbar(message, messageType) {
+    setSnackbarMessage(message);
+    setSnackbarType(messageType);
     // Sets the snackbar key as either 0 or 1. This prevents a high number being made.
     setSnackbarKey((snackbarKey + 1) % 2);
     setIsSnackbarOpen(true);
@@ -200,15 +231,28 @@ export const Identification = props => {
    * Handles when the user chooses to hide or show their public profile picture
    */
   async function toggleImagePrivacy() {
-    setOpenPhotoDialog(false);
-    setShowCropper(null);
-    await clearPhotoDialogErrorTimeout();
-    setIsImagePublic(!isImagePublic);
-    await user.setImagePrivacy(isImagePublic);
-    setSnackbarMessage(isImagePublic ? 'Public Photo Hidden' : ' Public Photo Visible');
-    // Sets the snackbar key as either 0 or 1. This prevents a high number being made.
-    setSnackbarKey((snackbarKey + 1) % 2);
-    setIsSnackbarOpen(true);
+    // Attempts to change the user's privacy
+    let changedPrivacy = await user
+      .setImagePrivacy(isImagePublic)
+      .then(async () => {
+        // Closes out of Photo Updater and removes any error messages
+        await clearPhotoDialogErrorTimeout();
+        setOpenPhotoDialog(false);
+        setShowCropper(null);
+        setIsImagePublic((isImagePublic + 1) % 2);
+        return true;
+      })
+      .catch(() => {
+        return false;
+      });
+    // User's image privacy successfully changed
+    if (changedPrivacy) {
+      createSnackbar(isImagePublic ? 'Public Photo Hidden' : ' Public Photo Visible', 'Success');
+    }
+    // User's image privacy failed to change
+    else {
+      createSnackbar('Privacy Change Failed', 'Error');
+    }
   }
 
   /**
@@ -275,39 +319,6 @@ export const Identification = props => {
     return message;
   }
 
-  /**
-   * Handles the submission of the Social Media links
-   *
-   * @param {String} fb The inputed Facebook link
-   * @param {String} tw The inputed Twitter link
-   * @param {String} li The inputed LinkedIn link
-   * @param {String} ig The inputed Instagram link
-   */
-  async function onDialogSubmit(fb, tw, li, ig) {
-    // For links that have changed, update state
-    // and send change to database.
-    if (fb !== facebookLink) {
-      setFacebookLink(fb);
-      user.updateSocialLink('facebook', fb);
-    }
-    if (tw !== twitterLink) {
-      setTwitterLink(tw);
-      user.updateSocialLink('twitter', tw);
-    }
-    if (li !== linkedInLink) {
-      setLinkedInLink(li);
-      user.updateSocialLink('linkedin', li);
-    }
-    if (ig !== instagramLink) {
-      user.updateSocialLink('instagram', ig);
-      setInstagramLink(ig);
-    }
-    setSnackbarMessage('Social Media Updated');
-    // Sets the snackbar key as either 0 or 1. This prevents a high number being made.
-    setSnackbarKey((snackbarKey + 1) % 2);
-    setIsSnackbarOpen(true);
-  }
-
   function maxCropPreviewWidth() {
     // see IDUploader/index.js > maxCropPreviewWidth for commented out code
     // that seemed to have finer tuned logic
@@ -357,6 +368,7 @@ export const Identification = props => {
           var maxWidth = maxCropPreviewWidth();
           var displayWidth = maxWidth > i.width ? i.width : maxWidth;
           var cropDim = minCropBoxDim(i.width, displayWidth);
+          setPhotoDialogError(null);
           setCropperData({ aspectRatio: aRatio, cropBoxDim: cropDim });
           setShowCropper(dataURL);
         }
@@ -433,7 +445,7 @@ export const Identification = props => {
                       <input {...getInputProps()} />
                       <img
                         className="gc360-photo-dialog-box_content_dropzone_img"
-                        src={`data:image/jpg;base64,${image}`}
+                        src={`data:image/jpg;base64,${preferredUserImage || defaultUserImage}`}
                         alt="Profile"
                       />
                     </div>
@@ -536,12 +548,16 @@ export const Identification = props => {
 
   let linksDialog = (
     <LinksDialog
-      onDialogSubmit={onDialogSubmit}
+      createSnackbar={createSnackbar}
       handleSocialLinksClose={handleSocialLinksClose}
       facebookLink={facebookLink}
+      setFacebookLink={setFacebookLink}
       twitterLink={twitterLink}
+      setTwitterLink={setTwitterLink}
       linkedInLink={linkedInLink}
+      setLinkedInLink={setLinkedInLink}
       instagramLink={instagramLink}
+      setInstagramLink={setInstagramLink}
     />
   );
 
@@ -636,12 +652,13 @@ export const Identification = props => {
     <div className="identification">
       <div className="identification-card">
         <Grid container className="identification-card-header">
-          <CardHeader title={`${props.profile.FirstName}'s Profile`} />
+          {userProfile && <CardHeader title={`${userProfile.FirstName}'s Profile`} />}
+          {!userProfile && <CardHeader title="My Personal Profile" />}
         </Grid>
 
         <div className="identification-card-content">
           {/* SHOWS THE CARD'S CONTENT IF USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
-          {props.profile && image ? (
+          {userProfile && (defaultUserImage || preferredUserImage) ? (
             <Grid container className="identification-card-content-card" justify="center">
               <Grid
                 container
@@ -650,20 +667,56 @@ export const Identification = props => {
                 justify="space-evenly"
               >
                 <Grid item className="identification-card-content-card-container-photo">
-                  <ButtonBase
-                    onClick={handlePhotoOpen}
-                    className="identification-card-content-card-container-photo-button"
-                  >
-                    <img
-                      className="identification-card-content-card-container-photo-button-image"
-                      src={`data:image/jpg;base64,${image}`}
-                      alt="Profile"
-                    />
-                    <GridListTileBar
-                      className="identification-card-content-card-container-photo-button-tile-bar"
-                      title="Photo Options"
-                    />
-                  </ButtonBase>
+                  <div className="identification-card-content-card-container-photo-main">
+                    <div className="identification-card-content-card-container-photo-main-container">
+                      <img
+                        className="identification-card-content-card-container-photo-main-container-image"
+                        src={`data:image/jpg;base64,${
+                          // Checks to see if the default and preferred photos should switch between bubbles
+                          switchPhotos
+                            ? // Main Photo: Default
+                              defaultUserImage
+                            : // Main Photo: Preferred
+                            // If the user doesn't have a preferred photo, then their default photo is shown
+                            hasPreferredImage
+                            ? preferredUserImage
+                            : defaultUserImage
+                        }`}
+                        alt="Profile"
+                      />
+
+                      <Typography
+                        variant="body1"
+                        className="identification-card-content-card-container-photo-main-container-tile-bar"
+                      >
+                        Photo Options
+                      </Typography>
+                    </div>
+                    <div
+                      onClick={handlePhotoOpen}
+                      className="identification-card-content-card-container-photo-main-button"
+                    ></div>
+                  </div>
+                  {preferredUserImage && defaultUserImage && (
+                    <div className="identification-card-content-card-container-photo-side">
+                      <img
+                        className="identification-card-content-card-container-photo-side-image"
+                        src={`data:image/jpg;base64,${
+                          // Checks to see if the default and preferred photos should switch between bubbles
+                          switchPhotos
+                            ? // Side Photo: Preferred
+                              preferredUserImage
+                            : // Side Photo: Default
+                              defaultUserImage
+                        }`}
+                        alt="Profile"
+                      />
+                      <div
+                        onClick={handlePhotoSwitch}
+                        className="identification-card-content-card-container-photo-side-button"
+                      ></div>
+                    </div>
+                  )}
                 </Grid>
 
                 <Grid item className="identification-card-content-card-container-info">
@@ -684,7 +737,7 @@ export const Identification = props => {
                     xs={12}
                     className="identification-card-content-card-container-info-class"
                   >
-                    <Typography>{props.profile.Class}</Typography>
+                    <Typography>{userProfile.Class}</Typography>
                   </Grid>
 
                   <Grid
@@ -694,8 +747,8 @@ export const Identification = props => {
                   >
                     <Typography variant="h6" paragraph>
                       {hasNickName
-                        ? props.profile.fullName + ' (' + props.profile.NickName + ')'
-                        : props.profile.fullName}
+                        ? userProfile.fullName + ' (' + userProfile.NickName + ')'
+                        : userProfile.fullName}
                     </Typography>
                   </Grid>
 
@@ -704,10 +757,10 @@ export const Identification = props => {
                     xs={12}
                     className="identification-card-content-card-container-info-email"
                   >
-                    <a href={`mailto:${props.profile.Email}`}>
+                    <a href={`mailto:${userProfile.Email}`}>
                       <div className="identification-card-content-card-container-info-email-container">
                         <EmailIcon className="identification-card-content-card-container-info-email-container-icon" />
-                        <Typography paragraph>{props.profile.Email}</Typography>
+                        <Typography paragraph>{userProfile.Email}</Typography>
                       </div>
                     </a>
                   </Grid>
@@ -730,17 +783,19 @@ export const Identification = props => {
             <GordonLoader />
           )}
 
-          <Link
-            to={`/profile/${props.profile.AD_Username}`}
-            className="identification-card-content-public-profile-link"
-          >
-            <Button
-              className="identification-card-content-public-profile-link-button"
-              variant="contained"
+          {userProfile && (
+            <Link
+              to={`/profile/${userProfile.AD_Username}`}
+              className="identification-card-content-public-profile-link"
             >
-              View My Public Profile
-            </Button>
-          </Link>
+              <Button
+                className="identification-card-content-public-profile-link-button"
+                variant="contained"
+              >
+                View My Public Profile
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -759,15 +814,38 @@ export const Identification = props => {
             'aria-describedby': 'message-id',
           }}
           message={
-            <span id="message-id">
-              <CheckCircleIcon
-                style={{
-                  marginBottom: '-4.5pt',
-                  marginRight: '0.5rem',
-                }}
-              />
-              {snackbarMessage}
-            </span>
+            // If the message type is Success
+            snackbarType === 'Success' ? (
+              <span id="message-id">
+                <CheckCircleIcon
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '0.5rem',
+                  }}
+                />
+                {snackbarMessage}
+              </span>
+            ) : snackbarType === 'Error' ? (
+              <span id="message-id">
+                <ErrorIcon
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '0.5rem',
+                  }}
+                />
+                {snackbarMessage}
+              </span>
+            ) : (
+              <span id="message-id">
+                <WarningIcon
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '0.5rem',
+                  }}
+                />
+                {snackbarMessage}
+              </span>
+            )
           }
           action={[
             <IconButton key="close" aria-label="Close" color="inherit" onClick={handleClose}>

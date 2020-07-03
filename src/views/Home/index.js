@@ -5,12 +5,13 @@ import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
 import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
+import NewsCard from './components/NewsCard';
 import user from '../../services/user';
 import wellness from '../../services/wellness';
 import Login from '../Login';
 import './home.css';
-import storage from '../../services/storage';
 import Question from './components/Question';
+import storage from '../../services/storage';
 
 import '../../app.css';
 
@@ -22,29 +23,25 @@ export default class Home extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null, network: 'online', answered: false, currentStatus: null };
+    this.state = {
+      personType: null,
+      networkStatus: 'online',
+      answered: false,
+      currentStatus: null,
+    };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     if (this.props.Authentication) {
-      this.getPersonType();
+      await this.getPersonType();
       await this.getStatus();
     }
-  }
 
-  componentWillReceiveProps(newProps) {
-    if (this.props.Authentication !== newProps.Authentication) {
-      this.getPersonType();
-    }
-  }
-
-  componentDidMount() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-
     window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
@@ -61,22 +58,28 @@ export default class Home extends Component {
       }
     });
 
-    let networkStatus;
+    let network;
     /* Attempts to get the network status from local storage.
      * If not found, the default value is online
      */
     try {
-      networkStatus = storage.get('network-status');
+      network = storage.get('network-status');
     } catch (error) {
       // Defaults the network to online if not found in local storage
-      networkStatus = 'online';
+      network = 'online';
     }
-    this.setState({ network: networkStatus });
+    // Saves the network's status to this component's state
+    this.setState({ network });
   }
 
   componentWillUnmount() {
-    // Removes the event listener
     window.removeEventListener('message', () => {});
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (this.props.Authentication !== newProps.Authentication) {
+      this.getPersonType();
+    }
   }
 
   async getStatus() {
@@ -115,15 +118,25 @@ export default class Home extends Component {
      */
     // Authenticated
     if (this.props.Authentication) {
-      // Authenticated - Questions Answered or Network Status: Offline
-      if (this.state.answered || this.state.network === 'offline') {
+      // Authenticated - Questions Answered
+      if (this.state.answered) {
         const personType = this.state.personType;
 
         let requests;
-        if (this.state.network === 'online') {
+        if (this.state.networkStatus === 'online') {
           requests = (
             <Grid item xs={12} md={5}>
               <Requests />
+            </Grid>
+          );
+        }
+
+        //get student news
+        let news;
+        if (this.state.networkStatus === 'online') {
+          news = (
+            <Grid item xs={12} md={5}>
+              <NewsCard />
             </Grid>
           );
         }
@@ -147,6 +160,7 @@ export default class Home extends Component {
             <Grid item xs={12} md={5}>
               <DiningBalance />
             </Grid>
+            {news}
             {requests}
           </Grid>
         );

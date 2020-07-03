@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
+import List from '@material-ui/core/List';
 
-import CollapsableEventItem from './components/CollapsableEventItem';
-import EventItem from './components/EventItem';
-import { gordonColors } from '../../theme';
+import NewsItem from '../NewsItem';
+import { gordonColors } from '../../../../theme';
+import './newsList.scss';
 
-import './event-list.css';
 
-export default class EventList extends Component {
+export default class NewsList extends Component {
   constructor(props) {
     super(props);
 
@@ -51,7 +50,7 @@ export default class EventList extends Component {
   }
 
   render() {
-    const { events } = this.props;
+    const { news } = this.props;
     let content;
     let header;
 
@@ -60,12 +59,12 @@ export default class EventList extends Component {
       color: '#FFF',
       padding: '10px',
     };
-
-    /****** HEADER ******/
-    // Show single "events" column on narrow viewports
+    
+    /********** HEADER ***********/
+    // Show single 'news' column for narrrow viewports
     if (window.innerWidth < this.breakpointWidth) {
-      content = events.map(currEvent => (
-        <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
+      content = news.map(currPosting => (
+        <NewsItem posting={currPosting} key={currPosting.SNID} size="single" />
       ));
 
       header = (
@@ -73,38 +72,40 @@ export default class EventList extends Component {
           <Grid container direction="row">
             <Grid item xs={12}>
               <Typography variant="body2" style={headerStyle}>
-                EVENTS
+                NEWS
               </Typography>
             </Grid>
           </Grid>
         </div>
       );
-      
-    // Show full events columns in header for larger viewports
-    } else if (events) {
-      content = events.map(currEvent => <EventItem event={currEvent} key={currEvent.Event_ID} />);
+    }
 
+    // Show full news columns in header for larger viewports
+    else if (news) {
+      content = news.map(posting => 
+        <NewsItem posting={posting} key={posting.SNID} size="full" />);
+      console.log(news);
       header = (
         <div style={headerStyle}>
           <Grid container direction="row">
-            <Grid item xs={4}>
+            <Grid item xs={2}>
               <Typography variant="body2" style={headerStyle}>
-                EVENT
+                CATEGORY
               </Typography>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={5}>
               <Typography variant="body2" style={headerStyle}>
-                LOCATION
+                SUBJECT
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography variant="body2" style={headerStyle}>
+                POSTED BY
               </Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography variant="body2" style={headerStyle}>
-                DATE
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={headerStyle}>
-                TIME
+                POSTED
               </Typography>
             </Grid>
           </Grid>
@@ -117,7 +118,7 @@ export default class EventList extends Component {
         <Card>
           {header}
           <Grid>
-            <List className="event-list" disablePadding>{content}</List>
+            <List className="news-list" disablePadding>{content}</List>
           </Grid>
         </Card>
       </section>
