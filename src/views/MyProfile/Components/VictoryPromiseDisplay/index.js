@@ -287,6 +287,8 @@ export default class VictoryPromiseDisplay extends React.Component {
         >
           <Grid>
             <HoverText
+              enterTouchDelay={0}
+              leaveTouchDelay={8000}
               title={
                 <React.Fragment>
                   <Typography color="inherit">Christian Character</Typography>
@@ -299,6 +301,8 @@ export default class VictoryPromiseDisplay extends React.Component {
               {IMG_CC}
             </HoverText>
             <HoverText
+              enterTouchDelay={0}
+              leaveTouchDelay={8000}
               title={
                 <React.Fragment>
                   <Typography color="inherit">Intellectual Maturity</Typography>
@@ -313,6 +317,8 @@ export default class VictoryPromiseDisplay extends React.Component {
           </Grid>
           <Grid>
             <HoverText
+              enterTouchDelay={0}
+              leaveTouchDelay={8000}
               title={
                 <React.Fragment>
                   <Typography color="inherit">Lives of Service</Typography>
@@ -325,6 +331,8 @@ export default class VictoryPromiseDisplay extends React.Component {
               {IMG_LS}
             </HoverText>
             <HoverText
+              enterTouchDelay={0}
+              leaveTouchDelay={8000}
               title={
                 <React.Fragment>
                   <Typography color="inherit">Leadership Worldwide</Typography>
