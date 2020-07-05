@@ -1,64 +1,29 @@
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import ProfileList from './../../components/ProfileList';
-import Office from './../../components/OfficeList';
-import user from './../../services/user';
-import storage from '../../services/storage';
-import activity from './../../services/activity';
-import { gordonColors } from '../../theme';
-import MyProfileActivityList from './../../components/MyProfileActivityList';
-import { Link } from 'react-router-dom';
-import 'cropperjs/dist/cropper.css';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
 import GordonLoader from '../../components/Loader';
 import GordonSchedulePanel from '../../components/SchedulePanel';
-import './myProfile.css';
-import '../../app.css';
-import { withWidth } from '@material-ui/core';
-import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
 import { Identification } from './Components/Identification/index';
+import { Involvements } from './Components/Involvements/index';
+import Office from './../../components/OfficeList';
+import ProfileList from './../../components/ProfileList';
+import storage from '../../services/storage';
+import user from './../../services/user';
+import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
+import '../../app.css';
+import './myProfile.css';
+import 'cropperjs/dist/cropper.css';
 
 const MyProfile = props => {
-  const style = {
-    img: {
-      width: '200px',
-      height: '200px',
-    },
-
-    centerGridContainer: {
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
-    },
-
-    button: {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    },
-    uncontainedButton: {
-      color: gordonColors.primary.cyan,
-      fontSize: '1rem',
-    },
-    publicProfileButton: {
-      background: gordonColors.primary.blue,
-      fontSize: '1rem',
-      color: 'white',
-    },
-  };
-
-  const [personType, setPersonType] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [profileInfo, setProfileInfo] = useState(null);
-  const [officeInfo, setOfficeInfo] = useState(null);
-  const [profile, setProfile] = useState({});
   const [memberships, setMemberships] = useState([]);
-  const [involvementsAndTheirPrivacy, setInvolvementsAndTheirPrivacy] = useState([]);
   const [network, setNetwork] = useState('online');
+  const [officeInfo, setOfficeInfo] = useState(null);
+  const [personType, setPersonType] = useState(null);
+  const [profile, setProfile] = useState({});
+  const [profileInfo, setProfileInfo] = useState(null);
 
   /**
    * Loads the user's profile info only once (at start)
@@ -66,21 +31,18 @@ const MyProfile = props => {
   useEffect(() => {
     async function loadProfile() {
       setLoading(true);
-      let profile;
       try {
-        profile = await user.getProfileInfo();
-        let profileInfo = <ProfileList profile={profile} myProf={true} />;
-        const personType = String(profile.PersonType);
-        let officeInfo = <Office profile={profile} />;
-        setProfileInfo(profileInfo);
-        setOfficeInfo(officeInfo);
+        let profile = await user.getProfileInfo();
         setProfile(profile);
+        let profileInfo = <ProfileList profile={profile} myProf={true} />;
+        setProfileInfo(profileInfo);
+        const personType = String(profile.PersonType);
         setPersonType(personType);
+        let officeInfo = <Office profile={profile} />;
+        setOfficeInfo(officeInfo);
         const memberships = await user.getMembershipsAlphabetically(profile.ID);
-        const involvementsAndTheirPrivacy = await getInvolvementAndPrivacyDictionary(memberships);
-        setLoading(false);
         setMemberships(memberships);
-        setInvolvementsAndTheirPrivacy(involvementsAndTheirPrivacy);
+        setLoading(false);
       } catch (error) {
         // Do Nothing
       }
@@ -128,42 +90,8 @@ const MyProfile = props => {
     return window.removeEventListener('message', () => {});
   }, [network]);
 
-  async function getInvolvementAndPrivacyDictionary(membershipsList) {
-    let involvementAndPrivacyDictionary = [];
-    for (let i = 0; i < membershipsList.length; i++) {
-      let involvement = await activity.get(membershipsList[i].ActivityCode);
-      involvementAndPrivacyDictionary.push({
-        key: membershipsList[i],
-        value: involvement.Privacy,
-      });
-    }
-    return involvementAndPrivacyDictionary;
-  }
-
   // AUTHENTICATED
   if (props.Authentication) {
-    let involvementAndPrivacyList;
-    if (memberships.length === 0) {
-      involvementAndPrivacyList = (
-        <div>
-          <Link to={`/involvements`}>
-            <Typography variant="body2" className="noInvolvements">
-              No Involvements to display. Click here to see Involvements around campus!
-            </Typography>
-          </Link>
-        </div>
-      );
-    } else {
-      involvementAndPrivacyList = involvementsAndTheirPrivacy.map(
-        involvementPrivacyKeyValuePair => (
-          <MyProfileActivityList
-            Membership={involvementPrivacyKeyValuePair.key}
-            InvolvementPrivacy={involvementPrivacyKeyValuePair.value}
-          />
-        ),
-      );
-    }
-
     // Creates the My Profile Page
     let MyProfile;
     // AUTHENTICATED - NETWORK STATUS: ONLINE
@@ -210,27 +138,7 @@ const MyProfile = props => {
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <Card>
-                        <CardContent>
-                          <Grid container direction="row" alignItems="center">
-                            <Grid item xs={7}>
-                              <CardHeader title="Involvements" />
-                            </Grid>
-                            <Grid item xs={5} align="right">
-                              <Link className="gc360-link" to="/transcript">
-                                <Button variant="contained" style={style.button}>
-                                  Experience Transcript
-                                </Button>
-                              </Link>
-                            </Grid>
-                          </Grid>
-                          <List>{involvementAndPrivacyList}</List>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  </Grid>
+                  <Involvements memberships={memberships} />
                 </Grid>
               </Grid>
             </div>
@@ -324,4 +232,4 @@ const MyProfile = props => {
   }
 };
 
-export default withWidth()(MyProfile);
+export default MyProfile;
