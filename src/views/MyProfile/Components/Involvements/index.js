@@ -71,7 +71,7 @@ export const Involvements = props => {
 
   return (
     <Grid item xs={12} className="myprofile-involvements">
-      <Grid item className="myprofile-involvements-header">
+      <Grid container className="myprofile-involvements-header">
         <CardHeader title="Involvements" />
       </Grid>
       <Card className="myprofile-involvements-card">

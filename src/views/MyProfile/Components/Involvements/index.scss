@@ -2,6 +2,7 @@
 
 .myprofile-involvements {
   &-header {
+    padding-left: 1rem;
     background-color: $primary-blue;
     color: white;
     border-top-left-radius: 4px;
@@ -28,6 +29,8 @@
 @media (max-width: $break-sm) {
   .myprofile-involvements {
     &-header {
+      padding-left: 0rem;
+      justify-content: center;
       background-color: $primary-blue;
       color: white;
       border-top-left-radius: 4px;

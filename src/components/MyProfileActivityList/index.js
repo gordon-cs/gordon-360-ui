@@ -30,13 +30,6 @@ const styles = {
 
 //MyProfile Involvements List
 class MyProfileActivityList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      involvementPrivacy: Boolean,
-    };
-  }
-
   handleChangeMembershipPrivacy(userMembership) {
     membership.toggleMembershipPrivacy(userMembership);
     this.forceUpdate();
@@ -82,6 +75,7 @@ class MyProfileActivityList extends Component {
         xl: 2,
       },
     };
+
     // If the Involvement is a regular (non-special/secret group - AKA Public) it is False.
     let myProfileInvolvementsList;
     if (!InvolvementPrivacy) {
@@ -166,7 +160,7 @@ class MyProfileActivityList extends Component {
           <Divider />
         </div>
       );
-      // If the Involvement is some kind of Private group (e.g. scholarship group etc. - AKA Private) it is False.
+      // If the Involvement is some kind of Private group (ejj.g. scholarship group etc. - AKA Private) it is False.
     } else {
       myProfileInvolvementsList = (
         <div>
