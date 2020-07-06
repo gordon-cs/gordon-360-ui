@@ -1,0 +1,12 @@
+@import '../../../../vars';
+
+// Make rows alternate white and grey
+/* stylelint-disable */
+.news-list > section:nth-child(even) {
+    background: #ebeaea;
+}
+  
+.news-list > section:nth-child(odd) {
+    background: #ffffff;
+}
+/* stylelint-enable */
