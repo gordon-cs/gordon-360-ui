@@ -50,9 +50,6 @@ export default class App extends Component {
     this.setState({ error, errorInfo });
   }
   componentWillMount() {
-    //setting up a global variable very hacky
-    window.didProfilePicUpdate = false;
-
     let authentication = isAuthenticated();
     this.setState({ authentication });
   }

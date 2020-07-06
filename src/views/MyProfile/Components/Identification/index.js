@@ -92,7 +92,6 @@ export const Identification = props => {
       try {
         const { def: defaultImage, pref: preferredImage } = await user.getImage();
         const profile = await user.getProfileInfo();
-        console.log('Profile: ', profile);
         setUserProfile(profile);
         setPreferredUserImage(preferredImage);
         seHasPreferredImage(preferredImage ? true : false);
@@ -153,7 +152,7 @@ export const Identification = props => {
           // Closes out the Photo Updater
           setOpenPhotoDialog(false);
           setShowCropper(null);
-          window.didProfilePicUpdate = true;
+          window.postMessage('update-profile-picture', window.location.origin);
         })
         .catch(() => {
           // Displays to the user that their photo failed to submit
@@ -205,7 +204,7 @@ export const Identification = props => {
         setPreferredUserImage(null);
         seHasPreferredImage(false);
         setOpenPhotoDialog(false);
-        window.didProfilePicUpdate = true;
+        window.postMessage('update-profile-picture', window.location.origin);
       })
       // Promised Rejected - Display error to the user
       .catch(() => {

@@ -45,23 +45,21 @@ export const GordonNavAvatarRightCorner = props => {
     loadAvatar(props.Authentication);
   }, [props.Authentication]);
 
+  /* Used to re-render the page when the user's profile picture changes
+   *  The origin of the message is checked to prevent cross-site scripting attacks
+   */
   useEffect(() => {
-    setInterval(checkPeer(), 1500);
-  });
+    window.addEventListener('message', event => {
+      if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
+        loadAvatar(props.Authentication);
+      }
+    });
+
+    return window.removeEventListener('message', () => {});
+  }, [props.Authentication]);
 
   // Avatar Button
   let avatar = createAvatarButton(props.Authentication, image, getInitials);
-
-  /**
-   * This method checks a peer component Profile
-   * and rerenders the avatar if the Profile picture is updated
-   */
-  function checkPeer() {
-    if (window.didProfilePicUpdate) {
-      loadAvatar(props.Authentication);
-      window.didProfilePicUpdate = false;
-    }
-  }
 
   /**
    * Gets the initials of the current user

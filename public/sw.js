@@ -593,7 +593,7 @@ self.addEventListener('fetch', event => {
 });
 
 self.addEventListener('message', event => {
-  // Sets variable to prevent the lost of this data when a new service worker installs
+  // Sets variable to prevent the loss of this data when a new service worker installs
   token = event.data.token;
   termCode = event.data.termCode;
 
