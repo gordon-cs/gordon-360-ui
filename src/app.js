@@ -87,7 +87,7 @@ export default class App extends Component {
                       path={route.path}
                       exact={route.exact}
                       render={props => (
-                        <div>
+                        <div className="app-main-container">
                           <OfflineBanner
                             currentPath={route.path}
                             Authentication={this.state.authentication}
