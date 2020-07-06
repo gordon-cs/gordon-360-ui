@@ -47,6 +47,7 @@ export async function getQuestions() {
   }
   
 
+  // comment below disables the eslint warning so we can execute dynamic string parsing without warnings
   /* eslint-disable no-template-curly-in-string */
   let wellnessQuestion = backendQuestions[0].question.replace("${user.FirstName}", `${user.FirstName}`);
   wellnessQuestion = wellnessQuestion.replace("${user.LastName}", `${user.LastName}`);
