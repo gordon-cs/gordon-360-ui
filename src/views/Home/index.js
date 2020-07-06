@@ -25,18 +25,13 @@ export default class Home extends Component {
 
     this.state = {
       personType: null,
-      networkStatus: 'online',
+      network: 'online',
       answered: false,
       currentStatus: null,
     };
   }
 
   async componentDidMount() {
-    if (this.props.Authentication) {
-      await this.getPersonType();
-      await this.getStatus();
-    }
-
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
@@ -70,6 +65,13 @@ export default class Home extends Component {
     }
     // Saves the network's status to this component's state
     this.setState({ network });
+
+    if (this.props.Authentication && network === 'online') {
+      await this.getPersonType();
+      await this.getStatus();
+    } else {
+      await this.getPersonType();
+    }
   }
 
   componentWillUnmount() {
@@ -119,11 +121,11 @@ export default class Home extends Component {
     // Authenticated
     if (this.props.Authentication) {
       // Authenticated - Questions Answered
-      if (this.state.answered) {
+      if (this.state.answered || this.state.network === 'offline') {
         const personType = this.state.personType;
 
         let requests;
-        if (this.state.networkStatus === 'online') {
+        if (this.state.network === 'online') {
           requests = (
             <Grid item xs={12} md={5}>
               <Requests />
@@ -133,13 +135,11 @@ export default class Home extends Component {
 
         //get student news
         let news;
-        if (this.state.networkStatus === 'online') {
-          news = (
-            <Grid item xs={12} md={5}>
-              <NewsCard />
-            </Grid>
-          );
-        }
+        news = (
+          <Grid item xs={12} md={5}>
+            <NewsCard />
+          </Grid>
+        );
 
         //Only show CL&W credits if user is a student
         let doughnut;

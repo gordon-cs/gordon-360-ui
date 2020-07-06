@@ -55,6 +55,7 @@ const staticCache = [
   '/about',
   '/help',
   '/admin',
+  '/news',
   '/attended',
   '/manifest.json',
   '/pwa.js',
@@ -517,6 +518,8 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/activities/session/${currentSession.SessionCode}`, ////////
       `${apiSource}/api/activities/session/${currentSession.SessionCode}/types`, ///////
       `${apiSource}/api/sessions/daysLeft`,
+      `${apiSource}/api/news/categories`,
+      `${apiSource}/api/news/not-expired`,
       // `${apiSource}/api/studentemployment/`,
       `${apiSource}/api/version`,
       `${apiSource}/api/events/chapel/${termCode}`,
