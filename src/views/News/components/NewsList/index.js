@@ -84,7 +84,7 @@ export default class NewsList extends Component {
     else if (news) {
       content = news.map(posting => 
         <NewsItem posting={posting} key={posting.SNID} size="full" />);
-      console.log(news);
+        
       header = (
         <div style={headerStyle}>
           <Grid container direction="row">

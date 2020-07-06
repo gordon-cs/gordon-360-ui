@@ -154,8 +154,10 @@ const getNewsByCategory = async category => {
  * @param {any} data The data which makes up the student news item
  * @return {Promise<any>} Response body
  */
-const submitStudentNews = async data => {
-  return await http.post(`student-news/submit`, data);
+const submitStudentNews = newsItem => {
+  return http.post('student-news', newsItem).catch(reason => {
+    console.log(reason);
+  });
 };
 
 export default {
