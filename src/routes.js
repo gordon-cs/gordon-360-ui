@@ -3,6 +3,7 @@ import ActivitiesAll from './views/ActivitiesAll';
 //import ActivityEdit from './views/ActivityEdit';
 import ActivityProfile from './views/ActivityProfile';
 import Home from './views/Home';
+import WellnessCheck from './views/WellnessCheck';
 import Help from './views/Help';
 import CoCurricularTranscript from './views/CoCurricularTranscript';
 import Events from './views/Events';
@@ -30,6 +31,11 @@ export default [
     name: 'About',
     path: '/about',
     component: About,
+  },
+  {
+    name: 'Wellness',
+    path: '/wellness',
+    component: WellnessCheck,
   },
   {
     name: 'Involvement Profile',

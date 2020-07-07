@@ -6,8 +6,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
-import Switch from '@material-ui/core/Switch';
-import Typography from '@material-ui/core/Typography';
 import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
@@ -31,7 +29,7 @@ export default class Events extends Component {
       search: '',
       chapelCredits: false,
       art: false,
-      athletics: false,
+      sports: false,
       academics: false,
       cec: false,
       studentLife: false,
@@ -44,10 +42,12 @@ export default class Events extends Component {
       filteredEvents: [],
       includePast: false,
       loading: true,
+      hasFilters: false,
       network: 'online',
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
+    this.clearFilters = this.clearFilters.bind(this);
     this.isMobileView = false;
     this.breakpointWidth = 540;
   }
@@ -74,17 +74,31 @@ export default class Events extends Component {
   async loadPrevious() {
     if (window.location.href.includes('?')) {
       const urlParams = new URLSearchParams(this.props.location.search);
-      let includePast = urlParams.get('Past') === 'true' ? true : false;
-      let chapelCredits = urlParams.get('CLW') === 'true' ? true : false;
-      let academics = urlParams.get('Academics') === 'true' ? true : false;
-      let admissions = urlParams.get('Admissions') === 'true' ? true : false;
-      let art = urlParams.get('Arts') === 'true' ? true : false;
-      let athletics = urlParams.get('Athletics') === 'true' ? true : false;
-      let calendar = urlParams.get('Calendar') === 'true' ? true : false;
-      let cec = urlParams.get('CEC') === 'true' ? true : false;
-      let fair = urlParams.get('Fair') === 'true' ? true : false;
-      let chapelOffice = urlParams.get('ChapelOffice') === 'true' ? true : false;
-      let studentLife = urlParams.get('StudentLife') === 'true' ? true : false;
+      let includePast = urlParams.has('Past') ? true : false;
+      let chapelCredits = urlParams.has('CLW') ? true : false;
+      let academics = urlParams.has('Academics') ? true : false;
+      let admissions = urlParams.has('Admissions') ? true : false;
+      let art = urlParams.has('Arts') ? true : false;
+      let sports = urlParams.has('Athletics') ? true : false;
+      let calendar = urlParams.has('Calendar') ? true : false;
+      let cec = urlParams.has('CEC') ? true : false;
+      let fair = urlParams.has('Fair') ? true : false;
+      let chapelOffice = urlParams.has('ChapelOffice') ? true : false;
+      let studentLife = urlParams.has('StudentLife') ? true : false;
+      // Determines if any filters are activated
+      let hasFilters =
+        includePast ||
+        chapelCredits ||
+        academics ||
+        admissions ||
+        art ||
+        sports ||
+        calendar ||
+        cec ||
+        fair ||
+        chapelOffice ||
+        studentLife;
+      console.log('Filters Enabled?: ', hasFilters);
 
       this.setState({
         includePast,
@@ -92,17 +106,18 @@ export default class Events extends Component {
         academics,
         admissions,
         art,
-        athletics,
+        sports,
         calendar,
         cec,
         fair,
         chapelOffice,
         studentLife,
+        hasFilters,
       });
 
       this.setState({ loading: true });
       const events = await gordonEvent.getFilteredEvents(this.state);
-      this.setState({ filteredEvents: events, loading: false });
+      this.setState({ filteredEvents: events, loading: false, open: hasFilters ? true : false });
 
       // If the include past filter is on, we get the events from the past
       if (this.state.includePast) {
@@ -134,23 +149,66 @@ export default class Events extends Component {
    */
   createURLParameters() {
     let url = '?';
-    if (this.state.includePast) url += '&Past=true';
-    if (this.state.chapelCredits) url += '&CLW=true';
-    if (this.state.academics) url += '&Academics=true';
-    if (this.state.admissions) url += '&Admissions=true';
-    if (this.state.art) url += '&Arts=true';
-    if (this.state.athletics) url += '&Athletics=true';
-    if (this.state.calendar) url += '&Calendar=true';
-    if (this.state.cec) url += '&CEC=true';
-    if (this.state.chapelOffice) url += '&ChapelOffice=true';
-    if (this.state.fair) url += '&Fair=true';
-    if (this.state.studentLife) url += '&StudentLife=true';
+    if (this.state.includePast) url += '&Past';
+    if (this.state.chapelCredits) url += '&CLW';
+    if (this.state.academics) url += '&Academics';
+    if (this.state.admissions) url += '&Admissions';
+    if (this.state.art) url += '&Arts';
+    if (this.state.sports) url += '&Athletics';
+    if (this.state.calendar) url += '&Calendar';
+    if (this.state.cec) url += '&CEC';
+    if (this.state.chapelOffice) url += '&ChapelOffice';
+    if (this.state.fair) url += '&Fair';
+    if (this.state.studentLife) url += '&StudentLife';
     this.props.history.push(url);
+    // Determines if any filters are activated
+    let hasFilters =
+      this.state.includePast ||
+      this.state.chapelCredits ||
+      this.state.academics ||
+      this.state.admissions ||
+      this.state.art ||
+      this.state.sports ||
+      this.state.calendar ||
+      this.state.cec ||
+      this.state.fair ||
+      this.state.chapelOffice ||
+      this.state.studentLife;
+    this.setState({ hasFilters });
   }
 
   handleExpandClick() {
+    // If there are any filters applied, then we reset all of them
+    if (this.state.hasFilters) {
+      this.clearFilters();
+    }
+    // Opens or closes the filter list
     this.setState({ open: !this.state.open });
   }
+
+  clearFilters() {
+    this.setState(
+      {
+        includePast: false,
+        chapelCredits: false,
+        academics: false,
+        admissions: false,
+        art: false,
+        athletics: false,
+        calendar: false,
+        cec: false,
+        fair: false,
+        chapelOffice: false,
+        studentLife: false,
+      },
+      async () => {
+        const events = await gordonEvent.getFilteredEvents(this.state);
+        this.setState({ filteredEvents: events, loading: false });
+        this.createURLParameters();
+      },
+    );
+  }
+
   search(name) {
     return async (event) => {
       await this.setState({
@@ -240,12 +298,6 @@ export default class Events extends Component {
       content = <GordonLoader />;
     } else if (this.state.events.length > 0) {
       content = <EventList events={this.state.filteredEvents} />;
-    } else {
-      content = (
-        <Grid item>
-          <Typography variant="h4">No Events To Show</Typography>
-        </Grid>
-      );
     }
 
     let filter;
@@ -254,6 +306,21 @@ export default class Events extends Component {
       filter = (
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <FormGroup row>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.chapelCredits}
+                  onChange={this.filterEvents('chapelCredits')}
+                />
+              }
+              label="CL&amp;W Credit"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={this.state.includePast} onChange={this.togglePastEvents} />
+              }
+              label="Include Past"
+            />
             <FormControlLabel
               control={
                 <Checkbox
@@ -278,10 +345,7 @@ export default class Events extends Component {
             />
             <FormControlLabel
               control={
-                <Checkbox
-                  checked={this.state.athletics}
-                  onChange={this.filterEvents('athletics')}
-                />
+                <Checkbox checked={this.state.sports} onChange={this.filterEvents('sports')} />
               }
               label="Athletics"
             />
@@ -328,6 +392,12 @@ export default class Events extends Component {
       button: {
         background: gordonColors.primary.cyan,
         color: 'white',
+
+        attendedEvents: {
+          background: gordonColors.primary.cyan,
+          color: 'white',
+          marginLeft: '1rem',
+        },
       },
     };
     // If the user is online
@@ -335,9 +405,17 @@ export default class Events extends Component {
       events = (
         <section>
           <Grid container justify="center">
-            <Grid item xs={12} md={12} lg={8}>
-              <Grid container alignItems="baseline" style={styles.searchBar} spacing={4}>
-                <Grid item xs={12} md={12} lg={8}>
+            <Grid
+              item
+              xs={12}
+              md={12}
+              lg={8}
+              alignContent="center"
+              justify="center"
+              style={{ paddingBottom: '1rem' }}
+            >
+              <Grid container alignItems="baseline" style={styles.searchBar}>
+                <Grid container md={8} lg={8}>
                   <TextField
                     id="search"
                     label="Search"
@@ -346,42 +424,35 @@ export default class Events extends Component {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={4} align="center">
-                  <Button variant="contained" style={style.button} onClick={this.handleExpandClick}>
-                    Filters
-                  </Button>
-                </Grid>
-                <Grid item tem xs={5} align="center">
-                  <Button
-                    variant="contained"
-                    style={style.button}
-                    onClick={() => (window.location.pathname = '/attended')}
-                  >
-                    ATTENDED EVENTS
-                  </Button>
-                </Grid>
-                <Grid item xs={6} sm={4} md={2} lg={2}>
-                  <FormControlLabel
-                    checked={this.state.includePast}
-                    control={<Switch onChange={this.togglePastEvents} />}
-                    label="Include Past"
-                  />
-                </Grid>
-                <Grid item xs={6} sm={4} md={2} lg={2}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={this.state.chapelCredits}
-                        onChange={this.filterEvents('chapelCredits')}
-                        aria-label="chapelCredits"
-                      />
-                    }
-                    label="CL&amp;W Only"
-                  />
+                <Grid
+                  container
+                  justify="flex-end"
+                  direction="row"
+                  md={4}
+                  lg={4}
+                  style={{ paddingTop: '1rem' }}
+                >
+                  <Grid item align="center">
+                    <Button
+                      variant="contained"
+                      style={style.button}
+                      onClick={this.handleExpandClick}
+                    >
+                      {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
+                    </Button>
+                  </Grid>
+                  <Grid item align="center">
+                    <Button
+                      variant="contained"
+                      style={style.button.attendedEvents}
+                      onClick={() => (window.location.pathname = '/attended')}
+                    >
+                      ATTENDED CL&amp;W
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-
             <Grid item xs={12} md={12} lg={8}>
               {filter}
               {content}

@@ -96,7 +96,8 @@ function filterbyCatagory(filters, allEvents) {
     filters.sports ||
     filters.studentLife ||
     filters.fair ||
-    filters.academics
+    filters.academics ||
+    filters.chapelCredits
   ) {
     for (let i = 0; i < allEvents.length; i++) {
       if (filters.chapelOffice && allEvents[i].Organization === 'Chapel Office') {
@@ -130,6 +131,11 @@ function filterbyCatagory(filters, allEvents) {
         (allEvents[i].Event_Type_Name === 'Research Project' ||
           allEvents[i].Event_Type_Name === 'Lecture/Speaker/Forum')
       ) {
+        filteredEvents.push(allEvents[i]);
+      }
+
+      // NEEDS TO BE TESTED WITH THE BACK-END
+      else if (filters.chapelCredits && allEvents[i].Organization === 'Chapel Credits') {
         filteredEvents.push(allEvents[i]);
       }
     }
@@ -166,7 +172,7 @@ const getCLWEvents = async () => {
 };
 
 //Takes parameter of all events(formatted) so getting from database is not needed
-const getFutureEvents = allEvents => {
+const getFutureEvents = (allEvents) => {
   const futureEvents = [];
   const date = new Date().getTime();
   allEvents.sort(sortByTime);
@@ -203,7 +209,7 @@ const getAllGuestEventsFormatted = async () => {
   return events.sort(sortByTime);
 };
 
-const getFilteredEvents = filters => {
+const getFilteredEvents = (filters) => {
   const allEvents = filters.events;
   let filteredEvents = [];
   let shownEvents = [];
@@ -211,15 +217,17 @@ const getFilteredEvents = filters => {
   if (filteredEvents === null) {
     filteredEvents = allEvents;
   }
+  // console.log('Events: ', filteredEvents);
 
-  if (filters.chapelCredits) {
-    for (let k = 0; k < filteredEvents.length; k++) {
-      if (filteredEvents[k].Category_Id === '85') {
-        shownEvents.push(filteredEvents[k]);
-      }
-    }
-    filteredEvents = shownEvents;
-  }
+  // if (filters.chapelCredits) {
+  //   for (let k = 0; k < filteredEvents.length; k++) {
+  //     if (filteredEvents[k].Category_Id === '85') {
+  //       shownEvents.push(filteredEvents[k]);
+  //     }
+  //   }
+  //   filteredEvents = shownEvents;
+  // }
+  // console.log('Events: ', filteredEvents);
 
   if (filters.search !== '') {
     shownEvents = [];

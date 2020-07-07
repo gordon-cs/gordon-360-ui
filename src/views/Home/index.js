@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
-import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
 import user from '../../services/user';
+import wellness from '../../services/wellness';
 import Login from '../Login';
 import './home.css';
+import Question from './components/Question';
 
 import '../../app.css';
 
@@ -19,18 +20,29 @@ export default class Home extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null, network: 'online' };
+    this.state = { personType: null, network: 'online', answered: false, currentStatus: null };
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     if (this.props.Authentication) {
       this.getPersonType();
+      await this.getStatus();
     }
   }
 
   componentWillReceiveProps(newProps) {
     if (this.props.Authentication !== newProps.Authentication) {
       this.getPersonType();
+    }
+  }
+
+  async getStatus() {
+    const answer = await wellness.getStatus();
+
+    if (answer.length > 0) {
+      this.setState({ answered: answer[0].answerValid });
+    } else {
+      this.setState({ answered: false });
     }
   }
 
@@ -48,13 +60,18 @@ export default class Home extends Component {
     }
   }
 
+  setAnswered = (data) => {
+    this.setState({ answered: data });
+  };
+
   render() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -73,44 +90,52 @@ export default class Home extends Component {
     /* Gets status of current network connection for online/offline rendering
      *  Defaults to online in case of PWA not being possible
      */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
     let content;
-    if (this.props.Authentication) {
-      const personType = this.state.personType;
 
-      let requests;
-      if (networkStatus === 'online') {
-        requests = (
-          <Grid item xs={12} md={5}>
-            <Requests />
+    /* Renders the wellness check question instead of the home page if the question
+     *  has not been answered yet
+     */
+    // Authenticated
+    if (this.props.Authentication) {
+      // Authenticated - Questions Answered
+      if (this.state.answered) {
+        const personType = this.state.personType;
+
+        //Only show CL&W credits if user is a student
+        let doughnut;
+        if (String(personType).includes('stu')) {
+          doughnut = <CLWCreditsDaysLeft />;
+        } else {
+          doughnut = <DaysLeft />;
+        }
+
+        content = (
+          <Grid container justify="center" spacing={2}>
+            <Grid item xs={12} md={10}>
+              <Carousel />
+            </Grid>
+            <Grid item xs={12} md={5}>
+              {doughnut}
+            </Grid>
+            <Grid item xs={12} md={5}>
+              <DiningBalance />
+            </Grid>
           </Grid>
         );
       }
-
-      //Only show CL&W credits if user is a student
-      let doughnut;
-      if (String(personType).includes('stu')) {
-        doughnut = <CLWCreditsDaysLeft />;
-      } else {
-        doughnut = <DaysLeft />;
+      // Authenticated - Questions Not Answered
+      else {
+        content = (
+          <Grid container justify="center" spacing={2}>
+            <Grid item xs={10} md={4}>
+              <Question setAnswered={this.setAnswered} />
+            </Grid>
+          </Grid>
+        );
       }
-
-      content = (
-        <Grid container justify="center" spacing={2}>
-          <Grid item xs={12} md={10}>
-            <Carousel />
-          </Grid>
-          <Grid item xs={12} md={5}>
-            {doughnut}
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <DiningBalance />
-          </Grid>
-          {requests}
-        </Grid>
-      );
-    } else {
+    }
+    // Not Authenticated
+    else {
       content = (
         <div className="gordon-login">
           <Login onLogIn={this.logIn} />

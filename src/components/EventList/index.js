@@ -3,7 +3,6 @@ import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-
 import CollapsableEventItem from './components/CollapsableEventItem';
 import EventItem from './components/EventItem';
 import { gordonColors } from '../../theme';
@@ -62,7 +61,7 @@ export default class EventList extends Component {
     };
 
     if (window.innerWidth < this.breakpointWidth) {
-      content = events.map(currEvent => (
+      content = events.map((currEvent) => (
         <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
       ));
 
@@ -77,36 +76,38 @@ export default class EventList extends Component {
           </Grid>
         </div>
       );
-    } else if (events) {
-      content = events.map(currEvent => <EventItem event={currEvent} key={currEvent.Event_ID} />);
-
-      header = (
-        <div style={headerStyle}>
-          <Grid container direction="row">
-            <Grid item xs={4}>
-              <Typography variant="body2" style={headerStyle}>
-                EVENT
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body2" style={headerStyle}>
-                LOCATION
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={headerStyle}>
-                DATE
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={headerStyle}>
-                TIME
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      );
+    } else if (events.length > 0) {
+      content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
+    } else if (events.length === 0) {
+      content = <Typography variant="h5">No Events To Show</Typography>;
     }
+
+    header = (
+      <div style={headerStyle}>
+        <Grid container direction="row">
+          <Grid item xs={4}>
+            <Typography variant="body2" style={headerStyle}>
+              EVENT
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
+            <Typography variant="body2" style={headerStyle}>
+              LOCATION
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body2" style={headerStyle}>
+              DATE
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body2" style={headerStyle}>
+              TIME
+            </Typography>
+          </Grid>
+        </Grid>
+      </div>
+    );
 
     return (
       <section>

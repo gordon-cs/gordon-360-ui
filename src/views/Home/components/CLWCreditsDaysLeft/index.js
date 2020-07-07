@@ -198,9 +198,9 @@ export default class CLWCreditsDaysLeft extends Component {
               <Button
                 variant="contained"
                 style={style.button}
-                onClick={(event) => (window.location.href = '/events?CLW=true')}
+                onClick={(event) => (window.location.href = '/events?CLW')}
               >
-                NEED MORE CHAPEL CREDITS?
+                MORE CREDITS
               </Button>
             </Grid>
           </Grid>

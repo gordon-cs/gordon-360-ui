@@ -19,6 +19,7 @@ import GordonActivityGrid from './components/ActivityGrid';
 import GordonLoader from '../../components/Loader';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
+import Requests from './components/Requests';
 
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
@@ -44,7 +45,7 @@ export default class GordonActivitiesAll extends Component {
   }
 
   async componentDidUpdate() {
-    window.onpopstate = e => {
+    window.onpopstate = (e) => {
       window.location.reload();
     };
   }
@@ -198,7 +199,7 @@ export default class GordonActivitiesAll extends Component {
   }
 
   filter(name) {
-    return async event => {
+    return async (event) => {
       await this.setState({ [name]: event.target.value });
       const { allActivities, type, search } = this.state;
       await this.setState({ activities: activity.filter(allActivities, type, search) });
@@ -221,7 +222,7 @@ export default class GordonActivitiesAll extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -281,7 +282,7 @@ export default class GordonActivitiesAll extends Component {
         ),
       );
 
-      const typeOptions = this.state.types.map(type => (
+      const typeOptions = this.state.types.map((type) => (
         <MenuItem value={type} key={type}>
           {type}
         </MenuItem>
@@ -340,6 +341,13 @@ export default class GordonActivitiesAll extends Component {
           </Grid>
 
           <Grid container align="center" spacing={4} justify="center">
+            <Grid item xs={12} lg={8}>
+              <Card>
+                <Grid item xs={12}>
+                  <Requests />
+                </Grid>
+              </Card>
+            </Grid>
             <Grid item xs={12} lg={8} fullWidth>
               <Card>
                 <div style={headerStyle}>
@@ -370,6 +378,7 @@ export default class GordonActivitiesAll extends Component {
           </Grid>
         </section>
       );
+      //if youre not authenticated
     } else {
       if (this.state.loading === true) {
         allInvolvements = <GordonLoader />;
@@ -387,7 +396,7 @@ export default class GordonActivitiesAll extends Component {
         ),
       );
 
-      const typeOptions = this.state.types.map(type => (
+      const typeOptions = this.state.types.map((type) => (
         <MenuItem value={type} key={type}>
           {type}
         </MenuItem>
@@ -449,9 +458,16 @@ export default class GordonActivitiesAll extends Component {
             <Grid container align="center" spacing={32} justify="center">
               <Grid item xs={12} lg={8}>
                 <Card>
+                  <Grid item xs={12} md={5}>
+                    <Requests />
+                  </Grid>
+                </Card>
+              </Grid>
+              <Grid item xs={12} lg={8}>
+                <Card>
                   <div style={headerStyle}>
                     <Typography variant="body2" style={headerStyle}>
-                      ALL ACTIVITIES
+                      ALL INVOLVEMENTS
                     </Typography>
                   </div>
                 </Card>
