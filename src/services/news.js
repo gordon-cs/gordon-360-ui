@@ -155,9 +155,9 @@ const getNewsByCategory = async category => {
  * @return {Promise<any>} Response body
  */
 const submitStudentNews = newsItem => {
-  return http.post('student-news', newsItem).catch(reason => {
-    console.log(reason);
-  });
+  // return http.post('news', newsItem).catch(reason => {
+  //   console.log("Caught news submission error: " + reason);
+  // });
 };
 
 export default {
@@ -167,5 +167,5 @@ export default {
   getTodaysNews,
   getPersonalUnapprovedFormatted,
   getNewNews,
-  getNotExpiredFormatted
+  getNotExpiredFormatted,
 };

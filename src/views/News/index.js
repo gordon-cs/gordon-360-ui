@@ -19,7 +19,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { Snackbar, IconButton } from '@material-ui/core';
+import { Snackbar, IconButton, FormHelperText } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
@@ -28,9 +28,6 @@ import CloseIcon from '@material-ui/icons/Close';
 const styles = {
   searchBar: {
     margin: '0 auto',
-  },
-  formControl: {
-    minWidth: 120,
   },
   newNewsForm: {
     backgroundColor: '#fff',
@@ -61,6 +58,7 @@ export default class StudentNews extends Component {
       newPostSubject: '',
       newPostBody: '',
       snackbarOpen: false,
+      snackbarMessage: 'Something went wrong',
     };
     this.handlePostClick = this.handlePostClick.bind(this);
     this.isMobileView = false;
@@ -99,15 +97,21 @@ export default class StudentNews extends Component {
     this.setState({[event.target.name]: event.target.value});
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     let newsItem = {
-      'category': this.state.newPostCategory, 
-      'subject': this.state.newPostSubject,
-      'body': this.state.newPostBody,
+      'categoryID': this.state.newPostCategory, 
+      'Subject': this.state.newPostSubject,
+      'Body': this.state.newPostBody,
     };
     console.log(newsItem);
-    let result = news.submitStudentNews(newsItem);
-    console.log(result);
+    let result = await news.submitStudentNews(newsItem);
+    console.log("Result: " + result);
+    if(result === undefined) {
+      this.setState({ snackbarMessage: 'News Posting Failed to Submit' })
+    }
+    else {
+      this.setState({ snackbarMessage: 'News Posting Submitted Successfully' })
+    }
     this.setState({ snackbarOpen: true })
     this.setState({ openPostActivity: false });
   }
@@ -254,28 +258,27 @@ export default class StudentNews extends Component {
 
               {/* Create Posting */}
               <Dialog open={this.state.openPostActivity} fullWidth>
-                {/* <form onSubmit="handleSubmit"> */}
                     <DialogTitle> Post on Student News </DialogTitle>
                     <DialogContent>
                       <Grid container>
                         <Grid item>
-                            <FormControl style={styles.formControl}>
-                                <InputLabel id="postCategoryLabel">Category</InputLabel>
-                                <Select
-                                  labelId="postCategoryLabel"
-                                  name="newPostCategory"
-                                  value={this.state.newPostCategory}
-                                  onChange={this.onChange.bind(this)}
-                                >
-                                  {this.state.categories.map((category) => 
-                                    <MenuItem 
-                                      key={category.categoryID}
-                                      value={category.categoryID}>
-                                      {category.categoryName}
-                                    </MenuItem>
-                                  )}
-                                </Select>
-                            </FormControl>
+                            <TextField
+                              select
+                              label="Category"
+                              name="newPostCategory"
+                              value={this.state.newPostCategory}
+                              onChange={this.onChange.bind(this)}
+                              // helperText="Please choose a category."
+                              style={{minWidth: '7rem'}}
+                            >
+                              {this.state.categories.map((category) => 
+                                <MenuItem 
+                                  key={category.categoryID}
+                                  value={category.categoryID}>
+                                  {category.categoryName}
+                                </MenuItem>
+                              )}
+                            </TextField>
                         </Grid>
                         <Grid item xs={12}>
                           <TextField
@@ -285,6 +288,7 @@ export default class StudentNews extends Component {
                             name="newPostSubject"
                             value={this.state.newPostSubject}
                             onChange={this.onChange.bind(this)}
+                            // helperText="Please enter a subject."
                           />
                         </Grid>
 
@@ -299,6 +303,7 @@ export default class StudentNews extends Component {
                             name="newPostBody"
                             value={this.state.newPostBody}
                             onChange={this.onChange.bind(this)}
+                            // helperText="Please enter a body."
                           />
                         </Grid>
                         {/* Image dropzone will be added here */}
@@ -312,17 +317,17 @@ export default class StudentNews extends Component {
                       <Button variant="contained" color="primary" onClick={this.handleWindowClose.bind(this)}>
                         Cancel
                       </Button>
-                      <Button variant="contained" color="primary" onClick={this.handleSubmit.bind(this)}>
+                      <Button disabled variant="contained" color="primary" onClick={this.handleSubmit.bind(this)}>
                         Submit
                       </Button>
                     </DialogActions>
-                    {/* </form> */}
                   </Dialog>
 
                   <Snackbar
                     open={this.state.snackbarOpen}
-                    message='News Posting Submitted Successfully'
+                    message={this.state.snackbarMessage}
                     onClose={this.handleSnackbarClose}
+                    autoHideDuration='8000'
                     anchorOrigin={{
                       vertical: 'bottom',
                       horizontal: 'left',
