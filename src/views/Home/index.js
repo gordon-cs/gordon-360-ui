@@ -5,6 +5,7 @@ import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
 import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
+import NewsCard from './components/NewsCard';
 import user from '../../services/user';
 import wellness from '../../services/wellness';
 import Login from '../Login';
@@ -116,6 +117,16 @@ export default class Home extends Component {
             </Grid>
           );
         }
+        
+        //get student news
+        let news;
+        if (networkStatus === 'online') {
+          news = (
+            <Grid item xs={12} md={5}>
+              <NewsCard />
+            </Grid>
+          );
+        }
 
         //Only show CL&W credits if user is a student
         let doughnut;
@@ -136,6 +147,7 @@ export default class Home extends Component {
               <Grid item xs={12} md={5}>
                 <DiningBalance />
               </Grid>
+              {news}
               {requests}
             </Grid>
           );
