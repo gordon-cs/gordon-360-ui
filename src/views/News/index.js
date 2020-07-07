@@ -11,15 +11,12 @@ import NewsList from '../News/components/NewsList';
 import GordonLoader from '../../components/Loader';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Select from '@material-ui/core/Select';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import { Snackbar, IconButton, FormHelperText } from '@material-ui/core';
+import { Snackbar, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
@@ -180,6 +177,10 @@ export default class StudentNews extends Component {
 
 
   render() {
+    // if all of the inputs are filled, enable 'submit' button
+    let submitButtonDisabled = this.state.newPostCategory === '' ||
+                         this.state.newPostSubject === '' || 
+                         this.state.newPostBody === '';
     let content;
 
     /* Used to re-render the page when the network connection changes.
@@ -314,10 +315,17 @@ export default class StudentNews extends Component {
                     </DialogContent>
 
                     <DialogActions>
-                      <Button variant="contained" color="primary" onClick={this.handleWindowClose.bind(this)}>
+                      <Button 
+                        variant="contained" 
+                        color="primary" 
+                        onClick={this.handleWindowClose.bind(this)}>
                         Cancel
                       </Button>
-                      <Button disabled variant="contained" color="primary" onClick={this.handleSubmit.bind(this)}>
+                      <Button 
+                        variant="contained" 
+                        color="primary" 
+                        onClick={this.handleSubmit.bind(this)}
+                        disabled={submitButtonDisabled}>
                         Submit
                       </Button>
                     </DialogActions>
