@@ -17,6 +17,7 @@ import IDUploader from './views/IDUploader';
 import Admin from './views/Admin';
 import Timesheets from './views/Timesheets';
 import BannerSubmission from './views/BannerSubmission';
+import News from './views/News';
 import Page404 from './views/Page404';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
@@ -111,6 +112,11 @@ export default [
     name: 'Banner',
     path: '/banner',
     component: BannerSubmission,
+  },
+  {
+    name: 'News',
+    path: '/news',
+    component: News,
   },
   {
     name: 'Page Not Found',
