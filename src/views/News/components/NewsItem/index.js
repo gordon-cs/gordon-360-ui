@@ -67,7 +67,7 @@ export default class NewsItem extends Component {
               <Typography className="news-column" style={{fontWeight: "bold"}}>{posting.Subject}</Typography>
             </Grid>
             <Grid item xs={3}>
-            <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
+              <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
                 <Typography className="news-column" style={{ textTransform: 'capitalize' }}>
                   {posting.author}
                 </Typography>

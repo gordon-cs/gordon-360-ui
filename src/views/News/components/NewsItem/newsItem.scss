@@ -28,11 +28,15 @@
 }
 
 .news-authorProfileLink {
-    color: #000;
+    color: unset;
 }
 
-.news-authorProfileLink:hover {
-    color: #fff !important;
+.news-item .news-authorProfileLink:hover {
+    color: $neutral-white;
+}
+
+.unapproved .news-item .news-authorProfileLink:hover {
+    color: unset;
 }
 
 .news-item:hover .news-column,
