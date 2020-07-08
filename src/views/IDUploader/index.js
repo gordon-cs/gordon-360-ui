@@ -56,7 +56,7 @@ class IDUploader extends Component {
         preview: null,
         IdCardPlaceholder: croppedImage,
       });
-      window.didProfilePicUpdate = true;
+      window.postMessage('update-profile-picture', window.location.origin);
     }
   };
 
