@@ -1,5 +1,5 @@
 //Main student timesheets page
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import 'date-fns';
 import {
   Grid,
@@ -62,6 +62,46 @@ const Timesheets = props => {
   const [saving, setSaving] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  const [clockInOut, setClockInOut] = useState('Clock In');
+
+  // disabled lint in some lines in order to remove warning about race condition that does not apply
+  // in our current case.
+  useEffect(() => {
+    // updates ui with the current status of the users clocked in feature
+    // either clocked in and ready to clock out or the apposite.
+    // status is notted by either true or false. true being clocked in.
+
+    async function getClockInOutStatus() {
+      try {
+        let status = await jobs.clockOut();
+
+        if (status[0].currentState) {
+          setClockInOut('Clock Out');
+
+          handleDateChangeInClock(new Date(status[0].timestamp));
+        } else {
+          setClockInOut('Clock In');
+        }
+      } catch (error) {
+        //do nothing
+      }
+    }
+
+    getClockInOutStatus();
+
+    // eslint-disable-next-line
+  }, []);
+  //had to be defined outside of the authentication condition so that the ui could update
+  // before cheking to see if user is authenticated.
+  const handleDateChangeInClock = date => {
+    if (date) {
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      setSelectedDateIn(date);
+      setIsOverlappingShift(false);
+      handleTimeErrors(date, selectedDateOut);
+    }
+  };
 
   const tooltipRef = useRef();
   const classes = useStyles();
@@ -352,6 +392,27 @@ const Timesheets = props => {
       return shouldDisableDate;
     };
 
+    const changeState = async () => {
+      if (clockInOut === 'Clock In') {
+        setClockInOut('Clock Out');
+        await jobs.clockIn(true);
+        let clockInDate = new Date();
+        handleDateChangeIn(clockInDate);
+      }
+      if (clockInOut === 'Clock Out') {
+        setClockInOut('Reset');
+        await jobs.clockIn(false);
+        let clockOutDate = new Date();
+        handleDateChangeOut(clockOutDate);
+        await jobs.deleteClockIn();
+      }
+      if (clockInOut === 'Reset') {
+        setClockInOut('Clock In');
+        setSelectedDateIn(null);
+        setSelectedDateOut(null);
+      }
+    };
+
     const handleCloseSnackbar = (event, reason) => {
       if (reason === 'clickaway') {
         return;
@@ -482,32 +543,39 @@ const Timesheets = props => {
                     marginTop: 8,
                   }}
                 >
-                  <div className="header-tooltip-container">
-                    <CustomTooltip
-                      classes={{ tooltip: classes.customWidth }}
-                      interactive
-                      disableFocusListener
-                      disableTouchListener
-                      title={
-                        'Student employees are not permitted to work more than 20 total hours\
-                      per work week, or more than 40 hours during winter, spring, and summer breaks.\
-                      \
-                      To request permission for a special circumstance, please email\
-                      student-employment@gordon.edu before exceeding this limit.'
-                      }
-                      placement="bottom"
-                    >
-                      <div ref={tooltipRef}>
-                        <CardHeader className="disable-select" title="Enter a shift" />
-                        <InfoOutlinedIcon
-                          className="tooltip-icon"
-                          style={{
-                            fontSize: 18,
-                          }}
-                        />
+                  <Grid container spacing={2} alignItems="center" alignContent="center">
+                    <Grid item md={2}>
+                      <Button onClick={changeState}> {clockInOut}</Button>
+                    </Grid>
+                    <Grid item md={8}>
+                      <div className="header-tooltip-container">
+                        <CustomTooltip
+                          classes={{ tooltip: classes.customWidth }}
+                          interactive
+                          disableFocusListener
+                          disableTouchListener
+                          title={
+                            'Student employees are not permitted to work more than 20 total hours\
+                        per work week, or more than 40 hours during winter, spring, and summer breaks.\
+                        \
+                        To request permission for a special circumstance, please email\
+                        student-employment@gordon.edu before exceeding this limit.'
+                          }
+                          placement="bottom"
+                        >
+                          <div ref={tooltipRef}>
+                            <CardHeader className="disable-select" title="Enter a shift" />
+                            <InfoOutlinedIcon
+                              className="tooltip-icon"
+                              style={{
+                                fontSize: 18,
+                              }}
+                            />
+                          </div>
+                        </CustomTooltip>
                       </div>
-                    </CustomTooltip>
-                  </div>
+                    </Grid>
+                  </Grid>
                   <Grid
                     container
                     spacing={2}
