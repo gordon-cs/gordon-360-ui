@@ -66,24 +66,25 @@ const Timesheets = (props) => {
   
   // disabled lint in some lines in order to remove warning about race condition that does not apply
   // in our current case.
-  // eslint-disable-next-line
-  useEffect(async ()=>{
+  useEffect(()=>{
     // updates ui with the current status of the users clocked in feature
     // either clocked in and ready to clock out or the apposite.
+    // status is notted by either true or false. true being clocked in.
+
     async function getClockInOutStatus(){
       try{
             let status = await jobs.clockOut();
             
             if(status[0].currentState){
               setClockInOut("Clock Out");
-              //
+
               handleDateChangeInClock(new Date(status[0].timestamp));
     
             } else {
               setClockInOut("Clock In");
               }
          } catch(error) {
-            //did nothing
+            //do nothing
            }
     }
 
@@ -397,8 +398,7 @@ const Timesheets = (props) => {
       return shouldDisableDate;
     };
 
-    const clockIn = async() =>{
-
+    const changeState = async() =>{
       if(clockInOut === "Clock In"){
         setClockInOut("Clock Out")
         await jobs.clockIn(true);
@@ -559,7 +559,7 @@ const Timesheets = (props) => {
                   alignContent="center">
 
                     <Grid item md={2}>
-                      <Button onClick={clockIn}> {clockInOut}</Button>
+                      <Button onClick={changeState}> {clockInOut}</Button>
                     </Grid>
                     <Grid item md={8}>
 

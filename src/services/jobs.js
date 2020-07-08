@@ -92,7 +92,7 @@ const clockOut = () => {
 };
 
 const deleteClockIn = () => {
-  return http.get(`jobs/deleteClockIn`);
+  return http.put(`jobs/deleteClockIn`);
 };
 
 export default {
