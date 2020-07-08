@@ -26,7 +26,7 @@ export default class NewsItem extends Component {
     const postingDescription = posting.Body;
     const { unapproved } = this.props;
     if(unapproved) {
-      posting.author = <i style={{textTransform: "lowercase"}}>"pending approval..."</i>;
+      posting.dayPosted = <i style={{textTransform: "lowercase"}}>"pending approval..."</i>;
     }
 
     // SINGLE SIZE - single column per news item
