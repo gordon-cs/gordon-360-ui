@@ -151,7 +151,7 @@ const getNewsByCategory = async category => {
 
 /**
  * Submits a student news
- * @param {any} data The data which makes up the student news item
+ * @param {any} newsItem The data which makes up the student news item
  * @return {Promise<any>} Response body
  */
 async function submitStudentNews(newsItem) {
