@@ -5,6 +5,7 @@
     display: flex;
     align-items: center;
     transition: background-color 150ms;
+    border-top: solid 1.5px $neutral-light-gray;
 }
 
 .news-item:hover {
@@ -18,4 +19,9 @@
 .news-item:hover .news-content,
 .news-item:hover .news-heading {
     color: #fff;
+}
+
+.unapproved .news-item {
+    background-color: $neutral-light-gray;
+    border-color: $neutral-gray;
 }

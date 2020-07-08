@@ -96,13 +96,12 @@ export default class StudentNews extends Component {
 
   async handleSubmit() {
     let newsItem = {
-      'categoryID': this.state.newPostCategory, 
-      'Subject': this.state.newPostSubject,
-      'Body': this.state.newPostBody,
+      categoryID: this.state.newPostCategory, 
+      Subject: this.state.newPostSubject,
+      Body: this.state.newPostBody,
     };
-    console.log(newsItem);
     let result = await news.submitStudentNews(newsItem);
-    console.log("Result: " + result);
+    console.log(result);
     if(result === undefined) {
       this.setState({ snackbarMessage: 'News Posting Failed to Submit' })
     }
@@ -119,13 +118,13 @@ export default class StudentNews extends Component {
 
     if (this.props.Authentication) {
       const newsCategories = await news.getCategories();
-      // const personalUnapprovedNews = await news.getPersonUnapproved();
+      const personalUnapprovedNews = await news.getPersonalUnapprovedFormatted();
       const unexpiredNews = await news.getNotExpiredFormatted();
       this.setState({ 
         loading: false,
         categories: newsCategories, 
         news: unexpiredNews,
-        // personalUnapprovedNews: personalUnapprovedNews
+        personalUnapprovedNews: personalUnapprovedNews
       });
       // example code from events may be helpful
       // const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
@@ -133,9 +132,8 @@ export default class StudentNews extends Component {
       // this.setState({ allEvents, events, loading: false, filteredEvents: events });
 
       // For Testing Purposes
-      // console.log("News:");
-      // console.log(news);
-      // console.log(newsCategories);
+      // console.log("State:");
+      // console.log(this.state);
     } else {
       // alert("Please sign in to access student news");
     }
@@ -214,7 +212,9 @@ export default class StudentNews extends Component {
       if (this.state.loading === true) {
         content = <GordonLoader />;
       } else if (this.state.news.length > 0) {
-        content = <NewsList news={this.state.news} />;
+        content = <NewsList 
+          news={this.state.news} 
+          personalUnapprovedNews={this.state.personalUnapprovedNews} />;
       } else {
         content = (
           <Grid item>
@@ -317,13 +317,12 @@ export default class StudentNews extends Component {
                     <DialogActions>
                       <Button 
                         variant="contained" 
-                        color="primary" 
                         onClick={this.handleWindowClose.bind(this)}>
                         Cancel
                       </Button>
                       <Button 
-                        variant="contained" 
-                        color="primary" 
+                        variant="contained"
+                        color="primary"
                         onClick={this.handleSubmit.bind(this)}
                         disabled={submitButtonDisabled}>
                         Submit
@@ -335,7 +334,7 @@ export default class StudentNews extends Component {
                     open={this.state.snackbarOpen}
                     message={this.state.snackbarMessage}
                     onClose={this.handleSnackbarClose}
-                    autoHideDuration='8000'
+                    autoHideDuration='5000'
                     anchorOrigin={{
                       vertical: 'bottom',
                       horizontal: 'left',

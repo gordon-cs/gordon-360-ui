@@ -24,11 +24,15 @@ export default class NewsItem extends Component {
     const { posting } = this.props;
     const { size } = this.props;
     const postingDescription = posting.Body;
+    const { unapproved } = this.props;
+    if(unapproved) {
+      posting.author = <i style={{textTransform: "lowercase"}}>"pending approval..."</i>;
+    }
 
     // SINGLE SIZE - single column per news item
     if(size === "single") {
       return (
-        <section style={this.props.style}>
+        <section style={this.props.style} className={unapproved ? "unapproved" : "approved"}>
           <Grid container onClick={this.handleExpandClick} className="news-item">
             <Grid item xs={12}>
               <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
@@ -47,7 +51,7 @@ export default class NewsItem extends Component {
     // FULL SIZE - many columns per news item
     else if(size === "full") {
       return (
-        <section>
+        <section className={unapproved ? "unapproved" : "approved"}>
           <Grid container direction="row" onClick={this.handleExpandClick} className="news-item">
             <Grid item xs={2}>
               <Typography className="news-column">{posting.categoryName}</Typography>

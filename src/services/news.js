@@ -39,7 +39,7 @@ const getNotExpired = () => http.get(`news/not-expired`);
 
 const getNewNews = () => http.get(`news/new`);
 
-const getPersonalUnapproved = () => http.get('news/personal-unexpired');
+const getPersonalUnapproved = () => http.get('news/personal-unapproved');
 
 const getCategories = () => http.get(`news/categories`);
 
@@ -154,10 +154,14 @@ const getNewsByCategory = async category => {
  * @param {any} data The data which makes up the student news item
  * @return {Promise<any>} Response body
  */
-const submitStudentNews = newsItem => {
-  // return http.post('news', newsItem).catch(reason => {
-  //   console.log("Caught news submission error: " + reason);
-  // });
+async function submitStudentNews(newsItem) {
+  console.log(newsItem);
+  try {
+    return http.post('news', newsItem);
+  }
+  catch (reason) {
+    console.log("Caught news submission error: " + reason);
+  }
 };
 
 export default {
