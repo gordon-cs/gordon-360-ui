@@ -155,7 +155,6 @@ const getNewsByCategory = async category => {
  * @return {Promise<any>} Response body
  */
 async function submitStudentNews(newsItem) {
-  console.log(newsItem);
   try {
     return http.post('news', newsItem);
   }

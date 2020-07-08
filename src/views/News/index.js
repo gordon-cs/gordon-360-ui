@@ -102,7 +102,6 @@ export default class StudentNews extends Component {
       Body: this.state.newPostBody,
     };
     let result = await news.submitStudentNews(newsItem);
-    console.log(result);
     if(result === undefined) {
       this.setState({ snackbarMessage: 'News Posting Failed to Submit' })
     }
@@ -111,6 +110,7 @@ export default class StudentNews extends Component {
     }
     this.setState({ snackbarOpen: true })
     this.setState({ openPostActivity: false });
+    window.top.location.reload();
   }
 
   //This should be the only time we pull from the database
