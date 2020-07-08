@@ -36,6 +36,7 @@ const styles = {
     bottom: 40,
     left: 'auto',
     position: 'fixed',
+    zIndex: 1,
   },
 };
 
