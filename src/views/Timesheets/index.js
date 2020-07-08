@@ -70,12 +70,14 @@ const Timesheets = (props) => {
     // updates ui with the current status of the users clocked in feature
     // either clocked in and ready to clock out or the apposite.
     // status is notted by either true or false. true being clocked in.
+
     async function getClockInOutStatus(){
       try{
             let status = await jobs.clockOut();
             
             if(status[0].currentState){
               setClockInOut("Clock Out");
+
               handleDateChangeInClock(new Date(status[0].timestamp));
     
             } else {
@@ -397,7 +399,6 @@ const Timesheets = (props) => {
     };
 
     const changeState = async() =>{
-
       if(clockInOut === "Clock In"){
         setClockInOut("Clock Out")
         await jobs.clockIn(true);
