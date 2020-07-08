@@ -27,8 +27,12 @@
     background-color: $neutral-gray;
 }
 
+.news-authorProfileLink {
+    color: #000;
+}
+
 .news-authorProfileLink:hover {
-    color: white !important;
+    color: #fff !important;
 }
 
 .news-item:hover .news-column,
