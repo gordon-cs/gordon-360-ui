@@ -1,6 +1,7 @@
 // Console log decorations
 const unavailableLog = ['color: #0066ff'].join(';');
 const normalLogCentered = ['margin-left: auto', 'margin-right: auto'].join(';');
+const showDeveloperConsoleLog = false;
 
 /* Checking to see if the Cache API is available
  *  If so, check to see if the Service Worker API is available
@@ -38,37 +39,37 @@ if ('caches' in window) {
     if (JSON.parse(localStorage.getItem('network-status')) === 'offline') {
       if (navigator.onLine) {
         localStorage.setItem('network-status', JSON.stringify('online'));
-        location.reload();
+        window.postMessage('online', window.location.origin);
       }
     } else {
       if (!navigator.onLine) {
         localStorage.setItem('network-status', JSON.stringify('offline'));
-        location.reload();
-        alert('You are offline. Information might not be up to date.');
+        window.postMessage('offline', window.location.origin);
       }
     }
 
     // If network connectivity disables during application run-time
     window.addEventListener('offline', event => {
-      console.log(
-        '%c--------------------     NO INTERNET CONNECTION     --------------------',
-        normalLogCentered,
-      );
+      if (showDeveloperConsoleLog) {
+        console.log(
+          '%c--------------------     NO INTERNET CONNECTION     --------------------',
+          normalLogCentered,
+        );
+      }
       navigator.serviceWorker.controller.postMessage('offline');
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
       localStorage.setItem('network-status', JSON.stringify('offline'));
-      window.postMessage('offline', location.origin);
-      // We wait until the alert box is closed so that the user is not alerted
-      // multiple times if they go offline and online many times outside the app
-      event.waitUntil(alert('You are offline. Information might not be up to date.'));
+      window.postMessage('offline', window.location.origin);
     });
 
     // If network connectivity re-enables during application run-time
     window.addEventListener('online', event => {
-      console.log(
-        '%c--------------------     INTERNET CONNECTION ESTABLISHED     --------------------',
-        normalLogCentered,
-      );
+      if (showDeveloperConsoleLog) {
+        console.log(
+          '%c--------------------     INTERNET CONNECTION ESTABLISHED     --------------------',
+          normalLogCentered,
+        );
+      }
       localStorage.setItem('network-status', JSON.stringify('online'));
       navigator.serviceWorker.controller.postMessage('online');
       navigator.serviceWorker.controller.postMessage({
@@ -76,11 +77,15 @@ if ('caches' in window) {
         token: JSON.parse(localStorage.getItem('token')),
         termCode: JSON.parse(localStorage.getItem('currentTerm')),
       });
-      event.waitUntil(window.postMessage('online', location.origin));
+      window.postMessage('online', window.location.origin);
     });
   } else {
-    console.log('%cSERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);
+    if (showDeveloperConsoleLog) {
+      console.log('%cSERVICE WORKER API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);
+    }
   }
 } else {
-  console.log('%cCACHE API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);
+  if (showDeveloperConsoleLog) {
+    console.log('%cCACHE API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);
+  }
 }

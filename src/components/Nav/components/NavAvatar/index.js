@@ -33,8 +33,21 @@ class GordonNavAvatar extends Component {
       this.loadAvatar(newProps.Authentication);
     }
   }
+
   componentDidMount() {
-    setInterval(this.checkPeer.bind(this), 1500);
+    /* Used to re-render the page when the user's profile picture changes
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
+        this.loadAvatar(this.props.Authentication);
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    // Removes the window's event listener before unmounting the component
+    return window.removeEventListener('message', () => {});
   }
 
   async loadAvatar(Authentication) {
@@ -52,16 +65,6 @@ class GordonNavAvatar extends Component {
     }
   }
 
-  /**
-   * This method checks a peer component Profile
-   * and rerenders the avatar if the Profile picture is updated
-   */
-  checkPeer() {
-    if (window.didProfilePicUpdate) {
-      this.loadAvatar(this.props.Authentication);
-      window.didProfilePicUpdate = false;
-    }
-  }
   getInitials() {
     if (this.state.username) {
       return this.state.username

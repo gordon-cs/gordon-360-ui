@@ -1,71 +1,50 @@
 import wellness from '../../../../services/wellness.js';
-let user, qOne;
+import user from '../../../../services/user';
+
+let currentUser, qOne;
 
 /*
  * Fetches the user's data
- *
- * @return {JSON} The JSON data of the current user
  */
 async function getUserData() {
-  // Gets the token from local storage to prove authentication for fetch
-  let token = JSON.parse(localStorage.getItem('token'));
-
-  // Creates the header for the request to get the user's info
-  let headers = new Headers({
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
+  currentUser = await user.getProfileInfo().catch(error => {
+    console.log(error.message);
   });
-
-  return await fetch(
-    new Request('https://360api.gordon.edu/api/profiles', { method: 'GET', headers }),
-  )
-    .then((result) => {
-      return result.json();
-    })
-    .then((data) => {
-      user = data;
-    })
-    .catch((error) => {
-      console.log(error.message);
-    });
 }
 
 export async function getQuestions() {
-  
   await getUserData();
   let backendQuestions = await wellness.getQuestion();
-  
-  let contactInfo;
-  
-  if((user.MobilePhone === undefined || user.MobilePhone === "") && user.HomePhone === "" ){
-     contactInfo = user.Email;
-  } 
-  
-  else if(user.MobilePhone === undefined){
-    contactInfo = user.HomePhone;
-  } else {
-      contactInfo = `(${user.MobilePhone.substring(0, 3)}) ${user.MobilePhone.substring(
-          3,
-          6,
-        )}-${user.MobilePhone.substring(6)}`;
-  }
-  
 
-  // comment below disables the eslint warning so we can execute dynamic string parsing without warnings
+  let phoneNumber = `(${currentUser.MobilePhone.substring(
+    0,
+    3,
+  )}) ${currentUser.MobilePhone.substring(3, 6)}-${currentUser.MobilePhone.substring(6)}`;
+
+  //comment below disables the eslint warning so we can execute dynamic string parsing without warnings
+
   /* eslint-disable no-template-curly-in-string */
-  let wellnessQuestion = backendQuestions[0].question.replace("${user.FirstName}", `${user.FirstName}`);
-  wellnessQuestion = wellnessQuestion.replace("${user.LastName}", `${user.LastName}`);
-  wellnessQuestion = wellnessQuestion.replace("${contactInfo}", `${contactInfo}`);
+  let wellnessQuestion = backendQuestions[0].question.replace(
+    '${user.FirstName}',
+    `${currentUser.FirstName}`,
+  );
+  wellnessQuestion = wellnessQuestion.replace('${user.LastName}', `${currentUser.LastName}`);
+  wellnessQuestion = wellnessQuestion.replace('${phoneNumber}', `${phoneNumber}`);
 
-  let yesPrompt = backendQuestions[0].yesPrompt.replace("${user.FirstName}", `${user.FirstName}`);
-  yesPrompt = yesPrompt.replace("${user.LastName}", `${user.LastName}`);
-  yesPrompt = yesPrompt.replace("${contactInfo}", `${contactInfo}`);
+  let yesPrompt = backendQuestions[0].yesPrompt.replace(
+    '${user.FirstName}',
+    `${currentUser.FirstName}`,
+  );
+  yesPrompt = yesPrompt.replace('${user.LastName}', `${currentUser.LastName}`);
+  yesPrompt = yesPrompt.replace('${phoneNumber}', `${phoneNumber}`);
 
-  let noPrompt = backendQuestions[0].noPrompt.replace("${user.FirstName}", `${user.FirstName}`);
-  noPrompt = noPrompt.replace("${user.LastName}", `${user.LastName}`);
-  noPrompt = noPrompt.replace("${contactInfo}", `${contactInfo}`);
+  let noPrompt = backendQuestions[0].noPrompt.replace(
+    '${user.FirstName}',
+    `${currentUser.FirstName}`,
+  );
+  noPrompt = noPrompt.replace('${user.LastName}', `${currentUser.LastName}`);
+  noPrompt = noPrompt.replace('${phoneNumber}', `${phoneNumber}`);
   /* eslint-enable no-template-curly-in-string */
-
 
   qOne = {
     question: wellnessQuestion,
@@ -83,13 +62,10 @@ export async function getQuestions() {
       question: noPrompt,
     },
     yes: {
-      question: [
-        yesPrompt
-
-      ],
+      question: [yesPrompt],
     },
-    //phone: user.MobilePhone,
-    //email: user.Email,
+    //phone: currentUser.MobilePhone,
+    //email: currentUser.Email,
   };
 
   let questions = {

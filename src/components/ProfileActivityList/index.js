@@ -18,12 +18,8 @@ export default class ProfileActivityList extends Component {
       network: 'online',
     };
   }
-  render() {
-    const { Activity } = this.props;
-    const imgStyle = {
-      width: '90%',
-    };
 
+  componentDidMount() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
@@ -44,21 +40,22 @@ export default class ProfileActivityList extends Component {
         this.setState({ network: 'offline' });
       }
     });
+  }
 
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+  render() {
+    const { Activity } = this.props;
+    const imgStyle = {
+      width: '90%',
+    };
 
     // Creates the My Profile button link depending on the status of the network found in local storage
-    let ActivityList;
-    if (networkStatus === 'online') {
-      ActivityList = (
-        <div>
-          <Grid container alignItems="center">
-            <Grid item xs={10}>
-              <List>
-                <ListItem>
+    let ActivityList = (
+      <div>
+        <Grid container alignItems="center">
+          <Grid item xs={10}>
+            <List>
+              <ListItem>
+                {this.state.network === 'online' ? (
                   <Link
                     to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}
                     className="gc360-link"
@@ -69,48 +66,34 @@ export default class ProfileActivityList extends Component {
                     <Typography>{Activity.SessionDescription}</Typography>
                     <Typography>{Activity.ParticipationDescription}</Typography>
                   </Link>
-                </ListItem>
-              </List>
-            </Grid>
-            <Grid item xs={2}>
+                ) : (
+                  <div>
+                    <Typography>
+                      <b>{Activity.ActivityDescription}</b>
+                    </Typography>
+                    <Typography>{Activity.SessionDescription}</Typography>
+                    <Typography>{Activity.ParticipationDescription}</Typography>
+                  </div>
+                )}
+              </ListItem>
+            </List>
+          </Grid>
+          <Grid item xs={2}>
+            {this.state.network === 'online' ? (
               <Link
                 to={`/activity/${Activity.SessionCode}/${Activity.ActivityCode}`}
                 className="gc360-link"
               >
                 <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
               </Link>
-            </Grid>
+            ) : (
+              <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
+            )}
           </Grid>
-          <Divider />
-        </div>
-      );
-    } else {
-      ActivityList = (
-        <div>
-          <Grid container alignItems="center">
-            <Grid item xs={10}>
-              <List>
-                <ListItem>
-                  <Grid item xs={10}>
-                    <Typography>
-                      <b>{Activity.ActivityDescription}</b>
-                    </Typography>
-                    <Typography>{Activity.SessionDescription}</Typography>
-                    <Typography>{Activity.ParticipationDescription}</Typography>
-                  </Grid>
-                </ListItem>
-              </List>
-            </Grid>
-            <Grid item xs={2}>
-              <Grid item xs={12}>
-                <img src={Activity.ActivityImagePath} alt="" style={imgStyle} />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Divider />
-        </div>
-      );
-    }
+        </Grid>
+        <Divider />
+      </div>
+    );
     return ActivityList;
   }
 }
