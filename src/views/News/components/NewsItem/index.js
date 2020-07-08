@@ -20,12 +20,14 @@ export default class NewsItem extends Component {
     this.setState({ open: !this.state.open });
   }
   render() {
-    // const { posting: newsItem } = this.props;
     const { posting } = this.props;
     const { size } = this.props;
     const postingDescription = posting.Body;
+    // Unapproved news should be distinct,
+    // currently it is italicized and grayed out slightly
     const { unapproved } = this.props;
     if(unapproved) {
+      // Shows 'pending approval' instead of the date posted
       posting.dayPosted = <i style={{textTransform: "lowercase"}}>"pending approval..."</i>;
     }
 

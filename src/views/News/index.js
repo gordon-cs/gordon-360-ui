@@ -58,7 +58,6 @@ export default class StudentNews extends Component {
       snackbarOpen: false,
       snackbarMessage: 'Something went wrong',
     };
-    this.handlePostClick = this.handlePostClick.bind(this);
     this.isMobileView = false;
     this.breakpointWidth = 540;
   }
@@ -73,12 +72,11 @@ export default class StudentNews extends Component {
   }
 
   handleWindowClose() {
-    this.setState({
-      openPostActivity: false,
-    });
+    this.setState({ openPostActivity: false });
   }
 
-  handleSnackbarClose = (event, reason) => {
+  handleSnackbarClose = (reason) => {
+    console.log(reason);
     if (reason === 'clickaway') {
       return;
     }
@@ -96,11 +94,14 @@ export default class StudentNews extends Component {
   }
 
   async handleSubmit() {
+    // create the JSON newsItem object to post
     let newsItem = {
       categoryID: this.state.newPostCategory, 
       Subject: this.state.newPostSubject,
       Body: this.state.newPostBody,
     };
+
+    // submit the news item and give feedback
     let result = await news.submitStudentNews(newsItem);
     if(result === undefined) {
       this.setState({ snackbarMessage: 'News Posting Failed to Submit' })
@@ -109,11 +110,14 @@ export default class StudentNews extends Component {
       this.setState({ snackbarMessage: 'News Posting Submitted Successfully' })
     }
     this.setState({ snackbarOpen: true })
+
+    // close the window and reload to update data
+    // (necessary since data is currently not pulled from render method)
     this.setState({ openPostActivity: false });
     window.top.location.reload();
   }
 
-  //This should be the only time we pull from the database
+  // This should be the only time we pull from the database
   async loadNews() {
     this.setState({ loading: true });
 
@@ -127,19 +131,13 @@ export default class StudentNews extends Component {
         news: unexpiredNews,
         personalUnapprovedNews: personalUnapprovedNews
       });
-      // example code from events may be helpful
-      // const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
-      // const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
-      // this.setState({ allEvents, events, loading: false, filteredEvents: events });
-
-      // For Testing Purposes
-      // console.log("State:");
-      // console.log(this.state);
     } else {
+      // TODO: test authentication handling and neaten code (ex. below)
       // alert("Please sign in to access student news");
     }
   }
   
+  // TODO: Currently disabled and unused
   search(name) {
     return async event => {
       await this.setState({
@@ -233,7 +231,7 @@ export default class StudentNews extends Component {
             <Fab
               variant="extended"
               color="primary"
-              onClick={this.handlePostClick}
+              onClick={this.handlePostClick.bind(this)}
               style={styles.fab}
             >
               <PostAddIcon />
@@ -258,11 +256,14 @@ export default class StudentNews extends Component {
                 </Grid>
               </Grid>
 
+              {/* NOTE: leaving helper text for now in case 
+              that is better than disabling submit button */}
               {/* Create Posting */}
               <Dialog open={this.state.openPostActivity} fullWidth>
                     <DialogTitle> Post on Student News </DialogTitle>
                     <DialogContent>
                       <Grid container>
+                        {/* CATEGORY ENTRY */}
                         <Grid item>
                             <TextField
                               select
@@ -282,6 +283,8 @@ export default class StudentNews extends Component {
                               )}
                             </TextField>
                         </Grid>
+                        
+                        {/* SUBJECT ENTRY */}
                         <Grid item xs={12}>
                           <TextField
                             label="Subject"
@@ -294,6 +297,7 @@ export default class StudentNews extends Component {
                           />
                         </Grid>
 
+                        {/* BODY ENTRY */}
                         <Grid item xs={12}>
                           <TextField
                             label="Body"
@@ -308,13 +312,16 @@ export default class StudentNews extends Component {
                             // helperText="Please enter a body."
                           />
                         </Grid>
+
                         {/* Image dropzone will be added here */}
                         {/* <Grid item xs={12}>
                           <Dropzone></Dropzone>
                         </Grid> */}
+
                       </Grid>
                     </DialogContent>
 
+                    {/* CANCEL/SUBMIT */}
                     <DialogActions>
                       <Button 
                         variant="contained" 
@@ -331,6 +338,7 @@ export default class StudentNews extends Component {
                     </DialogActions>
                   </Dialog>
 
+                  {/* USER FEEDBACK */}
                   <Snackbar
                     open={this.state.snackbarOpen}
                     message={this.state.snackbarMessage}
@@ -349,6 +357,7 @@ export default class StudentNews extends Component {
                   ></Snackbar>
 
               <Grid item xs={12} md={12} lg={8}>
+                {/* list of news */}
                 {content}
               </Grid>
             </Grid>
@@ -437,24 +446,3 @@ export default class StudentNews extends Component {
     }
   }
 }
-
-// function NewPostDialog() {
-
-//   const [newPostCategory, setNewPostCategory] = useState('');
-
-//   return (
-//     <Select
-//       labelId="postCategoryLabel"
-//       value={this.state.newPostCategory}
-//       onChange={() => setNewPostCategory(newPostCategory)}
-//     >
-//       {this.state.categories.map((category) => 
-//         <MenuItem 
-//           key={category.categoryID}
-//           value={category.categoryID}>
-//           {category.categoryName}
-//         </MenuItem>
-//       )}
-//     </Select>
-//   );
-// }
