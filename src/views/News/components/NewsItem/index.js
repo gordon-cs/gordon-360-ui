@@ -25,7 +25,6 @@ export default class NewsItem extends Component {
     const { posting } = this.props;
     const { size } = this.props;
     const postingDescription = posting.Body;
-    const authorLink = posting.author.replace(" ", ".");
 
     // SINGLE SIZE - single column per news item
     if(size === "single") {
@@ -34,7 +33,7 @@ export default class NewsItem extends Component {
           <Grid container onClick={this.handleExpandClick} className="news-item">
             <Grid item xs={12}>
               <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
-              <Link className="text-link" to={`/profile/${authorLink}`}>
+              <Link className="text-link" to={`/profile/${posting.ADUN}`}>
                 <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
                   {posting.author}
                 </Typography>
@@ -62,7 +61,7 @@ export default class NewsItem extends Component {
               <Typography className="news-column" style={{fontWeight: "bold"}}>{posting.Subject}</Typography>
             </Grid>
             <Grid item xs={3}>
-            <Link className="text-link" to={`/profile/${authorLink}`}>
+            <Link className="text-link" to={`/profile/${posting.ADUN}`}>
                 <Typography className="news-column" style={{ textTransform: 'capitalize' }}>
                   {posting.author}
                 </Typography>
