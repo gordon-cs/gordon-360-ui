@@ -238,10 +238,14 @@ export default class StudentNews extends Component {
               Post Listing
             </Fab>
 
+            {/* Remove spacing when search has been enabled */}
+            <div style={{padding: "10px"}}></div>
+
             <Grid container justify="center">
               
+              {/* TODO: Search, disabled until working and added temporary padding */}
               {/* Search */}
-              <Grid item xs={12} md={12} lg={8}>
+              {/* <Grid item xs={12} md={12} lg={8}>
                 <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={8}>
                   <Grid item xs={10} sm={8} md={8} lg={6}>
                     <TextField
@@ -254,7 +258,7 @@ export default class StudentNews extends Component {
                     />
                   </Grid>
                 </Grid>
-              </Grid>
+              </Grid> */}
 
               {/* NOTE: leaving helper text for now in case 
               that is better than disabling submit button */}
