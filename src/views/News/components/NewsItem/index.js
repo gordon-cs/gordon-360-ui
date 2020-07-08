@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import CardContent from '@material-ui/core/CardContent';
 import Collapse from '@material-ui/core/Collapse';
 import Grid from '@material-ui/core/Grid';
+import { Link } from 'react-router-dom';
 
 import './newsItem.scss';
 
@@ -32,7 +33,11 @@ export default class NewsItem extends Component {
           <Grid container onClick={this.handleExpandClick} className="news-item">
             <Grid item xs={12}>
               <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
-              <Typography className="news-content" style={{textTransform: "capitalize"}}> {posting.author} ({posting.datePosted}) </Typography>
+              <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
+                <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
+                  {posting.author}
+                </Typography>
+              </Link>
             </Grid>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{textAlign: "left"}}>
               <CardContent>
@@ -56,7 +61,11 @@ export default class NewsItem extends Component {
               <Typography className="news-column" style={{fontWeight: "bold"}}>{posting.Subject}</Typography>
             </Grid>
             <Grid item xs={3}>
-              <Typography className="news-column" style={{textTransform: "capitalize"}}>{posting.author}</Typography>
+            <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
+                <Typography className="news-column" style={{ textTransform: 'capitalize' }}>
+                  {posting.author}
+                </Typography>
+              </Link>
             </Grid>
             <Grid item xs={2}>
               <Typography className="news-column">{posting.dayPosted}</Typography>
