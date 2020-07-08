@@ -33,7 +33,7 @@ export default class NewsItem extends Component {
           <Grid container onClick={this.handleExpandClick} className="news-item">
             <Grid item xs={12}>
               <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
-              <Link className="text-link" to={`/profile/${posting.ADUN}`}>
+              <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
                 <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
                   {posting.author}
                 </Typography>
@@ -61,7 +61,7 @@ export default class NewsItem extends Component {
               <Typography className="news-column" style={{fontWeight: "bold"}}>{posting.Subject}</Typography>
             </Grid>
             <Grid item xs={3}>
-            <Link className="text-link" to={`/profile/${posting.ADUN}`}>
+            <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
                 <Typography className="news-column" style={{ textTransform: 'capitalize' }}>
                   {posting.author}
                 </Typography>
