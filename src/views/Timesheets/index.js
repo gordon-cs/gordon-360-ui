@@ -396,7 +396,7 @@ const Timesheets = (props) => {
       return shouldDisableDate;
     };
 
-    const clockIn = async() =>{
+    const changeState = async() =>{
 
       if(clockInOut === "Clock In"){
         setClockInOut("Clock Out")
@@ -558,7 +558,7 @@ const Timesheets = (props) => {
                   alignContent="center">
 
                     <Grid item md={2}>
-                      <Button onClick={clockIn}> {clockInOut}</Button>
+                      <Button onClick={changeState}> {clockInOut}</Button>
                     </Grid>
                     <Grid item md={8}>
 
