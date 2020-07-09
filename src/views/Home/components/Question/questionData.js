@@ -63,7 +63,7 @@ export async function getQuestions() {
 
   let noPrompt = backendQuestions[0].noPrompt.replace("${user.FirstName}", `${user.FirstName}`);
   noPrompt = noPrompt.replace("${user.LastName}", `${user.LastName}`);
-  noPrompt = noPrompt.replace("${contactInfo}", `${contactInfo}`);
+  noPrompt = noPrompt.replace("${contactInfo}", `${contactInfo}`); 
   /* eslint-enable no-template-curly-in-string */
 
 
