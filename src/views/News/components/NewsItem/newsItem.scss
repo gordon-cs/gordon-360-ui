@@ -13,6 +13,14 @@
     transition: background-color 150ms;
 }
 
+.news-authorProfileLink {
+    color: #000;
+}
+
+.news-authorProfileLink:hover {
+    color: #fff !important;
+}
+
 .news-item:hover .news-column,
 .news-item:hover .descriptionText,
 .news-item:hover .news-content,
