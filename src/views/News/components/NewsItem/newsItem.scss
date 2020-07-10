@@ -12,7 +12,7 @@
 .unapproved .news-item {
     background-color: $neutral-light-gray;
     border-color: $neutral-gray;
-    opacity: 60%;
+    opacity: 0.6;
     font-style: italic;
 }
 
@@ -23,7 +23,7 @@
 }
 
 .unapproved .news-item:hover {
-    opacity: 100%;
+    opacity: 1.0;
     background-color: $neutral-gray;
 }
 
