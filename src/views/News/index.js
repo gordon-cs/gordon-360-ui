@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-// import Fab from '@material-ui/core/Fab';
-// import PostAddIcon from '@material-ui/icons/PostAdd';
+import Fab from '@material-ui/core/Fab';
+import PostAddIcon from '@material-ui/icons/PostAdd';
 import Typography from '@material-ui/core/Typography';
 import gordonEvent from './../../services/event';
 import news from './../../services/news';
@@ -11,14 +11,13 @@ import NewsList from '../News/components/NewsList';
 import GordonLoader from '../../components/Loader';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Select from '@material-ui/core/Select';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+import { Snackbar, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
 // import Dropzone from 'react-dropzone';
@@ -26,9 +25,6 @@ import FormControl from '@material-ui/core/FormControl';
 const styles = {
   searchBar: {
     margin: '0 auto',
-  },
-  formControl: {
-    minWidth: 120,
   },
   newNewsForm: {
     backgroundColor: '#fff',
@@ -40,10 +36,12 @@ const styles = {
     bottom: 40,
     left: 'auto',
     position: 'fixed',
+    zIndex: 1,
   },
 };
 
 export default class StudentNews extends Component {
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -54,12 +52,16 @@ export default class StudentNews extends Component {
       categories: [],
       news: [],
       network: 'online',
+      newPostCategory: '',
+      newPostSubject: '',
+      newPostBody: '',
+      snackbarOpen: false,
+      snackbarMessage: 'Something went wrong',
     };
-    this.handlePostClick = this.handlePostClick.bind(this);
-    this.onClose = this.onClose.bind(this);
     this.isMobileView = false;
     this.breakpointWidth = 540;
   }
+
   componentWillMount() {
     this.setState({ loading: false })
     this.loadNews();
@@ -67,45 +69,75 @@ export default class StudentNews extends Component {
 
   handlePostClick() {
     this.setState({ openPostActivity: true });
+  }
+
+  handleWindowClose() {
+    this.setState({ openPostActivity: false });
+  }
+
+  handleSnackbarClose = (reason) => {
+    console.log(reason);
+    if (reason === 'clickaway') {
+      return;
     }
+    this.setState({snackbarOpen: false});
+  };
 
-  onClose() {
-    this.setState({
-      openPostActivity: false,
-    });
+  // 'New Post' Handlers
+  onChange(event) {
+    if(event.target.name === null || event.target.name === '') {
+      throw new Error("The name of the input must be set " +
+                "to the appropriate 'state' property value " +
+                "for the onChange() function to work");
+    }
+    this.setState({[event.target.name]: event.target.value});
   }
 
-  onSubmit() {
-    
+  async handleSubmit() {
+    // create the JSON newsItem object to post
+    let newsItem = {
+      categoryID: this.state.newPostCategory, 
+      Subject: this.state.newPostSubject,
+      Body: this.state.newPostBody,
+    };
+
+    // submit the news item and give feedback
+    let result = await news.submitStudentNews(newsItem);
+    if(result === undefined) {
+      this.setState({ snackbarMessage: 'News Posting Failed to Submit' })
+    }
+    else {
+      this.setState({ snackbarMessage: 'News Posting Submitted Successfully' })
+    }
+    this.setState({ snackbarOpen: true })
+
+    // close the window and reload to update data
+    // (necessary since data is currently not pulled from render method)
+    this.setState({ openPostActivity: false });
+    window.top.location.reload();
   }
 
-  //This should be the only time we pull from the database
+  // This should be the only time we pull from the database
   async loadNews() {
     this.setState({ loading: true });
 
     if (this.props.Authentication) {
       const newsCategories = await news.getCategories();
-      // const personalUnapprovedNews = await news.getPersonUnapproved();
+      const personalUnapprovedNews = await news.getPersonalUnapprovedFormatted();
       const unexpiredNews = await news.getNotExpiredFormatted();
       this.setState({ 
-        loading: false, 
+        loading: false,
         categories: newsCategories, 
-        news: unexpiredNews ,
-        // personalUnapprovedNews: personalUnapprovedNews
+        news: unexpiredNews,
+        personalUnapprovedNews: personalUnapprovedNews
       });
-      // example code from events may be helpful
-      // const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
-      // const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
-      // this.setState({ allEvents, events, loading: false, filteredEvents: events });
-
-      // For Testing Purposes
-      // console.log("News:");
-      // console.log(news);
     } else {
+      // TODO: test authentication handling and neaten code (ex. below)
       // alert("Please sign in to access student news");
     }
   }
   
+  // TODO: Currently disabled and unused
   search(name) {
     return async event => {
       await this.setState({
@@ -142,6 +174,10 @@ export default class StudentNews extends Component {
 
 
   render() {
+    // if all of the inputs are filled, enable 'submit' button
+    let submitButtonDisabled = this.state.newPostCategory === '' ||
+                         this.state.newPostSubject === '' || 
+                         this.state.newPostBody === '';
     let content;
 
     /* Used to re-render the page when the network connection changes.
@@ -175,7 +211,9 @@ export default class StudentNews extends Component {
       if (this.state.loading === true) {
         content = <GordonLoader />;
       } else if (this.state.news.length > 0) {
-        content = <NewsList news={this.state.news} />;
+        content = <NewsList 
+          news={this.state.news} 
+          personalUnapprovedNews={this.state.personalUnapprovedNews} />;
       } else {
         content = (
           <Grid item>
@@ -190,20 +228,22 @@ export default class StudentNews extends Component {
         news = (
           <section>
             {/* Button to Create Posting */}
-            {/* <Fab
+            <Fab
               variant="extended"
               color="primary"
-              onClick={this.handlePostClick}
+              onClick={this.handlePostClick.bind(this)}
               style={styles.fab}
             >
               <PostAddIcon />
               Post Listing
-            </Fab> */}
-            
+            </Fab>
+
+            {/* Remove spacing when search has been enabled */}
             <div style={{padding: "10px"}}></div>
 
             <Grid container justify="center">
               
+              {/* TODO: Search, disabled until working and added temporary padding */}
               {/* Search */}
               {/* <Grid item xs={12} md={12} lg={8}>
                 <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={8}>
@@ -220,66 +260,108 @@ export default class StudentNews extends Component {
                 </Grid>
               </Grid> */}
 
+              {/* NOTE: leaving helper text for now in case 
+              that is better than disabling submit button */}
               {/* Create Posting */}
               <Dialog open={this.state.openPostActivity} fullWidth>
                     <DialogTitle> Post on Student News </DialogTitle>
                     <DialogContent>
-                      
-                      <form style={styles.newNewsForm} onSubmit={this.handleSubmit}>
-                        <Grid container>
-                          <Grid item>
-                              <FormControl style={styles.formControl}>
-                                  <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                                  <Select>
-                                    {this.state.categories.map((category) => 
-                                      <MenuItem 
-                                        key={category.categoryID}
-                                        value={category.categoryID}>
-                                        {category.categoryName}
-                                      </MenuItem>
-                                    )}
-                                  </Select>
-                              </FormControl>
-                          </Grid>
-                          <Grid item xs={12}>
+                      <Grid container>
+                        {/* CATEGORY ENTRY */}
+                        <Grid item>
                             <TextField
-                              label="Subject"
-                              margin="dense"
-                              fullWidth
-                              //onChange={this.handleChange('tempActivityBlurb')}
-                            />
-                          </Grid>
-
-                          <Grid item xs={12}>
-                            <TextField
-                              label="Body"
-                              margin="normal"
-                              multiline
-                              fullWidth
-                              rows={4}
-                              variant="outlined"
-                              //onChange={this.handleChange('tempActivityJoinInfo')}
-                            />
-                          </Grid>
-                          {/* Image dropzone will be added here */}
-                          {/* <Grid item xs={12}>
-                            <Dropzone></Dropzone>
-                          </Grid> */}
+                              select
+                              label="Category"
+                              name="newPostCategory"
+                              value={this.state.newPostCategory}
+                              onChange={this.onChange.bind(this)}
+                              // helperText="Please choose a category."
+                              style={{minWidth: '7rem'}}
+                            >
+                              {this.state.categories.map((category) => 
+                                <MenuItem 
+                                  key={category.categoryID}
+                                  value={category.categoryID}>
+                                  {category.categoryName}
+                                </MenuItem>
+                              )}
+                            </TextField>
                         </Grid>
-                      </form>
+                        
+                        {/* SUBJECT ENTRY */}
+                        <Grid item xs={12}>
+                          <TextField
+                            label="Subject"
+                            margin="dense"
+                            fullWidth
+                            name="newPostSubject"
+                            value={this.state.newPostSubject}
+                            onChange={this.onChange.bind(this)}
+                            // helperText="Please enter a subject."
+                          />
+                        </Grid>
+
+                        {/* BODY ENTRY */}
+                        <Grid item xs={12}>
+                          <TextField
+                            label="Body"
+                            margin="normal"
+                            multiline
+                            fullWidth
+                            rows={4}
+                            variant="outlined"
+                            name="newPostBody"
+                            value={this.state.newPostBody}
+                            onChange={this.onChange.bind(this)}
+                            // helperText="Please enter a body."
+                          />
+                        </Grid>
+
+                        {/* Image dropzone will be added here */}
+                        {/* <Grid item xs={12}>
+                          <Dropzone></Dropzone>
+                        </Grid> */}
+
+                      </Grid>
                     </DialogContent>
 
+                    {/* CANCEL/SUBMIT */}
                     <DialogActions>
-                      <Button variant="contained" color="primary" onClick={this.onClose}>
+                      <Button 
+                        variant="contained" 
+                        onClick={this.handleWindowClose.bind(this)}>
                         Cancel
                       </Button>
-                      <Button variant="contained" color="primary" onClick={this.onEditActivity}>
+                      <Button 
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleSubmit.bind(this)}
+                        disabled={submitButtonDisabled}>
                         Submit
                       </Button>
                     </DialogActions>
                   </Dialog>
 
+                  {/* USER FEEDBACK */}
+                  <Snackbar
+                    open={this.state.snackbarOpen}
+                    message={this.state.snackbarMessage}
+                    onClose={this.handleSnackbarClose}
+                    autoHideDuration='5000'
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    action={[
+                      <IconButton key="close" aria-label="Close" 
+                                  color="inherit" onClick={this.handleSnackbarClose}>
+                        <CloseIcon />
+                      </IconButton>,
+                    ]}
+                  ></Snackbar>
+
               <Grid item xs={12} md={12} lg={8}>
+                {/* list of news */}
                 {content}
               </Grid>
             </Grid>

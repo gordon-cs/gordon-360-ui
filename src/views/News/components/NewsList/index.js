@@ -51,7 +51,9 @@ export default class NewsList extends Component {
 
   render() {
     const { news } = this.props;
-    let content;
+    const { personalUnapprovedNews } = this.props;
+    let postings;
+    let personalUnapprovedPostings;
     let header;
 
     const headerStyle = {
@@ -63,8 +65,12 @@ export default class NewsList extends Component {
     /********** HEADER ***********/
     // Show single 'news' column for narrrow viewports
     if (window.innerWidth < this.breakpointWidth) {
-      content = news.map(currPosting => (
-        <NewsItem posting={currPosting} key={currPosting.SNID} size="single" />
+      personalUnapprovedPostings = personalUnapprovedNews.map(posting => (
+        <NewsItem posting={posting} key={posting.SNID} size="single" unapproved/>
+      ));
+
+      postings = news.map(posting => (
+        <NewsItem posting={posting} key={posting.SNID} size="single" />
       ));
 
       header = (
@@ -82,9 +88,14 @@ export default class NewsList extends Component {
 
     // Show full news columns in header for larger viewports
     else if (news) {
-      content = news.map(posting => 
-        <NewsItem posting={posting} key={posting.SNID} size="full" />);
-      console.log(news);
+      personalUnapprovedPostings = personalUnapprovedNews.map(posting => (
+        <NewsItem posting={posting} key={posting.SNID} size="full" unapproved/>
+      ));
+
+      postings = news.map(posting => (
+        <NewsItem posting={posting} key={posting.SNID} size="full" />
+      ));
+        
       header = (
         <div style={headerStyle}>
           <Grid container direction="row">
@@ -118,7 +129,10 @@ export default class NewsList extends Component {
         <Card>
           {header}
           <Grid>
-            <List className="news-list" disablePadding>{content}</List>
+            <List className="news-list" disablePadding>
+              {personalUnapprovedPostings}
+              {postings}
+              </List>
           </Grid>
         </Card>
       </section>
