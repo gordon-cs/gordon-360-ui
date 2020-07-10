@@ -150,7 +150,7 @@ const getNewsByCategory = async category => {
 }
 
 /**
- * Submits a student news
+ * Submits a student news item
  * @param {any} newsItem The data which makes up the student news item
  * @return {Promise<any>} Response body
  */
@@ -163,12 +163,27 @@ async function submitStudentNews(newsItem) {
   }
 };
 
+/**
+ * Deletes a student news item
+ * @param {any} newsID The SNID of the news item to delete
+ * @return {Promise<any>} Response body
+ */
+async function deleteStudentNews(newsID) {
+  try {
+    return http.delete('news', newsID);
+  }
+  catch (reason) {
+    console.log("Caught news deletion error: " + reason);
+  }
+};
+
 export default {
   getNewsByCategory,
-  submitStudentNews,
   getCategories,
   getTodaysNews,
   getPersonalUnapprovedFormatted,
   getNewNews,
   getNotExpiredFormatted,
+  submitStudentNews,
+  deleteStudentNews,
 };
