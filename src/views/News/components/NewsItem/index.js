@@ -53,12 +53,30 @@ export default class NewsItem extends Component {
       // Shows 'pending approval' instead of the date posted
       posting.dayPosted = <i style={{textTransform: "lowercase"}}>"pending approval..."</i>;
     }
+    
+    // Only show the delete button if the current user is the author of the posting
+    let deleteButton;
+    if(this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase()) {
+      deleteButton = (
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<DeleteIcon />}
+          onClick={this.handleDelete.bind(this)}
+        >
+          Delete
+        </Button>
+      );
+    }
+    else {
+      deleteButton = (<div></div>);
+    }
 
     // SINGLE SIZE - single column per news item
     if(size === "single") {
       return (
         <section style={this.props.style} className={unapproved ? "unapproved" : "approved"}>
-          <Grid container onClick={this.handleExpandClick} className="news-item">
+          <Grid container onClick={this.handleExpandClick} className="news-item" justify="center">
             <Grid item xs={12}>
               <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
               <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
@@ -72,14 +90,7 @@ export default class NewsItem extends Component {
                 <Typography className="news-content">"{posting.categoryName}"</Typography>
                 <Typography className="news-content ">{posting.Body}</Typography>
               </CardContent>
-              <Button
-                      variant="outlined"
-                      color="primary"
-                      startIcon={<DeleteIcon />}
-                      onClick={this.handleDelete.bind(this)}
-                    >
-                      Delete
-                    </Button>
+              {deleteButton}
             </Collapse>
           </Grid>
         </section>
@@ -117,14 +128,7 @@ export default class NewsItem extends Component {
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      startIcon={<DeleteIcon />}
-                      onClick={this.handleDelete.bind(this)}
-                    >
-                      Delete
-                    </Button>
+                    {deleteButton}
                   </Grid>
                 </Grid>
               </CardContent>
@@ -148,3 +152,5 @@ NewsItem.propTypes = {
     // Expiration: PropTypes.string.isRequired,
   }).isRequired,
 };
+
+

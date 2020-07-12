@@ -7,6 +7,7 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import Typography from '@material-ui/core/Typography';
 import gordonEvent from './../../services/event';
 import news from './../../services/news';
+import userService from './../../services/user';
 import NewsList from '../News/components/NewsList';
 import GordonLoader from '../../components/Loader';
 import Card from '@material-ui/core/Card';
@@ -57,6 +58,7 @@ export default class StudentNews extends Component {
       newPostBody: '',
       snackbarOpen: false,
       snackbarMessage: 'Something went wrong',
+      currentUsername: '',
     };
     this.isMobileView = false;
     this.breakpointWidth = 540;
@@ -66,6 +68,14 @@ export default class StudentNews extends Component {
   componentWillMount() {
     this.setState({ loading: false })
     this.loadNews();
+    this.loadUsername();
+  }
+
+  async loadUsername() {
+    const user = await userService.getProfileInfo();
+    this.setState({
+      currentUsername: user.AD_Username,
+    });
   }
 
   handlePostClick() {
@@ -219,7 +229,8 @@ export default class StudentNews extends Component {
         content = <NewsList 
           news={this.state.news} 
           personalUnapprovedNews={this.state.personalUnapprovedNews}
-          updateSnackbar={this.updateSnackbar} />;
+          updateSnackbar={this.updateSnackbar}
+          currentUsername={this.state.currentUsername} />;
       } else {
         content = (
           <Grid item>

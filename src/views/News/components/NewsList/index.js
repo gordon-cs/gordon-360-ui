@@ -66,11 +66,22 @@ export default class NewsList extends Component {
     // Show single 'news' column for narrrow viewports
     if (window.innerWidth < this.breakpointWidth) {
       personalUnapprovedPostings = personalUnapprovedNews.map(posting => (
-        <NewsItem posting={posting} key={posting.SNID} size="single" unapproved/>
+        <NewsItem 
+          posting={posting} 
+          key={posting.SNID} 
+          size="single" 
+          updateSnackbar={this.props.updateSnackbar} 
+          currentUsername={this.props.currentUsername} 
+          unapproved/>
       ));
 
       postings = news.map(posting => (
-        <NewsItem posting={posting} key={posting.SNID} size="single" />
+        <NewsItem 
+          posting={posting} 
+          key={posting.SNID} 
+          size="single"
+          updateSnackbar={this.props.updateSnackbar} 
+          currentUsername={this.props.currentUsername}  />
       ));
 
       header = (
@@ -89,11 +100,22 @@ export default class NewsList extends Component {
     // Show full news columns in header for larger viewports
     else if (news) {
       personalUnapprovedPostings = personalUnapprovedNews.map(posting => (
-        <NewsItem posting={posting} key={posting.SNID} size="full" updateSnackbar={this.props.updateSnackbar} unapproved/>
+        <NewsItem 
+          posting={posting} 
+          key={posting.SNID} 
+          size="full" 
+          updateSnackbar={this.props.updateSnackbar} 
+          currentUsername={this.props.currentUsername} 
+          unapproved/>
       ));
 
       postings = news.map(posting => (
-        <NewsItem posting={posting} key={posting.SNID} updateSnackbar={this.props.updateSnackbar} size="full" />
+        <NewsItem 
+          posting={posting} 
+          key={posting.SNID} 
+          updateSnackbar={this.props.updateSnackbar} 
+          currentUsername={this.props.currentUsername}
+          size="full" />
       ));
         
       header = (
