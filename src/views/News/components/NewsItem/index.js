@@ -4,8 +4,8 @@ import React, { Component } from 'react';
 import CardContent from '@material-ui/core/CardContent';
 import Collapse from '@material-ui/core/Collapse';
 import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
+import newsService from './../../../../services/news';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
 
@@ -16,15 +16,34 @@ export default class NewsItem extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      open: false,
+      posting: props.posting,
+      snackbarOpen: false,
+      snackbarMessage: 'Something went wrong',
+    };
+    
     this.handleExpandClick = this.handleExpandClick.bind(this);
-
-    this.state = { open: false };
   }
+
   handleExpandClick() {
     this.setState({ open: !this.state.open });
   }
+
+  async handleDelete() {
+    const newsID = this.state.posting.SNID;
+    // delete the news item and give feedback
+    let result = await newsService.deleteStudentNews(newsID);
+    if(result === undefined) {
+      this.props.updateSnackbar('News Posting Failed to Delete');
+    }
+    else {
+      this.props.updateSnackbar('News Posting Deleted Successfully');
+    }
+  }
+
   render() {
-    const { posting } = this.props;
+    const posting = this.state.posting;
     const { size } = this.props;
     const postingDescription = posting.Body;
     // Unapproved news should be distinct,
@@ -48,11 +67,19 @@ export default class NewsItem extends Component {
                 </Typography>
               </Link>
             </Grid>
-            <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{textAlign: "left"}}>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <CardContent>
                 <Typography className="news-content">"{posting.categoryName}"</Typography>
                 <Typography className="news-content ">{posting.Body}</Typography>
               </CardContent>
+              <Button
+                      variant="outlined"
+                      color="primary"
+                      startIcon={<DeleteIcon />}
+                      onClick={this.handleDelete.bind(this)}
+                    >
+                      Delete
+                    </Button>
             </Collapse>
           </Grid>
         </section>
@@ -80,22 +107,27 @@ export default class NewsItem extends Component {
               <Typography className="news-column">{posting.dayPosted}</Typography>
             </Grid>
             
-            <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{textAlign: "left"}}>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{width: "100%"}}>
               <CardContent>
-                <Typography className="descriptionText">Description:</Typography>
-                <Typography type="caption" className="descriptionText">
-                  {postingDescription}
-                </Typography>
+                <Grid container direction="row" alignItems="center" justify="space-around">
+                  <Grid item xs={8} style={{textAlign: "left"}}>
+                    <Typography className="descriptionText">Description:</Typography>
+                    <Typography type="caption" className="descriptionText">
+                      {postingDescription}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      startIcon={<DeleteIcon />}
+                      onClick={this.handleDelete.bind(this)}
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                </Grid>
               </CardContent>
-              <Container>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  startIcon={<DeleteIcon />}
-                >
-                  Delete
-                </Button>
-              </Container>
             </Collapse>
           </Grid>
         </section>

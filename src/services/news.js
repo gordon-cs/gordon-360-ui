@@ -166,11 +166,11 @@ async function submitStudentNews(newsItem) {
 /**
  * Deletes a student news item
  * @param {any} newsID The SNID of the news item to delete
- * @return {Promise<any>} Response body
+ * @return {Promise.<Object>} deleted object
  */
 async function deleteStudentNews(newsID) {
   try {
-    return http.delete('news', newsID);
+    return http.del(`news/${newsID}`);
   }
   catch (reason) {
     console.log("Caught news deletion error: " + reason);

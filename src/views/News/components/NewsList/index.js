@@ -49,7 +49,7 @@ export default class NewsList extends Component {
     window.removeEventListener('resize', this.resize);
   }
 
-  render() {
+  render() {;
     const { news } = this.props;
     const { personalUnapprovedNews } = this.props;
     let postings;
@@ -89,11 +89,11 @@ export default class NewsList extends Component {
     // Show full news columns in header for larger viewports
     else if (news) {
       personalUnapprovedPostings = personalUnapprovedNews.map(posting => (
-        <NewsItem posting={posting} key={posting.SNID} size="full" unapproved/>
+        <NewsItem posting={posting} key={posting.SNID} size="full" updateSnackbar={this.props.updateSnackbar} unapproved/>
       ));
 
       postings = news.map(posting => (
-        <NewsItem posting={posting} key={posting.SNID} size="full" />
+        <NewsItem posting={posting} key={posting.SNID} updateSnackbar={this.props.updateSnackbar} size="full" />
       ));
         
       header = (

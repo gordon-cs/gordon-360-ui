@@ -60,6 +60,7 @@ export default class StudentNews extends Component {
     };
     this.isMobileView = false;
     this.breakpointWidth = 540;
+    this.updateSnackbar = this.updateSnackbar.bind(this);
   }
 
   componentWillMount() {
@@ -93,6 +94,11 @@ export default class StudentNews extends Component {
     this.setState({[event.target.name]: event.target.value});
   }
 
+  updateSnackbar(message) {
+    this.setState({ snackbarMessage: message });
+    this.setState({ snackbarOpen: true });
+  }
+
   async handleSubmit() {
     // create the JSON newsItem object to post
     let newsItem = {
@@ -104,12 +110,11 @@ export default class StudentNews extends Component {
     // submit the news item and give feedback
     let result = await news.submitStudentNews(newsItem);
     if(result === undefined) {
-      this.setState({ snackbarMessage: 'News Posting Failed to Submit' })
+      this.updateSnackbar('News Posting Failed to Submit');
     }
     else {
-      this.setState({ snackbarMessage: 'News Posting Submitted Successfully' })
+      this.updateSnackbar('News Posting Submitted Successfully');
     }
-    this.setState({ snackbarOpen: true })
 
     // close the window and reload to update data
     // (necessary since data is currently not pulled from render method)
@@ -213,7 +218,8 @@ export default class StudentNews extends Component {
       } else if (this.state.news.length > 0) {
         content = <NewsList 
           news={this.state.news} 
-          personalUnapprovedNews={this.state.personalUnapprovedNews} />;
+          personalUnapprovedNews={this.state.personalUnapprovedNews}
+          updateSnackbar={this.updateSnackbar} />;
       } else {
         content = (
           <Grid item>
@@ -360,7 +366,7 @@ export default class StudentNews extends Component {
                     ]}
                   ></Snackbar>
 
-              <Grid item xs={12} md={12} lg={8}>
+              <Grid item xs={12} md={12} lg={8} style={{marginBottom: "7rem"}}>
                 {/* list of news */}
                 {content}
               </Grid>
