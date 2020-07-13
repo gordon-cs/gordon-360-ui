@@ -49,7 +49,7 @@ export default class NewsList extends Component {
     window.removeEventListener('resize', this.resize);
   }
 
-  render() {;
+  render() {
     const { news } = this.props;
     const { personalUnapprovedNews } = this.props;
     let postings;
