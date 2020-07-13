@@ -97,10 +97,10 @@ export default class HealthStatus extends Component {
     if (this.state.loading) {
       content = <GordonLoader />;
     } else {
-      /* Renders the wellness status of a student
-       *  
-       */
 
+      /* 
+       * Renders the wellness status of a student
+       */
         if (this.state.currentStatus === false ) {
           content = (
             <Grid spacing={2}>

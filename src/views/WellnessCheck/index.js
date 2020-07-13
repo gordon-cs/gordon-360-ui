@@ -152,10 +152,10 @@ export default class WellnessCheck extends Component {
     if (this.state.loading) {
       content = <GordonLoader />;
     } else {
+      
       /* Renders the wellness check question instead of the home page if the question
        *  has not been answered yet
        */
-
       if (this.props.Authentication) {
         let status = <HealthStatus />
 

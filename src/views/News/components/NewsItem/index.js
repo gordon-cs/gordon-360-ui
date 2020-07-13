@@ -21,15 +21,21 @@ export default class NewsItem extends Component {
     this.setState({ open: !this.state.open });
   }
   render() {
-    // const { posting: newsItem } = this.props;
     const { posting } = this.props;
     const { size } = this.props;
     const postingDescription = posting.Body;
+    // Unapproved news should be distinct,
+    // currently it is italicized and grayed out slightly
+    const { unapproved } = this.props;
+    if(unapproved) {
+      // Shows 'pending approval' instead of the date posted
+      posting.dayPosted = <i style={{textTransform: "lowercase"}}>"pending approval..."</i>;
+    }
 
     // SINGLE SIZE - single column per news item
     if(size === "single") {
       return (
-        <section style={this.props.style}>
+        <section style={this.props.style} className={unapproved ? "unapproved" : "approved"}>
           <Grid container onClick={this.handleExpandClick} className="news-item">
             <Grid item xs={12}>
               <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
@@ -52,7 +58,7 @@ export default class NewsItem extends Component {
     // FULL SIZE - many columns per news item
     else if(size === "full") {
       return (
-        <section>
+        <section className={unapproved ? "unapproved" : "approved"}>
           <Grid container direction="row" onClick={this.handleExpandClick} className="news-item">
             <Grid item xs={2}>
               <Typography className="news-column">{posting.categoryName}</Typography>
@@ -61,7 +67,7 @@ export default class NewsItem extends Component {
               <Typography className="news-column" style={{fontWeight: "bold"}}>{posting.Subject}</Typography>
             </Grid>
             <Grid item xs={3}>
-            <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
+              <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
                 <Typography className="news-column" style={{ textTransform: 'capitalize' }}>
                   {posting.author}
                 </Typography>
