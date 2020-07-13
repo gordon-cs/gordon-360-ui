@@ -8,7 +8,7 @@
  */
 
 /**
- * Imported Variables and functions
+ * Imported Variables
  *
  * (sw_global_variables.js) | cacheVersion            | The name of the cache that's used to cache all files
  * (sw_global_variables.js) | showDeveloperConsoleLog | Determines if any console logs should be made
