@@ -391,6 +391,13 @@ export default class GordonActivitiesAll extends Component {
         </Grid>
 
         <Grid container align="center" spacing={4} justify="center">
+          {/* Shows the user's memberships requests */}
+          <Grid item xs={12} lg={8}>
+            <Card>
+              <Requests />
+            </Card>
+          </Grid>
+
           {/* Shows My Involvements Header if the user is authenticated */}
           {this.props.Authentication && (
             <Grid item xs={12} lg={8} fullWidth>
@@ -403,12 +410,6 @@ export default class GordonActivitiesAll extends Component {
               </Card>
             </Grid>
           )}
-
-          <Grid item xs={12} lg={8}>
-            <Card>
-              <Requests />
-            </Card>
-          </Grid>
 
           {/* Shows My Involvements Content if the user is authenticated */}
           {this.props.Authentication && (

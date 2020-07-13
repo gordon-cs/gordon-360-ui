@@ -9,8 +9,6 @@ import Collapse from '@material-ui/core/Collapse';
 import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import { gordonColors } from './../../theme';
 
 //import './event.css';
