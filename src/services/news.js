@@ -156,7 +156,7 @@ const getNewsByCategory = async category => {
  */
 async function submitStudentNews(newsItem) {
   try {
-    return http.post('news', newsItem);
+    return await http.post('news', newsItem);
   }
   catch (reason) {
     console.log("Caught news submission error: " + reason);
@@ -170,10 +170,27 @@ async function submitStudentNews(newsItem) {
  */
 async function deleteStudentNews(newsID) {
   try {
-    return http.del(`news/${newsID}`);
+    return await http.del(`news/${newsID}`);
   }
   catch (reason) {
     console.log("Caught news deletion error: " + reason);
+  }
+};
+
+/**
+ * Edits a student news item
+ * Posting must be authored by user and unapproved to edit
+ * Calls delete, then create rather than an actual update request
+ * @param {any} newsID The SNID of the news item to delete
+ * @return {Promise.<Object>} deleted object
+ */
+async function editStudentNews(newsID) {
+  try {
+    const newsItem = await deleteStudentNews(newsID);
+    return await submitStudentNews(newsItem);
+  }
+  catch (reason) {
+    console.log("Caught news update error: " + reason);
   }
 };
 
@@ -186,4 +203,5 @@ export default {
   getNotExpiredFormatted,
   submitStudentNews,
   deleteStudentNews,
+  editStudentNews,
 };

@@ -6,6 +6,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import newsService from './../../../../services/news';
+import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
 
@@ -28,6 +29,20 @@ export default class NewsItem extends Component {
 
   handleExpandClick() {
     this.setState({ open: !this.state.open });
+  }
+
+  async handleEdit() {
+    const newsID = this.state.posting.SNID;
+    // update the news item and give feedback
+    let result = await newsService.editStudentNews(newsID);
+    if(result === undefined) {
+      this.props.updateSnackbar('News Posting Failed to Update');
+    }
+    else {
+      this.props.updateSnackbar('News Posting Updated Successfully');
+    }
+    // Should be changed in future to allow react to only reload the updated news list
+    window.top.location.reload();
   }
 
   async handleDelete() {
@@ -55,6 +70,27 @@ export default class NewsItem extends Component {
       // Shows 'pending approval' instead of the date posted
       posting.dayPosted = <i style={{textTransform: "lowercase"}}>"pending approval..."</i>;
     }
+
+    // Only show the edit button if the current user is the author of the posting
+    // AND posting is unapproved
+    let editButton;
+    console.log(this.props.currentUsername.toLowerCase() + " - " +  posting.ADUN.toLowerCase() + " - " +  unapproved);
+    if(this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase() && unapproved) {
+      editButton = (
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<EditIcon />}
+          onClick={this.handleEdit.bind(this)}
+          className="btn"
+        >
+          Edit
+        </Button>
+      );
+    }
+    else {
+      editButton = (<div></div>);
+    }
     
     // Only show the delete button if the current user is the author of the posting
     let deleteButton;
@@ -65,6 +101,7 @@ export default class NewsItem extends Component {
           color="primary"
           startIcon={<DeleteIcon />}
           onClick={this.handleDelete.bind(this)}
+          className="btn deleteButton"
         >
           Delete
         </Button>
@@ -92,7 +129,10 @@ export default class NewsItem extends Component {
                 <Typography className="news-content">"{posting.categoryName}"</Typography>
                 <Typography className="news-content ">{posting.Body}</Typography>
               </CardContent>
-              {deleteButton}
+              <Grid container justify="space-evenly">
+                {editButton}
+                {deleteButton}
+              </Grid>
             </Collapse>
           </Grid>
         </section>
@@ -130,7 +170,10 @@ export default class NewsItem extends Component {
                     </Typography>
                   </Grid>
                   <Grid item xs={4}>
-                    {deleteButton}
+                    <Grid container justify="space-evenly">
+                      {editButton}
+                      {deleteButton}
+                    </Grid>
                   </Grid>
                 </Grid>
               </CardContent>
