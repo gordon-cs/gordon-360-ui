@@ -194,6 +194,10 @@ async function editStudentNews(newsID) {
   }
 };
 
+// async function getPostingByID(newsID) {
+
+// }
+
 export default {
   getNewsByCategory,
   getCategories,
@@ -204,4 +208,5 @@ export default {
   submitStudentNews,
   deleteStudentNews,
   editStudentNews,
+  // getPostingByISD,
 };

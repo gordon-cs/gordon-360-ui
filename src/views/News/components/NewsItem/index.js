@@ -33,16 +33,18 @@ export default class NewsItem extends Component {
 
   async handleEdit() {
     const newsID = this.state.posting.SNID;
-    // update the news item and give feedback
-    let result = await newsService.editStudentNews(newsID);
-    if(result === undefined) {
-      this.props.updateSnackbar('News Posting Failed to Update');
-    }
-    else {
-      this.props.updateSnackbar('News Posting Updated Successfully');
-    }
-    // Should be changed in future to allow react to only reload the updated news list
-    window.top.location.reload();
+    let newsItem = await newsService.deleteStudentNews(newsID);
+    this.callFunction('populateNewsWindow', newsItem);
+    // // update the news item and give feedback
+    // let result = await newsService.editStudentNews(newsID);
+    // if(result === undefined) {
+    //   this.props.updateSnackbar('News Posting Failed to Update');
+    // }
+    // else {
+    //   this.props.updateSnackbar('News Posting Updated Successfully');
+    // }
+    // // Should be changed in future to allow react to only reload the updated news list
+    // window.top.location.reload();
   }
 
   async handleDelete() {
@@ -50,13 +52,20 @@ export default class NewsItem extends Component {
     // delete the news item and give feedback
     let result = await newsService.deleteStudentNews(newsID);
     if(result === undefined) {
-      this.props.updateSnackbar('News Posting Failed to Delete');
+      this.callFunction('updateSnackbar', 'News Posting Failed to Delete');
+      //this.props.updateSnackbar('News Posting Failed to Delete');
     }
     else {
-      this.props.updateSnackbar('News Posting Deleted Successfully');
+      this.callFunction('updateSnackbar', 'News Posting Deleted Successfully');
+      //this.props.updateSnackbar('News Posting Deleted Successfully');
     }
     // Should be changed in future to allow react to only reload the updated news list
     window.top.location.reload();
+  }
+
+  // Calls parent function in News
+  callFunction(functionName, param) {
+    this.props.callFunction(functionName, param);
   }
 
   render() {
@@ -73,9 +82,10 @@ export default class NewsItem extends Component {
 
     // Only show the edit button if the current user is the author of the posting
     // AND posting is unapproved
+    // null check temporarily fixes issue on home card when user has not yet been authenticated
     let editButton;
-    console.log(this.props.currentUsername.toLowerCase() + " - " +  posting.ADUN.toLowerCase() + " - " +  unapproved);
-    if(this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase() && unapproved) {
+    if(this.props.currentUsername != null && 
+        this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase() && unapproved) {
       editButton = (
         <Button
           variant="outlined"
@@ -94,7 +104,8 @@ export default class NewsItem extends Component {
     
     // Only show the delete button if the current user is the author of the posting
     let deleteButton;
-    if(this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase()) {
+    if(this.props.currentUsername != null && 
+        this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase()) {
       deleteButton = (
         <Button
           variant="outlined"

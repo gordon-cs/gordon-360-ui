@@ -63,6 +63,8 @@ export default class StudentNews extends Component {
     this.isMobileView = false;
     this.breakpointWidth = 540;
     this.updateSnackbar = this.updateSnackbar.bind(this);
+    this.populateNewsWindow = this.populateNewsWindow.bind(this);
+    this.callFunction = this.callFunction.bind(this);
   }
 
   componentWillMount() {
@@ -102,6 +104,38 @@ export default class StudentNews extends Component {
                 "for the onChange() function to work");
     }
     this.setState({[event.target.name]: event.target.value});
+  }
+
+  callFunction(functionName, param) {    
+    if(functionName == null) {
+      throw new Error("Function name not specified to callFunction (news)");
+    }
+    switch(functionName) {
+      case 'updateSnackbar':
+        if(param == null) {
+          throw new Error("callFunction 'Update Snackbar' requires a parameter (news)");
+        }
+        this.updateSnackbar(param);
+        break;
+      case 'populateNewsWindow':
+        if(param == null) {
+          throw new Error("callFunction 'populateNewsWindow' requires a parameter (news)");
+        }
+        this.populateNewsWindow(param);
+        break;
+      default:
+        console.log("callFunction function name not applicable, double check your parameter");
+      }
+  }
+
+  populateNewsWindow(newsItem) {
+    // add an isEditing thing to state to save object from deletion on cancel (until endpoint added)
+    this.setState({ 
+      openPostActivity: true,
+      newPostCategory: newsItem.categoryID,
+      newPostSubject: newsItem.Subject,
+      newPostBody: newsItem.Body,
+    });
   }
 
   updateSnackbar(message) {
@@ -230,7 +264,8 @@ export default class StudentNews extends Component {
           news={this.state.news} 
           personalUnapprovedNews={this.state.personalUnapprovedNews}
           updateSnackbar={this.updateSnackbar}
-          currentUsername={this.state.currentUsername} />;
+          currentUsername={this.state.currentUsername}
+          callFunction={this.callFunction} />;
       } else {
         content = (
           <Grid item>
