@@ -1,5 +1,5 @@
 // Determines if the any console logs should be made
-const showDeveloperConsoleLog = true;
+const showDeveloperConsoleLog = false;
 // Console log decorations
 const unavailableLog = ['color: #0066ff'].join(';');
 const networkEmoji = `\u{1F4E1}`;
