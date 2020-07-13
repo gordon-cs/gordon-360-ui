@@ -71,6 +71,7 @@ export default class Events extends Component {
     window.removeEventListener('resize', this.resize);
   }
 
+  //this loads the filters based on the URL params- this will allow for back button and linking
   async loadPrevious() {
     if (window.location.href.includes('?')) {
       const urlParams = new URLSearchParams(this.props.location.search);
@@ -98,7 +99,6 @@ export default class Events extends Component {
         fair ||
         chapelOffice ||
         studentLife;
-      console.log('Filters Enabled?: ', hasFilters);
 
       this.setState({
         includePast,
@@ -247,6 +247,7 @@ export default class Events extends Component {
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
     }
+    //called to handle set filters
     this.loadPrevious();
   }
 
