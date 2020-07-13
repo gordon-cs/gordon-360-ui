@@ -55,6 +55,9 @@ a {
   padding: 1rem 0.5rem;
   width: 100%;
   background-color: #ebeaea;
+  &-container {
+    height: 100%;
+  }
 }
 
 // style for links that are menu items or buttons (not just text)

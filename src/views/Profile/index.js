@@ -302,7 +302,7 @@ export default class Profile extends Component {
                                 className="rounded-corners"
                                 src={`data:image/jpg;base64,${this.state.prefImage}`}
                                 alt=""
-                                style={{ 'max-height': '200px', 'min-width': '160px' }}
+                                style={{ maxHeight: '200px', minWidth: '160px' }}
                               />
                             )}
                             {this.state.prefImage && this.state.defImage && ' '}
@@ -311,7 +311,7 @@ export default class Profile extends Component {
                                 className="rounded-corners"
                                 src={`data:image/jpg;base64,${this.state.defImage}`}
                                 alt=""
-                                style={{ 'max-height': '200px', 'min-width': '160px' }}
+                                style={{ maxHeight: '200px', minWidth: '160px' }}
                               />
                             )}
                           </Grid>

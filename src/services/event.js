@@ -85,7 +85,7 @@ function formatevent(event) {
   }
   return event;
 }
-function filterbyCatagory(filters, allEvents) {
+function filterbyCategory(filters, allEvents) {
   let filteredEvents = [];
   if (
     filters.chapelOffice ||
@@ -213,7 +213,7 @@ const getFilteredEvents = (filters) => {
   const allEvents = filters.events;
   let filteredEvents = [];
   let shownEvents = [];
-  filteredEvents = filterbyCatagory(filters, allEvents);
+  filteredEvents = filterbyCategory(filters, allEvents);
   if (filteredEvents === null) {
     filteredEvents = allEvents;
   }

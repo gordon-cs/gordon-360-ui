@@ -4,11 +4,13 @@ import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
+import NewsCard from './components/NewsCard';
 import user from '../../services/user';
 import wellness from '../../services/wellness';
 import Login from '../Login';
 import './home.css';
 import Question from './components/Question';
+import storage from '../../services/storage';
 
 import '../../app.css';
 
@@ -20,14 +22,59 @@ export default class Home extends Component {
 
     this.logIn = this.logIn.bind(this);
 
-    this.state = { personType: null, network: 'online', answered: false, currentStatus: null };
+    this.state = {
+      personType: null,
+      network: 'online',
+      answered: false,
+      currentStatus: null,
+    };
   }
 
-  async componentWillMount() {
-    if (this.props.Authentication) {
-      this.getPersonType();
-      await this.getStatus();
+  async componentDidMount() {
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', (event) => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    let network;
+    /* Attempts to get the network status from local storage.
+     * If not found, the default value is online
+     */
+    try {
+      network = storage.get('network-status');
+    } catch (error) {
+      // Defaults the network to online if not found in local storage
+      network = 'online';
     }
+    // Saves the network's status to this component's state
+    this.setState({ network });
+
+    if (this.props.Authentication && network === 'online') {
+      await this.getPersonType();
+      await this.getStatus();
+    } else {
+      await this.getPersonType();
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('message', () => {});
   }
 
   componentWillReceiveProps(newProps) {
@@ -65,31 +112,6 @@ export default class Home extends Component {
   };
 
   render() {
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
     let content;
 
     /* Renders the wellness check question instead of the home page if the question
@@ -98,8 +120,16 @@ export default class Home extends Component {
     // Authenticated
     if (this.props.Authentication) {
       // Authenticated - Questions Answered
-      if (this.state.answered) {
+      if (this.state.answered || this.state.network === 'offline') {
         const personType = this.state.personType;
+
+        //get student news
+        let news;
+        news = (
+          <Grid item xs={12} md={5}>
+            <NewsCard />
+          </Grid>
+        );
 
         //Only show CL&W credits if user is a student
         let doughnut;
@@ -120,6 +150,7 @@ export default class Home extends Component {
             <Grid item xs={12} md={5}>
               <DiningBalance />
             </Grid>
+            {news}
           </Grid>
         );
       }

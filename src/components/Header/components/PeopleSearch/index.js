@@ -148,13 +148,16 @@ export default class GordonPeopleSearch extends Component {
   }
 
   renderNoResult() {
-    return(
-    <MenuItem className="people-search-suggestion" style=
-    {{paddingBottom: '5px'}}>
-      <Typography className="no-results" variant="body2">
-        No results
-      </Typography>
-    </MenuItem>)
+      return(
+        <MenuItem className="people-search-suggestion" style=
+        {{paddingBottom: '5px'}}>
+          <Typography className="no-results" variant="body2">
+            No results
+          </Typography>
+          <Typography className="loading" variant="body2">
+            Loading...
+          </Typography>
+        </MenuItem>)
   }
 
   renderSuggestion(params) {

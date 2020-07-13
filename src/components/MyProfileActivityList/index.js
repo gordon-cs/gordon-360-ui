@@ -30,13 +30,6 @@ const styles = {
 
 //MyProfile Involvements List
 class MyProfileActivityList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      involvementPrivacy: Boolean,
-    };
-  }
-
   handleChangeMembershipPrivacy(userMembership) {
     membership.toggleMembershipPrivacy(userMembership);
     this.forceUpdate();
@@ -47,23 +40,58 @@ class MyProfileActivityList extends Component {
     const { InvolvementPrivacy } = this.props;
     const { classes } = this.props;
     const imgStyle = {
-      width: '90%',
+      width: '100%',
+      maxWidth: '130px',
+      padding: '0.3rem',
+      borderRadius: '10px',
     };
     const toggleTextStyle = {
-      fontSize: '10pt',
+      fontSize: '12pt',
     };
     const membershipItemStyle = {
       opacity: Membership.Privacy || InvolvementPrivacy ? '0.5' : '1',
     };
+    // The Grid lengths for each content inside of the card based on Material-UI's breakpoints
+    const cardContentLengths = {
+      text: {
+        xs: 7,
+        sm: 8,
+        md: 6,
+        lg: 7,
+        xl: 6,
+      },
+      privacy: {
+        xs: 2,
+        sm: 2,
+        md: 2,
+        lg: 2,
+        xl: 2,
+      },
+      picture: {
+        xs: 3,
+        sm: 2,
+        md: 2,
+        lg: 3,
+        xl: 2,
+      },
+    };
+
     // If the Involvement is a regular (non-special/secret group - AKA Public) it is False.
     let myProfileInvolvementsList;
     if (!InvolvementPrivacy) {
       myProfileInvolvementsList = (
         <div>
-          <Grid container alignItems="center">
-            <Grid item xs={8}>
+          <Grid container alignItems="center" justify="center">
+            <Grid
+              item
+              xs={cardContentLengths.text.xs}
+              sm={cardContentLengths.text.sm}
+              md={cardContentLengths.text.md}
+              lg={cardContentLengths.text.lg}
+              xl={cardContentLengths.text.xl}
+            >
               <List>
-                <ListItem>
+                <ListItem style={{ paddingLeft: '0.5rem' }}>
                   <Link
                     className="gc360-link"
                     to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
@@ -78,7 +106,14 @@ class MyProfileActivityList extends Component {
                 </ListItem>
               </List>
             </Grid>
-            <Grid item xs={2}>
+            <Grid
+              item
+              xs={cardContentLengths.privacy.xs}
+              sm={cardContentLengths.privacy.sm}
+              md={cardContentLengths.privacy.md}
+              lg={cardContentLengths.privacy.lg}
+              xl={cardContentLengths.privacy.xl}
+            >
               <Grid container>
                 <Grid item xs={12} align="center">
                   {/* The function you are trying to fire by clicking the toggle must passed to onChange()
@@ -104,7 +139,15 @@ class MyProfileActivityList extends Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={2}>
+            <Grid
+              item
+              xs={cardContentLengths.picture.xs}
+              sm={cardContentLengths.picture.sm}
+              md={cardContentLengths.picture.md}
+              lg={cardContentLengths.picture.lg}
+              xl={cardContentLengths.picture.xl}
+              style={{ paddingLeft: '1rem', paddingTop: '0.3rem' }}
+            >
               <Link
                 className="gc360-link"
                 to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
@@ -117,14 +160,21 @@ class MyProfileActivityList extends Component {
           <Divider />
         </div>
       );
-      // If the Involvement is some kind of Private group (e.g. scholarship group etc. - AKA Private) it is False.
+      // If the Involvement is some kind of Private group (ejj.g. scholarship group etc. - AKA Private) it is False.
     } else {
       myProfileInvolvementsList = (
         <div>
-          <Grid container alignItems="center">
-            <Grid item xs={8}>
+          <Grid container alignItems="center" justify="center">
+            <Grid
+              item
+              xs={cardContentLengths.text.xs}
+              sm={cardContentLengths.text.sm}
+              md={cardContentLengths.text.md}
+              lg={cardContentLengths.text.lg}
+              xl={cardContentLengths.text.xl}
+            >
               <List>
-                <ListItem>
+                <ListItem style={{ paddingLeft: '0.5rem' }}>
                   <Link
                     className="gc360-link"
                     to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
@@ -139,7 +189,14 @@ class MyProfileActivityList extends Component {
                 </ListItem>
               </List>
             </Grid>
-            <Grid item xs={2}>
+            <Grid
+              item
+              xs={cardContentLengths.privacy.xs}
+              sm={cardContentLengths.privacy.sm}
+              md={cardContentLengths.privacy.md}
+              lg={cardContentLengths.privacy.lg}
+              xl={cardContentLengths.privacy.xl}
+            >
               <Grid container>
                 <Grid item xs={12} align="center">
                   <Grid container justify="center">
@@ -155,7 +212,15 @@ class MyProfileActivityList extends Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={2}>
+            <Grid
+              item
+              xs={cardContentLengths.picture.xs}
+              sm={cardContentLengths.picture.sm}
+              md={cardContentLengths.picture.md}
+              lg={cardContentLengths.picture.lg}
+              xl={cardContentLengths.picture.xl}
+              style={{ paddingLeft: '1rem', paddingTop: '0.3rem' }}
+            >
               <Link
                 className="gc360-link"
                 to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
