@@ -37,17 +37,17 @@ const getAuth = (username, password) => {
   const loginInfo = new URLSearchParams({
     username,
     password,
-    grant_type: 'password'
+    grant_type: 'password',
   });
-  
+
   const request = new Request(`${base}token`, {
-    method: 'post', 
+    method: 'post',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     //mode: 'no-cors',
     credentials: 'include',
-    body: loginInfo
+    body: loginInfo,
   });
- 
+
   return fetch(request)
     .then(parseResponse)
     .then(data => data.access_token)
@@ -87,14 +87,11 @@ const isAuthenticated = () => {
       // Checks to see if Service Worker is available since these values would not exist
       // if the service worker was unavailable
       if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage('delete-global-variables');
+        navigator.serviceWorker.controller.postMessage('remove-user-data');
         navigator.serviceWorker.controller.postMessage('cancel-fetches');
         if (localStorage.length > 0) {
           storage.remove('status');
           storage.remove('currentTerm');
-
-          // Removes all dynamic cache
-          navigator.serviceWorker.controller.postMessage('remove-dynamic-cache');
         }
       }
     }
@@ -113,13 +110,9 @@ const signOut = () => {
     // Checks to see if Service Worker is available since these values would not exist
     // if the service worker was unavailable
     if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage('delete-global-variables');
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
       storage.remove('status');
       storage.remove('currentTerm');
-
-      // Removes all dynamic cache
-      navigator.serviceWorker.controller.postMessage('remove-dynamic-cache');
     }
   }
 };
