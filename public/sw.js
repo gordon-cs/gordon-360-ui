@@ -174,7 +174,7 @@ self.addEventListener('message', event => {
     event.waitUntil(cacheGuestFiles(), cacheUserFiles());
   }
 
-  // If the message is to reset global variables due to signing out or lost of authentication
+  // If the message is to remove the user's data due to signing out or lost of authentication
   else if (event.data && event.data === 'remove-user-data') {
     event.waitUntil((token = null), (termCode = null), removeUserCache());
   }

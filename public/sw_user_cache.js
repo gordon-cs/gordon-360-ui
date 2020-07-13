@@ -36,19 +36,19 @@ let canceledUserFetches = [],
   userRequiredSource = `${apiSource}/profiles`;
 
 /**
- * Create the list of remote links to be fetched and cached for offline mode for an authenticated user
+ * Creates the list of remote links to be fetched and cached for offline mode for an authenticated user
  */
 async function createRemoteUserLinks() {
   // Used to determine if all links are created successfully
   let areLinksCreated = true;
 
-  // Creates the header for the request to have authentication
+  // Creates the headers for a request to have authentication
   let headers = new Headers({
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   });
 
-  // Checks to make sure that the token and termCode is available before trying to attempt any fetches
+  // Checks to make sure that the token and semester term code is available before attempting any fetches
   if (token && termCode) {
     userRemoteLinks = [
       `${apiSource}/cms/slider`,
@@ -63,7 +63,7 @@ async function createRemoteUserLinks() {
       `${apiSource}/events/chapel/${termCode}`,
     ];
 
-    // Fetches the user's information to create links using their info
+    // Fetches the user's profile info to create the remote links. Their profile info is also cached
     try {
       await fetch(
         (request = new Request(`${apiSource}/profiles`, { method: 'GET', headers })),
@@ -71,7 +71,7 @@ async function createRemoteUserLinks() {
         // Checks to make sure the response of the fetch is okay before adding links to the list
         // of remote links for the user
         if (response.ok && !isFetchCanceled) {
-          // Adds fetch response to cache
+          // Adds user's profile info to cache
           await caches.open(cacheVersion).then(cache => {
             cache.put(request.url, response.clone());
           });
@@ -89,8 +89,7 @@ async function createRemoteUserLinks() {
           );
           saveSuccessfulUserLink(userRequiredSource);
         } else {
-          // Since the response is not okay, the data needed to create the user's remote links are
-          // undefined. Due to this, creating the links failed
+          // Response is not okay so creating the links failed
           areLinksCreated = false;
           if (!isFetchCanceled)
             saveBadResponse(
@@ -101,8 +100,7 @@ async function createRemoteUserLinks() {
         }
       });
     } catch (error) {
-      // Since fetching the user's info failed, the data needed to create the user's remote links is
-      // unavailable. Due to this, creating the links failed
+      // Fetch has failed so creating the links failed
       areLinksCreated = false;
 
       if (!isFetchCanceled)
@@ -113,13 +111,13 @@ async function createRemoteUserLinks() {
     // Since the token or term code is missing, the user's remote links cannot be created
     areLinksCreated = false;
   }
-  return { areLinksCreated, userRemoteLinks, headers };
+  return { areLinksCreated, headers };
 }
 
 /**
  * Caches all of the user's files
  *
- * The files cached are the remote files needed for an authenticated user in offline mode.
+ * The files cached are the remote files required for an authenticated user in offline mode.
  * If all files are cached successfuly, its success is console logged. Vice versa if it fails.
  */
 async function cacheUserFiles() {
@@ -128,11 +126,11 @@ async function cacheUserFiles() {
    * logged in and if any user files should be fetched and cached.
    */
   if (token) {
-    // Determines if all links were successfully created, gets the list of links to fetch and cache,
-    // and the headers to have authentication for each fetch request
-    let { areLinksCreated, userRemoteLinks, headers } = await createRemoteUserLinks();
+    // Determines if all the links were creted successfully and receives the headers required for a
+    // request to have authentication
+    let { areLinksCreated, headers } = await createRemoteUserLinks();
 
-    // Used to determine if all files were successfully cached
+    // Used to determine if all files were cached successfully
     let cachedAllSuccessfully = true;
 
     // Attempts to fetch/cache all files if the links were created successfully, otherwise, no files are cached
@@ -140,6 +138,7 @@ async function cacheUserFiles() {
       // Since the links failed to create successfully, caching is aborted and deemed as failed
       cachedAllSuccessfully = false;
     } else {
+      // Links were created successfully
       for (const link of userRemoteLinks) {
         // Checks to see if fetching has been canceled before attempting to fetch
         if (!isFetchCanceled) {
@@ -185,15 +184,14 @@ async function cacheUserFiles() {
 }
 
 /**
- * Does a fetch of the link and attempts to cache it.
+ * Does a fetch of a link and attempts to cache it.
  * @param {String} link The URL of the fetch
  * @param {Headers} headers The headers needed for the request to have authentication
- * @param {Number} attemptsLeft Determines how many times a fetch should retry if it fails. The attempt #
- *                         is based on n-1 values. In example, 3 retries would mean attemptsLeft = 2
+ * @param {Number} attemptsLeft Determines how many times a fetch should retry if it fails
  * @returns {Boolean} Determines if the fetch was successful
  */
 async function fetchUserFile(link, headers, attemptsLeft = 2) {
-  // Attempts to do a fetch with the specified request
+  // Attempts to do a fetch with the given link
   return await fetch(
     new Request(link, {
       method: 'GET',
@@ -201,8 +199,8 @@ async function fetchUserFile(link, headers, attemptsLeft = 2) {
     }),
   )
     .then(async response => {
-      // Checks to make sure the response of the fetch is okay. If so, attempt to add the response
-      // to cache if fetching hasn't been canceled
+      // Checks to make sure the response of the fetch is okay. If so, attempts to add the response
+      // to cache if fetch wasn't canceled
       if (response.ok && !isFetchCanceled) {
         await caches.open(cacheVersion).then(cache => {
           cache.put(link, response.clone());
@@ -223,8 +221,8 @@ async function fetchUserFile(link, headers, attemptsLeft = 2) {
       }
     })
     .catch(error => {
-      // Since the fetch failed, it's attempted again until there are no attempts left if
-      // the fetch hasn't been canceled
+      // Since the fetch failed, if the fetch wasn't canceled, the fetch is attempted again until
+      // there are no attempts left
       if (isFetchCanceled) {
         saveCanceledUserLink(request.url);
         return false;
@@ -244,15 +242,14 @@ async function removeUserCache() {
   await caches.open(cacheVersion).then(cache => {
     cache.keys().then(items => {
       items.forEach(item => {
-        // Checks to see if the url is apart of the list of the user's remote links. If so,
-        // all data associated with that url is deleted from the cache and from the list of user's remote
-        // links
+        // Checks to see if the url is apart of the list of user's remote links. If so,
+        // all data associated with that url is deleted from the cache and from the list
         if (userRemoteLinks.includes(item.url)) {
           cache.delete(item);
           userRemoteLinks = userRemoteLinks.filter(link => link !== item.url);
         }
-        // Removes '/profile/firstName.lastName' since that files is associated
-        // with the user. If the link is found inside the list of the user's remote links, it's removed
+        // Removes '/profile/firstName.lastName' from the list of user's remote links and cache
+        // since that file is associated with the user.
         else if (item.url.match(location.origin) && item.url.includes('/profile/')) {
           cache.delete(item);
           userRemoteLinks = userRemoteLinks.filter(link => link !== item.url);
@@ -276,8 +273,8 @@ function saveBadResponseUserLink(badLink, statusNum) {
       [statusNum]: [badLink],
     };
   }
-  // If the list for the response's status number has been initialized and doesn't
-  // already contain the response's link (Prevents duplicated links in the same status)
+  // If the list for the response's status number has already been created and doesn't
+  // contain the response's link (Prevents duplicated links in the same status)
   else if (
     badResponseUserFetches[statusNum] &&
     !badResponseUserFetches[statusNum].includes(badLink)
@@ -300,7 +297,7 @@ function saveCanceledUserLink(link) {
 
 /**
  * Saves the link of a failed fetch
- * @param {String} link The url of the canceled fetch
+ * @param {String} link The url of the failed fetch
  */
 function saveFailedUserLink(link) {
   // Checks to make sure the link is not already in the list to prevent duplicates
@@ -308,8 +305,8 @@ function saveFailedUserLink(link) {
 }
 
 /**
- * Saves the link of a canceled fetch
- * @param {String} link The url of the canceled fetch
+ * Saves the link of a successful fetch
+ * @param {String} link The url of the successful fetch
  */
 function saveSuccessfulUserLink(link) {
   // Checks to make sure the link is not already in the list to prevent duplicates

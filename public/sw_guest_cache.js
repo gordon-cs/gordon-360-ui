@@ -93,7 +93,7 @@ let canceledGuestFetches = [],
   guestRequiredSource = `${apiSource}/sessions/current`;
 
 /**
- * Create the list of remote links to be fetched and cached for guest mode
+ * Creates the list of remote links to be fetched and cached for offline mode for a guest
  */
 async function createRemoteGuestLinks() {
   guestRemoteLinks = [
@@ -123,8 +123,7 @@ async function createRemoteGuestLinks() {
         });
         saveSuccessfulGuestLink(guestRequiredSource);
       } else {
-        // Since the response is not okay, the data needed to create the guest's remote links are
-        // undefined. Due to this, creating the links failed
+        // Response is not okay so creating the links failed
         areLinksCreated = false;
         if (!isFetchCanceled)
           saveBadResponseGuestLink(
@@ -136,8 +135,7 @@ async function createRemoteGuestLinks() {
     });
     // Catches any errors from the fetch
   } catch (error) {
-    // Since fetching the current session failed, the data needed to create the guest's remote links is
-    // unavailable. Due to this, creating the links failed
+    // Fetch has failed so creating the links failed
     areLinksCreated = false;
     if (!isFetchCanceled)
       saveFailedGuestLink(guestRequiredSource + ' (Needed source to create guest links)');
@@ -149,14 +147,14 @@ async function createRemoteGuestLinks() {
 /**
  * Caches all of the guest files
  *
- * The files cached are both the local and remote files needed for guest mode. If all files are
+ * The files cached are both the local and remote files required for guest mode. If all files are
  * cached successfuly, its success is console logged. Vice versa if it fails.
  */
 async function cacheGuestFiles() {
-  // Determines if all links were successfully created and gets the list of links to fetch and cache
+  // Determines if all the links were created successfully
   let areLinksCreated = await createRemoteGuestLinks();
 
-  // Used to determine if all files were successfully cached
+  // Used to determine if all files were cached successfully
   let cachedAllSuccessfully = true;
 
   // Attempts to fetch/cache all files if the links were created successfully, otherwise, no files are cached
@@ -164,20 +162,15 @@ async function cacheGuestFiles() {
     // Since the links failed to create successfully, caching is aborted and deemed as failed
     cachedAllSuccessfully = false;
   }
-  // Links were created successfully so attempt to fetch and cache all links
+  // Links were created successfully
   else {
     // Caches local files
     await caches.open(cacheVersion).then(cache => {
       cache.addAll(static360Cache);
     });
 
-    /**
-     * Caches remote files. A Promise is wrapped around the forEach loop to force JS to wait until
-     * every fetch is made. Therefore, only the method "resolve()" is needed to deem the promise
-     * as finished. Nothing needs to be returned from the Promise.
-     */
-
-    // Goes through each link inside of the list of remote links to cache the files for guest view
+    // Caches remote files. The list of the guest remote links is parsed through to fetch and
+    // cache all files for guest view
     for (const item of guestRemoteLinks) {
       // Checks to see if fetching has been canceled before attempting to fetch.
       if (!isFetchCanceled) {
@@ -227,18 +220,17 @@ async function cacheGuestFiles() {
 }
 
 /**
- * Does a fetch of the link and attempts to cache it.
+ * Does a fetch of a link and attempts to cache it.
  * @param {String} link The URL of the fetch
- * @param {Number} attemptsLeft Determines how many times a fetch should retry if it fails. The attempt #
- *                         is based on n-1 values. In example, 3 retries would mean attemptsLeft = 2
+ * @param {Number} attemptsLeft Determines how many times a fetch should retry if it fails
  * @returns {Boolean} Determines if the fetch was successful
  */
 async function fetchGuestFile(link, attemptsLeft = 2) {
-  // Attempts to do a fetch with the specified request
+  // Attempts to do a fetch with the given link
   return await fetch(link)
     .then(async response => {
-      // Checks to make sure the response of the fetch is okay. If so, attempt to add the response
-      // to cache if fetching hasn't been canceled
+      // Checks to make sure the response of the fetch is okay. If so, attempts to add the response
+      // to cache if the fetch wasn't canceled
       if (response.ok && !isFetchCanceled) {
         await caches.open(cacheVersion).then(cache => {
           cache.put(link, response.clone());
@@ -259,8 +251,8 @@ async function fetchGuestFile(link, attemptsLeft = 2) {
       }
     })
     .catch(error => {
-      // Since the fetch failed, it's attempted again until there are no attempts left if
-      // the fetch hasn't been canceled
+      // Since the fetch failed, if the fetch wasn't canceled, the fetch is attempted again until
+      // there are no attempts left
       if (isFetchCanceled) {
         saveCanceledGuestLink(link);
         return false;
@@ -286,8 +278,8 @@ function saveBadResponseGuestLink(badLink, statusNum) {
       [statusNum]: [badLink],
     };
   }
-  // If the list for the response's status number has been initialized and doesn't
-  // already contain the response's link (Prevents duplicated links in the same status)
+  // If the list for the response's status number has already been created and doesn't
+  // contain the response's link (Prevents duplicated links in the same status)
   else if (
     badResponseGuestFetches[statusNum] &&
     !badResponseGuestFetches[statusNum].includes(badLink)
@@ -310,7 +302,7 @@ function saveCanceledGuestLink(link) {
 
 /**
  * Saves the link of a failed fetch
- * @param {String} link The url of the canceled fetch
+ * @param {String} link The url of the failed fetch
  */
 function saveFailedGuestLink(link) {
   // Checks to make sure the link is not already in the list to prevent duplicates
@@ -318,8 +310,8 @@ function saveFailedGuestLink(link) {
 }
 
 /**
- * Saves the link of a canceled fetch
- * @param {String} link The url of the canceled fetch
+ * Saves the link of a successful fetch
+ * @param {String} link The url of the sucessful fetch
  */
 function saveSuccessfulGuestLink(link) {
   // Checks to make sure the link is not already in the list to prevent duplicates

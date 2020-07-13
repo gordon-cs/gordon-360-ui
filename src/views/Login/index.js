@@ -77,8 +77,8 @@ export default class Login extends Component {
        *  but not allow you to login due to the error "undefined is not a function"
        */
       if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-        // Sends a message, the token and current term code to the service worker to precache
-        // dynamic the authenticated user's files
+        // Sends the token, current term code, and a message to the service worker to update
+        // the cache
         navigator.serviceWorker.controller.postMessage({
           message: 'update-cache-files',
           token: storage.get('token'),
