@@ -40,6 +40,8 @@ export default class NewsItem extends Component {
     else {
       this.props.updateSnackbar('News Posting Deleted Successfully');
     }
+    // Should be changed in future to allow react to only reload the updated news list
+    window.top.location.reload();
   }
 
   render() {
