@@ -123,8 +123,14 @@ export default class Events extends Component {
          * So, when includePast is true, we set it to false so that togglePastEvents() will set it
          * back to true
          */
-        this.setState({ includePast: false });
-        this.togglePastEvents();
+        this.setState({ includePast: false }, () => {
+          this.togglePastEvents();
+          // Gets all the events included in the past along with all filters previously active
+          this.createURLParameters();
+          // Filter events to reflect boxes still checked
+          const events = gordonEvent.getFilteredEvents(this.state);
+          this.setState({ filteredEvents: events, loading: false });
+        });
       }
     }
   }
@@ -227,10 +233,6 @@ export default class Events extends Component {
       const futureEvents = gordonEvent.getFutureEvents(this.state.allEvents);
       await this.setState({ events: futureEvents });
     }
-    this.createURLParameters();
-    //filter events to reflect boxes still checked
-    const events = gordonEvent.getFilteredEvents(this.state);
-    this.setState({ filteredEvents: events, loading: false });
   }
 
   //This should be the only time we pull from the database
