@@ -12,8 +12,11 @@
 .unapproved .news-item {
     background-color: $neutral-light-gray;
     border-color: $neutral-gray;
-    opacity: 0.6;
     font-style: italic;
+}
+
+.unapproved p {
+    opacity: 0.6;
 }
 
 .news-item:hover {
@@ -23,8 +26,11 @@
 }
 
 .unapproved .news-item:hover {
-    opacity: 1.0;
     background-color: $neutral-gray;
+}
+
+.unapproved .news-item:hover p {
+    opacity: 1.0;
 }
 
 .news-authorProfileLink {
