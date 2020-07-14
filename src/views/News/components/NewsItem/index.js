@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import newsService from './../../../../services/news';
 import EditIcon from '@material-ui/icons/Edit';
+import storage from '../../../../services/storage';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
 
@@ -25,6 +26,47 @@ export default class NewsItem extends Component {
     };
     
     this.handleExpandClick = this.handleExpandClick.bind(this);
+  }
+
+  componentDidMount() {
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    let network;
+    /* Attempts to get the network status from local storage.
+     * If not found, the default value is online
+     */
+    try {
+      network = storage.get('network-status');
+    } catch (error) {
+      // Defaults the network to online if not found in local storage
+      network = 'online';
+    }
+    // Saves the network's status to this component's state
+    this.setState({ network });
+  }
+
+  componentWillUnmount() {
+    // Removes the window's event listeners before unmounting the component
+    window.removeEventListener('message', () => {});
   }
 
   handleExpandClick() {
@@ -129,11 +171,20 @@ export default class NewsItem extends Component {
           <Grid container onClick={this.handleExpandClick} className="news-item" justify="center">
             <Grid item xs={12}>
               <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
+              
+              {this.state.network === 'online' ? 
+              // online -> show author profile link
               <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
                 <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
                   {posting.author}
                 </Typography>
               </Link>
+              : 
+              // offline -> hide author profile link
+              <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
+                {posting.author}
+              </Typography>}
+              
             </Grid>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <CardContent>
