@@ -4,6 +4,7 @@
  * @module studentNews
  */
  // Written by Jessica Guan
+ // Modified by Cameron Abbot
 
 import { DateTime } from 'luxon';
 import http from './http';
@@ -33,15 +34,18 @@ import http from './http';
  */
 
 
-
-
 const getNotExpired = () => http.get(`news/not-expired`);
 
+// news since 10am (today's news)
 const getNewNews = () => http.get(`news/new`);
 
 const getPersonalUnapproved = () => http.get('news/personal-unapproved');
 
 const getCategories = () => http.get(`news/categories`);
+
+// this has an await build in since it is a standalone call
+// const getPostingByID = (id) => await http.get(`news/${id}`);
+
 
 /**
  * Format a news posting by adding fields:
@@ -69,9 +73,11 @@ function formatPosting(posting) {
   posting.author = fname + " " + lname;
 }
 
+/******************* GET **********************/
+
 /**
- * Gets all unexpired news
- * for use on the News Page
+ * Gets all unexpired student news
+ * and formats
  * @return {Promise<any>} Student news
  */
 const getNotExpiredFormatted = async () => {
@@ -87,6 +93,7 @@ const getNotExpiredFormatted = async () => {
 /**
  * Gets today's news
  * for use on the Home Page card
+ * and formats
  * @return {Promise<any>} Student news
  */
 const getTodaysNews = async () => {
@@ -100,6 +107,7 @@ const getTodaysNews = async () => {
 }
 
 /**
+ * NOTE: not currently used, might be used in future filter features
  * Gets today's news for given category
  * for use on the Home Page card
  * @param {Number} category the category of news
@@ -149,6 +157,8 @@ const getNewsByCategory = async category => {
   return categoryNews;
 }
 
+/******************* POST **********************/
+
 /**
  * Submits a student news item
  * @param {any} newsItem The data which makes up the student news item
@@ -163,6 +173,8 @@ async function submitStudentNews(newsItem) {
   }
 };
 
+/******************* DELETE **********************/
+
 /**
  * Deletes a student news item
  * @param {any} newsID The SNID of the news item to delete
@@ -176,6 +188,8 @@ async function deleteStudentNews(newsID) {
     console.log("Caught news deletion error: " + reason);
   }
 };
+
+/******************* EDIT (PUT) **********************/
 
 /**
  * Edits a student news item
@@ -194,10 +208,6 @@ async function editStudentNews(newsID) {
   }
 };
 
-// async function getPostingByID(newsID) {
-
-// }
-
 export default {
   getNewsByCategory,
   getCategories,
@@ -208,5 +218,5 @@ export default {
   submitStudentNews,
   deleteStudentNews,
   editStudentNews,
-  // getPostingByISD,
+  // getPostingByID,
 };

@@ -59,6 +59,7 @@ export default class StudentNews extends Component {
       snackbarOpen: false,
       snackbarMessage: 'Something went wrong',
       currentUsername: '',
+      isEditing: false,
     };
     this.isMobileView = false;
     this.breakpointWidth = 540;
@@ -135,12 +136,18 @@ export default class StudentNews extends Component {
       newPostCategory: newsItem.categoryID,
       newPostSubject: newsItem.Subject,
       newPostBody: newsItem.Body,
+      currentlyEditing: newsItem,
     });
   }
 
   updateSnackbar(message) {
     this.setState({ snackbarMessage: message });
     this.setState({ snackbarOpen: true });
+  }
+
+  async handleEdit() {
+    //delete the news item
+    //create news item
   }
 
   async handleSubmit() {
@@ -274,6 +281,25 @@ export default class StudentNews extends Component {
         );
       }
 
+      let submitButton = (
+        <Button 
+          variant="contained"
+          color="primary"
+          onClick={this.handleSubmit.bind(this)}
+          disabled={submitButtonDisabled}>
+          Submit
+        </Button>
+      );
+      let editButton = (
+        <Button 
+          variant="contained"
+          color="primary"
+          onClick={this.handleEdit.bind(this)}
+          disabled={submitButtonDisabled}>
+          Update
+        </Button>
+      );
+
       let news;
       // If the user is online
       if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
@@ -377,21 +403,15 @@ export default class StudentNews extends Component {
                       </Grid>
                     </DialogContent>
 
-                    {/* CANCEL/SUBMIT */}
-                    <DialogActions>
+                    {/* CANCEL/SUBMIT/EDIT */}
+                    {<DialogActions>
                       <Button 
                         variant="contained" 
                         onClick={this.handleWindowClose.bind(this)}>
                         Cancel
                       </Button>
-                      <Button 
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleSubmit.bind(this)}
-                        disabled={submitButtonDisabled}>
-                        Submit
-                      </Button>
-                    </DialogActions>
+                      {this.state.isEditing ? editButton : submitButton}
+                    </DialogActions>}
                   </Dialog>
 
                   {/* USER FEEDBACK */}
