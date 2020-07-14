@@ -19,12 +19,14 @@ export default class NewsItem extends Component {
     super(props);
 
     this.state = {
+      // for collapsable news postings
       open: false,
       posting: props.posting,
       snackbarOpen: false,
       snackbarMessage: 'Something went wrong',
     };
     
+    // for collapsable news postings
     this.handleExpandClick = this.handleExpandClick.bind(this);
   }
 
@@ -69,10 +71,14 @@ export default class NewsItem extends Component {
     window.removeEventListener('message', () => {});
   }
 
+  // for collapsable news postings
   handleExpandClick() {
     this.setState({ open: !this.state.open });
   }
 
+  /**
+   * When the edit (like submit) button is clicked on update news posting form
+   */ 
   async handleEdit() {
     const newsID = this.state.posting.SNID;
     let newsItem = await newsService.deleteStudentNews(newsID);
@@ -89,23 +95,26 @@ export default class NewsItem extends Component {
     // window.top.location.reload();
   }
 
+  /**
+   * When the delete button is clicked for a posting
+   */
   async handleDelete() {
     const newsID = this.state.posting.SNID;
     // delete the news item and give feedback
     let result = await newsService.deleteStudentNews(newsID);
     if(result === undefined) {
       this.callFunction('updateSnackbar', 'News Posting Failed to Delete');
-      //this.props.updateSnackbar('News Posting Failed to Delete');
     }
     else {
       this.callFunction('updateSnackbar', 'News Posting Deleted Successfully');
-      //this.props.updateSnackbar('News Posting Deleted Successfully');
     }
     // Should be changed in future to allow react to only reload the updated news list
     window.top.location.reload();
   }
 
-  // Calls parent function in News
+  // Calls a parent function in News
+  // Must be passed down through props of each component
+  // News -> NewsList -> NewsItem (currently)
   callFunction(functionName, param) {
     this.props.callFunction(functionName, param);
   }
@@ -212,11 +221,20 @@ export default class NewsItem extends Component {
               <Typography className="news-column" style={{fontWeight: "bold"}}>{posting.Subject}</Typography>
             </Grid>
             <Grid item xs={3}>
+              
+              {this.state.network === 'online' ? 
+              // online -> show author profile link
               <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
-                <Typography className="news-column" style={{ textTransform: 'capitalize' }}>
+                <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
                   {posting.author}
                 </Typography>
               </Link>
+              : 
+              // offline -> hide author profile link
+              <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
+                {posting.author}
+              </Typography>}
+              
             </Grid>
             <Grid item xs={2}>
               <Typography className="news-column">{posting.dayPosted}</Typography>
