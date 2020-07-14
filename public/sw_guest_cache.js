@@ -1,3 +1,7 @@
+/**
+ * ES-Lint warnings are disabled because there are functions/variables that are defined here but
+ * referenced in another script and this script itself is referencing variables from another script
+ */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 
@@ -81,6 +85,10 @@ const static360Cache = [
   '/static/media/MyGordonFavicon.7433864b.ico',
   '/static/media/GoGordonFavicon.3e563128.ico',
   '/static/media/BbFavicon.ba837cb2.ico ',
+  '/static/media/Off-CC.814b04da.svg',
+  '/static/media/Off-IM.853ae19c.svg',
+  '/static/media/Off-LS.c865b557.svg',
+  '/static/media/Off-LW.4e6742d6.svg',
 ];
 // A list of all the links that's needed for guest view
 let guestRemoteLinks = [];

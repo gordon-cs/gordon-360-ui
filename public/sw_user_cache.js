@@ -1,3 +1,10 @@
+/**
+ * ES-Lint warnings are disabled because there are functions/variables that are defined here but
+ * referenced in another script and this script itself is referencing variables from another script.
+ * Also, the global variable "location" is used instead of "window.location: because "window" is not
+ * defined within this scope. ES-Lint dislikes "location" but accepts "window.location"
+ */
+
 /* eslint-disable no-undef */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-vars */
@@ -61,11 +68,13 @@ async function createRemoteUserLinks() {
       `${apiSource}/news/not-expired`,
       `${apiSource}/version`,
       `${apiSource}/events/chapel/${termCode}`,
+      `${apiSource}/vpscore`,
+      `${apiSource}/schedule`,
     ];
 
-    // Fetches the user's profile info to create the remote links. Their profile info is also cached
     try {
-      await fetch(
+      // Fetches the user's profile info to create the remote links. Their profile info is also cached
+      let userProfile = await fetch(
         (request = new Request(`${apiSource}/profiles`, { method: 'GET', headers })),
       ).then(async response => {
         // Checks to make sure the response of the fetch is okay before adding links to the list
@@ -78,7 +87,6 @@ async function createRemoteUserLinks() {
           // Creates the user's remote links
           const profile = await response.json();
           userRemoteLinks.push(
-            `${apiSource}/memberships/student/${profile.ID}`,
             `${apiSource}/memberships/student/username/${profile.AD_Username}/`,
             `${apiSource}/profiles/${profile.AD_Username}/`,
             `${apiSource}/profiles/Image/${profile.AD_Username}/`,
@@ -88,6 +96,7 @@ async function createRemoteUserLinks() {
             `/profile/${profile.AD_Username}`,
           );
           saveSuccessfulUserLink(userRequiredSource);
+          return profile;
         } else {
           // Response is not okay so creating the links failed
           areLinksCreated = false;
@@ -99,13 +108,42 @@ async function createRemoteUserLinks() {
           else saveCanceledUserLink(userRequiredSource + ' (Needed source to create user links)');
         }
       });
+
+      // Fetches the user's memberships to cache each membership's data
+      await fetch(
+        (request = new Request(`${apiSource}/memberships/student/${userProfile.ID}`, {
+          method: 'GET',
+          headers,
+        })),
+      ).then(async response => {
+        // Checks to make sure the response of the fetch is okay before adding links to the list
+        // of remote links for the user
+        if (response.ok && !isFetchCanceled) {
+          // Adds user's profile info to cache
+          await caches.open(cacheVersion).then(cache => {
+            cache.put(request.url, response.clone());
+          });
+          // Creates the user's memberships links
+          const memberships = await response.json();
+          for (const activity of memberships) {
+            userRemoteLinks.push(`${apiSource}/activities/${activity.ActivityCode}`);
+          }
+          saveSuccessfulUserLink(request.url);
+        } else {
+          // Response is not okay so creating the links failed
+          areLinksCreated = false;
+          if (!isFetchCanceled)
+            saveBadResponse(request.url, +' (Needed source to create user links)', response.status);
+          else saveCanceledUserLink(request.url, +' (Needed source to create user links)');
+        }
+      });
     } catch (error) {
       // Fetch has failed so creating the links failed
       areLinksCreated = false;
 
       if (!isFetchCanceled)
-        saveFailedUserLink(userRequiredSource + ' (Needed source to create user links)');
-      else saveCanceledUserLink(userRequiredSource + ' (Needed source to create user links)');
+        saveFailedUserLink(request.url, +' (Needed source to create user links)');
+      else saveCanceledUserLink(request.url, +' (Needed source to create user links)');
     }
   } else {
     // Since the token or term code is missing, the user's remote links cannot be created
@@ -174,7 +212,6 @@ async function cacheUserFiles() {
       canceledUserFetches = [];
       failedUserFetches = [];
       successfulUserFetches = [];
-      userRemoteLinks = [];
       // Console logs the result of attempting to cache all of the user's files
       cachedAllSuccessfully
         ? console.log(`%c${successfulEmoji} Cached All User Files Successfully`, successfulLog)
