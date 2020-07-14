@@ -57,8 +57,10 @@ export default class NewsItem extends Component {
     }
     
     // Only show the delete button if the current user is the author of the posting
+    // null check temporarily fixes issue on home card when user has not yet been authenticated
     let deleteButton;
-    if(this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase()) {
+    if(this.props.currentUsername != null && 
+        this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase()) {
       deleteButton = (
         <Button
           variant="outlined"
