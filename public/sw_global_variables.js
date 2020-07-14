@@ -23,4 +23,4 @@ const cacheLog = ['margin-left: 24px'].join(';');
 const statusLog = ['color: #e67e22', 'margin-left: 24px'].join(';');
 
 // Determines if the service worker should do any console logs
-const showDeveloperConsoleLog = false;
+const showDeveloperConsoleLog = true;

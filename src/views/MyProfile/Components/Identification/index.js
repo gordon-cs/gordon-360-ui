@@ -290,7 +290,7 @@ export const Identification = props => {
    *
    * @return {String} The message of the Photo Dialog
    */
-  function createPhotoDialogMessage() {
+  function createPhotoDialogBoxMessage() {
     let message = '';
     // If an error occured and there's no currently running timeout, the error is displayed
     // and a timeout for that error message is created
@@ -416,7 +416,7 @@ export const Identification = props => {
    *
    * @return {JSX} The JSX of the Photo Updater
    */
-  function createPhotoDialog() {
+  function createPhotoDialogBox() {
     return (
       <Dialog
         className="gc360-photo-dialog"
@@ -430,7 +430,7 @@ export const Identification = props => {
           <DialogTitle className="gc360-photo-dialog-box_title">Update Photo</DialogTitle>
           <DialogContent className="gc360-photo-dialog-box_content">
             <DialogContentText className="gc360-photo-dialog-box_content_text">
-              {createPhotoDialogMessage()}
+              {createPhotoDialogBoxMessage()}
             </DialogContentText>
             {!showCropper && (
               <Dropzone
@@ -545,20 +545,23 @@ export const Identification = props => {
     );
   }
 
-  let linksDialog = (
-    <LinksDialog
-      createSnackbar={createSnackbar}
-      handleSocialLinksClose={handleSocialLinksClose}
-      facebookLink={facebookLink}
-      setFacebookLink={setFacebookLink}
-      twitterLink={twitterLink}
-      setTwitterLink={setTwitterLink}
-      linkedInLink={linkedInLink}
-      setLinkedInLink={setLinkedInLink}
-      instagramLink={instagramLink}
-      setInstagramLink={setInstagramLink}
-    />
-  );
+  let linksDialog =
+    props.network === 'online' ? (
+      <LinksDialog
+        createSnackbar={createSnackbar}
+        handleSocialLinksClose={handleSocialLinksClose}
+        facebookLink={facebookLink}
+        setFacebookLink={setFacebookLink}
+        twitterLink={twitterLink}
+        setTwitterLink={setTwitterLink}
+        linkedInLink={linkedInLink}
+        setLinkedInLink={setLinkedInLink}
+        instagramLink={instagramLink}
+        setInstagramLink={setInstagramLink}
+      />
+    ) : (
+      <></>
+    );
 
   // Defines which social media icons will display
   let facebookButton;
@@ -684,17 +687,21 @@ export const Identification = props => {
                         alt="Profile"
                       />
 
-                      <Typography
-                        variant="body1"
-                        className="identification-card-content-card-container-photo-main-container-tile-bar"
-                      >
-                        Photo Options
-                      </Typography>
+                      {props.network === 'online' && (
+                        <Typography
+                          variant="body1"
+                          className="identification-card-content-card-container-photo-main-container-tile-bar"
+                        >
+                          Photo Options
+                        </Typography>
+                      )}
                     </div>
-                    <div
-                      onClick={handlePhotoOpen}
-                      className="identification-card-content-card-container-photo-main-button"
-                    ></div>
+                    {props.network === 'online' && (
+                      <div
+                        onClick={handlePhotoOpen}
+                        className="identification-card-content-card-container-photo-main-button"
+                      ></div>
+                    )}
                   </div>
                   {preferredUserImage && defaultUserImage && (
                     <div className="identification-card-content-card-container-photo-side">
@@ -728,7 +735,7 @@ export const Identification = props => {
                       {twitterButton}
                       {linkedInButton}
                       {instagramButton}
-                      {editButton}
+                      {props.network === 'online' && editButton}
                     </Grid>
                   </Grid>
                   <Grid
@@ -764,7 +771,7 @@ export const Identification = props => {
                     </a>
                   </Grid>
 
-                  {createPhotoDialog()}
+                  {props.network === 'online' && createPhotoDialogBox()}
 
                   <Dialog
                     open={socialLinksOpen}
@@ -782,7 +789,7 @@ export const Identification = props => {
             <GordonLoader />
           )}
 
-          {userProfile && (
+          {userProfile && props.network === 'online' && (
             <Link
               to={`/profile/${userProfile.AD_Username}`}
               className="identification-card-content-public-profile-link"

@@ -59,15 +59,17 @@ export default class OfflineBanner extends Component {
       return 'rounded-corners MuiGrid-grid-md-10';
     }
     // Classes for My Public Profile view
-    else if (this.props.currentPath.includes('/profile/')) {
+    else if (
+      this.props.currentPath.includes('/profile/') ||
+      this.props.currentPath === '/myprofile'
+    ) {
       return 'rounded-corners MuiGrid-grid-lg-10 MuiGrid-grid-md-12';
     }
     // Classes for People Search, Timesheets, Feedback, and My Profile view
     else if (
       this.props.currentPath === '/people' ||
       this.props.currentPath === '/student-timesheets' ||
-      this.props.currentPath === '/feedback' ||
-      this.props.currentPath === '/myprofile'
+      this.props.currentPath === '/feedback'
     ) {
       return 'rounded-corners MuiGrid-grid-lg-8 MuiGrid-grid-md-8';
     }

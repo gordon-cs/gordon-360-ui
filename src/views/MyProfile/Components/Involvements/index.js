@@ -51,6 +51,7 @@ export const Involvements = props => {
         <MyProfileActivityList
           Membership={involvementPrivacyKeyValuePair.key}
           InvolvementPrivacy={involvementPrivacyKeyValuePair.value}
+          network={props.network}
         />
       ));
     }
