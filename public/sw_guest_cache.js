@@ -1,3 +1,7 @@
+/**
+ * ES-Lint warnings are disabled because there are functions/variables that are defined here but
+ * referenced in another script and this script itself is referencing variables from another script
+ */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 

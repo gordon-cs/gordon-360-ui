@@ -1,4 +1,9 @@
+/**
+ * ES-Lint warning is disabled because these variables are being used. They're used in the other
+ * service worker scripts
+ */
 /* eslint-disable no-unused-vars */
+
 // Cache version
 const cacheVersion = 'cache v1.2';
 

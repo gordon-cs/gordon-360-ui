@@ -1,3 +1,10 @@
+/**
+ * ES-Lint warnings are disabled because there are functions/variables that are defined here but
+ * referenced in another script and this script itself is referencing variables from another script.
+ * Also, the global variable "location" is used instead of "window.location: because "window" is not
+ * defined within this scope. ES-Lint dislikes "location" but accepts "window.location"
+ */
+
 /* eslint-disable no-undef */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-vars */
@@ -205,7 +212,6 @@ async function cacheUserFiles() {
       canceledUserFetches = [];
       failedUserFetches = [];
       successfulUserFetches = [];
-      userRemoteLinks = [];
       // Console logs the result of attempting to cache all of the user's files
       cachedAllSuccessfully
         ? console.log(`%c${successfulEmoji} Cached All User Files Successfully`, successfulLog)
