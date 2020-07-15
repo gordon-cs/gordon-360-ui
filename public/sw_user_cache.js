@@ -93,7 +93,6 @@ async function createRemoteUserLinks() {
             `${apiSource}/schedule/${profile.AD_Username}/`,
             `${apiSource}/myschedule/${profile.AD_Username}/`,
             `${apiSource}/schedulecontrol/${profile.AD_Username}/`,
-            `/profile/${profile.AD_Username}`,
           );
           saveSuccessfulUserLink(userRequiredSource);
           return profile;
@@ -282,12 +281,6 @@ async function removeUserCache() {
         // Checks to see if the url is apart of the list of user's remote links. If so,
         // all data associated with that url is deleted from the cache and from the list
         if (userRemoteLinks.includes(item.url)) {
-          cache.delete(item);
-          userRemoteLinks = userRemoteLinks.filter(link => link !== item.url);
-        }
-        // Removes '/profile/firstName.lastName' from the list of user's remote links and cache
-        // since that file is associated with the user.
-        else if (item.url.match(location.origin) && item.url.includes('/profile/')) {
           cache.delete(item);
           userRemoteLinks = userRemoteLinks.filter(link => link !== item.url);
         }

@@ -210,16 +210,8 @@ export function createMyProfileButton(networkStatus, authenticated, onLinkClick,
 
   // Authenticated
   if (authenticated) {
-    /* If online, the user will be directed to their page where they can edit their profile. Otherwise
-     * they're directed to their public profile
-     */
-    let profileLink =
-      networkStatus === 'online'
-        ? '/myprofile'
-        : `/profile/${user.getLocalInfo().name.replace(' ', '.')}`;
-
     myProfileButton = (
-      <NavLink exact to={profileLink} onClick={onLinkClick} className="gc360-link">
+      <NavLink exact to="/myprofile" onClick={onLinkClick} className="gc360-link">
         <ListItem divider button>
           <ListItemText primary="My Profile" />
         </ListItem>
