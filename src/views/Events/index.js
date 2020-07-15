@@ -125,11 +125,6 @@ export default class Events extends Component {
          */
         this.setState({ includePast: false }, () => {
           this.togglePastEvents();
-          // Gets all the events included in the past along with all filters previously active
-          this.createURLParameters();
-          // Filter events to reflect boxes still checked
-          const events = gordonEvent.getFilteredEvents(this.state);
-          this.setState({ filteredEvents: events, loading: false });
         });
       }
     }
@@ -233,6 +228,11 @@ export default class Events extends Component {
       const futureEvents = gordonEvent.getFutureEvents(this.state.allEvents);
       await this.setState({ events: futureEvents });
     }
+    // Gets all the events included in the past along with all filters previously active
+    this.createURLParameters();
+    // Filter events to reflect boxes still checked
+    const events = gordonEvent.getFilteredEvents(this.state);
+    this.setState({ filteredEvents: events, loading: false });
   }
 
   //This should be the only time we pull from the database
@@ -397,7 +397,7 @@ export default class Events extends Component {
         attendedEvents: {
           background: gordonColors.primary.cyan,
           color: 'white',
-          marginLeft: '1rem',
+          marginLeft: '0.88rem',
         },
       },
     };
@@ -416,7 +416,7 @@ export default class Events extends Component {
               style={{ paddingBottom: '1rem' }}
             >
               <Grid container alignItems="baseline" style={styles.searchBar}>
-                <Grid container md={8} lg={8}>
+                <Grid container md={8} lg={7}>
                   <TextField
                     id="search"
                     label="Search"
@@ -430,7 +430,7 @@ export default class Events extends Component {
                   justify="flex-end"
                   direction="row"
                   md={4}
-                  lg={4}
+                  lg={5}
                   style={{ paddingTop: '1rem' }}
                 >
                   <Grid item align="center">
