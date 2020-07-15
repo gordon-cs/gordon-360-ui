@@ -6,7 +6,7 @@ import Fab from '@material-ui/core/Fab';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Typography from '@material-ui/core/Typography';
 import gordonEvent from './../../services/event';
-import news from './../../services/news';
+import newsService from './../../services/news';
 import userService from './../../services/user';
 import NewsList from '../News/components/NewsList';
 import GordonLoader from '../../components/Loader';
@@ -59,12 +59,13 @@ export default class StudentNews extends Component {
       snackbarOpen: false,
       snackbarMessage: 'Something went wrong',
       currentUsername: '',
-      isEditing: false,
+      // false if not editing, newsID if editing
+      currentlyEditing: false,
     };
     this.isMobileView = false;
     this.breakpointWidth = 540;
     this.updateSnackbar = this.updateSnackbar.bind(this);
-    this.populateNewsWindow = this.populateNewsWindow.bind(this);
+    this.handleNewsItemEdit = this.handleNewsItemEdit.bind(this);
     this.callFunction = this.callFunction.bind(this);
   }
 
@@ -82,15 +83,24 @@ export default class StudentNews extends Component {
   }
 
   handlePostClick() {
-    this.setState({ openPostActivity: true });
+    this.setState({ 
+      openPostActivity: true,
+    });
   }
 
   handleWindowClose() {
-    this.setState({ openPostActivity: false });
+    this.setState({ 
+      openPostActivity: false,
+      newPostCategory: '',
+      newPostSubject: '',
+      newPostBody: '',
+      currentlyEditing: false,
+    });
   }
 
   handleSnackbarClose = (reason) => {
-    console.log(reason);
+    // not sure what reason is
+    // console.log(reason);
     if (reason === 'clickaway') {
       return;
     }
@@ -118,25 +128,26 @@ export default class StudentNews extends Component {
         }
         this.updateSnackbar(param);
         break;
-      case 'populateNewsWindow':
+      case 'handleNewsItemEdit':
         if(param == null) {
-          throw new Error("callFunction 'populateNewsWindow' requires a parameter (news)");
+          throw new Error("callFunction 'handleNewsItemEdit' requires a parameter (news)");
         }
-        this.populateNewsWindow(param);
+        this.handleNewsItemEdit(param);
         break;
       default:
         console.log("callFunction function name not applicable, double check your parameter");
       }
   }
 
-  populateNewsWindow(newsItem) {
-    // add an isEditing thing to state to save object from deletion on cancel (until endpoint added)
+  // Function called when 'edit' clicked for a news item
+  async handleNewsItemEdit(newsID) {
+    let newsItem = await newsService.getPostingByID(newsID);
     this.setState({ 
       openPostActivity: true,
       newPostCategory: newsItem.categoryID,
       newPostSubject: newsItem.Subject,
       newPostBody: newsItem.Body,
-      currentlyEditing: newsItem,
+      currentlyEditing: newsID,
     });
   }
 
@@ -145,9 +156,29 @@ export default class StudentNews extends Component {
     this.setState({ snackbarOpen: true });
   }
 
-  async handleEdit() {
-    //delete the news item
-    //create news item
+  // Handles the actual 'edit' submission
+  async handleUpdate() {
+    let newsID = this.state.currentlyEditing;
+    // create the JSON newData object to update with
+    let newData = {
+      categoryID: this.state.newPostCategory, 
+      Subject: this.state.newPostSubject,
+      Body: this.state.newPostBody,
+    };
+
+    // update the news item and give feedback
+    let result = await newsService.editStudentNews(newsID, newData);
+    if(result === undefined) {
+      this.updateSnackbar('News Posting Failed to Update');
+    }
+    else {
+      this.updateSnackbar('News Posting Updated Successfully');
+    }
+
+    // close the window and reload to update data
+    // (necessary since data is currently not pulled from render method)
+    this.setState({ openPostActivity: false });
+    window.top.location.reload();
   }
 
   async handleSubmit() {
@@ -159,7 +190,7 @@ export default class StudentNews extends Component {
     };
 
     // submit the news item and give feedback
-    let result = await news.submitStudentNews(newsItem);
+    let result = await newsService.submitStudentNews(newsItem);
     if(result === undefined) {
       this.updateSnackbar('News Posting Failed to Submit');
     }
@@ -178,9 +209,9 @@ export default class StudentNews extends Component {
     this.setState({ loading: true });
 
     if (this.props.Authentication) {
-      const newsCategories = await news.getCategories();
-      const personalUnapprovedNews = await news.getPersonalUnapprovedFormatted();
-      const unexpiredNews = await news.getNotExpiredFormatted();
+      const newsCategories = await newsService.getCategories();
+      const personalUnapprovedNews = await newsService.getPersonalUnapprovedFormatted();
+      const unexpiredNews = await newsService.getNotExpiredFormatted();
       this.setState({ 
         loading: false,
         categories: newsCategories, 
@@ -294,7 +325,7 @@ export default class StudentNews extends Component {
         <Button 
           variant="contained"
           color="primary"
-          onClick={this.handleEdit.bind(this)}
+          onClick={this.handleUpdate.bind(this)}
           disabled={submitButtonDisabled}>
           Update
         </Button>
@@ -410,7 +441,7 @@ export default class StudentNews extends Component {
                         onClick={this.handleWindowClose.bind(this)}>
                         Cancel
                       </Button>
-                      {this.state.isEditing ? editButton : submitButton}
+                      {this.state.currentlyEditing === false ? submitButton : editButton}
                     </DialogActions>}
                   </Dialog>
 

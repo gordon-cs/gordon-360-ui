@@ -43,8 +43,7 @@ const getPersonalUnapproved = () => http.get('news/personal-unapproved');
 
 const getCategories = () => http.get(`news/categories`);
 
-// this has an await build in since it is a standalone call
-// const getPostingByID = (id) => await http.get(`news/${id}`);
+const getPostingByID = (id) => http.get(`news/${id}`);
 
 
 /**
@@ -196,12 +195,12 @@ async function deleteStudentNews(newsID) {
  * Posting must be authored by user and unapproved to edit
  * Calls delete, then create rather than an actual update request
  * @param {any} newsID The SNID of the news item to delete
+ * @param {any} newData The JSON object that contains new data for update
  * @return {Promise.<Object>} deleted object
  */
-async function editStudentNews(newsID) {
+async function editStudentNews(newsID, newData) {
   try {
-    const newsItem = await deleteStudentNews(newsID);
-    return await submitStudentNews(newsItem);
+    return await http.put(`news/${newsID}`, newData);
   }
   catch (reason) {
     console.log("Caught news update error: " + reason);
@@ -218,5 +217,5 @@ export default {
   submitStudentNews,
   deleteStudentNews,
   editStudentNews,
-  // getPostingByID,
+  getPostingByID,
 };

@@ -13,7 +13,8 @@ import { Link } from 'react-router-dom';
 
 import './newsItem.scss';
 
-//Switched to table rows
+
+
 export default class NewsItem extends Component {
   constructor(props) {
     super(props);
@@ -29,6 +30,8 @@ export default class NewsItem extends Component {
     // for collapsable news postings
     this.handleExpandClick = this.handleExpandClick.bind(this);
   }
+
+
 
   componentDidMount() {
     /* Used to re-render the page when the network connection changes.
@@ -81,8 +84,7 @@ export default class NewsItem extends Component {
    */ 
   async handleEdit() {
     const newsID = this.state.posting.SNID;
-    let newsItem = await newsService.deleteStudentNews(newsID);
-    this.callFunction('populateNewsWindow', newsItem);
+    this.callFunction('handleNewsItemEdit', newsID);
     // // update the news item and give feedback
     // let result = await newsService.editStudentNews(newsID);
     // if(result === undefined) {
@@ -119,6 +121,9 @@ export default class NewsItem extends Component {
     this.props.callFunction(functionName, param);
   }
 
+
+
+
   render() {
     const posting = this.state.posting;
     const { size } = this.props;
@@ -134,6 +139,7 @@ export default class NewsItem extends Component {
     // Only show the edit button if the current user is the author of the posting
     // AND posting is unapproved
     // null check temporarily fixes issue on home card when user has not yet been authenticated
+    // it is because the home card doesn't give these properties
     let editButton;
     if(this.props.currentUsername != null && 
         this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase() && unapproved) {
@@ -240,6 +246,7 @@ export default class NewsItem extends Component {
               <Typography className="news-column">{posting.dayPosted}</Typography>
             </Grid>
             
+            {/* Collapsable details */}
             <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{width: "100%"}}>
               <CardContent>
                 <Grid container direction="row" alignItems="center" justify="space-around">
@@ -249,8 +256,10 @@ export default class NewsItem extends Component {
                       {postingDescription}
                     </Typography>
                   </Grid>
+                  {/* Possible action buttons */}
                   <Grid item xs={4}>
                     <Grid container justify="space-evenly">
+                      {/* these conditionally render - see respective methods */}
                       {editButton}
                       {deleteButton}
                     </Grid>
