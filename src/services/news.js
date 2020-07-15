@@ -4,6 +4,7 @@
  * @module studentNews
  */
  // Written by Jessica Guan
+ // Modified by Cameron Abbot
 
 import { DateTime } from 'luxon';
 import http from './http';
@@ -33,15 +34,17 @@ import http from './http';
  */
 
 
-
-
 const getNotExpired = () => http.get(`news/not-expired`);
 
+// news since 10am (today's news)
 const getNewNews = () => http.get(`news/new`);
 
 const getPersonalUnapproved = () => http.get('news/personal-unapproved');
 
 const getCategories = () => http.get(`news/categories`);
+
+const getPostingByID = (id) => http.get(`news/${id}`);
+
 
 /**
  * Format a news posting by adding fields:
@@ -69,9 +72,11 @@ function formatPosting(posting) {
   posting.author = fname + " " + lname;
 }
 
+/******************* GET **********************/
+
 /**
- * Gets all unexpired news
- * for use on the News Page
+ * Gets all unexpired student news
+ * and formats
  * @return {Promise<any>} Student news
  */
 const getNotExpiredFormatted = async () => {
@@ -87,6 +92,7 @@ const getNotExpiredFormatted = async () => {
 /**
  * Gets today's news
  * for use on the Home Page card
+ * and formats
  * @return {Promise<any>} Student news
  */
 const getTodaysNews = async () => {
@@ -100,6 +106,7 @@ const getTodaysNews = async () => {
 }
 
 /**
+ * NOTE: not currently used, might be used in future filter features
  * Gets today's news for given category
  * for use on the Home Page card
  * @param {Number} category the category of news
@@ -149,6 +156,8 @@ const getNewsByCategory = async category => {
   return categoryNews;
 }
 
+/******************* POST **********************/
+
 /**
  * Submits a student news item
  * @param {any} newsItem The data which makes up the student news item
@@ -156,12 +165,14 @@ const getNewsByCategory = async category => {
  */
 async function submitStudentNews(newsItem) {
   try {
-    return http.post('news', newsItem);
+    return await http.post('news', newsItem);
   }
   catch (reason) {
     console.log("Caught news submission error: " + reason);
   }
 };
+
+/******************* DELETE **********************/
 
 /**
  * Deletes a student news item
@@ -170,10 +181,29 @@ async function submitStudentNews(newsItem) {
  */
 async function deleteStudentNews(newsID) {
   try {
-    return http.del(`news/${newsID}`);
+    return await http.del(`news/${newsID}`);
   }
   catch (reason) {
     console.log("Caught news deletion error: " + reason);
+  }
+};
+
+/******************* EDIT (PUT) **********************/
+
+/**
+ * Edits a student news item
+ * Posting must be authored by user and unapproved to edit
+ * Calls delete, then create rather than an actual update request
+ * @param {any} newsID The SNID of the news item to delete
+ * @param {any} newData The JSON object that contains new data for update
+ * @return {Promise.<Object>} deleted object
+ */
+async function editStudentNews(newsID, newData) {
+  try {
+    return await http.put(`news/${newsID}`, newData);
+  }
+  catch (reason) {
+    console.log("Caught news update error: " + reason);
   }
 };
 
@@ -186,4 +216,6 @@ export default {
   getNotExpiredFormatted,
   submitStudentNews,
   deleteStudentNews,
+  editStudentNews,
+  getPostingByID,
 };
