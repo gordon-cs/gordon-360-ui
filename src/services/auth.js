@@ -37,17 +37,17 @@ const getAuth = (username, password) => {
   const loginInfo = new URLSearchParams({
     username,
     password,
-    grant_type: 'password'
+    grant_type: 'password',
   });
-  
+
   const request = new Request(`${base}token`, {
-    method: 'post', 
+    method: 'post',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     //mode: 'no-cors',
     credentials: 'include',
-    body: loginInfo
+    body: loginInfo,
   });
- 
+
   return fetch(request)
     .then(parseResponse)
     .then(data => data.access_token)
@@ -82,19 +82,19 @@ const isAuthenticated = () => {
     return token && token.length > 0;
   } catch (err) {
     console.log('auth.js: error occured getting token');
-    // Checks to see if Cache API is available before attempting to access it
+    // Checks to see if Cache API is available
     if ('caches' in window) {
-      // Checks to see if Service Worker is available since these values would not exist
-      // if the service worker was unavailable
+      /**
+       * Checks to see if the Service Worker is available since these values would not exist
+       * without it. If it does exist, a message is sent to the service worker to remove all of the
+       * user's data from cache and to cancel all fetches since it might contain information of
+       * the logged out user
+       */
       if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage('delete-global-variables');
+        navigator.serviceWorker.controller.postMessage('remove-user-data');
         navigator.serviceWorker.controller.postMessage('cancel-fetches');
         if (localStorage.length > 0) {
-          storage.remove('status');
           storage.remove('currentTerm');
-
-          // Removes all dynamic cache
-          navigator.serviceWorker.controller.postMessage('remove-dynamic-cache');
         }
       }
     }
@@ -113,13 +113,9 @@ const signOut = () => {
     // Checks to see if Service Worker is available since these values would not exist
     // if the service worker was unavailable
     if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage('delete-global-variables');
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
       storage.remove('status');
       storage.remove('currentTerm');
-
-      // Removes all dynamic cache
-      navigator.serviceWorker.controller.postMessage('remove-dynamic-cache');
     }
   }
 };

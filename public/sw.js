@@ -1,6 +1,14 @@
-/* eslint-disable no-loop-func */
+/**
+ * ES-Lint warnings are disabled because there are functions/variables that are defined here but
+ * referenced in another script and this script itself is referencing variables from another script.
+ * Also, the global variable "self" is used instead of "window.self" because "window" is not
+ * defined within this scope. ES-Lint dislikes "self" but accepts "window.self"
+ */
+
 /* eslint-disable no-undef */
 /* eslint-disable no-restricted-globals */
+/* eslint-disable no-unused-vars */
+
 /**
  * Caches files and responds to network requests when offline.
  *
@@ -12,158 +20,44 @@
  * @author Jake Moon and Jahnuel Dorelus.
  */
 
-///*********************************************** VARIABLES ***********************************************/
-// Current cache version
-const cacheVersion = 'cache v1.2';
-const apiSource = 'https://360apitrain.gordon.edu';
-/* Uncomment For Development Only (aka develop) */
-const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
-/* Uncomment For Production Only (aka master) */
-// const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
-// let failedDynamicCacheLinks = [];
-let dynamicCache = [];
-let token,
-  termCode,
-  cacheTimer,
-  isSuccessful,
-  isFetchCanceled,
-  networkStatus,
-  username,
-  id,
-  currentSession;
-
-const showDeveloperConsoleLog = false;
-
-// Console log decorations
-const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
-const successfulEmoji = `\u{2705}`;
-const errorLog = ['color: #ff0b23', 'margin-left: 20px'].join(';');
-const errorEmoji = `\u{1F6AB}`;
-const warningLog = ['color: #edc02c', 'margin-left: 24px'].join(';');
-const warningEmoji = `\u{26A0}`;
-const cacheLog = ['margin-left: 24px'].join(';');
-
-// Static Files to cache
-const staticCache = [
-  // Documents
-  '/',
-  '/events',
-  '/involvements',
-  '/feedback',
-  '/people',
-  '/favicon.ico',
-  '/about',
-  '/help',
-  '/admin',
-  '/news',
-  '/attended',
-  '/manifest.json',
-  '/pwa.js',
-  '/static/js/bundle.js',
-  '/static/js/0.chunk.js',
-  '/static/js/main.chunk.js',
-  '/static/js/1.chunk.js',
-  // Files needed to prevent blank pages occuring offline
-  '/main.89f23f7459ac700734a6.hot-update.js',
-  '/static/css/2.d64d1e9d.chunk.css',
-  '/static/css/2.d64d1e9d.chunk.css.map',
-  '/static/css/main.01e33f3b.chunk.css',
-  '/static/css/main.5e616716.chunk.css',
-  '/static/css/main.5e616716.chunk.css.map',
-  '/static/css/main.8e50f2fc.chunk.css',
-  '/static/css/main.8e50f2fc.chunk.css.map',
-  '/static/js/2.00596eb8.chunk.js',
-  '/static/js/2.00596eb8.chunk.js.map',
-  '/static/js/main.2f5d16ec.chunk.js',
-  '/static/js/main.2f5d16ec.chunk.js.map',
-  '/static/css/main.02025315.chunk.css',
-  '/static/css/2.3fd9a278.chunk.css',
-  '/static/js/2.8e1c3293.chunk.js',
-  '/static/js/main.c192f25f.chunk.js',
-  // Images
-  '/images/android-icon-36x36.png',
-  '/images/android-icon-48x48.png',
-  '/images/android-icon-72x72.png',
-  '/images/android-icon-96x96.png',
-  '/images/android-icon-144x144.png',
-  '/images/android-icon-192x192.png',
-  '/images/apple-icon-72x72.png',
-  '/images/apple-icon-76x76.png',
-  '/images/apple-icon-114x114.png',
-  '/images/apple-icon-120x120.png',
-  '/images/apple-icon-144x144.png',
-  '/images/apple-icon-152x152.png',
-  '/images/apple-icon-180x180.png',
-  '/images/apple-icon-precomposed.png',
-  '/images/iphone5_splash.png',
-  '/images/iphone6_splash.png',
-  '/images/iphoneplus_splash.png',
-  '/images/iphonex_splash.png',
-  '/images/ipad_splash.png',
-  '/images/ipadpro1_splash.png',
-  '/images/ipadpro2_splash.png',
-  '/images/apple-icon.png',
-  '/images/favicon-16x16.png',
-  '/images/favicon-32x32.png',
-  '/images/favicon-96x96.png',
-  '/images/ms-icon-70x70.png',
-  '/images/ms-icon-144x144.png',
-  '/images/ms-icon-150x150.png',
-  '/images/ms-icon-310x310.png',
-  '/static/media/campus1366.e8fc7838.jpg',
-  '/static/media/gordon-logo-vertical-white.a6586885.svg',
-  '/static/media/NoConnection.68275814.svg',
-  '/static/media/GordonFavicon.3e563128.ico',
-  '/static/media/MyGordonFavicon.7433864b.ico',
-  '/static/media/GoGordonFavicon.3e563128.ico',
-  '/static/media/BbFavicon.ba837cb2.ico ',
-];
-
-/* Files that needed to be cached to view involvements and events page as guests.
- * 2 other links needed for involvements are added to this in cacheStaticFiles()
+/**
+ * Imports scripts into this file. Every file that's imported becomes apart of this file. In other
+ * words, variables found in one script can and will be found in other scripts since they are all
+ * connected to this service worker.
  */
-const dynamicCacheTwo = [
-  `${apiSource}/api/events/25Live/Public`,
-  `${apiSource}/api/sessions`,
-  `${apiSource}/api/sessions/current`,
-];
+importScripts('./sw_global_variables.js', './sw_guest_cache.js', './sw_user_cache.js');
 
-/*********************************************** CACHING FUNCTIONS ***********************************************/
+/**
+ * Imported Variables and functions
+ *
+ * (sw_global_variables.js) | cacheVersion            | The name of the cache that's used to cache all files
+ * (sw_global_variables.js) | showDeveloperConsoleLog | Determines if any console logs should be made
+ * (sw_global_variables.js) | fontKeySource           | The URL of the font CSS file used by Gordon 360
+ * (sw_global_variables.js) | cacheEmoji              | The emoji symbol used to display in the console log for cache related logs
+ * (sw_global_variables.js) | cacheLog                | Console log styling for cache related logs
+ * (sw_global_variables.js) | warningEmoji            | The emoji symbol used to display in the console log for warning related logs
+ * (sw_global_variables.js) | warningLog              | Console log styling for warning related logs
+ * (sw_global_variables.js) | errorEmoji              | The emoji symbol used to display in the console log for error related logs
+ * (sw_global_variables.js) | errorLog                | Console log styling for cache related logs
+ * (sw_global_variables.js) | statusLog               | Console log styling for status related logs
+ * (sw_guest_cache.js)      | cacheGuestFiles()       | Function that caches all of the files needed for the guest in offline mode
+ * (sw_guest_cache.js)      | static360Cache          | The URLs of every file that's locally cached
+ * (sw_guest_cache.js)      | guestRemoteLinks        | The list of URLs used to cache files for the guest in offline mode
+ * (sw_user_cache.js)       | userRemoteLinks         | The list of URLs used to cache files for the authenticated user in offline mode
+ * (sw_user_cache.js)       | cacheUserFiles()        | Function that caches all of the files needed for the authenticated user in offline mode
+ * (sw_user_cache.js)       | removeUserCache()       | Function that removes all data from cache associated with the authenticated user
+ */
+
+// Local Variables
+let token, // Holds the token of the user
+  termCode, // Holds the current semester term code
+  cacheTimer, // Contains the timer that updates the cache after a specified interval
+  isFetchCanceled; // Determines if fetches should be canceled
+
 /**
  * Cleans the cache to remove data that's no longer in use (removes outdated cache version)
- * If there's cache with the correct cache version, it will just remove the dynamic files
  */
 async function cleanCache() {
-  // Checks to make sure the current session is available before removing cache
-  if (currentSession) {
-    // If the cache version is the same, we remove all dynamic files cached
-    await caches.open(cacheVersion).then(cache => {
-      cache.keys().then(items => {
-        items.forEach(item => {
-          // Removes all remote files except for the font key css, the involvements for the current term and the events
-          if (
-            !item.url.match(location.origin) &&
-            item.url !== fontKeySource &&
-            item.url !== `${apiSource}/api/events/25Live/Public` &&
-            item.url !== `${apiSource}/api/sessions` &&
-            item.url !== `${apiSource}/api/sessions/current` &&
-            item.url !== `${apiSource}/api/activities/session/${currentSession.SessionCode}` &&
-            item.url !== `${apiSource}/api/activities/session/${currentSession.SessionCode}/types`
-          ) {
-            cache.delete(item);
-          }
-          // Removes '/myprofile' and '/profile/firstName.lastName' since they were made when the user
-          // was caching dynamic files but appears to be from location.origin instead of remote
-          else if (
-            item.url.match(location.origin) &&
-            (item.url.includes('/profile/') || item.url.includes('/myprofile'))
-          ) {
-            cache.delete(item);
-          }
-        });
-      });
-    });
-  }
   // If there's outdated cache
   await caches.keys().then(keys => {
     keys.forEach(key => {
@@ -171,7 +65,7 @@ async function cleanCache() {
         return caches.delete(key).then(() => {
           if (showDeveloperConsoleLog)
             console.log(
-              `%c${successfulEmoji} Previous cache has been removed (outdated cache version)`,
+              `%c${successfulEmoji} Previous cache has been removed (outdated cache "${key}")`,
               successfulLog,
             );
         });
@@ -183,371 +77,55 @@ async function cleanCache() {
 /**
  * Does a fetch for each request received.
  *
- * If the network is available, it returns a response from the fetch
- * Else, it returns a response from the cache.
+ * If the network is available, it returns a response from the fetch.
+ * Otherwise, it returns a response from the cache.
  *
- * @param {Request} request A request made to be fetched from the network or cache
- * @return {Promise<Response>} A response wrapped in a promise that's served from the network or cache
+ * @param {Request} request The request to be fetched from the network or cache
+ * @return {Response} A response served from the network or cache
  */
 async function fetchThenCache(request) {
-  return await fetch(request)
-    .then(fetchResponse => {
-      // If the request is specifically Gordon 360's Font CSS or a dynamic file that's needed for offline
-      // or an Involvements picture
-      if (
-        request.url === fontKeySource ||
-        dynamicCache.includes(request.url) ||
-        request.url.includes('/browseable/uploads/')
-      ) {
-        caches.open(cacheVersion).then(cache => {
-          cache.put(request.url, fetchResponse.clone());
-        });
-        return fetchResponse.clone();
-      }
-      return fetchResponse.clone();
-    })
-    .catch(async () => {
-      if (showDeveloperConsoleLog)
-        console.log(`%c- Getting ${request.url} from cache instead...`, cacheLog);
+  // Attempts to do a fetch with the request if fetches have not been canceled
+  if (!isFetchCanceled) {
+    try {
+      return await fetch(request).then(async fetchResponse => {
+        // If the request is specifically Gordon 360's Font CSS or a file that's needed for offline
+        // mode, it's cached before being returned
+        if (
+          request.url === fontKeySource ||
+          static360Cache.includes(request.url) ||
+          guestRemoteLinks.includes(request.url) ||
+          userRemoteLinks.includes(request.url)
+        ) {
+          await caches.open(cacheVersion).then(cache => {
+            cache.put(request.url, fetchResponse.clone());
+          });
+          return fetchResponse.clone();
+        }
 
-      // const response = await caches.match(request.url);
+        // Returns the fetch's response if it's not a file that's needed for offline mode
+        return fetchResponse.clone();
+      });
+    } catch (error) {
+      // Since the fetch failed, attempt to retrieve the response from cache
+      if (showDeveloperConsoleLog)
+        console.log(`%c${cacheEmoji} Getting ${request.url} from cache instead...`, cacheLog);
+
       const response = await caches.open(cacheVersion).then(cache => {
         return cache.match(request.url).then(response => {
           return response;
         });
       });
+
       // If there's no response from cache, we console log that the request failed
       if (response) {
         return response;
       } else if (showDeveloperConsoleLog)
         console.log(`%c${errorEmoji} Failed to get ${request.url} from cache`, errorLog);
-    });
-}
-
-/**
- * Caches all of the static files
- *
- * The files cached are the static files' links in the staticCache array and the Guest view data.
- * This data includes both events and involvements for the current session. If all files are cached
- * successfuly, its success is console logged. Vice versa if it fails.
- */
-async function cacheStaticFiles() {
-  // Determines if all files were successfully cached
-  let cachedSuccessfully = true;
-
-  // CACHES LOCAL FILES
-  await caches.open(cacheVersion).then(cache => {
-    cache.addAll(staticCache).catch(error => {
-      cachedSuccessfully = false;
-      if (showDeveloperConsoleLog) console.log(`%c${errorEmoji} Error: ${error.message}`, errorLog);
-    });
-  });
-
-  // GETS THE CURRENT SESSION
-  await fetch((request = new Request(`${apiSource}/api/sessions/current`)))
-    .then(async fetchResponse => {
-      // Checks to make sure the response of the fetch is okay
-      if (fetchResponse.statusText === 'OK') {
-        // Adds fetch response to cache
-        await caches.open(cacheVersion).then(cache => {
-          cache.put(request.url, fetchResponse.clone());
-        });
-
-        return fetchResponse.json();
-      } else {
-        cachedSuccessfully = false;
-        if (showDeveloperConsoleLog) {
-          console.log(
-            `%c${warningEmoji} Bad Response: Status - ${fetchResponse.status} \n\t\tURL: ${fetchResponse.url}`,
-            warningLog,
-          );
-        }
-      }
-    })
-    .then(session => {
-      currentSession = session;
-      dynamicCacheTwo.push(`${apiSource}/api/activities/session/${session.SessionCode}`);
-      dynamicCacheTwo.push(`${apiSource}/api/activities/session/${session.SessionCode}/types`);
-    })
-    // Catches any errors from the fetch
-    .catch(error => {
-      cachedSuccessfully = false;
-      if (showDeveloperConsoleLog)
-        console.log(`%c${errorEmoji} Error: ${error.message} \n\t\tURL: ${request.url}`, errorLog);
-    });
-
-  // RETRIEVES All DATA
-  dynamicCacheTwo.forEach(async item => {
-    await fetch((request = new Request(item)))
-      .then(async fetchResponse => {
-        // Checks to make sure the response of the fetch is okay
-        if (fetchResponse.statusText === 'OK') {
-          // Adds fetch response to cache
-          await caches.open(cacheVersion).then(cache => {
-            cache.put(item, fetchResponse.clone());
-          });
-          return fetchResponse.json();
-        } else {
-          cachedSuccessfully = false;
-          if (showDeveloperConsoleLog) {
-            console.log(
-              `%c${warningEmoji} Bad Response: Status - ${fetchResponse.status} \n\t\tURL: ${fetchResponse.url}`,
-              warningLog,
-            );
-          }
-        }
-      })
-      // Catches any errors from the fetch
-      .catch(error => {
-        cachedSuccessfully = false;
-        if (showDeveloperConsoleLog)
-          console.log(
-            `%c${errorEmoji} Error: ${error.message} \n\t\tURL: ${request.url}`,
-            errorLog,
-          );
-      });
-  });
-
-  if (showDeveloperConsoleLog)
-    // Console logs the result of the attempt to cache all static files
-    cachedSuccessfully
-      ? console.log(`%c${successfulEmoji} Cached All Static Files Successfully`, successfulLog)
-      : console.log(`%c${errorEmoji} Caching All Static Files Failed`, errorLog);
-}
-
-// /**
-//  * Re-Caches all of the dynamic files that failed to fetch
-//  *
-//  *  @return {Promise} A promise with the result of re-caching the failed dynamic files
-//  */
-// async function recacheFailedDynamicFiles() {
-//   if (token && failedDynamicCacheLinks.length > 0) {
-//     const cacheOne = await cacheDynamicFiles(token, failedDynamicCacheLinks);
-//     if (showDeveloperConsoleLog)
-//     console.log('Failed Links: ', cacheOne);
-//     // If all failed dynamic files successfully cache, we then empty the array
-//     if (cacheOne) failedDynamicCacheLinks = [];
-//     // Checks to see if both all failed links successfully cached
-//     if (cacheOne && showDeveloperConsoleLog) {
-//       console.log(`%c${successfulEmoji} Cached Failed Dynamic Files Successfully`, successfulLog);
-//     }
-//   }
-// }
-
-/**
- * Fetches and caches all the dynamic files that are listed in the passed-in array
- *
- * For each URL in the passed-in array, a fetch is made. If the fetch is
- * successful, the response is then cached.
- * Else, we console log the specific URL that failed to fetch
- *
- * @param {String} token The token from Local Storage to authenticate each request made
- * @param {Array} dynamicLinks An array of links to be fetched and cached
- * @param {String} mode [Set to 'cors' by default] Defines the type of request to be made
- *
- * @return {Promise<Boolean>} A boolean that determines if all links given cached successfully
- */
-async function cacheDynamicFiles(token, dynamicLinks, mode = 'cors') {
-  // Creates the header for the request to have authenitication
-  let headers = new Headers({
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  });
-
-  // Variables that determines the success of caching all links
-  isSuccessful = true;
-  let fetchSuccess;
-  let operationSuccess;
-
-  // Variable to control cancellation of fetches
-  isFetchCanceled = false;
-
-  // Attempt to fetch all links
-  for (let url = 0; url < dynamicLinks.length; url++) {
-    let request = new Request(dynamicLinks[url], {
-      method: 'GET',
-      mode,
-      headers,
-    });
-
-    // We attempt to fetch a request multiple times if it failes
-    for (let attempt = 1; attempt <= 3; attempt++) {
-      fetchSuccess = await fetch(request)
-        .then(fetchResponse => {
-          // IF THE FETCH WAS SUCCESSFUL AND WAS NOT CANCELED
-          if (isFetchCanceled === false) {
-            // Adds fetch response to cache
-            caches.open(cacheVersion).then(cache => {
-              cache.put(request.url, fetchResponse.clone());
-            });
-            return fetchResponse;
-          }
-          // IF THE FETCH WAS SUCCESSFUL AND WAS CANCELED
-          else {
-            /* If the fetch was canceled due to the user going offline, we will still cache the
-             * successful response
-             */
-            if (networkStatus === 'offline') {
-              // Adds fetch response to cache
-              caches.open(cacheVersion).then(cache => {
-                cache.put(request.url, fetchResponse.clone());
-              });
-              return fetchResponse;
-            }
-            // Returns the response of an aborted request
-            return 'The user aborted a request.';
-          }
-        })
-        .catch(error => {
-          // IF THE FETCH FAILED AND WAS NOT CANCELED
-          if (isFetchCanceled === false) {
-            /* We save the failed request's URL for future caching. Since we attempt to fetch a request
-             * multiple times, we check to make sure we haven't saved the request's URL already
-             */
-            if (!failedDynamicCacheLinks.includes(request.url))
-              failedDynamicCacheLinks.push(request.url);
-            // Returns the original failed request's response
-            return error.message;
-          }
-          // IF THE FETCH FAILED AND WAS CANCELED
-          else {
-            /* If the fetch was canceled due to the user going offline, we will remember the
-             * request's URL for future caching. Since we attempt to fetch a request
-             * multiple times, we check to make sure we haven't saved the request's URL already
-             */
-            if (!failedDynamicCacheLinks.includes(request.url))
-              failedDynamicCacheLinks.push(request.url);
-            // Returns the response of an aborted request
-            return 'The user aborted a request.';
-          }
-        });
-
-      // If the fetch didn't fail, we stop retrying to fetch for the request
-      if (fetchSuccess !== 'Failed to fetch') attempt = 4;
     }
-
-    // If the fetch resulted in error
-    if (fetchSuccess === 'Failed to fetch') {
-      isSuccessful = false;
-      if (showDeveloperConsoleLog) {
-        console.log(
-          `%c${errorEmoji} Failed to fetch and cache Dynamic File: ${dynamicLinks[url]}`,
-          errorLog,
-        );
-      }
-    }
-
-    // If the fetch resulted in a bad response
-    else if (fetchSuccess.statusText && fetchSuccess.statusText !== 'OK') {
-      isSuccessful = false;
-      if (showDeveloperConsoleLog) {
-        console.log(
-          `%c${warningEmoji} Bad Response: Status - ${fetchSuccess.status} \n\t\tURL: ${dynamicLinks[url]}`,
-          warningLog,
-        );
-      }
-    }
-  }
-
-  // The promise to return with a boolean value determining if all links cached successfully
-  operationSuccess = await new Promise((resolve, reject) => {
-    isSuccessful === true ? resolve(true) : resolve(false);
-  });
-
-  return operationSuccess;
-}
-
-/**
- * Creates the list of Dynamic URLs to fetch
- *
- * Before the list is created, several fetches are made to retrieve the current user's info which is
- * used to create the list of URLs where their info is encapsulated within the URLs
- *
- * @param {String} token The token from Local Storage to authenticate each request made
- * @param {String} termCode The current semester term
- */
-async function dynamicLinksThenCache(token, termCode) {
-  // Checks to make sure that the token and termCode is available before trying to commit fetches
-  if (token && termCode) {
-    // Creates the header for the request to have authenitification
-    let headers = new Headers({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
-
-    // Gets the current user's profile info to access their firstname.lastname and ID#
-    let profile = await fetch(new Request(`${apiSource}/api/profiles`, { method: 'GET', headers }))
-      .then(response => {
-        return response.json();
-      })
-      .catch(error => {
-        return error.message;
-      });
-
-    // Checks to make sure that the current user's info exists
-    username = profile ? profile.AD_Username : null;
-    id = profile ? profile.ID : null;
-
-    // Gets the current session term
-    let currentSession = await fetch(
-      new Request(`${apiSource}/api/sessions/current`, {
-        method: 'GET',
-        headers,
-      }),
-    )
-      .then(response => {
-        return response.json();
-      })
-      .catch(error => {
-        return error.message;
-      });
-
-    /* Sets the URLs to the dynamicCache list variable. Instead of pushing the urls to the variable,
-     * we create a new list every time to prevent duplicates and to always have an updated URL list
-     * according to the current user
-     */
-    dynamicCache = [
-      // Home Page Fetch URLs
-      `${apiSource}/api/cms/slider`,
-      `${apiSource}/api/dining`,
-      `${apiSource}/api/events/25Live/All`,
-      `${apiSource}/api/profiles`,
-      `${apiSource}/api/profiles/Image`,
-      `${apiSource}/api/sessions`,
-      `${apiSource}/api/sessions/current`,
-      `${apiSource}/api/activities/session/${currentSession.SessionCode}`, ////////
-      `${apiSource}/api/activities/session/${currentSession.SessionCode}/types`, ///////
-      `${apiSource}/api/sessions/daysLeft`,
-      `${apiSource}/api/news/categories`,
-      `${apiSource}/api/news/not-expired`,
-      // `${apiSource}/api/studentemployment/`,
-      `${apiSource}/api/version`,
-      `${apiSource}/api/events/chapel/${termCode}`,
-      `${apiSource}/api/memberships/student/${id}`,
-      `${apiSource}/api/memberships/student/username/${username}/`,
-      `${apiSource}/api/profiles/${username}/`,
-      `${apiSource}/api/profiles/Image/${username}/`,
-      `${apiSource}/api/schedule/${username}/`,
-      `${apiSource}/api/myschedule/${username}/`,
-      `${apiSource}/api/schedulecontrol/${username}/`,
-      `/profile/${username}`,
-      `/myprofile`,
-    ];
-
-    // Waits until all URLs in the dynamicCache list created above has been attempted to be fetched
-    let fetchResult = await cacheDynamicFiles(token, dynamicCache);
-
-    /* If the result of attempting to fetch every URL in the list dynamicCache succeeded, it's logged
-     * to the console. If not, there was an error with one or more fetches in which the error
-     * message(s) has been logged to the console
-     */
-    if (showDeveloperConsoleLog) {
-      if (fetchResult) {
-        console.log(`%c${successfulEmoji} Cached All Dynamic Files Successfully`, successfulLog);
-      } else {
-        console.log(`%c${errorEmoji} Caching All Dynamic Files Failed`, errorLog);
-      }
-    }
+  } else {
+    // Console logs that the fetch has been canceled
+    if (showDeveloperConsoleLog)
+      console.log(`%c${warningEmoji} Request has been canceled: ${request.url}`, warningLog);
   }
 }
 
@@ -556,23 +134,24 @@ async function dynamicLinksThenCache(token, termCode) {
  */
 function timerFunction() {
   cacheTimer = setInterval(() => {
-    if (showDeveloperConsoleLog) console.log('Attempting to update cache.');
+    if (showDeveloperConsoleLog) console.log('%cAttempting to update cache.', statusLog);
     // Caching All Files
-    cacheStaticFiles(); // Static Cache
-    dynamicLinksThenCache(token, termCode); // Dynamic Cache
+    cacheGuestFiles(); // Guest Cache
+    cacheUserFiles(); // User Cache
     // Set interval to every hour
   }, 3600000);
 }
 
-/*********************************************** EVENT LISTENERS ***********************************************/
-self.addEventListener('install', event => {
+/**************************************** EVENT LISTENERS *****************************************/
+self.addEventListener('install', () => {
   self.skipWaiting();
-  console.log('Installing Service Worker');
+  if (showDeveloperConsoleLog) console.log('%cInstalling Service Worker', statusLog);
 });
 
 self.addEventListener('activate', event => {
-  console.log('Activating Service Worker');
+  if (showDeveloperConsoleLog) console.log('%cActivating Service Worker', statusLog);
   self.clients.claim();
+  // Removes outdated cache and starts timer to update the cache every hour
   event.waitUntil(cleanCache(), timerFunction());
 });
 
@@ -588,73 +167,30 @@ self.addEventListener('fetch', event => {
   //     console.log(`Fetching request from REMOTE LOCATION: ${event.request.url}`);
   //   }
   // }
-
   event.respondWith(fetchThenCache(event.request));
 });
 
 self.addEventListener('message', event => {
-  // Sets variable to prevent the loss of this data when a new service worker installs
-  token = event.data.token;
-  termCode = event.data.termCode;
+  // Gets the token and current semester term code
+  token = event.data.token ? event.data.token : null;
+  termCode = event.data.termCode ? event.data.termCode : null;
 
-  // If the message is to cache all static/dynamic files or update the cache
-  if (
-    (event.data.message && event.data.message === 'cache-static-dynamic-files') ||
-    event.data.message === 'update-cache-files'
-  ) {
-    if (showDeveloperConsoleLog)
-      // Console logs the current action depending on the message received
-      event.data.message === 'cache-static-dynamic-files'
-        ? console.log('Attempting to cache all files.')
-        : console.log('Attempting to update cache.');
-    // Caching All Files
-    event.waitUntil(
-      cleanCache(), // Cleans the cache before updating it
-      cacheStaticFiles(), // Static Cache
-      dynamicLinksThenCache(event.data.token, event.data.termCode), // Dynamic Cache
-    );
+  // If the message is to update the cache
+  if (event.data.message && event.data.message === 'update-cache-files') {
+    if (showDeveloperConsoleLog) console.log('%cAttempting to update cache.', statusLog);
+    event.waitUntil(cacheGuestFiles(), cacheUserFiles());
   }
 
-  // If the message is to start the cache timer
-  else if (event.data && event.data === 'start-cache-timer') {
-    if (showDeveloperConsoleLog) console.log('Starting timer to update cache.');
-    event.waitUntil(timerFunction());
-  }
-  // If the message is to stop the cache timer
-  else if (event.data && event.data === 'stop-cache-timer') {
-    if (showDeveloperConsoleLog) console.log('Stopping timer to update cache.');
-    event.waitUntil(clearInterval(cacheTimer));
-  }
-  // If the message is to reset global variables due to signing out or lost of authentication
-  else if (event.data && event.data === 'delete-global-variables') {
-    token = null;
-    termCode = null;
-    dynamicCache = [];
-    failedDynamicCacheLinks = [];
-    username = null;
-    id = null;
+  // If the message is to remove the user's data due to signing out or lost of authentication
+  else if (event.data && event.data === 'remove-user-data') {
+    event.waitUntil((token = null), (termCode = null), removeUserCache());
   }
   // If the message is to cancel all fetches
   else if (event.data === 'cancel-fetches') {
     // Since this event listener is invoked multiple times, this check prevents it from
     // console logging multiple times
-    if (isFetchCanceled === false && isSuccessful === true) {
-      if (showDeveloperConsoleLog)
-        console.log(`%c${warningEmoji} Canceling Any Currently Running Fetches.`, warningLog);
+    if (isFetchCanceled === false && guestRemoteLinks.length > 0 && userRemoteLinks.length > 0) {
       isFetchCanceled = true;
-      isSuccessful = false;
     }
-  }
-  // If the message is to remove all dynamic cache
-  else if (event.data === 'remove-dynamic-cache') {
-    event.waitUntil(cleanCache());
-  }
-  // If the message is to set network status as online
-  else if (event.data === 'online') {
-    event.waitUntil((networkStatus = 'online'));
-  }
-  // If the message is to set network status as offline
-  else if (event.data === 'offline') {
-    event.waitUntil((networkStatus = 'offline'));
   }
 });
