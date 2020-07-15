@@ -72,6 +72,7 @@ export default class NewsList extends Component {
           size="single" 
           updateSnackbar={this.props.updateSnackbar} 
           currentUsername={this.props.currentUsername} 
+          callFunction={this.props.callFunction}
           unapproved/>
       ));
 
@@ -81,7 +82,8 @@ export default class NewsList extends Component {
           key={posting.SNID} 
           size="single"
           updateSnackbar={this.props.updateSnackbar} 
-          currentUsername={this.props.currentUsername}  />
+          currentUsername={this.props.currentUsername} 
+          callFunction={this.props.callFunction} />
       ));
 
       header = (
@@ -106,6 +108,7 @@ export default class NewsList extends Component {
           size="full" 
           updateSnackbar={this.props.updateSnackbar} 
           currentUsername={this.props.currentUsername} 
+          callFunction={this.props.callFunction}
           unapproved/>
       ));
 
@@ -115,6 +118,7 @@ export default class NewsList extends Component {
           key={posting.SNID} 
           updateSnackbar={this.props.updateSnackbar} 
           currentUsername={this.props.currentUsername}
+          callFunction={this.props.callFunction}
           size="full" />
       ));
         

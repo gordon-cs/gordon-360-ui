@@ -6,7 +6,7 @@ import Fab from '@material-ui/core/Fab';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Typography from '@material-ui/core/Typography';
 import gordonEvent from './../../services/event';
-import news from './../../services/news';
+import newsService from './../../services/news';
 import userService from './../../services/user';
 import NewsList from '../News/components/NewsList';
 import GordonLoader from '../../components/Loader';
@@ -59,10 +59,14 @@ export default class StudentNews extends Component {
       snackbarOpen: false,
       snackbarMessage: 'Something went wrong',
       currentUsername: '',
+      // false if not editing, newsID if editing
+      currentlyEditing: false,
     };
     this.isMobileView = false;
     this.breakpointWidth = 540;
     this.updateSnackbar = this.updateSnackbar.bind(this);
+    this.handleNewsItemEdit = this.handleNewsItemEdit.bind(this);
+    this.callFunction = this.callFunction.bind(this);
   }
 
   componentWillMount() {
@@ -79,15 +83,24 @@ export default class StudentNews extends Component {
   }
 
   handlePostClick() {
-    this.setState({ openPostActivity: true });
+    this.setState({ 
+      openPostActivity: true,
+    });
   }
 
   handleWindowClose() {
-    this.setState({ openPostActivity: false });
+    this.setState({ 
+      openPostActivity: false,
+      newPostCategory: '',
+      newPostSubject: '',
+      newPostBody: '',
+      currentlyEditing: false,
+    });
   }
 
   handleSnackbarClose = (reason) => {
-    console.log(reason);
+    // not sure what reason is
+    // console.log(reason);
     if (reason === 'clickaway') {
       return;
     }
@@ -104,9 +117,68 @@ export default class StudentNews extends Component {
     this.setState({[event.target.name]: event.target.value});
   }
 
+  callFunction(functionName, param) {    
+    if(functionName == null) {
+      throw new Error("Function name not specified to callFunction (news)");
+    }
+    switch(functionName) {
+      case 'updateSnackbar':
+        if(param == null) {
+          throw new Error("callFunction 'Update Snackbar' requires a parameter (news)");
+        }
+        this.updateSnackbar(param);
+        break;
+      case 'handleNewsItemEdit':
+        if(param == null) {
+          throw new Error("callFunction 'handleNewsItemEdit' requires a parameter (news)");
+        }
+        this.handleNewsItemEdit(param);
+        break;
+      default:
+        console.log("callFunction function name not applicable, double check your parameter");
+      }
+  }
+
+  // Function called when 'edit' clicked for a news item
+  async handleNewsItemEdit(newsID) {
+    let newsItem = await newsService.getPostingByID(newsID);
+    this.setState({ 
+      openPostActivity: true,
+      newPostCategory: newsItem.categoryID,
+      newPostSubject: newsItem.Subject,
+      newPostBody: newsItem.Body,
+      currentlyEditing: newsID,
+    });
+  }
+
   updateSnackbar(message) {
     this.setState({ snackbarMessage: message });
     this.setState({ snackbarOpen: true });
+  }
+
+  // Handles the actual 'edit' submission
+  async handleUpdate() {
+    let newsID = this.state.currentlyEditing;
+    // create the JSON newData object to update with
+    let newData = {
+      categoryID: this.state.newPostCategory, 
+      Subject: this.state.newPostSubject,
+      Body: this.state.newPostBody,
+    };
+
+    // update the news item and give feedback
+    let result = await newsService.editStudentNews(newsID, newData);
+    if(result === undefined) {
+      this.updateSnackbar('News Posting Failed to Update');
+    }
+    else {
+      this.updateSnackbar('News Posting Updated Successfully');
+    }
+
+    // close the window and reload to update data
+    // (necessary since data is currently not pulled from render method)
+    this.setState({ openPostActivity: false });
+    window.top.location.reload();
   }
 
   async handleSubmit() {
@@ -118,7 +190,7 @@ export default class StudentNews extends Component {
     };
 
     // submit the news item and give feedback
-    let result = await news.submitStudentNews(newsItem);
+    let result = await newsService.submitStudentNews(newsItem);
     if(result === undefined) {
       this.updateSnackbar('News Posting Failed to Submit');
     }
@@ -137,9 +209,9 @@ export default class StudentNews extends Component {
     this.setState({ loading: true });
 
     if (this.props.Authentication) {
-      const newsCategories = await news.getCategories();
-      const personalUnapprovedNews = await news.getPersonalUnapprovedFormatted();
-      const unexpiredNews = await news.getNotExpiredFormatted();
+      const newsCategories = await newsService.getCategories();
+      const personalUnapprovedNews = await newsService.getPersonalUnapprovedFormatted();
+      const unexpiredNews = await newsService.getNotExpiredFormatted();
       this.setState({ 
         loading: false,
         categories: newsCategories, 
@@ -230,7 +302,8 @@ export default class StudentNews extends Component {
           news={this.state.news} 
           personalUnapprovedNews={this.state.personalUnapprovedNews}
           updateSnackbar={this.updateSnackbar}
-          currentUsername={this.state.currentUsername} />;
+          currentUsername={this.state.currentUsername}
+          callFunction={this.callFunction} />;
       } else {
         content = (
           <Grid item>
@@ -238,6 +311,25 @@ export default class StudentNews extends Component {
           </Grid>
         );
       }
+
+      let submitButton = (
+        <Button 
+          variant="contained"
+          color="primary"
+          onClick={this.handleSubmit.bind(this)}
+          disabled={submitButtonDisabled}>
+          Submit
+        </Button>
+      );
+      let editButton = (
+        <Button 
+          variant="contained"
+          color="primary"
+          onClick={this.handleUpdate.bind(this)}
+          disabled={submitButtonDisabled}>
+          Update
+        </Button>
+      );
 
       let news;
       // If the user is online
@@ -342,21 +434,15 @@ export default class StudentNews extends Component {
                       </Grid>
                     </DialogContent>
 
-                    {/* CANCEL/SUBMIT */}
-                    <DialogActions>
+                    {/* CANCEL/SUBMIT/EDIT */}
+                    {<DialogActions>
                       <Button 
                         variant="contained" 
                         onClick={this.handleWindowClose.bind(this)}>
                         Cancel
                       </Button>
-                      <Button 
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleSubmit.bind(this)}
-                        disabled={submitButtonDisabled}>
-                        Submit
-                      </Button>
-                    </DialogActions>
+                      {this.state.currentlyEditing === false ? submitButton : editButton}
+                    </DialogActions>}
                   </Dialog>
 
                   {/* USER FEEDBACK */}
