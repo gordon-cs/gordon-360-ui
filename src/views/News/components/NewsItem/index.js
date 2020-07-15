@@ -81,20 +81,11 @@ export default class NewsItem extends Component {
 
   /**
    * When the edit (like submit) button is clicked on update news posting form
-   */ 
+   * (handled by News parent component)
+   */
   async handleEdit() {
     const newsID = this.state.posting.SNID;
     this.callFunction('handleNewsItemEdit', newsID);
-    // // update the news item and give feedback
-    // let result = await newsService.editStudentNews(newsID);
-    // if(result === undefined) {
-    //   this.props.updateSnackbar('News Posting Failed to Update');
-    // }
-    // else {
-    //   this.props.updateSnackbar('News Posting Updated Successfully');
-    // }
-    // // Should be changed in future to allow react to only reload the updated news list
-    // window.top.location.reload();
   }
 
   /**
@@ -135,6 +126,27 @@ export default class NewsItem extends Component {
       // Shows 'pending approval' instead of the date posted
       posting.dayPosted = <i style={{textTransform: "lowercase"}}>"pending approval..."</i>;
     }
+
+    let authorProfileLink;
+    if(!this.state.network === 'online' || unapproved) {
+      // offline or unapproved -> hide author profile link
+      authorProfileLink = (
+        <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
+          {posting.author}
+        </Typography>
+      );
+    }
+    else {
+      // online and approved -> show author profile link
+      authorProfileLink = (
+        <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
+          <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
+            {posting.author}
+          </Typography>
+        </Link>
+      );
+    }
+    
 
     // Only show the edit button if the current user is the author of the posting
     // AND posting is unapproved
@@ -186,20 +198,7 @@ export default class NewsItem extends Component {
           <Grid container onClick={this.handleExpandClick} className="news-item" justify="center">
             <Grid item xs={12}>
               <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
-              
-              {this.state.network === 'online' ? 
-              // online -> show author profile link
-              <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
-                <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
-                  {posting.author}
-                </Typography>
-              </Link>
-              : 
-              // offline -> hide author profile link
-              <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
-                {posting.author}
-              </Typography>}
-              
+              {authorProfileLink}
             </Grid>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <CardContent>
@@ -227,20 +226,7 @@ export default class NewsItem extends Component {
               <Typography className="news-column" style={{fontWeight: "bold"}}>{posting.Subject}</Typography>
             </Grid>
             <Grid item xs={3}>
-              
-              {this.state.network === 'online' ? 
-              // online -> show author profile link
-              <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
-                <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
-                  {posting.author}
-                </Typography>
-              </Link>
-              : 
-              // offline -> hide author profile link
-              <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
-                {posting.author}
-              </Typography>}
-              
+              {authorProfileLink}
             </Grid>
             <Grid item xs={2}>
               <Typography className="news-column">{posting.dayPosted}</Typography>
