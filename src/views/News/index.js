@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Typography from '@material-ui/core/Typography';
-import gordonEvent from './../../services/event';
 import newsService from './../../services/news';
 import userService from './../../services/user';
 import NewsList from '../News/components/NewsList';
@@ -52,6 +51,8 @@ export default class StudentNews extends Component {
       loading: true,
       categories: [],
       news: [],
+      personalUnapprovedNews: [],
+      filteredNews: [],
       network: 'online',
       newPostCategory: '',
       newPostSubject: '',
@@ -216,7 +217,8 @@ export default class StudentNews extends Component {
         loading: false,
         categories: newsCategories, 
         news: unexpiredNews,
-        personalUnapprovedNews: personalUnapprovedNews
+        personalUnapprovedNews: personalUnapprovedNews,
+        filteredNews: unexpiredNews,
       });
     } else {
       // TODO: test authentication handling and neaten code (ex. below)
@@ -225,13 +227,14 @@ export default class StudentNews extends Component {
   }
   
   // TODO: Currently disabled and unused
-  search(name) {
+  search() {
     return async event => {
+      // await ensures state has been updated before continuing
       await this.setState({
-        [name]: event.target.value,
+        search: event.target.value,
       });
-      const events = await gordonEvent.getFilteredEvents(this.state);
-      this.setState({ filteredEvents: events, loading: false });
+      const filteredNews = await newsService.getFilteredNews(this.state);
+      this.setState({ filteredNews: filteredNews, loading: false });
     };
   }
 
@@ -299,7 +302,7 @@ export default class StudentNews extends Component {
         content = <GordonLoader />;
       } else if (this.state.news.length > 0) {
         content = <NewsList 
-          news={this.state.news} 
+          news={this.state.filteredNews} 
           personalUnapprovedNews={this.state.personalUnapprovedNews}
           updateSnackbar={this.updateSnackbar}
           currentUsername={this.state.currentUsername}
@@ -347,19 +350,15 @@ export default class StudentNews extends Component {
               Post Listing
             </Fab>
 
-            {/* Remove spacing when search has been enabled */}
-            <div style={{padding: "10px"}}></div>
-
             <Grid container justify="center">
               
-              {/* TODO: Search, disabled until working and added temporary padding */}
               {/* Search */}
-              {/* <Grid item xs={12} md={12} lg={8}>
-                <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={8}>
+              <Grid item xs={12} md={12} lg={8}>
+                <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={5}>
                   <Grid item xs={10} sm={8} md={8} lg={6}>
                     <TextField
                       id="search"
-                      label="Search"
+                      label="Search news"
                       value={this.state.search}
                       onChange={this.search('search')}
                       margin="normal"
@@ -367,7 +366,7 @@ export default class StudentNews extends Component {
                     />
                   </Grid>
                 </Grid>
-              </Grid> */}
+              </Grid>
 
               {/* NOTE: leaving helper text for now in case 
               that is better than disabling submit button */}
