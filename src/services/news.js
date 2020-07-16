@@ -139,6 +139,7 @@ const getPersonalUnapprovedFormatted = async () => {
 }
 
 /**
+ * NOTE: Not currently used
  * Get all unexpired news for given category
  * For use on the News Page
  * @param {Number} category the category that
@@ -155,6 +156,45 @@ const getNewsByCategory = async category => {
   }
   return categoryNews;
 }
+
+async function getFilteredNews(filters) {
+  // source news
+  let news = filters.news;
+  // TODO: apply category filters
+  // news = filterbyCategory(filters, allNews);
+  let filteredNews = [];
+
+  // TODO: This is incorrect in events.js -> should be length check rather than null check
+  // TODO: with category filters, if news becomes 0 then search should reset it here
+  // if (news.length === 0) {
+  //   news = filters.news;
+  // }
+
+  // SEARCH FILTER
+  if (filters.search !== '') {
+    // Approved News
+    for (let i = 0; i < news.length; i++) {
+      // subjects
+      if (news[i].Subject.toLowerCase().includes(filters.search.toLowerCase())) {
+        filteredNews.push(news[i]);
+      }
+      // categories
+      else if (news[i].categoryName.toLowerCase().includes(filters.search.toLowerCase())) {
+        filteredNews.push(news[i]);
+      }
+      // authors
+      else if (news[i].author.toLowerCase().includes(filters.search.toLowerCase())) {
+        filteredNews.push(news[i]);
+      }
+      // dates
+      else if (news[i].dayPosted.toLowerCase().includes(filters.search.toLowerCase())) {
+        filteredNews.push(news[i]);
+      }
+    }
+    news = filteredNews;
+  }
+  return news;
+};
 
 /******************* POST **********************/
 
@@ -214,6 +254,7 @@ export default {
   getPersonalUnapprovedFormatted,
   getNewNews,
   getNotExpiredFormatted,
+  getFilteredNews,
   submitStudentNews,
   deleteStudentNews,
   editStudentNews,
