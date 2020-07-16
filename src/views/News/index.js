@@ -354,7 +354,6 @@ export default class StudentNews extends Component {
 
             <Grid container justify="center">
               
-              {/* TODO: Search, disabled until working and added temporary padding */}
               {/* Search */}
               <Grid item xs={12} md={12} lg={8}>
                 <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={5}>
@@ -366,9 +365,6 @@ export default class StudentNews extends Component {
                       onChange={this.search('search')}
                       margin="normal"
                       fullWidth
-                      // InputProps={{
-                      //   startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment>,
-                      // }}
                     />
                   </Grid>
                 </Grid>

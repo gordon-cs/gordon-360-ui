@@ -157,6 +157,12 @@ const getNewsByCategory = async category => {
   return categoryNews;
 }
 
+/**
+ * Filter the news page
+ * (currently only search)
+ * @param {any} filters - the state of news that includes filter information
+ * @return {Promise<any>} news that has been filtered
+ */
 async function getFilteredNews(filters) {
   // source news
   let news = filters.news;
