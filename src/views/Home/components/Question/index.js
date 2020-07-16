@@ -84,19 +84,20 @@ export default class Question extends Component {
               <br />
               <RadioGroup>
                 <FormControlLabel
-                  value="No"
-                  control={<Radio />}
-                  label={'No'}
-                  onChange={() => {
-                    this.setState({ primaryQuestionAnswer: 'No', currentStatus: false });
-                  }}
-                />
-                <FormControlLabel
                   value="Yes"
                   control={<Radio />}
                   label={`Yes`}
                   onChange={() => {
                     this.setState({ primaryQuestionAnswer: 'Yes', currentStatus: true });
+                  }}
+                />
+                <br></br>
+                <FormControlLabel
+                  value="No"
+                  control={<Radio />}
+                  label={'No'}
+                  onChange={() => {
+                    this.setState({ primaryQuestionAnswer: 'No', currentStatus: false });
                   }}
                 />
               </RadioGroup>
