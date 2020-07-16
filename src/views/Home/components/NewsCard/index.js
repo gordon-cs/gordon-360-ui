@@ -4,11 +4,11 @@
 // But currently it is not being implemented (commented out)
 // May be a potential future feature, but not sure
 
-
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import CardHeader from '@material-ui/core/CardHeader';
 import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
 import { CardContent } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { gordonColors } from '../../../../theme';
@@ -50,7 +50,6 @@ export default class DailyNews extends Component {
 
   render() {
     // let categories;
-    let news;
 
     const button = {
       color: 'white',
@@ -64,10 +63,26 @@ export default class DailyNews extends Component {
     //     <CategorizedNews category={item.categoryID} />
     //   ));
 
-    news = this.state.news
-      .map(item => (
-        <NewsItem posting={item} key={item.SNID} size="single" style={{border: "2px solid #bbb", marginBottom: "-2px"}} />
+
+    let news;
+    if(this.state.news.length > 0) {
+      news = this.state.news.map(item => (
+        <NewsItem 
+          posting={item} 
+          key={item.SNID} 
+          size="single" 
+          style={{border: "2px solid #bbb", marginBottom: "-2px"}} 
+        />
       ));
+    }
+    else {
+      news = (
+        <Grid item>
+          <Typography variant="subtitle1">No News To Show</Typography>
+        </Grid>
+      );
+    }
+    
 
     return (
       <Card>

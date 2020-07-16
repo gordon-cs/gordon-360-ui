@@ -92,17 +92,28 @@ class MyProfileActivityList extends Component {
             >
               <List>
                 <ListItem style={{ paddingLeft: '0.5rem' }}>
-                  <Link
-                    className="gc360-link"
-                    to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
-                    style={membershipItemStyle}
-                  >
-                    <Typography>
-                      <b>{Membership.ActivityDescription}</b>
-                    </Typography>
-                    <Typography>{Membership.SessionDescription}</Typography>
-                    <Typography>{Membership.ParticipationDescription}</Typography>
-                  </Link>
+                  {/* A link to the activity is only available if the user is online */}
+                  {this.props.network === 'online' ? (
+                    <Link
+                      className="gc360-link"
+                      to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
+                      style={membershipItemStyle}
+                    >
+                      <Typography>
+                        <b>{Membership.ActivityDescription}</b>
+                      </Typography>
+                      <Typography>{Membership.SessionDescription}</Typography>
+                      <Typography>{Membership.ParticipationDescription}</Typography>
+                    </Link>
+                  ) : (
+                    <div style={membershipItemStyle}>
+                      <Typography>
+                        <b>{Membership.ActivityDescription}</b>
+                      </Typography>
+                      <Typography>{Membership.SessionDescription}</Typography>
+                      <Typography>{Membership.ParticipationDescription}</Typography>
+                    </div>
+                  )}
                 </ListItem>
               </List>
             </Grid>
@@ -114,30 +125,33 @@ class MyProfileActivityList extends Component {
               lg={cardContentLengths.privacy.lg}
               xl={cardContentLengths.privacy.xl}
             >
-              <Grid container>
-                <Grid item xs={12} align="center">
-                  {/* The function you are trying to fire by clicking the toggle must passed to onChange()
+              {this.props.network === 'online' && (
+                <Grid container>
+                  <Grid item xs={12} align="center">
+                    {/* The function you are trying to fire by clicking the toggle must passed to onChange()
               using an Arrow Function.
               https://stackoverflow.com/questions/33846682/react-onclick-function-fires-on-render
               */}
-                  <Switch
-                    onChange={() => {
-                      this.handleChangeMembershipPrivacy(Membership);
-                    }}
-                    checked={!Membership.Privacy}
-                    classes={{
-                      switchBase: classes.colorSwitchBase,
-                      checked: classes.colorChecked,
-                      track: classes.colorBar,
-                    }}
-                  />
+                    <Switch
+                      onChange={() => {
+                        this.handleChangeMembershipPrivacy(Membership);
+                      }}
+                      checked={!Membership.Privacy}
+                      classes={{
+                        switchBase: classes.colorSwitchBase,
+                        checked: classes.colorChecked,
+                        track: classes.colorBar,
+                      }}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} align="center">
+                    <Typography style={toggleTextStyle}>
+                      {Membership.Privacy ? 'Private' : 'Public'}
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} align="center">
-                  <Typography style={toggleTextStyle}>
-                    {Membership.Privacy ? 'Private' : 'Public'}
-                  </Typography>
-                </Grid>
-              </Grid>
+              )}
             </Grid>
             <Grid
               item
@@ -148,13 +162,20 @@ class MyProfileActivityList extends Component {
               xl={cardContentLengths.picture.xl}
               style={{ paddingLeft: '1rem', paddingTop: '0.3rem' }}
             >
-              <Link
-                className="gc360-link"
-                to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
-                style={membershipItemStyle}
-              >
-                <img src={Membership.ActivityImagePath} alt="" style={imgStyle} />
-              </Link>
+              {/* A link to the activity is only available if the user is online */}
+              {this.props.network === 'online' ? (
+                <Link
+                  className="gc360-link"
+                  to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
+                  style={membershipItemStyle}
+                >
+                  <img src={Membership.ActivityImagePath} alt="" style={imgStyle} />
+                </Link>
+              ) : (
+                <div style={membershipItemStyle}>
+                  <img src={Membership.ActivityImagePath} alt="" style={imgStyle} />
+                </div>
+              )}
             </Grid>
           </Grid>
           <Divider />
@@ -175,20 +196,32 @@ class MyProfileActivityList extends Component {
             >
               <List>
                 <ListItem style={{ paddingLeft: '0.5rem' }}>
-                  <Link
-                    className="gc360-link"
-                    to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
-                    style={membershipItemStyle}
-                  >
-                    <Typography>
-                      <b>{Membership.ActivityDescription}</b>
-                    </Typography>
-                    <Typography>{Membership.SessionDescription}</Typography>
-                    <Typography>{Membership.ParticipationDescription}</Typography>
-                  </Link>
+                  {/* A link to the activity is only available if the user is online */}
+                  {this.props.network === 'online' ? (
+                    <Link
+                      className="gc360-link"
+                      to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
+                      style={membershipItemStyle}
+                    >
+                      <Typography>
+                        <b>{Membership.ActivityDescription}</b>
+                      </Typography>
+                      <Typography>{Membership.SessionDescription}</Typography>
+                      <Typography>{Membership.ParticipationDescription}</Typography>
+                    </Link>
+                  ) : (
+                    <div style={membershipItemStyle}>
+                      <Typography>
+                        <b>{Membership.ActivityDescription}</b>
+                      </Typography>
+                      <Typography>{Membership.SessionDescription}</Typography>
+                      <Typography>{Membership.ParticipationDescription}</Typography>
+                    </div>
+                  )}
                 </ListItem>
               </List>
             </Grid>
+
             <Grid
               item
               xs={cardContentLengths.privacy.xs}
@@ -197,21 +230,24 @@ class MyProfileActivityList extends Component {
               lg={cardContentLengths.privacy.lg}
               xl={cardContentLengths.privacy.xl}
             >
-              <Grid container>
-                <Grid item xs={12} align="center">
-                  <Grid container justify="center">
-                    <Grid item>
-                      <LockIcon className="lock-icon" />
+              {this.props.network === 'online' && (
+                <Grid container>
+                  <Grid item xs={12} align="center">
+                    <Grid container justify="center">
+                      <Grid item>
+                        <LockIcon className="lock-icon" />
+                      </Grid>
                     </Grid>
                   </Grid>
+                  <Grid item xs={12} align="center">
+                    <Typography style={toggleTextStyle}>
+                      {InvolvementPrivacy ? 'Private' : 'Public'}
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} align="center">
-                  <Typography style={toggleTextStyle}>
-                    {InvolvementPrivacy ? 'Private' : 'Public'}
-                  </Typography>
-                </Grid>
-              </Grid>
+              )}
             </Grid>
+
             <Grid
               item
               xs={cardContentLengths.picture.xs}
@@ -221,13 +257,20 @@ class MyProfileActivityList extends Component {
               xl={cardContentLengths.picture.xl}
               style={{ paddingLeft: '1rem', paddingTop: '0.3rem' }}
             >
-              <Link
-                className="gc360-link"
-                to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
-                style={membershipItemStyle}
-              >
-                <img src={Membership.ActivityImagePath} alt="" style={imgStyle} />
-              </Link>
+              {/* A link to the activity is only available if the user is online */}
+              {this.props.network === 'online' ? (
+                <Link
+                  className="gc360-link"
+                  to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
+                  style={membershipItemStyle}
+                >
+                  <img src={Membership.ActivityImagePath} alt="" style={imgStyle} />
+                </Link>
+              ) : (
+                <div style={membershipItemStyle}>
+                  <img src={Membership.ActivityImagePath} alt="" style={imgStyle} />
+                </div>
+              )}
             </Grid>
           </Grid>
           <Divider />
