@@ -68,7 +68,7 @@ const Timesheets = props => {
   // in our current case.
   useEffect(() => {
     // updates ui with the current status of the users clocked in feature
-    // either clocked in and ready to clock out or the apposite.
+    // either clocked in and ready to clock out or the opposite.
     // status is notted by either true or false. true being clocked in.
 
     async function getClockInOutStatus() {
@@ -91,6 +91,7 @@ const Timesheets = props => {
 
     // eslint-disable-next-line
   }, []);
+
   //had to be defined outside of the authentication condition so that the ui could update
   // before cheking to see if user is authenticated.
   const handleDateChangeInClock = date => {
@@ -138,6 +139,7 @@ const Timesheets = props => {
   };
 
   if (props.Authentication) {
+
     const getActiveJobsForUser = (dateIn, dateOut) => {
       let details = {
         shift_start_datetime: dateIn.toLocaleString(),
@@ -554,12 +556,13 @@ const Timesheets = props => {
                           interactive
                           disableFocusListener
                           disableTouchListener
-                          title={
-                            'Student employees are not permitted to work more than 20 total hours\
+                          title={(jobs.getStaffPageForUser().then((value) => {return value}) ? jobs.getStaffPageForUser().then((value) => {console.log(value.length)})
+                            // eslint-disable-next-line no-multi-str
+                            :'Student employees are not permitted to work more than 20 total hours\
                         per work week, or more than 40 hours during winter, spring, and summer breaks.\
                         \
                         To request permission for a special circumstance, please email\
-                        student-employment@gordon.edu before exceeding this limit.'
+                        student-employment@gordon.edu before exceeding this limit.')
                           }
                           placement="bottom"
                         >

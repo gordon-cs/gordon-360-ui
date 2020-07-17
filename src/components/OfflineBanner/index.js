@@ -68,7 +68,7 @@ export default class OfflineBanner extends Component {
     // Classes for People Search, Timesheets, Feedback, and My Profile view
     else if (
       this.props.currentPath === '/people' ||
-      this.props.currentPath === '/student-timesheets' ||
+      this.props.currentPath === '/timesheets' ||
       this.props.currentPath === '/feedback'
     ) {
       return 'rounded-corners MuiGrid-grid-lg-8 MuiGrid-grid-md-8';

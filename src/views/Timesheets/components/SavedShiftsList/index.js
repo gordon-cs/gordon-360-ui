@@ -27,6 +27,7 @@ export default class SavedShiftsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      getStaffPageForUser: [],
       shifts: [],
       directSupervisor: null,
       reportingSupervisor: null,
@@ -106,6 +107,7 @@ export default class SavedShiftsList extends Component {
     if (shouldGetSupervisors) {
       this.getSupervisors();
     }
+    this.setState({getStaffPageForUser: jobs.getStaffPageForUser()})
   }
 
   componentDidUpdate() {
