@@ -15,11 +15,12 @@ const getStaffPageForUser = async () => {
 
 /**
  * Get active jobs for current user
+ * @param {Boolean} canUseStaff Whether user can use staff timesheets
  * @param {String} details The user's details
  * @return {Promise.<String>} User's active jobs
  */
-const getActiveJobsForUser = details => {
-  if (getStaffPageForUser?.length) {
+const getActiveJobsForUser = (canUseStaff, details) => {
+  if (canUseStaff) {
     return http.get(`jobs/getJobsStaff`, details); // Is a HttpPost, but says get?
   }
   return http.get(`jobs/getJobs`, details);
@@ -27,10 +28,11 @@ const getActiveJobsForUser = details => {
 
 /**
  * Get saved shifts for current user
+ * @param {Boolean} canUseStaff Whether user can use staff timesheets
  * @return {Promise.<String>} User's active jobs
  */
-const getSavedShiftsForUser = () => {
-  if (getStaffPageForUser?.length) {
+const getSavedShiftsForUser = canUseStaff => {
+  if (canUseStaff) {
     return []; //http.get(`jobs/getSavedShiftsStaff/`); This endpoint needs to return [] not null
   }
   return http.get(`jobs/getSavedShifts/`);
@@ -38,6 +40,7 @@ const getSavedShiftsForUser = () => {
 
 /**
  * Get active jobs for current user
+ * @param {Boolean} canUseStaff Whether user can use staff timesheets
  * @param {Number} eml we don't know what this means yet
  * @param {DateTime} shiftStart The start time of the shift
  * @param {DateTime} shiftEnd The end time of the shift
@@ -46,6 +49,7 @@ const getSavedShiftsForUser = () => {
  * @return {Promise.<String>} User's active jobs
  */
 const saveShiftForUser = async (
+  canUseStaff,
   eml,
   shiftStart,
   shiftEnd,
@@ -59,13 +63,13 @@ const saveShiftForUser = async (
     HOURS_WORKED: hoursWorked,
     SHIFT_NOTES: shiftNotes,
   };
-  if (getStaffPageForUser?.length) {
+  if (canUseStaff) {
     return await http.post(`jobs/saveShiftStaff/`, shiftDetails);
   }
   return await http.post(`jobs/saveShift/`, shiftDetails);
 };
 
-const editShift = async (rowID, newShiftStart, newShiftEnd, newHoursWorked) => {
+const editShift = async (canUseStaff, rowID, newShiftStart, newShiftEnd, newHoursWorked) => {
   let newShiftDetails = {
     ID: rowID,
     EML: null,
@@ -75,27 +79,27 @@ const editShift = async (rowID, newShiftStart, newShiftEnd, newHoursWorked) => {
     SHIFT_NOTES: null,
     LAST_CHANGED_BY: null,
   }
-  if (getStaffPageForUser?.length) {
+  if (canUseStaff) {
     return await http.put(`jobs/editShiftStaff/`, newShiftDetails)
   }
   return await http.put(`jobs/editShift/`, newShiftDetails);
 };
 
-const deleteShiftForUser = async rowID => {
-  if (getStaffPageForUser?.length) {
+const deleteShiftForUser = async (canUseStaff, rowID) => {
+  if (canUseStaff) {
     return await http.del(`jobs/deleteShiftStaff/${rowID}`);
   }
   return await http.del(`jobs/deleteShift/${rowID}`);
 };
 
-const getSupervisorNameForJob = supervisorID => {
-  if (getStaffPageForUser?.length) {
+const getSupervisorNameForJob = (canUseStaff, supervisorID) => {
+  if (canUseStaff) {
     return http.get(`jobs/supervisorNameStaff/${supervisorID}`);
   }
   return http.get(`jobs/supervisorName/${supervisorID}`);
 };
 
-const submitShiftsForUser = (shiftsToSubmit, submittedTo) => {
+const submitShiftsForUser = (canUseStaff, shiftsToSubmit, submittedTo) => {
   let shifts = [];
   for (let i = 0; i < shiftsToSubmit.length; i++) {
     shifts.push({
@@ -106,28 +110,28 @@ const submitShiftsForUser = (shiftsToSubmit, submittedTo) => {
       LAST_CHANGED_BY: shiftsToSubmit[i].LAST_CHANGED_BY,
     });
   }
-  if (getStaffPageForUser?.length) {
+  if (canUseStaff) {
     return http.post(`jobs/submitShiftsStaff`, shifts);
   }
   return http.post(`jobs/submitShifts`, shifts);
 };
 
-const clockIn = data => {
-  if (getStaffPageForUser?.length) {
+const clockIn = (canUseStaff, data) => {
+  if (canUseStaff) {
     return http.post(`jobs/clockInStaff`, data);
   }
   return http.post(`jobs/clockIn`, data);
 };
 
-const clockOut = () => {
-  if (getStaffPageForUser) {
+const clockOut = canUseStaff => {
+  if (canUseStaff) {
     return http.get(`jobs/clockOutStaff`);
   }
   return http.get(`jobs/clockOut`);
 };
 
-const deleteClockIn = async () => {
-  if (getStaffPageForUser) {
+const deleteClockIn = async canUseStaff => {
+  if (canUseStaff) {
     return await http.put(`jobs/deleteClockInStaff`);
   }
   return http.put(`jobs/deleteClockIn`);

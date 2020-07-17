@@ -12,6 +12,7 @@ export default class ShiftDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      getStaffPageForUser: false,
       loading: false,
       tabValue: 0,
       shifts: [],
@@ -28,6 +29,20 @@ export default class ShiftDisplay extends Component {
     this.snackbarText = '';
   }
 
+  async getCanUseStaff() {
+    try {
+      let canUse = await jobs.getStaffPageForUser();
+
+      if (canUse.length === 1) {
+        this.setState({getStaffPageForUser: true});
+      } else {
+        this.setState({getStaffPageForUser: false});
+      }
+    } catch (error) {
+        //do nothing
+    }
+  }
+
   componentDidMount() {
     this.setState({ loading: true }, () => {
       this.loadShifts().then(() => {
@@ -39,6 +54,7 @@ export default class ShiftDisplay extends Component {
         this.setState({ loading: false });
       });
     });
+    this.getCanUseStaff();
   }
 
   handleCloseSnackbar = (event, reason) => {
@@ -78,7 +94,7 @@ export default class ShiftDisplay extends Component {
   }
 
   editShift = (rowID, startTime, endTime, hoursWorked) => {
-    let promise = jobs.editShift(rowID, startTime, endTime, hoursWorked);
+    let promise = jobs.editShift(this.state.getStaffPageForUser, rowID, startTime, endTime, hoursWorked);
     promise.then(response => {
       this.loadShifts();
     });

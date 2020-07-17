@@ -63,17 +63,31 @@ const Timesheets = props => {
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [clockInOut, setClockInOut] = useState('Clock In');
+  const [canUseStaff, setCanUseStaff] = useState(null);
 
   // disabled lint in some lines in order to remove warning about race condition that does not apply
   // in our current case.
   useEffect(() => {
+
+    async function getCanUseStaff() {
+      try {
+        let canUse = await jobs.getStaffPageForUser();
+
+        if (canUse.length === 1) {
+          setCanUseStaff(true);
+        } else {
+          setCanUseStaff(false);
+        }
+      } catch (error) {
+          //do nothing
+      }
+    }
     // updates ui with the current status of the users clocked in feature
     // either clocked in and ready to clock out or the opposite.
     // status is notted by either true or false. true being clocked in.
-
     async function getClockInOutStatus() {
       try {
-        let status = await jobs.clockOut();
+        let status = await jobs.clockOut(canUseStaff);
 
         if (status[0].currentState) {
           setClockInOut('Clock Out');
@@ -87,6 +101,7 @@ const Timesheets = props => {
       }
     }
 
+    getCanUseStaff();
     getClockInOutStatus();
 
     // eslint-disable-next-line
@@ -145,13 +160,13 @@ const Timesheets = props => {
         shift_start_datetime: dateIn.toLocaleString(),
         shift_end_datetime: dateOut.toLocaleString(),
       };
-      jobs.getActiveJobsForUser(details).then(result => {
+      jobs.getActiveJobsForUser(canUseStaff, details).then(result => {
         setUserJobs(result);
       });
     };
 
     const getSavedShiftsForUser = () => {
-      return jobs.getSavedShiftsForUser();
+      return jobs.getSavedShiftsForUser(canUseStaff);
     };
 
     const handleDateChangeIn = date => {
@@ -279,7 +294,7 @@ const Timesheets = props => {
     };
 
     const saveShift = async (eml, shiftStart, shiftEnd, hoursWorked, shiftNotes) => {
-      await jobs.saveShiftForUser(eml, shiftStart, shiftEnd, hoursWorked, shiftNotes);
+      await jobs.saveShiftForUser(canUseStaff, eml, shiftStart, shiftEnd, hoursWorked, shiftNotes);
     };
 
     const jobsMenuItems = userJobs ? (
@@ -397,16 +412,16 @@ const Timesheets = props => {
     const changeState = async () => {
       if (clockInOut === 'Clock In') {
         setClockInOut('Clock Out');
-        await jobs.clockIn(true);
+        await jobs.clockIn(canUseStaff, true);
         let clockInDate = new Date();
         handleDateChangeIn(clockInDate);
       }
       if (clockInOut === 'Clock Out') {
         setClockInOut('Reset');
-        await jobs.clockIn(false);
+        await jobs.clockIn(canUseStaff, false);
         let clockOutDate = new Date();
         handleDateChangeOut(clockOutDate);
-        await jobs.deleteClockIn();
+        await jobs.deleteClockIn(canUseStaff);
       }
       if (clockInOut === 'Reset') {
         setClockInOut('Clock In');
@@ -556,7 +571,7 @@ const Timesheets = props => {
                           interactive
                           disableFocusListener
                           disableTouchListener
-                          title={(jobs.getStaffPageForUser().then((value) => {return value}) ? jobs.getStaffPageForUser().then((value) => {console.log(value.length)})
+                          title={(canUseStaff ? 'Staff Timesheets'
                             // eslint-disable-next-line no-multi-str
                             :'Student employees are not permitted to work more than 20 total hours\
                         per work week, or more than 40 hours during winter, spring, and summer breaks.\
