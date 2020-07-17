@@ -1,3 +1,4 @@
+//Displays shifts and sets up buttons for submitting shifts
 import React, { Component } from 'react';
 import {
   Typography,
@@ -33,16 +34,16 @@ export default class SavedShiftsList extends Component {
       showSubmissionConfirmation: false,
     };
 
-    this.prevJob = null
+    this.prevJob = null;
   }
 
   handleSubmitButtonClick = () => {
     this.setState({ showSubmissionConfirmation: true });
-  }
+  };
 
   onClose = () => {
     this.setState({ showSubmissionConfirmation: false });
-  }
+  };
 
   submitShiftsToSupervisor = (shifts, supervisorID) => {
     jobs.submitShiftsForUser(shifts, supervisorID).then(response => {
@@ -52,26 +53,28 @@ export default class SavedShiftsList extends Component {
       });
       this.props.loadShifts();
     });
-  }
+  };
 
   getTotalHours = (total, currentShift) => {
     return total + currentShift.HOURS_WORKED;
-  }
+  };
 
   getEstimatedPay = (total, currentShift) => {
-    return total + (currentShift.HOURS_WORKED * currentShift.HOURLY_RATE);
-  }
+    return total + currentShift.HOURS_WORKED * currentShift.HOURLY_RATE;
+  };
 
   getSupervisors() {
     jobs.getSupervisorNameForJob(this.props.directSupervisor).then(response => {
-      let directSupervisor = response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
+      let directSupervisor =
+        response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
       let directSupervisorObject = {
         name: directSupervisor,
         id: this.props.directSupervisor,
       };
 
       jobs.getSupervisorNameForJob(this.props.reportingSupervisor).then(response => {
-        let supervisor = response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
+        let supervisor =
+          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
         this.setState({
           directSupervisor: directSupervisorObject,
           reportingSupervisor: {
@@ -83,15 +86,44 @@ export default class SavedShiftsList extends Component {
     });
   }
 
-  componentDidUpdate() {
-    let {shifts, directSupervisor, reportingSupervisor} = this.props;
+  componentDidMount() {
+    let { shifts, directSupervisor, reportingSupervisor } = this.props;
     let supervisorIdsReady = directSupervisor && reportingSupervisor;
-    let shouldGetSupervisors; 
+    let shouldGetSupervisors;
     if (shifts.length > 0) {
-      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && (shifts[0].EML !== this.prevJob || (!this.state.directSupervisor || !this.state.reportingSupervisor));
-      this.prevJob = shifts[0].EML
+      shouldGetSupervisors =
+        this.props.cardTitle === 'Saved Shifts' &&
+        (shifts[0].EML !== this.prevJob ||
+          !this.state.directSupervisor || !this.state.reportingSupervisor);
+      this.prevJob = shifts[0].EML;
     } else {
-      shouldGetSupervisors = this.props.cardTitle === "Saved Shifts" && supervisorIdsReady && (!this.state.directSupervisor || !this.state.reportingSupervisor) && shifts !== null;
+      shouldGetSupervisors =
+        this.props.cardTitle === 'Saved Shifts' &&
+        supervisorIdsReady &&
+        (!this.state.directSupervisor || !this.state.reportingSupervisor) &&
+        shifts !== null;
+    }
+    if (shouldGetSupervisors) {
+      this.getSupervisors();
+    }
+  }
+
+  componentDidUpdate() {
+    let { shifts, directSupervisor, reportingSupervisor } = this.props;
+    let supervisorIdsReady = directSupervisor && reportingSupervisor;
+    let shouldGetSupervisors;
+    if (shifts.length > 0) {
+      shouldGetSupervisors =
+        this.props.cardTitle === 'Saved Shifts' &&
+        (shifts[0].EML !== this.prevJob ||
+          !this.state.directSupervisor || !this.state.reportingSupervisor);
+      this.prevJob = shifts[0].EML;
+    } else {
+      shouldGetSupervisors =
+        this.props.cardTitle === 'Saved Shifts' &&
+        supervisorIdsReady &&
+        (!this.state.directSupervisor || !this.state.reportingSupervisor) &&
+        shifts !== null;
     }
     if (shouldGetSupervisors) {
       this.getSupervisors();
@@ -102,7 +134,7 @@ export default class SavedShiftsList extends Component {
     let { cardTitle } = this.props;
     let totalHoursWorked = this.props.shifts.reduce(this.getTotalHours, 0);
     let totalEstimatedPay = this.props.shifts.reduce(this.getEstimatedPay, 0).toFixed(2);
-    
+
     let confirmationBox = (
       <Grid container>
         <Grid item>
@@ -124,9 +156,13 @@ export default class SavedShiftsList extends Component {
                   <Button
                     variant="contained"
                     onClick={() => {
-                      this.submitShiftsToSupervisor(this.props.shifts, this.state.selectedSupervisor.id)
+                      this.submitShiftsToSupervisor(
+                        this.props.shifts,
+                        this.state.selectedSupervisor.id,
+                      );
                     }}
-                    color="primary">
+                    color="primary"
+                  >
                     Submit
                   </Button>
                 </Grid>
@@ -142,27 +178,27 @@ export default class SavedShiftsList extends Component {
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
-              <Typography className='disable-select' variant="body2" style={styles.headerItem}>
+              <Typography className="disable-select" variant="body2" style={styles.headerItem}>
                 JOB
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className='disable-select' variant="body2" style={styles.headerItem}>
+              <Typography className="disable-select" variant="body2" style={styles.headerItem}>
                 IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className='disable-select' variant="body2" style={styles.headerItem}>
+              <Typography className="disable-select" variant="body2" style={styles.headerItem}>
                 OUT
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className='disable-select' variant="body2" style={styles.headerItem}>
+              <Typography className="disable-select" variant="body2" style={styles.headerItem}>
                 RATE
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className='disable-select' variant="body2" style={styles.headerItem}>
+              <Typography className="disable-select" variant="body2" style={styles.headerItem}>
                 HOURS
               </Typography>
             </Grid>
@@ -177,7 +213,8 @@ export default class SavedShiftsList extends Component {
         deleteShift={this.props.deleteShift}
         editShift={this.props.editShift}
         value={shift}
-        key={index} />
+        key={index}
+      />
     ));
 
     const supervisorDropdown = (
@@ -187,7 +224,7 @@ export default class SavedShiftsList extends Component {
         }}
         fullWidth
       >
-        <InputLabel className='disable-select'>Submit To</InputLabel>
+        <InputLabel className="disable-select">Submit To</InputLabel>
         <Select
           value={this.state.selectedSupervisor}
           onChange={e => {
@@ -224,54 +261,62 @@ export default class SavedShiftsList extends Component {
       content = (
         <>
           {confirmationBox}
-        <Card>
-          <CardContent>
-            <CardHeader className='disable-select' title={cardTitle} />
-            <Grid
-              className="shift-list"
-              container
-              spacing={2}
-              justify="space-around"
-              alignItems="center"
-              alignContent="center"
-              style={styles.boxShadow}
-            >
-              {header}
-              {shiftsList}
-            </Grid>
-          </CardContent>
-            {(cardTitle === "Approved Shifts" || cardTitle === "Submitted Shifts") &&
+          <Card>
+            <CardContent>
+              <CardHeader className="disable-select" title={cardTitle} />
+              <Grid
+                className="shift-list"
+                container
+                spacing={2}
+                justify="space-around"
+                alignItems="center"
+                alignContent="center"
+                style={styles.boxShadow}
+              >
+                {header}
+                {shiftsList}
+              </Grid>
+            </CardContent>
+            {(cardTitle === 'Saved Shifts' ||
+              cardTitle === 'Approved Shifts' ||
+              cardTitle === 'Submitted Shifts') && (
               <CardContent>
                 <Grid container>
                   <Grid item xs={12} sm={6}>
-                    <Typography className='disable-select' variant="h6">Total hours worked: {totalHoursWorked}</Typography>
+                    <Typography className="disable-select" variant="h6">
+                      Total hours worked: {totalHoursWorked}
+                    </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Typography className='disable-select' variant="h6">Estimated gross pay: ${totalEstimatedPay}</Typography>
+                    <Typography className="disable-select" variant="h6">
+                      Estimated gross pay: ${totalEstimatedPay}
+                    </Typography>
                   </Grid>
                 </Grid>
               </CardContent>
-            }
-          <CardActions>
-            {cardTitle === "Saved Shifts" && <Grid container>
-              <Grid container>
-                <Grid item xs={6} style={{paddingLeft: 4, paddingRight: 4}}>
-                  {supervisorDropdown}
+            )}
+            <CardActions>
+              {cardTitle === 'Saved Shifts' && (
+                <Grid container>
+                  <Grid container>
+                    <Grid item xs={6} style={{ paddingLeft: 4, paddingRight: 4 }}>
+                      {supervisorDropdown}
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Button
+                        disabled={this.state.selectedSupervisor === null}
+                        variant="contained"
+                        color="primary"
+                        onClick={this.handleSubmitButtonClick}
+                      >
+                        Submit All Shifts
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                  <Button
-                    disabled={this.state.selectedSupervisor === null}
-                    variant="contained"
-                    color="primary"
-                    onClick={this.handleSubmitButtonClick}
-                  >
-                    Submit All Shifts
-                </Button>
-                </Grid>
-              </Grid>
-            </Grid>}
-          </CardActions>
-        </Card>
+              )}
+            </CardActions>
+          </Card>
         </>
       );
     }

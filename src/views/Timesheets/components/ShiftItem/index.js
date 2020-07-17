@@ -1,3 +1,4 @@
+//Representation of a shift
 import React, { Component } from 'react';
 import {
   Typography,
@@ -21,11 +22,11 @@ import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import './ShiftItem.css'
+import './ShiftItem.css';
 import GordonLoader from '../../../../components/Loader';
 import SimpleSnackbar from '../../../../components/Snackbar';
 
-const CustomTooltip = withStyles((theme) => ({
+const CustomTooltip = withStyles(theme => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
@@ -34,19 +35,19 @@ const CustomTooltip = withStyles((theme) => ({
   },
 }))(Tooltip);
 
-const PickerInput = (props) => {
+const PickerInput = props => {
   return (
-  <>
-    <TextField
-      className='shift-edit-picker'
-      {...props}
-      variant={'outlined'}
-      multiline
-      rowsMax={2}
+    <>
+      <TextField
+        className="shift-edit-picker"
+        {...props}
+        variant={'outlined'}
+        multiline
+        rowsMax={2}
       />
-  </>
-  )
-}
+    </>
+  );
+};
 
 export default class ShiftItem extends Component {
   constructor(props) {
@@ -82,21 +83,21 @@ export default class ShiftItem extends Component {
         enteredFutureTime: false,
         errorText: '',
         isOverlappingShift: false,
-      })
+      });
     }
   }
 
   handleDeleteButtonClick = () => {
     this.setState({ showDeleteConfirmation: true });
-  }
+  };
 
   onClose = () => {
     this.setState({ showDeleteConfirmation: false });
-  }
+  };
 
   toggleEditing = () => {
-    this.setState({ editing: !this.state.editing })
-  }
+    this.setState({ editing: !this.state.editing });
+  };
 
   isLeapYear = date => {
     if (date.getFullYear() % 4 === 0) {
@@ -206,14 +207,15 @@ export default class ShiftItem extends Component {
   checkForError = () => {
     let now = Date.now();
     let enteredFutureTime = false;
-    let timeOutIsBeforeTimeIn = false
+    let timeOutIsBeforeTimeIn = false;
     let zeroLengthShift = false;
     let shiftTooLong = false;
     let isOverlappingShift = false;
     let timeDiff;
     let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
     if (this.state.newDateTimeIn && this.state.newDateTimeOut) {
-      enteredFutureTime = (this.state.newDateTimeIn.getTime() > now) || (this.state.newDateTimeOut.getTime() > now);
+      enteredFutureTime =
+        this.state.newDateTimeIn.getTime() > now || this.state.newDateTimeOut.getTime() > now;
       timeDiff = this.state.newDateTimeOut.getTime() - this.state.newDateTimeIn.getTime();
       calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
       timeOutIsBeforeTimeIn = timeDiff < 0;
@@ -231,56 +233,59 @@ export default class ShiftItem extends Component {
         dateInIsFuture: this.state.newDateTimeIn.getTime() > now,
         dateOutIsFuture: this.state.newDateTimeOut.getTime() > now,
         enteredFutureTime: enteredFutureTime,
-      })
+      });
     }
 
     if (enteredFutureTime) {
-      this.setState({errorText: 'Future time entered.'});
+      this.setState({ errorText: 'Future time entered.' });
     } else if (timeOutIsBeforeTimeIn) {
-      this.setState({errorText: 'A shift cannot end before it starts.'});
+      this.setState({ errorText: 'A shift cannot end before it starts.' });
     } else if (zeroLengthShift) {
-      this.setState({errorText: 'Shift has no length'});
+      this.setState({ errorText: 'Shift has no length' });
     } else if (shiftTooLong) {
-      this.setState({errorText: 'A shift cannot be longer than 20 hours.'});
+      this.setState({ errorText: 'A shift cannot be longer than 20 hours.' });
     } else if (isOverlappingShift) {
-      this.setState({errorText: 'The entered shift conflicts with a previous shift.'});
+      this.setState({ errorText: 'The entered shift conflicts with a previous shift.' });
+    } else {
+      this.setState({ errorText: '' });
     }
-    else {
-      this.setState({errorText: ''});
-    }
-  }
+  };
 
   handleDateInChange = date => {
-    this.setState({newDateTimeIn: date}, this.checkForError);
-  }
+    this.setState({ newDateTimeIn: date }, this.checkForError);
+  };
 
   handleDateOutChange = date => {
-    this.setState({newDateTimeOut: date}, this.checkForError);
-  }
+    this.setState({ newDateTimeOut: date }, this.checkForError);
+  };
 
   handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
 
-    this.setState({ snackbarOpen: false })
+    this.setState({ snackbarOpen: false });
   };
 
   onCheckButtonClick = () => {
     this.setState({ updating: true });
     // Split the shift if it spans pay week boundaries
     if (this.state.newDateTimeIn.getDay() === 6 && this.state.newDateTimeOut.getDay() === 0) {
-      this.snackbarText = (
-        'The edited shift crosses the pay week boundary. You must split it into two shifts, one that ends at 11:59 pm Saturday and one that begins at 12:00 am Sunday. Please edit/save your shifts to reflect this. '
-      );
+      this.snackbarText =
+        'The edited shift crosses the pay week boundary. You must split it into two shifts, one that ends at 11:59 pm Saturday and one that begins at 12:00 am Sunday. Please edit/save your shifts to reflect this. ';
       this.snackbarSeverity = 'warning';
       this.setState({
         snackbarOpen: true,
         updating: false,
       });
-
     } else {
-      this.props.editShift(this.props.value.ID, this.state.newDateTimeIn, this.state.newDateTimeOut, this.state.newHoursWorked)
+      this.props
+        .editShift(
+          this.props.value.ID,
+          this.state.newDateTimeIn,
+          this.state.newDateTimeOut,
+          this.state.newHoursWorked,
+        )
         .then(() => {
           this.setState({
             editing: false,
@@ -297,9 +302,10 @@ export default class ShiftItem extends Component {
         })
         .catch(error => {
           this.setState({ updating: false });
-          if (typeof (error) === 'string' && error.toLowerCase().includes('overlap')) {
+          if (typeof error === 'string' && error.toLowerCase().includes('overlap')) {
             this.snackbarSeverity = 'warning';
-            this.snackbarText = 'You have already entered hours that fall within this time frame. Please review the times you entered above and try again.';
+            this.snackbarText =
+              'You have already entered hours that fall within this time frame. Please review the times you entered above and try again.';
           } else {
             this.snackbarSeverity = 'error';
             this.snackbarText = 'There was a problem updating the shift.';
@@ -333,8 +339,8 @@ export default class ShiftItem extends Component {
     const dateOut = SHIFT_END_DATETIME.substring(8, 10);
     const timeOut = SHIFT_END_DATETIME.substring(11, 16);
 
-    const dateTimeIn = monthIn + '/' + dateIn + "\n" + timeIn;
-    const dateTimeOut = monthOut + '/' + dateOut + "\n" + timeOut;
+    const dateTimeIn = monthIn + '/' + dateIn + '\n' + timeIn;
+    const dateTimeOut = monthOut + '/' + dateOut + '\n' + timeOut;
 
     let timeInDisp;
     let timeOutDisp;
@@ -362,11 +368,11 @@ export default class ShiftItem extends Component {
           TextFieldComponent={PickerInput}
         />
       );
-      hoursWorkedDisp = (<Typography variant="body2">{this.state.newHoursWorked}</Typography>)
+      hoursWorkedDisp = <Typography variant="body2">{this.state.newHoursWorked}</Typography>;
     } else {
-      timeInDisp = <Typography variant="body2">{dateTimeIn}</Typography>
-      timeOutDisp = <Typography variant="body2">{dateTimeOut}</Typography>
-      hoursWorkedDisp = <Typography variant="body2">{HOURS_WORKED.toFixed(2)}</Typography>
+      timeInDisp = <Typography variant="body2">{dateTimeIn}</Typography>;
+      timeOutDisp = <Typography variant="body2">{dateTimeOut}</Typography>;
+      hoursWorkedDisp = <Typography variant="body2">{HOURS_WORKED.toFixed(2)}</Typography>;
     }
 
     let confirmationBox = (
@@ -390,13 +396,14 @@ export default class ShiftItem extends Component {
                   <Button
                     variant="contained"
                     onClick={() => {
-                      this.setState({deleting: true});
+                      this.setState({ deleting: true });
                       deleteShift(ID, EML_DESCRIPTION).then(() => {
-                        this.setState({deleting: false});
+                        this.setState({ deleting: false });
                       });
                       this.onClose();
                     }}
-                    style={styles.redButton}>
+                    style={styles.redButton}
+                  >
                     Yes
                   </Button>
                 </Grid>
@@ -411,58 +418,54 @@ export default class ShiftItem extends Component {
       <IconButton disabled>
         <GordonLoader size={this.loaderSize} />
       </IconButton>
-    )
+    );
     let deleteButton = (
       <IconButton onClick={this.handleDeleteButtonClick}>
         <DeleteForeverOutlinedIcon style={{ color: gordonColors.secondary.red }} />
       </IconButton>
     );
     if (this.state.deleting) {
-      
       deleteButton = loaderButton;
     }
 
     let checkButton = (
-      <IconButton
-        disabled={errorText !== ''}
-        onClick={this.onCheckButtonClick}>
+      <IconButton disabled={errorText !== ''} onClick={this.onCheckButtonClick}>
         <CheckOutlinedIcon style={{ color: 'green' }} />
       </IconButton>
     );
     if (this.state.updating) {
       checkButton = loaderButton;
     }
-    
+
     let shiftItemIcons;
     if (STATUS === 'Saved' || STATUS === 'Rejected') {
       if (this.state.editing) {
         shiftItemIcons = (
-          <Grid container direction='row'>
+          <Grid container direction="row">
             <Grid item xs={12} md={6}>
               {checkButton}
             </Grid>
             <Grid item xs={12} md={6}>
               <IconButton onClick={this.toggleEditing}>
-                <ClearOutlinedIcon
-                  style={{color: gordonColors.secondary.red}}
-                />
+                <ClearOutlinedIcon style={{ color: gordonColors.secondary.red }} />
               </IconButton>
             </Grid>
           </Grid>
-        )
+        );
       } else {
         shiftItemIcons = (
-          <Grid container direction='row'>
+          <Grid container direction="row">
             <Grid item xs={12} md={6}>
               <IconButton
-                  onClick={() => {
-                    this.setState({
-                      editing: !this.state.editing,
-                      newDateTimeIn: new Date(SHIFT_START_DATETIME),
-                      newDateTimeOut: new Date(SHIFT_END_DATETIME),
-                      newHoursWorked: HOURS_WORKED.toFixed(2),
-                    })
-                  }}>
+                onClick={() => {
+                  this.setState({
+                    editing: !this.state.editing,
+                    newDateTimeIn: new Date(SHIFT_START_DATETIME),
+                    newDateTimeOut: new Date(SHIFT_END_DATETIME),
+                    newHoursWorked: HOURS_WORKED.toFixed(2),
+                  });
+                }}
+              >
                 <EditOutlinedIcon />
               </IconButton>
             </Grid>
@@ -479,21 +482,24 @@ export default class ShiftItem extends Component {
         </IconButton>
       );
     }
-    
+
     let shiftNotesTooltip = <></>;
     if (SHIFT_NOTES !== '') {
       shiftNotesTooltip = (
         <CustomTooltip
           disableFocusListener
           disableTouchListener
-          className='tooltip-icon'
+          className="tooltip-icon"
           title={'Shift note: ' + SHIFT_NOTES}
-          placement='top'>
-          <MessageOutlinedIcon style={{
-            fontSize: 16
-            }} />
+          placement="top"
+        >
+          <MessageOutlinedIcon
+            style={{
+              fontSize: 16,
+            }}
+          />
         </CustomTooltip>
-      )
+      );
     }
 
     let shiftCommentTooltip = <></>;
@@ -502,19 +508,23 @@ export default class ShiftItem extends Component {
         <CustomTooltip
           disableFocusListener
           disableTouchListener
-          className='tooltip-icon'
+          className="tooltip-icon"
           title={COMMENTS}
-          placement='top'>
-          <InfoOutlinedIcon style={{ fontSize: 16 }}/>
+          placement="top"
+        >
+          <InfoOutlinedIcon style={{ fontSize: 16 }} />
         </CustomTooltip>
-      )
+      );
     }
 
-    let descColumn = errorText === '' ? (
-      <Typography variant="body2">{EML_DESCRIPTION}</Typography>
-    ) : (
-      <Typography style={{color: gordonColors.secondary.red}} variant="body2">{errorText}</Typography>
-    );
+    let descColumn =
+      errorText === '' ? (
+        <Typography variant="body2">{EML_DESCRIPTION}</Typography>
+      ) : (
+        <Typography style={{ color: gordonColors.secondary.red }} variant="body2">
+          {errorText}
+        </Typography>
+      );
 
     return (
       <>
@@ -524,30 +534,38 @@ export default class ShiftItem extends Component {
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <Grid container direction="row" alignItems="center">
                 <Grid item xs={3}>
-                  <div className='tooltip-container'>
-                    <Typography className='disable-select' variant="body2">{descColumn}</Typography>
+                  <div className="tooltip-container">
+                    <Typography className="disable-select" variant="body2">
+                      {descColumn}
+                    </Typography>
                     {shiftCommentTooltip}
                   </div>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className='disable-select' variant="body2">{timeInDisp}</Typography>
+                  <Typography className="disable-select" variant="body2">
+                    {timeInDisp}
+                  </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className='disable-select' variant="body2">{timeOutDisp}</Typography>
+                  <Typography className="disable-select" variant="body2">
+                    {timeOutDisp}
+                  </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className='disable-select' variant="body2">{HOURLY_RATE.toFixed(2)}</Typography>
+                  <Typography className="disable-select" variant="body2">
+                    {HOURLY_RATE.toFixed(2)}
+                  </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <div className='tooltip-container'>
-                    <Typography className='disable-select' variant="body2">{hoursWorkedDisp}</Typography>
+                  <div className="tooltip-container">
+                    <Typography className="disable-select" variant="body2">
+                      {hoursWorkedDisp}
+                    </Typography>
                     {shiftNotesTooltip}
                   </div>
                 </Grid>
                 <Grid item xs={1}>
-                  <Typography variant="body2">
-                    {shiftItemIcons}
-                  </Typography>
+                  <Typography variant="body2">{shiftItemIcons}</Typography>
                 </Grid>
               </Grid>
             </MuiPickersUtilsProvider>
@@ -557,7 +575,8 @@ export default class ShiftItem extends Component {
           text={this.snackbarText}
           severity={this.snackbarSeverity}
           open={this.state.snackbarOpen}
-          onClose={this.handleCloseSnackbar} />
+          onClose={this.handleCloseSnackbar}
+        />
       </>
     );
   }
@@ -568,4 +587,4 @@ const styles = {
     background: gordonColors.secondary.red,
     color: 'white',
   },
-}
+};

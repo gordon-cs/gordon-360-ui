@@ -12,6 +12,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import './VictoryPromise.css';
 
 export default class VictoryPromiseDisplay extends React.Component {
   constructor(props) {
@@ -193,22 +194,34 @@ export default class VictoryPromiseDisplay extends React.Component {
 
     if (this.state.CC_ON) {
       IMG_CC = (
-        <img className="vpdesign" src={require('./images/On-CC.svg')} alt="Christian Character" />
+        <img
+          className="victory-promise-container-card-container-content-box-layout-vpdesign"
+          src={require('./images/On-CC.svg')}
+          alt="Christian Character"
+        />
       );
     } else {
       IMG_CC = (
-        <img className="vpdesign" src={require('./images/Off-CC.svg')} alt="Christian Character" />
+        <img
+          className="victory-promise-container-card-container-content-box-layout-vpdesign"
+          src={require('./images/Off-CC.svg')}
+          alt="Christian Character"
+        />
       );
     }
 
     if (this.state.IM_ON) {
       IMG_IM = (
-        <img className="vpdesign" src={require('./images/On-IM.svg')} alt="Intellectual Maturity" />
+        <img
+          className="victory-promise-container-card-container-content-box-layout-vpdesign"
+          src={require('./images/On-IM.svg')}
+          alt="Intellectual Maturity"
+        />
       );
     } else {
       IMG_IM = (
         <img
-          className="vpdesign"
+          className="victory-promise-container-card-container-content-box-layout-vpdesign"
           src={require('./images/Off-IM.svg')}
           alt="Intellectual Maturity"
         />
@@ -217,30 +230,40 @@ export default class VictoryPromiseDisplay extends React.Component {
 
     if (this.state.LS_ON) {
       IMG_LS = (
-        <img className="vpdesign" src={require('./images/On-LS.svg')} alt="Lives of Service" />
+        <img
+          className="victory-promise-container-card-container-content-box-layout-vpdesign"
+          src={require('./images/On-LS.svg')}
+          alt="Lives of Service"
+        />
       );
     } else {
       IMG_LS = (
-        <img className="vpdesign" src={require('./images/Off-LS.svg')} alt="Lives of Service" />
+        <img
+          className="victory-promise-container-card-container-content-box-layout-vpdesign"
+          src={require('./images/Off-LS.svg')}
+          alt="Lives of Service"
+        />
       );
     }
 
     if (this.state.LW_ON) {
       IMG_LW = (
-        <img className="vpdesign" src={require('./images/On-LW.svg')} alt="Leadership Worldwide" />
+        <img
+          className="victory-promise-container-card-container-content-box-layout-vpdesign"
+          src={require('./images/On-LW.svg')}
+          alt="Leadership Worldwide"
+        />
       );
     } else {
       IMG_LW = (
-        <img className="vpdesign" src={require('./images/Off-LW.svg')} alt="Leadership Worldwide" />
+        <img
+          className="victory-promise-container-card-container-content-box-layout-vpdesign"
+          src={require('./images/Off-LW.svg')}
+          alt="Leadership Worldwide"
+        />
       );
     }
 
-    const style = {
-      button: {
-        background: gordonColors.primary.cyan,
-        color: 'white',
-      },
-    };
     const HoverText = withStyles(theme => ({
       tooltip: {
         backgroundColor: '#f5f5f9',
@@ -255,7 +278,13 @@ export default class VictoryPromiseDisplay extends React.Component {
 
     if (this.state.defaultVPMode) {
       content = (
-        <Grid item xs={12} container justify="center" className="box-layout">
+        <Grid
+          xs={12}
+          container
+          justify="center"
+          direction="column"
+          className="victory-promise-container-card-container-content-box-layout"
+        >
           <Grid>
             <HoverText
               title={
@@ -282,7 +311,7 @@ export default class VictoryPromiseDisplay extends React.Component {
               {IMG_IM}
             </HoverText>
           </Grid>
-          <Grid container justify="center">
+          <Grid>
             <HoverText
               title={
                 <React.Fragment>
@@ -323,43 +352,44 @@ export default class VictoryPromiseDisplay extends React.Component {
     }
 
     return (
-      <section>
-        <Grid container>
-          <Grid item xs={12}>
-            <Card>
-              <CardContent>
-                <Grid container direction="row" alignItems="center">
-                  <Grid item xs={7}>
-                    <CardHeader title="Victory Promise" />
-                  </Grid>
-                  <Grid item xs={5} align="right">
-                    <Button
-                      variant="contained"
-                      style={style.button}
-                      onClick={() => this.changeMode()}
-                    >
-                      Change Style
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Grid className="victory-promise-layout" item container>
-                  {content}
-                </Grid>
-                <Grid container justify="center">
+      <div className="victory-promise">
+        <Grid container xs className="victory-promise-header">
+          <CardHeader title="Victory Promise" />
+        </Grid>
+        <Grid container className="victory-promise-container" alignItems="center" justify="center">
+          <Card className="victory-promise-container-card">
+            <CardContent className="victory-promise-container-card-container">
+              <Grid item>
+                <Button
+                  variant="contained"
+                  className="victory-promise-container-card-container-button-style"
+                  onClick={() => this.changeMode()}
+                >
+                  Change Style
+                </Button>
+              </Grid>
+              <Grid container xs className="victory-promise-container-card-container-content">
+                {content}
+              </Grid>
+              {this.props.network === 'online' && (
+                <Grid
+                  container
+                  justify="center"
+                  className="victory-promise-container-card-container-link"
+                >
                   <Typography
-                    variant="body2"
-                    className="noInvolvements"
-                    style={{ cursor: 'pointer' }}
+                    variant="body1"
+                    className="victory-promise-container-card-container-link-text"
                     onClick={() => this.openVPLink()}
                   >
                     Click here for more information!
                   </Typography>
                 </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
+              )}
+            </CardContent>
+          </Card>
         </Grid>
-      </section>
+      </div>
     );
   }
 }
