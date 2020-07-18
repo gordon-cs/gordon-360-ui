@@ -3,17 +3,17 @@ import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
-import ProfileActivityList from './../../components/ProfileActivityList';
+import { Involvements } from '../../components/Involvements/index';
 import EmailIcon from '@material-ui/icons/Email';
 import Button from '@material-ui/core/Button';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import GordonSchedulePanel from '../../components/SchedulePanel';
+import storage from '../../services/storage';
 
 import './profile.css';
 import '../../app.css';
@@ -50,11 +50,47 @@ export default class Profile extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.Authentication) {
       this.loadProfile(this.props);
     }
+
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    let network;
+    /* Attempts to get the network status from local storage.
+     * If not found, the default value is online
+     */
+    try {
+      network = storage.get('network-status');
+    } catch (error) {
+      // Defaults the network to online if not found in local storage
+      network = 'online';
+    }
+    // Saves the network's status to this component's state
+    this.setState({ network });
   }
+
+  componentWillUnmount() {}
 
   componentWillReceiveProps(newProps) {
     if (
@@ -154,36 +190,6 @@ export default class Profile extends Component {
   }
 
   render() {
-    // The list of memberships that will be displayed on the page
-    let displayedMembershipList;
-
-    // The list of memberships that the user has made public
-    let publicMemberships = [];
-
-    if (!this.state.memberships) {
-      displayedMembershipList = <GordonLoader />;
-    } else {
-      // Populate publicMemberships with the user's public Involvements
-      for (let i = 0; i < this.state.memberships.length; i++) {
-        if (!this.state.memberships[i].Privacy) {
-          publicMemberships.push(this.state.memberships[i]);
-        }
-      }
-
-      // If the user has no public Involvements, say so on the page
-      if (publicMemberships.length === 0) {
-        displayedMembershipList = (
-          <Typography variant="body2" align="center">
-            No Involvements to display
-          </Typography>
-        );
-      } else {
-        displayedMembershipList = publicMemberships.map(activity => (
-          <ProfileActivityList Activity={activity} key={activity.MembershipID} />
-        ));
-      }
-    }
-
     let facebookButton;
     let twitterButton;
     let linkedInButton;
@@ -245,41 +251,10 @@ export default class Profile extends Component {
       );
     }
 
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
     if (this.props.Authentication) {
-      // Creates the Public Profile page depending on the status of the network found in local storage
-      // If the searched profile is the current user's profile, the page will remain avaiable offline
+      // Creates the Public Profile page depending on the status of the network
       let PublicProfile;
-      if (
-        networkStatus === 'online' ||
-        (networkStatus === 'offline' &&
-          this.state.profile.AD_Username === this.state.currentUser.AD_Username)
-      ) {
+      if (this.state.network === 'online') {
         PublicProfile = (
           <div>
             {this.state.loading && <GordonLoader />}
@@ -372,21 +347,7 @@ export default class Profile extends Component {
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <Card>
-                        <CardContent>
-                          <Grid container direction="row" alignItems="center">
-                            <Grid item xs={7}>
-                              <CardHeader title="Involvements" />
-                            </Grid>
-                            <Grid item xs={5} align="right"></Grid>
-                          </Grid>
-                          <List>{displayedMembershipList}</List>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  </Grid>
+                  <Involvements memberships={this.state.memberships} myProf={false} />
                 </Grid>
               </Grid>
             )}
@@ -420,7 +381,7 @@ export default class Profile extends Component {
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>
-                  <h4>People Search has been deactivated due to loss of network.</h4>
+                  <h4>Viewing a public profile has been deactivated due to loss of network.</h4>
                   <br />
                   <br />
                   <Button

@@ -9,9 +9,9 @@ const cacheVersion = 'cache v1.2';
 
 // API Source
 // @PROD
-const apiSource = 'https://360Api.gordon.edu/api';
+// const apiSource = 'https://360Api.gordon.edu/api';
 // @TRAIN
-// const apiSource = 'https://360ApiTrain.gordon.edu/api';
+const apiSource = 'https://360ApiTrain.gordon.edu/api';
 
 // Font Styles
 /* Uncomment For Development Only (aka develop) */
