@@ -143,16 +143,16 @@ export const Involvements = props => {
   }
 
   return (
-    <Grid item xs={12} className="myprofile-involvements">
-      <Grid container className="myprofile-involvements-header">
+    <Grid item xs={12} className="involvements">
+      <Grid container className="involvements-header">
         <CardHeader title="Involvements" />
       </Grid>
-      <Card className="myprofile-involvements-card">
-        <CardContent className="myprofile-involvements-card-content">
+      <Card className="involvements-card">
+        <CardContent className="involvements-card-content">
           {props.myProf && (
             <Grid container justify="center">
               <Link className="gc360-link" to="/transcript">
-                <Button variant="contained" className="myprofile-involvements-card-content-button">
+                <Button variant="contained" className="involvements-card-content-button">
                   Experience Transcript
                 </Button>
               </Link>

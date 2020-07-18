@@ -1,6 +1,6 @@
-@import '../../../../vars';
+@import '../../vars';
 
-.myprofile-involvements {
+.involvements {
   &-header {
     padding-left: 1rem;
     background-color: $primary-blue;
@@ -27,7 +27,7 @@
 }
 
 @media (max-width: $break-sm) {
-  .myprofile-involvements {
+  .involvements {
     &-header {
       padding-left: 0rem;
       justify-content: center;
