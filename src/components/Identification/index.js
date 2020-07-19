@@ -788,20 +788,18 @@ export const Identification = props => {
                 </Grid>
 
                 <Grid item className="identification-card-content-card-container-info">
-                  {(facebookButton || twitterButton || linkedInButton || instagramButton) && (
+                  {(facebookButton ||
+                    twitterButton ||
+                    linkedInButton ||
+                    instagramButton ||
+                    props.myProf) && (
                     <Grid
                       item
                       className="identification-card-content-card-container-info-social-media"
                     >
                       <Grid
                         container
-                        justify={
-                          linkCount < 3
-                            ? linkCount < 2
-                              ? 'center'
-                              : 'space-evenly'
-                            : 'space-between'
-                        }
+                        justify={linkCount < 3 ? 'space-evenly' : 'space-between'}
                         alignItems="center"
                       >
                         {facebookButton}
