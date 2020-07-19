@@ -1,18 +1,19 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
+// import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
 import { Involvements } from '../../components/Involvements/index';
-import EmailIcon from '@material-ui/icons/Email';
+// import EmailIcon from '@material-ui/icons/Email';
 import Button from '@material-ui/core/Button';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import GordonSchedulePanel from '../../components/SchedulePanel';
+import { Identification } from '../../components/Identification/index';
 import storage from '../../services/storage';
 
 import './profile.css';
@@ -190,66 +191,66 @@ export default class Profile extends Component {
   }
 
   render() {
-    let facebookButton;
-    let twitterButton;
-    let linkedInButton;
-    let instagramButton;
-    if (this.state.facebookLink !== '') {
-      facebookButton = (
-        <Grid item>
-          <a
-            href={this.state.facebookLink}
-            className="gc360-profile_icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.facebook.icon}
-          </a>
-        </Grid>
-      );
-    }
-    if (this.state.twitterLink !== '') {
-      twitterButton = (
-        <Grid item>
-          <a
-            href={this.state.twitterLink}
-            className="gc360-profile_icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.twitter.icon}
-          </a>
-        </Grid>
-      );
-    }
-    if (this.state.linkedInLink !== '') {
-      linkedInButton = (
-        <Grid item>
-          <a
-            href={this.state.linkedInLink}
-            className="gc360-profile_icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.linkedIn.icon}
-          </a>
-        </Grid>
-      );
-    }
-    if (this.state.instagramLink !== '') {
-      instagramButton = (
-        <Grid item>
-          <a
-            href={this.state.instagramLink}
-            className="gc360-profile_icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.instagram.icon}
-          </a>
-        </Grid>
-      );
-    }
+    // let facebookButton;
+    // let twitterButton;
+    // let linkedInButton;
+    // let instagramButton;
+    // if (this.state.facebookLink !== '') {
+    //   facebookButton = (
+    //     <Grid item>
+    //       <a
+    //         href={this.state.facebookLink}
+    //         className="gc360-profile_icon"
+    //         target="_blank"
+    //         rel="noopener noreferrer"
+    //       >
+    //         {socialMediaInfo.facebook.icon}
+    //       </a>
+    //     </Grid>
+    //   );
+    // }
+    // if (this.state.twitterLink !== '') {
+    //   twitterButton = (
+    //     <Grid item>
+    //       <a
+    //         href={this.state.twitterLink}
+    //         className="gc360-profile_icon"
+    //         target="_blank"
+    //         rel="noopener noreferrer"
+    //       >
+    //         {socialMediaInfo.twitter.icon}
+    //       </a>
+    //     </Grid>
+    //   );
+    // }
+    // if (this.state.linkedInLink !== '') {
+    //   linkedInButton = (
+    //     <Grid item>
+    //       <a
+    //         href={this.state.linkedInLink}
+    //         className="gc360-profile_icon"
+    //         target="_blank"
+    //         rel="noopener noreferrer"
+    //       >
+    //         {socialMediaInfo.linkedIn.icon}
+    //       </a>
+    //     </Grid>
+    //   );
+    // }
+    // if (this.state.instagramLink !== '') {
+    //   instagramButton = (
+    //     <Grid item>
+    //       <a
+    //         href={this.state.instagramLink}
+    //         className="gc360-profile_icon"
+    //         target="_blank"
+    //         rel="noopener noreferrer"
+    //       >
+    //         {socialMediaInfo.instagram.icon}
+    //       </a>
+    //     </Grid>
+    //   );
+    // }
 
     if (this.props.Authentication) {
       // Creates the Public Profile page depending on the status of the network
@@ -261,7 +262,7 @@ export default class Profile extends Component {
             {!this.state.loading && (
               <Grid container justify="center" spacing={2}>
                 <Grid item xs={12} lg={10}>
-                  <Card>
+                  {/* <Card>
                     <CardContent>
                       <Grid
                         container
@@ -328,7 +329,12 @@ export default class Profile extends Component {
                         </Grid>
                       </Grid>
                     </CardContent>
-                  </Card>
+                  </Card> */}
+                  <Identification
+                    profile={this.state.profile}
+                    network={this.state.network}
+                    myProf={false}
+                  />
                 </Grid>
 
                 <Grid item xs={12} lg={10} align="center">

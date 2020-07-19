@@ -11,10 +11,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import EmailIcon from '@material-ui/icons/Email';
-import user from './../../../../services/user';
-import { gordonColors } from '../../../../theme';
+import user from '../../services/user';
+import { gordonColors } from '../../theme';
 import LinksDialog from './Components/LinksDialog/index';
-import { socialMediaInfo } from '../../../../socialMedia';
+import { socialMediaInfo } from '../../socialMedia';
 import { Link } from 'react-router-dom';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -24,9 +24,10 @@ import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
-import './index.css';
-import GordonLoader from '../../../../components/Loader';
 import defaultGordonImage from './defaultGordonImage';
+import GordonLoader from '../Loader/index';
+import { windowBreakWidths } from '../../theme';
+import './index.css';
 
 export const Identification = props => {
   const CROP_DIM = 200; // pixels
@@ -50,6 +51,7 @@ export const Identification = props => {
   const [snackbarKey, setSnackbarKey] = useState(0); // A key to make every snackbar display unique
   const [snackbarType, setSnackbarType] = useState(''); // Either success or error
   const [userProfile, setUserProfile] = useState(null);
+  const [currentWidth, setCurrentWidth] = useState(null);
   const cropper = useRef();
   let photoDialogErrorTimeout = null;
 
@@ -90,35 +92,42 @@ export const Identification = props => {
   useEffect(() => {
     async function loadUserProfile() {
       try {
-        const { def: defaultImage, pref: preferredImage } = await user.getImage();
-        const profile = await user.getProfileInfo();
-        setUserProfile(profile);
+        const { def: defaultImage, pref: preferredImage } = await user.getImage(
+          props.profile.AD_Username,
+        );
+        setUserProfile(props.profile);
+        // Sets the user's preferred image. If a default image is given but the preferred is undefined,
+        // then this could mean that the current user is not allowed to see the preferred image or
+        // a preferred image wasn't set
         setPreferredUserImage(preferredImage);
         seHasPreferredImage(preferredImage ? true : false);
-        setDefaultUserImage(defaultImage || defaultGordonImage);
-        setIsImagePublic(profile.show_pic);
-        createNickname(profile);
+        // Sets the user's default image. If a preferred image is given but the default is undefined,
+        // then this, means that the current user is not allowed to see the default picture. The
+        // Gordon default image is only shown if both the preferred and default image are undefined
+        setDefaultUserImage(defaultImage || (preferredImage ? null : defaultGordonImage));
+        setIsImagePublic(props.profile.show_pic);
+        createNickname(props.profile);
         // Set state of social media links to database values after load.
         // If not empty, null, or undefined, add domain name back in for display and buttons.
         setFacebookLink(
-          !profile.Facebook || profile.Facebook === ''
+          !props.profile.Facebook || props.profile.Facebook === ''
             ? ''
-            : socialMediaInfo.facebook.prefix + profile.Facebook,
+            : socialMediaInfo.facebook.prefix + props.profile.Facebook,
         );
         setTwitterLink(
-          !profile.Twitter || profile.Twitter === ''
+          !props.profile.Twitter || props.profile.Twitter === ''
             ? ''
-            : socialMediaInfo.twitter.prefix + profile.Twitter,
+            : socialMediaInfo.twitter.prefix + props.profile.Twitter,
         );
         setLinkedInLink(
-          !profile.LinkedIn || profile.LinkedIn === ''
+          !props.profile.LinkedIn || props.profile.LinkedIn === ''
             ? ''
-            : socialMediaInfo.linkedIn.prefix + profile.LinkedIn,
+            : socialMediaInfo.linkedIn.prefix + props.profile.LinkedIn,
         );
         setInstagramLink(
-          !profile.Instagram || profile.Instagram === ''
+          !props.profile.Instagram || props.profile.Instagram === ''
             ? ''
-            : socialMediaInfo.instagram.prefix + profile.Instagram,
+            : socialMediaInfo.instagram.prefix + props.profile.Instagram,
         );
       } catch (error) {
         // Do Nothing
@@ -126,7 +135,49 @@ export const Identification = props => {
     }
 
     loadUserProfile();
-  }, []);
+  }, [props.profile]);
+
+  /**
+   * Gets the current breakpoint according to Material-UI's breakpoints
+   */
+  useEffect(() => {
+    if (props.myProf) {
+      // Gets the current Material-UI Breakpoint
+      function getMaterialUIBreakpoint(width) {
+        let currentWidth = '';
+        // If current width is in Material-UI breakpoint XS
+        if (width >= windowBreakWidths.breakXS && width < windowBreakWidths.breakSM) {
+          currentWidth = 'xs';
+        }
+        // If current width is in Material-UI breakpoint SM
+        else if (width >= windowBreakWidths.breakSM && width < windowBreakWidths.breakMD) {
+          currentWidth = 'sm';
+        }
+        // If current width is in Material-UI breakpoint MD
+        else if (width >= windowBreakWidths.breakMD && width < windowBreakWidths.breakLG) {
+          currentWidth = 'md';
+        }
+        // If current width is in Material-UI breakpoint LG
+        else if (width >= windowBreakWidths.breakLG && width < windowBreakWidths.breakXL) {
+          currentWidth = 'lg';
+        }
+        // If current width is in Material-UI breakpoint XL
+        else if (width >= windowBreakWidths.breakXL) {
+          currentWidth = 'xl';
+        }
+        return currentWidth;
+      }
+
+      // An event listener for when the browser size changes to get the current Material-UI breakpoint
+      window.addEventListener('resize', event => {
+        setCurrentWidth(getMaterialUIBreakpoint(event.target.innerWidth));
+      });
+      // Sets the current Material-UI Breakpoint
+      setCurrentWidth(getMaterialUIBreakpoint(window.innerWidth));
+      // Removes the resize window event listener
+      return window.removeEventListener('resize', () => {});
+    }
+  }, [props.myProf]);
 
   /**
    * Handles opening the Photo Updater Dialog Box
@@ -144,9 +195,20 @@ export const Identification = props => {
       let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       let response = user.postImage(croppedImage);
       response
-        .then(() => {
+        .then(async () => {
+          /**
+           * Gets the user's default image and not their preferred since the variable "newImage"
+           * is the current user's preferred picture. If fetching the current user's default image
+           * fails, the Gordon Default Image will not replace it because we still have their
+           * preferred image to show. The Gordon Default Image is only a fallback when no image is
+           * available
+           */
+          const { def: defaultImage } = await user.getImage(userProfile.AD_Username);
+          // Sets the current user's preferred image
           setPreferredUserImage(newImage);
-          seHasPreferredImage(true);
+          seHasPreferredImage(newImage ? true : false);
+          // Sets the current user's default image
+          setDefaultUserImage(defaultImage ? defaultImage : null);
           // Displays to the user that their photo has been submitted
           createSnackbar('Photo Submitted', 'Success');
           // Closes out the Photo Updater
@@ -190,7 +252,7 @@ export const Identification = props => {
       .then(async () => {
         // Attempts to get the user's image since it has been reset
         try {
-          const { def: defaultImage } = await user.getImage();
+          const { def: defaultImage } = await user.getImage(userProfile.AD_Username);
           setDefaultUserImage(defaultImage);
           // Displays to the user that their photo has been restored
           createSnackbar('Original Photo Restored', 'Success');
@@ -311,7 +373,7 @@ export const Identification = props => {
     // If no error occured and the cropper is not shown, the pick a file text is displayed
     else {
       message =
-        props.width === 'md' || props.width === 'sm' || props.width === 'xs'
+        currentWidth === 'md' || currentWidth === 'sm' || currentWidth === 'xs'
           ? 'Tap Image to Browse Files'
           : 'Drag & Drop Picture, or Click to Browse Files';
     }
@@ -323,7 +385,7 @@ export const Identification = props => {
     // that seemed to have finer tuned logic
     const smallScreenRatio = 0.5;
     const largeScreenRatio = 0.25;
-    const w = props.width;
+    const w = currentWidth;
     switch (w) {
       default:
         return 960 * largeScreenRatio;
@@ -687,7 +749,7 @@ export const Identification = props => {
                         alt="Profile"
                       />
 
-                      {props.network === 'online' && (
+                      {props.network === 'online' && props.myProf && (
                         <Typography
                           variant="body1"
                           className="identification-card-content-card-container-photo-main-container-tile-bar"
@@ -696,7 +758,7 @@ export const Identification = props => {
                         </Typography>
                       )}
                     </div>
-                    {props.network === 'online' && (
+                    {props.network === 'online' && props.myProf && (
                       <div
                         onClick={handlePhotoOpen}
                         className="identification-card-content-card-container-photo-main-button"
@@ -726,24 +788,36 @@ export const Identification = props => {
                 </Grid>
 
                 <Grid item className="identification-card-content-card-container-info">
-                  <Grid
-                    item
-                    className="identification-card-content-card-container-info-social-media"
-                  >
-                    <Grid container justify="space-between" alignItems="center">
-                      {facebookButton}
-                      {twitterButton}
-                      {linkedInButton}
-                      {instagramButton}
-                      {props.network === 'online' && editButton}
+                  {(facebookButton || twitterButton || linkedInButton || instagramButton) && (
+                    <Grid
+                      item
+                      className="identification-card-content-card-container-info-social-media"
+                    >
+                      <Grid
+                        container
+                        justify={
+                          linkCount < 3
+                            ? linkCount < 2
+                              ? 'center'
+                              : 'space-evenly'
+                            : 'space-between'
+                        }
+                        alignItems="center"
+                      >
+                        {facebookButton}
+                        {twitterButton}
+                        {linkedInButton}
+                        {instagramButton}
+                        {props.network === 'online' && props.myProf && editButton}
+                      </Grid>
                     </Grid>
-                  </Grid>
+                  )}
                   <Grid
                     item
                     xs={12}
                     className="identification-card-content-card-container-info-class"
                   >
-                    <Typography>{userProfile.Class}</Typography>
+                    {userProfile.Class && <Typography>{userProfile.Class}</Typography>}
                   </Grid>
 
                   <Grid
@@ -789,7 +863,7 @@ export const Identification = props => {
             <GordonLoader />
           )}
 
-          {userProfile && props.network === 'online' && (
+          {userProfile && props.network === 'online' && props.myProf && (
             <Link
               to={`/profile/${userProfile.AD_Username}`}
               className="identification-card-content-public-profile-link"

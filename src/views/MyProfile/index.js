@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import GordonLoader from '../../components/Loader';
 import GordonSchedulePanel from '../../components/SchedulePanel';
-import { Identification } from './Components/Identification/index';
+import { Identification } from '../../components/Identification/index';
 import { Involvements } from '../../components/Involvements/index';
 import Office from './../../components/OfficeList';
 import ProfileList from './../../components/ProfileList';
@@ -106,7 +106,7 @@ const MyProfile = props => {
                 md={profile.PersonType === 'stu' ? 8 : 12}
                 lg={profile.PersonType === 'stu' ? 6 : 10}
               >
-                <Identification profile={profile} width={props.width} network={network} />
+                <Identification profile={profile} network={network} myProf={true} />
               </Grid>
 
               {String(personType).includes('stu') && (
