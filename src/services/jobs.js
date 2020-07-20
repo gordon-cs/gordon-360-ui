@@ -116,24 +116,15 @@ const submitShiftsForUser = (canUseStaff, shiftsToSubmit, submittedTo) => {
   return http.post(`jobs/submitShifts`, shifts);
 };
 
-const clockIn = (canUseStaff, data) => {
-  if (canUseStaff) {
-    return http.post(`jobs/clockInStaff`, data);
-  }
+const clockIn = data => {
   return http.post(`jobs/clockIn`, data);
 };
 
-const clockOut = canUseStaff => {
-  if (canUseStaff) {
-    return http.get(`jobs/clockOutStaff`);
-  }
+const clockOut = () => {
   return http.get(`jobs/clockOut`);
 };
 
-const deleteClockIn = async canUseStaff => {
-  if (canUseStaff) {
-    return await http.put(`jobs/deleteClockInStaff`);
-  }
+const deleteClockIn = async () => {
   return http.put(`jobs/deleteClockIn`);
 };
 

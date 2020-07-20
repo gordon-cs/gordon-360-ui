@@ -1,4 +1,4 @@
-//Main student timesheets page
+//Main timesheets page
 import React, { useState, useRef, useEffect } from 'react';
 import 'date-fns';
 import {
@@ -87,7 +87,7 @@ const Timesheets = props => {
     // status is notted by either true or false. true being clocked in.
     async function getClockInOutStatus() {
       try {
-        let status = await jobs.clockOut(canUseStaff);
+        let status = await jobs.clockOut();
 
         if (status[0].currentState) {
           setClockInOut('Clock Out');
@@ -412,16 +412,16 @@ const Timesheets = props => {
     const changeState = async () => {
       if (clockInOut === 'Clock In') {
         setClockInOut('Clock Out');
-        await jobs.clockIn(canUseStaff, true);
+        await jobs.clockIn(true);
         let clockInDate = new Date();
         handleDateChangeIn(clockInDate);
       }
       if (clockInOut === 'Clock Out') {
         setClockInOut('Reset');
-        await jobs.clockIn(canUseStaff, false);
+        await jobs.clockIn(false);
         let clockOutDate = new Date();
         handleDateChangeOut(clockOutDate);
-        await jobs.deleteClockIn(canUseStaff);
+        await jobs.deleteClockIn();
       }
       if (clockInOut === 'Reset') {
         setClockInOut('Clock In');
@@ -571,7 +571,7 @@ const Timesheets = props => {
                           interactive
                           disableFocusListener
                           disableTouchListener
-                          title={(canUseStaff ? 'Staff Timesheets'
+                          title={(canUseStaff ? 'Staff Timesheets Prompt' // need to update for staff
                             // eslint-disable-next-line no-multi-str
                             :'Student employees are not permitted to work more than 20 total hours\
                         per work week, or more than 40 hours during winter, spring, and summer breaks.\
@@ -675,7 +675,7 @@ const Timesheets = props => {
                             textDecoration: 'none',
                             color: gordonColors.primary.blueShades.A700,
                           }}
-                          href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
+                          href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period" // Need to update for staff
                           underline="always"
                           target="_blank"
                           rel="noopener"
@@ -756,7 +756,7 @@ const Timesheets = props => {
             >
               <h1>You are not logged in.</h1>
               <br />
-              <h4>You must be logged in to use the Student Timesheets page.</h4>
+              <h4>You must be logged in to use the Timesheets page.</h4>
               <br />
               <Button
                 color="primary"
