@@ -29,13 +29,13 @@ import GordonLoader from '../../components/Loader';
 import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   customWidth: {
     maxWidth: 500,
   },
 }));
 
-const CustomTooltip = withStyles(theme => ({
+const CustomTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
@@ -44,7 +44,7 @@ const CustomTooltip = withStyles(theme => ({
   },
 }))(Tooltip);
 
-const Timesheets = props => {
+const Timesheets = (props) => {
   const [userJobs, setUserJobs] = useState([]);
   const [selectedDateIn, setSelectedDateIn] = useState(null);
   const [selectedDateOut, setSelectedDateOut] = useState(null);
@@ -64,22 +64,25 @@ const Timesheets = props => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [clockInOut, setClockInOut] = useState('Clock In');
   const [canUseStaff, setCanUseStaff] = useState(null);
+  const [hourTypes, setHourTypes] = useState(null);
+  const [selectedHourType, setSelectedHourType] = useState('null');
 
   // disabled lint in some lines in order to remove warning about race condition that does not apply
   // in our current case.
   useEffect(() => {
-
     async function getCanUseStaff() {
       try {
         let canUse = await jobs.getStaffPageForUser();
+        let hourTypes = await jobs.getHourTypes();
 
         if (canUse.length === 1) {
           setCanUseStaff(true);
+          setHourTypes(hourTypes);
         } else {
           setCanUseStaff(false);
         }
       } catch (error) {
-          //do nothing
+        //do nothing
       }
     }
     // updates ui with the current status of the users clocked in feature
@@ -109,7 +112,7 @@ const Timesheets = props => {
 
   //had to be defined outside of the authentication condition so that the ui could update
   // before cheking to see if user is authenticated.
-  const handleDateChangeInClock = date => {
+  const handleDateChangeInClock = (date) => {
     if (date) {
       date.setSeconds(0);
       date.setMilliseconds(0);
@@ -154,13 +157,12 @@ const Timesheets = props => {
   };
 
   if (props.Authentication) {
-
     const getActiveJobsForUser = (dateIn, dateOut) => {
       let details = {
         shift_start_datetime: dateIn.toLocaleString(),
         shift_end_datetime: dateOut.toLocaleString(),
       };
-      jobs.getActiveJobsForUser(canUseStaff, details).then(result => {
+      jobs.getActiveJobsForUser(canUseStaff, details).then((result) => {
         setUserJobs(result);
       });
     };
@@ -169,7 +171,7 @@ const Timesheets = props => {
       return jobs.getSavedShiftsForUser(canUseStaff);
     };
 
-    const handleDateChangeIn = date => {
+    const handleDateChangeIn = (date) => {
       if (date) {
         date.setSeconds(0);
         date.setMilliseconds(0);
@@ -182,7 +184,7 @@ const Timesheets = props => {
       }
     };
 
-    const handleDateChangeOut = date => {
+    const handleDateChangeOut = (date) => {
       if (date) {
         date.setSeconds(0);
         date.setMilliseconds(0);
@@ -235,7 +237,7 @@ const Timesheets = props => {
               );
               setSnackbarOpen(true);
             })
-            .catch(err => {
+            .catch((err) => {
               setSaving(false);
               if (typeof err === 'string' && err.toLowerCase().includes('overlap')) {
                 setSnackbarText(
@@ -268,7 +270,7 @@ const Timesheets = props => {
         roundedHourDifference,
         userShiftNotes,
       )
-        .then(result => {
+        .then((result) => {
           shiftDisplayComponent.loadShifts();
           setSelectedDateOut(null);
           setSelectedDateIn(null);
@@ -277,7 +279,7 @@ const Timesheets = props => {
           setHoursWorkedInDecimal(0);
           setSaving(false);
         })
-        .catch(err => {
+        .catch((err) => {
           setSaving(false);
           if (typeof err === 'string' && err.toLowerCase().includes('overlap')) {
             setSnackbarText(
@@ -298,7 +300,7 @@ const Timesheets = props => {
     };
 
     const jobsMenuItems = userJobs ? (
-      userJobs.map(job => (
+      userJobs.map((job) => (
         <MenuItem label={job.POSTITLE} value={job} key={job.EMLID}>
           {job.POSTITLE}
         </MenuItem>
@@ -306,8 +308,17 @@ const Timesheets = props => {
     ) : (
       <></>
     );
+    const hourTypeMenuItems = hourTypes ? (
+      hourTypes.map((type) => (
+        <MenuItem label={type.type_description} value={type.type_id} key={type.type_id}>
+          {type.type_description}
+        </MenuItem>
+      ))
+    ) : (
+      <></>
+    );
 
-    const isLeapYear = date => {
+    const isLeapYear = (date) => {
       if (date.getFullYear() % 4 === 0) {
         if (date.getFullYear() % 100 === 0) {
           if (date.getFullYear() % 400 !== 0) {
@@ -323,7 +334,7 @@ const Timesheets = props => {
       }
     };
 
-    const getNextDate = date => {
+    const getNextDate = (date) => {
       let is30DayMonth =
         date.getMonth() === 3 ||
         date.getMonth() === 5 ||
@@ -395,7 +406,7 @@ const Timesheets = props => {
       };
     };
 
-    const disableDisallowedDays = date => {
+    const disableDisallowedDays = (date) => {
       let dayIn = selectedDateIn;
       let nextDate = getNextDate(dayIn);
       let shouldDisableDate = !(
@@ -442,7 +453,7 @@ const Timesheets = props => {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         network === 'offline' &&
@@ -473,7 +484,7 @@ const Timesheets = props => {
         <InputLabel className="disable-select">Jobs</InputLabel>
         <Select
           value={selectedJob}
-          onChange={e => {
+          onChange={(e) => {
             setSelectedJob(e.target.value);
           }}
           input={<Input id="job" />}
@@ -482,6 +493,30 @@ const Timesheets = props => {
             <em>None</em>
           </MenuItem>
           {jobsMenuItems}
+        </Select>
+      </FormControl>
+    );
+
+    const hourTypeDropdown = (
+      <FormControl
+        disabled={hourTypes === null || hourTypes.length === 0}
+        style={{
+          width: 252,
+        }}
+      >
+        <InputLabel className="disable-select">Hour Type</InputLabel>
+        <Select
+          defaultValue="Regular"
+          value={selectedHourType}
+          onChange={(e) => {
+            setSelectedHourType(e.target.value);
+          }}
+          input={<Input id="hour type" />}
+        >
+          <MenuItem label="None" value="">
+            <em>None</em>
+          </MenuItem>
+          {hourTypeMenuItems}
         </Select>
       </FormControl>
     );
@@ -521,7 +556,7 @@ const Timesheets = props => {
       errorText = <></>;
     }
 
-    const handleShiftNotesChanged = event => {
+    const handleShiftNotesChanged = (event) => {
       setUserShiftNotes(event.target.value);
     };
 
@@ -538,7 +573,8 @@ const Timesheets = props => {
           selectedDateIn === null ||
           selectedDateOut === null ||
           selectedJob === null ||
-          selectedJob === ''
+          selectedJob === '' ||
+          selectedHourType === null
         }
         variant="contained"
         color="primary"
@@ -571,13 +607,15 @@ const Timesheets = props => {
                           interactive
                           disableFocusListener
                           disableTouchListener
-                          title={(canUseStaff ? 'Staff Timesheets Info' // need to update for staff
-                            // eslint-disable-next-line no-multi-str
-                            :'Student employees are not permitted to work more than 20 total hours\
+                          title={
+                            canUseStaff
+                              ? 'Staff Timesheets Info' // need to update for staff
+                              : // eslint-disable-next-line no-multi-str
+                                'Student employees are not permitted to work more than 20 total hours\
                         per work week, or more than 40 hours during winter, spring, and summer breaks.\
                         \
                         To request permission for a special circumstance, please email\
-                        student-employment@gordon.edu before exceeding this limit.')
+                        student-employment@gordon.edu before exceeding this limit.'
                           }
                           placement="bottom"
                         >
@@ -597,7 +635,7 @@ const Timesheets = props => {
                   <Grid
                     container
                     spacing={2}
-                    justify="space-around"
+                    justify="space-between"
                     alignItems="center"
                     alignContent="center"
                   >
@@ -643,6 +681,9 @@ const Timesheets = props => {
                       {jobDropdown}
                     </Grid>
                     <Grid item xs={12} md={6} lg={3}>
+                      {hourTypeDropdown}
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3}>
                       <TextField
                         className="disable-select"
                         style={{
@@ -663,7 +704,7 @@ const Timesheets = props => {
                     <Grid item xs={12}>
                       {errorText}
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
                       {saveButton}
                     </Grid>
                     <Grid item xs={12}>

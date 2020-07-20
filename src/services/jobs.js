@@ -31,7 +31,7 @@ const getActiveJobsForUser = (canUseStaff, details) => {
  * @param {Boolean} canUseStaff Whether user can use staff timesheets
  * @return {Promise.<String>} User's active jobs
  */
-const getSavedShiftsForUser = canUseStaff => {
+const getSavedShiftsForUser = (canUseStaff) => {
   if (canUseStaff) {
     return []; //http.get(`jobs/getSavedShiftsStaff/`); This endpoint needs to return [] not null
   }
@@ -78,9 +78,9 @@ const editShift = async (canUseStaff, rowID, newShiftStart, newShiftEnd, newHour
     HOURS_WORKED: newHoursWorked,
     SHIFT_NOTES: null,
     LAST_CHANGED_BY: null,
-  }
+  };
   if (canUseStaff) {
-    return await http.put(`jobs/editShiftStaff/`, newShiftDetails)
+    return await http.put(`jobs/editShiftStaff/`, newShiftDetails);
   }
   return await http.put(`jobs/editShift/`, newShiftDetails);
 };
@@ -116,7 +116,7 @@ const submitShiftsForUser = (canUseStaff, shiftsToSubmit, submittedTo) => {
   return http.post(`jobs/submitShifts`, shifts);
 };
 
-const clockIn = data => {
+const clockIn = (data) => {
   return http.post(`jobs/clockIn`, data);
 };
 
@@ -128,9 +128,9 @@ const deleteClockIn = async () => {
   return http.put(`jobs/deleteClockIn`);
 };
 
-/*const getHourTypes = () => {
+const getHourTypes = () => {
   return http.get(`jobs/hourTypes`);
-}*/
+};
 
 export default {
   getStaffPageForUser,
@@ -143,5 +143,6 @@ export default {
   submitShiftsForUser,
   clockIn,
   clockOut,
-  deleteClockIn
+  deleteClockIn,
+  getHourTypes,
 };
