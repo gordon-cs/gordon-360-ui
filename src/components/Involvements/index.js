@@ -15,6 +15,7 @@ import './index.css';
 
 export const Involvements = props => {
   const [involvementsAndTheirPrivacy, setInvolvementsAndTheirPrivacy] = useState([]);
+  const [publicMemberships, setPublicMemberships] = useState([]);
   const [network, setNetwork] = useState();
 
   /**
@@ -23,16 +24,22 @@ export const Involvements = props => {
   useEffect(() => {
     async function loadInvolvements() {
       try {
-        const involvementsAndTheirPrivacy = await getInvolvementAndPrivacyDictionary(
-          props.memberships,
-        );
-        setInvolvementsAndTheirPrivacy(involvementsAndTheirPrivacy);
+        // Creates the involvements list for the My Profile View
+        if (props.myProf) {
+          const involvementsAndTheirPrivacy = await getInvolvementAndPrivacyDictionary(
+            props.memberships,
+          );
+          setInvolvementsAndTheirPrivacy(involvementsAndTheirPrivacy);
+        }
+        // Creates the involvements list for the Public Profile view
+        const memberships = await getPublicMemberships(props.memberships);
+        setPublicMemberships(memberships);
       } catch (error) {
         // Do Nothing
       }
     }
     loadInvolvements();
-  }, [props.memberships]);
+  }, [props.memberships, props.myProf]);
 
   useEffect(() => {
     let networkStatus;
@@ -104,16 +111,6 @@ export const Involvements = props => {
 
     // Creates the Involvements list for the Public Profile Page
     else {
-      // The list of memberships that the user has made public
-      let publicMemberships = [];
-
-      // Populate "publicMemberships" with the user's public Involvements
-      for (let i = 0; i < props.memberships.length; i++) {
-        if (!props.memberships[i].Privacy) {
-          publicMemberships.push(props.memberships[i]);
-        }
-      }
-
       // If the user has no public Involvements, say so on the page
       if (publicMemberships.length === 0) {
         return (
@@ -140,6 +137,20 @@ export const Involvements = props => {
       });
     }
     return involvementAndPrivacyDictionary;
+  }
+
+  // Gets the list of public memberships
+  async function getPublicMemberships(membershipsList) {
+    let memberships = [];
+    for (let i = 0; i < membershipsList.length; i++) {
+      let involvement = await activity.get(membershipsList[i].ActivityCode);
+      // Checks to see if the involvement is a private involvement. If not and the involvement's
+      // privacy is set to false, it's added to the list of involvements to display
+      if (!involvement.Privacy && !membershipsList[i].Privacy) {
+        memberships.push(membershipsList[i]);
+      }
+    }
+    return memberships;
   }
 
   return (

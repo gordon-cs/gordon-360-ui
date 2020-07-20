@@ -9,20 +9,68 @@ import membership from './../../services/membership';
 import List from '@material-ui/core/List';
 import LockIcon from '@material-ui/icons/Lock';
 import ListItem from '@material-ui/core/ListItem';
+import Snackbar from '@material-ui/core/Snackbar';
+import ErrorIcon from '@material-ui/icons/Error';
+import CloseIcon from '@material-ui/icons/Close';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import IconButton from '@material-ui/core/IconButton';
 import '../ProfileList/profileList.css';
 import '../../app.css';
 import './index.css';
 
 export default class MyProfileActivityList extends Component {
-  handleChangeMembershipPrivacy(userMembership) {
-    membership.toggleMembershipPrivacy(userMembership);
-    this.forceUpdate();
+  constructor(props) {
+    super(props);
+    this.state = {
+      isSnackbarOpen: false,
+      snackbarMessage: '',
+      snackbarType: '',
+      snackbarKey: 0,
+      switchChecked: !props.Membership.Privacy,
+    };
+
+    this.createSnackbar = this.createSnackbar.bind(this);
+  }
+
+  async handleChangeMembershipPrivacy(userMembership) {
+    try {
+      let result = await membership.toggleMembershipPrivacy(userMembership);
+      // If no error occured above, then changing the activity's privacy was successful
+      if (result) {
+        this.createSnackbar(
+          userMembership.Privacy ? 'Membership Hidden' : 'Membership Visible',
+          'Success',
+        );
+        this.setState({ switchChecked: !this.state.switchChecked });
+      }
+      // Changing the activity's privacy failed
+      else {
+        this.createSnackbar('Privacy Change Failed', 'Error');
+      }
+    } catch {
+      // Changing the activity's privacy failed
+      this.createSnackbar('Privacy Change Failed', 'Error');
+    }
+  }
+
+  /**
+   * Displays the snackbar to the user.
+   * @param {String} message The message to display to the user
+   * @param {String} messageType The message's type. Either a success or error
+   */
+  createSnackbar(message, messageType) {
+    // Sets the snackbar key as either 0 or 1. This prevents a high number being made.
+    this.setState({
+      snackbarMessage: message,
+      snackbarType: messageType,
+      snackbarKey: (this.state.snackbarKey + 1) % 2,
+      isSnackbarOpen: true,
+    });
   }
 
   render() {
     // Gets the membership and involvement privacy
     const { Membership, InvolvementPrivacy } = this.props;
-
     // Style of privacy text
     const toggleTextStyle = {
       fontSize: '12pt',
@@ -49,8 +97,9 @@ export default class MyProfileActivityList extends Component {
       },
     };
 
-    // If the Involvement is a regular (non-special/secret group - AKA Public) it is False.
     let myProfileInvolvementsList;
+
+    // If the Involvement is a regular (non-special/secret group - AKA Public) it is False.
     if (!InvolvementPrivacy) {
       myProfileInvolvementsList = (
         <div>
@@ -103,7 +152,7 @@ export default class MyProfileActivityList extends Component {
                         onChange={() => {
                           this.handleChangeMembershipPrivacy(Membership);
                         }}
-                        checked={!Membership.Privacy}
+                        checked={this.state.switchChecked}
                       />
                     </Grid>
 
@@ -243,7 +292,63 @@ export default class MyProfileActivityList extends Component {
       );
     }
 
-    return <div>{myProfileInvolvementsList}</div>;
+    return (
+      <div>
+        {myProfileInvolvementsList}
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          // Makes every snackbar unique to prevent the same snackbar from being updated
+          key={this.state.snackbarKey.toString()}
+          open={this.state.isSnackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => {
+            this.setState({ isSnackbarOpen: false });
+          }}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={
+            // If the message type is Success
+            this.state.snackbarType === 'Success' ? (
+              <span id="message-id">
+                <CheckCircleIcon
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '0.5rem',
+                  }}
+                />
+                {this.state.snackbarMessage}
+              </span>
+            ) : (
+              <span id="message-id">
+                <ErrorIcon
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '0.5rem',
+                  }}
+                />
+                {this.state.snackbarMessage}
+              </span>
+            )
+          }
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => {
+                this.setState({ isSnackbarOpen: false });
+              }}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+      </div>
+    );
   }
 }
 
