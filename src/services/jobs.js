@@ -128,6 +128,10 @@ const deleteClockIn = async () => {
   return http.put(`jobs/deleteClockIn`);
 };
 
+const getHourTypes = () => {
+  return http.get(`jobs/hourTypes`);
+}
+
 export default {
   getStaffPageForUser,
   getActiveJobsForUser,
