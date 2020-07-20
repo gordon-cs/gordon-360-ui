@@ -30,6 +30,7 @@ export default class GordonEventItem extends Component {
     //       </ListItem>
     //     ));
     // }
+
     return (
       <section>
         <Card onClick={this.handleExpandClick}>
