@@ -34,8 +34,8 @@ export const Identification = props => {
   const [isImagePublic, setIsImagePublic] = useState(null);
   const [defaultUserImage, setDefaultUserImage] = useState(null);
   const [preferredUserImage, setPreferredUserImage] = useState(null);
-  const [hasPreferredImage, seHasPreferredImage] = useState(true);
-  const [switchPhotos, setSwitchPhotos] = useState(false);
+  const [hasPreferredImage, setHasPreferredImage] = useState(true);
+  const [isPhotosSwitched, setisPhotosSwitched] = useState(false);
   const [showCropper, setShowCropper] = useState(null);
   const [hasNickName, setHasNickname] = useState(Boolean);
   const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
@@ -87,22 +87,42 @@ export const Identification = props => {
   };
 
   /**
-   * Loads the user's profile info at start
+   * Loads the given user's profile info
    */
   useEffect(() => {
     async function loadUserProfile() {
       try {
-        const { def: defaultImage, pref: preferredImage } = await user.getImage(
-          props.profile.AD_Username,
-        );
+        // Gets the given user's image. Depending on given user's person type and the currently
+        // signed-in user's person type, different images will be given
+        const { def: defaultImage, pref: preferredImage } =
+          props.profile.PersonType === 'fac'
+            ? /**
+               * The given user is Faculty
+               * If currently signed-in user is Faculty : Will receive default and preferred image
+               * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
+               */
+              await user.getImage(props.profile.AD_Username)
+            : // Checks to see if the current page is the My Profile page
+            props.myProf
+            ? /**
+               * This case will occur only if the currently signed-in user is Non-Faculty and are
+               * on the My Profile page
+               */
+              await user.getImage()
+            : /**
+               * The given user is Non-Faculty
+               * If currently signed-in user is Faculty : Will receive default and preferred image
+               * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
+               */
+              await user.getImage(props.profile.AD_Username);
         setUserProfile(props.profile);
-        // Sets the user's preferred image. If a default image is given but the preferred is undefined,
-        // then this could mean that the current user is not allowed to see the preferred image or
+        // Sets the given user's preferred image. If a default image is given but the preferred is undefined,
+        // then this could mean that the currently signed-in user is not allowed to see the preferred image or
         // a preferred image wasn't set
         setPreferredUserImage(preferredImage);
-        seHasPreferredImage(preferredImage ? true : false);
-        // Sets the user's default image. If a preferred image is given but the default is undefined,
-        // then this, means that the current user is not allowed to see the default picture. The
+        setHasPreferredImage(preferredImage ? true : false);
+        // Sets the given user's default image. If a preferred image is given but the default is undefined,
+        // then this, means that the currently signed-in user is not allowed to see the default picture. The
         // Gordon default image is only shown if both the preferred and default image are undefined
         setDefaultUserImage(defaultImage || (preferredImage ? null : defaultGordonImage));
         setIsImagePublic(props.profile.show_pic);
@@ -135,7 +155,7 @@ export const Identification = props => {
     }
 
     loadUserProfile();
-  }, [props.profile]);
+  }, [props.profile, props.myProf]);
 
   /**
    * Gets the current breakpoint according to Material-UI's breakpoints
@@ -198,16 +218,16 @@ export const Identification = props => {
         .then(async () => {
           /**
            * Gets the user's default image and not their preferred since the variable "newImage"
-           * is the current user's preferred picture. If fetching the current user's default image
+           * is the user's preferred picture. If fetching the user's default image
            * fails, the Gordon Default Image will not replace it because we still have their
            * preferred image to show. The Gordon Default Image is only a fallback when no image is
            * available
            */
           const { def: defaultImage } = await user.getImage(userProfile.AD_Username);
-          // Sets the current user's preferred image
+          // Sets the user's preferred image
           setPreferredUserImage(newImage);
-          seHasPreferredImage(newImage ? true : false);
-          // Sets the current user's default image
+          setHasPreferredImage(newImage ? true : false);
+          // Sets the user's default image
           setDefaultUserImage(defaultImage ? defaultImage : null);
           // Displays to the user that their photo has been submitted
           createSnackbar('Photo Submitted', 'Success');
@@ -236,7 +256,7 @@ export const Identification = props => {
    * Handles the switch of showing the default and preferred image
    */
   function handlePhotoSwitch() {
-    setSwitchPhotos(!switchPhotos);
+    setisPhotosSwitched(!isPhotosSwitched);
   }
 
   /**
@@ -264,7 +284,7 @@ export const Identification = props => {
         // Deletes the preferred image, clears any timeouts errors and closes out of the photo updater
         await clearPhotoDialogErrorTimeout();
         setPreferredUserImage(null);
-        seHasPreferredImage(false);
+        setHasPreferredImage(false);
         setOpenPhotoDialog(false);
         window.postMessage('update-profile-picture', window.location.origin);
       })
@@ -466,7 +486,7 @@ export const Identification = props => {
     setIsSnackbarOpen(false);
   }
 
-  // Saves the nickname of the current user if available
+  // Saves the nickname of the given user if available
   function createNickname(profile) {
     let Name = String(profile.fullName);
     let FirstName = Name.split(' ')[0];
@@ -721,7 +741,7 @@ export const Identification = props => {
         </Grid>
 
         <div className="identification-card-content">
-          {/* SHOWS THE CARD'S CONTENT IF USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
+          {/* SHOWS THE CARD'S CONTENT IF THE GIVEN USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
           {userProfile && (defaultUserImage || preferredUserImage) ? (
             <Grid container className="identification-card-content-card" justify="center">
               <Grid
@@ -737,11 +757,11 @@ export const Identification = props => {
                         className="identification-card-content-card-container-photo-main-container-image"
                         src={`data:image/jpg;base64,${
                           // Checks to see if the default and preferred photos should switch between bubbles
-                          switchPhotos
+                          isPhotosSwitched
                             ? // Main Photo: Default
                               defaultUserImage
                             : // Main Photo: Preferred
-                            // If the user doesn't have a preferred photo, then their default photo is shown
+                            // If the given user doesn't have a preferred photo, then their default photo is shown
                             hasPreferredImage
                             ? preferredUserImage
                             : defaultUserImage
@@ -771,7 +791,7 @@ export const Identification = props => {
                         className="identification-card-content-card-container-photo-side-image"
                         src={`data:image/jpg;base64,${
                           // Checks to see if the default and preferred photos should switch between bubbles
-                          switchPhotos
+                          isPhotosSwitched
                             ? // Side Photo: Preferred
                               preferredUserImage
                             : // Side Photo: Default
