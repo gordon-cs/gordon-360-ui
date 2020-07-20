@@ -143,6 +143,7 @@ $image-side-width-desktop: 90px;
                 &-image {
                   width: $image-main-width-desktop;
                   height: $image-main-height-desktop;
+                  object-fit: cover;
                 }
                 &-tile-bar {
                   position: absolute;
@@ -185,6 +186,7 @@ $image-side-width-desktop: 90px;
                 border-radius: $image-border-radius;
                 width: $image-side-width-desktop;
                 height: $image-side-height-desktop;
+                object-fit: cover;
               }
               &-button {
                 position: absolute;
