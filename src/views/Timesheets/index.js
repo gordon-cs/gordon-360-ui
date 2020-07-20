@@ -571,7 +571,7 @@ const Timesheets = props => {
                           interactive
                           disableFocusListener
                           disableTouchListener
-                          title={(canUseStaff ? console.log(jobs.getHourTypes()) // need to update for staff
+                          title={(canUseStaff ? 'Staff Timesheets Info' // need to update for staff
                             // eslint-disable-next-line no-multi-str
                             :'Student employees are not permitted to work more than 20 total hours\
                         per work week, or more than 40 hours during winter, spring, and summer breaks.\

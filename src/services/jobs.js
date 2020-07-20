@@ -128,6 +128,7 @@ const deleteClockIn = async () => {
   return http.put(`jobs/deleteClockIn`);
 };
 
+// eslint-disable-next-line no-unused-vars
 const getHourTypes = () => {
   return http.get(`jobs/hourTypes`);
 }
