@@ -65,7 +65,7 @@ const Timesheets = (props) => {
   const [clockInOut, setClockInOut] = useState('Clock In');
   const [canUseStaff, setCanUseStaff] = useState(null);
   const [hourTypes, setHourTypes] = useState(null);
-  const [selectedHourType, setSelectedHourType] = useState('null');
+  const [selectedHourType, setSelectedHourType] = useState('R');
 
   // disabled lint in some lines in order to remove warning about race condition that does not apply
   // in our current case.
@@ -506,16 +506,12 @@ const Timesheets = (props) => {
       >
         <InputLabel className="disable-select">Hour Type</InputLabel>
         <Select
-          defaultValue="Regular"
           value={selectedHourType}
           onChange={(e) => {
             setSelectedHourType(e.target.value);
           }}
           input={<Input id="hour type" />}
         >
-          <MenuItem label="None" value="">
-            <em>None</em>
-          </MenuItem>
           {hourTypeMenuItems}
         </Select>
       </FormControl>
