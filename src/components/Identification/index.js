@@ -223,10 +223,23 @@ export const Identification = props => {
            * preferred image to show. The Gordon Default Image is only a fallback when no image is
            * available
            */
-          const { def: defaultImage } = await user.getImage(userProfile.AD_Username);
+
+          /**
+           * If the currently signed-in user is Faculty, retrieving their specific profile images will
+           * return their default image. If the currently signed-in user is Non-Faculty, retrieving
+           * their profile images will only return their preferred making the default undefined.
+           * This is to prevent a bug where a student submitting their photo would see a default and
+           * preferred photo instead of just their preferred
+           */
+
+          const { def: defaultImage } =
+            props.profile.PersonType === 'fac'
+              ? await user.getImage(props.profile.AD_Username)
+              : await user.getImage();
+
           // Sets the user's preferred image
           setPreferredUserImage(newImage);
-          setHasPreferredImage(newImage ? true : false);
+          setHasPreferredImage(true);
           // Sets the user's default image
           setDefaultUserImage(defaultImage ? defaultImage : null);
           // Displays to the user that their photo has been submitted

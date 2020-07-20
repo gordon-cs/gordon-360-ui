@@ -1,14 +1,11 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
-// import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-// import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
 import { Involvements } from '../../components/Involvements/index';
-// import EmailIcon from '@material-ui/icons/Email';
 import Button from '@material-ui/core/Button';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
