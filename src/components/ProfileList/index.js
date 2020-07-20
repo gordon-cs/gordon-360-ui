@@ -1,19 +1,30 @@
-import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Majors from './../../components/MajorList';
-import Minors from './../../components/MinorList';
 import user from './../../services/user';
-import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import LockIcon from '@material-ui/icons/Lock';
+import Snackbar from '@material-ui/core/Snackbar';
+import ErrorIcon from '@material-ui/icons/Error';
+import CloseIcon from '@material-ui/icons/Close';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import IconButton from '@material-ui/core/IconButton';
 import './profileList.css';
 import { withStyles } from '@material-ui/core/styles';
 import { gordonColors } from '../../theme';
+import {
+  createHomeListItem,
+  createHomePhoneListItem,
+  createMobilePhoneListItem,
+  createMajorsListItem,
+  createMinorsListItem,
+  createResidenceListItem,
+  createDormitoryListItem,
+  createFacultyDepartmentItem,
+  createMailboxItem,
+  createStudentIDItem,
+} from './listItems';
 import '../../app.css';
 
 const PRIVATE_INFO = 'Private as requested.';
@@ -99,21 +110,32 @@ class ProfileList extends Component {
       homePhoneDisclaimer: false,
       addressDisclaimer: false,
       isMobilePhonePrivate: Boolean,
+      isSnackbarOpen: false,
+      snackbarMessage: '',
+      snackBarType: '',
+      snackbarKey: 0,
     };
+    this.createSnackbar = this.createSnackbar.bind(this);
+    this.handleChangeMobilePhonePrivacy = this.handleChangeMobilePhonePrivacy.bind(this);
   }
 
-  async loadProfileInfo() {
+  /**
+   * Attempts to change the privacy of the user's mobile phone on their public profile
+   */
+  async handleChangeMobilePhonePrivacy() {
     try {
-      const profile = await user.getProfileInfo();
-      this.setState({ isMobilePhonePrivate: profile.IsMobilePhonePrivate });
-    } catch (error) {
-      this.setState({ error });
+      await user.setMobilePhonePrivacy(!this.state.isMobilePhonePrivate);
+      // If no error occured above, then changing the user's mobile phone privacy was successful
+      this.setState({ isMobilePhonePrivate: !this.state.isMobilePhonePrivate }, () => {
+        this.createSnackbar(
+          this.state.isMobilePhonePrivate ? 'Mobile Phone Hidden' : 'Mobile Phone Visible',
+          'Success',
+        );
+      });
+    } catch {
+      // Changing the user's mobile phone privacy failed
+      this.createSnackbar('Privacy Change Failed', 'Error');
     }
-  }
-
-  handleChangeMobilePhonePrivacy() {
-    this.setState({ isMobilePhonePrivate: !this.state.isMobilePhonePrivate });
-    user.setMobilePhonePrivacy(!this.state.isMobilePhonePrivate);
   }
 
   formatPhone(phone) {
@@ -145,513 +167,95 @@ class ProfileList extends Component {
     }
   }
 
+  /**
+   * Displays the snackbar to the user.
+   * @param {String} message The message to display to the user
+   * @param {String} messageType The message's type. Either a success or error
+   */
+  createSnackbar(message, messageType) {
+    // Sets the snackbar key as either 0 or 1. This prevents a high number being made.
+    this.setState({
+      snackbarMessage: message,
+      snackbarType: messageType,
+      snackbarKey: (this.state.snackbarKey + 1) % 2,
+      isSnackbarOpen: true,
+    });
+  }
+
   render() {
-    const { classes } = this.props;
+    // The profile of the user whose information to process and the classes style for the mobile
+    // phone privacy switch
+    const { classes, profile } = this.props;
     // Used to indicate content that's hidden on a user's public profile
     const privateTextStyle = {
       opacity: this.props.myProf ? '0.5' : '1',
     };
 
-    let address,
-      homephone,
-      mobilephone,
-      home,
-      department,
-      minors,
-      majors,
-      residence,
-      mailloc,
-      dorminfo,
-      studentID;
-    const { profile } = this.props;
-
-    // Creates the city and state address of the user
-    let userAddress;
-    if (this.props.profile.HomeCity === PRIVATE_INFO) {
-      userAddress = 'Private as requested';
-    } else if (
-      this.props.profile.Country === 'United States Of America' ||
-      this.props.profile.Country === ''
-    ) {
-      userAddress = `${this.props.profile.HomeCity}, ${this.props.profile.HomeState}`;
-    } else {
-      userAddress = `${this.props.profile.Country}`;
-    }
-
-    // Creates the address of the user
-    address = (
-      <Typography>
-        {this.props.profile.HomeStreet2 && (
-          <span
-            className={this.state.addressDisclaimer ? 'disclaimer' : ''}
-            style={privateTextStyle}
-          >
-            {this.props.profile.HomeStreet2},&nbsp;
-          </span>
-        )}
-        {userAddress}
-      </Typography>
+    // Creates the Home Phone List Item
+    let homephone = createHomePhoneListItem(
+      this.props.profile,
+      PRIVATE_INFO,
+      rowWidths,
+      { privateTextStyle, gridStyle },
+      this.state.homePhoneDisclaimer,
+      this.formatPhone(profile.HomePhone),
+      this.props.myProf,
     );
 
-    // Creates the Home Info List Item for the user's Public Profile
-    if (address !== '') {
-      // Gets the row item widths
-      const rowItemOne = rowWidths.twoItems.itemOne;
-      const rowItemTwo = rowWidths.twoItems.itemTwo;
-      home = (
-        <div>
-          <ListItem>
-            <Grid container justify="center">
-              <Grid
-                container
-                xs={rowItemOne.xs}
-                sm={rowItemOne.sm}
-                md={rowItemOne.md}
-                lg={rowItemOne.lg}
-                style={gridStyle.item}
-                alignItems="center"
-              >
-                <Typography className={this.state.addressDisclaimer ? 'disclaimer' : ''}>
-                  Home:
-                </Typography>
-              </Grid>
-              <Grid
-                container
-                xs={rowItemTwo.xs}
-                sm={rowItemTwo.sm}
-                md={rowItemTwo.md}
-                lg={rowItemTwo.lg}
-                style={gridStyle.lastItem}
-                alignItems="center"
-              >
-                <Typography>{address}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </div>
-      );
-    }
+    // Creates the Mobile Phone List Item
+    let mobilephone = createMobilePhoneListItem(
+      this.props.profile,
+      PRIVATE_INFO,
+      rowWidths,
+      { privateTextStyle, gridStyle },
+      this.state.mobilePhoneDisclaimer,
+      this.formatPhone(profile.MobilePhone),
+      classes,
+      this.state.isMobilePhonePrivate,
+      this.props.network,
+      this.props.myProf,
+      this.handleChangeMobilePhonePrivacy,
+    );
 
-    // Creates the Home Phone Info List Item
-    if (this.props.profile.HomePhone !== undefined && this.props.profile.HomePhone !== '') {
-      // Gets the row item widths
-      const rowItemOne = rowWidths.twoItems.itemOne;
-      const rowItemTwo = rowWidths.twoItems.itemTwo;
-      homephone = (
-        <div>
-          <ListItem>
-            <Grid container justify="center">
-              <Grid
-                container
-                xs={rowItemOne.xs}
-                sm={rowItemOne.sm}
-                md={rowItemOne.md}
-                lg={rowItemOne.lg}
-                style={gridStyle.item}
-                alignItems="center"
-              >
-                <Typography className={this.state.homePhoneDisclaimer ? 'disclaimer' : ''}>
-                  Home Phone:
-                </Typography>
-              </Grid>
-              <Grid
-                container
-                xs={rowItemTwo.xs}
-                sm={rowItemTwo.sm}
-                md={rowItemTwo.md}
-                lg={rowItemTwo.lg}
-                style={gridStyle.lastItem}
-                alignItems="center"
-              >
-                {this.props.profile.HomePhone !== PRIVATE_INFO && !this.props.myProf && (
-                  <a href={'tel:' + this.props.profile.HomePhone} className="number">
-                    <Typography
-                      className={this.state.homePhoneDisclaimer ? 'disclaimer' : 'gc360-text-link'}
-                    >
-                      {this.formatPhone(this.props.profile.HomePhone)}
-                    </Typography>
-                  </a>
-                )}
-                {this.props.profile.HomePhone === PRIVATE_INFO && (
-                  <Typography>Private as requested</Typography>
-                )}
-                {this.props.myProf && (
-                  <Typography
-                    style={
-                      String(this.props.profile.PersonType).includes('stu') ? privateTextStyle : ''
-                    }
-                  >
-                    {this.formatPhone(this.props.profile.HomePhone)}
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </div>
-      );
-    }
-
-    // Creates the Mobile Phone Info List Item for the user's Public Profile
-    if (this.props.profile.MobilePhone !== undefined && this.props.profile.MobilePhone !== '') {
-      // Gets the row item widths
-      const rowItemOne = rowWidths.twoItems.itemOne;
-      const rowItemTwo = rowWidths.twoItems.itemTwo;
-      mobilephone = (
-        <div>
-          <ListItem>
-            <Grid container justify="center">
-              <Grid
-                container
-                xs={rowItemOne.xs}
-                sm={rowItemOne.sm}
-                md={rowItemOne.md}
-                lg={rowItemOne.lg}
-                style={gridStyle.item}
-                alignItems="center"
-              >
-                <Typography className={this.state.mobilePhoneDisclaimer ? 'disclaimer' : ''}>
-                  Mobile Phone:
-                </Typography>
-              </Grid>
-              <Grid
-                container
-                xs={rowItemTwo.xs}
-                sm={rowItemTwo.sm}
-                md={rowItemTwo.md}
-                lg={rowItemTwo.lg}
-                style={gridStyle.lastItem}
-                alignItems="center"
-              >
-                {this.props.profile.MobilePhone !== PRIVATE_INFO && (
-                  <a href={'tel:' + this.props.profile.MobilePhone} className="number">
-                    <Typography
-                      className={
-                        this.state.mobilePhoneDisclaimer ? 'disclaimer' : 'gc360-text-link'
-                      }
-                    >
-                      {this.formatPhone(this.props.profile.MobilePhone)}
-                    </Typography>
-                  </a>
-                )}
-                {this.props.profile.MobilePhone === PRIVATE_INFO && (
-                  <Typography>Private as requested</Typography>
-                )}
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </div>
-      );
-    }
-
-    // Creates the Mobile Phone Info List Item for the user's My Profile
-    if (this.props.myProf && this.props.profile.MobilePhone) {
-      // Gets the row item widths
-      const rowItemOne = rowWidths.threeItems.itemOne;
-      const rowItemTwo = rowWidths.threeItems.itemTwo;
-      const rowItemThree = rowWidths.threeItems.itemThree;
-      mobilephone = (
-        <div>
-          <ListItem>
-            <Grid container alignItems="center" justify="center">
-              <Grid
-                container
-                xs={rowItemOne.xs}
-                sm={rowItemOne.sm}
-                md={rowItemOne.md}
-                lg={rowItemOne.lg}
-                style={gridStyle.item}
-                alignItems="center"
-              >
-                <Typography>Mobile Phone:</Typography>
-              </Grid>
-              <Grid
-                coontainer
-                xs={rowItemTwo.xs}
-                sm={rowItemTwo.sm}
-                md={rowItemTwo.md}
-                lg={rowItemTwo.lg}
-                style={{
-                  ...gridStyle.item,
-                  ...(this.state.isMobilePhonePrivate ? privateTextStyle : ''),
-                }}
-                alignItems="center"
-              >
-                <Typography>{this.formatPhone(this.props.profile.MobilePhone)}</Typography>
-              </Grid>
-
-              <Grid
-                container
-                xs={rowItemThree.xs}
-                sm={rowItemThree.sm}
-                md={rowItemThree.md}
-                lg={rowItemThree.lg}
-                style={gridStyle.lastItem}
-                alignItems="center"
-              >
-                <Grid container justify="center" alignItems="center" direction="column">
-                  {this.props.network === 'online' && (
-                    <Switch
-                      onChange={() => {
-                        this.handleChangeMobilePhonePrivacy();
-                      }}
-                      checked={!this.state.isMobilePhonePrivate}
-                      classes={{
-                        switchBase: classes.colorSwitchBase,
-                        checked: classes.colorChecked,
-                        bar: classes.colorBar,
-                      }}
-                    />
-                  )}
-                  <Typography>{this.state.isMobilePhonePrivate ? 'Private' : 'Public'}</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </div>
-      );
-    }
-
-    // Shows the majors and minors list items if the user is a student
-    if (String(this.props.profile.PersonType).includes('stu')) {
-      // Creates the Minors List Item
-      if (String(this.props.profile.Minors).length !== 0) {
-        minors = (
-          <Minors minors={this.props.profile.Minors} rowWidths={rowWidths} gridStyle={gridStyle} />
-        );
-      }
-
-      // Creates the Majors List Item
-      majors = (
-        <Majors majors={this.props.profile.Majors} rowWidths={rowWidths} gridStyle={gridStyle} />
-      );
-
-      // Creates the Residence List Item
-      if (this.props.profile.OnOffCampus !== '') {
-        // Gets the row item widths
-        const rowItemOne = rowWidths.twoItems.itemOne;
-        const rowItemTwo = rowWidths.twoItems.itemTwo;
-        residence = (
-          <div>
-            <ListItem>
-              <Grid container justify="center">
-                <Grid
-                  container
-                  xs={rowItemOne.xs}
-                  sm={rowItemOne.sm}
-                  md={rowItemOne.md}
-                  lg={rowItemOne.lg}
-                  style={gridStyle.item}
-                  alignItems="center"
-                >
-                  <Typography>On/Off Campus:</Typography>
-                </Grid>
-                <Grid
-                  container
-                  xs={rowItemTwo.xs}
-                  sm={rowItemTwo.sm}
-                  md={rowItemTwo.md}
-                  lg={rowItemTwo.lg}
-                  style={gridStyle.lastItem}
-                  alignItems="center"
-                >
-                  <Typography>{this.props.profile.OnOffCampus}</Typography>
-                </Grid>
-              </Grid>
-            </ListItem>
-            <Divider />
-          </div>
-        );
-      }
-    }
-
-    // Creates the Dorm Info List Item
-    if (
-      String(this.props.profile.PersonType).includes('stu') &&
-      (profile.BuildingDescription || profile.Hall)
-    ) {
-      // Gets the row item widths
-      const rowItemOne = rowWidths.twoItems.itemOne;
-      const rowItemTwo = rowWidths.twoItems.itemTwo;
-      dorminfo = (
-        <div>
-          <ListItem>
-            <Grid container justify="center">
-              <Grid
-                container
-                xs={rowItemOne.xs}
-                sm={rowItemOne.sm}
-                md={rowItemOne.md}
-                lg={rowItemOne.lg}
-                style={gridStyle.item}
-                alignItems="center"
-              >
-                <Typography>Dormitory: </Typography>
-              </Grid>
-              <Grid
-                container
-                xs={rowItemTwo.xs}
-                sm={rowItemTwo.sm}
-                md={rowItemTwo.md}
-                lg={rowItemTwo.lg}
-                style={gridStyle.lastItem}
-                alignItems="center"
-              >
-                <Typography>
-                  {profile.BuildingDescription ? profile.BuildingDescription : profile.Hall}
-                  {this.props.myProf && profile.OnCampusRoom ? (
-                    <span style={privateTextStyle}>, Room {profile.OnCampusRoom}</span>
-                  ) : (
-                    ''
-                  )}
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </div>
-      );
-    }
+    // Creates the Home List Item
+    let home = createHomeListItem(
+      this.props.profile,
+      PRIVATE_INFO,
+      rowWidths,
+      { privateTextStyle, gridStyle },
+      this.state.addressDisclaimer,
+    );
 
     // Creates the Faculty Department List Item
-    if (String(this.props.profile.PersonType).includes('fac')) {
-      if (this.props.profile.OnCampusDepartment !== '') {
-        // Gets the row item widths
-        const rowItemOne = rowWidths.twoItems.itemOne;
-        const rowItemTwo = rowWidths.twoItems.itemTwo;
-        department = (
-          <div>
-            <ListItem>
-              <Grid container justify="center">
-                <Grid
-                  container
-                  xs={rowItemOne.xs}
-                  sm={rowItemOne.sm}
-                  md={rowItemOne.md}
-                  lg={rowItemOne.lg}
-                  style={gridStyle.item}
-                  alignItems="center"
-                >
-                  <Typography>Department:</Typography>
-                </Grid>
-                <Grid
-                  container
-                  xs={rowItemTwo.xs}
-                  sm={rowItemTwo.sm}
-                  md={rowItemTwo.md}
-                  lg={rowItemTwo.lg}
-                  style={gridStyle.lastItem}
-                  alignItems="center"
-                >
-                  <Typography>{this.props.profile.OnCampusDepartment}</Typography>
-                </Grid>
-              </Grid>
-            </ListItem>
-            <Divider />
-          </div>
-        );
-      }
-    }
+    let department = createFacultyDepartmentItem(this.props.profile, rowWidths, { gridStyle });
 
-    // Creates the Mailbox Info List Item
-    if (
-      String(this.props.profile.PersonType).includes('stu') &&
-      this.props.profile.Mail_Location !== '' &&
-      this.props.profile.Mail_Location !== undefined
-    ) {
-      // Gets the row item widths
-      const rowItemOne = rowWidths.twoItems.itemOne;
-      const rowItemTwo = rowWidths.twoItems.itemTwo;
-      mailloc = (
-        <div>
-          <ListItem>
-            <Grid container justify="center">
-              <Grid
-                container
-                xs={rowItemOne.xs}
-                sm={rowItemOne.sm}
-                md={rowItemOne.md}
-                lg={rowItemOne.lg}
-                style={gridStyle.item}
-                alignItems="center"
-              >
-                <Typography>Mailbox:</Typography>
-              </Grid>
-              <Grid
-                container
-                xs={rowItemTwo.xs}
-                sm={rowItemTwo.sm}
-                md={rowItemTwo.md}
-                lg={rowItemTwo.lg}
-                style={gridStyle.lastItem}
-                alignItems="center"
-              >
-                <Typography>#{this.props.profile.Mail_Location}</Typography>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </div>
-      );
-    }
+    // Creates the Minors List Item
+    let minors = createMinorsListItem(this.props.profile, rowWidths, { gridStyle });
+
+    // Creates the Majors List Item
+    let majors = createMajorsListItem(this.props.profile, rowWidths, { gridStyle });
+
+    // Creates the Residence List Item
+    let residence = createResidenceListItem(this.props.profile, rowWidths, { gridStyle });
+
+    // Creates the Mailbox List Item
+    let mailloc = createMailboxItem(this.props.profile, rowWidths, { gridStyle });
+
+    // Creates the Dormitory List Item
+    let dorminfo = createDormitoryListItem(
+      this.props.profile,
+      rowWidths,
+      { privateTextStyle, gridStyle },
+      this.props.myProf,
+    );
 
     // Creates the Student ID List Item
-    if (this.props.myProf && String(this.props.profile.PersonType).includes('stu')) {
-      // Gets the row item widths
-      const rowItemOne = rowWidths.threeItems.itemOne;
-      const rowItemTwo = rowWidths.threeItems.itemTwo;
-      const rowItemThree = rowWidths.threeItems.itemThree;
-      studentID = (
-        <div>
-          <ListItem>
-            <Grid container justify="center" alignItems="center">
-              <Grid
-                container
-                xs={rowItemOne.xs}
-                sm={rowItemOne.sm}
-                md={rowItemOne.md}
-                lg={rowItemOne.lg}
-                style={gridStyle.item}
-                alignItems="center"
-              >
-                <Typography>Student ID:</Typography>
-              </Grid>
-              <Grid
-                coontainer
-                xs={rowItemTwo.xs}
-                sm={rowItemTwo.sm}
-                md={rowItemTwo.md}
-                lg={rowItemTwo.lg}
-                justify="right"
-                style={gridStyle.item}
-              >
-                <Typography style={privateTextStyle}>{this.props.profile.ID}</Typography>
-              </Grid>
-              <Grid
-                item
-                xs={rowItemThree.xs}
-                sm={rowItemThree.sm}
-                md={rowItemThree.md}
-                lg={rowItemThree.lg}
-                style={gridStyle.lastItem}
-                justify="right"
-                align="center"
-              >
-                <Grid container justify="center">
-                  <Grid item>
-                    <LockIcon className="lock-icon" />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </ListItem>
-          <Divider />
-        </div>
-      );
-    }
+    let studentID = createStudentIDItem(
+      this.props.profile,
+      rowWidths,
+      { privateTextStyle, gridStyle },
+      this.props.myProf,
+    );
 
     return (
       <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -682,6 +286,59 @@ class ProfileList extends Component {
               )}
           </CardContent>
         </Card>
+
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          // Makes every snackbar unique to prevent the same snackbar from being updated
+          key={this.state.snackbarKey.toString()}
+          open={this.state.isSnackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => {
+            this.setState({ isSnackbarOpen: false });
+          }}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={
+            // If the message type is Success
+            this.state.snackbarType === 'Success' ? (
+              <span id="message-id">
+                <CheckCircleIcon
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '0.5rem',
+                  }}
+                />
+                {this.state.snackbarMessage}
+              </span>
+            ) : (
+              <span id="message-id">
+                <ErrorIcon
+                  style={{
+                    marginBottom: '-4.5pt',
+                    marginRight: '0.5rem',
+                  }}
+                />
+                {this.state.snackbarMessage}
+              </span>
+            )
+          }
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => {
+                this.setState({ isSnackbarOpen: false });
+              }}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </Grid>
     );
   }
