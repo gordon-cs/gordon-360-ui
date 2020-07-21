@@ -20,7 +20,7 @@ export default class GordonEventItem extends Component {
   render() {
     const { event } = this.props;
     const subheader = `${event.date}, ${event.timeRange}`;
-
+    
     // let content;
     // if (event.Occurrences.length > 1) {
     //   content = event.Occurrences
@@ -30,6 +30,7 @@ export default class GordonEventItem extends Component {
     //       </ListItem>
     //     ));
     // }
+
     return (
       <section>
         <Card onClick={this.handleExpandClick}>
@@ -40,7 +41,7 @@ export default class GordonEventItem extends Component {
           </CardContent>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography>Discription</Typography>
+              <Typography>Description</Typography>
               <Typography type="caption">{event.Description}</Typography>
               {/* {content} */}
             </CardContent>

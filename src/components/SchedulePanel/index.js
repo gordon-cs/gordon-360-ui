@@ -15,17 +15,16 @@ import RemoveScheduleDialog from './components/RemoveScheduleDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
 import schedulecontrol from './../../services/schedulecontrol';
-import urlRegex from 'url-regex'
+import urlRegex from 'url-regex';
 import { Markup } from 'interweave';
 
 import myschedule from '../../services/myschedule';
 
 import GordonLoader from '../../components/Loader';
 
-
 // Default values
 const STARTHOUR = '08:00';
-const ENDHOUR ='17:00';
+const ENDHOUR = '17:00';
 
 const styles = {
   colorSwitchBase: {
@@ -45,7 +44,7 @@ class GordonSchedulePanel extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      myProf: false,  //myProf is boolean value that determines whether this is myprofile or not. this.props.profile actually contains profile data.
+      myProf: false, //myProf is boolean value that determines whether this is myprofile or not. this.props.profile actually contains profile data.
       isSchedulePrivate: 0,
       isExpanded: false,
       myScheduleOpen: false,
@@ -55,8 +54,8 @@ class GordonSchedulePanel extends Component {
       description: '',
       modifiedTimeStamp: null,
       loading: true,
-      start:STARTHOUR,
-      end:ENDHOUR,
+      start: STARTHOUR,
+      end: ENDHOUR,
       resourceId: 0,
       reloadCall: false,
     };
@@ -80,31 +79,39 @@ class GordonSchedulePanel extends Component {
     this.loadData(this.props.profile);
   }
 
-  loadData = async searchedUser => {
+  loadData = async (searchedUser) => {
     try {
-      const scheduleControlInfo = await schedulecontrol.getScheduleControl(searchedUser.AD_Username);
+      const scheduleControlInfo = await schedulecontrol.getScheduleControl(
+        searchedUser.AD_Username,
+      );
       this.scheduleControlInfo = scheduleControlInfo;
     } catch (e) {
       this.setState({ loading: false });
     }
     if (this.scheduleControlInfo) {
-      this.setState({ isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate,
-        description: this.scheduleControlInfo.Description ? 
-        this.scheduleControlInfo.Description.replace(new RegExp("SlSh", 'g'), '/').replace(new RegExp("CoLn", 'g'), ':')
-      .replace(new RegExp("dOT", 'g'), '.') : '',
-       modifiedTimeStamp: this.scheduleControlInfo.ModifiedTimeStamp });
+      this.setState({
+        isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate,
+        description: this.scheduleControlInfo.Description
+          ? this.scheduleControlInfo.Description.replace(new RegExp('SlSh', 'g'), '/')
+              .replace(new RegExp('CoLn', 'g'), ':')
+              .replace(new RegExp('dOT', 'g'), '.')
+          : '',
+        modifiedTimeStamp: this.scheduleControlInfo.ModifiedTimeStamp,
+      });
     }
     this.setState({ loading: false });
   };
 
-  handleMyScheduleOpen = slotInfo => {
-    if (this.props.myProf){
+  handleMyScheduleOpen = (slotInfo) => {
+    if (this.props.myProf) {
       this.setState({ myScheduleOpen: true });
-      if (slotInfo){
-        let startTime = slotInfo.start.toTimeString().split(":");
-        let endTime = slotInfo.end.toTimeString().split(":");
-        this.setState({start:startTime[0] + ":" + startTime[1],
-          end:endTime[0] + ":" + endTime[1], resourceId: slotInfo.resourceId,
+      if (slotInfo) {
+        let startTime = slotInfo.start.toTimeString().split(':');
+        let endTime = slotInfo.end.toTimeString().split(':');
+        this.setState({
+          start: startTime[0] + ':' + startTime[1],
+          end: endTime[0] + ':' + endTime[1],
+          resourceId: slotInfo.resourceId,
         });
       }
       this.setState({ isDoubleClick: false });
@@ -127,11 +134,11 @@ class GordonSchedulePanel extends Component {
     this.setState({ removeMyScheduleOpen: false });
   };
 
-  handleRemoveButton = event => {
+  handleRemoveButton = (event) => {
     if (event.id > 1000) {
       this.setState({ disabled: false, selectedEvent: event });
     } else {
-      this.setState({ disabled: true});
+      this.setState({ disabled: true });
     }
   };
 
@@ -147,12 +154,12 @@ class GordonSchedulePanel extends Component {
     this.setState({ disabled: false });
   };
 
-  handleDescriptionSubmit = async descValue => {
+  handleDescriptionSubmit = async (descValue) => {
     await schedulecontrol.setScheduleDescription(descValue);
     this.loadData(this.props.profile);
   };
 
-  handleMyScheduleSubmit = mySchedule => {
+  handleMyScheduleSubmit = (mySchedule) => {
     var data = {
       Event_ID: null,
       Gordon_ID: this.props.profile.ID,
@@ -175,22 +182,22 @@ class GordonSchedulePanel extends Component {
       data.Event_ID = this.state.selectedEvent.id;
       myschedule
         .updateMySchedule(data)
-        .then(value => {
-        this.loadData(this.props.profile);
-        this.setState({reloadCall:true});
+        .then((value) => {
+          this.loadData(this.props.profile);
+          this.setState({ reloadCall: true });
         })
-        .catch(error => {
+        .catch((error) => {
           alert('There was an error while updating the event');
           console.log(error);
         });
     } else {
       myschedule
         .addMySchedule(data)
-        .then(value => {
-        this.loadData(this.props.profile);
-        this.setState({reloadCall:true});
+        .then((value) => {
+          this.loadData(this.props.profile);
+          this.setState({ reloadCall: true });
         })
-        .catch(error => {
+        .catch((error) => {
           alert('There was an error while adding the event');
           console.log(error);
         });
@@ -200,17 +207,17 @@ class GordonSchedulePanel extends Component {
   handleRemoveSubmit() {
     myschedule
       .deleteMySchedule(this.state.selectedEvent.id)
-      .then(value => {
+      .then((value) => {
         this.loadData(this.props.profile);
-        this.setState({reloadCall:true, disabled:true});
+        this.setState({ reloadCall: true, disabled: true });
       })
-      .catch(error => {
+      .catch((error) => {
         alert('There was an error while removing the event');
         console.log(error);
       });
   }
 
-  handleDoubleClick = event => {
+  handleDoubleClick = (event) => {
     if (this.props.myProf && event.id > 1000) {
       this.setState({ myScheduleOpen: true, selectedEvent: event, isDoubleClick: true });
     }
@@ -226,23 +233,18 @@ class GordonSchedulePanel extends Component {
     this.setState({ isExpanded: !this.state.isExpanded });
   }
 
-  reloadHandler(){
-    this.setState({reloadCall:false});
+  reloadHandler() {
+    this.setState({ reloadCall: false });
   }
 
-
-
   render() {
-    const replaced = this.state.description
-  .replace(urlRegex({strict: false}), function(url) {
-    if ((url.split('://')[0] !== 'http') || url.split('://')[0] !== 'https'){
-     return '<a target="_blank" rel="noopener" href="https://'+ url + '">' + url + "</a>";
-    }
-    else{
-  return '<a target="_blank" rel="noopener" href="'+ url + '">' + url + "</a>";
-    }
-  });
-
+    const replaced = this.state.description.replace(urlRegex({ strict: false }), function (url) {
+      if (url.split('://')[0] !== 'http' && url.split('://')[0] !== 'https') {
+        return '<a target="_blank" rel="noopener" href="https://' + url + '">' + url + '</a>';
+      } else {
+        return '<a target="_blank" rel="noopener" href="' + url + '">' + url + '</a>';
+      }
+    });
 
     const button = {
       background: gordonColors.primary.cyan,
@@ -250,7 +252,6 @@ class GordonSchedulePanel extends Component {
     };
     const { classes } = this.props;
     let isFaculty = String(this.props.profile.PersonType).includes('fac');
-
 
     let privacyButton,
       removeOfficeHourButton,
@@ -261,45 +262,44 @@ class GordonSchedulePanel extends Component {
       removeScheduleDialog,
       lastUpdate;
 
-      lastUpdate = <div style={{color: gordonColors.primary.cyan}}>
-      <Typography style={{fontSize: '0.9rem'}}>Last Updated</Typography>
-      <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
+    lastUpdate = (
+      <div style={{ color: gordonColors.primary.cyan }}>
+        <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
+        <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
       </div>
+    );
 
-      if(this.props.myProf){
-        editDialog = (
-          <EditDescriptionDialog
-            onDialogSubmit={this.handleDescriptionSubmit}
-            handleEditDescriptionClose={this.handleEditDescriptionClose}
-            editDescriptionOpen={this.state.editDescriptionOpen}
-            descriptiontext={this.state.description}
-          />
-        );
-    
-        myScheduleDialog = (
-          <MyScheduleDialog
-            onDialogSubmit={this.handleMyScheduleSubmit}
-            handleMyScheduleClose={this.handleMyScheduleClose}
-            myScheduleOpen={this.state.myScheduleOpen}
-            selectedEvent={this.state.selectedEvent}
-            isDoubleClick={this.state.isDoubleClick}
-            startTime={this.state.start}
-            endTime={this.state.end}
-            resourceId={this.state.resourceId}
-          />
-        );
-    
-        removeScheduleDialog = (
-          <RemoveScheduleDialog
-            onDialogSubmit={this.handleRemoveSubmit}
-            handleRemoveMyScheduleClose={this.handleRemoveMyScheduleClose}
-            removeMyScheduleOpen={this.state.removeMyScheduleOpen}
-          />
-        );
-      }
+    if (this.props.myProf) {
+      editDialog = (
+        <EditDescriptionDialog
+          onDialogSubmit={this.handleDescriptionSubmit}
+          handleEditDescriptionClose={this.handleEditDescriptionClose}
+          editDescriptionOpen={this.state.editDescriptionOpen}
+          descriptiontext={this.state.description}
+        />
+      );
 
-      
+      myScheduleDialog = (
+        <MyScheduleDialog
+          onDialogSubmit={this.handleMyScheduleSubmit}
+          handleMyScheduleClose={this.handleMyScheduleClose}
+          myScheduleOpen={this.state.myScheduleOpen}
+          selectedEvent={this.state.selectedEvent}
+          isDoubleClick={this.state.isDoubleClick}
+          startTime={this.state.start}
+          endTime={this.state.end}
+          resourceId={this.state.resourceId}
+        />
+      );
 
+      removeScheduleDialog = (
+        <RemoveScheduleDialog
+          onDialogSubmit={this.handleRemoveSubmit}
+          handleRemoveMyScheduleClose={this.handleRemoveMyScheduleClose}
+          removeMyScheduleOpen={this.state.removeMyScheduleOpen}
+        />
+      );
+    }
 
     if (this.props.myProf && !isFaculty) {
       privacyButton = (
@@ -315,8 +315,10 @@ class GordonSchedulePanel extends Component {
               bar: classes.colorBar,
             }}
           />
-          <Typography style={{fontSize: '0.9rem'}}>
-            {this.state.isSchedulePrivate ? 'Course Schedule : Private' : 'Course Schedule : Public'}
+          <Typography style={{ fontSize: '0.9rem' }}>
+            {this.state.isSchedulePrivate
+              ? 'Course Schedule : Private'
+              : 'Course Schedule : Public'}
           </Typography>
         </Fragment>
       );
@@ -325,10 +327,9 @@ class GordonSchedulePanel extends Component {
     if (this.props.myProf) {
       editDescriptionButton = (
         <Fragment>
-          <Button 
-            variant="contained" 
-            style={button} 
-            onClick={this.handleEditDescriptionOpen}>EDIT DESCRIPTION</Button>
+          <Button variant="contained" style={button} onClick={this.handleEditDescriptionOpen}>
+            EDIT DESCRIPTION
+          </Button>
         </Fragment>
       );
     }
@@ -338,7 +339,7 @@ class GordonSchedulePanel extends Component {
         <Fragment>
           <Button
             variant="contained"
-            style={{backgroundColor:gordonColors.secondary.red, color:"white"}} 
+            style={{ backgroundColor: gordonColors.secondary.red, color: 'white' }}
             onClick={this.handleRemoveMyScheduleOpen}
             disabled={this.state.disabled} //disabled
           >
@@ -363,35 +364,44 @@ class GordonSchedulePanel extends Component {
             <Typography>{panelTitle} the Schedule</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
+            <Grid container direction="row" xs={12} lg={12} justify="center">
+              <Grid container direction="row" xs={12} lg={10}>
+                <Grid container xs={12} lg={8} alignItems="center" justify="flex-start">
+                  <Markup content={replaced} />
+                </Grid>
 
-          <Grid container direction="row" xs={12} lg={12} justify="center">
+                <Grid
+                  container
+                  direction="column"
+                  xs={12}
+                  lg={4}
+                  alignItems="flex-end"
+                  justify="flex-end"
+                >
+                  {privacyButton}
+                </Grid>
 
+                <Grid item xs={6} lg={2}>
+                  {editDescriptionButton}
+                </Grid>
 
-          <Grid container direction="row"  xs={12} lg={10}>
-          <Grid container xs={12} lg={8} alignItems="center" justify="flex-start">
-          <Markup content={replaced} />
-          </Grid>
+                <Grid item xs={6} lg={2}>
+                  {removeOfficeHourButton}
+                </Grid>
 
-          <Grid container direction="column" xs={12} lg={4} alignItems="flex-end" justify="flex-end">
-          {privacyButton}
-          </Grid>
+                <Grid
+                  container
+                  direction="column"
+                  xs={12}
+                  lg={8}
+                  alignItems="flex-end"
+                  justify="flex-end"
+                >
+                  {lastUpdate}
+                </Grid>
+              </Grid>
 
-
-          <Grid item xs={6} lg={2}>
-          {editDescriptionButton}
-          </Grid>
-
-          <Grid item xs={6} lg={2}>
-          {removeOfficeHourButton}
-          </Grid>
-
-          <Grid container direction="column" xs={12} lg={8} alignItems="flex-end" justify="flex-end" >
-          {lastUpdate}
-          </Grid>
-
-          </Grid>
-
-          <Grid item xs={12} lg={10}>
+              <Grid item xs={12} lg={10}>
                 <GordonScheduleCalendar
                   profile={this.props.profile}
                   myProf={this.props.myProf}
@@ -403,15 +413,14 @@ class GordonSchedulePanel extends Component {
                   reloadHandler={this.reloadHandler}
                   reloadCall={this.state.reloadCall}
                 />
-          </Grid>
-          </Grid>
+              </Grid>
+            </Grid>
 
             <Fragment>
               {editDialog}
               {myScheduleDialog}
               {removeScheduleDialog}
             </Fragment>
-
           </ExpansionPanelDetails>
         </ExpansionPanel>
       );

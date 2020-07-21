@@ -83,6 +83,18 @@ const submitShiftsForUser = (shiftsToSubmit, submittedTo) => {
   return http.post(`jobs/submitShifts`, shifts);
 };
 
+const clockIn = data => {
+  return http.post(`jobs/clockIn`, data);
+};
+
+const clockOut = () => {
+  return http.get(`jobs/clockOut`);
+};
+
+const deleteClockIn = () => {
+  return http.put(`jobs/deleteClockIn`);
+};
+
 export default {
   getActiveJobsForUser,
   getSavedShiftsForUser,
@@ -91,4 +103,7 @@ export default {
   deleteShiftForUser,
   getSupervisorNameForJob,
   submitShiftsForUser,
+  clockIn,
+  clockOut,
+  deleteClockIn
 };

@@ -316,9 +316,10 @@ const getImage = async username => {
 
 /**
  * Reset the current user's from preferred image to user's default image
+ * @returns {Response} Determines if the image was reset successfully
  */
 const resetImage = () => {
-  http.post('/profiles/image/reset', '');
+  return http.post('/profiles/image/reset', '');
 };
 
 /**
