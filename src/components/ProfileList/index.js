@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
+import Advisors from './../../components/AdvisorList';
 import user from './../../services/user';
 import Switch from '@material-ui/core/Switch';
 import Card from '@material-ui/core/Card';
@@ -68,7 +69,7 @@ class ProfileList extends Component {
       return tele;
     }
   }
-  componentWillMount() {
+  async componentWillMount() {
     this.setState({ isMobilePhonePrivate: this.props.profile.IsMobilePhonePrivate });
     if (!this.props.myProf) {
       this.setState({
@@ -86,6 +87,7 @@ class ProfileList extends Component {
           (this.props.profile.HomeStreet2 || this.props.profile.HomeStreet1),
       });
     }
+    this.setState({advisors: await user.getAdvisor(this.props.profile.AD_Username)});
   }
 
   render() {
@@ -100,7 +102,7 @@ class ProfileList extends Component {
     let homephone, mobilephone, Home, street;
     let Department;
     let minors, majors, residence;
-    let majoradvisors, minoradvisors;
+    let advisors;
     let mailloc, dorminfo;
     let studentID;
     const { profile } = this.props;
@@ -270,12 +272,13 @@ class ProfileList extends Component {
       }
     }
     if (String(this.props.profile.PersonType).includes('stu')) {
-      majoradvisors=(
+      /*
+      advisors=(
       <div>
             <ListItem>
               <Grid container justify="center">
                 <Grid item xs={6} sm={6} md={3} lg={6}>
-                  <Typography>Major Adviosr:</Typography>
+                  <Typography>Adviosr:</Typography>
                 </Grid>
                 <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
                   <Typography>{}</Typography>
@@ -285,23 +288,9 @@ class ProfileList extends Component {
             <Divider />
           </div>
         );
-        if (String(this.props.profile.Minors).length !== 0) {
-          minoradvisors = (
-            <div>
-                  <ListItem>
-                    <Grid container justify="center">
-                      <Grid item xs={6} sm={6} md={3} lg={6}>
-                        <Typography>Minor Adviosr:</Typography>
-                      </Grid>
-                      <Grid item xs={6} sm={6} md={9} lg={6} justify="right">
-                        <Typography>{}</Typography>
-                      </Grid>
-                    </Grid>
-                  </ListItem>
-                  <Divider />
-                </div>
-              );
-          }
+        */
+       advisors = <Advisors advisors={this.state.advisors} />;
+        
     }
     if (
       String(this.props.profile.PersonType).includes('stu') &&
@@ -398,9 +387,8 @@ class ProfileList extends Component {
           <CardContent>
             <CardHeader title="Personal Information" />
             {majors}
-            {majoradvisors}
             {minors}
-            {minoradvisors}
+            {advisors}
             {residence}
             {dorminfo}
             {mailloc}

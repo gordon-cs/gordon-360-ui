@@ -403,7 +403,8 @@ async function dynamicLinksThenCache(token, termCode) {
       `${apiSource}/api/memberships/student/${id}`,
       `${apiSource}/api/memberships/student/username/${username}/`,
       `${apiSource}/api/profiles/${username}/`,
-      `${apiSource}/api/profiles/Image/${username}/`,
+      `${apiSource}/api/profiles/Advisors/${username}/`,
+      `${apiSource}/api/profiles/Image/${username}/`
       `${apiSource}/api/schedule/${username}/`,
       `${apiSource}/api/myschedule/${username}/`,
       `${apiSource}/api/schedulecontrol/${username}/`,

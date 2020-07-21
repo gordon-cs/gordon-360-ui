@@ -168,6 +168,14 @@ import gordonEvent from './event';
  * @property {String} PersonType Type of person
  */
 
+ /**
+ * @global
+ * @typedef StudentAdvisorInfo
+ * @property {String} FirstName First Name for advisor
+ * @property {String} LastName Last Name for advisor
+ * @property {String} AD_Username User Name for advisor
+ */
+
 /**
  * @global
  * @typedef DiningInfo
@@ -437,6 +445,12 @@ const getProfile = username => {
   return profile;
 };
 
+const getAdvisor = async username => {
+  let advisor;
+  advisor = await http.get(`profiles/Advisors/${username}/`);
+  return advisor;
+}
+
 async function setMobilePhonePrivacy(makePrivate) {
   // 'Y' = private, 'N' = public
   await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
@@ -658,6 +672,7 @@ export default {
   getLeaderPositions,
   getSentMembershipRequests,
   getProfileInfo,
+  getAdvisor,
   resetImage,
   postImage,
   postIDImage,
