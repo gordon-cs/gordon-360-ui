@@ -24,6 +24,7 @@ import {
   createFacultyDepartmentItem,
   createMailboxItem,
   createStudentIDItem,
+  createSpouseItem,
 } from './listItems';
 import '../../app.css';
 
@@ -257,6 +258,9 @@ class ProfileList extends Component {
       this.props.myProf,
     );
 
+    // Creates the Spouse List Item
+    let spouse = createSpouseItem(this.props.profile, rowWidths, { gridStyle });
+
     return (
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <Card className="profile-list-card">
@@ -274,6 +278,7 @@ class ProfileList extends Component {
             {studentID}
             {homephone}
             {home}
+            {spouse}
             {(this.state.homePhoneDisclaimer ||
               this.state.addressDisclaimer ||
               this.state.mobilePhoneDisclaimer) &&

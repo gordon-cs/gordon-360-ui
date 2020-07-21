@@ -857,12 +857,42 @@ export const Identification = props => {
                     className="identification-card-content-card-container-info-name"
                   >
                     <Typography variant="h6" paragraph>
-                      {hasNickName
+                      {userProfile.Title &&
+                      userProfile.Title !== '' &&
+                      userProfile.PersonType === 'fac'
+                        ? // If the user has a title
+                          hasNickName
+                          ? // If the user has a title and a nickname
+                            userProfile.Title +
+                            ' ' +
+                            userProfile.fullName +
+                            ' (' +
+                            userProfile.NickName +
+                            ')'
+                          : // If the user has a title and no nickname
+                            userProfile.Title + ' ' + userProfile.fullName
+                        : // If the user doesn't have a title
+                        hasNickName
+                        ? // If the user doesn't have a title but has a nickname
+                          userProfile.fullName + ' (' + userProfile.NickName + ')'
+                        : // If the user doesn't have a title or a nickname
+                          userProfile.fullName}
+                      {/* {hasNickName
                         ? userProfile.fullName + ' (' + userProfile.NickName + ')'
-                        : userProfile.fullName}
+                        : userProfile.fullName} */}
                     </Typography>
                   </Grid>
-
+                  {userProfile.JobTitle && userProfile.JobTitle !== '' && (
+                    <Grid
+                      item
+                      xs={12}
+                      className="identification-card-content-card-container-info-job-title"
+                    >
+                      <Typography variant="h6" paragraph>
+                        {userProfile.JobTitle}
+                      </Typography>
+                    </Grid>
+                  )}
                   <Grid
                     item
                     xs={12}

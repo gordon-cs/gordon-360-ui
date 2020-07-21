@@ -229,6 +229,9 @@ $image-side-width-desktop: 90px;
             &-class {
               color: rgba(0, 0, 0, 0.54);
             }
+            &-job-title {
+              opacity: 0.7;
+            }
             &-email {
               display: inline-block;
               a:hover {

@@ -615,6 +615,58 @@ function createStudentIDItem(profile, rowWidths, styles, myProf) {
   }
 }
 
+/**
+ * Creates the Spouse List Item
+ *
+ * @param {Object} profile The profile of a user containing all information about them
+ * @param {Object} rowWidths Determines the grid lengths of this list item
+ * @param {Object} styles An object of all styles that this list item uses
+ *
+ * @return {JSX} The JSX of the Spouse List Item
+ */
+function createSpouseItem(profile, rowWidths, styles) {
+  if (String(profile.PersonType).includes('fac') && profile.SpouseName) {
+    // Gets the row item widths
+    const rowItemOne = rowWidths.twoItems.itemOne;
+    const rowItemTwo = rowWidths.twoItems.itemTwo;
+    return (
+      <div>
+        <ListItem>
+          <Grid container justify="center" alignItems="center">
+            <Grid
+              container
+              xs={rowItemOne.xs}
+              sm={rowItemOne.sm}
+              md={rowItemOne.md}
+              lg={rowItemOne.lg}
+              style={styles.gridStyle.item}
+              alignItems="center"
+            >
+              <Typography>Spouse:</Typography>
+            </Grid>
+            <Grid
+              coontainer
+              xs={rowItemTwo.xs}
+              sm={rowItemTwo.sm}
+              md={rowItemTwo.md}
+              lg={rowItemTwo.lg}
+              justify="right"
+              style={styles.gridStyle.item}
+            >
+              <Typography style={styles.privateTextStyle}>
+                {profile.SpouseName === 'Private as requested.'
+                  ? String(profile.SpouseName).replace('.', '')
+                  : profile.SpouseName}
+              </Typography>
+            </Grid>
+          </Grid>
+        </ListItem>
+        <Divider />
+      </div>
+    );
+  }
+}
+
 export {
   createHomeListItem,
   createHomePhoneListItem,
@@ -626,4 +678,5 @@ export {
   createFacultyDepartmentItem,
   createMailboxItem,
   createStudentIDItem,
+  createSpouseItem,
 };
