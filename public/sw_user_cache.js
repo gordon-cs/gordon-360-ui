@@ -90,6 +90,7 @@ async function createRemoteUserLinks() {
             `${apiSource}/memberships/student/username/${profile.AD_Username}/`,
             `${apiSource}/profiles/${profile.AD_Username}/`,
             `${apiSource}/profiles/Image/${profile.AD_Username}/`,
+            `${apiSource}/api/profiles/Advisors/${profile.AD_Username}/`,
             `${apiSource}/schedule/${profile.AD_Username}/`,
             `${apiSource}/myschedule/${profile.AD_Username}/`,
             `${apiSource}/schedulecontrol/${profile.AD_Username}/`,
