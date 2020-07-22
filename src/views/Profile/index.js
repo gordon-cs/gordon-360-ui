@@ -215,8 +215,8 @@ export default class Profile extends Component {
 
                 <Grid item xs={12} lg={5}>
                   <Grid container spacing={2}>
-                    {this.state.profileinfo}
                     {this.state.officeinfo}
+                    {this.state.profileinfo}
                   </Grid>
                 </Grid>
 

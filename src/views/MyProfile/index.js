@@ -125,8 +125,8 @@ const MyProfile = props => {
 
               <Grid item xs={12} lg={5}>
                 <Grid container spacing={2}>
-                  {profileInfo}
                   {officeInfo}
+                  {profileInfo}
                 </Grid>
               </Grid>
 
