@@ -228,6 +228,7 @@ const Timesheets = (props) => {
             timeIn2.toLocaleString(),
             timeOut2.toLocaleString(),
             roundedHourDifference2,
+            selectedHourType,
             userShiftNotes,
           )
             .then(() => {
@@ -268,6 +269,7 @@ const Timesheets = (props) => {
         timeIn.toLocaleString(),
         timeOut.toLocaleString(),
         roundedHourDifference,
+        selectedHourType,
         userShiftNotes,
       )
         .then((result) => {
@@ -295,8 +297,8 @@ const Timesheets = (props) => {
         });
     };
 
-    const saveShift = async (eml, shiftStart, shiftEnd, hoursWorked, shiftNotes) => {
-      await jobs.saveShiftForUser(canUseStaff, eml, shiftStart, shiftEnd, hoursWorked, shiftNotes);
+    const saveShift = async (eml, shiftStart, shiftEnd, hoursWorked, hoursType, shiftNotes) => {
+      await jobs.saveShiftForUser(canUseStaff, eml, shiftStart, shiftEnd, hoursWorked, hoursType, shiftNotes);
     };
 
     const jobsMenuItems = userJobs ? (
@@ -712,7 +714,8 @@ const Timesheets = (props) => {
                             textDecoration: 'none',
                             color: gordonColors.primary.blueShades.A700,
                           }}
-                          href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period" // Need to update for staff
+                          href={(canUseStaff ? "https://reports.gordon.edu/Reports/browse/Staff%20Timesheets":
+                          "https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period")}
                           underline="always"
                           target="_blank"
                           rel="noopener"

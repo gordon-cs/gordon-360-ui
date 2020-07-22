@@ -33,7 +33,7 @@ const getActiveJobsForUser = (canUseStaff, details) => {
  */
 const getSavedShiftsForUser = (canUseStaff) => {
   if (canUseStaff) {
-    return []; //http.get(`jobs/getSavedShiftsStaff/`); This endpoint needs to return [] not null
+    return http.get(`jobs/getSavedShiftsStaff/`);
   }
   return http.get(`jobs/getSavedShifts/`);
 };
@@ -44,7 +44,8 @@ const getSavedShiftsForUser = (canUseStaff) => {
  * @param {Number} eml we don't know what this means yet
  * @param {DateTime} shiftStart The start time of the shift
  * @param {DateTime} shiftEnd The end time of the shift
- * @param {Number} hoursWorked The number of hours worked
+ * @param {Number} hoursWorked The number of hours
+ * @param {char} hoursType Type of hour for staff
  * @param {String} shiftNotes Shift notes
  * @return {Promise.<String>} User's active jobs
  */
@@ -54,8 +55,20 @@ const saveShiftForUser = async (
   shiftStart,
   shiftEnd,
   hoursWorked,
+  hoursType,
   shiftNotes,
 ) => {
+  if (canUseStaff) {
+    let shiftDetails = {
+      EML: eml,
+      SHIFT_START_DATETIME: shiftStart,
+      SHIFT_END_DATETIME: shiftEnd,
+      HOURS_WORKED: hoursWorked,
+      HOURS_TYPE: hoursType,
+      SHIFT_NOTES: shiftNotes,
+    };
+    return await http.post(`jobs/saveShiftStaff/`, shiftDetails);
+  }
   let shiftDetails = {
     EML: eml,
     SHIFT_START_DATETIME: shiftStart,
@@ -63,9 +76,6 @@ const saveShiftForUser = async (
     HOURS_WORKED: hoursWorked,
     SHIFT_NOTES: shiftNotes,
   };
-  if (canUseStaff) {
-    return await http.post(`jobs/saveShiftStaff/`, shiftDetails);
-  }
   return await http.post(`jobs/saveShift/`, shiftDetails);
 };
 
@@ -101,6 +111,18 @@ const getSupervisorNameForJob = (canUseStaff, supervisorID) => {
 
 const submitShiftsForUser = (canUseStaff, shiftsToSubmit, submittedTo) => {
   let shifts = [];
+  if (canUseStaff) {
+    for (let i = 0; i < shiftsToSubmit.length; i++) {
+      shifts.push({
+        ID_NUM: shiftsToSubmit[i].ID_NUM,
+        EML: shiftsToSubmit[i].EML,
+        SHIFT_END_DATETIME: shiftsToSubmit[i].SHIFT_END_DATETIME,
+        SUBMITTED_TO: submittedTo,
+        HOURS_TYPE: shiftsToSubmit[i].HOURS_TYPE,
+        LAST_CHANGED_BY: shiftsToSubmit[i].LAST_CHANGED_BY,
+      });
+    return http.post(`jobs/submitShiftsStaff`, shifts);
+  }}
   for (let i = 0; i < shiftsToSubmit.length; i++) {
     shifts.push({
       ID_NUM: shiftsToSubmit[i].ID_NUM,
@@ -108,11 +130,7 @@ const submitShiftsForUser = (canUseStaff, shiftsToSubmit, submittedTo) => {
       SHIFT_END_DATETIME: shiftsToSubmit[i].SHIFT_END_DATETIME,
       SUBMITTED_TO: submittedTo,
       LAST_CHANGED_BY: shiftsToSubmit[i].LAST_CHANGED_BY,
-    });
-  }
-  if (canUseStaff) {
-    return http.post(`jobs/submitShiftsStaff`, shifts);
-  }
+    });}
   return http.post(`jobs/submitShifts`, shifts);
 };
 

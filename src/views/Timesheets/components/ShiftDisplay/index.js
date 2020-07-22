@@ -103,7 +103,7 @@ export default class ShiftDisplay extends Component {
 
   deleteShiftForUser(rowID, emlDesc) {
     let result = jobs
-      .deleteShiftForUser(rowID)
+      .deleteShiftForUser(this.state.getStaffPageForUser, rowID)
       .then(() => {
         this.jobNamesSet.delete(emlDesc);
         this.loadShifts();
