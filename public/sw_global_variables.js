@@ -8,9 +8,9 @@
 const cacheVersion = 'cache v1.2';
 
 // API Source
-// @PROD (** Make sure the url is all lowercase or the service worker will fail to remove user data **)
+// @PROD (** Make sure the URL is all lowercase or the service worker will fail to remove user data **)
 // const apiSource = 'https://360api.gordon.edu/api';
-// @TRAIN (** Make sure the url is all lowercase or the service worker will fail to remove user data **)
+// @TRAIN (** Make sure the URL is all lowercase or the service worker will fail to remove user data **)
 const apiSource = 'https://360apitrain.gordon.edu/api';
 
 // Font Styles

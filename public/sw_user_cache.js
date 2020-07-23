@@ -278,12 +278,10 @@ async function fetchUserFile(link, headers, attemptsLeft = 2) {
  * Cleans the cache to remove all of the user's data
  */
 async function removeUserCache() {
-  let info = [];
   // Opens the cache and parses through all data
   await caches.open(cacheVersion).then(cache => {
     cache.keys().then(items => {
       items.forEach(item => {
-        info.push(item.url);
         // Checks to see if the url is apart of the list of user's remote links. If so,
         // all data associated with that url is deleted from the cache and from the list
         if (userRemoteLinks.includes(item.url)) {
@@ -293,7 +291,6 @@ async function removeUserCache() {
       });
     });
   });
-  console.log({ info, userRemoteLinks });
 }
 
 /**
