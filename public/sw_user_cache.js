@@ -93,6 +93,7 @@ async function createRemoteUserLinks() {
             `${apiSource}/schedule/${profile.AD_Username}/`,
             `${apiSource}/myschedule/${profile.AD_Username}/`,
             `${apiSource}/schedulecontrol/${profile.AD_Username}/`,
+            `${apiSource}/studentemployment/`,
           );
           saveSuccessfulUserLink(userRequiredSource);
           return profile;

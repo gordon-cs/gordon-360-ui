@@ -8,11 +8,16 @@
 const cacheVersion = 'cache v1.2';
 
 // API Source
-const apiSource = 'https://360apitrain.gordon.edu/api';
+// @PROD
+// const apiSource = 'https://360Api.gordon.edu/api';
+// @TRAIN
+const apiSource = 'https://360ApiTrain.gordon.edu/api';
 
 // Font Styles
 /* Uncomment For Development Only (aka develop) */
+// @TRAIN
 const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
+// @PROD
 /* Uncomment For Production Only (aka master) */
 // const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
 
