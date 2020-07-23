@@ -31,6 +31,7 @@ const static360Cache = [
   // Documents
   '/',
   '/events',
+  '/events?CLW',
   '/involvements',
   '/feedback',
   '/people',
@@ -49,6 +50,7 @@ const static360Cache = [
   '/static/js/0.chunk.js.map',
   '/static/js/main.chunk.js',
   '/static/js/1.chunk.js',
+  '/static/js/1.chunk.js.map',
   // Images
   '/images/android-icon-36x36.png',
   '/images/android-icon-48x48.png',

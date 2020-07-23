@@ -42,6 +42,7 @@ export default class Login extends Component {
       openPWAInstructions: false,
       showPWALink: false,
       deferredPWAPrompt: null,
+      network: 'online',
     };
   }
 
@@ -85,6 +86,38 @@ export default class Login extends Component {
         this.setState({ showPWALink: true });
       }
     });
+
+    /* Used to re-render PWA installation button. The PWA installation button should only show
+     * when the user is online
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    let network;
+    /* Attempts to get the network status from local storage.
+     * If not found, the default value is online
+     */
+    try {
+      network = storage.get('network-status');
+    } catch (error) {
+      // Defaults the network to online if not found in local storage
+      network = 'online';
+    }
+    // Saves the network's status to this component's state
+    this.setState({ network });
   }
 
   componentWillUnmount() {
@@ -205,7 +238,7 @@ export default class Login extends Component {
             </section>
           </form>
         </Grid>
-        {this.state.showPWALink && (
+        {this.state.network === 'online' && this.state.showPWALink && (
           <Grid
             container
             xs={12}
@@ -223,15 +256,17 @@ export default class Login extends Component {
             </Grid>
           </Grid>
         )}
-        {this.state.showPWALink && this.state.openPWAInstructions && (
-          <PWAInstructions
-            open={this.state.openPWAInstructions}
-            handleDisplay={() => {
-              this.setState({ openPWAInstructions: !this.state.openPWAInstructions });
-            }}
-            deferredPWAPrompt={this.state.deferredPWAPrompt}
-          />
-        )}
+        {this.state.network === 'online' &&
+          this.state.showPWALink &&
+          this.state.openPWAInstructions && (
+            <PWAInstructions
+              open={this.state.openPWAInstructions}
+              handleDisplay={() => {
+                this.setState({ openPWAInstructions: !this.state.openPWAInstructions });
+              }}
+              deferredPWAPrompt={this.state.deferredPWAPrompt}
+            />
+          )}
 
         {LOGIN_BUG_MESSAGE && (
           <Snackbar /* Login Hang [START of section; remove everything from here to END] */

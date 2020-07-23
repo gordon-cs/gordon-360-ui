@@ -70,6 +70,7 @@ async function createRemoteUserLinks() {
       `${apiSource}/events/chapel/${termCode}`,
       `${apiSource}/vpscore`,
       `${apiSource}/schedule`,
+      `${apiSource}/news/personal-unapproved`,
     ];
 
     try {
