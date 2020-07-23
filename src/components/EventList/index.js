@@ -61,6 +61,8 @@ export default class EventList extends Component {
       padding: '10px',
     };
 
+    /****** HEADER ******/
+    // Show single "events" column on narrow viewports
     if (window.innerWidth < this.breakpointWidth) {
       content = events.map(currEvent => (
         <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
@@ -77,6 +79,8 @@ export default class EventList extends Component {
           </Grid>
         </div>
       );
+      
+    // Show full events columns in header for larger viewports
     } else if (events) {
       content = events.map(currEvent => <EventItem event={currEvent} key={currEvent.Event_ID} />);
 
@@ -113,7 +117,7 @@ export default class EventList extends Component {
         <Card>
           {header}
           <Grid>
-            <List className="event-list">{content}</List>
+            <List className="event-list" disablePadding>{content}</List>
           </Grid>
         </Card>
       </section>

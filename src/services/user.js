@@ -165,7 +165,7 @@ import gordonEvent from './event';
  * @property {String} Facebook Facebook
  * @property {String} Twitter Twitter
  * @property {String} Instagram Instagram
- * @property {String} Hanshake Handshake
+ * @property {String} Handshake Handshake
  * @property {String} LinkedIn LinkedIn
  * @property {String} PersonType Type of person
  */
@@ -310,9 +310,10 @@ const getImage = async username => {
 
 /**
  * Reset the current user's from preferred image to user's default image
+ * @returns {Response} Determines if the image was reset successfully
  */
 const resetImage = () => {
-  http.post('/profiles/image/reset', '');
+  return http.post('/profiles/image/reset', '');
 };
 
 /**

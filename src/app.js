@@ -10,6 +10,7 @@ import { isAuthenticated } from './services/auth';
 //import GordonError from './components/Error';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
+import OfflineBanner from './components/OfflineBanner';
 //import { AuthError } from './services/error';
 //import Login from './views/Login';
 import theme from './theme';
@@ -49,9 +50,6 @@ export default class App extends Component {
     this.setState({ error, errorInfo });
   }
   componentWillMount() {
-    //setting up a global variable very hacky
-    window.didProfilePicUpdate = false;
-
     let authentication = isAuthenticated();
     this.setState({ authentication });
   }
@@ -65,39 +63,45 @@ export default class App extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
-        <Router history={this.history}>
-          <section className="app-wrapper">
-            <GordonHeader
-              onDrawerToggle={this.onDrawerToggle}
-              onSignOut={this.onAuthChange}
-              Authentication={this.state.authentication}
-            />
-            <GordonNav
-              onDrawerToggle={this.onDrawerToggle}
-              drawerOpen={this.state.drawerOpen}
-              onSignOut={this.onAuthChange}
-              Authentication={this.state.authentication}
-            />
-            <main className="app-main">
-              <Switch>
-                {routes.map(route => (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    exact={route.exact}
-                    render={props => (
-                      <route.component
-                        onLogIn={this.onAuthChange}
-                        Authentication={this.state.authentication}
-                        {...props}
-                      />
-                    )}
-                  />
-                ))}
-              </Switch>
-            </main>
-          </section>
-        </Router>
+          <Router history={this.history}>
+            <section className="app-wrapper">
+              <GordonHeader
+                onDrawerToggle={this.onDrawerToggle}
+                onSignOut={this.onAuthChange}
+                Authentication={this.state.authentication}
+              />
+              <GordonNav
+                onDrawerToggle={this.onDrawerToggle}
+                drawerOpen={this.state.drawerOpen}
+                onSignOut={this.onAuthChange}
+                Authentication={this.state.authentication}
+              />
+              <main className="app-main">
+                <Switch>
+                  {routes.map(route => (
+                    <Route
+                      key={route.path}
+                      path={route.path}
+                      exact={route.exact}
+                      render={props => (
+                        <div className="app-main-container">
+                          <OfflineBanner
+                            currentPath={route.path}
+                            Authentication={this.state.authentication}
+                          />
+                          <route.component
+                            onLogIn={this.onAuthChange}
+                            Authentication={this.state.authentication}
+                            {...props}
+                          />
+                        </div>
+                      )}
+                    />
+                  ))}
+                </Switch>
+              </main>
+            </section>
+          </Router>
         </MuiPickersUtilsProvider>
       </MuiThemeProvider>
     );

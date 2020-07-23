@@ -33,8 +33,21 @@ class GordonNavAvatar extends Component {
       this.loadAvatar(newProps.Authentication);
     }
   }
+
   componentDidMount() {
-    setInterval(this.checkPeer.bind(this), 1500);
+    /* Used to re-render the page when the user's profile picture changes
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
+        this.loadAvatar(this.props.Authentication);
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    // Removes the window's event listener before unmounting the component
+    return window.removeEventListener('message', () => {});
   }
 
   async loadAvatar(Authentication) {
@@ -52,16 +65,6 @@ class GordonNavAvatar extends Component {
     }
   }
 
-  /**
-   * This method checks a peer component Profile
-   * and rerenders the avatar if the Profile picture is updated
-   */
-  checkPeer() {
-    if (window.didProfilePicUpdate) {
-      this.loadAvatar(this.props.Authentication);
-      window.didProfilePicUpdate = false;
-    }
-  }
   getInitials() {
     if (this.state.username) {
       return this.state.username
@@ -73,33 +76,6 @@ class GordonNavAvatar extends Component {
   }
   render() {
     const { classes } = this.props;
-
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
     let content;
     let buttonLink;
     if (this.props.Authentication) {
@@ -110,28 +86,15 @@ class GordonNavAvatar extends Component {
         );
       }
 
-      // Creates the My Profile button link depending on the status of the network found in local storage
-      if (networkStatus === 'online') {
-        // Link component to be used with Button component
-        buttonLink = ({ ...props }) => (
-          <Link
-            {...props}
-            to={`/myprofile`}
-            onClick={this.props.onLinkClick}
-            className="gc360-link"
-          />
-        );
-      } else {
-        // Link component to be used with Button component
-        buttonLink = ({ ...props }) => (
-          <Link
-            {...props}
-            to={`/profile/${user.getLocalInfo().name.replace(' ', '.')}`}
-            onClick={this.props.onLinkClick}
-            className="gc360-link"
-          />
-        );
-      }
+      // Link component to be used with Button component
+      buttonLink = ({ ...props }) => (
+        <Link
+          {...props}
+          to={`/myprofile`}
+          onClick={this.props.onLinkClick}
+          className="gc360-link"
+        />
+      );
 
       content = (
         <Button
