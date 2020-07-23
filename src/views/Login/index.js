@@ -11,8 +11,10 @@ import DocumentTitle from 'react-document-title';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import amber from '@material-ui/core/colors/amber'; // Login Hang
-
+import Fab from '@material-ui/core/Fab';
+import PWAInstructions from '../../components/PWAInstructions/index';
 import './login.css';
 import { authenticate } from '../../services/auth';
 import storage from '../../services/storage';
@@ -37,10 +39,13 @@ export default class Login extends Component {
       password: '',
       username: '',
       showMessageSnackbar: false, // Login Hang
+      openPWAInstructions: false,
+      showPWALink: false,
+      deferredPWAPrompt: null,
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.isIE = false;
     this.isEdge = false;
     let ua = navigator.userAgent;
@@ -49,6 +54,45 @@ export default class Login extends Component {
     } else if (ua.indexOf('Edge') > -1) {
       this.isEdge = true;
     }
+
+    // A window event listener to see if the browser has the PWA quick installation prompt available
+    window.addEventListener('beforeinstallprompt', e => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      this.setState({ deferredPWAPrompt: e });
+    });
+
+    // A window event listener to see if the PWA was installed
+    window.addEventListener('appinstalled', evt => {
+      // Exits out the PWA Installation dialog box if already opened
+      this.setState({ openPWAInstructions: false, showPWALink: false });
+    });
+
+    // A window event listener that checks to see if the page was loaded as an installed PWA
+    // or through a regular browser. If it was loaded through Gordon 360's PWA, the install button
+    // for Gordon 360 will not appear. Otherwise, it will
+    window.addEventListener('DOMContentLoaded', () => {
+      let loadedThroughPWA = false;
+      if (navigator.standalone) {
+        loadedThroughPWA = true;
+      }
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        loadedThroughPWA = true;
+      }
+      if (loadedThroughPWA) {
+        this.setState({ showPWALink: false, openPWAInstructions: false });
+      } else {
+        this.setState({ showPWALink: true });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    // Removes all events listerners that were invoked in this component
+    window.removeEventListener('beforeinstallprompt', () => {});
+    window.removeEventListener('appinstalled', () => {});
+    window.removeEventListener('DOMContentLoaded', () => {});
+    window.removeEventListener('DOMContentLoaded', () => {});
   }
 
   handleChange(prop) {
@@ -161,6 +205,34 @@ export default class Login extends Component {
             </section>
           </form>
         </Grid>
+        {this.state.showPWALink && (
+          <Grid
+            container
+            xs={12}
+            justify="center"
+            style={{ margin: '0.5rem' }}
+            onClick={() => {
+              this.setState({ openPWAInstructions: true });
+            }}
+          >
+            <Grid xs={12} sm={6} md={5} lg={4} xl={4}>
+              <Fab variant="extended" color="primary">
+                <GetAppIcon />
+                <Typography variant="subtitle1">&nbsp;Install Gordon 360</Typography>
+              </Fab>
+            </Grid>
+          </Grid>
+        )}
+        {this.state.showPWALink && this.state.openPWAInstructions && (
+          <PWAInstructions
+            open={this.state.openPWAInstructions}
+            handleDisplay={() => {
+              this.setState({ openPWAInstructions: !this.state.openPWAInstructions });
+            }}
+            deferredPWAPrompt={this.state.deferredPWAPrompt}
+          />
+        )}
+
         {LOGIN_BUG_MESSAGE && (
           <Snackbar /* Login Hang [START of section; remove everything from here to END] */
             style={{ marginTop: '1rem' }}
@@ -197,6 +269,7 @@ export default class Login extends Component {
             ]}
           />
         )}
+
         {/* Login Hang [END of section] */}
         <Snackbar /* Internet Explorer popup message */
           style={{ marginTop: '1rem' }}
