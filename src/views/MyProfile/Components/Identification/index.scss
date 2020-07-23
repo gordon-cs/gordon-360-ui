@@ -2,15 +2,15 @@
 
 $image-border-radius: 50%;
 // Main Image
-$image-main-height-mobile: 200px;
-$image-main-height-desktop: 230px;
-$image-main-width-mobile: 200px;
-$image-main-width-desktop: 230px;
+$image-main-height-mobile: 12.5rem;
+$image-main-height-desktop: 14.375rem;
+$image-main-width-mobile: 12.5rem;
+$image-main-width-desktop: 14.375rem;
 // Side Image
-$image-side-height-mobile: 80px;
-$image-side-height-desktop: 90px;
-$image-side-width-mobile: 80px;
-$image-side-width-desktop: 90px;
+$image-side-height-mobile: 5rem;
+$image-side-height-desktop: 5.625rem;
+$image-side-width-mobile: 5rem;
+$image-side-width-desktop: 5.625rem;
 
 // SNACKBAR STYLES
 
@@ -33,12 +33,12 @@ $image-side-width-desktop: 90px;
       display: grid;
       grid-row: 3;
       grid-template-rows: auto auto;
-      grid-row-gap: 10px;
+      grid-row-gap: 0.625rem;
       justify-items: center;
       &_text {
         grid-row: 1;
         text-align: center;
-        max-width: 285px;
+        max-width: 17.8125rem;
       }
       &_dropzone {
         transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
@@ -105,7 +105,7 @@ $image-side-width-desktop: 90px;
     align-items: center;
     flex-direction: column;
     background-color: white;
-    border-radius: 4px;
+    border-radius: 0.25rem;
     height: 100%;
     box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
       0px 1px 3px 0px rgba(0, 0, 0, 0.12);
@@ -124,7 +124,7 @@ $image-side-width-desktop: 90px;
       &-card {
         padding: 2rem 1rem 0rem 1rem;
         &-container {
-          max-width: 800px;
+          max-width: 50rem;
           margin: auto 2rem;
           &-photo {
             margin: 1rem 2rem 2rem 2rem !important;
@@ -199,7 +199,7 @@ $image-side-width-desktop: 90px;
             }
           }
           &-info {
-            max-width: 600px;
+            max-width: 37.5rem;
             transition: width 500ms;
             margin: auto 1rem;
             color: rgba(0, 0, 0, 0.87);
@@ -211,7 +211,7 @@ $image-side-width-desktop: 90px;
               margin-bottom: 1rem !important;
               .gc360-my-profile {
                 &_icon {
-                  font-size: 36px;
+                  font-size: 2.25rem;
                   color: $primary-blue;
                   transition: color 200ms, scale 1s;
                   &:hover {
@@ -272,7 +272,7 @@ $image-side-width-desktop: 90px;
           height: 12rem;
         }
         &_cropper {
-          padding-right: 20px;
+          padding-right: 1.25rem;
         }
       }
     }

@@ -103,7 +103,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-time-view-resources .rbc-time-header-content {
-  min-width: 140px;
+  min-width: 8.75rem;
   flex: 1 0 0;
   flex-basis: 0px;
 }
@@ -125,7 +125,7 @@ button.rbc-input::-moz-focus-inner {
   flex: 1 0 0%;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 0 3px;
+  padding: 0 0.1875rem;
   text-align: center;
   vertical-align: middle;
   font-weight: bold;
@@ -163,7 +163,7 @@ button.rbc-input::-moz-focus-inner {
   white-space: nowrap;
 }
 .rbc-btn-group + button {
-  margin-left: 10px;
+  margin-left: 0.625rem;
 }
 .rbc-btn-group button + button {
   margin-left: -1px;
@@ -185,12 +185,12 @@ button.rbc-input::-moz-focus-inner {
   border-bottom-left-radius: 0;
 }
 .rbc-rtl .rbc-btn-group > button:first-child:not(:last-child) {
-  border-radius: 4px;
+  border-radius: 0.25rem;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 .rbc-rtl .rbc-btn-group > button:last-child:not(:first-child) {
-  border-radius: 4px;
+  border-radius: 0.25rem;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 
@@ -199,12 +199,12 @@ button.rbc-input::-moz-focus-inner {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin-bottom: 10px;
-    font-size: 16px;
+    margin-bottom: 0.625rem;
+    font-size: 1rem;
   }
   .rbc-toolbar .rbc-toolbar-label {
     flex-grow: 1;
-    padding: 0 10px;
+    padding: 0 0.625rem;
     text-align: center;
   }
   .rbc-toolbar button {
@@ -217,7 +217,7 @@ button.rbc-input::-moz-focus-inner {
     background-image: none;
     border: 1px solid #ccc;
     padding: 0.375rem 1rem;
-    border-radius: 4px;
+    border-radius: 0.25rem;
     line-height: normal;
     white-space: nowrap;
   }
@@ -252,9 +252,9 @@ button.rbc-input::-moz-focus-inner {
     border: none;
     box-shadow: none;
     margin: 0;
-    padding: 2px 5px;
+    padding: 0.125rem 0.3125rem;
     background-color: #3174ad;
-    border-radius: 5px;
+    border-radius: 0.3125rem;
     color: #fff;
     cursor: pointer;
     width: 100%;
@@ -320,7 +320,7 @@ button.rbc-input::-moz-focus-inner {
   .rbc-date-cell {
     flex: 1 1 0;
     min-width: 0;
-    padding-right: 5px;
+    padding-right: 0.3125rem;
     text-align: right;
   }
   .rbc-date-cell.rbc-now {
@@ -379,7 +379,7 @@ button.rbc-input::-moz-focus-inner {
     border: 1px solid #e5e5e5;
     background-color: #fff;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
-    padding: 10px;
+    padding: 0.625rem;
   }
   .rbc-overlay > * + * {
     margin-top: 1px;
@@ -387,8 +387,8 @@ button.rbc-input::-moz-focus-inner {
 
   .rbc-overlay-header {
     border-bottom: 1px solid #e5e5e5;
-    margin: -10px -10px 5px -10px;
-    padding: 2px 10px;
+    margin: -0.625rem -0.625rem 0.3125rem -0.625rem;
+    padding: 0.125rem 0.625rem;
   }
 
   .rbc-time-column {
@@ -405,7 +405,7 @@ button.rbc-input::-moz-focus-inner {
 
   .rbc-timeslot-group {
     border-bottom: 1px solid #ddd;
-    min-height: 40px;
+    min-height: 2.5rem;
     display: flex;
     flex-flow: column nowrap;
   }
@@ -419,7 +419,7 @@ button.rbc-input::-moz-focus-inner {
   }
 
   .rbc-label {
-    padding: 0 5px;
+    padding: 0 0.3125rem;
   }
 
   .rbc-day-slot {
@@ -430,18 +430,18 @@ button.rbc-input::-moz-focus-inner {
     left: 0;
     position: absolute;
     right: 0;
-    margin-right: 10px;
+    margin-right: 0.625rem;
     top: 0;
   }
   .rbc-day-slot .rbc-events-container.rbc-is-rtl {
-    left: 10px;
+    left: 0.625rem;
     right: 0;
   }
   .rbc-day-slot .rbc-event {
     border: 1px solid #265985;
     display: flex;
     max-height: 100%;
-    min-height: 20px;
+    min-height: 1.25rem;
     flex-flow: column wrap;
     align-items: flex-start;
     overflow: hidden;
@@ -449,7 +449,7 @@ button.rbc-input::-moz-focus-inner {
   }
   .rbc-day-slot .rbc-event-label {
     flex: none;
-    padding-right: 5px;
+    padding-right: 0.3125rem;
     width: auto;
   }
 
@@ -471,14 +471,12 @@ button.rbc-input::-moz-focus-inner {
     overflow: hidden;
   }
 
-
-
   .rbc-time-view-resources .rbc-time-header-cell-single-day {
     display: none;
   }
 
   .rbc-time-view-resources .rbc-day-slot {
-    min-width: 140px;
+    min-width: 8.75rem;
   }
 
   .rbc-time-view-resources .rbc-header,
@@ -497,13 +495,12 @@ button.rbc-input::-moz-focus-inner {
     color: white;
     font-size: 75%;
     width: 100%;
-    padding: 3px;
+    padding: 0.1825rem;
   }
 
   .rbc-slot-selecting {
     cursor: move;
   }
-
 
   .rbc-time-header.rbc-overflowing {
     border-right: 1px solid #ddd;

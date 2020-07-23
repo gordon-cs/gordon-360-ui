@@ -43,12 +43,12 @@ export default class SavedShiftsList extends Component {
       let canUse = await jobs.getStaffPageForUser();
 
       if (canUse.length === 1) {
-        this.setState({getStaffPageForUser: true});
+        this.setState({ getStaffPageForUser: true });
       } else {
-        this.setState({getStaffPageForUser: false});
+        this.setState({ getStaffPageForUser: false });
       }
     } catch (error) {
-        //do nothing
+      //do nothing
     }
   }
 
@@ -61,13 +61,15 @@ export default class SavedShiftsList extends Component {
   };
 
   submitShiftsToSupervisor = (shifts, supervisorID) => {
-    jobs.submitShiftsForUser(this.state.getStaffPageForUser, shifts, supervisorID).then(response => {
-      this.setState({
-        selectedSupervisor: null,
-        showSubmissionConfirmation: false,
+    jobs
+      .submitShiftsForUser(this.state.getStaffPageForUser, shifts, supervisorID)
+      .then(response => {
+        this.setState({
+          selectedSupervisor: null,
+          showSubmissionConfirmation: false,
+        });
+        this.props.loadShifts();
       });
-      this.props.loadShifts();
-    });
   };
 
   getTotalHours = (total, currentShift) => {
@@ -79,26 +81,30 @@ export default class SavedShiftsList extends Component {
   };
 
   getSupervisors() {
-    jobs.getSupervisorNameForJob(this.state.getStaffPageForUser, this.props.directSupervisor).then(response => {
-      let directSupervisor =
-        response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
-      let directSupervisorObject = {
-        name: directSupervisor,
-        id: this.props.directSupervisor,
-      };
+    jobs
+      .getSupervisorNameForJob(this.state.getStaffPageForUser, this.props.directSupervisor)
+      .then(response => {
+        let directSupervisor =
+          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
+        let directSupervisorObject = {
+          name: directSupervisor,
+          id: this.props.directSupervisor,
+        };
 
-      jobs.getSupervisorNameForJob(this.state.getStaffPageForUser, this.props.reportingSupervisor).then(response => {
-        let supervisor =
-          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
-        this.setState({
-          directSupervisor: directSupervisorObject,
-          reportingSupervisor: {
-            name: supervisor,
-            id: this.props.reportingSupervisor,
-          },
-        });
+        jobs
+          .getSupervisorNameForJob(this.state.getStaffPageForUser, this.props.reportingSupervisor)
+          .then(response => {
+            let supervisor =
+              response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
+            this.setState({
+              directSupervisor: directSupervisorObject,
+              reportingSupervisor: {
+                name: supervisor,
+                id: this.props.reportingSupervisor,
+              },
+            });
+          });
       });
-    });
   }
 
   componentDidMount() {
@@ -109,7 +115,8 @@ export default class SavedShiftsList extends Component {
       shouldGetSupervisors =
         this.props.cardTitle === 'Saved Shifts' &&
         (shifts[0].EML !== this.prevJob ||
-          !this.state.directSupervisor || !this.state.reportingSupervisor);
+          !this.state.directSupervisor ||
+          !this.state.reportingSupervisor);
       this.prevJob = shifts[0].EML;
     } else {
       shouldGetSupervisors =
@@ -132,7 +139,8 @@ export default class SavedShiftsList extends Component {
       shouldGetSupervisors =
         this.props.cardTitle === 'Saved Shifts' &&
         (shifts[0].EML !== this.prevJob ||
-          !this.state.directSupervisor || !this.state.reportingSupervisor);
+          !this.state.directSupervisor ||
+          !this.state.reportingSupervisor);
       this.prevJob = shifts[0].EML;
     } else {
       shouldGetSupervisors =
@@ -348,11 +356,11 @@ const styles = {
   headerStyle: {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
-    padding: '10px',
+    padding: '.625rem',
   },
   headerItem: {
-    marginTop: '10px',
-    marginBottom: '10px',
+    marginTop: '.625rem',
+    marginBottom: '.625rem',
   },
   boxShadow: {
     boxShadow: '0px 1px 2px 1px rgba(0, 0, 0, .2)',

@@ -26,9 +26,9 @@ export const GordonNavButtonsRightCorner = props => {
 
   const useStyles = makeStyles({
     paper: {
-      width: 160,
+      width: '10rem',
       border: `1.5px solid ${gordonColors.primary.blue}`,
-      borderRadius: '8px',
+      borderRadius: '.5rem',
       overflowX: 'visible',
       overflowY: 'visible',
     },

@@ -35,7 +35,7 @@ export default class BannerSubmission extends Component {
       uploadButton: {
         background: gordonColors.primary.cyan,
         color: 'white',
-        marginTop: '20px',
+        marginTop: '1.25rem',
       },
     };
 

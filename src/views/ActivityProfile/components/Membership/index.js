@@ -323,7 +323,7 @@ export default class Membership extends Component {
     const headerStyle = {
       backgroundColor: gordonColors.primary.blue,
       color: '#FFF',
-      padding: '10px',
+      padding: '.625rem',
     };
     if (this.state.status === 'CLOSED') {
       isActivityClosed = true;

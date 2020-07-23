@@ -19,8 +19,8 @@ export const GordonNavAvatarRightCorner = props => {
   // Creates the styling of the Avatar
   const useStyles = makeStyles({
     root: {
-      width: '50px',
-      height: '50px',
+      width: '3.125rem',
+      height: '3.125rem',
       padding: '0rem',
       '&:hover': {
         transition: 'box-shadow 0.2s',
@@ -98,7 +98,7 @@ export const GordonNavAvatarRightCorner = props => {
           <Avatar
             className={`gc360-nav-avatar-rc_size ${classes.root}`}
             src={`data:image/jpg;base64,${avatarImage}`}
-            sizes="70px"
+            sizes="4.375rem"
           />
         );
       }

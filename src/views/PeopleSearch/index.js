@@ -60,7 +60,7 @@ const styles = {
   headerStyle: {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
-    padding: '10px',
+    padding: '.625rem',
   },
   colorSwitchBase: {
     color: gordonColors.neutral.lightGray,
@@ -123,8 +123,8 @@ class PeopleSearch extends Component {
 
   makeHeader() {
     let content = (
-      <Media query="(min-width: 960px)">
-        {(matches) =>
+      <Media query="(min-width: 60em)">
+        {matches =>
           matches ? (
             <div style={styles.headerStyle}>
               <Grid container direction="row" alignItems="center">
@@ -264,13 +264,11 @@ class PeopleSearch extends Component {
       } else {
         this.setState({
           peopleSearchResults: (
-            <Media query="(min-width: 960px)">
-              {(matches) =>
+            <Media query="(min-width: 60em)">
+              {matches =>
                 matches
-                  ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
-                  : peopleSearchResults.map((person) => (
-                      <MobilePeopleSearchResult Person={person} />
-                    ))
+                  ? peopleSearchResults.map(person => <PeopleSearchResult Person={person} />)
+                  : peopleSearchResults.map(person => <MobilePeopleSearchResult Person={person} />)
               }
             </Media>
           ),
@@ -397,11 +395,11 @@ class PeopleSearch extends Component {
           } else {
             this.setState({
               peopleSearchResults: (
-                <Media query="(min-width: 960px)">
-                  {(matches) =>
+                <Media query="(min-width: 60em)">
+                  {matches =>
                     matches
-                      ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
-                      : peopleSearchResults.map((person) => (
+                      ? peopleSearchResults.map(person => <PeopleSearchResult Person={person} />)
+                      : peopleSearchResults.map(person => (
                           <MobilePeopleSearchResult Person={person} />
                         ))
                   }
@@ -416,79 +414,79 @@ class PeopleSearch extends Component {
   }
 
   handleAdditionalOpsExpandClick = () => {
-    this.setState((state) => ({
+    this.setState(state => ({
       additionalOpsExpanded: !state.additionalOpsExpanded,
     }));
   };
 
   handleNameExpandClick = () => {
-    this.setState((state) => ({ nameExpanded: !state.nameExpanded }));
+    this.setState(state => ({ nameExpanded: !state.nameExpanded }));
   };
   handleAcademicsExpandClick = () => {
-    this.setState((state) => ({ academicsExpanded: !state.academicsExpanded }));
+    this.setState(state => ({ academicsExpanded: !state.academicsExpanded }));
   };
   handleHomeExpandClick = () => {
-    this.setState((state) => ({ homeExpanded: !state.homeExpanded }));
+    this.setState(state => ({ homeExpanded: !state.homeExpanded }));
   };
   handleOffDepExpandClick = () => {
-    this.setState((state) => ({ offDepExpanded: !state.offDepExpanded }));
+    this.setState(state => ({ offDepExpanded: !state.offDepExpanded }));
   };
-  handleRelationshipStatusInputChange = (e) => {
+  handleRelationshipStatusInputChange = e => {
     this.setState({
       relationshipStatusValue: e.target.value,
     });
   };
-  handleFirstNameInputChange = (e) => {
+  handleFirstNameInputChange = e => {
     this.setState({
       firstNameSearchValue: e.target.value,
     });
   };
-  handleLastNameInputChange = (e) => {
+  handleLastNameInputChange = e => {
     this.setState({
       lastNameSearchValue: e.target.value,
     });
   };
-  handleMajorInputChange = (e) => {
+  handleMajorInputChange = e => {
     this.setState({
       majorSearchValue: e.target.value,
     });
   };
-  handleMinorInputChange = (e) => {
+  handleMinorInputChange = e => {
     this.setState({
       minorSearchValue: e.target.value,
     });
   };
-  handleHallInputChange = (e) => {
+  handleHallInputChange = e => {
     this.setState({
       hallSearchValue: e.target.value,
     });
   };
-  handleClassTypeInputChange = (event) => {
+  handleClassTypeInputChange = event => {
     this.setState({
       classTypeSearchValue: event.target.value,
     });
   };
-  handleHomeCityInputChange = (e) => {
+  handleHomeCityInputChange = e => {
     this.setState({
       homeCitySearchValue: e.target.value,
     });
   };
-  handleStateInputChange = (e) => {
+  handleStateInputChange = e => {
     this.setState({
       stateSearchValue: e.target.value,
     });
   };
-  handleCountryInputChange = (e) => {
+  handleCountryInputChange = e => {
     this.setState({
       countrySearchValue: e.target.value,
     });
   };
-  handleDepartmentInputChange = (e) => {
+  handleDepartmentInputChange = e => {
     this.setState({
       departmentSearchValue: e.target.value,
     });
   };
-  handleBuildingInputChange = (e) => {
+  handleBuildingInputChange = e => {
     this.setState({
       buildingSearchValue: e.target.value,
     });
@@ -571,13 +569,11 @@ class PeopleSearch extends Component {
       } else {
         this.setState({
           peopleSearchResults: (
-            <Media query="(min-width: 1025px)">
-              {(matches) =>
+            <Media query="(min-width: 64.0625em)">
+              {matches =>
                 matches
-                  ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
-                  : peopleSearchResults.map((person) => (
-                      <MobilePeopleSearchResult Person={person} />
-                    ))
+                  ? peopleSearchResults.map(person => <PeopleSearchResult Person={person} />)
+                  : peopleSearchResults.map(person => <MobilePeopleSearchResult Person={person} />)
               }
             </Media>
           ),
@@ -591,7 +587,7 @@ class PeopleSearch extends Component {
     return new Date();
   };
 
-  handleEnterKeyPress = (event) => {
+  handleEnterKeyPress = event => {
     if (event.key === 'Enter') {
       this.search(
         this.state.includeAlumni,
@@ -614,43 +610,43 @@ class PeopleSearch extends Component {
     const { classes } = this.props;
     let includeAlumniCheckbox;
 
-    const majorOptions = this.state.majors.map((major) => (
+    const majorOptions = this.state.majors.map(major => (
       <MenuItem value={major} key={major}>
         {major}
       </MenuItem>
     ));
 
-    const minorOptions = this.state.minors.map((minor) => (
+    const minorOptions = this.state.minors.map(minor => (
       <MenuItem value={minor} key={minor}>
         {minor}
       </MenuItem>
     ));
 
-    const hallOptions = this.state.halls.map((hall) => (
+    const hallOptions = this.state.halls.map(hall => (
       <MenuItem value={hall} key={hall}>
         {hall}
       </MenuItem>
     ));
 
-    const stateOptions = this.state.states.map((state) => (
+    const stateOptions = this.state.states.map(state => (
       <MenuItem value={state} key={state}>
         {state}
       </MenuItem>
     ));
 
-    const countryOptions = this.state.countries.map((country) => (
+    const countryOptions = this.state.countries.map(country => (
       <MenuItem value={country} key={country}>
         {country}
       </MenuItem>
     ));
 
-    const departmentOptions = this.state.departments.map((department) => (
+    const departmentOptions = this.state.departments.map(department => (
       <MenuItem value={department} key={department}>
         {department}
       </MenuItem>
     ));
 
-    const buildingOptions = this.state.buildings.map((building) => (
+    const buildingOptions = this.state.buildings.map(building => (
       <MenuItem value={building} key={building}>
         {building}
       </MenuItem>
@@ -661,7 +657,7 @@ class PeopleSearch extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', (event) => {
+    window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -706,7 +702,7 @@ class PeopleSearch extends Component {
         aprilFools = (
           <Grid container spacing={2} alignItems="flex-end">
             <Media
-              query="(min-width: 600px)"
+              query="(min-width: 37.5em)"
               render={() => (
                 <Grid item>
                   <FaHeart style={styles.FontAwesome} />
@@ -789,7 +785,7 @@ class PeopleSearch extends Component {
                   <Typography variant="h5">General Info</Typography>
                   <Grid container spacing={2} alignItems="flex-end">
                     <Media
-                      query="(min-width: 600px)"
+                      query="(min-width: 37.5em)"
                       render={() => (
                         <Grid item>
                           <PersonIcon />
@@ -809,7 +805,7 @@ class PeopleSearch extends Component {
                   </Grid>
                   <Grid container spacing={2} alignItems="flex-end">
                     <Media
-                      query="(min-width: 600px)"
+                      query="(min-width: 37.5em)"
                       render={() => (
                         <Grid item>
                           <PersonIcon />
@@ -829,7 +825,7 @@ class PeopleSearch extends Component {
                   </Grid>
                   <Grid container spacing={2} alignItems="flex-end">
                     <Media
-                      query="(min-width: 600px)"
+                      query="(min-width: 37.5em)"
                       render={() => (
                         <Grid item>
                           <FaBuilding style={styles.FontAwesome} />
@@ -880,7 +876,7 @@ class PeopleSearch extends Component {
                     >
                       <Grid container spacing={2} alignItems="flex-end">
                         <Media
-                          query="(min-width: 600px)"
+                          query="(min-width: 37.5em)"
                           render={() => (
                             <Grid item>
                               <FaBook style={styles.FontAwesome} />
@@ -905,7 +901,7 @@ class PeopleSearch extends Component {
                       </Grid>
                       <Grid container spacing={2} alignItems="flex-end">
                         <Media
-                          query="(min-width: 600px)"
+                          query="(min-width: 37.5em)"
                           render={() => (
                             <Grid item>
                               <FaBook style={styles.FontAwesome} />
@@ -930,7 +926,7 @@ class PeopleSearch extends Component {
                       </Grid>
                       <Grid container spacing={2} alignItems="flex-end">
                         <Media
-                          query="(min-width: 600px)"
+                          query="(min-width: 37.5em)"
                           render={() => (
                             <Grid item>
                               <FaSchool style={styles.FontAwesome} />
@@ -987,7 +983,7 @@ class PeopleSearch extends Component {
                     >
                       <Grid container spacing={2} alignItems="flex-end">
                         <Media
-                          query="(min-width: 600px)"
+                          query="(min-width: 37.5em)"
                           render={() => (
                             <Grid item>
                               <HomeIcon style={styles.FontAwesome} />
@@ -1007,7 +1003,7 @@ class PeopleSearch extends Component {
                       </Grid>
                       <Grid container spacing={2} alignItems="flex-end">
                         <Media
-                          query="(min-width: 600px)"
+                          query="(min-width: 37.5em)"
                           render={() => (
                             <Grid item>
                               <CityIcon style={styles.FontAwesome} />
@@ -1032,7 +1028,7 @@ class PeopleSearch extends Component {
                       </Grid>
                       <Grid container spacing={2} alignItems="flex-end">
                         <Media
-                          query="(min-width: 600px)"
+                          query="(min-width: 37.5em)"
                           render={() => (
                             <Grid item>
                               <FaGlobeAmericas style={styles.FontAwesome} />
@@ -1082,7 +1078,7 @@ class PeopleSearch extends Component {
                     >
                       <Grid container spacing={2} alignItems="flex-end">
                         <Media
-                          query="(min-width: 600px)"
+                          query="(min-width: 37.5em)"
                           render={() => (
                             <Grid item>
                               <FaBriefcase style={styles.FontAwesome} />
@@ -1107,7 +1103,7 @@ class PeopleSearch extends Component {
                       </Grid>
                       <Grid container spacing={2} alignItems="flex-end">
                         <Media
-                          query="(min-width: 600px)"
+                          query="(min-width: 37.5em)"
                           render={() => (
                             <Grid item>
                               <FaBuilding style={styles.FontAwesome} />
@@ -1195,7 +1191,7 @@ class PeopleSearch extends Component {
                   disableActionSpacing
                   onClick={this.handleAdditionalOpsExpandClick}
                   style={{
-                    marginTop: '-16px',
+                    marginTop: '-1rem',
                   }}
                 >
                   <Grid container alignItems="baseline" justify="center">

@@ -331,7 +331,7 @@ export default class LinksDialog extends React.Component {
   render() {
     const style = {
       icon: {
-        fontSize: '26px',
+        fontSize: '1.625rem',
         color: gordonColors.primary.blue,
       },
       cancelButton: {

@@ -106,7 +106,7 @@ const styles = {
   card: {
     backgroundColor: gordonColors.primary.blue,
     color: 'white',
-    padding: '5px',
-    margin: '0px  auto 10px auto',
+    padding: '.3125rem',
+    margin: '0px  auto .625rem auto',
   },
 };

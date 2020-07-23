@@ -1,20 +1,20 @@
 .shift-edit-picker .MuiOutlinedInput-input {
-    text-align: center;
+  text-align: center;
 }
 
 .shift-edit-picker .MuiOutlinedInput-multiline {
-    padding: 8px 4px !important;
+  padding: 0.5rem 0.25rem !important;
 }
 
 .tooltip-container {
-    display: inline-flex;
-    position: relative;
+  display: inline-flex;
+  position: relative;
 }
 
 .tooltip-container .tooltip-icon {
-    position: absolute;
-    right: 0;
-    top:0;
-    margin-right: -16px;
-    margin-top: -8px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: -1rem;
+  margin-top: -0.5rem;
 }

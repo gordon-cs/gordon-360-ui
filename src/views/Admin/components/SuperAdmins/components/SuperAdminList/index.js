@@ -42,7 +42,7 @@ export default class SuperAdminList extends Component {
 
   render() {
     const itemStyle = {
-      padding: '10px',
+      padding: '.625rem',
     };
     const buttonStyle = {
       background: gordonColors.secondary.red,

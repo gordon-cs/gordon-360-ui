@@ -7,8 +7,8 @@
     overflow-y: auto; // make this to scroll
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    right: 20px;
-    border-radius: 4px;
+    right: 1.25rem;
+    border-radius: 0.25rem;
   }
 
   .h {
@@ -21,14 +21,14 @@
   .people-search-suggestion {
     display: block;
     align-self: left;
-    padding-bottom: 25px;
+    padding-bottom: 1.5625rem;
   }
 
   .people-search-suggestion-selected {
     background-color: $neutral-light-gray;
     display: block;
     align-self: left;
-    padding-bottom: 25px;
+    padding-bottom: 1.5625rem;
   }
 
   .people-search-suggestion-selected:hover {
@@ -38,7 +38,6 @@
   .people-search-dropdown:hover .people-search-suggestion-selected {
     background-color: white;
   }
-
 
   // .loading is shown first. After 350ms, .loading opacity and font-size go to 0. This is done
   // to give space for .no-results to increase in font size and change to normal opacity.
@@ -52,8 +51,14 @@
   }
 
   @keyframes show-no-results {
-    0% {font-size: 90%; opacity: 1;}
-    100% {font-size: 90%; opacity: 1;}
+    0% {
+      font-size: 90%;
+      opacity: 1;
+    }
+    100% {
+      font-size: 90%;
+      opacity: 1;
+    }
   }
 
   .loading {
@@ -64,8 +69,14 @@
   }
 
   @keyframes show-loading {
-    0% {font-size: 0; opacity: 0;}
-    100% {font-size: 0; opacity: 0;}
+    0% {
+      font-size: 0;
+      opacity: 0;
+    }
+    100% {
+      font-size: 0;
+      opacity: 0;
+    }
   }
 
   @media (min-width: 0px) {
@@ -87,7 +98,7 @@
     }
   }
 
-  @media (min-width: 400px) {
+  @media (min-width: 25em) {
     //margin-left: -8rem;
     .people-search-root {
       width: 10rem;
@@ -103,13 +114,13 @@
       width: 12rem;
     }
     .people-search-dropdown {
-      right: 28px;
+      right: 1.75rem;
     }
   }
 
   @media (min-width: $break-sm) {
     width: auto;
-    //margin-left: -18px;
+    //margin-left: -1.125rem;
     .people-search-root {
       width: 12rem;
       &:focus-within {
@@ -147,7 +158,7 @@
       width: 12.25rem;
     }
   }
-  @media (min-width: 960px) {
+  @media (min-width: 60em) {
     .people-search-suggestion,
     .people-search-suggestion-selected {
       width: 8.5rem;
@@ -157,7 +168,7 @@
     }
   }
 
-  @media (min-width: 1000px) {
+  @media (min-width: 62.5em) {
     .text-field {
       width: 14rem;
     }
@@ -180,9 +191,9 @@
     background: $primary-blue;
     transition: box-shadow 0.3s, width 0.3s;
     //margin-right: 0.75rem;
-    border-radius: 4px;
+    border-radius: 0.25rem;
     border: 1px solid $neutral-white;
-    padding: 2px 10px;
+    padding: 0.125rem 0.625rem;
     &:focus-within {
       box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.25);
     }

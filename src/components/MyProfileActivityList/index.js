@@ -41,9 +41,9 @@ class MyProfileActivityList extends Component {
     const { classes } = this.props;
     const imgStyle = {
       width: '100%',
-      maxWidth: '130px',
+      maxWidth: '8.125rem',
       padding: '0.3rem',
-      borderRadius: '10px',
+      borderRadius: '.625rem',
     };
     const toggleTextStyle = {
       fontSize: '12pt',

@@ -10,7 +10,7 @@
 
 .gc360-profile {
   &_icon {
-    font-size: 28px;
+    font-size: 1.75rem;
     color: black;
     transition: color 200ms;
     &:hover {
@@ -21,7 +21,7 @@
     display: flex;
     justify-content: space-around;
     &_icon {
-      font-size: 28px;
+      font-size: 1.75rem;
     }
   }
 }
@@ -37,10 +37,10 @@
 }
 
 .personal-office-grid {
-  grid-row-gap: 100px;
+  grid-row-gap: 6.25rem;
 }
 
-@media (max-width: 420px) {
+@media (max-width: 26.25em) {
   .alignPicCenter {
     padding-top: 0%;
   }
@@ -52,13 +52,13 @@
   }
 }
 
-@media (min-width: 720px) {
+@media (min-width: 45em) {
   .alignPicCenter {
     padding-top: 8%;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 64em) {
   .alignPicCenter {
     padding-top: 5%;
   }

@@ -10,32 +10,32 @@
   background-size: cover;
   background-origin: border-box;
 
-  @media (min-width: 3840px) {
+  @media (min-width: 240em) {
     // Larger than 4K
     background-image: url(campusFull.jpg);
   }
 
-  @media (max-width: 3840px) {
+  @media (max-width: 240em) {
     // 4K or smaller
     background-image: url(campus4K.jpg);
   }
 
-  @media (max-width: 1920px) {
+  @media (max-width: 120em) {
     // 1080p Full HD or smaller
     background-image: url(campusHD.jpg);
   }
 
-  @media (max-width: 1366px) {
+  @media (max-width: 85.375em) {
     // 1366 x 768 or smaller
     background-image: url(campus1366.jpg);
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 37.5em) {
     // 600 pixels or smaller (larger mobile device)
     background-image: url(campusMobileLG.jpg);
   }
 
-  @media (max-width: 400px) {
+  @media (max-width: 25em) {
     // 400 pixels or smaller (smaller mobile device)
     background-image: url(campusMobileSM.jpg);
   }

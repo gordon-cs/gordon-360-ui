@@ -15,9 +15,9 @@
 
 .card-content {
   display: grid;
-  font-size: 48px;
+  font-size: 3rem;
   grid-template-columns: 100%;
-  grid-row-gap: 10px;
+  grid-row-gap: 0.625rem;
 }
 
 .button {
@@ -49,8 +49,8 @@
   grid-column: 1 / -1;
 }
 
-/* For small and medium screens (1024px wide or less) */
-@media (max-width: 1024px) {
+/* For small and medium screens (64em wide or less) */
+@media (max-width: 64em) {
   .card {
     grid-column: 1 / -1; /* -1 makes item go all the way to right edge of container */
   }

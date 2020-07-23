@@ -71,14 +71,14 @@ export default class SuperAdmin extends Component {
 
   render() {
     const buttonStyle = {
-      margin: '20px',
+      margin: '1.25rem',
       background: gordonColors.primary.blue,
       color: 'white',
     };
     const headerStyle = {
       backgroundColor: gordonColors.primary.blue,
       color: '#FFF',
-      padding: '10px',
+      padding: '.625rem',
     };
 
     let content;

@@ -3,7 +3,7 @@ const showDeveloperConsoleLog = false;
 // Console log decorations
 const unavailableLog = ['color: #0066ff'].join(';');
 const networkEmoji = `\u{1F4E1}`;
-const normalLogCentered = ['color: #3498db', 'margin-left: 24px'].join(';');
+const normalLogCentered = ['color: #3498db', 'margin-left: 1.5rem'].join(';');
 
 /**
  * Checks to see if the Cache and Service Worker API is available. If so, continue with PWA

@@ -44,7 +44,7 @@ export default class GordonActivitiesAll extends Component {
   }
 
   async componentDidUpdate() {
-    window.onpopstate = (e) => {
+    window.onpopstate = e => {
       window.location.reload();
     };
   }
@@ -179,7 +179,7 @@ export default class GordonActivitiesAll extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', (event) => {
+    window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -246,7 +246,7 @@ export default class GordonActivitiesAll extends Component {
    * @returns {Function} An asynchronous function that filters the activities based upon an event's data
    */
   filter(name) {
-    return (event) => {
+    return event => {
       this.setState({ [name]: event.target.value }, () => {
         const { allActivities, type, search } = this.state;
         this.setState({ activities: activity.filter(allActivities, type, search) });
@@ -272,7 +272,7 @@ export default class GordonActivitiesAll extends Component {
     else {
       // Gets the description of the session
       try {
-        let involvementDescription = this.state.sessions.filter((session) => {
+        let involvementDescription = this.state.sessions.filter(session => {
           return this.state.session === session.SessionCode;
         })[0].SessionDescription;
         myInvolvementsHeadingText = involvementDescription.toUpperCase();
@@ -295,7 +295,7 @@ export default class GordonActivitiesAll extends Component {
     const headerStyle = {
       backgroundColor: gordonColors.primary.blue,
       color: '#FFF',
-      padding: '10px',
+      padding: '.625rem',
     };
 
     // Creates My Involvements
@@ -330,7 +330,7 @@ export default class GordonActivitiesAll extends Component {
             </MenuItem>
           ))
         : this.state.sessions
-            .filter((item) => item.SessionCode === this.state.session)
+            .filter(item => item.SessionCode === this.state.session)
             .map(({ SessionDescription: description, SessionCode: code }) => (
               <MenuItem label={description} value={code} key={code}>
                 {description}
@@ -338,7 +338,7 @@ export default class GordonActivitiesAll extends Component {
             ));
 
     // Creates the current session's types list
-    const typeOptions = this.state.types.map((type) => (
+    const typeOptions = this.state.types.map(type => (
       <MenuItem value={type} key={type}>
         {type}
       </MenuItem>

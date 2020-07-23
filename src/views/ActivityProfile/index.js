@@ -433,7 +433,7 @@ class ActivityProfile extends Component {
                                       className="rounded-corners"
                                       src={activityImagePath}
                                       alt=""
-                                      style={{ 'max-width': '320px', 'max-height': '320px' }}
+                                      style={{ 'max-width': '20rem', 'max-height': '20rem' }}
                                     />
                                   </div>
                                 </section>
@@ -578,17 +578,13 @@ class ActivityProfile extends Component {
           const { SessionDescription: sessionDescription } = this.state.sessionInfo;
           let description;
           if (activityBlurb.length !== 0) {
-            description = (
-              <Typography variant="body2">
-                {activityBlurb}
-              </Typography>
-            );
+            description = <Typography variant="body2">{activityBlurb}</Typography>;
           }
           let website;
           if (activityURL.length !== 0) {
             website = (
               <Typography variant="body2">
-                <a href={activityURL} className="gc360-text-link" style={{fontWeight:"bold"}}>
+                <a href={activityURL} className="gc360-text-link" style={{ fontWeight: 'bold' }}>
                   {' '}
                   {activityURL}
                 </a>
@@ -627,10 +623,7 @@ class ActivityProfile extends Component {
             <section className="gordon-activity-profile">
               <Card>
                 <CardContent>
-                  <CardHeader
-                    title={activityDescription}
-                    subheader={sessionDescription}
-                  />
+                  <CardHeader title={activityDescription} subheader={sessionDescription} />
                   <Grid align="center" className="activity-image" item>
                     <img
                       alt={activity.activityDescription}
@@ -639,13 +632,9 @@ class ActivityProfile extends Component {
                     />
                   </Grid>
                   <Grid item>{editActivity}</Grid>
-                  <Grid item style={{padding:"16px"}}>
-                    <Typography variant="body2">
-                      {description}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      {website}
-                    </Typography>
+                  <Grid item style={{ padding: '1rem' }}>
+                    <Typography variant="body2">{description}</Typography>
+                    <Typography variant="subtitle1">{website}</Typography>
                   </Grid>
 
                   <hr width="70%"></hr>
@@ -654,25 +643,19 @@ class ActivityProfile extends Component {
                   {/* Activity Description */}
                   <Grid item justify="center" align="left">
                     <Grid container lg={12} direction="column" align="left">
-                        <Typography variant="body2">
-                          {groupContacts}
-                        </Typography>
-                        <Typography variant="body2">
-                          {advisors}
-                        </Typography>
-                        <Typography variant="body2">
-                          <strong>Special Information for Joining: </strong>
-                          {this.state.activityInfo.ActivityJoinInfo}
-                        </Typography>
-                        <Typography variant="body2">
-                          <strong>Current Involvement Roster: </strong>
-                          {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
-                        </Typography>
-                        {/* negative margin necessary because of default padding on Membership */}
-                        {/* perhaps defaults can be changed eventually if all use cases checked */}
-                        <div style={{marginLeft: "-8px", padding: "8px 0"}}>
-                          {membership}
-                        </div>
+                      <Typography variant="body2">{groupContacts}</Typography>
+                      <Typography variant="body2">{advisors}</Typography>
+                      <Typography variant="body2">
+                        <strong>Special Information for Joining: </strong>
+                        {this.state.activityInfo.ActivityJoinInfo}
+                      </Typography>
+                      <Typography variant="body2">
+                        <strong>Current Involvement Roster: </strong>
+                        {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
+                      </Typography>
+                      {/* negative margin necessary because of default padding on Membership */}
+                      {/* perhaps defaults can be changed eventually if all use cases checked */}
+                      <div style={{ marginLeft: '-.5rem', padding: '.5rem 0' }}>{membership}</div>
                     </Grid>
                   </Grid>
                 </CardContent>

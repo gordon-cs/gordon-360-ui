@@ -14,9 +14,9 @@
   &_link {
     display: grid;
     grid-column: 1;
-    grid-template-rows: 5px 150px 50px 5px;
-    grid-auto-columns: auto 175px auto;
-    grid-row-gap: 10px;
+    grid-template-rows: 0.3125rem 9.375rem 3.125rem 0.3125rem;
+    grid-auto-columns: auto 10.9375rem auto;
+    grid-row-gap: 0.625rem;
     justify-items: center;
     align-items: center;
   }
@@ -35,7 +35,7 @@
 @media (max-width: $break-sm) {
   .gc360-act-grid {
     &_link {
-      grid-template-rows: 5px 50px 5px;
+      grid-template-rows: 0.3125rem 3.125rem 0.3125rem;
       grid-row-gap: 0px;
     }
     &_img {

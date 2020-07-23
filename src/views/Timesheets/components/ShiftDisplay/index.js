@@ -34,12 +34,12 @@ export default class ShiftDisplay extends Component {
       let canUse = await jobs.getStaffPageForUser();
 
       if (canUse.length === 1) {
-        this.setState({getStaffPageForUser: true});
+        this.setState({ getStaffPageForUser: true });
       } else {
-        this.setState({getStaffPageForUser: false});
+        this.setState({ getStaffPageForUser: false });
       }
     } catch (error) {
-        //do nothing
+      //do nothing
     }
   }
 
@@ -94,7 +94,13 @@ export default class ShiftDisplay extends Component {
   }
 
   editShift = (rowID, startTime, endTime, hoursWorked) => {
-    let promise = jobs.editShift(this.state.getStaffPageForUser, rowID, startTime, endTime, hoursWorked);
+    let promise = jobs.editShift(
+      this.state.getStaffPageForUser,
+      rowID,
+      startTime,
+      endTime,
+      hoursWorked,
+    );
     promise.then(response => {
       this.loadShifts();
     });
@@ -165,7 +171,7 @@ export default class ShiftDisplay extends Component {
       );
 
     let theTabs = (
-      <Media query="(min-width: 600px)">
+      <Media query="(min-width: 37.5rem)">
         {matches =>
           matches ? (
             <Tabs

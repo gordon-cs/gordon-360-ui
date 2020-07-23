@@ -35,7 +35,7 @@ export default class About extends Component {
     const headerStyle = {
       backgroundColor: gordonColors.primary.blue,
       color: '#FFF',
-      padding: '10px',
+      padding: '.625rem',
     };
 
     return (

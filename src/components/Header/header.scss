@@ -1,6 +1,6 @@
 @import '../../vars';
 
-$drawer-width: 240px;
+$drawer-width: 15rem;
 
 .gordon-header {
   position: absolute;
@@ -17,7 +17,7 @@ $drawer-width: 240px;
     transition: min-width 0.2s;
     color: $neutral-white;
     text-transform: capitalize;
-    min-width: 90px;
+    min-width: 5.625rem;
     &:hover {
       color: $neutral-white !important;
       text-decoration: none !important;
@@ -28,10 +28,10 @@ $drawer-width: 240px;
     transition: min-width 0.2s;
     color: $neutral-gray;
     text-transform: capitalize;
-    min-width: 90px;
+    min-width: 5.625rem;
   }
   .menu-button {
-    margin-left: -12px;
+    margin-left: -0.75rem;
   }
 
   @media (min-width: 0px) {
@@ -46,7 +46,7 @@ $drawer-width: 240px;
     }
 
     .right-side-container {
-      margin-left: 16px;
+      margin-left: 1rem;
       padding: 0;
     }
   }
@@ -58,7 +58,7 @@ $drawer-width: 240px;
     }
     .right-side-container {
       width: auto;
-      margin-left: 24px;
+      margin-left: 1.5rem;
     }
   }
 
@@ -80,7 +80,7 @@ $drawer-width: 240px;
     }
 
     .tab {
-      min-width: 80px;
+      min-width: 5rem;
     }
   }
 
@@ -91,13 +91,13 @@ $drawer-width: 240px;
   }
 
   .header-button {
-    margin-left: -12px;
-    margin-right: -12px;
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
   }
 
   .title {
     flex: 1;
-    margin-right: 10px;
+    margin-right: 0.625rem;
     font-weight: bold;
   }
 

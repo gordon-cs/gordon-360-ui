@@ -2,7 +2,7 @@
   display: grid;
   grid-template-rows: auto auto auto;
   grid-template-columns: 5% 45% 45% 5%;
-  grid-row-gap: 5px;
+  grid-row-gap: 0.3125rem;
 }
 
 .title {
@@ -25,9 +25,9 @@
 
 .info {
   display: grid;
-  grid-template-rows: 20% 10px 20% 20% 20%;
+  grid-template-rows: 20% 0.625rem 20% 20% 20%;
   grid-template-columns: 30% 20% 50%;
-  grid-row-gap: 10px;
+  grid-row-gap: 0.625rem;
   grid-column: 1;
 }
 
@@ -69,9 +69,9 @@
 }
 
 /* for smaller screens */
-@media (min-width: 768px) {
+@media (min-width: 48em) {
   .title {
-    font-size: 600px;
+    font-size: 37.5rem;
   }
 
   .info {

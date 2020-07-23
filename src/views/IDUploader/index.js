@@ -208,8 +208,8 @@ class IDUploader extends Component {
 
     const style = {
       img: {
-        width: '200px',
-        height: '200px',
+        width: '12.5rem',
+        height: '12.5rem',
       },
 
       centerGridContainer: {
@@ -226,7 +226,7 @@ class IDUploader extends Component {
       uploadButton: {
         background: gordonColors.primary.cyan,
         color: 'white',
-        marginTop: '20px',
+        marginTop: '1.25rem',
       },
 
       uncontainedButton: {
@@ -282,7 +282,7 @@ class IDUploader extends Component {
           <Grid item xs={12} md={6} lg={4} justify="center">
             <Grid container justify="center">
               <Card raised={true}>
-                <Grid item style={{ margin: '10px' }}>
+                <Grid item style={{ margin: '.625rem' }}>
                   <div>
                     <img
                       src={IdCardTop}
@@ -293,8 +293,11 @@ class IDUploader extends Component {
                   </div>
                 </Grid>
                 <Grid item>
-                  <Grid container style={{ width: '406px' }}>
-                    <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
+                  <Grid container style={{ width: '25.375rem' }}>
+                    <Grid
+                      item
+                      style={{ marginLeft: '.625rem', width: '20rem', marginBottom: '.3125rem' }}
+                    >
                       <div>
                         <img
                           src={this.state.IdCardPlaceholder}
@@ -304,7 +307,14 @@ class IDUploader extends Component {
                         />
                       </div>
                     </Grid>
-                    <Grid item style={{ marginLeft: '7px', width: '53px', marginBottom: '5px' }}>
+                    <Grid
+                      item
+                      style={{
+                        marginLeft: '.4375rem',
+                        width: '3.3125rem',
+                        marginBottom: '.3125rem',
+                      }}
+                    >
                       <div>
                         <img
                           src={IdCardGreen}
@@ -393,7 +403,7 @@ class IDUploader extends Component {
                           className="gc360-id-dialog_content_dropzone_img"
                           src={`data:image/jpg;base64,${this.state.image}`}
                           alt=""
-                          style={{ 'max-width': '140px', 'max-height': '140px' }}
+                          style={{ 'max-width': '8.75rem', 'max-height': '8.75rem' }}
                         />
                       </div>
                     </section>

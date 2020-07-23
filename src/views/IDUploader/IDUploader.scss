@@ -10,7 +10,7 @@
     display: grid;
     grid-row: 2;
     grid-template-rows: auto auto auto;
-    grid-row-gap: 10px;
+    grid-row-gap: 0.625rem;
     justify-items: center;
     &_text {
       grid-row: 1;
@@ -44,7 +44,7 @@
   &_actions {
     display: grid;
     grid-row: 3;
-    grid-column-gap: 10px;
+    grid-column-gap: 0.625rem;
   }
 }
 
@@ -56,7 +56,7 @@
         height: 10rem;
       }
       &_cropper {
-        padding-right: 20px;
+        padding-right: 1.25rem;
       }
     }
   }

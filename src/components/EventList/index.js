@@ -57,13 +57,13 @@ export default class EventList extends Component {
     const headerStyle = {
       backgroundColor: gordonColors.primary.blue,
       color: '#FFF',
-      padding: '10px',
+      padding: '.625rem',
     };
 
     /****** HEADER ******/
     // Show single "events" column on narrow viewports
     if (window.innerWidth < this.breakpointWidth) {
-      content = events.map((currEvent) => (
+      content = events.map(currEvent => (
         <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
       ));
 
@@ -79,7 +79,7 @@ export default class EventList extends Component {
         </div>
       );
     } else if (events.length > 0) {
-      content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
+      content = events.map(currEvent => <EventItem event={currEvent} key={currEvent.Event_ID} />);
     } else if (events.length === 0) {
       content = <Typography variant="h5">No Events To Show</Typography>;
     }

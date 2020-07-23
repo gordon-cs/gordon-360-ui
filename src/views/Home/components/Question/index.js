@@ -70,7 +70,7 @@ export default class Question extends Component {
   createQuestion(questionStyle) {
     // Checks to make sure the questions are imported before attempting to access its data
     if (this.state.questions !== null) {
-      let symptomsJSX = this.state.questions.qOne.symptoms.map((item) => {
+      let symptomsJSX = this.state.questions.qOne.symptoms.map(item => {
         return <FormLabel>- {item}</FormLabel>;
       });
 
@@ -79,7 +79,7 @@ export default class Question extends Component {
           <div style={questionStyle}>
             <FormControl>
               <FormLabel>{this.state.questions.qOne.question}</FormLabel>
-              <div style={{ height: '10px' }}></div>
+              <div style={{ height: '.625rem' }}></div>
               {symptomsJSX}
               <br />
               <RadioGroup>
@@ -172,7 +172,7 @@ export default class Question extends Component {
     const headerStyle = {
       backgroundColor: gordonColors.primary.blue,
       color: '#FFF',
-      padding: '10px',
+      padding: '.625rem',
       fontSize: 20,
     };
 
