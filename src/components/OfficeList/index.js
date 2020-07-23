@@ -191,10 +191,16 @@ export default class Office extends Component {
         </Card>
       );
     }
-    return (
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        {Office}
-      </Grid>
-    );
+
+    // Prevents a space from showing for an empty Office card
+    if (String(this.props.profile.PersonType).includes('fac')) {
+      return (
+        <Grid item xs={12} sm={12} md={12} lg={12}>
+          {Office}
+        </Grid>
+      );
+    } else {
+      return <></>;
+    }
   }
 }
