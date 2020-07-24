@@ -28,16 +28,15 @@ export default class Question extends Component {
     this.loadQuestion = this.loadQuestion.bind(this);
 
     this.state = {
-      error: null, 
+      error: null,
       loading: true,
-      answered: false,  //true if student answered the question, initiallized to false for safety
+      answered: false, //true if student answered the question, initiallized to false for safety
       primaryQuestionAnswer: null, // keeps track of the answer to the wellness check question
       currentStatus: null, //holds the the symptomatic status of the students to pass up to parent
       questions: null, //holds the prompts for the questions and responses
-      backendQuestion:"", //holds the main wellness check question coming from backend 
-      yesPrompt:"", //holds the yes answer prompt from back end
-      noPrompt:"", //holds the no answer prompt from back end
-
+      backendQuestion: '', //holds the main wellness check question coming from backend
+      yesPrompt: '', //holds the yes answer prompt from back end
+      noPrompt: '', //holds the no answer prompt from back end
     };
   }
 
@@ -54,7 +53,7 @@ export default class Question extends Component {
     this.setState({ loading: true });
     try {
       await wellness.getQuestion();
-      this.setState({ loading: false});
+      this.setState({ loading: false });
     } catch (error) {
       this.setState({ error });
     }
@@ -74,7 +73,7 @@ export default class Question extends Component {
       let symptomsJSX = this.state.questions.qOne.symptoms.map((item) => {
         return <FormLabel>- {item}</FormLabel>;
       });
-      
+
       return (
         <CardContent>
           <div style={questionStyle}>
@@ -85,19 +84,20 @@ export default class Question extends Component {
               <br />
               <RadioGroup>
                 <FormControlLabel
-                  value="No"
-                  control={<Radio />}
-                  label={'No'}
-                  onChange={() => {
-                    this.setState({ primaryQuestionAnswer: 'No', currentStatus: false });
-                  }}
-                />
-                <FormControlLabel
                   value="Yes"
                   control={<Radio />}
                   label={`Yes`}
                   onChange={() => {
                     this.setState({ primaryQuestionAnswer: 'Yes', currentStatus: true });
+                  }}
+                />
+                <br></br>
+                <FormControlLabel
+                  value="No"
+                  control={<Radio />}
+                  label={'No'}
+                  onChange={() => {
+                    this.setState({ primaryQuestionAnswer: 'No', currentStatus: false });
                   }}
                 />
               </RadioGroup>

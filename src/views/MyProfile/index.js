@@ -5,8 +5,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import GordonLoader from '../../components/Loader';
 import GordonSchedulePanel from '../../components/SchedulePanel';
-import { Identification } from './Components/Identification/index';
-import { Involvements } from './Components/Involvements/index';
+import { Identification } from '../../components/Identification/index';
+import { Involvements } from '../../components/Involvements/index';
 import Office from './../../components/OfficeList';
 import ProfileList from './../../components/ProfileList';
 import storage from '../../services/storage';
@@ -34,7 +34,7 @@ const MyProfile = props => {
       try {
         let profile = await user.getProfileInfo();
         setProfile(profile);
-        let profileInfo = <ProfileList profile={profile} myProf={true} />;
+        let profileInfo = <ProfileList profile={profile} myProf={true} network={network} />;
         setProfileInfo(profileInfo);
         const personType = String(profile.PersonType);
         setPersonType(personType);
@@ -48,7 +48,7 @@ const MyProfile = props => {
       }
     }
     loadProfile();
-  }, []);
+  }, [network]);
 
   useEffect(() => {
     let networkStatus;
@@ -93,109 +93,51 @@ const MyProfile = props => {
   // AUTHENTICATED
   if (props.Authentication) {
     // Creates the My Profile Page
-    let MyProfile;
-    // AUTHENTICATED - NETWORK STATUS: ONLINE
-    if (network === 'online') {
-      MyProfile = (
-        <div>
-          {loading && <GordonLoader />}
-          {!loading && (
-            <div className="personal-profile">
-              <Grid container justify="center" spacing={2}>
-                {/* START OF IDENTIFICATION CARD */}
-                <Grid
-                  item
-                  xs={12}
-                  sm={12}
-                  md={profile.PersonType === 'stu' ? 8 : 12}
-                  lg={profile.PersonType === 'stu' ? 6 : 10}
-                >
-                  <Identification profile={profile} width={props.width} />
+    let MyProfile = (
+      <div>
+        {loading && <GordonLoader />}
+        {!loading && (
+          <div className="personal-profile">
+            <Grid container justify="center" spacing={2}>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={profile.PersonType === 'stu' ? 8 : 12}
+                lg={profile.PersonType === 'stu' ? 6 : 10}
+              >
+                <Identification profile={profile} network={network} myProf={true} />
+              </Grid>
+
+              {String(personType).includes('stu') && (
+                <Grid item xs={12} md={4} lg={4} sm={12}>
+                  <VictoryPromiseDisplay network={network} />
                 </Grid>
-                {/* END OF IDENTIFICATION CARD */}
+              )}
 
-                {/* START OF VICTORY PROMISE */}
-                {String(personType).includes('stu') && (
-                  <Grid item xs={12} md={4} lg={4} sm={12}>
-                    <VictoryPromiseDisplay />
+              <Grid item xs={12} lg={10} align="center">
+                <Grid container xs={12} lg={12} spacing={0} justify="center">
+                  <Grid item xs={12} lg={12}>
+                    <GordonSchedulePanel profile={profile} myProf={true} />
                   </Grid>
-                )}
-                {/* END OF VICTORY PROMISE */}
-
-                <Grid item xs={12} lg={10} align="center">
-                  <Grid container xs={12} lg={12} spacing={0} justify="center">
-                    <Grid item xs={12} lg={12}>
-                      <GordonSchedulePanel profile={profile} myProf={true} />
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12} lg={5}>
-                  <Grid container spacing={2}>
-                    {profileInfo}
-                    {officeInfo}
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12} lg={5}>
-                  <Involvements memberships={memberships} />
                 </Grid>
               </Grid>
-            </div>
-          )}
-        </div>
-      );
-    }
-    // AUTHENTICATED - NETWORK STATUS: OFFLINE
-    else {
-      MyProfile = (
-        <Grid container justify="center" spacing="16">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <Grid
-                  item
-                  xs={2}
-                  alignItems="center"
-                  style={{
-                    display: 'block',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  {
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
-                  }
+
+              <Grid item xs={12} lg={5}>
+                <Grid container spacing={2}>
+                  {officeInfo}
+                  {profileInfo}
                 </Grid>
-                <br />
-                <h1>Please Re-establish Connection</h1>
-                <h4>Editing your profile has been deactivated due to loss of network.</h4>
-                <br />
-                <br />
-                <Button
-                  color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
-    }
+              </Grid>
+
+              <Grid item xs={12} lg={5}>
+                <Involvements memberships={memberships} myProf={true} />
+              </Grid>
+            </Grid>
+          </div>
+        )}
+      </div>
+    );
 
     return MyProfile;
   }

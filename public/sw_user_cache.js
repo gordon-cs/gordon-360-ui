@@ -70,6 +70,7 @@ async function createRemoteUserLinks() {
       `${apiSource}/events/chapel/${termCode}`,
       `${apiSource}/vpscore`,
       `${apiSource}/schedule`,
+      `${apiSource}/news/personal-unapproved`,
     ];
 
     try {
@@ -93,7 +94,7 @@ async function createRemoteUserLinks() {
             `${apiSource}/schedule/${profile.AD_Username}/`,
             `${apiSource}/myschedule/${profile.AD_Username}/`,
             `${apiSource}/schedulecontrol/${profile.AD_Username}/`,
-            `/profile/${profile.AD_Username}`,
+            `${apiSource}/studentemployment/`,
           );
           saveSuccessfulUserLink(userRequiredSource);
           return profile;
@@ -116,6 +117,8 @@ async function createRemoteUserLinks() {
           headers,
         })),
       ).then(async response => {
+        // Adds the request to the links of remote user links
+        userRemoteLinks.push(`${apiSource}/memberships/student/${userProfile.ID}`);
         // Checks to make sure the response of the fetch is okay before adding links to the list
         // of remote links for the user
         if (response.ok && !isFetchCanceled) {
@@ -282,12 +285,6 @@ async function removeUserCache() {
         // Checks to see if the url is apart of the list of user's remote links. If so,
         // all data associated with that url is deleted from the cache and from the list
         if (userRemoteLinks.includes(item.url)) {
-          cache.delete(item);
-          userRemoteLinks = userRemoteLinks.filter(link => link !== item.url);
-        }
-        // Removes '/profile/firstName.lastName' from the list of user's remote links and cache
-        // since that file is associated with the user.
-        else if (item.url.match(location.origin) && item.url.includes('/profile/')) {
           cache.delete(item);
           userRemoteLinks = userRemoteLinks.filter(link => link !== item.url);
         }

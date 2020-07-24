@@ -55,21 +55,24 @@ let token, // Holds the token of the user
   isFetchCanceled; // Determines if fetches should be canceled
 
 /**
- * Cleans the cache to remove data that's no longer in use (removes outdated cache version)
+ * Removes all cache data. This includes data from the current cache version and any other cache
+ * present. This may need to be modified in the future if the service worker isn't the only place
+ * using the cache. If other functions outside of the service worker uses the cache, its cache data
+ * will also be deleted when a new service worker installs and may cause a bug
  */
-async function cleanCache() {
-  // If there's outdated cache
+async function removeAllCache() {
   await caches.keys().then(keys => {
-    keys.forEach(key => {
-      if (key !== cacheVersion) {
-        return caches.delete(key).then(() => {
-          if (showDeveloperConsoleLog)
-            console.log(
-              `%c${successfulEmoji} Previous cache has been removed (outdated cache "${key}")`,
-              successfulLog,
-            );
-        });
-      }
+    // Goes through each cache present and deletes it
+    keys.forEach(async key => {
+      await caches.delete(key).then(() => {
+        if (showDeveloperConsoleLog) {
+          key === cacheVersion
+            ? // If the cache is the same as the current cache version
+              console.log(`%cCurrent cache cleared: "${key}"`, statusLog)
+            : // If the cache is not the same as the current cache version
+              console.log(`%cPrevious cache has been removed: "${key}"`, statusLog);
+        }
+      });
     });
   });
 }
@@ -148,11 +151,11 @@ self.addEventListener('install', () => {
   if (showDeveloperConsoleLog) console.log('%cInstalling Service Worker', statusLog);
 });
 
-self.addEventListener('activate', event => {
+self.addEventListener('activate', async event => {
   if (showDeveloperConsoleLog) console.log('%cActivating Service Worker', statusLog);
   self.clients.claim();
   // Removes outdated cache and starts timer to update the cache every hour
-  event.waitUntil(cleanCache(), timerFunction());
+  event.waitUntil(await removeAllCache(), timerFunction());
 });
 
 self.addEventListener('fetch', event => {
