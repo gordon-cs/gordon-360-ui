@@ -406,9 +406,11 @@ export default class Events extends Component {
       events = (
         <section>
           <Grid container justify="center">
+
+            {/* Search Bar and Filters */}
             <Grid
               item
-              xs={12}
+              xs={10}
               md={12}
               lg={8}
               alignContent="center"
@@ -416,7 +418,7 @@ export default class Events extends Component {
               style={{ paddingBottom: '1rem' }}
             >
               <Grid container alignItems="baseline" style={styles.searchBar}>
-                <Grid container md={8} lg={7}>
+                <Grid container xs={12} md={8} lg={7}>
                   <TextField
                     id="search"
                     label="Search"
@@ -429,31 +431,30 @@ export default class Events extends Component {
                   container
                   justify="flex-end"
                   direction="row"
+                  xs={12}
                   md={4}
                   lg={5}
                   style={{ paddingTop: '1rem' }}
                 >
-                  <Grid item align="center">
-                    <Button
-                      variant="contained"
-                      style={style.button}
-                      onClick={this.handleExpandClick}
-                    >
-                      {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
-                    </Button>
-                  </Grid>
-                  <Grid item align="center">
-                    <Button
-                      variant="contained"
-                      style={style.button.attendedEvents}
-                      onClick={() => (window.location.pathname = '/attended')}
-                    >
-                      ATTENDED CL&amp;W
-                    </Button>
-                  </Grid>
+                  <Button
+                    variant="contained"
+                    style={style.button}
+                    onClick={this.handleExpandClick}
+                  >
+                    {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    style={style.button.attendedEvents}
+                    onClick={() => (window.location.pathname = '/attended')}
+                  >
+                    ATTENDED CL&amp;W
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
+
+            {/* List of Events */}
             <Grid item xs={12} md={12} lg={8}>
               {filter}
               {content}
