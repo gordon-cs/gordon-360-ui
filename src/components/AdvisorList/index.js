@@ -19,23 +19,33 @@ export default class Advisors extends Component {
           <Typography>{advisor.Firstname + " " + advisor.Lastname}</Typography>
         </div>
       ));
-    
-    
-    if (this.props.advisors.length === 1) {
-      advisorPrefix = (
-        <div>
-          <Typography>Advisor:</Typography>
-        </div>
-      );
-    } else if (this.props.advisors.length > 1) {
-      advisorPrefix = (
-        <div>
-          <Typography>Advisors:</Typography>
-        </div>
-      );
-        }   
+
+      if (this.props.advisors.length === 0 ) {
+        advisorPrefix = (
+          <div>
+            <Typography>Advisor:</Typography>
+          </div>
+        );
+        content = (
+          <div>
+            <Typography>(not assigned)</Typography>
+          </div>
+        );
+      }else if (this.props.advisors.length === 1 ) {
+        advisorPrefix = (
+          <div>
+            <Typography>Advisor:</Typography>
+          </div>
+        );
+      } else if (this.props.advisors.length > 1) {
+        advisorPrefix = (
+          <div>
+            <Typography>Advisors:</Typography>
+          </div>
+        );
+      }
+      
     }
-  
   return (  
     <div>
       <ListItem>
@@ -50,7 +60,6 @@ export default class Advisors extends Component {
       </ListItem>
       <Divider />
     </div>
-    
-  );
-}
+    );
+  }
 }
