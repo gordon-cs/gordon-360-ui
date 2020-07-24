@@ -347,7 +347,8 @@ export default class StudentNews extends Component {
                              guidelines and will be reviewed at the discretion of 
                              The Office of Student Life... 
                              <Link
-                                href=".."
+                                href="https://gordonedu.sharepoint.com/:b:/g/
+                                StudentLife/admin/EY22_o3g6vFEsfT2nYY-8JwB34OlYmA1oaE1f4FTGD2gew"
                               >
                                 More Details
                               </Link>
