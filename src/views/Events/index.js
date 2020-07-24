@@ -11,7 +11,7 @@ import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
 import { gordonColors } from './../../theme';
 
-import './event.css';
+import './event.scss';
 
 const styles = {
   searchBar: {
