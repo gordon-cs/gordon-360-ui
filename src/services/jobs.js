@@ -33,7 +33,7 @@ const getActiveJobsForUser = (canUseStaff, details) => {
  */
 const getSavedShiftsForUser = (canUseStaff) => {
   if (canUseStaff) {
-    return http.get(`jobs/getSavedShiftsStaff/`);
+    return http.get(`jobs/savedShiftsForStaff/`);
   }
   return http.get(`jobs/getSavedShifts/`);
 };
