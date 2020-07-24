@@ -48,7 +48,7 @@ const gridStyle = {
 
 export default class Office extends Component {
   render() {
-    let OfficeHours, OfficePhone, Room, Office;
+    let department, officeHours, officePhone, room, Office;
     if (String(this.props.profile.PersonType).includes('fac')) {
       if (
         this.props.profile.BuildingDescription === '' &&
@@ -59,11 +59,47 @@ export default class Office extends Component {
         return null;
       }
 
+      if (this.props.profile.OnCampusDepartment !== '') {
+        const rowItemOne = rowWidths.itemOne;
+        const rowItemTwo = rowWidths.itemTwo;
+        department = (
+          <div>
+            <ListItem>
+              <Grid container justify="center">
+                <Grid
+                  container
+                  xs={rowItemOne.xs}
+                  sm={rowItemOne.sm}
+                  md={rowItemOne.md}
+                  lg={rowItemOne.lg}
+                  style={gridStyle.item}
+                  alignItems="center"
+                >
+                  <Typography>Department:</Typography>
+                </Grid>
+                <Grid
+                  container
+                  xs={rowItemTwo.xs}
+                  sm={rowItemTwo.sm}
+                  md={rowItemTwo.md}
+                  lg={rowItemTwo.lg}
+                  style={gridStyle.lastItem}
+                  alignItems="center"
+                >
+                  <Typography>{this.props.profile.OnCampusDepartment}</Typography>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <Divider />
+          </div>
+        );
+      }
+
       if (this.props.profile.OnCampusPhone !== '') {
         // Gets the row item widths
         const rowItemOne = rowWidths.itemOne;
         const rowItemTwo = rowWidths.itemTwo;
-        OfficePhone = (
+        officePhone = (
           <div>
             <ListItem>
               <Grid container justify="center">
@@ -104,7 +140,7 @@ export default class Office extends Component {
         // Gets the row item widths
         const rowItemOne = rowWidths.itemOne;
         const rowItemTwo = rowWidths.itemTwo;
-        OfficeHours = (
+        officeHours = (
           <div>
             <ListItem>
               <Grid container justify="center">
@@ -141,7 +177,7 @@ export default class Office extends Component {
         // Gets the row item widths
         const rowItemOne = rowWidths.itemOne;
         const rowItemTwo = rowWidths.itemTwo;
-        Room = (
+        room = (
           <div>
             <ListItem>
               <Grid container justify="center">
@@ -183,9 +219,10 @@ export default class Office extends Component {
           </Grid>
           <CardContent className="office-list-card-content">
             <List>
-              {Room}
-              {OfficePhone}
-              {OfficeHours}
+              {department}
+              {room}
+              {officePhone}
+              {officeHours}
             </List>
           </CardContent>
         </Card>

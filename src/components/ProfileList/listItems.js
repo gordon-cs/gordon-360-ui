@@ -463,54 +463,6 @@ function createDormitoryListItem(profile, rowWidths, styles, myProf) {
 }
 
 /**
- * Creates the Faculty Department List Item
- *
- * @param {Object} profile The profile of a user containing all information about them
- * @param {Object} rowWidths Determines the grid lengths of this list item
- * @param {Object} styles An object of all styles that this list item uses
- *
- * @return {JSX} The JSX of the Faculty Department List Item
- */
-function createFacultyDepartmentItem(profile, rowWidths, styles) {
-  if (String(profile.PersonType).includes('fac') && profile.OnCampusDepartment !== '') {
-    // Gets the row item widths
-    const rowItemOne = rowWidths.twoItems.itemOne;
-    const rowItemTwo = rowWidths.twoItems.itemTwo;
-    return (
-      <div>
-        <ListItem>
-          <Grid container justify="center">
-            <Grid
-              container
-              xs={rowItemOne.xs}
-              sm={rowItemOne.sm}
-              md={rowItemOne.md}
-              lg={rowItemOne.lg}
-              style={styles.gridStyle.item}
-              alignItems="center"
-            >
-              <Typography>Department:</Typography>
-            </Grid>
-            <Grid
-              container
-              xs={rowItemTwo.xs}
-              sm={rowItemTwo.sm}
-              md={rowItemTwo.md}
-              lg={rowItemTwo.lg}
-              style={styles.gridStyle.lastItem}
-              alignItems="center"
-            >
-              <Typography>{profile.OnCampusDepartment}</Typography>
-            </Grid>
-          </Grid>
-        </ListItem>
-        <Divider />
-      </div>
-    );
-  }
-}
-
-/**
  * Creates the Mailbox List Item
  *
  * @param {Object} profile The profile of a user containing all information about them
@@ -688,7 +640,6 @@ export {
   createMinorsListItem,
   createResidenceListItem,
   createDormitoryListItem,
-  createFacultyDepartmentItem,
   createMailboxItem,
   createStudentIDItem,
   createSpouseItem,
