@@ -210,7 +210,7 @@ export default class SavedShiftsList extends Component {
             </Grid>
             <Grid item xs={2}>
               <Typography className="disable-select" variant="body2" style={styles.headerItem}>
-                RATE
+                {(this.props.canUse ? 'HOUR TYPE': 'RATE')}
               </Typography>
             </Grid>
             <Grid item xs={2}>
@@ -231,7 +231,6 @@ export default class SavedShiftsList extends Component {
         value={shift}
         key={index}
         canUse={this.props.canUse}
-        selectedHourType={this.props.selectedHourType}
       />
     ));
 

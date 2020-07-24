@@ -163,7 +163,10 @@ const Timesheets = (props) => {
         shift_end_datetime: dateOut.toLocaleString(),
       };
       jobs.getActiveJobsForUser(canUseStaff, details).then((result) => {
-        setUserJobs(result);
+        // Take out this if statement when staff timesheets works
+        if (!canUseStaff) {
+          setUserJobs(result);
+        }
       });
     };
 

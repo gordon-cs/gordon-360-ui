@@ -247,7 +247,6 @@ export default class ShiftDisplay extends Component {
                 loadShifts={this.loadShifts.bind(this)}
                 deleteShift={this.deleteShiftForUser.bind(this)}
                 cardTitle="Approved Shifts"
-                selectedHourType={this.props.selectedHourType}
               />
             </Grid>
           </Grid>

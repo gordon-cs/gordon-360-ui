@@ -21,7 +21,7 @@ const getStaffPageForUser = async () => {
  */
 const getActiveJobsForUser = (canUseStaff, details) => {
   if (canUseStaff) {
-    return http.post(`jobs/getJobsStaff`, details); // Is a HttpPost, but says get?
+    return http.post(`jobs/getJobsStaff`, details);
   }
   return http.post(`jobs/getJobs`, details);
 };
@@ -90,7 +90,7 @@ const editShift = async (canUseStaff, rowID, newShiftStart, newShiftEnd, newHour
     LAST_CHANGED_BY: null,
   };
   if (canUseStaff) {
-    return await http.put(`jobs/editShiftStaff/`, newShiftDetails);
+    return await http.put(`jobs/editShiftStaff/`, newShiftDetails); // Needs to take hours_type
   }
   return await http.put(`jobs/editShift/`, newShiftDetails);
 };

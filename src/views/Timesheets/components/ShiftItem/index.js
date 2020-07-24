@@ -326,12 +326,13 @@ export default class ShiftItem extends Component {
       SHIFT_NOTES,
       COMMENTS,
       HOURLY_RATE,
+      // eslint-disable-next-line
+      HOURS_TYPE,
       HOURS_WORKED,
       STATUS,
     } = shift;
 
     const { errorText } = this.state;
-    const HOUR_TYPE = this.props.selectedHourType;
     const monthIn = SHIFT_START_DATETIME.substring(5, 7);
     const dateIn = SHIFT_START_DATETIME.substring(8, 10);
     const timeIn = SHIFT_START_DATETIME.substring(11, 16);
@@ -554,7 +555,7 @@ export default class ShiftItem extends Component {
                 </Grid>
                 <Grid item xs={2}>
                   <Typography className="disable-select" variant="body2">
-                    {(this.props.canUse ? console.log('HERE', HOUR_TYPE) : HOURLY_RATE.toFixed(2))}
+                    {(this.props.canUse ? console.log(shift) : HOURLY_RATE.toFixed(2))}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
