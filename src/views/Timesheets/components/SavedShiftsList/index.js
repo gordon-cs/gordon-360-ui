@@ -230,6 +230,8 @@ export default class SavedShiftsList extends Component {
         editShift={this.props.editShift}
         value={shift}
         key={index}
+        canUse={this.props.canUse}
+        selectedHourType={this.props.selectedHourType}
       />
     ));
 

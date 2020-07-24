@@ -732,6 +732,7 @@ const Timesheets = (props) => {
           <ShiftDisplay
             ref={setShiftDisplayComponent}
             getSavedShiftsForUser={getSavedShiftsForUser}
+            canUse={canUseStaff}
           />
         </Grid>
         <SimpleSnackbar
