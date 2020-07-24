@@ -390,6 +390,8 @@ The script deploys to either staging or production based on the branch it is run
 
 - An admin is able to remove themselves (on admin view), which causes major issues.
 
+- Staff-timesheets is having request issues because of permission complications. We can not test certain parts of the endpoints because they grab sensitive information. Due to the lack of time, we were not able to workout permissions to fully test and fix the remaning issues with Staff timesheets. Because of this, when in staff view, Staff timesheets does not work and returns a permission error when used. 
+
 ## History
 - The student timesheets project was done as a senior project by a trio of seniors Nathanial Rudenberg, Adam Princiotta, and Jacob Bradley. The handoff documentation for this project was a revision and update to the existing documentation which is in the [Connect Local Backend to React](#connect-local-backend-to-react) section of the README. The design document can be found [here](https://docs.google.com/document/d/1CepyCiMzBXQVM--JwKKstniU_H1TodzxHLuCqcHxLjk/edit?usp=sharing)
 - [Student Timesheets Final Presentation](https://docs.google.com/presentation/d/162V-DLuaEUyHDS2Diu09k5f4Tpo2iuoMtIDUyowa7eQ/edit?usp=sharing)
