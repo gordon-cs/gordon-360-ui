@@ -411,14 +411,15 @@ export default class Events extends Component {
             <Grid
               item
               xs={10}
+              sm={12}
               md={12}
               lg={8}
               alignContent="center"
               justify="center"
               style={{ paddingBottom: '1rem' }}
             >
-              <Grid container alignItems="baseline" style={styles.searchBar}>
-                <Grid container xs={12} md={8} lg={7}>
+              <Grid container alignItems="baseline" justify="center" style={styles.searchBar}>
+                <Grid container xs={12} sm={5} md={8} lg={7}>
                   <TextField
                     id="search"
                     label="Search"
@@ -432,6 +433,7 @@ export default class Events extends Component {
                   justify="flex-end"
                   direction="row"
                   xs={12}
+                  sm={6}
                   md={4}
                   lg={5}
                   style={{ paddingTop: '1rem' }}
