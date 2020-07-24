@@ -67,7 +67,7 @@ const saveShiftForUser = async (
       HOURS_TYPE: hoursType,
       SHIFT_NOTES: shiftNotes,
     };
-    return await http.post(`jobs/saveShiftStaff/`, shiftDetails);
+    return await http.post(`jobs/saveShiftsForStaff/`, shiftDetails);
   }
   let shiftDetails = {
     EML: eml,
