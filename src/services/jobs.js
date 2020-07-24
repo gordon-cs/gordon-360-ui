@@ -33,7 +33,7 @@ const getActiveJobsForUser = (canUseStaff, details) => {
  */
 const getSavedShiftsForUser = (canUseStaff) => {
   if (canUseStaff) {
-    return http.get(`jobs/savedShiftsStaff/`);
+    return http.get(`jobs/savedShiftsForStaff/`);
   }
   return http.get(`jobs/getSavedShifts/`);
 };
@@ -67,7 +67,7 @@ const saveShiftForUser = async (
       HOURS_TYPE: hoursType,
       SHIFT_NOTES: shiftNotes,
     };
-    return await http.post(`jobs/saveShiftsForStaff/`, shiftDetails);
+    return await http.post(`jobs/saveShiftStaff/`, shiftDetails);
   }
   let shiftDetails = {
     EML: eml,
