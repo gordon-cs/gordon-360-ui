@@ -21,7 +21,7 @@ const getStaffPageForUser = async () => {
  */
 const getActiveJobsForUser = (canUseStaff, details) => {
   if (canUseStaff) {
-    return http.post(`jobs/getJobsStaff`, details); // Is a HttpPost, but says get?
+    return http.post(`jobs/JobsStaff`, details); // Is a HttpPost, but says get?
   }
   return http.post(`jobs/getJobs`, details);
 };
@@ -33,7 +33,7 @@ const getActiveJobsForUser = (canUseStaff, details) => {
  */
 const getSavedShiftsForUser = (canUseStaff) => {
   if (canUseStaff) {
-    return http.get(`jobs/getSavedShiftsStaff/`);
+    return http.get(`jobs/savedShiftsStaff/`);
   }
   return http.get(`jobs/getSavedShifts/`);
 };
