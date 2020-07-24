@@ -5,7 +5,7 @@
 /* eslint-disable no-unused-vars */
 
 // Cache version
-const cacheVersion = 'cache v1.2';
+const cacheVersion = 'cache v1.3';
 
 // API Source
 // @PROD (** Make sure the URL is all lowercase or the service worker will fail to remove user data **)
