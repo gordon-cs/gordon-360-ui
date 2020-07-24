@@ -18,7 +18,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Snackbar, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { Link } from 'react-router-dom';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
 // import Dropzone from 'react-dropzone';
@@ -437,12 +436,11 @@ export default class StudentNews extends Component {
                              and found, rides, etc. All submissions must follow the Student News 
                              guidelines and will be reviewed at the discretion of 
                              The Office of Student Life... 
-                             <Link
-                                href="https://gordonedu.sharepoint.com/:b:/g/
-                                StudentLife/admin/EY22_o3g6vFEsfT2nYY-8JwB34OlYmA1oaE1f4FTGD2gew"
+                             <a
+                                href="https://gordonedu.sharepoint.com/:b:/g/StudentLife/admin/EY22_o3g6vFEsfT2nYY-8JwB34OlYmA1oaE1f4FTGD2gew"
                               >
                                 More Details
-                              </Link>
+                              </a>
                           </Typography>
                         </Grid>
                       </Grid>
