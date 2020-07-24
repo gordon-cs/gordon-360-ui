@@ -1,19 +1,17 @@
 import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import user from './../../services/user';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
-import ProfileActivityList from './../../components/ProfileActivityList';
-import EmailIcon from '@material-ui/icons/Email';
+import { Involvements } from '../../components/Involvements/index';
 import Button from '@material-ui/core/Button';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import GordonSchedulePanel from '../../components/SchedulePanel';
+import { Identification } from '../../components/Identification/index';
+import storage from '../../services/storage';
 
 import './profile.css';
 import '../../app.css';
@@ -50,11 +48,47 @@ export default class Profile extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.Authentication) {
       this.loadProfile(this.props);
     }
+
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', event => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    let network;
+    /* Attempts to get the network status from local storage.
+     * If not found, the default value is online
+     */
+    try {
+      network = storage.get('network-status');
+    } catch (error) {
+      // Defaults the network to online if not found in local storage
+      network = 'online';
+    }
+    // Saves the network's status to this component's state
+    this.setState({ network });
   }
+
+  componentWillUnmount() {}
 
   componentWillReceiveProps(newProps) {
     if (
@@ -154,206 +188,21 @@ export default class Profile extends Component {
   }
 
   render() {
-    // The list of memberships that will be displayed on the page
-    let displayedMembershipList;
-
-    // The list of memberships that the user has made public
-    let publicMemberships = [];
-
-    if (!this.state.memberships) {
-      displayedMembershipList = <GordonLoader />;
-    } else {
-      // Populate publicMemberships with the user's public Involvements
-      for (let i = 0; i < this.state.memberships.length; i++) {
-        if (!this.state.memberships[i].Privacy) {
-          publicMemberships.push(this.state.memberships[i]);
-        }
-      }
-
-      // If the user has no public Involvements, say so on the page
-      if (publicMemberships.length === 0) {
-        displayedMembershipList = (
-          <Typography variant="body2" align="center">
-            No Involvements to display
-          </Typography>
-        );
-      } else {
-        displayedMembershipList = publicMemberships.map(activity => (
-          <ProfileActivityList Activity={activity} key={activity.MembershipID} />
-        ));
-      }
-    }
-
-    let facebookButton;
-    let twitterButton;
-    let linkedInButton;
-    let instagramButton;
-    if (this.state.facebookLink !== '') {
-      facebookButton = (
-        <Grid item>
-          <a
-            href={this.state.facebookLink}
-            className="gc360-profile_icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.facebook.icon}
-          </a>
-        </Grid>
-      );
-    }
-    if (this.state.twitterLink !== '') {
-      twitterButton = (
-        <Grid item>
-          <a
-            href={this.state.twitterLink}
-            className="gc360-profile_icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.twitter.icon}
-          </a>
-        </Grid>
-      );
-    }
-    if (this.state.linkedInLink !== '') {
-      linkedInButton = (
-        <Grid item>
-          <a
-            href={this.state.linkedInLink}
-            className="gc360-profile_icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.linkedIn.icon}
-          </a>
-        </Grid>
-      );
-    }
-    if (this.state.instagramLink !== '') {
-      instagramButton = (
-        <Grid item>
-          <a
-            href={this.state.instagramLink}
-            className="gc360-profile_icon"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {socialMediaInfo.instagram.icon}
-          </a>
-        </Grid>
-      );
-    }
-
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
     if (this.props.Authentication) {
-      // Creates the Public Profile page depending on the status of the network found in local storage
-      // If the searched profile is the current user's profile, the page will remain avaiable offline
+      // Creates the Public Profile page depending on the status of the network
       let PublicProfile;
-      if (
-        networkStatus === 'online' ||
-        (networkStatus === 'offline' &&
-          this.state.profile.AD_Username === this.state.currentUser.AD_Username)
-      ) {
+      if (this.state.network === 'online') {
         PublicProfile = (
           <div>
             {this.state.loading && <GordonLoader />}
             {!this.state.loading && (
               <Grid container justify="center" spacing={2}>
                 <Grid item xs={12} lg={10}>
-                  <Card>
-                    <CardContent>
-                      <Grid
-                        container
-                        alignItems="center"
-                        align="center"
-                        justify="center"
-                        spacing={2}
-                      >
-                        <Grid container alignItems="center" spacing={2}>
-                          <Grid item xs={12} sm={12} md={12} lg={12}>
-                            {this.state.prefImage && (
-                              <img
-                                className="rounded-corners"
-                                src={`data:image/jpg;base64,${this.state.prefImage}`}
-                                alt=""
-                                style={{ maxHeight: '200px', minWidth: '160px' }}
-                              />
-                            )}
-                            {this.state.prefImage && this.state.defImage && ' '}
-                            {this.state.defImage && (
-                              <img
-                                className="rounded-corners"
-                                src={`data:image/jpg;base64,${this.state.defImage}`}
-                                alt=""
-                                style={{ maxHeight: '200px', minWidth: '160px' }}
-                              />
-                            )}
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={4}>
-                          <Grid container align="center" alignItems="center" spacing={2}>
-                            <Grid item xs={12}>
-                              <CardHeader
-                                title={
-                                  this.state.hasNickName
-                                    ? this.state.profile.fullName +
-                                      ' (' +
-                                      this.state.profile.NickName +
-                                      ')'
-                                    : this.state.profile.fullName
-                                }
-                                subheader={this.state.subheaderInfo}
-                              />
-
-                              <Grid container spacing={2} align="center" justify="center">
-                                {facebookButton}
-                                {twitterButton}
-                                {linkedInButton}
-                                {instagramButton}
-                              </Grid>
-                              {this.state.profile.Email !== '' && (
-                                <a
-                                  href={`mailto:${this.state.profile.Email}`}
-                                  className="gc360-text-link gc360-profile_email"
-                                >
-                                  <EmailIcon className="gc360-profile_email_icon" />
-                                  <Typography className="gc360-profile_email_text">
-                                    {this.state.profile.Email}
-                                  </Typography>
-                                </a>
-                              )}
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
+                  <Identification
+                    profile={this.state.profile}
+                    network={this.state.network}
+                    myProf={false}
+                  />
                 </Grid>
 
                 <Grid item xs={12} lg={10} align="center">
@@ -366,27 +215,13 @@ export default class Profile extends Component {
 
                 <Grid item xs={12} lg={5}>
                   <Grid container spacing={2}>
-                    {this.state.profileinfo}
                     {this.state.officeinfo}
+                    {this.state.profileinfo}
                   </Grid>
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <Card>
-                        <CardContent>
-                          <Grid container direction="row" alignItems="center">
-                            <Grid item xs={7}>
-                              <CardHeader title="Involvements" />
-                            </Grid>
-                            <Grid item xs={5} align="right"></Grid>
-                          </Grid>
-                          <List>{displayedMembershipList}</List>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  </Grid>
+                  <Involvements memberships={this.state.memberships} myProf={false} />
                 </Grid>
               </Grid>
             )}
@@ -420,7 +255,7 @@ export default class Profile extends Component {
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>
-                  <h4>People Search has been deactivated due to loss of network.</h4>
+                  <h4>Viewing a public profile has been deactivated due to loss of network.</h4>
                   <br />
                   <br />
                   <Button

@@ -1,24 +1,13 @@
 @import '../../vars';
 
-.profile-list-card {
+.office-list-card {
+  background-color: red;
   &-header {
     background-color: $primary-blue;
     color: white;
     padding-left: 1rem;
   }
   &-content {
-    .lock-icon {
-      color: #9e9e9e;
-    }
-    .disclaimer {
-      color: $secondary-red !important;
-      &-note {
-        background-color: #ffe8e7;
-        padding: 0.3rem 1rem;
-        margin-top: 1rem;
-        border-radius: 5px;
-      }
-    }
     .number {
       p {
         color: $primary-blue;
@@ -38,7 +27,8 @@
 }
 
 @media (max-width: $break-sm) {
-  .profile-list-card {
+  .office-list-card {
+    background-color: red;
     &-header {
       padding-left: 0rem;
       justify-content: center;
