@@ -41,7 +41,6 @@ export default class Events extends Component {
       includePast: false,
       loading: true,
       hasFilters: false,
-      network: 'online',
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
@@ -131,7 +130,7 @@ export default class Events extends Component {
   }
 
   filterEvents(name) {
-    return async (event) => {
+    return async event => {
       this.setState({ loading: true });
       await this.setState({ [name]: event.target.checked });
       const events = await gordonEvent.getFilteredEvents(this.state);
@@ -209,7 +208,7 @@ export default class Events extends Component {
   }
 
   search(name) {
-    return async (event) => {
+    return async event => {
       await this.setState({
         [name]: event.target.value,
       });
@@ -269,31 +268,6 @@ export default class Events extends Component {
 
   render() {
     let content;
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.state.loading === true) {
       content = <GordonLoader />;
@@ -401,47 +375,42 @@ export default class Events extends Component {
         },
       },
     };
-    // If the user is online
-    if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
-      events = (
-        <section>
-          <Grid container justify="center">
-            <Grid
-              item
-              xs={12}
-              md={12}
-              lg={8}
-              alignContent="center"
-              justify="center"
-              style={{ paddingBottom: '1rem' }}
-            >
-              <Grid container alignItems="baseline" style={styles.searchBar}>
-                <Grid container md={8} lg={7}>
-                  <TextField
-                    id="search"
-                    label="Search"
-                    value={this.state.search}
-                    onChange={this.search('search')}
-                    fullWidth
-                  />
+    events = (
+      <section>
+        <Grid container justify="center">
+          <Grid
+            item
+            xs={12}
+            md={12}
+            lg={8}
+            alignContent="center"
+            justify="center"
+            style={{ paddingBottom: '1rem' }}
+          >
+            <Grid container alignItems="baseline" style={styles.searchBar}>
+              <Grid container md={8} lg={7}>
+                <TextField
+                  id="search"
+                  label="Search"
+                  value={this.state.search}
+                  onChange={this.search('search')}
+                  fullWidth
+                />
+              </Grid>
+              <Grid
+                container
+                justify="flex-end"
+                direction="row"
+                md={4}
+                lg={5}
+                style={{ paddingTop: '1rem' }}
+              >
+                <Grid item align="center">
+                  <Button variant="contained" style={style.button} onClick={this.handleExpandClick}>
+                    {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
+                  </Button>
                 </Grid>
-                <Grid
-                  container
-                  justify="flex-end"
-                  direction="row"
-                  md={4}
-                  lg={5}
-                  style={{ paddingTop: '1rem' }}
-                >
-                  <Grid item align="center">
-                    <Button
-                      variant="contained"
-                      style={style.button}
-                      onClick={this.handleExpandClick}
-                    >
-                      {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
-                    </Button>
-                  </Grid>
+                {this.props.Authentication && (
                   <Grid item align="center">
                     <Button
                       variant="contained"
@@ -451,17 +420,18 @@ export default class Events extends Component {
                       ATTENDED CL&amp;W
                     </Button>
                   </Grid>
-                </Grid>
+                )}
               </Grid>
             </Grid>
-            <Grid item xs={12} md={12} lg={8}>
-              {filter}
-              {content}
-            </Grid>
           </Grid>
-        </section>
-      );
-    }
+          <Grid item xs={12} md={12} lg={8}>
+            {filter}
+            {content}
+          </Grid>
+        </Grid>
+      </section>
+    );
+
     return events;
   }
 }

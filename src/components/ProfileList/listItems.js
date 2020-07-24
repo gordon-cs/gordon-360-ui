@@ -105,9 +105,36 @@ function createHomePhoneListItem(
 ) {
   // If the user's home phone is available
   if (profile.HomePhone && profile.HomePhone !== '') {
+    console.log('Home Phone Avaialable: ', profile.HomePhone);
     // Gets the row item widths
     const rowItemOne = rowWidths.twoItems.itemOne;
     const rowItemTwo = rowWidths.twoItems.itemTwo;
+    let homePhoneJSX;
+
+    // If the Home Phone is available, it's not private and the current page is the Public Profile
+    if (profile.HomePhone !== privateInfo && !myProf) {
+      homePhoneJSX = (
+        <a href={'tel:' + profile.HomePhone} className="number">
+          <Typography className={homePhoneDisclaimer ? 'disclaimer' : 'gc360-text-link'}>
+            {formattedPhoneNum}
+          </Typography>
+        </a>
+      );
+    }
+    // If the Home Phone is private
+    else if (profile.HomePhone === privateInfo) {
+      homePhoneJSX = <Typography>Private as requested</Typography>;
+    }
+    // If the page is the My Profile page
+    else if (myProf) {
+      homePhoneJSX = (
+        <Typography
+          style={String(profile.PersonType).includes('stu') ? styles.privateTextStyle : {}}
+        >
+          {formattedPhoneNum}
+        </Typography>
+      );
+    }
     return (
       <div>
         <ListItem>
@@ -134,21 +161,7 @@ function createHomePhoneListItem(
               style={styles.gridStyle.lastItem}
               alignItems="center"
             >
-              {profile.HomePhone !== privateInfo && !myProf && (
-                <a href={'tel:' + profile.HomePhone} className="number">
-                  <Typography className={homePhoneDisclaimer ? 'disclaimer' : 'gc360-text-link'}>
-                    {formattedPhoneNum}
-                  </Typography>
-                </a>
-              )}
-              {profile.HomePhone === privateInfo && <Typography>Private as requested</Typography>}
-              {myProf && (
-                <Typography
-                  style={String(profile.PersonType).includes('stu') ? styles.privateTextStyle : ''}
-                >
-                  {formattedPhoneNum}
-                </Typography>
-              )}
+              {homePhoneJSX}
             </Grid>
           </Grid>
         </ListItem>
@@ -219,7 +232,7 @@ function createMobilePhoneListItem(
                 lg={rowItemTwo.lg}
                 style={{
                   ...styles.gridStyle.item,
-                  ...(isMobilePhonePrivate ? styles.privateTextStyle : ''),
+                  ...(isMobilePhonePrivate ? styles.privateTextStyle : {}),
                 }}
                 alignItems="center"
               >
