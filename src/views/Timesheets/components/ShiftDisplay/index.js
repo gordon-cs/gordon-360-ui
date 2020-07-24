@@ -221,6 +221,7 @@ export default class ShiftDisplay extends Component {
                 cardTitle="Saved Shifts"
                 directSupervisor={directSupervisor}
                 reportingSupervisor={reportingSupervisor}
+                canUse={this.props.canUse}
               />
             </Grid>
             <Grid item xs={12}>
@@ -246,6 +247,7 @@ export default class ShiftDisplay extends Component {
                 loadShifts={this.loadShifts.bind(this)}
                 deleteShift={this.deleteShiftForUser.bind(this)}
                 cardTitle="Approved Shifts"
+                selectedHourType={this.props.selectedHourType}
               />
             </Grid>
           </Grid>
