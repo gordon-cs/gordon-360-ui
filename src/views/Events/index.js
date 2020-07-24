@@ -11,7 +11,7 @@ import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
 import { gordonColors } from './../../theme';
 
-//import './event.css';
+import './event.css';
 
 const styles = {
   searchBar: {
@@ -435,6 +435,7 @@ export default class Events extends Component {
                   md={4}
                   lg={5}
                   style={{ paddingTop: '1rem' }}
+                  className={'buttonWrapper'}
                 >
                   <Button
                     variant="contained"
