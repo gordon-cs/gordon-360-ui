@@ -31,7 +31,6 @@ const static360Cache = [
   // Documents
   '/',
   '/events',
-  '/events?CLW',
   '/involvements',
   '/feedback',
   '/people',

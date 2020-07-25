@@ -113,12 +113,27 @@ async function fetchThenCache(request) {
       // Since the fetch failed, attempt to retrieve the response from cache
       if (showDeveloperConsoleLog)
         console.log(`%c${cacheEmoji} Getting ${request.url} from cache instead...`, cacheLog);
+      let response;
+      /**
+       * Checks the URL to see if it's the events page or the attended events page that contains
+       * query parameters. If there are any query parameters, the file "/events" is returned.
+       * This is fine because the file that's requested is the same HTML file that "/events" is
+       */
 
-      const response = await caches.open(cacheVersion).then(cache => {
-        return cache.match(request.url).then(response => {
+      if (request.url.includes('/events?') || request.url.includes('/attended?')) {
+        response = await caches.open(cacheVersion).then(async cache => {
+          const response = await cache.match(location.origin + '/events');
           return response;
         });
-      });
+        // location.href = request.url.slice(0, request.url.indexOf('?'));
+        // let queryParams = request.url.slice(request.url.indexOf('?'));
+      } else {
+        response = await caches.open(cacheVersion).then(cache => {
+          return cache.match(request.url).then(response => {
+            return response;
+          });
+        });
+      }
 
       // If there's no response from cache, we console log that the request failed
       if (response) {
