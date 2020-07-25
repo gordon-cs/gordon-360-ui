@@ -125,8 +125,6 @@ async function fetchThenCache(request) {
           const response = await cache.match(location.origin + '/events');
           return response;
         });
-        // location.href = request.url.slice(0, request.url.indexOf('?'));
-        // let queryParams = request.url.slice(request.url.indexOf('?'));
       } else {
         response = await caches.open(cacheVersion).then(cache => {
           return cache.match(request.url).then(response => {
