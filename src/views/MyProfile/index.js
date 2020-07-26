@@ -5,8 +5,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import GordonLoader from '../../components/Loader';
 import GordonSchedulePanel from '../../components/SchedulePanel';
-import { Identification } from './Components/Identification/index';
-import { Involvements } from './Components/Involvements/index';
+import { Identification } from '../../components/Identification/index';
+import { Involvements } from '../../components/Involvements/index';
 import Office from './../../components/OfficeList';
 import ProfileList from './../../components/ProfileList';
 import storage from '../../services/storage';
@@ -34,7 +34,7 @@ const MyProfile = props => {
       try {
         let profile = await user.getProfileInfo();
         setProfile(profile);
-        let profileInfo = <ProfileList profile={profile} myProf={true} />;
+        let profileInfo = <ProfileList profile={profile} myProf={true} network={network} />;
         setProfileInfo(profileInfo);
         const personType = String(profile.PersonType);
         setPersonType(personType);
@@ -48,7 +48,7 @@ const MyProfile = props => {
       }
     }
     loadProfile();
-  }, []);
+  }, [network]);
 
   useEffect(() => {
     let networkStatus;
@@ -99,7 +99,6 @@ const MyProfile = props => {
         {!loading && (
           <div className="personal-profile">
             <Grid container justify="center" spacing={2}>
-              {/* START OF IDENTIFICATION CARD */}
               <Grid
                 item
                 xs={12}
@@ -107,17 +106,14 @@ const MyProfile = props => {
                 md={profile.PersonType === 'stu' ? 8 : 12}
                 lg={profile.PersonType === 'stu' ? 6 : 10}
               >
-                <Identification profile={profile} width={props.width} network={network} />
+                <Identification profile={profile} network={network} myProf={true} />
               </Grid>
-              {/* END OF IDENTIFICATION CARD */}
 
-              {/* START OF VICTORY PROMISE */}
               {String(personType).includes('stu') && (
                 <Grid item xs={12} md={4} lg={4} sm={12}>
                   <VictoryPromiseDisplay network={network} />
                 </Grid>
               )}
-              {/* END OF VICTORY PROMISE */}
 
               <Grid item xs={12} lg={10} align="center">
                 <Grid container xs={12} lg={12} spacing={0} justify="center">
@@ -129,13 +125,13 @@ const MyProfile = props => {
 
               <Grid item xs={12} lg={5}>
                 <Grid container spacing={2}>
-                  {profileInfo}
                   {officeInfo}
+                  {profileInfo}
                 </Grid>
               </Grid>
 
               <Grid item xs={12} lg={5}>
-                <Involvements memberships={memberships} network={network} />
+                <Involvements memberships={memberships} myProf={true} />
               </Grid>
             </Grid>
           </div>

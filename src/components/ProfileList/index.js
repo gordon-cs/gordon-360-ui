@@ -167,7 +167,22 @@ class ProfileList extends Component {
           (this.props.profile.HomeStreet2 || this.props.profile.HomeStreet1),
       });
     }
-    this.setState({advisors: await user.getAdvisor(this.props.profile.AD_Username)});
+    this.setState({ advisors: await user.getAdvisor(this.props.profile.AD_Username) });
+  }
+
+  /**
+   * Displays the snackbar to the user.
+   * @param {String} message The message to display to the user
+   * @param {String} messageType The message's type. Either a success or error
+   */
+  createSnackbar(message, messageType) {
+    // Sets the snackbar key as either 0 or 1. This prevents a high number being made.
+    this.setState({
+      snackbarMessage: message,
+      snackbarType: messageType,
+      snackbarKey: (this.state.snackbarKey + 1) % 2,
+      isSnackbarOpen: true,
+    });
   }
 
   /**
