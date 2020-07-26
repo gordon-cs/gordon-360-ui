@@ -185,21 +185,6 @@ class ProfileList extends Component {
     });
   }
 
-  /**
-   * Displays the snackbar to the user.
-   * @param {String} message The message to display to the user
-   * @param {String} messageType The message's type. Either a success or error
-   */
-  createSnackbar(message, messageType) {
-    // Sets the snackbar key as either 0 or 1. This prevents a high number being made.
-    this.setState({
-      snackbarMessage: message,
-      snackbarType: messageType,
-      snackbarKey: (this.state.snackbarKey + 1) % 2,
-      isSnackbarOpen: true,
-    });
-  }
-
   render() {
     // The profile of the user whose information to process and the classes style for the mobile
     // phone privacy switch
