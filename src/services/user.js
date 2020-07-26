@@ -171,8 +171,8 @@ import gordonEvent from './event';
  /**
  * @global
  * @typedef StudentAdvisorInfo
- * @property {String} FirstName First Name for advisor
- * @property {String} LastName Last Name for advisor
+ * @property {String} Firstname First Name for advisor
+ * @property {String} Lastname Last Name for advisor
  * @property {String} AD_Username User Name for advisor
  */
 
