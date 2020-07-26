@@ -19,6 +19,7 @@ import {
   createMobilePhoneListItem,
   createMajorsListItem,
   createMinorsListItem,
+  createAdvisorsListItem,
   createResidenceListItem,
   createDormitoryListItem,
   createFacultyDepartmentItem,
@@ -148,7 +149,7 @@ class ProfileList extends Component {
       return tele;
     }
   }
-  componentWillMount() {
+  async componentWillMount() {
     this.setState({ isMobilePhonePrivate: this.props.profile.IsMobilePhonePrivate });
     if (!this.props.myProf) {
       this.setState({
@@ -166,6 +167,7 @@ class ProfileList extends Component {
           (this.props.profile.HomeStreet2 || this.props.profile.HomeStreet1),
       });
     }
+    this.setState({ advisors: await user.getAdvisor(this.props.profile.AD_Username) });
   }
 
   /**
@@ -236,6 +238,9 @@ class ProfileList extends Component {
     // Creates the Majors List Item
     let majors = createMajorsListItem(this.props.profile, rowWidths, { gridStyle });
 
+    // Creates the Advisors List Item
+    let advisors = createAdvisorsListItem(this.props.profile, rowWidths, { gridStyle });
+
     // Creates the Residence List Item
     let residence = createResidenceListItem(this.props.profile, rowWidths, { gridStyle });
 
@@ -270,6 +275,7 @@ class ProfileList extends Component {
           <CardContent className="profile-list-card-content">
             {majors}
             {minors}
+            {advisors}
             {residence}
             {dorminfo}
             {mailloc}
