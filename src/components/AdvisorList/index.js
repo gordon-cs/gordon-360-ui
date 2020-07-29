@@ -60,6 +60,12 @@ export default class Advisors extends Component {
         );
       }
     }
+    // The advisors list is not available so the user sees an empty listing
+    advisorPrefix = (
+      <div>
+        <Typography>Advisor:</Typography>
+      </div>
+    );
 
     return (
       <div>
