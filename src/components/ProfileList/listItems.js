@@ -106,7 +106,6 @@ function createHomePhoneListItem(
 ) {
   // If the user's home phone is available
   if (profile.HomePhone && profile.HomePhone !== '') {
-    console.log('Home Phone Avaialable: ', profile.HomePhone);
     // Gets the row item widths
     const rowItemOne = rowWidths.twoItems.itemOne;
     const rowItemTwo = rowWidths.twoItems.itemTwo;
