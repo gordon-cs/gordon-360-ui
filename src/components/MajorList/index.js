@@ -36,13 +36,13 @@ export default class Majors extends Component {
     }
 
     // Creates the list item's title
-    if (this.props.majors.length === 1) {
+    if (this.props.majors.length < 2) {
       majorPrefix = (
         <div>
           <Typography>Major:</Typography>
         </div>
       );
-    } else if (this.props.majors.length > 1) {
+    } else {
       majorPrefix = (
         <div>
           <Typography>Majors:</Typography>

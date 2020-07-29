@@ -6,6 +6,7 @@ import Switch from '@material-ui/core/Switch';
 import Divider from '@material-ui/core/Divider';
 import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
+import Advisors from './../../components/AdvisorList';
 import LockIcon from '@material-ui/icons/Lock';
 
 /**
@@ -359,6 +360,24 @@ function createMinorsListItem(profile, rowWidths, styles) {
 }
 
 /**
+ * Creates the Advisors List Item
+ *
+ * @param {Object} profile The profile of a user containing all information about them
+ * @param {Object} rowWidths Determines the grid lengths of this list item
+ * @param {Object} styles An object of all styles that this list item uses
+ *
+ * @return {JSX} The JSX of the Advisors List Item
+ */
+function createAdvisorsListItem(profile, rowWidths, styles) {
+  // Shows the advisor(s) if the user is a student and has any advisor
+  if (String(profile.PersonType).includes('stu')) {
+    return (
+      <Advisors advisors={profile.Advisors} rowWidths={rowWidths} gridStyle={styles.gridStyle} />
+    );
+  }
+}
+
+/**
  * Creates the Residence List Item
  *
  * @param {Object} profile The profile of a user containing all information about them
@@ -638,6 +657,7 @@ export {
   createMobilePhoneListItem,
   createMajorsListItem,
   createMinorsListItem,
+  createAdvisorsListItem,
   createResidenceListItem,
   createDormitoryListItem,
   createMailboxItem,
