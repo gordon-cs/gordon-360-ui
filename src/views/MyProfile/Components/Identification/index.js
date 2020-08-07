@@ -11,10 +11,10 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import EmailIcon from '@material-ui/icons/Email';
-import user from '../../services/user';
-import { gordonColors } from '../../theme';
+import user from './../../../../services/user';
+import { gordonColors } from '../../../../theme';
 import LinksDialog from './Components/LinksDialog/index';
-import { socialMediaInfo } from '../../socialMedia';
+import { socialMediaInfo } from '../../../../socialMedia';
 import { Link } from 'react-router-dom';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -24,18 +24,17 @@ import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
-import defaultGordonImage from './defaultGordonImage';
-import GordonLoader from '../Loader/index';
-import { windowBreakWidths } from '../../theme';
 import './index.css';
+import GordonLoader from '../../../../components/Loader';
+import defaultGordonImage from './defaultGordonImage';
 
 export const Identification = props => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState(null);
   const [defaultUserImage, setDefaultUserImage] = useState(null);
   const [preferredUserImage, setPreferredUserImage] = useState(null);
-  const [hasPreferredImage, setHasPreferredImage] = useState(true);
-  const [isPhotosSwitched, setisPhotosSwitched] = useState(false);
+  const [hasPreferredImage, seHasPreferredImage] = useState(true);
+  const [switchPhotos, setSwitchPhotos] = useState(false);
   const [showCropper, setShowCropper] = useState(null);
   const [hasNickName, setHasNickname] = useState(Boolean);
   const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
@@ -51,7 +50,6 @@ export const Identification = props => {
   const [snackbarKey, setSnackbarKey] = useState(0); // A key to make every snackbar display unique
   const [snackbarType, setSnackbarType] = useState(''); // Either success or error
   const [userProfile, setUserProfile] = useState(null);
-  const [currentWidth, setCurrentWidth] = useState(null);
   const cropper = useRef();
   let photoDialogErrorTimeout = null;
 
@@ -87,67 +85,40 @@ export const Identification = props => {
   };
 
   /**
-   * Loads the given user's profile info
+   * Loads the user's profile info at start
    */
   useEffect(() => {
     async function loadUserProfile() {
       try {
-        // Gets the given user's image. Depending on given user's person type and the currently
-        // signed-in user's person type, different images will be given
-        const { def: defaultImage, pref: preferredImage } =
-          props.profile.PersonType === 'fac'
-            ? /**
-               * The given user is Faculty
-               * If currently signed-in user is Faculty : Will receive default and preferred image
-               * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
-               */
-              await user.getImage(props.profile.AD_Username)
-            : // Checks to see if the current page is the My Profile page
-            props.myProf
-            ? /**
-               * This case will occur only if the currently signed-in user is Non-Faculty and are
-               * on the My Profile page
-               */
-              await user.getImage()
-            : /**
-               * The given user is Non-Faculty
-               * If currently signed-in user is Faculty : Will receive default and preferred image
-               * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
-               */
-              await user.getImage(props.profile.AD_Username);
-        setUserProfile(props.profile);
-        // Sets the given user's preferred image. If a default image is given but the preferred is undefined,
-        // then this could mean that the currently signed-in user is not allowed to see the preferred image or
-        // a preferred image wasn't set
+        const { def: defaultImage, pref: preferredImage } = await user.getImage();
+        const profile = await user.getProfileInfo();
+        setUserProfile(profile);
         setPreferredUserImage(preferredImage);
-        setHasPreferredImage(preferredImage ? true : false);
-        // Sets the given user's default image. If a preferred image is given but the default is undefined,
-        // then this, means that the currently signed-in user is not allowed to see the default picture. The
-        // Gordon default image is only shown if both the preferred and default image are undefined
-        setDefaultUserImage(defaultImage || (preferredImage ? null : defaultGordonImage));
-        setIsImagePublic(props.profile.show_pic);
-        createNickname(props.profile);
+        seHasPreferredImage(preferredImage ? true : false);
+        setDefaultUserImage(defaultImage || defaultGordonImage);
+        setIsImagePublic(profile.show_pic);
+        createNickname(profile);
         // Set state of social media links to database values after load.
         // If not empty, null, or undefined, add domain name back in for display and buttons.
         setFacebookLink(
-          !props.profile.Facebook || props.profile.Facebook === ''
+          !profile.Facebook || profile.Facebook === ''
             ? ''
-            : socialMediaInfo.facebook.prefix + props.profile.Facebook,
+            : socialMediaInfo.facebook.prefix + profile.Facebook,
         );
         setTwitterLink(
-          !props.profile.Twitter || props.profile.Twitter === ''
+          !profile.Twitter || profile.Twitter === ''
             ? ''
-            : socialMediaInfo.twitter.prefix + props.profile.Twitter,
+            : socialMediaInfo.twitter.prefix + profile.Twitter,
         );
         setLinkedInLink(
-          !props.profile.LinkedIn || props.profile.LinkedIn === ''
+          !profile.LinkedIn || profile.LinkedIn === ''
             ? ''
-            : socialMediaInfo.linkedIn.prefix + props.profile.LinkedIn,
+            : socialMediaInfo.linkedIn.prefix + profile.LinkedIn,
         );
         setInstagramLink(
-          !props.profile.Instagram || props.profile.Instagram === ''
+          !profile.Instagram || profile.Instagram === ''
             ? ''
-            : socialMediaInfo.instagram.prefix + props.profile.Instagram,
+            : socialMediaInfo.instagram.prefix + profile.Instagram,
         );
       } catch (error) {
         // Do Nothing
@@ -155,49 +126,7 @@ export const Identification = props => {
     }
 
     loadUserProfile();
-  }, [props.profile, props.myProf]);
-
-  /**
-   * Gets the current breakpoint according to Material-UI's breakpoints
-   */
-  useEffect(() => {
-    if (props.myProf) {
-      // Gets the current Material-UI Breakpoint
-      function getMaterialUIBreakpoint(width) {
-        let currentWidth = '';
-        // If current width is in Material-UI breakpoint XS
-        if (width >= windowBreakWidths.breakXS && width < windowBreakWidths.breakSM) {
-          currentWidth = 'xs';
-        }
-        // If current width is in Material-UI breakpoint SM
-        else if (width >= windowBreakWidths.breakSM && width < windowBreakWidths.breakMD) {
-          currentWidth = 'sm';
-        }
-        // If current width is in Material-UI breakpoint MD
-        else if (width >= windowBreakWidths.breakMD && width < windowBreakWidths.breakLG) {
-          currentWidth = 'md';
-        }
-        // If current width is in Material-UI breakpoint LG
-        else if (width >= windowBreakWidths.breakLG && width < windowBreakWidths.breakXL) {
-          currentWidth = 'lg';
-        }
-        // If current width is in Material-UI breakpoint XL
-        else if (width >= windowBreakWidths.breakXL) {
-          currentWidth = 'xl';
-        }
-        return currentWidth;
-      }
-
-      // An event listener for when the browser size changes to get the current Material-UI breakpoint
-      window.addEventListener('resize', event => {
-        setCurrentWidth(getMaterialUIBreakpoint(event.target.innerWidth));
-      });
-      // Sets the current Material-UI Breakpoint
-      setCurrentWidth(getMaterialUIBreakpoint(window.innerWidth));
-      // Removes the resize window event listener
-      return window.removeEventListener('resize', () => {});
-    }
-  }, [props.myProf]);
+  }, []);
 
   /**
    * Handles opening the Photo Updater Dialog Box
@@ -215,33 +144,9 @@ export const Identification = props => {
       let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       let response = user.postImage(croppedImage);
       response
-        .then(async () => {
-          /**
-           * Gets the user's default image and not their preferred since the variable "newImage"
-           * is the user's preferred picture. If fetching the user's default image
-           * fails, the Gordon Default Image will not replace it because we still have their
-           * preferred image to show. The Gordon Default Image is only a fallback when no image is
-           * available
-           */
-
-          /**
-           * If the currently signed-in user is Faculty, retrieving their specific profile images will
-           * return their default image. If the currently signed-in user is Non-Faculty, retrieving
-           * their profile images will only return their preferred making the default undefined.
-           * This is to prevent a bug where a student submitting their photo would see a default and
-           * preferred photo instead of just their preferred
-           */
-
-          const { def: defaultImage } =
-            props.profile.PersonType === 'fac'
-              ? await user.getImage(props.profile.AD_Username)
-              : await user.getImage();
-
-          // Sets the user's preferred image
+        .then(() => {
           setPreferredUserImage(newImage);
-          setHasPreferredImage(true);
-          // Sets the user's default image
-          setDefaultUserImage(defaultImage ? defaultImage : null);
+          seHasPreferredImage(true);
           // Displays to the user that their photo has been submitted
           createSnackbar('Photo Submitted', 'Success');
           // Closes out the Photo Updater
@@ -269,7 +174,7 @@ export const Identification = props => {
    * Handles the switch of showing the default and preferred image
    */
   function handlePhotoSwitch() {
-    setisPhotosSwitched(!isPhotosSwitched);
+    setSwitchPhotos(!switchPhotos);
   }
 
   /**
@@ -285,7 +190,7 @@ export const Identification = props => {
       .then(async () => {
         // Attempts to get the user's image since it has been reset
         try {
-          const { def: defaultImage } = await user.getImage(userProfile.AD_Username);
+          const { def: defaultImage } = await user.getImage();
           setDefaultUserImage(defaultImage);
           // Displays to the user that their photo has been restored
           createSnackbar('Original Photo Restored', 'Success');
@@ -297,7 +202,7 @@ export const Identification = props => {
         // Deletes the preferred image, clears any timeouts errors and closes out of the photo updater
         await clearPhotoDialogErrorTimeout();
         setPreferredUserImage(null);
-        setHasPreferredImage(false);
+        seHasPreferredImage(false);
         setOpenPhotoDialog(false);
         window.postMessage('update-profile-picture', window.location.origin);
       })
@@ -406,7 +311,7 @@ export const Identification = props => {
     // If no error occured and the cropper is not shown, the pick a file text is displayed
     else {
       message =
-        currentWidth === 'md' || currentWidth === 'sm' || currentWidth === 'xs'
+        props.width === 'md' || props.width === 'sm' || props.width === 'xs'
           ? 'Tap Image to Browse Files'
           : 'Drag & Drop Picture, or Click to Browse Files';
     }
@@ -418,7 +323,7 @@ export const Identification = props => {
     // that seemed to have finer tuned logic
     const smallScreenRatio = 0.5;
     const largeScreenRatio = 0.25;
-    const w = currentWidth;
+    const w = props.width;
     switch (w) {
       default:
         return 960 * largeScreenRatio;
@@ -499,7 +404,7 @@ export const Identification = props => {
     setIsSnackbarOpen(false);
   }
 
-  // Saves the nickname of the given user if available
+  // Saves the nickname of the current user if available
   function createNickname(profile) {
     let Name = String(profile.fullName);
     let FirstName = Name.split(' ')[0];
@@ -754,7 +659,7 @@ export const Identification = props => {
         </Grid>
 
         <div className="identification-card-content">
-          {/* SHOWS THE CARD'S CONTENT IF THE GIVEN USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
+          {/* SHOWS THE CARD'S CONTENT IF USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
           {userProfile && (defaultUserImage || preferredUserImage) ? (
             <Grid container className="identification-card-content-card" justify="center">
               <Grid
@@ -770,11 +675,11 @@ export const Identification = props => {
                         className="identification-card-content-card-container-photo-main-container-image"
                         src={`data:image/jpg;base64,${
                           // Checks to see if the default and preferred photos should switch between bubbles
-                          isPhotosSwitched
+                          switchPhotos
                             ? // Main Photo: Default
                               defaultUserImage
                             : // Main Photo: Preferred
-                            // If the given user doesn't have a preferred photo, then their default photo is shown
+                            // If the user doesn't have a preferred photo, then their default photo is shown
                             hasPreferredImage
                             ? preferredUserImage
                             : defaultUserImage
@@ -782,7 +687,7 @@ export const Identification = props => {
                         alt="Profile"
                       />
 
-                      {props.network === 'online' && props.myProf && (
+                      {props.network === 'online' && (
                         <Typography
                           variant="body1"
                           className="identification-card-content-card-container-photo-main-container-tile-bar"
@@ -791,7 +696,7 @@ export const Identification = props => {
                         </Typography>
                       )}
                     </div>
-                    {props.network === 'online' && props.myProf && (
+                    {props.network === 'online' && (
                       <div
                         onClick={handlePhotoOpen}
                         className="identification-card-content-card-container-photo-main-button"
@@ -804,7 +709,7 @@ export const Identification = props => {
                         className="identification-card-content-card-container-photo-side-image"
                         src={`data:image/jpg;base64,${
                           // Checks to see if the default and preferred photos should switch between bubbles
-                          isPhotosSwitched
+                          switchPhotos
                             ? // Side Photo: Preferred
                               preferredUserImage
                             : // Side Photo: Default
@@ -821,34 +726,24 @@ export const Identification = props => {
                 </Grid>
 
                 <Grid item className="identification-card-content-card-container-info">
-                  {(facebookButton ||
-                    twitterButton ||
-                    linkedInButton ||
-                    instagramButton ||
-                    props.myProf) && (
-                    <Grid
-                      item
-                      className="identification-card-content-card-container-info-social-media"
-                    >
-                      <Grid
-                        container
-                        justify={linkCount < 3 ? 'space-evenly' : 'space-between'}
-                        alignItems="center"
-                      >
-                        {facebookButton}
-                        {twitterButton}
-                        {linkedInButton}
-                        {instagramButton}
-                        {props.network === 'online' && props.myProf && editButton}
-                      </Grid>
+                  <Grid
+                    item
+                    className="identification-card-content-card-container-info-social-media"
+                  >
+                    <Grid container justify="space-between" alignItems="center">
+                      {facebookButton}
+                      {twitterButton}
+                      {linkedInButton}
+                      {instagramButton}
+                      {props.network === 'online' && editButton}
                     </Grid>
-                  )}
+                  </Grid>
                   <Grid
                     item
                     xs={12}
                     className="identification-card-content-card-container-info-class"
                   >
-                    {userProfile.Class && <Typography>{userProfile.Class}</Typography>}
+                    <Typography>{userProfile.Class}</Typography>
                   </Grid>
 
                   <Grid
@@ -857,42 +752,12 @@ export const Identification = props => {
                     className="identification-card-content-card-container-info-name"
                   >
                     <Typography variant="h6" paragraph>
-                      {userProfile.Title &&
-                      userProfile.Title !== '' &&
-                      userProfile.PersonType === 'fac'
-                        ? // If the user has a title
-                          hasNickName
-                          ? // If the user has a title and a nickname
-                            userProfile.Title +
-                            ' ' +
-                            userProfile.fullName +
-                            ' (' +
-                            userProfile.NickName +
-                            ')'
-                          : // If the user has a title and no nickname
-                            userProfile.Title + ' ' + userProfile.fullName
-                        : // If the user doesn't have a title
-                        hasNickName
-                        ? // If the user doesn't have a title but has a nickname
-                          userProfile.fullName + ' (' + userProfile.NickName + ')'
-                        : // If the user doesn't have a title or a nickname
-                          userProfile.fullName}
-                      {/* {hasNickName
+                      {hasNickName
                         ? userProfile.fullName + ' (' + userProfile.NickName + ')'
-                        : userProfile.fullName} */}
+                        : userProfile.fullName}
                     </Typography>
                   </Grid>
-                  {userProfile.JobTitle && userProfile.JobTitle !== '' && (
-                    <Grid
-                      item
-                      xs={12}
-                      className="identification-card-content-card-container-info-job-title"
-                    >
-                      <Typography variant="h6" paragraph>
-                        {userProfile.JobTitle}
-                      </Typography>
-                    </Grid>
-                  )}
+
                   <Grid
                     item
                     xs={12}
@@ -924,7 +789,7 @@ export const Identification = props => {
             <GordonLoader />
           )}
 
-          {userProfile && props.network === 'online' && props.myProf && (
+          {userProfile && props.network === 'online' && (
             <Link
               to={`/profile/${userProfile.AD_Username}`}
               className="identification-card-content-public-profile-link"

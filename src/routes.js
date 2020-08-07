@@ -104,8 +104,8 @@ export default [
     component: Admin,
   },
   {
-    name: 'Timesheets',
-    path: '/timesheets',
+    name: 'Student Timesheets',
+    path: '/student-timesheets',
     component: Timesheets,
   },
   {

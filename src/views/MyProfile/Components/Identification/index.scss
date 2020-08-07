@@ -1,4 +1,4 @@
-@import '../../vars';
+@import '../../../../vars';
 
 $image-border-radius: 50%;
 // Main Image
@@ -143,7 +143,6 @@ $image-side-width-desktop: 90px;
                 &-image {
                   width: $image-main-width-desktop;
                   height: $image-main-height-desktop;
-                  object-fit: cover;
                 }
                 &-tile-bar {
                   position: absolute;
@@ -186,7 +185,6 @@ $image-side-width-desktop: 90px;
                 border-radius: $image-border-radius;
                 width: $image-side-width-desktop;
                 height: $image-side-height-desktop;
-                object-fit: cover;
               }
               &-button {
                 position: absolute;
@@ -228,9 +226,6 @@ $image-side-width-desktop: 90px;
             }
             &-class {
               color: rgba(0, 0, 0, 0.54);
-            }
-            &-job-title {
-              opacity: 0.7;
             }
             &-email {
               display: inline-block;

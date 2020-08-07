@@ -90,7 +90,7 @@ export default class RequestReceived extends Component {
       displayedRequests = requests
         .slice(0)
         .reverse()
-        .map((request) => (
+        .map(request => (
           <Grid item xs={12}>
             <Grid container spacing={8}>
               <Grid item xs={12}>
