@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
+import Requests from './components/Requests';
 import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
 import user from '../../services/user';
@@ -36,7 +37,7 @@ export default class Home extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', (event) => {
+    window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -107,7 +108,7 @@ export default class Home extends Component {
     }
   }
 
-  setAnswered = (data) => {
+  setAnswered = data => {
     this.setState({ answered: data });
   };
 
@@ -122,6 +123,15 @@ export default class Home extends Component {
       // Authenticated - Questions Answered
       if (this.state.answered || this.state.network === 'offline') {
         const personType = this.state.personType;
+
+        let requests;
+        if (this.state.network === 'online') {
+          requests = (
+            <Grid item xs={12} md={5}>
+              <Requests />
+            </Grid>
+          );
+        }
 
         //get student news
         let news;
@@ -151,6 +161,7 @@ export default class Home extends Component {
               <DiningBalance />
             </Grid>
             {news}
+            {requests}
           </Grid>
         );
       }

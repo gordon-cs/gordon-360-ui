@@ -5,13 +5,13 @@
 /* eslint-disable no-unused-vars */
 
 // Cache version
-const cacheVersion = 'cache v1.3';
+const cacheVersion = 'cache v1.2';
 
 // API Source
-// @PROD (** Make sure the URL is all lowercase or the service worker will fail to remove user data **)
-// const apiSource = 'https://360api.gordon.edu/api';
-// @TRAIN (** Make sure the URL is all lowercase or the service worker will fail to remove user data **)
-const apiSource = 'https://360apitrain.gordon.edu/api';
+// @PROD
+const apiSource = 'https://360Api.gordon.edu/api';
+// @TRAIN
+// const apiSource = 'https://360ApiTrain.gordon.edu/api';
 
 // Font Styles
 /* Uncomment For Development Only (aka develop) */

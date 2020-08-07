@@ -27,7 +27,6 @@ export default class SavedShiftsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      getStaffPageForUser: false,
       shifts: [],
       directSupervisor: null,
       reportingSupervisor: null,
@@ -36,20 +35,6 @@ export default class SavedShiftsList extends Component {
     };
 
     this.prevJob = null;
-  }
-
-  async getCanUseStaff() {
-    try {
-      let canUse = await jobs.getStaffPageForUser();
-
-      if (canUse.length === 1) {
-        this.setState({getStaffPageForUser: true});
-      } else {
-        this.setState({getStaffPageForUser: false});
-      }
-    } catch (error) {
-        //do nothing
-    }
   }
 
   handleSubmitButtonClick = () => {
@@ -61,7 +46,7 @@ export default class SavedShiftsList extends Component {
   };
 
   submitShiftsToSupervisor = (shifts, supervisorID) => {
-    jobs.submitShiftsForUser(this.state.getStaffPageForUser, shifts, supervisorID).then(response => {
+    jobs.submitShiftsForUser(shifts, supervisorID).then(response => {
       this.setState({
         selectedSupervisor: null,
         showSubmissionConfirmation: false,
@@ -79,7 +64,7 @@ export default class SavedShiftsList extends Component {
   };
 
   getSupervisors() {
-    jobs.getSupervisorNameForJob(this.state.getStaffPageForUser, this.props.directSupervisor).then(response => {
+    jobs.getSupervisorNameForJob(this.props.directSupervisor).then(response => {
       let directSupervisor =
         response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
       let directSupervisorObject = {
@@ -87,7 +72,7 @@ export default class SavedShiftsList extends Component {
         id: this.props.directSupervisor,
       };
 
-      jobs.getSupervisorNameForJob(this.state.getStaffPageForUser, this.props.reportingSupervisor).then(response => {
+      jobs.getSupervisorNameForJob(this.props.reportingSupervisor).then(response => {
         let supervisor =
           response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
         this.setState({
@@ -121,7 +106,6 @@ export default class SavedShiftsList extends Component {
     if (shouldGetSupervisors) {
       this.getSupervisors();
     }
-    this.getCanUseStaff();
   }
 
   componentDidUpdate() {
@@ -230,8 +214,6 @@ export default class SavedShiftsList extends Component {
         editShift={this.props.editShift}
         value={shift}
         key={index}
-        canUse={this.props.canUse}
-        selectedHourType={this.props.selectedHourType}
       />
     ));
 

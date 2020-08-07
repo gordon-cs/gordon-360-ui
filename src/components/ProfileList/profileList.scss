@@ -1,47 +1,9 @@
 @import '../../vars';
 
-.profile-list-card {
-  &-header {
-    background-color: $primary-blue;
-    color: white;
-    padding-left: 1rem;
-  }
-  &-content {
-    .lock-icon {
-      color: #9e9e9e;
-    }
-    .disclaimer {
-      color: $secondary-red !important;
-      &-note {
-        background-color: #ffe8e7;
-        padding: 0.3rem 1rem;
-        margin-top: 1rem;
-        border-radius: 5px;
-      }
-    }
-    .number {
-      p {
-        color: $primary-blue;
-      }
-      &:hover {
-        text-decoration: none !important;
-        p {
-          color: $primary-cyan !important;
-        }
-      }
-    }
-    .MuiGrid-item {
-      // Makes all items within the list aligned to the left
-      text-align: left !important;
-    }
-  }
+.lock-icon {
+  color: #9e9e9e;
 }
-
-@media (max-width: $break-sm) {
-  .profile-list-card {
-    &-header {
-      padding-left: 0rem;
-      justify-content: center;
-    }
-  }
+.disclaimer {
+  color: $secondary-red !important;
+  opacity: '1' !important;
 }
