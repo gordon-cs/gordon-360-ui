@@ -1,0 +1,28 @@
+@import '../../vars';
+
+.public-profile-info-card {
+  &-text {
+    hyphens: auto;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    word-break: break-word;
+    a {
+      color: $primary-blue;
+      &:hover {
+        color: $primary-cyan !important;
+      }
+    }
+  }
+  &-picture {
+    margin: 0.5rem 0rem;
+    img {
+      width: 90%;
+      max-width: 120px;
+      border-radius: 5px;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}

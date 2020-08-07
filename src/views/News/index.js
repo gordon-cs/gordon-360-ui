@@ -429,7 +429,20 @@ export default class StudentNews extends Component {
                         {/* <Grid item xs={12}>
                           <Dropzone></Dropzone>
                         </Grid> */}
-
+                        <Grid item>
+                           {/* SUBMISSION GUIDELINES */}
+                          <Typography variant="caption" color="textSecondary" display="block" >
+                            Student News is intended for announcing Gordon sponsored events, lost
+                             and found, rides, etc. All submissions must follow the Student News 
+                             guidelines and will be reviewed at the discretion of 
+                             The Office of Student Life... 
+                             <a
+                                href="https://gordonedu.sharepoint.com/:b:/g/StudentLife/admin/EY22_o3g6vFEsfT2nYY-8JwB34OlYmA1oaE1f4FTGD2gew"
+                              >
+                                More Details
+                              </a>
+                          </Typography>
+                        </Grid>
                       </Grid>
                     </DialogContent>
 
