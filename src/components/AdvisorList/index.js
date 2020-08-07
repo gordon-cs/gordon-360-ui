@@ -61,42 +61,47 @@ export default class Advisors extends Component {
       }
     }
     // The advisors list is not available so the user sees an empty listing
-    advisorPrefix = (
-      <div>
-        <Typography>Advisor:</Typography>
-      </div>
-    );
+    //  CODE TO WOORK ON IN THE FUTURE IF THE USER'S ADVISORS FAILED TO LOAD
+    // advisorPrefix = (
+    //   <div>
+    //     <Typography>Advisor:</Typography>
+    //   </div>
+    // );
 
-    return (
-      <div>
-        <ListItem>
-          <Grid container justify="center">
-            <Grid
-              container
-              xs={rowItemOne.xs}
-              sm={rowItemOne.sm}
-              md={rowItemOne.md}
-              lg={rowItemOne.lg}
-              style={this.props.gridStyle.item}
-              alignItems="center"
-            >
-              <Typography>{advisorPrefix}</Typography>
+    if (this.props.advisors) {
+      return (
+        <div>
+          <ListItem>
+            <Grid container justify="center">
+              <Grid
+                container
+                xs={rowItemOne.xs}
+                sm={rowItemOne.sm}
+                md={rowItemOne.md}
+                lg={rowItemOne.lg}
+                style={this.props.gridStyle.item}
+                alignItems="center"
+              >
+                <Typography>{advisorPrefix}</Typography>
+              </Grid>
+              <Grid
+                container
+                xs={rowItemTwo.xs}
+                sm={rowItemTwo.sm}
+                md={rowItemTwo.md}
+                lg={rowItemTwo.lg}
+                style={this.props.gridStyle.lastItem}
+                alignItems="center"
+              >
+                {content}
+              </Grid>
             </Grid>
-            <Grid
-              container
-              xs={rowItemTwo.xs}
-              sm={rowItemTwo.sm}
-              md={rowItemTwo.md}
-              lg={rowItemTwo.lg}
-              style={this.props.gridStyle.lastItem}
-              alignItems="center"
-            >
-              {content}
-            </Grid>
-          </Grid>
-        </ListItem>
-        <Divider />
-      </div>
-    );
+          </ListItem>
+          <Divider />
+        </div>
+      );
+    } else {
+      return <></>;
+    }
   }
 }
