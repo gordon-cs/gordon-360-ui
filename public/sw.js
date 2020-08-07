@@ -52,7 +52,8 @@ importScripts('./sw_global_variables.js', './sw_guest_cache.js', './sw_user_cach
 let token, // Holds the token of the user
   termCode, // Holds the current semester term code
   cacheTimer, // Contains the timer that updates the cache after a specified interval
-  isFetchCanceled; // Determines if fetches should be canceled
+  isFetchCanceled, // Determines if fetches should be canceled
+  network = 'online'; // Determines if the network is online or offline
 
 /**
  * Removes all cache data. This includes data from the current cache version and any other cache
@@ -112,12 +113,25 @@ async function fetchThenCache(request) {
       // Since the fetch failed, attempt to retrieve the response from cache
       if (showDeveloperConsoleLog)
         console.log(`%c${cacheEmoji} Getting ${request.url} from cache instead...`, cacheLog);
+      let response;
+      /**
+       * Checks the URL to see if it's the events page or the attended events page that contains
+       * query parameters. If there are any query parameters, the file "/events" is returned.
+       * This is fine because the file that's requested is the same HTML file that "/events" is
+       */
 
-      const response = await caches.open(cacheVersion).then(cache => {
-        return cache.match(request.url).then(response => {
+      if (request.url.includes('/events?') || request.url.includes('/attended?')) {
+        response = await caches.open(cacheVersion).then(async cache => {
+          const response = await cache.match(location.origin + '/events');
           return response;
         });
-      });
+      } else {
+        response = await caches.open(cacheVersion).then(cache => {
+          return cache.match(request.url).then(response => {
+            return response;
+          });
+        });
+      }
 
       // If there's no response from cache, we console log that the request failed
       if (response) {
@@ -137,10 +151,12 @@ async function fetchThenCache(request) {
  */
 function timerFunction() {
   cacheTimer = setInterval(() => {
-    if (showDeveloperConsoleLog) console.log('%cAttempting to update cache.', statusLog);
-    // Caching All Files
-    cacheGuestFiles(); // Guest Cache
-    cacheUserFiles(); // User Cache
+    // if (showDeveloperConsoleLog) console.log('%cAttempting to update cache.', statusLog);
+    // Caches all files if online
+    if (network === 'online') {
+      cacheGuestFiles(); // Guest Cache
+      cacheUserFiles(); // User Cache
+    }
     // Set interval to every hour
   }, 3600000);
 }
@@ -155,7 +171,8 @@ self.addEventListener('activate', async event => {
   if (showDeveloperConsoleLog) console.log('%cActivating Service Worker', statusLog);
   self.clients.claim();
   // Removes outdated cache and starts timer to update the cache every hour
-  event.waitUntil(await removeAllCache(), timerFunction());
+  await removeAllCache();
+  timerFunction();
 });
 
 self.addEventListener('fetch', event => {
@@ -173,7 +190,7 @@ self.addEventListener('fetch', event => {
   event.respondWith(fetchThenCache(event.request));
 });
 
-self.addEventListener('message', event => {
+self.addEventListener('message', async event => {
   // Gets the token and current semester term code
   token = event.data.token ? event.data.token : null;
   termCode = event.data.termCode ? event.data.termCode : null;
@@ -181,12 +198,15 @@ self.addEventListener('message', event => {
   // If the message is to update the cache
   if (event.data.message && event.data.message === 'update-cache-files') {
     if (showDeveloperConsoleLog) console.log('%cAttempting to update cache.', statusLog);
-    event.waitUntil(cacheGuestFiles(), cacheUserFiles());
+    await cacheGuestFiles();
+    await cacheUserFiles();
   }
 
   // If the message is to remove the user's data due to signing out or lost of authentication
   else if (event.data && event.data === 'remove-user-data') {
-    event.waitUntil((token = null), (termCode = null), removeUserCache());
+    token = null;
+    termCode = null;
+    await removeUserCache();
   }
   // If the message is to cancel all fetches
   else if (event.data === 'cancel-fetches') {
@@ -195,5 +215,13 @@ self.addEventListener('message', event => {
     if (isFetchCanceled === false && guestRemoteLinks.length > 0 && userRemoteLinks.length > 0) {
       isFetchCanceled = true;
     }
+  }
+  // If the message is that the network is offline
+  else if (event.data === 'offline') {
+    network = 'offline';
+  }
+  // If the message is that the network is online
+  else if (event.data === 'online') {
+    network = 'online';
   }
 });

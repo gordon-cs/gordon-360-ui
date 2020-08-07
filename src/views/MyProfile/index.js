@@ -118,7 +118,7 @@ const MyProfile = props => {
               <Grid item xs={12} lg={10} align="center">
                 <Grid container xs={12} lg={12} spacing={0} justify="center">
                   <Grid item xs={12} lg={12}>
-                    <GordonSchedulePanel profile={profile} myProf={true} />
+                    <GordonSchedulePanel profile={profile} myProf={true} network={network} />
                   </Grid>
                 </Grid>
               </Grid>
