@@ -446,6 +446,7 @@ export default class Events extends Component {
                     ATTENDED CL&amp;W
                   </Button>
                 )}
+                </Grid>
               </Grid>
             </Grid>
           {/* List of Events */}
