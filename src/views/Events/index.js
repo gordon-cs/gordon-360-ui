@@ -6,11 +6,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Collapse from '@material-ui/core/Collapse';
-import Switch from '@material-ui/core/Switch';
-import Typography from '@material-ui/core/Typography';
 import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
+import { gordonColors } from './../../theme';
+
+import './event.scss';
 
 const styles = {
   searchBar: {
@@ -39,28 +40,176 @@ export default class Events extends Component {
       filteredEvents: [],
       includePast: false,
       loading: true,
+      hasFilters: false,
+      network: 'online',
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
+    this.clearFilters = this.clearFilters.bind(this);
     this.isMobileView = false;
     this.breakpointWidth = 540;
   }
-  componentWillMount() {
-    this.loadEvents();
+
+  componentDidUpdate() {
+    window.onpopstate = () => {
+      if (!window.location.href.includes('?')) {
+        window.location.reload();
+      } else {
+        this.loadEvents();
+      }
+    };
   }
+
+  componentDidMount() {
+    this.loadEvents();
+    window.addEventListener('resize', this.resize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
+
+  //this loads the filters based on the URL params- this will allow for back button and linking
+  async loadPrevious() {
+    if (window.location.href.includes('?')) {
+      const urlParams = new URLSearchParams(this.props.location.search);
+      let includePast = urlParams.has('Past') ? true : false;
+      let chapelCredits = urlParams.has('CLW') ? true : false;
+      let academics = urlParams.has('Academics') ? true : false;
+      let admissions = urlParams.has('Admissions') ? true : false;
+      let art = urlParams.has('Arts') ? true : false;
+      let sports = urlParams.has('Athletics') ? true : false;
+      let calendar = urlParams.has('Calendar') ? true : false;
+      let cec = urlParams.has('CEC') ? true : false;
+      let fair = urlParams.has('Fair') ? true : false;
+      let chapelOffice = urlParams.has('ChapelOffice') ? true : false;
+      let studentLife = urlParams.has('StudentLife') ? true : false;
+      // Determines if any filters are activated
+      let hasFilters =
+        includePast ||
+        chapelCredits ||
+        academics ||
+        admissions ||
+        art ||
+        sports ||
+        calendar ||
+        cec ||
+        fair ||
+        chapelOffice ||
+        studentLife;
+
+      this.setState({
+        includePast,
+        chapelCredits,
+        academics,
+        admissions,
+        art,
+        sports,
+        calendar,
+        cec,
+        fair,
+        chapelOffice,
+        studentLife,
+        hasFilters,
+      });
+
+      this.setState({ loading: true });
+      const events = await gordonEvent.getFilteredEvents(this.state);
+      this.setState({ filteredEvents: events, loading: false, open: hasFilters ? true : false });
+
+      // If the include past filter is on, we get the events from the past
+      if (this.state.includePast) {
+        /* When togglePastEvents() runs, it changes the state of includePast to its opposite.
+         * So, when includePast is true, we set it to false so that togglePastEvents() will set it
+         * back to true
+         */
+        this.setState({ includePast: false }, () => {
+          this.togglePastEvents();
+        });
+      }
+    }
+  }
+
   filterEvents(name) {
-    return async event => {
+    return async (event) => {
       this.setState({ loading: true });
       await this.setState({ [name]: event.target.checked });
       const events = await gordonEvent.getFilteredEvents(this.state);
       this.setState({ filteredEvents: events, loading: false });
+      this.createURLParameters();
     };
   }
+
+  /**
+   * Creates an updated URL depending on the state
+   *
+   * A new URL is created when a filter is applied. This new url is added to the browser's history
+   * to allow the user to use the back button and view previous search results
+   */
+  createURLParameters() {
+    let url = '?';
+    if (this.state.includePast) url += '&Past';
+    if (this.state.chapelCredits) url += '&CLW';
+    if (this.state.academics) url += '&Academics';
+    if (this.state.admissions) url += '&Admissions';
+    if (this.state.art) url += '&Arts';
+    if (this.state.sports) url += '&Athletics';
+    if (this.state.calendar) url += '&Calendar';
+    if (this.state.cec) url += '&CEC';
+    if (this.state.chapelOffice) url += '&ChapelOffice';
+    if (this.state.fair) url += '&Fair';
+    if (this.state.studentLife) url += '&StudentLife';
+    this.props.history.push(url);
+    // Determines if any filters are activated
+    let hasFilters =
+      this.state.includePast ||
+      this.state.chapelCredits ||
+      this.state.academics ||
+      this.state.admissions ||
+      this.state.art ||
+      this.state.sports ||
+      this.state.calendar ||
+      this.state.cec ||
+      this.state.fair ||
+      this.state.chapelOffice ||
+      this.state.studentLife;
+    this.setState({ hasFilters });
+  }
+
   handleExpandClick() {
+    // If there are any filters applied, then we reset all of them
+    if (this.state.hasFilters) {
+      this.clearFilters();
+    }
+    // Opens or closes the filter list
     this.setState({ open: !this.state.open });
   }
+
+  clearFilters() {
+    this.setState(
+      {
+        includePast: false,
+        chapelCredits: false,
+        academics: false,
+        admissions: false,
+        art: false,
+        sports: false,
+        calendar: false,
+        cec: false,
+        fair: false,
+        chapelOffice: false,
+        studentLife: false,
+      },
+      async () => {
+        const events = await gordonEvent.getFilteredEvents(this.state);
+        this.setState({ filteredEvents: events, loading: false });
+        this.createURLParameters();
+      },
+    );
+  }
+
   search(name) {
-    return async event => {
+    return async (event) => {
       await this.setState({
         [name]: event.target.value,
       });
@@ -79,7 +228,9 @@ export default class Events extends Component {
       const futureEvents = gordonEvent.getFutureEvents(this.state.allEvents);
       await this.setState({ events: futureEvents });
     }
-    //filter events to reflect boxes still checked
+    // Gets all the events included in the past along with all filters previously active
+    this.createURLParameters();
+    // Filter events to reflect boxes still checked
     const events = gordonEvent.getFilteredEvents(this.state);
     this.setState({ filteredEvents: events, loading: false });
   }
@@ -96,6 +247,8 @@ export default class Events extends Component {
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
     }
+    //called to handle set filters
+    this.loadPrevious();
   }
 
   //Has to rerender on screen resize in order for table to switch to the mobile view
@@ -114,27 +267,38 @@ export default class Events extends Component {
     else return false;
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
-  }
-
   render() {
     let content;
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', (event) => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    /* Gets status of current network connection for online/offline rendering
+     *  Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else if (this.state.events.length > 0) {
       content = <EventList events={this.state.filteredEvents} />;
-    } else {
-      content = (
-        <Grid item>
-          <Typography variant="h4">No Events To Show</Typography>
-        </Grid>
-      );
     }
 
     let filter;
@@ -143,6 +307,21 @@ export default class Events extends Component {
       filter = (
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <FormGroup row>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.chapelCredits}
+                  onChange={this.filterEvents('chapelCredits')}
+                />
+              }
+              label="CL&amp;W Credit"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={this.state.includePast} onChange={this.togglePastEvents} />
+              }
+              label="Include Past"
+            />
             <FormControlLabel
               control={
                 <Checkbox
@@ -175,7 +354,7 @@ export default class Events extends Component {
               control={
                 <Checkbox checked={this.state.calendar} onChange={this.filterEvents('calendar')} />
               }
-              label="Calendar Events"
+              label="Calendar"
             />
             <FormControlLabel
               control={<Checkbox checked={this.state.cec} onChange={this.filterEvents('cec')} />}
@@ -209,55 +388,84 @@ export default class Events extends Component {
       );
     }
 
-    let events = (
-      <section>
-        <Grid container justify="center">
-          <Grid item xs={12} md={12} lg={8}>
-            <Grid container alignItems="baseline" style={styles.searchBar} spacing={8}>
-              <Grid item xs={7} sm={10} md={6} lg={6}>
-                <TextField
-                  id="search"
-                  label="Search"
-                  value={this.state.search}
-                  onChange={this.search('search')}
-                  margin="none"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={4} sm={2} md={2} lg={2} align="center">
-                <Button variant="contained" color="primary" onClick={this.handleExpandClick}>
-                  Filters
-                </Button>
-              </Grid>
-              <Grid item xs={6} sm={4} md={2} lg={2}>
-                <FormControlLabel
-                  control={<Switch onChange={this.togglePastEvents} />}
-                  label="Include Past"
-                />
-              </Grid>
-              <Grid item xs={6} sm={4} md={2} lg={2}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={this.state.chapelCredits}
-                      onChange={this.filterEvents('chapelCredits')}
-                      aria-label="chapelCredits"
-                    />
-                  }
-                  label="CL&amp;W Only"
-                />
+    let events;
+    const style = {
+      button: {
+        background: gordonColors.primary.cyan,
+        color: 'white',
+
+        attendedEvents: {
+          background: gordonColors.primary.cyan,
+          color: 'white',
+          marginLeft: '0.88rem',
+        },
+      },
+    };
+    // If the user is online
+    if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
+      events = (
+        <section>
+          <Grid container justify="center">
+
+            {/* Search Bar and Filters */}
+            <Grid
+              item
+              xs={10}
+              sm={12}
+              md={12}
+              lg={8}
+              alignContent="center"
+              justify="center"
+              style={{ paddingBottom: '1rem' }}
+            >
+              <Grid container alignItems="baseline" justify="center" style={styles.searchBar}>
+                <Grid container xs={12} sm={5} md={8} lg={7}>
+                  <TextField
+                    id="search"
+                    label="Search"
+                    value={this.state.search}
+                    onChange={this.search('search')}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid
+                  container
+                  justify="flex-end"
+                  direction="row"
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={5}
+                  style={{ paddingTop: '1rem' }}
+                  className={'buttonWrapper'}
+                >
+                  <Button
+                    variant="contained"
+                    style={style.button}
+                    onClick={this.handleExpandClick}
+                  >
+                    {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    style={style.button.attendedEvents}
+                    onClick={() => (window.location.pathname = '/attended')}
+                  >
+                    ATTENDED CL&amp;W
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
 
-          <Grid item xs={12} md={12} lg={8}>
-            {filter}
-            {content}
+            {/* List of Events */}
+            <Grid item xs={12} md={12} lg={8}>
+              {filter}
+              {content}
+            </Grid>
           </Grid>
-        </Grid>
-      </section>
-    );
-
+        </section>
+      );
+    }
     return events;
   }
 }
