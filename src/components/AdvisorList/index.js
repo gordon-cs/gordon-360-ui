@@ -60,8 +60,9 @@ export default class Advisors extends Component {
         );
       }
     }
+
     // The advisors list is not available so the user sees an empty listing
-    //  CODE TO WOORK ON IN THE FUTURE IF THE USER'S ADVISORS FAILED TO LOAD
+    //  CODE TO WORK ON IN THE FUTURE IF THE USER'S ADVISORS FAILED TO LOAD
     // advisorPrefix = (
     //   <div>
     //     <Typography>Advisor:</Typography>

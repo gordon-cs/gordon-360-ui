@@ -130,7 +130,7 @@ export default class Events extends Component {
   }
 
   filterEvents(name) {
-    return async event => {
+    return async (event) => {
       this.setState({ loading: true });
       await this.setState({ [name]: event.target.checked });
       const events = await gordonEvent.getFilteredEvents(this.state);
@@ -208,7 +208,7 @@ export default class Events extends Component {
   }
 
   search(name) {
-    return async event => {
+    return async (event) => {
       await this.setState({
         [name]: event.target.value,
       });
@@ -268,6 +268,31 @@ export default class Events extends Component {
 
   render() {
     let content;
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', (event) => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    /* Gets status of current network connection for online/offline rendering
+     *  Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.state.loading === true) {
       content = <GordonLoader />;
@@ -423,17 +448,14 @@ export default class Events extends Component {
                 )}
               </Grid>
             </Grid>
-          </Grid>
-
           {/* List of Events */}
           <Grid item xs={12} md={12} lg={8}>
             {filter}
             {content}
           </Grid>
-        </Grid>
-      </section>
-    );
-
+        </section>
+      );
+    }
     return events;
   }
 }
