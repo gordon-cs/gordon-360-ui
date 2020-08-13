@@ -1,5 +1,5 @@
 import React from 'react';
-import user from './../../../../../../services/user';
+import user from '../../../../services/user';
 import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 // see socialMedia.js for pre-packaged icons of above and fix
 import {
@@ -10,8 +10,8 @@ import {
   Typography,
   TextField,
 } from '@material-ui/core';
-import { socialMediaInfo } from '../../../../../../socialMedia';
-import { gordonColors } from '../../../../../../theme';
+import { socialMediaInfo } from '../../../../socialMedia';
+import { gordonColors } from '../../../../theme';
 import './linksDialog.css';
 
 export default class LinksDialog extends React.Component {
