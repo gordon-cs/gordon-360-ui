@@ -391,12 +391,14 @@ export default class GordonActivitiesAll extends Component {
         </Grid>
 
         <Grid container align="center" spacing={4} justify="center">
-          {/* Shows the user's memberships requests */}
-          <Grid item xs={12} lg={8}>
-            <Card>
-              <Requests />
-            </Card>
-          </Grid>
+          {/* Shows the user's memberships requests if the user is online */}
+          {this.state.network === 'online' && this.props.Authentication && (
+            <Grid item xs={12} lg={8}>
+              <Card>
+                <Requests />
+              </Card>
+            </Grid>
+          )}
 
           {/* Shows My Involvements Header if the user is authenticated */}
           {this.props.Authentication && (

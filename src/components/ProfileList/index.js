@@ -22,7 +22,6 @@ import {
   createAdvisorsListItem,
   createResidenceListItem,
   createDormitoryListItem,
-  createFacultyDepartmentItem,
   createMailboxItem,
   createStudentIDItem,
   createSpouseItem,
@@ -229,9 +228,6 @@ class ProfileList extends Component {
       this.state.addressDisclaimer,
     );
 
-    // Creates the Faculty Department List Item
-    let department = createFacultyDepartmentItem(this.props.profile, rowWidths, { gridStyle });
-
     // Creates the Minors List Item
     let minors = createMinorsListItem(this.props.profile, rowWidths, { gridStyle });
 
@@ -279,7 +275,6 @@ class ProfileList extends Component {
             {residence}
             {dorminfo}
             {mailloc}
-            {department}
             {mobilephone}
             {studentID}
             {homephone}

@@ -145,24 +145,24 @@ export default class MyProfileActivityList extends Component {
                 </List>
               </Grid>
               <Grid container xs={4} alignItems="center">
-                {this.props.network === 'online' && (
-                  <Grid container direction="column">
-                    <Grid item align="center">
+                <Grid container direction="column">
+                  <Grid item align="center">
+                    {this.props.network === 'online' && (
                       <Switch
                         onChange={() => {
                           this.handleChangeMembershipPrivacy(Membership);
                         }}
                         checked={this.state.switchChecked}
                       />
-                    </Grid>
-
-                    <Grid item align="center">
-                      <Typography style={toggleTextStyle}>
-                        {Membership.Privacy ? 'Private' : 'Public'}
-                      </Typography>
-                    </Grid>
+                    )}
                   </Grid>
-                )}
+
+                  <Grid item align="center">
+                    <Typography style={toggleTextStyle}>
+                      {Membership.Privacy ? 'Private' : 'Public'}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
             {/* CONTENT TWO (Activity Picture) */}
