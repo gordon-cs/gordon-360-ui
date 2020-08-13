@@ -28,14 +28,15 @@ import './timesheets.css';
 import GordonLoader from '../../components/Loader';
 import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
+import user from '../../services/user';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   customWidth: {
     maxWidth: 500,
   },
 }));
 
-const CustomTooltip = withStyles((theme) => ({
+const CustomTooltip = withStyles(theme => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
@@ -44,7 +45,7 @@ const CustomTooltip = withStyles((theme) => ({
   },
 }))(Tooltip);
 
-const Timesheets = (props) => {
+const Timesheets = props => {
   const [userJobs, setUserJobs] = useState([]);
   const [selectedDateIn, setSelectedDateIn] = useState(null);
   const [selectedDateOut, setSelectedDateOut] = useState(null);
@@ -64,8 +65,16 @@ const Timesheets = (props) => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [clockInOut, setClockInOut] = useState('Clock In');
   const [canUseStaff, setCanUseStaff] = useState(null);
+  const [isUserStudent, setIsUserStudent] = useState(false);
   const [hourTypes, setHourTypes] = useState(null);
   const [selectedHourType, setSelectedHourType] = useState('R');
+
+  // Sets the person type of the user
+  useEffect(() => {
+    user.getProfileInfo().then(data => {
+      data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
+    });
+  });
 
   // disabled lint in some lines in order to remove warning about race condition that does not apply
   // in our current case.
@@ -112,7 +121,7 @@ const Timesheets = (props) => {
 
   //had to be defined outside of the authentication condition so that the ui could update
   // before cheking to see if user is authenticated.
-  const handleDateChangeInClock = (date) => {
+  const handleDateChangeInClock = date => {
     if (date) {
       date.setSeconds(0);
       date.setMilliseconds(0);
@@ -162,7 +171,7 @@ const Timesheets = (props) => {
         shift_start_datetime: dateIn.toLocaleString(),
         shift_end_datetime: dateOut.toLocaleString(),
       };
-      jobs.getActiveJobsForUser(canUseStaff, details).then((result) => {
+      jobs.getActiveJobsForUser(canUseStaff, details).then(result => {
         setUserJobs(result);
       });
     };
@@ -171,7 +180,7 @@ const Timesheets = (props) => {
       return jobs.getSavedShiftsForUser(canUseStaff);
     };
 
-    const handleDateChangeIn = (date) => {
+    const handleDateChangeIn = date => {
       if (date) {
         date.setSeconds(0);
         date.setMilliseconds(0);
@@ -184,7 +193,7 @@ const Timesheets = (props) => {
       }
     };
 
-    const handleDateChangeOut = (date) => {
+    const handleDateChangeOut = date => {
       if (date) {
         date.setSeconds(0);
         date.setMilliseconds(0);
@@ -238,7 +247,7 @@ const Timesheets = (props) => {
               );
               setSnackbarOpen(true);
             })
-            .catch((err) => {
+            .catch(err => {
               setSaving(false);
               if (typeof err === 'string' && err.toLowerCase().includes('overlap')) {
                 setSnackbarText(
@@ -272,7 +281,7 @@ const Timesheets = (props) => {
         selectedHourType,
         userShiftNotes,
       )
-        .then((result) => {
+        .then(result => {
           shiftDisplayComponent.loadShifts();
           setSelectedDateOut(null);
           setSelectedDateIn(null);
@@ -281,7 +290,7 @@ const Timesheets = (props) => {
           setHoursWorkedInDecimal(0);
           setSaving(false);
         })
-        .catch((err) => {
+        .catch(err => {
           setSaving(false);
           if (typeof err === 'string' && err.toLowerCase().includes('overlap')) {
             setSnackbarText(
@@ -298,11 +307,19 @@ const Timesheets = (props) => {
     };
 
     const saveShift = async (eml, shiftStart, shiftEnd, hoursWorked, hoursType, shiftNotes) => {
-      await jobs.saveShiftForUser(canUseStaff, eml, shiftStart, shiftEnd, hoursWorked, hoursType, shiftNotes);
+      await jobs.saveShiftForUser(
+        canUseStaff,
+        eml,
+        shiftStart,
+        shiftEnd,
+        hoursWorked,
+        hoursType,
+        shiftNotes,
+      );
     };
 
     const jobsMenuItems = userJobs ? (
-      userJobs.map((job) => (
+      userJobs.map(job => (
         <MenuItem label={job.POSTITLE} value={job} key={job.EMLID}>
           {job.POSTITLE}
         </MenuItem>
@@ -311,7 +328,7 @@ const Timesheets = (props) => {
       <></>
     );
     const hourTypeMenuItems = hourTypes ? (
-      hourTypes.map((type) => (
+      hourTypes.map(type => (
         <MenuItem label={type.type_description} value={type.type_id} key={type.type_id}>
           {type.type_description}
         </MenuItem>
@@ -320,7 +337,7 @@ const Timesheets = (props) => {
       <></>
     );
 
-    const isLeapYear = (date) => {
+    const isLeapYear = date => {
       if (date.getFullYear() % 4 === 0) {
         if (date.getFullYear() % 100 === 0) {
           if (date.getFullYear() % 400 !== 0) {
@@ -336,7 +353,7 @@ const Timesheets = (props) => {
       }
     };
 
-    const getNextDate = (date) => {
+    const getNextDate = date => {
       let is30DayMonth =
         date.getMonth() === 3 ||
         date.getMonth() === 5 ||
@@ -408,7 +425,7 @@ const Timesheets = (props) => {
       };
     };
 
-    const disableDisallowedDays = (date) => {
+    const disableDisallowedDays = date => {
       let dayIn = selectedDateIn;
       let nextDate = getNextDate(dayIn);
       let shouldDisableDate = !(
@@ -455,7 +472,7 @@ const Timesheets = (props) => {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', (event) => {
+    window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
         network === 'offline' &&
@@ -486,7 +503,7 @@ const Timesheets = (props) => {
         <InputLabel className="disable-select">Jobs</InputLabel>
         <Select
           value={selectedJob}
-          onChange={(e) => {
+          onChange={e => {
             setSelectedJob(e.target.value);
           }}
           input={<Input id="job" />}
@@ -509,7 +526,7 @@ const Timesheets = (props) => {
         <InputLabel className="disable-select">Hour Type</InputLabel>
         <Select
           value={selectedHourType}
-          onChange={(e) => {
+          onChange={e => {
             setSelectedHourType(e.target.value);
           }}
           input={<Input id="hour type" />}
@@ -554,7 +571,7 @@ const Timesheets = (props) => {
       errorText = <></>;
     }
 
-    const handleShiftNotesChanged = (event) => {
+    const handleShiftNotesChanged = event => {
       setUserShiftNotes(event.target.value);
     };
 
@@ -582,209 +599,233 @@ const Timesheets = (props) => {
       </Button>
     );
 
-    return networkStatus === 'online' ? (
-      <>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Card>
-                <CardContent
-                  style={{
-                    marginLeft: 8,
-                    marginTop: 8,
-                  }}
-                >
-                  <Grid container spacing={2} alignItems="center" alignContent="center">
-                    <Grid item md={2}>
-                      <Button onClick={changeState}> {clockInOut}</Button>
-                    </Grid>
-                    <Grid item md={8}>
-                      <div className="header-tooltip-container">
-                        <CustomTooltip
-                          classes={{ tooltip: classes.customWidth }}
-                          interactive
-                          disableFocusListener
-                          disableTouchListener
-                          title={
-                            canUseStaff
-                              ? 'Staff Timesheets Info' // need to update for staff
-                              : // eslint-disable-next-line no-multi-str
-                                'Student employees are not permitted to work more than 20 total hours\
+    if (networkStatus === 'online' && isUserStudent && props.Authentication) {
+      return (
+        <>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Card>
+                  <CardContent
+                    style={{
+                      marginLeft: 8,
+                      marginTop: 8,
+                    }}
+                  >
+                    <Grid container spacing={2} alignItems="center" alignContent="center">
+                      <Grid item md={2}>
+                        <Button onClick={changeState}> {clockInOut}</Button>
+                      </Grid>
+                      <Grid item md={8}>
+                        <div className="header-tooltip-container">
+                          <CustomTooltip
+                            classes={{ tooltip: classes.customWidth }}
+                            interactive
+                            disableFocusListener
+                            disableTouchListener
+                            title={
+                              canUseStaff
+                                ? 'Staff Timesheets Info' // need to update for staff
+                                : // eslint-disable-next-line no-multi-str
+                                  'Student employees are not permitted to work more than 20 total hours\
                         per work week, or more than 40 hours during winter, spring, and summer breaks.\
                         \
                         To request permission for a special circumstance, please email\
                         student-employment@gordon.edu before exceeding this limit.'
-                          }
-                          placement="bottom"
-                        >
-                          <div ref={tooltipRef}>
-                            <CardHeader className="disable-select" title="Enter a shift" />
-                            <InfoOutlinedIcon
-                              className="tooltip-icon"
-                              style={{
-                                fontSize: 18,
-                              }}
-                            />
-                          </div>
-                        </CustomTooltip>
-                      </div>
+                            }
+                            placement="bottom"
+                          >
+                            <div ref={tooltipRef}>
+                              <CardHeader className="disable-select" title="Enter a shift" />
+                              <InfoOutlinedIcon
+                                className="tooltip-icon"
+                                style={{
+                                  fontSize: 18,
+                                }}
+                              />
+                            </div>
+                          </CustomTooltip>
+                        </div>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="space-between"
-                    alignItems="center"
-                    alignContent="center"
-                  >
-                    <Grid item xs={12} md={6} lg={3}>
-                      <KeyboardDateTimePicker
-                        className="disable-select"
-                        style={{
-                          width: 252,
-                        }}
-                        variant="inline"
-                        disableFuture
-                        margin="normal"
-                        id="date-picker-in-dialog"
-                        label="Start Time"
-                        helperText="MM-DD-YY HH-MM AM/PM"
-                        format="MM/dd/yy hh:mm a"
-                        value={selectedDateIn}
-                        onChange={handleDateChangeIn}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={3}>
-                      <KeyboardDateTimePicker
-                        className="disable-select"
-                        style={{
-                          width: 252,
-                        }}
-                        variant="inline"
-                        disabled={selectedDateIn === null}
-                        initialFocusedDate={selectedDateIn}
-                        shouldDisableDate={disableDisallowedDays}
-                        disableFuture
-                        margin="normal"
-                        id="date-picker-out-dialog"
-                        label="End Time"
-                        helperText="MM-DD-YY HH-MM AM/PM"
-                        format="MM/dd/yy hh:mm a"
-                        openTo="hours"
-                        value={selectedDateOut}
-                        onChange={handleDateChangeOut}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={3}>
-                      {jobDropdown}
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={3}>
-                      {hourTypeDropdown}
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={3}>
-                      <TextField
-                        className="disable-select"
-                        style={{
-                          width: 252,
-                        }}
-                        label="Shift Notes"
-                        multiline
-                        rowsMax="3"
-                        value={userShiftNotes}
-                        onChange={handleShiftNotesChanged}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={3}>
-                      <Typography className="disable-select">
-                        Hours worked: {hoursWorkedInDecimal}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      {errorText}
-                    </Grid>
-                    <Grid item xs={12}>
-                      {saveButton}
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography>
-                        <Link
+                    <Grid
+                      container
+                      spacing={2}
+                      justify="space-between"
+                      alignItems="center"
+                      alignContent="center"
+                    >
+                      <Grid item xs={12} md={6} lg={3}>
+                        <KeyboardDateTimePicker
                           className="disable-select"
                           style={{
-                            borderBottom: '1px solid currentColor',
-                            textDecoration: 'none',
-                            color: gordonColors.primary.blueShades.A700,
+                            width: 252,
                           }}
-                          href={(canUseStaff ? "https://reports.gordon.edu/Reports/browse/Staff%20Timesheets":
-                          "https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period")}
-                          underline="always"
-                          target="_blank"
-                          rel="noopener"
-                        >
-                          View historical paid time
-                        </Link>
-                      </Typography>
+                          variant="inline"
+                          disableFuture
+                          margin="normal"
+                          id="date-picker-in-dialog"
+                          label="Start Time"
+                          helperText="MM-DD-YY HH-MM AM/PM"
+                          format="MM/dd/yy hh:mm a"
+                          value={selectedDateIn}
+                          onChange={handleDateChangeIn}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6} lg={3}>
+                        <KeyboardDateTimePicker
+                          className="disable-select"
+                          style={{
+                            width: 252,
+                          }}
+                          variant="inline"
+                          disabled={selectedDateIn === null}
+                          initialFocusedDate={selectedDateIn}
+                          shouldDisableDate={disableDisallowedDays}
+                          disableFuture
+                          margin="normal"
+                          id="date-picker-out-dialog"
+                          label="End Time"
+                          helperText="MM-DD-YY HH-MM AM/PM"
+                          format="MM/dd/yy hh:mm a"
+                          openTo="hours"
+                          value={selectedDateOut}
+                          onChange={handleDateChangeOut}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6} lg={3}>
+                        {jobDropdown}
+                      </Grid>
+                      <Grid item xs={12} md={6} lg={3}>
+                        {hourTypeDropdown}
+                      </Grid>
+                      <Grid item xs={12} md={6} lg={3}>
+                        <TextField
+                          className="disable-select"
+                          style={{
+                            width: 252,
+                          }}
+                          label="Shift Notes"
+                          multiline
+                          rowsMax="3"
+                          value={userShiftNotes}
+                          onChange={handleShiftNotesChanged}
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6} lg={3}>
+                        <Typography className="disable-select">
+                          Hours worked: {hoursWorkedInDecimal}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        {errorText}
+                      </Grid>
+                      <Grid item xs={12}>
+                        {saveButton}
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography>
+                          <Link
+                            className="disable-select"
+                            style={{
+                              borderBottom: '1px solid currentColor',
+                              textDecoration: 'none',
+                              color: gordonColors.primary.blueShades.A700,
+                            }}
+                            href={
+                              canUseStaff
+                                ? 'https://reports.gordon.edu/Reports/browse/Staff%20Timesheets'
+                                : 'https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period'
+                            }
+                            underline="always"
+                            target="_blank"
+                            rel="noopener"
+                          >
+                            View historical paid time
+                          </Link>
+                        </Typography>
+                      </Grid>
                     </Grid>
-                  </Grid>
+                  </CardContent>
+                </Card>
+              </MuiPickersUtilsProvider>
+            </Grid>
+            <ShiftDisplay
+              ref={setShiftDisplayComponent}
+              getSavedShiftsForUser={getSavedShiftsForUser}
+              canUse={canUseStaff}
+            />
+          </Grid>
+          <SimpleSnackbar
+            text={snackbarText}
+            severity={snackbarSeverity}
+            open={snackbarOpen}
+            onClose={handleCloseSnackbar}
+          />
+        </>
+      );
+    } else {
+      // If the network is offline or the user type is non-student
+      if (networkStatus === 'offline' || !isUserStudent) {
+        return (
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} md={8}>
+              <Card>
+                <CardContent
+                  style={{
+                    margin: 'auto',
+                    textAlign: 'center',
+                  }}
+                >
+                  {networkStatus === 'offline' && (
+                    <Grid
+                      item
+                      xs={2}
+                      alignItems="center"
+                      style={{
+                        display: 'block',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                      }}
+                    >
+                      <img
+                        src={require(`${'../../NoConnection.svg'}`)}
+                        alt="Internet Connection Lost"
+                      />
+                    </Grid>
+                  )}
+                  <br />
+                  <h1>
+                    {networkStatus === 'offline'
+                      ? 'Please re-establish connection'
+                      : 'Timesheets Unavailable'}
+                  </h1>
+                  <h4>
+                    {networkStatus === 'offline'
+                      ? 'Timesheets entry has been disabled due to loss of network.'
+                      : 'Timesheets is currently available for students only. Support for staff will come soon!'}
+                  </h4>
+                  <br />
+                  <br />
+                  <Button
+                    color="primary"
+                    backgroundColor="white"
+                    variant="outlined"
+                    onClick={() => {
+                      window.location.pathname = '';
+                    }}
+                  >
+                    Back To Home
+                  </Button>
                 </CardContent>
               </Card>
-            </MuiPickersUtilsProvider>
+            </Grid>
           </Grid>
-          <ShiftDisplay
-            ref={setShiftDisplayComponent}
-            getSavedShiftsForUser={getSavedShiftsForUser}
-            canUse={canUseStaff}
-          />
-        </Grid>
-        <SimpleSnackbar
-          text={snackbarText}
-          severity={snackbarSeverity}
-          open={snackbarOpen}
-          onClose={handleCloseSnackbar}
-        />
-      </>
-    ) : (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <Grid
-                item
-                xs={2}
-                alignItems="center"
-                style={{
-                  display: 'block',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-              >
-                <img src={require(`${'../../NoConnection.svg'}`)} alt="Internet Connection Lost" />
-              </Grid>
-              <br />
-              <h1>Please re-establish connection</h1>
-              <h4>Timesheets entry has been disabled due to loss of network.</h4>
-              <br />
-              <br />
-              <Button
-                color="primary"
-                backgroundColor="white"
-                variant="outlined"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Back To Home
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+        );
+      }
+    }
   } else {
+    // The user is not logged in
     return (
       <Grid container justify="center">
         <Grid item xs={12} md={8}>
