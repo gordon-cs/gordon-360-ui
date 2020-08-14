@@ -140,10 +140,10 @@ const Timesheets = props => {
       let timeDiff = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
       let roundedHourDifference = 0;
-      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.25) {
-        roundedHourDifference = 0.25;
-      } else if (calculatedTimeDiff >= 0.25) {
-        roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.1) {
+        roundedHourDifference = 0.1;
+      } else if (calculatedTimeDiff >= 0.1) {
+        roundedHourDifference = (Math.round(calculatedTimeDiff * 10) / 10).toFixed(2);
       }
       setHoursWorkedInDecimal(roundedHourDifference);
       let hoursWorked = Math.floor(calculatedTimeDiff);
@@ -224,10 +224,10 @@ const Timesheets = props => {
         let timeDiff2 = timeOut2.getTime() - timeIn2.getTime();
         let calculatedTimeDiff2 = timeDiff2 / 1000 / 60 / 60;
         let roundedHourDifference2 = 0;
-        if (calculatedTimeDiff2 > 0 && calculatedTimeDiff2 < 0.25) {
-          roundedHourDifference2 = 0.25;
-        } else if (calculatedTimeDiff2 >= 0.25) {
-          roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 4) / 4).toFixed(2);
+        if (calculatedTimeDiff2 > 0 && calculatedTimeDiff2 < 0.1) {
+          roundedHourDifference2 = 0.1;
+        } else if (calculatedTimeDiff2 >= 0.1) {
+          roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 10) / 10).toFixed(2);
         }
 
         // Do not save the shift if it has zero length
@@ -267,10 +267,10 @@ const Timesheets = props => {
       let timeDiff1 = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff1 / 1000 / 60 / 60;
       let roundedHourDifference;
-      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.25) {
-        roundedHourDifference = 0.25;
+      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.1) {
+        roundedHourDifference = 0.1;
       } else {
-        roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+        roundedHourDifference = (Math.round(calculatedTimeDiff * 10) / 10).toFixed(2);
       }
 
       saveShift(
