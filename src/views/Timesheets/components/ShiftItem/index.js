@@ -222,10 +222,10 @@ export default class ShiftItem extends Component {
       zeroLengthShift = timeDiff === 0;
       shiftTooLong = calculatedTimeDiff > 20;
       let roundedHourDifference = 0;
-      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.25) {
-        roundedHourDifference = 0.25;
-      } else if (calculatedTimeDiff >= 0.25) {
-        roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.1) {
+        roundedHourDifference = 0.1;
+      } else if (calculatedTimeDiff >= 0.1) {
+        roundedHourDifference = (Math.round(calculatedTimeDiff * 10) / 10).toFixed(2);
       }
 
       this.setState({
