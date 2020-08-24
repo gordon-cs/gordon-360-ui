@@ -138,13 +138,13 @@ const Timesheets = props => {
     if (timeIn !== null && timeOut !== null) {
       checkForFutureDate(timeIn, timeOut);
       let timeDiff = timeOut.getTime() - timeIn.getTime();
-      let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
-      let roundedHourDifference = 0;
-      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.1) {
-        roundedHourDifference = 0.1;
-      } else if (calculatedTimeDiff >= 0.1) {
-        roundedHourDifference = (Math.round(calculatedTimeDiff * 10) / 10).toFixed(2);
+      let calculatedTimeDiff = timeDiff / 3600000; //3,600,000 milliseconds in an hour.
+      let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
+      
+      if (roundedHourDifference == 0.00) {
+        roundedHourDifference = 0.08; //minimum 1/12 hour for working a shift (5 minutes)
       }
+      
       setHoursWorkedInDecimal(roundedHourDifference);
       let hoursWorked = Math.floor(calculatedTimeDiff);
       let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60).toFixed(2);
@@ -222,14 +222,14 @@ const Timesheets = props => {
         timeOut.setMinutes(59);
 
         let timeDiff2 = timeOut2.getTime() - timeIn2.getTime();
-        let calculatedTimeDiff2 = timeDiff2 / 1000 / 60 / 60;
-        let roundedHourDifference2 = 0;
-        if (calculatedTimeDiff2 > 0 && calculatedTimeDiff2 < 0.1) {
-          roundedHourDifference2 = 0.1;
-        } else if (calculatedTimeDiff2 >= 0.1) {
-          roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 10) / 10).toFixed(2);
+        let calculatedTimeDiff2 = timeDiff2 / 3600000; //3,600,000 milliseconds in an hour.
+        let roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 12) / 12).toFixed(2);
+        if (roundedHourDifference2 == 0.00) {
+          roundedHourDifference2 = 0.08; //minimum 1/12 hour for working a shift (5 minutes)
         }
-
+      
+      }
+        
         // Do not save the shift if it has zero length
         if (calculatedTimeDiff2 > 0) {
           saveShift(
