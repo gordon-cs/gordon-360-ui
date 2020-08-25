@@ -222,8 +222,8 @@ export default class ShiftItem extends Component {
       zeroLengthShift = timeDiff === 0;
       shiftTooLong = calculatedTimeDiff > 20;
       let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
-      if (roundedHourDifference == 0.00) {
-        roundedHourDifference = 0.08; //minimum 1/12th hour for working a shift (5 minutes)
+      if (roundedHourDifference == "0.00") {
+        roundedHourDifference = "0.08"; //minimum 1/12th hour for working a shift (5 minutes)
       } 
 
       this.setState({
