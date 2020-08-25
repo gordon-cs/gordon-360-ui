@@ -142,7 +142,7 @@ const Timesheets = props => {
       let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
       
       if (roundedHourDifference == 0.00) {
-        roundedHourDifference = 0.08; //minimum 1/12 hour for working a shift (5 minutes)
+        roundedHourDifference = 0.08; //minimum 1/12th hour for working a shift (5 minutes)
       }
       
       setHoursWorkedInDecimal(roundedHourDifference);
@@ -225,13 +225,13 @@ const Timesheets = props => {
         let calculatedTimeDiff2 = timeDiff2 / 3600000; //3,600,000 milliseconds in an hour.
         let roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 12) / 12).toFixed(2);
         if (roundedHourDifference2 == 0.00) {
-          roundedHourDifference2 = 0.08; //minimum 1/12 hour for working a shift (5 minutes)
+          roundedHourDifference2 = 0.08; //minimum 1/12th hour for working a shift (5 minutes)
         }
       
       }
         
-        // Do not save the shift if it has zero length
-        if (calculatedTimeDiff2 > 0) {
+      // Do not save the shift if it has zero length
+      if (calculatedTimeDiff2 > 0) {
           saveShift(
             selectedJob.EMLID,
             timeIn2.toLocaleString(),
@@ -265,13 +265,11 @@ const Timesheets = props => {
       }
 
       let timeDiff1 = timeOut.getTime() - timeIn.getTime();
-      let calculatedTimeDiff = timeDiff1 / 1000 / 60 / 60;
-      let roundedHourDifference;
-      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.1) {
-        roundedHourDifference = 0.1;
-      } else {
-        roundedHourDifference = (Math.round(calculatedTimeDiff * 10) / 10).toFixed(2);
-      }
+      let calculatedTimeDiff = timeDiff1 / 3600000; //3,600,000 milliseconds in an hour.
+      let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
+      if (roundedHourDifference == 0.00) {
+        roundedHourDifference = 0.08; //minimum 1/12th hour for working a shift (5 minutes)
+      } 
 
       saveShift(
         selectedJob.EMLID,
