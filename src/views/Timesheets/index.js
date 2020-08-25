@@ -140,8 +140,8 @@ const Timesheets = props => {
       let timeDiff = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff / 3600000; //3,600,000 milliseconds in an hour.
       let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
-      if (roundedHourDifference == "0.00") {
-        roundedHourDifference = "0.08"; //minimum 1/12th hour (5 minutes) for working a shift.
+      if (roundedHourDifference === 0.00) {
+        roundedHourDifference = 0.08; //minimum 1/12th hour (5 minutes) for working a shift.
       } 
       setHoursWorkedInDecimal(roundedHourDifference);
       let hoursWorked = Math.floor(calculatedTimeDiff);
@@ -222,8 +222,8 @@ const Timesheets = props => {
         let timeDiff2 = timeOut2.getTime() - timeIn2.getTime();
         let calculatedTimeDiff2 = timeDiff2 / 3600000; //3,600,000 milliseconds in an hour.
         let roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 12) / 12).toFixed(2);
-        if (roundedHourDifference2 == "0.00") {
-          roundedHourDifference2 = "0.08"; //minimum 1/12th hour (5 minutes) for working a shift.
+        if (roundedHourDifference2 === 0.00) {
+          roundedHourDifference2 = 0.08; //minimum 1/12th hour (5 minutes) for working a shift.
         } 
 
         // Do not save the shift if it has zero length
@@ -263,8 +263,8 @@ const Timesheets = props => {
       let timeDiff1 = timeOut.getTime() - timeIn.getTime();
       let calculatedTimeDiff = timeDiff1 / 3600000; //3,600,000 milliseconds in an hour.
       let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
-      if (roundedHourDifference == "0.00") {
-        roundedHourDifference = "0.08"; //minimum 1/12th hour (5 minutes) for working a shift.
+      if (roundedHourDifference === 0.00) {
+        roundedHourDifference = 0.08; //minimum 1/12th hour (5 minutes) for working a shift.
       } 
 
       saveShift(
