@@ -26,6 +26,8 @@ import GordonLoader from '../../components/Loader';
 import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
+import housing from '../../services/housing';
+
 
 const useStyles = makeStyles(theme => ({
   customWidth: {
@@ -42,10 +44,21 @@ const CustomTooltip = withStyles(theme => ({
   },
 }))(Tooltip);
 
+
+  async function infoGet() {
+    try {
+      return await housing.getHousingInfo();
+    } catch (error) {
+      //do nothing
+    }
+  }
+
+
 const apartApp = props => {
   return(<h1>
-  hello world
+    {infoGet()}
   </h1>)
+
 //   const [userJobs, setUserJobs] = useState([]);
 //   const [selectedDateIn, setSelectedDateIn] = useState(null);
 //   const [selectedDateOut, setSelectedDateOut] = useState(null);
