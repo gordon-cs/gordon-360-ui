@@ -47,7 +47,8 @@ const CustomTooltip = withStyles(theme => ({
 
   async function infoGet() {
     try {
-      return await housing.getHousingInfo();
+      const thing =  await housing.getHousingInfo();
+      return String(thing[0].Title)
     } catch (error) {
       //do nothing
     }
