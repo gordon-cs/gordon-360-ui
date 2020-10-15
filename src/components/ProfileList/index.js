@@ -154,7 +154,8 @@ class ProfileList extends Component {
     if (!this.props.myProf) {
       this.setState({
         campusLocationDisclaimer:
-          this.props.profile.KeepPrivate === 'S' || this.props.profile.KeepPrivate === 'P',
+          (this.props.profile.KeepPrivate === 'S' || this.props.profile.KeepPrivate === 'P') &&
+          this.props.profile.onoffcampus !== PRIVATE_INFO,
       });
       this.setState({
         mobilePhoneDisclaimer:
