@@ -1,4 +1,4 @@
-//Main timesheets page
+//Main apartment application page
 import React, { useState, useRef, useEffect } from 'react';
 import 'date-fns';
 import {
@@ -28,14 +28,13 @@ import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
 import housing from '../../services/housing';
 
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   customWidth: {
     maxWidth: 500,
   },
 }));
 
-const CustomTooltip = withStyles(theme => ({
+const CustomTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
@@ -44,75 +43,185 @@ const CustomTooltip = withStyles(theme => ({
   },
 }))(Tooltip);
 
-
-  async function infoGet() {
-    try {
-      const thing =  await housing.getHousingInfo();
-      return String(thing[0].Title)
-    } catch (error) {
-      //do nothing
-    }
-  }
-
-
-const apartApp = props => {
-  return(<h1>
-    {infoGet()}
-  </h1>)
-
-//   const [userJobs, setUserJobs] = useState([]);
-//   const [selectedDateIn, setSelectedDateIn] = useState(null);
-//   const [selectedDateOut, setSelectedDateOut] = useState(null);
-//   const [selectedJob, setSelectedJob] = useState(null);
-//   const [shiftTooLong, setShiftTooLong] = useState(false);
-//   const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = useState(false);
-//   const [isZeroLengthShift, setIsZeroLengthShift] = useState(false);
-//   const [enteredFutureTime, setEnteredFutureTime] = useState(false);
-//   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = useState(0.0);
-//   const [userShiftNotes, setUserShiftNotes] = useState('');
-//   const [isOverlappingShift, setIsOverlappingShift] = useState(false);
-//   const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
-//   const [snackbarOpen, setSnackbarOpen] = useState(false);
-//   const [network, setNetwork] = useState('online');
-//   const [saving, setSaving] = useState(false);
-//   const [snackbarText, setSnackbarText] = useState('');
-//   const [snackbarSeverity, setSnackbarSeverity] = useState('');
-//   const [clockInOut, setClockInOut] = useState('Clock In');
-//   const [canUseStaff, setCanUseStaff] = useState(null);
-// const [isUserStudent, setIsUserStudent] = useState(false);
-//   const [hourTypes, setHourTypes] = useState(null);
-//   const [selectedHourType, setSelectedHourType] = useState('R');
+const ApartApp = (props) => {
+  const [loading, setLoading] = useState(true);
+  // const [selectedDateIn, setSelectedDateIn] = useState(null);
+  // const [selectedDateOut, setSelectedDateOut] = useState(null);
+  // const [selectedJob, setSelectedJob] = useState(null);
+  // const [shiftTooLong, setShiftTooLong] = useState(false);
+  // const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = useState(false);
+  // const [isZeroLengthShift, setIsZeroLengthShift] = useState(false);
+  // const [enteredFutureTime, setEnteredFutureTime] = useState(false);
+  // const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = useState(0.0);
+  // const [userShiftNotes, setUserShiftNotes] = useState('');
+  // const [isOverlappingShift, setIsOverlappingShift] = useState(false);
+  // const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
+  // const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [network, setNetwork] = useState('online');
+  // const [saving, setSaving] = useState(false);
+  // const [snackbarText, setSnackbarText] = useState('');
+  // const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  // const [clockInOut, setClockInOut] = useState('Clock In');
+  // const [canUseStaff, setCanUseStaff] = useState(null);
+  const [isUserStudent, setIsUserStudent] = useState(false);
+  const [housingInfo, setHousingInfo] = useState(null);
+  const [housingTitle, setHousingTitle] = useState(null);
 
   // Sets the person type of the user
-//   useEffect(() => {
-//     user.getProfileInfo().then(data => {
-//       data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
-//     });
-//   });
+  useEffect(() => {
+    user.getProfileInfo().then((data) => {
+      // data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
+      // TODO - This is hardcoded to `true` for debug purposes only
+      // TODO - Remove this line and uncomment the real command above
+      setIsUserStudent(true);
+    });
+  });
 
-  // disabled lint in some lines in order to remove warning about race condition that does not apply
-  // in our current case.
-//   useEffect(() => {
-//     async function getCanUseStaff() {
-//       try {
-//         let canUse = await jobs.getStaffPageForUser();
+  // // disabled lint in some lines in order to remove warning about race condition that does not apply
+  // // in our current case.
+  // useEffect(() => {
+  //   async function getCanUseStaff() {
+  //     try {
+  //       let canUse = await jobs.getStaffPageForUser();
+  //       let hourTypes = await jobs.getHourTypes();
 
-//         if (canUse.length === 1) {
-//           setCanUseStaff(true);
-//         } else {
-//           setCanUseStaff(false);
-//         }
-//       } catch (error) {
-//         //do nothing
-//       }
-//     }
-//     getCanUseStaff();
-//   }, []);
+  //       if (canUse.length === 1) {
+  //         setCanUseStaff(true);
+  //         setHourTypes(hourTypes);
+  //       } else {
+  //         setCanUseStaff(false);
+  //       }
+  //     } catch (error) {
+  //       //do nothing
+  //     }
+  //   }
+  //   // updates ui with the current status of the users clocked in feature
+  //   // either clocked in and ready to clock out or the opposite.
+  //   // status is notted by either true or false. true being clocked in.
+  //   async function getClockInOutStatus() {
+  //     try {
+  //       let status = await jobs.clockOut();
 
-//   const tooltipRef = useRef();
-//   const classes = useStyles();
+  //       if (status[0].currentState) {
+  //         setClockInOut('Clock Out');
+
+  //         handleDateChangeInClock(new Date(status[0].timestamp));
+  //       } else {
+  //         setClockInOut('Clock In');
+  //       }
+  //     } catch (error) {
+  //       //do nothing
+  //     }
+  //   }
+
+  //   getCanUseStaff();
+  //   getClockInOutStatus();
+
+  //   // eslint-disable-next-line
+  // }, []);
+
+  useEffect(() => {
+    async function infoGet() {
+      setLoading(true);
+      try {
+        let housingInfo = await housing.getHousingInfo();
+        setHousingInfo(housingInfo);
+        let housingTitle = String(housingInfo[0].Title);
+        setHousingTitle(housingTitle);
+        setLoading(false);
+      } catch (error) {
+        // Do Nothing
+      }
+    }
+    infoGet();
+  }, []);
+
+  // //had to be defined outside of the authentication condition so that the ui could update
+  //   // before cheking to see if user is authenticated.
+  //   const handleDateChangeInClock = date => {
+  //     if (date) {
+  //       date.setSeconds(0);
+  //       date.setMilliseconds(0);
+  //       setSelectedDateIn(date);
+  //       setIsOverlappingShift(false);
+  //       handleTimeErrors(date, selectedDateOut);
+  //     }
+  //   };
+
+  //   const tooltipRef = useRef();
+  //   const classes = useStyles();
+
+  //   const handleTimeErrors = (timeIn, timeOut) => {
+  //     if (timeIn !== null && timeOut !== null) {
+  //       checkForFutureDate(timeIn, timeOut);
+  //       let timeDiff = timeOut.getTime() - timeIn.getTime();
+  //       let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
+  //       let roundedHourDifference = 0;
+  //       if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.25) {
+  //         roundedHourDifference = 0.25;
+  //       } else if (calculatedTimeDiff >= 0.25) {
+  //         roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+  //       }
+  //       setHoursWorkedInDecimal(roundedHourDifference);
+  //       let hoursWorked = Math.floor(calculatedTimeDiff);
+  //       let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60).toFixed(2);
+
+  //       if (minutesWorked >= 60) {
+  //         hoursWorked++;
+  //         minutesWorked = 0;
+  //       }
+
+  //       setTimeOutIsBeforeTimeIn(timeDiff < 0);
+  //       setIsZeroLengthShift(timeDiff === 0);
+  //       setShiftTooLong(calculatedTimeDiff > 20);
+  //     }
+  //   };
+
+  //   const checkForFutureDate = (dateIn, dateOut) => {
+  //     let now = Date.now();
+  //     setEnteredFutureTime(dateIn.getTime() > now || dateOut.getTime() > now);
+  //   };
 
   if (props.Authentication) {
+    //     const getActiveJobsForUser = (dateIn, dateOut) => {
+    //       let details = {
+    //         shift_start_datetime: dateIn.toLocaleString(),
+    //         shift_end_datetime: dateOut.toLocaleString(),
+    //       };
+    //       jobs.getActiveJobsForUser(canUseStaff, details).then(result => {
+    //         setUserJobs(result);
+    //       });
+    //     };
+
+    //     const getSavedShiftsForUser = () => {
+    //       return jobs.getSavedShiftsForUser(canUseStaff);
+    //     };
+
+    //     const handleDateChangeIn = date => {
+    //       if (date) {
+    //         date.setSeconds(0);
+    //         date.setMilliseconds(0);
+    //         setSelectedDateIn(date);
+    //         setIsOverlappingShift(false);
+    //         handleTimeErrors(date, selectedDateOut);
+    //         if (selectedDateOut !== null) {
+    //           getActiveJobsForUser(date, selectedDateOut);
+    //         }
+    //       }
+    //     };
+
+    //     const handleDateChangeOut = date => {
+    //       if (date) {
+    //         date.setSeconds(0);
+    //         date.setMilliseconds(0);
+    //         setSelectedDateOut(date);
+    //         setIsOverlappingShift(false);
+    //         handleTimeErrors(selectedDateIn, date);
+    //         if (selectedDateIn !== null) {
+    //           getActiveJobsForUser(selectedDateIn, date);
+    //         }
+    //       }
+    //     };
 
     // const handleSaveButtonClick = () => {
     //   let timeIn = selectedDateIn;
@@ -245,7 +354,7 @@ const apartApp = props => {
     //   <></>
     // );
 
-    const isLeapYear = date => {
+    const isLeapYear = (date) => {
       if (date.getFullYear() % 4 === 0) {
         if (date.getFullYear() % 100 === 0) {
           if (date.getFullYear() % 400 !== 0) {
@@ -261,7 +370,7 @@ const apartApp = props => {
       }
     };
 
-    const getNextDate = date => {
+    const getNextDate = (date) => {
       let is30DayMonth =
         date.getMonth() === 3 ||
         date.getMonth() === 5 ||
@@ -366,17 +475,11 @@ const apartApp = props => {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        //setNetwork('online');
-      } else if (
-        event.data === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        //setNetwork('offline');
+    window.addEventListener('message', (event) => {
+      if (event.data === 'online' && event.origin === window.location.origin) {
+        setNetwork('online');
+      } else if (event.data === 'offline' && event.origin === window.location.origin) {
+        setNetwork('offline');
       }
     });
 
@@ -463,9 +566,9 @@ const apartApp = props => {
     //   errorText = <></>;
     // }
 
-    const handleShiftNotesChanged = event => {
+    // const handleShiftNotesChanged = (event) => {
     //   setUserShiftNotes(event.target.value);
-    };
+    // };
 
     // const saveButton = saving ? (
     //   <GordonLoader size={32} />
@@ -478,262 +581,118 @@ const apartApp = props => {
     //   </Button>
     // );
 
-    //if (networkStatus === 'online' && isUserStudent && props.Authentication) {
-    //   return (
-        // <>
-        //   <Grid container spacing={2}>
-        //     <Grid item xs={12}>
-        //       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        //         <Card>
-        //           <CardContent
-        //             style={{
-        //               marginLeft: 8,
-        //               marginTop: 8,
-        //             }}
-        //           >
-        //             <Grid container spacing={2} alignItems="center" alignContent="center">
-        //               <Grid item md={2}>
-        //                 <Button onClick={changeState}> {clockInOut}</Button>
-        //               </Grid>
-        //               <Grid item md={8}>
-        //                 <div className="header-tooltip-container">
-        //                   <CustomTooltip
-        //                     classes={{ tooltip: classes.customWidth }}
-        //                     interactive
-        //                     disableFocusListener
-        //                     disableTouchListener
-        //                     title={
-        //                       canUseStaff
-        //                         ? 'Staff Timesheets Info' // need to update for staff
-        //                         : // eslint-disable-next-line no-multi-str
-        //                           'Student employees are not permitted to work more than 20 total hours\
-        //                 per work week, or more than 40 hours during winter, spring, and summer breaks.\
-        //                 \
-        //                 To request permission for a special circumstance, please email\
-        //                 student-employment@gordon.edu before exceeding this limit.'
-        //                     }
-        //                     placement="bottom"
-        //                   >
-        //                     <div ref={tooltipRef}>
-        //                       <CardHeader className="disable-select" title="Enter a shift" />
-        //                       <InfoOutlinedIcon
-        //                         className="tooltip-icon"
-        //                         style={{
-        //                           fontSize: 18,
-        //                         }}
-        //                       />
-        //                     </div>
-        //                   </CustomTooltip>
-        //                 </div>
-        //               </Grid>
-        //             </Grid>
-        //             <Grid
-        //               container
-        //               spacing={2}
-        //               justify="space-between"
-        //               alignItems="center"
-        //               alignContent="center"
-        //             >
-        //               <Grid item xs={12} md={6} lg={3}>
-        //                 <KeyboardDateTimePicker
-        //                   className="disable-select"
-        //                   style={{
-        //                     width: 252,
-        //                   }}
-        //                   variant="inline"
-        //                   disableFuture
-        //                   margin="normal"
-        //                   id="date-picker-in-dialog"
-        //                   label="Start Time"
-        //                   helperText="MM-DD-YY HH-MM AM/PM"
-        //                   format="MM/dd/yy hh:mm a"
-        //                   value={selectedDateIn}
-        //                   onChange={handleDateChangeIn}
-        //                 />
-        //               </Grid>
-        //               <Grid item xs={12} md={6} lg={3}>
-        //                 <KeyboardDateTimePicker
-        //                   className="disable-select"
-        //                   style={{
-        //                     width: 252,
-        //                   }}
-        //                   variant="inline"
-        //                   disabled={selectedDateIn === null}
-        //                   initialFocusedDate={selectedDateIn}
-        //                   shouldDisableDate={disableDisallowedDays}
-        //                   disableFuture
-        //                   margin="normal"
-        //                   id="date-picker-out-dialog"
-        //                   label="End Time"
-        //                   helperText="MM-DD-YY HH-MM AM/PM"
-        //                   format="MM/dd/yy hh:mm a"
-        //                   openTo="hours"
-        //                   value={selectedDateOut}
-        //                   onChange={handleDateChangeOut}
-        //                 />
-        //               </Grid>
-        //               <Grid item xs={12} md={6} lg={3}>
-        //                 {jobDropdown}
-        //               </Grid>
-        //               <Grid item xs={12} md={6} lg={3}>
-        //                 {hourTypeDropdown}
-        //               </Grid>
-        //               <Grid item xs={12} md={6} lg={3}>
-        //                 <TextField
-        //                   className="disable-select"
-        //                   style={{
-        //                     width: 252,
-        //                   }}
-        //                   label="Shift Notes"
-        //                   multiline
-        //                   rowsMax="3"
-        //                   value={userShiftNotes}
-        //                   onChange={handleShiftNotesChanged}
-        //                 />
-        //               </Grid>
-        //               <Grid item xs={12} md={6} lg={3}>
-        //                 <Typography className="disable-select">
-        //                   Hours worked: {hoursWorkedInDecimal}
-        //                 </Typography>
-        //               </Grid>
-        //               <Grid item xs={12}>
-        //                 {errorText}
-        //               </Grid>
-        //               <Grid item xs={12}>
-        //                 {saveButton}
-        //               </Grid>
-        //               <Grid item xs={12}>
-        //                 <Typography>
-        //                   <Link
-        //                     className="disable-select"
-        //                     style={{
-        //                       borderBottom: '1px solid currentColor',
-        //                       textDecoration: 'none',
-        //                       color: gordonColors.primary.blueShades.A700,
-        //                     }}
-        //                     href={
-        //                       canUseStaff
-        //                         ? 'https://reports.gordon.edu/Reports/browse/Staff%20Timesheets'
-        //                         : 'https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period'
-        //                     }
-        //                     underline="always"
-        //                     target="_blank"
-        //                     rel="noopener"
-        //                   >
-        //                     View historical paid time
-        //                   </Link>
-        //                 </Typography>
-        //               </Grid>
-        //             </Grid>
-        //           </CardContent>
-        //         </Card>
-        //       </MuiPickersUtilsProvider>
-        //     </Grid>
-        //     <ShiftDisplay
-        //       ref={setShiftDisplayComponent}
-        //       getSavedShiftsForUser={getSavedShiftsForUser}
-        //       canUse={canUseStaff}
-        //     />
-        //   </Grid>
-        //   <SimpleSnackbar
-        //     text={snackbarText}
-        //     severity={snackbarSeverity}
-        //     open={snackbarOpen}
-        //     onClose={handleCloseSnackbar}
-        //   />
-        // </>
-    //   );
-    //} else {
+    if (networkStatus === 'online' && isUserStudent && props.Authentication) {
+      return (
+        <Grid container justify="center">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <h1>Hello World</h1>
+                <br />
+                <h4>The follow is information that was retrieved from the API:</h4>
+                <br />
+                <h3>{housingTitle}</h3>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      );
+    } else {
       // If the network is offline or the user type is non-student
-    //   if (networkStatus === 'offline' || !isUserStudent) {
-    //     return (
-    //       <Grid container justify="center" spacing="16">
-    //         <Grid item xs={12} md={8}>
-    //           <Card>
-    //             <CardContent
-    //               style={{
-    //                 margin: 'auto',
-    //                 textAlign: 'center',
-    //               }}
-    //             >
-    //               {networkStatus === 'offline' && (
-    //                 <Grid
-    //                   item
-    //                   xs={2}
-    //                   alignItems="center"
-    //                   style={{
-    //                     display: 'block',
-    //                     marginLeft: 'auto',
-    //                     marginRight: 'auto',
-    //                   }}
-    //                 >
-    //                   <img
-    //                     src={require(`${'../../NoConnection.svg'}`)}
-    //                     alt="Internet Connection Lost"
-    //                   />
-    //                 </Grid>
-    //               )}
-    //               <br />
-    //               <h1>
-    //                 {networkStatus === 'offline'
-    //                   ? 'Please re-establish connection'
-    //                   : 'Timesheets Unavailable'}
-    //               </h1>
-    //               <h4>
-    //                 {networkStatus === 'offline'
-    //                   ? 'Timesheets entry has been disabled due to loss of network.'
-    //                   : 'Timesheets is currently available for students only. Support for staff will come soon!'}
-    //               </h4>
-    //               <br />
-    //               <br />
-    //               <Button
-    //                 color="primary"
-    //                 backgroundColor="white"
-    //                 variant="outlined"
-    //                 onClick={() => {
-    //                   window.location.pathname = '';
-    //                 }}
-    //               >
-    //                 Back To Home
-    //               </Button>
-    //             </CardContent>
-    //           </Card>
-    //         </Grid>
-    //       </Grid>
-    //     );
-    //   }
-   // }
+      if (networkStatus === 'offline' || !isUserStudent) {
+        return (
+          <Grid container justify="center" spacing="16">
+            <Grid item xs={12} md={8}>
+              <Card>
+                <CardContent
+                  style={{
+                    margin: 'auto',
+                    textAlign: 'center',
+                  }}
+                >
+                  {networkStatus === 'offline' && (
+                    <Grid
+                      item
+                      xs={2}
+                      alignItems="center"
+                      style={{
+                        display: 'block',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                      }}
+                    >
+                      <img
+                        src={require(`${'../../NoConnection.svg'}`)}
+                        alt="Internet Connection Lost"
+                      />
+                    </Grid>
+                  )}
+                  <br />
+                  <h1>
+                    {networkStatus === 'offline'
+                      ? 'Please re-establish connection'
+                      : 'Apartment application Unavailable'}
+                  </h1>
+                  <h4>
+                    {networkStatus === 'offline'
+                      ? 'Apartment application entry has been disabled due to loss of network.'
+                      : 'Apartment application is currently available for students only. Support for staff will come soon!'}
+                  </h4>
+                  <br />
+                  <br />
+                  <Button
+                    color="primary"
+                    backgroundColor="white"
+                    variant="outlined"
+                    onClick={() => {
+                      window.location.pathname = '';
+                    }}
+                  >
+                    Back To Home
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        );
+      }
+    }
   } else {
     // The user is not logged in
-    // return (
-    //   <Grid container justify="center">
-    //     <Grid item xs={12} md={8}>
-    //       <Card>
-    //         <CardContent
-    //           style={{
-    //             margin: 'auto',
-    //             textAlign: 'center',
-    //           }}
-    //         >
-    //           <h1>You are not logged in.</h1>
-    //           <br />
-    //           <h4>You must be logged in to use the Timesheets page.</h4>
-    //           <br />
-    //           <Button
-    //             color="primary"
-    //             variant="contained"
-    //             onClick={() => {
-    //               window.location.pathname = '';
-    //             }}
-    //           >
-    //             Login
-    //           </Button>
-    //         </CardContent>
-    //       </Card>
-    //     </Grid>
-    //   </Grid>
-    // );
+    return (
+      <Grid container justify="center">
+        <Grid item xs={12} md={8}>
+          <Card>
+            <CardContent
+              style={{
+                margin: 'auto',
+                textAlign: 'center',
+              }}
+            >
+              <h1>You are not logged in.</h1>
+              <br />
+              <h4>You must be logged in to use the Apartment Applications page.</h4>
+              <br />
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  window.location.pathname = '';
+                }}
+              >
+                Login
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    );
   }
 };
 
-export default apartApp;
+export default ApartApp;

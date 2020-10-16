@@ -10,15 +10,16 @@ import http from './http';
  * @global
  * @typedef boolean
  * @property {status}
- * 
+ *
  */
 
 /**
  * returns current status of student housing
- * @return {Promise<any>} Response
+ * @return {Promise.<StudentHousingInfo>} Response
  */
 const getHousingInfo = async () => {
-  return await http.get(`housing/apartmentInfo`);
+  const housingInfo = await http.get(`housing/apartmentInfo`);
+  return housingInfo;
 };
 
 export default {
