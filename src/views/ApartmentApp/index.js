@@ -63,19 +63,33 @@ const ApartApp = (props) => {
   // const [snackbarSeverity, setSnackbarSeverity] = useState('');
   // const [clockInOut, setClockInOut] = useState('Clock In');
   // const [canUseStaff, setCanUseStaff] = useState(null);
+  const [personType, setPersonType] = useState(null);
+  const [profile, setProfile] = useState({});
   const [isUserStudent, setIsUserStudent] = useState(false);
   const [housingInfo, setHousingInfo] = useState(null);
-  const [housingTitle, setHousingTitle] = useState(null);
+  // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
+  const [onCampusRoom, setOnCampusRoom] = useState(null);
+  const [onOffCampus, setOnOffCampus] = useState(null);
 
-  // Sets the person type of the user
+  /**
+   * Loads the user's profile info only once (at start)
+   */
   useEffect(() => {
-    user.getProfileInfo().then((data) => {
-      // data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
-      // TODO - This is hardcoded to `true` for debug purposes only
-      // TODO - Remove this line and uncomment the real command above
-      setIsUserStudent(true);
-    });
-  });
+    async function loadProfile() {
+      setLoading(true);
+      try {
+        let profile = await user.getProfileInfo();
+        setProfile(profile);
+        const personType = String(profile.PersonType);
+        setPersonType(personType);
+        profile.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
+        setLoading(false);
+      } catch (error) {
+        // Do Nothing
+      }
+    }
+    loadProfile();
+  }, []);
 
   // // disabled lint in some lines in order to remove warning about race condition that does not apply
   // // in our current case.
@@ -126,8 +140,10 @@ const ApartApp = (props) => {
       try {
         let housingInfo = await housing.getHousingInfo();
         setHousingInfo(housingInfo);
-        let housingTitle = String(housingInfo[0].Title);
-        setHousingTitle(housingTitle);
+        let onOffCampus = String(housingInfo[0].OnOffCampus);
+        setOnOffCampus(onOffCampus);
+        let onCampusRoom = String(housingInfo[0].OnCampusRoom);
+        setOnCampusRoom(onCampusRoom);
         setLoading(false);
       } catch (error) {
         // Do Nothing
@@ -594,9 +610,11 @@ const ApartApp = (props) => {
               >
                 <h1>Hello World</h1>
                 <br />
-                <h4>The follow is information that was retrieved from the API:</h4>
+                <h3>{'You name: ' + profile.fullName}</h3>
                 <br />
-                <h3>{housingTitle}</h3>
+                <h3>{'On/Off Campus: ' + onOffCampus}</h3>
+                <br />
+                <h3>{'Your room number: ' + onCampusRoom}</h3>
               </CardContent>
             </Card>
           </Grid>
