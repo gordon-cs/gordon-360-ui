@@ -193,6 +193,67 @@ export function createTimesheetsButton(networkStatus, authenticated, onLinkClick
 }
 
 /**
+ * Creates the Apartment Application button.
+ *
+ * Depending on the status of the network, authentication, and user role, the Apartment Application
+ * button is created.
+ *
+ * @param {String} networkStatus The status of the network. Either 'online' or 'offline'.
+ * @param {Boolean} authenticated Determines if the user is logged in.
+ * @param {Function} onLinkClick Determines what occurs when the user clicks on this button.
+ * @param {Function} openDialogBox Sets the data of a dialog box to be shown if the user clicks on
+ *                                this button.
+ *
+ * @return {JSX} The JSX of the Apartment Application button.
+ */
+export function createApartmentAppButton(networkStatus, authenticated, onLinkClick, openDialogBox) {
+  let apartmentAppButton;
+  // Network Status: Online
+  if (networkStatus === 'online') {
+    // Network Status: Online - Authenticated
+    if (authenticated) {
+      apartmentAppButton = (
+        <NavLink exact to="/ApartApp" onClick={onLinkClick} className="gc360-link">
+          <ListItem divider button>
+            <ListItemText primary="Apartment Application" />
+          </ListItem>
+        </NavLink>
+      );
+    }
+    // Network Status: Online - Not Authenticated
+    else {
+      apartmentAppButton = (
+        <div
+          onClick={() => {
+            openDialogBox('unauthorized', 'apartment app view');
+          }}
+        >
+          <ListItem divider button disabled={true}>
+            <ListItemText primary="Apartment Application" />
+          </ListItem>
+        </div>
+      );
+    }
+  }
+  // Network Status: Offline
+  else {
+    apartmentAppButton = (
+      <div
+        onClick={() => {
+          openDialogBox('offline', '');
+        }}
+      >
+        <ListItem divider button disabled={true}>
+          <ListItemText primary="Apartment Application" />
+        </ListItem>
+      </div>
+    );
+  }
+
+  return apartmentAppButton;
+}
+
+/**
  * Creates the My Profile button.
  *
  * Depending on the status of the network and authentication, the My Profile button is created.
