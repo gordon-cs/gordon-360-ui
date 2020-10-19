@@ -1,47 +1,48 @@
 //Main apartment application page
-import React, { useState, useRef, useEffect } from 'react';
+// import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'date-fns';
 import {
   Grid,
   Card,
   CardContent,
-  CardHeader,
-  Link,
-  Tooltip,
-  FormControl,
-  InputLabel,
-  Select,
-  Input,
-  MenuItem,
+  // CardHeader,
+  // Link,
+  // Tooltip,
+  // FormControl,
+  // InputLabel,
+  // Select,
+  // Input,
+  // MenuItem,
   Button,
-  Typography,
-  TextField,
+  // Typography,
+  // TextField,
 } from '@material-ui/core/';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
-import { withStyles } from '@material-ui/core/styles';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { gordonColors } from '../../theme';
+// import DateFnsUtils from '@date-io/date-fns';
+// import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
+// import { withStyles } from '@material-ui/core/styles';
+// import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+// import { gordonColors } from '../../theme';
 import GordonLoader from '../../components/Loader';
-import { makeStyles } from '@material-ui/core/styles';
-import SimpleSnackbar from '../../components/Snackbar';
+// import { makeStyles } from '@material-ui/core/styles';
+// import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
 import housing from '../../services/housing';
 
-const useStyles = makeStyles((theme) => ({
-  customWidth: {
-    maxWidth: 500,
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   customWidth: {
+//     maxWidth: 500,
+//   },
+// }));
 
-const CustomTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: theme.palette.common.black,
-    color: 'rgba(255, 255, 255, 0.87)',
-    boxShadow: theme.shadows[1],
-    fontSize: 12,
-  },
-}))(Tooltip);
+// const CustomTooltip = withStyles((theme) => ({
+//   tooltip: {
+//     backgroundColor: theme.palette.common.black,
+//     color: 'rgba(255, 255, 255, 0.87)',
+//     boxShadow: theme.shadows[1],
+//     fontSize: 12,
+//   },
+// }))(Tooltip);
 
 const ApartApp = (props) => {
   const [loading, setLoading] = useState(true);
@@ -63,10 +64,10 @@ const ApartApp = (props) => {
   // const [snackbarSeverity, setSnackbarSeverity] = useState('');
   // const [clockInOut, setClockInOut] = useState('Clock In');
   // const [canUseStaff, setCanUseStaff] = useState(null);
-  const [personType, setPersonType] = useState(null);
+  // const [personType, setPersonType] = useState(null);
   const [profile, setProfile] = useState({});
   const [isUserStudent, setIsUserStudent] = useState(false);
-  const [housingInfo, setHousingInfo] = useState(null);
+  // const [housingInfo, setHousingInfo] = useState(null);
   // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
   const [onCampusRoom, setOnCampusRoom] = useState(null);
   const [onOffCampus, setOnOffCampus] = useState(null);
@@ -80,8 +81,8 @@ const ApartApp = (props) => {
       try {
         let profile = await user.getProfileInfo();
         setProfile(profile);
-        const personType = String(profile.PersonType);
-        setPersonType(personType);
+        // const personType = String(profile.PersonType);
+        // setPersonType(personType);
         profile.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
         setLoading(false);
       } catch (error) {
@@ -139,7 +140,7 @@ const ApartApp = (props) => {
       setLoading(true);
       try {
         let housingInfo = await housing.getHousingInfo();
-        setHousingInfo(housingInfo);
+        // setHousingInfo(housingInfo);
         let onOffCampus = String(housingInfo[0].OnOffCampus);
         setOnOffCampus(onOffCampus);
         let onCampusRoom = String(housingInfo[0].OnCampusRoom);
@@ -370,93 +371,93 @@ const ApartApp = (props) => {
     //   <></>
     // );
 
-    const isLeapYear = (date) => {
-      if (date.getFullYear() % 4 === 0) {
-        if (date.getFullYear() % 100 === 0) {
-          if (date.getFullYear() % 400 !== 0) {
-            return false;
-          } else {
-            return true;
-          }
-        } else {
-          return true;
-        }
-      } else {
-        return false;
-      }
-    };
+    // const isLeapYear = (date) => {
+    //   if (date.getFullYear() % 4 === 0) {
+    //     if (date.getFullYear() % 100 === 0) {
+    //       if (date.getFullYear() % 400 !== 0) {
+    //         return false;
+    //       } else {
+    //         return true;
+    //       }
+    //     } else {
+    //       return true;
+    //     }
+    //   } else {
+    //     return false;
+    //   }
+    // };
 
-    const getNextDate = (date) => {
-      let is30DayMonth =
-        date.getMonth() === 3 ||
-        date.getMonth() === 5 ||
-        date.getMonth() === 8 ||
-        date.getMonth() === 10;
+    // const getNextDate = (date) => {
+    //   let is30DayMonth =
+    //     date.getMonth() === 3 ||
+    //     date.getMonth() === 5 ||
+    //     date.getMonth() === 8 ||
+    //     date.getMonth() === 10;
 
-      let isFebruary = date.getMonth() === 1;
-      let isDecember = date.getMonth() === 11;
-      let nextDate;
-      let monthToReturn;
-      let yearToReturn;
+    //   let isFebruary = date.getMonth() === 1;
+    //   let isDecember = date.getMonth() === 11;
+    //   let nextDate;
+    //   let monthToReturn;
+    //   let yearToReturn;
 
-      if (isFebruary) {
-        if (isLeapYear(date)) {
-          if (date.getDate() === 29) {
-            nextDate = 1;
-            monthToReturn = 2;
-            yearToReturn = date.getFullYear();
-          } else {
-            nextDate = date.getDate() + 1;
-            monthToReturn = date.getMonth();
-            yearToReturn = date.getFullYear();
-          }
-        } else if (date.getDate() === 28) {
-          nextDate = 1;
-          monthToReturn = 2;
-          yearToReturn = date.getFullYear();
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      } else if (isDecember) {
-        if (date.getDate() === 31) {
-          nextDate = 1;
-          monthToReturn = 0;
-          yearToReturn = date.getFullYear() + 1;
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      } else if (is30DayMonth) {
-        if (date.getDate() === 30) {
-          nextDate = 1;
-          monthToReturn = date.getMonth() + 1;
-          yearToReturn = date.getFullYear();
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      } else {
-        if (date.getDate() === 31) {
-          nextDate = 1;
-          monthToReturn = date.getMonth() + 1;
-          yearToReturn = date.getFullYear();
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      }
+    //   if (isFebruary) {
+    //     if (isLeapYear(date)) {
+    //       if (date.getDate() === 29) {
+    //         nextDate = 1;
+    //         monthToReturn = 2;
+    //         yearToReturn = date.getFullYear();
+    //       } else {
+    //         nextDate = date.getDate() + 1;
+    //         monthToReturn = date.getMonth();
+    //         yearToReturn = date.getFullYear();
+    //       }
+    //     } else if (date.getDate() === 28) {
+    //       nextDate = 1;
+    //       monthToReturn = 2;
+    //       yearToReturn = date.getFullYear();
+    //     } else {
+    //       nextDate = date.getDate() + 1;
+    //       monthToReturn = date.getMonth();
+    //       yearToReturn = date.getFullYear();
+    //     }
+    //   } else if (isDecember) {
+    //     if (date.getDate() === 31) {
+    //       nextDate = 1;
+    //       monthToReturn = 0;
+    //       yearToReturn = date.getFullYear() + 1;
+    //     } else {
+    //       nextDate = date.getDate() + 1;
+    //       monthToReturn = date.getMonth();
+    //       yearToReturn = date.getFullYear();
+    //     }
+    //   } else if (is30DayMonth) {
+    //     if (date.getDate() === 30) {
+    //       nextDate = 1;
+    //       monthToReturn = date.getMonth() + 1;
+    //       yearToReturn = date.getFullYear();
+    //     } else {
+    //       nextDate = date.getDate() + 1;
+    //       monthToReturn = date.getMonth();
+    //       yearToReturn = date.getFullYear();
+    //     }
+    //   } else {
+    //     if (date.getDate() === 31) {
+    //       nextDate = 1;
+    //       monthToReturn = date.getMonth() + 1;
+    //       yearToReturn = date.getFullYear();
+    //     } else {
+    //       nextDate = date.getDate() + 1;
+    //       monthToReturn = date.getMonth();
+    //       yearToReturn = date.getFullYear();
+    //     }
+    //   }
 
-      return {
-        date: nextDate,
-        month: monthToReturn,
-        year: yearToReturn,
-      };
-    };
+    //   return {
+    //     date: nextDate,
+    //     month: monthToReturn,
+    //     year: yearToReturn,
+    //   };
+    // };
 
     // const changeState = async () => {
     //   if (clockInOut === 'Clock In') {
@@ -479,12 +480,12 @@ const ApartApp = (props) => {
     //   }
     // };
 
-    const handleCloseSnackbar = (event, reason) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-      //setSnackbarOpen(false);
-    };
+    // const handleCloseSnackbar = (event, reason) => {
+    //   if (reason === 'clickaway') {
+    //     return;
+    //   }
+    //   //setSnackbarOpen(false);
+    // };
 
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
@@ -492,9 +493,17 @@ const ApartApp = (props) => {
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
     window.addEventListener('message', (event) => {
-      if (event.data === 'online' && event.origin === window.location.origin) {
+      if (
+        event.data === 'online' &&
+        network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
         setNetwork('online');
-      } else if (event.data === 'offline' && event.origin === window.location.origin) {
+      } else if (
+        event.data === 'offline' &&
+        network === 'online' &&
+        event.origin === window.location.origin
+      ) {
         setNetwork('offline');
       }
     });
@@ -599,26 +608,33 @@ const ApartApp = (props) => {
 
     if (networkStatus === 'online' && isUserStudent && props.Authentication) {
       return (
-        <Grid container justify="center">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <h1>Hello World</h1>
-                <br />
-                <h3>{'You name: ' + profile.fullName}</h3>
-                <br />
-                <h3>{'On/Off Campus: ' + onOffCampus}</h3>
-                <br />
-                <h3>{'Your room number: ' + onCampusRoom}</h3>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        <div>
+          {loading && <GordonLoader />}
+          {!loading && (
+            <div className="apartment-application">
+              <Grid container justify="center">
+                <Grid item xs={12} md={8}>
+                  <Card>
+                    <CardContent
+                      style={{
+                        margin: 'auto',
+                        textAlign: 'center',
+                      }}
+                    >
+                      <h1>Hello World</h1>
+                      <br />
+                      <h3>{'You name: ' + profile.fullName}</h3>
+                      <br />
+                      <h3>{'On/Off Campus: ' + onOffCampus}</h3>
+                      <br />
+                      <h3>{'Your room number: ' + onCampusRoom}</h3>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </div>
+          )}
+        </div>
       );
     } else {
       // If the network is offline or the user type is non-student
