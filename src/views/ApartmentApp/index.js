@@ -1,5 +1,4 @@
 //Main apartment application page
-// import React, { useState, useRef, useEffect } from 'react';
 import React, { useState, useEffect } from 'react';
 import 'date-fns';
 import {
@@ -26,6 +25,7 @@ import {
 import GordonLoader from '../../components/Loader';
 // import { makeStyles } from '@material-ui/core/styles';
 // import SimpleSnackbar from '../../components/Snackbar';
+import ApartmentPeopleSearch from '../../components/ApartmentPeopleSearch';
 import user from '../../services/user';
 import housing from '../../services/housing';
 
@@ -628,6 +628,12 @@ const ApartApp = (props) => {
                       <h3>{'On/Off Campus: ' + onOffCampus}</h3>
                       <br />
                       <h3>{'Your room number: ' + onCampusRoom}</h3>
+                      <br />
+                      <ApartmentPeopleSearch Authentication={props.Authentication} />
+                      <br />
+                      <ApartmentPeopleSearch Authentication={props.Authentication} />
+                      <br />
+                      <ApartmentPeopleSearch Authentication={props.Authentication} />
                     </CardContent>
                   </Card>
                 </Grid>
