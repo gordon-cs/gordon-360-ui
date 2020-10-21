@@ -491,7 +491,7 @@ export default class GordonHeader extends Component {
 
             <Typography className="title disable-select" variant="h6" color="inherit">
               <Switch>
-                {routes.map(route => (
+                {routes.map((route) => (
                   <Route
                     key={route.path}
                     path={route.path}
@@ -523,7 +523,8 @@ export default class GordonHeader extends Component {
                 {/* Uncomment when re-enabling timesheets link */}
                 {/* this.createTimesheetsTab() */}
                 {this.createWellnessTab()}
-                {this.createApartmentAppTab()}
+                {/* Uncomment when re-enabling apartment application link */}
+                {/* this.createApartmentAppTab() */}
               </Tabs>
             </div>
 
