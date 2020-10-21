@@ -1,7 +1,51 @@
-import React from 'react';
+import Downshift from 'downshift';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import Paper from '@material-ui/core/Paper';
+import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import 'date-fns';
-import { Link, MenuItem, Typography } from '@material-ui/core/';
+// import { Button, MenuItem, Typography } from '@material-ui/core/';
 import GordonPeopleSearch from '../../components/Header/components/PeopleSearch';
+import './apartment-people-search.css';
+const MIN_QUERY_LENGTH = 2;
+
+//  TextBox Input Field
+const renderInput = (inputProps) => {
+  const { autoFocus, value, ref, ...other } = inputProps;
+
+  return (
+    <TextField
+      autoFocus={autoFocus}
+      value={value}
+      inputRef={ref}
+      className={'text-field'}
+      InputProps={{
+        disableUnderline: true,
+        classes: {
+          root: 'people-search-root',
+          input: 'people-search-input',
+          inputDisabled: 'people-search-disabled',
+        },
+        startAdornment: (
+          <InputAdornment position="start">
+            <PersonAddIcon />
+          </InputAdornment>
+        ),
+        ...other,
+      }}
+    />
+  );
+};
 
 /*
  * Modified version of the PeopleSearch, sends search result to
@@ -14,7 +58,12 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
   }
 
   // Send the UserName of the selected student to the ApartmentApp backend
-  setApplicant() {
+  setApplicant(userName) {
+    // TODO - Implement sending this username to the API
+
+    // TODO - delete this line once method is fully implemented
+    console.log('The following UserName was selected: ' + userName);
+
     this.reset();
   }
 
@@ -30,9 +79,18 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
       <MenuItem
         {...itemProps}
         key={suggestion.UserName}
-        component={Link}
-        to={`/profile/${suggestion.UserName}`}
-        onClick={this.reset} // TODO Change this to call a method which send the UserName to the backend
+        button={true}
+        // component={Button}
+        action={
+          //`/profile/${suggestion.UserName}`}
+          suggestionList &&
+          suggestionList[suggestionIndex] !== undefined &&
+          suggestion.UserName === suggestionList[suggestionIndex].UserName &&
+          suggestionIndex !== -1
+            ? this.setApplicant(suggestionList[suggestionIndex].UserName)
+            : console.log('Nope: ' + suggestion.UserName)
+        }
+        onClick={this.reset}
         className={
           suggestionList && suggestionList[suggestionIndex] !== undefined
             ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
@@ -88,5 +146,135 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
         </Typography>
       </MenuItem>
     );
+  }
+
+  render() {
+    /* Used to re-render the page when the network connection changes.
+     *  this.state.network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', (event) => {
+      if (
+        event.data === 'online' &&
+        this.state.network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        this.state.network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'offline' });
+      }
+    });
+
+    /* Gets status of current network connection for online/offline rendering
+     *  Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+
+    let holder = 'People Search';
+    if (window.innerWidth < this.breakpointWidth) {
+      holder = 'People';
+      if (networkStatus === 'offline') holder = 'Offline';
+    } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
+
+    let content;
+    if (this.props.Authentication) {
+      // Creates the People Search Bar depending on the status of the network found in local storage
+      content = (
+        // Assign reference to Downshift to `this` for usage elsewhere in the component
+        <Downshift
+          ref={(downshift) => {
+            this.downshift = downshift;
+          }}
+        >
+          {({ getInputProps, getItemProps, isOpen }) => (
+            <span className="apartment-people-search">
+              {networkStatus === 'online'
+                ? renderInput(
+                    getInputProps({
+                      placeholder: holder,
+                      onChange: (event) => this.getSuggestions(event.target.value),
+                      onKeyDown: (event) => this.handleKeys(event.key),
+                    }),
+                  )
+                : renderInput(
+                    getInputProps({
+                      placeholder: holder,
+                      style: { color: 'white' },
+                      disabled: { networkStatus },
+                    }),
+                  )}
+              {isOpen &&
+              this.state.suggestions.length > 0 &&
+              this.state.query.length >= MIN_QUERY_LENGTH ? (
+                <Paper square className="people-search-dropdown">
+                  {this.state.suggestions.map((suggestion) =>
+                    this.renderSuggestion({
+                      suggestion,
+                      itemProps: getItemProps({ item: suggestion.UserName }),
+                    }),
+                  )}
+                </Paper>
+              ) : isOpen &&
+                this.state.suggestions.length === 0 &&
+                this.state.query.length >= MIN_QUERY_LENGTH ? (
+                // Styling copied from how renderSuggestion is done with
+                // only bottom padding changed and 'no-results' class used
+                <Paper square className="people-search-dropdown">
+                  {this.renderNoResult()}
+                </Paper>
+              ) : null}
+            </span>
+          )}
+        </Downshift>
+      );
+    } else {
+      content = (
+        <span className="apartment-people-search">
+          <TextField
+            placeholder="People Search"
+            fullWidth
+            value={''}
+            onChange={(event) => this.unauthenticatedSearch()}
+            className={'text-field'}
+            InputProps={{
+              disableUnderline: true,
+              classes: {
+                root: 'people-search-root',
+                input: 'people-search-input',
+              },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonAddIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Dialog
+            open={this.state.loginDialog}
+            onClose={(clicked) => this.handleClose()}
+            aria-labelledby="login-dialog-title"
+            aria-describedby="login-dialog-description"
+          >
+            <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="login-dialog-description">
+                You are not logged in. Please log in to use People Search.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" onClick={(clicked) => this.handleClose()} color="primary">
+                Okay
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </span>
+      );
+    }
+    return content;
   }
 }
