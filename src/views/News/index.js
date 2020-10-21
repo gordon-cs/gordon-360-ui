@@ -297,10 +297,10 @@ export default class StudentNews extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if(this.props.Authentication) {
-
+      
       if (this.state.loading === true) {
         content = <GordonLoader />;
-      } else if (this.state.news.length > 0) {
+      } else if (this.state.news.length > 0 || this.state.personalUnapprovedNews.length > 0) {
         content = <NewsList 
           news={this.state.filteredNews} 
           personalUnapprovedNews={this.state.personalUnapprovedNews}
