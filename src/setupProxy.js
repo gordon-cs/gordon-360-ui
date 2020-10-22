@@ -6,6 +6,6 @@ module.exports = app => {
   // app.use(proxy('/token', { target: 'https://360Api.gordon.edu/', changeOrigin: true }));
 
   // @TRAIN
-  app.use(proxy('/api', { target: 'http://localhost:2550/', changeOrigin: true }));
-  app.use(proxy('/token', { target: 'http://localhost:2550/', changeOrigin: true }));
+  app.use(proxy('/api', { target: 'http://360apitrain.gordon.edu/', changeOrigin: true }));
+  app.use(proxy('/token', { target: 'http://360apitrain.gordon.edu/', changeOrigin: true }));
 };

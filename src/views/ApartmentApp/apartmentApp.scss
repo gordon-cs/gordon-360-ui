@@ -1,7 +1,20 @@
 @import '../../vars';
 
 .apartment-application {
-  display: grid;
-  // justify: center;
-  width: 80%;
+  justify-content: center;
+  display: flex;
+  &-card {
+    flex-grow: 0;
+    max-width: 66.666667%;
+    flex-basis: 66.666667%;
+  }
+}
+
+@media (max-width: $break-xs) {
+  .apartment-application {
+    &-card {
+      max-width: 100%;
+      flex-basis: 100%;
+    }
+  }
 }

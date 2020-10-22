@@ -29,7 +29,6 @@ const renderInput = (inputProps) => {
       inputRef={ref}
       className={'text-field'}
       InputProps={{
-        disableUnderline: true,
         classes: {
           root: 'people-search-root',
           input: 'people-search-input',
@@ -241,7 +240,6 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
             onChange={() => this.unauthenticatedSearch()}
             className={'text-field'}
             InputProps={{
-              disableUnderline: true,
               classes: {
                 root: 'people-search-root',
                 input: 'people-search-input',
