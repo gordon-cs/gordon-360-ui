@@ -53,17 +53,63 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
   contructor() {
     // super(props);
     this.renderSuggestion = this.renderSuggestion.bind(this);
+    this.holder = '';
   }
 
-  // Send the UserName of the selected student to the ApartmentApp backend
-  setApplicant(userName) {
+  setText(text) {
+    this.holder = text;
+  }
+
+  setApplicant(theChosenOne) {
     // TODO - Implement sending this username to the API
+    console.log('DEBUG: The following UserName was selected: ' + theChosenOne);
 
-    // TODO - delete this line once method is fully implemented
-    console.log('The following UserName was selected: ' + userName);
+    /* // TODO
+     * Send the UserName to the backend,
+     * have the backend add this user to the appartment application,
+     *then have the backend use the UserName to get the fullName using _profileService,
+     * and the backend will return this fullName as a verification of success.
+     * The frontend will recieve this fullname and then do
+     */
 
+    // TODO - This line does not work, the render must be updated
+    // Set the text to the selected name
+    this.holder = theChosenOne;
+  }
+
+  handleClick(theChosenOne) {
+    this.setApplicant(theChosenOne);
     this.reset();
   }
+
+  handleKeys = (key) => {
+    let suggestionIndex = this.state.suggestionIndex;
+    let suggestionList = this.state.suggestions;
+    let theChosenOne;
+
+    if (key === 'Enter') {
+      if (suggestionList && suggestionList.length > 0) {
+        suggestionIndex === -1
+          ? (theChosenOne = suggestionList[0].UserName)
+          : (theChosenOne = suggestionList[suggestionIndex].UserName);
+        this.setApplicant(theChosenOne);
+        this.reset();
+      }
+    }
+    if (key === 'ArrowDown') {
+      suggestionIndex++;
+      suggestionIndex = suggestionIndex % suggestionList.length;
+      this.setState({ suggestionIndex });
+    }
+    if (key === 'ArrowUp') {
+      if (suggestionIndex !== -1) suggestionIndex--;
+      if (suggestionIndex === -1) suggestionIndex = suggestionList.length - 1;
+      this.setState({ suggestionIndex });
+    }
+    if (key === 'Backspace') {
+      this.setState({ suggestions: [] });
+    }
+  };
 
   renderSuggestion(params) {
     const { suggestion, itemProps } = params;
@@ -77,18 +123,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
       <MenuItem
         {...itemProps}
         key={suggestion.UserName}
-        button={true}
-        // component={Button}
-        action={
-          //`/profile/${suggestion.UserName}`}
-          suggestionList &&
-          suggestionList[suggestionIndex] !== undefined &&
-          suggestion.UserName === suggestionList[suggestionIndex].UserName &&
-          suggestionIndex !== -1
-            ? this.setApplicant(suggestionList[suggestionIndex].UserName)
-            : console.log('Nope: ' + suggestion.UserName)
-        }
-        onClick={this.reset}
+        onClick={this.handleClick.bind(this, suggestion.UserName)}
         className={
           suggestionList && suggestionList[suggestionIndex] !== undefined
             ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
@@ -173,11 +208,11 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
      */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-    let holder = 'People Search';
+    this.holder = 'People Search';
     if (window.innerWidth < this.breakpointWidth) {
-      holder = 'People';
-      if (networkStatus === 'offline') holder = 'Offline';
-    } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
+      this.holder = 'People';
+      if (networkStatus === 'offline') this.holder = 'Offline';
+    } else if (networkStatus === 'offline') this.holder = 'Offline-Unavailable';
 
     let content;
     if (this.props.Authentication) {
@@ -194,14 +229,14 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
               {networkStatus === 'online'
                 ? renderInput(
                     getInputProps({
-                      placeholder: holder,
+                      placeholder: this.holder,
                       onChange: (event) => this.getSuggestions(event.target.value),
                       onKeyDown: (event) => this.handleKeys(event.key),
                     }),
                   )
                 : renderInput(
                     getInputProps({
-                      placeholder: holder,
+                      placeholder: this.holder,
                       style: { color: 'white' },
                       disabled: { networkStatus },
                     }),
