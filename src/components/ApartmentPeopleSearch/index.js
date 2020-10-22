@@ -11,8 +11,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import 'date-fns';
 // import { Button, MenuItem, Typography } from '@material-ui/core/';
 import GordonPeopleSearch from '../../components/Header/components/PeopleSearch';
@@ -239,7 +238,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
             placeholder="People Search"
             fullWidth
             value={''}
-            onChange={(event) => this.unauthenticatedSearch()}
+            onChange={() => this.unauthenticatedSearch()}
             className={'text-field'}
             InputProps={{
               disableUnderline: true,
@@ -256,7 +255,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
           />
           <Dialog
             open={this.state.loginDialog}
-            onClose={(clicked) => this.handleClose()}
+            onClose={() => this.handleClose()}
             aria-labelledby="login-dialog-title"
             aria-describedby="login-dialog-description"
           >
@@ -267,7 +266,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" onClick={(clicked) => this.handleClose()} color="primary">
+              <Button variant="contained" onClick={() => this.handleClose()} color="primary">
                 Okay
               </Button>
             </DialogActions>
