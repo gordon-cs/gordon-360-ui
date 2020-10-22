@@ -107,6 +107,7 @@ class ProfileList extends Component {
     super(props);
     this.state = {
       myProf: false, //if my profile page
+      campusLocationDisclaimer: false,
       mobilePhoneDisclaimer: false,
       homePhoneDisclaimer: false,
       addressDisclaimer: false,
@@ -151,6 +152,11 @@ class ProfileList extends Component {
   async componentWillMount() {
     this.setState({ isMobilePhonePrivate: this.props.profile.IsMobilePhonePrivate });
     if (!this.props.myProf) {
+      this.setState({
+        campusLocationDisclaimer:
+          (this.props.profile.KeepPrivate === 'S' || this.props.profile.KeepPrivate === 'P') &&
+          this.props.profile.OnOffCampus !== PRIVATE_INFO,
+      });
       this.setState({
         mobilePhoneDisclaimer:
           this.props.profile.IsMobilePhonePrivate === 1 &&
@@ -238,7 +244,12 @@ class ProfileList extends Component {
     let advisors = createAdvisorsListItem(this.props.profile, rowWidths, { gridStyle });
 
     // Creates the Residence List Item
-    let residence = createResidenceListItem(this.props.profile, rowWidths, { gridStyle });
+    let residence = createResidenceListItem(
+      this.props.profile,
+      rowWidths,
+      { gridStyle },
+      this.state.campusLocationDisclaimer,
+    );
 
     // Creates the Mailbox List Item
     let mailloc = createMailboxItem(this.props.profile, rowWidths, { gridStyle });
@@ -249,6 +260,7 @@ class ProfileList extends Component {
       rowWidths,
       { privateTextStyle, gridStyle },
       this.props.myProf,
+      this.state.campusLocationDisclaimer,
     );
 
     // Creates the Student ID List Item
