@@ -391,10 +391,20 @@ const getLocalInfo = () => {
 };
 
 function sortAtndEventsByTime(a, b) {
-  if (a.CHDate < b.CHDate) {
+
+  let timeA = a.CHDate;
+  if (a.Occurrences[0]) {
+    timeA = a.Occurrences[0][0];
+  }
+  let timeB = b.CHDate;
+  if (b.Occurrences[0]) {
+    timeB = b.Occurrences[0][0];
+  }
+
+  if (timeA < timeB) {
     return -1;
   }
-  if (a.CHDate > b.CHDate) {
+  if (timeA > timeB) {
     return 1;
   }
   return 0;
