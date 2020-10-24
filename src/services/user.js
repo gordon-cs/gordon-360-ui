@@ -390,17 +390,26 @@ const getLocalInfo = () => {
   }
 };
 
+function sortAtndEventsByTime(a, b) {
+  if (a.CHDate < b.CHDate) {
+    return -1;
+  }
+  if (a.CHDate > b.CHDate) {
+    return 1;
+  }
+  return 0;
+}
+
 //Call function to retrieve events from database then format them
 const getAttendedChapelEventsFormatted = async () => {
   const termCode = session.getTermCode();
   const attendedEvents = await getAttendedChapelEvents(termCode);
   const events = [];
-  attendedEvents.sort(gordonEvent.sortByTime);
   for (let i = 0; i < attendedEvents.length; i += 1) {
     events.push(attendedEvents[i]);
     gordonEvent.formatevent(attendedEvents[i]);
   }
-  return events.sort(gordonEvent.sortByTime);
+  return events.sort(sortAtndEventsByTime);
 };
 
 /**
