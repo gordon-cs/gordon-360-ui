@@ -2,9 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import 'date-fns';
 import { Grid, Card, CardContent, Button } from '@material-ui/core/';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import PersonIcon from '@material-ui/icons/Person';
 import GordonLoader from '../../components/Loader';
 import ApartmentPeopleSearch from '../../components/ApartmentPeopleSearch';
 import user from '../../services/user';
@@ -106,28 +103,17 @@ const ApartApp = (props) => {
                   <br />
                   <h3>{'Your room number: ' + onCampusRoom}</h3>
                   <br />
-                  <TextField
-                    placeholder="People Search"
-                    value={profile.fullName}
-                    // inputRef={ref}
-                    className={'text-field'}
-                    InputProps={{
-                      classes: {
-                        root: 'people-search-root',
-                        input: 'people-search-input',
-                        inputDisabled: 'people-search-disabled',
-                      },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <PersonIcon />
-                        </InputAdornment>
-                      ),
-                    }}
+                  <ApartmentPeopleSearch
+                    Authentication={props.Authentication}
+                    AutoFillName={profile.fullName}
                   />
                   <br />
-                  <ApartmentPeopleSearch Authentication={props.Authentication} />
                   <br />
                   <ApartmentPeopleSearch Authentication={props.Authentication} />
+                  <br />
+                  <br />
+                  <ApartmentPeopleSearch Authentication={props.Authentication} />
+                  <br />
                   <br />
                   <ApartmentPeopleSearch Authentication={props.Authentication} />
                 </CardContent>

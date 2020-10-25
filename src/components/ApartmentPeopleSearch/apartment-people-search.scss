@@ -7,7 +7,7 @@
     overflow-y: auto; // make this to scroll
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    left: 50%;
+    align-self: flex-start;
     z-index: 2;
     border-radius: 4px;
   }
@@ -80,7 +80,7 @@
     }
   }
 
-  @media (min-width: 0px) {
+  /*@media (min-width: 0px) {
     .people-search-dropdown {
       width: 7rem;
     }
@@ -199,7 +199,7 @@
     .people-search-suggestion-selected {
       width: 11.15rem;
     }
-  }
+  }*/
 
   .people-search-root {
     align-self: flex-start;
@@ -208,7 +208,6 @@
     transition: box-shadow 0.3s, width 0.3s;
     //margin-right: 0.75rem;
     border-radius: 4px;
-    border: 1px solid $neutral-dark-gray;
     padding: 2px 10px;
     &:focus-within {
       box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.25);

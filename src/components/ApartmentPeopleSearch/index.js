@@ -2,6 +2,7 @@ import Downshift from 'downshift';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import PersonIcon from '@material-ui/icons/Person';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
@@ -13,8 +14,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import React from 'react';
 import 'date-fns';
-// import { Button, MenuItem, Typography } from '@material-ui/core/';
 import GordonPeopleSearch from '../../components/Header/components/PeopleSearch';
+// import housing from '../../services/housing';
 import './apartment-people-search.css';
 const MIN_QUERY_LENGTH = 2;
 
@@ -27,6 +28,10 @@ const renderInput = (inputProps) => {
       autoFocus={autoFocus}
       value={value}
       inputRef={ref}
+      id="people-search"
+      label="Applicant Name"
+      type="search"
+      variant="outlined"
       className={'text-field'}
       InputProps={{
         classes: {
@@ -46,23 +51,27 @@ const renderInput = (inputProps) => {
 };
 
 /*
- * Modified version of the PeopleSearch, sends search result to
- * ApartmentApp backend rather than redirecting to student profile page.
+ * Modified subclass of the PeopleSearch, sends username of selectec search result to
+ * ApartmentApp backend rather than redirecting the user to student profile page.
  */
 export default class ApartmentPeopleSearch extends GordonPeopleSearch {
   contructor() {
     // super(props);
     this.renderSuggestion = this.renderSuggestion.bind(this);
-    this.holder = '';
-  }
-
-  setText(text) {
-    this.holder = text;
+    this.handleKeys = this.handleKeys.bind(this);
+    this.state = {
+      fullName: '',
+      userName: '',
+    };
   }
 
   setApplicant(theChosenOne) {
     // TODO - Implement sending this username to the API
     console.log('DEBUG: The following UserName was selected: ' + theChosenOne);
+    alert(theChosenOne ? `You selected ${theChosenOne}` : 'Selection Cleared');
+
+    let userName = theChosenOne;
+    this.setState({ userName });
 
     /* // TODO
      * Send the UserName to the backend,
@@ -72,14 +81,11 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
      * The frontend will recieve this fullname and then do
      */
 
-    // TODO - This line does not work, the render must be updated
-    // Set the text to the selected name
-    this.holder = theChosenOne;
-  }
+    // TODO use api to get FullName of student from the username stored in 'theChosenOne'
+    // let fullName = await housing.editApplication(theChosenOne); // API Route names have not been decided yet
 
-  handleClick(theChosenOne) {
-    this.setApplicant(theChosenOne);
-    this.reset();
+    // Set the text to the selected name
+    // this.setState({ fullName });
   }
 
   handleKeys = (key) => {
@@ -93,7 +99,6 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
           ? (theChosenOne = suggestionList[0].UserName)
           : (theChosenOne = suggestionList[suggestionIndex].UserName);
         this.setApplicant(theChosenOne);
-        this.reset();
       }
     }
     if (key === 'ArrowDown') {
@@ -123,7 +128,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
       <MenuItem
         {...itemProps}
         key={suggestion.UserName}
-        onClick={this.handleClick.bind(this, suggestion.UserName)}
+        // onClick={this.handleClick.bind(this, suggestion)}
         className={
           suggestionList && suggestionList[suggestionIndex] !== undefined
             ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
@@ -208,14 +213,41 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
      */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-    this.holder = 'People Search';
+    let holder = 'People Search';
     if (window.innerWidth < this.breakpointWidth) {
-      this.holder = 'People';
-      if (networkStatus === 'offline') this.holder = 'Offline';
-    } else if (networkStatus === 'offline') this.holder = 'Offline-Unavailable';
+      holder = 'People';
+      if (networkStatus === 'offline') holder = 'Offline';
+    } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
 
     let content;
-    if (this.props.Authentication) {
+    if (this.props.AutoFillName) {
+      // Creates an non-editable People Search Bar which displays the string given by AutoFillName
+      content = (
+        <span className="apartment-people-search">
+          <TextField
+            value={this.props.AutoFillName}
+            id="filled-people-search"
+            label="Your Name"
+            type="search"
+            variant="outlined"
+            className={'text-field'}
+            InputProps={{
+              classes: {
+                root: 'people-search-root',
+                input: 'people-search-input',
+                inputDisabled: 'people-search-input',
+              },
+              readOnly: true,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </span>
+      );
+    } else if (this.props.Authentication) {
       // Creates the People Search Bar depending on the status of the network found in local storage
       content = (
         // Assign reference to Downshift to `this` for usage elsewhere in the component
@@ -223,20 +255,22 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
           ref={(downshift) => {
             this.downshift = downshift;
           }}
+          onChange={(selection) => this.setApplicant(selection)}
         >
           {({ getInputProps, getItemProps, isOpen }) => (
             <span className="apartment-people-search">
               {networkStatus === 'online'
                 ? renderInput(
                     getInputProps({
-                      placeholder: this.holder,
+                      placeholder: holder,
                       onChange: (event) => this.getSuggestions(event.target.value),
                       onKeyDown: (event) => this.handleKeys(event.key),
                     }),
                   )
                 : renderInput(
                     getInputProps({
-                      placeholder: this.holder,
+                      placeholder: holder,
+                      // placeholder: this.state.holder,
                       style: { color: 'white' },
                       disabled: { networkStatus },
                     }),
@@ -273,6 +307,10 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
             fullWidth
             value={''}
             onChange={() => this.unauthenticatedSearch()}
+            id="people-search"
+            label="Applicant Name"
+            type="search"
+            variant="outlined"
             className={'text-field'}
             InputProps={{
               classes: {
