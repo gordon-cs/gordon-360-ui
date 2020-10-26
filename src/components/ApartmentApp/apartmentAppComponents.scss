@@ -1,8 +1,9 @@
 @import '../../vars';
 
 .apartment-applicant-list {
-  display: block;
-  // flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   .applicant-list-root {
     align-self: flex-start;
     color: inherit;
