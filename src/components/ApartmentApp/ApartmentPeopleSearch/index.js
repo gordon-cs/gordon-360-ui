@@ -5,17 +5,9 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
-// import Dialog from '@material-ui/core/Dialog';
-// import DialogActions from '@material-ui/core/DialogActions';
-// import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
-// import DialogTitle from '@material-ui/core/DialogTitle';
-// import Button from '@material-ui/core/Button';
 import React from 'react';
 import 'date-fns';
 import GordonPeopleSearch from '../../../components/Header/components/PeopleSearch';
-import user from './../../../services/user';
-// import housing from '../../../services/housing';
 import '../apartmentAppComponents.css';
 const MIN_QUERY_LENGTH = 2;
 
@@ -37,24 +29,12 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
 
   handleSelection = (theChosenOne) => {
     // Make sure the chosen username was not null
-    if (theChosenOne !== null) {
+    if (theChosenOne && theChosenOne !== null) {
       console.log('DEBUG - Component: The following UserName was selected: ' + theChosenOne);
-      try {
-        const profile = user.getProfileInfo(theChosenOne);
-        const personType = String(profile.PersonType);
-        // Only add the person to the application if they are a student
-        if (personType.includes('stu')) {
-          // Send the selected username to the parent component
-          this.props.onSearchSelect(theChosenOne);
-        } else {
-          this.props.onSearchSelect(null);
-          console.log('Not Student' + personType);
-        }
-        // Reset the search box
-        this.reset();
-      } catch (error) {
-        // Do Nothing
-      }
+      // Send the selected username to the parent component
+      this.props.onSearchSelect(theChosenOne);
+      // Reset the search box
+      this.reset();
     }
   };
 

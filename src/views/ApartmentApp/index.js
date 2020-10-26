@@ -7,7 +7,7 @@ import PersonIcon from '@material-ui/icons/Person';
 // import { gordonColors } from '../../theme';
 import GordonLoader from '../../components/Loader';
 import ApartmentPeopleSearch from '../../components/ApartmentApp/ApartmentPeopleSearch';
-import ApplicantListFields from '../../components/ApartmentApp/ApplicantList';
+import ApplicantListField from '../../components/ApartmentApp/ApplicantList';
 import user from '../../services/user';
 import housing from '../../services/housing';
 import './apartmentApp.css';
@@ -22,31 +22,37 @@ export default class ApartApp extends Component {
       loading: true,
       network: 'online',
       profile: {},
-      applicantList: [],
-      numberOfApplicants: 0,
-      searchResult: '',
+      applicantProfileList: [],
       // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
       onCampusRoom: null,
       onOffCampus: null,
     };
   }
 
+  /**
+   * Callback for apartment people search submission
+   * @param {String} searchSelection Username for student
+   */
   onSearchSubmit = (searchSelection) => {
-    this.setState({ searchResult: searchSelection });
-
     console.log('Received username: ' + searchSelection);
-    console.log(this.state.searchResult);
-
-    if (this.state.searchResult === null) {
-      alert('An error occur with the search bar');
-    } else {
-      let applicantList = this.state.applicantList;
-      applicantList.push(this.state.searchResult);
-      this.setState({ applicantList });
-      let numberOfApplicants = this.state.numberOfApplicants + 1;
-      this.setState({ numberOfApplicants });
+    if (searchSelection && searchSelection !== null) {
+      // Method separated from callback because profile must be handled inside an async function/method
+      this.addApplicantToList(searchSelection);
     }
   };
+
+  async addApplicantToList(username) {
+    try {
+      // Get the profile of the selected user
+      let profile = await user.getProfileInfo(username);
+      // Add the profile object to the list of applicants
+      let applicantProfileList = this.state.applicantProfileList;
+      applicantProfileList.push(profile);
+      this.setState({ applicantProfileList });
+    } catch (error) {
+      // Do Nothing
+    }
+  }
 
   /**
    * Loads the user's profile info only once (at start)
@@ -58,19 +64,19 @@ export default class ApartApp extends Component {
       this.setState({ profile });
       this.checkPersonType(profile);
       if (this.state.isStu) {
-        let applicantList = this.state.applicantList;
-        applicantList.push(String(profile.AD_Username));
-        this.setState({ applicantList });
-        let numberOfApplicants = this.state.numberOfApplicants + 1;
-        this.setState({ numberOfApplicants });
+        let applicantProfileList = this.state.applicantProfileList;
+        applicantProfileList.push(profile);
+        this.setState({ applicantProfileList });
       }
       this.setState({ loading: false });
     } catch (error) {
       // Do Nothing
     }
-    for (let applicant of this.state.applicantList) {
-      console.log(applicant);
-    }
+    // DEBUG - Remove this before merge
+    // for (let applicantProfile of this.state.applicantProfileList) {
+    //   console.log(applicantProfile.fullName);
+    //   console.log(applicantProfile.AD_Username);
+    // }
   }
 
   checkPersonType(profile) {
@@ -86,6 +92,7 @@ export default class ApartApp extends Component {
   async loadHousingInfo() {
     this.setState({ loading: true });
     try {
+      // TODO - Once saving application has been implemented in the backend, this will be replaced with a call to the load the application info. The getHousingInfo was made obselete after the Hello World
       let housingInfo = await housing.getHousingInfo();
       let onOffCampus = String(housingInfo[0].OnOffCampus);
       this.setState({ onOffCampus });
@@ -99,7 +106,8 @@ export default class ApartApp extends Component {
 
   componentWillMount() {
     this.loadProfile();
-    this.loadHousingInfo();
+    // this.loadHousingInfo();
+    // this.checkForSavedApplication();
   }
 
   render() {
@@ -151,7 +159,7 @@ export default class ApartApp extends Component {
                     <br />
                     <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
                     <br />
-                    <span className="apartment-people-search">
+                    <div className="apartment-primary-applicant">
                       <TextField
                         value={this.state.profile.fullName}
                         label="Primary Applicant (Your Name)"
@@ -170,10 +178,10 @@ export default class ApartApp extends Component {
                           ),
                         }}
                       />
-                    </span>
+                    </div>
                     <br />
                     <br />
-                    <ApplicantListFields applicantList={this.state.applicantList} />
+                    <ApplicantListField applicantList={this.state.applicantProfileList} />
                     <br />
                     <br />
                     <ApartmentPeopleSearch
