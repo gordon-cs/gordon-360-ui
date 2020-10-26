@@ -32,7 +32,7 @@ const renderInput = inputProps => {
         classes: {
           root: 'people-search-root',
           input: 'people-search-input',
-          inputDisabled: 'people-search-disabled',
+          // inputDisabled: 'people-search-disabled',
         },
         startAdornment: (
           <InputAdornment position="start">
@@ -138,9 +138,9 @@ export default class GordonPeopleSearch extends Component {
     var hasMatched = false;
     return (
       <span>
-        {parts.map(part =>
+        {parts.map((part) =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
-            ? (hasMatched = true && <span class="h">{part}</span>)
+            ? (hasMatched = true && <span className="h">{part}</span>)
             : part,
         )}
       </span>

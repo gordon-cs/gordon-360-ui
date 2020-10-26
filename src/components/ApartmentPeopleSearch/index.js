@@ -14,41 +14,14 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import React from 'react';
 import 'date-fns';
+// import { gordonColors } from '../../theme';
+
+// import ProfileList from './../../components/ProfileList';
 import GordonPeopleSearch from '../../components/Header/components/PeopleSearch';
+import user from './../../services/user';
 // import housing from '../../services/housing';
 import './apartment-people-search.css';
 const MIN_QUERY_LENGTH = 2;
-
-//  TextBox Input Field
-const renderInput = (inputProps) => {
-  const { autoFocus, value, ref, ...other } = inputProps;
-
-  return (
-    <TextField
-      autoFocus={autoFocus}
-      value={value}
-      inputRef={ref}
-      id="people-search"
-      label="Applicant Name"
-      type="search"
-      variant="outlined"
-      className={'text-field'}
-      InputProps={{
-        classes: {
-          root: 'people-search-root',
-          input: 'people-search-input',
-          inputDisabled: 'people-search-disabled',
-        },
-        startAdornment: (
-          <InputAdornment position="start">
-            <PersonAddIcon />
-          </InputAdornment>
-        ),
-        ...other,
-      }}
-    />
-  );
-};
 
 /*
  * Modified subclass of the PeopleSearch, sends username of selectec search result to
@@ -60,32 +33,57 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
     this.renderSuggestion = this.renderSuggestion.bind(this);
     this.handleKeys = this.handleKeys.bind(this);
     this.state = {
-      fullName: '',
-      userName: '',
+      isStu: Boolean,
+      loading: true,
+      profile: {},
+      username: '',
     };
   }
 
-  setApplicant(theChosenOne) {
-    // TODO - Implement sending this username to the API
-    console.log('DEBUG: The following UserName was selected: ' + theChosenOne);
-    alert(theChosenOne ? `You selected ${theChosenOne}` : 'Selection Cleared');
+  onUsernameSelected = (event) => {
+    event.preventDefault();
+    this.props.onSubmit(this.state.username);
+    console.log(this.state.username);
+  };
 
-    let userName = theChosenOne;
-    this.setState({ userName });
+  async loadProfile(searchedUsername) {
+    this.setState({ loading: true });
+    this.setState({ username: searchedUsername });
+    try {
+      const profile = await user.getProfileInfo(searchedUsername);
+      this.setState({ profile });
+      let personType = String(profile.PersonType);
+      this.setState({ isStu: personType.includes('stu') });
+      this.setState({ loading: false });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-    /* // TODO
-     * Send the UserName to the backend,
-     * have the backend add this user to the appartment application,
-     *then have the backend use the UserName to get the fullName using _profileService,
-     * and the backend will return this fullName as a verification of success.
-     * The frontend will recieve this fullname and then do
-     */
+  handleSelection(theChosenOne) {
+    // Make sure the chosen username was not null
+    if (theChosenOne !== null) {
+      console.log('DEBUG - Component: The following UserName was selected: ' + theChosenOne);
+      // alert(theChosenOne ? `You selected ${theChosenOne}` : 'Selection Cleared');
 
-    // TODO use api to get FullName of student from the username stored in 'theChosenOne'
-    // let fullName = await housing.editApplication(theChosenOne); // API Route names have not been decided yet
-
-    // Set the text to the selected name
-    // this.setState({ fullName });
+      // this.loadProfile(theChosenOne);
+      this.setState({ username: theChosenOne });
+      try {
+        const profile = user.getProfileInfo(this.state.username);
+        this.setState({ profile });
+        let personType = String(profile.PersonType);
+        this.setState({ isStu: personType.includes('stu') });
+        // Reset the search box
+        this.reset();
+        // Set the text in the text field to the fullname rather than username
+        // this.textFieldRef.value = this.state.profile.fullName;
+        // Indicate text field as invalid if the selected person is not a student
+        // this.textFieldRef.error = !this.state.isStu;
+      } catch (error) {
+        // this.textFieldRef.error = true;
+        // console.log(error);
+      }
+    }
   }
 
   handleKeys = (key) => {
@@ -98,7 +96,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
         suggestionIndex === -1
           ? (theChosenOne = suggestionList[0].UserName)
           : (theChosenOne = suggestionList[suggestionIndex].UserName);
-        this.setApplicant(theChosenOne);
+        this.handleSelection(theChosenOne);
       }
     }
     if (key === 'ArrowDown') {
@@ -114,6 +112,36 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
     if (key === 'Backspace') {
       this.setState({ suggestions: [] });
     }
+  };
+
+  //  TextBox Input Field
+  renderInput = (inputProps) => {
+    const { autoFocus, value, ref, ...other } = inputProps;
+
+    return (
+      <TextField
+        autoFocus={autoFocus}
+        value={value}
+        inputRef={ref}
+        id="people-search"
+        label="Applicant Name"
+        type="search"
+        variant="outlined"
+        className={'text-field'}
+        InputProps={{
+          classes: {
+            root: 'people-search-root',
+            input: 'people-search-input',
+          },
+          startAdornment: (
+            <InputAdornment position="start">
+              <PersonAddIcon />
+            </InputAdornment>
+          ),
+          ...other,
+        }}
+      />
+    );
   };
 
   renderSuggestion(params) {
@@ -235,7 +263,6 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
               classes: {
                 root: 'people-search-root',
                 input: 'people-search-input',
-                inputDisabled: 'people-search-input',
               },
               readOnly: true,
               startAdornment: (
@@ -255,19 +282,19 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
           ref={(downshift) => {
             this.downshift = downshift;
           }}
-          onChange={(selection) => this.setApplicant(selection)}
+          onChange={(selection) => this.handleSelection(selection)}
         >
           {({ getInputProps, getItemProps, isOpen }) => (
-            <span className="apartment-people-search">
+            <span onSubmit={this.onUserNameSelected} className="apartment-people-search">
               {networkStatus === 'online'
-                ? renderInput(
+                ? this.renderInput(
                     getInputProps({
                       placeholder: holder,
                       onChange: (event) => this.getSuggestions(event.target.value),
                       onKeyDown: (event) => this.handleKeys(event.key),
                     }),
                   )
-                : renderInput(
+                : this.renderInput(
                     getInputProps({
                       placeholder: holder,
                       // placeholder: this.state.holder,
