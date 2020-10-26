@@ -6,7 +6,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import PersonIcon from '@material-ui/icons/Person';
 // import { gordonColors } from '../../theme';
 import GordonLoader from '../../components/Loader';
-import ApartmentPeopleSearch from '../../components/ApartmentPeopleSearch';
+import ApartmentPeopleSearch from '../../components/ApartmentApp/ApartmentPeopleSearch';
+import ApplicantListFields from '../../components/ApartmentApp/ApplicantList';
 import user from '../../services/user';
 import housing from '../../services/housing';
 import './apartmentApp.css';
@@ -14,11 +15,6 @@ import './apartmentApp.css';
 export default class ApartApp extends Component {
   constructor(props) {
     super(props);
-    // this.search1Ref = React.createRef();
-    // this.search2Ref = React.createRef();
-    // this.search3Ref = React.createRef();
-    // this.search4Ref = React.createRef();
-    // this.search5Ref = React.createRef();
     this.state = {
       isStu: Boolean,
       isFac: Boolean,
@@ -28,21 +24,29 @@ export default class ApartApp extends Component {
       profile: {},
       applicantList: [],
       numberOfApplicants: 0,
+      searchResult: '',
       // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
       onCampusRoom: null,
       onOffCampus: null,
     };
   }
 
-  onSearchSubmit(username) {
-    console.log('Received username: ');
-    console.log(username);
-    let applicantList = this.state.applicantList;
-    applicantList[this.state.numberOfApplicants] = username;
-    this.setState({ applicantList });
-    let numberOfApplicants = this.state.numberOfApplicants + 1;
-    this.setState({ numberOfApplicants });
-  }
+  onSearchSubmit = (searchSelection) => {
+    this.setState({ searchResult: searchSelection });
+
+    console.log('Received username: ' + searchSelection);
+    console.log(this.state.searchResult);
+
+    if (this.state.searchResult === null) {
+      alert('An error occur with the search bar');
+    } else {
+      let applicantList = this.state.applicantList;
+      applicantList.push(this.state.searchResult);
+      this.setState({ applicantList });
+      let numberOfApplicants = this.state.numberOfApplicants + 1;
+      this.setState({ numberOfApplicants });
+    }
+  };
 
   /**
    * Loads the user's profile info only once (at start)
@@ -55,7 +59,7 @@ export default class ApartApp extends Component {
       this.checkPersonType(profile);
       if (this.state.isStu) {
         let applicantList = this.state.applicantList;
-        applicantList[0] = profile.AD_Username;
+        applicantList.push(String(profile.AD_Username));
         this.setState({ applicantList });
         let numberOfApplicants = this.state.numberOfApplicants + 1;
         this.setState({ numberOfApplicants });
@@ -63,6 +67,9 @@ export default class ApartApp extends Component {
       this.setState({ loading: false });
     } catch (error) {
       // Do Nothing
+    }
+    for (let applicant of this.state.applicantList) {
+      console.log(applicant);
     }
   }
 
@@ -146,8 +153,8 @@ export default class ApartApp extends Component {
                     <br />
                     <span className="apartment-people-search">
                       <TextField
-                        value={this.props.AutoFillName}
-                        label="Your Name"
+                        value={this.state.profile.fullName}
+                        label="Primary Applicant (Your Name)"
                         variant="outlined"
                         className={'text-field'}
                         InputProps={{
@@ -170,8 +177,7 @@ export default class ApartApp extends Component {
                     <br />
                     <br />
                     <ApartmentPeopleSearch
-                      // ref={this.search3Ref}
-                      onSubmit={this.onSearchSubmit.bind(this)}
+                      onSearchSelect={this.onSearchSubmit}
                       Authentication={this.props.Authentication}
                     />
                   </CardContent>
@@ -271,39 +277,5 @@ export default class ApartApp extends Component {
         </Grid>
       );
     }
-  }
-}
-
-class ApplicantListFields extends Component {
-  render() {
-    const applicantList = ['user1', 'user2', 'user3'];
-    const content = [];
-    for (let applicant of applicantList) {
-      let profile = user.getProfileInfo(applicant);
-      content.push(
-        <TextField
-          value={applicant}
-          label="Applicant"
-          variant="outlined"
-          className={'text-field'}
-          InputProps={{
-            classes: {
-              root: 'people-search-root',
-              input: 'people-search-input',
-            },
-            readOnly: true,
-            startAdornment: (
-              <InputAdornment position="start">
-                <PersonIcon />
-              </InputAdornment>
-            ),
-          }}
-        />,
-      );
-      content.push(<br />);
-      content.push(<br />);
-    }
-
-    return <div className="apartment-applicant-list">{content}</div>;
   }
 }

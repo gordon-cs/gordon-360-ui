@@ -2,25 +2,21 @@ import Downshift from 'downshift';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import PersonIcon from '@material-ui/icons/Person';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
+// import Dialog from '@material-ui/core/Dialog';
+// import DialogActions from '@material-ui/core/DialogActions';
+// import DialogContent from '@material-ui/core/DialogContent';
+// import DialogContentText from '@material-ui/core/DialogContentText';
+// import DialogTitle from '@material-ui/core/DialogTitle';
+// import Button from '@material-ui/core/Button';
 import React from 'react';
 import 'date-fns';
-// import { gordonColors } from '../../theme';
-
-// import ProfileList from './../../components/ProfileList';
-import GordonPeopleSearch from '../../components/Header/components/PeopleSearch';
-import user from './../../services/user';
-// import housing from '../../services/housing';
-import './apartment-people-search.css';
+import GordonPeopleSearch from '../../../components/Header/components/PeopleSearch';
+import user from './../../../services/user';
+// import housing from '../../../services/housing';
+import '../apartmentAppComponents.css';
 const MIN_QUERY_LENGTH = 2;
 
 /*
@@ -36,55 +32,35 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
       isStu: Boolean,
       loading: true,
       profile: {},
-      username: '',
     };
   }
 
-  onUsernameSelected = (event) => {
-    event.preventDefault();
-    this.props.onSubmit(this.state.username);
-    console.log(this.state.username);
-  };
-
-  async loadProfile(searchedUsername) {
-    this.setState({ loading: true });
-    this.setState({ username: searchedUsername });
-    try {
-      const profile = await user.getProfileInfo(searchedUsername);
-      this.setState({ profile });
-      let personType = String(profile.PersonType);
-      this.setState({ isStu: personType.includes('stu') });
-      this.setState({ loading: false });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  handleSelection(theChosenOne) {
+  handleSelection = (theChosenOne) => {
     // Make sure the chosen username was not null
     if (theChosenOne !== null) {
       console.log('DEBUG - Component: The following UserName was selected: ' + theChosenOne);
-      // alert(theChosenOne ? `You selected ${theChosenOne}` : 'Selection Cleared');
-
-      // this.loadProfile(theChosenOne);
-      this.setState({ username: theChosenOne });
       try {
-        const profile = user.getProfileInfo(this.state.username);
-        this.setState({ profile });
-        let personType = String(profile.PersonType);
-        this.setState({ isStu: personType.includes('stu') });
+        const profile = user.getProfileInfo(theChosenOne);
+        const personType = String(profile.PersonType);
+        // Only add the person to the application if they are a student
+        if (personType.includes('stu')) {
+          // Send the selected username to the parent component
+          this.props.onSearchSelect(theChosenOne);
+        } else {
+          this.props.onSearchSelect(null);
+          console.log('Not Student' + personType);
+        }
         // Reset the search box
         this.reset();
-        // Set the text in the text field to the fullname rather than username
-        // this.textFieldRef.value = this.state.profile.fullName;
-        // Indicate text field as invalid if the selected person is not a student
-        // this.textFieldRef.error = !this.state.isStu;
       } catch (error) {
-        // this.textFieldRef.error = true;
-        // console.log(error);
+        // Do Nothing
       }
     }
-  }
+  };
+
+  handleClick = (suggestion) => {
+    this.handleSelection(suggestion.UserName);
+  };
 
   handleKeys = (key) => {
     let suggestionIndex = this.state.suggestionIndex;
@@ -156,7 +132,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
       <MenuItem
         {...itemProps}
         key={suggestion.UserName}
-        // onClick={this.handleClick.bind(this, suggestion)}
+        onClick={this.handleClick.bind(this, suggestion)}
         className={
           suggestionList && suggestionList[suggestionIndex] !== undefined
             ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
@@ -247,131 +223,55 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
       if (networkStatus === 'offline') holder = 'Offline';
     } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
 
-    let content;
-    if (this.props.AutoFillName) {
-      // Creates an non-editable People Search Bar which displays the string given by AutoFillName
-      content = (
-        <span className="apartment-people-search">
-          <TextField
-            value={this.props.AutoFillName}
-            id="filled-people-search"
-            label="Your Name"
-            type="search"
-            variant="outlined"
-            className={'text-field'}
-            InputProps={{
-              classes: {
-                root: 'people-search-root',
-                input: 'people-search-input',
-              },
-              readOnly: true,
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </span>
-      );
-    } else if (this.props.Authentication) {
-      // Creates the People Search Bar depending on the status of the network found in local storage
-      content = (
-        // Assign reference to Downshift to `this` for usage elsewhere in the component
-        <Downshift
-          ref={(downshift) => {
-            this.downshift = downshift;
-          }}
-          onChange={(selection) => this.handleSelection(selection)}
-        >
-          {({ getInputProps, getItemProps, isOpen }) => (
-            <span onSubmit={this.onUserNameSelected} className="apartment-people-search">
-              {networkStatus === 'online'
-                ? this.renderInput(
-                    getInputProps({
-                      placeholder: holder,
-                      onChange: (event) => this.getSuggestions(event.target.value),
-                      onKeyDown: (event) => this.handleKeys(event.key),
-                    }),
-                  )
-                : this.renderInput(
-                    getInputProps({
-                      placeholder: holder,
-                      // placeholder: this.state.holder,
-                      style: { color: 'white' },
-                      disabled: { networkStatus },
-                    }),
-                  )}
-              {isOpen &&
-              this.state.suggestions.length > 0 &&
+    // Creates the People Search Bar depending on the status of the network found in local storage
+    return (
+      // Assign reference to Downshift to `this` for usage elsewhere in the component
+      <Downshift
+        ref={(downshift) => {
+          this.downshift = downshift;
+        }}
+        // onChange={(selection) => this.handleSelection(selection)}
+      >
+        {({ getInputProps, getItemProps, isOpen }) => (
+          <span className="apartment-people-search">
+            {networkStatus === 'online'
+              ? this.renderInput(
+                  getInputProps({
+                    placeholder: holder,
+                    onChange: (event) => this.getSuggestions(event.target.value),
+                    onKeyDown: (event) => this.handleKeys(event.key),
+                  }),
+                )
+              : this.renderInput(
+                  getInputProps({
+                    placeholder: holder,
+                    style: { color: 'white' },
+                    disabled: { networkStatus },
+                  }),
+                )}
+            {isOpen &&
+            this.state.suggestions.length > 0 &&
+            this.state.query.length >= MIN_QUERY_LENGTH ? (
+              <Paper square className="people-search-dropdown">
+                {this.state.suggestions.map((suggestion) =>
+                  this.renderSuggestion({
+                    suggestion,
+                    itemProps: getItemProps({ item: suggestion.UserName }),
+                  }),
+                )}
+              </Paper>
+            ) : isOpen &&
+              this.state.suggestions.length === 0 &&
               this.state.query.length >= MIN_QUERY_LENGTH ? (
-                <Paper square className="people-search-dropdown">
-                  {this.state.suggestions.map((suggestion) =>
-                    this.renderSuggestion({
-                      suggestion,
-                      itemProps: getItemProps({ item: suggestion.UserName }),
-                    }),
-                  )}
-                </Paper>
-              ) : isOpen &&
-                this.state.suggestions.length === 0 &&
-                this.state.query.length >= MIN_QUERY_LENGTH ? (
-                // Styling copied from how renderSuggestion is done with
-                // only bottom padding changed and 'no-results' class used
-                <Paper square className="people-search-dropdown">
-                  {this.renderNoResult()}
-                </Paper>
-              ) : null}
-            </span>
-          )}
-        </Downshift>
-      );
-    } else {
-      content = (
-        <span className="apartment-people-search">
-          <TextField
-            placeholder="People Search"
-            fullWidth
-            value={''}
-            onChange={() => this.unauthenticatedSearch()}
-            id="people-search"
-            label="Applicant Name"
-            type="search"
-            variant="outlined"
-            className={'text-field'}
-            InputProps={{
-              classes: {
-                root: 'people-search-root',
-                input: 'people-search-input',
-              },
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonAddIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Dialog
-            open={this.state.loginDialog}
-            onClose={() => this.handleClose()}
-            aria-labelledby="login-dialog-title"
-            aria-describedby="login-dialog-description"
-          >
-            <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="login-dialog-description">
-                You are not logged in. Please log in to use People Search.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="contained" onClick={() => this.handleClose()} color="primary">
-                Okay
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </span>
-      );
-    }
-    return content;
+              // Styling copied from how renderSuggestion is done with
+              // only bottom padding changed and 'no-results' class used
+              <Paper square className="people-search-dropdown">
+                {this.renderNoResult()}
+              </Paper>
+            ) : null}
+          </span>
+        )}
+      </Downshift>
+    );
   }
 }

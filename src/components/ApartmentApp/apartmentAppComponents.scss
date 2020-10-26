@@ -1,5 +1,9 @@
 @import '../../vars';
 
+.apartment-applicant-list {
+  flex-direction: column;
+}
+
 .apartment-people-search {
   .people-search-dropdown {
     position: absolute;
