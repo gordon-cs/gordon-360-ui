@@ -71,7 +71,7 @@ const Timesheets = (props) => {
 
   // Sets the person type of the user
   useEffect(() => {
-    user.getProfileInfo().then(data => {
+    user.getProfileInfo().then((data) => {
       data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
     });
   });
@@ -168,10 +168,10 @@ const Timesheets = (props) => {
   if (props.Authentication) {
     const getActiveJobsForUser = (dateIn, dateOut) => {
       let details = {
-        shift_start_datetime: dateIn.toLocaleString(),
-        shift_end_datetime: dateOut.toLocaleString(),
+        shift_start_datetime: dateIn.toISOString(),
+        shift_end_datetime: dateOut.toISOString(),
       };
-      jobs.getActiveJobsForUser(canUseStaff, details).then(result => {
+      jobs.getActiveJobsForUser(canUseStaff, details).then((result) => {
         setUserJobs(result);
       });
     };
@@ -328,7 +328,7 @@ const Timesheets = (props) => {
       <></>
     );
     const hourTypeMenuItems = hourTypes ? (
-      hourTypes.map(type => (
+      hourTypes.map((type) => (
         <MenuItem label={type.type_description} value={type.type_id} key={type.type_id}>
           {type.type_description}
         </MenuItem>
@@ -526,7 +526,7 @@ const Timesheets = (props) => {
         <InputLabel className="disable-select">Hour Type</InputLabel>
         <Select
           value={selectedHourType}
-          onChange={e => {
+          onChange={(e) => {
             setSelectedHourType(e.target.value);
           }}
           input={<Input id="hour type" />}
