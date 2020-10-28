@@ -2,6 +2,7 @@
 
 .apartment-application {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   &-card {
     flex-grow: 0;
@@ -19,40 +20,31 @@
   }
 }
 
-.apartment-applicant-list {
+.applicant-menu-container {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  .applicant-list-item {
-    align-self: center;
-    color: inherit;
-    background: $neutral-white;
-    transition: box-shadow 0.3s, width 0.3s;
-    margin-bottom: 0.75rem;
-    border-radius: 4px;
-    padding: 2px 10px;
-    &:focus-within {
-      box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.25);
-    }
-    &:hover:not(:focus-within) {
-      box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.25);
-    }
-  }
+  width: 100%;
 }
 
-.applicant-avatar {
-  width: 50px;
-  height: 50px;
-  padding: 0rem;
-  &:hover {
-    transition: box-shadow 0.2s;
-    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.5);
+.applicant-menu-column-1 {
+  flex-shrink: 0; /* shrinks to 0 to apply 60% width*/
+  flex-basis: 60%; /* sets initial width to 60%*/
+}
+
+// .box {
+//   background-color: $neutral-white;
+//   padding: 10px;
+//   border-radius: 12px;
+//   border: 2px solid $neutral-light-gray;
+//   margin: 10px;
+//   box-shadow: 1px 1px 1px #000;
+// }
+
+@media only screen and (max-width: 900px) {
+  .applicant-menu-container {
+    flex-direction: column;
   }
-  &:not(:hover) {
-    transition: box-shadow 0.3s;
-    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5);
-  }
-  &_placeholder {
-    background-color: $primary-cyan;
-  }
+
+  // .box {
+  //   margin: 0 0 1rem;
+  // }
 }

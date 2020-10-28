@@ -1,14 +1,17 @@
 @import '../../vars';
 
 .apartment-people-search {
+  display: inline-flex;
+  flex-direction: column;
   .people-search-dropdown {
-    position: absolute;
     max-height: 60vh;
+    // width: 20rem;
     overflow-y: auto; // make this to scroll
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    align-self: flex-start;
-    z-index: 2;
+    right: 20px;
+    // align-self: center;
+    z-index: 100;
     border-radius: 4px;
   }
 
@@ -21,14 +24,14 @@
 
   .people-search-suggestion {
     display: block;
-    align-self: center;
+    align-self: left;
     padding-bottom: 25px;
   }
 
   .people-search-suggestion-selected {
     background-color: $neutral-light-gray;
     display: block;
-    align-self: center;
+    align-self: left;
     padding-bottom: 25px;
   }
 
@@ -80,10 +83,7 @@
     }
   }
 
-  /*@media (min-width: 0px) {
-    .people-search-dropdown {
-      width: 7rem;
-    }
+  @media (min-width: 0px) {
     .people-search-root {
       width: 7rem;
       &:focus-within {
@@ -94,9 +94,6 @@
 
   @media (min-width: $break-xs) {
     //margin-left: -10rem;
-    .people-search-dropdown {
-      width: 8rem;
-    }
     .people-search-root {
       width: 8rem;
       &:focus-within {
@@ -107,9 +104,6 @@
 
   @media (min-width: 400px) {
     //margin-left: -8rem;
-    .people-search-dropdown {
-      width: 10rem;
-    }
     .people-search-root {
       width: 10rem;
       &:focus-within {
@@ -123,14 +117,14 @@
     .people-search-suggestion-selected {
       width: 12rem;
     }
+    .people-search-dropdown {
+      right: 28px;
+    }
   }
 
   @media (min-width: $break-sm) {
     width: auto;
     //margin-left: -18px;
-    .people-search-dropdown {
-      width: 14.5rem;
-    }
     .people-search-root {
       width: 12rem;
       &:focus-within {
@@ -143,11 +137,8 @@
     .text-field {
       width: 14rem;
     }
-    .people-search-dropdown {
-      width: 17rem;
-    }
     .people-search-root {
-      align-self: flex-start;
+      align-self: flex-end;
       width: 15rem;
       &:focus-within {
         width: 17rem;
@@ -159,11 +150,8 @@
     .text-field {
       width: 11.5rem;
     }
-    .people-search-dropdown {
-      width: 15rem;
-    }
     .people-search-root {
-      align-self: flex-start;
+      align-self: flex-end;
       width: 13rem;
       &:focus-within {
         width: 15rem;
@@ -179,17 +167,17 @@
     .people-search-suggestion-selected {
       width: 8.5rem;
     }
+    .people-search-dropdown {
+      right: auto;
+    }
   }
 
   @media (min-width: 1000px) {
     .text-field {
       width: 14rem;
     }
-    .people-search-dropdown {
-      width: 16rem;
-    }
     .people-search-root {
-      align-self: flex-start;
+      align-self: flex-end;
       width: 13.5rem;
       &:focus-within {
         width: 16rem;
@@ -199,15 +187,16 @@
     .people-search-suggestion-selected {
       width: 11.15rem;
     }
-  }*/
+  }
 
   .people-search-root {
-    align-self: flex-start;
+    align-self: flex-end;
     color: inherit;
     background: $neutral-white;
     transition: box-shadow 0.3s, width 0.3s;
     //margin-right: 0.75rem;
     border-radius: 4px;
+    border: 1px solid $primary-blue;
     padding: 2px 10px;
     &:focus-within {
       box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.25);

@@ -2,20 +2,10 @@
 import React, { Component } from 'react';
 import 'date-fns';
 import { Grid, Card, CardContent, Button, TextField } from '@material-ui/core/';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-// import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-// import FormGroup from '@material-ui/core/FormGroup';
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import PersonIcon from '@material-ui/icons/Person';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+// import InputAdornment from '@material-ui/core/InputAdornment';
+// import PersonIcon from '@material-ui/icons/Person';
 import GordonLoader from '../../components/Loader';
+import ApplicantList from '../../components/ApartmentApplicantList';
 import ApartmentPeopleSearch from '../../components/ApartmentPeopleSearch';
 import user from '../../services/user';
 import housing from '../../services/housing';
@@ -43,7 +33,6 @@ export default class ApartApp extends Component {
    * @param {String} searchSelection Username for student
    */
   onSearchSubmit = searchSelection => {
-    console.log('Received username: ' + searchSelection);
     if (searchSelection && searchSelection !== null) {
       // Method separated from callback because profile must be handled inside an async method
       this.addApplicant(searchSelection);
@@ -54,20 +43,36 @@ export default class ApartApp extends Component {
     try {
       // Get the profile of the selected user
       let applicantProfile = await user.getProfileInfo(username);
-      // Check if the selected user is a student
-      let personType = String(applicantProfile.personType);
-      if (personType.includes('stu')) {
-        // Add the profile object to the list of applicants
-        let applicants = this.state.applicants;
-        applicants.push(applicantProfile);
-        this.setState({ applicants });
-      } else {
-        // Display an error of some kind
-      }
+      // // Check if the selected user is a student
+      // if (String(applicantProfile.personType).includes('stu')) {
+      // Add the profile object to the list of applicants
+      let applicants = this.state.applicants;
+      applicants.push(applicantProfile);
+      this.setState({ applicants });
+      // } else {
+      //   // Display an error of some kind
+      //   alert('User ' + username + ' is either not a student, or status is not publicly viewable');
+      // }
     } catch (error) {
       // Do Nothing
+      alert('Something went wrong while trying to get the profile of ' + username);
     }
   }
+
+  /**
+   * Callback for applicant list remove button
+   * @param {String} profileToRemove Username for student
+   */
+  onApplicantRemove = profileToRemove => {
+    if (profileToRemove && profileToRemove !== null) {
+      let applicantList = this.state.applicants; // make a separate copy of the array
+      let index = applicantList.indexOf(profileToRemove);
+      if (index !== -1) {
+        applicantList.splice(index, 1);
+        this.setState({ applicants: applicantList });
+      }
+    }
+  };
 
   /**
    * Loads the user's profile info only once (at start)
@@ -87,11 +92,6 @@ export default class ApartApp extends Component {
     } catch (error) {
       // Do Nothing
     }
-    // DEBUG - Remove this before merge
-    // for (let applicantProfile of this.state.applicants) {
-    //   console.log(applicantProfile.fullName);
-    //   console.log(applicantProfile.AD_Username);
-    // }
   }
 
   checkPersonType(profile) {
@@ -107,7 +107,7 @@ export default class ApartApp extends Component {
   async loadHousingInfo() {
     this.setState({ loading: true });
     try {
-      // TODO - Once saving application has been implemented in the backend, this will be replaced with a call to the load the application info. The getHousingInfo was made obselete after the Hello World
+      // TODO - Once saving application has been implemented in the backend, this will be replaced with a call to the load the application info. The getHousingInfo was made obsolete after the Hello World
       let housingInfo = await housing.getHousingInfo();
       let onOffCampus = String(housingInfo[0].OnOffCampus);
       this.setState({ onOffCampus });
@@ -121,78 +121,8 @@ export default class ApartApp extends Component {
 
   componentWillMount() {
     this.loadProfile();
-    // this.loadHousingInfo();
+    this.loadHousingInfo();
     // this.checkForSavedApplication();
-  }
-
-  handleRemoveApplicant(profile) {
-    console.log('handleRemoveApplicant ' + profile);
-
-    /*
-    let profileList = this.state.applicants; // make a separate copy of the array
-    let index = profileList.indexOf(profile);
-    if (index !== -1) {
-      profileList.splice(index, 1);
-      this.setState({ applicants: profileList });
-    }
-    */
-  }
-
-  renderApplicant(params) {
-    const { profile, itemProps } = params;
-    let avatarImage = loadAvatar(profile.AD_Username);
-    //  let isPrimaryApplicant = username === this.state.userProfile.AD_Username;
-    return (
-      <ListItem
-        {...itemProps}
-        key={profile.AD_Username}
-        className={'applicant-list-item'}
-      >
-        <ListItemAvatar>
-          {avatarImage ? (
-            <Avatar
-              className={`applicant-avatar`}
-              src={`data:image/jpg;base64,${avatarImage}`}
-              sizes="70px"
-            />
-          ) : (
-            <Avatar>
-              <PersonIcon />
-            </Avatar>
-          )}
-        </ListItemAvatar>
-        <ListItemText primary={profile.fullName} secondary={profile.AD_Username} />
-        <ListItemSecondaryAction>
-          {profile.AD_Username === this.state.userProfile.AD_Username ? (
-            <IconButton edge="end" aria-label="remove">
-              <RemoveCircleOutlineIcon color="disabled" />
-            </IconButton>
-          ) : (
-            <IconButton edge="end" aria-label="remove">
-              <RemoveCircleOutlineIcon color="action" />
-            </IconButton>
-          )}
-        </ListItemSecondaryAction>
-      </ListItem>
-    );
-  }
-
-  /**
-   * Creates the Avatar image of the given user
-   *
-   * @param {String} username The username of the desired user image
-   *
-   * @return {String} The profile image of the given user if available
-   */
-  async loadAvatar(username) {
-    // let username = String(profile.AD_Username);
-    try {
-      const { def: defaultImage, pref: preferredImage } = await user.getImage(username);
-      const image = preferredImage || defaultImage;
-      return image;
-    } catch (error) {
-      return null;
-    }
   }
 
   render() {
@@ -236,50 +166,49 @@ export default class ApartApp extends Component {
                       textAlign: 'center',
                     }}
                   >
-                    <h1>Hello World</h1>
+                    <h1>Apartment Application</h1>
                     <br />
-                    <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
-                    <br />
-                    <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
-                    <br />
-                    <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
-                    <br />
-                    <div className="apartment-primary-applicant">
-                      <TextField
-                        value={this.state.userProfile.fullName}
-                        label="Primary Applicant (Your Name)"
-                        variant="outlined"
-                        className={'text-field'}
-                        InputProps={{
-                          classes: {
-                            root: 'people-search-root',
-                            input: 'people-search-input',
-                          },
-                          readOnly: true,
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <PersonIcon />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
+                    <div className="applicant-menu-container">
+                      <div className="applicant-menu-column-1 box">
+                        <ApplicantList
+                          onApplicantRemove={this.onApplicantRemove}
+                          applicants={this.state.applicants}
+                          userProfile={this.state.userProfile}
+                        />
+                      </div>
+                      <div className="applicant-menu-column-2 box">
+                        <ApartmentPeopleSearch
+                          onSearchSelect={this.onSearchSubmit}
+                          Authentication={this.props.Authentication}
+                        />
+                      </div>
                     </div>
                     <br />
                     <br />
-                    <List className="apartment-applicant-list">
-                      {this.state.applicants.map((profile) =>
-                        this.renderApplicant({
-                          profile,
-                          itemProps: getItemProps({ item: profile.AD_Username }),
-                        }),
-                      )}
-                    </List>
-                    <br />
-                    <br />
-                    <ApartmentPeopleSearch
-                      onSearchSelect={this.onSearchSubmit}
-                      Authentication={this.props.Authentication}
+                    <TextField
+                      fullWidth
+                      value="Placeholder for Hall Preference Selection Menu"
+                      size="large"
+                      variant="outlined"
+                      InputProps={{
+                        readOnly: true,
+                      }}
                     />
+                  </CardContent>
+                </Card>
+                <br />
+                <Card>
+                  <CardContent
+                    style={{
+                      margin: 'auto',
+                      textAlign: 'center',
+                    }}
+                  >
+                    <h2>Hello World:</h2>
+                    <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
+                    <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
+                    <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
+                    <br />
                   </CardContent>
                 </Card>
               </div>
@@ -379,4 +308,3 @@ export default class ApartApp extends Component {
     }
   }
 }
-

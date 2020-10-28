@@ -7,8 +7,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import 'date-fns';
-import GordonPeopleSearch from '../../../components/Header/components/PeopleSearch';
-import '../apartmentAppComponents.css';
+import GordonPeopleSearch from '../Header/components/PeopleSearch';
+import './apartmentPeopleSearch.css';
 const MIN_QUERY_LENGTH = 2;
 
 /*
@@ -27,10 +27,9 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
     };
   }
 
-  handleSelection = (theChosenOne) => {
+  handleSelection = theChosenOne => {
     // Make sure the chosen username was not null
     if (theChosenOne && theChosenOne !== null) {
-      console.log('DEBUG - Component: The following UserName was selected: ' + theChosenOne);
       // Send the selected username to the parent component
       this.props.onSearchSelect(theChosenOne);
       // Reset the search box
@@ -38,11 +37,11 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
     }
   };
 
-  handleClick = (suggestion) => {
+  handleClick = suggestion => {
     this.handleSelection(suggestion.UserName);
   };
 
-  handleKeys = (key) => {
+  handleKeys = key => {
     let suggestionIndex = this.state.suggestionIndex;
     let suggestionList = this.state.suggestions;
     let theChosenOne;
@@ -71,7 +70,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
   };
 
   //  TextBox Input Field
-  renderInput = (inputProps) => {
+  renderInput = inputProps => {
     const { autoFocus, value, ref, ...other } = inputProps;
 
     return (
@@ -79,10 +78,9 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
         autoFocus={autoFocus}
         value={value}
         inputRef={ref}
-        id="people-search"
-        label="Applicant Name"
-        type="search"
-        variant="outlined"
+        // id="people-search"
+        // type="search"
+        // variant="filled"
         className={'text-field'}
         InputProps={{
           classes: {
@@ -137,7 +135,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
                   suggestion.LastName,
                   this.state.highlightQuery.split(/ |\./)[1],
                 ),
-              ].map((e) => <span>{e}</span>)
+              ].map(e => <span>{e}</span>)
             : this.getHighlightedText(
                 suggestion.FirstName + ' ' + suggestion.LastName,
                 this.state.highlightQuery,
@@ -176,7 +174,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', (event) => {
+    window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -207,7 +205,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
     return (
       // Assign reference to Downshift to `this` for usage elsewhere in the component
       <Downshift
-        ref={(downshift) => {
+        ref={downshift => {
           this.downshift = downshift;
         }}
         // onChange={(selection) => this.handleSelection(selection)}
@@ -218,8 +216,8 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
               ? this.renderInput(
                   getInputProps({
                     placeholder: holder,
-                    onChange: (event) => this.getSuggestions(event.target.value),
-                    onKeyDown: (event) => this.handleKeys(event.key),
+                    onChange: event => this.getSuggestions(event.target.value),
+                    onKeyDown: event => this.handleKeys(event.key),
                   }),
                 )
               : this.renderInput(
@@ -233,7 +231,7 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
             this.state.suggestions.length > 0 &&
             this.state.query.length >= MIN_QUERY_LENGTH ? (
               <Paper square className="people-search-dropdown">
-                {this.state.suggestions.map((suggestion) =>
+                {this.state.suggestions.map(suggestion =>
                   this.renderSuggestion({
                     suggestion,
                     itemProps: getItemProps({ item: suggestion.UserName }),
