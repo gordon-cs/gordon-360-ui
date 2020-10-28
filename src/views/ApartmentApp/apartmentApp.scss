@@ -1,8 +1,8 @@
 @import '../../vars';
 
 .apartment-application {
-  justify-content: center;
   display: flex;
+  justify-content: center;
   &-card {
     flex-grow: 0;
     max-width: 66.666667%;
@@ -15,6 +15,27 @@
     &-card {
       max-width: 100%;
       flex-basis: 100%;
+    }
+  }
+}
+
+.apartment-applicant-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .applicant-list-item {
+    align-self: center;
+    color: inherit;
+    background: $neutral-white;
+    transition: box-shadow 0.3s, width 0.3s;
+    margin-bottom: 0.75rem;
+    border-radius: 4px;
+    padding: 2px 10px;
+    &:focus-within {
+      box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.25);
+    }
+    &:hover:not(:focus-within) {
+      box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.25);
     }
   }
 }
