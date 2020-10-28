@@ -2,12 +2,21 @@
 import React, { Component } from 'react';
 import 'date-fns';
 import { Grid, Card, CardContent, Button, TextField } from '@material-ui/core/';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+// import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+// import FormGroup from '@material-ui/core/FormGroup';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import PersonIcon from '@material-ui/icons/Person';
-// import { gordonColors } from '../../theme';
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import GordonLoader from '../../components/Loader';
 import ApartmentPeopleSearch from '../../components/ApartmentPeopleSearch';
-// import ApplicantListField from '../../components/ApartmentApp/ApplicantList';
 import user from '../../services/user';
 import housing from '../../services/housing';
 import './apartmentApp.css';
@@ -47,10 +56,10 @@ export default class ApartApp extends Component {
       let applicantProfile = await user.getProfileInfo(username);
       // Check if the selected user is a student
       let personType = String(applicantProfile.personType);
-      if (personType.includes('stu'))
-      {// Add the profile object to the list of applicants
-      let applicants = this.state.applicants;
-      applicants.push(applicantProfile);
+      if (personType.includes('stu')) {
+        // Add the profile object to the list of applicants
+        let applicants = this.state.applicants;
+        applicants.push(applicantProfile);
         this.setState({ applicants });
       } else {
         // Display an error of some kind
@@ -118,9 +127,10 @@ export default class ApartApp extends Component {
 
   handleRemoveApplicant(profile) {
     console.log('handleRemoveApplicant ' + profile);
+
     /*
     let profileList = this.state.applicants; // make a separate copy of the array
-    let index = array.indexOf(profile);
+    let index = profileList.indexOf(profile);
     if (index !== -1) {
       profileList.splice(index, 1);
       this.setState({ applicants: profileList });
@@ -128,29 +138,16 @@ export default class ApartApp extends Component {
     */
   }
 
-  /**
-   * Creates the Avatar image of the given user
-   *
-   * @param {String} username The username of the desired user image
-   *
-   * @return {String} The profile image of the given user if available
-   */
-  async loadAvatar(username) {
-    try {
-      const { def: defaultImage, pref: preferredImage } = await user.getImage(username);
-      const image = preferredImage || defaultImage;
-      return image;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  renderApplicant(profile) {
-    const content = [];
-    const keyName = profile.AD_Username.replace('.', '-');
-    let avatarImage = this.loadAvatar(profile.AD_Username);
+  renderApplicant(params) {
+    const { profile, itemProps } = params;
+    let avatarImage = loadAvatar(profile.AD_Username);
+    //  let isPrimaryApplicant = username === this.state.userProfile.AD_Username;
     return (
-      <ListItem>
+      <ListItem
+        {...itemProps}
+        key={profile.AD_Username}
+        className={'applicant-list-item'}
+      >
         <ListItemAvatar>
           {avatarImage ? (
             <Avatar
@@ -166,62 +163,36 @@ export default class ApartApp extends Component {
         </ListItemAvatar>
         <ListItemText primary={profile.fullName} secondary={profile.AD_Username} />
         <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
+          {profile.AD_Username === this.state.userProfile.AD_Username ? (
+            <IconButton edge="end" aria-label="remove">
+              <RemoveCircleOutlineIcon color="disabled" />
+            </IconButton>
+          ) : (
+            <IconButton edge="end" aria-label="remove">
+              <RemoveCircleOutlineIcon color="action" />
+            </IconButton>
+          )}
         </ListItemSecondaryAction>
       </ListItem>
     );
+  }
 
-    /*
-    if (personType.includes('stu')) {
-      content.push(
-        <TextField
-          key={keyName + '-textfield'}
-          value={profile.fullName}
-          label="Applicant"
-          className={'text-field'}
-          InputProps={{
-            classes: { root: 'applicant-list-item' },
-            readOnly: true,
-            startAdornment: (
-              <InputAdornment position="start">
-                <PersonIcon />
-              </InputAdornment>
-            ),
-          }}
-        />,
-      );
-    } else {
-      content.push(
-        <TextField
-          error
-          key={keyName + '-textfield'}
-          value={profile.fullName}
-          label="Applicant"
-          helperText="Applicants must be students"
-          className={'text-field'}
-          InputProps={{
-            classes: { root: 'applicant-list-item' },
-            readOnly: true,
-            startAdornment: (
-              <InputAdornment position="start">
-                <PersonIcon />
-              </InputAdornment>
-            ),
-          }}
-        />,
-      );
+  /**
+   * Creates the Avatar image of the given user
+   *
+   * @param {String} username The username of the desired user image
+   *
+   * @return {String} The profile image of the given user if available
+   */
+  async loadAvatar(username) {
+    // let username = String(profile.AD_Username);
+    try {
+      const { def: defaultImage, pref: preferredImage } = await user.getImage(username);
+      const image = preferredImage || defaultImage;
+      return image;
+    } catch (error) {
+      return null;
     }
-
-    if (profile.AD_Username !== this.state.userProfile.AD_Username) {
-      content.push(<Button key={'remove-' + keyName + '-button'}>Placeholder</Button>);
-    } else {
-      content.push(<Button key={'remove-' + keyName + '-button'}>To be disabled</Button>);
-    }
-
-    return <div className="applicant-list-item">{content}</div>;
-    */
   }
 
   render() {
@@ -295,11 +266,14 @@ export default class ApartApp extends Component {
                     </div>
                     <br />
                     <br />
-                    <div className="apartment-applicant-list">
-                      {this.state.applicants.length > 0
-                        ? this.state.applicants.map(profile => this.renderApplicant(profile))
-                        : this.renderApplicant(this.state.userProfile)}
-                    </div>
+                    <List className="apartment-applicant-list">
+                      {this.state.applicants.map((profile) =>
+                        this.renderApplicant({
+                          profile,
+                          itemProps: getItemProps({ item: profile.AD_Username }),
+                        }),
+                      )}
+                    </List>
                     <br />
                     <br />
                     <ApartmentPeopleSearch
@@ -405,3 +379,4 @@ export default class ApartApp extends Component {
     }
   }
 }
+
