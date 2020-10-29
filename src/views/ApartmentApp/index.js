@@ -1,7 +1,7 @@
 //Main apartment application page
 import React, { Component } from 'react';
 import 'date-fns';
-import { Grid, Card, CardContent, Button, TextField } from '@material-ui/core/';
+import { Grid, Card, CardContent, Button, TextField, Typography } from '@material-ui/core/';
 // import InputAdornment from '@material-ui/core/InputAdornment';
 // import PersonIcon from '@material-ui/icons/Person';
 import GordonLoader from '../../components/Loader';
@@ -14,12 +14,14 @@ import './apartmentApp.css';
 export default class ApartApp extends Component {
   constructor(props) {
     super(props);
+    this.peopleSearch = React.createRef();
     this.state = {
       isStu: Boolean,
       isFac: Boolean,
       isAlu: Boolean,
       loading: true,
       network: 'online',
+      peopleSearchError: null,
       userProfile: {},
       applicants: [],
       // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
@@ -33,6 +35,8 @@ export default class ApartApp extends Component {
    * @param {String} searchSelection Username for student
    */
   onSearchSubmit = searchSelection => {
+    // Clear any error message from the search bar
+    this.setState({ peopleSearchError: null });
     if (searchSelection && searchSelection !== null) {
       // Method separated from callback because profile must be handled inside an async method
       this.addApplicant(searchSelection);
@@ -43,16 +47,18 @@ export default class ApartApp extends Component {
     try {
       // Get the profile of the selected user
       let applicantProfile = await user.getProfileInfo(username);
-      // // Check if the selected user is a student
-      // if (String(applicantProfile.personType).includes('stu')) {
-      // Add the profile object to the list of applicants
-      let applicants = this.state.applicants;
-      applicants.push(applicantProfile);
-      this.setState({ applicants });
-      // } else {
-      //   // Display an error of some kind
-      //   alert('User ' + username + ' is either not a student, or status is not publicly viewable');
-      // }
+      // Check if the selected user is a student
+      if (String(applicantProfile.PersonType).includes('stu')) {
+        // Add the profile object to the list of applicants
+        let applicants = this.state.applicants;
+        applicants.push(applicantProfile);
+        this.setState({ applicants });
+      } else {
+        // Display an error with the search bar
+        let newErrorMessage = 'Error: ' + username + ' is not a student';
+        this.setState({ peopleSearchError: newErrorMessage });
+        // alert('User ' + username + ' is either not a student, or status is not publicly viewable');
+      }
     } catch (error) {
       // Do Nothing
       alert('Something went wrong while trying to get the profile of ' + username);
@@ -119,7 +125,7 @@ export default class ApartApp extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadProfile();
     this.loadHousingInfo();
     // this.checkForSavedApplication();
@@ -158,60 +164,64 @@ export default class ApartApp extends Component {
           <div className="apartment-application">
             {this.state.loading && <GordonLoader />}
             {!this.state.loading && (
-              <div className="apartment-application-card">
-                <Card>
-                  <CardContent
-                    style={{
-                      margin: 'auto',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <h1>Apartment Application</h1>
-                    <br />
-                    <div className="applicant-menu-container">
-                      <div className="applicant-menu-column-1 box">
-                        <ApplicantList
-                          onApplicantRemove={this.onApplicantRemove}
-                          applicants={this.state.applicants}
-                          userProfile={this.state.userProfile}
-                        />
-                      </div>
-                      <div className="applicant-menu-column-2 box">
-                        <ApartmentPeopleSearch
-                          onSearchSelect={this.onSearchSubmit}
-                          Authentication={this.props.Authentication}
-                        />
-                      </div>
-                    </div>
-                    <br />
-                    <br />
-                    <TextField
-                      fullWidth
-                      value="Placeholder for Hall Preference Selection Menu"
-                      size="large"
-                      variant="outlined"
-                      InputProps={{
-                        readOnly: true,
+              <Grid container justify="center" spacing={6}>
+                <Grid item xs={12} md={8}>
+                  <Card>
+                    <CardContent
+                      style={{
+                        marginLeft: 8,
+                        marginTop: 8,
+                        textAlign: 'center',
                       }}
-                    />
-                  </CardContent>
-                </Card>
-                <br />
-                <Card>
-                  <CardContent
-                    style={{
-                      margin: 'auto',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <h2>Hello World:</h2>
-                    <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
-                    <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
-                    <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
-                    <br />
-                  </CardContent>
-                </Card>
-              </div>
+                    >
+                      <Typography variant="h5">Apartment Application</Typography>
+                      <br />
+                      <Grid container justify="center" spacing={4}>
+                        <Grid item xs={12} md={8}>
+                          <ApplicantList
+                            onApplicantRemove={this.onApplicantRemove}
+                            applicants={this.state.applicants}
+                            userProfile={this.state.userProfile}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md>
+                          <ApartmentPeopleSearch
+                            errorMessage={this.state.peopleSearchError}
+                            onSearchSelect={this.onSearchSubmit}
+                            Authentication={this.props.Authentication}
+                          />
+                        </Grid>
+                      </Grid>
+                      <br />
+                      <br />
+                      <TextField
+                        fullWidth
+                        value="Placeholder for Hall Preference Selection Menu"
+                        variant="outlined"
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    </CardContent>
+                  </Card>
+                  <br />
+                  <Card>
+                    <CardContent
+                      style={{
+                        margin: 'auto',
+                        textAlign: 'center',
+                      }}
+                    >
+                      <Typography variant="h5">Hello World:</Typography>
+
+                      <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
+                      <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
+                      <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
+                      <br />
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
             )}
           </div>
         );

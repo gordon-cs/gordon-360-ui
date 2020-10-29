@@ -16,8 +16,8 @@ const MIN_QUERY_LENGTH = 2;
  * ApartmentApp backend rather than redirecting the user to student profile page.
  */
 export default class ApartmentPeopleSearch extends GordonPeopleSearch {
-  contructor() {
-    // super(props);
+  constructor(props) {
+    super(props);
     this.renderSuggestion = this.renderSuggestion.bind(this);
     this.handleKeys = this.handleKeys.bind(this);
     this.state = {
@@ -73,14 +73,22 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
   renderInput = inputProps => {
     const { autoFocus, value, ref, ...other } = inputProps;
 
+    let fieldProps = {
+      error: false,
+      helperText: null,
+    };
+
+    if (this.props.errorMessage !== null) {
+      fieldProps.error = true;
+      fieldProps.helperText = this.props.errorMessage;
+    }
+
     return (
       <TextField
+        {...fieldProps}
         autoFocus={autoFocus}
         value={value}
         inputRef={ref}
-        // id="people-search"
-        // type="search"
-        // variant="filled"
         className={'text-field'}
         InputProps={{
           classes: {
@@ -195,9 +203,9 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
      */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-    let holder = 'People Search';
+    let holder = 'Search Students';
     if (window.innerWidth < this.breakpointWidth) {
-      holder = 'People';
+      holder = 'Search';
       if (networkStatus === 'offline') holder = 'Offline';
     } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
 

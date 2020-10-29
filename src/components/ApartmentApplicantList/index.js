@@ -11,11 +11,12 @@ import PersonIcon from '@material-ui/icons/Person';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import user from '../../services/user';
 import './apartmentApplicantList.scss';
+import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
+// Create a list of applicants, displayed by name, username, and class standing.
 export default class ApplicantList extends Component {
   constructor(props) {
     super(props);
-    this.renderApplicant = this.renderApplicant.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
   }
 
@@ -27,44 +28,128 @@ export default class ApplicantList extends Component {
     }
   };
 
-  /**
-   * Creates the Avatar image of the given user
-   *
-   * @param {String} username The username of the desired user image
-   *
-   * @return {String} The profile image of the given user if available
-   */
-  async loadAvatar(username) {
-    // let username = String(profile.AD_Username);
-    try {
-      const { def: defaultImage, pref: preferredImage } = await user.getImage(username);
-      const image = preferredImage || defaultImage;
-      return image;
-    } catch (error) {
-      return null;
+  render() {
+    if (this.props.applicants) {
+      return (
+        <List className="apartment-applicant-list">
+          <ListItem key="applicant-list-header" className="applicant-list-header">
+            <ListItemText primary="Student Applicants" />
+          </ListItem>
+          {this.props.applicants.map(profile => (
+            <ApplicantListItem
+              key={profile.AD_Username}
+              profile={profile}
+              isPrimaryApplicant={profile === this.props.userProfile}
+              onApplicantRemove={this.handleRemove.bind(this, profile)}
+            />
+          ))}
+        </List>
+      );
+    }
+  }
+}
+
+// Based off src/views/PeopleSearch/components/PeopleSearchResult
+class ApplicantListItem extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      avatar: null,
+      prefImage: null,
+      defImage: null,
+      isStu: Boolean,
+      isFac: Boolean,
+      isAlu: Boolean,
+    };
+  }
+
+  handleRemove = profile => {
+    // Make sure the chosen profile was not null
+    if (profile && profile !== null) {
+      // Send the selected profile to the parent component
+      this.props.onApplicantRemove(profile);
+    }
+  };
+
+  componentDidUpdate(newProps) {
+    if (this.props.profile.AD_Username !== newProps.profile.AD_Username) {
+      this.loadAvatar();
     }
   }
 
-  renderApplicant(profile) {
-    let avatarImage = this.loadAvatar(profile.AD_Username);
+  componentDidMount() {
+    this.loadAvatar();
+  }
+
+  async loadAvatar() {
+    this.setState({ avatar: null });
+    const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
+      await user.getImage(this.props.profile.AD_Username),
+    ]);
+    let avatar;
+    if (this.props.profile.AD_Username) {
+      avatar = preferredImage || defaultImage;
+    } else {
+      avatar = (
+        <svg width="50" height="50" viewBox="0 0 50 50">
+          <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+        </svg>
+      );
+    }
+    this.setState({ avatar });
+  }
+
+  render() {
+    const profile = this.props.profile;
+    let fullname = String(profile.fullName);
+    let personType, personClassJobTitle, nickname;
+
+    // set nicknames up
+    if (
+      profile.NickName !== null &&
+      profile.NickName !== '' &&
+      profile.FirstName !== profile.NickName
+    ) {
+      nickname = '(' + profile.NickName + ')';
+    }
+    // set classes up
+    if (String(profile.PersonType).includes('stu')) {
+      personType = 'Student';
+      if (profile.Class !== undefined) {
+        personClassJobTitle = profile.Class;
+      }
+      // set job titles up
+    } else {
+      personType = 'Not Student';
+      if (profile.JobTitle !== undefined) {
+        personClassJobTitle = profile.JobTitle;
+      }
+    }
+
     return (
       <ListItem key={profile.AD_Username} className={'applicant-list-item'}>
         <ListItemAvatar>
-          {avatarImage ? (
+          {this.state.avatar ? (
             <Avatar
-              className={`applicant-avatar`}
-              src={`data:image/jpg;base64,${avatarImage}`}
-              sizes="70px"
+              className={`avatar`}
+              src={`data:image/jpg;base64,${this.state.avatar}`}
+              alt=""
             />
           ) : (
             <Avatar>
-              <PersonIcon />
+              <PersonIcon color="primary" />
             </Avatar>
           )}
         </ListItemAvatar>
-        <ListItemText primary={profile.fullName} secondary={profile.AD_Username} />
+        <ListItemText
+          primary={nickname ? fullname.replace(' ', ' ' + nickname + ' ') : fullname}
+          secondary={profile.AD_Username}
+          width="50%"
+        />
+        <ListItemText primary={personClassJobTitle} secondary={personType} width="50%" />
         <ListItemSecondaryAction>
-          {profile.AD_Username === this.props.userProfile.AD_Username ? (
+          {this.props.isPrimaryApplicant ? (
             <IconButton edge="end" aria-label="remove">
               <RemoveCircleOutlineIcon color="disabled" />
             </IconButton>
@@ -80,15 +165,5 @@ export default class ApplicantList extends Component {
         </ListItemSecondaryAction>
       </ListItem>
     );
-  }
-
-  render() {
-    if (this.props.applicants) {
-      return (
-        <List className="apartment-applicant-list">
-          {this.props.applicants.map(profile => this.renderApplicant(profile))}
-        </List>
-      );
-    }
   }
 }
