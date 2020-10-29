@@ -9,7 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import PersonIcon from '@material-ui/icons/Person';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-import ApartmentPeopleSearch from '../../components/ApartmentPeopleSearch';
+import GordonPeopleSearch from '../Header/components/PeopleSearch';
 import user from '../../services/user';
 import './apartmentApplicantList.scss';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
@@ -47,8 +47,9 @@ export default class ApplicantList extends Component {
         <List className="apartment-applicant-list">
           <ListItem key="applicant-list-header" className="applicant-list-header">
             <ListItemText primary="Student Applicants" />
-            <ApartmentPeopleSearch
+            <GordonPeopleSearch
               justify="flex-end"
+              disableLink
               errorMessage={this.state.peopleSearchError}
               onSearchSubmit={this.handleSelection}
               Authentication={this.props.Authentication}

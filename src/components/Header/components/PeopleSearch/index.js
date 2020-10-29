@@ -87,6 +87,13 @@ export default class GordonPeopleSearch extends Component {
     this.setState({ suggestions });
   }
 
+  handleClick = theChosenOne => {
+    if (theChosenOne && theChosenOne !== null) {
+      this.props.onSearchSubmit(theChosenOne);
+    }
+    this.reset();
+  };
+
   handleKeys = key => {
     let suggestionIndex = this.state.suggestionIndex;
     let suggestionList = this.state.suggestions;
@@ -97,7 +104,11 @@ export default class GordonPeopleSearch extends Component {
         suggestionIndex === -1
           ? (theChosenOne = suggestionList[0].UserName)
           : (theChosenOne = suggestionList[suggestionIndex].UserName);
-        window.location.pathname = '/profile/' + theChosenOne;
+        // If prop set to disable link, then trigger the onSearchSubmit callback function
+        // Else, redirect the user to the selected profile page
+        this.props.disableLink
+          ? this.props.onSearchSubmit(theChosenOne)
+          : (window.location.pathname = '/profile/' + theChosenOne);
         this.reset();
       }
     }
@@ -169,12 +180,13 @@ export default class GordonPeopleSearch extends Component {
       return null;
     }
     return (
+      // The props for component={Link} and to={`/profile/${suggestion.UserName}`}
+      // have been moved to the declaration of itemProps in the render() method.
+      // This allows these link features to be omitted if this.props.disableLink is true
       <MenuItem
         {...itemProps}
         key={suggestion.UserName}
-        component={Link}
-        to={`/profile/${suggestion.UserName}`}
-        onClick={this.reset}
+        onClick={this.handleClick.bind(this, suggestion.UserName)}
         className={
           suggestionList && suggestionList[suggestionIndex] !== undefined
             ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
@@ -314,6 +326,8 @@ export default class GordonPeopleSearch extends Component {
                 ? renderInput(
                     getInputProps({
                       placeholder: holder,
+                      error: this.props.errorMessage,
+                      helperText: this.props.errorMessage,
                       onChange: event => this.getSuggestions(event.target.value),
                       onKeyDown: event => this.handleKeys(event.key),
                     }),
@@ -328,14 +342,29 @@ export default class GordonPeopleSearch extends Component {
               {isOpen &&
               this.state.suggestions.length > 0 &&
               this.state.query.length >= MIN_QUERY_LENGTH ? (
-                <Paper square className="people-search-dropdown">
-                  {this.state.suggestions.map(suggestion =>
-                    this.renderSuggestion({
-                      suggestion,
-                      itemProps: getItemProps({ item: suggestion.UserName }),
-                    }),
-                  )}
-                </Paper>
+                this.props.disableLink ? (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map(suggestion =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({ item: suggestion.UserName }),
+                      }),
+                    )}
+                  </Paper>
+                ) : (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map(suggestion =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({
+                          item: suggestion.UserName,
+                          component: Link,
+                          to: `/profile/${suggestion.UserName}`,
+                        }),
+                      }),
+                    )}
+                  </Paper>
+                )
               ) : isOpen &&
                 this.state.suggestions.length === 0 &&
                 this.state.query.length >= MIN_QUERY_LENGTH ? (

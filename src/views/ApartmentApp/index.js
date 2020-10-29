@@ -161,71 +161,63 @@ export default class ApartApp extends Component {
 
       if (networkStatus === 'online' && this.state.isStu && this.props.Authentication) {
         return (
-          <div className="apartment-application">
-            {this.state.loading && <GordonLoader />}
-            {!this.state.loading && (
-              <Grid container justify="center" spacing={6}>
-                <Grid item xs={12} md={8}>
-                  <Card>
-                    <CardContent
-                      style={{
-                        marginLeft: 8,
-                        marginTop: 8,
-                        textAlign: 'center',
-                      }}
-                    >
-                      <Typography variant="h5">Apartment Application</Typography>
-                      <br />
-                      <Grid container justify="center" spacing={4}>
-                        <Grid item xs={12} md={8}>
-                          <ApplicantList
-                            onApplicantRemove={this.onApplicantRemove}
-                            applicants={this.state.applicants}
-                            userProfile={this.state.userProfile}
-                            onSearchSubmit={this.onSearchSubmit}
-                            peopleSearchError={this.state.peopleSearchError}
-                          />
-                        </Grid>
-                        {/* <Grid item xs={12} md>
-                          <ApartmentPeopleSearch
-                            errorMessage={this.state.peopleSearchError}
-                            onSearchSubmit={this.onSearchSubmit}
-                            Authentication={this.props.Authentication}
-                          />
-                        </Grid> */}
+          <Grid container justify="center" spacing={6}>
+            {this.state.loading ? (
+              <GordonLoader />
+            ) : (
+              <Grid item xs={12} md={8}>
+                <Card>
+                  <CardContent
+                    style={{
+                      marginLeft: 8,
+                      marginTop: 8,
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Typography variant="h5">Apartment Application</Typography>
+                    <Grid container justify="center" spacing={3}>
+                      <Grid item xs={12}>
+                        <ApplicantList
+                          onApplicantRemove={this.onApplicantRemove}
+                          applicants={this.state.applicants}
+                          userProfile={this.state.userProfile}
+                          onSearchSubmit={this.onSearchSubmit}
+                          peopleSearchError={this.state.peopleSearchError}
+                          Authentication={this.props.Authentication}
+                        />
                       </Grid>
-                      <br />
-                      <br />
-                      <TextField
-                        fullWidth
-                        value="Placeholder for Hall Preference Selection Menu"
-                        variant="outlined"
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                    </CardContent>
-                  </Card>
-                  <br />
-                  <Card>
-                    <CardContent
-                      style={{
-                        margin: 'auto',
-                        textAlign: 'center',
-                      }}
-                    >
-                      <Typography variant="h5">Hello World:</Typography>
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          value="Placeholder for Hall Preference Selection Menu"
+                          variant="outlined"
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                        />
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+                <br />
+                <Card>
+                  <CardContent
+                    style={{
+                      margin: 'auto',
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Typography variant="h5">Hello World:</Typography>
 
-                      <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
-                      <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
-                      <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
-                      <br />
-                    </CardContent>
-                  </Card>
-                </Grid>
+                    <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
+                    <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
+                    <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
+                    <br />
+                  </CardContent>
+                </Card>
               </Grid>
             )}
-          </div>
+          </Grid>
         );
       } else {
         // If the network is offline or the user type is non-student
