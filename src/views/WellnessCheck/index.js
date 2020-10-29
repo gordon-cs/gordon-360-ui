@@ -56,15 +56,15 @@ export default class WellnessCheck extends Component {
     const SYMPTOMS = true;
     const NO_SYMPTOMS = false;
 
-    if(answer.length > 0){
-        if (answer[0].userAnswer === true) {
-          this.setState({ currentStatus: SYMPTOMS });
-        }
-        if (answer[0].userAnswer === false) {
-          this.setState({ currentStatus: NO_SYMPTOMS });
-        }
-    } else{
-       this.setState({ currentStatus: NO_SYMPTOMS });
+    if (answer.length > 0) {
+      if (answer[0].userAnswer === true) {
+        this.setState({ currentStatus: SYMPTOMS });
+      }
+      if (answer[0].userAnswer === false) {
+        this.setState({ currentStatus: NO_SYMPTOMS });
+      }
+    } else {
+      this.setState({ currentStatus: NO_SYMPTOMS });
     }
   }
 
@@ -75,7 +75,7 @@ export default class WellnessCheck extends Component {
    */
   async getUserData() {
     const data = await user.getProfileInfo();
-    this.setState({ currentUser: data});
+    this.setState({ currentUser: data });
   }
 
   async getPersonType() {
@@ -152,12 +152,11 @@ export default class WellnessCheck extends Component {
     if (this.state.loading) {
       content = <GordonLoader />;
     } else {
-      
       /* Renders the wellness check question instead of the home page if the question
        *  has not been answered yet
        */
       if (this.props.Authentication) {
-        let status = <HealthStatus />
+        let status = <HealthStatus />;
 
         content = (
           <Grid container justify="center" spacing={2}>

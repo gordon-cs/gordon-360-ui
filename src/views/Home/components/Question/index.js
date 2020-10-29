@@ -70,7 +70,7 @@ export default class Question extends Component {
   createQuestion(questionStyle) {
     // Checks to make sure the questions are imported before attempting to access its data
     if (this.state.questions !== null) {
-      let symptomsJSX = this.state.questions.qOne.symptoms.map((item) => {
+      let symptomsJSX = this.state.questions.qOne.symptoms.map(item => {
         return <FormLabel>- {item}</FormLabel>;
       });
 

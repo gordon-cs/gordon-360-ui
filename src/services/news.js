@@ -3,8 +3,8 @@
  *
  * @module studentNews
  */
- // Written by Jessica Guan
- // Modified by Cameron Abbot
+// Written by Jessica Guan
+// Modified by Cameron Abbot
 
 import { DateTime } from 'luxon';
 import http from './http';
@@ -33,7 +33,6 @@ import http from './http';
  * @property {Date} ManualExpirationDate the expiration Date of the item
  */
 
-
 const getNotExpired = () => http.get(`news/not-expired`);
 
 // news since 10am (today's news)
@@ -43,8 +42,7 @@ const getPersonalUnapproved = () => http.get('news/personal-unapproved');
 
 const getCategories = () => http.get(`news/categories`);
 
-const getPostingByID = (id) => http.get(`news/${id}`);
-
+const getPostingByID = id => http.get(`news/${id}`);
 
 /**
  * Format a news posting by adding fields:
@@ -56,20 +54,17 @@ const getPostingByID = (id) => http.get(`news/${id}`);
  */
 function formatPosting(posting) {
   const timestamp = DateTime.fromISO(posting.Entered);
-  posting.dayPosted = timestamp.weekdayShort + ", "
-                     + timestamp.monthLong + " "
-                     + timestamp.day;
+  posting.dayPosted = timestamp.weekdayShort + ', ' + timestamp.monthLong + ' ' + timestamp.day;
   posting.yearPosted = timestamp.year;
-  posting.datePosted = timestamp.month + "/"
-                     + timestamp.day;
-  
+  posting.datePosted = timestamp.month + '/' + timestamp.day;
+
   let author = posting.ADUN;
   let fname, lname;
-  if(author.includes(".")) {
-    fname = author.substring(0,author.indexOf("."));
-    lname = author.substring(author.indexOf(".") + 1);
+  if (author.includes('.')) {
+    fname = author.substring(0, author.indexOf('.'));
+    lname = author.substring(author.indexOf('.') + 1);
   }
-  posting.author = fname + " " + lname;
+  posting.author = fname + ' ' + lname;
 }
 
 /******************* GET **********************/
@@ -82,12 +77,12 @@ function formatPosting(posting) {
 const getNotExpiredFormatted = async () => {
   let unexpiredNews = await getNotExpired();
   const news = [];
-  for (let i = 0; i < unexpiredNews.length; i +=1) {
+  for (let i = 0; i < unexpiredNews.length; i += 1) {
     news.push(unexpiredNews[i]);
     formatPosting(unexpiredNews[i]);
   }
   return news;
-}
+};
 
 /**
  * Gets today's news
@@ -98,12 +93,12 @@ const getNotExpiredFormatted = async () => {
 const getTodaysNews = async () => {
   let news = await getNewNews();
   const todaysNews = [];
-  for (let i = 0; i < news.length; i +=1) {
+  for (let i = 0; i < news.length; i += 1) {
     todaysNews.push(news[i]);
     formatPosting(news[i]);
   }
   return todaysNews;
-}
+};
 
 /**
  * NOTE: not currently used, might be used in future filter features
@@ -131,12 +126,12 @@ const getTodaysNews = async () => {
 const getPersonalUnapprovedFormatted = async () => {
   let news = await getPersonalUnapproved();
   const personalUnapproved = [];
-  for (let i = 0; i < news.length; i +=1) {
+  for (let i = 0; i < news.length; i += 1) {
     personalUnapproved.push(news[i]);
     formatPosting(news[i]);
   }
   return personalUnapproved;
-}
+};
 
 /**
  * NOTE: Not currently used
@@ -149,13 +144,13 @@ const getNewsByCategory = async category => {
   let news;
   news = await getNotExpired();
   const categoryNews = [];
-  for (let i = 0; i < news.length; i +=1) {
-    if(news[i].categoryID === category) {
+  for (let i = 0; i < news.length; i += 1) {
+    if (news[i].categoryID === category) {
       categoryNews.push(news[i]);
     }
   }
   return categoryNews;
-}
+};
 
 /**
  * Filter the news page
@@ -200,7 +195,7 @@ async function getFilteredNews(filters) {
     news = filteredNews;
   }
   return news;
-};
+}
 
 /******************* POST **********************/
 
@@ -212,11 +207,10 @@ async function getFilteredNews(filters) {
 async function submitStudentNews(newsItem) {
   try {
     return await http.post('news', newsItem);
+  } catch (reason) {
+    console.log('Caught news submission error: ' + reason);
   }
-  catch (reason) {
-    console.log("Caught news submission error: " + reason);
-  }
-};
+}
 
 /******************* DELETE **********************/
 
@@ -228,11 +222,10 @@ async function submitStudentNews(newsItem) {
 async function deleteStudentNews(newsID) {
   try {
     return await http.del(`news/${newsID}`);
+  } catch (reason) {
+    console.log('Caught news deletion error: ' + reason);
   }
-  catch (reason) {
-    console.log("Caught news deletion error: " + reason);
-  }
-};
+}
 
 /******************* EDIT (PUT) **********************/
 
@@ -247,11 +240,10 @@ async function deleteStudentNews(newsID) {
 async function editStudentNews(newsID, newData) {
   try {
     return await http.put(`news/${newsID}`, newData);
+  } catch (reason) {
+    console.log('Caught news update error: ' + reason);
   }
-  catch (reason) {
-    console.log("Caught news update error: " + reason);
-  }
-};
+}
 
 export default {
   getNewsByCategory,

@@ -23,5 +23,5 @@ const getHousingInfo = async () => {
 };
 
 export default {
-  getHousingInfo
+  getHousingInfo,
 };

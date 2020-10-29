@@ -128,5 +128,5 @@ export default [
     name: 'Page Not Found',
     path: '*',
     component: Page404,
-  }
+  },
 ];

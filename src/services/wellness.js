@@ -10,7 +10,7 @@ import http from './http';
  * @global
  * @typedef boolean
  * @property {status}//a boolean that tells if a student is symptomatic
- * 
+ *
  */
 
 /**
@@ -41,5 +41,7 @@ function postAnswer(data) {
 }
 
 export default {
-  getStatus, getQuestion, postAnswer
+  getStatus,
+  getQuestion,
+  postAnswer,
 };

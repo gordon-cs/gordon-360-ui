@@ -1,36 +1,35 @@
 .denied-box {
-    height: 250px;
+  height: 250px;
+  background-color: rgb(163, 0, 0);
+}
+
+.denied-time {
+  font-size: calc(14px + 1vw);
+  color: white;
+  padding-bottom: 30px;
+}
+
+.circle-cross {
+  text-align: center;
+  height: calc(70px + 3vw);
+  width: calc(70px + 3vw);
+  background-color: rgb(163, 0, 0);
+  color: white;
+  border-radius: 50%;
+  display: inline-block;
+  animation-name: animationCross;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes animationCross {
+  from {
     background-color: rgb(163, 0, 0);
-  }
-  
-  .denied-time {
-    font-size: calc(14px + 1vw);
     color: white;
-    padding-bottom: 30px;
   }
-  
-  .circle-cross {
-    text-align: center;
-    height: calc(70px + 3vw);
-    width: calc(70px + 3vw);
-    background-color: rgb(163, 0, 0);
-    color: white;
-    border-radius: 50%;
-    display: inline-block;
-    animation-name: animationCross;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
+  to {
+    background-color: white;
+    color: rgb(163, 0, 0);
   }
-  
-  @keyframes animationCross {
-    from {
-      background-color: rgb(163, 0, 0);
-      color: white;
-    }
-    to {
-      background-color: white;
-      color: rgb(163, 0, 0);
-    }
-  }
-  
+}

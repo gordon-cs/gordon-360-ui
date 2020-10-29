@@ -30,13 +30,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   customWidth: {
     maxWidth: 500,
   },
 }));
 
-const CustomTooltip = withStyles((theme) => ({
+const CustomTooltip = withStyles(theme => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
@@ -45,7 +45,7 @@ const CustomTooltip = withStyles((theme) => ({
   },
 }))(Tooltip);
 
-const Timesheets = (props) => {
+const Timesheets = props => {
   const [userJobs, setUserJobs] = useState([]);
   const [selectedDateIn, setSelectedDateIn] = useState(null);
   const [selectedDateOut, setSelectedDateOut] = useState(null);
@@ -71,7 +71,7 @@ const Timesheets = (props) => {
 
   // Sets the person type of the user
   useEffect(() => {
-    user.getProfileInfo().then((data) => {
+    user.getProfileInfo().then(data => {
       data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
     });
   });
@@ -121,7 +121,7 @@ const Timesheets = (props) => {
 
   //had to be defined outside of the authentication condition so that the ui could update
   // before cheking to see if user is authenticated.
-  const handleDateChangeInClock = (date) => {
+  const handleDateChangeInClock = date => {
     if (date) {
       date.setSeconds(0);
       date.setMilliseconds(0);
@@ -171,7 +171,7 @@ const Timesheets = (props) => {
         shift_start_datetime: dateIn.toISOString(),
         shift_end_datetime: dateOut.toISOString(),
       };
-      jobs.getActiveJobsForUser(canUseStaff, details).then((result) => {
+      jobs.getActiveJobsForUser(canUseStaff, details).then(result => {
         setUserJobs(result);
       });
     };
@@ -180,7 +180,7 @@ const Timesheets = (props) => {
       return jobs.getSavedShiftsForUser(canUseStaff);
     };
 
-    const handleDateChangeIn = (date) => {
+    const handleDateChangeIn = date => {
       if (date) {
         date.setSeconds(0);
         date.setMilliseconds(0);
@@ -193,7 +193,7 @@ const Timesheets = (props) => {
       }
     };
 
-    const handleDateChangeOut = (date) => {
+    const handleDateChangeOut = date => {
       if (date) {
         date.setSeconds(0);
         date.setMilliseconds(0);
@@ -247,7 +247,7 @@ const Timesheets = (props) => {
               );
               setSnackbarOpen(true);
             })
-            .catch((err) => {
+            .catch(err => {
               setSaving(false);
               if (typeof err === 'string' && err.toLowerCase().includes('overlap')) {
                 setSnackbarText(
@@ -281,7 +281,7 @@ const Timesheets = (props) => {
         selectedHourType,
         userShiftNotes,
       )
-        .then((result) => {
+        .then(result => {
           shiftDisplayComponent.loadShifts();
           setSelectedDateOut(null);
           setSelectedDateIn(null);
@@ -290,7 +290,7 @@ const Timesheets = (props) => {
           setHoursWorkedInDecimal(0);
           setSaving(false);
         })
-        .catch((err) => {
+        .catch(err => {
           setSaving(false);
           if (typeof err === 'string' && err.toLowerCase().includes('overlap')) {
             setSnackbarText(
@@ -319,7 +319,7 @@ const Timesheets = (props) => {
     };
 
     const jobsMenuItems = userJobs ? (
-      userJobs.map((job) => (
+      userJobs.map(job => (
         <MenuItem label={job.POSTITLE} value={job} key={job.EMLID}>
           {job.POSTITLE}
         </MenuItem>
@@ -328,7 +328,7 @@ const Timesheets = (props) => {
       <></>
     );
     const hourTypeMenuItems = hourTypes ? (
-      hourTypes.map((type) => (
+      hourTypes.map(type => (
         <MenuItem label={type.type_description} value={type.type_id} key={type.type_id}>
           {type.type_description}
         </MenuItem>
@@ -337,7 +337,7 @@ const Timesheets = (props) => {
       <></>
     );
 
-    const isLeapYear = (date) => {
+    const isLeapYear = date => {
       if (date.getFullYear() % 4 === 0) {
         if (date.getFullYear() % 100 === 0) {
           if (date.getFullYear() % 400 !== 0) {
@@ -353,7 +353,7 @@ const Timesheets = (props) => {
       }
     };
 
-    const getNextDate = (date) => {
+    const getNextDate = date => {
       let is30DayMonth =
         date.getMonth() === 3 ||
         date.getMonth() === 5 ||
@@ -425,7 +425,7 @@ const Timesheets = (props) => {
       };
     };
 
-    const disableDisallowedDays = (date) => {
+    const disableDisallowedDays = date => {
       let dayIn = selectedDateIn;
       let nextDate = getNextDate(dayIn);
       let shouldDisableDate = !(
@@ -472,7 +472,7 @@ const Timesheets = (props) => {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', (event) => {
+    window.addEventListener('message', event => {
       if (
         event.data === 'online' &&
         network === 'offline' &&
@@ -503,7 +503,7 @@ const Timesheets = (props) => {
         <InputLabel className="disable-select">Jobs</InputLabel>
         <Select
           value={selectedJob}
-          onChange={(e) => {
+          onChange={e => {
             setSelectedJob(e.target.value);
           }}
           input={<Input id="job" />}
@@ -526,7 +526,7 @@ const Timesheets = (props) => {
         <InputLabel className="disable-select">Hour Type</InputLabel>
         <Select
           value={selectedHourType}
-          onChange={(e) => {
+          onChange={e => {
             setSelectedHourType(e.target.value);
           }}
           input={<Input id="hour type" />}
@@ -571,7 +571,7 @@ const Timesheets = (props) => {
       errorText = <></>;
     }
 
-    const handleShiftNotesChanged = (event) => {
+    const handleShiftNotesChanged = event => {
       setUserShiftNotes(event.target.value);
     };
 

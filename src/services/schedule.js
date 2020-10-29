@@ -23,7 +23,6 @@ import http from './http';
  * @property {TimeSpan} END_TIME
  */
 
-
 /**
  * Get course schedule for the current user
  * @return {Promise.<Schedule[]>} returns all the course schedules

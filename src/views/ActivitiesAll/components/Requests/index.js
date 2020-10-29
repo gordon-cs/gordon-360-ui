@@ -72,7 +72,7 @@ export default class Requests extends Component {
 
     // For each involvement leading, render RequestsReceived component
     // which will render the individual requests
-    received = this.state.involvementsLeading.map((involvement) => (
+    received = this.state.involvementsLeading.map(involvement => (
       <RequestsReceived involvement={involvement} />
     ));
 
@@ -109,7 +109,7 @@ export default class Requests extends Component {
       sent = this.state.requestsSent
         .slice(0) // Render requests in order of newest to oldest
         .reverse() // newest to oldest
-        .map((request) => (
+        .map(request => (
           <RequestSent member={request} key={request.RequestID} onCancel={this.onCancel} />
         ));
     }
