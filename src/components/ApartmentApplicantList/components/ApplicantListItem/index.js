@@ -8,7 +8,7 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import PersonIcon from '@material-ui/icons/Person';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-import user from '../../services/user';
+import user from '../../../../services/user';
 import './applicantListItem.css';
 import '../../../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 

@@ -2,14 +2,10 @@
 import React, { Component } from 'react';
 import 'date-fns';
 import { Grid, Card, CardContent, Button, TextField, Typography } from '@material-ui/core/';
-// import InputAdornment from '@material-ui/core/InputAdornment';
-// import PersonIcon from '@material-ui/icons/Person';
 import GordonLoader from '../../components/Loader';
 import ApplicantList from '../../components/ApartmentApplicantList';
-// import ApartmentPeopleSearch from '../../components/ApartmentPeopleSearch';
 import user from '../../services/user';
 import housing from '../../services/housing';
-import './apartmentApp.css';
 
 export default class ApartApp extends Component {
   constructor(props) {
