@@ -34,7 +34,7 @@ export default class ApartApp extends Component {
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  onSearchSubmit = (searchSelection) => {
+  onSearchSubmit = searchSelection => {
     // Clear any error message from the search bar
     this.setState({ peopleSearchError: null });
     if (searchSelection && searchSelection !== null) {
@@ -69,7 +69,7 @@ export default class ApartApp extends Component {
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  onApplicantRemove = (profileToRemove) => {
+  onApplicantRemove = profileToRemove => {
     if (profileToRemove && profileToRemove !== null) {
       let applicantList = this.state.applicants; // make a separate copy of the array
       let index = applicantList.indexOf(profileToRemove);
@@ -138,7 +138,7 @@ export default class ApartApp extends Component {
        *  multiple re-renders that creates extreme performance lost.
        *  The origin of the message is checked to prevent cross-site scripting attacks
        */
-      window.addEventListener('message', (event) => {
+      window.addEventListener('message', event => {
         if (
           event.data === 'online' &&
           this.state.network === 'offline' &&
@@ -182,12 +182,14 @@ export default class ApartApp extends Component {
                             onApplicantRemove={this.onApplicantRemove}
                             applicants={this.state.applicants}
                             userProfile={this.state.userProfile}
+                            onSearchSubmit={this.onSearchSubmit}
+                            peopleSearchError={this.state.peopleSearchError}
                           />
                         </Grid>
                         {/* <Grid item xs={12} md>
                           <ApartmentPeopleSearch
                             errorMessage={this.state.peopleSearchError}
-                            onSearchSelect={this.onSearchSubmit}
+                            onSearchSubmit={this.onSearchSubmit}
                             Authentication={this.props.Authentication}
                           />
                         </Grid> */}

@@ -8,7 +8,8 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import 'date-fns';
 import GordonPeopleSearch from '../Header/components/PeopleSearch';
-import './apartmentPeopleSearch.css';
+// import './apartmentPeopleSearch.css';
+import '../Header/components/PeopleSearch/people-search.scss';
 const MIN_QUERY_LENGTH = 2;
 
 /*
@@ -19,19 +20,16 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
   constructor(props) {
     super(props);
     this.renderSuggestion = this.renderSuggestion.bind(this);
+    this.handleSelection = this.handleSelection.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.handleKeys = this.handleKeys.bind(this);
-    this.state = {
-      isStu: Boolean,
-      loading: true,
-      profile: {},
-    };
   }
 
   handleSelection = theChosenOne => {
     // Make sure the chosen username was not null
     if (theChosenOne && theChosenOne !== null) {
       // Send the selected username to the parent component
-      this.props.onSearchSelect(theChosenOne);
+      this.props.onSearchSubmit(theChosenOne);
       // Reset the search box
       this.reset();
     }
@@ -216,10 +214,9 @@ export default class ApartmentPeopleSearch extends GordonPeopleSearch {
         ref={downshift => {
           this.downshift = downshift;
         }}
-        // onChange={(selection) => this.handleSelection(selection)}
       >
         {({ getInputProps, getItemProps, isOpen }) => (
-          <span className="apartment-people-search">
+          <span className="gordon-people-search">
             {networkStatus === 'online'
               ? this.renderInput(
                   getInputProps({

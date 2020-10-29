@@ -18,10 +18,22 @@ import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResul
 export default class ApplicantList extends Component {
   constructor(props) {
     super(props);
+    this.handleSelection = this.handleSelection.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
+    this.state = {
+      peopleSearchError: null,
+    };
   }
 
-  handleRemove = (profile) => {
+  handleSelection = theChosenOne => {
+    // Make sure the chosen username was not null
+    if (theChosenOne && theChosenOne !== null) {
+      // Send the selected username to the parent component
+      this.props.onSearchSubmit(theChosenOne);
+    }
+  };
+
+  handleRemove = profile => {
     // Make sure the chosen profile was not null
     if (profile && profile !== null) {
       // Send the selected profile to the parent component
@@ -38,11 +50,11 @@ export default class ApplicantList extends Component {
             <ApartmentPeopleSearch
               justify="flex-end"
               errorMessage={this.state.peopleSearchError}
-              onSearchSelect={this.onSearchSubmit}
+              onSearchSubmit={this.handleSelection}
               Authentication={this.props.Authentication}
             />
           </ListItem>
-          {this.props.applicants.map((profile) => (
+          {this.props.applicants.map(profile => (
             <ApplicantListItem
               key={profile.AD_Username}
               profile={profile}
@@ -71,7 +83,7 @@ class ApplicantListItem extends Component {
     };
   }
 
-  handleRemove = (profile) => {
+  handleRemove = profile => {
     // Make sure the chosen profile was not null
     if (profile && profile !== null) {
       // Send the selected profile to the parent component
@@ -109,7 +121,7 @@ class ApplicantListItem extends Component {
 
   render() {
     const profile = this.props.profile;
-    let fullname = String(profile.fullName);
+    let fullName = String(profile.fullName);
     let personType, personClassJobTitle, nickname;
 
     // set nicknames up
@@ -150,7 +162,7 @@ class ApplicantListItem extends Component {
           )}
         </ListItemAvatar>
         <ListItemText
-          primary={nickname ? fullname.replace(' ', ' ' + nickname + ' ') : fullname}
+          primary={nickname ? fullName.replace(' ', ' ' + nickname + ' ') : fullName}
           secondary={profile.AD_Username}
           width="50%"
         />
