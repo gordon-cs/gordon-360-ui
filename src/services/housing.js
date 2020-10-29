@@ -22,6 +22,21 @@ const getHousingInfo = async () => {
   return housingInfo;
 };
 
+/**
+ * Get active jobs for current user
+ * @param {Number} primaryID Whether user can use staff timesheets
+ * @param {StudentProfileInfo} applicants Array of StudentProfileInfo objects
+ * @return {Promise.<String>} User's active jobs
+ */
+const saveApartmentApplication = async (primaryID, applicants) => {
+  let applicationDetails = {
+    PRIMARY_ID: primaryID,
+    APPLICANT_ARRAY: applicants,
+  };
+  return await http.post(`jobs/saveShift/`, applicationDetails);
+};
+
 export default {
-  getHousingInfo
+  getHousingInfo,
+  saveApartmentApplication,
 };
