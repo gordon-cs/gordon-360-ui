@@ -9,6 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import PersonIcon from '@material-ui/icons/Person';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import ApartmentPeopleSearch from '../../components/ApartmentPeopleSearch';
 import user from '../../services/user';
 import './apartmentApplicantList.scss';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
@@ -20,7 +21,7 @@ export default class ApplicantList extends Component {
     this.handleRemove = this.handleRemove.bind(this);
   }
 
-  handleRemove = profile => {
+  handleRemove = (profile) => {
     // Make sure the chosen profile was not null
     if (profile && profile !== null) {
       // Send the selected profile to the parent component
@@ -34,8 +35,14 @@ export default class ApplicantList extends Component {
         <List className="apartment-applicant-list">
           <ListItem key="applicant-list-header" className="applicant-list-header">
             <ListItemText primary="Student Applicants" />
+            <ApartmentPeopleSearch
+              justify="flex-end"
+              errorMessage={this.state.peopleSearchError}
+              onSearchSelect={this.onSearchSubmit}
+              Authentication={this.props.Authentication}
+            />
           </ListItem>
-          {this.props.applicants.map(profile => (
+          {this.props.applicants.map((profile) => (
             <ApplicantListItem
               key={profile.AD_Username}
               profile={profile}
@@ -64,7 +71,7 @@ class ApplicantListItem extends Component {
     };
   }
 
-  handleRemove = profile => {
+  handleRemove = (profile) => {
     // Make sure the chosen profile was not null
     if (profile && profile !== null) {
       // Send the selected profile to the parent component
@@ -128,7 +135,7 @@ class ApplicantListItem extends Component {
     }
 
     return (
-      <ListItem key={profile.AD_Username} className={'applicant-list-item'}>
+      <ListItem key={profile.AD_Username} className={'applicant-list-item'} alignItems="flex-start">
         <ListItemAvatar>
           {this.state.avatar ? (
             <Avatar

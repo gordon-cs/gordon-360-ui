@@ -6,7 +6,7 @@ import { Grid, Card, CardContent, Button, TextField, Typography } from '@materia
 // import PersonIcon from '@material-ui/icons/Person';
 import GordonLoader from '../../components/Loader';
 import ApplicantList from '../../components/ApartmentApplicantList';
-import ApartmentPeopleSearch from '../../components/ApartmentPeopleSearch';
+// import ApartmentPeopleSearch from '../../components/ApartmentPeopleSearch';
 import user from '../../services/user';
 import housing from '../../services/housing';
 import './apartmentApp.css';
@@ -34,7 +34,7 @@ export default class ApartApp extends Component {
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  onSearchSubmit = searchSelection => {
+  onSearchSubmit = (searchSelection) => {
     // Clear any error message from the search bar
     this.setState({ peopleSearchError: null });
     if (searchSelection && searchSelection !== null) {
@@ -69,7 +69,7 @@ export default class ApartApp extends Component {
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  onApplicantRemove = profileToRemove => {
+  onApplicantRemove = (profileToRemove) => {
     if (profileToRemove && profileToRemove !== null) {
       let applicantList = this.state.applicants; // make a separate copy of the array
       let index = applicantList.indexOf(profileToRemove);
@@ -138,7 +138,7 @@ export default class ApartApp extends Component {
        *  multiple re-renders that creates extreme performance lost.
        *  The origin of the message is checked to prevent cross-site scripting attacks
        */
-      window.addEventListener('message', event => {
+      window.addEventListener('message', (event) => {
         if (
           event.data === 'online' &&
           this.state.network === 'offline' &&
@@ -184,13 +184,13 @@ export default class ApartApp extends Component {
                             userProfile={this.state.userProfile}
                           />
                         </Grid>
-                        <Grid item xs={12} md>
+                        {/* <Grid item xs={12} md>
                           <ApartmentPeopleSearch
                             errorMessage={this.state.peopleSearchError}
                             onSearchSelect={this.onSearchSubmit}
                             Authentication={this.props.Authentication}
                           />
-                        </Grid>
+                        </Grid> */}
                       </Grid>
                       <br />
                       <br />
