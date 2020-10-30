@@ -88,7 +88,7 @@ export default class GordonPeopleSearch extends Component {
   }
 
   handleClick = theChosenOne => {
-    if (theChosenOne && theChosenOne !== null) {
+    if (theChosenOne && theChosenOne !== null && this.props.disableLink) {
       this.props.onSearchSubmit(theChosenOne);
     }
     this.reset();
@@ -123,7 +123,7 @@ export default class GordonPeopleSearch extends Component {
       this.setState({ suggestionIndex });
     }
     if (key === 'Backspace') {
-      this.setState({suggestions: []});
+      this.setState({ suggestions: [] });
     }
   };
 
@@ -149,7 +149,7 @@ export default class GordonPeopleSearch extends Component {
     var hasMatched = false;
     return (
       <span>
-        {parts.map((part) =>
+        {parts.map(part =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
             ? (hasMatched = true && <span className="h">{part}</span>)
             : part,
@@ -159,16 +159,16 @@ export default class GordonPeopleSearch extends Component {
   }
 
   renderNoResult() {
-      return(
-        <MenuItem className="people-search-suggestion" style=
-        {{paddingBottom: '5px'}}>
-          <Typography className="no-results" variant="body2">
-            No results
-          </Typography>
-          <Typography className="loading" variant="body2">
-            Loading...
-          </Typography>
-        </MenuItem>)
+    return (
+      <MenuItem className="people-search-suggestion" style={{ paddingBottom: '5px' }}>
+        <Typography className="no-results" variant="body2">
+          No results
+        </Typography>
+        <Typography className="loading" variant="body2">
+          Loading...
+        </Typography>
+      </MenuItem>
+    );
   }
 
   renderSuggestion(params) {
@@ -313,32 +313,34 @@ export default class GordonPeopleSearch extends Component {
     let content;
     if (this.props.Authentication) {
       // Creates the People Search Bar depending on the status of the network found in local storage
-        content = (
-          // Assign reference to Downshift to `this` for usage elsewhere in the component
-          <Downshift
-            ref={downshift => {
-              this.downshift = downshift;
-            }}
-          >
-            {({ getInputProps, getItemProps, isOpen }) => (
-              <span className="gordon-people-search">
-                {networkStatus === 'online' ? (renderInput(
-                  getInputProps({
-                    placeholder: holder,
-                    onChange: event => this.getSuggestions(event.target.value),
-                    onKeyDown: event => this.handleKeys(event.key),
-                  }),
-                )) : (renderInput(
-                  getInputProps({
-                    placeholder: holder,
-                    style: { color: 'white' },
-                    disabled: { networkStatus },
-                  }),
-                ))}
-                {isOpen &&
-                this.state.suggestions.length > 0 &&
-                this.state.query.length >= MIN_QUERY_LENGTH ? (
-                  this.props.disableLink ? (
+      content = (
+        // Assign reference to Downshift to `this` for usage elsewhere in the component
+        <Downshift
+          ref={downshift => {
+            this.downshift = downshift;
+          }}
+        >
+          {({ getInputProps, getItemProps, isOpen }) => (
+            <span className="gordon-people-search">
+              {networkStatus === 'online'
+                ? renderInput(
+                    getInputProps({
+                      placeholder: holder,
+                      onChange: event => this.getSuggestions(event.target.value),
+                      onKeyDown: event => this.handleKeys(event.key),
+                    }),
+                  )
+                : renderInput(
+                    getInputProps({
+                      placeholder: holder,
+                      style: { color: 'white' },
+                      disabled: { networkStatus },
+                    }),
+                  )}
+              {isOpen &&
+              this.state.suggestions.length > 0 &&
+              this.state.query.length >= MIN_QUERY_LENGTH ? (
+                this.props.disableLink ? (
                   <Paper square className="people-search-dropdown">
                     {this.state.suggestions.map(suggestion =>
                       this.renderSuggestion({
@@ -347,31 +349,33 @@ export default class GordonPeopleSearch extends Component {
                       }),
                     )}
                   </Paper>
-                  ) : (
-                    <Paper square className="people-search-dropdown">
-                      {this.state.suggestions.map(suggestion =>
-                        this.renderSuggestion({
-                          suggestion,
-                          itemProps: getItemProps({
-                            item: suggestion.UserName,
-                            component: Link,
-                            to: `/profile/${suggestion.UserName}`,
-                          }),
+                ) : (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map(suggestion =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({
+                          item: suggestion.UserName,
+                          component: Link,
+                          to: `/profile/${suggestion.UserName}`,
                         }),
-                      )}
-                    </Paper>
-                  )
-                ) : isOpen && this.state.suggestions.length === 0 &&
-                  this.state.query.length >= MIN_QUERY_LENGTH ? (
-                  // Styling copied from how renderSuggestion is done with
-                  // only bottom padding changed and 'no-results' class used
-                    <Paper square className="people-search-dropdown">
-                      {this.renderNoResult()}
-                    </Paper>) : null}
-              </span>
-            )}
-          </Downshift>
-        );
+                      }),
+                    )}
+                  </Paper>
+                )
+              ) : isOpen &&
+                this.state.suggestions.length === 0 &&
+                this.state.query.length >= MIN_QUERY_LENGTH ? (
+                // Styling copied from how renderSuggestion is done with
+                // only bottom padding changed and 'no-results' class used
+                <Paper square className="people-search-dropdown">
+                  {this.renderNoResult()}
+                </Paper>
+              ) : null}
+            </span>
+          )}
+        </Downshift>
+      );
     } else {
       content = (
         <span className="gordon-people-search">
