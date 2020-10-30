@@ -38,6 +38,8 @@ export default class EditDescriptionDialog extends React.Component {
     this.setState({ [name]: e.target.value }, () => {});
   };
 
+
+
   handleClose = () => {
     this.props.handleEditDescriptionClose();
 

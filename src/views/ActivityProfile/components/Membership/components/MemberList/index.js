@@ -138,15 +138,11 @@ export default class MemberList extends Component {
   async confirmLeave() {
     await membership.remove(this.props.member.MembershipID);
     // Search to see if the member is still in the involvement after removing
-    let inInvolvement = await membership.search(
-      this.props.member.IDNumber,
-      this.props.member.SessionCode,
-      this.props.member.ActivityCode,
-    )[0];
+    let inInvolvement = await membership.search(this.props.member.IDNumber, this.props.member.SessionCode, this.props.member.ActivityCode)[0];
     if (inInvolvement) {
       this.setState({ leaveSnackbar: 'failure' });
     } else {
-      this.setState({ leaveSnackbar: 'success' });
+      this.setState({ leaveSnackbar: 'success' });;
     }
     this.onClose();
     this.refresh();

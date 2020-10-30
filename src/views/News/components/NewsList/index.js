@@ -8,6 +8,7 @@ import NewsItem from '../NewsItem';
 import { gordonColors } from '../../../../theme';
 import './newsList.scss';
 
+
 export default class NewsList extends Component {
   constructor(props) {
     super(props);
@@ -60,31 +61,29 @@ export default class NewsList extends Component {
       color: '#FFF',
       padding: '10px',
     };
-
+    
     /********** HEADER ***********/
     // Show single 'news' column for narrrow viewports
     if (window.innerWidth < this.breakpointWidth) {
       personalUnapprovedPostings = personalUnapprovedNews.map(posting => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="single"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
+        <NewsItem 
+          posting={posting} 
+          key={posting.SNID} 
+          size="single" 
+          updateSnackbar={this.props.updateSnackbar} 
+          currentUsername={this.props.currentUsername} 
           callFunction={this.props.callFunction}
-          unapproved
-        />
+          unapproved/>
       ));
 
       postings = news.map(posting => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
+        <NewsItem 
+          posting={posting} 
+          key={posting.SNID} 
           size="single"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-        />
+          updateSnackbar={this.props.updateSnackbar} 
+          currentUsername={this.props.currentUsername} 
+          callFunction={this.props.callFunction} />
       ));
 
       header = (
@@ -103,28 +102,26 @@ export default class NewsList extends Component {
     // Show full news columns in header for larger viewports
     else if (news) {
       personalUnapprovedPostings = personalUnapprovedNews.map(posting => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="full"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
+        <NewsItem 
+          posting={posting} 
+          key={posting.SNID} 
+          size="full" 
+          updateSnackbar={this.props.updateSnackbar} 
+          currentUsername={this.props.currentUsername} 
           callFunction={this.props.callFunction}
-          unapproved
-        />
+          unapproved/>
       ));
 
       postings = news.map(posting => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          updateSnackbar={this.props.updateSnackbar}
+        <NewsItem 
+          posting={posting} 
+          key={posting.SNID} 
+          updateSnackbar={this.props.updateSnackbar} 
           currentUsername={this.props.currentUsername}
           callFunction={this.props.callFunction}
-          size="full"
-        />
+          size="full" />
       ));
-
+        
       header = (
         <div style={headerStyle}>
           <Grid container direction="row">
@@ -161,7 +158,7 @@ export default class NewsList extends Component {
             <List className="news-list" disablePadding>
               {personalUnapprovedPostings}
               {postings}
-            </List>
+              </List>
           </Grid>
         </Card>
       </section>

@@ -554,7 +554,7 @@ export default class ShiftItem extends Component {
                 </Grid>
                 <Grid item xs={2}>
                   <Typography className="disable-select" variant="body2">
-                    {this.props.canUse ? console.log('HERE', HOUR_TYPE) : HOURLY_RATE.toFixed(2)}
+                    {(this.props.canUse ? console.log('HERE', HOUR_TYPE) : HOURLY_RATE.toFixed(2))}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>

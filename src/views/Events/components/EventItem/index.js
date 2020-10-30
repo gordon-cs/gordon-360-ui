@@ -20,7 +20,7 @@ export default class GordonEventItem extends Component {
   render() {
     const { event } = this.props;
     const subheader = `${event.date}, ${event.timeRange}`;
-
+    
     // let content;
     // if (event.Occurrences.length > 1) {
     //   content = event.Occurrences

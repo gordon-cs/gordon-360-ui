@@ -40,6 +40,7 @@
     background-color: white;
   }
 
+
   // .loading is shown first. After 350ms, .loading opacity and font-size go to 0. This is done
   // to give space for .no-results to increase in font size and change to normal opacity.
   .no-results {
@@ -52,14 +53,8 @@
   }
 
   @keyframes show-no-results {
-    0% {
-      font-size: 90%;
-      opacity: 1;
-    }
-    100% {
-      font-size: 90%;
-      opacity: 1;
-    }
+    0% {font-size: 90%; opacity: 1;}
+    100% {font-size: 90%; opacity: 1;}
   }
 
   .loading {
@@ -70,14 +65,8 @@
   }
 
   @keyframes show-loading {
-    0% {
-      font-size: 0;
-      opacity: 0;
-    }
-    100% {
-      font-size: 0;
-      opacity: 0;
-    }
+    0% {font-size: 0; opacity: 0;}
+    100% {font-size: 0; opacity: 0;}
   }
 
   @media (min-width: 0px) {

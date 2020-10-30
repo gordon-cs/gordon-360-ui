@@ -151,8 +151,9 @@ export default class Admin extends Component {
             </Card>
           </Grid>
         </Grid>
-      );
+      )
     }
+
 
     return Admin;
   }

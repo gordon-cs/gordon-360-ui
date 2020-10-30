@@ -20,6 +20,8 @@ export default class RemoveScheduleDialog extends React.Component {
     this.props.handleRemoveMyScheduleClose();
   };
 
+
+
   render() {
     const button = {
       background: gordonColors.primary.cyan,

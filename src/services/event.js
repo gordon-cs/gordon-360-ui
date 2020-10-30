@@ -172,7 +172,7 @@ const getCLWEvents = async () => {
 };
 
 //Takes parameter of all events(formatted) so getting from database is not needed
-const getFutureEvents = allEvents => {
+const getFutureEvents = (allEvents) => {
   const futureEvents = [];
   const date = new Date().getTime();
   allEvents.sort(sortByTime);
@@ -209,7 +209,7 @@ const getAllGuestEventsFormatted = async () => {
   return events.sort(sortByTime);
 };
 
-const getFilteredEvents = filters => {
+const getFilteredEvents = (filters) => {
   const allEvents = filters.events;
   let filteredEvents = [];
   let shownEvents = [];

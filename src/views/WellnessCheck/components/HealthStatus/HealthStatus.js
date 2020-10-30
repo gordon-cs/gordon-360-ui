@@ -26,7 +26,7 @@ export default class HealthStatus extends Component {
       width: 0,
     };
   }
-
+ 
   async componentDidMount() {
     this.intervalID = setInterval(() => this.tick(), 1000);
     this.updateWindowDimensions();
@@ -75,63 +75,65 @@ export default class HealthStatus extends Component {
     const SYMPTOMS = true;
     const NO_SYMPTOMS = false;
 
-    if (answer.length > 0) {
-      if (answer[0].answerValid) {
-        if (answer[0].userAnswer === true) {
-          this.setState({ currentStatus: SYMPTOMS });
-        }
-        if (answer[0].userAnswer === false) {
-          this.setState({ currentStatus: NO_SYMPTOMS });
-        }
-      } else {
-        this.setState({ currentStatus: SYMPTOMS });
-      }
-    } else {
-      this.setState({ currentStatus: SYMPTOMS });
+    if(answer.length > 0){
+        if(answer[0].answerValid){
+            if (answer[0].userAnswer === true) {
+              this.setState({ currentStatus: SYMPTOMS });
+            }
+            if (answer[0].userAnswer === false) {
+              this.setState({ currentStatus: NO_SYMPTOMS });
+            }
+        }else{
+            this.setState({ currentStatus: SYMPTOMS });
+          }
+    }else{
+       this.setState({ currentStatus: SYMPTOMS });
     }
   }
 
-  render() {
+
+  render() {  
     let content;
     if (this.state.loading) {
       content = <GordonLoader />;
     } else {
-      /*
+
+      /* 
        * Renders the wellness status of a student
        */
-      if (this.state.currentStatus === false) {
-        content = (
-          <Grid spacing={2}>
-            <Card>
-              {
-                //<CardHeader title="Approved" />
-              }
-              <CardContent className="approved-box">
-                <div className="approved-time">{this.state.time}</div>
-                <div className="circle-check">
-                  <CheckIcon style={{ fontSize: this.resizeIcon() }} />
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
-        );
-      } else {
-        content = (
-          <Grid spacing={2}>
-            <Card>
-              {
-                // <CardHeader title="Denied" />
-              }
-              <CardContent className="denied-box">
-                <div className="denied-time">{this.state.time}</div>
-                <div className="circle-cross">
-                  <ClearIcon style={{ fontSize: this.resizeIcon() }} />
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
-        );
-      }
+        if (this.state.currentStatus === false ) {
+          content = (
+            <Grid spacing={2}>
+              <Card>
+                {
+                  //<CardHeader title="Approved" />
+                }
+                <CardContent className="approved-box">
+                  <div className="approved-time">{this.state.time}</div>
+                  <div className="circle-check">
+                    <CheckIcon style={{ fontSize: this.resizeIcon() }} />
+                  </div>
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        } else {
+          content = (
+            <Grid spacing={2}>
+              <Card>
+                {
+                  // <CardHeader title="Denied" />
+                }
+                <CardContent className="denied-box">
+                  <div className="denied-time">{this.state.time}</div>
+                  <div className="circle-cross">
+                    <ClearIcon style={{ fontSize: this.resizeIcon() }} />
+                  </div>
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        }
     }
     return content;
   }

@@ -3,6 +3,7 @@
 // Instead, the NewsItem.js file in the "News" view is being used
 // This file is being preserved for now as the news features are still in development
 
+
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -64,23 +65,28 @@ export default class CategorizedNews extends Component {
 
     //List news items in this category only if there are items
     numNewsItems = this.state.todaysNews.length;
-    if (numNewsItems === 0) {
+    if(numNewsItems === 0) {
       items = '';
       show = '';
     } else {
-      items = this.state.todaysNews.map(item => (
-        <NewsItem subject={item.subject} submittedBy={item.name} description={item.news} />
-      ));
+      items = this.state.todaysNews
+        .map(item => (
+          <NewsItem subject={item.subject} submittedBy={item.name}  description={item.news} />
+        ));
     }
 
-    return (
+    return(
       <Grid container direction="column" spacing={8}>
         <Grid container alignItems="baseline" direction="row" spacing={8}>
           <Grid item>
-            <Typography variant="subtitle1">{this.props.category}</Typography>
+            <Typography variant="subtitle1">
+              {this.props.category}
+            </Typography>
           </Grid>
           <Grid item>
-            <Typography>{numNewsItems} Listings</Typography>
+            <Typography>
+              {numNewsItems} Listings
+            </Typography>
           </Grid>
           <Grid item>
             <Button size="small" style={button} onClick={this.handleExpandClick}>
@@ -96,4 +102,5 @@ export default class CategorizedNews extends Component {
       </Grid>
     );
   }
+
 }

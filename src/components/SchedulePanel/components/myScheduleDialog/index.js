@@ -10,17 +10,19 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../../../theme';
 import Checkbox from '@material-ui/core/Checkbox';
-import myschedule from '../../../../services/myschedule';
+import myschedule from '../../../../services/myschedule'
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { FormHelperText } from '@material-ui/core';
-import { KeyboardTimePicker } from '@material-ui/pickers';
+import {KeyboardTimePicker} from '@material-ui/pickers';
 
 // Default values
 const STARTHOUR = '08:00';
-const ENDHOUR = '17:00';
+const ENDHOUR ='17:00';
 
 export default class MyScheduleDialog extends React.Component {
+
+
   constructor(props) {
     super(props);
 
@@ -50,7 +52,7 @@ export default class MyScheduleDialog extends React.Component {
       formErrors: {
         descriptionInput: '',
         locationInput: '',
-        checkedInput: '',
+        checkedInput:'',
         startHourValid: '',
         endHourValid: '',
       },
@@ -62,7 +64,7 @@ export default class MyScheduleDialog extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // Case : Edit(doubleclick)
-    if (nextProps.selectedEvent && this.state.selectedEvent !== nextProps.selectedEvent) {
+    if (nextProps.selectedEvent && (this.state.selectedEvent !== nextProps.selectedEvent) ) {
       this.setState({ selectedEvent: nextProps.selectedEvent }, () => {
         myschedule
           .getMyScheduleEventId(this.state.selectedEvent.id)
@@ -98,8 +100,8 @@ export default class MyScheduleDialog extends React.Component {
           checkedFr: nextProps.resourceId === 6 ? true : false,
           checkedSa: nextProps.resourceId === 7 ? true : false,
         },
-        startHourInput: nextProps.startTime,
-        endHourInput: nextProps.endTime,
+        startHourInput:nextProps.startTime,
+        endHourInput:nextProps.endTime,
         checkedValid: true,
         startHourValid: true,
         endHourValid: true,
@@ -132,14 +134,14 @@ export default class MyScheduleDialog extends React.Component {
           parseInt(value.trim(), 10) <= 22;
         fieldValidationErrors.startHourInput = startHourValid ? '' : 'Start Time is not Valid';
         endHourValid =
-          this.state.endHourInput.trim() !== '' &&
-          parseInt(value.trim(), 10) < parseInt(this.state.endHourInput.trim(), 10) &&
-          parseInt(this.state.endHourInput.trim(), 10) > 5 &&
-          parseInt(this.state.endHourInput.trim(), 10) <= 22;
-        fieldValidationErrors.endHourInput = endHourValid ? '' : 'End Time is not Valid';
+        this.state.endHourInput.trim() !== '' &&
+        parseInt(value.trim(), 10) < parseInt(this.state.endHourInput.trim(), 10) &&
+        parseInt(this.state.endHourInput.trim(), 10) > 5 &&
+        parseInt(this.state.endHourInput.trim(), 10) <= 22;
+      fieldValidationErrors.endHourInput = endHourValid ? '' : 'End Time is not Valid';
         break;
       case 'endHourInput':
-        startHourValid =
+          startHourValid =
           this.state.startHourInput.trim() !== '' &&
           parseInt(value.trim(), 10) > parseInt(this.state.startHourInput.trim(), 10) &&
           parseInt(this.state.startHourInput.trim(), 10) > 5 &&
@@ -178,7 +180,7 @@ export default class MyScheduleDialog extends React.Component {
         this.state.endHourValid &&
         this.state.checkedValid,
     });
-    console.log('Form Valid ', this.state.formValid);
+    console.log("Form Valid ", this.state.formValid);
   }
 
   handleSubmit = e => {
@@ -211,7 +213,9 @@ export default class MyScheduleDialog extends React.Component {
       }
     }
     fieldValidationErrors.checkedInput = valid ? '' : 'At least one day has to be checked';
-    this.setState({ checkedValid: valid, formErrors: fieldValidationErrors }, () => {
+    this.setState({ checkedValid: valid,
+      formErrors: fieldValidationErrors,
+     }, () => {
       this.validateForm();
     });
   };
@@ -220,7 +224,7 @@ export default class MyScheduleDialog extends React.Component {
     this.setState({ [name]: value }, () => {
       this.validateField(name, value);
     });
-  };
+  }
 
   handleChange = name => e => {
     let value = e.target.value;
@@ -318,6 +322,7 @@ export default class MyScheduleDialog extends React.Component {
     }
   };
 
+
   // For Edit Only
   checkTime = event => {
     if (event) {
@@ -346,22 +351,22 @@ export default class MyScheduleDialog extends React.Component {
     let myScheduleDialog;
 
     myScheduleDialog = (
-      <Dialog
-        open={this.props.myScheduleOpen}
-        onClose={this.props.handleMyScheduleClose}
-        fullWidth="true"
-        maxWidth="md"
-        className="time-tile"
-      >
-        <DialogTitle>{dialogTitle} schedule item</DialogTitle>
+        <Dialog
+          open={this.props.myScheduleOpen}
+          onClose={this.props.handleMyScheduleClose}
+          fullWidth="true"
+          maxWidth="md"
+          className="time-tile"
+        >
+          <DialogTitle>{dialogTitle} schedule item</DialogTitle>
 
-        <DialogContent>
-          <form className="info" onSubmit={this.handleSubmit}>
-            <FormControl error={!this.state.checkedValid}>
+          <DialogContent>
+            <form className="info" onSubmit={this.handleSubmit}>
+              <FormControl error={!this.state.checkedValid}>
               <FormHelperText>
-                {this.state.checkedValid ? '' : this.state.formErrors.checkedInput}
+              {this.state.checkedValid ? '' : this.state.formErrors.checkedInput}
               </FormHelperText>
-              <FormGroup row="true" className="dayWeek">
+              <FormGroup row="true" className="dayWeek"  >
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -371,7 +376,7 @@ export default class MyScheduleDialog extends React.Component {
                       primary
                     />
                   }
-                  label={<Typography style={{ fontSize: '0.9rem' }}>Sunday</Typography>}
+                  label={<Typography style={{fontSize: '0.9rem'}}>Sunday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -382,7 +387,8 @@ export default class MyScheduleDialog extends React.Component {
                       primary
                     />
                   }
-                  label={<Typography style={{ fontSize: '0.9rem' }}>Monday</Typography>}
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Monday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -393,7 +399,8 @@ export default class MyScheduleDialog extends React.Component {
                       primary
                     />
                   }
-                  label={<Typography style={{ fontSize: '0.9rem' }}>Tuesday</Typography>}
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Tuesday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -404,7 +411,8 @@ export default class MyScheduleDialog extends React.Component {
                       primary
                     />
                   }
-                  label={<Typography style={{ fontSize: '0.9rem' }}>Wednesday</Typography>}
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Wednesday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -415,7 +423,8 @@ export default class MyScheduleDialog extends React.Component {
                       primary
                     />
                   }
-                  label={<Typography style={{ fontSize: '0.9rem' }}>Thursday</Typography>}
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Thursday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -426,7 +435,8 @@ export default class MyScheduleDialog extends React.Component {
                       primary
                     />
                   }
-                  label={<Typography style={{ fontSize: '0.9rem' }}>Friday</Typography>}
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Friday</Typography>}
                 />
                 <FormControlLabel
                   control={
@@ -437,36 +447,37 @@ export default class MyScheduleDialog extends React.Component {
                       primary
                     />
                   }
-                  label={<Typography style={{ fontSize: '0.9rem' }}>Saturday</Typography>}
+
+                  label={<Typography style={{fontSize: '0.9rem'}}>Saturday</Typography>}
                 />
               </FormGroup>
-            </FormControl>
+              </FormControl>
 
-            <div>
-              <KeyboardTimePicker
-                style={{ width: '20%' }}
+              <div>
+                <KeyboardTimePicker
+                style={{width:"20%"}}
                 label="Start time"
                 ampm={false}
                 variant="inline"
                 disabled={this.state.checkedC}
                 minutesStep={5}
-                inputValue={this.state.startHourInput}
-                onChange={this.handlePickerChange('startHourInput')}
-                error={!this.state.startHourValid}
-                helperText={this.state.startHourValid ? '' : this.state.formErrors.startHourInput}
-              />
-              <KeyboardTimePicker
-                style={{ width: '20%' }}
+                  inputValue={this.state.startHourInput}
+                  onChange={this.handlePickerChange('startHourInput')}
+                  error={!this.state.startHourValid}
+                  helperText={this.state.startHourValid ? '' : this.state.formErrors.startHourInput}
+                />
+                <KeyboardTimePicker
+                style={{width:"20%"}}
                 label="End time"
                 ampm={false}
                 variant="inline"
                 disabled={this.state.checkedC}
                 minutesStep={5}
-                inputValue={this.state.endHourInput}
-                onChange={this.handlePickerChange('endHourInput')}
-                error={!this.state.endHourValid}
-                helperText={this.state.endHourValid ? '' : this.state.formErrors.endHourInput}
-              />
+                  inputValue={this.state.endHourInput}
+                  onChange={this.handlePickerChange('endHourInput')}
+                  error={!this.state.endHourValid}
+                  helperText={this.state.endHourValid ? '' : this.state.formErrors.endHourInput}
+                />
               <FormControlLabel
                 control={
                   <Checkbox
@@ -476,56 +487,57 @@ export default class MyScheduleDialog extends React.Component {
                     primary
                   />
                 }
-                label={<Typography style={{ fontSize: '0.9rem' }}>All Day</Typography>}
+
+                label={<Typography style={{fontSize: '0.9rem'}}>All Day</Typography>}
                 className="alldaycheckbox"
-                style={{ verticalAlign: 'bottom', marginLeft: '1.5%' }}
+                style={{verticalAlign:'bottom', marginLeft: '1.5%' }}
               />
-            </div>
-            <div>
-              <TextField
-                label="Location"
-                fullWidth
-                value={this.state.locationInput}
-                onChange={this.handleChange('locationInput')}
-                error={!this.state.locationValid}
-                helperText={this.state.locationValid ? '' : this.state.formErrors.locationInput}
-                onKeyDown={this.handleEnterKeyPress}
-              />
-            </div>
-            <div>
-              <TextField
-                label="Description"
-                fullWidth
-                value={this.state.descriptionInput}
-                onChange={this.handleChange('descriptionInput')}
-                error={!this.state.descriptionValid}
-                helperText={
-                  this.state.descriptionValid ? '' : this.state.formErrors.descriptionInput
-                }
-                onKeyDown={this.handleEnterKeyPress}
-              />
-            </div>
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.props.handleMyScheduleClose} variant="contained" style={button}>
-            Cancel
-          </Button>
-          <Button onClick={this.handleReset} variant="contained" style={button}>
-            Reset
-          </Button>
-          <Button
-            onClick={this.handleSubmit}
-            type="submit"
-            disabled={!this.state.formValid}
-            variant="contained"
-            style={button}
-          >
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
+              </div>
+              <div>
+                <TextField
+                  label="Location"
+                  fullWidth
+                  value={this.state.locationInput}
+                  onChange={this.handleChange('locationInput')}
+                  error={!this.state.locationValid}
+                  helperText={this.state.locationValid ? '' : this.state.formErrors.locationInput}
+                  onKeyDown={this.handleEnterKeyPress}
+                />
+              </div>
+              <div>
+                <TextField
+                  label="Description"
+                  fullWidth
+                  value={this.state.descriptionInput}
+                  onChange={this.handleChange('descriptionInput')}
+                  error={!this.state.descriptionValid}
+                  helperText={
+                    this.state.descriptionValid ? '' : this.state.formErrors.descriptionInput
+                  }
+                  onKeyDown={this.handleEnterKeyPress}
+                />
+              </div>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.props.handleMyScheduleClose} variant="contained" style={button}>
+              Cancel
+            </Button>
+            <Button onClick={this.handleReset} variant="contained" style={button}>
+              Reset
+            </Button>
+            <Button
+              onClick={this.handleSubmit}
+              type="submit"
+              disabled={!this.state.formValid}
+              variant="contained"
+              style={button}
+            >
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+      );
 
     return <Fragment>{myScheduleDialog}</Fragment>;
   }

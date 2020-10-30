@@ -416,7 +416,7 @@ export default class GordonHeader extends Component {
     return wellnessTab;
   }
 
-  /**
+   /**
    * Creates the Apartment Application button.
    *
    * Depending on the status of the network and authentication, the apartment application button is created.
@@ -430,7 +430,12 @@ export default class GordonHeader extends Component {
       // Network Status: Online - Authenticated
       if (this.props.Authentication) {
         apartmentTab = (
-          <Tab className="tab" label="Apartment App" component={NavLink} to="/ApartApp" />
+          <Tab
+            className="tab"
+            label="Apartment App"
+            component={NavLink}
+            to="/ApartApp"
+          />
         );
       }
       // Network Status: Online -  Not Authenticated
@@ -486,7 +491,7 @@ export default class GordonHeader extends Component {
 
             <Typography className="title disable-select" variant="h6" color="inherit">
               <Switch>
-                {routes.map(route => (
+                {routes.map((route) => (
                   <Route
                     key={route.path}
                     path={route.path}

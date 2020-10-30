@@ -31,7 +31,7 @@ const getActiveJobsForUser = (canUseStaff, details) => {
  * @param {Boolean} canUseStaff Whether user can use staff timesheets
  * @return {Promise.<String>} User's active jobs
  */
-const getSavedShiftsForUser = canUseStaff => {
+const getSavedShiftsForUser = (canUseStaff) => {
   if (canUseStaff) {
     return http.get(`jobs/savedShiftsForStaff/`);
   }
@@ -121,9 +121,8 @@ const submitShiftsForUser = (canUseStaff, shiftsToSubmit, submittedTo) => {
         HOURS_TYPE: shiftsToSubmit[i].HOURS_TYPE,
         LAST_CHANGED_BY: shiftsToSubmit[i].LAST_CHANGED_BY,
       });
-      return http.post(`jobs/submitShiftsStaff`, shifts);
-    }
-  }
+    return http.post(`jobs/submitShiftsStaff`, shifts);
+  }}
   for (let i = 0; i < shiftsToSubmit.length; i++) {
     shifts.push({
       ID_NUM: shiftsToSubmit[i].ID_NUM,
@@ -131,12 +130,11 @@ const submitShiftsForUser = (canUseStaff, shiftsToSubmit, submittedTo) => {
       SHIFT_END_DATETIME: shiftsToSubmit[i].SHIFT_END_DATETIME,
       SUBMITTED_TO: submittedTo,
       LAST_CHANGED_BY: shiftsToSubmit[i].LAST_CHANGED_BY,
-    });
-  }
+    });}
   return http.post(`jobs/submitShifts`, shifts);
 };
 
-const clockIn = data => {
+const clockIn = (data) => {
   return http.post(`jobs/clockIn`, data);
 };
 

@@ -20,7 +20,7 @@ import { gordonColors } from '../../../../theme';
 import storage from '../../../../services/storage';
 import './index.css';
 
-export const GordonNavButtonsRightCorner = props => {
+export const GordonNavButtonsRightCorner = (props) => {
   const [linkOpen, setLinkOpen] = useState(false);
   const [network, setNetwork] = useState('online');
   const [showMenu, setShowMenu] = useState(false);
@@ -118,7 +118,7 @@ export const GordonNavButtonsRightCorner = props => {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         network === 'offline' &&

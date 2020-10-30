@@ -127,7 +127,7 @@ export default class PeopleSearchResult extends Component {
             <Grid
               item
               style={{
-                // a set width is necessary to keep profile images in line
+                // a set width is necessary to keep profile images in line 
                 // while maintaining center alignment
                 width: '260px',
               }}

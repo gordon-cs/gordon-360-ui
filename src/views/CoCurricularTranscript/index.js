@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -245,6 +245,7 @@ export default class Transcript extends Component {
   };
 
   render() {
+
     if (this.props.Authentication) {
       let activityList;
       if (!this.state.categorizedMemberships.activities) {
@@ -379,7 +380,8 @@ export default class Transcript extends Component {
             </Card>
           </Grid>
         </Grid>
-      );
+      )
     }
+
   }
 }
