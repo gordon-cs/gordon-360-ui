@@ -169,6 +169,26 @@ export default class ApartApp extends Component {
           <GordonLoader />
         ) : (
           <Grid container direction="row-reverse" justify="center" spacing={2}>
+            <Grid item xs={12} md={4}>
+              <Card>
+                <CardContent
+                  style={{
+                    marginLeft: 8,
+                    marginTop: 8,
+                    textAlign: 'center',
+                  }}
+                >
+                  <Typography variant="h6">Apartment Application Instructions</Typography>
+                  <Typography variant="body1">Placeholder Text</Typography>
+                  <Typography variant="body1">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
+                    tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus,
+                    cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem
+                    quibusdam.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
             <Grid item xs={12} md={8}>
               <Card>
                 <CardContent
@@ -178,7 +198,7 @@ export default class ApartApp extends Component {
                     textAlign: 'center',
                   }}
                 >
-                  <Typography variant="h5">Apartment Application</Typography>
+                  <Typography variant="h2">Apartment Application</Typography>
                   <Grid container justify="center" spacing={3}>
                     <Grid item xs={12}>
                       <ApplicantList
@@ -216,26 +236,6 @@ export default class ApartApp extends Component {
                   <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
                   <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
                   <br />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent
-                  style={{
-                    marginLeft: 8,
-                    marginTop: 8,
-                    textAlign: 'center',
-                  }}
-                >
-                  <Typography variant="h5">Apartment Application Instructions</Typography>
-                  <Typography variant="body1">Placeholder Text</Typography>
-                  <Typography variant="body1">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                    tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus,
-                    cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem
-                    quibusdam.
-                  </Typography>
                 </CardContent>
               </Card>
             </Grid>

@@ -23,9 +23,6 @@ export default class ApplicantListItem extends Component {
       avatar: null,
       prefImage: null,
       defImage: null,
-      isStu: Boolean,
-      isFac: Boolean,
-      isAlu: Boolean,
     };
   }
 
