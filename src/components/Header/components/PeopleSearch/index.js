@@ -326,8 +326,6 @@ export default class GordonPeopleSearch extends Component {
                 ? renderInput(
                     getInputProps({
                       placeholder: holder,
-                      error: this.props.errorMessage,
-                      helperText: this.props.errorMessage,
                       onChange: event => this.getSuggestions(event.target.value),
                       onKeyDown: event => this.handleKeys(event.key),
                     }),

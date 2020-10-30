@@ -14,9 +14,6 @@ export default class ApplicantList extends Component {
     super(props);
     this.handleSelection = this.handleSelection.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
-    this.state = {
-      peopleSearchError: null,
-    };
   }
 
   handleSelection = theChosenOne => {
@@ -44,7 +41,6 @@ export default class ApplicantList extends Component {
             <GordonPeopleSearch
               justify="flex-end"
               disableLink
-              errorMessage={this.state.peopleSearchError}
               onSearchSubmit={this.handleSelection}
               Authentication={this.props.Authentication}
             />

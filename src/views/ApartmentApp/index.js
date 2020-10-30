@@ -17,7 +17,8 @@ export default class ApartApp extends Component {
       isAlu: Boolean,
       loading: true,
       network: 'online',
-      peopleSearchError: null,
+      submitDialogOpen: false, // Use this for saving app (later feature)
+      errorDialogOpen: false,
       userProfile: {},
       applicants: [],
       // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
@@ -31,8 +32,6 @@ export default class ApartApp extends Component {
    * @param {String} searchSelection Username for student
    */
   onSearchSubmit = searchSelection => {
-    // Clear any error message from the search bar
-    this.setState({ peopleSearchError: null });
     if (searchSelection && searchSelection !== null) {
       // Method separated from callback because profile must be handled inside an async method
       this.addApplicant(searchSelection);
@@ -45,15 +44,25 @@ export default class ApartApp extends Component {
       let applicantProfile = await user.getProfileInfo(username);
       // Check if the selected user is a student
       if (String(applicantProfile.PersonType).includes('stu')) {
-        // Add the profile object to the list of applicants
-        let applicants = this.state.applicants;
-        applicants.push(applicantProfile);
-        this.setState({ applicants });
+        let applicants = this.state.applicants; // make a separate copy of the array
+        // Check if new applicant is already in list
+        if (!applicants.some(applicant => applicant.AD_Username === username)) {
+          // Add the profile object to the list of applicants
+          applicants.push(applicantProfile);
+          this.setState({ applicants });
+        } else {
+          // Display an error if the selected user is already in the list
+          let newErrorMessage = 'Error: ' + applicantProfile.fullName + ' is already in the list';
+          this.setState({ errorDialogOpen: true });
+          console.log(newErrorMessage);
+          alert(newErrorMessage);
+        }
       } else {
-        // Display an error with the search bar
-        let newErrorMessage = 'Error: ' + username + ' is not a student';
-        this.setState({ peopleSearchError: newErrorMessage });
-        // alert('User ' + username + ' is either not a student, or status is not publicly viewable');
+        // Display an error if the selected user is not a student
+        let newErrorMessage = 'Error: ' + applicantProfile.fullName + ' is not a student';
+        this.setState({ errorDialogOpen: true });
+        console.log(newErrorMessage);
+        alert(newErrorMessage);
       }
     } catch (error) {
       // Do Nothing
@@ -67,11 +76,11 @@ export default class ApartApp extends Component {
    */
   onApplicantRemove = profileToRemove => {
     if (profileToRemove && profileToRemove !== null) {
-      let applicantList = this.state.applicants; // make a separate copy of the array
-      let index = applicantList.indexOf(profileToRemove);
+      let applicants = this.state.applicants; // make a separate copy of the array
+      let index = applicants.indexOf(profileToRemove);
       if (index !== -1) {
-        applicantList.splice(index, 1);
-        this.setState({ applicants: applicantList });
+        applicants.splice(index, 1);
+        this.setState({ applicants });
       }
     }
   };
@@ -177,7 +186,6 @@ export default class ApartApp extends Component {
                         applicants={this.state.applicants}
                         userProfile={this.state.userProfile}
                         onSearchSubmit={this.onSearchSubmit}
-                        peopleSearchError={this.state.peopleSearchError}
                         Authentication={this.props.Authentication}
                       />
                     </Grid>
