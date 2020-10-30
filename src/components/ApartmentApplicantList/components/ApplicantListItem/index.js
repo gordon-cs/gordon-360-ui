@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import 'date-fns';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -90,7 +91,13 @@ export default class ApplicantListItem extends Component {
     }
 
     return (
-      <ListItem key={profile.AD_Username} className={'applicant-list-item'} alignItems="flex-start">
+      <ListItem
+        key={profile.AD_Username}
+        component={Link}
+        target="_blank"
+        to={`/profile/${profile.AD_Username}`}
+        className={'applicant-list-item'}
+      >
         <ListItemAvatar>
           {this.state.avatar ? (
             <Avatar

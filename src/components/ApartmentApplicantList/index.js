@@ -35,7 +35,7 @@ export default class ApplicantList extends Component {
   render() {
     if (this.props.applicants) {
       return (
-        <List className="apartment-applicant-list">
+        <List className="apartment-applicant-list" aria-label="apartment applicants">
           <ListItem key="applicant-list-header" className="applicant-list-header">
             <ListItemText primary="Student Applicants" />
             <GordonPeopleSearch

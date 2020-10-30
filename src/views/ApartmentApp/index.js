@@ -189,7 +189,7 @@ export default class ApartApp extends Component {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={8} lg={6}>
               <Card>
                 <CardContent
                   style={{
