@@ -390,21 +390,45 @@ const getLocalInfo = () => {
   }
 };
 
+/**
+ * Get the CHDate (the datetime when a user received CL&W credit)
+ * unless Occurrences (the actual datetime when the event occured)
+ * is non-null, since users would rather know when the event was
+ * than when they got credit.
+ * 
+ * @param {JSON} event 
+ * @returns {DateTime} event.CHDate or event.Occurrences[0][0]
+ * (since Occurences is a list of lists of start and end times
+ * for each re-occurence of an event)
+ */
+function getAtndEventTime(event) {
+  if (event.Occurrences[0]) {
+    return event.Occurrences[0][0];
+  }
+  return event.CHDate;
+}
+
+/**
+ * Determines in which order two JSON event objects
+ * should be sorted based on a time associated with them.
+ * Note that this does not necessarily sort events by 
+ * when they occurred, since getAtndEventTime
+ * may have to resort to using CHDate. CHDate
+ * can sometimes be weeks after an event due to slow
+ * processing.
+ * 
+ * @param {JSON} a 
+ * @param {JSON} b 
+ */
 function sortAtndEventsByTime(a, b) {
 
-  let timeA = a.CHDate;
-  if (a.Occurrences[0]) {
-    timeA = a.Occurrences[0][0];
-  }
-  let timeB = b.CHDate;
-  if (b.Occurrences[0]) {
-    timeB = b.Occurrences[0][0];
-  }
+  let tA = getAtndEventTime(a);
+  let tB = getAtndEventTime(b);
 
-  if (timeA < timeB) {
+  if (tA < tB) {
     return -1;
   }
-  if (timeA > timeB) {
+  if (tA > tB) {
     return 1;
   }
   return 0;
