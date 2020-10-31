@@ -396,7 +396,7 @@ const getLocalInfo = () => {
  * is non-null, since users would rather know when the event was
  * than when they got credit.
  * 
- * @param {JSON} event 
+ * @param {JSON} event : an event the user attended
  * @returns {DateTime} event.CHDate or event.Occurrences[0][0]
  * (since Occurences is a list of lists of start and end times
  * for each re-occurence of an event)
@@ -417,8 +417,9 @@ function getAtndEventTime(event) {
  * can sometimes be weeks after an event due to slow
  * processing.
  * 
- * @param {JSON} a 
- * @param {JSON} b 
+ * @param {JSON} a : an event
+ * @param {JSON} b : another event
+ * @returns {int} -1 if a's time is less than b's, 1 if it's more, 0 if they're equal
  */
 function sortAtndEventsByTime(a, b) {
 
