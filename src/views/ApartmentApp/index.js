@@ -11,6 +11,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Slide,
   Button,
   Typography,
 } from '@material-ui/core/';
@@ -170,6 +171,10 @@ export default class ApartApp extends Component {
        */
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
+      const Transition = React.forwardRef(function Transition(props, ref) {
+        return <Slide direction="down" ref={ref} {...props} />;
+      });
+
       if (networkStatus === 'online' && this.state.isStu && this.props.Authentication) {
         return (
           <div>
@@ -208,6 +213,7 @@ export default class ApartApp extends Component {
                           />
                           <Dialog
                             open={this.state.errorDialogOpen}
+                            TransitionComponent={Transition}
                             keepMounted
                             aria-labelledby="alert-dialog-title"
                             aria-describedby="alert-dialog-description"
