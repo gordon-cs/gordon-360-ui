@@ -305,7 +305,9 @@ export default class GordonPeopleSearch extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     let holder = 'People Search';
-    if (window.innerWidth < this.breakpointWidth) {
+    if (this.props.customPlaceholderText) {
+      holder = this.props.customPlaceholderText;
+    } else if (window.innerWidth < this.breakpointWidth) {
       holder = 'People';
       if (networkStatus === 'offline') holder = 'Offline';
     } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
