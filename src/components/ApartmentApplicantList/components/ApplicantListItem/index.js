@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import 'date-fns';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
+import {
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  ListItemText,
+  Avatar,
+  IconButton,
+} from '@material-ui/core/ListItemText';
 import PersonIcon from '@material-ui/icons/Person';
-import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import ClearIcon from '@material-ui/icons/Clear';
 import user from '../../../../services/user';
-import './applicantListItem.css';
+import '../../../../views/ApartmentApp/apartmentApp.css';
 import '../../../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
 // Based off src/views/PeopleSearch/components/PeopleSearchResult
@@ -29,7 +31,7 @@ export default class ApplicantListItem extends Component {
 
   handleRemove = profile => {
     // Make sure the chosen profile was not null
-    if (profile && profile !== null) {
+    if (profile) {
       // Send the selected profile to the parent component
       this.props.onApplicantRemove(profile);
     }
@@ -120,7 +122,7 @@ export default class ApplicantListItem extends Component {
         <ListItemSecondaryAction>
           {this.props.isPrimaryApplicant ? (
             <IconButton edge="end" aria-label="remove">
-              <RemoveCircleOutlineIcon color="disabled" />
+              <ClearIcon color="disabled" />
             </IconButton>
           ) : (
             <IconButton
@@ -128,7 +130,7 @@ export default class ApplicantListItem extends Component {
               aria-label="remove"
               onClick={this.handleRemove.bind(this, profile)}
             >
-              <RemoveCircleOutlineIcon color="action" />
+              <ClearIcon color="secondary" />
             </IconButton>
           )}
         </ListItemSecondaryAction>

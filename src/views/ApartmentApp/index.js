@@ -1,11 +1,12 @@
 //Main apartment application page
 import React, { Component } from 'react';
 import 'date-fns';
-import { Grid, Card, CardContent, Button, TextField, Typography } from '@material-ui/core/';
+import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
 import GordonLoader from '../../components/Loader';
 import ApplicantList from '../../components/ApartmentApplicantList';
 import user from '../../services/user';
 import housing from '../../services/housing';
+import './apartmentApp.css';
 
 export default class ApartApp extends Component {
   constructor(props) {
@@ -75,7 +76,7 @@ export default class ApartApp extends Component {
    * @param {String} profileToRemove Username for student
    */
   onApplicantRemove = profileToRemove => {
-    if (profileToRemove && profileToRemove !== null) {
+    if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
       let index = applicants.indexOf(profileToRemove);
       if (index !== -1) {
@@ -165,81 +166,55 @@ export default class ApartApp extends Component {
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
       if (networkStatus === 'online' && this.state.isStu && this.props.Authentication) {
-        return this.state.loading ? (
-          <GordonLoader />
-        ) : (
-          <Grid container direction="row-reverse" justify="center" spacing={2}>
-            <Grid item xs={12} md={4}>
-              <Card>
-                <CardContent
-                  style={{
-                    marginLeft: 8,
-                    marginTop: 8,
-                    textAlign: 'center',
-                  }}
-                >
-                  <Typography variant="h6">Apartment Application Instructions</Typography>
-                  <Typography variant="body1">Placeholder Text</Typography>
-                  <Typography variant="body1">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                    tenetur unde suscipit, quam beatae rerum inventore consectetur, neque doloribus,
-                    cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem
-                    quibusdam.
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={8} lg={6}>
-              <Card>
-                <CardContent
-                  style={{
-                    marginLeft: 8,
-                    marginTop: 8,
-                    textAlign: 'center',
-                  }}
-                >
-                  <Typography variant="h2">Apartment Application</Typography>
-                  <Grid container justify="center" spacing={3}>
-                    <Grid item xs={12}>
-                      <ApplicantList
-                        onApplicantRemove={this.onApplicantRemove}
-                        applicants={this.state.applicants}
-                        userProfile={this.state.userProfile}
-                        onSearchSubmit={this.onSearchSubmit}
-                        Authentication={this.props.Authentication}
+        return (
+          <div>
+            {this.state.loading ? (
+              <GordonLoader />
+            ) : (
+              <div className="apartment-application">
+                <Grid container direction="row-reverse" justify="center" spacing={2}>
+                  <Grid item xs={12} md={4}>
+                    <Card>
+                      <CardHeader
+                        title="Apartment Application Instructions"
+                        className="card-header"
                       />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        value="Placeholder for Hall Preference Selection Menu"
-                        variant="outlined"
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                      />
-                    </Grid>
+                      <CardContent>
+                        <Typography variant="body1">Placeholder Text</Typography>
+                        <Typography variant="body1">
+                          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
+                          tenetur unde suscipit, quam beatae rerum inventore consectetur, neque
+                          doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum
+                          quasi quidem quibusdam.
+                        </Typography>
+                      </CardContent>
+                    </Card>
                   </Grid>
-                </CardContent>
-              </Card>
-              <br />
-              <Card>
-                <CardContent
-                  style={{
-                    margin: 'auto',
-                    textAlign: 'center',
-                  }}
-                >
-                  <Typography variant="h5">Hello World:</Typography>
+                  <Grid item xs={12} md={8} lg={6}>
+                    <Card>
+                      <ApplicantList />
+                    </Card>
+                    <Card>
+                      <CardHeader title="Preferred Halls" className="card-header" />
+                      <CardContent>
+                        <Typography variant="body1">Placeholder text</Typography>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h5">Hello World:</Typography>
 
-                  <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
-                  <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
-                  <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
-                  <br />
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+                        <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
+                        <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
+                        <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
+                        <br />
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </div>
+            )}
+          </div>
         );
       } else {
         // If the network is offline or the user type is non-student
