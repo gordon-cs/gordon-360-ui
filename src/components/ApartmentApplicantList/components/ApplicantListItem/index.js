@@ -8,7 +8,7 @@ import {
   ListItemText,
   Avatar,
   IconButton,
-} from '@material-ui/core/ListItemText';
+} from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import ClearIcon from '@material-ui/icons/Clear';
 import user from '../../../../services/user';
@@ -29,7 +29,7 @@ export default class ApplicantListItem extends Component {
     };
   }
 
-  handleRemove = profile => {
+  handleRemove = (profile) => {
     // Make sure the chosen profile was not null
     if (profile) {
       // Send the selected profile to the parent component
