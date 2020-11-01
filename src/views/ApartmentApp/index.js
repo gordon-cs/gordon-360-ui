@@ -191,31 +191,39 @@ export default class ApartApp extends Component {
                     </Card>
                   </Grid>
                   <Grid item xs={12} md={8} lg={6}>
-                    <Card>
-                      <ApplicantList
-                        onApplicantRemove={this.onApplicantRemove}
-                        applicants={this.state.applicants}
-                        userProfile={this.state.userProfile}
-                        onSearchSubmit={this.onSearchSubmit}
-                        Authentication={this.props.Authentication}
-                      />
-                    </Card>
-                    <Card>
-                      <CardHeader title="Preferred Halls" className="card-header" />
-                      <CardContent>
-                        <Typography variant="body1">Placeholder text</Typography>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardContent>
-                        <Typography variant="h5">Hello World:</Typography>
+                    <Grid container direction="column" spacing={2}>
+                      <Grid item>
+                        <Card>
+                          <ApplicantList
+                            onApplicantRemove={this.onApplicantRemove}
+                            applicants={this.state.applicants}
+                            userProfile={this.state.userProfile}
+                            onSearchSubmit={this.onSearchSubmit}
+                            Authentication={this.props.Authentication}
+                          />
+                        </Card>
+                      </Grid>
+                      <Grid item>
+                        <Card>
+                          <CardHeader title="Preferred Halls" className="card-header" />
+                          <CardContent>
+                            <Typography variant="body1">Placeholder text</Typography>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                      <Grid item>
+                        <Card>
+                          <CardContent>
+                            <Typography variant="h5">Hello World:</Typography>
 
-                        <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
-                        <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
-                        <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
-                        <br />
-                      </CardContent>
-                    </Card>
+                            <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
+                            <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
+                            <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
+                            <br />
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
               </div>

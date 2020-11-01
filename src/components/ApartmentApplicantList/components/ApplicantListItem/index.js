@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import 'date-fns';
 import {
+  Grid,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
@@ -98,7 +99,7 @@ export default class ApplicantListItem extends Component {
         component={Link}
         target="_blank"
         to={`/profile/${profile.AD_Username}`}
-        className={'applicant-list-item'}
+        className={'list-item'}
       >
         <ListItemAvatar>
           {this.state.avatar ? (
@@ -113,12 +114,23 @@ export default class ApplicantListItem extends Component {
             </Avatar>
           )}
         </ListItemAvatar>
-        <ListItemText
-          primary={nickname ? fullName.replace(' ', ' ' + nickname + ' ') : fullName}
-          secondary={profile.AD_Username}
-          width="50%"
-        />
-        <ListItemText primary={personClassJobTitle} secondary={personType} width="50%" />
+        <Grid container>
+          <Grid item xs={8}>
+            <ListItemText
+              primary={nickname ? fullName.replace(' ', ' ' + nickname + ' ') : fullName}
+              secondary={profile.AD_Username}
+              className={'list-item'}
+              padding="10"
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <ListItemText
+              primary={personClassJobTitle}
+              secondary={personType}
+              className={'list-item'}
+            />
+          </Grid>
+        </Grid>
         <ListItemSecondaryAction>
           {this.props.isPrimaryApplicant ? (
             <IconButton edge="end" aria-label="remove">
@@ -130,7 +142,7 @@ export default class ApplicantListItem extends Component {
               aria-label="remove"
               onClick={this.handleRemove.bind(this, profile)}
             >
-              <ClearIcon color="secondary" />
+              <ClearIcon />
             </IconButton>
           )}
         </ListItemSecondaryAction>
