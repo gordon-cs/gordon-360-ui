@@ -1,7 +1,19 @@
 //Main apartment application page
 import React, { Component } from 'react';
 import 'date-fns';
-import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
+import {
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+  Typography,
+} from '@material-ui/core/';
 import GordonLoader from '../../components/Loader';
 import ApplicantList from '../../components/ApartmentApplicantList';
 import user from '../../services/user';
@@ -20,6 +32,7 @@ export default class ApartApp extends Component {
       network: 'online',
       submitDialogOpen: false, // Use this for saving app (later feature)
       errorDialogOpen: false,
+      errorDialogText: null,
       userProfile: {},
       applicants: [],
       // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
@@ -32,7 +45,7 @@ export default class ApartApp extends Component {
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  onSearchSubmit = (searchSelection) => {
+  onSearchSubmit = searchSelection => {
     if (searchSelection && searchSelection !== null) {
       // Method separated from callback because profile must be handled inside an async method
       this.addApplicant(searchSelection);
@@ -40,34 +53,24 @@ export default class ApartApp extends Component {
   };
 
   async addApplicant(username) {
-    try {
-      // Get the profile of the selected user
-      let applicantProfile = await user.getProfileInfo(username);
-      // Check if the selected user is a student
-      if (String(applicantProfile.PersonType).includes('stu')) {
-        let applicants = this.state.applicants; // make a separate copy of the array
-        // Check if new applicant is already in list
-        if (!applicants.some((applicant) => applicant.AD_Username === username)) {
-          // Add the profile object to the list of applicants
-          applicants.push(applicantProfile);
-          this.setState({ applicants });
-        } else {
-          // Display an error if the selected user is already in the list
-          let newErrorMessage = 'Error: ' + applicantProfile.fullName + ' is already in the list';
-          this.setState({ errorDialogOpen: true });
-          console.log(newErrorMessage);
-          alert(newErrorMessage);
-        }
-      } else {
-        // Display an error if the selected user is not a student
-        let newErrorMessage = 'Error: ' + applicantProfile.fullName + ' is not a student';
-        this.setState({ errorDialogOpen: true });
-        console.log(newErrorMessage);
-        alert(newErrorMessage);
-      }
-    } catch (error) {
-      // Do Nothing
-      alert('Something went wrong while trying to get the profile of ' + username);
+    let applicants = this.state.applicants; // make a separate copy of the array
+    // Get the profile of the selected user
+    let applicantProfile = await user.getProfileInfo(username);
+    // Check if the selected user is a student
+    if (!String(applicantProfile.PersonType).includes('stu')) {
+      // Display an error if the selected user is not a student
+      let newErrorText = applicantProfile.fullName + ' is not a student';
+      this.setState({ errorDialogOpen: true, errorDialogText: newErrorText });
+      console.log('Error: ' + newErrorText);
+    } else if (applicants.some(applicant => applicant.AD_Username === username)) {
+      // Display an error if the selected user is already in the list
+      let newErrorText = applicantProfile.fullName + ' is already in the list';
+      this.setState({ errorDialogOpen: true, errorDialogText: newErrorText });
+      console.log('Error: ' + newErrorText);
+    } else {
+      // Add the profile object to the list of applicants
+      applicants.push(applicantProfile);
+      this.setState({ applicants });
     }
   }
 
@@ -75,7 +78,7 @@ export default class ApartApp extends Component {
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  onApplicantRemove = (profileToRemove) => {
+  onApplicantRemove = profileToRemove => {
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
       let index = applicants.indexOf(profileToRemove);
@@ -122,14 +125,16 @@ export default class ApartApp extends Component {
       // TODO - Once saving application has been implemented in the backend, this will be replaced with a call to the load the application info. The getHousingInfo was made obsolete after the Hello World
       let housingInfo = await housing.getHousingInfo();
       let onOffCampus = String(housingInfo[0].OnOffCampus);
-      this.setState({ onOffCampus });
       let onCampusRoom = String(housingInfo[0].OnCampusRoom);
-      this.setState({ onCampusRoom });
-      this.setState({ loading: false });
+      this.setState({ onOffCampus, onCampusRoom, loading: false });
     } catch (error) {
       // Do Nothing
     }
   }
+
+  handleCloseOkay = () => {
+    this.setState({ submitDialogOpen: false, errorDialogOpen: false, errorDialogText: null });
+  };
 
   componentDidMount() {
     this.loadProfile();
@@ -144,7 +149,7 @@ export default class ApartApp extends Component {
        *  multiple re-renders that creates extreme performance lost.
        *  The origin of the message is checked to prevent cross-site scripting attacks
        */
-      window.addEventListener('message', (event) => {
+      window.addEventListener('message', event => {
         if (
           event.data === 'online' &&
           this.state.network === 'offline' &&
@@ -201,6 +206,25 @@ export default class ApartApp extends Component {
                             onSearchSubmit={this.onSearchSubmit}
                             Authentication={this.props.Authentication}
                           />
+                          <Dialog
+                            open={this.state.errorDialogOpen}
+                            keepMounted
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                            maxWidth="false"
+                          >
+                            <DialogTitle id="alert-dialog-title">Add Applicant</DialogTitle>
+                            <DialogContent>
+                              <DialogContentText id="alert-dialog-description">
+                                {this.state.errorDialogText}
+                              </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button onClick={this.handleCloseOkay} color="primary" autoFocus>
+                                Okay
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
                         </Card>
                       </Grid>
                       <Grid item>

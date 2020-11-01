@@ -8,5 +8,10 @@
 
 .list-item {
   text-align: start;
-  color: #000;
+  color: $neutral-dark-gray;
+}
+
+.button {
+  background-color: $primary-blue;
+  color: $neutral-white;
 }
