@@ -32,7 +32,7 @@ export default class ApartApp extends Component {
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  onSearchSubmit = searchSelection => {
+  onSearchSubmit = (searchSelection) => {
     if (searchSelection && searchSelection !== null) {
       // Method separated from callback because profile must be handled inside an async method
       this.addApplicant(searchSelection);
@@ -47,7 +47,7 @@ export default class ApartApp extends Component {
       if (String(applicantProfile.PersonType).includes('stu')) {
         let applicants = this.state.applicants; // make a separate copy of the array
         // Check if new applicant is already in list
-        if (!applicants.some(applicant => applicant.AD_Username === username)) {
+        if (!applicants.some((applicant) => applicant.AD_Username === username)) {
           // Add the profile object to the list of applicants
           applicants.push(applicantProfile);
           this.setState({ applicants });
@@ -75,7 +75,7 @@ export default class ApartApp extends Component {
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  onApplicantRemove = profileToRemove => {
+  onApplicantRemove = (profileToRemove) => {
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
       let index = applicants.indexOf(profileToRemove);
@@ -144,7 +144,7 @@ export default class ApartApp extends Component {
        *  multiple re-renders that creates extreme performance lost.
        *  The origin of the message is checked to prevent cross-site scripting attacks
        */
-      window.addEventListener('message', event => {
+      window.addEventListener('message', (event) => {
         if (
           event.data === 'online' &&
           this.state.network === 'offline' &&
@@ -192,7 +192,13 @@ export default class ApartApp extends Component {
                   </Grid>
                   <Grid item xs={12} md={8} lg={6}>
                     <Card>
-                      <ApplicantList />
+                      <ApplicantList
+                        onApplicantRemove={this.onApplicantRemove}
+                        applicants={this.state.applicants}
+                        userProfile={this.state.userProfile}
+                        onSearchSubmit={this.onSearchSubmit}
+                        Authentication={this.props.Authentication}
+                      />
                     </Card>
                     <Card>
                       <CardHeader title="Preferred Halls" className="card-header" />
