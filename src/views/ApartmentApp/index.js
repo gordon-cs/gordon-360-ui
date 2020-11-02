@@ -1,20 +1,8 @@
 //Main apartment application page
 import React, { Component } from 'react';
 import 'date-fns';
-import {
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Slide,
-  Button,
-  Typography,
-} from '@material-ui/core/';
+import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
+import GordonDialogBox from '../../components/GordonDialogBox';
 import GordonLoader from '../../components/Loader';
 import ApplicantList from '../../components/ApartmentApplicantList';
 import user from '../../services/user';
@@ -46,7 +34,7 @@ export default class ApartApp extends Component {
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  onSearchSubmit = searchSelection => {
+  onSearchSubmit = (searchSelection) => {
     if (searchSelection && searchSelection !== null) {
       // Method separated from callback because profile must be handled inside an async method
       this.addApplicant(searchSelection);
@@ -62,12 +50,10 @@ export default class ApartApp extends Component {
       // Display an error if the selected user is not a student
       let newErrorText = applicantProfile.fullName + ' is not a student';
       this.setState({ errorDialogOpen: true, errorDialogText: newErrorText });
-      console.log('Error: ' + newErrorText);
-    } else if (applicants.some(applicant => applicant.AD_Username === username)) {
+    } else if (applicants.some((applicant) => applicant.AD_Username === username)) {
       // Display an error if the selected user is already in the list
       let newErrorText = applicantProfile.fullName + ' is already in the list';
       this.setState({ errorDialogOpen: true, errorDialogText: newErrorText });
-      console.log('Error: ' + newErrorText);
     } else {
       // Add the profile object to the list of applicants
       applicants.push(applicantProfile);
@@ -79,7 +65,7 @@ export default class ApartApp extends Component {
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  onApplicantRemove = profileToRemove => {
+  onApplicantRemove = (profileToRemove) => {
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
       let index = applicants.indexOf(profileToRemove);
@@ -150,7 +136,7 @@ export default class ApartApp extends Component {
        *  multiple re-renders that creates extreme performance lost.
        *  The origin of the message is checked to prevent cross-site scripting attacks
        */
-      window.addEventListener('message', event => {
+      window.addEventListener('message', (event) => {
         if (
           event.data === 'online' &&
           this.state.network === 'offline' &&
@@ -170,10 +156,6 @@ export default class ApartApp extends Component {
        *  Defaults to online in case of PWA not being possible
        */
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
-      const Transition = React.forwardRef(function Transition(props, ref) {
-        return <Slide direction="down" ref={ref} {...props} />;
-      });
 
       if (networkStatus === 'online' && this.state.isStu && this.props.Authentication) {
         return (
@@ -211,26 +193,16 @@ export default class ApartApp extends Component {
                             onSearchSubmit={this.onSearchSubmit}
                             Authentication={this.props.Authentication}
                           />
-                          <Dialog
+                          <GordonDialogBox
                             open={this.state.errorDialogOpen}
-                            TransitionComponent={Transition}
-                            keepMounted
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                            maxWidth="false"
-                          >
-                            <DialogTitle id="alert-dialog-title">Add Applicant</DialogTitle>
-                            <DialogContent>
-                              <DialogContentText id="alert-dialog-description">
-                                {this.state.errorDialogText}
-                              </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                              <Button onClick={this.handleCloseOkay} color="primary" autoFocus>
-                                Okay
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
+                            onClose={this.handleCloseOkay}
+                            labelledby={'applicant-dialog'}
+                            describedby={'applicant-denied'}
+                            title={'Could Not Add Applicant'}
+                            text={this.state.errorDialogText}
+                            buttonClicked={this.handleCloseOkay}
+                            buttonName={'Okay'}
+                          />
                         </Card>
                       </Grid>
                       <Grid item>
