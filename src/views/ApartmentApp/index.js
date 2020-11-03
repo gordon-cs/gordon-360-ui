@@ -207,49 +207,47 @@ export default class ApartApp extends Component {
                       </CardContent>
                     </Card>
                   </Grid>
-                  <Grid item xs={12} md={8} lg={6}>
-                    <Grid container direction="column" spacing={2}>
-                      <Grid item>
-                        <ApplicantList
-                          applicants={this.state.applicants}
-                          userProfile={this.state.userProfile}
+                  <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
+                    <Grid item>
+                      <ApplicantList
+                        applicants={this.state.applicants}
+                        userProfile={this.state.userProfile}
                         saving={this.state.saving}
-                          onSearchSubmit={this.onSearchSubmit}
-                          onApplicantRemove={this.onApplicantRemove}
-                          onSaveButtonClick={this.handleSaveButtonClick}
-                          Authentication={this.props.Authentication}
-                        />
-                        <GordonDialogBox
-                          open={this.state.errorDialogOpen}
-                          onClose={this.handleCloseOkay}
-                          labelledby={'applicant-dialog'}
-                          describedby={'applicant-denied'}
-                          title={'Could Not Add Applicant'}
-                          text={this.state.errorDialogText}
-                          buttonClicked={this.handleCloseOkay}
-                          buttonName={'Okay'}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Card>
-                          <CardHeader title="Preferred Halls" className="card-header" />
-                          <CardContent>
-                            <Typography variant="body1">Placeholder text</Typography>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                      <Grid item>
-                        <Card>
-                          <CardContent>
-                            <Typography variant="h5">Hello World:</Typography>
+                        onSearchSubmit={this.onSearchSubmit}
+                        onApplicantRemove={this.onApplicantRemove}
+                        onSaveButtonClick={this.handleSaveButtonClick}
+                        Authentication={this.props.Authentication}
+                      />
+                      <GordonDialogBox
+                        open={this.state.errorDialogOpen}
+                        onClose={this.handleCloseOkay}
+                        labelledby={'applicant-dialog'}
+                        describedby={'applicant-denied'}
+                        title={'Could Not Add Applicant'}
+                        text={this.state.errorDialogText}
+                        buttonClicked={this.handleCloseOkay}
+                        buttonName={'Okay'}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Card>
+                        <CardHeader title="Preferred Halls" className="card-header" />
+                        <CardContent>
+                          <Typography variant="body1">Placeholder text</Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    <Grid item>
+                      <Card>
+                        <CardContent>
+                          <Typography variant="h5">Hello World:</Typography>
 
-                            <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
-                            <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
-                            <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
-                            <br />
-                          </CardContent>
-                        </Card>
-                      </Grid>
+                          <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
+                          <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
+                          <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
+                          <br />
+                        </CardContent>
+                      </Card>
                     </Grid>
                   </Grid>
                 </Grid>
