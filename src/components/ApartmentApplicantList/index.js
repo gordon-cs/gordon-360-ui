@@ -3,6 +3,7 @@ import 'date-fns';
 import { Grid, Card, CardHeader, CardContent, List, Button, Typography } from '@material-ui/core';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import GordonPeopleSearch from '../Header/components/PeopleSearch';
+import GordonLoader from '../../components/Loader';
 import ApplicantListItem from './components/ApplicantListItem';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
@@ -18,6 +19,7 @@ export default class ApplicantList extends Component {
     this.state = {
       saveButtonClicked: false,
     };
+    this.loaderSize = 20;
   }
 
   handleSelection = (theChosenOne) => {
@@ -56,14 +58,13 @@ export default class ApplicantList extends Component {
               customPlaceholderText={'Add Applicant'}
               onSearchSubmit={this.handleSelection}
               Authentication={this.props.Authentication}
-              justify="flex-end"
             />
           }
           title="Student Applicants"
           className="card-header"
         />
         <CardContent>
-          <Grid container justify="flex-end">
+          <Grid container justify="space-between" spacing={2}>
             <Grid item xs={12}>
               <List className="applicant-list" aria-label="apartment applicants">
                 {this.props.applicants ? (
@@ -85,22 +86,26 @@ export default class ApplicantList extends Component {
                 )}
               </List>
             </Grid>
-            <Grid item>
+            <Grid item xs={12} sm={6}>
               {this.props.applicants.length < MIN_NUM_APPLICANTS && this.state.saveButtonClicked ? (
                 <Typography variant="overline" color="error">
                   Must have at least {MIN_NUM_APPLICANTS} applicants
                 </Typography>
               ) : null}
             </Grid>
-            <Grid item xs={2}>
-              <Button
-                // disabled={this.props.applicants.length < MIN_NUM_APPLICANTS}
-                variant="contained"
-                color="primary"
-                onClick={this.handleSaveButtonClick}
-              >
-                Save
-              </Button>
+            <Grid item xs={12} sm={3}>
+              {this.props.saving ? (
+                <GordonLoader size={this.loaderSize} />
+              ) : (
+                <Button
+                  disabled={this.props.saving}
+                  variant="contained"
+                  color="primary"
+                  onClick={this.handleSaveButtonClick}
+                >
+                  Save
+                </Button>
+              )}
             </Grid>
           </Grid>
         </CardContent>

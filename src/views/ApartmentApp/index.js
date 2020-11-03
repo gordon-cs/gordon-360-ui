@@ -18,6 +18,7 @@ export default class ApartApp extends Component {
       isFac: Boolean,
       isAlu: Boolean,
       loading: true,
+      saving: false,
       network: 'online',
       submitDialogOpen: false, // Use this for saving app (later feature)
       errorDialogOpen: false,
@@ -130,7 +131,7 @@ export default class ApartApp extends Component {
     let debugMessage = 'DEBUG: Save button was clicked';
     console.log(debugMessage);
     alert(debugMessage);
-    // this.saveApplication(this.state.userProfile.ID, this.state.applicants);
+    this.saveApplication(this.state.userProfile.ID, this.state.applicants);
   };
 
   /**
@@ -139,7 +140,14 @@ export default class ApartApp extends Component {
    * @param {StudentProfileInfo} applicants Array of StudentProfileInfo objects
    */
   async saveApplication(primaryID, applicants) {
-    await housing.saveApartmentApplication(primaryID, applicants);
+    this.setState({ saving: true });
+    try {
+      const saved = await housing.saveApartmentApplication(primaryID, applicants);
+      console.log(saved.primaryID);
+    } catch (error) {
+      // Do Nothing
+    }
+    this.setState({ saving: false });
   }
 
   handleCloseOkay = () => {
@@ -205,6 +213,7 @@ export default class ApartApp extends Component {
                         <ApplicantList
                           applicants={this.state.applicants}
                           userProfile={this.state.userProfile}
+                        saving={this.state.saving}
                           onSearchSubmit={this.onSearchSubmit}
                           onApplicantRemove={this.onApplicantRemove}
                           onSaveButtonClick={this.handleSaveButtonClick}
