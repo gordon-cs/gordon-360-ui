@@ -1,19 +1,21 @@
+@import '../../../../vars';
+
 .approved-box {
     height: 250px;
-    background-color: rgb(0, 85, 0);
+    background-color: $wellness-green;
   }
-  
+
   .approved-time {
     font-size: calc(14px + 1vw);
     color: white;
     padding-bottom: 30px;
   }
-  
+
   .circle-check {
     text-align: center;
     height: calc(70px + 3vw);
     width: calc(70px + 3vw);
-    background-color: rgb(0, 85, 0);
+    background-color: $wellness-green;
     color: white;
     border-radius: 50%;
     display: inline-block;
@@ -22,15 +24,14 @@
     animation-iteration-count: infinite;
     animation-direction: alternate;
   }
-  
+
   @keyframes animationCheck {
     from {
-      background-color: rgb(0, 85, 0);
+      background-color: $wellness-green;
       color: white;
     }
     to {
       background-color: white;
-      color: rgb(0, 85, 0);
+      color: $wellness-green;
     }
   }
-  

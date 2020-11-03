@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import GordonLoader from '../../../../components/Loader';
-import { getQuestions } from './questionData';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -12,73 +11,88 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { Button } from '@material-ui/core';
-import { gordonColors } from '../../../../theme';
 import './index.scss';
 import wellness from '../../../../services/wellness.js';
+import user from '../../../../services/user.js';
 
 /**
  * Creates the question for the health check feature
  */
 
-export default class Question extends Component {
-  constructor(props) {
-    super(props);
+const Question = ({ setAnswered }) => {
+  const [loading, setLoading] = useState(true);
+  const [answer, setAnswer] = useState(null);
+  const [wellnessQuestion, setWellnessQuestion] = useState(null);
 
-    this.submitHandler = this.submitHandler.bind(this);
-    this.loadQuestion = this.loadQuestion.bind(this);
+  useEffect(() => {
+    setLoading(true);
+    wellness
+      .getQuestion()
+      .then((q) => formatQuestion(q))
+      .then((q) => {
+        setWellnessQuestion(q);
+        setLoading(false);
+      });
+  }, [setLoading, setWellnessQuestion]);
 
-    this.state = {
-      error: null,
-      loading: true,
-      answered: false, //true if student answered the question, initiallized to false for safety
-      primaryQuestionAnswer: null, // keeps track of the answer to the wellness check question
-      currentStatus: null, //holds the the symptomatic status of the students to pass up to parent
-      questions: null, //holds the prompts for the questions and responses
-      backendQuestion: '', //holds the main wellness check question coming from backend
-      yesPrompt: '', //holds the yes answer prompt from back end
-      noPrompt: '', //holds the no answer prompt from back end
+  const submitHandler = (event) => {
+    wellness
+      .postAnswer(answer === 'Yes')
+      .then(() => setAnswered(true))
+      .then(() => event.preventDefault());
+  };
+
+  const formatQuestion = async (question) => {
+    const userInfo = await user.getProfileInfo();
+
+    /* eslint-disable no-template-curly-in-string */
+    let wellnessQuestion = question[0].question.replace(
+      '${user.FirstName}',
+      `${userInfo.FirstName}`,
+    );
+    wellnessQuestion = wellnessQuestion.replace('${user.LastName}', `${userInfo.LastName}`);
+
+    let [yesPrompt, link] = question[0].yesPrompt.split('https://');
+
+    yesPrompt = yesPrompt.replace('${user.FirstName}', `${userInfo.FirstName}`);
+    yesPrompt = yesPrompt.replace('${user.LastName}', `${userInfo.LastName}`);
+    link = 'https://' + link;
+
+    let noPrompt = question[0].noPrompt.replace('${user.FirstName}', `${userInfo.FirstName}`);
+    noPrompt = noPrompt.replace('${user.LastName}', `${userInfo.LastName}`);
+    /* eslint-enable no-template-curly-in-string */
+
+    return {
+      question: wellnessQuestion,
+      symptoms: [
+        'Temperature higher than 100.4°F',
+        'New loss of taste or smell',
+        'Sore throat',
+        'Muscle pain',
+        'Cough',
+        'Shortness of breath or difficulty breathing',
+        'Fever',
+        'Chills',
+      ],
+      yes: yesPrompt,
+      no: noPrompt,
+      link: link,
     };
-  }
-
-  componentWillMount() {
-    this.loadQuestion();
-    this.props.setAnswered(this.state.answered);
-  }
-
-  async componentDidMount() {
-    this.setState({ questions: await getQuestions() });
-  }
-
-  async loadQuestion() {
-    this.setState({ loading: true });
-    try {
-      await wellness.getQuestion();
-      this.setState({ loading: false });
-    } catch (error) {
-      this.setState({ error });
-    }
-  }
-
-  async submitHandler(e) {
-    this.setState({ answered: true });
-    this.props.setAnswered(true);
-    await wellness.postAnswer(this.state.currentStatus);
-    e.preventDefault();
-  }
+  };
 
   // Creates wellness check question
-  createQuestion(questionStyle) {
+  const question = () => {
     // Checks to make sure the questions are imported before attempting to access its data
-    if (this.state.questions !== null) {
-      let symptomsJSX = this.state.questions.qOne.symptoms.map((item) => {
+    if (wellnessQuestion !== null) {
+      let symptomsJSX = wellnessQuestion.symptoms.map((item) => {
         return <FormLabel>- {item}</FormLabel>;
       });
 
       return (
         <CardContent>
-          <div style={questionStyle}>
+          <div className="left">
             <FormControl>
-              <FormLabel>{this.state.questions.qOne.question}</FormLabel>
+              <FormLabel>{wellnessQuestion.question}</FormLabel>
               <div style={{ height: '10px' }}></div>
               {symptomsJSX}
               <br />
@@ -87,18 +101,14 @@ export default class Question extends Component {
                   value="Yes"
                   control={<Radio />}
                   label={`Yes`}
-                  onChange={() => {
-                    this.setState({ primaryQuestionAnswer: 'Yes', currentStatus: true });
-                  }}
+                  onChange={() => setAnswer('Yes')}
                 />
                 <br></br>
                 <FormControlLabel
                   value="No"
                   control={<Radio />}
                   label={'No'}
-                  onChange={() => {
-                    this.setState({ primaryQuestionAnswer: 'No', currentStatus: false });
-                  }}
+                  onChange={() => setAnswer('No')}
                 />
               </RadioGroup>
             </FormControl>
@@ -106,117 +116,69 @@ export default class Question extends Component {
         </CardContent>
       );
     }
-    // Shows the Gordon Loader if the data has not yet been found in the state
-    else {
-      return <GordonLoader />;
-    }
-  }
+  };
 
-  // creates prompt after the first question is answered
-  createPrompt(questionStyle) {
-    // Checks to make sure the questions are found in the state before
-    if (this.state.questions !== null) {
-      if (this.state.primaryQuestionAnswer === 'Yes') {
-        return (
-          <CardContent>
-            <div style={questionStyle}>
-              <FormControl>
-                <FormLabel>
-                  {this.state.questions.qOne.yes.question[0]}
-                  <a
-                    href=" https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/symptoms.html#cdc-chat-bot-open"
-                    target="_blank"
-                  >
-                    {this.state.questions.qOne.yes.question[1]}
-                  </a>
-                  {this.state.questions.qOne.yes.question[2]}
-                </FormLabel>
-              </FormControl>
-            </div>
-          </CardContent>
-        );
-      } else if (this.state.primaryQuestionAnswer === 'No') {
-        return (
-          <CardContent>
-            <div style={questionStyle}>
-              <FormControl>
-                <FormLabel>{this.state.questions.qOne.no.question}</FormLabel>
-              </FormControl>
-            </div>
-          </CardContent>
-        );
+  const answerSection = () => {
+    if (wellnessQuestion && answer) {
+      let answerClass;
+      let answerText;
+      let answerLink;
+      if (answer === 'Yes') {
+        answerClass = 'symptoms';
+        answerText = wellnessQuestion.yes;
+        answerLink = true;
+      } else {
+        answerClass = 'healthy';
+        answerText = wellnessQuestion.no;
       }
-    }
-  }
-
-  showSubmitButton(buttonStyle) {
-    // Shows submit button
-    if (this.state.questions && this.state.primaryQuestionAnswer) {
       return (
-        <div>
+        <div className={answerClass}>
+          <CardContent className="left">
+            <div>
+              <Typography color="textPrimary">
+                {answerText}
+                {answerLink ? (
+                  <a href={wellnessQuestion.link} target="_blank" rel="noopener noreferrer">
+                    this link
+                  </a>
+                ) : (
+                  ''
+                )}
+              </Typography>
+            </div>
+          </CardContent>
           <br />
-          <Button variant="contained" style={buttonStyle.button} onClick={this.submitHandler}>
+          <Button variant="contained" onClick={submitHandler}>
             Submit
-          </Button>{' '}
+          </Button>
           <br />
           <br />
         </div>
       );
     }
-    // Doesn't show submit button
-    return <div></div>;
-  }
+  };
 
-  render() {
-    // Styles the header
-    const headerStyle = {
-      backgroundColor: gordonColors.primary.blue,
-      color: '#FFF',
-      padding: '10px',
-      fontSize: 20,
-    };
-
-    // Styles each question
-    const questionStyle = {
-      textAlign: 'left',
-    };
-
-    // Styles the submit button
-    const buttonStyle = {
-      button: {
-        background: gordonColors.primary.cyan,
-        color: 'white',
-      },
-    };
-
-    if (this.state.error) {
-      throw this.state.error;
-    }
-
-    //creates container for the title and questions
-    let content;
-    if (this.state.loading === true) {
-      content = <GordonLoader />;
-    } else {
-      content = (
-        <Card className="wellness_check">
-          <div style={headerStyle}>
-            <Grid container direction="row">
-              <Grid item xs={12}>
-                <Typography variant="body2" style={headerStyle}>
-                  Wellness Check
-                </Typography>
-              </Grid>
+  if (loading === true) {
+    return <GordonLoader />;
+  } else {
+    return (
+      <Card className="wellness-check symptoms">
+        <div className="wellness-header">
+          <Grid container direction="row">
+            <Grid item xs={12}>
+              <Typography variant="body2" className="wellness-header">
+                Wellness Check
+              </Typography>
             </Grid>
-          </div>
-          {this.createQuestion(questionStyle)}
-          <Divider />
-          {this.createPrompt(questionStyle)}
-          {this.showSubmitButton(buttonStyle)}
-          <div style={headerStyle}>Health Center (for students): (978) 867-4300 </div>
-        </Card>
-      );
-    }
-    return <div>{content}</div>;
+          </Grid>
+        </div>
+        {question()}
+        <Divider />
+        {answerSection()}
+        <div className="wellness-header">Health Center (for students): (978) 867-4300 </div>
+      </Card>
+    );
   }
-}
+};
+
+export default Question;

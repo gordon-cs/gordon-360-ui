@@ -1,28 +1,51 @@
+@import '../../../../vars';
+
 //this makes the space between the selectable answers smaller
-.wellness_check {
+.wellness-check {
+  text-overflow: ellipsis;
   .MuiButtonBase-root {
-    padding: 4px !important;
+    padding: 4px;
   }
+
   .MuiFormLabel-root {
     color: black !important;
   }
-  /* unvisited link */
-  a:link {
-    color: blue;
+
+  .wellness-header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+    padding: 10px;
+    font-size: 20px;
   }
 
-  /* visited link */
-  a:visited {
-    color: blue;
+  .symptoms {
+    border: 15px solid $wellness-yellow;
+    border-radius: 2px;
+    color: $neutral-dark-gray;
+    .MuiButton-contained {
+      background: $wellness-yellow;
+      color: $neutral-dark-gray;
+    }
   }
 
-  /* mouse over link */
-  a:hover {
-    color: blue;
+  .healthy {
+    border: 15px solid $wellness-green;
+    border-radius: 2px;
+    color: $neutral-white;
+    .MuiButton-contained {
+      background: $wellness-green;
+      color: $neutral-white;
+    }
   }
 
-  /* selected link */
-  a:active {
+  .left {
+    text-align: left;
+  }
+
+  a {
     color: blue;
+    &:hover {
+      text-decoration: none;
+    }
   }
 }
