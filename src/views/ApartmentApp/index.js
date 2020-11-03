@@ -2,8 +2,9 @@
 import React, { Component } from 'react';
 import 'date-fns';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
-import GordonDialogBox from '../../components/GordonDialogBox';
+// import GordonDialogBox from '../../components/GordonDialogBox';
 import GordonLoader from '../../components/Loader';
+import SimpleSnackbar from '../../components/Snackbar';
 import ApplicantList from '../../components/ApartmentApplicantList';
 import user from '../../services/user';
 import housing from '../../services/housing';
@@ -19,16 +20,20 @@ export default class ApartApp extends Component {
       isAlu: Boolean,
       loading: true,
       saving: false,
+      savingSuccess: false,
       network: 'online',
       submitDialogOpen: false, // Use this for saving app (later feature)
       errorDialogOpen: false,
-      errorDialogText: null,
       userProfile: {},
       applicants: [],
       // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
       onCampusRoom: null,
       onOffCampus: null,
     };
+    this.errorDialogText = '';
+    this.snackbarText = '';
+    this.snackbarSeverity = '';
+    this.saveButtonAlertTimeout = null;
   }
 
   componentDidMount() {
@@ -78,10 +83,12 @@ export default class ApartApp extends Component {
    * @param {String} searchSelection Username for student
    */
   onSearchSubmit = (searchSelection) => {
+    this.setState({ updating: true });
     if (searchSelection && searchSelection !== null) {
       // The method is separated from callback because user API service must be handled inside an async method
       this.addApplicant(searchSelection);
     }
+    this.setState({ updating: false });
   };
 
   /**
@@ -90,21 +97,36 @@ export default class ApartApp extends Component {
    */
   async addApplicant(username) {
     let applicants = this.state.applicants; // make a separate copy of the array
-    // Get the profile of the selected user
-    let applicantProfile = await user.getProfileInfo(username);
-    // Check if the selected user is a student
-    if (!String(applicantProfile.PersonType).includes('stu')) {
-      // Display an error if the selected user is not a student
-      let newErrorText = applicantProfile.fullName + ' is not a student';
-      this.setState({ errorDialogOpen: true, errorDialogText: newErrorText });
-    } else if (applicants.some((applicant) => applicant.AD_Username === username)) {
-      // Display an error if the selected user is already in the list
-      let newErrorText = applicantProfile.fullName + ' is already in the list';
-      this.setState({ errorDialogOpen: true, errorDialogText: newErrorText });
-    } else {
-      // Add the profile object to the list of applicants
-      applicants.push(applicantProfile);
-      this.setState({ applicants });
+    try {
+      // Get the profile of the selected user
+      let applicantProfile = await user.getProfileInfo(username);
+      // Check if the selected user is a student
+      if (!String(applicantProfile.PersonType).includes('stu')) {
+        // Display an error if the selected user is not a student
+        this.snackbarText =
+          'Could not add ' + String(applicantProfile.fullName) + ' because they are not a student.';
+        this.snackbarSeverity = 'warning';
+        this.setState({ snackbarOpen: true });
+      } else if (applicants.some((applicant) => applicant.AD_Username === username)) {
+        // Display an error if the selected user is already in the list
+        this.snackbarText = String(applicantProfile.fullName) + ' is already in the list.';
+        this.snackbarSeverity = 'info';
+        this.setState({ snackbarOpen: true });
+      } else {
+        // Add the profile object to the list of applicants
+        applicants.push(applicantProfile);
+        this.setState({ applicants });
+        if (this.state.applicants.some((applicant) => applicant.AD_Username === username)) {
+          this.snackbarText =
+            String(applicantProfile.fullName) + ' was successfully added to the list.';
+          this.snackbarSeverity = 'success';
+          this.setState({ snackbarOpen: true });
+        }
+      }
+    } catch (error) {
+      this.snackbarText = 'Something went wrong while trying to add this person. Please try again.';
+      this.snackbarSeverity = 'error';
+      this.setState({ snackbarOpen: true });
     }
   }
 
@@ -113,6 +135,7 @@ export default class ApartApp extends Component {
    * @param {String} profileToRemove Username for student
    */
   onApplicantRemove = (profileToRemove) => {
+    this.setState({ updating: true });
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
       let index = applicants.indexOf(profileToRemove);
@@ -121,6 +144,7 @@ export default class ApartApp extends Component {
         this.setState({ applicants });
       }
     }
+    this.setState({ updating: false });
   };
 
   /**
@@ -130,7 +154,7 @@ export default class ApartApp extends Component {
     // The method is separated from callback because the housing API service must be handled inside an async method
     let debugMessage = 'DEBUG: Save button was clicked';
     console.log(debugMessage);
-    alert(debugMessage);
+    // alert(debugMessage);
     this.saveApplication(this.state.userProfile.ID, this.state.applicants);
   };
 
@@ -141,17 +165,42 @@ export default class ApartApp extends Component {
    */
   async saveApplication(primaryID, applicants) {
     this.setState({ saving: true });
+    this.saveButtonAlertTimeout = null;
+    let saveSuccessful = null;
     try {
       const saved = await housing.saveApartmentApplication(primaryID, applicants);
-      console.log(saved.primaryID);
+      console.log(saved.primaryID); // `saved` is a placeholder name
+      saveSuccessful = saved;
     } catch (error) {
       // Do Nothing
     }
-    this.setState({ saving: false });
+    if (saveSuccessful) {
+      this.setState({ saving: 'success' });
+    } else {
+      this.snackbarText = 'This feature is not yet implemented.';
+      // this.snackbarText = 'Something went wrong while trying to save the application.';
+      this.snackbarSeverity = 'error';
+      this.setState({ snackbarOpen: true, saving: 'failed' });
+    }
+    if (this.saveButtonAlertTimeout === null) {
+      // Shows the success icon for 2 seconds and then returns back to normal button
+      this.saveButtonAlertTimeout = setTimeout(() => {
+        this.saveButtonAlertTimeout = null;
+        this.setState({ saving: false });
+      }, 2000);
+    }
   }
 
   handleCloseOkay = () => {
     this.setState({ submitDialogOpen: false, errorDialogOpen: false, errorDialogText: null });
+  };
+
+  handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ snackbarOpen: false });
   };
 
   render() {
@@ -213,12 +262,13 @@ export default class ApartApp extends Component {
                         applicants={this.state.applicants}
                         userProfile={this.state.userProfile}
                         saving={this.state.saving}
+                        savingSuccess={this.state.savingSuccess}
                         onSearchSubmit={this.onSearchSubmit}
                         onApplicantRemove={this.onApplicantRemove}
                         onSaveButtonClick={this.handleSaveButtonClick}
                         Authentication={this.props.Authentication}
                       />
-                      <GordonDialogBox
+                      {/* <GordonDialogBox
                         open={this.state.errorDialogOpen}
                         onClose={this.handleCloseOkay}
                         labelledby={'applicant-dialog'}
@@ -227,6 +277,12 @@ export default class ApartApp extends Component {
                         text={this.state.errorDialogText}
                         buttonClicked={this.handleCloseOkay}
                         buttonName={'Okay'}
+                      /> */}
+                      <SimpleSnackbar
+                        text={this.snackbarText}
+                        severity={this.snackbarSeverity}
+                        open={this.state.snackbarOpen}
+                        onClose={this.handleCloseSnackbar}
                       />
                     </Grid>
                     <Grid item>

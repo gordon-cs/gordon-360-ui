@@ -2,12 +2,25 @@ import React, { Component } from 'react';
 import 'date-fns';
 import { Grid, Card, CardHeader, CardContent, List, Button, Typography } from '@material-ui/core';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { gordonColors } from '../../theme';
 import GordonPeopleSearch from '../Header/components/PeopleSearch';
 import GordonLoader from '../../components/Loader';
 import ApplicantListItem from './components/ApplicantListItem';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 const MIN_NUM_APPLICANTS = 3;
+const styles = {
+  success: {
+    color: gordonColors.secondary.green,
+    fontSize: '26px',
+  },
+  error: {
+    color: gordonColors.secondary.red,
+    fontSize: '26px',
+  },
+};
 
 // Create a list of applicants, displayed by name, username, and class standing.
 export default class ApplicantList extends Component {
@@ -95,7 +108,13 @@ export default class ApplicantList extends Component {
             </Grid>
             <Grid item xs={12} sm={3}>
               {this.props.saving ? (
-                <GordonLoader size={this.loaderSize} />
+                this.props.saving === 'success' ? (
+                  <CheckCircleIcon style={styles.success} />
+                ) : this.props.saving === 'failed' ? (
+                  <ErrorIcon style={styles.error} />
+                ) : (
+                  <GordonLoader size={this.loaderSize} />
+                )
               ) : (
                 <Button
                   disabled={this.props.saving}
