@@ -30,17 +30,63 @@ export default class ApartApp extends Component {
     };
   }
 
+  componentDidMount() {
+    this.loadProfile();
+    this.loadHousingInfo();
+    // this.checkForSavedApplication();
+  }
+
+  /**
+   * Loads the user's profile info only once (at start)
+   */
+  async loadProfile() {
+    this.setState({ loading: true });
+    try {
+      const profile = await user.getProfileInfo();
+      this.setState({ userProfile: profile });
+      this.setState({ isStu: String(profile.PersonType).includes('stu') });
+      if (this.state.isStu) {
+        let applicants = this.state.applicants;
+        applicants.push(profile);
+        this.setState({ applicants });
+      }
+      this.setState({ loading: false });
+    } catch (error) {
+      // Do Nothing
+    }
+  }
+
+  /**
+   * Loads the user's saved apartment application, if one exists
+   */
+  async loadHousingInfo() {
+    this.setState({ loading: true });
+    try {
+      // TODO - Once saving application has been implemented in the backend, this will be replaced with a call to the load the application info. The getHousingInfo was made obsolete after the Hello World
+      let housingInfo = await housing.getHousingInfo();
+      let onOffCampus = String(housingInfo[0].OnOffCampus);
+      let onCampusRoom = String(housingInfo[0].OnCampusRoom);
+      this.setState({ onOffCampus, onCampusRoom, loading: false });
+    } catch (error) {
+      // Do Nothing
+    }
+  }
+
   /**
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
   onSearchSubmit = (searchSelection) => {
     if (searchSelection && searchSelection !== null) {
-      // Method separated from callback because profile must be handled inside an async method
+      // The method is separated from callback because user API service must be handled inside an async method
       this.addApplicant(searchSelection);
     }
   };
 
+  /**
+   * Add an applicant to the list, identified by username
+   * @param {String} username Username for student
+   */
   async addApplicant(username) {
     let applicants = this.state.applicants; // make a separate copy of the array
     // Get the profile of the selected user
@@ -77,57 +123,28 @@ export default class ApartApp extends Component {
   };
 
   /**
-   * Loads the user's profile info only once (at start)
+   * Callback for apartment application save button
    */
-  async loadProfile() {
-    this.setState({ loading: true });
-    try {
-      const profile = await user.getProfileInfo();
-      this.setState({ userProfile: profile });
-      this.checkPersonType(profile);
-      if (this.state.isStu) {
-        let applicants = this.state.applicants;
-        applicants.push(profile);
-        this.setState({ applicants });
-      }
-      this.setState({ loading: false });
-    } catch (error) {
-      // Do Nothing
-    }
-  }
-
-  checkPersonType(profile) {
-    let personType = String(profile.PersonType);
-    this.setState({ isStu: personType.includes('stu') });
-    this.setState({ isFac: personType.includes('fac') });
-    this.setState({ isAlu: personType.includes('alu') });
-  }
+  handleSaveButtonClick = () => {
+    // The method is separated from callback because the housing API service must be handled inside an async method
+    let debugMessage = 'DEBUG: Save button was clicked';
+    console.log(debugMessage);
+    alert(debugMessage);
+    // this.saveApplication(this.state.userProfile.ID, this.state.applicants);
+  };
 
   /**
-   * Loads the user's saved apartment application, if one exists
+   * Save the current state of the application to the database
+   * @param {Number} primaryID the student ID number of the person filling out the application
+   * @param {StudentProfileInfo} applicants Array of StudentProfileInfo objects
    */
-  async loadHousingInfo() {
-    this.setState({ loading: true });
-    try {
-      // TODO - Once saving application has been implemented in the backend, this will be replaced with a call to the load the application info. The getHousingInfo was made obsolete after the Hello World
-      let housingInfo = await housing.getHousingInfo();
-      let onOffCampus = String(housingInfo[0].OnOffCampus);
-      let onCampusRoom = String(housingInfo[0].OnCampusRoom);
-      this.setState({ onOffCampus, onCampusRoom, loading: false });
-    } catch (error) {
-      // Do Nothing
-    }
+  async saveApplication(primaryID, applicants) {
+    await housing.saveApartmentApplication(primaryID, applicants);
   }
 
   handleCloseOkay = () => {
     this.setState({ submitDialogOpen: false, errorDialogOpen: false, errorDialogText: null });
   };
-
-  componentDidMount() {
-    this.loadProfile();
-    this.loadHousingInfo();
-    // this.checkForSavedApplication();
-  }
 
   render() {
     if (this.props.Authentication) {
@@ -185,25 +202,24 @@ export default class ApartApp extends Component {
                   <Grid item xs={12} md={8} lg={6}>
                     <Grid container direction="column" spacing={2}>
                       <Grid item>
-                        <Card>
-                          <ApplicantList
-                            onApplicantRemove={this.onApplicantRemove}
-                            applicants={this.state.applicants}
-                            userProfile={this.state.userProfile}
-                            onSearchSubmit={this.onSearchSubmit}
-                            Authentication={this.props.Authentication}
-                          />
-                          <GordonDialogBox
-                            open={this.state.errorDialogOpen}
-                            onClose={this.handleCloseOkay}
-                            labelledby={'applicant-dialog'}
-                            describedby={'applicant-denied'}
-                            title={'Could Not Add Applicant'}
-                            text={this.state.errorDialogText}
-                            buttonClicked={this.handleCloseOkay}
-                            buttonName={'Okay'}
-                          />
-                        </Card>
+                        <ApplicantList
+                          applicants={this.state.applicants}
+                          userProfile={this.state.userProfile}
+                          onSearchSubmit={this.onSearchSubmit}
+                          onApplicantRemove={this.onApplicantRemove}
+                          onSaveButtonClick={this.handleSaveButtonClick}
+                          Authentication={this.props.Authentication}
+                        />
+                        <GordonDialogBox
+                          open={this.state.errorDialogOpen}
+                          onClose={this.handleCloseOkay}
+                          labelledby={'applicant-dialog'}
+                          describedby={'applicant-denied'}
+                          title={'Could Not Add Applicant'}
+                          text={this.state.errorDialogText}
+                          buttonClicked={this.handleCloseOkay}
+                          buttonName={'Okay'}
+                        />
                       </Grid>
                       <Grid item>
                         <Card>
