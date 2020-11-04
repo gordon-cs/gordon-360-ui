@@ -9,7 +9,7 @@ import './nav-avatar.css';
 import '../../../../app.css';
 import user from '../../../../services/user';
 
-const styles = theme => ({
+const styles = (theme) => ({
   drawerHeader: theme.mixins.toolbar,
 });
 
@@ -26,11 +26,11 @@ class GordonNavAvatar extends Component {
     };
   }
   async componentWillMount() {
-    this.loadAvatar(this.props.Authentication);
+    this.loadAvatar(this.props.authentication);
   }
   async componentWillReceiveProps(newProps) {
-    if (this.props.Authentication !== newProps.Authentication) {
-      this.loadAvatar(newProps.Authentication);
+    if (this.props.authentication !== newProps.authentication) {
+      this.loadAvatar(newProps.authentication);
     }
   }
 
@@ -38,9 +38,9 @@ class GordonNavAvatar extends Component {
     /* Used to re-render the page when the user's profile picture changes
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
-        this.loadAvatar(this.props.Authentication);
+        this.loadAvatar(this.props.authentication);
       }
     });
   }
@@ -50,8 +50,8 @@ class GordonNavAvatar extends Component {
     return window.removeEventListener('message', () => {});
   }
 
-  async loadAvatar(Authentication) {
-    if (Authentication) {
+  async loadAvatar(authentication) {
+    if (authentication) {
       const { name, user_name: username } = user.getLocalInfo();
       this.setState({ name, username });
       const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
@@ -69,7 +69,7 @@ class GordonNavAvatar extends Component {
     if (this.state.username) {
       return this.state.username
         .split('.') // Split name into separate words
-        .map(name => name[0]) // Get first letter of each part of name
+        .map((name) => name[0]) // Get first letter of each part of name
         .join(''); // Join initials back into a string
     }
     return '';
@@ -78,7 +78,7 @@ class GordonNavAvatar extends Component {
     const { classes } = this.props;
     let content;
     let buttonLink;
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       let avatar = <Avatar className="avatar placeholder">{this.getInitials()}</Avatar>;
       if (this.state.image) {
         avatar = (

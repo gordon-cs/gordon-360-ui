@@ -31,11 +31,18 @@ const Question = ({ setAnswered }) => {
 
   useEffect(() => {
     setLoading(true);
+
+    // Prevent memory leak by only updating state while component is mounted
+    let isSubscribed = true;
     wellness.getQuestion().then((q) => {
-      setWellnessQuestion(q);
-      setLoading(false);
+      if (isSubscribed) {
+        setWellnessQuestion(q);
+        setLoading(false);
+      }
     });
-  }, [setLoading, setWellnessQuestion]);
+
+    return () => (isSubscribed = false);
+  }, []);
 
   const submitAnswer = () => {
     wellness.postAnswer(answer === 'Yes').then(() => setAnswered(true));
@@ -121,7 +128,7 @@ const Question = ({ setAnswered }) => {
           <br />
           <Button
             variant="contained"
-            onClick={(e) => {
+            onClick={() => {
               if (answer === 'Yes') {
                 setIsDialogOpen(true);
               } else if (answer === 'No') {

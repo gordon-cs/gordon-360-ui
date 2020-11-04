@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid'
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -33,7 +33,7 @@ export default class Transcript extends Component {
   }
 
   componentWillMount() {
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       this.loadTranscript();
     }
   }
@@ -91,7 +91,7 @@ export default class Transcript extends Component {
   // Sorts a list of activity components in order of most recent end date to least recent end date.
   // Param: activities - an array of Activity components with props Activity and Sessions
   // Returns: the same array, sorted in order of most recent (newest) to least recent
-  sortNewestFirst = activities => {
+  sortNewestFirst = (activities) => {
     let sorted = activities.sort(function(a, b) {
       let lastSessA = a.props.Sessions[a.props.Sessions.length - 1];
       let lastSessB = b.props.Sessions[b.props.Sessions.length - 1];
@@ -107,7 +107,7 @@ export default class Transcript extends Component {
 
   // Param: activities - a list of activity objects ("Memberships" as defined in gordon-360-api)
   // Returns: array of Activity components with props Activity and Sessions.
-  groupActivityByCode = activities => {
+  groupActivityByCode = (activities) => {
     let condensedActs = [];
 
     // sort activities by ActivityCode
@@ -165,7 +165,7 @@ export default class Transcript extends Component {
   // of which category a membership should belong to.
   // Params: memberships - An array of membership objects retrieved from the database.
   // Returns: An array of four arrays-one per category-into which the  memberships have been filtered
-  filterMemberships = memberships => {
+  filterMemberships = (memberships) => {
     let filtered = {
       honors: [],
       experience: {
@@ -211,7 +211,7 @@ export default class Transcript extends Component {
   // Formats an array of major objects into a string for display on the transcript
   // Params: majors - An array of major objects
   // Returns: A string of all the current user's majors.
-  getMajors = majors => {
+  getMajors = (majors) => {
     let majorsString = 'Majors: ';
 
     //If majors is empty or not loaded, return null majors without iterating to avoid crashing
@@ -229,7 +229,7 @@ export default class Transcript extends Component {
   // Formats an array of minor objects into a string for display on the transcript
   // Params: minors - An array of minor objects
   // Returns: A string of all the current user's minors.
-  getMinors = minors => {
+  getMinors = (minors) => {
     let minorsString = 'Minors: ';
 
     //If minors is empty or not loaded, return null minors without iterating to avoid crashing
@@ -245,8 +245,7 @@ export default class Transcript extends Component {
   };
 
   render() {
-
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       let activityList;
       if (!this.state.categorizedMemberships.activities) {
         activityList = <GordonLoader />;
@@ -277,7 +276,7 @@ export default class Transcript extends Component {
         );
         experienceList = experienceList.concat(
           this.state.categorizedMemberships.experience.employments
-            .map(employment => <Experience Experience={employment} />)
+            .map((employment) => <Experience Experience={employment} />)
             .reverse(),
         );
       }
@@ -380,8 +379,7 @@ export default class Transcript extends Component {
             </Card>
           </Grid>
         </Grid>
-      )
+      );
     }
-
   }
 }

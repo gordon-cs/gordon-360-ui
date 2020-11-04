@@ -34,19 +34,19 @@ export default class WellnessCheck extends Component {
     } catch (error) {
       // Do nothing
     }
-    user.getImage().then(data => {
+    user.getImage().then((data) => {
       this.setState({ image: data, loading: false });
     });
   }
 
   componentWillMount() {
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       this.getPersonType();
     }
   }
 
   componentWillReceiveProps(newProps) {
-    if (this.props.Authentication !== newProps.Authentication) {
+    if (this.props.authentication !== newProps.authentication) {
       this.getPersonType();
     }
   }
@@ -56,15 +56,15 @@ export default class WellnessCheck extends Component {
     const SYMPTOMS = true;
     const NO_SYMPTOMS = false;
 
-    if(answer.length > 0){
-        if (answer[0].userAnswer === true) {
-          this.setState({ currentStatus: SYMPTOMS });
-        }
-        if (answer[0].userAnswer === false) {
-          this.setState({ currentStatus: NO_SYMPTOMS });
-        }
-    } else{
-       this.setState({ currentStatus: NO_SYMPTOMS });
+    if (answer.length > 0) {
+      if (answer[0].userAnswer === true) {
+        this.setState({ currentStatus: SYMPTOMS });
+      }
+      if (answer[0].userAnswer === false) {
+        this.setState({ currentStatus: NO_SYMPTOMS });
+      }
+    } else {
+      this.setState({ currentStatus: NO_SYMPTOMS });
     }
   }
 
@@ -75,7 +75,7 @@ export default class WellnessCheck extends Component {
    */
   async getUserData() {
     const data = await user.getProfileInfo();
-    this.setState({ currentUser: data});
+    this.setState({ currentUser: data });
   }
 
   async getPersonType() {
@@ -91,11 +91,6 @@ export default class WellnessCheck extends Component {
       console.log('Login failed with error: ' + error);
     }
   }
-
-  callBack = (data, data2) => {
-    this.setState({ answered: data });
-    this.setState({ currentStatus: data2 });
-  };
 
   setUserImage() {
     if (this.state.image && this.state.image.pref && this.state.currentUser) {
@@ -133,7 +128,7 @@ export default class WellnessCheck extends Component {
       fontSize: 20,
     };
 
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -152,12 +147,11 @@ export default class WellnessCheck extends Component {
     if (this.state.loading) {
       content = <GordonLoader />;
     } else {
-      
       /* Renders the wellness check question instead of the home page if the question
        *  has not been answered yet
        */
-      if (this.props.Authentication) {
-        let status = <HealthStatus />
+      if (this.props.authentication) {
+        let status = <HealthStatus />;
 
         content = (
           <Grid container justify="center" spacing={2}>
