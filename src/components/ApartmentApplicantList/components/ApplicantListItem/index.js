@@ -163,7 +163,7 @@ export default class ApplicantListItem extends Component {
             onClick={this.handleMenuClick}
           >
             Edit
-            <ArrowDropDownIcon />
+            {this.props.isPrimaryApplicant ? <StarBorderIcon /> : <ArrowDropDownIcon />}
           </Button>
           <Menu
             id="applicant-menu"

@@ -165,7 +165,8 @@ export default class ApartApp extends Component {
       try {
         this.saveApplication(this.state.newPrimaryApplicant.ID, this.state.applicants);
       } catch (error) {
-        this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
+        this.snackbarText = 'This feature is not yet implemented.';
+        // this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
         this.snackbarSeverity = 'error';
         this.setState({ snackbarOpen: true, saving: 'failed' });
       }
@@ -230,7 +231,7 @@ export default class ApartApp extends Component {
       this.saveButtonAlertTimeout = setTimeout(() => {
         this.saveButtonAlertTimeout = null;
         this.setState({ saving: false });
-      }, 2000);
+      }, 6000);
     }
   }
 
