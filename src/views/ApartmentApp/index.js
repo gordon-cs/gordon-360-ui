@@ -21,6 +21,8 @@ import ApplicantList from '../../components/ApartmentApplicantList';
 import user from '../../services/user';
 import housing from '../../services/housing';
 import './apartmentApp.css';
+const MAX_NUM_APPLICANTS = 8;
+// const MIN_NUM_APPLICANTS = 3;
 
 export default class ApartApp extends Component {
   constructor(props) {
@@ -117,8 +119,12 @@ export default class ApartApp extends Component {
     try {
       // Get the profile of the selected user
       let applicantProfile = await user.getProfileInfo(username);
-      // Check if the selected user is a student
-      if (!String(applicantProfile.PersonType).includes('stu')) {
+      if (applicants.length >= MAX_NUM_APPLICANTS) {
+        // Display an error if the user try to add an applicant when the list is full
+        this.snackbarText = 'You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants';
+        this.snackbarSeverity = 'warning';
+        this.setState({ snackbarOpen: true });
+      } else if (!String(applicantProfile.PersonType).includes('stu')) {
         // Display an error if the selected user is not a student
         this.snackbarText =
           'Could not add ' + String(applicantProfile.fullName) + ' because they are not a student.';
@@ -309,6 +315,7 @@ export default class ApartApp extends Component {
                   <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                     <Grid item>
                       <ApplicantList
+                        maxNumApplicants={MAX_NUM_APPLICANTS}
                         applicants={this.state.applicants}
                         userProfile={this.state.userProfile}
                         saving={this.state.saving}

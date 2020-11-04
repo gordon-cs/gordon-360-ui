@@ -10,8 +10,6 @@ import GordonLoader from '../../components/Loader';
 import ApplicantListItem from './components/ApplicantListItem';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
-// const MIN_NUM_APPLICANTS = 3;
-const MAX_NUM_APPLICANTS = 8;
 const styles = {
   success: {
     color: gordonColors.secondary.green,
@@ -68,7 +66,7 @@ export default class ApplicantList extends Component {
           action={
             <GordonPeopleSearch
               disableLink
-              disabled={this.props.applicants.length > MAX_NUM_APPLICANTS}
+              disabled={this.props.applicants.length > this.props.maxNumApplicants}
               icon={<GroupAddIcon />}
               customPlaceholderText={'Add Applicant'}
               onSearchSubmit={this.handleSelection}
@@ -108,9 +106,9 @@ export default class ApplicantList extends Component {
                 <Typography variant="overline" color="error">
                   Something when wrong while trying to save the application
                 </Typography>
-              ) : this.props.applicants.length >= MAX_NUM_APPLICANTS ? (
+              ) : this.props.applicants.length >= this.props.maxNumApplicants ? (
                 <Typography variant="overline" color="error">
-                  You have reached the maximum number of applicants
+                  You have reached the maximum number of applicants ({this.props.maxNumApplicants})
                 </Typography>
               ) : null}
             </Grid>
