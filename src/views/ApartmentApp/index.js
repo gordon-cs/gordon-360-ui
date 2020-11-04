@@ -1,8 +1,20 @@
 //Main apartment application page
 import React, { Component } from 'react';
 import 'date-fns';
-import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
-// import GordonDialogBox from '../../components/GordonDialogBox';
+import {
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+  Typography,
+} from '@material-ui/core/';
+import { Alert, AlertTitle } from '@material-ui/lab';
 import GordonLoader from '../../components/Loader';
 import SimpleSnackbar from '../../components/Snackbar';
 import ApplicantList from '../../components/ApartmentApplicantList';
@@ -23,14 +35,14 @@ export default class ApartApp extends Component {
       savingSuccess: false,
       network: 'online',
       submitDialogOpen: false, // Use this for saving app (later feature)
-      errorDialogOpen: false,
+      editDialogOpen: false,
       userProfile: {},
       applicants: [],
       // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
       onCampusRoom: null,
       onOffCampus: null,
     };
-    this.errorDialogText = '';
+    this.editDialogText = '';
     this.snackbarText = '';
     this.snackbarSeverity = '';
     this.saveButtonAlertTimeout = null;
@@ -60,6 +72,9 @@ export default class ApartApp extends Component {
     } catch (error) {
       // Do Nothing
     }
+    // DEBUG
+    this.handleSearchSubmit('Nick.Noormand');
+    this.handleSearchSubmit('Joshua.Rogers');
   }
 
   /**
@@ -82,7 +97,7 @@ export default class ApartApp extends Component {
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  onSearchSubmit = (searchSelection) => {
+  handleSearchSubmit = (searchSelection) => {
     this.setState({ updating: true });
     if (searchSelection && searchSelection !== null) {
       // The method is separated from callback because user API service must be handled inside an async method
@@ -131,10 +146,36 @@ export default class ApartApp extends Component {
   }
 
   /**
+   * Callback for changing the primary applicant
+   * @param {String} profile The StudentProfileInfo object for the person who is to be made the primary applicant
+   */
+  handleChangePrimary = (profile) => {
+    this.setState({ updating: true });
+    if (profile) {
+      if (this.state.applicants.includes(profile)) {
+        this.setState({ newPrimaryApplicant: profile, editDialogOpen: true });
+      }
+    }
+  };
+
+  handleChangePrimaryAccepted = () => {
+    if (this.state.newPrimaryApplicant) {
+      try {
+        this.saveApplication(this.state.newPrimaryApplicant.ID, this.state.applicants);
+      } catch (error) {
+        this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
+        this.snackbarSeverity = 'error';
+        this.setState({ snackbarOpen: true, saving: 'failed' });
+      }
+      this.handleCloseOkay();
+    }
+  };
+
+  /**
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  onApplicantRemove = (profileToRemove) => {
+  handleRemove = (profileToRemove) => {
     this.setState({ updating: true });
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
@@ -191,16 +232,22 @@ export default class ApartApp extends Component {
     }
   }
 
-  handleCloseOkay = () => {
-    this.setState({ submitDialogOpen: false, errorDialogOpen: false, errorDialogText: null });
-  };
-
   handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-
     this.setState({ snackbarOpen: false });
+  };
+
+  handleCloseDialog = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.handleCloseOkay();
+  };
+
+  handleCloseOkay = () => {
+    this.setState({ submitDialogOpen: false, editDialogOpen: false });
   };
 
   render() {
@@ -263,21 +310,51 @@ export default class ApartApp extends Component {
                         userProfile={this.state.userProfile}
                         saving={this.state.saving}
                         savingSuccess={this.state.savingSuccess}
-                        onSearchSubmit={this.onSearchSubmit}
-                        onApplicantRemove={this.onApplicantRemove}
+                        onSearchSubmit={this.handleSearchSubmit}
+                        onChangePrimary={this.handleChangePrimary}
+                        onApplicantRemove={this.handleRemove}
                         onSaveButtonClick={this.handleSaveButtonClick}
                         Authentication={this.props.Authentication}
                       />
-                      {/* <GordonDialogBox
-                        open={this.state.errorDialogOpen}
-                        onClose={this.handleCloseOkay}
-                        labelledby={'applicant-dialog'}
-                        describedby={'applicant-denied'}
-                        title={'Could Not Add Applicant'}
-                        text={this.state.errorDialogText}
-                        buttonClicked={this.handleCloseOkay}
-                        buttonName={'Okay'}
-                      /> */}
+                      <Dialog
+                        open={this.state.editDialogOpen}
+                        onClose={this.handleCloseDialog}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle id="alert-dialog-title">
+                          <Alert variant="filled" severity="warning">
+                            <AlertTitle>
+                              <strong>Change primary applicant?</strong>
+                            </AlertTitle>
+                          </Alert>
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">
+                            If you change the primary applicant, you will no longer be able to edit
+                            this application yourself.
+                            <br />
+                            Are you sure you want to change the primary applicant?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button
+                            variant="contained"
+                            onClick={this.handleCloseOkay}
+                            color="primary"
+                            autofocus
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="contained"
+                            onClick={this.handleChangePrimaryAccepted}
+                            color="primary"
+                          >
+                            Accept
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
                       <SimpleSnackbar
                         text={this.snackbarText}
                         severity={this.snackbarSeverity}

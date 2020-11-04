@@ -8,9 +8,15 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Avatar,
-  IconButton,
+  Button,
+  Menu,
+  MenuItem,
+  ListItemIcon,
 } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+// import ContactMailIcon from '@material-ui/icons/ContactMail';
 import ClearIcon from '@material-ui/icons/Clear';
 import user from '../../../../services/user';
 import '../../../../views/ApartmentApp/apartmentApp.css';
@@ -27,16 +33,9 @@ export default class ApplicantListItem extends Component {
       avatar: null,
       prefImage: null,
       defImage: null,
+      anchorEl: null,
     };
   }
-
-  handleRemove = (profile) => {
-    // Make sure the chosen profile was not null
-    if (profile) {
-      // Send the selected profile to the parent component
-      this.props.onApplicantRemove(profile);
-    }
-  };
 
   componentDidUpdate(newProps) {
     if (this.props.profile.AD_Username !== newProps.profile.AD_Username) {
@@ -65,6 +64,32 @@ export default class ApplicantListItem extends Component {
     }
     this.setState({ avatar });
   }
+
+  handleMenuClick = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  handleChangePrimary = (profile) => {
+    // Make sure the chosen profile was not null
+    if (profile) {
+      // Send the selected profile to the parent component
+      this.props.onChangePrimary(profile);
+      this.handleMenuClose();
+    }
+  };
+
+  handleRemove = (profile) => {
+    // Make sure the chosen profile was not null
+    if (profile) {
+      // Send the selected profile to the parent component
+      this.props.onApplicantRemove(profile);
+      this.handleMenuClose();
+    }
+  };
 
   render() {
     const profile = this.props.profile;
@@ -114,16 +139,15 @@ export default class ApplicantListItem extends Component {
             </Avatar>
           )}
         </ListItemAvatar>
-        <Grid container>
-          <Grid item xs={8}>
+        <Grid container alignItems="center" spacing={3}>
+          <Grid item xs={6}>
             <ListItemText
               primary={nickname ? fullName.replace(' ', ' ' + nickname + ' ') : fullName}
               secondary={profile.AD_Username}
               className={'list-item'}
-              padding="10"
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <ListItemText
               primary={personClassJobTitle}
               secondary={personType}
@@ -132,19 +156,41 @@ export default class ApplicantListItem extends Component {
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          {this.props.isPrimaryApplicant ? (
-            <IconButton edge="end" aria-label="remove">
-              <ClearIcon color="disabled" />
-            </IconButton>
-          ) : (
-            <IconButton
-              edge="end"
-              aria-label="remove"
+          <Button
+            aria-controls="applicant-menu"
+            aria-haspopup="true"
+            disabled={this.props.isPrimaryApplicant}
+            onClick={this.handleMenuClick}
+          >
+            Edit
+            <ArrowDropDownIcon />
+          </Button>
+          <Menu
+            id="applicant-menu"
+            anchorEl={this.state.anchorEl}
+            keepMounted
+            open={Boolean(this.state.anchorEl)}
+            onClose={this.handleMenuClose}
+          >
+            <MenuItem
+              disabled={this.props.isPrimaryApplicant}
+              onClick={this.handleChangePrimary.bind(this, profile)}
+            >
+              <ListItemIcon>
+                <StarBorderIcon />
+              </ListItemIcon>
+              Make Primary Contact
+            </MenuItem>
+            <MenuItem
+              disabled={this.props.isPrimaryApplicant}
               onClick={this.handleRemove.bind(this, profile)}
             >
-              <ClearIcon />
-            </IconButton>
-          )}
+              <ListItemIcon>
+                <ClearIcon />
+              </ListItemIcon>
+              Remove
+            </MenuItem>
+          </Menu>
         </ListItemSecondaryAction>
       </ListItem>
     );
