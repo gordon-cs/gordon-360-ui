@@ -73,6 +73,8 @@ export default class ApartApp extends Component {
       // Do Nothing
     }
     // DEBUG
+    this.handleSearchSubmit('Gahngnin.Kim');
+    this.handleSearchSubmit('Christian.Kunis');
     this.handleSearchSubmit('Nick.Noormand');
     this.handleSearchSubmit('Joshua.Rogers');
   }
