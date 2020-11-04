@@ -11,9 +11,13 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { Button } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import './index.scss';
 import wellness from '../../../../services/wellness.js';
-import user from '../../../../services/user.js';
 
 /**
  * Creates the question for the health check feature
@@ -23,69 +27,38 @@ const Question = ({ setAnswered }) => {
   const [loading, setLoading] = useState(true);
   const [answer, setAnswer] = useState(null);
   const [wellnessQuestion, setWellnessQuestion] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    wellness
-      .getQuestion()
-      .then((q) => formatQuestion(q))
-      .then((q) => {
-        setWellnessQuestion(q);
-        setLoading(false);
-      });
+    wellness.getQuestion().then((q) => {
+      setWellnessQuestion(q);
+      setLoading(false);
+    });
   }, [setLoading, setWellnessQuestion]);
 
-  const submitHandler = (event) => {
-    wellness
-      .postAnswer(answer === 'Yes')
-      .then(() => setAnswered(true))
-      .then(() => event.preventDefault());
+  const submitAnswer = () => {
+    wellness.postAnswer(answer === 'Yes').then(() => setAnswered(true));
   };
 
-  const formatQuestion = async (question) => {
-    const userInfo = await user.getProfileInfo();
-
-    /* eslint-disable no-template-curly-in-string */
-    let wellnessQuestion = question[0].question.replace(
-      '${user.FirstName}',
-      `${userInfo.FirstName}`,
+  const header = () => {
+    return (
+      <div className="wellness-header">
+        <Grid container direction="row">
+          <Grid item xs={12}>
+            <Typography variant="body2" className="wellness-header">
+              Wellness Check
+            </Typography>
+          </Grid>
+        </Grid>
+      </div>
     );
-    wellnessQuestion = wellnessQuestion.replace('${user.LastName}', `${userInfo.LastName}`);
-
-    let [yesPrompt, link] = question[0].yesPrompt.split('https://');
-
-    yesPrompt = yesPrompt.replace('${user.FirstName}', `${userInfo.FirstName}`);
-    yesPrompt = yesPrompt.replace('${user.LastName}', `${userInfo.LastName}`);
-    link = 'https://' + link;
-
-    let noPrompt = question[0].noPrompt.replace('${user.FirstName}', `${userInfo.FirstName}`);
-    noPrompt = noPrompt.replace('${user.LastName}', `${userInfo.LastName}`);
-    /* eslint-enable no-template-curly-in-string */
-
-    return {
-      question: wellnessQuestion,
-      symptoms: [
-        'Temperature higher than 100.4°F',
-        'New loss of taste or smell',
-        'Sore throat',
-        'Muscle pain',
-        'Cough',
-        'Shortness of breath or difficulty breathing',
-        'Fever',
-        'Chills',
-      ],
-      yes: yesPrompt,
-      no: noPrompt,
-      link: link,
-    };
   };
 
-  // Creates wellness check question
   const question = () => {
-    // Checks to make sure the questions are imported before attempting to access its data
     if (wellnessQuestion !== null) {
-      let symptomsJSX = wellnessQuestion.symptoms.map((item) => {
-        return <FormLabel>- {item}</FormLabel>;
+      let symptomsJSX = wellnessQuestion.symptoms.map((item, index) => {
+        return <FormLabel key={index}>- {item}</FormLabel>;
       });
 
       return (
@@ -122,11 +95,15 @@ const Question = ({ setAnswered }) => {
     if (wellnessQuestion && answer) {
       let answerClass;
       let answerText;
-      let answerLink;
+      let answerLink = null;
       if (answer === 'Yes') {
         answerClass = 'symptoms';
         answerText = wellnessQuestion.yes;
-        answerLink = true;
+        answerLink = (
+          <a href={wellnessQuestion.link} target="_blank" rel="noopener noreferrer">
+            this link
+          </a>
+        );
       } else {
         answerClass = 'healthy';
         answerText = wellnessQuestion.no;
@@ -137,18 +114,21 @@ const Question = ({ setAnswered }) => {
             <div>
               <Typography color="textPrimary">
                 {answerText}
-                {answerLink ? (
-                  <a href={wellnessQuestion.link} target="_blank" rel="noopener noreferrer">
-                    this link
-                  </a>
-                ) : (
-                  ''
-                )}
+                {answerLink}
               </Typography>
             </div>
           </CardContent>
           <br />
-          <Button variant="contained" onClick={submitHandler}>
+          <Button
+            variant="contained"
+            onClick={(e) => {
+              if (answer === 'Yes') {
+                setIsDialogOpen(true);
+              } else if (answer === 'No') {
+                submitAnswer();
+              }
+            }}
+          >
             Submit
           </Button>
           <br />
@@ -158,24 +138,44 @@ const Question = ({ setAnswered }) => {
     }
   };
 
+  const symptomsDialog = () => {
+    return (
+      <Dialog
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        aria-labelledby="submit-dialog"
+        aria-describedby="submit-symptoms"
+        className="symptoms-dialog"
+      >
+        <DialogTitle>Symptom Positive Response</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You are about to submit that you have recently experienced COVID-19 symptoms.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" onClick={() => setIsDialogOpen(false)}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={submitAnswer} className="confirm-symptoms">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
   if (loading === true) {
     return <GordonLoader />;
   } else {
     return (
-      <Card className="wellness-check symptoms">
-        <div className="wellness-header">
-          <Grid container direction="row">
-            <Grid item xs={12}>
-              <Typography variant="body2" className="wellness-header">
-                Wellness Check
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
+      <Card className="wellness-check">
+        {header()}
         {question()}
         <Divider />
         {answerSection()}
         <div className="wellness-header">Health Center (for students): (978) 867-4300 </div>
+        {symptomsDialog()}
       </Card>
     );
   }
