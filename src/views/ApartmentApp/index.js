@@ -55,11 +55,6 @@ export default class ApartApp extends Component {
     } catch (error) {
       // Do Nothing
     }
-    // DEBUG
-    this.handleSearchSubmit('Gahngnin.Kim');
-    this.handleSearchSubmit('Christian.Kunis');
-    this.handleSearchSubmit('Nick.Noormand');
-    this.handleSearchSubmit('Joshua.Rogers');
   }
 
   render() {
@@ -97,7 +92,10 @@ export default class ApartApp extends Component {
               <GordonLoader />
             ) : (
               <div className="student-apartment-application">
-                <StudentApplication Authentication={this.props.Authentication} />
+                <StudentApplication
+                  userProfile={this.state.userProfile}
+                  Authentication={this.props.Authentication}
+                />
               </div>
             )}
           </div>

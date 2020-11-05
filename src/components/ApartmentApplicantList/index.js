@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import 'date-fns';
-import { Grid, Card, CardHeader, CardContent, List, Button, Typography } from '@material-ui/core';
+import {
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  Typography,
+} from '@material-ui/core';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -31,7 +41,7 @@ export default class ApplicantList extends Component {
     this.loaderSize = 20;
   }
 
-  handleSelection = (theChosenOne) => {
+  handleSelection = theChosenOne => {
     // Make sure the chosen username was not null
     if (theChosenOne) {
       // Send the selected username to the parent component
@@ -39,7 +49,7 @@ export default class ApplicantList extends Component {
     }
   };
 
-  handleChangePrimary = (profile) => {
+  handleChangePrimary = profile => {
     // Make sure the chosen profile was not null
     if (profile) {
       // Send the selected profile to the parent component
@@ -47,7 +57,7 @@ export default class ApplicantList extends Component {
     }
   };
 
-  handleRemove = (profile) => {
+  handleRemove = profile => {
     // Make sure the chosen profile was not null
     if (profile) {
       // Send the selected profile to the parent component
@@ -81,23 +91,22 @@ export default class ApplicantList extends Component {
             <Grid item xs={12}>
               <List className="applicant-list" aria-label="apartment applicants">
                 {this.props.applicants ? (
-                  this.props.applicants.map((profile) => (
+                  this.props.applicants.map(profile => (
                     <ApplicantListItem
                       key={profile.AD_Username}
                       profile={profile}
-                      isPrimaryApplicant={profile === this.props.userProfile}
+                      isPrimaryApplicant={profile.AD_Username === this.props.primaryUsername}
                       onChangePrimary={this.handleChangePrimary.bind(this, profile)}
                       onApplicantRemove={this.handleRemove.bind(this, profile)}
                     />
                   ))
                 ) : (
-                  <ApplicantListItem
-                    key={this.props.userProfile.AD_Username}
-                    profile={this.props.userProfile}
-                    isPrimaryApplicant={true}
-                    onChangePrimary={this.handleChangePrimary.bind(this, this.props.userProfile)}
-                    onApplicantRemove={this.handleRemove.bind(this, this.props.userProfile)}
-                  />
+                  <ListItem key={'applicant-list-placeholder'} className={'list-item'}>
+                    <ListItemText
+                      primary={'Use the search bar above to add applicants'}
+                      className={'list-item'}
+                    />
+                  </ListItem>
                 )}
               </List>
             </Grid>
