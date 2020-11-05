@@ -130,7 +130,7 @@ export default class ApartApp extends Component {
           'Could not add ' + String(applicantProfile.fullName) + ' because they are not a student.';
         this.snackbarSeverity = 'warning';
         this.setState({ snackbarOpen: true });
-      } else if (applicants.some((applicant) => applicant.AD_Username === username)) {
+      } else if (applicants.some(applicant => applicant.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         this.snackbarText = String(applicantProfile.fullName) + ' is already in the list.';
         this.snackbarSeverity = 'info';
@@ -139,7 +139,7 @@ export default class ApartApp extends Component {
         // Add the profile object to the list of applicants
         applicants.push(applicantProfile);
         this.setState({ applicants });
-        if (this.state.applicants.some((applicant) => applicant.AD_Username === username)) {
+        if (this.state.applicants.some(applicant => applicant.AD_Username === username)) {
           this.snackbarText =
             String(applicantProfile.fullName) + ' was successfully added to the list.';
           this.snackbarSeverity = 'success';
@@ -205,21 +205,21 @@ export default class ApartApp extends Component {
     let debugMessage = 'DEBUG: Save button was clicked';
     console.log(debugMessage);
     // alert(debugMessage);
-    this.saveApplication(this.state.userProfile.ID, this.state.applicants);
+    this.saveApplication(this.state.userProfile.AD_Username, this.state.applicants);
   };
 
   /**
    * Save the current state of the application to the database
-   * @param {Number} primaryID the student ID number of the person filling out the application
+   * @param {String} primaryUsername the student username of the person filling out the application
    * @param {StudentProfileInfo} applicants Array of StudentProfileInfo objects
    */
-  async saveApplication(primaryID, applicants) {
+  async saveApplication(primaryUsername, applicants) {
     this.setState({ saving: true });
     this.saveButtonAlertTimeout = null;
     let saveSuccessful = null;
     try {
-      const saved = await housing.saveApartmentApplication(primaryID, applicants);
-      console.log(saved.primaryID); // `saved` is a placeholder name
+      const saved = await housing.saveApartmentApplication(primaryUsername, applicants);
+      console.log(saved.primaryUsername); // `saved` is a placeholder name
       saveSuccessful = saved;
     } catch (error) {
       // Do Nothing
@@ -266,7 +266,7 @@ export default class ApartApp extends Component {
        *  multiple re-renders that creates extreme performance lost.
        *  The origin of the message is checked to prevent cross-site scripting attacks
        */
-      window.addEventListener('message', (event) => {
+      window.addEventListener('message', event => {
         if (
           event.data === 'online' &&
           this.state.network === 'offline' &&
