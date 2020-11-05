@@ -88,7 +88,7 @@ export default class GordonPeopleSearch extends Component {
   }
 
   handleClick = theChosenOne => {
-    if (theChosenOne && theChosenOne !== null && this.props.disableLink) {
+    if (theChosenOne && this.props.disableLink) {
       this.props.onSearchSubmit(theChosenOne);
     }
     this.reset();

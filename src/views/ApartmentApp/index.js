@@ -84,7 +84,7 @@ export default class ApartApp extends Component {
    */
   onSearchSubmit = searchSelection => {
     this.setState({ updating: true });
-    if (searchSelection && searchSelection !== null) {
+    if (searchSelection) {
       // The method is separated from callback because user API service must be handled inside an async method
       this.addApplicant(searchSelection);
     }
