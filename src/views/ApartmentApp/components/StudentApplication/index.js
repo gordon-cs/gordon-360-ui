@@ -28,9 +28,7 @@ export default class StudentApplication extends Component {
     super(props);
     this.peopleSearch = React.createRef();
     this.state = {
-      isStu: Boolean,
-      isFac: Boolean,
-      isAlu: Boolean,
+      isStu: true,
       loading: true,
       saving: false,
       network: 'online',
@@ -38,9 +36,6 @@ export default class StudentApplication extends Component {
       editDialogOpen: false,
       userProfile: {},
       applicants: [],
-      // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
-      onCampusRoom: null,
-      onOffCampus: null,
     };
     this.editDialogText = '';
     this.snackbarText = '';
@@ -103,7 +98,7 @@ export default class StudentApplication extends Component {
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  handleSearchSubmit = (searchSelection) => {
+  handleSearchSubmit = searchSelection => {
     this.setState({ updating: true });
     if (searchSelection) {
       // The method is separated from callback because user API service must be handled inside an async method
@@ -159,7 +154,7 @@ export default class StudentApplication extends Component {
    * Callback for changing the primary applicant
    * @param {String} profile The StudentProfileInfo object for the person who is to be made the primary applicant
    */
-  handleChangePrimary = (profile) => {
+  handleChangePrimary = profile => {
     this.setState({ updating: true });
     if (profile) {
       if (this.state.applicants.includes(profile)) {
@@ -186,7 +181,7 @@ export default class StudentApplication extends Component {
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  handleRemove = (profileToRemove) => {
+  handleRemove = profileToRemove => {
     this.setState({ updating: true });
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
