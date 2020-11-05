@@ -26,7 +26,7 @@ export default class ApartApp extends Component {
        *  multiple re-renders that creates extreme performance lost.
        *  The origin of the message is checked to prevent cross-site scripting attacks
        */
-      window.addEventListener('message', (event) => {
+      window.addEventListener('message', event => {
         if (
           event.data === 'online' &&
           this.state.network === 'offline' &&
