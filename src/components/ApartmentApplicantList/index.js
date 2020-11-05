@@ -10,7 +10,7 @@ import GordonLoader from '../../components/Loader';
 import ApplicantListItem from './components/ApplicantListItem';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
-const MIN_NUM_APPLICANTS = 3;
+const MIN_NUM_APPLICANTS = 2;
 const styles = {
   success: {
     color: gordonColors.secondary.green,
