@@ -28,14 +28,13 @@ export default class StudentApplication extends Component {
     super(props);
     this.peopleSearch = React.createRef();
     this.state = {
-      isStu: true,
       loading: true,
       saving: false,
       savingSuccess: false,
       network: 'online',
       submitDialogOpen: false, // Use this for saving app (later feature)
       editDialogOpen: false,
-      userProfile: {},
+      primaryUsername: null, // The username of the primary applicant
       applicants: [],
     };
     this.editDialogText = '';
@@ -47,7 +46,7 @@ export default class StudentApplication extends Component {
   componentDidMount() {
     this.loadProfile();
     this.loadHousingInfo();
-    // this.checkForSavedApplication();
+    this.loadSavedApplication();
   }
 
   /**
@@ -58,12 +57,9 @@ export default class StudentApplication extends Component {
     try {
       const profile = await user.getProfileInfo();
       this.setState({ userProfile: profile });
-      this.setState({ isStu: String(profile.PersonType).includes('stu') });
-      if (this.state.isStu) {
-        let applicants = this.state.applicants;
-        applicants.push(profile);
-        this.setState({ applicants });
-      }
+      let applicants = this.state.applicants;
+      applicants.push(profile);
+      this.setState({ applicants });
       this.setState({ loading: false });
     } catch (error) {
       // Do Nothing
@@ -88,6 +84,13 @@ export default class StudentApplication extends Component {
       this.setState({ onOffCampus, onCampusRoom, loading: false });
     } catch (error) {
       // Do Nothing
+    }
+  }
+
+  async loadSavedApplication() {
+    // TODO: Implement this once save/load of application data has been implemented in the backend
+    if (!this.state.primaryUsername) {
+      this.setState({ primaryUsername: this.props.userProfile.AD_Username });
     }
   }
 
@@ -199,7 +202,7 @@ export default class StudentApplication extends Component {
     let debugMessage = 'DEBUG: Save button was clicked';
     console.log(debugMessage);
     // alert(debugMessage);
-    this.saveApplication(this.state.userProfile.ID, this.state.applicants);
+    this.saveApplication(this.props.userProfile.ID, this.state.applicants);
   };
 
   /**
@@ -281,7 +284,8 @@ export default class StudentApplication extends Component {
        */
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-      if (networkStatus === 'online' && this.state.isStu && this.props.Authentication) {
+      if (networkStatus === 'online' && this.props.Authentication) {
+        // TODO: if (this.props.userProfile.AD_Username !== this.state.primaryUsername) {display the page but all as read-only (not editable)}
         return (
           <div>
             {this.state.loading ? (
@@ -310,8 +314,9 @@ export default class StudentApplication extends Component {
                     <Grid item>
                       <ApplicantList
                         maxNumApplicants={MAX_NUM_APPLICANTS}
+                        userProfile={this.props.userProfile}
+                        primaryUsername={this.state.primaryUsername}
                         applicants={this.state.applicants}
-                        userProfile={this.state.userProfile}
                         saving={this.state.saving}
                         savingSuccess={this.state.savingSuccess}
                         onSearchSubmit={this.handleSearchSubmit}
@@ -379,7 +384,7 @@ export default class StudentApplication extends Component {
                         <CardContent>
                           <Typography variant="h5">Hello World:</Typography>
 
-                          <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
+                          <h3>{'You name: ' + this.props.userProfile.fullName}</h3>
                           <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
                           <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
                           <br />
