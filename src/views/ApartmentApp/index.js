@@ -20,7 +20,6 @@ export default class ApartApp extends Component {
       isAlu: Boolean,
       loading: true,
       saving: false,
-      savingSuccess: false,
       network: 'online',
       submitDialogOpen: false, // Use this for saving app (later feature)
       errorDialogOpen: false,
@@ -262,7 +261,6 @@ export default class ApartApp extends Component {
                         applicants={this.state.applicants}
                         userProfile={this.state.userProfile}
                         saving={this.state.saving}
-                        savingSuccess={this.state.savingSuccess}
                         onSearchSubmit={this.onSearchSubmit}
                         onApplicantRemove={this.onApplicantRemove}
                         onSaveButtonClick={this.handleSaveButtonClick}
