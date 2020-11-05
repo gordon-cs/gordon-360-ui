@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
-import './apartmentApp.scss';
 import {
   Grid,
   Card,
   CardHeader,
   CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+  // Dialog,
+  // DialogActions,
+  // DialogContent,
+  // DialogContentText,
+  // DialogTitle,
   Button,
-  Typography,
+  // Typography,
 } from '@material-ui/core/';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import GordonLoader from '../../../../components/Loader';

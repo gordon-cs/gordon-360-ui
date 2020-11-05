@@ -1,6 +1,5 @@
 //Main apartment application page
 import React, { Component } from 'react';
-import 'date-fns';
 import {
   Grid,
   Card,
