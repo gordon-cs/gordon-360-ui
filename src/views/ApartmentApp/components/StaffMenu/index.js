@@ -1,17 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-  Typography,
-} from '@material-ui/core/';
+import { Grid, Card, CardHeader, CardContent } from '@material-ui/core/';
 import '../../apartmentApp.css';
 
 export default class StaffMenu extends Component {
