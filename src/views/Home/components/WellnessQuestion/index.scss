@@ -1,8 +1,6 @@
 @import '../../../../vars';
 
-//this makes the space between the selectable answers smaller
-.wellness-check {
-  text-overflow: ellipsis;
+.wellness-question {
   .MuiButtonBase-root {
     padding: 4px;
   }
@@ -53,7 +51,7 @@
 .symptoms-dialog {
   .MuiDialog-paper {
     border: 15px solid $wellness-yellow;
-    border-radius: 2px;
+    border-radius: 5px;
     color: $neutral-dark-gray;
   }
 

@@ -1,29 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import {
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Typography,
+  Radio,
+  RadioGroup,
+} from '@material-ui/core';
+
 import GordonLoader from '../../../../components/Loader';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import { Button } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import './index.scss';
 import wellness from '../../../../services/wellness.js';
+
+import './index.scss';
 
 /**
  * Creates the question for the health check feature
  */
 
-const Question = ({ setAnswered }) => {
+const WellnessQuestion = ({ setAnswered }) => {
   const [loading, setLoading] = useState(true);
   const [answer, setAnswer] = useState(null);
   const [wellnessQuestion, setWellnessQuestion] = useState(null);
@@ -32,23 +36,19 @@ const Question = ({ setAnswered }) => {
   useEffect(() => {
     setLoading(true);
 
-    // Prevent memory leak by only updating state while component is mounted
-    let isSubscribed = true;
-    wellness.getQuestion().then((q) => {
-      if (isSubscribed) {
+    wellness
+      .getQuestion()
+      .then((q) => {
         setWellnessQuestion(q);
-        setLoading(false);
-      }
-    });
-
-    return () => (isSubscribed = false);
+      })
+      .then(() => setLoading(false));
   }, []);
 
   const submitAnswer = () => {
     wellness.postAnswer(answer === 'Yes').then(() => setAnswered(true));
   };
 
-  const header = () => {
+  const Header = () => {
     return (
       <div className="wellness-header">
         <Grid container direction="row">
@@ -62,43 +62,47 @@ const Question = ({ setAnswered }) => {
     );
   };
 
-  const question = () => {
-    if (wellnessQuestion !== null) {
-      let symptomsJSX = wellnessQuestion.symptoms.map((item, index) => {
-        return <FormLabel key={index}>- {item}</FormLabel>;
-      });
-
+  const QuestionText = () => {
+    if (wellnessQuestion) {
       return (
         <CardContent>
           <div className="left">
             <FormControl>
               <FormLabel>{wellnessQuestion.question}</FormLabel>
               <div style={{ height: '10px' }}></div>
-              {symptomsJSX}
+              {wellnessQuestion.symptoms.map((item, index) => {
+                return <FormLabel key={index}>- {item}</FormLabel>;
+              })}
               <br />
               <RadioGroup>
                 <FormControlLabel
                   value="Yes"
                   control={<Radio />}
                   label={`Yes`}
-                  onChange={() => setAnswer('Yes')}
+                  onChange={() => {
+                    setAnswer('Yes');
+                  }}
                 />
                 <br></br>
                 <FormControlLabel
                   value="No"
                   control={<Radio />}
                   label={'No'}
-                  onChange={() => setAnswer('No')}
+                  onChange={() => {
+                    setAnswer('No');
+                  }}
                 />
               </RadioGroup>
             </FormControl>
           </div>
         </CardContent>
       );
+    } else {
+      return null;
     }
   };
 
-  const answerSection = () => {
+  const Answer = () => {
     if (wellnessQuestion && answer) {
       let answerClass;
       let answerText;
@@ -142,10 +146,12 @@ const Question = ({ setAnswered }) => {
           <br />
         </div>
       );
+    } else {
+      return null;
     }
   };
 
-  const symptomsDialog = () => {
+  const SymptomsDialog = () => {
     return (
       <Dialog
         open={isDialogOpen}
@@ -176,16 +182,16 @@ const Question = ({ setAnswered }) => {
     return <GordonLoader />;
   } else {
     return (
-      <Card className="wellness-check">
-        {header()}
-        {question()}
+      <Card className="wellness-question">
+        {Header()}
+        {QuestionText()}
         <Divider />
-        {answerSection()}
+        {Answer()}
         <div className="wellness-header">Health Center (for students): (978) 867-4300 </div>
-        {symptomsDialog()}
+        {SymptomsDialog()}
       </Card>
     );
   }
 };
 
-export default Question;
+export default WellnessQuestion;

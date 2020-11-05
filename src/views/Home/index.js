@@ -6,7 +6,7 @@ import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
-import Question from './components/Question';
+import WellnessQuestion from './components/WellnessQuestion';
 import user from '../../services/user';
 import wellness from '../../services/wellness';
 import storage from '../../services/storage';
@@ -15,6 +15,7 @@ import './home.css';
 
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
   const [networkStatus, setNetworkStatus] = useState('online');
   const [answered, setAnswered] = useState(null);
@@ -46,51 +47,50 @@ const Home = ({ authentication, onLogIn }) => {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     if (authentication) {
-      setLoading(true);
-      getPersonType();
-      if (networkStatus === 'online') {
-        getWellnessStatus();
-      }
+      user
+        .getProfileInfo()
+        .then((p) => setPersonType(p.PersonType))
+        .then(() => {
+          if (networkStatus === 'online') {
+            wellness
+              .getStatus()
+              .then((a) => {
+                setAnswered(a.length && a[0].answerValid);
+              })
+              .then(() => {
+                setIsAuthenticated(true);
+                setLoading(false);
+              });
+          } else {
+            setIsAuthenticated(true);
+            setLoading(false);
+          }
+        });
     } else {
       // Clear out component's person-specific state when authentication becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
       setAnswered(null);
       setPersonType(null);
+      setIsAuthenticated(false);
+      setLoading(false);
     }
-    setLoading(false);
   }, [authentication, networkStatus]);
 
-  const getWellnessStatus = async () => {
-    const answer = await wellness.getStatus();
-
-    if (answer.length > 0) {
-      setAnswered(answer[0].answerValid);
-    } else {
-      setAnswered(false);
-    }
-  };
-
-  const getPersonType = async () => {
-    const profile = await user.getProfileInfo();
-    console.log(profile);
-    setPersonType(profile.PersonType);
-  };
-
-  if (!authentication) {
-    // Show log in page when user is unauthenticated
+  if (loading) {
+    return <GordonLoader />;
+  } else if (!isAuthenticated) {
     return (
       <div className="gordon-login">
         <Login onLogIn={onLogIn} />
       </div>
     );
-  } else if (loading) {
-    return <GordonLoader />;
   } else if (networkStatus === 'online' && !answered) {
     return (
       <Grid container justify="center" spacing={2}>
         <Grid item xs={10} md={4}>
-          <Question setAnswered={setAnswered} />
+          <WellnessQuestion setAnswered={setAnswered} />
         </Grid>
       </Grid>
     );
