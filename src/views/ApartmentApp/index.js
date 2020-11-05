@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Grid,
   Card,
-  CardHeader,
+  // CardHeader,
   CardContent,
   // Dialog,
   // DialogActions,
@@ -12,13 +12,56 @@ import {
   Button,
   // Typography,
 } from '@material-ui/core/';
-import { Alert, AlertTitle } from '@material-ui/lab';
-import GordonLoader from '../../../../components/Loader';
+import GordonLoader from '../../components/Loader';
 import StudentApplication from './components/StudentApplication';
 import StaffMenu from './components/StaffMenu';
+import user from '../../services/user';
+// import housing from '../../services/housing';
 import './apartmentApp.scss';
 
 export default class ApartApp extends Component {
+  constructor(props) {
+    super(props);
+    this.peopleSearch = React.createRef();
+    this.state = {
+      isStu: Boolean,
+      isFac: Boolean,
+      isAlu: Boolean,
+      loading: true,
+      network: 'online',
+      userProfile: {},
+    };
+    this.snackbarText = '';
+    this.snackbarSeverity = '';
+    this.saveButtonAlertTimeout = null;
+  }
+
+  componentDidMount() {
+    this.loadProfile();
+  }
+
+  /**
+   * Loads the user's profile info only once (at start)
+   */
+  async loadProfile() {
+    this.setState({ loading: true });
+    try {
+      const profile = await user.getProfileInfo();
+      this.setState({ userProfile: profile });
+      this.setState({ isStu: String(profile.PersonType).includes('stu') });
+      this.setState({ isFac: String(profile.PersonType).includes('fac') });
+      this.setState({ isAlu: String(profile.PersonType).includes('alu') });
+      this.setState({ loading: false });
+    } catch (error) {
+      // Do Nothing
+    }
+    // DEBUG
+    this.handleSearchSubmit('Gahngnin.Kim');
+    this.handleSearchSubmit('Christian.Kunis');
+    this.handleSearchSubmit('Nick.Noormand');
+    this.handleSearchSubmit('Joshua.Rogers');
+  }
+
   render() {
     if (this.props.Authentication) {
       /* Used to re-render the page when the network connection changes.
