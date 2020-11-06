@@ -68,30 +68,30 @@ export default class App extends Component {
               <GordonHeader
                 onDrawerToggle={this.onDrawerToggle}
                 onSignOut={this.onAuthChange}
-                Authentication={this.state.authentication}
+                authentication={this.state.authentication}
               />
               <GordonNav
                 onDrawerToggle={this.onDrawerToggle}
                 drawerOpen={this.state.drawerOpen}
                 onSignOut={this.onAuthChange}
-                Authentication={this.state.authentication}
+                authentication={this.state.authentication}
               />
               <main className="app-main">
                 <Switch>
-                  {routes.map(route => (
+                  {routes.map((route) => (
                     <Route
                       key={route.path}
                       path={route.path}
                       exact={route.exact}
-                      render={props => (
+                      render={(props) => (
                         <div className="app-main-container">
                           <OfflineBanner
                             currentPath={route.path}
-                            Authentication={this.state.authentication}
+                            authentication={this.state.authentication}
                           />
                           <route.component
                             onLogIn={this.onAuthChange}
-                            Authentication={this.state.authentication}
+                            authentication={this.state.authentication}
                             {...props}
                           />
                         </div>
