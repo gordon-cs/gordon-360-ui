@@ -416,65 +416,6 @@ export default class GordonHeader extends Component {
     return wellnessTab;
   }
 
-   /**
-   * Creates the Apartment Application button.
-   *
-   * Depending on the status of the network and authentication, the apartment application button is created.
-   *
-   * @return {JSX} The JSX of the Appartment App  button.
-   */
-  createApartmentAppTab() {
-    let apartmentTab;
-    // Network Status: Online
-    if (this.state.network === 'online') {
-      // Network Status: Online - Authenticated
-      if (this.props.Authentication) {
-        apartmentTab = (
-          <Tab
-            className="tab"
-            label="Apartment App"
-            component={NavLink}
-            to="/ApartApp"
-          />
-        );
-      }
-      // Network Status: Online -  Not Authenticated
-      else {
-        apartmentTab = (
-          <div onClick={clicked => this.openDialogBox('unauthorized', 'apartment app')}>
-            <Tab
-              className="tab"
-              label="Apartment App"
-              component={Button}
-              style={{ color: 'white' }}
-              disabled={true}
-            />
-          </div>
-        );
-      }
-    }
-    // Network Status: Offline
-    else {
-      apartmentTab = (
-        <div
-          onClick={clicked => {
-            this.openDialogBox('offline', '');
-          }}
-        >
-          <Tab
-            className="tab"
-            label="apartment App"
-            component={Button}
-            style={{ color: 'white' }}
-            disabled={true}
-          />
-        </div>
-      );
-    }
-
-    return apartmentTab;
-  }
-
   render() {
     return (
       <section className="gordon-header">
@@ -523,7 +464,6 @@ export default class GordonHeader extends Component {
                 {/* Uncomment when re-enabling timesheets link */}
                 {/* this.createTimesheetsTab() */}
                 {this.createWellnessTab()}
-                {this.createApartmentAppTab()}
               </Tabs>
             </div>
 

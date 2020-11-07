@@ -32,7 +32,7 @@ const renderInput = inputProps => {
         classes: {
           root: 'people-search-root',
           input: 'people-search-input',
-          inputDisabled: 'people-search-disabled',
+          // inputDisabled: 'people-search-disabled',
         },
         startAdornment: (
           <InputAdornment position="start">
@@ -87,6 +87,13 @@ export default class GordonPeopleSearch extends Component {
     this.setState({ suggestions });
   }
 
+  handleClick = theChosenOne => {
+    if (theChosenOne && theChosenOne !== null && this.props.disableLink) {
+      this.props.onSearchSubmit(theChosenOne);
+    }
+    this.reset();
+  };
+
   handleKeys = key => {
     let suggestionIndex = this.state.suggestionIndex;
     let suggestionList = this.state.suggestions;
@@ -97,7 +104,11 @@ export default class GordonPeopleSearch extends Component {
         suggestionIndex === -1
           ? (theChosenOne = suggestionList[0].UserName)
           : (theChosenOne = suggestionList[suggestionIndex].UserName);
-        window.location.pathname = '/profile/' + theChosenOne;
+        // If prop set to disable link, then trigger the onSearchSubmit callback function
+        // Else, redirect the user to the selected profile page
+        this.props.disableLink
+          ? this.props.onSearchSubmit(theChosenOne)
+          : (window.location.pathname = '/profile/' + theChosenOne);
         this.reset();
       }
     }
@@ -112,7 +123,7 @@ export default class GordonPeopleSearch extends Component {
       this.setState({ suggestionIndex });
     }
     if (key === 'Backspace') {
-      this.setState({suggestions: []});
+      this.setState({ suggestions: [] });
     }
   };
 
@@ -140,7 +151,7 @@ export default class GordonPeopleSearch extends Component {
       <span>
         {parts.map(part =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
-            ? (hasMatched = true && <span class="h">{part}</span>)
+            ? (hasMatched = true && <span className="h">{part}</span>)
             : part,
         )}
       </span>
@@ -148,16 +159,16 @@ export default class GordonPeopleSearch extends Component {
   }
 
   renderNoResult() {
-      return(
-        <MenuItem className="people-search-suggestion" style=
-        {{paddingBottom: '5px'}}>
-          <Typography className="no-results" variant="body2">
-            No results
-          </Typography>
-          <Typography className="loading" variant="body2">
-            Loading...
-          </Typography>
-        </MenuItem>)
+    return (
+      <MenuItem className="people-search-suggestion" style={{ paddingBottom: '5px' }}>
+        <Typography className="no-results" variant="body2">
+          No results
+        </Typography>
+        <Typography className="loading" variant="body2">
+          Loading...
+        </Typography>
+      </MenuItem>
+    );
   }
 
   renderSuggestion(params) {
@@ -169,12 +180,13 @@ export default class GordonPeopleSearch extends Component {
       return null;
     }
     return (
+      // The props for component={Link} and to={`/profile/${suggestion.UserName}`}
+      // have been moved to the declaration of itemProps in the render() method.
+      // This allows these link features to be omitted if this.props.disableLink is true
       <MenuItem
         {...itemProps}
         key={suggestion.UserName}
-        component={Link}
-        to={`/profile/${suggestion.UserName}`}
-        onClick={this.reset}
+        onClick={this.handleClick.bind(this, suggestion.UserName)}
         className={
           suggestionList && suggestionList[suggestionIndex] !== undefined
             ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
@@ -293,7 +305,9 @@ export default class GordonPeopleSearch extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     let holder = 'People Search';
-    if (window.innerWidth < this.breakpointWidth) {
+    if (this.props.customPlaceholderText) {
+      holder = this.props.customPlaceholderText;
+    } else if (window.innerWidth < this.breakpointWidth) {
       holder = 'People';
       if (networkStatus === 'offline') holder = 'Offline';
     } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
@@ -301,31 +315,34 @@ export default class GordonPeopleSearch extends Component {
     let content;
     if (this.props.Authentication) {
       // Creates the People Search Bar depending on the status of the network found in local storage
-        content = (
-          // Assign reference to Downshift to `this` for usage elsewhere in the component
-          <Downshift
-            ref={downshift => {
-              this.downshift = downshift;
-            }}
-          >
-            {({ getInputProps, getItemProps, isOpen }) => (
-              <span className="gordon-people-search">
-                {networkStatus === 'online' ? (renderInput(
-                  getInputProps({
-                    placeholder: holder,
-                    onChange: event => this.getSuggestions(event.target.value),
-                    onKeyDown: event => this.handleKeys(event.key),
-                  }),
-                )) : (renderInput(
-                  getInputProps({
-                    placeholder: holder,
-                    style: { color: 'white' },
-                    disabled: { networkStatus },
-                  }),
-                ))}
-                {isOpen &&
-                this.state.suggestions.length > 0 &&
-                this.state.query.length >= MIN_QUERY_LENGTH ? (
+      content = (
+        // Assign reference to Downshift to `this` for usage elsewhere in the component
+        <Downshift
+          ref={downshift => {
+            this.downshift = downshift;
+          }}
+        >
+          {({ getInputProps, getItemProps, isOpen }) => (
+            <span className="gordon-people-search">
+              {networkStatus === 'online'
+                ? renderInput(
+                    getInputProps({
+                      placeholder: holder,
+                      onChange: event => this.getSuggestions(event.target.value),
+                      onKeyDown: event => this.handleKeys(event.key),
+                    }),
+                  )
+                : renderInput(
+                    getInputProps({
+                      placeholder: holder,
+                      style: { color: 'white' },
+                      disabled: { networkStatus },
+                    }),
+                  )}
+              {isOpen &&
+              this.state.suggestions.length > 0 &&
+              this.state.query.length >= MIN_QUERY_LENGTH ? (
+                this.props.disableLink ? (
                   <Paper square className="people-search-dropdown">
                     {this.state.suggestions.map(suggestion =>
                       this.renderSuggestion({
@@ -334,17 +351,33 @@ export default class GordonPeopleSearch extends Component {
                       }),
                     )}
                   </Paper>
-                ) : isOpen && this.state.suggestions.length === 0 &&
-                  this.state.query.length >= MIN_QUERY_LENGTH ? (
-                  // Styling copied from how renderSuggestion is done with
-                  // only bottom padding changed and 'no-results' class used
-                    <Paper square className="people-search-dropdown">
-                      {this.renderNoResult()}
-                    </Paper>) : null}
-              </span>
-            )}
-          </Downshift>
-        );
+                ) : (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map(suggestion =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({
+                          item: suggestion.UserName,
+                          component: Link,
+                          to: `/profile/${suggestion.UserName}`,
+                        }),
+                      }),
+                    )}
+                  </Paper>
+                )
+              ) : isOpen &&
+                this.state.suggestions.length === 0 &&
+                this.state.query.length >= MIN_QUERY_LENGTH ? (
+                // Styling copied from how renderSuggestion is done with
+                // only bottom padding changed and 'no-results' class used
+                <Paper square className="people-search-dropdown">
+                  {this.renderNoResult()}
+                </Paper>
+              ) : null}
+            </span>
+          )}
+        </Downshift>
+      );
     } else {
       content = (
         <span className="gordon-people-search">
