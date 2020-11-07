@@ -22,7 +22,7 @@ import user from '../../services/user';
 import housing from '../../services/housing';
 import './apartmentApp.css';
 const MAX_NUM_APPLICANTS = 8;
-// const MIN_NUM_APPLICANTS = 3;
+// const MIN_NUM_APPLICANTS = 2;
 
 export default class ApartApp extends Component {
   constructor(props) {
@@ -34,7 +34,6 @@ export default class ApartApp extends Component {
       isAlu: Boolean,
       loading: true,
       saving: false,
-      savingSuccess: false,
       network: 'online',
       submitDialogOpen: false, // Use this for saving app (later feature)
       editDialogOpen: false,
@@ -87,7 +86,11 @@ export default class ApartApp extends Component {
   async loadHousingInfo() {
     this.setState({ loading: true });
     try {
-      // TODO - Once saving application has been implemented in the backend, this will be replaced with a call to the load the application info. The getHousingInfo was made obsolete after the Hello World
+      /**
+       * TODO: Once saving application has been implemented in the backend,
+       * TODO: this will be replaced with a call to the load the application info.
+       * TODO: The getHousingInfo was made obsolete after the Hello World
+       */
       let housingInfo = await housing.getHousingInfo();
       let onOffCampus = String(housingInfo[0].OnOffCampus);
       let onCampusRoom = String(housingInfo[0].OnCampusRoom);
@@ -103,7 +106,7 @@ export default class ApartApp extends Component {
    */
   handleSearchSubmit = (searchSelection) => {
     this.setState({ updating: true });
-    if (searchSelection && searchSelection !== null) {
+    if (searchSelection) {
       // The method is separated from callback because user API service must be handled inside an async method
       this.addApplicant(searchSelection);
     }
@@ -201,10 +204,9 @@ export default class ApartApp extends Component {
    * Callback for apartment application save button
    */
   handleSaveButtonClick = () => {
+    let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
+    console.log(debugMessage); //! DEBUG
     // The method is separated from callback because the housing API service must be handled inside an async method
-    let debugMessage = 'DEBUG: Save button was clicked';
-    console.log(debugMessage);
-    // alert(debugMessage);
     this.saveApplication(this.state.userProfile.AD_Username, this.state.applicants);
   };
 
@@ -218,8 +220,16 @@ export default class ApartApp extends Component {
     this.saveButtonAlertTimeout = null;
     let saveSuccessful = null;
     try {
+      // TODO: `saved` is a placeholder name. Renamed it once the backend side has been finalized
       const saved = await housing.saveApartmentApplication(primaryUsername, applicants);
-      console.log(saved.primaryUsername); // `saved` is a placeholder name
+      console.log(saved.primaryUsername); //! DEBUG
+      /**
+       * TODO: saveSuccessful is set to saved for debug testing only.
+       *
+       * TODO: In the final version, this variable `saveSuccessful` will be set to true or false
+       * TODO: based on some analysis of whatever gets returned
+       * TODO: by `housing.saveApartmentApplicaiton()`
+       */
       saveSuccessful = saved;
     } catch (error) {
       // Do Nothing
@@ -227,7 +237,7 @@ export default class ApartApp extends Component {
     if (saveSuccessful) {
       this.setState({ saving: 'success' });
     } else {
-      this.snackbarText = 'This feature is not yet implemented.';
+      this.snackbarText = 'This feature is not yet implemented.'; //! DEBUG
       // this.snackbarText = 'Something went wrong while trying to save the application.';
       this.snackbarSeverity = 'error';
       this.setState({ snackbarOpen: true, saving: 'failed' });
@@ -261,10 +271,11 @@ export default class ApartApp extends Component {
 
   render() {
     if (this.props.Authentication) {
-      /* Used to re-render the page when the network connection changes.
-       *  this.state.network is compared to the message received to prevent
-       *  multiple re-renders that creates extreme performance lost.
-       *  The origin of the message is checked to prevent cross-site scripting attacks
+      /**
+       * Used to re-render the page when the network connection changes.
+       * this.state.network is compared to the message received to prevent
+       * multiple re-renders that creates extreme performance lost.
+       * The origin of the message is checked to prevent cross-site scripting attacks
        */
       window.addEventListener('message', event => {
         if (
@@ -282,8 +293,9 @@ export default class ApartApp extends Component {
         }
       });
 
-      /* Gets status of current network connection for online/offline rendering
-       *  Defaults to online in case of PWA not being possible
+      /**
+       * Gets status of current network connection for online/offline rendering
+       * Defaults to online in case of PWA not being possible
        */
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
@@ -319,7 +331,6 @@ export default class ApartApp extends Component {
                         applicants={this.state.applicants}
                         userProfile={this.state.userProfile}
                         saving={this.state.saving}
-                        savingSuccess={this.state.savingSuccess}
                         onSearchSubmit={this.handleSearchSubmit}
                         onChangePrimary={this.handleChangePrimary}
                         onApplicantRemove={this.handleRemove}
