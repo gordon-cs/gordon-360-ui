@@ -111,7 +111,7 @@ function filterbyCategory(filters, allEvents) {
         filteredEvents.push(allEvents[i]);
       } else if (filters.cec && allEvents[i].Organization === 'Campus Events Council (CEC)') {
         filteredEvents.push(allEvents[i]);
-      } else if (filters.calendar && allEvents[i].Event_Type_Name === 'Calendar Announcement') {
+      } else if (filters.calendar && allEvents[i].Event_Type_Name === 'Calendar Announcement') { // could be affected
         filteredEvents.push(allEvents[i]);
       } else if (filters.admissions && allEvents[i].Organization === 'Admissions') {
         filteredEvents.push(allEvents[i]);
@@ -120,6 +120,7 @@ function filterbyCategory(filters, allEvents) {
       } else if (filters.studentLife && allEvents[i].Organization === 'Office of Student Life') {
         filteredEvents.push(allEvents[i]);
       } else if (
+        // May need to change, since these types are deprecated and replaced by Event 
         filters.fair &&
         (allEvents[i].Event_Type_Name === 'Festival' ||
           allEvents[i].Event_Type_Name === 'Exhibition' ||
@@ -128,13 +129,13 @@ function filterbyCategory(filters, allEvents) {
         filteredEvents.push(allEvents[i]);
       } else if (
         filters.academics &&
-        (allEvents[i].Event_Type_Name === 'Research Project' ||
-          allEvents[i].Event_Type_Name === 'Lecture/Speaker/Forum')
+        (allEvents[i].Event_Type_Name === 'Research Project' || // replaced by Meeting
+          allEvents[i].Event_Type_Name === 'Lecture/Speaker/Forum') // replaced by Event
       ) {
         filteredEvents.push(allEvents[i]);
       }
 
-      // NEEDS TO BE TESTED WITH THE BACK-END
+      // NEEDS TO BE TESTED WITH THE BACK-END <- and is this still true?
       else if (filters.chapelCredits && allEvents[i].Organization === 'Chapel Credits') {
         filteredEvents.push(allEvents[i]);
       }
@@ -227,7 +228,7 @@ const getFilteredEvents = (filters) => {
   //   }
   //   filteredEvents = shownEvents;
   // }
-  // console.log('Events: ', filteredEvents);
+  // console.log('Events: ', filteredEvents); <- can we get rid of this too?
 
   if (filters.search !== '') {
     shownEvents = [];

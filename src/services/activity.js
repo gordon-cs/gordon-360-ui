@@ -135,7 +135,7 @@ const getStatus = (activityCode, sessionCode) =>
  * @param {String} sessionCode Identifier for a session
  * @return {Promise.<String[]>} List of activity types for a session
  */
-const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/types`);
+const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/types`); // *
 
 /**
  * Get all open activities for a session
@@ -156,7 +156,7 @@ const getClosed = () => http.get(`activities/closed`);
  * @param {String} [search=''] Search value to fuzzy match description against
  * @return {Activity[]} Filtered activities
  */
-const filter = (activities = [], typeDescription, search = '') => {
+const filter = (activities = [], typeDescription, search = '') => { //
   let filteredActivities = activities;
   if (typeDescription) {
     filteredActivities = filteredActivities.filter(
