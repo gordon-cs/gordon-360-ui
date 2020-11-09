@@ -10,23 +10,21 @@ import {
   DialogTitle,
   Grid,
 } from '@material-ui/core';
-import wellness from '../../../../services/wellness';
+import wellness, { StatusColors } from '../../../../services/wellness';
 import GordonLoader from '../../../../components/Loader';
-import { Check, Remove } from '@material-ui/icons';
+import { Check, Remove, Clear } from '@material-ui/icons';
 import './index.css';
-
-const SYMPTOMS = true;
-const NO_SYMPTOMS = false;
 
 const HealthStatus = () => {
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentStatus, setCurrentStatus] = useState(true);
+  const [currentStatus, setCurrentStatus] = useState(null);
   const [time, setTime] = useState(null);
   const [iconSize, setIconSize] = useState(0);
 
   useEffect(() => {
     setLoading(true);
+    getCurrentStatus();
 
     tick();
     const intervalID = setInterval(tick, 60 * 1000);
@@ -34,22 +32,21 @@ const HealthStatus = () => {
     setIconSize(window.innerWidth * 0.03 + 69);
     window.addEventListener('resize', resizeIcon);
 
-    wellness
-      .getStatus()
-      .then((answer) => {
-        if (answer.length && answer[0].answerValid && answer[0].userAnswer === NO_SYMPTOMS) {
-          setCurrentStatus(NO_SYMPTOMS);
-        } else {
-          setCurrentStatus(SYMPTOMS);
-        }
-      })
-      .then(() => setLoading(false));
-
     return () => {
       window.removeEventListener('resize', resizeIcon);
       clearInterval(intervalID);
     };
   }, []);
+
+  const getCurrentStatus = async () => {
+    const status = await wellness.getStatus();
+    if (status.IsValid) {
+      setCurrentStatus(status.Status);
+    } else {
+      setCurrentStatus(StatusColors.YELLOW);
+    }
+    setLoading(false);
+  };
 
   const tick = () => {
     setTime(
@@ -68,7 +65,7 @@ const HealthStatus = () => {
   };
 
   const ReportSymptomsButton = () => {
-    if (currentStatus === NO_SYMPTOMS) {
+    if (currentStatus === StatusColors.GREEN) {
       return (
         <Button variant="contained" onClick={() => setIsDialogOpen(true)}>
           Report Symptoms
@@ -101,8 +98,8 @@ const HealthStatus = () => {
           <Button
             variant="contained"
             onClick={() =>
-              wellness.postAnswer(SYMPTOMS).then(() => {
-                setCurrentStatus(SYMPTOMS);
+              wellness.postAnswer(StatusColors.YELLOW).then(() => {
+                setCurrentStatus(StatusColors.YELLOW);
                 setIsDialogOpen(false);
               })
             }
@@ -116,18 +113,30 @@ const HealthStatus = () => {
   };
 
   const AnimatedIcon = () => {
-    if (currentStatus === NO_SYMPTOMS) {
-      return (
-        <div className="status-animation">
-          <Check style={{ fontSize: iconSize }} />
-        </div>
-      );
-    } else {
-      return (
-        <div className="status-animation">
-          <Remove style={{ fontSize: iconSize }} />
-        </div>
-      );
+    switch (currentStatus) {
+      case StatusColors.GREEN:
+        return (
+          <div className="status-animation">
+            <Check style={{ fontSize: iconSize }} />
+          </div>
+        );
+
+      case StatusColors.YELLOW:
+        return (
+          <div className="status-animation">
+            <Remove style={{ fontSize: iconSize }} />
+          </div>
+        );
+
+      case StatusColors.RED:
+        return (
+          <div className="status-animation">
+            <Clear style={{ fontSize: iconSize }} />
+          </div>
+        );
+
+      default:
+        break;
     }
   };
 
@@ -136,7 +145,7 @@ const HealthStatus = () => {
   } else {
     return (
       <Grid spacing={2} className="wellness-status">
-        <Card className={currentStatus ? 'symptoms' : 'no-symptoms'}>
+        <Card className={currentStatus}>
           <CardContent className="status-box">
             <div className="status-time">{time}</div>
             {AnimatedIcon()}

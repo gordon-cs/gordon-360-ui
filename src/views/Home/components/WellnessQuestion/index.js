@@ -19,7 +19,7 @@ import {
 } from '@material-ui/core';
 
 import GordonLoader from '../../../../components/Loader';
-import wellness from '../../../../services/wellness.js';
+import wellness, { StatusColors } from '../../../../services/wellness.js';
 
 import './index.scss';
 
@@ -34,22 +34,24 @@ const WellnessQuestion = ({ setAnswered }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-
-    wellness
-      .getQuestion()
-      .then((q) => {
-        setWellnessQuestion(q);
-      })
-      .then(() => setLoading(false));
+    loadQuestion();
   }, []);
 
-  const submitAnswer = () => {
-    wellness.postAnswer(answer === 'Yes').then(() => setAnswered(true));
+  const loadQuestion = async () => {
+    setLoading(true);
+    const question = await wellness.getQuestion();
+    setWellnessQuestion(question);
+    setLoading(false);
   };
 
-  const Header = () => {
-    return (
+  const submitAnswer = () => {
+    wellness.postAnswer(answer).then(() => setAnswered(true));
+  };
+
+  if (loading === true) {
+    return <GordonLoader />;
+  } else {
+    const header = (
       <div className="wellness-header">
         <Grid container direction="row">
           <Grid item xs={12}>
@@ -60,99 +62,72 @@ const WellnessQuestion = ({ setAnswered }) => {
         </Grid>
       </div>
     );
-  };
 
-  const QuestionText = () => {
-    if (wellnessQuestion) {
-      return (
-        <CardContent>
-          <div className="left">
-            <FormControl>
-              <FormLabel>{wellnessQuestion.question}</FormLabel>
-              <div style={{ height: '10px' }}></div>
-              {wellnessQuestion.symptoms.map((item, index) => {
-                return <FormLabel key={index}>- {item}</FormLabel>;
-              })}
-              <br />
-              <RadioGroup>
-                <FormControlLabel
-                  value="Yes"
-                  control={<Radio />}
-                  label={`Yes`}
-                  onChange={() => {
-                    setAnswer('Yes');
-                  }}
-                />
-                <br></br>
-                <FormControlLabel
-                  value="No"
-                  control={<Radio />}
-                  label={'No'}
-                  onChange={() => {
-                    setAnswer('No');
-                  }}
-                />
-              </RadioGroup>
-            </FormControl>
+    const questionText = (
+      <CardContent>
+        <div className="left">
+          <FormControl>
+            <FormLabel>{wellnessQuestion.question}</FormLabel>
+            <div style={{ height: '10px' }}></div>
+            {wellnessQuestion.symptoms.map((item, index) => {
+              return <FormLabel key={index}>- {item}</FormLabel>;
+            })}
+            <br />
+            <RadioGroup>
+              <FormControlLabel
+                value="Yes"
+                control={<Radio />}
+                label={`Yes`}
+                onChange={() => {
+                  setAnswer(StatusColors.YELLOW);
+                }}
+              />
+              <br></br>
+              <FormControlLabel
+                value="No"
+                control={<Radio />}
+                label={'No'}
+                onChange={() => {
+                  setAnswer(StatusColors.GREEN);
+                }}
+              />
+            </RadioGroup>
+          </FormControl>
+        </div>
+      </CardContent>
+    );
+
+    const answerDisclaimer = answer ? (
+      <div className={answer}>
+        <CardContent className="left">
+          <div>
+            <Typography color="textPrimary">
+              {answer === StatusColors.YELLOW
+                ? wellnessQuestion.yesPrompt
+                : wellnessQuestion.noPrompt}
+              {answer === StatusColors.YELLOW ? (
+                <a href={wellnessQuestion.link} target="_blank" rel="noopener noreferrer">
+                  this link
+                </a>
+              ) : null}
+            </Typography>
           </div>
         </CardContent>
-      );
-    } else {
-      return null;
-    }
-  };
+        <br />
+        <Button
+          variant="contained"
+          onClick={() => {
+            answer === StatusColors.YELLOW ? setIsDialogOpen(true) : submitAnswer();
+          }}
+        >
+          Submit
+        </Button>
+        <br />
+        <br />
+      </div>
+    ) : null;
 
-  const Answer = () => {
-    if (wellnessQuestion && answer) {
-      let answerClass;
-      let answerText;
-      let answerLink = null;
-      if (answer === 'Yes') {
-        answerClass = 'symptoms';
-        answerText = wellnessQuestion.yes;
-        answerLink = (
-          <a href={wellnessQuestion.link} target="_blank" rel="noopener noreferrer">
-            this link
-          </a>
-        );
-      } else {
-        answerClass = 'healthy';
-        answerText = wellnessQuestion.no;
-      }
-      return (
-        <div className={answerClass}>
-          <CardContent className="left">
-            <div>
-              <Typography color="textPrimary">
-                {answerText}
-                {answerLink}
-              </Typography>
-            </div>
-          </CardContent>
-          <br />
-          <Button
-            variant="contained"
-            onClick={() => {
-              if (answer === 'Yes') {
-                setIsDialogOpen(true);
-              } else if (answer === 'No') {
-                submitAnswer();
-              }
-            }}
-          >
-            Submit
-          </Button>
-          <br />
-          <br />
-        </div>
-      );
-    } else {
-      return null;
-    }
-  };
-
-  const SymptomsDialog = () => {
-    return (
+    const symptomsDialog = (
       <Dialog
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
@@ -176,19 +151,15 @@ const WellnessQuestion = ({ setAnswered }) => {
         </DialogActions>
       </Dialog>
     );
-  };
 
-  if (loading === true) {
-    return <GordonLoader />;
-  } else {
     return (
       <Card className="wellness-question">
-        {Header()}
-        {QuestionText()}
+        {header}
+        {questionText}
         <Divider />
-        {Answer()}
+        {answerDisclaimer}
         <div className="wellness-header">Health Center (for students): (978) 867-4300 </div>
-        {SymptomsDialog()}
+        {symptomsDialog}
       </Card>
     );
   }

@@ -12,29 +12,31 @@ import './index.css';
 const WellnessCheck = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [username, setUsername] = useState(null);
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
     if (authentication) {
-      user
-        .getProfileInfo()
-        .then((u) => setCurrentUser(u))
-        .then(() => {
-          user
-            .getImage()
-            .then((i) => setImage(i))
-            .then(() => {
-              setIsAuthenticated(true);
-              setLoading(false);
-            });
-        });
+      loadPage();
+      setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
-      setLoading(false);
     }
   }, [authentication]);
+
+  const loadPage = async () => {
+    setLoading(true);
+
+    const [
+      { FirstName, LastName },
+      { def: defaultImage, pref: preferredImage },
+    ] = await Promise.all([user.getProfileInfo(), user.getImage()]);
+
+    setUsername(`${FirstName} ${LastName}`);
+    setImage(preferredImage ?? defaultImage);
+
+    setLoading(false);
+  };
 
   if (loading) {
     return <GordonLoader />;
@@ -50,12 +52,12 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
         <Grid item xs={12} md={8}>
           <Card className="wellness-check">
             <CardContent>
-              <CardHeader title={`${currentUser.FirstName} ${currentUser.LastName}`} />
+              <CardHeader title={username} />
               <Card>
                 <img
                   className="rounded-corners user-image"
-                  src={`data:image/jpg;base64,${image.pref ? image.pref : image.def}`}
-                  alt={`${currentUser.FirstName} ${currentUser.LastName}`}
+                  src={`data:image/jpg;base64,${image}`}
+                  alt={username}
                 />
               </Card>
               <HealthStatus />

@@ -18,7 +18,7 @@ const Home = ({ authentication, onLogIn }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
   const [networkStatus, setNetworkStatus] = useState('online');
-  const [answered, setAnswered] = useState(null);
+  const [hasAnswered, setHasAnswered] = useState(null);
 
   useEffect(() => {
     // Retrieve network status from local storage or default to online
@@ -47,36 +47,29 @@ const Home = ({ authentication, onLogIn }) => {
   }, []);
 
   useEffect(() => {
-    setLoading(true);
     if (authentication) {
-      user
-        .getProfileInfo()
-        .then((p) => setPersonType(p.PersonType))
-        .then(() => {
-          if (networkStatus === 'online') {
-            wellness
-              .getStatus()
-              .then((a) => {
-                setAnswered(a.length && a[0].answerValid);
-              })
-              .then(() => {
-                setIsAuthenticated(true);
-                setLoading(false);
-              });
-          } else {
-            setIsAuthenticated(true);
-            setLoading(false);
-          }
-        });
+      loadPage();
+      setIsAuthenticated(true);
     } else {
       // Clear out component's person-specific state when authentication becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
-      setAnswered(null);
+      setHasAnswered(null);
       setPersonType(null);
       setIsAuthenticated(false);
       setLoading(false);
     }
-  }, [authentication, networkStatus]);
+  }, [authentication]);
+
+  const loadPage = async () => {
+    setLoading(true);
+    const [{ PersonType }, { IsValid }] = await Promise.all([
+      user.getProfileInfo(),
+      wellness.getStatus(),
+    ]);
+    setPersonType(PersonType);
+    setHasAnswered(IsValid);
+    setLoading(false);
+  };
 
   if (loading) {
     return <GordonLoader />;
@@ -86,11 +79,11 @@ const Home = ({ authentication, onLogIn }) => {
         <Login onLogIn={onLogIn} />
       </div>
     );
-  } else if (networkStatus === 'online' && !answered) {
+  } else if (networkStatus === 'online' && !hasAnswered) {
     return (
       <Grid container justify="center" spacing={2}>
         <Grid item xs={10} md={4}>
-          <WellnessQuestion setAnswered={setAnswered} />
+          <WellnessQuestion setAnswered={setHasAnswered} />
         </Grid>
       </Grid>
     );
