@@ -3,11 +3,6 @@ import {
   Button,
   Card,
   CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Divider,
   FormControl,
   FormControlLabel,
@@ -18,8 +13,9 @@ import {
   RadioGroup,
 } from '@material-ui/core';
 
-import GordonLoader from '../../../../components/Loader';
-import wellness, { StatusColors } from '../../../../services/wellness.js';
+import GordonLoader from '../Loader';
+import SymptomsDialog from '../SymptomsDialog';
+import wellness, { StatusColors } from '../../services/wellness.js';
 
 import './index.scss';
 
@@ -27,7 +23,7 @@ import './index.scss';
  * Creates the question for the health check feature
  */
 
-const WellnessQuestion = ({ setAnswered }) => {
+const WellnessQuestion = ({ setStatus }) => {
   const [loading, setLoading] = useState(true);
   const [answer, setAnswer] = useState(null);
   const [wellnessQuestion, setWellnessQuestion] = useState(null);
@@ -45,7 +41,7 @@ const WellnessQuestion = ({ setAnswered }) => {
   };
 
   const submitAnswer = () => {
-    wellness.postAnswer(answer).then(() => setAnswered(true));
+    wellness.postAnswer(answer).then((status) => setStatus(status));
   };
 
   if (loading === true) {
@@ -127,40 +123,23 @@ const WellnessQuestion = ({ setAnswered }) => {
       </div>
     ) : null;
 
-    const symptomsDialog = (
-      <Dialog
-        open={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        aria-labelledby="submit-dialog"
-        aria-describedby="submit-symptoms"
-        className="symptoms-dialog"
-      >
-        <DialogTitle>Symptom Positive Response</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            You are about to submit that you have recently experienced COVID-19 symptoms.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={() => setIsDialogOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="contained" onClick={submitAnswer} className="confirm-symptoms">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-
     return (
-      <Card className="wellness-question">
-        {header}
-        {questionText}
-        <Divider />
-        {answerDisclaimer}
-        <div className="wellness-header">Health Center (for students): (978) 867-4300 </div>
-        {symptomsDialog}
-      </Card>
+      <Grid container justify="center" spacing={2}>
+        <Grid item xs={10} md={4}>
+          <Card className="wellness-question">
+            {header}
+            {questionText}
+            <Divider />
+            {answerDisclaimer}
+            <div className="wellness-header">Health Center (for students): (978) 867-4300</div>
+            <SymptomsDialog
+              isOpen={isDialogOpen}
+              setIsOpen={setIsDialogOpen}
+              setStatus={setStatus}
+            />
+          </Card>
+        </Grid>
+      </Grid>
     );
   }
 };

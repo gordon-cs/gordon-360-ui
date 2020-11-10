@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { Card, CardContent, CardHeader, Grid } from '@material-ui/core';
-
 import GordonLoader from '../../components/Loader';
+import WellnessQuestion from '../../components/WellnessQuestion';
 import HealthStatus from './components/HealthStatus';
 import Login from '../Login';
+import wellness from '../../services/wellness';
 import user from '../../services/user';
 
 import './index.css';
@@ -12,6 +12,7 @@ import './index.css';
 const WellnessCheck = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
+  const [currentStatus, setCurrentStatus] = useState(null);
   const [username, setUsername] = useState(null);
   const [image, setImage] = useState(null);
 
@@ -22,18 +23,23 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
     } else {
       setIsAuthenticated(false);
     }
-  }, [authentication]);
+  }, [authentication, currentStatus]);
 
   const loadPage = async () => {
     setLoading(true);
 
-    const [
-      { FirstName, LastName },
-      { def: defaultImage, pref: preferredImage },
-    ] = await Promise.all([user.getProfileInfo(), user.getImage()]);
+    const status = await wellness.getStatus();
 
-    setUsername(`${FirstName} ${LastName}`);
-    setImage(preferredImage ?? defaultImage);
+    if (status && status.IsValid) {
+      setCurrentStatus(status.Status);
+      const [
+        { FirstName, LastName },
+        { def: defaultImage, pref: preferredImage },
+      ] = await Promise.all([user.getProfileInfo(), user.getImage()]);
+
+      setUsername(`${FirstName} ${LastName}`);
+      setImage(preferredImage ?? defaultImage);
+    }
 
     setLoading(false);
   };
@@ -46,26 +52,16 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
         <Login onLogIn={onLogIn} />
       </div>
     );
+  } else if (currentStatus === null) {
+    return <WellnessQuestion setStatus={setCurrentStatus} />;
   } else {
     return (
-      <Grid container justify="center" spacing={2}>
-        <Grid item xs={12} md={8}>
-          <Card className="wellness-check">
-            <CardContent>
-              <CardHeader title={username} />
-              <Card>
-                <img
-                  className="rounded-corners user-image"
-                  src={`data:image/jpg;base64,${image}`}
-                  alt={username}
-                />
-              </Card>
-              <HealthStatus />
-            </CardContent>
-            <div className="wellness-header">Questions? Health Center: (978) 867-4300 </div>
-          </Card>
-        </Grid>
-      </Grid>
+      <HealthStatus
+        currentStatus={currentStatus}
+        setCurrentStatus={setCurrentStatus}
+        username={username}
+        image={image}
+      />
     );
   }
 };

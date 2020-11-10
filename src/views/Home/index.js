@@ -1,12 +1,12 @@
 import Grid from '@material-ui/core/Grid';
 import React, { useState, useEffect } from 'react';
 import GordonLoader from '../../components/Loader';
+import WellnessQuestion from '../../components/WellnessQuestion';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
-import WellnessQuestion from './components/WellnessQuestion';
 import user from '../../services/user';
 import wellness from '../../services/wellness';
 import storage from '../../services/storage';
@@ -80,13 +80,7 @@ const Home = ({ authentication, onLogIn }) => {
       </div>
     );
   } else if (networkStatus === 'online' && !hasAnswered) {
-    return (
-      <Grid container justify="center" spacing={2}>
-        <Grid item xs={10} md={4}>
-          <WellnessQuestion setAnswered={setHasAnswered} />
-        </Grid>
-      </Grid>
-    );
+    return <WellnessQuestion setStatus={setHasAnswered} />;
   } else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 

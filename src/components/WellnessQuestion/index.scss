@@ -1,4 +1,4 @@
-@import '../../../../vars';
+@import '../../vars';
 
 .wellness-question {
   .MuiButtonBase-root {
@@ -45,17 +45,5 @@
     &:hover {
       text-decoration: none;
     }
-  }
-}
-
-.symptoms-dialog {
-  .MuiDialog-paper {
-    border: 15px solid $wellness-yellow;
-    border-radius: 5px;
-    color: $neutral-dark-gray;
-  }
-
-  .confirm-symptoms {
-    background: $wellness-yellow;
   }
 }

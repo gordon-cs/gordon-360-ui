@@ -72,7 +72,7 @@ const postAnswer = async (status) => {
  * @returns {Promise<WellnessQuestion>} list of questions from backend
  */
 const getQuestion = async () => {
-  const question = await http.get(`wellness/question`);
+  const question = await http.get('wellness/question');
   return await formatQuestion(question);
 };
 
