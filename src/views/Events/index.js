@@ -69,7 +69,7 @@ export default class Events extends Component {
   }
 
   //this loads the filters based on the URL params- this will allow for back button and linking
-  async loadPrevious() { // should we still filter into these categories?
+  async loadPrevious() {
     if (window.location.href.includes('?')) {
       const urlParams = new URLSearchParams(this.props.location.search);
       let includePast = urlParams.has('Past') ? true : false;

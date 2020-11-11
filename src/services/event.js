@@ -111,7 +111,7 @@ function filterbyCategory(filters, allEvents) {
         filteredEvents.push(allEvents[i]);
       } else if (filters.cec && allEvents[i].Organization === 'Campus Events Council (CEC)') {
         filteredEvents.push(allEvents[i]);
-      } else if (filters.calendar && allEvents[i].Event_Type_Name === 'Calendar Announcement') { // could be affected
+      } else if (filters.calendar && allEvents[i].Event_Type_Name === 'Calendar Announcement') {
         filteredEvents.push(allEvents[i]);
       } else if (filters.admissions && allEvents[i].Organization === 'Admissions') {
         filteredEvents.push(allEvents[i]);
@@ -120,7 +120,6 @@ function filterbyCategory(filters, allEvents) {
       } else if (filters.studentLife && allEvents[i].Organization === 'Office of Student Life') {
         filteredEvents.push(allEvents[i]);
       } else if (
-        // May need to change, since these types are deprecated and replaced by Event 
         filters.fair &&
         (allEvents[i].Event_Type_Name === 'Festival' ||
           allEvents[i].Event_Type_Name === 'Exhibition' ||
@@ -129,14 +128,13 @@ function filterbyCategory(filters, allEvents) {
         filteredEvents.push(allEvents[i]);
       } else if (
         filters.academics &&
-        (allEvents[i].Event_Type_Name === 'Research Project' || // replaced by Meeting
-          allEvents[i].Event_Type_Name === 'Lecture/Speaker/Forum') // replaced by Event
+        (allEvents[i].Event_Type_Name === 'Research Project' ||
+          allEvents[i].Event_Type_Name === 'Lecture/Speaker/Forum')
       ) {
         filteredEvents.push(allEvents[i]);
       }
 
-      // NEEDS TO BE TESTED WITH THE BACK-END <- and is this still true?
-      else if (filters.chapelCredits && allEvents[i].Organization === 'Chapel Credits') {
+      else if (filters.chapelCredits && allEvents[i].Category_Id === '85') {
         filteredEvents.push(allEvents[i]);
       }
     }
