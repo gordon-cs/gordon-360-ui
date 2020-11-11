@@ -130,7 +130,7 @@ export default class Events extends Component {
   }
 
   filterEvents(name) {
-    return async event => {
+    return async (event) => {
       this.setState({ loading: true });
       await this.setState({ [name]: event.target.checked });
       const events = await gordonEvent.getFilteredEvents(this.state);
@@ -208,7 +208,7 @@ export default class Events extends Component {
   }
 
   search(name) {
-    return async event => {
+    return async (event) => {
       await this.setState({
         [name]: event.target.value,
       });
@@ -237,7 +237,7 @@ export default class Events extends Component {
   //This should be the only time we pull from the database
   async loadEvents() {
     this.setState({ loading: true });
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
@@ -412,7 +412,7 @@ export default class Events extends Component {
                 <Button variant="contained" style={style.button} onClick={this.handleExpandClick}>
                   {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
                 </Button>
-                {this.props.Authentication && (
+                {this.props.authentication && (
                   <Button
                     variant="contained"
                     style={style.button.attendedEvents}

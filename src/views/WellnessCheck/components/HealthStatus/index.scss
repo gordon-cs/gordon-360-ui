@@ -1,0 +1,91 @@
+@import '../../../../vars';
+
+.wellness-status {
+  .symptoms {
+    .status-box {
+      height: 250px;
+      background-color: $wellness-yellow;
+    }
+
+    .status-time {
+      font-size: calc(14px + 1vw);
+      color: $neutral-dark-gray;
+      padding-bottom: 30px;
+    }
+
+    .status-animation {
+      text-align: center;
+      height: calc(70px + 3vw);
+      width: calc(70px + 3vw);
+      background-color: $wellness-yellow;
+      color: $neutral-dark-gray;
+      border-radius: 50%;
+      display: inline-block;
+      animation-name: animationCross;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+  }
+
+  @keyframes animationCross {
+    from {
+      background-color: $wellness-yellow;
+      color: $neutral-dark-gray;
+    }
+    to {
+      background-color: $neutral-dark-gray;
+      color: $wellness-yellow;
+    }
+  }
+
+  .no-symptoms {
+    .status-box {
+      height: 250px;
+      background-color: $wellness-green;
+    }
+
+    .status-time {
+      font-size: calc(14px + 1vw);
+      color: white;
+      padding-bottom: 30px;
+    }
+
+    .status-animation {
+      text-align: center;
+      height: calc(70px + 3vw);
+      width: calc(70px + 3vw);
+      background-color: $wellness-green;
+      color: white;
+      border-radius: 50%;
+      display: inline-block;
+      animation-name: animationCheck;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+  }
+
+  @keyframes animationCheck {
+    from {
+      background-color: $wellness-green;
+      color: white;
+    }
+    to {
+      background-color: white;
+      color: $wellness-green;
+    }
+  }
+
+  .symptoms-dialog {
+    .MuiDialog-paper {
+      border: 15px solid $wellness-yellow;
+      border-radius: 5px;
+      color: $neutral-dark-gray;
+    }
+
+    .confirm-symptoms {
+      background: $wellness-yellow;
+    }
+  }
+}
