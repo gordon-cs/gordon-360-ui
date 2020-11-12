@@ -5,6 +5,7 @@ import {
   Card,
   CardHeader,
   CardContent,
+  Collapse,
   Dialog,
   DialogActions,
   DialogContent,
@@ -31,6 +32,7 @@ export default class StudentApplication extends Component {
       loading: true,
       saving: false,
       network: 'online',
+      applicationCardsOpen: false,
       submitDialogOpen: false, // Use this for saving app (later feature)
       editDialogOpen: false,
       primaryUsername: null, // The username of the primary applicant
@@ -97,11 +99,20 @@ export default class StudentApplication extends Component {
     }
   }
 
+  handleOpenNewApplication = () => {
+    this.setState({ applicationCardsOpen: true });
+  };
+
+  handleSubmitApplication = () => {
+    //! Placeholder
+    this.setState({ applicationCardsOpen: false });
+  };
+
   /**
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  handleSearchSubmit = searchSelection => {
+  handleSearchSubmit = (searchSelection) => {
     this.setState({ updating: true });
     if (searchSelection) {
       // The method is separated from callback because user API service must be handled inside an async method
@@ -130,7 +141,7 @@ export default class StudentApplication extends Component {
           'Could not add ' + String(applicantProfile.fullName) + ' because they are not a student.';
         this.snackbarSeverity = 'warning';
         this.setState({ snackbarOpen: true });
-      } else if (applicants.some(applicant => applicant.AD_Username === username)) {
+      } else if (applicants.some((applicant) => applicant.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         this.snackbarText = String(applicantProfile.fullName) + ' is already in the list.';
         this.snackbarSeverity = 'info';
@@ -139,7 +150,7 @@ export default class StudentApplication extends Component {
         // Add the profile object to the list of applicants
         applicants.push(applicantProfile);
         this.setState({ applicants });
-        if (this.state.applicants.some(applicant => applicant.AD_Username === username)) {
+        if (this.state.applicants.some((applicant) => applicant.AD_Username === username)) {
           this.snackbarText =
             String(applicantProfile.fullName) + ' was successfully added to the list.';
           this.snackbarSeverity = 'success';
@@ -157,7 +168,7 @@ export default class StudentApplication extends Component {
    * Callback for changing the primary applicant
    * @param {String} profile The StudentProfileInfo object for the person who is to be made the primary applicant
    */
-  handleChangePrimary = profile => {
+  handleChangePrimary = (profile) => {
     this.setState({ updating: true });
     if (profile) {
       if (this.state.applicants.includes(profile)) {
@@ -184,7 +195,7 @@ export default class StudentApplication extends Component {
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  handleRemove = profileToRemove => {
+  handleRemove = (profileToRemove) => {
     this.setState({ updating: true });
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
@@ -263,7 +274,7 @@ export default class StudentApplication extends Component {
        * multiple re-renders that creates extreme performance lost.
        * The origin of the message is checked to prevent cross-site scripting attacks
        */
-      window.addEventListener('message', event => {
+      window.addEventListener('message', (event) => {
         if (
           event.data === 'online' &&
           this.state.network === 'offline' &&
@@ -293,104 +304,153 @@ export default class StudentApplication extends Component {
               <GordonLoader />
             ) : (
               <div className="apartment-application">
-                <Grid container direction="row-reverse" justify="center" spacing={2}>
-                  <Grid item xs={12} md={4}>
+                <Grid container justify="center" spacing={2}>
+                  <Grid item xs={12} lg={10}>
                     <Card>
-                      <CardHeader
-                        title="Apartment Application Instructions"
-                        className="card-header"
-                      />
                       <CardContent>
-                        <Typography variant="body1">Placeholder Text</Typography>
-                        <Typography variant="body1">
-                          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                          tenetur unde suscipit, quam beatae rerum inventore consectetur, neque
-                          doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum
-                          quasi quidem quibusdam.
-                        </Typography>
+                        <Grid container direction="row" justify="flex-end">
+                          <Grid item xs={3}>
+                            <Typography variant="body1">Placeholder Text</Typography>
+                          </Grid>
+                          <Grid item xs={3}>
+                            <Button
+                              variant="contained"
+                              onClick={this.handleOpenNewApplication}
+                              color="primary"
+                              disabled={this.state.applicationCardsOpen}
+                            >
+                              Create a new application
+                            </Button>
+                          </Grid>
+                        </Grid>
                       </CardContent>
                     </Card>
                   </Grid>
-                  <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
-                    <Grid item>
-                      <ApplicantList
-                        maxNumApplicants={MAX_NUM_APPLICANTS}
-                        userProfile={this.props.userProfile}
-                        primaryUsername={this.state.primaryUsername}
-                        applicants={this.state.applicants}
-                        saving={this.state.saving}
-                        onSearchSubmit={this.handleSearchSubmit}
-                        onChangePrimary={this.handleChangePrimary}
-                        onApplicantRemove={this.handleRemove}
-                        onSaveButtonClick={this.handleSaveButtonClick}
-                        Authentication={this.props.Authentication}
-                      />
-                      <Dialog
-                        open={this.state.editDialogOpen}
-                        onClose={this.handleCloseDialog}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                      >
-                        <DialogTitle id="alert-dialog-title">
-                          <Alert variant="filled" severity="warning">
-                            <AlertTitle>
-                              <strong>Change primary applicant?</strong>
-                            </AlertTitle>
-                          </Alert>
-                        </DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                            If you change the primary applicant, you will no longer be able to edit
-                            this application yourself.
-                            <br />
-                            Are you sure you want to change the primary applicant?
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button
-                            variant="contained"
-                            onClick={this.handleCloseOkay}
-                            color="primary"
-                            autofocus
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            variant="contained"
-                            onClick={this.handleChangePrimaryAccepted}
-                            color="primary"
-                          >
-                            Accept
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                      <SimpleSnackbar
-                        text={this.snackbarText}
-                        severity={this.snackbarSeverity}
-                        open={this.state.snackbarOpen}
-                        onClose={this.handleCloseSnackbar}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Card>
-                        <CardHeader title="Preferred Halls" className="card-header" />
-                        <CardContent>
-                          <Typography variant="body1">Placeholder text</Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                    <Grid item>
-                      <Card>
-                        <CardContent>
-                          <Typography variant="h5">Hello World:</Typography>
+                  <Grid item>
+                    <Collapse in={this.state.applicationCardsOpen} timeout="auto" unmountOnExit>
+                      <Grid container direction="row-reverse" justify="center" spacing={2}>
+                        <Grid item xs={12} md={4}>
+                          <Card>
+                            <CardHeader
+                              title="Apartment Application Instructions"
+                              className="card-header"
+                            />
+                            <CardContent>
+                              <Typography variant="body1">Placeholder Text</Typography>
+                              <Typography variant="body1">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                                blanditiis tenetur unde suscipit, quam beatae rerum inventore
+                                consectetur, neque doloribus, cupiditate numquam dignissimos laborum
+                                fugiat deleniti? Eum quasi quidem quibusdam.
+                              </Typography>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                        <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
+                          <Grid item>
+                            <ApplicantList
+                              maxNumApplicants={MAX_NUM_APPLICANTS}
+                              userProfile={this.props.userProfile}
+                              primaryUsername={this.state.primaryUsername}
+                              applicants={this.state.applicants}
+                              saving={this.state.saving}
+                              savingSuccess={this.state.savingSuccess}
+                              onSearchSubmit={this.handleSearchSubmit}
+                              onChangePrimary={this.handleChangePrimary}
+                              onApplicantRemove={this.handleRemove}
+                              onSaveButtonClick={this.handleSaveButtonClick}
+                              Authentication={this.props.Authentication}
+                            />
+                            <Dialog
+                              open={this.state.editDialogOpen}
+                              onClose={this.handleCloseDialog}
+                              aria-labelledby="alert-dialog-title"
+                              aria-describedby="alert-dialog-description"
+                            >
+                              <DialogTitle id="alert-dialog-title">
+                                <Alert variant="filled" severity="warning">
+                                  <AlertTitle>
+                                    <strong>Change primary applicant?</strong>
+                                  </AlertTitle>
+                                </Alert>
+                              </DialogTitle>
+                              <DialogContent>
+                                <DialogContentText id="alert-dialog-description">
+                                  If you change the primary applicant, you will no longer be able to
+                                  edit this application yourself.
+                                  <br />
+                                  Are you sure you want to change the primary applicant?
+                                </DialogContentText>
+                              </DialogContent>
+                              <DialogActions>
+                                <Button
+                                  variant="contained"
+                                  onClick={this.handleCloseOkay}
+                                  color="primary"
+                                  autofocus
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  variant="contained"
+                                  onClick={this.handleChangePrimaryAccepted}
+                                  color="primary"
+                                >
+                                  Accept
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
+                            <SimpleSnackbar
+                              text={this.snackbarText}
+                              severity={this.snackbarSeverity}
+                              open={this.state.snackbarOpen}
+                              onClose={this.handleCloseSnackbar}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <Card>
+                              <CardHeader title="Preferred Halls" className="card-header" />
+                              <CardContent>
+                                <Typography variant="body1">Placeholder text</Typography>
+                              </CardContent>
+                            </Card>
+                          </Grid>
+                          <Grid item>
+                            <Card>
+                              <CardContent>
+                                <Typography variant="h5">Hello World:</Typography>
 
-                          <h3>{'You name: ' + this.props.userProfile.fullName}</h3>
-                          <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
-                          <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
-                          <br />
-                        </CardContent>
-                      </Card>
-                    </Grid>
+                                <h3>{'You name: ' + this.props.userProfile.fullName}</h3>
+                                <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
+                                <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
+                                <br />
+                              </CardContent>
+                            </Card>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12} lg={10}>
+                          <Card>
+                            <CardContent>
+                              <Grid container direction="row" justify="flex-end">
+                                <Grid item xs={3}>
+                                  <Typography variant="body1">Placeholder Text</Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                  <Button
+                                    variant="contained"
+                                    onClick={this.handleSubmitApplication}
+                                    color="primary"
+                                    disabled={!this.state.applicationCardsOpen}
+                                  >
+                                    Submit Application
+                                  </Button>
+                                </Grid>
+                              </Grid>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                      </Grid>
+                    </Collapse>
                   </Grid>
                 </Grid>
               </div>
