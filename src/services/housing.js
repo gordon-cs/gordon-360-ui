@@ -33,7 +33,7 @@ const saveApartmentApplication = async (primaryUsername, applicants) => {
     PRIMARY_USERNAME: primaryUsername,
     APPLICANT_ARRAY: applicants.map(profile => profile.AD_Username),
   };
-  return await http.post(`housing/submit/`, applicationDetails);
+  return await http.post(`housing/save/`, applicationDetails);
 };
 
 export default {
