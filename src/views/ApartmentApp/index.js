@@ -218,27 +218,16 @@ export default class ApartApp extends Component {
   async saveApplication(primaryUsername, applicants) {
     this.setState({ saving: true });
     this.saveButtonAlertTimeout = null;
-    let saveSuccessful = null;
+    let result = null;
     try {
-      // TODO: `saved` is a placeholder name. Renamed it once the backend side has been finalized
-      const saved = await housing.saveApartmentApplication(primaryUsername, applicants);
-      console.log(saved.primaryUsername); //! DEBUG
-      /**
-       * TODO: saveSuccessful is set to saved for debug testing only.
-       *
-       * TODO: In the final version, this variable `saveSuccessful` will be set to true or false
-       * TODO: based on some analysis of whatever gets returned
-       * TODO: by `housing.saveApartmentApplicaiton()`
-       */
-      saveSuccessful = saved;
-    } catch (error) {
-      // Do Nothing
+      result = await housing.saveApartmentApplication(primaryUsername, applicants);
+    } catch {
+      result = false;
     }
-    if (saveSuccessful) {
+    if (result) {
       this.setState({ saving: 'success' });
     } else {
-      this.snackbarText = 'This feature is not yet implemented.'; //! DEBUG
-      // this.snackbarText = 'Something went wrong while trying to save the application.';
+      this.snackbarText = 'Something went wrong while trying to save the application.';
       this.snackbarSeverity = 'error';
       this.setState({ snackbarOpen: true, saving: 'failed' });
     }
