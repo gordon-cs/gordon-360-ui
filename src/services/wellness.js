@@ -51,7 +51,7 @@ export const StatusColors = {
  * @returns {Promise<WellnessStatus>} Response
  */
 const getStatus = async () => {
-  return await http.get('wellness');
+  return await http.get('wellness/status');
 };
 
 /**
@@ -61,7 +61,7 @@ const getStatus = async () => {
  */
 const postAnswer = async (status) => {
   try {
-    return http.post('wellness', status);
+    return http.post('wellness/status', status);
   } catch (error) {
     return console.log(error);
   }
