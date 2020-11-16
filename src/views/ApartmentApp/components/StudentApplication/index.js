@@ -112,7 +112,7 @@ export default class StudentApplication extends Component {
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  handleSearchSubmit = (searchSelection) => {
+  handleSearchSubmit = searchSelection => {
     this.setState({ updating: true });
     if (searchSelection) {
       // The method is separated from callback because user API service must be handled inside an async method
@@ -141,7 +141,7 @@ export default class StudentApplication extends Component {
           'Could not add ' + String(applicantProfile.fullName) + ' because they are not a student.';
         this.snackbarSeverity = 'warning';
         this.setState({ snackbarOpen: true });
-      } else if (applicants.some((applicant) => applicant.AD_Username === username)) {
+      } else if (applicants.some(applicant => applicant.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         this.snackbarText = String(applicantProfile.fullName) + ' is already in the list.';
         this.snackbarSeverity = 'info';
@@ -150,7 +150,7 @@ export default class StudentApplication extends Component {
         // Add the profile object to the list of applicants
         applicants.push(applicantProfile);
         this.setState({ applicants });
-        if (this.state.applicants.some((applicant) => applicant.AD_Username === username)) {
+        if (this.state.applicants.some(applicant => applicant.AD_Username === username)) {
           this.snackbarText =
             String(applicantProfile.fullName) + ' was successfully added to the list.';
           this.snackbarSeverity = 'success';
@@ -168,7 +168,7 @@ export default class StudentApplication extends Component {
    * Callback for changing the primary applicant
    * @param {String} profile The StudentProfileInfo object for the person who is to be made the primary applicant
    */
-  handleChangePrimary = (profile) => {
+  handleChangePrimary = profile => {
     this.setState({ updating: true });
     if (profile) {
       if (this.state.applicants.includes(profile)) {
@@ -195,7 +195,7 @@ export default class StudentApplication extends Component {
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  handleRemove = (profileToRemove) => {
+  handleRemove = profileToRemove => {
     this.setState({ updating: true });
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
@@ -274,7 +274,7 @@ export default class StudentApplication extends Component {
        * multiple re-renders that creates extreme performance lost.
        * The origin of the message is checked to prevent cross-site scripting attacks
        */
-      window.addEventListener('message', (event) => {
+      window.addEventListener('message', event => {
         if (
           event.data === 'online' &&
           this.state.network === 'offline' &&
