@@ -8,20 +8,30 @@ import http from './http';
 import user from './user';
 
 /**
- * @global
- * @typedef WellnessStatus
- * @property {?boolean} answerValid whether the answer is still valid (new since 5am)
- * @property {?boolean} userAnswer whether the user is symptomatic
- * @property {Date} timestamp when the answer was submitted
- *
+ * Enum of the Wellness Status Colors
+ * @readonly
+ * @enum {string}
+ */
+export const StatusColors = {
+  /** Healthy, no known symptoms or exposure */
+  GREEN: 'GREEN',
+  /** Self-reported symptoms */
+  YELLOW: 'YELLOW',
+  /** Confirmed symtpoms or exposure */
+  RED: 'RED',
+};
+
+/**
+ * @typedef {('GREEN'|'YELLOW'|'RED')} StatusColor
  */
 
 /**
  * @global
- * @typedef BackendQuestion
- * @property {string} question the text of the question
- * @property {string} yesPrompt the text disclaimer for a positive answer
- * @property {string} noPrompt the text disclaimer for a negative answer
+ * @typedef WellnessStatus
+ * @property {StatusColor} Status The user's status
+ * @property {Date} Created when the status was created
+ * @property {boolean} IsValid whether the status is still valid
+ * @property {boolean} IsOverride whether the status is an administrative override
  *
  */
 
@@ -30,87 +40,83 @@ import user from './user';
  * @typedef WellnessQuestion
  * @property {string} wellnessQuestion the text content of the question
  * @property {Array<string>} symptoms the list of symptoms
- * @property {string} yes the text disclaimer for a positive answer
- * @property {string} no the text disclaimer for a negative answer
+ * @property {string} yesPrompt the text disclaimer for a positive answer
+ * @property {string} noPrompt the text disclaimer for a negative answer
  * @property {string} link the text of the link to HR's flowchart
  *
  */
 
 /**
  * returns current status of student
- * @returns {Promise<Array<WellnessStatus>>} Response
+ * @returns {Promise<WellnessStatus>} Response
  */
 const getStatus = async () => {
-  return await http.get(`wellness`);
+  return await http.get('wellness/status');
 };
 
 /**
  * add answer to the wellness question to the back end
- * @param {boolean} answer answer to be recorded
- * @return {Promise<WellnessStatus | Error>} Response
+ * @param {StatusColor} status status to be recorded
+ * @return {Promise<WellnessStatus>} Response
  */
-function postAnswer(answer) {
-  return http.post('wellness', answer).catch((reason) => {
-    console.log(reason);
-  });
-}
+const postAnswer = async (status) => {
+  try {
+    return http.post('wellness/status', status);
+  } catch (error) {
+    return console.log(error);
+  }
+};
 
 /**
  * returns questions to be displayed in the UI
  * @returns {Promise<WellnessQuestion>} list of questions from backend
  */
 const getQuestion = async () => {
-  const questions = await getBackendQuestions();
-  return await formatQuestion(questions);
+  const question = await http.get('wellness/status/question');
+  return await formatQuestion(question);
 };
 
 /**
  * Formats the wellness question and answer prompts for display
- * @param {Array<BackendQuestion>} questions Array of questions stored in database
+ * @param {Object} question The question stored in database
+ * @param {string} question.question The text of the question
+ * @param {string} question.yesPrompt The text disclaimer for a symptoms-positive answer
+ * @param {string} question.noPrompt The text disclaimer for a symptoms-negative answer
  * @returns {Promise<WellnessQuestion>} The wellness question parsed into an object for display
  *
  */
-const formatQuestion = async (questions) => {
+const formatQuestion = async (question) => {
   const { FirstName, LastName } = await user.getProfileInfo();
 
   /* eslint-disable no-template-curly-in-string */
-  let wellnessQuestion = questions[0].question.replace('${user.FirstName}', `${FirstName}`);
-  wellnessQuestion = wellnessQuestion.replace('${user.LastName}', `${LastName}`);
+  question.question = question.question
+    .replace('${user.FirstName}', `${FirstName}`)
+    .replace('${user.LastName}', `${LastName}`);
 
-  let [yesPrompt, link] = questions[0].yesPrompt.split('https://');
+  let [yesPrompt, link] = question.yesPrompt.split('https://');
 
-  yesPrompt = yesPrompt.replace('${user.FirstName}', `${FirstName}`);
-  yesPrompt = yesPrompt.replace('${user.LastName}', `${LastName}`);
-  link = 'https://' + link;
+  question.yesPrompt = yesPrompt
+    .replace('${user.FirstName}', `${FirstName}`)
+    .replace('${user.LastName}', `${LastName}`);
+  question.link = 'https://' + link;
 
-  let noPrompt = questions[0].noPrompt.replace('${user.FirstName}', `${FirstName}`);
-  noPrompt = noPrompt.replace('${user.LastName}', `${LastName}`);
+  question.noPrompt = question.noPrompt
+    .replace('${user.FirstName}', `${FirstName}`)
+    .replace('${user.LastName}', `${LastName}`);
   /* eslint-enable no-template-curly-in-string */
 
-  return {
-    question: wellnessQuestion,
-    symptoms: [
-      'Temperature higher than 100.4°F',
-      'New loss of taste or smell',
-      'Sore throat',
-      'Muscle pain',
-      'Cough',
-      'Shortness of breath or difficulty breathing',
-      'Fever',
-      'Chills',
-    ],
-    yes: yesPrompt,
-    no: noPrompt,
-    link: link,
-  };
-};
+  question.symptoms = [
+    'Temperature higher than 100.4°F',
+    'New loss of taste or smell',
+    'Sore throat',
+    'Muscle pain',
+    'Cough',
+    'Shortness of breath or difficulty breathing',
+    'Fever',
+    'Chills',
+  ];
 
-/**
- * returns questions fetched from the API
- * @returns {Promise<Array<BackendQuestion>>} list of questions from backend
- */
-const getBackendQuestions = async () => {
-  return http.get(`wellness/question`);
+  return question;
 };
 
 export default {

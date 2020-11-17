@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { Card, CardContent, CardHeader, Grid } from '@material-ui/core';
-
 import GordonLoader from '../../components/Loader';
+import WellnessQuestion from '../../components/WellnessQuestion';
 import HealthStatus from './components/HealthStatus';
 import Login from '../Login';
+import wellness from '../../services/wellness';
 import user from '../../services/user';
 
 import './index.css';
@@ -12,29 +12,37 @@ import './index.css';
 const WellnessCheck = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentStatus, setCurrentStatus] = useState(null);
+  const [username, setUsername] = useState(null);
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
     if (authentication) {
-      user
-        .getProfileInfo()
-        .then((u) => setCurrentUser(u))
-        .then(() => {
-          user
-            .getImage()
-            .then((i) => setImage(i))
-            .then(() => {
-              setIsAuthenticated(true);
-              setLoading(false);
-            });
-        });
+      loadPage();
+      setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
-      setLoading(false);
     }
-  }, [authentication]);
+  }, [authentication, currentStatus]);
+
+  const loadPage = async () => {
+    setLoading(true);
+
+    const status = await wellness.getStatus();
+
+    if (status && status.IsValid) {
+      setCurrentStatus(status.Status);
+      const [
+        { FirstName, LastName },
+        { def: defaultImage, pref: preferredImage },
+      ] = await Promise.all([user.getProfileInfo(), user.getImage()]);
+
+      setUsername(`${FirstName} ${LastName}`);
+      setImage(preferredImage ?? defaultImage);
+    }
+
+    setLoading(false);
+  };
 
   if (loading) {
     return <GordonLoader />;
@@ -44,26 +52,16 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
         <Login onLogIn={onLogIn} />
       </div>
     );
+  } else if (currentStatus === null) {
+    return <WellnessQuestion setStatus={setCurrentStatus} />;
   } else {
     return (
-      <Grid container justify="center" spacing={2}>
-        <Grid item xs={12} md={8}>
-          <Card className="wellness-check">
-            <CardContent>
-              <CardHeader title={`${currentUser.FirstName} ${currentUser.LastName}`} />
-              <Card>
-                <img
-                  className="rounded-corners user-image"
-                  src={`data:image/jpg;base64,${image.pref ? image.pref : image.def}`}
-                  alt={`${currentUser.FirstName} ${currentUser.LastName}`}
-                />
-              </Card>
-              <HealthStatus />
-            </CardContent>
-            <div className="wellness-header">Questions? Health Center: (978) 867-4300 </div>
-          </Card>
-        </Grid>
-      </Grid>
+      <HealthStatus
+        currentStatus={currentStatus}
+        setCurrentStatus={setCurrentStatus}
+        username={username}
+        image={image}
+      />
     );
   }
 };

@@ -1,49 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  Card,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Grid,
-} from '@material-ui/core';
-import wellness from '../../../../services/wellness';
-import GordonLoader from '../../../../components/Loader';
-import { Check, Remove } from '@material-ui/icons';
+import { Button, Card, CardContent, CardHeader, Grid } from '@material-ui/core';
+import { Check, Remove, Clear } from '@material-ui/icons';
+import { StatusColors } from '../../../../services/wellness';
+import SymptomsDialog from '../../../../components/SymptomsDialog';
 import './index.css';
 
-const SYMPTOMS = true;
-const NO_SYMPTOMS = false;
-
-const HealthStatus = () => {
-  const [loading, setLoading] = useState(true);
+const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [currentStatus, setCurrentStatus] = useState(true);
   const [time, setTime] = useState(null);
   const [iconSize, setIconSize] = useState(0);
 
   useEffect(() => {
-    setLoading(true);
-
     tick();
     const intervalID = setInterval(tick, 60 * 1000);
 
     setIconSize(window.innerWidth * 0.03 + 69);
     window.addEventListener('resize', resizeIcon);
-
-    wellness
-      .getStatus()
-      .then((answer) => {
-        if (answer.length && answer[0].answerValid && answer[0].userAnswer === NO_SYMPTOMS) {
-          setCurrentStatus(NO_SYMPTOMS);
-        } else {
-          setCurrentStatus(SYMPTOMS);
-        }
-      })
-      .then(() => setLoading(false));
 
     return () => {
       window.removeEventListener('resize', resizeIcon);
@@ -67,87 +39,63 @@ const HealthStatus = () => {
     setIconSize(window.innerWidth * 0.03 + 69);
   };
 
-  const ReportSymptomsButton = () => {
-    if (currentStatus === NO_SYMPTOMS) {
-      return (
-        <Button variant="contained" onClick={() => setIsDialogOpen(true)}>
-          Report Symptoms
-        </Button>
-      );
-    } else {
-      return null;
-    }
-  };
+  let animatedIcon;
+  switch (currentStatus) {
+    case StatusColors.GREEN:
+      animatedIcon = <Check style={{ fontSize: iconSize }} />;
+      break;
 
-  const SymptomsDialog = () => {
-    return (
-      <Dialog
-        open={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        aria-labelledby="submit-dialog"
-        aria-describedby="submit-symptoms"
-        className="symptoms-dialog"
-      >
-        <DialogTitle>Symptom Positive Response</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            You are about to submit that you have recently experienced COVID-19 symptoms.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={() => setIsDialogOpen(false)}>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() =>
-              wellness.postAnswer(SYMPTOMS).then(() => {
-                setCurrentStatus(SYMPTOMS);
-                setIsDialogOpen(false);
-              })
-            }
-            className="confirm-symptoms"
-          >
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  };
+    case StatusColors.YELLOW:
+      animatedIcon = <Remove style={{ fontSize: iconSize }} />;
+      break;
 
-  const AnimatedIcon = () => {
-    if (currentStatus === NO_SYMPTOMS) {
-      return (
-        <div className="status-animation">
-          <Check style={{ fontSize: iconSize }} />
-        </div>
-      );
-    } else {
-      return (
-        <div className="status-animation">
-          <Remove style={{ fontSize: iconSize }} />
-        </div>
-      );
-    }
-  };
+    case StatusColors.RED:
+      animatedIcon = <Clear style={{ fontSize: iconSize }} />;
+      break;
 
-  if (loading) {
-    return <GordonLoader />;
-  } else {
-    return (
-      <Grid spacing={2} className="wellness-status">
-        <Card className={currentStatus ? 'symptoms' : 'no-symptoms'}>
-          <CardContent className="status-box">
-            <div className="status-time">{time}</div>
-            {AnimatedIcon()}
-          </CardContent>
-        </Card>
-        <br />
-        {ReportSymptomsButton()}
-        {SymptomsDialog()}
-      </Grid>
-    );
+    default:
+      break;
   }
+
+  return (
+    <Grid container justify="center" spacing={2}>
+      <Grid item xs={12} md={8}>
+        <Card className="wellness-check">
+          <CardContent>
+            <CardHeader title={username} />
+            <Card>
+              <img
+                className="rounded-corners user-image"
+                src={`data:image/jpg;base64,${image}`}
+                alt={username}
+              />
+            </Card>
+            <Grid spacing={2} className="wellness-status">
+              <Card className={currentStatus}>
+                <CardContent className="status-box">
+                  <div className="status-time">{time}</div>
+
+                  <div className="status-animation">{animatedIcon}</div>
+                </CardContent>
+              </Card>
+              <br />
+              {currentStatus === StatusColors.GREEN && (
+                <Button variant="contained" onClick={() => setIsDialogOpen(true)}>
+                  Report Symptoms
+                </Button>
+              )}
+              <SymptomsDialog
+                isOpen={isDialogOpen}
+                setIsOpen={setIsDialogOpen}
+                setStatus={setCurrentStatus}
+              />
+            </Grid>
+          </CardContent>
+          <div className="wellness-header">Questions? Health Center: (978) 867-4300 </div>
+        </Card>
+      </Grid>
+    </Grid>
+  );
 };
 
 export default HealthStatus;
