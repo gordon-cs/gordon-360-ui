@@ -14,6 +14,13 @@ import http from './http';
  */
 
 /**
+ * @global
+ * @typedef ApplicationDetails
+ * @property {String} username  Username of the primary applicant
+ * @property {String[]} applicants  Array of student usernames
+ */
+
+/**
  * returns current status of student housing
  * @return {Promise.<StudentHousingInfo>} Response
  */
@@ -23,20 +30,43 @@ const getHousingInfo = async () => {
 };
 
 /**
- * Get active apartment applications for current user
- * @param {String} primaryUsername the student username of the person filling out the application
- * @param {StudentProfileInfo} applicants Array of StudentProfileInfo objects
- * @return {Promise.<String>} User's active jobs
+ * Check if a given student is on an existing application
+ * @param {String} [username] Username in firstname.lastname format
+ * @return {Promise.<Number>} Application's ID number
+ */
+const checkApartmentApplication = async username => {
+  // TODO: The name of this API endpoint has not yet been decided
+  //! This endpoint is not yet implemented in the backend
+  return await http.get('housing/finduser/', username);
+};
+
+/**
+ * Save active apartment applications for current user
+ * @param {String} primaryUsername the student username of the person responsible for filling out or editing the application (in firstname.lastname format)
+ * @param {String[]} applicants Array of student usernames
+ * @return {Promise.<Number>} Application's ID number
  */
 const saveApartmentApplication = async (primaryUsername, applicants) => {
   let applicationDetails = {
-    PRIMARY_USERNAME: primaryUsername,
-    APPLICANT_ARRAY: applicants.map(profile => profile.AD_Username),
+    username: primaryUsername,
+    applicants: applicants.map(profile => profile.AD_Username),
   };
   return await http.post(`housing/save/`, applicationDetails);
 };
 
+/**
+ * Get active apartment application for given application ID number
+ * @param {Number} applicationID the application ID number for the desired application
+ * @return {Promise.<ApplicationDetails>} Application details
+ */
+const getApartmentApplication = async applicationID => {
+  //! This endpoint is not yet implemented in the backend
+  return await http.get(`housing/load/`, applicationID);
+};
+
 export default {
   getHousingInfo,
+  checkApartmentApplication,
   saveApartmentApplication,
+  getApartmentApplication,
 };

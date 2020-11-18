@@ -21,6 +21,7 @@ import ApplicantList from '../../../../components/ApartmentApplicantList';
 import user from '../../../../services/user';
 import housing from '../../../../services/housing';
 import '../../apartmentApp.css';
+import { Iso } from '@material-ui/icons';
 const MAX_NUM_APPLICANTS = 8;
 // const MIN_NUM_APPLICANTS = 2;
 
@@ -32,8 +33,9 @@ export default class StudentApplication extends Component {
       loading: true,
       saving: false,
       network: 'online',
+      isOnExistingApplication: false, // Indicates whether the current user is already on an application that is in the database
       applicationCardsOpen: false,
-      submitDialogOpen: false, // Use this for saving app (later feature)
+      submitDialogOpen: false, // Use this for submitting app (later feature)
       editDialogOpen: false,
       primaryUsername: null, // The username of the primary applicant
       applicants: [],
@@ -93,9 +95,24 @@ export default class StudentApplication extends Component {
   }
 
   async loadSavedApplication() {
-    // TODO: Implement this once save/load of application data has been implemented in the backend
-    if (!this.state.primaryUsername) {
-      this.setState({ primaryUsername: this.props.userProfile.AD_Username });
+    // Check if the student is on an application. Returns the application ID number if found
+    let applicationID = await housing.isOnExistingApplication(this.props.userProfile.AD_Username);
+    if (applicationID) {
+      this.setState({ isOnExistingApplication: true });
+      let applicationDetails = housing.getApartmentApplication(applicationID);
+      if (applicationDetails) {
+        if (applicationDetails.PRIMARY_USERNAME) {
+          this.setState({ primaryUsername: applicationDetails.username });
+        }
+        if (applicationDetails.applicants) {
+          this.setState({ applicants: applicationDetails.applicants });
+        }
+      }
+    } else {
+      this.setState({ isOnExistingApplication: false });
+      if (!this.state.primaryUsername) {
+        this.setState({ primaryUsername: this.props.userProfile.AD_Username });
+      }
     }
   }
 
@@ -147,14 +164,24 @@ export default class StudentApplication extends Component {
         this.snackbarSeverity = 'info';
         this.setState({ snackbarOpen: true });
       } else {
-        // Add the profile object to the list of applicants
-        applicants.push(applicantProfile);
-        this.setState({ applicants });
-        if (this.state.applicants.some(applicant => applicant.AD_Username === username)) {
+        // Check if the student is on an existing application
+        let applicationID = await housing.checkApartmentApplication(username);
+        if (applicationID) {
+          // Display an error if the selected user is already on an existing application (in the database)
           this.snackbarText =
-            String(applicantProfile.fullName) + ' was successfully added to the list.';
-          this.snackbarSeverity = 'success';
+            String(applicantProfile.fullName) + ' is already on an existing application.';
+          this.snackbarSeverity = 'error';
           this.setState({ snackbarOpen: true });
+        } else {
+          // Add the profile object to the list of applicants
+          applicants.push(applicantProfile);
+          this.setState({ applicants });
+          if (this.state.applicants.some(applicant => applicant.AD_Username === username)) {
+            this.snackbarText =
+              String(applicantProfile.fullName) + ' was successfully added to the list.';
+            this.snackbarSeverity = 'success';
+            this.setState({ snackbarOpen: true });
+          }
         }
       }
     } catch (error) {
