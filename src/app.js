@@ -1,4 +1,4 @@
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
@@ -25,7 +25,7 @@ export default class App extends Component {
       analytics.initialize();
     }
 
-    this.history = createHistory();
+    this.history = createBrowserHistory();
     this.history.listen(() => analytics.onPageView());
 
     this.onDrawerToggle = this.onDrawerToggle.bind(this);
