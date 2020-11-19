@@ -151,7 +151,11 @@ export default class GordonPeopleSearch extends Component {
       <span>
         {parts.map(part =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
-            ? (hasMatched = true && <span className="h">{part}</span>)
+            ? (hasMatched = true && (
+                <span className="h" key={'highlighted-' + text}>
+                  {part}
+                </span>
+              ))
             : part,
         )}
       </span>
@@ -323,7 +327,7 @@ export default class GordonPeopleSearch extends Component {
           }}
         >
           {({ getInputProps, getItemProps, isOpen }) => (
-            <span className="gordon-people-search">
+            <span className="gordon-people-search" key="suggestion-list-span">
               {networkStatus === 'online'
                 ? renderInput(
                     getInputProps({
