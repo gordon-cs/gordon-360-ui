@@ -53,13 +53,13 @@ const getApplicationID = async username => {
 /**
  * Save active apartment applications for current user
  * @param {String} primaryUsername the student username of the person responsible for filling out or editing the application (in firstname.lastname format)
- * @param {String[]} Applicants Array of student usernames
+ * @param {String[]} applicants Array of student usernames
  * @return {Promise.<Number>} Application's ID number
  */
-const saveApartmentApplication = async (primaryUsername, Applicants) => {
+const saveApartmentApplication = async (primaryUsername, applicants) => {
   let applicationDetails = {
     Username: primaryUsername,
-    Applicants: Applicants.map(profile => profile.AD_Username),
+    Applicants: applicants.map(profile => profile.AD_Username),
   };
   return await http.post(`housing/apartment/save/`, applicationDetails);
 };
