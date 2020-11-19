@@ -102,10 +102,10 @@ export default class StudentApplication extends Component {
       let applicationDetails = housing.getApartmentApplication(applicationID);
       if (applicationDetails) {
         if (applicationDetails.PRIMARY_USERNAME) {
-          this.setState({ primaryUsername: applicationDetails.username });
+          this.setState({ primaryUsername: applicationDetails.Username });
         }
-        if (applicationDetails.applicants) {
-          this.setState({ applicants: applicationDetails.applicants });
+        if (applicationDetails.Applicants) {
+          this.setState({ applicants: applicationDetails.Applicants });
         }
       }
     } else {
@@ -165,7 +165,7 @@ export default class StudentApplication extends Component {
         this.setState({ snackbarOpen: true });
       } else {
         // Check if the student is on an existing application
-        let applicationID = await housing.checkApartmentApplication(username);
+        let applicationID = await housing.getApplicationID(username);
         if (applicationID) {
           // Display an error if the selected user is already on an existing application (in the database)
           this.snackbarText =

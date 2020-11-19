@@ -16,8 +16,8 @@ import http from './http';
 /**
  * @global
  * @typedef ApplicationDetails
- * @property {String} username  Username of the primary applicant
- * @property {String[]} applicants  Array of student usernames
+ * @property {String} Username  Username of the primary applicant
+ * @property {String[]} Applicants  Array of student usernames
  */
 
 /**
@@ -30,43 +30,53 @@ const getHousingInfo = async () => {
 };
 
 /**
+ * Check if the current user is authorized to view the housing staff page for applications
+ * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
+ */
+const checkHousingStaff = async () => {
+  try {
+    return await http.get(`housing/staff`);
+  } catch {
+    return false;
+  }
+};
+
+/**
  * Check if a given student is on an existing application
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<Number>} Application's ID number
  */
-const checkApartmentApplication = async username => {
-  // TODO: The name of this API endpoint has not yet been decided
-  //! This endpoint is not yet implemented in the backend
-  return await http.get('housing/finduser/', username);
+const getApplicationID = async username => {
+  return await http.get(`housing/apartment/${username}/`);
 };
 
 /**
  * Save active apartment applications for current user
  * @param {String} primaryUsername the student username of the person responsible for filling out or editing the application (in firstname.lastname format)
- * @param {String[]} applicants Array of student usernames
+ * @param {String[]} Applicants Array of student usernames
  * @return {Promise.<Number>} Application's ID number
  */
-const saveApartmentApplication = async (primaryUsername, applicants) => {
+const saveApartmentApplication = async (primaryUsername, Applicants) => {
   let applicationDetails = {
-    username: primaryUsername,
-    applicants: applicants.map(profile => profile.AD_Username),
+    Username: primaryUsername,
+    Applicants: Applicants.map(profile => profile.AD_Username),
   };
-  return await http.post(`housing/save/`, applicationDetails);
+  return await http.post(`housing/apartment/save/`, applicationDetails);
 };
 
 /**
  * Get active apartment application for given application ID number
- * @param {Number} applicationID the application ID number for the desired application
+ * @param {String} applicationID the application ID number for the desired application
  * @return {Promise.<ApplicationDetails>} Application details
  */
 const getApartmentApplication = async applicationID => {
-  //! This endpoint is not yet implemented in the backend
-  return await http.get(`housing/load/`, applicationID);
+  return await http.get(`housing/apartment/${applicationID}/`);
 };
 
 export default {
   getHousingInfo,
-  checkApartmentApplication,
+  checkHousingStaff,
+  getApplicationID,
   saveApartmentApplication,
   getApartmentApplication,
 };
