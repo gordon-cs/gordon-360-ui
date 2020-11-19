@@ -24,6 +24,22 @@ import '../../apartmentApp.css';
 const MAX_NUM_APPLICANTS = 8;
 // const MIN_NUM_APPLICANTS = 2;
 
+const renderInstructionsCard = () => {
+  return (
+    <Card>
+      <CardHeader title="Apartment Application Instructions" className="card-header" />
+      <CardContent>
+        <Typography variant="body1">Placeholder Text</Typography>
+        <Typography variant="body1">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
+          suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
+          dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+};
+
 export default class StudentApplication extends Component {
   constructor(props) {
     super(props);
@@ -325,26 +341,20 @@ export default class StudentApplication extends Component {
                         </Grid>
                       </CardContent>
                     </Card>
+                    {/* <Collapse in={!this.state.applicationCardsOpen} timeout="auto" unmountOnExit>
+                      {renderInstructionsCard()}
+                    </Collapse> */}
+                  </Grid>
+                  <Grid item xs={12} md={8}>
+                    <Collapse in={!this.state.applicationCardsOpen} timeout="auto" unmountOnExit>
+                      {renderInstructionsCard()}
+                    </Collapse>
                   </Grid>
                   <Grid item>
                     <Collapse in={this.state.applicationCardsOpen} timeout="auto" unmountOnExit>
                       <Grid container direction="row-reverse" justify="center" spacing={2}>
                         <Grid item xs={12} md={4}>
-                          <Card>
-                            <CardHeader
-                              title="Apartment Application Instructions"
-                              className="card-header"
-                            />
-                            <CardContent>
-                              <Typography variant="body1">Placeholder Text</Typography>
-                              <Typography variant="body1">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-                                blanditiis tenetur unde suscipit, quam beatae rerum inventore
-                                consectetur, neque doloribus, cupiditate numquam dignissimos laborum
-                                fugiat deleniti? Eum quasi quidem quibusdam.
-                              </Typography>
-                            </CardContent>
-                          </Card>
+                          {renderInstructionsCard()}
                         </Grid>
                         <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                           <Grid item>
