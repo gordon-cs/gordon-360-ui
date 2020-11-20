@@ -138,10 +138,10 @@ export default class GordonPeopleSearch extends Component {
     var hasMatched = false;
     return (
       <span>
-        {parts.map((part) =>
+        {parts.map((part, key) =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
             ? (hasMatched = true && (
-                <span className="h" key={'highlighted-' + text}>
+                <span className="h" key={key}>
                   {part}
                 </span>
               ))
@@ -203,7 +203,7 @@ export default class GordonPeopleSearch extends Component {
                   suggestion.LastName,
                   this.state.highlightQuery.split(/ |\./)[1],
                 ),
-              ].map((e) => <span>{e}</span>)
+              ].map((e, key) => <span key={key}>{e}</span>)
             : this.getHighlightedText(
                 suggestion.FirstName + ' ' + suggestion.LastName,
                 this.state.highlightQuery,
