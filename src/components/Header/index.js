@@ -469,6 +469,7 @@ export default class GordonHeader extends Component {
             <GordonPeopleSearch authentication={this.props.authentication} />
 
             <GordonNavAvatarRightCorner
+              onSignOut={this.props.onSignOut}
               authentication={this.props.authentication}
               onClick={this.handleRightSideMenu}
               menuOpened={this.state.openRightSideMenu}
