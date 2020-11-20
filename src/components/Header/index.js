@@ -416,7 +416,7 @@ export default class GordonHeader extends Component {
     return wellnessTab;
   }
 
-   /**
+  /**
    * Creates the Apartment Application button.
    *
    * Depending on the status of the network and authentication, the apartment application button is created.
@@ -428,20 +428,15 @@ export default class GordonHeader extends Component {
     // Network Status: Online
     if (this.state.network === 'online') {
       // Network Status: Online - Authenticated
-      if (this.props.Authentication) {
+      if (this.props.authentication) {
         apartmentTab = (
-          <Tab
-            className="tab"
-            label="Apartment App"
-            component={NavLink}
-            to="/ApartApp"
-          />
+          <Tab className="tab" label="Apartment App" component={NavLink} to="/ApartApp" />
         );
       }
       // Network Status: Online -  Not Authenticated
       else {
         apartmentTab = (
-          <div onClick={clicked => this.openDialogBox('unauthorized', 'apartment app')}>
+          <div onClick={(clicked) => this.openDialogBox('unauthorized', 'apartment app')}>
             <Tab
               className="tab"
               label="Apartment App"
@@ -457,7 +452,7 @@ export default class GordonHeader extends Component {
     else {
       apartmentTab = (
         <div
-          onClick={clicked => {
+          onClick={(clicked) => {
             this.openDialogBox('offline', '');
           }}
         >

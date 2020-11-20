@@ -87,7 +87,7 @@ export const GordonNavButtonsRightCorner = (props) => {
   // Apartment Application Button
   let apartmentAppButton = createApartmentAppButton(
     network,
-    props.Authentication,
+    props.authentication,
     props.onClose,
     props.openDialogBox,
   );
