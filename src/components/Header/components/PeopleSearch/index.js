@@ -12,7 +12,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import './people-search.css';
 import peopleSearch from '../../../../services/people-search';
 const MIN_QUERY_LENGTH = 2;
@@ -87,7 +86,7 @@ export default class GordonPeopleSearch extends Component {
     this.setState({ suggestions });
   }
 
-  handleClick = theChosenOne => {
+  handleClick = (theChosenOne) => {
     if (theChosenOne && this.props.disableLink) {
       this.props.onSearchSubmit(theChosenOne);
     }
@@ -319,57 +318,61 @@ export default class GordonPeopleSearch extends Component {
     let content;
     if (this.props.authentication) {
       // Creates the People Search Bar depending on the status of the network found in local storage
-        content = (
-          // Assign reference to Downshift to `this` for usage elsewhere in the component
-          <Downshift
-            ref={downshift => {
-              this.downshift = downshift;
-            }}
-          >
-            {({ getInputProps, getItemProps, isOpen }) => (
+      content = (
+        // Assign reference to Downshift to `this` for usage elsewhere in the component
+        <Downshift
+          ref={(downshift) => {
+            this.downshift = downshift;
+          }}
+        >
+          {({ getInputProps, getItemProps, isOpen }) => (
             <span className="gordon-people-search" key="suggestion-list-span">
-                {networkStatus === 'online' ? (renderInput(
-                  getInputProps({
-                    placeholder: holder,
-                    onChange: event => this.getSuggestions(event.target.value),
-                    onKeyDown: event => this.handleKeys(event.key),
-                  }),
-                )) : (renderInput(
-                  getInputProps({
-                    placeholder: holder,
-                    style: { color: 'white' },
-                    disabled: { networkStatus },
-                  }),
-                ))}
-                {isOpen &&
-                this.state.suggestions.length > 0 &&
+              {networkStatus === 'online'
+                ? renderInput(
+                    getInputProps({
+                      placeholder: holder,
+                      onChange: (event) => this.getSuggestions(event.target.value),
+                      onKeyDown: (event) => this.handleKeys(event.key),
+                    }),
+                  )
+                : renderInput(
+                    getInputProps({
+                      placeholder: holder,
+                      style: { color: 'white' },
+                      disabled: { networkStatus },
+                    }),
+                  )}
+              {isOpen &&
+              this.state.suggestions.length > 0 &&
+              this.state.query.length >= MIN_QUERY_LENGTH ? (
+                <Paper square className="people-search-dropdown">
+                  {this.state.suggestions.map((suggestion) =>
+                    this.renderSuggestion({
+                      suggestion,
+                      itemProps: getItemProps({ item: suggestion.UserName }),
+                    }),
+                  )}
+                </Paper>
+              ) : isOpen &&
+                this.state.suggestions.length === 0 &&
                 this.state.query.length >= MIN_QUERY_LENGTH ? (
-                  <Paper square className="people-search-dropdown">
-                    {this.state.suggestions.map(suggestion =>
-                      this.renderSuggestion({
-                        suggestion,
-                        itemProps: getItemProps({ item: suggestion.UserName }),
-                      }),
-                    )}
-                  </Paper>
-                ) : isOpen && this.state.suggestions.length === 0 &&
-                  this.state.query.length >= MIN_QUERY_LENGTH ? (
-                  // Styling copied from how renderSuggestion is done with
-                  // only bottom padding changed and 'no-results' class used
-                    <Paper square className="people-search-dropdown">
-                      {this.renderNoResult()}
-                    </Paper>) : null}
-              </span>
-            )}
-          </Downshift>
-        );
+                // Styling copied from how renderSuggestion is done with
+                // only bottom padding changed and 'no-results' class used
+                <Paper square className="people-search-dropdown">
+                  {this.renderNoResult()}
+                </Paper>
+              ) : null}
+            </span>
+          )}
+        </Downshift>
+      );
     } else {
       content = (
         <span className="gordon-people-search">
           <TextField
             placeholder="People Search"
             value={''}
-            onChange={(event) => this.unauthenticatedSearch()}
+            onChange={() => this.unauthenticatedSearch()}
             className={'text-field'}
             InputProps={{
               disableUnderline: true,
@@ -386,7 +389,7 @@ export default class GordonPeopleSearch extends Component {
           />
           <Dialog
             open={this.state.loginDialog}
-            onClose={(clicked) => this.handleClose()}
+            onClose={() => this.handleClose()}
             aria-labelledby="login-dialog-title"
             aria-describedby="login-dialog-description"
           >
@@ -397,7 +400,7 @@ export default class GordonPeopleSearch extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" onClick={(clicked) => this.handleClose()} color="primary">
+              <Button variant="contained" onClick={() => this.handleClose()} color="primary">
                 Okay
               </Button>
             </DialogActions>
