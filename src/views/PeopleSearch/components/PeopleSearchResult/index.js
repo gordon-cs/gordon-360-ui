@@ -99,7 +99,8 @@ export default class PeopleSearchResult extends Component {
       Person.Mail_Location !== null &&
       Person.Mail_Location !== ''
     ) {
-      personMailLocation = '#' + Person.Mail_Location;
+      personMailLocation =
+        Person.Type === 'Student' ? '#' + Person.Mail_Location : Person.Mail_Location;
     }
 
     return (
