@@ -18,7 +18,7 @@ import peopleSearch from '../../../../services/people-search';
 const MIN_QUERY_LENGTH = 2;
 
 //  TextBox Input Field
-const renderInput = inputProps => {
+const renderInput = (inputProps) => {
   const { autoFocus, value, ref, ...other } = inputProps;
 
   return (
@@ -87,7 +87,7 @@ export default class GordonPeopleSearch extends Component {
     this.setState({ suggestions });
   }
 
-  handleKeys = key => {
+  handleKeys = (key) => {
     let suggestionIndex = this.state.suggestionIndex;
     let suggestionList = this.state.suggestions;
     let theChosenOne;
@@ -112,7 +112,7 @@ export default class GordonPeopleSearch extends Component {
       this.setState({ suggestionIndex });
     }
     if (key === 'Backspace') {
-      this.setState({suggestions: []});
+      this.setState({ suggestions: [] });
     }
   };
 
@@ -138,7 +138,7 @@ export default class GordonPeopleSearch extends Component {
     var hasMatched = false;
     return (
       <span>
-        {parts.map(part =>
+        {parts.map((part) =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
             ? (hasMatched = true && <span class="h">{part}</span>)
             : part,
@@ -148,16 +148,16 @@ export default class GordonPeopleSearch extends Component {
   }
 
   renderNoResult() {
-      return(
-        <MenuItem className="people-search-suggestion" style=
-        {{paddingBottom: '5px'}}>
-          <Typography className="no-results" variant="body2">
-            No results
-          </Typography>
-          <Typography className="loading" variant="body2">
-            Loading...
-          </Typography>
-        </MenuItem>)
+    return (
+      <MenuItem className="people-search-suggestion" style={{ paddingBottom: '5px' }}>
+        <Typography className="no-results" variant="body2">
+          No results
+        </Typography>
+        <Typography className="loading" variant="body2">
+          Loading...
+        </Typography>
+      </MenuItem>
+    );
   }
 
   renderSuggestion(params) {
@@ -199,7 +199,7 @@ export default class GordonPeopleSearch extends Component {
                   suggestion.LastName,
                   this.state.highlightQuery.split(/ |\./)[1],
                 ),
-              ].map(e => <span>{e}</span>)
+              ].map((e) => <span>{e}</span>)
             : this.getHighlightedText(
                 suggestion.FirstName + ' ' + suggestion.LastName,
                 this.state.highlightQuery,
@@ -271,7 +271,7 @@ export default class GordonPeopleSearch extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -299,59 +299,63 @@ export default class GordonPeopleSearch extends Component {
     } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
 
     let content;
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       // Creates the People Search Bar depending on the status of the network found in local storage
-        content = (
-          // Assign reference to Downshift to `this` for usage elsewhere in the component
-          <Downshift
-            ref={downshift => {
-              this.downshift = downshift;
-            }}
-          >
-            {({ getInputProps, getItemProps, isOpen }) => (
-              <span className="gordon-people-search">
-                {networkStatus === 'online' ? (renderInput(
-                  getInputProps({
-                    placeholder: holder,
-                    onChange: event => this.getSuggestions(event.target.value),
-                    onKeyDown: event => this.handleKeys(event.key),
-                  }),
-                )) : (renderInput(
-                  getInputProps({
-                    placeholder: holder,
-                    style: { color: 'white' },
-                    disabled: { networkStatus },
-                  }),
-                ))}
-                {isOpen &&
-                this.state.suggestions.length > 0 &&
+      content = (
+        // Assign reference to Downshift to `this` for usage elsewhere in the component
+        <Downshift
+          ref={(downshift) => {
+            this.downshift = downshift;
+          }}
+        >
+          {({ getInputProps, getItemProps, isOpen }) => (
+            <span className="gordon-people-search">
+              {networkStatus === 'online'
+                ? renderInput(
+                    getInputProps({
+                      placeholder: holder,
+                      onChange: (event) => this.getSuggestions(event.target.value),
+                      onKeyDown: (event) => this.handleKeys(event.key),
+                    }),
+                  )
+                : renderInput(
+                    getInputProps({
+                      placeholder: holder,
+                      style: { color: 'white' },
+                      disabled: { networkStatus },
+                    }),
+                  )}
+              {isOpen &&
+              this.state.suggestions.length > 0 &&
+              this.state.query.length >= MIN_QUERY_LENGTH ? (
+                <Paper square className="people-search-dropdown">
+                  {this.state.suggestions.map((suggestion) =>
+                    this.renderSuggestion({
+                      suggestion,
+                      itemProps: getItemProps({ item: suggestion.UserName }),
+                    }),
+                  )}
+                </Paper>
+              ) : isOpen &&
+                this.state.suggestions.length === 0 &&
                 this.state.query.length >= MIN_QUERY_LENGTH ? (
-                  <Paper square className="people-search-dropdown">
-                    {this.state.suggestions.map(suggestion =>
-                      this.renderSuggestion({
-                        suggestion,
-                        itemProps: getItemProps({ item: suggestion.UserName }),
-                      }),
-                    )}
-                  </Paper>
-                ) : isOpen && this.state.suggestions.length === 0 &&
-                  this.state.query.length >= MIN_QUERY_LENGTH ? (
-                  // Styling copied from how renderSuggestion is done with
-                  // only bottom padding changed and 'no-results' class used
-                    <Paper square className="people-search-dropdown">
-                      {this.renderNoResult()}
-                    </Paper>) : null}
-              </span>
-            )}
-          </Downshift>
-        );
+                // Styling copied from how renderSuggestion is done with
+                // only bottom padding changed and 'no-results' class used
+                <Paper square className="people-search-dropdown">
+                  {this.renderNoResult()}
+                </Paper>
+              ) : null}
+            </span>
+          )}
+        </Downshift>
+      );
     } else {
       content = (
         <span className="gordon-people-search">
           <TextField
             placeholder="People Search"
             value={''}
-            onChange={event => this.unauthenticatedSearch()}
+            onChange={(event) => this.unauthenticatedSearch()}
             className={'text-field'}
             InputProps={{
               disableUnderline: true,
@@ -368,7 +372,7 @@ export default class GordonPeopleSearch extends Component {
           />
           <Dialog
             open={this.state.loginDialog}
-            onClose={clicked => this.handleClose()}
+            onClose={(clicked) => this.handleClose()}
             aria-labelledby="login-dialog-title"
             aria-describedby="login-dialog-description"
           >
@@ -379,7 +383,7 @@ export default class GordonPeopleSearch extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" onClick={clicked => this.handleClose()} color="primary">
+              <Button variant="contained" onClick={(clicked) => this.handleClose()} color="primary">
                 Okay
               </Button>
             </DialogActions>

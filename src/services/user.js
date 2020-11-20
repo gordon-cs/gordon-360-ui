@@ -393,17 +393,61 @@ const getLocalInfo = () => {
   }
 };
 
+/**
+ * Get the CHDate (the datetime when a user received CL&W credit)
+ * unless Occurrences (the actual datetime when the event occured)
+ * is non-null, since users would rather know when the event was
+ * than when they got credit.
+ * 
+ * @param {JSON} event : an event the user attended
+ * @returns {DateTime} event.CHDate or event.Occurrences[0][0]
+ * (since Occurences is a list of lists of start and end times
+ * for each re-occurence of an event)
+ */
+function getAtndEventTime(event) {
+  if (event.Occurrences[0]) {
+    return event.Occurrences[0][0];
+  }
+  return event.CHDate;
+}
+
+/**
+ * Determines in which order two JSON event objects
+ * should be sorted based on a time associated with them.
+ * Note that this does not necessarily sort events by 
+ * when they occurred, since getAtndEventTime
+ * may have to resort to using CHDate. CHDate
+ * can sometimes be weeks after an event due to slow
+ * processing.
+ * 
+ * @param {JSON} a : an event
+ * @param {JSON} b : another event
+ * @returns {int} -1 if a's time is less than b's, 1 if it's more, 0 if they're equal
+ */
+function sortAtndEventsByTime(a, b) {
+
+  let tA = getAtndEventTime(a);
+  let tB = getAtndEventTime(b);
+
+  if (tA < tB) {
+    return -1;
+  }
+  if (tA > tB) {
+    return 1;
+  }
+  return 0;
+}
+
 //Call function to retrieve events from database then format them
 const getAttendedChapelEventsFormatted = async () => {
   const termCode = session.getTermCode();
   const attendedEvents = await getAttendedChapelEvents(termCode);
   const events = [];
-  attendedEvents.sort(gordonEvent.sortByTime);
   for (let i = 0; i < attendedEvents.length; i += 1) {
     events.push(attendedEvents[i]);
     gordonEvent.formatevent(attendedEvents[i]);
   }
-  return events.sort(gordonEvent.sortByTime);
+  return events.sort(sortAtndEventsByTime);
 };
 
 /**

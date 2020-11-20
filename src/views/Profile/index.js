@@ -50,7 +50,7 @@ export default class Profile extends Component {
   }
 
   componentDidMount() {
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       this.loadProfile(this.props);
     }
 
@@ -59,7 +59,7 @@ export default class Profile extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -93,7 +93,7 @@ export default class Profile extends Component {
 
   componentWillReceiveProps(newProps) {
     if (
-      this.props.Authentication &&
+      this.props.authentication &&
       this.props.match.params.username !== newProps.match.params.username
     ) {
       this.loadProfile(newProps);
@@ -193,7 +193,6 @@ export default class Profile extends Component {
       if (this.state.error && this.state.error.name === 'NotFoundError') {
         return <Redirect to="/profilenotfound" />;
       }
-
       // Creates the Public Profile page depending on the status of the network
       let PublicProfile;
       if (this.state.network === 'online') {
