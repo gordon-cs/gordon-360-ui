@@ -101,7 +101,7 @@ export default class StudentApplication extends Component {
       this.setState({ isOnExistingApplication: true });
       let applicationDetails = housing.getApartmentApplication(applicationID);
       if (applicationDetails) {
-        if (applicationDetails.PRIMARY_USERNAME) {
+        if (applicationDetails.Username) {
           this.setState({ primaryUsername: applicationDetails.Username });
         }
         if (applicationDetails.Applicants) {
