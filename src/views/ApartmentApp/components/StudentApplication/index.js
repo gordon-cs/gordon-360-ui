@@ -151,18 +151,15 @@ export default class StudentApplication extends Component {
         // Display an error if the user try to add an applicant when the list is full
         this.snackbarText = 'You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants';
         this.snackbarSeverity = 'warning';
-        this.setState({ snackbarOpen: true });
       } else if (!String(applicantProfile.PersonType).includes('stu')) {
         // Display an error if the selected user is not a student
         this.snackbarText =
           'Could not add ' + String(applicantProfile.fullName) + ' because they are not a student.';
         this.snackbarSeverity = 'warning';
-        this.setState({ snackbarOpen: true });
       } else if (applicants.some(applicant => applicant.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         this.snackbarText = String(applicantProfile.fullName) + ' is already in the list.';
         this.snackbarSeverity = 'info';
-        this.setState({ snackbarOpen: true });
       } else {
         // Check if the student is on an existing application
         let applicationID = await housing.getApplicationID(username);
@@ -171,7 +168,6 @@ export default class StudentApplication extends Component {
           this.snackbarText =
             String(applicantProfile.fullName) + ' is already on an existing application.';
           this.snackbarSeverity = 'error';
-          this.setState({ snackbarOpen: true });
         } else {
           // Add the profile object to the list of applicants
           applicants.push(applicantProfile);
@@ -180,15 +176,14 @@ export default class StudentApplication extends Component {
             this.snackbarText =
               String(applicantProfile.fullName) + ' was successfully added to the list.';
             this.snackbarSeverity = 'success';
-            this.setState({ snackbarOpen: true });
           }
         }
       }
     } catch (error) {
       this.snackbarText = 'Something went wrong while trying to add this person. Please try again.';
       this.snackbarSeverity = 'error';
-      this.setState({ snackbarOpen: true });
     }
+    this.setState({ snackbarOpen: true });
   }
 
   /**
