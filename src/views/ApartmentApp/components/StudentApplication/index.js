@@ -121,8 +121,15 @@ export default class StudentApplication extends Component {
   };
 
   handleSubmitApplication = () => {
-    //! Placeholder
-    this.setState({ applicationCardsOpen: false });
+    try {
+      //! Placeholder
+      this.snackbarText = 'This feature is not yet implemented.';
+      this.snackbarSeverity = 'info';
+    } catch {
+      this.snackbarText = 'Something went wrong while trying to submit the application.';
+      this.snackbarSeverity = 'error';
+    }
+    this.setState({ snackbarOpen: true, applicationCardsOpen: false });
   };
 
   /**
@@ -204,8 +211,7 @@ export default class StudentApplication extends Component {
       try {
         this.saveApplication(this.state.newPrimaryApplicant.ID, this.state.applicants);
       } catch (error) {
-        this.snackbarText = 'This feature is not yet implemented.';
-        // this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
+        this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
         this.snackbarSeverity = 'error';
         this.setState({ snackbarOpen: true, saving: 'failed' });
       }
