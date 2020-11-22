@@ -417,14 +417,6 @@ export default class StudentApplication extends Component {
                               onClose={this.handleCloseSnackbar}
                             />
                           </Grid>
-                          <Grid item>
-                            <Card>
-                              <CardHeader title="Preferred Halls" className="card-header" />
-                              <CardContent>
-                                <Typography variant="body1">Placeholder text</Typography>
-                              </CardContent>
-                            </Card>
-                          </Grid>
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justify="center" spacing={2}>
@@ -439,41 +431,42 @@ export default class StudentApplication extends Component {
                           </Grid>
                           <Grid item>
                             <Card>
+                              <CardHeader title="Off-Campus Work Study" className="card-header" />
                               <CardContent>
-                                <Typography variant="h5">Hello World:</Typography>
-
-                                <h3>{'You name: ' + this.props.userProfile.fullName}</h3>
-                                <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
-                                <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
-                                <br />
+                                <Typography variant="body1">Placeholder text</Typography>
                               </CardContent>
                             </Card>
                           </Grid>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                          {renderInstructionsCard()}
+                          <Card>
+                            <CardHeader title="Agreements" className="card-header" />
+                            <CardContent>
+                              <Typography variant="body1">Placeholder text</Typography>
+                            </CardContent>
+                          </Card>
                         </Grid>
-                      </Grid>
-                      <Grid item xs={12} lg={10}>
-                        <Card>
-                          <CardContent>
-                            <Grid container direction="row" justify="flex-end">
-                              <Grid item xs={3}>
-                                <Typography variant="body1">Placeholder Text</Typography>
+                        <Grid item xs={12} lg={10}>
+                          <Card>
+                            <CardContent>
+                              <Grid container direction="row" justify="flex-end">
+                                <Grid item xs={3}>
+                                  <Typography variant="body1">Placeholder Text</Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                  <Button
+                                    variant="contained"
+                                    onClick={this.handleSubmitApplication}
+                                    color="primary"
+                                    disabled={!this.state.applicationCardsOpen}
+                                  >
+                                    Submit Application
+                                  </Button>
+                                </Grid>
                               </Grid>
-                              <Grid item xs={3}>
-                                <Button
-                                  variant="contained"
-                                  onClick={this.handleSubmitApplication}
-                                  color="primary"
-                                  disabled={!this.state.applicationCardsOpen}
-                                >
-                                  Submit Application
-                                </Button>
-                              </Grid>
-                            </Grid>
-                          </CardContent>
-                        </Card>
+                            </CardContent>
+                          </Card>
+                        </Grid>
                       </Grid>
                     </Collapse>
                   </Grid>
