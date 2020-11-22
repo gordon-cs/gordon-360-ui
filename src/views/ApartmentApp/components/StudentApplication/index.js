@@ -425,6 +425,18 @@ export default class StudentApplication extends Component {
                               </CardContent>
                             </Card>
                           </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="row" justify="center" spacing={2}>
+                        <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
+                          <Grid item>
+                            <Card>
+                              <CardHeader title="Preferred Halls" className="card-header" />
+                              <CardContent>
+                                <Typography variant="body1">Placeholder text</Typography>
+                              </CardContent>
+                            </Card>
+                          </Grid>
                           <Grid item>
                             <Card>
                               <CardContent>
@@ -438,27 +450,30 @@ export default class StudentApplication extends Component {
                             </Card>
                           </Grid>
                         </Grid>
-                        <Grid item xs={12} lg={10}>
-                          <Card>
-                            <CardContent>
-                              <Grid container direction="row" justify="flex-end">
-                                <Grid item xs={3}>
-                                  <Typography variant="body1">Placeholder Text</Typography>
-                                </Grid>
-                                <Grid item xs={3}>
-                                  <Button
-                                    variant="contained"
-                                    onClick={this.handleSubmitApplication}
-                                    color="primary"
-                                    disabled={!this.state.applicationCardsOpen}
-                                  >
-                                    Submit Application
-                                  </Button>
-                                </Grid>
-                              </Grid>
-                            </CardContent>
-                          </Card>
+                        <Grid item xs={12} md={4}>
+                          {renderInstructionsCard()}
                         </Grid>
+                      </Grid>
+                      <Grid item xs={12} lg={10}>
+                        <Card>
+                          <CardContent>
+                            <Grid container direction="row" justify="flex-end">
+                              <Grid item xs={3}>
+                                <Typography variant="body1">Placeholder Text</Typography>
+                              </Grid>
+                              <Grid item xs={3}>
+                                <Button
+                                  variant="contained"
+                                  onClick={this.handleSubmitApplication}
+                                  color="primary"
+                                  disabled={!this.state.applicationCardsOpen}
+                                >
+                                  Submit Application
+                                </Button>
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                        </Card>
                       </Grid>
                     </Collapse>
                   </Grid>
