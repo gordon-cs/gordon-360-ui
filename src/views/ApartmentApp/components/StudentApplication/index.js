@@ -67,15 +67,10 @@ export default class StudentApplication extends Component {
     } catch (error) {
       // Do Nothing
     }
-    // DEBUG
-    // this.handleSearchSubmit('Gahngnin.Kim');
-    // this.handleSearchSubmit('Christian.Kunis');
-    // this.handleSearchSubmit('Nick.Noormand');
-    // this.handleSearchSubmit('Joshua.Rogers');
   }
 
   /**
-   * Loads the user's saved apartment application, if one exists
+   * Loads the user's housing info (for the Hello World demo. This has since become obsolete)
    */
   async loadHousingInfo() {
     this.setState({ loading: true });
@@ -94,6 +89,9 @@ export default class StudentApplication extends Component {
     }
   }
 
+  /**
+   * Loads the user's saved apartment application, if one exists
+   */
   async loadSavedApplication() {
     // Check if the student is on an application. Returns the application ID number if found
     let applicationID = await housing.isOnExistingApplication(this.props.userProfile.AD_Username);
