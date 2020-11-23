@@ -32,7 +32,7 @@ const renderInput = inputProps => {
         classes: {
           root: 'people-search-root',
           input: 'people-search-input',
-          // inputDisabled: 'people-search-disabled',
+          // inputDisabled: 'people-search-disabled', // `inputDisabled` is not a valid classes prop for this Material-UI component. See https://material-ui.com/api/autocomplete/#css
         },
         startAdornment: (
           <InputAdornment position="start">
