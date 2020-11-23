@@ -18,6 +18,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import GordonLoader from '../../../../components/Loader';
 import SimpleSnackbar from '../../../../components/Snackbar';
 import ApplicantList from '../../../../components/ApartmentApplicantList';
+import HallSelection from '../../../../components/ApartmentHallSelection';
 import user from '../../../../services/user';
 import housing from '../../../../services/housing';
 import '../../apartmentApp.css';
@@ -53,7 +54,12 @@ export default class StudentApplication extends Component {
       editDialogOpen: false,
       primaryUsername: null, // The username of the primary applicant
       applicants: [],
+      preferredHalls: ['Choose a hall'],
     };
+    this.offCampusProgramInfo = new Map();
+    this.state.applicants.forEach((profile) =>
+      this.offCampusProgramInfo.set(profile.AD_Username, ''),
+    );
     this.editDialogText = '';
     this.snackbarText = '';
     this.snackbarSeverity = '';
@@ -371,63 +377,21 @@ export default class StudentApplication extends Component {
                               onSaveButtonClick={this.handleSaveButtonClick}
                               authentication={this.props.authentication}
                             />
-                            <Dialog
-                              open={this.state.editDialogOpen}
-                              onClose={this.handleCloseDialog}
-                              aria-labelledby="alert-dialog-title"
-                              aria-describedby="alert-dialog-description"
-                            >
-                              <DialogTitle id="alert-dialog-title">
-                                <Alert variant="filled" severity="warning">
-                                  <AlertTitle>
-                                    <strong>Change primary applicant?</strong>
-                                  </AlertTitle>
-                                </Alert>
-                              </DialogTitle>
-                              <DialogContent>
-                                <DialogContentText id="alert-dialog-description">
-                                  If you change the primary applicant, you will no longer be able to
-                                  edit this application yourself.
-                                  <br />
-                                  Are you sure you want to change the primary applicant?
-                                </DialogContentText>
-                              </DialogContent>
-                              <DialogActions>
-                                <Button
-                                  variant="contained"
-                                  onClick={this.handleCloseOkay}
-                                  color="primary"
-                                  autofocus
-                                >
-                                  Cancel
-                                </Button>
-                                <Button
-                                  variant="contained"
-                                  onClick={this.handleChangePrimaryAccepted}
-                                  color="primary"
-                                >
-                                  Accept
-                                </Button>
-                              </DialogActions>
-                            </Dialog>
-                            <SimpleSnackbar
-                              text={this.snackbarText}
-                              severity={this.snackbarSeverity}
-                              open={this.state.snackbarOpen}
-                              onClose={this.handleCloseSnackbar}
-                            />
                           </Grid>
                         </Grid>
                       </Grid>
                       <Grid container direction="row" justify="center" spacing={2}>
                         <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                           <Grid item>
-                            <Card>
-                              <CardHeader title="Preferred Halls" className="card-header" />
-                              <CardContent>
-                                <Typography variant="body1">Placeholder text</Typography>
-                              </CardContent>
-                            </Card>
+                            <HallSelection
+                              primaryUsername={this.state.primaryUsername}
+                              preferredHalls={this.state.preferredHalls}
+                              saving={this.state.saving}
+                              savingSuccess={this.state.savingSuccess}
+                              onHallRemove={this.handleRemove}
+                              onSaveButtonClick={this.handleSaveButtonClick}
+                              authentication={this.props.authentication}
+                            />
                           </Grid>
                           <Grid item>
                             <Card>
@@ -468,6 +432,51 @@ export default class StudentApplication extends Component {
                           </Card>
                         </Grid>
                       </Grid>
+                      <Dialog
+                        open={this.state.editDialogOpen}
+                        onClose={this.handleCloseDialog}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle id="alert-dialog-title">
+                          <Alert variant="filled" severity="warning">
+                            <AlertTitle>
+                              <strong>Change primary applicant?</strong>
+                            </AlertTitle>
+                          </Alert>
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">
+                            If you change the primary applicant, you will no longer be able to edit
+                            this application yourself.
+                            <br />
+                            Are you sure you want to change the primary applicant?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button
+                            variant="contained"
+                            onClick={this.handleCloseOkay}
+                            color="primary"
+                            autofocus
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="contained"
+                            onClick={this.handleChangePrimaryAccepted}
+                            color="primary"
+                          >
+                            Accept
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                      <SimpleSnackbar
+                        text={this.snackbarText}
+                        severity={this.snackbarSeverity}
+                        open={this.state.snackbarOpen}
+                        onClose={this.handleCloseSnackbar}
+                      />
                     </Collapse>
                   </Grid>
                 </Grid>

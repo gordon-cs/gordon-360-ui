@@ -8,28 +8,14 @@ import {
   List,
   ListItem,
   ListItemText,
-  Button,
   Typography,
 } from '@material-ui/core';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import ErrorIcon from '@material-ui/icons/Error';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { gordonColors } from '../../theme';
 import GordonPeopleSearch from '../Header/components/PeopleSearch';
-import GordonLoader from '../../components/Loader';
 import ApplicantListItem from './components/ApplicantListItem';
+import SaveButton from '../ApartAppSaveButton';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
-const styles = {
-  success: {
-    color: gordonColors.secondary.green,
-    fontSize: '26px',
-  },
-  error: {
-    color: gordonColors.secondary.red,
-    fontSize: '26px',
-  },
-};
 
 // Create a list of applicants, displayed by name, username, and class standing.
 export default class ApplicantList extends Component {
@@ -88,7 +74,7 @@ export default class ApplicantList extends Component {
         />
         <CardContent>
           <Grid container justify="space-between" spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={11}>
               <List className="applicant-list" aria-label="apartment applicants">
                 {this.props.applicants ? (
                   this.props.applicants.map((profile) => (
@@ -122,24 +108,7 @@ export default class ApplicantList extends Component {
               ) : null}
             </Grid>
             <Grid item xs={3}>
-              {this.props.saving ? (
-                this.props.saving === 'success' ? (
-                  <CheckCircleIcon style={styles.success} />
-                ) : this.props.saving === 'failed' ? (
-                  <ErrorIcon style={styles.error} />
-                ) : (
-                  <GordonLoader size={this.loaderSize} />
-                )
-              ) : (
-                <Button
-                  disabled={this.props.saving}
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleSaveButtonClick}
-                >
-                  Save
-                </Button>
-              )}
+              <SaveButton saving={this.props.saving} onClick={this.handleSaveButtonClick} />
             </Grid>
           </Grid>
         </CardContent>
