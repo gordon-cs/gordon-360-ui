@@ -99,7 +99,7 @@ const Timesheets = (props) => {
     // status is notted by either true or false. true being clocked in.
     async function getClockInOutStatus() {
       try {
-        let status = await jobs.clockOut();
+        let status = await jobs.getClockIns();
 
         if (status[0].currentState) {
           setClockInOut('Clock Out');
@@ -167,17 +167,11 @@ const Timesheets = (props) => {
 
   if (props.authentication) {
     const getActiveJobsForUser = (dateIn, dateOut) => {
-      let details = {
-        shift_start_datetime: dateIn.toISOString(),
-        shift_end_datetime: dateOut.toISOString(),
-      };
-      jobs.getActiveJobsForUser(canUseStaff, details).then((result) => {
-        setUserJobs(result);
-      });
+      jobs.getActiveJobs(canUseStaff, dateIn, dateOut).then((jobs) => setUserJobs(jobs));
     };
 
     const getSavedShiftsForUser = () => {
-      return jobs.getSavedShiftsForUser(canUseStaff);
+      return jobs.getShifts(canUseStaff);
     };
 
     const handleDateChangeIn = (date) => {
@@ -234,8 +228,8 @@ const Timesheets = (props) => {
         if (calculatedTimeDiff2 > 0) {
           saveShift(
             selectedJob.EMLID,
-            timeIn2.toLocaleString(),
-            timeOut2.toLocaleString(),
+            timeIn2,
+            timeOut2,
             roundedHourDifference2,
             selectedHourType,
             userShiftNotes,
@@ -275,8 +269,8 @@ const Timesheets = (props) => {
 
       saveShift(
         selectedJob.EMLID,
-        timeIn.toLocaleString(),
-        timeOut.toLocaleString(),
+        timeIn,
+        timeOut,
         roundedHourDifference,
         selectedHourType,
         userShiftNotes,
@@ -307,7 +301,7 @@ const Timesheets = (props) => {
     };
 
     const saveShift = async (eml, shiftStart, shiftEnd, hoursWorked, hoursType, shiftNotes) => {
-      await jobs.saveShiftForUser(
+      await jobs.saveShift(
         canUseStaff,
         eml,
         shiftStart,
@@ -442,13 +436,13 @@ const Timesheets = (props) => {
     const changeState = async () => {
       if (clockInOut === 'Clock In') {
         setClockInOut('Clock Out');
-        await jobs.clockIn(true);
+        await jobs.postClockIn(true);
         let clockInDate = new Date();
         handleDateChangeIn(clockInDate);
       }
       if (clockInOut === 'Clock Out') {
         setClockInOut('Reset');
-        await jobs.clockIn(false);
+        await jobs.postClockIn(false);
         let clockOutDate = new Date();
         handleDateChangeOut(clockOutDate);
         await jobs.deleteClockIn();
