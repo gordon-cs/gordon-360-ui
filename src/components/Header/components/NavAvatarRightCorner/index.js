@@ -141,7 +141,7 @@ export const GordonNavAvatarRightCorner = (props) => {
 
   return (
     <section className="right-side-container">
-      <Tooltip className="tooltip" id="tooltip-avatar" title={name}>
+      <Tooltip className="tooltip" id="tooltip-avatar" title={name ? name : 'Nav Avatar'}>
         <IconButton
           className={`gc360-nav-avatar-rc ${classes.root}`}
           aria-label="More"
