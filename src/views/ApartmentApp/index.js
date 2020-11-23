@@ -1,21 +1,9 @@
 //Main apartment application page
 import React, { Component } from 'react';
 import 'date-fns';
-import {
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-  Typography,
-} from '@material-ui/core/';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
 import GordonLoader from '../../components/Loader';
+import AlertDialogBox from '../../components/AlertDialogBox';
 import SimpleSnackbar from '../../components/Snackbar';
 import ApplicantList from '../../components/ApartmentApplicantList';
 import user from '../../services/user';
@@ -104,7 +92,7 @@ export default class ApartApp extends Component {
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  handleSearchSubmit = (searchSelection) => {
+  handleSearchSubmit = searchSelection => {
     this.setState({ updating: true });
     if (searchSelection) {
       // The method is separated from callback because user API service must be handled inside an async method
@@ -160,7 +148,7 @@ export default class ApartApp extends Component {
    * Callback for changing the primary applicant
    * @param {String} profile The StudentProfileInfo object for the person who is to be made the primary applicant
    */
-  handleChangePrimary = (profile) => {
+  handleChangePrimary = profile => {
     this.setState({ updating: true });
     if (profile) {
       if (this.state.applicants.includes(profile)) {
@@ -187,7 +175,7 @@ export default class ApartApp extends Component {
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  handleRemove = (profileToRemove) => {
+  handleRemove = profileToRemove => {
     this.setState({ updating: true });
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
@@ -282,6 +270,15 @@ export default class ApartApp extends Component {
         }
       });
 
+      const primaryApplicantAlertTest = (
+        <span>
+          If you change the primary applicant, you will no longer be able to edit this application
+          yourself.
+          <br />
+          Are you sure you want to change the primary applicant?
+        </span>
+      );
+
       /**
        * Gets status of current network connection for online/offline rendering
        * Defaults to online in case of PWA not being possible
@@ -326,45 +323,17 @@ export default class ApartApp extends Component {
                         onSaveButtonClick={this.handleSaveButtonClick}
                         Authentication={this.props.Authentication}
                       />
-                      <Dialog
+                      <AlertDialogBox
                         open={this.state.editDialogOpen}
                         onClose={this.handleCloseDialog}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                      >
-                        <DialogTitle id="alert-dialog-title">
-                          <Alert variant="filled" severity="warning">
-                            <AlertTitle>
-                              <strong>Change primary applicant?</strong>
-                            </AlertTitle>
-                          </Alert>
-                        </DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                            If you change the primary applicant, you will no longer be able to edit
-                            this application yourself.
-                            <br />
-                            Are you sure you want to change the primary applicant?
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button
-                            variant="contained"
-                            onClick={this.handleCloseOkay}
-                            color="primary"
-                            autofocus
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            variant="contained"
-                            onClick={this.handleChangePrimaryAccepted}
-                            color="primary"
-                          >
-                            Accept
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
+                        severity={'warning'}
+                        title={'Change primary applicant?'}
+                        text={primaryApplicantAlertTest}
+                        cancelButtonClicked={this.handleCloseOkay}
+                        cancelButtonName={'Cancel'}
+                        confirmButtonClicked={this.handleChangePrimaryAccepted}
+                        confirmButtonName={'Accept'}
+                      />
                       <SimpleSnackbar
                         text={this.snackbarText}
                         severity={this.snackbarSeverity}
