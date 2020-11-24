@@ -1,17 +1,6 @@
 import React, { Component } from 'react';
-import {
-  Grid,
-  Card,
-  // CardHeader,
-  CardContent,
-  // Dialog,
-  // DialogActions,
-  // DialogContent,
-  // DialogContentText,
-  // DialogTitle,
-  Button,
-  // Typography,
-} from '@material-ui/core/';
+import 'date-fns';
+import { Grid, Card, CardContent, Button } from '@material-ui/core/';
 import GordonLoader from '../../components/Loader';
 import StudentApplication from './components/StudentApplication';
 import StaffMenu from './components/StaffMenu';
@@ -80,8 +69,9 @@ export default class ApartApp extends Component {
         }
       });
 
-      /* Gets status of current network connection for online/offline rendering
-       *  Defaults to online in case of PWA not being possible
+      /**
+       * Gets status of current network connection for online/offline rendering
+       * Defaults to online in case of PWA not being possible
        */
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
