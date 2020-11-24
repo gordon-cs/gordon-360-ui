@@ -47,7 +47,7 @@ export default class GordonNavLinks extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -202,7 +202,7 @@ export default class GordonNavLinks extends Component {
     // People Button
     let peopleButton = createPeopleButton(
       this.state.network,
-      this.props.Authentication,
+      this.props.authentication,
       this.props.onLinkClick,
       this.openDialogBox,
     );
@@ -210,7 +210,7 @@ export default class GordonNavLinks extends Component {
     // Timesheets Button
     let timesheetsButton = createTimesheetsButton(
       this.state.network,
-      this.props.Authentication,
+      this.props.authentication,
       this.props.onLinkClick,
       this.openDialogBox,
     );
@@ -218,7 +218,7 @@ export default class GordonNavLinks extends Component {
     // Wellness Button
     let wellnessButton = createWellnessButton(
       this.state.network,
-      this.props.Authentication,
+      this.props.authentication,
       this.props.onLinkClick,
       this.openDialogBox,
     );
@@ -246,14 +246,14 @@ export default class GordonNavLinks extends Component {
     // Admin Button
     let adminButton = createAdminButton(
       this.state.network,
-      this.props.Authentication,
+      this.props.authentication,
       this.props.onLinkClick,
       this.openDialogBox,
     );
 
     // Sign In & Out Button
     let signInOutButton = createSignInOutButton(
-      this.props.Authentication,
+      this.props.authentication,
       this.onSignOut,
       this.onSignIn,
     );
