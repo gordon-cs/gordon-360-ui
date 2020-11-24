@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@material-ui/core/';
 import GordonLoader from '../../../../components/Loader';
-import AlertDialogBox from '../../components/AlertDialogBox';
+import AlertDialogBox from '../../../../components/AlertDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
 import ApplicantList from '../../../../components/ApartmentApplicantList';
 import user from '../../../../services/user';
