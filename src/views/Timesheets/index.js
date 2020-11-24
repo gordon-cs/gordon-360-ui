@@ -165,7 +165,7 @@ const Timesheets = (props) => {
     setEnteredFutureTime(dateIn.getTime() > now || dateOut.getTime() > now);
   };
 
-  if (props.Authentication) {
+  if (props.authentication) {
     const getActiveJobsForUser = (dateIn, dateOut) => {
       let details = {
         shift_start_datetime: dateIn.toISOString(),
@@ -599,7 +599,7 @@ const Timesheets = (props) => {
       </Button>
     );
 
-    if (networkStatus === 'online' && isUserStudent && props.Authentication) {
+    if (networkStatus === 'online' && isUserStudent && props.authentication) {
       return (
         <>
           <Grid container spacing={2}>

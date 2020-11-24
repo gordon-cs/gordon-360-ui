@@ -19,7 +19,7 @@ export default class EventsAttended extends Component {
     };
   }
   componentWillMount() {
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       this.loadEvents();
     }
   }
@@ -39,7 +39,7 @@ export default class EventsAttended extends Component {
       },
     };
 
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       if (this.state.loading === true) {
         content = <GordonLoader />;
       } else if (this.state.events.length > 0) {

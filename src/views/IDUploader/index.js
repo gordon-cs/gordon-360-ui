@@ -180,7 +180,7 @@ class IDUploader extends Component {
 
   onCropperMove() {
     // Keyboard support for cropping
-    document.addEventListener('keydown', e => {
+    document.addEventListener('keydown', (e) => {
       if (this.refs.cropper != null) {
         let data = this.refs.cropper.getCropBoxData();
         if (e.code === 'ArrowUp') {
@@ -244,7 +244,7 @@ class IDUploader extends Component {
     };
 
     let content;
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       content = (
         <Fragment>
           <Grid item xs={12} md={6} lg={8}>
