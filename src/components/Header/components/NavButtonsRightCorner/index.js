@@ -8,7 +8,6 @@ import {
   createHelpButton,
   createLinksButton,
   createTimesheetsButton,
-  createApartmentAppButton,
   createMyProfileButton,
   createSignInOutButton,
 } from './navButtons';
@@ -63,7 +62,7 @@ export const GordonNavButtonsRightCorner = (props) => {
   // My Profile Button
   let myProfileButton = createMyProfileButton(
     network,
-    props.Authentication,
+    props.authentication,
     props.onClose,
     props.openDialogBox,
   );
@@ -79,15 +78,7 @@ export const GordonNavButtonsRightCorner = (props) => {
   // Timesheets Button
   let timesheetsButton = createTimesheetsButton(
     network,
-    props.Authentication,
-    props.onClose,
-    props.openDialogBox,
-  );
-
-  // Apartment Application Button
-  let apartmentAppButton = createApartmentAppButton(
-    network,
-    props.Authentication,
+    props.authentication,
     props.onClose,
     props.openDialogBox,
   );
@@ -104,13 +95,13 @@ export const GordonNavButtonsRightCorner = (props) => {
   // Admin Button
   let adminButton = createAdminButton(
     network,
-    props.Authentication,
+    props.authentication,
     props.onClose,
     props.openDialogBox,
   );
 
   // Sign In & Out Button
-  let signInOutButton = createSignInOutButton(props.Authentication, onSignOut, props.onClose);
+  let signInOutButton = createSignInOutButton(props.authentication, onSignOut, props.onClose);
 
   useEffect(() => {
     /* Used to re-render the page when the network connection changes.
@@ -179,7 +170,6 @@ export const GordonNavButtonsRightCorner = (props) => {
             {myProfileButton}
             {linksButton}
             {timesheetsButton}
-            {apartmentAppButton}
             {helpButton}
             {aboutButton}
             {feedbackButton}
