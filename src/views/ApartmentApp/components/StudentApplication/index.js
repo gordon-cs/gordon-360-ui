@@ -6,16 +6,11 @@ import {
   CardHeader,
   CardContent,
   Collapse,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Button,
   Typography,
 } from '@material-ui/core/';
-import { Alert, AlertTitle } from '@material-ui/lab';
 import GordonLoader from '../../../../components/Loader';
+import AlertDialogBox from '../../../../components/AlertDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
 import ApplicantList from '../../../../components/ApartmentApplicantList';
 import HallSelection from '../../../../components/ApartmentHallSelection';
@@ -202,10 +197,9 @@ export default class StudentApplication extends Component {
   handleChangePrimaryAccepted = () => {
     if (this.state.newPrimaryApplicant) {
       try {
-        this.saveApplication(this.state.newPrimaryApplicant.ID, this.state.applicants);
+        this.saveApplication(this.state.newPrimaryApplicant.AD_Username, this.state.applicants);
       } catch (error) {
-        this.snackbarText = 'This feature is not yet implemented.';
-        // this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
+        this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
         this.snackbarSeverity = 'error';
         this.setState({ snackbarOpen: true, saving: 'failed' });
       }
@@ -262,7 +256,7 @@ export default class StudentApplication extends Component {
       this.setState({ snackbarOpen: true, saving: 'failed' });
     }
     if (this.saveButtonAlertTimeout === null) {
-      // Shows the success icon for 2 seconds and then returns back to normal button
+      // Shows the success icon for 6 seconds and then returns back to normal button
       this.saveButtonAlertTimeout = setTimeout(() => {
         this.saveButtonAlertTimeout = null;
         this.setState({ saving: false });
@@ -311,6 +305,15 @@ export default class StudentApplication extends Component {
           this.setState({ network: 'offline' });
         }
       });
+
+      const primaryApplicantAlertTest = (
+        <span>
+          If you change the primary applicant, you will no longer be able to edit this application
+          yourself.
+          <br />
+          Are you sure you want to change the primary applicant?
+        </span>
+      );
 
       /**
        * Gets status of current network connection for online/offline rendering
@@ -377,6 +380,17 @@ export default class StudentApplication extends Component {
                               onSaveButtonClick={this.handleSaveButtonClick}
                               authentication={this.props.authentication}
                             />
+                            <AlertDialogBox
+                              open={this.state.editDialogOpen}
+                              onClose={this.handleCloseDialog}
+                              severity={'warning'}
+                              title={'Change primary applicant?'}
+                              text={primaryApplicantAlertTest}
+                              cancelButtonClicked={this.handleCloseOkay}
+                              cancelButtonName={'Cancel'}
+                              confirmButtonClicked={this.handleChangePrimaryAccepted}
+                              confirmButtonName={'Accept'}
+                            />
                           </Grid>
                         </Grid>
                       </Grid>
@@ -432,54 +446,15 @@ export default class StudentApplication extends Component {
                           </Card>
                         </Grid>
                       </Grid>
-                      <Dialog
-                        open={this.state.editDialogOpen}
-                        onClose={this.handleCloseDialog}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                      >
-                        <DialogTitle id="alert-dialog-title">
-                          <Alert variant="filled" severity="warning">
-                            <AlertTitle>
-                              <strong>Change primary applicant?</strong>
-                            </AlertTitle>
-                          </Alert>
-                        </DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                            If you change the primary applicant, you will no longer be able to edit
-                            this application yourself.
-                            <br />
-                            Are you sure you want to change the primary applicant?
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button
-                            variant="contained"
-                            onClick={this.handleCloseOkay}
-                            color="primary"
-                            autofocus
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            variant="contained"
-                            onClick={this.handleChangePrimaryAccepted}
-                            color="primary"
-                          >
-                            Accept
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                      <SimpleSnackbar
-                        text={this.snackbarText}
-                        severity={this.snackbarSeverity}
-                        open={this.state.snackbarOpen}
-                        onClose={this.handleCloseSnackbar}
-                      />
                     </Collapse>
                   </Grid>
                 </Grid>
+                <SimpleSnackbar
+                  text={this.snackbarText}
+                  severity={this.snackbarSeverity}
+                  open={this.state.snackbarOpen}
+                  onClose={this.handleCloseSnackbar}
+                />
               </div>
             )}
           </div>

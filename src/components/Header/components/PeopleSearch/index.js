@@ -12,6 +12,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './people-search.css';
 import peopleSearch from '../../../../services/people-search';
 const MIN_QUERY_LENGTH = 2;
@@ -31,7 +32,7 @@ const renderInput = (inputProps) => {
         classes: {
           root: 'people-search-root',
           input: 'people-search-input',
-          // inputDisabled: 'people-search-disabled',
+          // inputDisabled: 'people-search-disabled', // `inputDisabled` is not a valid classes prop for this Material-UI component. See https://material-ui.com/api/autocomplete/#css
         },
         startAdornment: (
           <InputAdornment position="start">
@@ -345,14 +346,29 @@ export default class GordonPeopleSearch extends Component {
               {isOpen &&
               this.state.suggestions.length > 0 &&
               this.state.query.length >= MIN_QUERY_LENGTH ? (
-                <Paper square className="people-search-dropdown">
-                  {this.state.suggestions.map((suggestion) =>
-                    this.renderSuggestion({
-                      suggestion,
-                      itemProps: getItemProps({ item: suggestion.UserName }),
-                    }),
-                  )}
-                </Paper>
+                this.props.disableLink ? (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map((suggestion) =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({ item: suggestion.UserName }),
+                      }),
+                    )}
+                  </Paper>
+                ) : (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map((suggestion) =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({
+                          item: suggestion.UserName,
+                          component: Link,
+                          to: `/profile/${suggestion.UserName}`,
+                        }),
+                      }),
+                    )}
+                  </Paper>
+                )
               ) : isOpen &&
                 this.state.suggestions.length === 0 &&
                 this.state.query.length >= MIN_QUERY_LENGTH ? (

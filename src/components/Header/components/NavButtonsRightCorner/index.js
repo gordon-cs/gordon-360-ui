@@ -8,7 +8,6 @@ import {
   createHelpButton,
   createLinksButton,
   createTimesheetsButton,
-  createApartmentAppButton,
   createMyProfileButton,
   createSignInOutButton,
 } from './navButtons';
@@ -78,14 +77,6 @@ export const GordonNavButtonsRightCorner = (props) => {
 
   // Timesheets Button
   let timesheetsButton = createTimesheetsButton(
-    network,
-    props.authentication,
-    props.onClose,
-    props.openDialogBox,
-  );
-
-  // Apartment Application Button
-  let apartmentAppButton = createApartmentAppButton(
     network,
     props.authentication,
     props.onClose,
@@ -179,7 +170,6 @@ export const GordonNavButtonsRightCorner = (props) => {
             {myProfileButton}
             {linksButton}
             {timesheetsButton}
-            {apartmentAppButton}
             {helpButton}
             {aboutButton}
             {feedbackButton}
