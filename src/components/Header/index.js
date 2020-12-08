@@ -75,7 +75,13 @@ export default class GordonHeader extends Component {
     let currentPath = window.location.pathname;
     // Tab url regular expressions must be listed in the same order as the tabs, since the
     // indices of the elements in the array on the next line are mapped to the indices of the tabs
-    let urls = [/^\/$/, /^\/involvements\/?$|^\/activity/, /^\/events\/?$/, /^\/people$/];
+    let urls = [
+      /^\/$/,
+      /^\/involvements\/?$|^\/activity/,
+      /^\/events\/?$/,
+      /^\/people$/,
+      /^\/wellness$/,
+    ];
     this.value = false;
     for (let i = 0; i < urls.length; i++) {
       if (urls[i].test(currentPath)) {
