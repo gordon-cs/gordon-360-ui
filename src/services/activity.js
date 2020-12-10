@@ -91,7 +91,7 @@ function dataURItoBlob(dataURI) {
  * @param {String} activityCode Identifier for an activity
  * @return {Promise.<Activity>} Activity
  */
-const get = activityCode => http.get(`activities/${activityCode}`);
+const get = (activityCode) => http.get(`activities/${activityCode}`);
 
 /**
  * Get advisors for an activity
@@ -107,10 +107,10 @@ const getAdvisors = (activityCode, sessionCode) =>
  * @param {String} sessionCode Identifier for a session
  * @return {Promise.<Activity[]>} List of activities
  */
-const getAll = sessionCode =>
+const getAll = (sessionCode) =>
   http
     .get(`activities/session/${sessionCode}`)
-    .then(activities => sortBy(activities, activity => activity.ActivityDescription));
+    .then((activities) => sortBy(activities, (activity) => activity.ActivityDescription));
 
 /**
  * Get group administrators for an activity
@@ -135,7 +135,7 @@ const getStatus = (activityCode, sessionCode) =>
  * @param {String} sessionCode Identifier for a session
  * @return {Promise.<String[]>} List of activity types for a session
  */
-const getTypes = sessionCode => http.get(`activities/session/${sessionCode}/types`);
+const getTypes = (sessionCode) => http.get(`activities/session/${sessionCode}/types`);
 
 /**
  * Get all open activities for a session
@@ -160,7 +160,7 @@ const filter = (activities = [], typeDescription, search = '') => {
   let filteredActivities = activities;
   if (typeDescription) {
     filteredActivities = filteredActivities.filter(
-      activity => activity.ActivityTypeDescription === typeDescription,
+      (activity) => activity.ActivityTypeDescription === typeDescription,
     );
   }
 
@@ -188,7 +188,7 @@ const reopenActivity = async (activityCode, sessionCode) => {
  * @param {String} activityCode Identifier for an activity
  * @return {Promis<any>} Response body
  */
-const resetImage = async activityCode => {
+const resetImage = async (activityCode) => {
   return await http.post(`activities/${activityCode}/image/reset`, null);
 };
 
