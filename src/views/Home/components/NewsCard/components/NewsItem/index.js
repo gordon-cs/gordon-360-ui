@@ -3,7 +3,6 @@
 // Instead, the NewsItem.js file in the "News" view is being used
 // This file is being preserved for now as the news features are still in development
 
-
 // import { ListItem, ListItemText } from 'material-ui/List';
 import React, { Component } from 'react';
 import { Card, CardContent, Typography, Collapse } from '@material-ui/core';
@@ -28,9 +27,7 @@ export default class GordonNewsItem extends Component {
       <Card onClick={this.handleExpandClick} className="news-item">
         <CardContent>
           <Typography variant="h6">{subject}</Typography>
-          <Typography variant="subtitle2">
-            {submittedBy}
-          </Typography>
+          <Typography variant="subtitle2">{submittedBy}</Typography>
         </CardContent>
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <CardContent>

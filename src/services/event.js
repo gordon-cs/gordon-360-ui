@@ -132,9 +132,7 @@ function filterbyCategory(filters, allEvents) {
           allEvents[i].Event_Type_Name === 'Lecture/Speaker/Forum')
       ) {
         filteredEvents.push(allEvents[i]);
-      }
-
-      else if (filters.chapelCredits && allEvents[i].Category_Id === '85') {
+      } else if (filters.chapelCredits && allEvents[i].Category_Id === '85') {
         filteredEvents.push(allEvents[i]);
       }
     }

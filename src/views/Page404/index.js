@@ -27,17 +27,20 @@ const styles = {
 };
 
 export default class Page404 extends Component {
-
   render() {
-    return (      
-      <Grid container
-        justify="center" alignContent="center"
-        direction="column"
-        style={styles.main}
-      >
+    return (
+      <Grid container justify="center" alignContent="center" direction="column" style={styles.main}>
         {/* 404 message */}
         <Grid item style={styles.message}>
-          <Typography variant="h4" align="center" style={{fontSize: "calc(0.2vw + 0.8em)", color: "rgba(0, 0, 0, 0.54)", fontWeight: "bold"}}>
+          <Typography
+            variant="h4"
+            align="center"
+            style={{
+              fontSize: 'calc(0.2vw + 0.8em)',
+              color: 'rgba(0, 0, 0, 0.54)',
+              fontWeight: 'bold',
+            }}
+          >
             {message}
           </Typography>
         </Grid>
@@ -46,11 +49,18 @@ export default class Page404 extends Component {
           <img src={mascot} alt="Gordon Mascot" style={styles.mascot}></img>
         </Grid>
         {/* Scottie dog walking across bottom animation */}
-        <div style={{position: "fixed", bottom: "0px", height: "100px", width:"100%", fontSize: "15px"}}>
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '0px',
+            height: '100px',
+            width: '100%',
+            fontSize: '15px',
+          }}
+        >
           <ScottieDog></ScottieDog>
         </div>
       </Grid>
     );
-    }
-
+  }
 }
