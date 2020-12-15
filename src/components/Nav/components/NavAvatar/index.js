@@ -22,7 +22,6 @@ class GordonNavAvatar extends Component {
       image: null,
       name: null,
       username: null,
-      network: 'online',
     };
   }
   async componentWillMount() {
