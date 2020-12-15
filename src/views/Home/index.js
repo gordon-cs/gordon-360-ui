@@ -9,42 +9,16 @@ import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
 import user from '../../services/user';
 import wellness from '../../services/wellness';
-import storage from '../../services/storage';
 import Login from '../Login';
 import './home.css';
+import { useNetworkStatus } from '../../context/NetworkContext';
 
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
-  const [networkStatus, setNetworkStatus] = useState('online');
   const [hasAnswered, setHasAnswered] = useState(null);
-
-  useEffect(() => {
-    // Retrieve network status from local storage or default to online
-    try {
-      setNetworkStatus(storage.get('network-status'));
-    } catch (error) {
-      setNetworkStatus('online');
-    }
-
-    /* Used to re-render the page when the network connection changes.
-     * The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      setNetworkStatus((prevStatus) => {
-        if (
-          event.origin === window.location.origin &&
-          (event.data === 'online' || event.data === 'offline')
-        ) {
-          return event.data;
-        }
-        return prevStatus;
-      });
-    });
-
-    return () => window.removeEventListener('message', () => {});
-  }, []);
+  const networkStatus = useNetworkStatus();
 
   useEffect(() => {
     if (authentication) {
