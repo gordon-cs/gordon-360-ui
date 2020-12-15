@@ -11,11 +11,14 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import React, { Component } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
 import peopleSearch from '../../../../services/people-search';
+import { useNetworkIsOnline } from '../../../../context/NetworkContext';
+
 const MIN_QUERY_LENGTH = 2;
+const BREAKPOINT_WIDTH = 400;
 
 //  TextBox Input Field
 const renderInput = (inputProps) => {
@@ -45,32 +48,21 @@ const renderInput = (inputProps) => {
   );
 };
 
-export default class GordonPeopleSearch extends Component {
-  constructor(props) {
-    super(props);
-    this.getSuggestions = this.getSuggestions.bind(this);
-    this.renderNoResult = this.renderNoResult.bind(this);
-    this.renderSuggestion = this.renderSuggestion.bind(this);
-    this.reset = this.reset.bind(this);
-    this.handleKeys = this.handleKeys.bind(this);
-    this.state = {
-      suggestions: [],
-      suggestionIndex: -1,
-      query: String,
-      highlightQuery: String,
-      loginDialog: false,
-      network: 'online',
-    };
-    this.isMobileView = false;
-    this.breakpointWidth = 400;
-  }
+const GordonPeopleSearch = (props) => {
+  const [suggestions, setSuggestions] = useState([]);
+  const [suggestionIndex, setSuggestionIndex] = useState(-1);
+  const [query, setQuery] = useState('');
+  const [highlightQuery, setHighlightQuery] = useState('');
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
+  const downshiftRef = useRef(null);
+  const isOnline = useNetworkIsOnline();
 
-  async getSuggestions(query) {
-    query = query.replace(/[^a-zA-Z0-9'\-.\s]/gm, '');
-
+  const getSuggestions = async (query) => {
+    setQuery(query.replace(/[^a-zA-Z0-9'\-.\s]/gm, ''));
     // Trim beginning or trailing spaces or periods from query text
-    var highlightQuery = query.replace(/^[\s.]+|[\s.]+$/gm, '');
-    this.setState({ highlightQuery, query });
+    query.replace(/^[\s.]+|[\s.]+$/gm, '');
+    setHighlightQuery(query.replace(/^[\s.]+|[\s.]+$/gm, ''));
 
     // Bail if query is missing or is less than minimum query length
     if (!query || query.length < MIN_QUERY_LENGTH) {
@@ -80,60 +72,55 @@ export default class GordonPeopleSearch extends Component {
     //so apparently everything breaks if the first letter is capital, which is what happens on mobile
     //sometimes and then you spend four hours trying to figure out why downshift is not working
     //but really its just that its capitalized what the heck
-    query = query.toLowerCase();
+    setQuery((prevQuery) => prevQuery.toLowerCase());
 
-    let suggestions = await peopleSearch.search(query);
+    peopleSearch.search(query).then((s) => setSuggestions(s));
+  };
 
-    this.setState({ suggestions });
-  }
-
-  handleKeys = (key) => {
-    let suggestionIndex = this.state.suggestionIndex;
-    let suggestionList = this.state.suggestions;
+  const handleKeys = (key) => {
     let theChosenOne;
 
     if (key === 'Enter') {
-      if (suggestionList && suggestionList.length > 0) {
+      if (suggestions && suggestions.length > 0) {
         suggestionIndex === -1
-          ? (theChosenOne = suggestionList[0].UserName)
-          : (theChosenOne = suggestionList[suggestionIndex].UserName);
+          ? (theChosenOne = suggestions[0].UserName)
+          : (theChosenOne = suggestions[suggestionIndex].UserName);
         window.location.pathname = '/profile/' + theChosenOne;
-        this.reset();
+        reset();
       }
     }
     if (key === 'ArrowDown') {
-      suggestionIndex++;
-      suggestionIndex = suggestionIndex % suggestionList.length;
-      this.setState({ suggestionIndex });
+      setSuggestionIndex(suggestionIndex + (1 % suggestions.length));
     }
     if (key === 'ArrowUp') {
-      if (suggestionIndex !== -1) suggestionIndex--;
-      if (suggestionIndex === -1) suggestionIndex = suggestionList.length - 1;
-      this.setState({ suggestionIndex });
+      let newIndex;
+      if (suggestionIndex !== -1) newIndex = suggestionIndex - 1;
+      if (suggestionIndex === -1) newIndex = suggestions.length - 1;
+      setSuggestionIndex(newIndex);
     }
     if (key === 'Backspace') {
-      this.setState({ suggestions: [] });
+      setSuggestions([]);
     }
   };
 
-  reset() {
+  const reset = () => {
     // Remove chosen username from the input
-    this.downshift.clearSelection();
+    downshiftRef.current.clearSelection();
 
     // Remove loaded suggestions
-    this.downshift.clearItems();
+    downshiftRef.current.clearItems();
 
-    this.setState({ suggestionIndex: -1 });
-  }
+    setSuggestionIndex(-1);
+  };
 
-  highlightParse(text) {
+  const highlightParse = (text) => {
     return text.replace(/ |\./, '|');
-  }
+  };
 
   // Highlight first occurrence of 'highlight' in 'text'
-  getHighlightedText(text, highlight) {
+  const getHighlightedText = (text, highlight) => {
     // Split text on highlight term, include term itself into parts, ignore case
-    var highlights = this.highlightParse(highlight);
+    var highlights = highlightParse(highlight);
     var parts = text.split(new RegExp(`(${highlights})`, 'gi'));
     var hasMatched = false;
     return (
@@ -149,9 +136,9 @@ export default class GordonPeopleSearch extends Component {
         )}
       </span>
     );
-  }
+  };
 
-  renderNoResult() {
+  const renderNoResult = () => {
     return (
       <MenuItem className="people-search-suggestion" style={{ paddingBottom: '5px' }}>
         <Typography className="no-results" variant="body2">
@@ -162,12 +149,10 @@ export default class GordonPeopleSearch extends Component {
         </Typography>
       </MenuItem>
     );
-  }
+  };
 
-  renderSuggestion(params) {
+  const renderSuggestion = (params) => {
     const { suggestion, itemProps } = params;
-    let suggestionIndex = this.state.suggestionIndex;
-    let suggestionList = this.state.suggestions;
     // Bail if any required properties are missing
     if (!suggestion.UserName || !suggestion.FirstName || !suggestion.LastName) {
       return null;
@@ -178,10 +163,10 @@ export default class GordonPeopleSearch extends Component {
         key={suggestion.UserName}
         component={Link}
         to={`/profile/${suggestion.UserName}`}
-        onClick={this.reset}
+        onClick={reset}
         className={
-          suggestionList && suggestionList[suggestionIndex] !== undefined
-            ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
+          suggestions && suggestions[suggestionIndex] !== undefined
+            ? suggestion.UserName === suggestions[suggestionIndex].UserName &&
               suggestionIndex !== -1
               ? 'people-search-suggestion-selected '
               : 'people-search-suggestion'
@@ -193,21 +178,12 @@ export default class GordonPeopleSearch extends Component {
               name part of the query in the first name, and only highlight occurrences of the last
               name part of the query in the last name. Otherwise, highlight occurrences of the
               query in the first and last name. */}
-          {this.state.highlightQuery.match(/ |\./)
+          {highlightQuery.match(/ |\./)
             ? [
-                this.getHighlightedText(
-                  suggestion.FirstName + ' ',
-                  this.state.highlightQuery.split(/ |\./)[0],
-                ),
-                this.getHighlightedText(
-                  suggestion.LastName,
-                  this.state.highlightQuery.split(/ |\./)[1],
-                ),
+                getHighlightedText(suggestion.FirstName + ' ', highlightQuery.split(/ |\./)[0]),
+                getHighlightedText(suggestion.LastName, highlightQuery.split(/ |\./)[1]),
               ].map((e, key) => <span key={key}>{e}</span>)
-            : this.getHighlightedText(
-                suggestion.FirstName + ' ' + suggestion.LastName,
-                this.state.highlightQuery,
-              )}
+            : getHighlightedText(suggestion.FirstName + ' ' + suggestion.LastName, highlightQuery)}
         </Typography>
         <Typography variant="caption" component="p">
           {/* If the first name matches either part (first or last name) of the query, don't
@@ -216,185 +192,143 @@ export default class GordonPeopleSearch extends Component {
               If the username contains a period,
               If the last name matches either part (first of last name) of the query, don't
               highlight occurrences of the query in the last name part of the username. */}
-          {!suggestion.FirstName.match(
-            new RegExp(`(${this.highlightParse(this.state.highlightQuery)})`, 'i'),
-          )
-            ? this.getHighlightedText(suggestion.UserName.split('.')[0], this.state.highlightQuery)
+          {!suggestion.FirstName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
+            ? getHighlightedText(suggestion.UserName.split('.')[0], highlightQuery)
             : suggestion.UserName.split('.')[0]}
           {suggestion.UserName.includes('.') && '.'}
           {suggestion.UserName.includes('.') &&
-            (!suggestion.LastName.match(
-              new RegExp(`(${this.highlightParse(this.state.highlightQuery)})`, 'i'),
-            )
-              ? this.getHighlightedText(
-                  suggestion.UserName.split('.')[1],
-                  this.state.highlightQuery,
-                )
+            (!suggestion.LastName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
+              ? getHighlightedText(suggestion.UserName.split('.')[1], highlightQuery)
               : suggestion.UserName.split('.')[1])}
         </Typography>
       </MenuItem>
     );
-  }
+  };
 
   //Makes People Search placeholder switch to People to avoid cutting it off
   //Has to rerender on screen resize in order to switch to the mobile view
-  resize = () => {
-    if (this.breakpointPassed()) {
-      this.isMobileView = !this.isMobileView;
-      this.forceUpdate();
+  const resize = () => {
+    if (breakpointPassed()) {
+      setIsMobileView((i) => !i);
     }
   };
 
   //checks if the screen has been resized past the mobile breakpoint
   //allows for forceUpdate to only be called when necessary, improving resizing performance
-  breakpointPassed() {
-    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
-    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
+  const breakpointPassed = () => {
+    if (isMobileView && window.innerWidth > BREAKPOINT_WIDTH) return true;
+    if (!isMobileView && window.innerWidth < BREAKPOINT_WIDTH) return true;
     else return false;
-  }
+  };
 
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
-  }
+  useEffect(() => {
+    window.addEventListener('resize', resize);
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
-  }
+    return () => window.removeEventListener('resize', resize);
+  });
 
-  unauthenticatedSearch() {
-    this.setState({ loginDialog: true });
-  }
+  const unauthenticatedSearch = () => {
+    setShowLoginDialog(true);
+  };
 
-  handleClose() {
-    this.setState({ loginDialog: false });
-  }
+  const handleClose = () => {
+    setShowLoginDialog(false);
+  };
 
-  render() {
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
-    let holder = 'People Search';
-    if (window.innerWidth < this.breakpointWidth) {
-      holder = 'People';
-      if (networkStatus === 'offline') holder = 'Offline';
-    } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
-
-    let content;
-    if (this.props.authentication) {
-      // Creates the People Search Bar depending on the status of the network found in local storage
-      content = (
-        // Assign reference to Downshift to `this` for usage elsewhere in the component
-        <Downshift
-          ref={(downshift) => {
-            this.downshift = downshift;
-          }}
-        >
-          {({ getInputProps, getItemProps, isOpen }) => (
-            <span className="gordon-people-search" key="suggestion-list-span">
-              {networkStatus === 'online'
-                ? renderInput(
-                    getInputProps({
-                      placeholder: holder,
-                      onChange: (event) => this.getSuggestions(event.target.value),
-                      onKeyDown: (event) => this.handleKeys(event.key),
-                    }),
-                  )
-                : renderInput(
-                    getInputProps({
-                      placeholder: holder,
-                      style: { color: 'white' },
-                      disabled: { networkStatus },
-                    }),
-                  )}
-              {isOpen &&
-              this.state.suggestions.length > 0 &&
-              this.state.query.length >= MIN_QUERY_LENGTH ? (
-                <Paper square className="people-search-dropdown">
-                  {this.state.suggestions.map((suggestion) =>
-                    this.renderSuggestion({
-                      suggestion,
-                      itemProps: getItemProps({ item: suggestion.UserName }),
-                    }),
-                  )}
-                </Paper>
-              ) : isOpen &&
-                this.state.suggestions.length === 0 &&
-                this.state.query.length >= MIN_QUERY_LENGTH ? (
-                // Styling copied from how renderSuggestion is done with
-                // only bottom padding changed and 'no-results' class used
-                <Paper square className="people-search-dropdown">
-                  {this.renderNoResult()}
-                </Paper>
-              ) : null}
-            </span>
-          )}
-        </Downshift>
-      );
+  const placeholderText = () => {
+    if (window.innerWidth < BREAKPOINT_WIDTH) {
+      // Mobile placeholder
+      return isOnline ? 'People' : 'Offline';
     } else {
-      content = (
-        <span className="gordon-people-search">
-          <TextField
-            placeholder="People Search"
-            value={''}
-            onChange={(event) => this.unauthenticatedSearch()}
-            className={'text-field'}
-            InputProps={{
-              disableUnderline: true,
-              classes: {
-                root: 'people-search-root',
-                input: 'people-search-input',
-              },
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <Dialog
-            open={this.state.loginDialog}
-            onClose={(clicked) => this.handleClose()}
-            aria-labelledby="login-dialog-title"
-            aria-describedby="login-dialog-description"
-          >
-            <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="login-dialog-description">
-                You are not logged in. Please log in to use People Search.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="contained" onClick={(clicked) => this.handleClose()} color="primary">
-                Okay
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </span>
-      );
+      return isOnline ? 'People Search' : 'Offline-Unavailable';
     }
-    return content;
+  };
+
+  let content;
+  if (props.authentication) {
+    content = (
+      // Assign reference to Downshift to `this` for usage elsewhere in the component
+      <Downshift ref={downshiftRef}>
+        {({ getInputProps, getItemProps, isOpen }) => (
+          <span className="gordon-people-search" key="suggestion-list-span">
+            {isOnline
+              ? renderInput(
+                  getInputProps({
+                    placeholder: placeholderText(),
+                    onChange: (event) => getSuggestions(event.target.value),
+                    onKeyDown: (event) => handleKeys(event.key),
+                  }),
+                )
+              : renderInput(
+                  getInputProps({
+                    placeholder: placeholderText(),
+                    style: { color: 'white' },
+                    disabled: { isOnline },
+                  }),
+                )}
+            {isOpen && suggestions.length > 0 && query.length >= MIN_QUERY_LENGTH ? (
+              <Paper square className="people-search-dropdown">
+                {suggestions.map((suggestion) =>
+                  renderSuggestion({
+                    suggestion,
+                    itemProps: getItemProps({ item: suggestion.UserName }),
+                  }),
+                )}
+              </Paper>
+            ) : isOpen && suggestions.length === 0 && query.length >= MIN_QUERY_LENGTH ? (
+              // Styling copied from how renderSuggestion is done with
+              // only bottom padding changed and 'no-results' class used
+              <Paper square className="people-search-dropdown">
+                {renderNoResult()}
+              </Paper>
+            ) : null}
+          </span>
+        )}
+      </Downshift>
+    );
+  } else {
+    content = (
+      <span className="gordon-people-search">
+        <TextField
+          placeholder={placeholderText()}
+          value={''}
+          onChange={(event) => unauthenticatedSearch()}
+          className={'text-field'}
+          InputProps={{
+            disableUnderline: true,
+            classes: {
+              root: 'people-search-root',
+              input: 'people-search-input',
+            },
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <Dialog
+          open={showLoginDialog}
+          onClose={(clicked) => handleClose()}
+          aria-labelledby="login-dialog-title"
+          aria-describedby="login-dialog-description"
+        >
+          <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="login-dialog-description">
+              You are not logged in. Please log in to use People Search.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={(clicked) => handleClose()} color="primary">
+              Okay
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </span>
+    );
   }
-}
+  return content;
+};
+
+export default GordonPeopleSearch;
