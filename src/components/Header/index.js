@@ -7,13 +7,13 @@ import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
-import WorkIcon from '@material-ui/icons/Work';
+// import WorkIcon from '@material-ui/icons/Work';
 import WellnessIcon from '@material-ui/icons/LocalHospital';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
 import { Route, Switch, NavLink } from 'react-router-dom';
 import './header.css';
@@ -22,9 +22,9 @@ import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import { GordonNavButtonsRightCorner } from './components/NavButtonsRightCorner';
 import routes from '../../routes';
 import { projectName } from '../../project-name';
-import storage from '../../services/storage';
 import GordonDialogBox from '../GordonDialogBox/index';
 import { windowBreakWidths } from '../../theme';
+import { useNetworkStatus } from '../../context/NetworkContext';
 
 const getRouteName = (route) => {
   if (route.name) {
@@ -43,35 +43,18 @@ const getRouteName = (route) => {
   );
 };
 
-export default class GordonHeader extends Component {
-  constructor(props) {
-    super(props);
-    this.updateTabHighlight = this.updateTabHighlight.bind(this);
-    this.createPeopleTab = this.createPeopleTab.bind(this);
-    this.openDialogBox = this.openDialogBox.bind(this);
-    this.closeDialogBox = this.closeDialogBox.bind(this);
-    this.handleRightSideMenu = this.handleRightSideMenu.bind(this);
-
-    this.state = {
-      value: null,
-      dialogBoxOpened: false,
-      dialogType: '',
-      dialogReason: '',
-      network: 'online',
-      openRightSideMenu: false,
-    };
-  }
-
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
+const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
+  const [tabIndex, setTabIndex] = useState(null);
+  const [dialog, setDialog] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const network = useNetworkStatus();
 
   /**
    * Update the tab highlight indicator based on the url
    *
    * The checks use regular expressions to check for matches in the url.
    */
-  updateTabHighlight() {
+  const updateTabHighlight = () => {
     let currentPath = window.location.pathname;
     // Tab url regular expressions must be listed in the same order as the tabs, since the
     // indices of the elements in the array on the next line are mapped to the indices of the tabs
@@ -82,81 +65,29 @@ export default class GordonHeader extends Component {
       /^\/people$/,
       /^\/wellness$/,
     ];
-    this.value = false;
+    setTabIndex(false);
     for (let i = 0; i < urls.length; i++) {
       if (urls[i].test(currentPath)) {
-        this.value = i;
+        setTabIndex(i);
       }
     }
-  }
+  };
 
-  componentWillUpdate() {
-    this.updateTabHighlight();
-  }
+  useEffect(() => {
+    updateTabHighlight();
+  });
 
-  componentWillMount() {
-    this.value = false;
-    this.updateTabHighlight();
-  }
-
-  componentDidMount() {
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    let network;
-    /* Attempts to get the network status from local storage.
-     * If not found, the default value is online
-     */
-    try {
-      network = storage.get('network-status');
-    } catch (error) {
-      // Defaults the network to online if not found in local storage
-      network = 'online';
-    }
-    // Saves the network's status to this component's state
-    this.setState({ network });
-
-    window.addEventListener('resize', (event) => {
+  useEffect(() => {
+    const resize = (event) => {
       if (event.target.innerWidth < windowBreakWidths.breakMD) {
-        if (this.state.openRightSideMenu) {
-          this.setState({ openRightSideMenu: false });
-        }
+        setIsMenuOpen(false);
       }
-    });
-  }
+    };
 
-  componentWillUnmount() {
-    // Removes the window's event listeners before unmounting the component
-    window.removeEventListener('message', () => {});
-    window.removeEventListener('resize', () => {});
-  }
+    window.addEventListener('resize', resize);
 
-  /**
-   * Sets the state of whether the menu should open or not. It also saves its opener HTML anchor.
-   */
-  handleRightSideMenu() {
-    this.state.openRightSideMenu === false
-      ? this.setState({ openRightSideMenu: true })
-      : this.setState({ openRightSideMenu: false });
-  }
+    return () => window.removeEventListener('resize', resize);
+  }, [isMenuOpen]);
 
   /**
    * Creates a dialog box.
@@ -165,337 +96,151 @@ export default class GordonHeader extends Component {
    *
    * @returns {JSX} The JSX of the dialog box
    */
-  createDialogBox() {
-    // Type - Offline
-    if (this.state.dialogType === 'offline') {
+  const createDialogBox = () => {
+    if (dialog === 'offline') {
       return (
         <GordonDialogBox
-          open={this.state.dialogBoxOpened}
-          onClose={this.closeDialogBox}
+          open={dialog}
+          onClose={() => setDialog(null)}
           labelledby={'offline-dialog'}
           describedby={'feature-deactivated'}
           title={'Offline Mode'}
           text={
             'This feature is unavailable offline. Please reconnect to internet to access this feature.'
           }
-          buttonClicked={this.closeDialogBox}
+          buttonClicked={() => setDialog(null)}
           buttonName={'Okay'}
         />
       );
-    }
-    // Type - Unauthorized
-    else if (this.state.dialogType === 'unauthorized') {
+    } else if (dialog === 'unauthorized') {
       return (
         <GordonDialogBox
-          open={this.state.dialogBoxOpened}
-          onClose={this.closeDialogBox}
+          open={dialog}
+          onClose={() => setDialog(null)}
           labelledby={'unauthorized-dialog'}
           describedby={'feature-unavailable'}
           title={'Credentials Needed'}
-          text={`This feature is unavailable while not logged in. Please log in to ${this.state.dialogReason}.`}
-          buttonClicked={this.closeDialogBox}
+          text={`This feature is unavailable while not logged in. Please log in to access it.`}
+          buttonClicked={() => setDialog(null)}
           buttonName={'Okay'}
         />
       );
-    }
-  }
-
-  /**
-   * Opens the dialog box.
-   *
-   * Depending on the type and reason for opening the dialog box, the dialog box's content is made.
-   *
-   * @param {String} type The type of dialog box requested.
-   * @param {String} feature The feature the user attempted to access
-   */
-  openDialogBox(type, feature) {
-    let reason = '';
-    if (feature === 'people search') {
-      reason = 'use People Search';
-    } else if (feature === 'timesheets view') {
-      reason = 'view Timesheets';
-    } else if (feature === 'wellness check') {
-      reason = 'check Wellness';
-    } else if (feature === 'my profile view') {
-      reason = 'view your personal profile';
     } else {
-      reason = '';
+      return null;
     }
+  };
 
-    this.setState({ dialogBoxOpened: true, dialogType: type, dialogReason: reason });
-  }
-
-  /**
-   * Closes the dialog box.
-   *
-   * While closing the dialog box, all of its text content is erased.
-   */
-  closeDialogBox() {
-    this.setState({
-      dialogBoxOpened: false,
-      dialogType: '',
-      dialogReason: '',
-    });
-  }
-
-  /**
-   * Creates the People Tab.
-   *
-   * Depending on the status of the network and authentication, the People tab is created.
-   *
-   * @return {JSX} The JSX of the People tab.
-   */
-  createPeopleTab() {
-    let peopleTab;
-
-    // Network Status: Online
-    if (this.state.network === 'online') {
-      // Network Status: Online - Authenticated
-      if (this.props.authentication) {
-        peopleTab = (
-          <Tab
-            className="tab"
-            icon={<PeopleIcon />}
-            label="People"
-            component={NavLink}
-            to="/people"
-          />
-        );
-      }
-      // Network Status: Online -  Not Authenticated
-      else {
-        peopleTab = (
-          <div onClick={(clicked) => this.openDialogBox('unauthorized', 'people search')}>
-            <Tab
-              className="tab"
-              icon={<PeopleIcon />}
-              label="People"
-              component={Button}
-              style={{ color: 'white' }}
-              disabled={true}
-            />
-          </div>
-        );
-      }
-    }
-    // Network Status: Offline
-    else {
-      peopleTab = (
+  const disablableTab = (name, icon) => {
+    if (network === 'offline') {
+      return (
         <div
-          onClick={(clicked) => {
-            this.openDialogBox('offline', '');
+          onClick={() => {
+            setDialog('offline');
           }}
         >
           <Tab
             className="tab"
-            icon={<PeopleIcon />}
-            label="People"
+            icon={icon}
+            label={name}
             component={Button}
             style={{ color: 'white' }}
             disabled={true}
           />
         </div>
       );
-    }
-
-    return peopleTab;
-  }
-
-  /**
-   * Creates the Timesheets button.
-   *
-   * Depending on the status of the network and authentication, the Timesheets button is created.
-   *
-   * @return {JSX} The JSX of the Timesheets button.
-   */
-  createTimesheetsTab() {
-    let timesheetsTab;
-
-    // Network Status: Online
-    if (this.state.network === 'online') {
-      // Network Status: Online - Authenticated
-      if (this.props.authentication) {
-        timesheetsTab = (
+    } else if (!authentication) {
+      return (
+        <div onClick={() => setDialog('unauthorized')}>
           <Tab
             className="tab"
-            icon={<WorkIcon />}
-            label="Timesheets"
-            component={NavLink}
-            to="/timesheets"
-          />
-        );
-      }
-      // Network Status: Online - Not Authenticated
-      else {
-        timesheetsTab = (
-          <div onClick={(clicked) => this.openDialogBox('unauthorized', 'timesheets view')}>
-            <Tab
-              className="tab"
-              icon={<WorkIcon />}
-              label="Timesheets"
-              component={NavLink}
-              to="/timesheets"
-              disabled={true}
-            />
-          </div>
-        );
-      }
-    }
-    // Network Status: Offline
-    else {
-      timesheetsTab = (
-        <div onClick={(clicked) => this.openDialogBox('offline', '')}>
-          <Tab
-            className="tab"
-            icon={<WorkIcon />}
-            label="Timesheets"
-            component={NavLink}
-            to="/timesheets"
-            disabled={true}
-          />
-        </div>
-      );
-    }
-
-    return timesheetsTab;
-  }
-
-  /**
-   * Creates the Wellness Check button.
-   *
-   * Depending on the status of the network and authentication, the Wellness Check button is created.
-   *
-   * @return {JSX} The JSX of the Wellness Check button.
-   */
-  createWellnessTab() {
-    let wellnessTab;
-    // Network Status: Online
-    if (this.state.network === 'online') {
-      // Network Status: Online - Authenticated
-      if (this.props.authentication) {
-        wellnessTab = (
-          <Tab
-            className="tab"
-            icon={<WellnessIcon />}
-            label="Wellness"
-            component={NavLink}
-            to="/wellness"
-          />
-        );
-      }
-      // Network Status: Online -  Not Authenticated
-      else {
-        wellnessTab = (
-          <div onClick={(clicked) => this.openDialogBox('unauthorized', 'wellness check')}>
-            <Tab
-              className="tab"
-              icon={<WellnessIcon />}
-              label="Wellness"
-              component={Button}
-              style={{ color: 'white' }}
-              disabled={true}
-            />
-          </div>
-        );
-      }
-    }
-    // Network Status: Offline
-    else {
-      wellnessTab = (
-        <div
-          onClick={(clicked) => {
-            this.openDialogBox('offline', '');
-          }}
-        >
-          <Tab
-            className="tab"
-            icon={<WellnessIcon />}
-            label="Wellness"
+            icon={icon}
+            label={name}
             component={Button}
             style={{ color: 'white' }}
             disabled={true}
           />
         </div>
       );
+    } else {
+      const route = `/${name}`;
+      return <Tab className="tab" icon={icon} label={name} component={NavLink} to={route} />;
     }
+  };
 
-    return wellnessTab;
-  }
-  render() {
-    return (
-      <section className="gordon-header">
-        <AppBar className="app-bar" position="static">
-          <Toolbar>
-            <IconButton
-              className="menu-button"
-              color="primary"
-              aria-label="open drawer"
-              onClick={this.props.onDrawerToggle}
-            >
-              <MenuIcon className="menu-button-icon" />
-            </IconButton>
+  return (
+    <section className="gordon-header">
+      <AppBar className="app-bar" position="static">
+        <Toolbar>
+          <IconButton
+            className="menu-button"
+            color="primary"
+            aria-label="open drawer"
+            onClick={onDrawerToggle}
+          >
+            <MenuIcon className="menu-button-icon" />
+          </IconButton>
 
-            <Typography className="title disable-select" variant="h6" color="inherit">
-              <Switch>
-                {routes.map((route) => (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    exact={route.exact}
-                    component={getRouteName(route)}
-                  />
-                ))}
-              </Switch>
-            </Typography>
-
-            <div className="center-container">
-              <Tabs centered value={this.value} onChange={this.handleChange}>
-                <Tab className="tab" icon={<HomeIcon />} label="Home" component={NavLink} to="/" />
-                <Tab
-                  className="tab"
-                  icon={<LocalActivityIcon />}
-                  label="Involvements"
-                  component={NavLink}
-                  to="/involvements"
+          <Typography className="title disable-select" variant="h6" color="inherit">
+            <Switch>
+              {routes.map((route) => (
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  exact={route.exact}
+                  component={getRouteName(route)}
                 />
-                <Tab
-                  className="tab"
-                  icon={<EventIcon />}
-                  label="Events"
-                  component={NavLink}
-                  to="/events"
-                />
-                {this.createPeopleTab()}
-                {/* Uncomment when re-enabling timesheets link */}
-                {/* this.createTimesheetsTab() */}
-                {this.createWellnessTab()}
-              </Tabs>
-            </div>
+              ))}
+            </Switch>
+          </Typography>
 
-            <GordonPeopleSearch authentication={this.props.authentication} />
+          <div className="center-container">
+            <Tabs centered value={tabIndex} onChange={(event, value) => setTabIndex(value)}>
+              <Tab className="tab" icon={<HomeIcon />} label="Home" component={NavLink} to="/" />
+              <Tab
+                className="tab"
+                icon={<LocalActivityIcon />}
+                label="Involvements"
+                component={NavLink}
+                to="/involvements"
+              />
+              <Tab
+                className="tab"
+                icon={<EventIcon />}
+                label="Events"
+                component={NavLink}
+                to="/events"
+              />
+              {disablableTab('People', <PeopleIcon />)}
+              {/* {disablableTab('Timesheets', WorkIcon)} */}
+              {disablableTab('Wellness', <WellnessIcon />)}
+            </Tabs>
+          </div>
 
-            <GordonNavAvatarRightCorner
-              onSignOut={this.props.onSignOut}
-              authentication={this.props.authentication}
-              onClick={this.handleRightSideMenu}
-              menuOpened={this.state.openRightSideMenu}
-            />
+          <GordonPeopleSearch authentication={authentication} />
 
-            <GordonNavButtonsRightCorner
-              open={this.state.openRightSideMenu}
-              openDialogBox={this.openDialogBox}
-              onSignOut={this.props.onSignOut}
-              authentication={this.props.authentication}
-              onClose={this.handleRightSideMenu}
-            />
+          <GordonNavAvatarRightCorner
+            onSignOut={onSignOut}
+            authentication={authentication}
+            onClick={() => setIsMenuOpen((o) => !o)}
+            menuOpened={isMenuOpen}
+          />
 
-            {this.createDialogBox()}
-          </Toolbar>
-        </AppBar>
-      </section>
-    );
-  }
-}
+          <GordonNavButtonsRightCorner
+            open={isMenuOpen}
+            openDialogBox={setDialog}
+            onSignOut={onSignOut}
+            authentication={authentication}
+            onClose={() => setIsMenuOpen((o) => !o)}
+          />
+
+          {createDialogBox()}
+        </Toolbar>
+      </AppBar>
+    </section>
+  );
+};
+
+export default GordonHeader;
 
 GordonHeader.propTypes = {
   onDrawerToggle: PropTypes.func.isRequired,
