@@ -19,12 +19,12 @@ import { Route, Switch, NavLink } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
-import { GordonNavButtonsRightCorner } from './components/NavButtonsRightCorner';
+import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
 import routes from '../../routes';
 import { projectName } from '../../project-name';
 import GordonDialogBox from '../GordonDialogBox/index';
 import { windowBreakWidths } from '../../theme';
-import { useNetworkStatus } from '../../context/NetworkContext';
+import { useNetworkIsOnline } from '../../context/NetworkContext';
 
 const getRouteName = (route) => {
   if (route.name) {
@@ -47,7 +47,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   const [tabIndex, setTabIndex] = useState(null);
   const [dialog, setDialog] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const network = useNetworkStatus();
+  const isOnline = useNetworkIsOnline();
 
   /**
    * Update the tab highlight indicator based on the url
@@ -131,7 +131,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   };
 
   const disablableTab = (name, icon) => {
-    if (network === 'offline') {
+    if (!isOnline) {
       return (
         <div
           onClick={() => {

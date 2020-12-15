@@ -11,14 +11,14 @@ import user from '../../services/user';
 import wellness from '../../services/wellness';
 import Login from '../Login';
 import './home.css';
-import { useNetworkStatus } from '../../context/NetworkContext';
+import { useNetworkIsOnline } from '../../context/NetworkContext';
 
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
   const [hasAnswered, setHasAnswered] = useState(null);
-  const networkStatus = useNetworkStatus();
+  const isOnline = useNetworkIsOnline();
 
   useEffect(() => {
     if (authentication) {
@@ -53,7 +53,7 @@ const Home = ({ authentication, onLogIn }) => {
         <Login onLogIn={onLogIn} />
       </div>
     );
-  } else if (networkStatus === 'online' && !hasAnswered) {
+  } else if (isOnline && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;

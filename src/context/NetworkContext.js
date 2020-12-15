@@ -12,7 +12,7 @@ const NetworkConext = createContext();
  *
  * @return {string} 'online' if connected to the network, 'offline' otherwise.
  */
-export const useNetworkStatus = () => {
+export const useNetworkIsOnline = () => {
   const context = useContext(NetworkConext);
   if (context === undefined) {
     throw new Error(`useNetworkStatus must be called within NetworkContextProvider`);
@@ -22,37 +22,38 @@ export const useNetworkStatus = () => {
 };
 
 const NetworkContextProvider = (props) => {
-  const [networkStatus, setNetworkStatus] = useState('online');
+  const [isOnline, setIsOnline] = useState('online');
 
   useEffect(() => {
     // Retrieve network status from local storage or default to online
     try {
-      setNetworkStatus(storage.get('network-status'));
+      const networkStatus = storage.get('network-status');
+      setIsOnline(networkStatus === 'online');
     } catch (error) {
-      setNetworkStatus('online');
+      setIsOnline(true);
     }
 
     /* Used to re-render the page when the network connection changes.
      * The origin of the message is checked to prevent cross-site scripting attacks
      */
+    const updateNetworkStatus = (event) => {
+      setIsOnline((prevStatus) => {
+        if (
+          event.origin === window.location.origin &&
+          (event.data === 'online' || event.data === 'offline')
+        ) {
+          return event.data === 'online';
+        }
+        return prevStatus;
+      });
+    };
+
     window.addEventListener('message', updateNetworkStatus);
 
     return () => window.removeEventListener('message', updateNetworkStatus);
   }, []);
 
-  const updateNetworkStatus = (event) => {
-    setNetworkStatus((prevStatus) => {
-      if (
-        event.origin === window.location.origin &&
-        (event.data === 'online' || event.data === 'offline')
-      ) {
-        return event.data;
-      }
-      return prevStatus;
-    });
-  };
-
-  return <NetworkConext.Provider value={networkStatus}>{props.children}</NetworkConext.Provider>;
+  return <NetworkConext.Provider value={isOnline}>{props.children}</NetworkConext.Provider>;
 };
 
 export default NetworkContextProvider;
