@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { signOut } from '../../../../services/auth';
-import {
-  createAboutButton,
-  createAdminButton,
-  createFeedbackButton,
-  createHelpButton,
-  createLinksButton,
-  createTimesheetsButton,
-  createMyProfileButton,
-  createSignInOutButton,
-} from './navButtons';
 import Popover from '@material-ui/core/Popover';
 import List from '@material-ui/core/List';
-import PropTypes from 'prop-types';
-import QuickLinksDialog from '../../../QuickLinksDialog';
+import { signOut } from '../../../../services/auth';
+import user from '../../../../services/user';
+import GordonQuickLinksDialog from '../../../QuickLinksDialog';
 import { gordonColors } from '../../../../theme';
-import storage from '../../../../services/storage';
+import GordonNavButton from '../NavButton';
+import { useNetworkIsOnline } from '../../../../context/NetworkContext';
 import './index.css';
 
-export const GordonNavButtonsRightCorner = (props) => {
+/**
+ *
+ * @param {Function} onClose action to perform when closing the right side nav menu
+ * @param {Function} onSignOut action to perform when signing out
+ * @param {boolean} authentication whether the user is authenticated
+ * @param {Function} openDialogBox function that opens the dialog for when a feature is unavailable
+ * @param {boolean} open whether the right side menu is open
+ */
+const GordonNavButtonsRightCorner = ({
+  onClose,
+  onSignOut,
+  authentication,
+  openDialogBox,
+  open,
+}) => {
   const [linkOpen, setLinkOpen] = useState(false);
-  const [network, setNetwork] = useState('online');
-  const [showMenu, setShowMenu] = useState(false);
+  const isOnline = useNetworkIsOnline();
 
   const useStyles = makeStyles({
     paper: {
@@ -39,113 +43,82 @@ export const GordonNavButtonsRightCorner = (props) => {
   /**
    * Closes the menu and logs out the user
    */
-  function onSignOut() {
-    props.onClose();
+  function closeAndSignOut() {
+    onClose();
     signOut();
-    props.onSignOut();
+    onSignOut();
   }
 
-  /**
-   * Opens the dialog box containing external links
-   */
-  function handleLinkClickOpen() {
-    setLinkOpen(true);
+  let myProfileButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !authentication ? 'unauthorized' : null}
+      onLinkClick={onClose}
+      openUnavailableDialog={openDialogBox}
+      linkName={'My Profile'}
+      linkPath={'/myprofile'}
+    />
+  );
+
+  let linksButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : null}
+      onLinkClick={() => {
+        onClose();
+        setLinkOpen(true);
+      }}
+      openUnavailableDialog={openDialogBox}
+      linkName={'Links'}
+    />
+  );
+
+  let timesheetsButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !authentication ? 'unauthorized' : null}
+      onLinkClick={onClose}
+      openUnavailableDialog={openDialogBox}
+      linkName={'Timesheets'}
+      linkPath={'/timesheets'}
+    />
+  );
+
+  let helpButton = <GordonNavButton onLinkClick={onClose} linkName={'Help'} linkPath={'/help'} />;
+
+  let aboutButton = (
+    <GordonNavButton onLinkClick={onClose} linkName={'About'} linkPath={'/about'} />
+  );
+
+  let feedbackButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : null}
+      onLinkClick={onClose}
+      openUnavailableDialog={openDialogBox}
+      linkName={'Feedback'}
+      linkPath={'/feedback'}
+    />
+  );
+
+  let adminButton;
+  if (authentication && user.getLocalInfo().college_role === 'god') {
+    adminButton = (
+      <GordonNavButton
+        unavailable={!isOnline ? 'offline' : null}
+        onLinkClick={onClose}
+        openUnavailableDialog={openDialogBox}
+        linkName={'Admin'}
+        linkPath={'/admin'}
+      />
+    );
+  } else {
+    adminButton = null;
   }
 
-  /**
-   * Closes the dialog box containing external links
-   */
-  function handleLinkClose() {
-    setLinkOpen(false);
-  }
-
-  // My Profile Button
-  let myProfileButton = createMyProfileButton(
-    network,
-    props.authentication,
-    props.onClose,
-    props.openDialogBox,
+  let signInOutButton = (
+    <GordonNavButton
+      onLinkClick={authentication ? closeAndSignOut : onClose}
+      linkName={authentication ? 'Sign Out' : 'Sign In'}
+      linkPath={'/'}
+    />
   );
-
-  // Links Button
-  let linksButton = createLinksButton(
-    network,
-    props.onClose,
-    handleLinkClickOpen,
-    props.openDialogBox,
-  );
-
-  // Timesheets Button
-  let timesheetsButton = createTimesheetsButton(
-    network,
-    props.authentication,
-    props.onClose,
-    props.openDialogBox,
-  );
-
-  // Help Button
-  let helpButton = createHelpButton(props.onClose);
-
-  // About Button
-  let aboutButton = createAboutButton(props.onClose);
-
-  // Feedback Button
-  let feedbackButton = createFeedbackButton(network, props.onClose, props.openDialogBox);
-
-  // Admin Button
-  let adminButton = createAdminButton(
-    network,
-    props.authentication,
-    props.onClose,
-    props.openDialogBox,
-  );
-
-  // Sign In & Out Button
-  let signInOutButton = createSignInOutButton(props.authentication, onSignOut, props.onClose);
-
-  useEffect(() => {
-    /* Used to re-render the page when the network connection changes.
-     *  The state's network variable is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('online');
-      } else if (
-        event.data === 'offline' &&
-        network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('offline');
-      }
-    });
-    return window.removeEventListener('message', () => {});
-  }, [network]);
-
-  useEffect(() => {
-    props.open === true ? setShowMenu(true) : setShowMenu(false);
-  }, [props.open]);
-
-  useEffect(() => {
-    let networkStatus;
-    /* Attempts to get the network status from local storage.
-     * If not found, the default value is online
-     */
-    try {
-      networkStatus = storage.get('network-status');
-    } catch (error) {
-      // Defaults the network to online if not found in local storage
-      networkStatus = 'online';
-    }
-
-    // Saves the network's status to this component's state
-    setNetwork(networkStatus);
-  }, [network]);
 
   return (
     <div>
@@ -160,13 +133,11 @@ export const GordonNavButtonsRightCorner = (props) => {
             vertical: 'top',
             horizontal: 'right',
           }}
-          open={showMenu}
-          onClose={props.onClose}
+          open={open}
+          onClose={onClose}
         >
           <List id="right-side-menu-list" disablePadding={true}>
-            <div id="right-menu-triangle"></div>
-            {/* Whichever button appears last in the list, make sure it's <ListItem> tag doesn't
-        contain 'divider'. This is to prevent the last item of the menu showing a bottom border  */}
+            <div id="right-menu-triangle" />
             {myProfileButton}
             {linksButton}
             {timesheetsButton}
@@ -179,15 +150,13 @@ export const GordonNavButtonsRightCorner = (props) => {
         </Popover>
       </div>
 
-      <QuickLinksDialog
-        handleLinkClickOpen={handleLinkClickOpen}
-        handleLinkClose={handleLinkClose}
+      <GordonQuickLinksDialog
+        handleLinkClickOpen={() => setLinkOpen(true)}
+        handleLinkClose={() => setLinkOpen(false)}
         linkopen={linkOpen}
       />
     </div>
   );
 };
 
-GordonNavButtonsRightCorner.propTypes = {
-  onSignOut: PropTypes.func.isRequired,
-};
+export default GordonNavButtonsRightCorner;
