@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -39,6 +39,7 @@ import PeopleSearchResult from './components/PeopleSearchResult';
 import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
 import GordonLoader from '../../components/Loader';
 import './peopleSearch.css';
+import { useNetworkIsOnline } from '../../context/NetworkContext';
 
 const styles = {
   FontAwesome: {
@@ -75,54 +76,46 @@ const styles = {
   colorChecked: {},
 };
 
-class PeopleSearch extends Component {
-  constructor(props) {
-    super(props);
+const PeopleSearch = (props) => {
+  const [personType, setPersonType] = useState('');
+  const [academicsExpanded, setAcademicsExpanded] = useState(false);
+  const [homeExpanded, setHomeExpanded] = useState(false);
+  const [offDepExpanded, setOffDepExpanded] = useState(false);
+  const [additionalOpsExpanded, setAdditionalOpsExpanded] = useState(true);
 
-    this.state = {
-      personType: '',
-      nameExpanded: true,
-      academicsExpanded: false,
-      homeExpanded: false,
-      offDepExpanded: false,
-      additionalOpsExpanded: true,
+  // arrays of table data from backend
+  const [majors, setMajors] = useState([]);
+  const [minors, setMinors] = useState([]);
+  const [states, setStates] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [buildings, setBuildings] = useState([]);
+  const [halls, setHalls] = useState([]);
 
-      // arrays of table data from backend
-      majors: [],
-      minors: [],
-      states: [],
-      countries: [],
-      departments: [],
-      buildings: [],
-      halls: [],
+  // Keyboard string values
+  const [firstNameSearchValue, setFirstNameSearchValue] = useState('');
+  const [lastNameSearchValue, setLastNameSearchValue] = useState('');
+  const [homeCitySearchValue, setHomeCitySearchValue] = useState('');
+  // Drop-down menu values
+  const [majorSearchValue, setMajorSearchValue] = useState('');
+  const [minorSearchValue, setMinorSearchValue] = useState('');
+  const [hallSearchValue, setHallSearchValue] = useState('');
+  const [classTypeSearchValue, setClassTypeSearchValue] = useState('');
+  const [stateSearchValue, setStateSearchValue] = useState('');
+  const [countrySearchValue, setCountrySearchValue] = useState('');
+  const [departmentSearchValue, setDepartmentSearchValue] = useState('');
+  const [buildingSearchValue, setBuildingSearchValue] = useState('');
+  // For April Fools:
+  const [relationshipStatusValue, setRelationshipStatusValue] = useState('');
 
-      // Keyboard string values
-      firstNameSearchValue: '',
-      lastNameSearchValue: '',
-      homeCitySearchValue: '',
-      // Drop-down menu values
-      majorSearchValue: '',
-      minorSearchValue: '',
-      hallSearchValue: '',
-      classTypeSearchValue: '',
-      stateSearchValue: '',
-      countrySearchValue: '',
-      departmentSearchValue: '',
-      buildingSearchValue: '',
-      // For April Fools:
-      relationshipStatusValue: '',
+  const [includeAlumni, setIncludeAlmuni] = useState(false);
+  const [peopleSearchResults, setPeopleSearchResults] = useState(null);
+  const [header, setHeader] = useState('');
 
-      includeAlumni: false,
-      peopleSearchResults: null,
-      header: '',
-      searchButtons: '',
+  const isOnline = useNetworkIsOnline();
 
-      network: 'online',
-    };
-  }
-
-  makeHeader() {
-    let content = (
+  const makeHeader = () => {
+    return (
       <Media query="(min-width: 960px)">
         {(matches) =>
           matches ? (
@@ -172,120 +165,37 @@ class PeopleSearch extends Component {
         }
       </Media>
     );
-    return content;
-  }
+  };
 
-  componentDidUpdate() {
+  useEffect(() => {
     window.onpopstate = () => {
       if (!window.location.href.includes('?')) {
         window.location.reload();
       } else {
-        this.goBackPage();
+        goBackPage();
       }
     };
-  }
+  }, []);
 
-  async goBackPage() {
-    const urlParams = new URLSearchParams(window.location.search);
-    var includeAlumni = urlParams.get('includeAlumni') || false;
-    var firstName = urlParams.get('firstName').trim() || '';
-    var lastName = urlParams.get('lastName').trim() || '';
-    var major = urlParams.get('major').trim() || '';
-    var minor = urlParams.get('minor').trim() || '';
-    var hall = urlParams.get('hall').trim() || '';
-    var classType = urlParams.get('classType').trim() || '';
-    var homeCity = urlParams.get('homeCity').trim() || '';
-    var state = urlParams.get('state').trim() || '';
-    var country = urlParams.get('country').trim() || '';
-    var department = urlParams.get('department').trim() || '';
-    var building = urlParams.get('building').trim() || '';
+  const goBackPage = async () => {
+    getSearchParamsFromUrl();
 
-    this.setState({
-      firstNameSearchValue: firstName,
-      lastNameSearchValue: lastName,
-      homeCitySearchValue: homeCity,
-      majorSearchValue: major,
-      minorSearchValue: minor,
-      hallSearchValue: hall,
-      classTypeSearchValue: classType,
-      stateSearchValue: state,
-      countrySearchValue: country,
-      departmentSearchValue: department,
-      buildingSearchValue: building,
-    });
-
-    if (
-      includeAlumni === false &&
-      firstName === '' &&
-      lastName === '' &&
-      major === '' &&
-      minor === '' &&
-      hall === '' &&
-      classType === '' &&
-      homeCity === '' &&
-      state === '' &&
-      country === '' &&
-      department === '' &&
-      building === ''
-    ) {
+    if (searchParamsNull()) {
       // do not search
     } else {
-      this.setState({
-        header: <GordonLoader />,
-        peopleSearchResults: null,
-        additionalOpsExpanded: false,
-      });
-      let peopleSearchResults = [];
-      peopleSearchResults = await goStalk.search(
-        includeAlumni,
-        firstName,
-        lastName,
-        major,
-        minor,
-        hall,
-        classType,
-        homeCity,
-        state,
-        country,
-        department,
-        building,
-      );
-      if (peopleSearchResults.length === 0) {
-        this.setState({
-          peopleSearchResults: (
-            <Grid item xs={12}>
-              <Typography variant="headline" align="center">
-                No results found.
-              </Typography>
-            </Grid>
-          ),
-          header: '',
-        });
-      } else {
-        this.setState({
-          peopleSearchResults: (
-            <Media query="(min-width: 960px)">
-              {(matches) =>
-                matches
-                  ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
-                  : peopleSearchResults.map((person) => (
-                      <MobilePeopleSearchResult Person={person} />
-                    ))
-              }
-            </Media>
-          ),
-          header: this.makeHeader(),
-        });
-      }
+      search();
     }
-  }
+  };
 
-  async componentWillMount() {
-    if (this.props.authentication) {
+  useEffect(() => {
+    loadPage();
+  }, []);
+
+  const loadPage = async () => {
+    if (props.authentication) {
       try {
-        const profile = await user.getProfileInfo();
-        const personType = profile.PersonType;
         const [
+          profile,
           majors,
           minors,
           halls,
@@ -294,6 +204,7 @@ class PeopleSearch extends Component {
           departments,
           buildings,
         ] = await Promise.all([
+          user.getProfileInfo(),
           goStalk.getMajors(),
           goStalk.getMinors(),
           goStalk.getHalls(),
@@ -302,977 +213,696 @@ class PeopleSearch extends Component {
           goStalk.getDepartments(),
           goStalk.getBuildings(),
         ]);
-        this.setState({
-          majors,
-          minors,
-          halls,
-          states,
-          countries,
-          departments,
-          buildings,
-          personType,
-        });
+
+        setMajors(majors);
+        setMinors(minors);
+        setHalls(halls);
+        setStates(states);
+        setCountries(countries);
+        setDepartments(departments);
+        setBuildings(buildings);
+        setPersonType(profile.PersonType);
       } catch (error) {
         // error
       }
 
       if (window.location.href.includes('?')) {
-        const urlParams = new URLSearchParams(window.location.search);
-        var includeAlumni = urlParams.get('includeAlumni') || false;
-        let firstName = urlParams.get('firstName').trim() || '';
-        let lastName = urlParams.get('lastName').trim() || '';
-        let major = urlParams.get('major').trim() || '';
-        let minor = urlParams.get('minor').trim() || '';
-        let hall = urlParams.get('hall').trim() || '';
-        let classType = urlParams.get('classType').trim() || '';
-        let homeCity = urlParams.get('homeCity').trim() || '';
-        let state = urlParams.get('state').trim() || '';
-        let country = urlParams.get('country').trim() || '';
-        let department = urlParams.get('department').trim() || '';
-        let building = urlParams.get('building').trim() || '';
+        getSearchParamsFromUrl();
 
-        this.setState({
-          firstNameSearchValue: firstName,
-          lastNameSearchValue: lastName,
-          homeCitySearchValue: homeCity,
-          majorSearchValue: major,
-          minorSearchValue: minor,
-          hallSearchValue: hall,
-          classTypeSearchValue: classType,
-          stateSearchValue: state,
-          countrySearchValue: country,
-          departmentSearchValue: department,
-          buildingSearchValue: building,
-        });
-
-        if (
-          includeAlumni === false &&
-          firstName === '' &&
-          lastName === '' &&
-          major === '' &&
-          minor === '' &&
-          hall === '' &&
-          classType === '' &&
-          homeCity === '' &&
-          state === '' &&
-          country === '' &&
-          department === '' &&
-          building === ''
-        ) {
+        if (searchParamsNull()) {
           // do not search
         } else {
-          this.setState({
-            header: <GordonLoader />,
-            peopleSearchResults: null,
-            additionalOpsExpanded: false,
-          });
-          let peopleSearchResults = [];
-
-          peopleSearchResults = await goStalk.search(
-            includeAlumni,
-            firstName,
-            lastName,
-            major,
-            minor,
-            hall,
-            classType,
-            homeCity,
-            state,
-            country,
-            department,
-            building,
-          );
-
-          if (peopleSearchResults.length === 0) {
-            this.setState({
-              peopleSearchResults: (
-                <Grid item xs={12}>
-                  <Typography variant="headline" align="center">
-                    No results found.
-                  </Typography>
-                </Grid>
-              ),
-              header: '',
-            });
-          } else {
-            this.setState({
-              peopleSearchResults: (
-                <Media query="(min-width: 960px)">
-                  {(matches) =>
-                    matches
-                      ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
-                      : peopleSearchResults.map((person) => (
-                          <MobilePeopleSearchResult Person={person} />
-                        ))
-                  }
-                </Media>
-              ),
-              header: this.makeHeader(),
-            });
-          }
+          search();
         }
       }
     }
-  }
-
-  handleAdditionalOpsExpandClick = () => {
-    this.setState((state) => ({
-      additionalOpsExpanded: !state.additionalOpsExpanded,
-    }));
   };
 
-  handleNameExpandClick = () => {
-    this.setState((state) => ({ nameExpanded: !state.nameExpanded }));
-  };
-  handleAcademicsExpandClick = () => {
-    this.setState((state) => ({ academicsExpanded: !state.academicsExpanded }));
-  };
-  handleHomeExpandClick = () => {
-    this.setState((state) => ({ homeExpanded: !state.homeExpanded }));
-  };
-  handleOffDepExpandClick = () => {
-    this.setState((state) => ({ offDepExpanded: !state.offDepExpanded }));
-  };
-  handleRelationshipStatusInputChange = (e) => {
-    this.setState({
-      relationshipStatusValue: e.target.value,
-    });
-  };
-  handleFirstNameInputChange = (e) => {
-    this.setState({
-      firstNameSearchValue: e.target.value,
-    });
-  };
-  handleLastNameInputChange = (e) => {
-    this.setState({
-      lastNameSearchValue: e.target.value,
-    });
-  };
-  handleMajorInputChange = (e) => {
-    this.setState({
-      majorSearchValue: e.target.value,
-    });
-  };
-  handleMinorInputChange = (e) => {
-    this.setState({
-      minorSearchValue: e.target.value,
-    });
-  };
-  handleHallInputChange = (e) => {
-    this.setState({
-      hallSearchValue: e.target.value,
-    });
-  };
-  handleClassTypeInputChange = (event) => {
-    this.setState({
-      classTypeSearchValue: event.target.value,
-    });
-  };
-  handleHomeCityInputChange = (e) => {
-    this.setState({
-      homeCitySearchValue: e.target.value,
-    });
-  };
-  handleStateInputChange = (e) => {
-    this.setState({
-      stateSearchValue: e.target.value,
-    });
-  };
-  handleCountryInputChange = (e) => {
-    this.setState({
-      countrySearchValue: e.target.value,
-    });
-  };
-  handleDepartmentInputChange = (e) => {
-    this.setState({
-      departmentSearchValue: e.target.value,
-    });
-  };
-  handleBuildingInputChange = (e) => {
-    this.setState({
-      buildingSearchValue: e.target.value,
-    });
+  const getSearchParamsFromUrl = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    let includeAlumni = urlParams.get('includeAlumni') || false;
+    let firstName = urlParams.get('firstName').trim() || '';
+    let lastName = urlParams.get('lastName').trim() || '';
+    let major = urlParams.get('major').trim() || '';
+    let minor = urlParams.get('minor').trim() || '';
+    let hall = urlParams.get('hall').trim() || '';
+    let classType = urlParams.get('classType').trim() || '';
+    let homeCity = urlParams.get('homeCity').trim() || '';
+    let state = urlParams.get('state').trim() || '';
+    let country = urlParams.get('country').trim() || '';
+    let department = urlParams.get('department').trim() || '';
+    let building = urlParams.get('building').trim() || '';
+
+    setIncludeAlmuni(includeAlumni);
+    setFirstNameSearchValue(firstName);
+    setLastNameSearchValue(lastName);
+    setHomeCitySearchValue(homeCity);
+    setMajorSearchValue(major);
+    setMinorSearchValue(minor);
+    setHallSearchValue(hall);
+    setClassTypeSearchValue(classType);
+    setStateSearchValue(state);
+    setCountrySearchValue(country);
+    setDepartmentSearchValue(department);
+    setBuildingSearchValue(building);
   };
 
-  handleChangeIncludeAlumni() {
-    this.setState({ includeAlumni: !this.state.includeAlumni });
-  }
+  const searchParamsNull = () => {
+    return (
+      includeAlumni === false &&
+      firstNameSearchValue === '' &&
+      lastNameSearchValue === '' &&
+      majorSearchValue === '' &&
+      minorSearchValue === '' &&
+      hallSearchValue === '' &&
+      classTypeSearchValue === '' &&
+      homeCitySearchValue === '' &&
+      stateSearchValue === '' &&
+      countrySearchValue === '' &&
+      departmentSearchValue === '' &&
+      buildingSearchValue === ''
+    );
+  };
 
-  async search(
-    includeAlumni,
-    firstName,
-    lastName,
-    major,
-    minor,
-    hall,
-    classType,
-    homeCity,
-    state,
-    country,
-    department,
-    building,
-  ) {
-    if (
-      this.state.includeAlumni === false &&
-      this.state.firstNameSearchValue === '' &&
-      this.state.lastNameSearchValue === '' &&
-      this.state.classTypeSearchValue === '' &&
-      this.state.majorSearchValue === '' &&
-      this.state.minorSearchValue === '' &&
-      this.state.hallSearchValue === '' &&
-      this.state.classTypeSearchValue === '' &&
-      this.state.homeCitySearchValue === '' &&
-      this.state.stateSearchValue === '' &&
-      this.state.countrySearchValue === '' &&
-      this.state.departmentSearchValue === '' &&
-      this.state.buildingSearchValue === ''
-    ) {
-      // do not search
-    } else {
-      this.setState({
-        header: <GordonLoader />,
-        peopleSearchResults: null,
-        additionalOpsExpanded: false,
-      });
-      let peopleSearchResults = [];
-      peopleSearchResults = await goStalk.search(
-        includeAlumni,
-        firstName,
-        lastName,
-        major,
-        minor,
-        hall,
-        classType,
-        homeCity,
-        state,
-        country,
-        department,
-        building,
+  const search = async () => {
+    setHeader(<GordonLoader />);
+    setPeopleSearchResults(null);
+    setAdditionalOpsExpanded(false);
+
+    let peopleSearchResults = [];
+    peopleSearchResults = await goStalk.search(
+      includeAlumni,
+      firstNameSearchValue,
+      lastNameSearchValue,
+      majorSearchValue,
+      minorSearchValue,
+      hallSearchValue,
+      classTypeSearchValue,
+      homeCitySearchValue,
+      stateSearchValue,
+      countrySearchValue,
+      departmentSearchValue,
+      buildingSearchValue,
+    );
+    if (peopleSearchResults.length === 0) {
+      setPeopleSearchResults(
+        <Grid item xs={12}>
+          <Typography variant="headline" align="center">
+            No results found.
+          </Typography>
+        </Grid>,
       );
-
-      let searchParameters =
-        `?firstName=${firstName}&lastName=${lastName}` +
-        `&major=${major}&minor=${minor}&hall=${hall}&classType=${classType}` +
-        `&homeCity=${homeCity}&state=${state}&country=${country}` +
-        `&department=${department}&building=${building}&includeAlumni=${includeAlumni}`;
-      this.props.history.push(searchParameters);
-
-      if (peopleSearchResults.length === 0) {
-        this.setState({
-          peopleSearchResults: (
-            <Grid item xs={12}>
-              <Typography variant="h5" align="center">
-                No results found.
-              </Typography>
-            </Grid>
-          ),
-          header: '',
-        });
-      } else {
-        this.setState({
-          peopleSearchResults: (
-            <Media query="(min-width: 1025px)">
-              {(matches) =>
-                matches
-                  ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
-                  : peopleSearchResults.map((person) => (
-                      <MobilePeopleSearchResult Person={person} />
-                    ))
-              }
-            </Media>
-          ),
-          header: this.makeHeader(),
-        });
-      }
+      setHeader('');
+    } else {
+      setPeopleSearchResults(
+        <Media query="(min-width: 960px)">
+          {(matches) =>
+            matches
+              ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
+              : peopleSearchResults.map((person) => <MobilePeopleSearchResult Person={person} />)
+          }
+        </Media>,
+      );
+      setHeader(makeHeader());
     }
-  }
+  };
 
-  getDate = () => {
+  const saveSearchParamsToHistory = () => {
+    let searchParameters =
+      `?firstName=${firstNameSearchValue}&lastName=${lastNameSearchValue}` +
+      `&major=${majorSearchValue}&minor=${minorSearchValue}&hall=${hallSearchValue}&classType=${classTypeSearchValue}` +
+      `&homeCity=${homeCitySearchValue}&state=${stateSearchValue}&country=${countrySearchValue}` +
+      `&department=${departmentSearchValue}&building=${buildingSearchValue}&includeAlumni=${includeAlumni}`;
+    props.history.push(searchParameters);
+  };
+
+  const clearSearchParams = () => {
+    setIncludeAlmuni(false);
+    setFirstNameSearchValue('');
+    setLastNameSearchValue('');
+    setHomeCitySearchValue('');
+    setMajorSearchValue('');
+    setMinorSearchValue('');
+    setHallSearchValue('');
+    setClassTypeSearchValue('');
+    setStateSearchValue('');
+    setCountrySearchValue('');
+    setDepartmentSearchValue('');
+    setBuildingSearchValue('');
+  };
+
+  const getDate = () => {
     return new Date();
   };
 
-  handleEnterKeyPress = (event) => {
+  const handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
-      this.search(
-        this.state.includeAlumni,
-        this.state.firstNameSearchValue,
-        this.state.lastNameSearchValue,
-        this.state.majorSearchValue,
-        this.state.minorSearchValue,
-        this.state.hallSearchValue,
-        this.state.classTypeSearchValue,
-        this.state.homeCitySearchValue,
-        this.state.stateSearchValue,
-        this.state.countrySearchValue,
-        this.state.departmentSearchValue,
-        this.state.buildingSearchValue,
-      );
+      search();
+      saveSearchParamsToHistory();
     }
   };
 
-  render() {
-    const { classes } = this.props;
-    let includeAlumniCheckbox;
+  const { classes } = props;
+  let includeAlumniCheckbox;
 
-    const majorOptions = this.state.majors.map((major) => (
-      <MenuItem value={major} key={major}>
-        {major}
-      </MenuItem>
-    ));
+  const majorOptions = majors.map((major) => (
+    <MenuItem value={major} key={major}>
+      {major}
+    </MenuItem>
+  ));
 
-    const minorOptions = this.state.minors.map((minor) => (
-      <MenuItem value={minor} key={minor}>
-        {minor}
-      </MenuItem>
-    ));
+  const minorOptions = minors.map((minor) => (
+    <MenuItem value={minor} key={minor}>
+      {minor}
+    </MenuItem>
+  ));
 
-    const hallOptions = this.state.halls.map((hall) => (
-      <MenuItem value={hall} key={hall}>
-        {hall}
-      </MenuItem>
-    ));
+  const hallOptions = halls.map((hall) => (
+    <MenuItem value={hall} key={hall}>
+      {hall}
+    </MenuItem>
+  ));
 
-    const stateOptions = this.state.states.map((state) => (
-      <MenuItem value={state} key={state}>
-        {state}
-      </MenuItem>
-    ));
+  const stateOptions = states.map((state) => (
+    <MenuItem value={state} key={state}>
+      {state}
+    </MenuItem>
+  ));
 
-    const countryOptions = this.state.countries.map((country) => (
-      <MenuItem value={country} key={country}>
-        {country}
-      </MenuItem>
-    ));
+  const countryOptions = countries.map((country) => (
+    <MenuItem value={country} key={country}>
+      {country}
+    </MenuItem>
+  ));
 
-    const departmentOptions = this.state.departments.map((department) => (
-      <MenuItem value={department} key={department}>
-        {department}
-      </MenuItem>
-    ));
+  const departmentOptions = departments.map((department) => (
+    <MenuItem value={department} key={department}>
+      {department}
+    </MenuItem>
+  ));
 
-    const buildingOptions = this.state.buildings.map((building) => (
-      <MenuItem value={building} key={building}>
-        {building}
-      </MenuItem>
-    ));
+  const buildingOptions = buildings.map((building) => (
+    <MenuItem value={building} key={building}>
+      {building}
+    </MenuItem>
+  ));
 
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
+  if (props.authentication) {
+    if (personType !== 'stu' && personType !== '') {
+      includeAlumniCheckbox = (
+        <Grid item xs={6} justify="center">
+          <FormControlLabel
+            control={
+              <Checkbox checked={includeAlumni} onChange={() => setIncludeAlmuni((i) => !i)} />
+            }
+            label="Include Alumni"
+          />
+        </Grid>
+      );
+    }
 
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
-    if (this.props.authentication) {
-      if (this.state.personType !== 'stu' && this.state.personType !== '') {
-        includeAlumniCheckbox = (
-          <Grid item xs={6} justify="center">
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.includeAlumni}
-                  onChange={() => {
-                    this.handleChangeIncludeAlumni();
-                  }}
-                />
-              }
-              label="Include Alumni"
-            />
-          </Grid>
-        );
-      }
-
-      let aprilFools = '';
-      if (this.getDate().getMonth() === 3 && this.getDate().getDate() === 1) {
-        aprilFools = (
-          <Grid container spacing={2} alignItems="flex-end">
-            <Media
-              query="(min-width: 600px)"
-              render={() => (
-                <Grid item>
-                  <FaHeart style={styles.FontAwesome} />
-                </Grid>
-              )}
-            />
-            <Grid item xs={11}>
-              <FormControl fullWidth>
-                <InputLabel>Relationship Status</InputLabel>
-                <Select
-                  value={this.state.relationshipStatusValue}
-                  onChange={this.handleRelationshipStatusInputChange}
-                  input={<Input id="relationship-status" />}
+    let aprilFools = '';
+    if (getDate().getMonth() === 3 && getDate().getDate() === 1) {
+      aprilFools = (
+        <Grid container spacing={2} alignItems="flex-end">
+          <Media
+            query="(min-width: 600px)"
+            render={() => (
+              <Grid item>
+                <FaHeart style={styles.FontAwesome} />
+              </Grid>
+            )}
+          />
+          <Grid item xs={11}>
+            <FormControl fullWidth>
+              <InputLabel>Relationship Status</InputLabel>
+              <Select
+                value={relationshipStatusValue}
+                onChange={(e) => setRelationshipStatusValue(e.target.value)}
+                input={<Input id="relationship-status" />}
+              >
+                <MenuItem label="All" value="">
+                  <em>All</em>
+                </MenuItem>
+                <MenuItem label="Single" value="Single">
+                  Single
+                </MenuItem>
+                <MenuItem label="Taken" value="Taken">
+                  Taken
+                </MenuItem>
+                <MenuItem label="Engaged" value="Engaged">
+                  Engaged
+                </MenuItem>
+                <MenuItem label="Married" value="Married">
+                  Married
+                </MenuItem>
+                <MenuItem label="At DTR Bench Right NOW" value="At DTR Bench Right NOW">
+                  At DTR Bench Right NOW
+                </MenuItem>
+                <MenuItem label="1st DTR" value="1st DTR">
+                  1st DTR
+                </MenuItem>
+                <MenuItem label="2nd DTR" value="2nd DTR">
+                  2nd DTR
+                </MenuItem>
+                <MenuItem label="Sat Together At Chapel" value="Sat Together At Chapel">
+                  Sat Together At Chapel
+                </MenuItem>
+                <MenuItem
+                  label='"Jesus Is My Significant Other"'
+                  value='"Jesus Is My Significant Other"'
                 >
-                  <MenuItem label="All" value="">
-                    <em>All</em>
-                  </MenuItem>
-                  <MenuItem label="Single" value="Single">
-                    Single
-                  </MenuItem>
-                  <MenuItem label="Taken" value="Taken">
-                    Taken
-                  </MenuItem>
-                  <MenuItem label="Engaged" value="Engaged">
-                    Engaged
-                  </MenuItem>
-                  <MenuItem label="Married" value="Married">
-                    Married
-                  </MenuItem>
-                  <MenuItem label="At DTR Bench Right NOW" value="At DTR Bench Right NOW">
-                    At DTR Bench Right NOW
-                  </MenuItem>
-                  <MenuItem label="1st DTR" value="1st DTR">
-                    1st DTR
-                  </MenuItem>
-                  <MenuItem label="2nd DTR" value="2nd DTR">
-                    2nd DTR
-                  </MenuItem>
-                  <MenuItem label="Sat Together At Chapel" value="Sat Together At Chapel">
-                    Sat Together At Chapel
-                  </MenuItem>
-                  <MenuItem
-                    label='"Jesus Is My Significant Other"'
-                    value='"Jesus Is My Significant Other"'
-                  >
-                    "Jesus Is My Significant Other"
-                  </MenuItem>
-                  <MenuItem label="Waiting For Her Boaz" value="Waiting For Her Boaz">
-                    Waiting For Her Boaz
-                  </MenuItem>
-                  <MenuItem
-                    label="Waiting For His Proverbs 31 Woman"
-                    value="Waiting For His Proverbs 31 Woman"
-                  >
-                    Waiting For His Proverbs 31 Woman
-                  </MenuItem>
-                  <MenuItem label="It's Complicated" value="It's Complicated">
-                    It's Complicated
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        );
-      }
-
-      // Creates the PeopleSearch page depending on the status of the network found in local storage
-      let PeopleSearch;
-      if (networkStatus === 'online') {
-        PeopleSearch = (
-          <Grid container justify="center" spacing={6}>
-            <Grid item xs={12} md={8}>
-              <Card>
-                <CardContent
-                  style={{
-                    marginLeft: 8,
-                    marginTop: 8,
-                  }}
+                  "Jesus Is My Significant Other"
+                </MenuItem>
+                <MenuItem label="Waiting For Her Boaz" value="Waiting For Her Boaz">
+                  Waiting For Her Boaz
+                </MenuItem>
+                <MenuItem
+                  label="Waiting For His Proverbs 31 Woman"
+                  value="Waiting For His Proverbs 31 Woman"
                 >
-                  <Typography variant="h5">General Info</Typography>
-                  <Grid container spacing={2} alignItems="flex-end">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <PersonIcon />
-                        </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <TextField
-                        id="first-name"
-                        label="First Name"
-                        fullWidth
-                        value={this.state.firstNameSearchValue}
-                        onChange={this.handleFirstNameInputChange}
-                        onKeyDown={this.handleEnterKeyPress}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={2} alignItems="flex-end">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <PersonIcon />
-                        </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <TextField
-                        id="last-name"
-                        label="Last Name"
-                        fullWidth
-                        value={this.state.lastNameSearchValue}
-                        onChange={this.handleLastNameInputChange}
-                        onKeyDown={this.handleEnterKeyPress}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={2} alignItems="flex-end">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <FaBuilding style={styles.FontAwesome} />
-                        </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <FormControl fullWidth>
-                        <InputLabel>Hall</InputLabel>
-                        <Select
-                          value={this.state.hallSearchValue}
-                          onChange={this.handleHallInputChange}
-                          input={<Input id="hall" />}
-                        >
-                          <MenuItem label="All Halls" value="">
-                            <em>All Halls</em>
-                          </MenuItem>
-                          {hallOptions}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                  {aprilFools}
-                </CardContent>
-                <Collapse in={this.state.additionalOpsExpanded} timeout="auto" unmountOnExit>
-                  <CardContent>
-                    <CardActions
-                      className={[classes.actions, 'card-expansion']}
-                      disableActionSpacing
-                      onClick={this.handleAcademicsExpandClick}
-                    >
-                      <Typography variant="h5">Academics</Typography>
-                      <IconButton
-                        className={classnames(classes.expand, {
-                          [classes.expandOpen]: this.state.academicsExpanded,
-                        })}
-                        aria-expanded={this.state.academicsExpanded}
-                        aria-label="Show more"
-                      >
-                        <ExpandMoreIcon />
-                      </IconButton>
-                    </CardActions>
-                    <Collapse
-                      in={this.state.academicsExpanded}
-                      timeout="auto"
-                      unmountOnExit
-                      style={styles.CardContent}
-                    >
-                      <Grid container spacing={2} alignItems="flex-end">
-                        <Media
-                          query="(min-width: 600px)"
-                          render={() => (
-                            <Grid item>
-                              <FaBook style={styles.FontAwesome} />
-                            </Grid>
-                          )}
-                        />
-                        <Grid item xs={11}>
-                          <FormControl fullWidth>
-                            <InputLabel>Major</InputLabel>
-                            <Select
-                              value={this.state.majorSearchValue}
-                              onChange={this.handleMajorInputChange}
-                              input={<Input id="major" />}
-                            >
-                              <MenuItem label="All Majors" value="">
-                                <em>All Majors</em>
-                              </MenuItem>
-                              {majorOptions}
-                            </Select>
-                          </FormControl>
-                        </Grid>
+                  Waiting For His Proverbs 31 Woman
+                </MenuItem>
+                <MenuItem label="It's Complicated" value="It's Complicated">
+                  It's Complicated
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+      );
+    }
+
+    if (isOnline) {
+      return (
+        <Grid container justify="center" spacing={6}>
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  marginLeft: 8,
+                  marginTop: 8,
+                }}
+              >
+                <Typography variant="h5">General Info</Typography>
+                <Grid container spacing={2} alignItems="flex-end">
+                  <Media
+                    query="(min-width: 600px)"
+                    render={() => (
+                      <Grid item>
+                        <PersonIcon />
                       </Grid>
-                      <Grid container spacing={2} alignItems="flex-end">
-                        <Media
-                          query="(min-width: 600px)"
-                          render={() => (
-                            <Grid item>
-                              <FaBook style={styles.FontAwesome} />
-                            </Grid>
-                          )}
-                        />
-                        <Grid item xs={11}>
-                          <FormControl fullWidth>
-                            <InputLabel>Minor</InputLabel>
-                            <Select
-                              value={this.state.minorSearchValue}
-                              onChange={this.handleMinorInputChange}
-                              input={<Input id="minor" />}
-                            >
-                              <MenuItem label="All Minors" value="">
-                                <em>All Minors</em>
-                              </MenuItem>
-                              {minorOptions}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      </Grid>
-                      <Grid container spacing={2} alignItems="flex-end">
-                        <Media
-                          query="(min-width: 600px)"
-                          render={() => (
-                            <Grid item>
-                              <FaSchool style={styles.FontAwesome} />
-                            </Grid>
-                          )}
-                        />
-                        <Grid item xs={11}>
-                          <FormControl fullWidth>
-                            <InputLabel>Class</InputLabel>
-                            <Select
-                              value={this.state.classTypeSearchValue}
-                              onChange={this.handleClassTypeInputChange}
-                              input={<Input id="class" />}
-                            >
-                              <MenuItem label="All Classes" value="">
-                                <em>All</em>
-                              </MenuItem>
-                              <MenuItem value={1}>Freshman</MenuItem>
-                              <MenuItem value={2}>Sophomore</MenuItem>
-                              <MenuItem value={3}>Junior</MenuItem>
-                              <MenuItem value={4}>Senior</MenuItem>
-                              <MenuItem value={5}>Graduate Student</MenuItem>
-                              <MenuItem value={6}>Undergraduate Conferred</MenuItem>
-                              <MenuItem value={7}>Graduate Conferred</MenuItem>
-                              <MenuItem value={0}>Unassigned</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      </Grid>
-                    </Collapse>
-                  </CardContent>
-                  <CardContent>
-                    <CardActions
-                      className={[classes.actions, 'card-expansion']}
-                      disableActionSpacing
-                      onClick={this.handleHomeExpandClick}
-                    >
-                      <Typography variant="h5">Home</Typography>
-                      <IconButton
-                        className={classnames(classes.expand, {
-                          [classes.expandOpen]: this.state.homeExpanded,
-                        })}
-                        aria-expanded={this.state.homeExpanded}
-                        aria-label="Show more"
-                      >
-                        <ExpandMoreIcon />
-                      </IconButton>
-                    </CardActions>
-                    <Collapse
-                      in={this.state.homeExpanded}
-                      timeout="auto"
-                      unmountOnExit
-                      style={styles.CardContent}
-                    >
-                      <Grid container spacing={2} alignItems="flex-end">
-                        <Media
-                          query="(min-width: 600px)"
-                          render={() => (
-                            <Grid item>
-                              <HomeIcon style={styles.FontAwesome} />
-                            </Grid>
-                          )}
-                        />
-                        <Grid item xs={11}>
-                          <TextField
-                            id="hometown"
-                            label="Hometown"
-                            fullWidth
-                            value={this.state.homeCitySearchValue}
-                            onChange={this.handleHomeCityInputChange}
-                            onKeyDown={this.handleEnterKeyPress}
-                          />
-                        </Grid>
-                      </Grid>
-                      <Grid container spacing={2} alignItems="flex-end">
-                        <Media
-                          query="(min-width: 600px)"
-                          render={() => (
-                            <Grid item>
-                              <CityIcon style={styles.FontAwesome} />
-                            </Grid>
-                          )}
-                        />
-                        <Grid item xs={11}>
-                          <FormControl fullWidth>
-                            <InputLabel>State</InputLabel>
-                            <Select
-                              value={this.state.stateSearchValue}
-                              onChange={this.handleStateInputChange}
-                              input={<Input id="state" />}
-                            >
-                              <MenuItem label="All States" value="">
-                                <em>All</em>
-                              </MenuItem>
-                              {stateOptions}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      </Grid>
-                      <Grid container spacing={2} alignItems="flex-end">
-                        <Media
-                          query="(min-width: 600px)"
-                          render={() => (
-                            <Grid item>
-                              <FaGlobeAmericas style={styles.FontAwesome} />
-                            </Grid>
-                          )}
-                        />
-                        <Grid item xs={11}>
-                          <FormControl fullWidth>
-                            <InputLabel>Country</InputLabel>
-                            <Select
-                              value={this.state.countrySearchValue}
-                              onChange={this.handleCountryInputChange}
-                              input={<Input id="country" />}
-                            >
-                              <MenuItem label="All Countries" value="">
-                                <em>All</em>
-                              </MenuItem>
-                              {countryOptions}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      </Grid>
-                    </Collapse>
-                  </CardContent>
-                  <CardContent>
-                    <CardActions
-                      className={[classes.actions, 'card-expansion']}
-                      disableActionSpacing
-                      onClick={this.handleOffDepExpandClick}
-                    >
-                      <Typography variant="h5">Building and Department</Typography>
-                      <IconButton
-                        className={classnames(classes.expand, {
-                          [classes.expandOpen]: this.state.offDepExpanded,
-                        })}
-                        aria-expanded={this.state.offDepExpanded}
-                        aria-label="Show more"
-                      >
-                        <ExpandMoreIcon />
-                      </IconButton>
-                    </CardActions>
-                    <Collapse
-                      in={this.state.offDepExpanded}
-                      timeout="auto"
-                      unmountOnExit
-                      style={styles.CardContent}
-                    >
-                      <Grid container spacing={2} alignItems="flex-end">
-                        <Media
-                          query="(min-width: 600px)"
-                          render={() => (
-                            <Grid item>
-                              <FaBriefcase style={styles.FontAwesome} />
-                            </Grid>
-                          )}
-                        />
-                        <Grid item xs={11}>
-                          <FormControl fullWidth>
-                            <InputLabel>Department</InputLabel>
-                            <Select
-                              value={this.state.departmentSearchValue}
-                              onChange={this.handleDepartmentInputChange}
-                              input={<Input id="department-type" />}
-                            >
-                              <MenuItem label="All Departments" value="">
-                                <em>All</em>
-                              </MenuItem>
-                              {departmentOptions}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      </Grid>
-                      <Grid container spacing={2} alignItems="flex-end">
-                        <Media
-                          query="(min-width: 600px)"
-                          render={() => (
-                            <Grid item>
-                              <FaBuilding style={styles.FontAwesome} />
-                            </Grid>
-                          )}
-                        />
-                        <Grid item xs={11}>
-                          <FormControl fullWidth>
-                            <InputLabel>Building</InputLabel>
-                            <Select
-                              value={this.state.buildingSearchValue}
-                              onChange={this.handleBuildingInputChange}
-                              input={<Input id="building-type" />}
-                            >
-                              <MenuItem label="All Buildings" value="">
-                                <em>All</em>
-                              </MenuItem>
-                              {buildingOptions}
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      </Grid>
-                    </Collapse>
-                  </CardContent>
-                </Collapse>
-                <CardActions>
-                  <Grid container direction="column" alignItems="center">
-                    <Grid item xs={12}>
-                      <Grid container direction="row" alignItems="flex-end" justify="center">
-                        {includeAlumniCheckbox}
-                        <Grid item>
-                          <Button
-                            color="primary"
-                            variant="outlined"
-                            onClick={() => {
-                              this.setState({
-                                includeAlumni: false,
-                                firstNameSearchValue: '',
-                                lastNameSearchValue: '',
-                                majorSearchValue: '',
-                                minorSearchValue: '',
-                                hallSearchValue: '',
-                                classTypeSearchValue: '',
-                                homeCitySearchValue: '',
-                                stateSearchValue: '',
-                                countrySearchValue: '',
-                                departmentSearchValue: '',
-                                buildingSearchValue: '',
-                              });
-                            }}
-                          >
-                            Clear Input
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <br />
-                    <Button
-                      color="primary"
-                      onClick={() => {
-                        this.search(
-                          this.state.includeAlumni,
-                          this.state.firstNameSearchValue,
-                          this.state.lastNameSearchValue,
-                          this.state.majorSearchValue,
-                          this.state.minorSearchValue,
-                          this.state.hallSearchValue,
-                          this.state.classTypeSearchValue,
-                          this.state.homeCitySearchValue,
-                          this.state.stateSearchValue,
-                          this.state.countrySearchValue,
-                          this.state.departmentSearchValue,
-                          this.state.buildingSearchValue,
-                        );
-                      }}
+                    )}
+                  />
+                  <Grid item xs={11}>
+                    <TextField
+                      id="first-name"
+                      label="First Name"
                       fullWidth
-                      variant="contained"
-                    >
-                      SEARCH
-                    </Button>
-                  </Grid>
-                </CardActions>
-                <CardActions
-                  className={[classes.actions, 'card-expansion']}
-                  disableActionSpacing
-                  onClick={this.handleAdditionalOpsExpandClick}
-                  style={{
-                    marginTop: '-16px',
-                  }}
-                >
-                  <Grid container alignItems="baseline" justify="center">
-                    <Grid item>
-                      <IconButton
-                        className={classnames(classes.expand, {
-                          [classes.expandOpen]: this.state.additionalOpsExpanded,
-                        })}
-                        aria-expanded={this.state.additionalOpsExpanded}
-                        aria-label="Show more"
-                      >
-                        <ExpandMoreIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                </CardActions>
-              </Card>
-              <br />
-              <Card>
-                {this.state.header}
-                {this.state.peopleSearchResults}
-              </Card>
-            </Grid>
-          </Grid>
-        );
-      } else {
-        PeopleSearch = (
-          <Grid container justify="center" spacing="16">
-            <Grid item xs={12} md={8}>
-              <Card>
-                <CardContent
-                  style={{
-                    margin: 'auto',
-                    textAlign: 'center',
-                  }}
-                >
-                  <Grid
-                    item
-                    xs={2}
-                    alignItems="center"
-                    style={{
-                      display: 'block',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                    }}
-                  >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
+                      value={firstNameSearchValue}
+                      onChange={(e) => setFirstNameSearchValue(e.target.value)}
+                      onKeyDown={handleEnterKeyPress}
                     />
                   </Grid>
-                  <br />
-                  <h1>Please Re-establish Connection</h1>
-                  <h4>People Search has been deactivated due to loss of network.</h4>
-                  <br />
-                  <br />
-                  <Button
-                    color="primary"
-                    backgroundColor="white"
-                    variant="outlined"
-                    onClick={() => {
-                      window.location.pathname = '';
-                    }}
+                </Grid>
+                <Grid container spacing={2} alignItems="flex-end">
+                  <Media
+                    query="(min-width: 600px)"
+                    render={() => (
+                      <Grid item>
+                        <PersonIcon />
+                      </Grid>
+                    )}
+                  />
+                  <Grid item xs={11}>
+                    <TextField
+                      id="last-name"
+                      label="Last Name"
+                      fullWidth
+                      value={lastNameSearchValue}
+                      onChange={(e) => setLastNameSearchValue(e.target.value)}
+                      onKeyDown={handleEnterKeyPress}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} alignItems="flex-end">
+                  <Media
+                    query="(min-width: 600px)"
+                    render={() => (
+                      <Grid item>
+                        <FaBuilding style={styles.FontAwesome} />
+                      </Grid>
+                    )}
+                  />
+                  <Grid item xs={11}>
+                    <FormControl fullWidth>
+                      <InputLabel>Hall</InputLabel>
+                      <Select
+                        value={hallSearchValue}
+                        onChange={(e) => setHallSearchValue(e.target.value)}
+                        input={<Input id="hall" />}
+                      >
+                        <MenuItem label="All Halls" value="">
+                          <em>All Halls</em>
+                        </MenuItem>
+                        {hallOptions}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+                {aprilFools}
+              </CardContent>
+              <Collapse in={additionalOpsExpanded} timeout="auto" unmountOnExit>
+                <CardContent>
+                  <CardActions
+                    className={[classes.actions, 'card-expansion']}
+                    disableActionSpacing
+                    onClick={() => setAcademicsExpanded((e) => !e)}
                   >
-                    Back To Home
-                  </Button>
+                    <Typography variant="h5">Academics</Typography>
+                    <IconButton
+                      className={classnames(classes.expand, {
+                        [classes.expandOpen]: academicsExpanded,
+                      })}
+                      aria-expanded={academicsExpanded}
+                      aria-label="Show more"
+                    >
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </CardActions>
+                  <Collapse
+                    in={academicsExpanded}
+                    timeout="auto"
+                    unmountOnExit
+                    style={styles.CardContent}
+                  >
+                    <Grid container spacing={2} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <FaBook style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Major</InputLabel>
+                          <Select
+                            value={majorSearchValue}
+                            onChange={(e) => setMajorSearchValue(e.target.value)}
+                            input={<Input id="major" />}
+                          >
+                            <MenuItem label="All Majors" value="">
+                              <em>All Majors</em>
+                            </MenuItem>
+                            {majorOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <FaBook style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Minor</InputLabel>
+                          <Select
+                            value={minorSearchValue}
+                            onChange={(e) => setMinorSearchValue(e.target.value)}
+                            input={<Input id="minor" />}
+                          >
+                            <MenuItem label="All Minors" value="">
+                              <em>All Minors</em>
+                            </MenuItem>
+                            {minorOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <FaSchool style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Class</InputLabel>
+                          <Select
+                            value={classTypeSearchValue}
+                            onChange={(e) => setClassTypeSearchValue(e.target.value)}
+                            input={<Input id="class" />}
+                          >
+                            <MenuItem label="All Classes" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            <MenuItem value={1}>Freshman</MenuItem>
+                            <MenuItem value={2}>Sophomore</MenuItem>
+                            <MenuItem value={3}>Junior</MenuItem>
+                            <MenuItem value={4}>Senior</MenuItem>
+                            <MenuItem value={5}>Graduate Student</MenuItem>
+                            <MenuItem value={6}>Undergraduate Conferred</MenuItem>
+                            <MenuItem value={7}>Graduate Conferred</MenuItem>
+                            <MenuItem value={0}>Unassigned</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </Collapse>
                 </CardContent>
-              </Card>
-            </Grid>
+                <CardContent>
+                  <CardActions
+                    className={[classes.actions, 'card-expansion']}
+                    disableActionSpacing
+                    onClick={() => setHomeExpanded((e) => !e)}
+                  >
+                    <Typography variant="h5">Home</Typography>
+                    <IconButton
+                      className={classnames(classes.expand, {
+                        [classes.expandOpen]: homeExpanded,
+                      })}
+                      aria-expanded={homeExpanded}
+                      aria-label="Show more"
+                    >
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </CardActions>
+                  <Collapse
+                    in={homeExpanded}
+                    timeout="auto"
+                    unmountOnExit
+                    style={styles.CardContent}
+                  >
+                    <Grid container spacing={2} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <HomeIcon style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <TextField
+                          id="hometown"
+                          label="Hometown"
+                          fullWidth
+                          value={homeCitySearchValue}
+                          onChange={(e) => setHomeCitySearchValue(e.target.value)}
+                          onKeyDown={handleEnterKeyPress}
+                        />
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <CityIcon style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>State</InputLabel>
+                          <Select
+                            value={stateSearchValue}
+                            onChange={(e) => setStateSearchValue(e.target.value)}
+                            input={<Input id="state" />}
+                          >
+                            <MenuItem label="All States" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {stateOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <FaGlobeAmericas style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Country</InputLabel>
+                          <Select
+                            value={countrySearchValue}
+                            onChange={(e) => setCountrySearchValue(e.target.value)}
+                            input={<Input id="country" />}
+                          >
+                            <MenuItem label="All Countries" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {countryOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </Collapse>
+                </CardContent>
+                <CardContent>
+                  <CardActions
+                    className={[classes.actions, 'card-expansion']}
+                    disableActionSpacing
+                    onClick={() => setOffDepExpanded((e) => !e)}
+                  >
+                    <Typography variant="h5">Building and Department</Typography>
+                    <IconButton
+                      className={classnames(classes.expand, {
+                        [classes.expandOpen]: offDepExpanded,
+                      })}
+                      aria-expanded={offDepExpanded}
+                      aria-label="Show more"
+                    >
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </CardActions>
+                  <Collapse
+                    in={offDepExpanded}
+                    timeout="auto"
+                    unmountOnExit
+                    style={styles.CardContent}
+                  >
+                    <Grid container spacing={2} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <FaBriefcase style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Department</InputLabel>
+                          <Select
+                            value={departmentSearchValue}
+                            onChange={(e) => setDepartmentSearchValue(e.target.value)}
+                            input={<Input id="department-type" />}
+                          >
+                            <MenuItem label="All Departments" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {departmentOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <FaBuilding style={styles.FontAwesome} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Building</InputLabel>
+                          <Select
+                            value={buildingSearchValue}
+                            onChange={(e) => setBuildingSearchValue(e.target.value)}
+                            input={<Input id="building-type" />}
+                          >
+                            <MenuItem label="All Buildings" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {buildingOptions}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
+                  </Collapse>
+                </CardContent>
+              </Collapse>
+              <CardActions>
+                <Grid container direction="column" alignItems="center">
+                  <Grid item xs={12}>
+                    <Grid container direction="row" alignItems="flex-end" justify="center">
+                      {includeAlumniCheckbox}
+                      <Grid item>
+                        <Button color="primary" variant="outlined" onClick={clearSearchParams}>
+                          Clear Input
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <br />
+                  <Button color="primary" onClick={search} fullWidth variant="contained">
+                    SEARCH
+                  </Button>
+                </Grid>
+              </CardActions>
+              <CardActions
+                className={[classes.actions, 'card-expansion']}
+                disableActionSpacing
+                onClick={() => setAdditionalOpsExpanded((e) => !e)}
+                style={{
+                  marginTop: '-16px',
+                }}
+              >
+                <Grid container alignItems="baseline" justify="center">
+                  <Grid item>
+                    <IconButton
+                      className={classnames(classes.expand, {
+                        [classes.expandOpen]: additionalOpsExpanded,
+                      })}
+                      aria-expanded={additionalOpsExpanded}
+                      aria-label="Show more"
+                    >
+                      <ExpandMoreIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </CardActions>
+            </Card>
+            <br />
+            <Card>
+              {header}
+              {peopleSearchResults}
+            </Card>
           </Grid>
-        );
-      }
-
-      return PeopleSearch;
+        </Grid>
+      );
     } else {
       return (
-        <Grid container justify="center">
+        <Grid container justify="center" spacing="16">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent
@@ -1281,18 +911,35 @@ class PeopleSearch extends Component {
                   textAlign: 'center',
                 }}
               >
-                <h1>You are not logged in.</h1>
+                <Grid
+                  item
+                  xs={2}
+                  alignItems="center"
+                  style={{
+                    display: 'block',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
+                >
+                  <img
+                    src={require(`${'../../NoConnection.svg'}`)}
+                    alt="Internet Connection Lost"
+                  />
+                </Grid>
                 <br />
-                <h4>You must be logged in to view use People Search.</h4>
+                <h1>Please Re-establish Connection</h1>
+                <h4>People Search has been deactivated due to loss of network.</h4>
+                <br />
                 <br />
                 <Button
                   color="primary"
-                  variant="contained"
+                  backgroundColor="white"
+                  variant="outlined"
                   onClick={() => {
                     window.location.pathname = '';
                   }}
                 >
-                  Login
+                  Back To Home
                 </Button>
               </CardContent>
             </Card>
@@ -1300,7 +947,36 @@ class PeopleSearch extends Component {
         </Grid>
       );
     }
+  } else {
+    return (
+      <Grid container justify="center">
+        <Grid item xs={12} md={8}>
+          <Card>
+            <CardContent
+              style={{
+                margin: 'auto',
+                textAlign: 'center',
+              }}
+            >
+              <h1>You are not logged in.</h1>
+              <br />
+              <h4>You must be logged in to view use People Search.</h4>
+              <br />
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  window.location.pathname = '';
+                }}
+              >
+                Login
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    );
   }
-}
+};
 
 export default withStyles(styles)(PeopleSearch);
