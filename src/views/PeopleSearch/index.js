@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -167,33 +167,91 @@ const PeopleSearch = (props) => {
     );
   };
 
+  const search = useCallback(async () => {
+    if (
+      includeAlumni !== null &&
+      firstNameSearchValue &&
+      lastNameSearchValue &&
+      majorSearchValue &&
+      minorSearchValue &&
+      hallSearchValue &&
+      classTypeSearchValue &&
+      homeCitySearchValue &&
+      stateSearchValue &&
+      countrySearchValue &&
+      departmentSearchValue &&
+      buildingSearchValue
+    ) {
+      setHeader(<GordonLoader />);
+      setPeopleSearchResults(null);
+      setAdditionalOpsExpanded(false);
+
+      let peopleSearchResults = [];
+      peopleSearchResults = await goStalk.search(
+        includeAlumni,
+        firstNameSearchValue,
+        lastNameSearchValue,
+        majorSearchValue,
+        minorSearchValue,
+        hallSearchValue,
+        classTypeSearchValue,
+        homeCitySearchValue,
+        stateSearchValue,
+        countrySearchValue,
+        departmentSearchValue,
+        buildingSearchValue,
+      );
+      if (peopleSearchResults.length === 0) {
+        setPeopleSearchResults(
+          <Grid item xs={12}>
+            <Typography variant="headline" align="center">
+              No results found.
+            </Typography>
+          </Grid>,
+        );
+        setHeader('');
+      } else {
+        setPeopleSearchResults(
+          <Media query="(min-width: 960px)">
+            {(matches) =>
+              matches
+                ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
+                : peopleSearchResults.map((person) => <MobilePeopleSearchResult Person={person} />)
+            }
+          </Media>,
+        );
+        setHeader(makeHeader());
+      }
+    }
+  }, [
+    buildingSearchValue,
+    classTypeSearchValue,
+    countrySearchValue,
+    departmentSearchValue,
+    firstNameSearchValue,
+    hallSearchValue,
+    homeCitySearchValue,
+    includeAlumni,
+    lastNameSearchValue,
+    majorSearchValue,
+    minorSearchValue,
+    stateSearchValue,
+  ]);
+
   useEffect(() => {
     window.onpopstate = () => {
       if (!window.location.href.includes('?')) {
         window.location.reload();
       } else {
-        goBackPage();
+        getSearchParamsFromUrl();
+        search();
       }
     };
-  }, []);
-
-  const goBackPage = async () => {
-    getSearchParamsFromUrl();
-
-    if (searchParamsNull()) {
-      // do not search
-    } else {
-      search();
-    }
-  };
+  }, [search]);
 
   useEffect(() => {
-    loadPage();
-  }, []);
-
-  const loadPage = async () => {
-    if (props.authentication) {
-      try {
+    const loadPage = async () => {
+      if (props.authentication) {
         const [
           profile,
           majors,
@@ -222,21 +280,16 @@ const PeopleSearch = (props) => {
         setDepartments(departments);
         setBuildings(buildings);
         setPersonType(profile.PersonType);
-      } catch (error) {
-        // error
-      }
 
-      if (window.location.href.includes('?')) {
-        getSearchParamsFromUrl();
-
-        if (searchParamsNull()) {
-          // do not search
-        } else {
+        if (window.location.href.includes('?')) {
+          getSearchParamsFromUrl();
           search();
         }
       }
-    }
-  };
+    };
+
+    loadPage();
+  }, [props.authentication, search]);
 
   const getSearchParamsFromUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -265,66 +318,6 @@ const PeopleSearch = (props) => {
     setCountrySearchValue(country);
     setDepartmentSearchValue(department);
     setBuildingSearchValue(building);
-  };
-
-  const searchParamsNull = () => {
-    return (
-      includeAlumni === false &&
-      firstNameSearchValue === '' &&
-      lastNameSearchValue === '' &&
-      majorSearchValue === '' &&
-      minorSearchValue === '' &&
-      hallSearchValue === '' &&
-      classTypeSearchValue === '' &&
-      homeCitySearchValue === '' &&
-      stateSearchValue === '' &&
-      countrySearchValue === '' &&
-      departmentSearchValue === '' &&
-      buildingSearchValue === ''
-    );
-  };
-
-  const search = async () => {
-    setHeader(<GordonLoader />);
-    setPeopleSearchResults(null);
-    setAdditionalOpsExpanded(false);
-
-    let peopleSearchResults = [];
-    peopleSearchResults = await goStalk.search(
-      includeAlumni,
-      firstNameSearchValue,
-      lastNameSearchValue,
-      majorSearchValue,
-      minorSearchValue,
-      hallSearchValue,
-      classTypeSearchValue,
-      homeCitySearchValue,
-      stateSearchValue,
-      countrySearchValue,
-      departmentSearchValue,
-      buildingSearchValue,
-    );
-    if (peopleSearchResults.length === 0) {
-      setPeopleSearchResults(
-        <Grid item xs={12}>
-          <Typography variant="headline" align="center">
-            No results found.
-          </Typography>
-        </Grid>,
-      );
-      setHeader('');
-    } else {
-      setPeopleSearchResults(
-        <Media query="(min-width: 960px)">
-          {(matches) =>
-            matches
-              ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
-              : peopleSearchResults.map((person) => <MobilePeopleSearchResult Person={person} />)
-          }
-        </Media>,
-      );
-      setHeader(makeHeader());
-    }
   };
 
   const saveSearchParamsToHistory = () => {
