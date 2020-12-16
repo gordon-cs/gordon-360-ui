@@ -1,6 +1,5 @@
 import React from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 
 /**
@@ -9,25 +8,39 @@ import { NavLink } from 'react-router-dom';
  * @param {string} unavailable why the page linked to is unavailable. Either 'offline', 'unauthorized', or null
  * @param {Function} onLinkClick function called when link is clicked
  * @param {Function}  openUnavailableDialog function to open the dialog box when the linked page is unavailable
+ * @param {boolean} divider whether or to add a divider
  * @param {string} linkName the name of the link
  * @param {string} linkPath the path to be linked to
+ * @param {JSX.Element} LinkIcon An optional icon to include in the link
  *
  */
 const GordonNavButton = ({
   unavailable = null,
   onLinkClick = () => {},
   openUnavailableDialog = () => {},
+  divider = true,
   linkName,
   linkPath = null,
+  LinkIcon = null,
 }) => {
   const link =
     unavailable !== null || linkPath === null ? (
-      <ListItem divider button onClick={onLinkClick} disabled={unavailable !== null}>
+      <ListItem divider={divider} button onClick={onLinkClick} disabled={unavailable !== null}>
+        {LinkIcon && (
+          <ListItemIcon>
+            <LinkIcon />
+          </ListItemIcon>
+        )}
         <ListItemText primary={linkName} />
       </ListItem>
     ) : (
       <NavLink exact to={linkPath} onClick={onLinkClick} className="gc360-link">
-        <ListItem divider button>
+        <ListItem divider={divider} button>
+          {LinkIcon && (
+            <ListItemIcon>
+              <LinkIcon />
+            </ListItemIcon>
+          )}
           <ListItemText primary={linkName} />
         </ListItem>
       </NavLink>

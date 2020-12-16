@@ -6,7 +6,7 @@ import { signOut } from '../../../../services/auth';
 import user from '../../../../services/user';
 import GordonQuickLinksDialog from '../../../QuickLinksDialog';
 import { gordonColors } from '../../../../theme';
-import GordonNavButton from '../NavButton';
+import GordonNavButton from '../../../NavButton';
 import { useNetworkIsOnline } from '../../../../context/NetworkContext';
 import './index.css';
 
