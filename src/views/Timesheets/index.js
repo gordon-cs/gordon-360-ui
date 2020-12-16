@@ -29,6 +29,7 @@ import GordonLoader from '../../components/Loader';
 import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
+import { useNetworkIsOnline } from '../../context/NetworkContext';
 
 const useStyles = makeStyles((theme) => ({
   customWidth: {
@@ -59,7 +60,6 @@ const Timesheets = (props) => {
   const [isOverlappingShift, setIsOverlappingShift] = useState(false);
   const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [network, setNetwork] = useState('online');
   const [saving, setSaving] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
@@ -68,6 +68,7 @@ const Timesheets = (props) => {
   const [isUserStudent, setIsUserStudent] = useState(false);
   const [hourTypes, setHourTypes] = useState(null);
   const [selectedHourType, setSelectedHourType] = useState('R');
+  const isOnline = useNetworkIsOnline();
 
   // Sets the person type of the user
   useEffect(() => {
@@ -467,32 +468,6 @@ const Timesheets = (props) => {
       setSnackbarOpen(false);
     };
 
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('online');
-      } else if (
-        event.data === 'offline' &&
-        network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('offline');
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
     const jobDropdown = (
       <FormControl
         disabled={userJobs === null || userJobs.length === 0}
@@ -599,7 +574,7 @@ const Timesheets = (props) => {
       </Button>
     );
 
-    if (networkStatus === 'online' && isUserStudent && props.authentication) {
+    if (isOnline && isUserStudent && props.authentication) {
       return (
         <>
           <Grid container spacing={2}>
@@ -766,7 +741,7 @@ const Timesheets = (props) => {
       );
     } else {
       // If the network is offline or the user type is non-student
-      if (networkStatus === 'offline' || !isUserStudent) {
+      if (!isOnline || !isUserStudent) {
         return (
           <Grid container justify="center" spacing="16">
             <Grid item xs={12} md={8}>
@@ -777,7 +752,7 @@ const Timesheets = (props) => {
                     textAlign: 'center',
                   }}
                 >
-                  {networkStatus === 'offline' && (
+                  {!isOnline && (
                     <Grid
                       item
                       xs={2}
@@ -795,13 +770,9 @@ const Timesheets = (props) => {
                     </Grid>
                   )}
                   <br />
-                  <h1>
-                    {networkStatus === 'offline'
-                      ? 'Please re-establish connection'
-                      : 'Timesheets Unavailable'}
-                  </h1>
+                  <h1>{!isOnline ? 'Please re-establish connection' : 'Timesheets Unavailable'}</h1>
                   <h4>
-                    {networkStatus === 'offline'
+                    {!isOnline
                       ? 'Timesheets entry has been disabled due to loss of network.'
                       : 'Timesheets is currently available for students only. Support for staff will come soon!'}
                   </h4>

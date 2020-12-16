@@ -365,7 +365,7 @@ class GordonSchedulePanel extends Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container direction="row" xs={12} lg={12} justify="center">
-              {this.props.network === 'online' && (
+              {this.props.isOnline && (
                 <Grid container direction="row" xs={12} lg={10}>
                   <Grid container xs={12} lg={8} alignItems="center" justify="flex-start">
                     <Markup content={replaced} />
@@ -414,7 +414,7 @@ class GordonSchedulePanel extends Component {
                   schedulePrivacy={this.state.isSchedulePrivate}
                   reloadHandler={this.reloadHandler}
                   reloadCall={this.state.reloadCall}
-                  network={this.props.network}
+                  isOnline={this.props.isOnline}
                 />
               </Grid>
             </Grid>

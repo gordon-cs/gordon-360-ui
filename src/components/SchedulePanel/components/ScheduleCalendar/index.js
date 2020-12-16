@@ -109,7 +109,7 @@ export default class GordonScheduleCalendar extends Component {
       // Calendar API can be controlled here with these properties
       let Resource = ({ localizer = momentLocalizer(Moment) }) => (
         <Calendar
-          selectable={this.props.network === 'online' ? true : false}
+          selectable={this.props.isOnline ? true : false}
           events={this.eventInfo}
           localizer={localizer}
           min={dayStart}
