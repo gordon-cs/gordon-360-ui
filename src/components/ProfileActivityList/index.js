@@ -12,8 +12,6 @@ import './index.css';
 export default class ProfileActivityList extends Component {
   render() {
     const { Activity } = this.props;
-
-    // Creates the My Profile button link depending on the status of the network found in local storage
     let ActivityList = (
       <div>
         <Grid container alignItems="center" className="public-profile-info-card">

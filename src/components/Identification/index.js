@@ -29,7 +29,7 @@ import GordonLoader from '../Loader/index';
 import { windowBreakWidths } from '../../theme';
 import './index.css';
 
-export const Identification = (props) => {
+const Identification = (props) => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState(null);
   const [defaultUserImage, setDefaultUserImage] = useState(null);
@@ -640,23 +640,22 @@ export const Identification = (props) => {
     );
   }
 
-  let linksDialog =
-    props.network === 'online' ? (
-      <LinksDialog
-        createSnackbar={createSnackbar}
-        handleSocialLinksClose={handleSocialLinksClose}
-        facebookLink={facebookLink}
-        setFacebookLink={setFacebookLink}
-        twitterLink={twitterLink}
-        setTwitterLink={setTwitterLink}
-        linkedInLink={linkedInLink}
-        setLinkedInLink={setLinkedInLink}
-        instagramLink={instagramLink}
-        setInstagramLink={setInstagramLink}
-      />
-    ) : (
-      <></>
-    );
+  let linksDialog = props.isOnline ? (
+    <LinksDialog
+      createSnackbar={createSnackbar}
+      handleSocialLinksClose={handleSocialLinksClose}
+      facebookLink={facebookLink}
+      setFacebookLink={setFacebookLink}
+      twitterLink={twitterLink}
+      setTwitterLink={setTwitterLink}
+      linkedInLink={linkedInLink}
+      setLinkedInLink={setLinkedInLink}
+      instagramLink={instagramLink}
+      setInstagramLink={setInstagramLink}
+    />
+  ) : (
+    <></>
+  );
 
   // Defines which social media icons will display
   let facebookButton;
@@ -782,7 +781,7 @@ export const Identification = (props) => {
                         alt="Profile"
                       />
 
-                      {props.network === 'online' && props.myProf && (
+                      {props.isOnline && props.myProf && (
                         <Typography
                           variant="body1"
                           className="identification-card-content-card-container-photo-main-container-tile-bar"
@@ -791,7 +790,7 @@ export const Identification = (props) => {
                         </Typography>
                       )}
                     </div>
-                    {props.network === 'online' && props.myProf && (
+                    {props.isOnline && props.myProf && (
                       <div
                         onClick={handlePhotoOpen}
                         className="identification-card-content-card-container-photo-main-button"
@@ -839,7 +838,7 @@ export const Identification = (props) => {
                         {twitterButton}
                         {linkedInButton}
                         {instagramButton}
-                        {props.network === 'online' && props.myProf && editButton}
+                        {props.isOnline && props.myProf && editButton}
                       </Grid>
                     </Grid>
                   )}
@@ -906,7 +905,7 @@ export const Identification = (props) => {
                     </a>
                   </Grid>
 
-                  {props.network === 'online' && createPhotoDialogBox()}
+                  {props.isOnline && createPhotoDialogBox()}
 
                   <Dialog
                     open={socialLinksOpen}
@@ -924,7 +923,7 @@ export const Identification = (props) => {
             <GordonLoader />
           )}
 
-          {userProfile && props.network === 'online' && props.myProf && (
+          {userProfile && props.isOnline && props.myProf && (
             <Link
               to={`/profile/${userProfile.AD_Username}`}
               className="identification-card-content-public-profile-link"
@@ -998,3 +997,5 @@ export const Identification = (props) => {
     </div>
   );
 };
+
+export default Identification;

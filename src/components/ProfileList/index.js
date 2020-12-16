@@ -214,7 +214,7 @@ class ProfileList extends Component {
       this.formatPhone(profile.MobilePhone),
       classes,
       this.state.isMobilePhonePrivate,
-      this.props.network,
+      this.props.isOnline,
       this.props.myProf,
       this.handleChangeMobilePhonePrivacy,
     );

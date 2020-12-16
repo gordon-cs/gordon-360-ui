@@ -120,7 +120,7 @@ export default class MyProfileActivityList extends Component {
                 <List>
                   <ListItem className="my-profile-info-card-info-one-text">
                     {/* A link to the activity is only available if the user is online */}
-                    {this.props.network === 'online' ? (
+                    {this.props.isOnline ? (
                       <Link
                         className="gc360-link"
                         to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
@@ -147,7 +147,7 @@ export default class MyProfileActivityList extends Component {
               <Grid container xs={4} alignItems="center">
                 <Grid container direction="column">
                   <Grid item align="center">
-                    {this.props.network === 'online' && (
+                    {this.props.isOnline && (
                       <Switch
                         onChange={() => {
                           this.handleChangeMembershipPrivacy(Membership);
@@ -177,7 +177,7 @@ export default class MyProfileActivityList extends Component {
               alignItems="center"
             >
               {/* A link to the activity is only available if the user is online */}
-              {this.props.network === 'online' ? (
+              {this.props.isOnline ? (
                 <Link
                   className="gc360-link"
                   to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
@@ -216,7 +216,7 @@ export default class MyProfileActivityList extends Component {
                 <List>
                   <ListItem className="my-profile-info-card-info-one-text">
                     {/* A link to the activity is only available if the user is online */}
-                    {this.props.network === 'online' ? (
+                    {this.props.isOnline ? (
                       <Link
                         className="gc360-link"
                         to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}
@@ -242,7 +242,7 @@ export default class MyProfileActivityList extends Component {
               </Grid>
 
               <Grid container xs={4} alignItems="center">
-                {this.props.network === 'online' && (
+                {this.props.isOnline && (
                   <Grid container>
                     <Grid item xs={12} align="center">
                       <Grid container justify="center">
@@ -272,7 +272,7 @@ export default class MyProfileActivityList extends Component {
               alignItems="center"
             >
               {/* A link to the activity is only available if the user is online */}
-              {this.props.network === 'online' ? (
+              {this.props.isOnline ? (
                 <Link
                   className="gc360-link"
                   to={`/activity/${Membership.SessionCode}/${Membership.ActivityCode}`}

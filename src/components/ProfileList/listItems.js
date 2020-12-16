@@ -182,7 +182,7 @@ function createHomePhoneListItem(
  * @param {String} formattedPhoneNum The user's phone number properly formatted
  * @param {Object} classes Styles applied to privacy switch of this list item
  * @param {Boolean} isMobilePhonePrivate Determines if the mobile phone is private
- * @param {String} network Determines if the network is online or offline
+ * @param {String} isOnline Whether the network is online or not
  * @param {Boolean} myProf Determines if the current page is the My Profile page
  * @param {Function} handleChangeMobilePhonePrivacy Handles the privacy change of the mobile phone number
  *
@@ -197,7 +197,7 @@ function createMobilePhoneListItem(
   formattedPhoneNum,
   classes,
   isMobilePhonePrivate,
-  network,
+  isOnline,
   myProf,
   handleChangeMobilePhonePrivacy,
 ) {
@@ -249,7 +249,7 @@ function createMobilePhoneListItem(
                 alignItems="center"
               >
                 <Grid container justify="center" alignItems="center" direction="column">
-                  {network === 'online' && (
+                  {isOnline && (
                     <Switch
                       onChange={() => {
                         handleChangeMobilePhonePrivacy();

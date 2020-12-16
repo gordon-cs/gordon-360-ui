@@ -371,7 +371,7 @@ export default class VictoryPromiseDisplay extends React.Component {
               <Grid container xs className="victory-promise-container-card-container-content">
                 {content}
               </Grid>
-              {this.props.network === 'online' && (
+              {this.props.isOnline && (
                 <Grid
                   container
                   justify="center"

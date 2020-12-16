@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import activity from '../../services/activity';
-import storage from '../../services/storage';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import Grid from '@material-ui/core/Grid';
+import { Button, Card, CardContent, CardHeader, Grid, List } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import List from '@material-ui/core/List';
 import MyProfileActivityList from '../MyProfileActivityList/index';
 import ProfileActivityList from '../ProfileActivityList/index';
 import Typography from '@material-ui/core/Typography';
 import './index.css';
+import { useNetworkIsOnline } from '../../context/NetworkContext';
 
 export const Involvements = (props) => {
   const [involvementsAndTheirPrivacy, setInvolvementsAndTheirPrivacy] = useState([]);
   const [publicMemberships, setPublicMemberships] = useState([]);
-  const [network, setNetwork] = useState();
+  const isOnline = useNetworkIsOnline();
 
   /**
    * Loads the user's profile info only once (at start)
@@ -41,46 +36,6 @@ export const Involvements = (props) => {
     loadInvolvements();
   }, [props.memberships, props.myProf]);
 
-  useEffect(() => {
-    let networkStatus;
-    /* Attempts to get the network status from local storage.
-     * If not found, the default value is online
-     */
-    try {
-      networkStatus = storage.get('network-status');
-    } catch (error) {
-      // Defaults the network to online if not found in local storage
-      networkStatus = 'online';
-    }
-
-    // Saves the network's status to this component's state
-    setNetwork(networkStatus);
-  }, [network]);
-
-  useEffect(() => {
-    /* Used to re-render the page when the network connection changes.
-     *  The state's network variable is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('online');
-      } else if (
-        event.data === 'offline' &&
-        network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('offline');
-      }
-    });
-    return window.removeEventListener('message', () => {});
-  }, [network]);
-
   // Creates the Involvements list
   function createInvolvementsList() {
     // Creates the Involvements list for the My Profile page
@@ -103,7 +58,7 @@ export const Involvements = (props) => {
           <MyProfileActivityList
             Membership={involvementPrivacyKeyValuePair.key}
             InvolvementPrivacy={involvementPrivacyKeyValuePair.value}
-            network={network}
+            isOnline={isOnline}
           />
         ));
       }

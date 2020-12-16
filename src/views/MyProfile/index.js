@@ -5,25 +5,23 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import GordonLoader from '../../components/Loader';
 import GordonSchedulePanel from '../../components/SchedulePanel';
-import { Identification } from '../../components/Identification/index';
+import Identification from '../../components/Identification';
 import { Involvements } from '../../components/Involvements/index';
 import Office from './../../components/OfficeList';
 import ProfileList from './../../components/ProfileList';
-import storage from '../../services/storage';
 import user from './../../services/user';
 import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
 import '../../app.css';
 import './myProfile.css';
 import 'cropperjs/dist/cropper.css';
+import { useNetworkIsOnline } from '../../context/NetworkContext';
 
 const MyProfile = (props) => {
   const [loading, setLoading] = useState(true);
   const [memberships, setMemberships] = useState([]);
-  const [network, setNetwork] = useState('online');
-  const [officeInfo, setOfficeInfo] = useState(null);
   const [personType, setPersonType] = useState(null);
   const [profile, setProfile] = useState({});
-  const [profileInfo, setProfileInfo] = useState(null);
+  const isOnline = useNetworkIsOnline();
 
   /**
    * Loads the user's profile info only once (at start)
@@ -34,12 +32,8 @@ const MyProfile = (props) => {
       try {
         let profile = await user.getProfileInfo();
         setProfile(profile);
-        let profileInfo = <ProfileList profile={profile} myProf={true} network={network} />;
-        setProfileInfo(profileInfo);
         const personType = String(profile.PersonType);
         setPersonType(personType);
-        let officeInfo = <Office profile={profile} />;
-        setOfficeInfo(officeInfo);
         const memberships = await user.getMembershipsAlphabetically(profile.ID);
         setMemberships(memberships);
         setLoading(false);
@@ -47,102 +41,56 @@ const MyProfile = (props) => {
         // Do Nothing
       }
     }
-    loadProfile();
-  }, [network]);
-
-  useEffect(() => {
-    let networkStatus;
-    /* Attempts to get the network status from local storage.
-     * If not found, the default value is online
-     */
-    try {
-      networkStatus = storage.get('network-status');
-    } catch (error) {
-      // Defaults the network to online if not found in local storage
-      networkStatus = 'online';
+    if (isOnline) {
+      loadProfile();
     }
+  }, [isOnline]);
 
-    // Saves the network's status to this component's state
-    setNetwork(networkStatus);
-  }, [network]);
+  if (loading) {
+    return <GordonLoader />;
+  } else if (props.authentication) {
+    return (
+      <div className="personal-profile">
+        <Grid container justify="center" spacing={2}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={profile.PersonType === 'stu' ? 8 : 12}
+            lg={profile.PersonType === 'stu' ? 6 : 10}
+          >
+            <Identification profile={profile} isOnline={isOnline} myProf={true} />
+          </Grid>
 
-  useEffect(() => {
-    /* Used to re-render the page when the network connection changes.
-     *  The state's network variable is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('online');
-      } else if (
-        event.data === 'offline' &&
-        network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('offline');
-      }
-    });
-    return window.removeEventListener('message', () => {});
-  }, [network]);
+          {String(personType).includes('stu') && (
+            <Grid item xs={12} md={4} lg={4} sm={12}>
+              <VictoryPromiseDisplay isOnline={isOnline} />
+            </Grid>
+          )}
 
-  // AUTHENTICATED
-  if (props.authentication) {
-    // Creates the My Profile Page
-    let MyProfile = (
-      <div>
-        {loading && <GordonLoader />}
-        {!loading && (
-          <div className="personal-profile">
-            <Grid container justify="center" spacing={2}>
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                md={profile.PersonType === 'stu' ? 8 : 12}
-                lg={profile.PersonType === 'stu' ? 6 : 10}
-              >
-                <Identification profile={profile} network={network} myProf={true} />
-              </Grid>
-
-              {String(personType).includes('stu') && (
-                <Grid item xs={12} md={4} lg={4} sm={12}>
-                  <VictoryPromiseDisplay network={network} />
-                </Grid>
-              )}
-
-              <Grid item xs={12} lg={10} align="center">
-                <Grid container xs={12} lg={12} spacing={0} justify="center">
-                  <Grid item xs={12} lg={12}>
-                    <GordonSchedulePanel profile={profile} myProf={true} network={network} />
-                  </Grid>
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12} lg={5}>
-                <Grid container spacing={2}>
-                  {officeInfo}
-                  {profileInfo}
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12} lg={5}>
-                <Involvements memberships={memberships} myProf={true} />
+          <Grid item xs={12} lg={10} align="center">
+            <Grid container xs={12} lg={12} spacing={0} justify="center">
+              <Grid item xs={12} lg={12}>
+                <GordonSchedulePanel profile={profile} myProf={true} isOnline={isOnline} />
               </Grid>
             </Grid>
-          </div>
-        )}
+          </Grid>
+
+          <Grid item xs={12} lg={5}>
+            <Grid container spacing={2}>
+              <Office profile={profile} />
+              <ProfileList profile={profile} myProf={true} isOnline={isOnline} />
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12} lg={5}>
+            <Involvements memberships={memberships} myProf={true} />
+          </Grid>
+        </Grid>
       </div>
     );
-
-    return MyProfile;
-  }
-  // NOT AUTHENTICATED
-  else {
+  } else {
+    // Not Authenticated
     return (
       <Grid container justify="center">
         <Grid item xs={12} md={8}>
