@@ -1,170 +1,107 @@
-import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import List from '@material-ui/core/List';
+import React, { useEffect, useState } from 'react';
+import { Card, Grid, List, Typography } from '@material-ui/core';
 
 import NewsItem from '../NewsItem';
 import { gordonColors } from '../../../../theme';
 import './newsList.scss';
 
-export default class NewsList extends Component {
-  constructor(props) {
-    super(props);
+const BREAKPOINT_WIDTH = 540;
 
-    this.handleExpandClick = this.handleExpandClick.bind(this);
+const NewsList = ({ news, personalUnapprovedNews, onEdit, onDelete, currentUsername }) => {
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < BREAKPOINT_WIDTH);
 
-    this.state = {
-      open: false,
+  useEffect(() => {
+    const resize = () => {
+      setIsMobileView(window.innerWidth < BREAKPOINT_WIDTH);
     };
-    this.breakpointWidth = 540;
-  }
 
-  handleExpandClick() {
-    this.setState({ open: !this.state.open });
-  }
+    window.addEventListener('resize', resize);
 
-  //Has to rerender on screen resize in order for table to switch to the mobile view
-  resize = () => {
-    if (this.breakpointPassed()) {
-      this.isMobileView = !this.isMobileView;
-      this.forceUpdate();
-    }
+    return () => window.removeEventListener('resize', resize);
+  }, []);
+
+  const headerStyle = {
+    backgroundColor: gordonColors.primary.blue,
+    color: '#FFF',
+    padding: '10px',
   };
 
-  //checks if the screen has been resized past the mobile breakpoint
-  //allows for forceUpdate to only be called when necessary, improving resizing performance
-  breakpointPassed() {
-    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
-    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
-    else return false;
-  }
+  const size = isMobileView ? 'single' : 'full';
+  const header = isMobileView ? (
+    <div style={headerStyle}>
+      <Grid container direction="row">
+        <Grid item xs={12}>
+          <Typography variant="body2" style={headerStyle}>
+            NEWS
+          </Typography>
+        </Grid>
+      </Grid>
+    </div>
+  ) : (
+    <div style={headerStyle}>
+      <Grid container direction="row">
+        <Grid item xs={2}>
+          <Typography variant="body2" style={headerStyle}>
+            CATEGORY
+          </Typography>
+        </Grid>
+        <Grid item xs={5}>
+          <Typography variant="body2" style={headerStyle}>
+            SUBJECT
+          </Typography>
+        </Grid>
+        <Grid item xs={3}>
+          <Typography variant="body2" style={headerStyle}>
+            POSTED BY
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant="body2" style={headerStyle}>
+            POSTED
+          </Typography>
+        </Grid>
+      </Grid>
+    </div>
+  );
 
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
-  }
-
-  render() {
-    const { news } = this.props;
-    const { personalUnapprovedNews } = this.props;
-    let postings;
-    let personalUnapprovedPostings;
-    let header;
-
-    const headerStyle = {
-      backgroundColor: gordonColors.primary.blue,
-      color: '#FFF',
-      padding: '10px',
-    };
-
-    /********** HEADER ***********/
-    // Show single 'news' column for narrrow viewports
-    if (window.innerWidth < this.breakpointWidth) {
-      personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="single"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-          unapproved
-        />
-      ));
-
-      postings = news.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="single"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-        />
-      ));
-
-      header = (
-        <div style={headerStyle}>
-          <Grid container direction="row">
-            <Grid item xs={12}>
-              <Typography variant="body2" style={headerStyle}>
-                NEWS
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      );
-    }
-
-    // Show full news columns in header for larger viewports
-    else if (news) {
-      personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="full"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-          unapproved
-        />
-      ));
-
-      postings = news.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-          size="full"
-        />
-      ));
-
-      header = (
-        <div style={headerStyle}>
-          <Grid container direction="row">
-            <Grid item xs={2}>
-              <Typography variant="body2" style={headerStyle}>
-                CATEGORY
-              </Typography>
-            </Grid>
-            <Grid item xs={5}>
-              <Typography variant="body2" style={headerStyle}>
-                SUBJECT
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography variant="body2" style={headerStyle}>
-                POSTED BY
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={headerStyle}>
-                POSTED
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      );
-    }
-
+  const personalUnapprovedPostings = personalUnapprovedNews.map((posting) => {
     return (
-      <section>
-        <Card>
-          {header}
-          <Grid>
-            <List className="news-list" disablePadding>
-              {personalUnapprovedPostings}
-              {postings}
-            </List>
-          </Grid>
-        </Card>
-      </section>
+      <NewsItem
+        posting={posting}
+        key={posting.SNID}
+        isEditable={currentUsername.toLowerCase() === posting.ADUN.toLowerCase()}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        size={size}
+        unapproved
+      />
     );
-  }
-}
+  });
+
+  const postings = news.map((posting) => (
+    <NewsItem
+      posting={posting}
+      key={posting.SNID}
+      isEditable={currentUsername.toLowerCase() === posting.ADUN.toLowerCase()}
+      onEdit={onEdit}
+      onDelete={onDelete}
+      size={size}
+    />
+  ));
+
+  return (
+    <section>
+      <Card>
+        {header}
+        <Grid>
+          <List className="news-list" disablePadding>
+            {personalUnapprovedPostings}
+            {postings}
+          </List>
+        </Grid>
+      </Card>
+    </section>
+  );
+};
+
+export default NewsList;
