@@ -58,7 +58,7 @@ const ActivityProfile = ({ authentication, match }) => {
   const [openRemoveImage, setOpenRemoveImage] = useState(false);
   const [emailList, setEmailList] = useState([]);
   const isOnline = useNetworkIsOnline();
-  const cropper = useRef();
+  const cropperRef = useRef();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -186,7 +186,7 @@ const ActivityProfile = ({ authentication, match }) => {
   const onCropperZoom = (event) => {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      this.refs.cropper.zoomTo(1);
+      cropperRef.current.zoomTo(1);
     }
   };
 
@@ -223,7 +223,7 @@ const ActivityProfile = ({ authentication, match }) => {
     setOpenEditActivity(false);
   };
 
-  // Why not just load page again?
+  // TODO: Why not just load page again?
   const refresh = () => {
     window.location.reload();
   };
@@ -231,8 +231,10 @@ const ActivityProfile = ({ authentication, match }) => {
   const handleCloseSelect = () => {
     if (preview != null) {
       setImage(preview);
-      var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-      this.setState({ image: croppedImage, photoOpen: false, preview: null });
+      const croppedImage = cropperRef.current.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      setImage(croppedImage);
+      setPhotoOpen(false);
+      setPreview(null);
     }
   };
 
@@ -261,7 +263,7 @@ const ActivityProfile = ({ authentication, match }) => {
   let content;
 
   if (loading) {
-    content = <GordonLoader />;
+    return <GordonLoader />;
   }
   if (!isOnline) {
     content = (
@@ -315,6 +317,7 @@ const ActivityProfile = ({ authentication, match }) => {
       color: 'white',
     };
 
+    console.log(activityInfo);
     const {
       ActivityDescription: activityDescription,
       ActivityBlurb: activityBlurb,
@@ -350,7 +353,7 @@ const ActivityProfile = ({ authentication, match }) => {
             <DialogContent>
               <Grid align="center" className="activity-image" item>
                 <img
-                  alt={activity.activityDescription}
+                  alt={activityDescription}
                   src={image || activityImagePath}
                   className="rounded-corners"
                 />
@@ -415,7 +418,7 @@ const ActivityProfile = ({ authentication, match }) => {
                   {preview && (
                     <Grid container justify="center" spacing={6}>
                       <Cropper
-                        ref={cropper}
+                        ref={cropperRef}
                         src={preview}
                         style={{
                           'max-width': maxCropPreviewWidth(),
@@ -623,9 +626,9 @@ const ActivityProfile = ({ authentication, match }) => {
       ActivityBlurb: activityBlurb,
       ActivityURL: activityURL,
       ActivityImagePath: activityImagePath,
-    } = this.state.activityInfo;
+    } = activityInfo;
 
-    const { SessionDescription: sessionDescription } = this.state.sessionInfo;
+    const { SessionDescription: sessionDescription } = sessionInfo;
     let description;
     if (activityBlurb.length !== 0) {
       description = (

@@ -249,14 +249,12 @@ export default class Membership extends Component {
   async loadMembers() {
     this.setState({ loading: true });
     try {
-      const [id, participationDetail] = await Promise.all([
-        user.getLocalInfo().id,
-        membership.search(
-          this.state.id,
-          this.props.sessionInfo.SessionCode,
-          this.props.activityCode,
-        ),
-      ]);
+      const { id } = await user.getLocalInfo();
+      const participationDetail = await membership.search(
+        id,
+        this.props.sessionInfo.SessionCode,
+        this.props.activityCode,
+      );
       this.setState({
         id,
         participationDetail,

@@ -9,53 +9,45 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import React, { Component } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './activities-all.css';
 import activity from '../../services/activity';
-import session from '../../services/session';
+import sessionService from '../../services/session';
 import GordonActivityGrid from './components/ActivityGrid';
 import GordonLoader from '../../components/Loader';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import Requests from './components/Requests';
-import storage from '../../services/storage';
+import { useNetworkIsOnline } from '../../context/NetworkContext';
 
-export default class GordonActivitiesAll extends Component {
-  constructor(props) {
-    super(props);
-    this.changeSession = this.changeSession.bind(this);
-    this.filter = this.filter.bind(this);
+const GordonActivitiesAll = (props) => {
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [currentAcademicSession, setCurrentAcademicSession] = useState('');
+  const [profile, setProfile] = useState('');
+  const [activities, setActivities] = useState([]);
+  const [allActivities, setAllActivities] = useState([]);
+  const [myInvolvements, setMyInvolvements] = useState([]);
+  const [search, setSearch] = useState('');
+  const [session, setSession] = useState('');
+  const [sessions, setSessions] = useState([]);
+  const [type, setType] = useState('');
+  const [types, setTypes] = useState([]);
+  const isOnline = useNetworkIsOnline();
 
-    this.state = {
-      currentAcademicSession: '',
-      profile: '',
-      activities: [],
-      allActivities: [],
-      myInvolvements: [],
-      error: null,
-      loading: true,
-      search: '',
-      session: '',
-      sessions: [],
-      type: '',
-      types: [],
-      network: 'online',
-    };
-  }
-
-  async componentDidUpdate() {
+  useEffect(() => {
     window.onpopstate = (e) => {
       window.location.reload();
     };
-  }
+  }, []);
 
-  async componentWillMount() {
-    // this.setState({ loading: true });
-    const { SessionCode: sessionCode } = await session.getCurrent();
+  const load = useCallback(async () => {
+    setLoading(true);
+    const { SessionCode: sessionCode } = await sessionService.getCurrent();
     const [activities, types, sessions] = await Promise.all([
       activity.getAll(sessionCode),
       activity.getTypes(sessionCode),
-      session.getAll(),
+      sessionService.getAll(),
     ]);
 
     //Index of the array "activities" of current session
@@ -67,20 +59,21 @@ export default class GordonActivitiesAll extends Component {
       }
     }
 
-    let [pastActivities, pastTypes] = [[], []];
-    let myPastInvolvements = [];
+    let pastActivities,
+      pastTypes,
+      myPastInvolvements = [];
     let tempSession;
-    var backButton = false;
+    let backButton = false;
     if (window.location.href.includes('?')) {
       backButton = true;
       tempSession = window.location.href.split('?')[1];
-      this.setState({ session: tempSession });
+      setSession(tempSession);
       [pastActivities, pastTypes] = await Promise.all([
         activity.getAll(tempSession),
         activity.getTypes(tempSession),
       ]);
     }
-    if (this.props.authentication) {
+    if (props.authentication) {
       try {
         const profile = await user.getProfileInfo();
         const myInvolvements = await user.getSessionMembershipsWithoutGuests(
@@ -92,123 +85,75 @@ export default class GordonActivitiesAll extends Component {
             profile.ID,
             tempSession,
           );
-          this.setState({
-            profile,
-            activities: pastActivities,
-            allActivities: pastActivities,
-            myInvolvements: myPastInvolvements,
-            types: pastTypes,
-            sessions: sessions,
-          });
+          setSessions(sessions);
+          setActivities(pastActivities);
+          setAllActivities(pastActivities);
+          setMyInvolvements(myPastInvolvements);
+          setTypes(pastTypes);
+          setProfile(profile);
         } else if (activities.length === 0) {
-          for (var k = IcurrentSession - 1; k >= 0; k--) {
+          for (let k = IcurrentSession - 1; k >= 0; k--) {
             const [newActivities] = await Promise.all([activity.getAll(sessions[k].SessionCode)]);
             if (newActivities.length !== 0) {
-              this.setState({
-                session: sessions[k].SessionCode,
-                sessions,
-                activities: newActivities,
-                allActivities: newActivities,
-                myInvolvements: [],
-                types,
-                profile,
-              });
+              setSession(sessions[k].sessionCode);
+              setSessions(sessions);
+              setActivities(newActivities);
+              setAllActivities(newActivities);
+              setMyInvolvements([]);
+              setTypes(types);
+              setProfile(profile);
               break;
             }
           }
         } else {
-          this.setState({
-            profile,
-            session: sessionCode,
-            activities,
-            allActivities: activities,
-            myInvolvements: myInvolvements,
-            sessions,
-            types,
-          });
+          setSession(sessionCode);
+          setSessions(sessions);
+          setActivities(activities);
+          setAllActivities(activities);
+          setMyInvolvements(myInvolvements);
+          setTypes(types);
+          setProfile(profile);
         }
       } catch (error) {
-        this.setState({ error });
+        setError(error);
       }
     } else {
       try {
         if (backButton) {
-          this.setState({
-            activities: pastActivities,
-            allActivities: pastActivities,
-            types: pastTypes,
-            sessions: sessions,
-          });
+          setSessions(sessions);
+          setActivities(pastActivities);
+          setAllActivities(pastActivities);
+          setTypes(pastTypes);
         } else if (activities.length === 0) {
-          for (k = IcurrentSession - 1; k >= 0; k--) {
+          for (let k = IcurrentSession - 1; k >= 0; k--) {
             const [newActivities] = await Promise.all([activity.getAll(sessions[k].SessionCode)]);
             if (newActivities.length !== 0) {
-              this.setState({
-                session: sessions[k].SessionCode,
-                sessions,
-                activities: newActivities,
-                allActivities: newActivities,
-                types,
-              });
+              setSessions(sessions);
+              setSession(sessions[k].SessionCode);
+              setActivities(newActivities);
+              setAllActivities(newActivities);
+              setTypes(types);
               break;
             }
           }
         } else {
-          this.setState({
-            session: sessionCode,
-            activities,
-            allActivities: activities,
-            sessions,
-            types,
-          });
+          setSession(sessionCode);
+          setSessions(sessions);
+          setActivities(activities);
+          setAllActivities(activities);
+          setTypes(types);
         }
       } catch (error) {
-        this.setState({ error });
+        setError(error);
       }
     }
-    this.setState({
-      loading: false,
-      currentAcademicSession:
-        this.state.currentAcademicSession === '' ? sessionCode : this.state.currentAcademicSession,
-    });
-  }
+    setCurrentAcademicSession(sessionCode);
+    setLoading(false);
+  }, [props.authentication]);
 
-  componentDidMount() {
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    let network;
-    /* Attempts to get the network status from local storage.
-     * If not found, the default value is online
-     */
-    try {
-      network = storage.get('network-status');
-    } catch (error) {
-      // Defaults the network to online if not found in local storage
-      network = 'online';
-    }
-
-    // Saves the network's status to this component's state
-    this.setState({ network });
-  }
+  useEffect(() => {
+    load();
+  }, [load]);
 
   /**
    * Gets the information of the new selected session to display to the user.
@@ -216,27 +161,23 @@ export default class GordonActivitiesAll extends Component {
    * @param {Event} event The event of a session being changed. It contains the value of the new
    *                      selected session.
    */
-  async changeSession(event) {
-    this.setState({ session: event.target.value, loading: true }, async () => {
-      // Saves the selected session in React's history to allow the browser to navigate through past
-      // selected sessions in its history through the Back button
-      this.props.history.push(`?${this.state.session}`);
-
-      const allActivities = await activity.getAll(this.state.session);
-      const types = await activity.getTypes(this.state.session);
-      const { type, search } = this.state;
-      this.setState({
-        activities: activity.filter(allActivities, type, search),
-        allActivities,
-        types,
-        // If authenticated, gets the user's involvements for the selected session
-        myInvolvements: this.props.authentication
-          ? await user.getSessionMembershipsWithoutGuests(this.state.profile.ID, this.state.session)
-          : [],
-        loading: false,
-      });
-    });
-  }
+  const changeSession = async (event) => {
+    const newSession = event.target.value;
+    setLoading(true);
+    setSession(newSession);
+    props.history.push(`?${newSession}`);
+    const allActivities = await activity.getAll(newSession);
+    const types = await activity.getTypes(newSession);
+    setActivities(activity.filter(allActivities, type, search));
+    setAllActivities(allActivities);
+    setTypes(types);
+    setMyInvolvements(
+      props.authentication
+        ? await user.getSessionMembershipsWithoutGuests(profile.ID, newSession)
+        : [],
+    );
+    setLoading(false);
+  };
 
   /**
    * Filters the activities list by the current/selected Activity-Type and the user search.
@@ -245,25 +186,30 @@ export default class GordonActivitiesAll extends Component {
    *                      a user search and a 'Type' is a selected Activity-Type
    * @returns {Function} An asynchronous function that filters the activities based upon an event's data
    */
-  filter(name) {
-    return (event) => {
-      this.setState({ [name]: event.target.value }, () => {
-        const { allActivities, type, search } = this.state;
-        this.setState({ activities: activity.filter(allActivities, type, search) });
-      });
-    };
-  }
+  const filter = (name) => {
+    if (name === 'search') {
+      return (event) => {
+        setSearch(event.target.value);
+        setActivities(activity.filter(allActivities, type, event.target.value));
+      };
+    } else {
+      return (event) => {
+        setType(event.target.value);
+        setActivities(activity.filter(allActivities, event.target.value, search));
+      };
+    }
+  };
 
   /**
    * Creates the My Involvements text for both the header and if the user has no involvements.
    *
    * @returns {Object} An object that contains both MyInvolvements header and no-involvements text
    */
-  createMyInvolvementsText() {
+  const createMyInvolvementsText = () => {
     let myInvolvementsHeadingText = '';
     let myInvolvementsNoneText = '';
     // If the current session is the current academic session
-    if (this.state.session !== '' && this.state.session === this.state.currentAcademicSession) {
+    if (session && session === currentAcademicSession) {
       myInvolvementsHeadingText = 'CURRENT';
       myInvolvementsNoneText =
         "It looks like you're not currently a member of any Involvements. Get connected below!";
@@ -272,171 +218,167 @@ export default class GordonActivitiesAll extends Component {
     else {
       // Gets the description of the session
       try {
-        let involvementDescription = this.state.sessions.filter((session) => {
-          return this.state.session === session.SessionCode;
+        let involvementDescription = sessions.filter((s) => {
+          return s.SessionCode === session;
         })[0].SessionDescription;
         myInvolvementsHeadingText = involvementDescription.toUpperCase();
         myInvolvementsNoneText = 'No Involvements found for ' + involvementDescription;
       } catch (error) {
-        // Do nothing with error
+        console.error(error);
       }
     }
 
-    return { headingText: myInvolvementsHeadingText, noneText: myInvolvementsNoneText };
+    return [myInvolvementsHeadingText, myInvolvementsNoneText];
+  };
+
+  // If an error occured while getting user's involvements, throw an error
+  if (error) {
+    throw error;
   }
 
-  render() {
-    // If an error occured while getting user's involvements, throw an error
-    if (this.state.error) {
-      throw this.state.error;
-    }
+  // Grid Header Style
+  const headerStyle = {
+    backgroundColor: gordonColors.primary.blue,
+    color: '#FFF',
+    padding: '10px',
+  };
 
-    // Grid Header Style
-    const headerStyle = {
-      backgroundColor: gordonColors.primary.blue,
-      color: '#FFF',
-      padding: '10px',
-    };
+  let myInvolvementsComp;
+  let allInvolvementsComp;
+  let [myInvolvementsHeadingText, myInvolvementsNoneText] = createMyInvolvementsText();
 
-    // Creates My Involvements
-    let myInvolvements = <GordonLoader />; // Defaulted to the Gordon loader until user data is fetched
-    let myInvolvementsText = this.createMyInvolvementsText();
-    let myInvolvementsHeaderText = myInvolvementsText.headingText;
-    let myInvolvementsNoneText = myInvolvementsText.noneText;
+  if (loading) {
+    myInvolvementsComp = <GordonLoader />;
+    allInvolvementsComp = <GordonLoader />;
+  } else {
+    myInvolvementsComp = (
+      <GordonActivityGrid
+        activities={myInvolvements}
+        sessionCode={session}
+        noInvolvementsText={myInvolvementsNoneText}
+      />
+    );
+    allInvolvementsComp = (
+      <GordonActivityGrid
+        activities={activities}
+        sessionCode={session}
+        noInvolvementsText="No results for the selected session and type."
+      />
+    );
+  }
 
-    // Creates All Involvements
-    let allInvolvements = <GordonLoader />; // Defaulted to the Gordon loader until user data is fetched
+  // Creates the sessions list
+  const sessionOptions = isOnline
+    ? sessions.map(({ SessionDescription: description, SessionCode: code }) => (
+        <MenuItem label={description} value={code} key={code}>
+          {description}
+        </MenuItem>
+      ))
+    : sessions
+        .filter((item) => item.SessionCode === session)
+        .map(({ SessionDescription: description, SessionCode: code }) => (
+          <MenuItem label={description} value={code} key={code}>
+            {description}
+          </MenuItem>
+        ));
 
-    // Creates the involvements grids if the user's info was retrieved
-    if (!this.state.loading) {
-      myInvolvements = (
-        <GordonActivityGrid
-          myInvolvements={this.state.myInvolvements}
-          sessionCode={this.state.session}
-          noInvolvementsText={myInvolvementsNoneText}
-        />
-      );
-      allInvolvements = (
-        <GordonActivityGrid activities={this.state.activities} sessionCode={this.state.session} />
-      );
-    }
+  // Creates the current session's types list
+  const typeOptions = types.map((type) => (
+    <MenuItem value={type} key={type}>
+      {type}
+    </MenuItem>
+  ));
 
-    // Creates the sessions list
-    const sessionOptions =
-      this.state.network === 'online'
-        ? this.state.sessions.map(({ SessionDescription: description, SessionCode: code }) => (
-            <MenuItem label={description} value={code} key={code}>
-              {description}
-            </MenuItem>
-          ))
-        : this.state.sessions
-            .filter((item) => item.SessionCode === this.state.session)
-            .map(({ SessionDescription: description, SessionCode: code }) => (
-              <MenuItem label={description} value={code} key={code}>
-                {description}
-              </MenuItem>
-            ));
-
-    // Creates the current session's types list
-    const typeOptions = this.state.types.map((type) => (
-      <MenuItem value={type} key={type}>
-        {type}
-      </MenuItem>
-    ));
-
-    let fullContent = (
-      <section className="activities-all">
-        <Grid container justify="center" spacing={0}>
-          <Grid item xs={12} md={12} lg={8}>
-            <Grid container className="activities-filter" spacing={2}>
-              <Grid item xs={12} md={12} lg={6}>
-                <TextField
-                  id="search"
-                  label="Search"
-                  value={this.state.search}
-                  onChange={this.filter('search')}
-                  margin="none"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} md={6} lg={3}>
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="activity-session">Session</InputLabel>
-                  <Select
-                    value={this.state.session}
-                    onChange={this.changeSession}
-                    input={<Input id="activity-session" />}
-                  >
-                    {sessionOptions}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} md={6} lg={3}>
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="activity-type">Type of Involvement</InputLabel>
-                  <Select
-                    value={this.state.type}
-                    onChange={this.filter('type')}
-                    input={<Input id="activity-type" />}
-                  >
-                    <MenuItem label="All" value="">
-                      <em>All</em>
-                    </MenuItem>
-                    {typeOptions}
-                  </Select>
-                </FormControl>
-              </Grid>
+  let fullContent = (
+    <section className="activities-all">
+      <Grid container justify="center" spacing={0}>
+        <Grid item xs={12} md={12} lg={8}>
+          <Grid container className="activities-filter" spacing={2}>
+            <Grid item xs={12} md={12} lg={6}>
+              <TextField
+                id="search"
+                label="Search"
+                value={search}
+                onChange={filter('search')}
+                margin="none"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="activity-session">Session</InputLabel>
+                <Select
+                  value={session}
+                  onChange={changeSession}
+                  input={<Input id="activity-session" />}
+                >
+                  {sessionOptions}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="activity-type">Type of Involvement</InputLabel>
+                <Select value={type} onChange={filter('type')} input={<Input id="activity-type" />}>
+                  <MenuItem label="All" value="">
+                    <em>All</em>
+                  </MenuItem>
+                  {typeOptions}
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         </Grid>
+      </Grid>
 
-        <Grid container align="center" spacing={4} justify="center">
-          {/* Shows the user's memberships requests if the user is online */}
-          {this.state.network === 'online' && this.props.authentication && (
-            <Grid item xs={12} lg={8}>
-              <Card>
-                <Requests />
-              </Card>
-            </Grid>
-          )}
-
-          {/* Shows My Involvements Header if the user is authenticated */}
-          {this.props.authentication && (
-            <Grid item xs={12} lg={8} fullWidth>
-              <Card>
-                <div style={headerStyle}>
-                  <Typography variant="body2" style={headerStyle}>
-                    MY {myInvolvementsHeaderText} INVOLVEMENTS
-                  </Typography>
-                </div>
-              </Card>
-            </Grid>
-          )}
-
-          {/* Shows My Involvements Content if the user is authenticated */}
-          {this.props.authentication && (
-            <Grid item xs={12} lg={8}>
-              {myInvolvements}
-            </Grid>
-          )}
-
+      <Grid container align="center" spacing={4} justify="center">
+        {/* Shows the user's memberships requests if the user is online */}
+        {isOnline && props.authentication && (
           <Grid item xs={12} lg={8}>
+            <Card>
+              <Requests />
+            </Card>
+          </Grid>
+        )}
+
+        {/* Shows My Involvements Header if the user is authenticated */}
+        {props.authentication && (
+          <Grid item xs={12} lg={8} fullWidth>
             <Card>
               <div style={headerStyle}>
                 <Typography variant="body2" style={headerStyle}>
-                  ALL INVOLVEMENTS
+                  MY {myInvolvementsHeadingText} INVOLVEMENTS
                 </Typography>
               </div>
             </Card>
           </Grid>
+        )}
 
+        {/* Shows My Involvements Content if the user is authenticated */}
+        {props.authentication && (
           <Grid item xs={12} lg={8}>
-            {allInvolvements}
+            {myInvolvementsComp}
           </Grid>
-        </Grid>
-      </section>
-    );
+        )}
 
-    return <div>{fullContent}</div>;
-  }
-}
+        <Grid item xs={12} lg={8}>
+          <Card>
+            <div style={headerStyle}>
+              <Typography variant="body2" style={headerStyle}>
+                ALL INVOLVEMENTS
+              </Typography>
+            </div>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} lg={8}>
+          {allInvolvementsComp}
+        </Grid>
+      </Grid>
+    </section>
+  );
+
+  return fullContent;
+};
+
+export default GordonActivitiesAll;
