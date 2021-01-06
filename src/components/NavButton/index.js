@@ -13,6 +13,7 @@ import { NavLink } from 'react-router-dom';
  * @param {string} linkPath the path to be linked to
  * @param {JSX.Element} LinkIcon An optional icon to include in the link
  *
+ * @returns {JSX.Element} A NavButton
  */
 const GordonNavButton = ({
   unavailable = null,

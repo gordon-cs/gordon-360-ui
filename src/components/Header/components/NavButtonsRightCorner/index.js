@@ -17,6 +17,8 @@ import './index.css';
  * @param {boolean} authentication whether the user is authenticated
  * @param {Function} openDialogBox function that opens the dialog for when a feature is unavailable
  * @param {boolean} open whether the right side menu is open
+ *
+ * @returns {JSX.Element} The Nav Buttons for the top right corner navigation menu
  */
 const GordonNavButtonsRightCorner = ({
   onClose,
