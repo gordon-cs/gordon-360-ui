@@ -29,6 +29,7 @@ import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
 import { useNetworkIsOnline } from '../../context/NetworkContext';
+import OfflinePanel from '../../components/OfflinePanel';
 
 const CROP_DIM = 320; // pixels
 
@@ -266,48 +267,7 @@ const ActivityProfile = ({ authentication, match }) => {
     return <GordonLoader />;
   }
   if (!isOnline) {
-    content = (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <Grid
-                item
-                xs={2}
-                alignItems="center"
-                style={{
-                  display: 'block',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-              >
-                <img src={require(`${'../../NoConnection.svg'}`)} alt="Internet Connection Lost" />
-              </Grid>
-              <br />
-              <h1>Please Re-establish Connection</h1>
-              <h4>Viewing an involvement has been deactivated due to loss of network.</h4>
-              <br />
-              <br />
-              <Button
-                color="primary"
-                backgroundColor="white"
-                variant="outlined"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Back To Home
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    return <OfflinePanel componentName="Activity Profile" />;
   }
 
   if (authentication) {

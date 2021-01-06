@@ -4,6 +4,7 @@ import InvolvementsStatus from './components/InvolvementsStatus';
 import SuperAdmin from './components/SuperAdmins';
 import user from '../../services/user';
 import { useNetworkIsOnline } from '../../context/NetworkContext';
+import OfflinePanel from '../../components/OfflinePanel';
 
 const Admin = (props) => {
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
@@ -50,48 +51,7 @@ const Admin = (props) => {
       </Grid>
     );
   } else if (!isOnline) {
-    return (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <Grid
-                item
-                xs={2}
-                alignItems="center"
-                style={{
-                  display: 'block',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-              >
-                <img src={require(`${'../../NoConnection.svg'}`)} alt="Internet Connection Lost" />
-              </Grid>
-              <br />
-              <h1>Please Re-establish Connection</h1>
-              <h4>Revision of administrators has been deactivated due to loss of network.</h4>
-              <br />
-              <br />
-              <Button
-                color="primary"
-                backgroundColor="white"
-                variant="outlined"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Back To Home
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    return <OfflinePanel componentName="Admin" />;
   } else if (!isSuperAdmin) {
     return null;
   } else {

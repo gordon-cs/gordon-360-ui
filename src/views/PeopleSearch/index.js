@@ -40,6 +40,7 @@ import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
 import GordonLoader from '../../components/Loader';
 import './peopleSearch.css';
 import { useNetworkIsOnline } from '../../context/NetworkContext';
+import OfflinePanel from '../../components/OfflinePanel';
 
 const styles = {
   FontAwesome: {
@@ -486,7 +487,9 @@ const PeopleSearch = (props) => {
       );
     }
 
-    if (isOnline) {
+    if (!isOnline) {
+      return <OfflinePanel componentName="People Search" />;
+    } else {
       return (
         <Grid container justify="center" spacing={6}>
           <Grid item xs={12} md={8}>
@@ -889,52 +892,6 @@ const PeopleSearch = (props) => {
             <Card>
               {header}
               {peopleSearchResults}
-            </Card>
-          </Grid>
-        </Grid>
-      );
-    } else {
-      return (
-        <Grid container justify="center" spacing="16">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <Grid
-                  item
-                  xs={2}
-                  alignItems="center"
-                  style={{
-                    display: 'block',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
-                </Grid>
-                <br />
-                <h1>Please Re-establish Connection</h1>
-                <h4>People Search has been deactivated due to loss of network.</h4>
-                <br />
-                <br />
-                <Button
-                  color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </CardContent>
             </Card>
           </Grid>
         </Grid>

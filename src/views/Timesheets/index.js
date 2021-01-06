@@ -30,6 +30,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
 import { useNetworkIsOnline } from '../../context/NetworkContext';
+import OfflinePanel from '../../components/OfflinePanel';
 
 const useStyles = makeStyles((theme) => ({
   customWidth: {
@@ -741,7 +742,9 @@ const Timesheets = (props) => {
       );
     } else {
       // If the network is offline or the user type is non-student
-      if (!isOnline || !isUserStudent) {
+      if (!isOnline) {
+        return <OfflinePanel componentName="Timesheets" />;
+      } else if (!isUserStudent) {
         return (
           <Grid container justify="center" spacing="16">
             <Grid item xs={12} md={8}>
@@ -752,29 +755,10 @@ const Timesheets = (props) => {
                     textAlign: 'center',
                   }}
                 >
-                  {!isOnline && (
-                    <Grid
-                      item
-                      xs={2}
-                      alignItems="center"
-                      style={{
-                        display: 'block',
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                      }}
-                    >
-                      <img
-                        src={require(`${'../../NoConnection.svg'}`)}
-                        alt="Internet Connection Lost"
-                      />
-                    </Grid>
-                  )}
-                  <br />
-                  <h1>{!isOnline ? 'Please re-establish connection' : 'Timesheets Unavailable'}</h1>
+                  <h1>Timesheets Unavailable</h1>
                   <h4>
-                    {!isOnline
-                      ? 'Timesheets entry has been disabled due to loss of network.'
-                      : 'Timesheets is currently available for students only. Support for staff will come soon!'}
+                    Timesheets is currently available for students only. Support for staff will come
+                    soon!
                   </h4>
                   <br />
                   <br />

@@ -14,6 +14,7 @@ import Identification from '../../components/Identification';
 import './profile.css';
 import '../../app.css';
 import { useNetworkIsOnline } from '../../context/NetworkContext';
+import OfflinePanel from '../../components/OfflinePanel';
 
 //Public profile view
 const Profile = ({ authentication, match }) => {
@@ -42,7 +43,9 @@ const Profile = ({ authentication, match }) => {
   if (loading) {
     return <GordonLoader />;
   } else if (authentication) {
-    if (isOnline) {
+    if (!isOnline) {
+      return <OfflinePanel componentName="Profile" />;
+    } else {
       return (
         <Grid container justify="center" spacing={2}>
           <Grid item xs={12} lg={10}>
@@ -66,52 +69,6 @@ const Profile = ({ authentication, match }) => {
 
           <Grid item xs={12} lg={5}>
             <Involvements memberships={memberships} myProf={false} />
-          </Grid>
-        </Grid>
-      );
-    } else {
-      return (
-        <Grid container justify="center" spacing={2}>
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <Grid
-                  item
-                  xs={2}
-                  alignItems="center"
-                  style={{
-                    display: 'block',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
-                </Grid>
-                <br />
-                <h1>Please Re-establish Connection</h1>
-                <h4>Viewing a public profile has been deactivated due to loss of network.</h4>
-                <br />
-                <br />
-                <Button
-                  color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </CardContent>
-            </Card>
           </Grid>
         </Grid>
       );

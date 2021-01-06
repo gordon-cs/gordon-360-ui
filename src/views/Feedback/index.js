@@ -1,8 +1,8 @@
 import React from 'react';
 
 import './feedback.css';
-import { Button, Card, CardContent, Grid } from '@material-ui/core';
 import { useNetworkIsOnline } from '../../context/NetworkContext';
+import OfflinePanel from '../../components/OfflinePanel';
 
 const Feedback = () => {
   const isOnline = useNetworkIsOnline();
@@ -24,48 +24,7 @@ const Feedback = () => {
       </div>
     );
   } else {
-    return (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <Grid
-                item
-                xs={2}
-                alignItems="center"
-                style={{
-                  display: 'block',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-              >
-                <img src={require(`${'../../NoConnection.svg'}`)} alt="Internet Connection Lost" />
-              </Grid>
-              <br />
-              <h1>Please Re-establish Connection</h1>
-              <h4>Submitting feedback has been deactivated due to loss of network.</h4>
-              <br />
-              <br />
-              <Button
-                color="primary"
-                backgroundColor="white"
-                variant="outlined"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Back To Home
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    return <OfflinePanel componentName="Feedback" />;
   }
 };
 
