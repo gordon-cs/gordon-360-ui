@@ -69,7 +69,7 @@ const GordonActivityGrid = ({ activities, sessionCode, width, noInvolvementsText
           />
           <div className="gc360-act-grid_title" style={isOnline ? null : offlineStyle.text}>
             {activity.ActivityDescription}
-          </div>{' '}
+          </div>
         </>
       );
 
@@ -84,7 +84,7 @@ const GordonActivityGrid = ({ activities, sessionCode, width, noInvolvementsText
                 {activityImage}
               </Link>
             ) : (
-              activityImage
+              <div>{activityImage}</div>
             )}
           </Paper>
         </GridListTile>
