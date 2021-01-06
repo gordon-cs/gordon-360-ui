@@ -10,7 +10,7 @@ const NetworkConext = createContext();
  *
  * Can be used by any functional component under the NetworkContextProvider in App.js
  *
- * @return {string} 'online' if connected to the network, 'offline' otherwise.
+ * @return {boolean} true if connected to the network, false otherwise.
  */
 export const useNetworkIsOnline = () => {
   const context = useContext(NetworkConext);
