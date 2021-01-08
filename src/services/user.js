@@ -26,13 +26,9 @@ import gordonEvent from './event';
  * @property {Object} CHDate Start time of the event
  * @property {String} CHTermCD Term code of the event
  * @property {Object} CHTime Time the user's ID was scanned
- * @property {Number} Category_ID Category of the event
  * @property {String} Description Given description of the event
  * @property {String} Event_Name The generic name of the event
  * @property {String} Event_Title Specific title of the event
- * @property {String} Event_Type_Name Term code of the event
- * @property {Array.<String[]>} Occurrences Occurrences of the event, each containing start time,
- * end time, and location
  * @property {String} Organization Organization hosting the event
  * @property {Number} Required Required CL&W credits for the user
  */
@@ -404,7 +400,7 @@ const getLocalInfo = () => {
  */
 function getAtndEventTime(event) {
   if (event.Occurrences[0]) {
-    return event.Occurrences[0][0];
+    return event.Occurrences[0].StartDate;
   }
   return event.CHDate;
 }

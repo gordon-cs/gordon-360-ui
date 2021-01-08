@@ -10,13 +10,10 @@ import http from './http';
  * The first element is the start time of the event, the second element is the end time of the
  * event, and the third element is the location of the event.
  * @global
- * @typedef {Array} EventOccurrence
- * @example
- * [
- *   "2017-11-18T19:00:00-05:00",
- *   "2017-11-18T22:00:00-05:00",
- *   "Tavilla Hall 126 - Conference Room"
- * ]
+ * @typedef EventOccurrence
+ * @property {string} StartDate The datetime, as a string, when the occurence begins
+ * @property {string} EndDate The datetime, as a string, when the occurence ends
+ * @property {string} Location The location of the occurence
  */
 
 /**
@@ -25,8 +22,7 @@ import http from './http';
  * @property {String} Event_ID
  * @property {String} Event_Name
  * @property {String} Event_Title
- * @property {String} Event_Type_Name
- * @property {Number} Category_Id
+ * @property {boolean} HasCLAWCredit
  * @property {String} Description
  * @property {EventOccurrence[]} Occurrences
  */
@@ -38,65 +34,49 @@ import http from './http';
 
 const getAllEvents = () => http.get('events/25Live/All');
 
-const getAllCLAWEvents = () => http.get('/events/25Live/CLAW');
+const getAllCLAWEvents = () => http.get('events/25Live/CLAW');
 
 const getAllGuestEvents = () => http.get('events/25Live/Public');
 
+/**
+ *  Format an event for display on the front end
+ * @param {Event} event The event to format
+ * @returns {Event} The formatted event
+ */
 function formatevent(event) {
-  let beginTime;
-  let endTime;
-  if (event.Occurrences[0] && event.Occurrences[0][0] && event.Occurrences[0][1]) {
-    beginTime = DateTime.fromISO(event.Occurrences[0][0]).toFormat('t');
-    endTime = DateTime.fromISO(event.Occurrences[0][1]).toFormat('t');
+  if (event.Occurrences[0]) {
+    let beginTime = DateTime.fromISO(event.Occurrences[0].StartDate).toFormat('t');
+    let endTime = DateTime.fromISO(event.Occurrences[0].EndDate).toFormat('t');
+    event.timeRange = `${beginTime} - ${endTime}`;
+    event.date = DateTime.fromISO(event.Occurrences[0].StartDate).toFormat('LLL d, yyyy');
   }
-  const timeRange = `${beginTime} - ${endTime}`;
-  event.timeRange = timeRange;
 
-  let date;
-  if (event.Occurrences[0] && event.Occurrences[0][0]) {
-    date = DateTime.fromISO(event.Occurrences[0][0]).toFormat('LLL d, yyyy');
-  }
-  event.date = date;
+  event.title = event.Event_Title || event.Event_Name;
 
-  let title;
-  if (event.Event_Title === '') {
-    title = event.Event_Name;
-  } else {
-    title = event.Event_Title;
-  }
-  event.title = title;
+  event.location = event.Occurrences[0].Location || 'No Location Listed';
 
-  let location;
-  if (event.Occurrences[0] && event.Occurrences[0][2]) {
-    location = `${event.Occurrences[0][2]} `;
-  } else {
-    location = 'No location Listed';
+  if (!event.Description) {
+    event.Description = 'No description available';
   }
-  event.location = location;
 
-  if (event.Description) {
-    if (event.Description === '' || event.Description.substring(0, 4) === '<res') {
-      event.Description = 'No description available';
-    }
-    event.Description = event.Description.replace(/&(#[0-9]+|[a-zA-Z]+);/g, ' ').replace(
-      /<\/?[^>]+(>|$)/g,
-      ' ',
-    );
-  }
+  // Remove markup from event description.
+  event.Description = event.Description.replace(/&(#[0-9]+|[a-zA-Z]+);/g, ' ').replace(
+    /<\/?[^>]+(>|$)/g,
+    ' ',
+  );
+
   return event;
 }
+
 function filterbyCategory(filters, allEvents) {
   let filteredEvents = [];
   if (
     filters.chapelOffice ||
     filters.art ||
     filters.cec ||
-    filters.calendar ||
     filters.admissions ||
     filters.sports ||
     filters.studentLife ||
-    filters.fair ||
-    filters.academics ||
     filters.chapelCredits
   ) {
     for (let i = 0; i < allEvents.length; i++) {
@@ -111,28 +91,13 @@ function filterbyCategory(filters, allEvents) {
         filteredEvents.push(allEvents[i]);
       } else if (filters.cec && allEvents[i].Organization === 'Campus Events Council (CEC)') {
         filteredEvents.push(allEvents[i]);
-      } else if (filters.calendar && allEvents[i].Event_Type_Name === 'Calendar Announcement') {
-        filteredEvents.push(allEvents[i]);
       } else if (filters.admissions && allEvents[i].Organization === 'Admissions') {
         filteredEvents.push(allEvents[i]);
       } else if (filters.sports && allEvents[i].Organization === 'Athletics') {
         filteredEvents.push(allEvents[i]);
       } else if (filters.studentLife && allEvents[i].Organization === 'Office of Student Life') {
         filteredEvents.push(allEvents[i]);
-      } else if (
-        filters.fair &&
-        (allEvents[i].Event_Type_Name === 'Festival' ||
-          allEvents[i].Event_Type_Name === 'Exhibition' ||
-          allEvents[i].Event_Type_Name === 'Fair/Expo')
-      ) {
-        filteredEvents.push(allEvents[i]);
-      } else if (
-        filters.academics &&
-        (allEvents[i].Event_Type_Name === 'Research Project' ||
-          allEvents[i].Event_Type_Name === 'Lecture/Speaker/Forum')
-      ) {
-        filteredEvents.push(allEvents[i]);
-      } else if (filters.chapelCredits && allEvents[i].Category_Id === '85') {
+      } else if (filters.chapelCredits && allEvents[i].HasCLAWCredit) {
         filteredEvents.push(allEvents[i]);
       }
     }
@@ -143,10 +108,10 @@ function filterbyCategory(filters, allEvents) {
 }
 
 function sortByTime(a, b) {
-  if (a.Occurrences[0][0] < b.Occurrences[0][0]) {
+  if (a.Occurrences[0].StartDate < b.Occurrences[0].StartDate) {
     return -1;
   }
-  if (a.Occurrences[0][0] > b.Occurrences[0][0]) {
+  if (a.Occurrences[0].StartDate > b.Occurrences[0].StartDate) {
     return 1;
   }
   return 0;
@@ -158,7 +123,7 @@ const getCLWEvents = async () => {
   const date = new Date().getTime();
   allEvents.sort(sortByTime);
   for (let i = 0; i < allEvents.length; i += 1) {
-    const startDate = new Date(allEvents[i].Occurrences[0][0]).getTime();
+    const startDate = new Date(allEvents[i].Occurrences[0].StartDate).getTime();
 
     if (startDate > date) {
       chapelEvents.push(allEvents[i]);
@@ -174,7 +139,7 @@ const getFutureEvents = (allEvents) => {
   const date = new Date().getTime();
   allEvents.sort(sortByTime);
   for (let i = 0; i < allEvents.length; i += 1) {
-    const startDate = new Date(allEvents[i].Occurrences[0][0]).getTime();
+    const startDate = new Date(allEvents[i].Occurrences[0].StartDate).getTime();
     if (startDate > date) {
       futureEvents.push(allEvents[i]);
     }
@@ -214,17 +179,6 @@ const getFilteredEvents = (filters) => {
   if (filteredEvents === null) {
     filteredEvents = allEvents;
   }
-  // console.log('Events: ', filteredEvents);
-
-  // if (filters.chapelCredits) {
-  //   for (let k = 0; k < filteredEvents.length; k++) {
-  //     if (filteredEvents[k].Category_Id === '85') {
-  //       shownEvents.push(filteredEvents[k]);
-  //     }
-  //   }
-  //   filteredEvents = shownEvents;
-  // }
-  // console.log('Events: ', filteredEvents); <- can we get rid of this too?
 
   if (filters.search !== '') {
     shownEvents = [];
@@ -232,7 +186,7 @@ const getFilteredEvents = (filters) => {
       // search through the event title
       if (filteredEvents[i].title.toLowerCase().includes(filters.search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
-        // search through the datezZ
+        // search through the date
       } else if (filteredEvents[i].timeRange.toLowerCase().includes(filters.search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
         // search through the event times
