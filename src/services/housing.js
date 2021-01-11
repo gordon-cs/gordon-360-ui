@@ -25,13 +25,13 @@ const getHousingInfo = async () => {
 /**
  * Get active apartment applications for current user
  * @param {String} primaryUsername the student username of the person filling out the application
- * @param {StudentProfileInfo} applicants Array of StudentProfileInfo objects
+ * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
  * @return {Promise.<String>} User's active jobs
  */
 const saveApartmentApplication = async (primaryUsername, applicants) => {
   let applicationDetails = {
-    PRIMARY_USERNAME: primaryUsername,
-    APPLICANT_ARRAY: applicants.map(profile => profile.AD_Username),
+    Username: primaryUsername,
+    Applicants: applicants.map((profile) => profile.AD_Username),
   };
   return await http.post(`housing/save/`, applicationDetails);
 };
