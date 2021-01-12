@@ -217,11 +217,11 @@ export default class Events extends Component {
   async loadEvents() {
     this.setState({ loading: true });
     if (this.props.authentication) {
-      const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
+      const allEvents = await gordonEvent.getAllEvents(); //Retrieve all events from database
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
     } else {
-      const allEvents = await gordonEvent.getAllGuestEventsFormatted(); //Retrieve all Guest events from database
+      const allEvents = await gordonEvent.getAllGuestEvents(); //Retrieve all Guest events from database
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
     }

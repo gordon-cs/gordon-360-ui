@@ -28,23 +28,36 @@ import http from './http';
  */
 
 /**
- * Get all events
- * @return {Promise.<Event[]>} all events
+ * Gets all events from the backend, and then formats and sorts them
+ * @returns {Event[]} All events
  */
-const getAllEvents = () => http.get('events/25Live/All');
+const getAllEvents = async () => {
+  const allEvents = await http.get('events/25Live/All');
+  return allEvents.map((e) => formatevent(e)).sort(sortByTime);
+};
 
 /**
- * Get all events that offer CL&W credit
+ * Gets upcoming CL&W events and formats them for display
  * TODO: Unused. Consider removing
- * @return {Promise.<Event[]>} all CL&W events
+ * @returns {Event[]} upcoming CL&W events
  */
-const getAllCLAWEvents = () => http.get('events/25Live/CLAW');
+const getCLWEvents = async () => {
+  const allEvents = await http.get('events/25Live/CLAW');
+  const now = Date.now();
+  return allEvents
+    .filter((e) => new Date(e.Occurrences[0].StartDate).getTime() > now)
+    .map((e) => formatevent(e))
+    .sort(sortByTime);
+};
 
 /**
- * Get all events marked as public
- * @return {Promise.<Event[]>} all public events
+ * Gets all public events from the backend, and then formats and sorts them
+ * @returns {Event[]} All events
  */
-const getAllGuestEvents = () => http.get('events/25Live/Public');
+const getAllGuestEvents = async () => {
+  const allGuest = await http.get('events/25Live/Public');
+  return allGuest.map((e) => formatevent(e)).sort(sortByTime);
+};
 
 /**
  *  Format an event for display on the front end
@@ -133,20 +146,6 @@ function sortByTime(a, b) {
 }
 
 /**
- * Gets upcoming CL&W events and formats them for display
- * TODO: Unused. Consider removing
- * @returns {Event[]} upcoming CL&W events
- */
-const getCLWEvents = async () => {
-  const allEvents = await getAllCLAWEvents();
-  const now = Date.now();
-  return allEvents
-    .filter((e) => new Date(e.Occurrences[0].StartDate).getTime() > now)
-    .map((e) => formatevent(e))
-    .sort(sortByTime);
-};
-
-/**
  * Filters events for only those whose first occurrence is in the future
  * @param {Event[]} allEvents The events to filter
  * @returns {Event[]} all events that occur in the future
@@ -156,24 +155,6 @@ const getFutureEvents = (allEvents) => {
   return allEvents
     .filter((e) => new Date(e.Occurrences[0].StartDate).getTime() > now)
     .sort(sortByTime);
-};
-
-/**
- * Gets all events from the backend, and then formats and sorts them
- * @returns {Event[]} All events
- */
-const getAllEventsFormatted = async () => {
-  const allEvents = await getAllEvents();
-  return allEvents.map((e) => formatevent(e)).sort(sortByTime);
-};
-
-/**
- * Gets all public events from the backend, and then formats and sorts them
- * @returns {Event[]} All events
- */
-const getAllGuestEventsFormatted = async () => {
-  const allGuest = await getAllGuestEvents();
-  return allGuest.map((e) => formatevent(e)).sort(sortByTime);
 };
 
 /**
@@ -217,11 +198,9 @@ const getFilteredEvents = (filters) => {
 
 export default {
   getAllEvents,
-  getAllEventsFormatted,
   getFutureEvents,
   getCLWEvents,
   getFilteredEvents,
   formatevent,
   getAllGuestEvents,
-  getAllGuestEventsFormatted,
 };
