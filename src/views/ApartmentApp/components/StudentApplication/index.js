@@ -211,7 +211,7 @@ export default class StudentApplication extends Component {
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  handleRemove = (profileToRemove) => {
+  handleRemoveApplicant = (profileToRemove) => {
     this.setState({ updating: true });
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
@@ -376,7 +376,7 @@ export default class StudentApplication extends Component {
                               savingSuccess={this.state.savingSuccess}
                               onSearchSubmit={this.handleSearchSubmit}
                               onChangePrimary={this.handleChangePrimary}
-                              onApplicantRemove={this.handleRemove}
+                              onApplicantRemove={this.handleRemoveApplicant}
                               onSaveButtonClick={this.handleSaveButtonClick}
                               authentication={this.props.authentication}
                             />
@@ -402,7 +402,7 @@ export default class StudentApplication extends Component {
                               preferredHalls={this.state.preferredHalls}
                               saving={this.state.saving}
                               savingSuccess={this.state.savingSuccess}
-                              onHallRemove={this.handleRemove}
+                              onHallRemove={this.handleRemoveHall}
                               onSaveButtonClick={this.handleSaveButtonClick}
                               authentication={this.props.authentication}
                             />

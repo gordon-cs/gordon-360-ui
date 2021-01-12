@@ -45,8 +45,12 @@ export default class HallSelection extends Component {
     // Make sure the chosen profile was not null
     if (hall) {
       // Send the selected profile to the parent component
-      this.props.onApplicantRemove(hall);
+      this.props.onHallRemove(hall);
     }
+  };
+
+  handleAddHallListItem = () => {
+    this.props.onHallAdd();
   };
 
   handleSaveButtonClick = () => {
