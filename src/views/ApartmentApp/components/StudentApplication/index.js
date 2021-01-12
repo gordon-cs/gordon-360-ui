@@ -49,7 +49,7 @@ export default class StudentApplication extends Component {
       editDialogOpen: false,
       primaryUsername: null, // The username of the primary applicant
       applicants: [],
-      preferredHalls: ['Choose a hall'],
+      preferredHalls: [''],
     };
     this.offCampusProgramInfo = new Map();
     this.state.applicants.forEach((profile) =>
@@ -231,12 +231,17 @@ export default class StudentApplication extends Component {
    * @param {Number} index The index of the hall in the list
    */
   handleHallInputChange = (hallSelectionValue, index) => {
+    console.log(hallSelectionValue); //! DEBUG
+    console.log(index); //! DEBUG
     this.setState({ updating: true });
-    if (hallSelectionValue && index && this.state.preferredHalls.length > 0) {
+    if (hallSelectionValue && index !== null && this.state.preferredHalls.length > 0) {
+      console.log('Attempting to update preferred halls'); //! DEBUG
       if (index !== -1) {
         let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
-        preferredHalls.splice(index, 1, hallSelectionValue); // replace the element at index with the value stored in 'hallSelectionValue'
+        // preferredHalls.splice(index, 1, hallSelectionValue); // replace the element at index with the value stored in 'hallSelectionValue'
+        preferredHalls[index] = hallSelectionValue;
         this.setState({ preferredHalls });
+        preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
       }
     }
     this.setState({ updating: false });
@@ -244,16 +249,17 @@ export default class StudentApplication extends Component {
 
   /**
    * Callback for hall list remove button
-   * @param {String} hallToRemove The name of the hall to be removed from the list of perferred halls
+   * @param {Number} index The index of the hall to be removed from the list of perferred halls
    */
-  handleHallRemove = (hallToRemove) => {
+  handleHallRemove = (index) => {
     this.setState({ updating: true });
-    if (hallToRemove && this.state.preferredHalls.length > 1) {
+    console.log(index); //! DEBUG
+    if (index !== null && this.state.preferredHalls.length > 1) {
       let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
-      let index = preferredHalls.indexOf(hallToRemove);
       if (index !== -1) {
         preferredHalls.splice(index, 1);
         this.setState({ preferredHalls });
+        preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
       }
     }
     this.setState({ updating: false });
@@ -262,10 +268,10 @@ export default class StudentApplication extends Component {
   /**
    * Callback for hall list add button
    */
-  handleAddHall = () => {
+  handleHallAdd = () => {
     this.setState({ updating: true });
     let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
-    preferredHalls.push(['Choose a hall']);
+    preferredHalls.push(['']);
     this.setState({ preferredHalls, updating: false });
   };
 
@@ -449,7 +455,7 @@ export default class StudentApplication extends Component {
                               savingSuccess={this.state.savingSuccess}
                               onHallInputChange={this.handleHallInputChange}
                               onHallRemove={this.handleHallRemove}
-                              onHallAdd={this.handleAddHall}
+                              onHallAdd={this.handleHallAdd}
                               onSaveButtonClick={this.handleSaveButtonClick}
                               authentication={this.props.authentication}
                             />

@@ -22,7 +22,8 @@ import housing from '../../../../services/housing';
 export default class HallListItem extends Component {
   constructor(props) {
     super(props);
-
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleRemove = this.handleRemove.bind(this);
     this.state = {
       // array of table data from backend
       halls: [],
@@ -33,9 +34,15 @@ export default class HallListItem extends Component {
   }
 
   componentDidUpdate(newProps) {
-    if (newProps && this.props.preferredHalls !== newProps.preferredHalls) {
-      let halls = this.state.halls.filter((hall) => !newProps.preferredHalls.includes(hall));
-      this.setState({ halls });
+    if (newProps) {
+      if (this.props.preferredHalls !== newProps.preferredHalls) {
+        let halls = this.state.halls.filter((hall) => !newProps.preferredHalls.includes(hall));
+        this.setState({ halls });
+      }
+      let hallSelectionValue = newProps.preferredHalls[newProps.index];
+      if (this.state.hallSelectionValue !== hallSelectionValue) {
+        this.setState({ hallSelectionValue });
+      }
     }
   }
 
@@ -49,35 +56,30 @@ export default class HallListItem extends Component {
         //! DEBUG: Fills in halls dropdown when the housing api endpoint is not yet implemented
         unfilteredHalls = await goStalk.getHalls();
       }
-      let halls = unfilteredHalls.filter((hall) => !this.props.preferredHalls.includes(hall));
+      //Remove spaces from strings and filter out halls which have already been selected
+      let halls = unfilteredHalls.map((hall) => hall.trim());
       this.setState({ halls });
     }
   }
 
-  handleHallInputChange = (e) => {
-    this.setState({
-      hallSelectionValue: e.target.value,
-    });
-    if (this.state.hallSelectionValue) {
-      this.props.onHallInputChange(this.state.hallSelectionValue, this.props.index);
+  handleInputChange = (event) => {
+    if (event.target.value) {
+      let hallSelectionValue = event.target.value;
+      let index = this.props.index;
+      this.setState({ hallSelectionValue });
+      this.props.onHallInputChange(hallSelectionValue, index);
     }
   };
 
-  handleRemove = (hall) => {
-    // Make sure the chosen hall was not null
-    if (hall) {
-      // Send the selected hall to the parent component
-      this.props.onHallRemove(hall);
+  handleRemove = () => {
+    if (this.props.index !== null) {
+      // Send this list item's index to the parent component
+      this.props.onHallRemove(this.props.index);
     }
   };
 
   render() {
     const index = this.props.index;
-    const hallOptions = this.state.halls.map((hall) => (
-      <MenuItem value={hall} key={hall}>
-        {hall}
-      </MenuItem>
-    ));
 
     return (
       <ListItem key={index} className={'list-item'}>
@@ -86,24 +88,32 @@ export default class HallListItem extends Component {
         </ListItemIcon>
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={1}>
-            <TextField label="Rank" inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} />
+            <TextField
+              label="Rank"
+              defaultValue={index}
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+            />
           </Grid>
           <Grid item xs={11}>
             <FormControl fullWidth>
               <InputLabel>Hall</InputLabel>
               <Select
                 value={this.state.hallSelectionValue}
-                onChange={this.handleHallInputChange}
+                onChange={this.handleInputChange}
                 input={<Input id={'hall' + index} />}
               >
                 <ListSubheader>Select a hall</ListSubheader>
-                {hallOptions}
+                {this.state.halls.map((hall) => (
+                  <MenuItem value={hall} key={hall}>
+                    {hall}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete">
+          <IconButton edge="end" aria-label="delete" onClick={this.handleRemove}>
             <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>

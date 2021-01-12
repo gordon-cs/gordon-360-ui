@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'date-fns';
-import { Grid, Card, CardHeader, CardContent, List, Typography } from '@material-ui/core';
+import { Grid, Card, CardHeader, CardContent, List, Typography, Button } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import HallListItem from './components/HallListItem';
 import SaveButton from '../ApartAppSaveButton';
 import goStalk from '../../services/goStalk';
@@ -12,8 +13,9 @@ import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResul
 export default class HallSelection extends Component {
   constructor(props) {
     super(props);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
-    this.handleAddHall = this.handleAddHall.bind(this);
+    this.handleAddDropdown = this.handleAddDropdown.bind(this);
     this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
     this.state = {
       // array of table data from backend
@@ -24,34 +26,36 @@ export default class HallSelection extends Component {
 
   async componentDidMount() {
     if (this.props.authentication) {
+      let unfilteredHalls;
       try {
         // Get the halls available for apartments, filtered by the gender of the primary applicant
-        const halls = await housing.getApartmentHalls(this.props.primaryUsername);
-        this.setState({ halls });
+        unfilteredHalls = await housing.getApartmentHalls(this.props.primaryUsername);
       } catch {
         //! DEBUG: Fills in halls dropdown when the housing api endpoint is not yet implemented
         // This list of halls is references from the 'Hall' dropdown on the PeopleSearch page
-        const halls = await goStalk.getHalls();
-        this.setState({ halls });
+        unfilteredHalls = await goStalk.getHalls();
       }
+      //Remove spaces from strings
+      let halls = unfilteredHalls.map((hall) => hall.trim());
+      this.setState({ halls });
     }
   }
 
-  handleHallInputChange = (hallSelectionValue, index) => {
+  handleInputChange = (hallSelectionValue, index) => {
     console.log(hallSelectionValue); //! DEBUG
     console.log(index); //! DEBUG
     this.props.onHallInputChange(hallSelectionValue, index);
   };
 
-  handleRemove = (hall) => {
-    // Make sure the chosen profile was not null
-    if (hall) {
-      // Send the selected profile to the parent component
-      this.props.onHallRemove(hall);
+  handleRemove = (index) => {
+    // Make sure the chosen index was not null
+    if (index !== null) {
+      // Send the selected index to the parent component
+      this.props.onHallRemove(index);
     }
   };
 
-  handleAddHall = () => {
+  handleAddDropdown = () => {
     this.props.onHallAdd();
   };
 
@@ -71,29 +75,36 @@ export default class HallSelection extends Component {
                 {this.props.preferredHalls ? (
                   this.props.preferredHalls.map((preferredHall, index) => (
                     <HallListItem
-                      key={preferredHall}
+                      key={preferredHall + index}
                       index={index}
                       primaryUsername={this.props.primaryUsername}
                       preferredHalls={this.props.preferredHalls}
-                      onHallInputChange={this.handleHallInputChange}
+                      onHallInputChange={this.handleInputChange}
                       onHallRemove={this.handleRemove}
                       authentication={this.props.authentication}
                     />
                   ))
                 ) : (
                   <HallListItem
-                    key={0}
+                    key={''}
                     index={0}
                     primaryUsername={this.props.primaryUsername}
                     preferredHalls={this.props.preferredHalls}
-                    onHallInputChange={this.handleHallInputChange}
+                    onHallInputChange={this.handleInputChange}
                     authentication={this.props.authentication}
                   />
                 )}
               </List>
             </Grid>
             <Grid item xs={12}>
-              <div>Add Additional Hall (Placeholder)</div>
+              <Button
+                variant="contained"
+                color="default"
+                startIcon={<AddIcon />}
+                onClick={this.handleAddDropdown}
+              >
+                Add a Hall
+              </Button>
             </Grid>
             <Grid item xs={9}>
               {this.props.saving === 'failed' ? (
