@@ -30,6 +30,7 @@ export default class HallSelection extends Component {
         this.setState({ halls });
       } catch {
         //! DEBUG: Fills in halls dropdown when the housing api endpoint is not yet implemented
+        // This list of halls is references from the 'Hall' dropdown on the PeopleSearch page
         const halls = await goStalk.getHalls();
         this.setState({ halls });
       }
@@ -37,8 +38,8 @@ export default class HallSelection extends Component {
   }
 
   handleHallInputChange = (hallSelectionValue, index) => {
-    console.log(hallSelectionValue);
-    console.log(index);
+    console.log(hallSelectionValue); //! DEBUG
+    console.log(index); //! DEBUG
     this.props.onHallInputChange(hallSelectionValue, index);
   };
 
