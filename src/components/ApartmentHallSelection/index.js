@@ -13,6 +13,7 @@ export default class HallSelection extends Component {
   constructor(props) {
     super(props);
     this.handleRemove = this.handleRemove.bind(this);
+    this.handleAddHall = this.handleAddHall.bind(this);
     this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
     this.state = {
       // array of table data from backend
@@ -49,7 +50,7 @@ export default class HallSelection extends Component {
     }
   };
 
-  handleAddHallListItem = () => {
+  handleAddHall = () => {
     this.props.onHallAdd();
   };
 
@@ -74,6 +75,7 @@ export default class HallSelection extends Component {
                       primaryUsername={this.props.primaryUsername}
                       preferredHalls={this.props.preferredHalls}
                       onHallInputChange={this.handleHallInputChange}
+                      onHallRemove={this.handleRemove}
                       authentication={this.props.authentication}
                     />
                   ))
@@ -88,6 +90,9 @@ export default class HallSelection extends Component {
                   />
                 )}
               </List>
+            </Grid>
+            <Grid item xs={12}>
+              <div>Add Additional Hall (Placeholder)</div>
             </Grid>
             <Grid item xs={9}>
               {this.props.saving === 'failed' ? (
