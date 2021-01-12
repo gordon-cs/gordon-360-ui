@@ -431,16 +431,14 @@ function sortAtndEventsByTime(a, b) {
   return 0;
 }
 
-//Call function to retrieve events from database then format them
+/**
+ * Fetch attended CL&W events, then format and sort them
+ * @returns {AttendedEvent[]} Array of attended CL&W events
+ */
 const getAttendedChapelEventsFormatted = async () => {
   const termCode = session.getTermCode();
   const attendedEvents = await getAttendedChapelEvents(termCode);
-  const events = [];
-  for (let i = 0; i < attendedEvents.length; i += 1) {
-    events.push(attendedEvents[i]);
-    gordonEvent.formatevent(attendedEvents[i]);
-  }
-  return events.sort(sortAtndEventsByTime);
+  return attendedEvents.map((e) => gordonEvent.formatevent(e)).sort(sortAtndEventsByTime);
 };
 
 /**

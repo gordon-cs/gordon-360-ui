@@ -29,13 +29,21 @@ import http from './http';
 
 /**
  * Get all events
- * @return {Promise.<Event[]>} returns all the events
+ * @return {Promise.<Event[]>} all events
  */
-
 const getAllEvents = () => http.get('events/25Live/All');
 
+/**
+ * Get all events that offer CL&W credit
+ * TODO: Unused. Consider removing
+ * @return {Promise.<Event[]>} all CL&W events
+ */
 const getAllCLAWEvents = () => http.get('events/25Live/CLAW');
 
+/**
+ * Get all events marked as public
+ * @return {Promise.<Event[]>} all public events
+ */
 const getAllGuestEvents = () => http.get('events/25Live/Public');
 
 /**
@@ -44,28 +52,29 @@ const getAllGuestEvents = () => http.get('events/25Live/Public');
  * @returns {Event} The formatted event
  */
 function formatevent(event) {
+  let formattedEvent = { ...event };
   if (event.Occurrences[0]) {
     let beginTime = DateTime.fromISO(event.Occurrences[0].StartDate).toFormat('t');
     let endTime = DateTime.fromISO(event.Occurrences[0].EndDate).toFormat('t');
-    event.timeRange = `${beginTime} - ${endTime}`;
-    event.date = DateTime.fromISO(event.Occurrences[0].StartDate).toFormat('LLL d, yyyy');
+    formattedEvent.timeRange = `${beginTime} - ${endTime}`;
+    formattedEvent.date = DateTime.fromISO(event.Occurrences[0].StartDate).toFormat('LLL d, yyyy');
   }
 
-  event.title = event.Event_Title || event.Event_Name;
+  formattedEvent.title = event.Event_Title || event.Event_Name;
 
-  event.location = event.Occurrences[0].Location || 'No Location Listed';
+  formattedEvent.location = event.Occurrences[0].Location || 'No Location Listed';
 
-  if (!event.Description) {
-    event.Description = 'No description available';
+  if (!formattedEvent.Description) {
+    formattedEvent.Description = 'No description available';
   }
 
   // Remove markup from event description.
-  event.Description = event.Description.replace(/&(#[0-9]+|[a-zA-Z]+);/g, ' ').replace(
-    /<\/?[^>]+(>|$)/g,
+  formattedEvent.Description = formattedEvent.Description.replace(
+    /&(#[0-9]+|[a-zA-Z]+);/g,
     ' ',
-  );
+  ).replace(/<\/?[^>]+(>|$)/g, ' ');
 
-  return event;
+  return formattedEvent;
 }
 
 function filterbyCategory(filters, allEvents) {
@@ -107,6 +116,12 @@ function filterbyCategory(filters, allEvents) {
   return filteredEvents;
 }
 
+/**
+ * Compares two events by the time of their first occurrence
+ * @param {Event} a the first event to compare
+ * @param {Event} b the second event to compare
+ * @returns {int} the sort order of the two events. -1 if a is first, 1 if b is first, 0 otherwise
+ */
 function sortByTime(a, b) {
   if (a.Occurrences[0].StartDate < b.Occurrences[0].StartDate) {
     return -1;
@@ -117,60 +132,58 @@ function sortByTime(a, b) {
   return 0;
 }
 
+/**
+ * Gets upcoming CL&W events and formats them for display
+ * TODO: Unused. Consider removing
+ * @returns {Event[]} upcoming CL&W events
+ */
 const getCLWEvents = async () => {
   const allEvents = await getAllCLAWEvents();
-  const chapelEvents = [];
-  const date = new Date().getTime();
-  allEvents.sort(sortByTime);
-  for (let i = 0; i < allEvents.length; i += 1) {
-    const startDate = new Date(allEvents[i].Occurrences[0].StartDate).getTime();
-
-    if (startDate > date) {
-      chapelEvents.push(allEvents[i]);
-    }
-    formatevent(allEvents[i]);
-  }
-  return chapelEvents.sort(sortByTime);
+  const now = Date.now();
+  return allEvents
+    .filter((e) => new Date(e.Occurrences[0].StartDate).getTime() > now)
+    .map((e) => formatevent(e))
+    .sort(sortByTime);
 };
 
-//Takes parameter of all events(formatted) so getting from database is not needed
+/**
+ * Filters events for only those whose first occurrence is in the future
+ * @param {Event[]} allEvents The events to filter
+ * @returns {Event[]} all events that occur in the future
+ */
 const getFutureEvents = (allEvents) => {
-  const futureEvents = [];
-  const date = new Date().getTime();
-  allEvents.sort(sortByTime);
-  for (let i = 0; i < allEvents.length; i += 1) {
-    const startDate = new Date(allEvents[i].Occurrences[0].StartDate).getTime();
-    if (startDate > date) {
-      futureEvents.push(allEvents[i]);
-    }
-  }
-  return futureEvents.sort(sortByTime);
+  const now = Date.now();
+  return allEvents
+    .filter((e) => new Date(e.Occurrences[0].StartDate).getTime() > now)
+    .sort(sortByTime);
 };
 
-//Calls getAllEvents to get from database and then formats events
+/**
+ * Gets all events from the backend, and then formats and sorts them
+ * @returns {Event[]} All events
+ */
 const getAllEventsFormatted = async () => {
   const allEvents = await getAllEvents();
-  const events = [];
-  allEvents.sort(sortByTime);
-  for (let i = 0; i < allEvents.length; i += 1) {
-    events.push(allEvents[i]);
-    formatevent(allEvents[i]);
-  }
-  return events.sort(sortByTime);
+  return allEvents.map((e) => formatevent(e)).sort(sortByTime);
 };
 
-//Calls getAllGuestEvents to get from database and then formats events
+/**
+ * Gets all public events from the backend, and then formats and sorts them
+ * @returns {Event[]} All events
+ */
 const getAllGuestEventsFormatted = async () => {
   const allGuest = await getAllGuestEvents();
-  const events = [];
-  allGuest.sort(sortByTime);
-  for (let i = 0; i < allGuest.length; i += 1) {
-    events.push(allGuest[i]);
-    formatevent(allGuest[i]);
-  }
-  return events.sort(sortByTime);
+  return allGuest.map((e) => formatevent(e)).sort(sortByTime);
 };
 
+/**
+ * Filters events based on the active filters and search text
+ * TODO: Refactor to take in an explicit events array, search text, and list of filters.
+ *       Currently, the Events component is passing it's entire state, which is poor encapsulation
+ *       and makes this method much less reusable.
+ * @param {Object} filters the events and filters to use
+ * @returns {Event[]} The filtered events
+ */
 const getFilteredEvents = (filters) => {
   const allEvents = filters.events;
   let filteredEvents = [];
