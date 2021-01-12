@@ -169,7 +169,7 @@ export default class Events extends Component {
   clearFilters() {
     this.setState(
       {
-        includePast: false,
+        includePast: true,
         chapelCredits: false,
         admissions: false,
         art: false,
@@ -179,9 +179,9 @@ export default class Events extends Component {
         studentLife: false,
       },
       async () => {
-        const events = await gordonEvent.getFilteredEvents(this.state);
-        this.setState({ filteredEvents: events, loading: false });
-        this.createURLParameters();
+        // Set includePast to true above so that it is "toggled" to false by the below method
+        // This will ensure we filter only future events
+        await this.togglePastEvents();
       },
     );
   }
