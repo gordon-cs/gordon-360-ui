@@ -12,7 +12,6 @@ import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResul
 export default class HallSelection extends Component {
   constructor(props) {
     super(props);
-    this.handleSelection = this.handleSelection.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
     this.state = {
@@ -42,27 +41,11 @@ export default class HallSelection extends Component {
     this.props.onHallInputChange(hallSelectionValue, index);
   };
 
-  handleSelection = (theChosenOne) => {
-    // Make sure the chosen username was not null
-    if (theChosenOne) {
-      // Send the selected username to the parent component
-      this.props.onSearchSubmit(theChosenOne);
-    }
-  };
-
-  handleChangePrimary = (profile) => {
+  handleRemove = (hall) => {
     // Make sure the chosen profile was not null
-    if (profile) {
+    if (hall) {
       // Send the selected profile to the parent component
-      this.props.onChangePrimary(profile);
-    }
-  };
-
-  handleRemove = (profile) => {
-    // Make sure the chosen profile was not null
-    if (profile) {
-      // Send the selected profile to the parent component
-      this.props.onApplicantRemove(profile);
+      this.props.onApplicantRemove(hall);
     }
   };
 
