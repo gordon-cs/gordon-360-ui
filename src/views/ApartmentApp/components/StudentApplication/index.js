@@ -210,9 +210,9 @@ export default class StudentApplication extends Component {
 
   /**
    * Callback for applicant list remove button
-   * @param {String} profileToRemove Username for student
+   * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
    */
-  handleRemoveApplicant = (profileToRemove) => {
+  handleApplicantRemove = (profileToRemove) => {
     this.setState({ updating: true });
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
@@ -223,6 +223,50 @@ export default class StudentApplication extends Component {
       }
     }
     this.setState({ updating: false });
+  };
+
+  /**
+   * Callback for hall list remove button
+   * @param {String} hallSelectionValue The name of the hall that was selected
+   * @param {Number} index The index of the hall in the list
+   */
+  handleHallInputChange = (hallSelectionValue, index) => {
+    this.setState({ updating: true });
+    if (hallSelectionValue && index && this.state.preferredHalls.length > 0) {
+      if (index !== -1) {
+        let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
+        preferredHalls.splice(index, 1, hallSelectionValue); // replace the element at index with the value stored in 'hallSelectionValue'
+        this.setState({ preferredHalls });
+      }
+    }
+    this.setState({ updating: false });
+  };
+
+  /**
+   * Callback for hall list remove button
+   * @param {String} hallToRemove The name of the hall to be removed from the list of perferred halls
+   */
+  handleHallRemove = (hallToRemove) => {
+    this.setState({ updating: true });
+    if (hallToRemove && this.state.preferredHalls.length > 1) {
+      let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
+      let index = preferredHalls.indexOf(hallToRemove);
+      if (index !== -1) {
+        preferredHalls.splice(index, 1);
+        this.setState({ preferredHalls });
+      }
+    }
+    this.setState({ updating: false });
+  };
+
+  /**
+   * Callback for hall list add button
+   */
+  handleAddHall = () => {
+    this.setState({ updating: true });
+    let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
+    preferredHalls.push(['Choose a hall']);
+    this.setState({ preferredHalls, updating: false });
   };
 
   /**
@@ -377,7 +421,7 @@ export default class StudentApplication extends Component {
                               savingSuccess={this.state.savingSuccess}
                               onSearchSubmit={this.handleSearchSubmit}
                               onChangePrimary={this.handleChangePrimary}
-                              onApplicantRemove={this.handleRemoveApplicant}
+                              onApplicantRemove={this.handleApplicantRemove}
                               onSaveButtonClick={this.handleSaveButtonClick}
                               authentication={this.props.authentication}
                             />
@@ -403,7 +447,9 @@ export default class StudentApplication extends Component {
                               preferredHalls={this.state.preferredHalls}
                               saving={this.state.saving}
                               savingSuccess={this.state.savingSuccess}
-                              onHallRemove={this.handleRemoveHall}
+                              onHallInputChange={this.handleHallInputChange}
+                              onHallRemove={this.handleHallRemove}
+                              onHallAdd={this.handleAddHall}
                               onSaveButtonClick={this.handleSaveButtonClick}
                               authentication={this.props.authentication}
                             />
