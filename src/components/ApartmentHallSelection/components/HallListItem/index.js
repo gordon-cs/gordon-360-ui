@@ -64,11 +64,10 @@ export default class HallListItem extends Component {
   };
 
   handleRemove = (hall) => {
-    // Make sure the chosen profile was not null
+    // Make sure the chosen hall was not null
     if (hall) {
-      // Send the selected profile to the parent component
+      // Send the selected hall to the parent component
       this.props.onHallRemove(hall);
-      this.handleMenuClose();
     }
   };
 
