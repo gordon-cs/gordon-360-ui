@@ -5,6 +5,7 @@
  */
 import { DateTime } from 'luxon';
 import http from './http';
+import session from './session';
 
 /**
  * The first element is the start time of the event, the second element is the end time of the
@@ -19,12 +20,25 @@ import http from './http';
 /**
  * @global
  * @typedef Event
- * @property {String} Event_ID
- * @property {String} Event_Name
- * @property {String} Event_Title
- * @property {boolean} HasCLAWCredit
- * @property {String} Description
- * @property {EventOccurrence[]} Occurrences
+ * @property {String} Event_ID The ID of the event, from 25Live
+ * @property {String} Event_Name The internal name of the event
+ * @property {String} Event_Title The title, to be displayed, of the event
+ * @property {boolean} HasCLAWCredit Whether the event offers CL&W Credit
+ * @property {String} Description The description of the event
+ * @property {EventOccurrence[]} Occurrences All scheduled occurrences of the event
+ */
+
+/**
+ * @global
+ * @typedef AttendedEvent
+ * @property {String} CHDate The date and time that the user received CL&W credit
+ * @property {String} CHTermCD Term code of the event
+ * @property {String} Description Given description of the event
+ * @property {String} Event_Name The generic name of the event
+ * @property {String} Event_Title Specific title of the event
+ * @property {EventOccurrence[]} Occurrences All scheduled occurrences of the event
+ * @property {String} Organization Organization hosting the event
+ * @property {Number} Required Required CL&W credits for the user
  */
 
 /**
@@ -33,7 +47,7 @@ import http from './http';
  */
 const getAllEvents = async () => {
   const allEvents = await http.get('events/25Live/All');
-  return allEvents.map((e) => formatevent(e)).sort(sortByTime);
+  return allEvents.map((e) => formatevent(e)).sort(sortEventsByTime);
 };
 
 /**
@@ -47,7 +61,7 @@ const getCLWEvents = async () => {
   return allEvents
     .filter((e) => new Date(e.Occurrences[0].StartDate).getTime() > now)
     .map((e) => formatevent(e))
-    .sort(sortByTime);
+    .sort(sortEventsByTime);
 };
 
 /**
@@ -56,7 +70,17 @@ const getCLWEvents = async () => {
  */
 const getAllGuestEvents = async () => {
   const allGuest = await http.get('events/25Live/Public');
-  return allGuest.map((e) => formatevent(e)).sort(sortByTime);
+  return allGuest.map((e) => formatevent(e)).sort(sortEventsByTime);
+};
+
+/**
+ * Get chapel events attended by the user during the current term
+ * @return {AttendedEvent[]} all CL&W events attended by the user, formatted and sorted
+ */
+const getAttendedChapelEvents = async () => {
+  const termCode = session.getTermCode();
+  let attendedEvents = await http.get(`events/chapel/${termCode}`);
+  return attendedEvents.map((e) => formatevent(e)).sort(sortAtndEventsByTime);
 };
 
 /**
@@ -135,13 +159,30 @@ function filterbyCategory(filters, allEvents) {
  * @param {Event} b the second event to compare
  * @returns {int} the sort order of the two events. -1 if a is first, 1 if b is first, 0 otherwise
  */
-function sortByTime(a, b) {
-  if (a.Occurrences[0].StartDate < b.Occurrences[0].StartDate) {
-    return -1;
-  }
-  if (a.Occurrences[0].StartDate > b.Occurrences[0].StartDate) {
-    return 1;
-  }
+function sortEventsByTime(a, b) {
+  const timeA = a.Occurrences[0].StartDate;
+  const timeB = b.Occurrences[0].StartDate;
+
+  if (timeA < timeB) return -1;
+  if (timeA > timeB) return 1;
+  return 0;
+}
+
+/**
+ * Sorts attended CL&W events by time. Time in this case can be either
+ * the first occurrence of the event, or the time when the user received credit (CHDate).
+ * CHDate can be significantly after the time the event occurred, because of processing delays.
+ *
+ * @param {AttendedEvent} a the first event to compare
+ * @param {AttendedEvent} b the second event to compare
+ * @returns {int} -1 if a's time is less than b's, 1 if it's more, 0 if they're equal
+ */
+function sortAtndEventsByTime(a, b) {
+  const timeA = a.Occurrences?.[0]?.StartDate || a.CHDate;
+  const timeB = b.Occurrences?.[0]?.StartDate || b.CHDate;
+
+  if (timeA < timeB) return -1;
+  if (timeA > timeB) return 1;
   return 0;
 }
 
@@ -154,7 +195,7 @@ const getFutureEvents = (allEvents) => {
   const now = Date.now();
   return allEvents
     .filter((e) => new Date(e.Occurrences[0].StartDate).getTime() > now)
-    .sort(sortByTime);
+    .sort(sortEventsByTime);
 };
 
 /**
@@ -201,6 +242,6 @@ export default {
   getFutureEvents,
   getCLWEvents,
   getFilteredEvents,
-  formatevent,
   getAllGuestEvents,
+  getAttendedChapelEvents,
 };

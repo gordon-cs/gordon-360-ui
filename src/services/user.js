@@ -22,19 +22,6 @@ import gordonEvent from './event';
 
 /**
  * @global
- * @typedef AttendedEvent
- * @property {Object} CHDate Start time of the event
- * @property {String} CHTermCD Term code of the event
- * @property {Object} CHTime Time the user's ID was scanned
- * @property {String} Description Given description of the event
- * @property {String} Event_Name The generic name of the event
- * @property {String} Event_Title Specific title of the event
- * @property {String} Organization Organization hosting the event
- * @property {Number} Required Required CL&W credits for the user
- */
-
-/**
- * @global
  * @typedef LocalInfo
  * @property {String} aud Audience of token (URL)
  * @property {String} college_role User role
@@ -290,13 +277,6 @@ function setClass(profile) {
 }
 
 /**
- * Get chapel events attended by the user
- * @param {String} termCode code for the semester
- * @return {Promise.<AttendedEvent[]>} An object of all CL&W events attended by the user
- */
-const getAttendedChapelEvents = (termCode) => http.get(`events/chapel/${termCode}`);
-
-/**
  * Get image for a given user or the current user if `username` is not provided
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<String>} Image as a Base64-encoded string
@@ -388,66 +368,11 @@ const getLocalInfo = () => {
 };
 
 /**
- * Get the CHDate (the datetime when a user received CL&W credit)
- * unless Occurrences (the actual datetime when the event occured)
- * is non-null, since users would rather know when the event was
- * than when they got credit.
- *
- * @param {JSON} event : an event the user attended
- * @returns {DateTime} event.CHDate or event.Occurrences[0][0]
- * (since Occurences is a list of lists of start and end times
- * for each re-occurence of an event)
+ * Get the number of cl&w credits acquired, and number of credits required.
+ * @return {CLWCredits} An Object of their current and required number of CL&W events,
  */
-function getAtndEventTime(event) {
-  if (event.Occurrences[0]) {
-    return event.Occurrences[0].StartDate;
-  }
-  return event.CHDate;
-}
-
-/**
- * Determines in which order two JSON event objects
- * should be sorted based on a time associated with them.
- * Note that this does not necessarily sort events by
- * when they occurred, since getAtndEventTime
- * may have to resort to using CHDate. CHDate
- * can sometimes be weeks after an event due to slow
- * processing.
- *
- * @param {JSON} a : an event
- * @param {JSON} b : another event
- * @returns {int} -1 if a's time is less than b's, 1 if it's more, 0 if they're equal
- */
-function sortAtndEventsByTime(a, b) {
-  let tA = getAtndEventTime(a);
-  let tB = getAtndEventTime(b);
-
-  if (tA < tB) {
-    return -1;
-  }
-  if (tA > tB) {
-    return 1;
-  }
-  return 0;
-}
-
-/**
- * Fetch attended CL&W events, then format and sort them
- * @returns {AttendedEvent[]} Array of attended CL&W events
- */
-const getAttendedChapelEventsFormatted = async () => {
-  const termCode = session.getTermCode();
-  const attendedEvents = await getAttendedChapelEvents(termCode);
-  return attendedEvents.map((e) => gordonEvent.formatevent(e)).sort(sortAtndEventsByTime);
-};
-
-/**
- * Get the number of cl&w credits aquired, and number of credits required.
- * @return {Promise.<CLWCredits>} An Object of their current and requiered number of CL&W events,
- */
-const getChapelCredits = async () => {
-  const termCode = session.getTermCode();
-  const attendedEvents = await getAttendedChapelEvents(termCode);
+const getChapelCredits = () => {
+  const attendedEvents = gordonEvent.getAttendedChapelEvents();
 
   // Get required number of CL&W credits for the user, defaulting to thirty
   let required = 30;
@@ -698,7 +623,6 @@ export default {
   setMobilePhonePrivacy,
   setImagePrivacy,
   getMemberships,
-  getAttendedChapelEventsFormatted,
   getChapelCredits,
   getImage,
   getLocalInfo,
