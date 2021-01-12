@@ -183,7 +183,7 @@ export default class StudentApplication extends Component {
 
   /**
    * Callback for changing the primary applicant
-   * @param {String} profile The StudentProfileInfo object for the person who is to be made the primary applicant
+   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the primary applicant
    */
   handleChangePrimary = (profile) => {
     this.setState({ updating: true });
@@ -197,7 +197,8 @@ export default class StudentApplication extends Component {
   handleChangePrimaryAccepted = () => {
     if (this.state.newPrimaryApplicant) {
       try {
-        this.saveApplication(this.state.newPrimaryApplicant.AD_Username, this.state.applicants);
+        this.setState({ primaryUsername: this.state.newPrimaryApplicant.AD_Username });
+        this.saveApplication(this.state.primaryUsername, this.state.applicants);
       } catch (error) {
         this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
         this.snackbarSeverity = 'error';
@@ -231,13 +232,13 @@ export default class StudentApplication extends Component {
     let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
     console.log(debugMessage); //! DEBUG
     // The method is separated from callback because the housing API service must be handled inside an async method
-    this.saveApplication(this.state.userProfile.AD_Username, this.state.applicants);
+    this.saveApplication(this.state.primaryUsername, this.state.applicants);
   };
 
   /**
    * Save the current state of the application to the database
    * @param {String} primaryUsername the student username of the person filling out the application
-   * @param {StudentProfileInfo} applicants Array of StudentProfileInfo objects
+   * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
    */
   async saveApplication(primaryUsername, applicants) {
     this.setState({ saving: true });
@@ -306,7 +307,7 @@ export default class StudentApplication extends Component {
         }
       });
 
-      const primaryApplicantAlertTest = (
+      const primaryApplicantAlertText = (
         <span>
           If you change the primary applicant, you will no longer be able to edit this application
           yourself.
@@ -385,7 +386,7 @@ export default class StudentApplication extends Component {
                               onClose={this.handleCloseDialog}
                               severity={'warning'}
                               title={'Change primary applicant?'}
-                              text={primaryApplicantAlertTest}
+                              text={primaryApplicantAlertText}
                               cancelButtonClicked={this.handleCloseOkay}
                               cancelButtonName={'Cancel'}
                               confirmButtonClicked={this.handleChangePrimaryAccepted}
