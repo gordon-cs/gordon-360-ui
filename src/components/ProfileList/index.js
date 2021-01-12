@@ -166,7 +166,6 @@ class ProfileList extends Component {
           (this.props.profile.HomeStreet2 || this.props.profile.HomeStreet1),
       });
     }
-    this.setState({ advisors: await user.getAdvisor(this.props.profile.AD_Username) });
   }
 
   /**
@@ -235,7 +234,13 @@ class ProfileList extends Component {
     let majors = createMajorsListItem(this.props.profile, rowWidths, { gridStyle });
 
     // Creates the Advisors List Item
-    let advisors = createAdvisorsListItem(this.props.profile, rowWidths, { gridStyle });
+    let advisors;
+    // only show on personal profile
+    if(this.props.myProf) {
+      advisors = createAdvisorsListItem(this.props.profile, rowWidths, { gridStyle });
+    } else {
+      advisors = <></>;
+    }
 
     // Creates the Residence List Item
     let residence = createResidenceListItem(this.props.profile, rowWidths, { gridStyle });
