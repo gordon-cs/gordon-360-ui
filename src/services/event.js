@@ -90,26 +90,26 @@ const getAttendedChapelEvents = async () => {
  */
 function formatevent(event) {
   let formattedEvent = { ...event };
-  if (event.Occurrences[0]) {
-    let beginTime = DateTime.fromISO(event.Occurrences[0].StartDate).toFormat('t');
-    let endTime = DateTime.fromISO(event.Occurrences[0].EndDate).toFormat('t');
+  if (event.Occurrences?.[0]) {
+    const beginTime = DateTime.fromISO(event.Occurrences[0].StartDate).toFormat('t');
+    const endTime = DateTime.fromISO(event.Occurrences[0].EndDate).toFormat('t');
     formattedEvent.timeRange = `${beginTime} - ${endTime}`;
     formattedEvent.date = DateTime.fromISO(event.Occurrences[0].StartDate).toFormat('LLL d, yyyy');
   }
 
   formattedEvent.title = event.Event_Title || event.Event_Name;
 
-  formattedEvent.location = event.Occurrences[0].Location || 'No Location Listed';
+  formattedEvent.location = event.Occurrences?.[0]?.Location || 'No Location Listed';
 
   if (!formattedEvent.Description) {
     formattedEvent.Description = 'No description available';
+  } else {
+    // Remove markup from event description.
+    formattedEvent.Description = formattedEvent.Description.replace(
+      /&(#[0-9]+|[a-zA-Z]+);/g,
+      ' ',
+    ).replace(/<\/?[^>]+(>|$)/g, ' ');
   }
-
-  // Remove markup from event description.
-  formattedEvent.Description = formattedEvent.Description.replace(
-    /&(#[0-9]+|[a-zA-Z]+);/g,
-    ' ',
-  ).replace(/<\/?[^>]+(>|$)/g, ' ');
 
   return formattedEvent;
 }
