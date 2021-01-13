@@ -25,19 +25,18 @@ export default class HallListItem extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.state = {
-      // array of table data from backend
-      halls: [],
-
-      // Drop-down menu values
-      hallSelectionValue: '',
+      availableHalls: [], // array of table data from backend
+      hallSelectionValue: '', // Drop-down menu values
     };
   }
 
   componentDidUpdate(newProps) {
     if (newProps) {
       if (this.props.preferredHalls !== newProps.preferredHalls) {
-        let halls = this.state.halls.filter((hall) => !newProps.preferredHalls.includes(hall));
-        this.setState({ halls });
+        let availableHalls = this.state.availableHalls.filter(
+          (hall) => !newProps.preferredHalls.includes(hall),
+        );
+        this.setState({ availableHalls });
       }
       let hallSelectionValue = newProps.preferredHalls[newProps.index];
       if (this.state.hallSelectionValue !== hallSelectionValue) {
@@ -57,8 +56,8 @@ export default class HallListItem extends Component {
         unfilteredHalls = await goStalk.getHalls();
       }
       //Remove spaces from strings and filter out halls which have already been selected
-      let halls = unfilteredHalls.map((hall) => hall.trim());
-      this.setState({ halls });
+      let availableHalls = unfilteredHalls.map((hall) => hall.trim());
+      this.setState({ availableHalls });
     }
   }
 
@@ -103,7 +102,7 @@ export default class HallListItem extends Component {
                 input={<Input id={'hall' + index} />}
               >
                 <ListSubheader>Select a hall</ListSubheader>
-                {this.state.halls.map((hall) => (
+                {this.state.availableHalls.map((hall) => (
                   <MenuItem value={hall} key={hall}>
                     {hall}
                   </MenuItem>

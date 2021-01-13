@@ -19,7 +19,7 @@ export default class HallSelection extends Component {
     this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
     this.state = {
       // array of table data from backend
-      halls: [],
+      availableHalls: [],
     };
     this.loaderSize = 20;
   }
@@ -36,8 +36,8 @@ export default class HallSelection extends Component {
         unfilteredHalls = await goStalk.getHalls();
       }
       //Remove spaces from strings
-      let halls = unfilteredHalls.map((hall) => hall.trim());
-      this.setState({ halls });
+      let availableHalls = unfilteredHalls.map((hall) => hall.trim());
+      this.setState({ availableHalls });
     }
   }
 
@@ -111,9 +111,9 @@ export default class HallSelection extends Component {
                 <Typography variant="overline" color="error">
                   Something when wrong while trying to save the application
                 </Typography>
-              ) : this.props.preferredHalls.length >= this.state.halls.length ? (
+              ) : this.props.preferredHalls.length >= this.state.availableHalls.length ? (
                 <Typography variant="overline" color="error">
-                  You have reached the maximum number of halls ({this.state.halls.length})
+                  You have reached the maximum number of halls ({this.state.availableHalls.length})
                 </Typography>
               ) : null}
             </Grid>

@@ -254,13 +254,17 @@ export default class StudentApplication extends Component {
   handleHallRemove = (index) => {
     this.setState({ updating: true });
     console.log(index); //! DEBUG
-    if (index !== null && this.state.preferredHalls.length > 1) {
+    if (index !== null && index !== -1) {
       let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
-      if (index !== -1) {
+      if (preferredHalls.length > 1) {
+        // Remove the selected hall if the list has more than one element
         preferredHalls.splice(index, 1);
-        this.setState({ preferredHalls });
-        preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+      } else {
+        // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
+        preferredHalls[0] = '';
       }
+      this.setState({ preferredHalls });
+      preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
     }
     this.setState({ updating: false });
   };
