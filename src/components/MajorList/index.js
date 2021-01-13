@@ -33,21 +33,25 @@ export default class Majors extends Component {
         major === lastItem ? (majorText += `${major}`) : (majorText += `${major}, `);
       });
       content = <Typography>{majorText}</Typography>;
-    }
 
-    // Creates the list item's title
-    if (this.props.majors.length < 2) {
-      majorPrefix = (
-        <div>
-          <Typography>Major:</Typography>
-        </div>
-      );
-    } else {
-      majorPrefix = (
-        <div>
-          <Typography>Majors:</Typography>
-        </div>
-      );
+      if(this.props.majors.length === 0) {
+        content = <Typography>Undecided</Typography>;
+      }
+
+      // Creates the list item's title
+      if (this.props.majors.length < 2) {
+        majorPrefix = (
+          <div>
+            <Typography>Major:</Typography>
+          </div>
+        );
+      } else {
+        majorPrefix = (
+          <div>
+            <Typography>Majors:</Typography>
+          </div>
+        );
+      }
     }
 
     return (
