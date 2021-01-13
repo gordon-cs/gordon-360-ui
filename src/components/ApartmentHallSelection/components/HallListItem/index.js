@@ -68,7 +68,7 @@ export default class HallListItem extends Component {
     console.log('Called "handleRankValueChange" in HallListItem component');
     if (event.target.value !== null) {
       let hallSelectionValue = this.state.hallSelectionValue;
-      let hallRankValue = Number(event.target.value);
+      let hallRankValue = event.target.value;
       this.setState({ hallRankValue });
       let index = this.props.index;
       this.props.onHallInputChange(hallSelectionValue, hallRankValue, index);
@@ -93,10 +93,14 @@ export default class HallListItem extends Component {
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={1}>
             <TextField
+              fullWidth
               label="Rank"
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
               value={this.state.hallRankValue}
+              onFocus={(event) => {
+                event.target.select();
+              }}
               onChange={this.handleRankValueChange}
+              inputProps={{ inputmode: 'numeric', pattern: '[0-9]*' }}
             />
           </Grid>
           <Grid item xs={11}>

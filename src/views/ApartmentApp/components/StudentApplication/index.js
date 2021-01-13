@@ -83,7 +83,7 @@ export default class StudentApplication extends Component {
     } catch (error) {
       // Do Nothing
     }
-    // DEBUG
+    //! DEBUG
     // this.handleSearchSubmit('Gahngnin.Kim');
     // this.handleSearchSubmit('Christian.Kunis');
     // this.handleSearchSubmit('Nick.Noormand');
@@ -237,44 +237,54 @@ export default class StudentApplication extends Component {
     console.log('hallRank: ' + hallRankValue); //! DEBUG
     console.log('index: ' + index); //! DEBUG
     this.setState({ updating: true });
-    if (hallSelectionValue && hallRankValue && index !== null) {
-      if (hallRankValue <= 0) {
-        // Display an error if the selected rank value is less or equal to zero
-        this.snackbarText =
-          'The "Rank" value expected a positive number, but you entered ' + String(hallRankValue);
+    if (index !== null && index >= 0) {
+      console.log('Attempting to update preferred halls'); //! DEBUG
+
+      let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
+
+      // Create a new custom hallInfo object
+      let newHallInfo = preferredHalls[index];
+
+      // Error checking on the hallSelectionValue before modifying the newHallInfo object
+      if (
+        hallSelectionValue !== null &&
+        hallSelectionValue !== this.state.preferredHalls[index].hallName &&
+        this.state.preferredHalls.some((hallInfo) => hallInfo.hallName === hallSelectionValue)
+      ) {
+        // Display an error if the selected hall is already in the list
+        this.snackbarText = String(hallSelectionValue) + ' is already in the list.';
         this.snackbarSeverity = 'info';
         this.setState({ snackbarOpen: true });
-      } else if (hallSelectionValue && hallRankValue && index !== null) {
-        console.log('Attempting to update preferred halls'); //! DEBUG
-        if (index !== -1) {
-          let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
-          // Create a new custom hallInfo object
-          let newHallInfo = preferredHalls[index];
-          if (
-            this.state.preferredHalls.some(
-              (hallInfo) => hallInfo.hallName === hallSelectionValue,
-            ) &&
-            hallSelectionValue !== this.state.preferredHalls[index].hallName
-          ) {
-            // Display an error if the selected hall is already in the list
-            this.snackbarText = String(hallSelectionValue) + ' is already in the list.';
-            this.snackbarSeverity = 'info';
-            this.setState({ snackbarOpen: true });
-          } else {
-            // Create a new custom hallInfo object
-            newHallInfo = { hallName: hallSelectionValue, hallRank: hallRankValue };
-          }
-          preferredHalls[index] = newHallInfo; // replace the element at index with the new hall info object
-          // preferredHalls.splice(index, 1, newHallInfo);
-          console.log('Printing current list of preferred halls'); //! DEBUG
-          preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
-          preferredHalls.sort(function(a, b) {
-            return a.hallRank - b.hallRank;
-          });
-          preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
-          this.setState({ preferredHalls });
-        }
+      } else if (hallSelectionValue !== null) {
+        // Create a new custom hallInfo object
+        newHallInfo.hallName = hallSelectionValue;
       }
+
+      // Error checking on the hallRankValue before modifying the newHallInfo object
+      if (hallRankValue !== null && Number(hallRankValue) && Number(hallRankValue) >= 0) {
+        newHallInfo.hallRank = Number(hallRankValue);
+      } else {
+        // Display an error if the selected rank value is less or equal to zero
+        this.snackbarText =
+          'The "Rank" value expected a positive number, but you entered "' +
+          String(hallRankValue) +
+          '"';
+        this.snackbarSeverity = 'error';
+        this.setState({ snackbarOpen: true });
+      }
+
+      preferredHalls[index] = newHallInfo; // replace the element at index with the new hall info object
+      // preferredHalls.splice(index, 1, newHallInfo);
+
+      // Sort the list of halls by the rank numbers
+      preferredHalls.sort(function(a, b) {
+        return a.hallRank - b.hallRank;
+      });
+
+      console.log('Printing current list of preferred halls'); //! DEBUG
+      preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+
+      this.setState({ preferredHalls });
     } else {
       this.snackbarText = 'Something went wrong while trying to add this hall. Please try again.';
       this.snackbarSeverity = 'error';
