@@ -16,8 +16,6 @@ import {
 } from '@material-ui/core';
 import ApartmentIcon from '@material-ui/icons/Apartment';
 import ClearIcon from '@material-ui/icons/Clear';
-import goStalk from '../../../../services/goStalk';
-import housing from '../../../../services/housing';
 
 export default class HallListItem extends Component {
   constructor(props) {
