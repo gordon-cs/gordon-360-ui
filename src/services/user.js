@@ -371,8 +371,8 @@ const getLocalInfo = () => {
  * Get the number of cl&w credits acquired, and number of credits required.
  * @return {CLWCredits} An Object of their current and required number of CL&W events,
  */
-const getChapelCredits = () => {
-  const attendedEvents = gordonEvent.getAttendedChapelEvents();
+const getChapelCredits = async () => {
+  const attendedEvents = await gordonEvent.getAttendedChapelEvents();
 
   // Get required number of CL&W credits for the user, defaulting to thirty
   let required = 30;
