@@ -18,7 +18,7 @@ export default class OfflineBanner extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -59,23 +59,25 @@ export default class OfflineBanner extends Component {
       return 'rounded-corners MuiGrid-grid-md-10';
     }
     // Classes for My Public Profile view
-    else if (
-      this.props.currentPath.includes('/profile/') ||
-      this.props.currentPath === '/myprofile'
-    ) {
+    else if (this.props.currentPath === '/myprofile') {
       return 'rounded-corners MuiGrid-grid-lg-10 MuiGrid-grid-md-12';
     }
-    // Classes for People Search, Timesheets, Feedback, and My Profile view
+    // Classes for People Search, Timesheets, Feedback, My Profile, and Public Profile view
     else if (
       this.props.currentPath === '/people' ||
-      this.props.currentPath === '/timesheets' ||
-      this.props.currentPath === '/feedback'
+      this.props.currentPath === '/student-timesheets' ||
+      this.props.currentPath === '/feedback' ||
+      this.props.currentPath.includes('/profile/')
     ) {
       return 'rounded-corners MuiGrid-grid-lg-8 MuiGrid-grid-md-8';
     }
     // Classes for any Activity view
     else if (this.props.currentPath.includes('/activity/')) {
       return 'rounded-corners MuiGrid-grid-xs-12 MuiGrid-grid-md-8 MuiGrid-grid-lg-5';
+    }
+    // Classes for Experience Transcript view
+    else if (this.props.currentPath === '/transcript') {
+      return 'rounded-corners MuiGrid-grid-xs-12 MuiGrid-grid-md-6 MuiGrid-grid-lg-6';
     } else {
       return 'rounded-corners MuiGrid-grid-lg-8 MuiGrid-grid-md-12';
     }
@@ -89,7 +91,7 @@ export default class OfflineBanner extends Component {
     // Network Status: Offline
     else {
       // Shows the offline banner on every page except the Login
-      if (!this.props.Authentication && this.props.currentPath === '/') {
+      if (!this.props.authentication && this.props.currentPath === '/') {
         return <div></div>;
       } else {
         return (

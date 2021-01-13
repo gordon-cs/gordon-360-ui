@@ -6,7 +6,7 @@
 
 import http from './http.js';
 
-const postErrorLog = message => {
+const postErrorLog = (message) => {
   let currentTime = new Date();
   let data = {
     LOG_MESSAGE: message,
@@ -15,7 +15,7 @@ const postErrorLog = message => {
   return http.post('log/add', data);
 };
 
-const postErrorMessage = message => {
+const postErrorMessage = (message) => {
   return http.post('log', message);
 };
 
@@ -37,7 +37,7 @@ const matchItem = (string, data) => {
   return { name: 'unknown' };
 };
 
-const parseNavigator = navigator => {
+const parseNavigator = (navigator) => {
   //Code modified from https://medium.com/creative-technology-concepts-code/detect-device-browser-and-version-using-javascript-8b511906745
   var oses = [
     { name: 'Windows Phone', value: 'Windows Phone' },

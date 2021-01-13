@@ -26,7 +26,7 @@ import storage from '../../services/storage';
 import GordonDialogBox from '../GordonDialogBox/index';
 import { windowBreakWidths } from '../../theme';
 
-const getRouteName = route => {
+const getRouteName = (route) => {
   if (route.name) {
     return () => (
       <span>
@@ -75,7 +75,13 @@ export default class GordonHeader extends Component {
     let currentPath = window.location.pathname;
     // Tab url regular expressions must be listed in the same order as the tabs, since the
     // indices of the elements in the array on the next line are mapped to the indices of the tabs
-    let urls = [/^\/$/, /^\/involvements\/?$|^\/activity/, /^\/events\/?$/, /^\/people$/];
+    let urls = [
+      /^\/$/,
+      /^\/involvements\/?$|^\/activity/,
+      /^\/events\/?$/,
+      /^\/people$/,
+      /^\/wellness$/,
+    ];
     this.value = false;
     for (let i = 0; i < urls.length; i++) {
       if (urls[i].test(currentPath)) {
@@ -99,7 +105,7 @@ export default class GordonHeader extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -128,7 +134,7 @@ export default class GordonHeader extends Component {
     // Saves the network's status to this component's state
     this.setState({ network });
 
-    window.addEventListener('resize', event => {
+    window.addEventListener('resize', (event) => {
       if (event.target.innerWidth < windowBreakWidths.breakMD) {
         if (this.state.openRightSideMenu) {
           this.setState({ openRightSideMenu: false });
@@ -245,7 +251,7 @@ export default class GordonHeader extends Component {
     // Network Status: Online
     if (this.state.network === 'online') {
       // Network Status: Online - Authenticated
-      if (this.props.Authentication) {
+      if (this.props.authentication) {
         peopleTab = (
           <Tab
             className="tab"
@@ -259,7 +265,7 @@ export default class GordonHeader extends Component {
       // Network Status: Online -  Not Authenticated
       else {
         peopleTab = (
-          <div onClick={clicked => this.openDialogBox('unauthorized', 'people search')}>
+          <div onClick={(clicked) => this.openDialogBox('unauthorized', 'people search')}>
             <Tab
               className="tab"
               icon={<PeopleIcon />}
@@ -276,7 +282,7 @@ export default class GordonHeader extends Component {
     else {
       peopleTab = (
         <div
-          onClick={clicked => {
+          onClick={(clicked) => {
             this.openDialogBox('offline', '');
           }}
         >
@@ -308,7 +314,7 @@ export default class GordonHeader extends Component {
     // Network Status: Online
     if (this.state.network === 'online') {
       // Network Status: Online - Authenticated
-      if (this.props.Authentication) {
+      if (this.props.authentication) {
         timesheetsTab = (
           <Tab
             className="tab"
@@ -322,7 +328,7 @@ export default class GordonHeader extends Component {
       // Network Status: Online - Not Authenticated
       else {
         timesheetsTab = (
-          <div onClick={clicked => this.openDialogBox('unauthorized', 'timesheets view')}>
+          <div onClick={(clicked) => this.openDialogBox('unauthorized', 'timesheets view')}>
             <Tab
               className="tab"
               icon={<WorkIcon />}
@@ -338,7 +344,7 @@ export default class GordonHeader extends Component {
     // Network Status: Offline
     else {
       timesheetsTab = (
-        <div onClick={clicked => this.openDialogBox('offline', '')}>
+        <div onClick={(clicked) => this.openDialogBox('offline', '')}>
           <Tab
             className="tab"
             icon={<WorkIcon />}
@@ -366,7 +372,7 @@ export default class GordonHeader extends Component {
     // Network Status: Online
     if (this.state.network === 'online') {
       // Network Status: Online - Authenticated
-      if (this.props.Authentication) {
+      if (this.props.authentication) {
         wellnessTab = (
           <Tab
             className="tab"
@@ -380,7 +386,7 @@ export default class GordonHeader extends Component {
       // Network Status: Online -  Not Authenticated
       else {
         wellnessTab = (
-          <div onClick={clicked => this.openDialogBox('unauthorized', 'wellness check')}>
+          <div onClick={(clicked) => this.openDialogBox('unauthorized', 'wellness check')}>
             <Tab
               className="tab"
               icon={<WellnessIcon />}
@@ -397,7 +403,7 @@ export default class GordonHeader extends Component {
     else {
       wellnessTab = (
         <div
-          onClick={clicked => {
+          onClick={(clicked) => {
             this.openDialogBox('offline', '');
           }}
         >
@@ -431,7 +437,7 @@ export default class GordonHeader extends Component {
 
             <Typography className="title disable-select" variant="h6" color="inherit">
               <Switch>
-                {routes.map(route => (
+                {routes.map((route) => (
                   <Route
                     key={route.path}
                     path={route.path}
@@ -466,10 +472,11 @@ export default class GordonHeader extends Component {
               </Tabs>
             </div>
 
-            <GordonPeopleSearch Authentication={this.props.Authentication} />
+            <GordonPeopleSearch authentication={this.props.authentication} />
 
             <GordonNavAvatarRightCorner
-              Authentication={this.props.Authentication}
+              onSignOut={this.props.onSignOut}
+              authentication={this.props.authentication}
               onClick={this.handleRightSideMenu}
               menuOpened={this.state.openRightSideMenu}
             />
@@ -478,7 +485,7 @@ export default class GordonHeader extends Component {
               open={this.state.openRightSideMenu}
               openDialogBox={this.openDialogBox}
               onSignOut={this.props.onSignOut}
-              Authentication={this.props.Authentication}
+              authentication={this.props.authentication}
               onClose={this.handleRightSideMenu}
             />
 

@@ -21,7 +21,7 @@ const getStaffPageForUser = async () => {
  */
 const getActiveJobsForUser = (canUseStaff, details) => {
   if (canUseStaff) {
-    return http.post(`jobs/getJobsStaff`, details); // Is a HttpPost, but says get?
+    return http.post(`jobs/JobsStaff`, details); // Is a HttpPost, but says get?
   }
   return http.post(`jobs/getJobs`, details);
 };
@@ -33,7 +33,7 @@ const getActiveJobsForUser = (canUseStaff, details) => {
  */
 const getSavedShiftsForUser = (canUseStaff) => {
   if (canUseStaff) {
-    return http.get(`jobs/getSavedShiftsStaff/`);
+    return http.get(`jobs/savedShiftsForStaff/`);
   }
   return http.get(`jobs/getSavedShifts/`);
 };
@@ -121,8 +121,9 @@ const submitShiftsForUser = (canUseStaff, shiftsToSubmit, submittedTo) => {
         HOURS_TYPE: shiftsToSubmit[i].HOURS_TYPE,
         LAST_CHANGED_BY: shiftsToSubmit[i].LAST_CHANGED_BY,
       });
-    return http.post(`jobs/submitShiftsStaff`, shifts);
-  }}
+      return http.post(`jobs/submitShiftsStaff`, shifts);
+    }
+  }
   for (let i = 0; i < shiftsToSubmit.length; i++) {
     shifts.push({
       ID_NUM: shiftsToSubmit[i].ID_NUM,
@@ -130,7 +131,8 @@ const submitShiftsForUser = (canUseStaff, shiftsToSubmit, submittedTo) => {
       SHIFT_END_DATETIME: shiftsToSubmit[i].SHIFT_END_DATETIME,
       SUBMITTED_TO: submittedTo,
       LAST_CHANGED_BY: shiftsToSubmit[i].LAST_CHANGED_BY,
-    });}
+    });
+  }
   return http.post(`jobs/submitShifts`, shifts);
 };
 

@@ -96,6 +96,7 @@ import gordonEvent from './event';
  * @property {String} office_hours Office hours
  * @property {Number} preferred_photo Preferred photo
  * @property {Number} show_pic Whether or not to show picture
+ * @property {String} Mail_Location On campus mailstop
  */
 
 /**
@@ -168,6 +169,14 @@ import gordonEvent from './event';
  * @property {String} Handshake Handshake
  * @property {String} LinkedIn LinkedIn
  * @property {String} PersonType Type of person
+ */
+
+/**
+ * @global
+ * @typedef StudentAdvisorInfo
+ * @property {String} Firstname First Name for advisor
+ * @property {String} Lastname Last Name for advisor
+ * @property {String} AD_Username User Name for advisor
  */
 
 /**
@@ -291,14 +300,14 @@ function setClass(profile) {
  * @param {String} termCode code for the semester
  * @return {Promise.<AttendedEvent[]>} An object of all CL&W events attended by the user
  */
-const getAttendedChapelEvents = termCode => http.get(`events/chapel/${termCode}`);
+const getAttendedChapelEvents = (termCode) => http.get(`events/chapel/${termCode}`);
 
 /**
  * Get image for a given user or the current user if `username` is not provided
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<String>} Image as a Base64-encoded string
  */
-const getImage = async username => {
+const getImage = async (username) => {
   let pic;
   if (username) {
     pic = await http.get(`profiles/Image/${username}/`);
@@ -321,7 +330,7 @@ const resetImage = () => {
  * @param {String} dataURI of the image being uploaded
  * @return {Response} response of http request
  */
-const postIDImage = dataURI => {
+const postIDImage = (dataURI) => {
   let imageData = new FormData();
   let blob = dataURItoBlob(dataURI);
   let type = blob.type.replace('image/', '');
@@ -335,7 +344,7 @@ const postIDImage = dataURI => {
  * @param {String} dataURI of the image being uploaded
  * @return {Response} response of http request
  */
-const postImage = dataURI => {
+const postImage = (dataURI) => {
   let imageData = new FormData();
   let blob = dataURItoBlob(dataURI);
   let type = blob.type.replace('image/', '');
@@ -384,17 +393,60 @@ const getLocalInfo = () => {
   }
 };
 
+/**
+ * Get the CHDate (the datetime when a user received CL&W credit)
+ * unless Occurrences (the actual datetime when the event occured)
+ * is non-null, since users would rather know when the event was
+ * than when they got credit.
+ *
+ * @param {JSON} event : an event the user attended
+ * @returns {DateTime} event.CHDate or event.Occurrences[0][0]
+ * (since Occurences is a list of lists of start and end times
+ * for each re-occurence of an event)
+ */
+function getAtndEventTime(event) {
+  if (event.Occurrences[0]) {
+    return event.Occurrences[0][0];
+  }
+  return event.CHDate;
+}
+
+/**
+ * Determines in which order two JSON event objects
+ * should be sorted based on a time associated with them.
+ * Note that this does not necessarily sort events by
+ * when they occurred, since getAtndEventTime
+ * may have to resort to using CHDate. CHDate
+ * can sometimes be weeks after an event due to slow
+ * processing.
+ *
+ * @param {JSON} a : an event
+ * @param {JSON} b : another event
+ * @returns {int} -1 if a's time is less than b's, 1 if it's more, 0 if they're equal
+ */
+function sortAtndEventsByTime(a, b) {
+  let tA = getAtndEventTime(a);
+  let tB = getAtndEventTime(b);
+
+  if (tA < tB) {
+    return -1;
+  }
+  if (tA > tB) {
+    return 1;
+  }
+  return 0;
+}
+
 //Call function to retrieve events from database then format them
 const getAttendedChapelEventsFormatted = async () => {
   const termCode = session.getTermCode();
   const attendedEvents = await getAttendedChapelEvents(termCode);
   const events = [];
-  attendedEvents.sort(gordonEvent.sortByTime);
   for (let i = 0; i < attendedEvents.length; i += 1) {
     events.push(attendedEvents[i]);
     gordonEvent.formatevent(attendedEvents[i]);
   }
-  return events.sort(gordonEvent.sortByTime);
+  return events.sort(sortAtndEventsByTime);
 };
 
 /**
@@ -430,7 +482,7 @@ const getDiningInfo = async () => {
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<StaffProfileInfo|StudentProfileInfo>} Profile info
  */
-const getProfile = username => {
+const getProfile = (username) => {
   let profile;
   if (username) {
     profile = http.get(`profiles/${username}/`);
@@ -438,6 +490,12 @@ const getProfile = username => {
     profile = http.get('profiles');
   }
   return profile;
+};
+
+const getAdvisor = async (username) => {
+  let advisor;
+  advisor = await http.get(`profiles/Advisors/${username}/`);
+  return advisor;
 };
 
 async function setMobilePhonePrivacy(makePrivate) {
@@ -450,20 +508,20 @@ async function setImagePrivacy(makePrivate) {
   await http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y'));
 }
 
-const getMemberships = async id => {
+const getMemberships = async (id) => {
   let memberships;
   memberships = await http.get(`memberships/student/${id}`);
   return memberships;
 };
 
-const getPublicMemberships = async username => {
+const getPublicMemberships = async (username) => {
   let memberships;
   memberships = await http.get(`memberships/student/username/${username}/`);
   memberships.sort(compareByTitle);
   return memberships;
 };
 
-const getMembershipsAlphabetically = async id => {
+const getMembershipsAlphabetically = async (id) => {
   let memberships;
   memberships = await http.get(`memberships/student/${id}`);
   memberships.sort(compareByTitle);
@@ -471,7 +529,7 @@ const getMembershipsAlphabetically = async id => {
 };
 
 //Take student's memberships and filter for current only
-const getCurrentMemberships = async id => {
+const getCurrentMemberships = async (id) => {
   let myInvolvements = await getMembershipsAlphabetically(id);
   let myCurrentInvolvements = [];
   const { SessionCode: sessionCode } = await session.getCurrent();
@@ -484,7 +542,7 @@ const getCurrentMemberships = async id => {
 };
 
 //Take student's memberships and filter out "Guest" memberships
-const getMembershipsWithoutGuests = async id => {
+const getMembershipsWithoutGuests = async (id) => {
   let myInvolvements = await getMemberships(id);
   let myInvolvementsWithoutGuests = [];
   for (let i = 0; i < myInvolvements.length; i += 1) {
@@ -496,7 +554,7 @@ const getMembershipsWithoutGuests = async id => {
 };
 
 //Take student's non-"Guest" memberships and filter for current only
-const getCurrentMembershipsWithoutGuests = async id => {
+const getCurrentMembershipsWithoutGuests = async (id) => {
   let myInvolvements = await getMembershipsWithoutGuests(id);
   let myCurrentInvolvementsWithoutGuests = [];
   const { SessionCode: sessionCode } = await session.getCurrent();
@@ -540,7 +598,7 @@ const getSentMembershipRequests = () => {
  * @param {String} id Identifier for student
  * @return {Request[]} List of memberships
  */
-const getLeaderPositions = async id => {
+const getLeaderPositions = async (id) => {
   let leaderPositions = [];
   let allMemberships = await getCurrentMemberships(id);
   for (let i = 0; i < allMemberships.length; i += 1) {
@@ -583,7 +641,7 @@ function compareByActCode(a, b) {
 //not including Guest memberships
 //using asynchronous http.get request (via getMemberships function)
 //sorts by SessionCode and ActivityCode
-const getTranscriptMembershipsInfo = async id => {
+const getTranscriptMembershipsInfo = async (id) => {
   let transcriptInfo = await getMembershipsWithoutGuests(id);
   transcriptInfo.sort(compareByActCode);
   return transcriptInfo;
@@ -598,7 +656,7 @@ const getEmploymentInfo = async () => {
   return employmentInfo;
 };
 
-const getProfileInfo = async username => {
+const getProfileInfo = async (username) => {
   let profile = await getProfile(username);
   formatName(profile);
   setClass(profile);
@@ -664,6 +722,7 @@ export default {
   getLeaderPositions,
   getSentMembershipRequests,
   getProfileInfo,
+  getAdvisor,
   resetImage,
   postImage,
   postIDImage,

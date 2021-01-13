@@ -11,7 +11,7 @@ import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
 import { gordonColors } from './../../theme';
 
-//import './event.css';
+import './event.scss';
 
 const styles = {
   searchBar: {
@@ -41,7 +41,6 @@ export default class Events extends Component {
       includePast: false,
       loading: true,
       hasFilters: false,
-      network: 'online',
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
@@ -238,7 +237,7 @@ export default class Events extends Component {
   //This should be the only time we pull from the database
   async loadEvents() {
     this.setState({ loading: true });
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
@@ -269,31 +268,6 @@ export default class Events extends Component {
 
   render() {
     let content;
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.state.loading === true) {
       content = <GordonLoader />;
@@ -388,7 +362,6 @@ export default class Events extends Component {
       );
     }
 
-    let events;
     const style = {
       button: {
         background: gordonColors.primary.cyan,
@@ -401,67 +374,66 @@ export default class Events extends Component {
         },
       },
     };
-    // If the user is online
-    if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
-      events = (
-        <section>
-          <Grid container justify="center">
-            <Grid
-              item
-              xs={12}
-              md={12}
-              lg={8}
-              alignContent="center"
-              justify="center"
-              style={{ paddingBottom: '1rem' }}
-            >
-              <Grid container alignItems="baseline" style={styles.searchBar}>
-                <Grid container md={8} lg={7}>
-                  <TextField
-                    id="search"
-                    label="Search"
-                    value={this.state.search}
-                    onChange={this.search('search')}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid
-                  container
-                  justify="flex-end"
-                  direction="row"
-                  md={4}
-                  lg={5}
-                  style={{ paddingTop: '1rem' }}
-                >
-                  <Grid item align="center">
-                    <Button
-                      variant="contained"
-                      style={style.button}
-                      onClick={this.handleExpandClick}
-                    >
-                      {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
-                    </Button>
-                  </Grid>
-                  <Grid item align="center">
-                    <Button
-                      variant="contained"
-                      style={style.button.attendedEvents}
-                      onClick={() => (window.location.pathname = '/attended')}
-                    >
-                      ATTENDED CL&amp;W
-                    </Button>
-                  </Grid>
-                </Grid>
+    let events = (
+      <section>
+        <Grid container justify="center">
+          {/* Search Bar and Filters */}
+          <Grid
+            item
+            xs={10}
+            sm={12}
+            md={12}
+            lg={8}
+            alignContent="center"
+            justify="center"
+            style={{ paddingBottom: '1rem' }}
+          >
+            <Grid container alignItems="baseline" justify="center" style={styles.searchBar}>
+              <Grid container xs={12} sm={5} md={8} lg={7}>
+                <TextField
+                  id="search"
+                  label="Search"
+                  value={this.state.search}
+                  onChange={this.search('search')}
+                  fullWidth
+                />
+              </Grid>
+              <Grid
+                container
+                justify="flex-end"
+                direction="row"
+                xs={12}
+                sm={6}
+                md={4}
+                lg={5}
+                style={{ paddingTop: '1rem' }}
+                className={'buttonWrapper'}
+              >
+                <Button variant="contained" style={style.button} onClick={this.handleExpandClick}>
+                  {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
+                </Button>
+                {this.props.authentication && (
+                  <Button
+                    variant="contained"
+                    style={style.button.attendedEvents}
+                    onClick={() => (window.location.pathname = '/attended')}
+                  >
+                    ATTENDED CL&amp;W
+                  </Button>
+                )}
               </Grid>
             </Grid>
-            <Grid item xs={12} md={12} lg={8}>
-              {filter}
-              {content}
-            </Grid>
           </Grid>
-        </section>
-      );
-    }
+
+          {/* List of Events */}
+          <Grid item xs={12} md={12} lg={8}>
+            {filter}
+            {content}
+          </Grid>
+        </Grid>
+      </section>
+    );
+
     return events;
   }
 }

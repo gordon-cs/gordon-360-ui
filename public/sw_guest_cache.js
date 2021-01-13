@@ -40,6 +40,7 @@ const static360Cache = [
   '/admin',
   '/news',
   '/myprofile',
+  '/transcript',
   '/attended',
   '/manifest.json',
   '/pwa.js',
@@ -47,6 +48,7 @@ const static360Cache = [
   '/static/js/0.chunk.js',
   '/static/js/0.chunk.js.map',
   '/static/js/main.chunk.js',
+  '/static/js/main.chunk.js.map',
   '/static/js/1.chunk.js',
   // Images
   '/images/android-icon-36x36.png',
@@ -84,7 +86,7 @@ const static360Cache = [
   '/static/media/GordonFavicon.3e563128.ico',
   '/static/media/MyGordonFavicon.7433864b.ico',
   '/static/media/GoGordonFavicon.3e563128.ico',
-  '/static/media/BbFavicon.ba837cb2.ico ',
+  '/static/media/BbFavicon.ba837cb2.ico',
   '/static/media/Off-CC.814b04da.svg',
   '/static/media/Off-IM.853ae19c.svg',
   '/static/media/Off-LS.c865b557.svg',
@@ -120,7 +122,7 @@ async function createRemoteGuestLinks() {
       if (response.ok && !isFetchCanceled) {
         // Adds fetch response to cache
         await caches.open(cacheVersion).then(cache => {
-          cache.put(guestRequiredSource, response.clone());
+          cache.put(response.url, response.clone());
         });
         // Uses the data of the current session to create the dynamic links for the Involvements page
         response.json().then(currentSession => {
@@ -241,7 +243,7 @@ async function fetchGuestFile(link, attemptsLeft = 2) {
       // to cache if the fetch wasn't canceled
       if (response.ok && !isFetchCanceled) {
         await caches.open(cacheVersion).then(cache => {
-          cache.put(link, response.clone());
+          cache.put(response.url, response.clone());
         });
         saveSuccessfulGuestLink(response.url);
         return true;

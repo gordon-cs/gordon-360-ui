@@ -238,7 +238,7 @@ class GordonSchedulePanel extends Component {
   }
 
   render() {
-    const replaced = this.state.description.replace(urlRegex({ strict: false }), function (url) {
+    const replaced = this.state.description.replace(urlRegex({ strict: false }), function(url) {
       if (url.split('://')[0] !== 'http' && url.split('://')[0] !== 'https') {
         return '<a target="_blank" rel="noopener" href="https://' + url + '">' + url + '</a>';
       } else {
@@ -365,41 +365,43 @@ class GordonSchedulePanel extends Component {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
             <Grid container direction="row" xs={12} lg={12} justify="center">
-              <Grid container direction="row" xs={12} lg={10}>
-                <Grid container xs={12} lg={8} alignItems="center" justify="flex-start">
-                  <Markup content={replaced} />
-                </Grid>
+              {this.props.network === 'online' && (
+                <Grid container direction="row" xs={12} lg={10}>
+                  <Grid container xs={12} lg={8} alignItems="center" justify="flex-start">
+                    <Markup content={replaced} />
+                  </Grid>
 
-                <Grid
-                  container
-                  direction="column"
-                  xs={12}
-                  lg={4}
-                  alignItems="flex-end"
-                  justify="flex-end"
-                >
-                  {privacyButton}
-                </Grid>
+                  <Grid
+                    container
+                    direction="column"
+                    xs={12}
+                    lg={4}
+                    alignItems="flex-end"
+                    justify="flex-end"
+                  >
+                    {privacyButton}
+                  </Grid>
 
-                <Grid item xs={6} lg={2}>
-                  {editDescriptionButton}
-                </Grid>
+                  <Grid item xs={6} lg={2}>
+                    {editDescriptionButton}
+                  </Grid>
 
-                <Grid item xs={6} lg={2}>
-                  {removeOfficeHourButton}
-                </Grid>
+                  <Grid item xs={6} lg={2}>
+                    {removeOfficeHourButton}
+                  </Grid>
 
-                <Grid
-                  container
-                  direction="column"
-                  xs={12}
-                  lg={8}
-                  alignItems="flex-end"
-                  justify="flex-end"
-                >
-                  {lastUpdate}
+                  <Grid
+                    container
+                    direction="column"
+                    xs={12}
+                    lg={8}
+                    alignItems="flex-end"
+                    justify="flex-end"
+                  >
+                    {lastUpdate}
+                  </Grid>
                 </Grid>
-              </Grid>
+              )}
 
               <Grid item xs={12} lg={10}>
                 <GordonScheduleCalendar
@@ -412,6 +414,7 @@ class GordonSchedulePanel extends Component {
                   schedulePrivacy={this.state.isSchedulePrivate}
                   reloadHandler={this.reloadHandler}
                   reloadCall={this.state.reloadCall}
+                  network={this.props.network}
                 />
               </Grid>
             </Grid>

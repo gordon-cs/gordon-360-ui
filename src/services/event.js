@@ -132,10 +132,7 @@ function filterbyCategory(filters, allEvents) {
           allEvents[i].Event_Type_Name === 'Lecture/Speaker/Forum')
       ) {
         filteredEvents.push(allEvents[i]);
-      }
-
-      // NEEDS TO BE TESTED WITH THE BACK-END
-      else if (filters.chapelCredits && allEvents[i].Organization === 'Chapel Credits') {
+      } else if (filters.chapelCredits && allEvents[i].Category_Id === '85') {
         filteredEvents.push(allEvents[i]);
       }
     }
@@ -227,7 +224,7 @@ const getFilteredEvents = (filters) => {
   //   }
   //   filteredEvents = shownEvents;
   // }
-  // console.log('Events: ', filteredEvents);
+  // console.log('Events: ', filteredEvents); <- can we get rid of this too?
 
   if (filters.search !== '') {
     shownEvents = [];

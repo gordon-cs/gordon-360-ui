@@ -43,7 +43,7 @@ export default class GroupContacts extends Component {
               <strong>Group Contacts:</strong>
             </Typography>
             <List dense disablePadding>
-              {groupAdmin.map(activityGroupAdmin => (
+              {groupAdmin.map((activityGroupAdmin) => (
                 <ListItem className="contacts" key={activityGroupAdmin.Email}>
                   <IconButton
                     classes={{ root: 'email-button' }}
