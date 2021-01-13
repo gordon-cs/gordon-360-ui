@@ -22,51 +22,56 @@ import housing from '../../../../services/housing';
 export default class HallListItem extends Component {
   constructor(props) {
     super(props);
-    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleMenuInputChange = this.handleMenuInputChange.bind(this);
+    this.handleRankValueChange = this.handleRankValueChange.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.state = {
       availableHalls: [], // array of table data from backend
-      hallSelectionValue: '', // Drop-down menu values
+      hallSelectionValue: '', // Drop-down menu value
+      hallRankValue: this.props.index + 1,
     };
   }
 
-  componentDidUpdate(newProps) {
-    if (newProps) {
-      if (this.props.preferredHalls !== newProps.preferredHalls) {
-        let availableHalls = this.state.availableHalls.filter(
-          (hall) => !newProps.preferredHalls.includes(hall),
-        );
-        this.setState({ availableHalls });
-      }
-      let hallSelectionValue = newProps.preferredHalls[newProps.index];
-      if (this.state.hallSelectionValue !== hallSelectionValue) {
-        this.setState({ hallSelectionValue });
-      }
-    }
-  }
-
   async componentDidMount() {
-    if (this.props.authentication) {
-      let unfilteredHalls;
-      try {
-        // Get the halls available for apartments, filtered by the gender of the primary applicant
-        unfilteredHalls = await housing.getApartmentHalls(this.props.primaryUsername);
-      } catch {
-        //! DEBUG: Fills in halls dropdown when the housing api endpoint is not yet implemented
-        unfilteredHalls = await goStalk.getHalls();
-      }
-      //Remove spaces from strings and filter out halls which have already been selected
-      let availableHalls = unfilteredHalls.map((hall) => hall.trim());
-      this.setState({ availableHalls });
+    // Get the hall info for this list item
+    let hallInfo = this.props.preferredHalls[this.props.index];
+    let hallSelectionValue = hallInfo.hallName;
+    let hallRankValue = hallInfo.hallRank;
+    this.setState({ hallSelectionValue, hallRankValue });
+  }
+
+  async componentDidUpdate(newProps) {
+    if (newProps && this.props.preferredHalls !== newProps.preferredHalls) {
+      // Get the hall info for this list item
+      let hallInfo = newProps.preferredHalls[newProps.index];
+      let hallSelectionValue = hallInfo.hallName;
+      let hallRankValue = hallInfo.hallRank;
+      this.setState({ hallSelectionValue, hallRankValue });
     }
   }
 
-  handleInputChange = (event) => {
+  handleMenuInputChange = (event) => {
+    console.log('Called "handleMenuInputChange" in HallListItem component');
     if (event.target.value) {
       let hallSelectionValue = event.target.value;
+      if (!this.props.preferredHalls.some((hallInfo) => hallInfo.hallName === hallSelectionValue)) {
+        // Update the state only if the
+        this.setState({ hallSelectionValue });
+      }
+      let hallRankValue = this.state.hallRankValue;
       let index = this.props.index;
-      this.setState({ hallSelectionValue });
-      this.props.onHallInputChange(hallSelectionValue, index);
+      this.props.onHallInputChange(hallSelectionValue, hallRankValue, index);
+    }
+  };
+
+  handleRankValueChange = (event) => {
+    console.log('Called "handleRankValueChange" in HallListItem component');
+    if (event.target.value !== null) {
+      let hallSelectionValue = this.state.hallSelectionValue;
+      let hallRankValue = Number(event.target.value);
+      this.setState({ hallRankValue });
+      let index = this.props.index;
+      this.props.onHallInputChange(hallSelectionValue, hallRankValue, index);
     }
   };
 
@@ -89,8 +94,9 @@ export default class HallListItem extends Component {
           <Grid item xs={1}>
             <TextField
               label="Rank"
-              defaultValue={index + 1}
               inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              value={this.state.hallRankValue}
+              onChange={this.handleRankValueChange}
             />
           </Grid>
           <Grid item xs={11}>
@@ -98,13 +104,13 @@ export default class HallListItem extends Component {
               <InputLabel>Hall</InputLabel>
               <Select
                 value={this.state.hallSelectionValue}
-                onChange={this.handleInputChange}
+                onChange={this.handleMenuInputChange}
                 input={<Input id={'hall' + index} />}
               >
                 <ListSubheader>Select a hall</ListSubheader>
-                {this.state.availableHalls.map((hall) => (
-                  <MenuItem value={hall} key={hall}>
-                    {hall}
+                {this.props.availableHalls.map((hallName) => (
+                  <MenuItem value={hallName} key={hallName}>
+                    {hallName}
                   </MenuItem>
                 ))}
               </Select>

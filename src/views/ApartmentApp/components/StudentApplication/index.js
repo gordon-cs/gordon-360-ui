@@ -49,8 +49,9 @@ export default class StudentApplication extends Component {
       editDialogOpen: false,
       primaryUsername: null, // The username of the primary applicant
       applicants: [],
-      preferredHalls: [''],
+      preferredHalls: [{ hallName: '', hallRank: 1 }],
     };
+    // Off-campus program info is stored as a Map, where the Key is a student's username and the corresponding Value is the department of that student's off-campus program
     this.offCampusProgramInfo = new Map();
     this.state.applicants.forEach((profile) =>
       this.offCampusProgramInfo.set(profile.AD_Username, ''),
@@ -230,19 +231,54 @@ export default class StudentApplication extends Component {
    * @param {String} hallSelectionValue The name of the hall that was selected
    * @param {Number} index The index of the hall in the list
    */
-  handleHallInputChange = (hallSelectionValue, index) => {
-    console.log(hallSelectionValue); //! DEBUG
-    console.log(index); //! DEBUG
+  handleHallInputChange = (hallSelectionValue, hallRankValue, index) => {
+    console.log('Called "handleHallInputChange" in StudentApplication component'); //! DEBUG
+    console.log('hallName: ' + hallSelectionValue); //! DEBUG
+    console.log('hallRank: ' + hallRankValue); //! DEBUG
+    console.log('index: ' + index); //! DEBUG
     this.setState({ updating: true });
-    if (hallSelectionValue && index !== null && this.state.preferredHalls.length > 0) {
-      console.log('Attempting to update preferred halls'); //! DEBUG
-      if (index !== -1) {
-        let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
-        // preferredHalls.splice(index, 1, hallSelectionValue); // replace the element at index with the value stored in 'hallSelectionValue'
-        preferredHalls[index] = hallSelectionValue;
-        this.setState({ preferredHalls });
-        preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+    if (hallSelectionValue && hallRankValue && index !== null) {
+      if (hallRankValue <= 0) {
+        // Display an error if the selected rank value is less or equal to zero
+        this.snackbarText =
+          'The "Rank" value expected a positive number, but you entered ' + String(hallRankValue);
+        this.snackbarSeverity = 'info';
+        this.setState({ snackbarOpen: true });
+      } else if (hallSelectionValue && hallRankValue && index !== null) {
+        console.log('Attempting to update preferred halls'); //! DEBUG
+        if (index !== -1) {
+          let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
+          // Create a new custom hallInfo object
+          let newHallInfo = preferredHalls[index];
+          if (
+            this.state.preferredHalls.some(
+              (hallInfo) => hallInfo.hallName === hallSelectionValue,
+            ) &&
+            hallSelectionValue !== this.state.preferredHalls[index].hallName
+          ) {
+            // Display an error if the selected hall is already in the list
+            this.snackbarText = String(hallSelectionValue) + ' is already in the list.';
+            this.snackbarSeverity = 'info';
+            this.setState({ snackbarOpen: true });
+          } else {
+            // Create a new custom hallInfo object
+            newHallInfo = { hallName: hallSelectionValue, hallRank: hallRankValue };
+          }
+          preferredHalls[index] = newHallInfo; // replace the element at index with the new hall info object
+          // preferredHalls.splice(index, 1, newHallInfo);
+          console.log('Printing current list of preferred halls'); //! DEBUG
+          preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+          preferredHalls.sort(function(a, b) {
+            return a.hallRank - b.hallRank;
+          });
+          preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+          this.setState({ preferredHalls });
+        }
       }
+    } else {
+      this.snackbarText = 'Something went wrong while trying to add this hall. Please try again.';
+      this.snackbarSeverity = 'error';
+      this.setState({ snackbarOpen: true });
     }
     this.setState({ updating: false });
   };
@@ -252,8 +288,9 @@ export default class StudentApplication extends Component {
    * @param {Number} index The index of the hall to be removed from the list of perferred halls
    */
   handleHallRemove = (index) => {
+    console.log('Called "handleHallRemove" in StudentApplication component'); //! DEBUG
     this.setState({ updating: true });
-    console.log(index); //! DEBUG
+    console.log('index: ' + index); //! DEBUG
     if (index !== null && index !== -1) {
       let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
       if (preferredHalls.length > 1) {
@@ -261,10 +298,12 @@ export default class StudentApplication extends Component {
         preferredHalls.splice(index, 1);
       } else {
         // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
-        preferredHalls[0] = '';
+        let newHallInfo = { hallName: '', hallRank: 1 };
+        preferredHalls[0] = newHallInfo;
       }
-      this.setState({ preferredHalls });
+      console.log('Printing current list of preferred halls'); //! DEBUG
       preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+      this.setState({ preferredHalls });
     }
     this.setState({ updating: false });
   };
@@ -273,9 +312,13 @@ export default class StudentApplication extends Component {
    * Callback for hall list add button
    */
   handleHallAdd = () => {
+    console.log('Called "handleHallAdd" in StudentApplication component'); //1 DEBUG
     this.setState({ updating: true });
     let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
-    preferredHalls.push(['']);
+    let newHallRank = 1 + preferredHalls.length;
+    preferredHalls.push({ hallName: '', hallRank: newHallRank });
+    console.log('Printing current list of preferred halls'); //! DEBUG
+    preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
     this.setState({ preferredHalls, updating: false });
   };
 
