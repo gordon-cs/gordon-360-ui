@@ -90,7 +90,7 @@ export default class HallListItem extends Component {
           <Grid item xs={1}>
             <TextField
               label="Rank"
-              defaultValue={index}
+              defaultValue={index + 1}
               inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
             />
           </Grid>
