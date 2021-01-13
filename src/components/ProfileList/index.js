@@ -237,9 +237,13 @@ class ProfileList extends Component {
     let advisors;
     // only show on personal profile
     if(this.props.myProf) {
-      advisors = createAdvisorsListItem(this.props.profile, rowWidths, { gridStyle });
+      advisors = createAdvisorsListItem(
+        this.props.profile, 
+        rowWidths, 
+        { privateTextStyle, gridStyle }
+      );
     } else {
-      advisors = <></>;
+      advisors = null;
     }
 
     // Creates the Residence List Item
