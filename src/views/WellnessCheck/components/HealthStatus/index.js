@@ -70,6 +70,8 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
                 alt={username}
               />
             </Card>
+            {/* TODO: Remove following code block after Spring 2021 move in is complete */}
+            {/* START */}
             {currentStatus === StatusColors.RED && (
               <Typography variant="h5">
                 Students must fill out{' '}
@@ -83,6 +85,7 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
                 before checking in.
               </Typography>
             )}
+            {/* END */}
             <Grid spacing={2} className="wellness-status">
               <Card className={currentStatus}>
                 <CardContent className="status-box">
