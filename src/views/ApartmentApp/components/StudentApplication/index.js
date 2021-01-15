@@ -46,6 +46,7 @@ export default class StudentApplication extends Component {
       applicationCardsOpen: false,
       submitDialogOpen: false, // Use this for saving app (later feature)
       editDialogOpen: false,
+      applicationID: -1, // Default value of -1 indicate to backend that the application ID number is not yet known
       primaryUsername: null, // The username of the primary applicant
       applicants: [],
     };
@@ -226,25 +227,31 @@ export default class StudentApplication extends Component {
     let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
     console.log(debugMessage); //! DEBUG
     // The method is separated from callback because the housing API service must be handled inside an async method
-    this.saveApplication(this.state.primaryUsername, this.state.applicants);
+    this.saveApplication(
+      this.state.applicationID,
+      this.state.primaryUsername,
+      this.state.applicants,
+    );
   };
 
   /**
    * Save the current state of the application to the database
+   * @param {Number} applicationID the application ID number if it is known, else it is -1
    * @param {String} primaryUsername the student username of the person filling out the application
    * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
    */
-  async saveApplication(primaryUsername, applicants) {
+  async saveApplication(applicationID, primaryUsername, applicants) {
     this.setState({ saving: true });
     this.saveButtonAlertTimeout = null;
     let result = null;
     try {
-      result = await housing.saveApartmentApplication(primaryUsername, applicants);
+      result = await housing.saveApartmentApplication(applicationID, primaryUsername, applicants);
     } catch {
       result = false;
     }
-    if (result) {
-      this.setState({ saving: 'success' });
+    if (result !== null) {
+      console.log(result); //! DEBUG
+      this.setState({ applicationID: result, saving: 'success' });
     } else {
       this.snackbarText = 'Something went wrong while trying to save the application.';
       this.snackbarSeverity = 'error';
@@ -260,6 +267,7 @@ export default class StudentApplication extends Component {
   }
 
   handleCloseSnackbar = (event, reason) => {
+    // Prevent the snackbar from closing if the user clicks outside the snackbar
     if (reason === 'clickaway') {
       return;
     }
@@ -267,6 +275,7 @@ export default class StudentApplication extends Component {
   };
 
   handleCloseDialog = (event, reason) => {
+    // Prevent the dialog box from closing if the user clicks outside the dialog box
     if (reason === 'clickaway') {
       return;
     }
