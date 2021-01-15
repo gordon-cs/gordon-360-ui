@@ -190,18 +190,53 @@ export default class StudentApplication extends Component {
   };
 
   handleChangePrimaryAccepted = () => {
-    if (this.state.newPrimaryApplicant) {
-      try {
-        this.setState({ primaryUsername: this.state.newPrimaryApplicant.AD_Username });
-        this.saveApplication(this.state.primaryUsername, this.state.applicants);
-      } catch (error) {
-        this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
-        this.snackbarSeverity = 'error';
-        this.setState({ snackbarOpen: true, saving: 'failed' });
-      }
+    if (this.state.newPrimaryApplicant && this.state.newPrimaryApplicant.AD_Username) {
+      // The method is separated from callback because the housing API service must be handled inside an async method
+      this.changePrimaryApplicant(
+        this.state.applicationID,
+        this.state.newPrimaryApplicant.AD_Username,
+      );
       this.handleCloseOkay();
+    } else {
+      this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
+      this.snackbarSeverity = 'error';
+      this.setState({ snackbarOpen: true, saving: 'failed' });
     }
   };
+
+  /**
+   * Update the primary applicant of the application to the database
+   * @param {Number} applicationID the application ID number
+   * @param {String} newPrimaryUsername the student username of the person who will be allowed to edit this application
+   */
+  async changePrimaryApplicant(applicationID, newPrimaryUsername) {
+    this.setState({ saving: true });
+    this.saveButtonAlertTimeout = null;
+    let result = null;
+    try {
+      result = await housing.changeApplicationModifier(applicationID, newPrimaryUsername);
+    } catch {
+      result = false;
+    }
+    if (result) {
+      console.log(result); //! DEBUG
+      this.setState({
+        primaryUsername: this.state.newPrimaryApplicant.AD_Username,
+        saving: 'success',
+      });
+    } else {
+      this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
+      this.snackbarSeverity = 'error';
+      this.setState({ snackbarOpen: true, saving: 'failed' });
+    }
+    if (this.saveButtonAlertTimeout === null) {
+      // Shows the success icon for 6 seconds and then returns back to normal button
+      this.saveButtonAlertTimeout = setTimeout(() => {
+        this.saveButtonAlertTimeout = null;
+        this.setState({ saving: false });
+      }, 6000);
+    }
+  }
 
   /**
    * Callback for applicant list remove button
