@@ -230,6 +230,7 @@ export default class StudentApplication extends Component {
   /**
    * Callback for hall list remove button
    * @param {String} hallSelectionValue The name of the hall that was selected
+   * @param {String|Number} hallRankValue The rank value that the user assigned to this hall
    * @param {Number} index The index of the hall in the list
    */
   handleHallInputChange = (hallSelectionValue, hallRankValue, index) => {
