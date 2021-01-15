@@ -2,8 +2,9 @@
 import React, { Component } from 'react';
 import 'date-fns';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
-import GordonDialogBox from '../../components/GordonDialogBox';
+// import GordonDialogBox from '../../components/GordonDialogBox';
 import GordonLoader from '../../components/Loader';
+import SimpleSnackbar from '../../components/Snackbar';
 import ApplicantList from '../../components/ApartmentApplicantList';
 import user from '../../services/user';
 import housing from '../../services/housing';
@@ -18,63 +19,27 @@ export default class ApartApp extends Component {
       isFac: Boolean,
       isAlu: Boolean,
       loading: true,
+      saving: false,
       network: 'online',
       submitDialogOpen: false, // Use this for saving app (later feature)
       errorDialogOpen: false,
-      errorDialogText: null,
       userProfile: {},
       applicants: [],
       // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
       onCampusRoom: null,
       onOffCampus: null,
     };
+    this.errorDialogText = '';
+    this.snackbarText = '';
+    this.snackbarSeverity = '';
+    this.saveButtonAlertTimeout = null;
   }
 
-  /**
-   * Callback for apartment people search submission
-   * @param {String} searchSelection Username for student
-   */
-  onSearchSubmit = (searchSelection) => {
-    if (searchSelection && searchSelection !== null) {
-      // Method separated from callback because profile must be handled inside an async method
-      this.addApplicant(searchSelection);
-    }
-  };
-
-  async addApplicant(username) {
-    let applicants = this.state.applicants; // make a separate copy of the array
-    // Get the profile of the selected user
-    let applicantProfile = await user.getProfileInfo(username);
-    // Check if the selected user is a student
-    if (!String(applicantProfile.PersonType).includes('stu')) {
-      // Display an error if the selected user is not a student
-      let newErrorText = applicantProfile.fullName + ' is not a student';
-      this.setState({ errorDialogOpen: true, errorDialogText: newErrorText });
-    } else if (applicants.some((applicant) => applicant.AD_Username === username)) {
-      // Display an error if the selected user is already in the list
-      let newErrorText = applicantProfile.fullName + ' is already in the list';
-      this.setState({ errorDialogOpen: true, errorDialogText: newErrorText });
-    } else {
-      // Add the profile object to the list of applicants
-      applicants.push(applicantProfile);
-      this.setState({ applicants });
-    }
+  componentDidMount() {
+    this.loadProfile();
+    this.loadHousingInfo();
+    // this.checkForSavedApplication();
   }
-
-  /**
-   * Callback for applicant list remove button
-   * @param {String} profileToRemove Username for student
-   */
-  onApplicantRemove = (profileToRemove) => {
-    if (profileToRemove) {
-      let applicants = this.state.applicants; // make a separate copy of the array
-      let index = applicants.indexOf(profileToRemove);
-      if (index !== -1) {
-        applicants.splice(index, 1);
-        this.setState({ applicants });
-      }
-    }
-  };
 
   /**
    * Loads the user's profile info only once (at start)
@@ -84,7 +49,7 @@ export default class ApartApp extends Component {
     try {
       const profile = await user.getProfileInfo();
       this.setState({ userProfile: profile });
-      this.checkPersonType(profile);
+      this.setState({ isStu: String(profile.PersonType).includes('stu') });
       if (this.state.isStu) {
         let applicants = this.state.applicants;
         applicants.push(profile);
@@ -96,20 +61,17 @@ export default class ApartApp extends Component {
     }
   }
 
-  checkPersonType(profile) {
-    let personType = String(profile.PersonType);
-    this.setState({ isStu: personType.includes('stu') });
-    this.setState({ isFac: personType.includes('fac') });
-    this.setState({ isAlu: personType.includes('alu') });
-  }
-
   /**
    * Loads the user's saved apartment application, if one exists
    */
   async loadHousingInfo() {
     this.setState({ loading: true });
     try {
-      // TODO - Once saving application has been implemented in the backend, this will be replaced with a call to the load the application info. The getHousingInfo was made obsolete after the Hello World
+      /**
+       * TODO: Once saving application has been implemented in the backend,
+       * TODO: this will be replaced with a call to the load the application info.
+       * TODO: The getHousingInfo was made obsolete after the Hello World
+       */
       let housingInfo = await housing.getHousingInfo();
       let onOffCampus = String(housingInfo[0].OnOffCampus);
       let onCampusRoom = String(housingInfo[0].OnCampusRoom);
@@ -119,24 +81,136 @@ export default class ApartApp extends Component {
     }
   }
 
+  /**
+   * Callback for apartment people search submission
+   * @param {String} searchSelection Username for student
+   */
+  onSearchSubmit = searchSelection => {
+    this.setState({ updating: true });
+    if (searchSelection) {
+      // The method is separated from callback because user API service must be handled inside an async method
+      this.addApplicant(searchSelection);
+    }
+    this.setState({ updating: false });
+  };
+
+  /**
+   * Add an applicant to the list, identified by username
+   * @param {String} username Username for student
+   */
+  async addApplicant(username) {
+    let applicants = this.state.applicants; // make a separate copy of the array
+    try {
+      // Get the profile of the selected user
+      let applicantProfile = await user.getProfileInfo(username);
+      // Check if the selected user is a student
+      if (!String(applicantProfile.PersonType).includes('stu')) {
+        // Display an error if the selected user is not a student
+        this.snackbarText =
+          'Could not add ' + String(applicantProfile.fullName) + ' because they are not a student.';
+        this.snackbarSeverity = 'warning';
+        this.setState({ snackbarOpen: true });
+      } else if (applicants.some(applicant => applicant.AD_Username === username)) {
+        // Display an error if the selected user is already in the list
+        this.snackbarText = String(applicantProfile.fullName) + ' is already in the list.';
+        this.snackbarSeverity = 'info';
+        this.setState({ snackbarOpen: true });
+      } else {
+        // Add the profile object to the list of applicants
+        applicants.push(applicantProfile);
+        this.setState({ applicants });
+        if (this.state.applicants.some(applicant => applicant.AD_Username === username)) {
+          this.snackbarText =
+            String(applicantProfile.fullName) + ' was successfully added to the list.';
+          this.snackbarSeverity = 'success';
+          this.setState({ snackbarOpen: true });
+        }
+      }
+    } catch (error) {
+      this.snackbarText = 'Something went wrong while trying to add this person. Please try again.';
+      this.snackbarSeverity = 'error';
+      this.setState({ snackbarOpen: true });
+    }
+  }
+
+  /**
+   * Callback for applicant list remove button
+   * @param {String} profileToRemove Username for student
+   */
+  onApplicantRemove = profileToRemove => {
+    this.setState({ updating: true });
+    if (profileToRemove) {
+      let applicants = this.state.applicants; // make a separate copy of the array
+      let index = applicants.indexOf(profileToRemove);
+      if (index !== -1) {
+        applicants.splice(index, 1);
+        this.setState({ applicants });
+      }
+    }
+    this.setState({ updating: false });
+  };
+
+  /**
+   * Callback for apartment application save button
+   */
+  handleSaveButtonClick = () => {
+    let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
+    console.log(debugMessage); //! DEBUG
+    // The method is separated from callback because the housing API service must be handled inside an async method
+    this.saveApplication(this.state.userProfile.AD_Username, this.state.applicants);
+  };
+
+  /**
+   * Save the current state of the application to the database
+   * @param {String} primaryUsername the student username of the person filling out the application
+   * @param {StudentProfileInfo} applicants Array of StudentProfileInfo objects
+   */
+  async saveApplication(primaryUsername, applicants) {
+    this.setState({ saving: true });
+    this.saveButtonAlertTimeout = null;
+    let result = null;
+    try {
+      result = await housing.saveApartmentApplication(primaryUsername, applicants);
+    } catch {
+      result = false;
+    }
+    if (result) {
+      this.setState({ saving: 'success' });
+    } else {
+      this.snackbarText = 'Something went wrong while trying to save the application.';
+      this.snackbarSeverity = 'error';
+      this.setState({ snackbarOpen: true, saving: 'failed' });
+    }
+    if (this.saveButtonAlertTimeout === null) {
+      // Shows the success icon for 2 seconds and then returns back to normal button
+      this.saveButtonAlertTimeout = setTimeout(() => {
+        this.saveButtonAlertTimeout = null;
+        this.setState({ saving: false });
+      }, 2000);
+    }
+  }
+
   handleCloseOkay = () => {
     this.setState({ submitDialogOpen: false, errorDialogOpen: false, errorDialogText: null });
   };
 
-  componentDidMount() {
-    this.loadProfile();
-    this.loadHousingInfo();
-    // this.checkForSavedApplication();
-  }
+  handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ snackbarOpen: false });
+  };
 
   render() {
     if (this.props.Authentication) {
-      /* Used to re-render the page when the network connection changes.
-       *  this.state.network is compared to the message received to prevent
-       *  multiple re-renders that creates extreme performance lost.
-       *  The origin of the message is checked to prevent cross-site scripting attacks
+      /**
+       * Used to re-render the page when the network connection changes.
+       * this.state.network is compared to the message received to prevent
+       * multiple re-renders that creates extreme performance lost.
+       * The origin of the message is checked to prevent cross-site scripting attacks
        */
-      window.addEventListener('message', (event) => {
+      window.addEventListener('message', event => {
         if (
           event.data === 'online' &&
           this.state.network === 'offline' &&
@@ -152,8 +226,9 @@ export default class ApartApp extends Component {
         }
       });
 
-      /* Gets status of current network connection for online/offline rendering
-       *  Defaults to online in case of PWA not being possible
+      /**
+       * Gets status of current network connection for online/offline rendering
+       * Defaults to online in case of PWA not being possible
        */
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
@@ -182,49 +257,53 @@ export default class ApartApp extends Component {
                       </CardContent>
                     </Card>
                   </Grid>
-                  <Grid item xs={12} md={8} lg={6}>
-                    <Grid container direction="column" spacing={2}>
-                      <Grid item>
-                        <Card>
-                          <ApplicantList
-                            onApplicantRemove={this.onApplicantRemove}
-                            applicants={this.state.applicants}
-                            userProfile={this.state.userProfile}
-                            onSearchSubmit={this.onSearchSubmit}
-                            Authentication={this.props.Authentication}
-                          />
-                          <GordonDialogBox
-                            open={this.state.errorDialogOpen}
-                            onClose={this.handleCloseOkay}
-                            labelledby={'applicant-dialog'}
-                            describedby={'applicant-denied'}
-                            title={'Could Not Add Applicant'}
-                            text={this.state.errorDialogText}
-                            buttonClicked={this.handleCloseOkay}
-                            buttonName={'Okay'}
-                          />
-                        </Card>
-                      </Grid>
-                      <Grid item>
-                        <Card>
-                          <CardHeader title="Preferred Halls" className="card-header" />
-                          <CardContent>
-                            <Typography variant="body1">Placeholder text</Typography>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                      <Grid item>
-                        <Card>
-                          <CardContent>
-                            <Typography variant="h5">Hello World:</Typography>
+                  <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
+                    <Grid item>
+                      <ApplicantList
+                        applicants={this.state.applicants}
+                        userProfile={this.state.userProfile}
+                        saving={this.state.saving}
+                        onSearchSubmit={this.onSearchSubmit}
+                        onApplicantRemove={this.onApplicantRemove}
+                        onSaveButtonClick={this.handleSaveButtonClick}
+                        Authentication={this.props.Authentication}
+                      />
+                      {/* <GordonDialogBox
+                        open={this.state.errorDialogOpen}
+                        onClose={this.handleCloseOkay}
+                        labelledby={'applicant-dialog'}
+                        describedby={'applicant-denied'}
+                        title={'Could Not Add Applicant'}
+                        text={this.state.errorDialogText}
+                        buttonClicked={this.handleCloseOkay}
+                        buttonName={'Okay'}
+                      /> */}
+                      <SimpleSnackbar
+                        text={this.snackbarText}
+                        severity={this.snackbarSeverity}
+                        open={this.state.snackbarOpen}
+                        onClose={this.handleCloseSnackbar}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Card>
+                        <CardHeader title="Preferred Halls" className="card-header" />
+                        <CardContent>
+                          <Typography variant="body1">Placeholder text</Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                    <Grid item>
+                      <Card>
+                        <CardContent>
+                          <Typography variant="h5">Hello World:</Typography>
 
-                            <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
-                            <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
-                            <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
-                            <br />
-                          </CardContent>
-                        </Card>
-                      </Grid>
+                          <h3>{'You name: ' + this.state.userProfile.fullName}</h3>
+                          <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
+                          <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
+                          <br />
+                        </CardContent>
+                      </Card>
                     </Grid>
                   </Grid>
                 </Grid>
