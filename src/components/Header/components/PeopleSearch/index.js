@@ -32,7 +32,7 @@ const renderInput = (inputProps) => {
         classes: {
           root: 'people-search-root',
           input: 'people-search-input',
-          // inputDisabled: 'people-search-disabled',
+          // inputDisabled: 'people-search-disabled', // `inputDisabled` is not a valid classes prop for this Material-UI component. See https://material-ui.com/api/autocomplete/#css
         },
         startAdornment: (
           <InputAdornment position="start">
@@ -149,9 +149,13 @@ export default class GordonPeopleSearch extends Component {
     var hasMatched = false;
     return (
       <span>
-        {parts.map((part) =>
+        {parts.map((part, key) =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
-            ? (hasMatched = true && <span className="h">{part}</span>)
+            ? (hasMatched = true && (
+                <span className="h" key={key}>
+                  {part}
+                </span>
+              ))
             : part,
         )}
       </span>
@@ -211,7 +215,7 @@ export default class GordonPeopleSearch extends Component {
                   suggestion.LastName,
                   this.state.highlightQuery.split(/ |\./)[1],
                 ),
-              ].map((e) => <span>{e}</span>)
+              ].map((e, key) => <span key={key}>{e}</span>)
             : this.getHighlightedText(
                 suggestion.FirstName + ' ' + suggestion.LastName,
                 this.state.highlightQuery,
@@ -323,7 +327,7 @@ export default class GordonPeopleSearch extends Component {
           }}
         >
           {({ getInputProps, getItemProps, isOpen }) => (
-            <span className="gordon-people-search">
+            <span className="gordon-people-search" key="suggestion-list-span">
               {networkStatus === 'online'
                 ? renderInput(
                     getInputProps({
@@ -384,7 +388,7 @@ export default class GordonPeopleSearch extends Component {
           <TextField
             placeholder="People Search"
             value={''}
-            onChange={(event) => this.unauthenticatedSearch()}
+            onChange={() => this.unauthenticatedSearch()}
             className={'text-field'}
             InputProps={{
               disableUnderline: true,
@@ -401,7 +405,7 @@ export default class GordonPeopleSearch extends Component {
           />
           <Dialog
             open={this.state.loginDialog}
-            onClose={(clicked) => this.handleClose()}
+            onClose={() => this.handleClose()}
             aria-labelledby="login-dialog-title"
             aria-describedby="login-dialog-description"
           >
@@ -412,7 +416,7 @@ export default class GordonPeopleSearch extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" onClick={(clicked) => this.handleClose()} color="primary">
+              <Button variant="contained" onClick={() => this.handleClose()} color="primary">
                 Okay
               </Button>
             </DialogActions>

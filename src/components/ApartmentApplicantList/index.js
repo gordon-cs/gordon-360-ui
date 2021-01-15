@@ -8,28 +8,14 @@ import {
   List,
   ListItem,
   ListItemText,
-  Button,
   Typography,
 } from '@material-ui/core';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import ErrorIcon from '@material-ui/icons/Error';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { gordonColors } from '../../theme';
 import GordonPeopleSearch from '../Header/components/PeopleSearch';
-import GordonLoader from '../../components/Loader';
 import ApplicantListItem from './components/ApplicantListItem';
+import SaveButton from '../ApartAppSaveButton';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
-const styles = {
-  success: {
-    color: gordonColors.secondary.green,
-    fontSize: '26px',
-  },
-  error: {
-    color: gordonColors.secondary.red,
-    fontSize: '26px',
-  },
-};
 
 // Create a list of applicants, displayed by name, username, and class standing.
 export default class ApplicantList extends Component {
@@ -41,7 +27,7 @@ export default class ApplicantList extends Component {
     this.loaderSize = 20;
   }
 
-  handleSelection = theChosenOne => {
+  handleSelection = (theChosenOne) => {
     // Make sure the chosen username was not null
     if (theChosenOne) {
       // Send the selected username to the parent component
@@ -49,7 +35,7 @@ export default class ApplicantList extends Component {
     }
   };
 
-  handleChangePrimary = profile => {
+  handleChangePrimary = (profile) => {
     // Make sure the chosen profile was not null
     if (profile) {
       // Send the selected profile to the parent component
@@ -57,7 +43,7 @@ export default class ApplicantList extends Component {
     }
   };
 
-  handleRemove = profile => {
+  handleRemove = (profile) => {
     // Make sure the chosen profile was not null
     if (profile) {
       // Send the selected profile to the parent component
@@ -80,7 +66,7 @@ export default class ApplicantList extends Component {
               icon={<GroupAddIcon />}
               customPlaceholderText={'Add Applicant'}
               onSearchSubmit={this.handleSelection}
-              Authentication={this.props.Authentication}
+              authentication={this.props.authentication}
             />
           }
           title="Student Applicants"
@@ -88,10 +74,10 @@ export default class ApplicantList extends Component {
         />
         <CardContent>
           <Grid container justify="space-between" spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={11}>
               <List className="applicant-list" aria-label="apartment applicants">
                 {this.props.applicants ? (
-                  this.props.applicants.map(profile => (
+                  this.props.applicants.map((profile) => (
                     <ApplicantListItem
                       key={profile.AD_Username}
                       profile={profile}
@@ -122,24 +108,7 @@ export default class ApplicantList extends Component {
               ) : null}
             </Grid>
             <Grid item xs={3}>
-              {this.props.saving ? (
-                this.props.saving === 'success' ? (
-                  <CheckCircleIcon style={styles.success} />
-                ) : this.props.saving === 'failed' ? (
-                  <ErrorIcon style={styles.error} />
-                ) : (
-                  <GordonLoader size={this.loaderSize} />
-                )
-              ) : (
-                <Button
-                  disabled={this.props.saving}
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleSaveButtonClick}
-                >
-                  Save
-                </Button>
-              )}
+              <SaveButton saving={this.props.saving} onClick={this.handleSaveButtonClick} />
             </Grid>
           </Grid>
         </CardContent>

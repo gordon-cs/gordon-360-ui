@@ -1,17 +1,6 @@
 import React, { Component } from 'react';
-import {
-  Grid,
-  Card,
-  // CardHeader,
-  CardContent,
-  // Dialog,
-  // DialogActions,
-  // DialogContent,
-  // DialogContentText,
-  // DialogTitle,
-  Button,
-  // Typography,
-} from '@material-ui/core/';
+import 'date-fns';
+import { Grid, Card, CardContent, Button } from '@material-ui/core/';
 import GordonLoader from '../../components/Loader';
 import StudentApplication from './components/StudentApplication';
 import StaffMenu from './components/StaffMenu';
@@ -58,7 +47,7 @@ export default class ApartApp extends Component {
   }
 
   render() {
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       /* Used to re-render the page when the network connection changes.
        *  this.state.network is compared to the message received to prevent
        *  multiple re-renders that creates extreme performance lost.
@@ -80,12 +69,13 @@ export default class ApartApp extends Component {
         }
       });
 
-      /* Gets status of current network connection for online/offline rendering
-       *  Defaults to online in case of PWA not being possible
+      /**
+       * Gets status of current network connection for online/offline rendering
+       * Defaults to online in case of PWA not being possible
        */
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-      if (networkStatus === 'online' && this.state.isStu && this.props.Authentication) {
+      if (networkStatus === 'online' && this.state.isStu && this.props.authentication) {
         return (
           <div>
             {this.state.loading ? (
@@ -94,20 +84,20 @@ export default class ApartApp extends Component {
               <div className="student-apartment-application">
                 <StudentApplication
                   userProfile={this.state.userProfile}
-                  Authentication={this.props.Authentication}
+                  authentication={this.props.authentication}
                 />
               </div>
             )}
           </div>
         );
-      } else if (networkStatus === 'online' && !this.state.isStu && this.props.Authentication) {
+      } else if (networkStatus === 'online' && !this.state.isStu && this.props.authentication) {
         return (
           <div>
             {this.state.loading ? (
               <GordonLoader />
             ) : (
               <div className="staff-apartment-application">
-                <StaffMenu Authentication={this.props.Authentication} />
+                <StaffMenu authentication={this.props.authentication} />
               </div>
             )}
           </div>
