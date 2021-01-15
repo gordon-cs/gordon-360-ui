@@ -17,7 +17,6 @@ import HallSelection from '../../../../components/ApartmentHallSelection';
 import user from '../../../../services/user';
 import housing from '../../../../services/housing';
 import '../../apartmentApp.css';
-import { Iso } from '@material-ui/icons';
 const MAX_NUM_APPLICANTS = 8;
 // const MIN_NUM_APPLICANTS = 2;
 
