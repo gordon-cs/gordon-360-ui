@@ -180,7 +180,7 @@ export default class StudentApplication extends Component {
         this.snackbarText =
           'Could not add ' + String(applicantProfile.fullName) + ' because they are not a student.';
         this.snackbarSeverity = 'warning';
-      } else if (applicants.some(applicant => applicant.AD_Username === username)) {
+      } else if (applicants.some((applicant) => applicant.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         this.snackbarText = String(applicantProfile.fullName) + ' is already in the list.';
         this.snackbarSeverity = 'info';
@@ -196,7 +196,7 @@ export default class StudentApplication extends Component {
           // Add the profile object to the list of applicants
           applicants.push(applicantProfile);
           this.setState({ applicants });
-          if (this.state.applicants.some(applicant => applicant.AD_Username === username)) {
+          if (this.state.applicants.some((applicant) => applicant.AD_Username === username)) {
             this.snackbarText =
               String(applicantProfile.fullName) + ' was successfully added to the list.';
             this.snackbarSeverity = 'success';

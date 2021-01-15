@@ -46,7 +46,7 @@ const checkHousingStaff = async () => {
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<String>} Application's ID number
  */
-const getApplicationID = username => {
+const getApplicationID = (username) => {
   let applicationID;
   if (username) {
     applicationID = http.get(`housing/apartment/${username}/`);
@@ -67,7 +67,7 @@ const saveApartmentApplication = async (applicationID, primaryUsername, applican
   let applicationDetails = {
     AprtAppID: applicationID,
     Username: primaryUsername,
-    Applicants: applicants.map(applicantProfile => applicantProfile.AD_Username),
+    Applicants: applicants.map((applicantProfile) => applicantProfile.AD_Username),
   };
   return await http.post(`housing/apartment/save/`, applicationDetails);
 };
@@ -77,7 +77,7 @@ const saveApartmentApplication = async (applicationID, primaryUsername, applican
  * @param {String} applicationID the application ID number for the desired application
  * @return {Promise.<ApplicationDetails>} Application details
  */
-const getApartmentApplication = async applicationID => {
+const getApartmentApplication = async (applicationID) => {
   return await http.get(`housing/apartment/load/${applicationID}/`);
 };
 
