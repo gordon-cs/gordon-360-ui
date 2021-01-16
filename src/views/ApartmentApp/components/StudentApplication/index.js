@@ -17,7 +17,6 @@ import user from '../../../../services/user';
 import housing from '../../../../services/housing';
 import '../../apartmentApp.css';
 const MAX_NUM_APPLICANTS = 8;
-// const MIN_NUM_APPLICANTS = 2;
 
 const renderInstructionsCard = () => {
   return (
@@ -77,11 +76,6 @@ export default class StudentApplication extends Component {
     } catch (error) {
       // Do Nothing
     }
-    // DEBUG
-    // this.handleSearchSubmit('Gahngnin.Kim');
-    // this.handleSearchSubmit('Christian.Kunis');
-    // this.handleSearchSubmit('Nick.Noormand');
-    // this.handleSearchSubmit('Joshua.Rogers');
   }
 
   /**
