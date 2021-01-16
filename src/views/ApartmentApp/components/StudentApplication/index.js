@@ -57,7 +57,6 @@ export default class StudentApplication extends Component {
 
   componentDidMount() {
     this.loadProfile();
-    this.loadHousingInfo();
     this.loadSavedApplication();
   }
 
@@ -73,26 +72,6 @@ export default class StudentApplication extends Component {
       applicants.push(profile);
       this.setState({ applicants });
       this.setState({ loading: false });
-    } catch (error) {
-      // Do Nothing
-    }
-  }
-
-  /**
-   * Loads the user's saved apartment application, if one exists
-   */
-  async loadHousingInfo() {
-    this.setState({ loading: true });
-    try {
-      /**
-       * TODO: Once saving application has been implemented in the backend,
-       * TODO: this will be replaced with a call to the load the application info.
-       * TODO: The getHousingInfo was made obsolete after the Hello World
-       */
-      let housingInfo = await housing.getHousingInfo();
-      let onOffCampus = String(housingInfo[0].OnOffCampus);
-      let onCampusRoom = String(housingInfo[0].OnCampusRoom);
-      this.setState({ onOffCampus, onCampusRoom, loading: false });
     } catch (error) {
       // Do Nothing
     }
@@ -476,18 +455,6 @@ export default class StudentApplication extends Component {
                               <CardHeader title="Preferred Halls" className="card-header" />
                               <CardContent>
                                 <Typography variant="body1">Placeholder text</Typography>
-                              </CardContent>
-                            </Card>
-                          </Grid>
-                          <Grid item>
-                            <Card>
-                              <CardContent>
-                                <Typography variant="h5">Hello World:</Typography>
-
-                                <h3>{'You name: ' + this.props.userProfile.fullName}</h3>
-                                <h3>{'On/Off Campus: ' + this.state.onOffCampus}</h3>
-                                <h3>{'Your room number: ' + this.state.onCampusRoom}</h3>
-                                <br />
                               </CardContent>
                             </Card>
                           </Grid>
