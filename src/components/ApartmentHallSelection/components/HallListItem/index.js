@@ -5,9 +5,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
-  ListSubheader,
   MenuItem,
-  TextField,
   FormControl,
   Input,
   InputLabel,
@@ -20,8 +18,8 @@ import ClearIcon from '@material-ui/icons/Clear';
 export default class HallListItem extends Component {
   constructor(props) {
     super(props);
-    this.handleMenuInputChange = this.handleMenuInputChange.bind(this);
-    this.handleRankValueChange = this.handleRankValueChange.bind(this);
+    this.handleHallInputChange = this.handleHallInputChange.bind(this);
+    this.handleRankInputChange = this.handleRankInputChange.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.state = {
       availableHalls: [], // array of table data from backend
@@ -48,12 +46,12 @@ export default class HallListItem extends Component {
     }
   }
 
-  handleMenuInputChange = (event) => {
-    console.log('Called "handleMenuInputChange" in HallListItem component');
+  handleHallInputChange = (event) => {
+    console.log('Called "handleHallInputChange" in HallListItem component');
     if (event.target.value) {
       let hallSelectionValue = event.target.value;
       if (!this.props.preferredHalls.some((hallInfo) => hallInfo.hallName === hallSelectionValue)) {
-        // Update the state only if the
+        // Update the state only if the selected hall is NOT already in the list
         this.setState({ hallSelectionValue });
       }
       let hallRankValue = this.state.hallRankValue;
@@ -62,8 +60,8 @@ export default class HallListItem extends Component {
     }
   };
 
-  handleRankValueChange = (event) => {
-    console.log('Called "handleRankValueChange" in HallListItem component');
+  handleRankInputChange = (event) => {
+    console.log('Called "handleRankInputChange" in HallListItem component');
     if (event.target.value !== null) {
       let hallSelectionValue = this.state.hallSelectionValue;
       let hallRankValue = event.target.value;
@@ -83,38 +81,45 @@ export default class HallListItem extends Component {
   render() {
     const index = this.props.index;
 
+    const hallOptions = this.props.availableHalls.map((hallName) => (
+      <MenuItem value={hallName} key={hallName}>
+        {hallName}
+      </MenuItem>
+    ));
+
+    const rankOptions = this.props.preferredHalls.map((_hall, i) => (
+      <MenuItem value={i + 1} key={i + 1}>
+        {i + 1}
+      </MenuItem>
+    ));
+
     return (
       <ListItem key={index} className={'list-item'}>
         <ListItemIcon>
           <ApartmentIcon color="primary" />
         </ListItemIcon>
         <Grid container alignItems="center" spacing={3}>
-          <Grid item xs={1}>
-            <TextField
-              fullWidth
-              label="Rank"
-              value={this.state.hallRankValue}
-              onFocus={(event) => {
-                event.target.select();
-              }}
-              onChange={this.handleRankValueChange}
-              inputProps={{ inputmode: 'numeric', pattern: '[0-9]*' }}
-            />
+          <Grid item xs={3} sm={2}>
+            <FormControl fullWidth>
+              <InputLabel>Rank</InputLabel>
+              <Select
+                value={this.state.hallRankValue}
+                onChange={this.handleRankInputChange}
+                input={<Input id={'rank' + index} />}
+              >
+                {rankOptions}
+              </Select>
+            </FormControl>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={9} sm={10}>
             <FormControl fullWidth>
               <InputLabel>Hall</InputLabel>
               <Select
                 value={this.state.hallSelectionValue}
-                onChange={this.handleMenuInputChange}
+                onChange={this.handleHallInputChange}
                 input={<Input id={'hall' + index} />}
               >
-                <ListSubheader>Select a hall</ListSubheader>
-                {this.props.availableHalls.map((hallName) => (
-                  <MenuItem value={hallName} key={hallName}>
-                    {hallName}
-                  </MenuItem>
-                ))}
+                {hallOptions}
               </Select>
             </FormControl>
           </Grid>

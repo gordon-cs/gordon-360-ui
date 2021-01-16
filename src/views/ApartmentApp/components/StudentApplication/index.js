@@ -244,7 +244,7 @@ export default class StudentApplication extends Component {
 
       let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
 
-      // Create a new custom hallInfo object
+      // Get the custom hallInfo object at the given index
       let newHallInfo = preferredHalls[index];
 
       // Error checking on the hallSelectionValue before modifying the newHallInfo object
@@ -263,7 +263,7 @@ export default class StudentApplication extends Component {
       }
 
       // Error checking on the hallRankValue before modifying the newHallInfo object
-      if (hallRankValue !== null && Number(hallRankValue) && Number(hallRankValue) >= 0) {
+      if (hallRankValue !== null) {
         newHallInfo.hallRank = Number(hallRankValue);
       } else {
         // Display an error if the selected rank value is less or equal to zero
@@ -308,6 +308,13 @@ export default class StudentApplication extends Component {
       if (preferredHalls.length > 1) {
         // Remove the selected hall if the list has more than one element
         preferredHalls.splice(index, 1);
+        // If any rank value is greater than the new maximum, then set it to that new max rank
+        let maxRank = preferredHalls.length;
+        preferredHalls.forEach((hallInfo, index) => {
+          if (hallInfo.hallRank > maxRank) {
+            preferredHalls[index].hallRank = maxRank;
+          }
+        });
       } else {
         // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
         let newHallInfo = { hallName: '', hallRank: 1 };
@@ -327,7 +334,7 @@ export default class StudentApplication extends Component {
     console.log('Called "handleHallAdd" in StudentApplication component'); //1 DEBUG
     this.setState({ updating: true });
     let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
-    let newHallRank = 1 + preferredHalls.length;
+    let newHallRank = preferredHalls.length + 1;
     preferredHalls.push({ hallName: '', hallRank: newHallRank });
     console.log('Printing current list of preferred halls'); //! DEBUG
     preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
