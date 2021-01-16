@@ -111,7 +111,7 @@ export default class StudentApplication extends Component {
     }
   }
 
-  handleOpenNewApplication = () => {
+  handleShowApplication = () => {
     this.setState({ applicationCardsOpen: true });
   };
 
@@ -373,18 +373,58 @@ export default class StudentApplication extends Component {
                     <Card>
                       <CardContent>
                         <Grid container direction="row" justify="flex-end">
-                          <Grid item xs={3}>
-                            <Typography variant="body1">Placeholder Text</Typography>
+                          <Grid item xs={6} sm={8}>
+                            {this.state.applicationID === -1 ? (
+                              <Typography variant="body1">
+                                Placeholder Text
+                                <br />
+                                No existing applications found
+                              </Typography>
+                            ) : this.props.userProfile.AD_Username ===
+                              this.state.primaryUsername ? (
+                              <Typography variant="body1">
+                                Existing application for this semester:
+                                <br />
+                                Last Modified: [Insert Date Here]
+                              </Typography>
+                            ) : (
+                              <Typography variant="body1">
+                                Only the primary applicant may edit the application.
+                                <br />
+                                Last Modified: [Insert Date Here]
+                              </Typography>
+                            )}
                           </Grid>
-                          <Grid item xs={3}>
-                            <Button
-                              variant="contained"
-                              onClick={this.handleOpenNewApplication}
-                              color="primary"
-                              disabled={this.state.applicationCardsOpen}
-                            >
-                              Create a new application
-                            </Button>
+                          <Grid item xs={6} sm={4}>
+                            {this.state.applicationID === -1 ? (
+                              <Button
+                                variant="contained"
+                                onClick={this.handleShowApplication}
+                                color="primary"
+                                disabled={this.state.applicationCardsOpen}
+                              >
+                                Create a new application
+                              </Button>
+                            ) : this.props.userProfile.AD_Username ===
+                              this.state.primaryUsername ? (
+                              <Button
+                                variant="contained"
+                                onClick={this.handleShowApplication}
+                                color="primary"
+                                disabled={this.state.applicationCardsOpen}
+                              >
+                                Edit your application
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="contained"
+                                onClick={this.handleShowApplication}
+                                color="primary"
+                                disabled={this.state.applicationCardsOpen}
+                              >
+                                View your application
+                              </Button>
+                            )}
                           </Grid>
                         </Grid>
                       </CardContent>
@@ -461,21 +501,37 @@ export default class StudentApplication extends Component {
                         <Grid item xs={12} lg={10}>
                           <Card>
                             <CardContent>
-                              <Grid container direction="row" justify="flex-end">
-                                <Grid item xs={3}>
-                                  <Typography variant="body1">Placeholder Text</Typography>
+                              {this.props.userProfile.AD_Username === this.state.primaryUsername ? (
+                                <Grid container direction="row" justify="flex-end">
+                                  <Grid item xs={6} sm={8}>
+                                    <Typography variant="body1">Placeholder Text</Typography>
+                                  </Grid>
+                                  <Grid item xs={6} sm={4}>
+                                    <Button
+                                      variant="contained"
+                                      onClick={this.handleSubmitApplication}
+                                      color="primary"
+                                      disabled={!this.state.applicationCardsOpen}
+                                    >
+                                      Submit Application
+                                    </Button>
+                                  </Grid>
                                 </Grid>
-                                <Grid item xs={3}>
-                                  <Button
-                                    variant="contained"
-                                    onClick={this.handleSubmitApplication}
-                                    color="primary"
-                                    disabled={!this.state.applicationCardsOpen}
-                                  >
-                                    Submit Application
-                                  </Button>
+                              ) : (
+                                <Grid container direction="row" justify="flex-end">
+                                  <Grid item xs={6} sm={8}>
+                                    <Typography variant="body1">
+                                      Placeholder Text for when the user is NOT the primary
+                                      applicant
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={6} sm={4}>
+                                    <Button variant="contained" color="primary" disabled>
+                                      Submit Application
+                                    </Button>
+                                  </Grid>
                                 </Grid>
-                              </Grid>
+                              )}
                             </CardContent>
                           </Card>
                         </Grid>
