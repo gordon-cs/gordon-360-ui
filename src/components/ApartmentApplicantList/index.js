@@ -104,7 +104,7 @@ export default class ApplicantList extends Component {
             <Grid item xs={9}>
               {this.props.saving === 'failed' ? (
                 <Typography variant="overline" color="error">
-                  Something when wrong while trying to save the application
+                  Something went wrong while trying to save the application
                 </Typography>
               ) : this.props.applicants.length >= this.props.maxNumApplicants ? (
                 <Typography variant="overline" color="error">
