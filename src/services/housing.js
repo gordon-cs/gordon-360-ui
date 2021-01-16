@@ -23,20 +23,6 @@ const getHousingInfo = async () => {
 };
 
 /**
- * Update the primary applicant of the application to the database
- * @param {Number} applicationID the application ID number
- * @param {String} newPrimaryUsername the student username of the person who will be allowed to edit this application
- * @return {Promise.<Boolean>} User's active jobs
- */
-const changeApplicationModifier = async (applicationID, newPrimaryUsername) => {
-  let applicationDetails = {
-    AprtAppID: applicationID,
-    Username: newPrimaryUsername,
-  };
-  return await http.post(`housing/change-modifier/`, applicationDetails);
-};
-
-/**
  * Save the current state of the application to the database
  * @param {Number} applicationID the application ID number if it is known, else it is -1
  * @param {String} primaryUsername the student username of the person filling out the application
@@ -52,8 +38,22 @@ const saveApartmentApplication = async (applicationID, primaryUsername, applican
   return await http.post(`housing/save/`, applicationDetails);
 };
 
+/**
+ * Update the primary applicant of the application to the database
+ * @param {Number} applicationID the application ID number
+ * @param {String} newPrimaryUsername the student username of the person who will be allowed to edit this application
+ * @return {Promise.<Boolean>} User's active jobs
+ */
+const changeApplicationModifier = async (applicationID, newPrimaryUsername) => {
+  let applicationDetails = {
+    AprtAppID: applicationID,
+    Username: newPrimaryUsername,
+  };
+  return await http.post(`housing/change-modifier/`, applicationDetails);
+};
+
 export default {
   getHousingInfo,
-  changeApplicationModifier,
   saveApartmentApplication,
+  changeApplicationModifier,
 };
