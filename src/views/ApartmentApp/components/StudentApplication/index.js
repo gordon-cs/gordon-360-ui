@@ -473,7 +473,6 @@ export default class StudentApplication extends Component {
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
       if (networkStatus === 'online' && this.props.authentication) {
-        // TODO: if (this.props.userProfile.AD_Username !== this.state.primaryUsername) {display the page but all as read-only (not editable)}
         return (
           <div>
             {this.state.loading ? (
