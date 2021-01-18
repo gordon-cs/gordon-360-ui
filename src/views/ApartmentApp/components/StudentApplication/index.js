@@ -570,7 +570,6 @@ export default class StudentApplication extends Component {
                               primaryUsername={this.state.primaryUsername}
                               preferredHalls={this.state.preferredHalls}
                               saving={this.state.saving}
-                              savingSuccess={this.state.savingSuccess}
                               onHallInputChange={this.handleHallInputChange}
                               onHallRemove={this.handleHallRemove}
                               onHallAdd={this.handleHallAdd}
