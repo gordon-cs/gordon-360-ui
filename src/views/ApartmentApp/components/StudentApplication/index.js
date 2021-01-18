@@ -43,7 +43,6 @@ export default class StudentApplication extends Component {
       loading: true,
       saving: false,
       network: 'online',
-      isOnExistingApplication: false, // Indicates whether the current user is already on an application that is in the database
       applicationCardsOpen: false,
       submitDialogOpen: false, // Use this for submitting app (later feature)
       editDialogOpen: false,
@@ -72,10 +71,10 @@ export default class StudentApplication extends Component {
    */
   async loadSavedApplication() {
     this.setState({ loading: true });
-    // Check if the student is on an application. Returns the application ID number if found
-    let applicationID = await housing.isOnExistingApplication(this.props.userProfile.AD_Username);
+    // Check if the current user is on an application. Returns the application ID number if found
+    let applicationID = await housing.getApplicationID();
     if (applicationID !== null && applicationID !== -1) {
-      this.setState({ isOnExistingApplication: true });
+      this.setState({ applicationID });
       let applicationDetails = housing.getApartmentApplication(applicationID);
       if (applicationDetails) {
         if (applicationDetails.Username) {
@@ -86,7 +85,7 @@ export default class StudentApplication extends Component {
         }
       }
     } else {
-      this.setState({ isOnExistingApplication: false });
+      this.setState({ applicationID: -1 });
       if (!this.state.primaryUsername) {
         this.setState({ primaryUsername: this.props.userProfile.AD_Username });
       }
@@ -128,7 +127,7 @@ export default class StudentApplication extends Component {
 
   /**
    * Add an applicant to the list, identified by username
-   * @param {String} username Username for student
+   * @param {String} username Username for the new applicant
    */
   async addApplicant(username) {
     let applicants = this.state.applicants; // make a separate copy of the array
@@ -151,7 +150,7 @@ export default class StudentApplication extends Component {
       } else {
         // Check if the student is on an existing application
         let applicationID = await housing.getApplicationID(username);
-        if (applicationID) {
+        if (applicationID !== null && applicationID !== -1) {
           // Display an error if the selected user is already on an existing application (in the database)
           this.snackbarText =
             String(applicantProfile.fullName) + ' is already on an existing application.';
