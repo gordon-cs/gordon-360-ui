@@ -16,18 +16,10 @@ import http from './http';
 /**
  * @global
  * @typedef ApplicationDetails
+ * @property {Number} AprtAppID  Application ID number of this application
  * @property {String} Username  Username of the primary applicant
  * @property {String[]} Applicants  Array of student usernames
  */
-
-/**
- * returns current status of student housing
- * @return {Promise.<StudentHousingInfo>} Response
- */
-const getHousingInfo = async () => {
-  const housingInfo = await http.get(`housing/apartmentInfo`);
-  return housingInfo;
-};
 
 /**
  * Check if the current user is authorized to view the housing staff page for applications
@@ -44,24 +36,24 @@ const checkHousingStaff = async () => {
 /**
  * Check if a given student is on an existing application
  * @param {String} [username] Username in firstname.lastname format
- * @return {Promise.<String>} Application's ID number
+ * @return {Promise.<Number>} Application's ID number
  */
 const getApplicationID = (username) => {
   let applicationID;
   if (username) {
-    applicationID = http.get(`housing/apartment/${username}/`);
+    applicationID = await http.get(`housing/apartment/${username}/`);
   } else {
-    applicationID = http.get('housing/apartment');
+    applicationID = await http.get('housing/apartment');
   }
   return applicationID;
 };
 
 /**
- * Save active apartment applications for current user
+ * Save the current state of the application to the database
  * @param {Number} applicationID the application ID number if it is known, else it is -1
  * @param {String} primaryUsername the student username of the person responsible for filling out or editing the application (in firstname.lastname format)
  * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
- * @return {Promise.<String>} Application's ID number
+ * @return {Promise.<Number>} Application's ID number
  */
 const saveApartmentApplication = async (applicationID, primaryUsername, applicants) => {
   let applicationDetails = {
@@ -76,14 +68,14 @@ const saveApartmentApplication = async (applicationID, primaryUsername, applican
  * Update the primary applicant of the application to the database
  * @param {Number} applicationID the application ID number
  * @param {String} newPrimaryUsername the student username of the person who will be allowed to edit this application
- * @return {Promise.<Boolean>} User's active jobs
+ * @return {Promise.<Boolean>} Status of whether or not the operation was successful
  */
 const changeApplicationModifier = async (applicationID, newPrimaryUsername) => {
-  let applicationDetails = {
+  let newModifierDetails = {
     AprtAppID: applicationID,
     Username: newPrimaryUsername,
   };
-  return await http.post(`housing/apartment/change-modifier/`, applicationDetails);
+  return await http.post(`housing/apartment/change-modifier/`, newModifierDetails);
 };
 
 /**
@@ -96,7 +88,6 @@ const getApartmentApplication = async (applicationID) => {
 };
 
 export default {
-  getHousingInfo,
   checkHousingStaff,
   getApplicationID,
   saveApartmentApplication,
