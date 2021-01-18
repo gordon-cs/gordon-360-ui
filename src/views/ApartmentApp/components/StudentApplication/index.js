@@ -73,10 +73,8 @@ export default class StudentApplication extends Component {
   async loadProfile() {
     this.setState({ loading: true });
     try {
-      const profile = await user.getProfileInfo();
-      this.setState({ userProfile: profile });
       let applicants = this.state.applicants;
-      applicants.push(profile);
+      applicants.push(this.props.userProfile);
       this.setState({ applicants });
       this.setState({ loading: false });
     } catch (error) {
@@ -455,7 +453,6 @@ export default class StudentApplication extends Component {
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
       if (networkStatus === 'online' && this.props.authentication) {
-        // TODO: if (this.props.userProfile.AD_Username !== this.state.primaryUsername) {display the page but all as read-only (not editable)}
         return (
           <div>
             {this.state.loading ? (
@@ -546,7 +543,6 @@ export default class StudentApplication extends Component {
                               primaryUsername={this.state.primaryUsername}
                               applicants={this.state.applicants}
                               saving={this.state.saving}
-                              savingSuccess={this.state.savingSuccess}
                               onSearchSubmit={this.handleSearchSubmit}
                               onChangePrimary={this.handleChangePrimary}
                               onApplicantRemove={this.handleApplicantRemove}
