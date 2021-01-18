@@ -66,10 +66,8 @@ export default class StudentApplication extends Component {
   async loadProfile() {
     this.setState({ loading: true });
     try {
-      const profile = await user.getProfileInfo();
-      this.setState({ userProfile: profile });
       let applicants = this.state.applicants;
-      applicants.push(profile);
+      applicants.push(this.props.userProfile);
       this.setState({ applicants });
       this.setState({ loading: false });
     } catch (error) {
