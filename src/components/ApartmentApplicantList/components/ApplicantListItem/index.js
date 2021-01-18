@@ -16,7 +16,6 @@ import {
 import PersonIcon from '@material-ui/icons/Person';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-// import ContactMailIcon from '@material-ui/icons/ContactMail';
 import ClearIcon from '@material-ui/icons/Clear';
 import user from '../../../../services/user';
 import '../../../../views/ApartmentApp/apartmentApp.css';
@@ -31,9 +30,7 @@ export default class ApplicantListItem extends Component {
 
     this.state = {
       avatar: null,
-      prefImage: null,
-      defImage: null,
-      anchorEl: null,
+      anchorEl: null, // A HTML element, or a function that returns it. It's used to set the position of the menu.
     };
   }
 
