@@ -10,7 +10,6 @@ import GordonLoader from '../../components/Loader';
 import ApplicantListItem from './components/ApplicantListItem';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
-const MIN_NUM_APPLICANTS = 2;
 const styles = {
   success: {
     color: gordonColors.secondary.green,
@@ -29,9 +28,6 @@ export default class ApplicantList extends Component {
     this.handleSelection = this.handleSelection.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
-    this.state = {
-      saveButtonClicked: false,
-    };
     this.loaderSize = 20;
   }
 
@@ -40,8 +36,14 @@ export default class ApplicantList extends Component {
     if (theChosenOne) {
       // Send the selected username to the parent component
       this.props.onSearchSubmit(theChosenOne);
-      // Reset the save button
-      this.setState({ saveButtonClicked: false });
+    }
+  };
+
+  handleChangePrimary = (profile) => {
+    // Make sure the chosen profile was not null
+    if (profile) {
+      // Send the selected profile to the parent component
+      this.props.onChangePrimary(profile);
     }
   };
 
@@ -50,14 +52,11 @@ export default class ApplicantList extends Component {
     if (profile) {
       // Send the selected profile to the parent component
       this.props.onApplicantRemove(profile);
-      // Reset the save button
-      this.setState({ saveButtonClicked: false });
     }
   };
 
   handleSaveButtonClick = () => {
     this.props.onSaveButtonClick();
-    this.setState({ saveButtonClicked: true });
   };
 
   render() {
@@ -67,6 +66,7 @@ export default class ApplicantList extends Component {
           action={
             <GordonPeopleSearch
               disableLink
+              disabled={this.props.applicants.length > this.props.maxNumApplicants}
               icon={<GroupAddIcon />}
               customPlaceholderText={'Add Applicant'}
               onSearchSubmit={this.handleSelection}
@@ -86,6 +86,7 @@ export default class ApplicantList extends Component {
                       key={profile.AD_Username}
                       profile={profile}
                       isPrimaryApplicant={profile === this.props.userProfile}
+                      onChangePrimary={this.handleChangePrimary.bind(this, profile)}
                       onApplicantRemove={this.handleRemove.bind(this, profile)}
                     />
                   ))
@@ -94,19 +95,24 @@ export default class ApplicantList extends Component {
                     key={this.props.userProfile.AD_Username}
                     profile={this.props.userProfile}
                     isPrimaryApplicant={true}
+                    onChangePrimary={this.handleChangePrimary.bind(this, this.props.userProfile)}
                     onApplicantRemove={this.handleRemove.bind(this, this.props.userProfile)}
                   />
                 )}
               </List>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              {this.props.applicants.length < MIN_NUM_APPLICANTS && this.state.saveButtonClicked ? (
+            <Grid item xs={9}>
+              {this.props.saving === 'failed' ? (
                 <Typography variant="overline" color="error">
-                  Must have at least {MIN_NUM_APPLICANTS} applicants
+                  Something went wrong while trying to save the application
+                </Typography>
+              ) : this.props.applicants.length >= this.props.maxNumApplicants ? (
+                <Typography variant="overline" color="error">
+                  You have reached the maximum number of applicants ({this.props.maxNumApplicants})
                 </Typography>
               ) : null}
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={3}>
               {this.props.saving ? (
                 this.props.saving === 'success' ? (
                   <CheckCircleIcon style={styles.success} />

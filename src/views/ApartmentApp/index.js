@@ -2,13 +2,15 @@
 import React, { Component } from 'react';
 import 'date-fns';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
-// import GordonDialogBox from '../../components/GordonDialogBox';
 import GordonLoader from '../../components/Loader';
+import AlertDialogBox from '../../components/AlertDialogBox';
 import SimpleSnackbar from '../../components/Snackbar';
 import ApplicantList from '../../components/ApartmentApplicantList';
 import user from '../../services/user';
 import housing from '../../services/housing';
 import './apartmentApp.css';
+const MAX_NUM_APPLICANTS = 8;
+// const MIN_NUM_APPLICANTS = 2;
 
 export default class ApartApp extends Component {
   constructor(props) {
@@ -22,14 +24,14 @@ export default class ApartApp extends Component {
       saving: false,
       network: 'online',
       submitDialogOpen: false, // Use this for saving app (later feature)
-      errorDialogOpen: false,
+      editDialogOpen: false,
       userProfile: {},
       applicants: [],
       // TODO - For end-to-end Hello World debug. Remove the next 2 lines before merge
       onCampusRoom: null,
       onOffCampus: null,
     };
-    this.errorDialogText = '';
+    this.editDialogText = '';
     this.snackbarText = '';
     this.snackbarSeverity = '';
     this.saveButtonAlertTimeout = null;
@@ -59,6 +61,11 @@ export default class ApartApp extends Component {
     } catch (error) {
       // Do Nothing
     }
+    // DEBUG
+    this.handleSearchSubmit('Gahngnin.Kim');
+    this.handleSearchSubmit('Christian.Kunis');
+    this.handleSearchSubmit('Nick.Noormand');
+    this.handleSearchSubmit('Joshua.Rogers');
   }
 
   /**
@@ -85,7 +92,7 @@ export default class ApartApp extends Component {
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  onSearchSubmit = searchSelection => {
+  handleSearchSubmit = searchSelection => {
     this.setState({ updating: true });
     if (searchSelection) {
       // The method is separated from callback because user API service must be handled inside an async method
@@ -103,8 +110,12 @@ export default class ApartApp extends Component {
     try {
       // Get the profile of the selected user
       let applicantProfile = await user.getProfileInfo(username);
-      // Check if the selected user is a student
-      if (!String(applicantProfile.PersonType).includes('stu')) {
+      if (applicants.length >= MAX_NUM_APPLICANTS) {
+        // Display an error if the user try to add an applicant when the list is full
+        this.snackbarText = 'You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants';
+        this.snackbarSeverity = 'warning';
+        this.setState({ snackbarOpen: true });
+      } else if (!String(applicantProfile.PersonType).includes('stu')) {
         // Display an error if the selected user is not a student
         this.snackbarText =
           'Could not add ' + String(applicantProfile.fullName) + ' because they are not a student.';
@@ -134,10 +145,37 @@ export default class ApartApp extends Component {
   }
 
   /**
+   * Callback for changing the primary applicant
+   * @param {String} profile The StudentProfileInfo object for the person who is to be made the primary applicant
+   */
+  handleChangePrimary = profile => {
+    this.setState({ updating: true });
+    if (profile) {
+      if (this.state.applicants.includes(profile)) {
+        this.setState({ newPrimaryApplicant: profile, editDialogOpen: true });
+      }
+    }
+  };
+
+  handleChangePrimaryAccepted = () => {
+    if (this.state.newPrimaryApplicant) {
+      try {
+        this.saveApplication(this.state.newPrimaryApplicant.ID, this.state.applicants);
+      } catch (error) {
+        this.snackbarText = 'This feature is not yet implemented.';
+        // this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
+        this.snackbarSeverity = 'error';
+        this.setState({ snackbarOpen: true, saving: 'failed' });
+      }
+      this.handleCloseOkay();
+    }
+  };
+
+  /**
    * Callback for applicant list remove button
    * @param {String} profileToRemove Username for student
    */
-  onApplicantRemove = profileToRemove => {
+  handleRemove = profileToRemove => {
     this.setState({ updating: true });
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
@@ -186,20 +224,26 @@ export default class ApartApp extends Component {
       this.saveButtonAlertTimeout = setTimeout(() => {
         this.saveButtonAlertTimeout = null;
         this.setState({ saving: false });
-      }, 2000);
+      }, 6000);
     }
   }
-
-  handleCloseOkay = () => {
-    this.setState({ submitDialogOpen: false, errorDialogOpen: false, errorDialogText: null });
-  };
 
   handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-
     this.setState({ snackbarOpen: false });
+  };
+
+  handleCloseDialog = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.handleCloseOkay();
+  };
+
+  handleCloseOkay = () => {
+    this.setState({ submitDialogOpen: false, editDialogOpen: false });
   };
 
   render() {
@@ -225,6 +269,15 @@ export default class ApartApp extends Component {
           this.setState({ network: 'offline' });
         }
       });
+
+      const primaryApplicantAlertTest = (
+        <span>
+          If you change the primary applicant, you will no longer be able to edit this application
+          yourself.
+          <br />
+          Are you sure you want to change the primary applicant?
+        </span>
+      );
 
       /**
        * Gets status of current network connection for online/offline rendering
@@ -260,24 +313,27 @@ export default class ApartApp extends Component {
                   <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                     <Grid item>
                       <ApplicantList
+                        maxNumApplicants={MAX_NUM_APPLICANTS}
                         applicants={this.state.applicants}
                         userProfile={this.state.userProfile}
                         saving={this.state.saving}
-                        onSearchSubmit={this.onSearchSubmit}
-                        onApplicantRemove={this.onApplicantRemove}
+                        onSearchSubmit={this.handleSearchSubmit}
+                        onChangePrimary={this.handleChangePrimary}
+                        onApplicantRemove={this.handleRemove}
                         onSaveButtonClick={this.handleSaveButtonClick}
                         Authentication={this.props.Authentication}
                       />
-                      {/* <GordonDialogBox
-                        open={this.state.errorDialogOpen}
-                        onClose={this.handleCloseOkay}
-                        labelledby={'applicant-dialog'}
-                        describedby={'applicant-denied'}
-                        title={'Could Not Add Applicant'}
-                        text={this.state.errorDialogText}
-                        buttonClicked={this.handleCloseOkay}
-                        buttonName={'Okay'}
-                      /> */}
+                      <AlertDialogBox
+                        open={this.state.editDialogOpen}
+                        onClose={this.handleCloseDialog}
+                        severity={'warning'}
+                        title={'Change primary applicant?'}
+                        text={primaryApplicantAlertTest}
+                        cancelButtonClicked={this.handleCloseOkay}
+                        cancelButtonName={'Cancel'}
+                        confirmButtonClicked={this.handleChangePrimaryAccepted}
+                        confirmButtonName={'Accept'}
+                      />
                       <SimpleSnackbar
                         text={this.snackbarText}
                         severity={this.snackbarSeverity}
