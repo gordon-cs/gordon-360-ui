@@ -64,34 +64,17 @@ export default class StudentApplication extends Component {
   }
 
   componentDidMount() {
-    this.loadProfile();
     this.loadSavedApplication();
-  }
-
-  /**
-   * Loads the user's profile info only once (at start)
-   */
-  async loadProfile() {
-    this.setState({ loading: true });
-    try {
-      const profile = await user.getProfileInfo();
-      this.setState({ userProfile: profile });
-      let applicants = this.state.applicants;
-      applicants.push(profile);
-      this.setState({ applicants });
-      this.setState({ loading: false });
-    } catch (error) {
-      // Do Nothing
-    }
   }
 
   /**
    * Loads the user's saved apartment application, if one exists
    */
   async loadSavedApplication() {
+    this.setState({ loading: true });
     // Check if the student is on an application. Returns the application ID number if found
     let applicationID = await housing.isOnExistingApplication(this.props.userProfile.AD_Username);
-    if (applicationID) {
+    if (applicationID !== null && applicationID !== -1) {
       this.setState({ isOnExistingApplication: true });
       let applicationDetails = housing.getApartmentApplication(applicationID);
       if (applicationDetails) {
@@ -107,7 +90,11 @@ export default class StudentApplication extends Component {
       if (!this.state.primaryUsername) {
         this.setState({ primaryUsername: this.props.userProfile.AD_Username });
       }
+      let applicants = this.state.applicants;
+      applicants.push(this.props.userProfile);
+      this.setState({ applicants });
     }
+    this.setState({ loading: false });
   }
 
   handleShowApplication = () => {
@@ -571,19 +558,30 @@ export default class StudentApplication extends Component {
                         </Grid>
                         <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                           <Grid item>
-                            <ApplicantList
-                              maxNumApplicants={MAX_NUM_APPLICANTS}
-                              userProfile={this.props.userProfile}
-                              primaryUsername={this.state.primaryUsername}
-                              applicants={this.state.applicants}
-                              saving={this.state.saving}
-                              savingSuccess={this.state.savingSuccess}
-                              onSearchSubmit={this.handleSearchSubmit}
-                              onChangePrimary={this.handleChangePrimary}
-                              onApplicantRemove={this.handleApplicantRemove}
-                              onSaveButtonClick={this.handleSaveButtonClick}
-                              authentication={this.props.authentication}
-                            />
+                            {this.props.userProfile.AD_Username === this.state.primaryUsername ? (
+                              <ApplicantList
+                                maxNumApplicants={MAX_NUM_APPLICANTS}
+                                userProfile={this.props.userProfile}
+                                primaryUsername={this.state.primaryUsername}
+                                applicants={this.state.applicants}
+                                saving={this.state.saving}
+                                onSearchSubmit={this.handleSearchSubmit}
+                                onChangePrimary={this.handleChangePrimary}
+                                onApplicantRemove={this.handleApplicantRemove}
+                                onSaveButtonClick={this.handleSaveButtonClick}
+                                authentication={this.props.authentication}
+                              />
+                            ) : (
+                              <ApplicantList
+                                disabled
+                                maxNumApplicants={MAX_NUM_APPLICANTS}
+                                userProfile={this.props.userProfile}
+                                primaryUsername={this.state.primaryUsername}
+                                applicants={this.state.applicants}
+                                saving={this.state.saving}
+                                authentication={this.props.authentication}
+                              />
+                            )}
                             <AlertDialogBox
                               open={this.state.editDialogOpen}
                               onClose={this.handleCloseDialog}
@@ -601,17 +599,26 @@ export default class StudentApplication extends Component {
                       <Grid container direction="row" justify="center" spacing={2}>
                         <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                           <Grid item>
-                            <HallSelection
-                              primaryUsername={this.state.primaryUsername}
-                              preferredHalls={this.state.preferredHalls}
-                              saving={this.state.saving}
-                              savingSuccess={this.state.savingSuccess}
-                              onHallInputChange={this.handleHallInputChange}
-                              onHallRemove={this.handleHallRemove}
-                              onHallAdd={this.handleHallAdd}
-                              onSaveButtonClick={this.handleSaveButtonClick}
-                              authentication={this.props.authentication}
-                            />
+                            {this.props.userProfile.AD_Username === this.state.primaryUsername ? (
+                              <HallSelection
+                                primaryUsername={this.state.primaryUsername}
+                                preferredHalls={this.state.preferredHalls}
+                                saving={this.state.saving}
+                                onHallInputChange={this.handleHallInputChange}
+                                onHallRemove={this.handleHallRemove}
+                                onHallAdd={this.handleHallAdd}
+                                onSaveButtonClick={this.handleSaveButtonClick}
+                                authentication={this.props.authentication}
+                              />
+                            ) : (
+                              <HallSelection
+                                disabled
+                                primaryUsername={this.state.primaryUsername}
+                                preferredHalls={this.state.preferredHalls}
+                                saving={this.state.saving}
+                                authentication={this.props.authentication}
+                              />
+                            )}
                           </Grid>
                           <Grid item>
                             <Card>
@@ -623,12 +630,18 @@ export default class StudentApplication extends Component {
                           </Grid>
                         </Grid>
                         <Grid item xs={12} md={4}>
-                          <Card>
-                            <CardHeader title="Agreements" className="card-header" />
-                            <CardContent>
-                              <Typography variant="body1">Placeholder text</Typography>
-                            </CardContent>
-                          </Card>
+                          <Collapse
+                            in={this.props.userProfile.AD_Username === this.state.primaryUsername}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            <Card>
+                              <CardHeader title="Agreements" className="card-header" />
+                              <CardContent>
+                                <Typography variant="body1">Placeholder text</Typography>
+                              </CardContent>
+                            </Card>
+                          </Collapse>
                         </Grid>
                         <Grid item xs={12} lg={10}>
                           <Card>

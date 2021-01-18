@@ -79,6 +79,7 @@ export default class HallSelection extends Component {
                     <HallListItem
                       key={preferredHall.hallName + index}
                       index={index}
+                      disabled={this.props.disabled}
                       availableHalls={this.state.availableHalls}
                       primaryUsername={this.props.primaryUsername}
                       preferredHalls={this.props.preferredHalls}
@@ -91,6 +92,7 @@ export default class HallSelection extends Component {
                   <HallListItem
                     key={''}
                     index={0}
+                    disabled={this.props.disabled}
                     availableHalls={this.state.availableHalls}
                     primaryUsername={this.props.primaryUsername}
                     preferredHalls={this.props.preferredHalls}
@@ -102,6 +104,7 @@ export default class HallSelection extends Component {
             </Grid>
             <Grid item xs={12}>
               <Button
+                disabled={this.props.disabled}
                 variant="contained"
                 color="default"
                 startIcon={<AddIcon />}
@@ -122,7 +125,11 @@ export default class HallSelection extends Component {
               ) : null}
             </Grid>
             <Grid item xs={3}>
-              <SaveButton saving={this.props.saving} onClick={this.handleSaveButtonClick} />
+              <SaveButton
+                disabled={this.props.disabled}
+                saving={this.props.saving}
+                onClick={this.handleSaveButtonClick}
+              />
             </Grid>
           </Grid>
         </CardContent>

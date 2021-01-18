@@ -41,7 +41,7 @@ export default class SaveButton extends Component {
           )
         ) : (
           <Button
-            disabled={this.props.saving}
+            disabled={this.props.saving || this.props.disabled}
             variant="contained"
             color="primary"
             onClick={this.handleSaveButtonClick}

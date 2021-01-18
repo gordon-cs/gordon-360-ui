@@ -62,7 +62,9 @@ export default class ApplicantList extends Component {
           action={
             <GordonPeopleSearch
               disableLink
-              disabled={this.props.applicants.length > this.props.maxNumApplicants}
+              disabled={
+                this.props.disabled || this.props.applicants.length > this.props.maxNumApplicants
+              }
               icon={<GroupAddIcon />}
               customPlaceholderText={'Add Applicant'}
               onSearchSubmit={this.handleSelection}
@@ -80,6 +82,7 @@ export default class ApplicantList extends Component {
                   this.props.applicants.map((profile) => (
                     <ApplicantListItem
                       key={profile.AD_Username}
+                      disabled={this.props.disabled}
                       profile={profile}
                       isPrimaryApplicant={profile.AD_Username === this.props.primaryUsername}
                       onChangePrimary={this.handleChangePrimary.bind(this, profile)}
@@ -108,7 +111,11 @@ export default class ApplicantList extends Component {
               ) : null}
             </Grid>
             <Grid item xs={3}>
-              <SaveButton saving={this.props.saving} onClick={this.handleSaveButtonClick} />
+              <SaveButton
+                disabled={this.props.disabled}
+                saving={this.props.saving}
+                onClick={this.handleSaveButtonClick}
+              />
             </Grid>
           </Grid>
         </CardContent>

@@ -159,7 +159,7 @@ export default class ApplicantListItem extends Component {
           <Button
             aria-controls="applicant-menu"
             aria-haspopup="true"
-            disabled={this.props.isPrimaryApplicant}
+            disabled={this.props.isPrimaryApplicant || this.props.disabled}
             onClick={this.handleMenuClick}
           >
             Edit
@@ -173,7 +173,7 @@ export default class ApplicantListItem extends Component {
             onClose={this.handleMenuClose}
           >
             <MenuItem
-              disabled={this.props.isPrimaryApplicant}
+              disabled={this.props.isPrimaryApplicant || this.props.disabled}
               onClick={this.handleChangePrimary.bind(this, profile)}
             >
               <ListItemIcon>
@@ -182,7 +182,7 @@ export default class ApplicantListItem extends Component {
               Make Primary Contact
             </MenuItem>
             <MenuItem
-              disabled={this.props.isPrimaryApplicant}
+              disabled={this.props.isPrimaryApplicant || this.props.disabled}
               onClick={this.handleRemove.bind(this, profile)}
             >
               <ListItemIcon>

@@ -100,9 +100,10 @@ export default class HallListItem extends Component {
         </ListItemIcon>
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={3} sm={2}>
-            <FormControl fullWidth>
+            <FormControl required fullWidth>
               <InputLabel>Rank</InputLabel>
               <Select
+                disabled={this.props.disabled}
                 value={this.state.hallRankValue}
                 onChange={this.handleRankInputChange}
                 input={<Input id={'rank' + index} />}
@@ -112,9 +113,10 @@ export default class HallListItem extends Component {
             </FormControl>
           </Grid>
           <Grid item xs={9} sm={10}>
-            <FormControl fullWidth>
+            <FormControl required fullWidth>
               <InputLabel>Hall</InputLabel>
               <Select
+                disabled={this.props.disabled}
                 value={this.state.hallSelectionValue}
                 onChange={this.handleHallInputChange}
                 input={<Input id={'hall' + index} />}
