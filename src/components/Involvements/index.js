@@ -13,7 +13,7 @@ import ProfileActivityList from '../ProfileActivityList/index';
 import Typography from '@material-ui/core/Typography';
 import './index.css';
 
-export const Involvements = props => {
+export const Involvements = (props) => {
   const [involvementsAndTheirPrivacy, setInvolvementsAndTheirPrivacy] = useState([]);
   const [publicMemberships, setPublicMemberships] = useState([]);
   const [network, setNetwork] = useState();
@@ -63,7 +63,7 @@ export const Involvements = props => {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         network === 'offline' &&
@@ -99,7 +99,7 @@ export const Involvements = props => {
       }
       // If the user has memberships
       else {
-        return involvementsAndTheirPrivacy.map(involvementPrivacyKeyValuePair => (
+        return involvementsAndTheirPrivacy.map((involvementPrivacyKeyValuePair) => (
           <MyProfileActivityList
             Membership={involvementPrivacyKeyValuePair.key}
             InvolvementPrivacy={involvementPrivacyKeyValuePair.value}
@@ -119,7 +119,7 @@ export const Involvements = props => {
           </Typography>
         );
       } else {
-        return publicMemberships.map(activity => (
+        return publicMemberships.map((activity) => (
           <ProfileActivityList Activity={activity} key={activity.MembershipID} />
         ));
       }

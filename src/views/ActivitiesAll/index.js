@@ -80,7 +80,7 @@ export default class GordonActivitiesAll extends Component {
         activity.getTypes(tempSession),
       ]);
     }
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       try {
         const profile = await user.getProfileInfo();
         const myInvolvements = await user.getSessionMembershipsWithoutGuests(
@@ -230,7 +230,7 @@ export default class GordonActivitiesAll extends Component {
         allActivities,
         types,
         // If authenticated, gets the user's involvements for the selected session
-        myInvolvements: this.props.Authentication
+        myInvolvements: this.props.authentication
           ? await user.getSessionMembershipsWithoutGuests(this.state.profile.ID, this.state.session)
           : [],
         loading: false,
@@ -392,7 +392,7 @@ export default class GordonActivitiesAll extends Component {
 
         <Grid container align="center" spacing={4} justify="center">
           {/* Shows the user's memberships requests if the user is online */}
-          {this.state.network === 'online' && this.props.Authentication && (
+          {this.state.network === 'online' && this.props.authentication && (
             <Grid item xs={12} lg={8}>
               <Card>
                 <Requests />
@@ -401,7 +401,7 @@ export default class GordonActivitiesAll extends Component {
           )}
 
           {/* Shows My Involvements Header if the user is authenticated */}
-          {this.props.Authentication && (
+          {this.props.authentication && (
             <Grid item xs={12} lg={8} fullWidth>
               <Card>
                 <div style={headerStyle}>
@@ -414,7 +414,7 @@ export default class GordonActivitiesAll extends Component {
           )}
 
           {/* Shows My Involvements Content if the user is authenticated */}
-          {this.props.Authentication && (
+          {this.props.authentication && (
             <Grid item xs={12} lg={8}>
               {myInvolvements}
             </Grid>

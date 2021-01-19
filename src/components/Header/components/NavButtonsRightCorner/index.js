@@ -19,7 +19,7 @@ import { gordonColors } from '../../../../theme';
 import storage from '../../../../services/storage';
 import './index.css';
 
-export const GordonNavButtonsRightCorner = props => {
+export const GordonNavButtonsRightCorner = (props) => {
   const [linkOpen, setLinkOpen] = useState(false);
   const [network, setNetwork] = useState('online');
   const [showMenu, setShowMenu] = useState(false);
@@ -62,7 +62,7 @@ export const GordonNavButtonsRightCorner = props => {
   // My Profile Button
   let myProfileButton = createMyProfileButton(
     network,
-    props.Authentication,
+    props.authentication,
     props.onClose,
     props.openDialogBox,
   );
@@ -78,7 +78,7 @@ export const GordonNavButtonsRightCorner = props => {
   // Timesheets Button
   let timesheetsButton = createTimesheetsButton(
     network,
-    props.Authentication,
+    props.authentication,
     props.onClose,
     props.openDialogBox,
   );
@@ -95,13 +95,13 @@ export const GordonNavButtonsRightCorner = props => {
   // Admin Button
   let adminButton = createAdminButton(
     network,
-    props.Authentication,
+    props.authentication,
     props.onClose,
     props.openDialogBox,
   );
 
   // Sign In & Out Button
-  let signInOutButton = createSignInOutButton(props.Authentication, onSignOut, props.onClose);
+  let signInOutButton = createSignInOutButton(props.authentication, onSignOut, props.onClose);
 
   useEffect(() => {
     /* Used to re-render the page when the network connection changes.
@@ -109,7 +109,7 @@ export const GordonNavButtonsRightCorner = props => {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         network === 'offline' &&

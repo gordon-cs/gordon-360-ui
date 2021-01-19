@@ -17,14 +17,14 @@ const getAdmins = () => http.get(`/admins`);
  * @param {String} id Identifier for an admin
  * @return {Promise<any>} Response body
  */
-const removeAdmin = id => http.del(`/admins/${id}`);
+const removeAdmin = (id) => http.del(`/admins/${id}`);
 
 /**
  * Add superadmin with the given id
  * @param {String} dataURI of the superadmin being added
  * @return {Promise<any>} Response body
  */
-const addAdmin = dataURI => http.post(`/admins/`, dataURI);
+const addAdmin = (dataURI) => http.post(`/admins/`, dataURI);
 
 export default {
   getAdmins,

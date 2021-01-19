@@ -29,7 +29,7 @@ import GordonLoader from '../Loader/index';
 import { windowBreakWidths } from '../../theme';
 import './index.css';
 
-export const Identification = props => {
+export const Identification = (props) => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState(null);
   const [defaultUserImage, setDefaultUserImage] = useState(null);
@@ -190,7 +190,7 @@ export const Identification = props => {
       }
 
       // An event listener for when the browser size changes to get the current Material-UI breakpoint
-      window.addEventListener('resize', event => {
+      window.addEventListener('resize', (event) => {
         setCurrentWidth(getMaterialUIBreakpoint(event.target.innerWidth));
       });
       // Sets the current Material-UI Breakpoint

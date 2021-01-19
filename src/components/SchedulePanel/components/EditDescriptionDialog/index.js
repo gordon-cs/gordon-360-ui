@@ -27,18 +27,16 @@ export default class EditDescriptionDialog extends React.Component {
     }
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     var desc = this.state.descInput;
     this.props.onDialogSubmit(desc);
     this.handleClose();
   };
 
-  handleChange = name => e => {
+  handleChange = (name) => (e) => {
     this.setState({ [name]: e.target.value }, () => {});
   };
-
-
 
   handleClose = () => {
     this.props.handleEditDescriptionClose();

@@ -102,7 +102,7 @@ class GordonSchedulePanel extends Component {
     this.setState({ loading: false });
   };
 
-  handleMyScheduleOpen = slotInfo => {
+  handleMyScheduleOpen = (slotInfo) => {
     if (this.props.myProf) {
       this.setState({ myScheduleOpen: true });
       if (slotInfo) {
@@ -182,7 +182,7 @@ class GordonSchedulePanel extends Component {
       data.Event_ID = this.state.selectedEvent.id;
       myschedule
         .updateMySchedule(data)
-        .then(value => {
+        .then((value) => {
           this.loadData(this.props.profile);
           this.setState({ reloadCall: true });
         })
@@ -193,7 +193,7 @@ class GordonSchedulePanel extends Component {
     } else {
       myschedule
         .addMySchedule(data)
-        .then(value => {
+        .then((value) => {
           this.loadData(this.props.profile);
           this.setState({ reloadCall: true });
         })

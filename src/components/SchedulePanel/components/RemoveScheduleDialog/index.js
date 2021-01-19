@@ -14,13 +14,11 @@ export default class RemoveScheduleDialog extends React.Component {
     };
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.onDialogSubmit();
     this.props.handleRemoveMyScheduleClose();
   };
-
-
 
   render() {
     const button = {

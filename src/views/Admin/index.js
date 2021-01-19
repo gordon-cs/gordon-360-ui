@@ -19,7 +19,7 @@ export default class Admin extends Component {
   }
 
   async componentWillMount() {
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       const college_role = await user.getLocalInfo().college_role;
       this.setState({ isSuperAdmin: college_role === 'god' ? true : false });
     }
@@ -31,7 +31,7 @@ export default class Admin extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -55,7 +55,7 @@ export default class Admin extends Component {
     // Creates the My Profile button link depending on the status of the network found in local storage
     let Admin;
 
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       if (networkStatus === 'online') {
         if (this.state.isSuperAdmin) {
           Admin = (
@@ -151,9 +151,8 @@ export default class Admin extends Component {
             </Card>
           </Grid>
         </Grid>
-      )
+      );
     }
-
 
     return Admin;
   }
