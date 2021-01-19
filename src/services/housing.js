@@ -38,7 +38,7 @@ const checkHousingStaff = async () => {
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<Number>} Application's ID number
  */
-const getApplicationID = (username) => {
+const getApplicationID = async (username) => {
   let applicationID;
   if (username) {
     applicationID = await http.get(`housing/apartment/${username}/`);
