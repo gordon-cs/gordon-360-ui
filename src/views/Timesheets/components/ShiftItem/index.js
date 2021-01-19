@@ -26,7 +26,7 @@ import './ShiftItem.css';
 import GordonLoader from '../../../../components/Loader';
 import SimpleSnackbar from '../../../../components/Snackbar';
 
-const CustomTooltip = withStyles(theme => ({
+const CustomTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
@@ -35,7 +35,7 @@ const CustomTooltip = withStyles(theme => ({
   },
 }))(Tooltip);
 
-const PickerInput = props => {
+const PickerInput = (props) => {
   return (
     <>
       <TextField
@@ -99,7 +99,7 @@ export default class ShiftItem extends Component {
     this.setState({ editing: !this.state.editing });
   };
 
-  isLeapYear = date => {
+  isLeapYear = (date) => {
     if (date.getFullYear() % 4 === 0) {
       if (date.getFullYear() % 100 === 0) {
         if (date.getFullYear() % 400 !== 0) {
@@ -118,7 +118,7 @@ export default class ShiftItem extends Component {
     }
   };
 
-  getNextDate = date => {
+  getNextDate = (date) => {
     let is30DayMonth =
       date.getMonth() === 3 ||
       date.getMonth() === 5 ||
@@ -190,7 +190,7 @@ export default class ShiftItem extends Component {
     };
   };
 
-  disableDisallowedDays = date => {
+  disableDisallowedDays = (date) => {
     let dayIn = this.state.newDateTimeIn;
     let nextDate = this.getNextDate(dayIn);
     let shouldDisableDate = !(
@@ -251,11 +251,11 @@ export default class ShiftItem extends Component {
     }
   };
 
-  handleDateInChange = date => {
+  handleDateInChange = (date) => {
     this.setState({ newDateTimeIn: date }, this.checkForError);
   };
 
-  handleDateOutChange = date => {
+  handleDateOutChange = (date) => {
     this.setState({ newDateTimeOut: date }, this.checkForError);
   };
 
@@ -300,7 +300,7 @@ export default class ShiftItem extends Component {
             updating: false,
           });
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState({ updating: false });
           if (typeof error === 'string' && error.toLowerCase().includes('overlap')) {
             this.snackbarSeverity = 'warning';
@@ -554,7 +554,7 @@ export default class ShiftItem extends Component {
                 </Grid>
                 <Grid item xs={2}>
                   <Typography className="disable-select" variant="body2">
-                    {(this.props.canUse ? console.log('HERE', HOUR_TYPE) : HOURLY_RATE.toFixed(2))}
+                    {this.props.canUse ? console.log('HERE', HOUR_TYPE) : HOURLY_RATE.toFixed(2)}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>

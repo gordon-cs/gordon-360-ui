@@ -23,7 +23,7 @@ const store = (key, value) => {
  * @return {any} Stored value
  * @throws Will throw an error when the key is not set in local storage
  */
-const get = key => {
+const get = (key) => {
   const storedValue = localStorage.getItem(key);
   if (storedValue === null) {
     throw new Error(`Key '${key}' does not exist in local storage`);
@@ -42,7 +42,7 @@ const get = key => {
  * Remove a value stored locally
  * @param {String} key Where value is stored
  */
-const remove = key => {
+const remove = (key) => {
   localStorage.removeItem(key);
 };
 
