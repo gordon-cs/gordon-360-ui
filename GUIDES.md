@@ -16,8 +16,8 @@ ESLint and Stylelint are used in conjunction with Prettier to catch syntax error
 
 If you are adding a dependency to the project, you must use either `--save` or `--save-dev` with `npm install`. This will save the dependency and its current version to `package.json`, which means it will be installed automatically when `npm install` is run.
 
-* If you are installing a dependency that will be used in development, such as a build tool, linter, or documentation tool, use `npm install --save-dev nameOfPackage`. This will save the dependency to the `devDependencies` property of `package.json`.
-* If you are installing a production dependency, such as a charting library, a date formatting library, or a utility like Lodash, use `npm install --save nameOfPackage`. This will save the dependency to the `dependencies` property of `package.json`.
+- If you are installing a dependency that will be used in development, such as a build tool, linter, or documentation tool, use `npm install --save-dev nameOfPackage`. This will save the dependency to the `devDependencies` property of `package.json`.
+- If you are installing a production dependency, such as a charting library, a date formatting library, or a utility like Lodash, use `npm install --save nameOfPackage`. This will save the dependency to the `dependencies` property of `package.json`.
 
 To remove a dependency, use `npm rm nameOfPackage`.
 
@@ -33,9 +33,9 @@ To update all depedencies to their latest allowed versions (as specified by the 
 
 > Given a version number MAJOR.MINOR.PATCH, increment the:
 >
-> * MAJOR version when you make incompatible API changes,
-> * MINOR version when you add functionality in a backwards-compatible manner, and
-> * PATCH version when you make backwards-compatible bug fixes.
+> - MAJOR version when you make incompatible API changes,
+> - MINOR version when you add functionality in a backwards-compatible manner, and
+> - PATCH version when you make backwards-compatible bug fixes.
 >
 > Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
 
@@ -45,10 +45,10 @@ npm uses semantic versioning ranges to specify a range of acceptable versions. F
 
 The source files for the app are in `./src`. The other top-level folders are as follows:
 
-* `.vscode` contains configuration for Visual Studio Code
-* `build` contains the built application; not tracked by Git
-* `node_modules` contains dependencies installed by `npm`; not tracked by Git
-* `public` contains assets that should not be processed by Webpack. Only files inside `public` can be used from `public/index.html`.
+- `.vscode` contains configuration for Visual Studio Code
+- `build` contains the built application; not tracked by Git
+- `node_modules` contains dependencies installed by `npm`; not tracked by Git
+- `public` contains assets that should not be processed by Webpack. Only files inside `public` can be used from `public/index.html`.
 
 The structure of the `src` directory is as follows:
 

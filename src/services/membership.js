@@ -53,7 +53,7 @@ import http from './http';
  * @return {Promise<any>} Response
  */
 function addMembership(data) {
-  return http.post('memberships', data).catch(reason => {
+  return http.post('memberships', data).catch((reason) => {
     console.log(reason);
   });
 }
@@ -63,7 +63,7 @@ function addMembership(data) {
  * @param {String} requestID Request object
  * @return {Promise<any>} Response
  */
-const approveRequest = requestID => {
+const approveRequest = (requestID) => {
   return http.post(`requests/${requestID}/approve`);
 };
 
@@ -95,7 +95,7 @@ const checkAdmin = (id, sessionCode, activityCode) => {
  * @param {String} requestID Request object
  * @return {Promise<any>} Response
  */
-const denyRequest = requestID => {
+const denyRequest = (requestID) => {
   return http.post(`requests/${requestID}/deny`);
 };
 
@@ -104,7 +104,7 @@ const denyRequest = requestID => {
  * @param {String} requestID request id
  * @return {Promise.<Object>} deleted object
  */
-const cancelRequest = requestID => {
+const cancelRequest = (requestID) => {
   return http.del(`requests/${requestID}`);
 };
 
@@ -148,7 +148,7 @@ const get = (activityCode, sessionCode) => {
 };
 
 //Change the privacy value for a club membership
-const toggleMembershipPrivacy = async userMembership => {
+const toggleMembershipPrivacy = async (userMembership) => {
   let currentMembershipPrivacy = userMembership.Privacy;
   let newMembershipPrivacy = !currentMembershipPrivacy;
   let setMembershipPrivacy = async function(value) {
@@ -170,14 +170,14 @@ const toggleMembershipPrivacy = async userMembership => {
  * @param {String} activityCode Identifier for an activity
  * @return {Member[]} List of all memberships for activity
  */
-const getAll = activityCode => http.get(`memberships/activity/${activityCode}`);
+const getAll = (activityCode) => http.get(`memberships/activity/${activityCode}`);
 
 /**
  * Get all group admins
  * @param {String} activityCode Identifier for an activity
  * @return {Member[]} List of all group admins
  */
-const getAllGroupAdmins = activityCode =>
+const getAllGroupAdmins = (activityCode) =>
   http.get(`memberships/activity/${activityCode}/group-admin`);
 
 /**
@@ -185,7 +185,7 @@ const getAllGroupAdmins = activityCode =>
  * @param {String} email Email
  * @return {Object} Email details
  */
-const getEmailAccount = async email => {
+const getEmailAccount = async (email) => {
   return await http.get(`accounts/email/${email}/`);
 };
 
@@ -212,7 +212,7 @@ const getMembersNum = (activityCode, sessionCode) =>
  * @param {String} userID ID of user
  * @return {Member[]} Array of the given student's memberships
  */
-const getIndividualMembership = userID =>
+const getIndividualMembership = (userID) =>
   http.get(`memberships/student/${userID}`).then(function(result) {
     return result;
   });
@@ -272,7 +272,7 @@ const getDiffDays = function(date) {
  * @param {String} membershipID The membershipID to remove
  * @return {Promise.<Object>} Response body
  */
-const remove = membershipID => {
+const remove = (membershipID) => {
   return http.del(`memberships/${membershipID}`);
 };
 
@@ -282,7 +282,7 @@ const remove = membershipID => {
  * @return {Promise<Object>} Response body
  */
 function requestMembership(data) {
-  return http.post(`requests`, data).catch(reason => {
+  return http.post(`requests`, data).catch((reason) => {
     console.log(reason);
   });
 }

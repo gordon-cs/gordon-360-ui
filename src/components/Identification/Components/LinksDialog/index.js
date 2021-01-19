@@ -130,7 +130,7 @@ export default class LinksDialog extends React.Component {
    */
   validateForm(platform) {
     // Resets the state that determines if any links have changed
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       updatedLinks: { ...prevState.updatedLinks, [platform]: false },
       updatingFailedLinks: { ...prevState.updatingFailedLinks, [platform]: false },
     }));
@@ -229,7 +229,7 @@ export default class LinksDialog extends React.Component {
     });
 
     // Parses through each response and sees if they all passed
-    responses.forEach(response => {
+    responses.forEach((response) => {
       /**
        *  If Response Failed - Sets allPassed to false, updates the number of links failed, and sets
        * the link of the specified platform back to it's original
@@ -237,7 +237,7 @@ export default class LinksDialog extends React.Component {
       if (response.value === undefined) {
         allPassed = false;
         numOfFailedLinks += 1;
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
           // Resets the variable that shows the platform as updating
           updatingLinks: {
             ...prevState.updatingLinks,
@@ -258,7 +258,7 @@ export default class LinksDialog extends React.Component {
         else if (response.platform === 'twitter') this.props.setTwitterLink(tw);
         else if (response.platform === 'linkedIn') this.props.setLinkedInLink(li);
         else if (response.platform === 'instagram') this.props.setInstagramLink(ig);
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
           updatedLinks: {
             ...prevState.updatedLinks,
             [response.platform]: false,
@@ -295,7 +295,7 @@ export default class LinksDialog extends React.Component {
    *
    * @param {Event} e The event of the Submit button being clicked
    */
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
 
     let fb = this.state.facebook;
@@ -368,7 +368,7 @@ export default class LinksDialog extends React.Component {
                   : 'Facebook Link'
               }
               value={this.state.facebook}
-              onChange={event => {
+              onChange={(event) => {
                 this.handleChange('facebook', event);
               }}
               error={!this.state.fbValid}
@@ -395,7 +395,7 @@ export default class LinksDialog extends React.Component {
                   : 'Twitter Link'
               }
               value={this.state.twitter}
-              onChange={event => {
+              onChange={(event) => {
                 this.handleChange('twitter', event);
               }}
               error={!this.state.twValid}
@@ -422,7 +422,7 @@ export default class LinksDialog extends React.Component {
                   : 'LinkedIn Link'
               }
               value={this.state.linkedIn}
-              onChange={event => {
+              onChange={(event) => {
                 this.handleChange('linkedIn', event);
               }}
               error={!this.state.liValid}
@@ -449,7 +449,7 @@ export default class LinksDialog extends React.Component {
                   : 'Instagram Link'
               }
               value={this.state.instagram}
-              onChange={event => {
+              onChange={(event) => {
                 this.handleChange('instagram', event);
               }}
               error={!this.state.igValid}
