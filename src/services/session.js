@@ -30,13 +30,13 @@ import http from './http';
  * @param {String} sessionCode Identifier for a session
  * @return {Promise.<Session>} Session
  */
-const get = sessionCode => http.get(`sessions/${sessionCode}`);
+const get = (sessionCode) => http.get(`sessions/${sessionCode}`);
 
 /**
  * Get sessions
  * @return {Promise.<Session[]>} List of sessions
  */
-const getAll = () => http.get('sessions').then(sessions => sessions.reverse());
+const getAll = () => http.get('sessions').then((sessions) => sessions.reverse());
 
 /**
  * Get current session

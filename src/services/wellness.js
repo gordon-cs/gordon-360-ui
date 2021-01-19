@@ -30,8 +30,7 @@ export const StatusColors = {
  * @typedef WellnessStatus
  * @property {StatusColor} Status The user's status
  * @property {Date} Created when the status was created
- * @property {boolean} IsValid whether the status is still valid
- * @property {boolean} IsOverride whether the status is an administrative override
+ * @property {boolean} IsValid whether the status has expired
  *
  */
 
@@ -50,18 +49,18 @@ export const StatusColors = {
  * returns current status of student
  * @returns {Promise<WellnessStatus>} Response
  */
-const getStatus = async () => {
-  return await http.get('wellness/status');
+const getStatus = () => {
+  return http.get('wellness');
 };
 
 /**
  * add answer to the wellness question to the back end
  * @param {StatusColor} status status to be recorded
- * @return {Promise<WellnessStatus>} Response
+ * @return {Promise<WellnessStatus>} The status that was posted, if successful
  */
-const postAnswer = async (status) => {
+const postAnswer = (status) => {
   try {
-    return http.post('wellness/status', status);
+    return http.post('wellness', status);
   } catch (error) {
     return console.log(error);
   }
@@ -72,8 +71,8 @@ const postAnswer = async (status) => {
  * @returns {Promise<WellnessQuestion>} list of questions from backend
  */
 const getQuestion = async () => {
-  const question = await http.get('wellness/status/question');
-  return await formatQuestion(question);
+  const question = await http.get('wellness/question');
+  return formatQuestion(question);
 };
 
 /**
