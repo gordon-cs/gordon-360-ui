@@ -70,7 +70,7 @@ const saveApartmentApplication = async (applicationID, primaryUsername, applican
  * @param {String} newPrimaryUsername the student username of the person who will be allowed to edit this application
  * @return {Promise.<Boolean>} Status of whether or not the operation was successful
  */
-const changeApplicationModifier = async (applicationID, newPrimaryUsername) => {
+const changeApartmentAppModifier = async (applicationID, newPrimaryUsername) => {
   let newModifierDetails = {
     AprtAppID: applicationID,
     Username: newPrimaryUsername,
@@ -91,6 +91,6 @@ export default {
   checkHousingStaff,
   getApplicationID,
   saveApartmentApplication,
-  changeApplicationModifier,
+  changeApartmentAppModifier,
   getApartmentApplication,
 };

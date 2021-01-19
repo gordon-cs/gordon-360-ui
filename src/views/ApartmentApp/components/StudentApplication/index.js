@@ -211,7 +211,7 @@ export default class StudentApplication extends Component {
     this.saveButtonAlertTimeout = null;
     let result = null;
     try {
-      result = await housing.changeApplicationModifier(applicationID, newPrimaryUsername);
+      result = await housing.changeApartmentAppModifier(applicationID, newPrimaryUsername);
     } catch {
       result = false;
     }
