@@ -115,6 +115,7 @@ const Identification = (props) => {
                * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
                */
               await user.getImage(props.profile.AD_Username);
+
         // Sets the given user's preferred image. If a default image is given but the preferred is undefined,
         // then this could mean that the currently signed-in user is not allowed to see the preferred image or
         // a preferred image wasn't set

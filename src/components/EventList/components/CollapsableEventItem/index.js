@@ -54,8 +54,6 @@ GordonCollapsableEventItem.propTypes = {
     Event_ID: PropTypes.string.isRequired,
     Event_Name: PropTypes.string.isRequired,
     Event_Title: PropTypes.string.isRequired,
-    Event_Type_Name: PropTypes.string,
-    Category_ID: PropTypes.number,
     Description: PropTypes.string,
     Occurrences: PropTypes.array,
   }).isRequired,

@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import GordonLoader from './../../components/Loader';
 import GordonSchedulePanel from '../../components/SchedulePanel';
 import Identification from '../../components/Identification';
+import { Redirect } from 'react-router';
 
 import './profile.css';
 import '../../app.css';
@@ -19,6 +20,7 @@ import OfflinePanel from '../../components/OfflinePanel';
 //Public profile view
 const Profile = ({ authentication, match }) => {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [profile, setProfile] = useState({});
   const [memberships, setMemberships] = useState([]);
   const isOnline = useNetworkIsOnline();
@@ -31,12 +33,16 @@ const Profile = ({ authentication, match }) => {
 
   const loadProfile = async (searchedUser) => {
     setLoading(true);
-    const [searchedProfile, memberships] = await Promise.all([
-      user.getProfileInfo(searchedUser),
-      user.getPublicMemberships(searchedUser),
-    ]);
-    setProfile(searchedProfile);
-    setMemberships(memberships);
+    try {
+      const [searchedProfile, memberships] = await Promise.all([
+        user.getProfileInfo(searchedUser),
+        user.getPublicMemberships(searchedUser),
+      ]);
+      setProfile(searchedProfile);
+      setMemberships(memberships);
+    } catch (e) {
+      setError(e);
+    }
     setLoading(false);
   };
 
@@ -45,6 +51,8 @@ const Profile = ({ authentication, match }) => {
   } else if (authentication) {
     if (!isOnline) {
       return <OfflinePanel componentName="Profile" />;
+    } else if (error && error.name === 'NotFoundError') {
+      return <Redirect to="/profilenotfound" />;
     } else {
       return (
         <Grid container justify="center" spacing={2}>
