@@ -189,7 +189,7 @@ export default class Profile extends Component {
   }
 
   render() {
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       if (this.state.error && this.state.error.name === 'NotFoundError') {
         return <Redirect to="/profilenotfound" />;
       }
