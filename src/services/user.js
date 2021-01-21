@@ -63,6 +63,7 @@ import gordonEvent from './event';
  * @property {String} Facebook Facebook
  * @property {String} FirstName First name
  * @property {String} Gender Gender
+ * @property {String} Handshake Handshake
  * @property {String} HomeCity City
  * @property {String} HomeCountry Country
  * @property {String} HomeFax Home fax number
@@ -73,7 +74,6 @@ import gordonEvent from './event';
  * @property {String} HomeStreet2 Street address line 2
  * @property {String} ID ID
  * @property {String} Instagram Instagram
- * @property {String} Handshake Handshake
  * @property {String} JobTitle Job title
  * @property {String} KeepPrivate Keep private
  * @property {String} LastName Last name
@@ -697,7 +697,6 @@ function updateSocialLink(type, link) {
       break;
   }
   linkToSend = encodeURIComponent(linkToSend);
-
   url = {
     [type]: linkToSend,
   };

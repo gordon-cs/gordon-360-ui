@@ -153,6 +153,11 @@ export const Identification = (props) => {
           ? ''
           : socialMediaInfo.instagram.prefix + props.profile.Instagram,
       );
+      setHandshakeLink(
+        !props.profile.Handshake || props.profile.Handshake === ''
+          ? ''
+          : socialMediaInfo.handshake.prefix + props.profile.Handshake,
+      );
     }
 
     loadUserProfile();
