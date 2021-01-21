@@ -195,6 +195,9 @@ function setOnOffCampus(data) {
     case 'D':
       data.OnOffCampus = '';
       break;
+    case 'P': //Private
+      data.OnOffCampus = 'Private as requested.';
+      break;
     default:
       data.OnOffCampus = 'On Campus';
   }

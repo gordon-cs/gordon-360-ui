@@ -105,14 +105,17 @@ const formatQuestion = async (question) => {
   /* eslint-enable no-template-curly-in-string */
 
   question.symptoms = [
-    'Temperature higher than 100.4°F',
-    'New loss of taste or smell',
-    'Sore throat',
-    'Muscle pain',
+    'Fever or chills',
     'Cough',
     'Shortness of breath or difficulty breathing',
-    'Fever',
-    'Chills',
+    'Fatigue',
+    'Muscle or body aches',
+    'Headache',
+    'New loss of taste or smell',
+    'Sore throat',
+    'Congestion or runny nose',
+    'Nausea or vomiting',
+    'Diarrhea',
   ];
 
   return question;
