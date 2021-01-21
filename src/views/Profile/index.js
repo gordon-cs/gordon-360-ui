@@ -12,6 +12,7 @@ import { socialMediaInfo } from '../../socialMedia';
 import GordonSchedulePanel from '../../components/SchedulePanel';
 import { Identification } from '../../components/Identification/index';
 import storage from '../../services/storage';
+import { Redirect } from 'react-router';
 
 import './profile.css';
 import '../../app.css';
@@ -188,7 +189,10 @@ export default class Profile extends Component {
   }
 
   render() {
-    if (this.props.authentication) {
+    if (this.props.Authentication) {
+      if (this.state.error && this.state.error.name === 'NotFoundError') {
+        return <Redirect to="/profilenotfound" />;
+      }
       // Creates the Public Profile page depending on the status of the network
       let PublicProfile;
       if (this.state.network === 'online') {

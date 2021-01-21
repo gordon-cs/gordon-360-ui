@@ -75,19 +75,19 @@ export default class GordonLinksList extends Component {
           <ListItemLink
             target="_blank"
             rel="noopener"
-            href="https://blackboard.gordon.edu"
+            href="https://canvas.gordon.edu"
             className="gc360-text-link"
           >
             <ListItemIcon>
               <img
-                className="blackboard"
-                src={require(`${'../Images/BbFavicon.ico'}`)}
-                alt="blackboard learn"
+                className="canvas"
+                src={require(`${'../Images/Canvas.ico'}`)}
+                alt="canvas"
                 width="16"
                 height="16"
               />
             </ListItemIcon>
-            <ListItemText primary="Blackboard Learn" />
+            <ListItemText primary="Canvas" />
           </ListItemLink>
         </List>
         <List

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardContent, CardHeader, Grid } from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 import { Check, Remove, Clear } from '@material-ui/icons';
 import { StatusColors } from '../../../../services/wellness';
 import SymptomsDialog from '../../../../components/SymptomsDialog';
@@ -70,6 +70,22 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
                 alt={username}
               />
             </Card>
+            {/* TODO: Remove following code block after Spring 2021 move in is complete */}
+            {/* START */}
+            {currentStatus === StatusColors.RED && (
+              <Typography variant="h5">
+                Students must fill out{' '}
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://forms.office.com/Pages/ResponsePage.aspx?id=2-xRAi1Od0CUmEAyiseU6VaZ78BOMQJAiGjLu2N4tPZURDQ0UUdUOTkwV0NPOFlYTTVOTlNCRFZLOS4u"
+                >
+                  the Return to Campus form
+                </a>{' '}
+                before checking in.
+              </Typography>
+            )}
+            {/* END */}
             <Grid spacing={2} className="wellness-status">
               <Card className={currentStatus}>
                 <CardContent className="status-box">

@@ -149,9 +149,13 @@ export default class GordonPeopleSearch extends Component {
     var hasMatched = false;
     return (
       <span>
-        {parts.map((part) =>
+        {parts.map((part, key) =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
-            ? (hasMatched = true && <span className="h">{part}</span>)
+            ? (hasMatched = true && (
+                <span className="h" key={key}>
+                  {part}
+                </span>
+              ))
             : part,
         )}
       </span>
@@ -211,7 +215,7 @@ export default class GordonPeopleSearch extends Component {
                   suggestion.LastName,
                   this.state.highlightQuery.split(/ |\./)[1],
                 ),
-              ].map((e) => <span>{e}</span>)
+              ].map((e, key) => <span key={key}>{e}</span>)
             : this.getHighlightedText(
                 suggestion.FirstName + ' ' + suggestion.LastName,
                 this.state.highlightQuery,
@@ -323,7 +327,7 @@ export default class GordonPeopleSearch extends Component {
           }}
         >
           {({ getInputProps, getItemProps, isOpen }) => (
-            <span className="gordon-people-search">
+            <span className="gordon-people-search" key="suggestion-list-span">
               {networkStatus === 'online'
                 ? renderInput(
                     getInputProps({

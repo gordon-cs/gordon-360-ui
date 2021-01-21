@@ -26,7 +26,7 @@ export default class Advisors extends Component {
       // very last. If there's only one advisor, no comma will appear
       let advisorText = '';
 
-      this.props.advisors.forEach(advisor => {
+      this.props.advisors.forEach((advisor) => {
         // NOTE: The difference between the two statements that adds text to the variable
         // "advisorText" is that one of them adds BOTH a comma and a space
         advisor === lastItem
@@ -60,8 +60,9 @@ export default class Advisors extends Component {
         );
       }
     }
+
     // The advisors list is not available so the user sees an empty listing
-    //  CODE TO WOORK ON IN THE FUTURE IF THE USER'S ADVISORS FAILED TO LOAD
+    //  CODE TO WORK ON IN THE FUTURE IF THE USER'S ADVISORS FAILED TO LOAD
     // advisorPrefix = (
     //   <div>
     //     <Typography>Advisor:</Typography>

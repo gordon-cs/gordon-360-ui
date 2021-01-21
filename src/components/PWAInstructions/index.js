@@ -138,7 +138,7 @@ const devices = {
   },
 };
 
-const PWAInstructions = props => {
+const PWAInstructions = (props) => {
   const [device, setDevice] = useState(null);
   const [platform, setPlatform] = useState(null);
   const classes = toggleStyles();
@@ -349,7 +349,7 @@ const PWAInstructions = props => {
                   onChange={handleDeviceChange}
                   aria-label="text formatting"
                 >
-                  {devices.names.map(item => {
+                  {devices.names.map((item) => {
                     return (
                       <ToggleButton
                         value={item}
@@ -398,7 +398,7 @@ const PWAInstructions = props => {
                   >
                     {devices[device] &&
                       devices[device].names &&
-                      devices[device].names.map(item => {
+                      devices[device].names.map((item) => {
                         return (
                           <ToggleButton
                             value={item}

@@ -11,7 +11,7 @@ import './coCurricularTranscriptExperience.css';
 
 export default class Experience extends Component {
   /* Returns the first three letters of the month based on the number in the date */
-  sliceMonth = date => {
+  sliceMonth = (date) => {
     switch (date) {
       case '01':
         return 'Jan';
@@ -44,7 +44,7 @@ export default class Experience extends Component {
   };
 
   //Formats the duration of the employment to be more legible on the resume
-  formatDuration = experience => {
+  formatDuration = (experience) => {
     if (experience.Job_Start_Date === null) {
       return null;
     } else {

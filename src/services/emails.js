@@ -11,7 +11,7 @@ import http from './http';
  * @param {String} id Activity code
  * @return {emails[]} List of all emails for members in the activity
  */
-const get = id => http.get(`emails/activity/${id}`);
+const get = (id) => http.get(`emails/activity/${id}`);
 
 /**
  * Get the emails for members of the activity with activity code id during the specified session.
@@ -26,7 +26,7 @@ const getForSession = (id, SessionId) => http.get(`emails/activity/${id}/session
  * @param {String} id Activity code
  * @return {emails[]} List of all emails for leaders in the activity
  */
-const getLeaders = id => http.get(`emails/activity/${id}/leaders`);
+const getLeaders = (id) => http.get(`emails/activity/${id}/leaders`);
 
 /**
  * Get the emails for leaders of the activity with activity code id during the specified session.
@@ -42,7 +42,7 @@ const getLeadersForSession = (id, SessionId) =>
  * @param {String} id Activity code
  * @return {emails[]} List of all emails for advisors in the activity
  */
-const getAdvisors = id => http.get(`emails/activity/${id}/advisors`);
+const getAdvisors = (id) => http.get(`emails/activity/${id}/advisors`);
 
 /**
  * Get the emails for advisors of the activity with activity code id during the specified session.
