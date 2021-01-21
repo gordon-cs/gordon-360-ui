@@ -620,7 +620,17 @@ function updateSocialLink(type, link) {
       linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
       break;
     case 'handshake':
-      linkToSend = link.substring(socialMediaInfo.handshake.prefix.length);
+      // hard coded a second prefix in because handshake supports 'app.' and 'gordon.' addresses
+      let handshakeSecondPrefix = 'https://app.joinhandshake.com/users/';
+      
+      // if using the 'app.joinhandshake' prefix
+      if(link.indexOf(handshakeSecondPrefix) === 0) {
+        linkToSend = link.substring(handshakeSecondPrefix.length);
+      }
+      // otherwise assume using the normal 'gordon.joinhandshake' prefix
+      else {
+        linkToSend = link.substring(socialMediaInfo.handshake.prefix.length);
+      }
       break;
     default:
       break;
