@@ -16,7 +16,7 @@ import '../../app.css';
 import './myProfile.css';
 import 'cropperjs/dist/cropper.css';
 
-const MyProfile = props => {
+const MyProfile = (props) => {
   const [loading, setLoading] = useState(true);
   const [memberships, setMemberships] = useState([]);
   const [network, setNetwork] = useState('online');
@@ -72,7 +72,7 @@ const MyProfile = props => {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         network === 'offline' &&
@@ -91,7 +91,7 @@ const MyProfile = props => {
   }, [network]);
 
   // AUTHENTICATED
-  if (props.Authentication) {
+  if (props.authentication) {
     // Creates the My Profile Page
     let MyProfile = (
       <div>
@@ -118,7 +118,7 @@ const MyProfile = props => {
               <Grid item xs={12} lg={10} align="center">
                 <Grid container xs={12} lg={12} spacing={0} justify="center">
                   <Grid item xs={12} lg={12}>
-                    <GordonSchedulePanel profile={profile} myProf={true} />
+                    <GordonSchedulePanel profile={profile} myProf={true} network={network} />
                   </Grid>
                 </Grid>
               </Grid>

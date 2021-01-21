@@ -28,12 +28,9 @@ export default class Events extends Component {
       chapelCredits: false,
       art: false,
       sports: false,
-      academics: false,
       cec: false,
       studentLife: false,
-      calendar: false,
       admissions: false,
-      fair: false,
       chapelOffice: false,
       allEvents: [],
       events: [],
@@ -41,7 +38,6 @@ export default class Events extends Component {
       includePast: false,
       loading: true,
       hasFilters: false,
-      network: 'online',
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
@@ -75,39 +71,30 @@ export default class Events extends Component {
       const urlParams = new URLSearchParams(this.props.location.search);
       let includePast = urlParams.has('Past') ? true : false;
       let chapelCredits = urlParams.has('CLW') ? true : false;
-      let academics = urlParams.has('Academics') ? true : false;
       let admissions = urlParams.has('Admissions') ? true : false;
       let art = urlParams.has('Arts') ? true : false;
       let sports = urlParams.has('Athletics') ? true : false;
-      let calendar = urlParams.has('Calendar') ? true : false;
       let cec = urlParams.has('CEC') ? true : false;
-      let fair = urlParams.has('Fair') ? true : false;
       let chapelOffice = urlParams.has('ChapelOffice') ? true : false;
       let studentLife = urlParams.has('StudentLife') ? true : false;
       // Determines if any filters are activated
       let hasFilters =
         includePast ||
         chapelCredits ||
-        academics ||
         admissions ||
         art ||
         sports ||
-        calendar ||
         cec ||
-        fair ||
         chapelOffice ||
         studentLife;
 
       this.setState({
         includePast,
         chapelCredits,
-        academics,
         admissions,
         art,
         sports,
-        calendar,
         cec,
-        fair,
         chapelOffice,
         studentLife,
         hasFilters,
@@ -150,27 +137,21 @@ export default class Events extends Component {
     let url = '?';
     if (this.state.includePast) url += '&Past';
     if (this.state.chapelCredits) url += '&CLW';
-    if (this.state.academics) url += '&Academics';
     if (this.state.admissions) url += '&Admissions';
     if (this.state.art) url += '&Arts';
     if (this.state.sports) url += '&Athletics';
-    if (this.state.calendar) url += '&Calendar';
     if (this.state.cec) url += '&CEC';
     if (this.state.chapelOffice) url += '&ChapelOffice';
-    if (this.state.fair) url += '&Fair';
     if (this.state.studentLife) url += '&StudentLife';
     this.props.history.push(url);
     // Determines if any filters are activated
     let hasFilters =
       this.state.includePast ||
       this.state.chapelCredits ||
-      this.state.academics ||
       this.state.admissions ||
       this.state.art ||
       this.state.sports ||
-      this.state.calendar ||
       this.state.cec ||
-      this.state.fair ||
       this.state.chapelOffice ||
       this.state.studentLife;
     this.setState({ hasFilters });
@@ -188,22 +169,19 @@ export default class Events extends Component {
   clearFilters() {
     this.setState(
       {
-        includePast: false,
+        includePast: true,
         chapelCredits: false,
-        academics: false,
         admissions: false,
         art: false,
         sports: false,
-        calendar: false,
         cec: false,
-        fair: false,
         chapelOffice: false,
         studentLife: false,
       },
       async () => {
-        const events = await gordonEvent.getFilteredEvents(this.state);
-        this.setState({ filteredEvents: events, loading: false });
-        this.createURLParameters();
+        // Set includePast to true above so that it is "toggled" to false by the below method
+        // This will ensure we filter only future events
+        await this.togglePastEvents();
       },
     );
   }
@@ -238,12 +216,12 @@ export default class Events extends Component {
   //This should be the only time we pull from the database
   async loadEvents() {
     this.setState({ loading: true });
-    if (this.props.Authentication) {
-      const allEvents = await gordonEvent.getAllEventsFormatted(); //Retrieve all events from database
+    if (this.props.authentication) {
+      const allEvents = await gordonEvent.getAllEvents(); //Retrieve all events from database
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
     } else {
-      const allEvents = await gordonEvent.getAllGuestEventsFormatted(); //Retrieve all Guest events from database
+      const allEvents = await gordonEvent.getAllGuestEvents(); //Retrieve all Guest events from database
       const events = gordonEvent.getFutureEvents(allEvents); //Filter out past events initially
       this.setState({ allEvents, events, loading: false, filteredEvents: events });
     }
@@ -269,31 +247,6 @@ export default class Events extends Component {
 
   render() {
     let content;
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.state.loading === true) {
       content = <GordonLoader />;
@@ -325,15 +278,6 @@ export default class Events extends Component {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={this.state.academics}
-                  onChange={this.filterEvents('academics')}
-                />
-              }
-              label="Academics"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
                   checked={this.state.admissions}
                   onChange={this.filterEvents('admissions')}
                 />
@@ -351,12 +295,6 @@ export default class Events extends Component {
               label="Athletics"
             />
             <FormControlLabel
-              control={
-                <Checkbox checked={this.state.calendar} onChange={this.filterEvents('calendar')} />
-              }
-              label="Calendar"
-            />
-            <FormControlLabel
               control={<Checkbox checked={this.state.cec} onChange={this.filterEvents('cec')} />}
               label="CEC"
             />
@@ -368,11 +306,6 @@ export default class Events extends Component {
                 />
               }
               label="Chapel Office"
-            />
-
-            <FormControlLabel
-              control={<Checkbox checked={this.state.fair} onChange={this.filterEvents('fair')} />}
-              label="Fair or Expos"
             />
             <FormControlLabel
               control={
@@ -388,7 +321,6 @@ export default class Events extends Component {
       );
     }
 
-    let events;
     const style = {
       button: {
         background: gordonColors.primary.cyan,
@@ -401,51 +333,45 @@ export default class Events extends Component {
         },
       },
     };
-    // If the user is online
-    if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
-      events = (
-        <section>
-          <Grid container justify="center">
-
-            {/* Search Bar and Filters */}
-            <Grid
-              item
-              xs={10}
-              sm={12}
-              md={12}
-              lg={8}
-              alignContent="center"
-              justify="center"
-              style={{ paddingBottom: '1rem' }}
-            >
-              <Grid container alignItems="baseline" justify="center" style={styles.searchBar}>
-                <Grid container xs={12} sm={5} md={8} lg={7}>
-                  <TextField
-                    id="search"
-                    label="Search"
-                    value={this.state.search}
-                    onChange={this.search('search')}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid
-                  container
-                  justify="flex-end"
-                  direction="row"
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={5}
-                  style={{ paddingTop: '1rem' }}
-                  className={'buttonWrapper'}
-                >
-                  <Button
-                    variant="contained"
-                    style={style.button}
-                    onClick={this.handleExpandClick}
-                  >
-                    {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
-                  </Button>
+    let events = (
+      <section>
+        <Grid container justify="center">
+          {/* Search Bar and Filters */}
+          <Grid
+            item
+            xs={10}
+            sm={12}
+            md={12}
+            lg={8}
+            alignContent="center"
+            justify="center"
+            style={{ paddingBottom: '1rem' }}
+          >
+            <Grid container alignItems="baseline" justify="center" style={styles.searchBar}>
+              <Grid container xs={12} sm={5} md={8} lg={7}>
+                <TextField
+                  id="search"
+                  label="Search"
+                  value={this.state.search}
+                  onChange={this.search('search')}
+                  fullWidth
+                />
+              </Grid>
+              <Grid
+                container
+                justify="flex-end"
+                direction="row"
+                xs={12}
+                sm={6}
+                md={4}
+                lg={5}
+                style={{ paddingTop: '1rem' }}
+                className={'buttonWrapper'}
+              >
+                <Button variant="contained" style={style.button} onClick={this.handleExpandClick}>
+                  {this.state.open && this.state.hasFilters ? 'CLEAR FILTERS' : 'FILTERS'}
+                </Button>
+                {this.props.authentication && (
                   <Button
                     variant="contained"
                     style={style.button.attendedEvents}
@@ -453,19 +379,20 @@ export default class Events extends Component {
                   >
                     ATTENDED CL&amp;W
                   </Button>
-                </Grid>
+                )}
               </Grid>
             </Grid>
-
-            {/* List of Events */}
-            <Grid item xs={12} md={12} lg={8}>
-              {filter}
-              {content}
-            </Grid>
           </Grid>
-        </section>
-      );
-    }
+
+          {/* List of Events */}
+          <Grid item xs={12} md={12} lg={8}>
+            {filter}
+            {content}
+          </Grid>
+        </Grid>
+      </section>
+    );
+
     return events;
   }
 }

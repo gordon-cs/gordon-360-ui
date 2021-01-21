@@ -29,12 +29,12 @@ import GordonLoader from '../Loader/index';
 import { windowBreakWidths } from '../../theme';
 import './index.css';
 
-export const Identification = props => {
+export const Identification = (props) => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState(null);
   const [defaultUserImage, setDefaultUserImage] = useState(null);
   const [preferredUserImage, setPreferredUserImage] = useState(null);
-  const [hasPreferredImage, setHasPreferredImage] = useState(true);
+  const [hasPreferredImage, setHasPreferredImage] = useState(false);
   const [isPhotosSwitched, setisPhotosSwitched] = useState(false);
   const [showCropper, setShowCropper] = useState(null);
   const [hasNickName, setHasNickname] = useState(Boolean);
@@ -92,12 +92,12 @@ export const Identification = props => {
   useEffect(() => {
     async function loadUserProfile() {
       try {
-        // Gets the given user's image. Depending on given user's person type and the currently
-        // signed-in user's person type, different images will be given
+        // Gets the requested user's image. Depending on requested user's person type and the currently
+        // signed-in user's person type, different images will be shown
         const { def: defaultImage, pref: preferredImage } =
           props.profile.PersonType === 'fac'
             ? /**
-               * The given user is Faculty
+               * The requested user's image is Faculty
                * If currently signed-in user is Faculty : Will receive default and preferred image
                * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
                */
@@ -110,48 +110,49 @@ export const Identification = props => {
                */
               await user.getImage()
             : /**
-               * The given user is Non-Faculty
+               * The requested user's image is Non-Faculty
                * If currently signed-in user is Faculty : Will receive default and preferred image
                * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
                */
               await user.getImage(props.profile.AD_Username);
-        setUserProfile(props.profile);
+
         // Sets the given user's preferred image. If a default image is given but the preferred is undefined,
         // then this could mean that the currently signed-in user is not allowed to see the preferred image or
         // a preferred image wasn't set
         setPreferredUserImage(preferredImage);
         setHasPreferredImage(preferredImage ? true : false);
         // Sets the given user's default image. If a preferred image is given but the default is undefined,
-        // then this, means that the currently signed-in user is not allowed to see the default picture. The
-        // Gordon default image is only shown if both the preferred and default image are undefined
-        setDefaultUserImage(defaultImage || (preferredImage ? null : defaultGordonImage));
-        setIsImagePublic(props.profile.show_pic);
-        createNickname(props.profile);
-        // Set state of social media links to database values after load.
-        // If not empty, null, or undefined, add domain name back in for display and buttons.
-        setFacebookLink(
-          !props.profile.Facebook || props.profile.Facebook === ''
-            ? ''
-            : socialMediaInfo.facebook.prefix + props.profile.Facebook,
-        );
-        setTwitterLink(
-          !props.profile.Twitter || props.profile.Twitter === ''
-            ? ''
-            : socialMediaInfo.twitter.prefix + props.profile.Twitter,
-        );
-        setLinkedInLink(
-          !props.profile.LinkedIn || props.profile.LinkedIn === ''
-            ? ''
-            : socialMediaInfo.linkedIn.prefix + props.profile.LinkedIn,
-        );
-        setInstagramLink(
-          !props.profile.Instagram || props.profile.Instagram === ''
-            ? ''
-            : socialMediaInfo.instagram.prefix + props.profile.Instagram,
-        );
+        // then this, means that the currently signed-in user is not allowed to see the default picture.
+        setDefaultUserImage(defaultImage);
       } catch (error) {
-        // Do Nothing
+        // Do nothing
       }
+      setUserProfile(props.profile);
+
+      setIsImagePublic(props.profile.show_pic);
+      createNickname(props.profile);
+      // Set state of social media links to database values after load.
+      // If not empty, null, or undefined, add domain name back in for display and buttons.
+      setFacebookLink(
+        !props.profile.Facebook || props.profile.Facebook === ''
+          ? ''
+          : socialMediaInfo.facebook.prefix + props.profile.Facebook,
+      );
+      setTwitterLink(
+        !props.profile.Twitter || props.profile.Twitter === ''
+          ? ''
+          : socialMediaInfo.twitter.prefix + props.profile.Twitter,
+      );
+      setLinkedInLink(
+        !props.profile.LinkedIn || props.profile.LinkedIn === ''
+          ? ''
+          : socialMediaInfo.linkedIn.prefix + props.profile.LinkedIn,
+      );
+      setInstagramLink(
+        !props.profile.Instagram || props.profile.Instagram === ''
+          ? ''
+          : socialMediaInfo.instagram.prefix + props.profile.Instagram,
+      );
     }
 
     loadUserProfile();
@@ -189,7 +190,7 @@ export const Identification = props => {
       }
 
       // An event listener for when the browser size changes to get the current Material-UI breakpoint
-      window.addEventListener('resize', event => {
+      window.addEventListener('resize', (event) => {
         setCurrentWidth(getMaterialUIBreakpoint(event.target.innerWidth));
       });
       // Sets the current Material-UI Breakpoint

@@ -5,6 +5,7 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 ## Contents
 
 - [Getting Started](#getting-started)
+
   - [Front End Development](#front-end)
   - [Back End Development](#connect-local-backend-to-react)
   - [Server Notes](#server-notes)
@@ -27,14 +28,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
 
 #### Windows:
-- Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
-    - Extract the file and run it.
-    - The installer will ask you where to install NVM. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
-    - After the installation completes, open a terminal and run these commands in order:
-      - `nvm install 9.11.1`
-      - `nvm use 9.11.1`
 
-#### Linux: 
+- Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
+  - Extract the file and run it.
+  - The installer will ask you where to install NVM. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
+  - After the installation completes, open a terminal and run these commands in order:
+    - `nvm install 9.11.1`
+    - `nvm use 9.11.1`
+
+#### Linux:
+
 Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, run `nvm install 9.11.1` then run `nvm use 9.11.1`.
 
 <!-- ### Front End Development (Note) -->
@@ -43,6 +46,7 @@ Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubu
 When running the app, it will open in a browser at <http://localhost:3000>.
 
 After cloning this repo, and after any major changes to local code (like changing branches) run:
+
 - `npm install` (This gets the right packages installed in the directory)
 - `npm start` (This starts a local server, and prints the local URL)
 
@@ -368,6 +372,7 @@ The script deploys to either staging or production based on the branch it is run
 1.  When the pull request is approved, merge it. This will trigger a build that will automatically deploy `master` to production.
 
 ### Contributing
+
 1. Clone the repository to the local machine.
 2. Create a new branch with a meaningful name (pertaining to the specific change being implemented).
 3. Commit to this branch, with changes focused solely on the branch's nominal purpose.
@@ -393,5 +398,6 @@ The script deploys to either staging or production based on the branch it is run
 - Staff-timesheets is almost working, with the exception of the edit shift and remove shift function. the API endpoints are all set up and seem to be working to send and get data. The add and save shift functions work like expected but the submit function has yet to be tested with a supervisor. In order to address these issues we have to make sure that we re work the ui in order to make sure that we are sending all the necessary info to edit and delete a saved shift. Previously it was thought that we would not have to change the way that the front end worked and we would simply have to integrate the backend for staff time sheets into the jobs controller. This proved to be wrong. It seems that there are more things that we have not accounted for that a staff's shift has and a student does not. Due to lack of testing and time we were not able to find the necessary changes that need to be made, however, we do know that it revolved around the fact that staff has an extra variable called HOURS_TYPE. We accounted for the variable in our submit and save shift functions in our back end and front end, as we expected that to be the case.
 
 ## History
+
 - The student timesheets project was done as a senior project by a trio of seniors Nathanial Rudenberg, Adam Princiotta, and Jacob Bradley. The handoff documentation for this project was a revision and update to the existing documentation which is in the [Connect Local Backend to React](#connect-local-backend-to-react) section of the README. The design document can be found [here](https://docs.google.com/document/d/1CepyCiMzBXQVM--JwKKstniU_H1TodzxHLuCqcHxLjk/edit?usp=sharing)
 - [Student Timesheets Final Presentation](https://docs.google.com/presentation/d/162V-DLuaEUyHDS2Diu09k5f4Tpo2iuoMtIDUyowa7eQ/edit?usp=sharing)

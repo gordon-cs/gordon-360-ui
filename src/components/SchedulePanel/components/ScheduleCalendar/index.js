@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Moment from 'moment';
 
-import {Calendar, momentLocalizer} from 'react-big-calendar';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 
 import GordonLoader from '../../../Loader';
 import schedule from '../../../../services/schedule';
@@ -33,13 +33,11 @@ export default class GordonScheduleCalendar extends Component {
           backgroundColor: isSelected ? '#8d4987' : '#9b5094',
         },
       };
-    } else return {
-    };
+    } else return {};
   };
 
-
-  componentWillReceiveProps(nextProps){
-    if (this.props.reloadCall !== nextProps.reloadCall){
+  componentWillReceiveProps(nextProps) {
+    if (this.props.reloadCall !== nextProps.reloadCall) {
       this.loadData(this.props.profile);
       this.props.reloadHandler();
     }
@@ -49,14 +47,14 @@ export default class GordonScheduleCalendar extends Component {
     this.loadData(this.props.profile);
   }
 
-  loadData = async searchedUser => {
-    this.setState({ loading: true});
+  loadData = async (searchedUser) => {
+    this.setState({ loading: true });
     let courseInfo = null;
     if (this.props.myProf) {
-      try{
-      const schedulePromise = schedule.getScheduleMyProf();
-      courseInfo = await schedule.makeScheduleCourses(schedulePromise);
-      } catch(e){
+      try {
+        const schedulePromise = schedule.getScheduleMyProf();
+        courseInfo = await schedule.makeScheduleCourses(schedulePromise);
+      } catch (e) {
         this.setState({ loading: false });
       }
     } else {
@@ -77,7 +75,7 @@ export default class GordonScheduleCalendar extends Component {
     }
 
     let currentSession = await session.getCurrent();
-    
+
     this.setState({ loading: false, currentSession });
   };
 
@@ -111,7 +109,7 @@ export default class GordonScheduleCalendar extends Component {
       // Calendar API can be controlled here with these properties
       let Resource = ({ localizer = momentLocalizer(Moment) }) => (
         <Calendar
-          selectable
+          selectable={this.props.network === 'online' ? true : false}
           events={this.eventInfo}
           localizer={localizer}
           min={dayStart}
@@ -120,13 +118,15 @@ export default class GordonScheduleCalendar extends Component {
           timeslots={4}
           defaultView="day"
           view={['day']}
-          onSelectEvent={event => {
+          onSelectEvent={(event) => {
             this.props.handleRemoveButton(event);
           }}
-          onDoubleClickEvent={event => {
+          onDoubleClickEvent={(event) => {
             this.props.handleDoubleClick(event);
           }}
-          onSelectSlot={slotInfo => {this.props.handleMyScheduleOpen(slotInfo)}}
+          onSelectSlot={(slotInfo) => {
+            this.props.handleMyScheduleOpen(slotInfo);
+          }}
           defaultDate={Moment(new Date())}
           resources={resourceMap}
           resourceIdAccessor="resourceId"

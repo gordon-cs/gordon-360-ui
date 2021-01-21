@@ -75,19 +75,19 @@ export default class GordonLinksList extends Component {
           <ListItemLink
             target="_blank"
             rel="noopener"
-            href="https://blackboard.gordon.edu"
+            href="https://canvas.gordon.edu"
             className="gc360-text-link"
           >
             <ListItemIcon>
               <img
-                className="blackboard"
-                src={require(`${'../Images/BbFavicon.ico'}`)}
-                alt="blackboard learn"
+                className="canvas"
+                src={require(`${'../Images/Canvas.ico'}`)}
+                alt="canvas"
                 width="16"
                 height="16"
               />
             </ListItemIcon>
-            <ListItemText primary="Blackboard Learn" />
+            <ListItemText primary="Canvas" />
           </ListItemLink>
         </List>
         <List
@@ -97,7 +97,7 @@ export default class GordonLinksList extends Component {
           <ListItemLink
             target="_blank"
             rel="noopener"
-            href="http://athletics.gordon.edu//"
+            href="http://athletics.gordon.edu/"
             className="gc360-text-link"
           >
             <ListItemIcon>
@@ -126,6 +126,17 @@ export default class GordonLinksList extends Component {
               <LinkIcon style={{ fontSize: 16 }} />
             </ListItemIcon>
             <ListItemText primary="Sexual Discrimination and Harassment" />
+          </ListItemLink>
+          <ListItemLink
+            target="_blank"
+            rel="noopener"
+            href="https://www.gordon.edu/map"
+            className="gc360-text-link"
+          >
+            <ListItemIcon>
+              <LinkIcon style={{ fontSize: 16 }} />
+            </ListItemIcon>
+            <ListItemText primary="Gordon College Maps" />
           </ListItemLink>
         </List>
       </Typography>

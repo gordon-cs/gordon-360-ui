@@ -91,6 +91,7 @@ async function createRemoteUserLinks() {
             `${apiSource}/memberships/student/username/${profile.AD_Username}/`,
             `${apiSource}/profiles/${profile.AD_Username}/`,
             `${apiSource}/profiles/Image/${profile.AD_Username}/`,
+            `${apiSource}/profiles/Advisors/${profile.AD_Username}/`,
             `${apiSource}/schedule/${profile.AD_Username}/`,
             `${apiSource}/myschedule/${profile.AD_Username}/`,
             `${apiSource}/schedulecontrol/${profile.AD_Username}/`,
@@ -275,22 +276,46 @@ async function fetchUserFile(link, headers, attemptsLeft = 2) {
 }
 
 /**
- * Cleans the cache to remove all of the user's data
+ * Cleans the cache to remove all of the user's data. If the API source located in
+ * sw_global_variables.js is not the same with the API that the browser fetches from, all remote
+ * data will be removed.
  */
 async function removeUserCache() {
   // Opens the cache and parses through all data
-  await caches.open(cacheVersion).then(cache => {
-    cache.keys().then(items => {
-      items.forEach(item => {
-        // Checks to see if the url is apart of the list of user's remote links. If so,
-        // all data associated with that url is deleted from the cache and from the list
-        if (userRemoteLinks.includes(item.url)) {
-          cache.delete(item);
-          userRemoteLinks = userRemoteLinks.filter(link => link !== item.url);
-        }
+  await caches
+    .open(cacheVersion)
+    .then(cache => {
+      cache.keys().then(items => {
+        items.forEach(item => {
+          /**
+           * Checks to see if the item's URL is apart of the list of user's remote links. If so,
+           * the link is removed from cache and from the list of the user's remote links
+           */
+          if (userRemoteLinks.includes(item.url)) {
+            cache.delete(item);
+            userRemoteLinks = userRemoteLinks.filter(link => link !== item.url);
+          } else if (
+            /**
+             * This is a fallback check if the statement above does not run. If the item's URL is not
+             * apart of the list of the user's remote links, the other lists of links that are needed for
+             * guest mode (and the font css) are checked to see if they contain the link. If not, the
+             * item is removed from cache.
+             */
+            item.url !== fontKeySource &&
+            !guestRemoteLinks.includes(item.url) &&
+            !static360Cache.includes(item.url.replace(location.origin, ''))
+          ) {
+            cache.delete(item);
+          }
+        });
       });
+    })
+    .then(() => {
+      // Re-caches all guest remote links if online (just in case if that data was removed)
+      if (network === 'online') cacheGuestFiles();
+      // Makes sure that the user's remote links is reset
+      userRemoteLinks = [];
     });
-  });
 }
 
 /**

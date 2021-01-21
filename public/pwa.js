@@ -42,6 +42,7 @@ if ('caches' in window) {
     // If there's an internet connection: Opens in online mode if the current mode is offline
     if (JSON.parse(localStorage.getItem('network-status')) === 'offline') {
       if (navigator.onLine) {
+        navigator.serviceWorker.controller.postMessage('online');
         localStorage.setItem('network-status', JSON.stringify('online'));
         window.postMessage('online', window.location.origin);
       }
@@ -49,6 +50,7 @@ if ('caches' in window) {
     // If there's no internet connection: Opens in offline mode if the current mode is online
     else {
       if (!navigator.onLine) {
+        navigator.serviceWorker.controller.postMessage('offline');
         localStorage.setItem('network-status', JSON.stringify('offline'));
         window.postMessage('offline', window.location.origin);
       }
@@ -62,6 +64,7 @@ if ('caches' in window) {
       // Due to no network connection, all fetches are canceled and an offline message is sent
       // throughout all components
       navigator.serviceWorker.controller.postMessage('cancel-fetches');
+      navigator.serviceWorker.controller.postMessage('offline');
       localStorage.setItem('network-status', JSON.stringify('offline'));
       window.postMessage('offline', window.location.origin);
     });
@@ -79,6 +82,7 @@ if ('caches' in window) {
         token: JSON.parse(localStorage.getItem('token')),
         termCode: JSON.parse(localStorage.getItem('currentTerm')),
       });
+      navigator.serviceWorker.controller.postMessage('online');
       window.postMessage('online', window.location.origin);
     });
   } else {

@@ -16,7 +16,7 @@ const base = process.env.REACT_APP_API_URL;
  * @param {object|array} headerOptions options to put in the header, if empty only auth is added
  * @return {Headers} A headers object
  */
-const makeHeaders = headerOptions => {
+const makeHeaders = (headerOptions) => {
   if (isAuthenticated()) {
     if (headerOptions === undefined) {
       try {
@@ -67,19 +67,19 @@ const createRequest = (url, method, body, headerOptions) =>
  * @return {Promise.<Object|Array|String|Number>} Resolves with response body; rejects on non-2xx
  * response code
  */
-export const parseResponse = res => {
+export const parseResponse = (res) => {
   // Parse body of response if not empty
   //    Make sure text of response is not empty before trying to convert it
   //    to a JSON object
   const json = res
     .text()
-    .then(text => (text.length ? JSON.parse(text) : {}))
+    .then((text) => (text.length ? JSON.parse(text) : {}))
     // Handle error if response body is not valid JSON
-    .catch(err => Promise.reject(createError(err, res)));
+    .catch((err) => Promise.reject(createError(err, res)));
 
   // Handle error when response body is valid but status code is not
   if (!res.ok) {
-    return json.then(data => Promise.reject(createError(data, res)));
+    return json.then((data) => Promise.reject(createError(data, res)));
   }
   return json;
 };
@@ -100,7 +100,7 @@ const makeRequest = (url, method, body, headerOptions) =>
  * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
  * @return {Promise.<Object>} Response body
  */
-const get = url => makeRequest(url, 'get');
+const get = (url) => makeRequest(url, 'get');
 
 /**
  * Put
@@ -130,7 +130,7 @@ const post = (url, body, headerOptions) => {
  * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
  * @return {Promise.<Object>} Response body
  */
-const del = url => makeRequest(url, 'delete');
+const del = (url) => makeRequest(url, 'delete');
 
 export default {
   del,

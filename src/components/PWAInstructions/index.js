@@ -102,7 +102,7 @@ const devices = {
         'Apple Installation Gordon 360 Step 4',
       ],
       [
-        'Lastly, tap on "Add" in the top right corner to install Gordon 360 on your homescreen!',
+        'Lastly, tap on "Add" in the top right corner to install Gordon 360 on your home screen!',
         require('./images/Mobile/Apple/iPhone-Add-Button.png'),
         'Apple Installation Gordon 360 Step 5',
       ],
@@ -130,7 +130,7 @@ const devices = {
         'Android Installation Gordon 360 Step 4',
       ],
       [
-        'Lastly, tap on "Add" to install Gordon 360 on your homescreen!',
+        'Lastly, tap on "Add" to install Gordon 360 on your home screen!',
         require('./images/Mobile/Android/Android-Add-Button.jpg'),
         'Android Installation Gordon 360 Step 5',
       ],
@@ -138,7 +138,7 @@ const devices = {
   },
 };
 
-const PWAInstructions = props => {
+const PWAInstructions = (props) => {
   const [device, setDevice] = useState(null);
   const [platform, setPlatform] = useState(null);
   const classes = toggleStyles();
@@ -349,7 +349,7 @@ const PWAInstructions = props => {
                   onChange={handleDeviceChange}
                   aria-label="text formatting"
                 >
-                  {devices.names.map(item => {
+                  {devices.names.map((item) => {
                     return (
                       <ToggleButton
                         value={item}
@@ -398,7 +398,7 @@ const PWAInstructions = props => {
                   >
                     {devices[device] &&
                       devices[device].names &&
-                      devices[device].names.map(item => {
+                      devices[device].names.map((item) => {
                         return (
                           <ToggleButton
                             value={item}
@@ -451,7 +451,9 @@ const PWAInstructions = props => {
       <Grid container className="pwa-instructions">
         <Grid container xs={12} justify="center" className="pwa-instructions-title">
           <Typography variant="h5">
-            {props.deferredPWAPrompt ? 'Install Gordon 360' : 'Installing Gordon 360 Instructions'}
+            {props.deferredPWAPrompt
+              ? 'Install Gordon 360'
+              : ' Instructions to install Gordon 360 '}
           </Typography>
         </Grid>
         <DialogContent className="pwa-instructions-content">{createContent()}</DialogContent>

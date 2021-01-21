@@ -8,18 +8,28 @@
 const cacheVersion = 'cache v1.3';
 
 // API Source
-// @PROD (** Make sure the URL is all lowercase or the service worker will fail to remove user data **)
-// const apiSource = 'https://360api.gordon.edu/api';
-// @TRAIN (** Make sure the URL is all lowercase or the service worker will fail to remove user data **)
-const apiSource = 'https://360apitrain.gordon.edu/api';
+/**
+ * @PROD
+ * Make sure the URL is the EXACT same as what the browser fetches. Letter casing is important.
+ */
+const apiSource = String('https://360api.gordon.edu/').toLowerCase() + 'api';
+/**
+ * @TRAIN
+ * Make sure the URL is the EXACT same as what the browser fetches. Letter casing is important.
+ */
+// const apiSource = String('https://360apitrain.gordon.edu/').toLowerCase() + 'api';
 
 // Font Styles
-/* Uncomment For Development Only (aka develop) */
-// @TRAIN
-const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
-// @PROD
-/* Uncomment For Production Only (aka master) */
-// const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
+/**
+ * @PROD
+ * Uncomment For Production Only (aka master)
+ */
+const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.css';
+/**
+ * @TRAIN
+ * Uncomment For Development Only (aka develop)
+ */
+// const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');

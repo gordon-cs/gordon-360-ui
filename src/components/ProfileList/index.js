@@ -19,9 +19,9 @@ import {
   createMobilePhoneListItem,
   createMajorsListItem,
   createMinorsListItem,
+  createAdvisorsListItem,
   createResidenceListItem,
   createDormitoryListItem,
-  createFacultyDepartmentItem,
   createMailboxItem,
   createStudentIDItem,
   createSpouseItem,
@@ -107,6 +107,7 @@ class ProfileList extends Component {
     super(props);
     this.state = {
       myProf: false, //if my profile page
+      campusLocationDisclaimer: false,
       mobilePhoneDisclaimer: false,
       homePhoneDisclaimer: false,
       addressDisclaimer: false,
@@ -148,9 +149,14 @@ class ProfileList extends Component {
       return tele;
     }
   }
-  componentWillMount() {
+  async componentWillMount() {
     this.setState({ isMobilePhonePrivate: this.props.profile.IsMobilePhonePrivate });
     if (!this.props.myProf) {
+      this.setState({
+        campusLocationDisclaimer:
+          (this.props.profile.KeepPrivate === 'S' || this.props.profile.KeepPrivate === 'P') &&
+          this.props.profile.OnOffCampus !== PRIVATE_INFO,
+      });
       this.setState({
         mobilePhoneDisclaimer:
           this.props.profile.IsMobilePhonePrivate === 1 &&
@@ -227,17 +233,32 @@ class ProfileList extends Component {
       this.state.addressDisclaimer,
     );
 
-    // Creates the Faculty Department List Item
-    let department = createFacultyDepartmentItem(this.props.profile, rowWidths, { gridStyle });
-
     // Creates the Minors List Item
     let minors = createMinorsListItem(this.props.profile, rowWidths, { gridStyle });
 
     // Creates the Majors List Item
     let majors = createMajorsListItem(this.props.profile, rowWidths, { gridStyle });
 
+    // Creates the Advisors List Item
+    let advisors;
+    // only show on personal profile
+    if(this.props.myProf) {
+      advisors = createAdvisorsListItem(
+        this.props.profile, 
+        rowWidths, 
+        { privateTextStyle, gridStyle }
+      );
+    } else {
+      advisors = null;
+    }
+
     // Creates the Residence List Item
-    let residence = createResidenceListItem(this.props.profile, rowWidths, { gridStyle });
+    let residence = createResidenceListItem(
+      this.props.profile,
+      rowWidths,
+      { gridStyle },
+      this.state.campusLocationDisclaimer,
+    );
 
     // Creates the Mailbox List Item
     let mailloc = createMailboxItem(this.props.profile, rowWidths, { gridStyle });
@@ -248,6 +269,7 @@ class ProfileList extends Component {
       rowWidths,
       { privateTextStyle, gridStyle },
       this.props.myProf,
+      this.state.campusLocationDisclaimer,
     );
 
     // Creates the Student ID List Item
@@ -270,10 +292,10 @@ class ProfileList extends Component {
           <CardContent className="profile-list-card-content">
             {majors}
             {minors}
+            {advisors}
             {residence}
             {dorminfo}
             {mailloc}
-            {department}
             {mobilephone}
             {studentID}
             {homephone}

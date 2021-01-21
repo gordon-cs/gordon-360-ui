@@ -184,6 +184,18 @@ export default class About extends Component {
                 <br /> Chris Hansen, Jason Whitehouse&nbsp;&apos;99, Information Systems Group
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
+                <strong>Software Development Team, Summer 2020</strong>
+              </Typography>
+              <Typography variant="body2" paragraph>
+                Ari Dospassos&nbsp;&apos;21, Caleb Chang&nbsp;&apos;20, Cameron Abbot&nbsp;&apos;23,
+                Gahngnin Kim&nbsp;&apos;21, Jahnuel Dorelus&nbsp;&apos;21, Marilyn
+                Stoltzfus&nbsp;&apos;21, Matheus Ramos&nbsp;&apos;21, Nick Noormand&nbsp;&apos;21,
+                and Shouwang Zhu&nbsp;&apos;21
+                <br />
+                Dr.&nbsp;Russ Tuck, Dr.&nbsp;Jonathan Senning&nbsp;&apos;85, Summer Practicum in
+                Computer Science (2020)
+              </Typography>
+              <Typography variant="subtitle1" gutterBottom>
                 <strong>Beneficent Philanthropes</strong>
               </Typography>
               <Typography variant="body2" paragraph>
