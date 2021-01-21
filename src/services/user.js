@@ -412,11 +412,17 @@ const getProfile = (username) => {
   return profile;
 };
 
-const getAdvisor = async (username) => {
-  let advisor;
-  advisor = await http.get(`profiles/Advisors/${username}/`);
-  return advisor;
+const getAdvisors = async (username) => {
+  let advisors;
+  advisors = await http.get(`profiles/Advisors/${username}/`);
+  return advisors;
 };
+
+async function setAdvisors(profile) {
+  if(profile.AD_Username != null) {
+    profile.Advisors = await getAdvisors(profile.AD_Username);
+  }
+}
 
 async function setMobilePhonePrivacy(makePrivate) {
   // 'Y' = private, 'N' = public
@@ -585,6 +591,7 @@ const getProfileInfo = async (username) => {
   formatCountry(profile);
   setOnOffCampus(profile);
   setMinorObject(profile);
+  await setAdvisors(profile);
   return profile;
 };
 
@@ -638,7 +645,7 @@ export default {
   getLeaderPositions,
   getSentMembershipRequests,
   getProfileInfo,
-  getAdvisor,
+  getAdvisors,
   resetImage,
   postImage,
   postIDImage,
