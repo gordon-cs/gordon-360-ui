@@ -40,7 +40,7 @@ export default class SuperAdmin extends Component {
     this.setState({ open: true });
   }
 
-  handleText = event => {
+  handleText = (event) => {
     this.setState({ newAdminEmail: event.target.value });
   };
 
@@ -85,7 +85,7 @@ export default class SuperAdmin extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      content = this.state.admins.map(superadmin => (
+      content = this.state.admins.map((superadmin) => (
         <div>
           <SuperAdminList Admin={superadmin} />
         </div>

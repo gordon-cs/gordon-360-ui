@@ -20,7 +20,7 @@ import http from './http';
  * @param {String} query Query to search
  * @return {Promise.<SearchResult[]>} List of search results
  */
-const search = query => {
+const search = (query) => {
   let searchQuery = query;
 
   // If query has a space in it or is a username, separate it into first and last names

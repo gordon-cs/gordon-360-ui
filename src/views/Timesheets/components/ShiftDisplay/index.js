@@ -34,12 +34,12 @@ export default class ShiftDisplay extends Component {
       let canUse = await jobs.getStaffPageForUser();
 
       if (canUse.length === 1) {
-        this.setState({getStaffPageForUser: true});
+        this.setState({ getStaffPageForUser: true });
       } else {
-        this.setState({getStaffPageForUser: false});
+        this.setState({ getStaffPageForUser: false });
       }
     } catch (error) {
-        //do nothing
+      //do nothing
     }
   }
 
@@ -67,7 +67,7 @@ export default class ShiftDisplay extends Component {
 
   loadShifts() {
     const { getSavedShiftsForUser } = this.props;
-    return getSavedShiftsForUser().then(data => {
+    return getSavedShiftsForUser().then((data) => {
       for (let i = 0; i < data.length; i++) {
         this.jobNamesSet.add(data[i].EML_DESCRIPTION);
       }
@@ -94,8 +94,14 @@ export default class ShiftDisplay extends Component {
   }
 
   editShift = (rowID, startTime, endTime, hoursWorked) => {
-    let promise = jobs.editShift(this.state.getStaffPageForUser, rowID, startTime, endTime, hoursWorked);
-    promise.then(response => {
+    let promise = jobs.editShift(
+      this.state.getStaffPageForUser,
+      rowID,
+      startTime,
+      endTime,
+      hoursWorked,
+    );
+    promise.then((response) => {
       this.loadShifts();
     });
     return promise;
@@ -166,7 +172,7 @@ export default class ShiftDisplay extends Component {
 
     let theTabs = (
       <Media query="(min-width: 600px)">
-        {matches =>
+        {(matches) =>
           matches ? (
             <Tabs
               centered

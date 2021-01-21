@@ -80,7 +80,7 @@ const Home = ({ authentication, onLogIn }) => {
       </div>
     );
   } else if (networkStatus === 'online' && !hasAnswered) {
-    return <WellnessQuestion setStatus={setHasAnswered} />;
+    return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 

@@ -14,7 +14,7 @@ const base = process.env.REACT_APP_API_URL;
  * @param {Error} err An authentication error
  * @throws {Error} An error that can be shown to users (`error.message`)
  */
-const handleError = err => {
+const handleError = (err) => {
   console.error('Could not authenticate user:', err);
   if (err.error && err.error_description) {
     throw new Error(err.error_description);
@@ -50,7 +50,7 @@ const getAuth = (username, password) => {
 
   return fetch(request)
     .then(parseResponse)
-    .then(data => data.access_token)
+    .then((data) => data.access_token)
     .catch(handleError);
 };
 
@@ -63,7 +63,7 @@ const getAuth = (username, password) => {
  */
 const authenticate = (username, password) =>
   getAuth(username, password)
-    .then(token => {
+    .then((token) => {
       storage.store('token', token);
     })
     .then(() => {

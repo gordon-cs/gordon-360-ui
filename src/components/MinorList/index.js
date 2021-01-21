@@ -26,7 +26,7 @@ export default class Minors extends Component {
       // very last. If there's only one minor, no comma will appear
       let minorText = '';
 
-      this.props.minors.forEach(minor => {
+      this.props.minors.forEach((minor) => {
         // NOTE: The difference between the two statements that adds text to the variable
         // "majorText" is that one of them adds BOTH a comma and a space
         minor === lastItem ? (minorText += `${minor}`) : (minorText += `${minor}, `);

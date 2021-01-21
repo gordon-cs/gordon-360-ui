@@ -47,7 +47,7 @@ export default class GordonScheduleCalendar extends Component {
     this.loadData(this.props.profile);
   }
 
-  loadData = async searchedUser => {
+  loadData = async (searchedUser) => {
     this.setState({ loading: true });
     let courseInfo = null;
     if (this.props.myProf) {
@@ -118,13 +118,13 @@ export default class GordonScheduleCalendar extends Component {
           timeslots={4}
           defaultView="day"
           view={['day']}
-          onSelectEvent={event => {
+          onSelectEvent={(event) => {
             this.props.handleRemoveButton(event);
           }}
-          onDoubleClickEvent={event => {
+          onDoubleClickEvent={(event) => {
             this.props.handleDoubleClick(event);
           }}
-          onSelectSlot={slotInfo => {
+          onSelectSlot={(slotInfo) => {
             this.props.handleMyScheduleOpen(slotInfo);
           }}
           defaultDate={Moment(new Date())}
