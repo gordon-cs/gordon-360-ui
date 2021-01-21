@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardContent,
+  CardHeader,
   CardActions,
   Checkbox,
   Collapse,
@@ -73,6 +74,9 @@ const styles = {
   },
   colorBar: {},
   colorChecked: {},
+  icon: {
+    color: gordonColors.neutral.grayShades[900],
+  }
 };
 
 class PeopleSearch extends Component {
@@ -701,6 +705,7 @@ class PeopleSearch extends Component {
         );
       }
 
+      // April Fools
       let aprilFools = '';
       if (this.getDate().getMonth() === 3 && this.getDate().getDate() === 1) {
         aprilFools = (
@@ -775,81 +780,86 @@ class PeopleSearch extends Component {
 
       // Creates the PeopleSearch page depending on the status of the network found in local storage
       let PeopleSearch;
+      let searchPageTitle = <div>Search the
+        <b style={{color: gordonColors.primary.cyan}}> Gordon </b>
+        Community</div>;
+      
       if (networkStatus === 'online') {
         PeopleSearch = (
           <Grid container justify="center" spacing={6}>
-            <Grid item xs={12} md={8}>
-              <Card>
-                <CardContent
-                  style={{
-                    marginLeft: 8,
-                    marginTop: 8,
-                  }}
-                >
-                  <Typography variant="h5">General Info</Typography>
-                  <Grid container spacing={2} alignItems="flex-end">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <PersonIcon />
+            <Grid item xs={12} md={8} direction="row">
+              <Card style={{ padding: '0 3vw', }}>
+                <CardContent>
+                  
+                  <CardHeader title={searchPageTitle} />
+
+                  {/* Search Section 1: General Info */}
+                  <Grid container spacing={2} direction="row" padded>
+                    {/* First Name */}
+                    <Grid item xs={12} sm={6}>
+                      <Grid container spacing={2} alignItems="flex-end">
+                        <Media
+                          query="(min-width: 600px)"
+                          render={() => (
+                            <Grid item>
+                              <PersonIcon className={classes.icon} />
+                            </Grid>
+                          )}
+                        />
+                        <Grid item xs>
+                          <TextField
+                            id="first-name"
+                            label="First Name"
+                            fullWidth
+                            value={this.state.firstNameSearchValue}
+                            onChange={this.handleFirstNameInputChange}
+                            onKeyDown={this.handleEnterKeyPress}
+                          />
                         </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <TextField
-                        id="first-name"
-                        label="First Name"
-                        fullWidth
-                        value={this.state.firstNameSearchValue}
-                        onChange={this.handleFirstNameInputChange}
-                        onKeyDown={this.handleEnterKeyPress}
-                      />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid container spacing={2} alignItems="flex-end">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <PersonIcon />
+                    {/* Last Name */}
+                    <Grid item xs={12} sm={6}>
+                      <Grid container spacing={2} alignItems="flex-end">
+                        <Grid item xs>
+                          <TextField
+                            id="last-name"
+                            label="Last Name"
+                            fullWidth
+                            value={this.state.lastNameSearchValue}
+                            onChange={this.handleLastNameInputChange}
+                            onKeyDown={this.handleEnterKeyPress}
+                          />
                         </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <TextField
-                        id="last-name"
-                        label="Last Name"
-                        fullWidth
-                        value={this.state.lastNameSearchValue}
-                        onChange={this.handleLastNameInputChange}
-                        onKeyDown={this.handleEnterKeyPress}
-                      />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  <Grid container spacing={2} alignItems="flex-end">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <FaBuilding style={styles.FontAwesome} />
+                    {/* Hall */}
+                    <Grid item xs={12}>
+                      <Grid container spacing={2} alignItems="flex-end">
+                        <Media
+                          query="(min-width: 600px)"
+                          render={() => (
+                            <Grid item>
+                              <FaBuilding style={styles.FontAwesome} className={classes.icon} />
+                            </Grid>
+                          )}
+                        />
+                        <Grid item xs>
+                          <FormControl fullWidth>
+                            <InputLabel>Hall</InputLabel>
+                            <Select
+                              value={this.state.hallSearchValue}
+                              onChange={this.handleHallInputChange}
+                              input={<Input id="hall" />}
+                            >
+                              <MenuItem label="All Halls" value="">
+                                <em>All Halls</em>
+                              </MenuItem>
+                              {hallOptions}
+                            </Select>
+                          </FormControl>
                         </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <FormControl fullWidth>
-                        <InputLabel>Hall</InputLabel>
-                        <Select
-                          value={this.state.hallSearchValue}
-                          onChange={this.handleHallInputChange}
-                          input={<Input id="hall" />}
-                        >
-                          <MenuItem label="All Halls" value="">
-                            <em>All Halls</em>
-                          </MenuItem>
-                          {hallOptions}
-                        </Select>
-                      </FormControl>
+                      </Grid>
                     </Grid>
                   </Grid>
                   {aprilFools}
