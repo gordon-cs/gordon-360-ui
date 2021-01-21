@@ -897,31 +897,45 @@ class PeopleSearch extends Component {
                     <Grid item>
                       <Button
                         color="primary"
+                        style={
+                          this.state.majorSearchValue != '' || 
+                          this.state.minorSearchValue != '' || 
+                          this.state.classTypeSearchValue != '' ? 
+                          {backgroundColor: gordonColors.secondary.yellow} : {}}
                         variant={this.state.academicsExpanded ? "contained" : "outlined"}
                         onClick={this.handleAcademicsExpandClick}
                       >
                         <AddIcon fontSize="inherit" />
-                        academic info
+                        Academic Info
                       </Button>
                     </Grid>
                     <Grid item>
                       <Button
                         color="primary"
+                        style={
+                          this.state.homeCitySearchValue != '' || 
+                          this.state.stateSearchValue != '' || 
+                          this.state.countrySearchValue != '' ? 
+                          {backgroundColor: gordonColors.secondary.yellow} : {}}
                         variant={this.state.homeExpanded ? "contained" : "outlined"}
                         onClick={this.handleHomeExpandClick}
                       >
                         <AddIcon fontSize="inherit" />
-                        home info
+                        Home Info
                       </Button>
                     </Grid>
                     <Grid item>
                       <Button
                         color="primary"
+                        style={
+                          this.state.departmentSearchValue != '' || 
+                          this.state.buildingSearchValue != '' ? 
+                          {backgroundColor: gordonColors.secondary.yellow} : {}}
                         variant={this.state.offDepExpanded ? "contained" : "outlined"}
                         onClick={this.handleOffDepExpandClick}
                       >
                         <AddIcon fontSize="inherit" />
-                        residency info
+                        Office Info
                       </Button>
                     </Grid>
                     <Grid item>
