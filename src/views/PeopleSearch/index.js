@@ -730,11 +730,11 @@ class PeopleSearch extends Component {
               query="(min-width: 600px)"
               render={() => (
                 <Grid item>
-                  <FaHeart style={styles.FontAwesome} />
+                  <FaHeart style={styles.FontAwesome} Icon className={classes.icon} />
                 </Grid>
               )}
             />
-            <Grid item xs={11}>
+            <Grid item xs>
               <FormControl fullWidth>
                 <InputLabel>Relationship Status</InputLabel>
                 <Select
@@ -877,9 +877,12 @@ class PeopleSearch extends Component {
                         </Grid>
                       </Grid>
                     </Grid>
+                    {/* Formatted similar to 'Hall' dropdown */}
+                    <Grid item xs={12}>
+                      {aprilFools}
+                    </Grid>
                     {includeAlumniCheckbox}
                   </Grid>
-                  {aprilFools}
                   
                   <br/>
 
