@@ -107,6 +107,7 @@ class ProfileList extends Component {
     super(props);
     this.state = {
       myProf: false, //if my profile page
+      campusLocationDisclaimer: false,
       mobilePhoneDisclaimer: false,
       homePhoneDisclaimer: false,
       addressDisclaimer: false,
@@ -152,6 +153,11 @@ class ProfileList extends Component {
     this.setState({ isMobilePhonePrivate: this.props.profile.IsMobilePhonePrivate });
     if (!this.props.myProf) {
       this.setState({
+        campusLocationDisclaimer:
+          (this.props.profile.KeepPrivate === 'S' || this.props.profile.KeepPrivate === 'P') &&
+          this.props.profile.OnOffCampus !== PRIVATE_INFO,
+      });
+      this.setState({
         mobilePhoneDisclaimer:
           this.props.profile.IsMobilePhonePrivate === 1 &&
           this.props.profile.MobilePhone !== PRIVATE_INFO,
@@ -166,7 +172,6 @@ class ProfileList extends Component {
           (this.props.profile.HomeStreet2 || this.props.profile.HomeStreet1),
       });
     }
-    this.setState({ advisors: await user.getAdvisor(this.props.profile.AD_Username) });
   }
 
   /**
@@ -235,10 +240,25 @@ class ProfileList extends Component {
     let majors = createMajorsListItem(this.props.profile, rowWidths, { gridStyle });
 
     // Creates the Advisors List Item
-    let advisors = createAdvisorsListItem(this.props.profile, rowWidths, { gridStyle });
+    let advisors;
+    // only show on personal profile
+    if(this.props.myProf) {
+      advisors = createAdvisorsListItem(
+        this.props.profile, 
+        rowWidths, 
+        { privateTextStyle, gridStyle }
+      );
+    } else {
+      advisors = null;
+    }
 
     // Creates the Residence List Item
-    let residence = createResidenceListItem(this.props.profile, rowWidths, { gridStyle });
+    let residence = createResidenceListItem(
+      this.props.profile,
+      rowWidths,
+      { gridStyle },
+      this.state.campusLocationDisclaimer,
+    );
 
     // Creates the Mailbox List Item
     let mailloc = createMailboxItem(this.props.profile, rowWidths, { gridStyle });
@@ -249,6 +269,7 @@ class ProfileList extends Component {
       rowWidths,
       { privateTextStyle, gridStyle },
       this.props.myProf,
+      this.state.campusLocationDisclaimer,
     );
 
     // Creates the Student ID List Item

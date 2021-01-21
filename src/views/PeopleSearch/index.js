@@ -153,7 +153,7 @@ class PeopleSearch extends Component {
                   <Typography variant="body2" style={styles.headerStyle}>
                     @GORDON.EDU
                     <br />
-                    MAILBOX #
+                    MAIL LOCATION
                   </Typography>
                 </Grid>
               </Grid>
@@ -281,7 +281,7 @@ class PeopleSearch extends Component {
   }
 
   async componentWillMount() {
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       try {
         const profile = await user.getProfileInfo();
         const personType = profile.PersonType;
@@ -682,7 +682,7 @@ class PeopleSearch extends Component {
      */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       if (this.state.personType !== 'stu' && this.state.personType !== '') {
         includeAlumniCheckbox = (
           <Grid item xs={6} justify="center">

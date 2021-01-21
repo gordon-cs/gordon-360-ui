@@ -7,7 +7,7 @@ import './nav-avatar-right-corner.css';
 import '../../../../app.css';
 import user from '../../../../services/user';
 
-export const GordonNavAvatarRightCorner = props => {
+export const GordonNavAvatarRightCorner = (props) => {
   const [name, setName] = useState(null);
   const [username, setUsername] = useState(null);
   const [image, setImage] = useState(null);
@@ -42,24 +42,24 @@ export const GordonNavAvatarRightCorner = props => {
 
   // Re-creates the Avatar whenever authentication changes
   useEffect(() => {
-    loadAvatar(props.Authentication);
-  }, [props.Authentication]);
+    loadAvatar(props.authentication);
+  }, [props.authentication]);
 
   /* Used to re-render the page when the user's profile picture changes
    *  The origin of the message is checked to prevent cross-site scripting attacks
    */
   useEffect(() => {
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
-        loadAvatar(props.Authentication);
+        loadAvatar(props.authentication);
       }
     });
 
     return window.removeEventListener('message', () => {});
-  }, [props.Authentication]);
+  }, [props.authentication]);
 
   // Avatar Button
-  let avatar = createAvatarButton(props.Authentication, image, getInitials);
+  let avatar = createAvatarButton(props.authentication, image, getInitials);
 
   /**
    * Gets the initials of the current user
@@ -70,7 +70,7 @@ export const GordonNavAvatarRightCorner = props => {
     if (username) {
       return username
         .split('.') // Split name into separate words
-        .map(name => name[0]) // Get first letter of each part of name
+        .map((name) => name[0]) // Get first letter of each part of name
         .join('')
         .toUpperCase(); // Join initials back into a string
     }
@@ -150,7 +150,7 @@ export const GordonNavAvatarRightCorner = props => {
           aria-label="More"
           aria-owns={'global-menu'}
           aria-haspopup="true"
-          onClick={event => {
+          onClick={(event) => {
             // Handles opening the menu
             props.onClick();
           }}

@@ -99,7 +99,10 @@ export default class PeopleSearchResult extends Component {
       Person.Mail_Location !== null &&
       Person.Mail_Location !== ''
     ) {
-      personMailLocation = 'Mailbox #' + Person.Mail_Location;
+      personMailLocation =
+        Person.Type === 'Student'
+          ? 'Mailbox #' + Person.Mail_Location
+          : 'Mailstop ' + Person.Mail_Location;
     }
 
     return (
@@ -127,7 +130,7 @@ export default class PeopleSearchResult extends Component {
             <Grid
               item
               style={{
-                // a set width is necessary to keep profile images in line 
+                // a set width is necessary to keep profile images in line
                 // while maintaining center alignment
                 width: '260px',
               }}

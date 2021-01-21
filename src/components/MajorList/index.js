@@ -27,27 +27,31 @@ export default class Majors extends Component {
       // very last. If there's only one major, no comma will appear
       let majorText = '';
 
-      this.props.majors.forEach(major => {
+      this.props.majors.forEach((major) => {
         // NOTE: The difference between the two statements that adds text to the variable
         // "majorText" is that one of them adds BOTH a comma and a space
         major === lastItem ? (majorText += `${major}`) : (majorText += `${major}, `);
       });
       content = <Typography>{majorText}</Typography>;
-    }
 
-    // Creates the list item's title
-    if (this.props.majors.length < 2) {
-      majorPrefix = (
-        <div>
-          <Typography>Major:</Typography>
-        </div>
-      );
-    } else {
-      majorPrefix = (
-        <div>
-          <Typography>Majors:</Typography>
-        </div>
-      );
+      if(this.props.majors.length === 0) {
+        content = <Typography>Undecided</Typography>;
+      }
+
+      // Creates the list item's title
+      if (this.props.majors.length < 2) {
+        majorPrefix = (
+          <div>
+            <Typography>Major:</Typography>
+          </div>
+        );
+      } else {
+        majorPrefix = (
+          <div>
+            <Typography>Majors:</Typography>
+          </div>
+        );
+      }
     }
 
     return (

@@ -45,7 +45,7 @@ export default class InvolvementsStatus extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else if (this.state.InvolvementStatusList.length > 0) {
-      content = this.state.InvolvementStatusList.map(activity => (
+      content = this.state.InvolvementStatusList.map((activity) => (
         <div>
           <InvolvementStatusList Activity={activity} />
           <Divider />

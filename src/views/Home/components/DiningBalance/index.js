@@ -250,21 +250,21 @@ export default class DiningBalance extends Component {
     return (
       <Card>
         <CardContent>
-              <Grid container direction="row" alignItems="center">
-                <Grid item xs={7} align="left">
-                  <CardHeader title="Dining Balance" />
-                </Grid>
-                <Grid item xs={5} align="right">
-                  <Button
-                    variant="contained"
-                    style={style.button}
-                    onClick={() => (window.open('https://gordon.cafebonappetit.com/', '_blank'))}
-                    >
-                    TODAY'S MENU
-                  </Button>
-                </Grid>
-              </Grid>
-              {content}
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={7} align="left">
+              <CardHeader title="Dining Balance" />
+            </Grid>
+            <Grid item xs={5} align="right">
+              <Button
+                variant="contained"
+                style={style.button}
+                onClick={() => window.open('https://gordon.cafebonappetit.com/', '_blank')}
+              >
+                TODAY'S MENU
+              </Button>
+            </Grid>
+          </Grid>
+          {content}
         </CardContent>
       </Card>
     );
