@@ -77,6 +77,18 @@ const styles = {
   }
 };
 
+const noResultsCard = (
+  <Grid item xs={12}>
+    <Card>
+      <CardContent>
+        <Typography variant="headline" align="center">
+          No results found.
+        </Typography>
+      </CardContent>
+    </Card>
+  </Grid>
+);
+
 class PeopleSearch extends Component {
   constructor(props) {
     super(props);
@@ -87,7 +99,6 @@ class PeopleSearch extends Component {
       academicsExpanded: false,
       homeExpanded: false,
       offDepExpanded: false,
-      additionalOpsExpanded: true,
 
       // arrays of table data from backend
       majors: [],
@@ -235,7 +246,6 @@ class PeopleSearch extends Component {
       this.setState({
         header: <GordonLoader />,
         peopleSearchResults: null,
-        additionalOpsExpanded: false,
       });
       let peopleSearchResults = [];
       peopleSearchResults = await goStalk.search(
@@ -254,13 +264,7 @@ class PeopleSearch extends Component {
       );
       if (peopleSearchResults.length === 0) {
         this.setState({
-          peopleSearchResults: (
-            <Grid item xs={12}>
-              <Typography variant="headline" align="center">
-                No results found.
-              </Typography>
-            </Grid>
-          ),
+          peopleSearchResults: noResultsCard,
           header: '',
         });
       } else {
@@ -366,7 +370,6 @@ class PeopleSearch extends Component {
           this.setState({
             header: <GordonLoader />,
             peopleSearchResults: null,
-            additionalOpsExpanded: false,
           });
           let peopleSearchResults = [];
 
@@ -387,13 +390,7 @@ class PeopleSearch extends Component {
 
           if (peopleSearchResults.length === 0) {
             this.setState({
-              peopleSearchResults: (
-                <Grid item xs={12}>
-                  <Typography variant="headline" align="center">
-                    No results found.
-                  </Typography>
-                </Grid>
-              ),
+              peopleSearchResults: noResultsCard,
               header: '',
             });
           } else {
@@ -417,35 +414,29 @@ class PeopleSearch extends Component {
     }
   }
 
-  handleAdditionalOpsExpandClick = () => {
-    this.setState((state) => ({
-      additionalOpsExpanded: !state.additionalOpsExpanded,
-    }));
-  };
-
   handleNameExpandClick = () => {
     this.setState((state) => ({ nameExpanded: !state.nameExpanded }));
   };
   handleAcademicsExpandClick = () => {
-    this.setState({
+    this.setState((state) => ({
+      academicsExpanded: !state.academicsExpanded,
       homeExpanded: false,
       offDepExpanded: false,
-    });
-    this.setState((state) => ({ academicsExpanded: !state.academicsExpanded }));
+    }));
   };
   handleHomeExpandClick = () => {
-    this.setState({
+    this.setState((state) => ({
+      homeExpanded: !state.homeExpanded,
       academicsExpanded: false,
       offDepExpanded: false,
-    });
-    this.setState((state) => ({ homeExpanded: !state.homeExpanded }));
+    }));
   };
   handleOffDepExpandClick = () => {
-    this.setState({
+    this.setState((state) => ({
+      offDepExpanded: !state.offDepExpanded,
       academicsExpanded: false,
       homeExpanded: false,
-    });
-    this.setState((state) => ({ offDepExpanded: !state.offDepExpanded }));
+    }));
   };
 
   handleRelationshipStatusInputChange = (e) => {
@@ -547,7 +538,6 @@ class PeopleSearch extends Component {
       this.setState({
         header: <GordonLoader />,
         peopleSearchResults: null,
-        additionalOpsExpanded: false,
         academicsExpanded: false,
         homeExpanded: false,
         offDepExpanded: false,
@@ -577,13 +567,7 @@ class PeopleSearch extends Component {
 
       if (peopleSearchResults.length === 0) {
         this.setState({
-          peopleSearchResults: (
-            <Grid item xs={12}>
-              <Typography variant="h5" align="center">
-                No results found.
-              </Typography>
-            </Grid>
-          ),
+          peopleSearchResults: noResultsCard,
           header: '',
         });
       } else {
@@ -899,7 +883,10 @@ class PeopleSearch extends Component {
                           this.state.majorSearchValue !== '' || 
                           this.state.minorSearchValue !== '' || 
                           this.state.classTypeSearchValue !== '' ? 
-                          {backgroundColor: gordonColors.secondary.yellow} : {}}
+                          {
+                            backgroundColor: gordonColors.primary.cyan,
+                            color: "#ffffff"
+                          } : {}}
                         variant={this.state.academicsExpanded ? "contained" : "outlined"}
                         onClick={this.handleAcademicsExpandClick}
                       >
@@ -914,7 +901,10 @@ class PeopleSearch extends Component {
                           this.state.homeCitySearchValue !== '' || 
                           this.state.stateSearchValue !== '' || 
                           this.state.countrySearchValue !== '' ? 
-                          {backgroundColor: gordonColors.secondary.yellow} : {}}
+                          {
+                            backgroundColor: gordonColors.primary.cyan,
+                            color: "#ffffff"
+                          } : {}}
                         variant={this.state.homeExpanded ? "contained" : "outlined"}
                         onClick={this.handleHomeExpandClick}
                       >
@@ -925,43 +915,18 @@ class PeopleSearch extends Component {
                     <Grid item>
                       <Button
                         color="primary"
+                        variant={this.state.offDepExpanded ? "contained" : "outlined"}
+                        onClick={this.handleOffDepExpandClick}
                         style={
                           this.state.departmentSearchValue !== '' || 
                           this.state.buildingSearchValue !== '' ? 
-                          {backgroundColor: gordonColors.secondary.yellow} : {}}
-                        variant={this.state.offDepExpanded ? "contained" : "outlined"}
-                        onClick={this.handleOffDepExpandClick}
+                          {
+                            backgroundColor: gordonColors.primary.cyan,
+                            color: "#ffffff"
+                          } : {}}
                       >
                         <AddIcon fontSize="inherit" />
                         Office Info
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        style={{backgroundColor: gordonColors.neutral.lightGray}}
-                        disableElevation
-                        variant="contained"
-                        onClick={() => {
-                          this.setState({
-                            includeAlumni: false,
-                            firstNameSearchValue: '',
-                            lastNameSearchValue: '',
-                            majorSearchValue: '',
-                            minorSearchValue: '',
-                            hallSearchValue: '',
-                            classTypeSearchValue: '',
-                            homeCitySearchValue: '',
-                            stateSearchValue: '',
-                            countrySearchValue: '',
-                            departmentSearchValue: '',
-                            buildingSearchValue: '',
-                            academicsExpanded: false,
-                            homeExpanded: false,
-                            offDepExpanded: false,
-                          });
-                        }}
-                      >
-                        Clear All
                       </Button>
                     </Grid>
                   </Grid>
@@ -1193,8 +1158,9 @@ class PeopleSearch extends Component {
                 </CardContent>
                 
                 <CardActions>
-                  <Grid container xs={12} justify="center">
-                    <Grid container xs={10}>
+                  <Grid container xs={12} justify="center" spacing={2}>
+                    {/* Search Button */}
+                    <Grid item xs={8}>
                       <Button
                         color="primary"
                         onClick={() => {
@@ -1217,6 +1183,38 @@ class PeopleSearch extends Component {
                         variant="contained"
                       >
                         SEARCH
+                      </Button>
+                    </Grid>
+                    {/* Clear All Button */}
+                    <Grid item xs={8} sm={'auto'}>
+                      <Button
+                        style={{backgroundColor: gordonColors.neutral.lightGray}}
+                        fullWidth
+                        disableElevation
+                        variant="contained"
+                        onClick={() => {
+                          this.setState({
+                            includeAlumni: false,
+                            firstNameSearchValue: '',
+                            lastNameSearchValue: '',
+                            majorSearchValue: '',
+                            minorSearchValue: '',
+                            hallSearchValue: '',
+                            classTypeSearchValue: '',
+                            homeCitySearchValue: '',
+                            stateSearchValue: '',
+                            countrySearchValue: '',
+                            departmentSearchValue: '',
+                            buildingSearchValue: '',
+                            academicsExpanded: false,
+                            homeExpanded: false,
+                            offDepExpanded: false,
+                            header: '',
+                            peopleSearchResults: null,
+                          });
+                        }}
+                      >
+                        Clear All
                       </Button>
                     </Grid>
                   </Grid>
