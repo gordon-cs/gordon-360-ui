@@ -1,6 +1,6 @@
 import React from 'react';
 import user from '../../../../services/user';
-import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram, FaHandshake } from 'react-icons/fa';
 // see socialMedia.js for pre-packaged icons of above and fix
 import {
   Button,
@@ -23,16 +23,19 @@ export default class LinksDialog extends React.Component {
       twitter: this.props.twitterLink || '',
       linkedIn: this.props.linkedInLink || '',
       instagram: this.props.instagramLink || '',
+      handshake: this.props.handshakeLink || '',
       formErrors: {
         facebook: '',
         twitter: '',
         linkedIn: '',
         instagram: '',
+        handshake: '',
       },
       fbValid: true,
       twValid: true,
       liValid: true,
       igValid: true,
+      hsValid: true,
       formValid: false,
       formHasDifferentLinks: false,
       updatedLinks: {
@@ -40,12 +43,14 @@ export default class LinksDialog extends React.Component {
         twitter: false,
         linkedIn: false,
         instagram: false,
+        handshake: false,
       },
       updatingFailedLinks: {
         facebook: false,
         twitter: false,
         linkedIn: false,
         instagram: false,
+        handshake: false,
       },
     };
   }
@@ -68,6 +73,9 @@ export default class LinksDialog extends React.Component {
     if (nextProps.instagramLink !== this.props.instagramLink) {
       this.setState({ instagram: nextProps.instagramLink });
     }
+    if (nextProps.handshakeLink !== this.props.handshakeLink) {
+      this.setState({ handshake: nextProps.handshakeLink });
+    }
   }
 
   /**
@@ -82,11 +90,13 @@ export default class LinksDialog extends React.Component {
     let twValid = this.state.twValid;
     let liValid = this.state.liValid;
     let igValid = this.state.igValid;
+    let hsValid = this.state.hsValid;
 
     let facebook = socialMediaInfo.facebook;
     let twitter = socialMediaInfo.twitter;
     let linkedIn = socialMediaInfo.linkedIn;
     let instagram = socialMediaInfo.instagram;
+    let handshake = socialMediaInfo.handshake;
 
     // Require that content begins with appropriate domain name if not empty
     switch (fieldName) {
@@ -106,6 +116,13 @@ export default class LinksDialog extends React.Component {
         igValid = value === '' || value.indexOf(instagram.prefix) === 0;
         fieldValidationErrors.instagram = igValid ? '' : instagram.error;
         break;
+      case 'handshake':
+        // hard coded a second prefix in because handshake supports 'app.' and 'gordon.' addresses
+        // I know, the hard coding hurts me too.
+        hsValid = value === '' || value.indexOf(handshake.prefix) === 0
+                               || value.indexOf("https://app.joinhandshake.com/users/") === 0;
+        fieldValidationErrors.handshake = hsValid ? '' : handshake.error;
+        break;
       default:
         break;
     }
@@ -116,6 +133,7 @@ export default class LinksDialog extends React.Component {
         twValid: twValid,
         liValid: liValid,
         igValid: igValid,
+        hsValid: hsValid,
       },
       () => {
         this.validateForm(fieldName);
@@ -139,7 +157,7 @@ export default class LinksDialog extends React.Component {
     this.setState(
       {
         formValid:
-          this.state.fbValid && this.state.twValid && this.state.liValid && this.state.igValid,
+          this.state.fbValid && this.state.twValid && this.state.liValid && this.state.igValid && this.state.hsValid,
       },
       () => {
         // If the form is valid and the links changed
@@ -148,7 +166,8 @@ export default class LinksDialog extends React.Component {
           (this.props.facebookLink !== this.state.facebook ||
             this.props.twitterLink !== this.state.twitter ||
             this.props.linkedInLink !== this.state.linkedIn ||
-            this.props.instagramLink !== this.state.instagram)
+            this.props.instagramLink !== this.state.instagram ||
+            this.props.handshakeLink !== this.state.handshake)
         ) {
           this.setState({
             formHasDifferentLinks: true,
@@ -157,6 +176,7 @@ export default class LinksDialog extends React.Component {
               twitter: this.props.twitterLink !== this.state.twitter,
               linkedIn: this.props.linkedInLink !== this.state.linkedIn,
               instagram: this.props.instagramLink !== this.state.instagram,
+              handshake: this.props.handshakeLink !== this.state.handshake,
             },
           });
         }
@@ -164,7 +184,7 @@ export default class LinksDialog extends React.Component {
         else {
           this.setState({
             formHasDifferentLinks: false,
-            updatedLinks: { facebook: false, twitter: false, linkedIn: false, instagram: false },
+            updatedLinks: { facebook: false, twitter: false, linkedIn: false, instagram: false, handshake: false },
           });
         }
       },
@@ -178,8 +198,9 @@ export default class LinksDialog extends React.Component {
    * @param {String} tw The inputed Twitter link
    * @param {String} li The inputed LinkedIn link
    * @param {String} ig The inputed Instagram link
+   * @param {String} hs The inputed Handshake link
    */
-  async onDialogSubmit(fb, tw, li, ig) {
+  async onDialogSubmit(fb, tw, li, ig, hs) {
     let allPassed = true, // Used to determine if all links updated successfully
       responses = [], // Used to hold the fetch response of each link update
       numOfFailedLinks = 0; // Used to calculate the number of links that failed to update
@@ -217,6 +238,14 @@ export default class LinksDialog extends React.Component {
         value: await user.updateSocialLink('instagram', ig),
       });
     }
+    if (hs !== this.props.handshakeLink) {
+      responses.push({
+        input: 'handshake',
+        oldLink: this.props.handshakeLink,
+        platform: 'handshake',
+        value: await user.updateSocialLink('handshake', hs),
+      });
+    }
 
     // Resets the list of failed updating links
     this.setState({
@@ -225,6 +254,7 @@ export default class LinksDialog extends React.Component {
         twitter: false,
         linkedIn: false,
         instagram: false,
+        handshake: false,
       },
     });
 
@@ -258,6 +288,7 @@ export default class LinksDialog extends React.Component {
         else if (response.platform === 'twitter') this.props.setTwitterLink(tw);
         else if (response.platform === 'linkedIn') this.props.setLinkedInLink(li);
         else if (response.platform === 'instagram') this.props.setInstagramLink(ig);
+        else if (response.platform === 'handshake') this.props.setHandshakeLink(hs);
         this.setState((prevState) => ({
           updatedLinks: {
             ...prevState.updatedLinks,
@@ -302,8 +333,9 @@ export default class LinksDialog extends React.Component {
     let tw = this.state.twitter;
     let li = this.state.linkedIn;
     let ig = this.state.instagram;
+    let hs = this.state.handshake;
 
-    this.onDialogSubmit(fb, tw, li, ig);
+    this.onDialogSubmit(fb, tw, li, ig, hs);
   };
 
   /**
@@ -460,6 +492,33 @@ export default class LinksDialog extends React.Component {
               className="gc360-links-dialog_content_field"
             />
           </div>
+          <div className="gc360-links-dialog_content_handshake gc360-links-dialog_content_media">
+            <div className="gc360-links-dialog_content_icon">
+              <FaHandshake style={style.icon} />
+            </div>
+            <TextField
+              color={gordonColors.primary.blue}
+              id="handshakeInput"
+              label={
+                // Sets the label based upon whether the link has updated and if so, if it failed
+                this.state.updatedLinks.handshake && this.state.updatingFailedLinks.handshake
+                  ? 'Handshake (Failed)'
+                  : this.state.updatedLinks.handshake
+                  ? 'Handshake (Updated)'
+                  : 'Handshake Link'
+              }
+              value={this.state.handshake}
+              onChange={event => {
+                this.handleChange('handshake', event);
+              }}
+              error={!this.state.hsValid}
+              helperText={this.state.hsValid ? '' : this.state.formErrors.handshake}
+              margin="dense"
+              fullWidth
+              multiline
+              className="gc360-links-dialog_content_field"
+            />
+          </div>
         </DialogContent>
         <DialogActions className="gc360-links-dialog_actions">
           <Button onClick={this.handleClose} variant="contained" style={style.cancelButton}>
@@ -477,7 +536,8 @@ export default class LinksDialog extends React.Component {
               this.state.updatingFailedLinks.facebook ||
               this.state.updatingFailedLinks.twitter ||
               this.state.updatingFailedLinks.linkedIn ||
-              this.state.updatingFailedLinks.instagram
+              this.state.updatingFailedLinks.instagram ||
+              this.state.updatingFailedLinks.handshake
                 ? 'Resubmit'
                 : 'Submit'}
             </Button>
