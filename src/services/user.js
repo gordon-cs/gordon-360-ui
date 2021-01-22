@@ -46,6 +46,7 @@ import gordonEvent from './event';
  * @property {String} Facebook Facebook
  * @property {String} FirstName First name
  * @property {String} Gender Gender
+ * @property {String} Handshake Handshake
  * @property {String} HomeCity City
  * @property {String} HomeCountry Country
  * @property {String} HomeFax Home fax number
@@ -148,6 +149,7 @@ import gordonEvent from './event';
  * @property {String} Facebook Facebook
  * @property {String} Twitter Twitter
  * @property {String} Instagram Instagram
+ * @property {String} Handshake Handshake
  * @property {String} LinkedIn LinkedIn
  * @property {String} PersonType Type of person
  */
@@ -617,11 +619,23 @@ function updateSocialLink(type, link) {
     case 'instagram':
       linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
       break;
+    case 'handshake':
+      // hard coded a second prefix in because handshake supports 'app.' and 'gordon.' addresses
+      let handshakeSecondPrefix = 'https://app.joinhandshake.com/users/';
+      
+      // if using the 'app.joinhandshake' prefix
+      if(link.indexOf(handshakeSecondPrefix) === 0) {
+        linkToSend = link.substring(handshakeSecondPrefix.length);
+      }
+      // otherwise assume using the normal 'gordon.joinhandshake' prefix
+      else {
+        linkToSend = link.substring(socialMediaInfo.handshake.prefix.length);
+      }
+      break;
     default:
       break;
   }
   linkToSend = encodeURIComponent(linkToSend);
-
   url = {
     [type]: linkToSend,
   };
