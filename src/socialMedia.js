@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram, FaHandshake } from 'react-icons/fa';
 import EditIcon from '@material-ui/icons/Edit';
 
 export const socialMediaInfo = {
@@ -22,6 +22,11 @@ export const socialMediaInfo = {
     icon: <FaInstagram />,
     prefix: 'https://www.instagram.com/',
     error: 'Invalid Instagram link. ',
+  },
+  handshake: {
+    icon: <FaHandshake />,
+    prefix: 'https://gordon.joinhandshake.com/users/',
+    error: 'Invalid Handshake link. ',
   },
   edit: {
     icon: <EditIcon />,
