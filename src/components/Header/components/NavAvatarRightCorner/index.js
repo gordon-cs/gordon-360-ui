@@ -34,9 +34,6 @@ export const GordonNavAvatarRightCorner = (props) => {
         backgroundColor: gordonColors.primary.cyan,
       },
     },
-    tooltip: {
-      backgroundColor: gordonColors.neutral.darkGray,
-    },
   });
   const classes = useStyles();
 
@@ -144,7 +141,7 @@ export const GordonNavAvatarRightCorner = (props) => {
 
   return (
     <section className="right-side-container">
-      <Tooltip classes={classes} id="tooltip-avatar" title={name}>
+      <Tooltip className="tooltip" id="tooltip-avatar" title={name ? name : 'Nav Avatar'}>
         <IconButton
           className={`gc360-nav-avatar-rc ${classes.root}`}
           aria-label="More"
