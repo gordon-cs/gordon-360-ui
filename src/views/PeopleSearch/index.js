@@ -655,9 +655,10 @@ class PeopleSearch extends Component {
       </MenuItem>
     ));
 
+    // Lower case using js to remove all caps, then capitalize with css
     const countryOptions = this.state.countries.map((country) => (
-      <MenuItem value={country} key={country}>
-        {country}
+      <MenuItem value={country} key={country} style={{textTransform: "capitalize"}}>
+        {country.toLowerCase()}
       </MenuItem>
     ));
 

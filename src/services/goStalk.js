@@ -73,6 +73,7 @@ const search = (
     // workaround to avoid breaking the backend
     minor = minor.replace('&', '_');
   }
+  hall = hall.trim();
   if (hall === '' || hall === null) {
     // eslint-disable-next-line
     hall = 'C' + '\u266F';
