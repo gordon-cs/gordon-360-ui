@@ -18,9 +18,7 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
-import classnames from 'classnames';
 import Media from 'react-media';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PersonIcon from '@material-ui/icons/Person';
 import AddIcon from '@material-ui/icons/Add';
 import {
@@ -645,7 +643,6 @@ class PeopleSearch extends Component {
         {minor}
       </MenuItem>
     ));
-
     const hallOptions = this.state.halls.map((hall) => (
       <MenuItem value={hall} key={hall}>
         {hall}
@@ -898,8 +895,8 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.majorSearchValue != '' || 
-                          this.state.minorSearchValue != '' || 
+                          this.state.majorSearchValue !== '' || 
+                          this.state.minorSearchValue !== '' || 
                           this.state.classTypeSearchValue != '' ? 
                           {backgroundColor: gordonColors.secondary.yellow} : {}}
                         variant={this.state.academicsExpanded ? "contained" : "outlined"}
@@ -913,9 +910,9 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.homeCitySearchValue != '' || 
-                          this.state.stateSearchValue != '' || 
-                          this.state.countrySearchValue != '' ? 
+                          this.state.homeCitySearchValue !== '' || 
+                          this.state.stateSearchValue !== '' || 
+                          this.state.countrySearchValue !== '' ? 
                           {backgroundColor: gordonColors.secondary.yellow} : {}}
                         variant={this.state.homeExpanded ? "contained" : "outlined"}
                         onClick={this.handleHomeExpandClick}
@@ -928,8 +925,8 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.departmentSearchValue != '' || 
-                          this.state.buildingSearchValue != '' ? 
+                          this.state.departmentSearchValue !== '' || 
+                          this.state.buildingSearchValue !== '' ? 
                           {backgroundColor: gordonColors.secondary.yellow} : {}}
                         variant={this.state.offDepExpanded ? "contained" : "outlined"}
                         onClick={this.handleOffDepExpandClick}
