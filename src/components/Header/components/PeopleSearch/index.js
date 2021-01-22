@@ -87,7 +87,7 @@ export default class GordonPeopleSearch extends Component {
     this.setState({ suggestions });
   }
 
-  handleClick = theChosenOne => {
+  handleClick = (theChosenOne) => {
     if (theChosenOne && this.props.disableLink) {
       this.props.onSearchSubmit(theChosenOne);
     }
@@ -388,7 +388,7 @@ export default class GordonPeopleSearch extends Component {
           <TextField
             placeholder="People Search"
             value={''}
-            onChange={(event) => this.unauthenticatedSearch()}
+            onChange={() => this.unauthenticatedSearch()}
             className={'text-field'}
             InputProps={{
               disableUnderline: true,
@@ -405,7 +405,7 @@ export default class GordonPeopleSearch extends Component {
           />
           <Dialog
             open={this.state.loginDialog}
-            onClose={(clicked) => this.handleClose()}
+            onClose={() => this.handleClose()}
             aria-labelledby="login-dialog-title"
             aria-describedby="login-dialog-description"
           >
@@ -416,7 +416,7 @@ export default class GordonPeopleSearch extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" onClick={(clicked) => this.handleClose()} color="primary">
+              <Button variant="contained" onClick={() => this.handleClose()} color="primary">
                 Okay
               </Button>
             </DialogActions>

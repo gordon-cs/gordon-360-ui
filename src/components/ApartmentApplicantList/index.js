@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import 'date-fns';
-import { Grid, Card, CardHeader, CardContent, List, Button, Typography } from '@material-ui/core';
+import {
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+  Typography,
+} from '@material-ui/core';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -70,7 +80,7 @@ export default class ApplicantList extends Component {
               icon={<GroupAddIcon />}
               customPlaceholderText={'Add Applicant'}
               onSearchSubmit={this.handleSelection}
-              Authentication={this.props.Authentication}
+              authentication={this.props.authentication}
             />
           }
           title="Student Applicants"
@@ -85,19 +95,18 @@ export default class ApplicantList extends Component {
                     <ApplicantListItem
                       key={profile.AD_Username}
                       profile={profile}
-                      isPrimaryApplicant={profile === this.props.userProfile}
+                      isPrimaryApplicant={profile.AD_Username === this.props.primaryUsername}
                       onChangePrimary={this.handleChangePrimary.bind(this, profile)}
                       onApplicantRemove={this.handleRemove.bind(this, profile)}
                     />
                   ))
                 ) : (
-                  <ApplicantListItem
-                    key={this.props.userProfile.AD_Username}
-                    profile={this.props.userProfile}
-                    isPrimaryApplicant={true}
-                    onChangePrimary={this.handleChangePrimary.bind(this, this.props.userProfile)}
-                    onApplicantRemove={this.handleRemove.bind(this, this.props.userProfile)}
-                  />
+                  <ListItem key={'applicant-list-placeholder'} className={'list-item'}>
+                    <ListItemText
+                      primary={'Use the search bar above to add applicants'}
+                      className={'list-item'}
+                    />
+                  </ListItem>
                 )}
               </List>
             </Grid>
