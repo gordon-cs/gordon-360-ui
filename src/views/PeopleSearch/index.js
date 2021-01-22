@@ -897,7 +897,7 @@ class PeopleSearch extends Component {
                         style={
                           this.state.majorSearchValue !== '' || 
                           this.state.minorSearchValue !== '' || 
-                          this.state.classTypeSearchValue != '' ? 
+                          this.state.classTypeSearchValue !== '' ? 
                           {backgroundColor: gordonColors.secondary.yellow} : {}}
                         variant={this.state.academicsExpanded ? "contained" : "outlined"}
                         onClick={this.handleAcademicsExpandClick}
