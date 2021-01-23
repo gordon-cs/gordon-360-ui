@@ -36,11 +36,11 @@ const saveApartmentApplication = async (applicationID, primaryUsername, applican
  * @return {Promise.<Boolean>} Status of whether or not the operation was successful
  */
 const changeApplicationModifier = async (applicationID, newPrimaryUsername) => {
-  let applicationDetails = {
+  let newModifierDetails = {
     AprtAppID: applicationID,
     Username: newPrimaryUsername,
   };
-  return await http.post(`housing/change-modifier/`, applicationDetails);
+  return await http.post(`housing/change-modifier/`, newModifierDetails);
 };
 
 export default {

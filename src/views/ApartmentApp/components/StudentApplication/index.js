@@ -13,6 +13,7 @@ import GordonLoader from '../../../../components/Loader';
 import AlertDialogBox from '../../../../components/AlertDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
 import ApplicantList from '../../../../components/ApartmentApplicantList';
+import HallSelection from '../../../../components/ApartmentHallSelection';
 import user from '../../../../services/user';
 import housing from '../../../../services/housing';
 import '../../apartmentApp.css';
@@ -48,7 +49,13 @@ export default class StudentApplication extends Component {
       applicationID: -1, // Default value of -1 indicate to backend that the application ID number is not yet known
       primaryUsername: null, // The username of the primary applicant
       applicants: [],
+      preferredHalls: [{ hallName: '', hallRank: 1 }],
     };
+    // Off-campus program info is stored as a Map, where the Key is a student's username and the corresponding Value is the department of that student's off-campus program
+    this.offCampusProgramInfo = new Map();
+    this.state.applicants.forEach((profile) =>
+      this.offCampusProgramInfo.set(profile.AD_Username, ''),
+    );
     this.editDialogText = '';
     this.snackbarText = '';
     this.snackbarSeverity = '';
@@ -211,9 +218,9 @@ export default class StudentApplication extends Component {
 
   /**
    * Callback for applicant list remove button
-   * @param {String} profileToRemove Username for student
+   * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
    */
-  handleRemove = (profileToRemove) => {
+  handleApplicantRemove = (profileToRemove) => {
     this.setState({ updating: true });
     if (profileToRemove) {
       let applicants = this.state.applicants; // make a separate copy of the array
@@ -224,6 +231,120 @@ export default class StudentApplication extends Component {
       }
     }
     this.setState({ updating: false });
+  };
+
+  /**
+   * Callback for hall list remove button
+   * @param {String} hallSelectionValue The name of the hall that was selected
+   * @param {String|Number} hallRankValue The rank value that the user assigned to this hall
+   * @param {Number} index The index of the hall in the list
+   */
+  handleHallInputChange = (hallSelectionValue, hallRankValue, index) => {
+    console.log('Called "handleHallInputChange" in StudentApplication component'); //! DEBUG
+    console.log('hallName: ' + hallSelectionValue); //! DEBUG
+    console.log('hallRank: ' + hallRankValue); //! DEBUG
+    console.log('index: ' + index); //! DEBUG
+    this.setState({ updating: true });
+    if (index !== null && index >= 0) {
+      console.log('Attempting to update preferred halls'); //! DEBUG
+
+      let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
+
+      // Get the custom hallInfo object at the given index
+      let newHallInfo = preferredHalls[index];
+
+      // Error checking on the hallSelectionValue before modifying the newHallInfo object
+      if (
+        hallSelectionValue !== null &&
+        hallSelectionValue !== this.state.preferredHalls[index].hallName &&
+        this.state.preferredHalls.some((hallInfo) => hallInfo.hallName === hallSelectionValue)
+      ) {
+        // Display an error if the selected hall is already in the list
+        this.snackbarText = String(hallSelectionValue) + ' is already in the list.';
+        this.snackbarSeverity = 'info';
+        this.setState({ snackbarOpen: true });
+      } else if (hallSelectionValue !== null) {
+        // Create a new custom hallInfo object
+        newHallInfo.hallName = hallSelectionValue;
+      }
+
+      // Error checking on the hallRankValue before modifying the newHallInfo object
+      if (hallRankValue !== null) {
+        newHallInfo.hallRank = Number(hallRankValue);
+      } else {
+        // Display an error if the selected rank value is less or equal to zero
+        this.snackbarText =
+          'The "Rank" value expected a positive number, but you entered "' +
+          String(hallRankValue) +
+          '"';
+        this.snackbarSeverity = 'error';
+        this.setState({ snackbarOpen: true });
+      }
+
+      preferredHalls[index] = newHallInfo; // replace the element at index with the new hall info object
+      // preferredHalls.splice(index, 1, newHallInfo);
+
+      // Sort the list of halls by the rank numbers
+      preferredHalls.sort(function(a, b) {
+        return a.hallRank - b.hallRank;
+      });
+
+      console.log('Printing current list of preferred halls'); //! DEBUG
+      preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+
+      this.setState({ preferredHalls });
+    } else {
+      this.snackbarText = 'Something went wrong while trying to add this hall. Please try again.';
+      this.snackbarSeverity = 'error';
+      this.setState({ snackbarOpen: true });
+    }
+    this.setState({ updating: false });
+  };
+
+  /**
+   * Callback for hall list remove button
+   * @param {Number} index The index of the hall to be removed from the list of perferred halls
+   */
+  handleHallRemove = (index) => {
+    console.log('Called "handleHallRemove" in StudentApplication component'); //! DEBUG
+    this.setState({ updating: true });
+    console.log('index: ' + index); //! DEBUG
+    if (index !== null && index !== -1) {
+      let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
+      if (preferredHalls.length > 1) {
+        // Remove the selected hall if the list has more than one element
+        preferredHalls.splice(index, 1);
+        // If any rank value is greater than the new maximum, then set it to that new max rank
+        let maxRank = preferredHalls.length;
+        preferredHalls.forEach((hallInfo, index) => {
+          if (hallInfo.hallRank > maxRank) {
+            preferredHalls[index].hallRank = maxRank;
+          }
+        });
+      } else {
+        // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
+        let newHallInfo = { hallName: '', hallRank: 1 };
+        preferredHalls[0] = newHallInfo;
+      }
+      console.log('Printing current list of preferred halls'); //! DEBUG
+      preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+      this.setState({ preferredHalls });
+    }
+    this.setState({ updating: false });
+  };
+
+  /**
+   * Callback for hall list add button
+   */
+  handleHallAdd = () => {
+    console.log('Called "handleHallAdd" in StudentApplication component'); //1 DEBUG
+    this.setState({ updating: true });
+    let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
+    let newHallRank = preferredHalls.length + 1;
+    preferredHalls.push({ hallName: '', hallRank: newHallRank });
+    console.log('Printing current list of preferred halls'); //! DEBUG
+    preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+    this.setState({ preferredHalls, updating: false });
   };
 
   /**
@@ -424,7 +545,7 @@ export default class StudentApplication extends Component {
                               saving={this.state.saving}
                               onSearchSubmit={this.handleSearchSubmit}
                               onChangePrimary={this.handleChangePrimary}
-                              onApplicantRemove={this.handleRemove}
+                              onApplicantRemove={this.handleApplicantRemove}
                               onSaveButtonClick={this.handleSaveButtonClick}
                               authentication={this.props.authentication}
                             />
@@ -439,21 +560,39 @@ export default class StudentApplication extends Component {
                               confirmButtonClicked={this.handleChangePrimaryAccepted}
                               confirmButtonName={'Accept'}
                             />
-                            <SimpleSnackbar
-                              text={this.snackbarText}
-                              severity={this.snackbarSeverity}
-                              open={this.state.snackbarOpen}
-                              onClose={this.handleCloseSnackbar}
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid container direction="row" justify="center" spacing={2}>
+                        <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
+                          <Grid item>
+                            <HallSelection
+                              primaryUsername={this.state.primaryUsername}
+                              preferredHalls={this.state.preferredHalls}
+                              saving={this.state.saving}
+                              onHallInputChange={this.handleHallInputChange}
+                              onHallRemove={this.handleHallRemove}
+                              onHallAdd={this.handleHallAdd}
+                              onSaveButtonClick={this.handleSaveButtonClick}
+                              authentication={this.props.authentication}
                             />
                           </Grid>
                           <Grid item>
                             <Card>
-                              <CardHeader title="Preferred Halls" className="card-header" />
+                              <CardHeader title="Off-Campus Work Study" className="card-header" />
                               <CardContent>
                                 <Typography variant="body1">Placeholder text</Typography>
                               </CardContent>
                             </Card>
                           </Grid>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <Card>
+                            <CardHeader title="Agreements" className="card-header" />
+                            <CardContent>
+                              <Typography variant="body1">Placeholder text</Typography>
+                            </CardContent>
+                          </Card>
                         </Grid>
                         <Grid item xs={12} lg={10}>
                           <Card>
@@ -496,6 +635,12 @@ export default class StudentApplication extends Component {
                     </Collapse>
                   </Grid>
                 </Grid>
+                <SimpleSnackbar
+                  text={this.snackbarText}
+                  severity={this.snackbarSeverity}
+                  open={this.state.snackbarOpen}
+                  onClose={this.handleCloseSnackbar}
+                />
               </div>
             )}
           </div>
