@@ -153,7 +153,7 @@ class PeopleSearch extends Component {
                   <Typography variant="body2" style={styles.headerStyle}>
                     @GORDON.EDU
                     <br />
-                    MAILBOX #
+                    MAIL LOCATION
                   </Typography>
                 </Grid>
               </Grid>

@@ -43,7 +43,7 @@ export default class Advisors extends Component {
               <strong>Advisors:</strong>
             </Typography>
             <List dense disablePadding>
-              {advisors.map(activityAdvisor => (
+              {advisors.map((activityAdvisor) => (
                 <ListItem className="contacts" key={activityAdvisor.Email}>
                   <IconButton
                     classes={{ root: 'email-button' }}

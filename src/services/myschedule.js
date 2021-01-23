@@ -31,7 +31,7 @@ import http from './http';
  * @return {Promise.<MySchedule[]>} returns all the custom schedules
  */
 
-const getMySchedule = async username => {
+const getMySchedule = async (username) => {
   let schedule;
   if (username) {
     schedule = await http.get(`myschedule/${username}/`);
@@ -47,7 +47,7 @@ const getMySchedule = async username => {
  * @return {Promise.<MySchedule>} returns the custom schedules
  */
 
-const getMyScheduleEventId = async eventId => {
+const getMyScheduleEventId = async (eventId) => {
   let schedule = await http.get(`myschedule/event/${eventId}/`);
   return schedule;
 };
@@ -93,7 +93,7 @@ function checkDayofWeek(event) {
  */
 
 async function makeMySchedule(myschedule) {
-  let events = await myschedule.then(mySchedule => {
+  let events = await myschedule.then((mySchedule) => {
     return mySchedule;
   });
   let today = moment();
@@ -130,7 +130,7 @@ async function makeMySchedule(myschedule) {
  * @return {Promise<any>} Response body
  */
 
-const addMySchedule = async mySchedule => {
+const addMySchedule = async (mySchedule) => {
   return http.post(`myschedule/`, mySchedule);
 };
 
@@ -140,7 +140,7 @@ const addMySchedule = async mySchedule => {
  * @return {Promise<any>} Response body
  */
 
-const updateMySchedule = async mySchedule => {
+const updateMySchedule = async (mySchedule) => {
   return http.put(`myschedule/`, mySchedule);
 };
 
@@ -150,7 +150,7 @@ const updateMySchedule = async mySchedule => {
  * @return {Promise<any>} Response body
  */
 
-const deleteMySchedule = eventID => {
+const deleteMySchedule = (eventID) => {
   return http.del(`myschedule/${eventID}`);
 };
 

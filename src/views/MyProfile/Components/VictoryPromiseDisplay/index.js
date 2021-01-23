@@ -71,7 +71,7 @@ export default class VictoryPromiseDisplay extends React.Component {
     this.setState({ CC, IM, LS, LW });
 
     var arr = [CC, IM, LS, LW];
-    const min = arr.filter(x => x > 0)[0] ? arr.filter(x => x > 0).sort()[0] : 1;
+    const min = arr.filter((x) => x > 0)[0] ? arr.filter((x) => x > 0).sort()[0] : 1;
     var emptySlice = min - 0.3;
 
     if (CC > 0) {
@@ -264,7 +264,7 @@ export default class VictoryPromiseDisplay extends React.Component {
       );
     }
 
-    const HoverText = withStyles(theme => ({
+    const HoverText = withStyles((theme) => ({
       tooltip: {
         backgroundColor: '#f5f5f9',
         color: 'rgba(0, 0, 0, 0.87)',
