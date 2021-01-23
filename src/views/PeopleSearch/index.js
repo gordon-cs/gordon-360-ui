@@ -1159,38 +1159,11 @@ class PeopleSearch extends Component {
                 
                 <CardActions>
                   <Grid container xs={12} justify="center" spacing={2}>
-                    {/* Search Button */}
-                    <Grid item xs={8}>
-                      <Button
-                        color="primary"
-                        onClick={() => {
-                          this.search(
-                            this.state.includeAlumni,
-                            this.state.firstNameSearchValue,
-                            this.state.lastNameSearchValue,
-                            this.state.majorSearchValue,
-                            this.state.minorSearchValue,
-                            this.state.hallSearchValue,
-                            this.state.classTypeSearchValue,
-                            this.state.homeCitySearchValue,
-                            this.state.stateSearchValue,
-                            this.state.countrySearchValue,
-                            this.state.departmentSearchValue,
-                            this.state.buildingSearchValue,
-                          );
-                        }}
-                        fullWidth
-                        variant="contained"
-                      >
-                        SEARCH
-                      </Button>
-                    </Grid>
                     {/* Clear All Button */}
                     <Grid item xs={8} sm={'auto'}>
                       <Button
                         style={{backgroundColor: gordonColors.neutral.lightGray}}
                         fullWidth
-                        disableElevation
                         variant="contained"
                         onClick={() => {
                           this.setState({
@@ -1215,6 +1188,32 @@ class PeopleSearch extends Component {
                         }}
                       >
                         Clear All
+                      </Button>
+                    </Grid>
+                    {/* Search Button */}
+                    <Grid item xs={8}>
+                      <Button
+                        color="primary"
+                        onClick={() => {
+                          this.search(
+                            this.state.includeAlumni,
+                            this.state.firstNameSearchValue,
+                            this.state.lastNameSearchValue,
+                            this.state.majorSearchValue,
+                            this.state.minorSearchValue,
+                            this.state.hallSearchValue,
+                            this.state.classTypeSearchValue,
+                            this.state.homeCitySearchValue,
+                            this.state.stateSearchValue,
+                            this.state.countrySearchValue,
+                            this.state.departmentSearchValue,
+                            this.state.buildingSearchValue,
+                          );
+                        }}
+                        fullWidth
+                        variant="contained"
+                      >
+                        SEARCH
                       </Button>
                     </Grid>
                   </Grid>
