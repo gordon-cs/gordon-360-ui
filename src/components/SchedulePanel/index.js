@@ -79,7 +79,7 @@ class GordonSchedulePanel extends Component {
     this.loadData(this.props.profile);
   }
 
-  loadData = async searchedUser => {
+  loadData = async (searchedUser) => {
     try {
       const scheduleControlInfo = await schedulecontrol.getScheduleControl(
         searchedUser.AD_Username,
@@ -102,7 +102,7 @@ class GordonSchedulePanel extends Component {
     this.setState({ loading: false });
   };
 
-  handleMyScheduleOpen = slotInfo => {
+  handleMyScheduleOpen = (slotInfo) => {
     if (this.props.myProf) {
       this.setState({ myScheduleOpen: true });
       if (slotInfo) {
@@ -134,7 +134,7 @@ class GordonSchedulePanel extends Component {
     this.setState({ removeMyScheduleOpen: false });
   };
 
-  handleRemoveButton = event => {
+  handleRemoveButton = (event) => {
     if (event.id > 1000) {
       this.setState({ disabled: false, selectedEvent: event });
     } else {
@@ -154,12 +154,12 @@ class GordonSchedulePanel extends Component {
     this.setState({ disabled: false });
   };
 
-  handleDescriptionSubmit = async descValue => {
+  handleDescriptionSubmit = async (descValue) => {
     await schedulecontrol.setScheduleDescription(descValue);
     this.loadData(this.props.profile);
   };
 
-  handleMyScheduleSubmit = mySchedule => {
+  handleMyScheduleSubmit = (mySchedule) => {
     var data = {
       Event_ID: null,
       Gordon_ID: this.props.profile.ID,
@@ -182,22 +182,22 @@ class GordonSchedulePanel extends Component {
       data.Event_ID = this.state.selectedEvent.id;
       myschedule
         .updateMySchedule(data)
-        .then(value => {
+        .then((value) => {
           this.loadData(this.props.profile);
           this.setState({ reloadCall: true });
         })
-        .catch(error => {
+        .catch((error) => {
           alert('There was an error while updating the event');
           console.log(error);
         });
     } else {
       myschedule
         .addMySchedule(data)
-        .then(value => {
+        .then((value) => {
           this.loadData(this.props.profile);
           this.setState({ reloadCall: true });
         })
-        .catch(error => {
+        .catch((error) => {
           alert('There was an error while adding the event');
           console.log(error);
         });
@@ -207,17 +207,17 @@ class GordonSchedulePanel extends Component {
   handleRemoveSubmit() {
     myschedule
       .deleteMySchedule(this.state.selectedEvent.id)
-      .then(value => {
+      .then((value) => {
         this.loadData(this.props.profile);
         this.setState({ reloadCall: true, disabled: true });
       })
-      .catch(error => {
+      .catch((error) => {
         alert('There was an error while removing the event');
         console.log(error);
       });
   }
 
-  handleDoubleClick = event => {
+  handleDoubleClick = (event) => {
     if (this.props.myProf && event.id > 1000) {
       this.setState({ myScheduleOpen: true, selectedEvent: event, isDoubleClick: true });
     }

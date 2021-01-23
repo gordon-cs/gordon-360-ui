@@ -57,14 +57,14 @@ export default class Login extends Component {
     }
 
     // A window event listener to see if the browser has the PWA quick installation prompt available
-    window.addEventListener('beforeinstallprompt', e => {
+    window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       this.setState({ deferredPWAPrompt: e });
     });
 
     // A window event listener to see if the PWA was installed
-    window.addEventListener('appinstalled', evt => {
+    window.addEventListener('appinstalled', (evt) => {
       // Exits out the PWA Installation dialog box if already opened
       this.setState({ openPWAInstructions: false, showPWALink: false });
     });
@@ -90,7 +90,7 @@ export default class Login extends Component {
     /* Used to re-render PWA installation button. The PWA installation button should only show
      * when the user is online
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -129,7 +129,7 @@ export default class Login extends Component {
   }
 
   handleChange(prop) {
-    return event => {
+    return (event) => {
       this.setState({ [prop]: event.target.value });
     };
   }

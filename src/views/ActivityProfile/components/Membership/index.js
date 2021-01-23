@@ -97,7 +97,7 @@ export default class Membership extends Component {
     window.removeEventListener('resize', this.resize);
   }
 
-  handleSelectParticipationLevel = event => {
+  handleSelectParticipationLevel = (event) => {
     this.setState({ participationCode: event.target.value });
   };
 
@@ -109,7 +109,7 @@ export default class Membership extends Component {
     this.setState({ openJoin: true });
   }
 
-  handleText = name => event => {
+  handleText = (name) => (event) => {
     this.setState({ [name]: event.target.value });
   };
 
@@ -533,7 +533,7 @@ export default class Membership extends Component {
             {adminView}
             <Card>
               {header}
-              {members.map(groupMember => (
+              {members.map((groupMember) => (
                 <MemberList
                   member={groupMember}
                   admin={this.state.isAdmin}

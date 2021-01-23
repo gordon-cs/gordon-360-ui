@@ -13,8 +13,6 @@ import { Link } from 'react-router-dom';
 
 import './newsItem.scss';
 
-
-
 export default class NewsItem extends Component {
   constructor(props) {
     super(props);
@@ -26,12 +24,10 @@ export default class NewsItem extends Component {
       snackbarOpen: false,
       snackbarMessage: 'Something went wrong',
     };
-    
+
     // for collapsable news postings
     this.handleExpandClick = this.handleExpandClick.bind(this);
   }
-
-
 
   componentDidMount() {
     /* Used to re-render the page when the network connection changes.
@@ -39,7 +35,7 @@ export default class NewsItem extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -95,10 +91,9 @@ export default class NewsItem extends Component {
     const newsID = this.state.posting.SNID;
     // delete the news item and give feedback
     let result = await newsService.deleteStudentNews(newsID);
-    if(result === undefined) {
+    if (result === undefined) {
       this.callFunction('updateSnackbar', 'News Posting Failed to Delete');
-    }
-    else {
+    } else {
       this.callFunction('updateSnackbar', 'News Posting Deleted Successfully');
     }
     // Should be changed in future to allow react to only reload the updated news list
@@ -112,9 +107,6 @@ export default class NewsItem extends Component {
     this.props.callFunction(functionName, param);
   }
 
-
-
-
   render() {
     const posting = this.state.posting;
     const { size } = this.props;
@@ -122,21 +114,20 @@ export default class NewsItem extends Component {
     // Unapproved news should be distinct,
     // currently it is italicized and grayed out slightly
     const { unapproved } = this.props;
-    if(unapproved) {
+    if (unapproved) {
       // Shows 'pending approval' instead of the date posted
-      posting.dayPosted = <i style={{textTransform: "lowercase"}}>"pending approval..."</i>;
+      posting.dayPosted = <i style={{ textTransform: 'lowercase' }}>"pending approval..."</i>;
     }
 
     let authorProfileLink;
-    if(!this.state.network === 'online' || unapproved) {
+    if (!this.state.network === 'online' || unapproved) {
       // offline or unapproved -> hide author profile link
       authorProfileLink = (
         <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
           {posting.author}
         </Typography>
       );
-    }
-    else {
+    } else {
       // online and approved -> show author profile link
       authorProfileLink = (
         <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
@@ -146,15 +137,17 @@ export default class NewsItem extends Component {
         </Link>
       );
     }
-    
 
     // Only show the edit button if the current user is the author of the posting
     // AND posting is unapproved
     // null check temporarily fixes issue on home card when user has not yet been authenticated
     // it is because the home card doesn't give these properties
     let editButton;
-    if(this.props.currentUsername != null && 
-        this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase() && unapproved) {
+    if (
+      this.props.currentUsername != null &&
+      this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase() &&
+      unapproved
+    ) {
       editButton = (
         <Button
           variant="outlined"
@@ -166,16 +159,17 @@ export default class NewsItem extends Component {
           Edit
         </Button>
       );
+    } else {
+      editButton = <div></div>;
     }
-    else {
-      editButton = (<div></div>);
-    }
-    
+
     // Only show the delete button if the current user is the author of the posting
     // null check temporarily fixes issue on home card when user has not yet been authenticated
     let deleteButton;
-    if(this.props.currentUsername != null && 
-        this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase()) {
+    if (
+      this.props.currentUsername != null &&
+      this.props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase()
+    ) {
       deleteButton = (
         <Button
           variant="outlined"
@@ -187,18 +181,20 @@ export default class NewsItem extends Component {
           Delete
         </Button>
       );
-    }
-    else {
-      deleteButton = (<div></div>);
+    } else {
+      deleteButton = <div></div>;
     }
 
     // SINGLE SIZE - single column per news item
-    if(size === "single") {
+    if (size === 'single') {
       return (
-        <section style={this.props.style} className={unapproved ? "unapproved" : "approved"}>
+        <section style={this.props.style} className={unapproved ? 'unapproved' : 'approved'}>
           <Grid container onClick={this.handleExpandClick} className="news-item" justify="center">
             <Grid item xs={12}>
-              <Typography variant="h6" className="news-heading" style={{fontWeight: "bold"}}> {posting.Subject} </Typography>
+              <Typography variant="h6" className="news-heading" style={{ fontWeight: 'bold' }}>
+                {' '}
+                {posting.Subject}{' '}
+              </Typography>
               {authorProfileLink}
             </Grid>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
@@ -216,15 +212,17 @@ export default class NewsItem extends Component {
       );
     }
     // FULL SIZE - many columns per news item
-    else if(size === "full") {
+    else if (size === 'full') {
       return (
-        <section className={unapproved ? "unapproved" : "approved"}>
+        <section className={unapproved ? 'unapproved' : 'approved'}>
           <Grid container direction="row" onClick={this.handleExpandClick} className="news-item">
             <Grid item xs={2}>
               <Typography className="news-column">{posting.categoryName}</Typography>
             </Grid>
             <Grid item xs={5}>
-              <Typography className="news-column" style={{fontWeight: "bold"}}>{posting.Subject}</Typography>
+              <Typography className="news-column" style={{ fontWeight: 'bold' }}>
+                {posting.Subject}
+              </Typography>
             </Grid>
             <Grid item xs={3}>
               {authorProfileLink}
@@ -232,12 +230,12 @@ export default class NewsItem extends Component {
             <Grid item xs={2}>
               <Typography className="news-column">{posting.dayPosted}</Typography>
             </Grid>
-            
+
             {/* Collapsable details */}
-            <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{width: "100%"}}>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{ width: '100%' }}>
               <CardContent>
                 <Grid container direction="row" alignItems="center" justify="space-around">
-                  <Grid item xs={8} style={{textAlign: "left"}}>
+                  <Grid item xs={8} style={{ textAlign: 'left' }}>
                     <Typography className="descriptionText">Description:</Typography>
                     <Typography type="caption" className="descriptionText">
                       {postingDescription}
@@ -258,7 +256,6 @@ export default class NewsItem extends Component {
         </section>
       );
     }
-    
   }
 }
 
@@ -273,5 +270,3 @@ NewsItem.propTypes = {
     // Expiration: PropTypes.string.isRequired,
   }).isRequired,
 };
-
-
