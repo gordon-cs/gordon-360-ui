@@ -17,6 +17,10 @@ import SaveButton from '../ApartAppSaveButton';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
+/**
+ * @typedef { import('../../services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
 // Create a list of applicants, displayed by name, username, and class standing.
 export default class ApplicantList extends Component {
   constructor(props) {

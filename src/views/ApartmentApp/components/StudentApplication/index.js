@@ -19,6 +19,14 @@ import housing from '../../../../services/housing';
 import '../../apartmentApp.css';
 const MAX_NUM_APPLICANTS = 8;
 
+/**
+ * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
+/**
+ * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ */
+
 const renderInstructionsCard = () => {
   return (
     <Card>
@@ -353,11 +361,14 @@ export default class StudentApplication extends Component {
   handleSaveButtonClick = () => {
     let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
     console.log(debugMessage); //! DEBUG
+    // Filter out any hall entries that do not have a name selected
+    const preferredHalls = this.state.preferredHalls.filter((hallInfo) => hallInfo.hallName !== '');
     // The method is separated from callback because the housing API service must be handled inside an async method
     this.saveApplication(
       this.state.applicationID,
       this.state.editorUsername,
       this.state.applicants,
+      preferredHalls,
     );
   };
 
@@ -366,13 +377,19 @@ export default class StudentApplication extends Component {
    * @param {Number} applicationID the application ID number if it is known, else it is -1
    * @param {String} editorUsername the student username of the person filling out the application
    * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
+   * @param {ApartmentChoice[]} preferredHalls Array of ApartmentChoice objects
    */
-  async saveApplication(applicationID, editorUsername, applicants) {
+  async saveApplication(applicationID, editorUsername, applicants, preferredHalls) {
     this.setState({ saving: true });
     this.saveButtonAlertTimeout = null;
     let result = null;
     try {
-      result = await housing.saveApartmentApplication(applicationID, editorUsername, applicants);
+      result = await housing.saveApartmentApplication(
+        applicationID,
+        editorUsername,
+        applicants,
+        preferredHalls,
+      );
     } catch {
       result = false;
     }

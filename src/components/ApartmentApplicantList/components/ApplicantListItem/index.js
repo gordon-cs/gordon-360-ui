@@ -21,6 +21,10 @@ import user from '../../../../services/user';
 import '../../../../views/ApartmentApp/apartmentApp.css';
 import '../../../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
+/**
+ * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
 // Based off src/views/PeopleSearch/components/PeopleSearchResult
 // but using this.props.profile of type StudentProfileInfo
 // rather than using this.props.Person of type PeopleSearchResult

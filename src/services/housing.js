@@ -5,13 +5,16 @@
  */
 
 import http from './http';
-import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * @global
  * @typedef boolean
  * @property {status}
  *
+ */
+
+/**
+ * @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
  */
 
 /**

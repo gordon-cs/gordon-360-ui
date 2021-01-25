@@ -9,6 +9,10 @@ import housing from '../../services/housing';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
+/**
+ * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
+ */
+
 // Create a list of selection boxes to choosing preferred halls
 export default class HallSelection extends Component {
   constructor(props) {
