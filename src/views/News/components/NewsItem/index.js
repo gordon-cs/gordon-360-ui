@@ -11,12 +11,12 @@ const NewsItem = ({ posting, size, unapproved, onDelete, onEdit, isEditable, sty
   const [open, setOpen] = useState(false);
 
   const authorProfileLink = unapproved ? (
-    <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
+    <Typography variant="h6" className="news-column" style={{ textTransform: 'capitalize' }}>
       {posting.author}
     </Typography>
   ) : (
     <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
-      <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
+      <Typography variant="h6" className="news-column" style={{ textTransform: 'capitalize' }}>
         {posting.author}
       </Typography>
     </Link>
