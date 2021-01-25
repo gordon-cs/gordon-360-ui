@@ -47,8 +47,8 @@ export default class HallSelection extends Component {
 
   handleInputChange = (hallSelectionValue, hallRankValue, index) => {
     console.log('Called "handleInputChange" in ApartmentHallSelection component');
-    console.log('hallName: ' + hallSelectionValue); //! DEBUG
-    console.log('hallRank: ' + hallRankValue); //! DEBUG
+    console.log('HallName: ' + hallSelectionValue); //! DEBUG
+    console.log('HallRank: ' + hallRankValue); //! DEBUG
     console.log('index: ' + index); //! DEBUG
     this.props.onHallInputChange(hallSelectionValue, hallRankValue, index);
   };
@@ -81,7 +81,7 @@ export default class HallSelection extends Component {
                 {this.props.preferredHalls ? (
                   this.props.preferredHalls.map((preferredHall, index) => (
                     <HallListItem
-                      key={preferredHall.hallName + index}
+                      key={preferredHall.HallName + index}
                       index={index}
                       disabled={this.props.disabled}
                       availableHalls={this.state.availableHalls}
