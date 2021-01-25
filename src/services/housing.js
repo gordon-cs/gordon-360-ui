@@ -20,29 +20,30 @@ import http from './http';
 /**
  * @global
  * @typedef ApartmentChoice
- * @property {String} hallName  The name of the apartment hall
- * @property {Number} hallRank  The rank assigned to this hall by the user
+ * @property {String} HallName The name of the apartment hall
+ * @property {Number} HallRank The rank assigned to this hall by the user
  */
+// NOTE: Properties 'HallName' and 'HallRank' must be capitalized to match the backend
 
 /**
  * Save the current state of the application to the database
  * @param {Number} applicationID the application ID number if it is known, else it is -1
  * @param {String} editorUsername the student username of the person filling out the application
  * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
- * @param {ApartmentChoice[]} preferredHalls Array of ApartmentChoice objects
+ * @param {ApartmentChoice[]} apartmentChoices Array of ApartmentChoice objects
  * @return {Promise.<Number>} Application's ID number
  */
 const saveApartmentApplication = async (
   applicationID,
   editorUsername,
   applicants,
-  preferredHalls,
+  apartmentChoices,
 ) => {
   let applicationDetails = {
     AprtAppID: applicationID,
     Username: editorUsername,
     Applicants: applicants.map((profile) => profile.AD_Username),
-    ApartmentChoices: preferredHalls,
+    ApartmentChoices: apartmentChoices,
   };
   return await http.post(`housing/save/`, applicationDetails);
 };

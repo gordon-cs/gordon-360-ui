@@ -31,8 +31,8 @@ export default class HallListItem extends Component {
   async componentDidMount() {
     // Get the hall info for this list item
     let hallInfo = this.props.preferredHalls[this.props.index];
-    let hallSelectionValue = hallInfo.hallName;
-    let hallRankValue = hallInfo.hallRank;
+    let hallSelectionValue = hallInfo.HallName;
+    let hallRankValue = hallInfo.HallRank;
     this.setState({ hallSelectionValue, hallRankValue });
   }
 
@@ -40,8 +40,8 @@ export default class HallListItem extends Component {
     if (newProps && this.props.preferredHalls !== newProps.preferredHalls) {
       // Get the hall info for this list item
       let hallInfo = newProps.preferredHalls[newProps.index];
-      let hallSelectionValue = hallInfo.hallName;
-      let hallRankValue = hallInfo.hallRank;
+      let hallSelectionValue = hallInfo.HallName;
+      let hallRankValue = hallInfo.HallRank;
       this.setState({ hallSelectionValue, hallRankValue });
     }
   }
@@ -50,7 +50,7 @@ export default class HallListItem extends Component {
     console.log('Called "handleHallInputChange" in HallListItem component');
     if (event.target.value) {
       let hallSelectionValue = event.target.value;
-      if (!this.props.preferredHalls.some((hallInfo) => hallInfo.hallName === hallSelectionValue)) {
+      if (!this.props.preferredHalls.some((hallInfo) => hallInfo.HallName === hallSelectionValue)) {
         // Update the state only if the selected hall is NOT already in the list
         this.setState({ hallSelectionValue });
       }
@@ -81,9 +81,9 @@ export default class HallListItem extends Component {
   render() {
     const index = this.props.index;
 
-    const hallOptions = this.props.availableHalls.map((hallName) => (
-      <MenuItem value={hallName} key={hallName}>
-        {hallName}
+    const hallOptions = this.props.availableHalls.map((HallName) => (
+      <MenuItem value={HallName} key={HallName}>
+        {HallName}
       </MenuItem>
     ));
 

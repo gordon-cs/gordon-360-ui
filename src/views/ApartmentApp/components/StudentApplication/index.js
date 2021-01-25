@@ -57,7 +57,7 @@ export default class StudentApplication extends Component {
       applicationID: -1, // Default value of -1 indicate to backend that the application ID number is not yet known
       editorUsername: null, // The username of the application editor
       applicants: [],
-      preferredHalls: [{ hallName: '', hallRank: 1 }],
+      preferredHalls: [{ HallName: '', HallRank: 1 }], // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
     };
     // Off-campus program info is stored as a Map, where the Key is a student's username and the corresponding Value is the department of that student's off-campus program
     this.offCampusProgramInfo = new Map();
@@ -249,8 +249,8 @@ export default class StudentApplication extends Component {
    */
   handleHallInputChange = (hallSelectionValue, hallRankValue, index) => {
     console.log('Called "handleHallInputChange" in StudentApplication component'); //! DEBUG
-    console.log('hallName: ' + hallSelectionValue); //! DEBUG
-    console.log('hallRank: ' + hallRankValue); //! DEBUG
+    console.log('HallName: ' + hallSelectionValue); //! DEBUG
+    console.log('HallRank: ' + hallRankValue); //! DEBUG
     console.log('index: ' + index); //! DEBUG
     this.setState({ updating: true });
     if (index !== null && index >= 0) {
@@ -264,8 +264,8 @@ export default class StudentApplication extends Component {
       // Error checking on the hallSelectionValue before modifying the newHallInfo object
       if (
         hallSelectionValue !== null &&
-        hallSelectionValue !== this.state.preferredHalls[index].hallName &&
-        this.state.preferredHalls.some((hallInfo) => hallInfo.hallName === hallSelectionValue)
+        hallSelectionValue !== this.state.preferredHalls[index].HallName &&
+        this.state.preferredHalls.some((hallInfo) => hallInfo.HallName === hallSelectionValue)
       ) {
         // Display an error if the selected hall is already in the list
         this.snackbarText = String(hallSelectionValue) + ' is already in the list.';
@@ -273,12 +273,12 @@ export default class StudentApplication extends Component {
         this.setState({ snackbarOpen: true });
       } else if (hallSelectionValue !== null) {
         // Create a new custom hallInfo object
-        newHallInfo.hallName = hallSelectionValue;
+        newHallInfo.HallName = hallSelectionValue;
       }
 
       // Error checking on the hallRankValue before modifying the newHallInfo object
       if (hallRankValue !== null) {
-        newHallInfo.hallRank = Number(hallRankValue);
+        newHallInfo.HallRank = Number(hallRankValue);
       } else {
         // Display an error if the selected rank value is less or equal to zero
         this.snackbarText =
@@ -294,7 +294,7 @@ export default class StudentApplication extends Component {
 
       // Sort the list of halls by the rank numbers
       preferredHalls.sort(function(a, b) {
-        return a.hallRank - b.hallRank;
+        return a.HallRank - b.HallRank;
       });
 
       console.log('Printing current list of preferred halls'); //! DEBUG
@@ -325,13 +325,13 @@ export default class StudentApplication extends Component {
         // If any rank value is greater than the new maximum, then set it to that new max rank
         let maxRank = preferredHalls.length;
         preferredHalls.forEach((hallInfo, index) => {
-          if (hallInfo.hallRank > maxRank) {
-            preferredHalls[index].hallRank = maxRank;
+          if (hallInfo.HallRank > maxRank) {
+            preferredHalls[index].HallRank = maxRank;
           }
         });
       } else {
         // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
-        let newHallInfo = { hallName: '', hallRank: 1 };
+        let newHallInfo = { HallName: '', HallRank: 1 };
         preferredHalls[0] = newHallInfo;
       }
       console.log('Printing current list of preferred halls'); //! DEBUG
@@ -349,7 +349,7 @@ export default class StudentApplication extends Component {
     this.setState({ updating: true });
     let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
     let newHallRank = preferredHalls.length + 1;
-    preferredHalls.push({ hallName: '', hallRank: newHallRank });
+    preferredHalls.push({ HallName: '', HallRank: newHallRank });
     console.log('Printing current list of preferred halls'); //! DEBUG
     preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
     this.setState({ preferredHalls, updating: false });
@@ -362,7 +362,7 @@ export default class StudentApplication extends Component {
     let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
     console.log(debugMessage); //! DEBUG
     // Filter out any hall entries that do not have a name selected
-    const preferredHalls = this.state.preferredHalls.filter((hallInfo) => hallInfo.hallName !== '');
+    const preferredHalls = this.state.preferredHalls.filter((hallInfo) => hallInfo.HallName !== '');
     // The method is separated from callback because the housing API service must be handled inside an async method
     this.saveApplication(
       this.state.applicationID,
