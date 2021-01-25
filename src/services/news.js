@@ -155,46 +155,35 @@ const getNewsByCategory = async (category) => {
 /**
  * Filter the news page
  * (currently only search)
- * @param {any} filters - the state of news that includes filter information
- * @return {Promise<any>} news that has been filtered
+ * @param {Array<NewsItem>} news The unfiltered news
+ * @param {string} searchText The text to use in searching the news
+ * @return {Array<NewsItem>} news that has been filtered
  */
-async function getFilteredNews(filters) {
-  // source news
-  let news = filters.news;
+function getFilteredNews(news, searchText) {
   // TODO: apply category filters
   // news = filterbyCategory(filters, allNews);
-  let filteredNews = [];
-
-  // TODO: This is incorrect in events.js -> should be length check rather than null check
-  // TODO: with category filters, if news becomes 0 then search should reset it here
-  // if (news.length === 0) {
-  //   news = filters.news;
-  // }
 
   // SEARCH FILTER
-  if (filters.search !== '') {
-    // Approved News
-    for (let i = 0; i < news.length; i++) {
-      // subjects
-      if (news[i].Subject.toLowerCase().includes(filters.search.toLowerCase())) {
-        filteredNews.push(news[i]);
-      }
-      // categories
-      else if (news[i].categoryName.toLowerCase().includes(filters.search.toLowerCase())) {
-        filteredNews.push(news[i]);
-      }
-      // authors
-      else if (news[i].author.toLowerCase().includes(filters.search.toLowerCase())) {
-        filteredNews.push(news[i]);
-      }
-      // dates
-      else if (news[i].dayPosted.toLowerCase().includes(filters.search.toLowerCase())) {
-        filteredNews.push(news[i]);
-      }
-    }
-    news = filteredNews;
+  if (searchText) {
+    return news.filter((n) => matchesSearchText(n, searchText.toLowerCase()));
+  } else {
+    return news;
   }
-  return news;
+}
+
+/**
+ * Check if a news item contains any matches to the specified search text
+ * @param {NewsItem} newsItem the news item to check for matches
+ * @param {string} searchText The search text to match against
+ * @return {boolean} whether the news item contains and matches for the search text
+ */
+function matchesSearchText(newsItem, searchText) {
+  return (
+    newsItem.Subject.toLowerCase().includes(searchText) ||
+    newsItem.categoryName.toLowerCase().includes(searchText) ||
+    newsItem.author.toLowerCase().includes(searchText) ||
+    newsItem.dayPosted.toLowerCase().includes(searchText)
+  );
 }
 
 /******************* POST **********************/

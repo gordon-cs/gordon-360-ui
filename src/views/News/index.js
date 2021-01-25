@@ -24,8 +24,6 @@ import GordonLoader from '../../components/Loader';
 import OfflinePanel from '../../components/OfflinePanel';
 import { useNetworkIsOnline } from '../../context/NetworkContext';
 
-// TODO: Fix Filtering and Searching - currently commented out at the tag 'Fix Search'
-
 const styles = {
   searchBar: {
     margin: '0 auto',
@@ -50,8 +48,8 @@ const StudentNews = ({ authentication }) => {
   const [categories, setCategories] = useState([]);
   const [news, setNews] = useState([]);
   const [personalUnapprovedNews, setPersonalUnapprovedNews] = useState([]);
-  // const [search, setSearch] = useState(''); //Fix Search
-  // const [filteredNews, setFilteredNews] = useState([]); //Fix Search
+  const [search, setSearch] = useState('');
+  const [filteredNews, setFilteredNews] = useState([]);
   const [newPostCategory, setNewPostCategory] = useState('');
   const [newPostSubject, setNewPostSubject] = useState('');
   const [newPostBody, setNewPostBody] = useState('');
@@ -78,7 +76,7 @@ const StudentNews = ({ authentication }) => {
     setCategories(newsCategories);
     setNews(unexpiredNews);
     setPersonalUnapprovedNews(personalUnapprovedNews);
-    // setFilteredNews(unexpiredNews); //'Fix Search'
+    setFilteredNews(unexpiredNews);
     setLoading(false);
   };
 
@@ -89,6 +87,12 @@ const StudentNews = ({ authentication }) => {
       setLoading(false);
     }
   }, [authentication, isOnline]);
+
+  useEffect(() => {
+    if (search) {
+      setFilteredNews(newsService.getFilteredNews(news, search));
+    }
+  }, [search, news]);
 
   const handleWindowClose = () => {
     setOpenPostActivity(false);
@@ -153,17 +157,6 @@ const StudentNews = ({ authentication }) => {
     setOpenPostActivity(false);
   };
 
-  // TODO: Currently broken and therefore disabled Fix Search
-  // const filter = () => {
-  //   return async (event) => {
-  //     setSearch(event.target.value);
-  //     const filtered = await newsService.getFilteredNews(search); // Fix the service's filter function
-  //     setFilteredNews(filtered);
-  //     console.log(filteredNews);
-  //     setLoading(false);
-  //   };
-  // };
-
   if (loading) {
     return <GordonLoader />;
   } else if (authentication) {
@@ -181,8 +174,7 @@ const StudentNews = ({ authentication }) => {
           </Fab>
 
           <Grid container justify="center">
-            {/* Fix Search [BEGIN] - stretches until [END] below */}
-            {/* <Grid item xs={12} md={12} lg={8}>
+            <Grid item xs={12} md={12} lg={8}>
               <Grid
                 container
                 alignItems="baseline"
@@ -195,19 +187,18 @@ const StudentNews = ({ authentication }) => {
                     id="search"
                     label="Search news"
                     value={search}
-                    onChange={filter('search')}
+                    onChange={(e) => setSearch(e.target.value)}
                     margin="normal"
                     fullWidth
                   />
                 </Grid>
               </Grid>
-            </Grid> */}
-            {/* Fix Search [END] */}
+            </Grid>
 
             <Grid item xs={12} md={12} lg={8} style={{ marginBottom: '7rem' }}>
-              {news.length > 0 || personalUnapprovedNews.length > 0 ? (
+              {filteredNews.length > 0 || personalUnapprovedNews.length > 0 ? (
                 <NewsList
-                  news={news}
+                  news={filteredNews}
                   personalUnapprovedNews={personalUnapprovedNews}
                   currentUsername={currentUsername}
                   onEdit={startEditing}
