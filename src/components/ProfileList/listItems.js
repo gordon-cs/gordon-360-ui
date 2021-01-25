@@ -368,10 +368,11 @@ function createMinorsListItem(profile, rowWidths, styles) {
  * @return {JSX} The JSX of the Advisors List Item
  */
 function createAdvisorsListItem(profile, rowWidths, styles) {
-  // Shows the advisor(s) if the user is a student and has any advisor
+  // Shows the advisor(s) if the user is a student or 'non assigned' if there are none
   if (String(profile.PersonType).includes('stu')) {
     return (
-      <Advisors advisors={profile.Advisors} rowWidths={rowWidths} gridStyle={styles.gridStyle} />
+      <Advisors advisors={profile.Advisors} rowWidths={rowWidths} gridStyle={styles.gridStyle} 
+                styles={styles.privateTextStyle} />
     );
   }
 }
