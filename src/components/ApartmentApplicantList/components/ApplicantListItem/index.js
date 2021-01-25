@@ -21,6 +21,10 @@ import user from '../../../../services/user';
 import '../../../../views/ApartmentApp/apartmentApp.css';
 import '../../../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
+/**
+ * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
 // Based off src/views/PeopleSearch/components/PeopleSearchResult
 // but using this.props.profile of type StudentProfileInfo
 // rather than using this.props.Person of type PeopleSearchResult
@@ -70,11 +74,11 @@ export default class ApplicantListItem extends Component {
     this.setState({ anchorEl: null });
   };
 
-  handleChangePrimary = (profile) => {
+  handleChangeEditor = (profile) => {
     // Make sure the chosen profile was not null
     if (profile) {
       // Send the selected profile to the parent component
-      this.props.onChangePrimary(profile);
+      this.props.onChangeEditor(profile);
       this.handleMenuClose();
     }
   };
@@ -156,11 +160,11 @@ export default class ApplicantListItem extends Component {
           <Button
             aria-controls="applicant-menu"
             aria-haspopup="true"
-            disabled={this.props.isPrimaryApplicant || this.props.disabled}
+            disabled={this.props.isApplicationEditor || this.props.disabled}
             onClick={this.handleMenuClick}
           >
             Edit
-            {this.props.isPrimaryApplicant ? <StarBorderIcon /> : <ArrowDropDownIcon />}
+            {this.props.isApplicationEditor ? <StarBorderIcon /> : <ArrowDropDownIcon />}
           </Button>
           <Menu
             id="applicant-menu"
@@ -170,16 +174,16 @@ export default class ApplicantListItem extends Component {
             onClose={this.handleMenuClose}
           >
             <MenuItem
-              disabled={this.props.isPrimaryApplicant || this.props.disabled}
-              onClick={this.handleChangePrimary.bind(this, profile)}
+              disabled={this.props.isApplicationEditor || this.props.disabled}
+              onClick={this.handleChangeEditor.bind(this, profile)}
             >
               <ListItemIcon>
                 <StarBorderIcon />
               </ListItemIcon>
-              Make Primary Contact
+              Make Editor
             </MenuItem>
             <MenuItem
-              disabled={this.props.isPrimaryApplicant || this.props.disabled}
+              disabled={this.props.isApplicationEditor || this.props.disabled}
               onClick={this.handleRemove.bind(this, profile)}
             >
               <ListItemIcon>

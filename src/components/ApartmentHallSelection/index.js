@@ -9,6 +9,10 @@ import housing from '../../services/housing';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
+/**
+ * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
+ */
+
 // Create a list of selection boxes to choosing preferred halls
 export default class HallSelection extends Component {
   constructor(props) {
@@ -28,8 +32,8 @@ export default class HallSelection extends Component {
     if (this.props.authentication) {
       let unfilteredHalls;
       try {
-        // Get the halls available for apartments, filtered by the gender of the primary applicant
-        unfilteredHalls = await housing.getApartmentHalls(this.props.primaryUsername);
+        // Get the halls available for apartments, filtered by the gender of the application editor
+        unfilteredHalls = await housing.getApartmentHalls(this.props.editorUsername);
       } catch {
         //! DEBUG: Fills in halls dropdown when the housing api endpoint is not yet implemented
         // This list of halls is references from the 'Hall' dropdown on the PeopleSearch page
@@ -81,7 +85,7 @@ export default class HallSelection extends Component {
                       index={index}
                       disabled={this.props.disabled}
                       availableHalls={this.state.availableHalls}
-                      primaryUsername={this.props.primaryUsername}
+                      editorUsername={this.props.editorUsername}
                       preferredHalls={this.props.preferredHalls}
                       onHallInputChange={this.handleInputChange}
                       onHallRemove={this.handleRemove}
@@ -94,7 +98,7 @@ export default class HallSelection extends Component {
                     index={0}
                     disabled={this.props.disabled}
                     availableHalls={this.state.availableHalls}
-                    primaryUsername={this.props.primaryUsername}
+                    editorUsername={this.props.editorUsername}
                     preferredHalls={this.props.preferredHalls}
                     onHallInputChange={this.handleInputChange}
                     authentication={this.props.authentication}

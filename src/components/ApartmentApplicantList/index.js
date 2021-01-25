@@ -17,6 +17,10 @@ import SaveButton from '../ApartAppSaveButton';
 import '../../views/ApartmentApp/apartmentApp.css';
 import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
+/**
+ * @typedef { import('../../services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
 // Create a list of applicants, displayed by name, username, and class standing.
 export default class ApplicantList extends Component {
   constructor(props) {
@@ -35,11 +39,11 @@ export default class ApplicantList extends Component {
     }
   };
 
-  handleChangePrimary = (profile) => {
+  handleChangeEditor = (profile) => {
     // Make sure the chosen profile was not null
     if (profile) {
       // Send the selected profile to the parent component
-      this.props.onChangePrimary(profile);
+      this.props.onChangeEditor(profile);
     }
   };
 
@@ -84,8 +88,8 @@ export default class ApplicantList extends Component {
                       key={profile.AD_Username}
                       disabled={this.props.disabled}
                       profile={profile}
-                      isPrimaryApplicant={profile.AD_Username === this.props.primaryUsername}
-                      onChangePrimary={this.handleChangePrimary.bind(this, profile)}
+                      isApplicationEditor={profile.AD_Username === this.props.editorUsername}
+                      onChangeEditor={this.handleChangeEditor.bind(this, profile)}
                       onApplicantRemove={this.handleRemove.bind(this, profile)}
                     />
                   ))

@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import { Grid, Card, CardHeader, CardContent } from '@material-ui/core/';
 import '../../apartmentApp.css';
 
+/**
+ * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
+/**
+ * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ */
+
 export default class StaffMenu extends Component {
   render() {
     return (
