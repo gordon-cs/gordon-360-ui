@@ -30,6 +30,7 @@ import http from './http';
  * @property {Number} AprtAppID  Application ID number of this application
  * @property {String} Username  Username of the primary applicant
  * @property {String[]} Applicants  Array of student usernames
+ * @property {ApartmentChoice[]} ApartmentChoices  Array of ApartmentChoice objects
  */
 
 /**
