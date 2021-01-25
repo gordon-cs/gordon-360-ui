@@ -19,6 +19,7 @@ export default class ApartApp extends Component {
       loading: true,
       network: 'online',
       userProfile: {},
+      isHousingStaff: Boolean,
     };
     this.snackbarText = '';
     this.snackbarSeverity = '';
@@ -27,6 +28,7 @@ export default class ApartApp extends Component {
 
   componentDidMount() {
     this.loadProfile();
+    this.checkHousingStaff();
   }
 
   /**
@@ -44,6 +46,24 @@ export default class ApartApp extends Component {
     } catch (error) {
       // Do Nothing
     }
+  }
+
+  /**
+   * Check if the current user is authorized to view the application staff page
+   */
+  async checkHousingStaff() {
+    this.setState({ loading: true });
+    try {
+      const isHousingStaff = await housing.checkHousingStaff();
+      if (isHousingStaff) {
+        this.setState({ isHousingStaff: true });
+      } else {
+        this.setState({ isHousingStaff: false });
+      }
+    } catch (error) {
+      this.setState({ isHousingStaff: false });
+    }
+    this.setState({ loading: false });
   }
 
   render() {
@@ -76,6 +96,7 @@ export default class ApartApp extends Component {
       const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
       if (networkStatus === 'online' && this.state.isStu && this.props.authentication) {
+        // If the network is online and the user type is student
         return (
           <div>
             {this.state.loading ? (
@@ -90,7 +111,13 @@ export default class ApartApp extends Component {
             )}
           </div>
         );
-      } else if (networkStatus === 'online' && !this.state.isStu && this.props.authentication) {
+      } else if (
+        networkStatus === 'online' &&
+        !this.state.isStu &&
+        this.state.isHousingStaff &&
+        this.props.authentication
+      ) {
+        // If the network is online and the user is authorized to access the staff menu
         return (
           <div>
             {this.state.loading ? (
@@ -141,7 +168,7 @@ export default class ApartApp extends Component {
                     <h4>
                       {networkStatus === 'offline'
                         ? 'Apartment application entry has been disabled due to loss of network.'
-                        : 'Apartment application is currently available for students only. Support for staff will come soon!'}
+                        : 'Apartment application is available for students only.'}
                     </h4>
                     <br />
                     <br />
