@@ -47,7 +47,7 @@ export default class StudentApplication extends Component {
       submitDialogOpen: false, // Use this for saving app (later feature)
       editDialogOpen: false,
       applicationID: -1, // Default value of -1 indicate to backend that the application ID number is not yet known
-      primaryUsername: null, // The username of the primary applicant
+      editorUsername: null, // The username of the application editor
       applicants: [],
       preferredHalls: [{ hallName: '', hallRank: 1 }],
     };
@@ -84,8 +84,8 @@ export default class StudentApplication extends Component {
 
   async loadSavedApplication() {
     // TODO: Implement this once save/load of application data has been implemented in the backend
-    if (!this.state.primaryUsername) {
-      this.setState({ primaryUsername: this.props.userProfile.AD_Username });
+    if (!this.state.editorUsername) {
+      this.setState({ editorUsername: this.props.userProfile.AD_Username });
     }
   }
 
@@ -155,55 +155,55 @@ export default class StudentApplication extends Component {
   }
 
   /**
-   * Callback for changing the primary applicant
-   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the primary applicant
+   * Callback for changing the application editor
+   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
    */
-  handleChangePrimary = (profile) => {
+  handleChangeEditor = (profile) => {
     this.setState({ updating: true });
     if (profile) {
       if (this.state.applicants.includes(profile)) {
-        this.setState({ newPrimaryApplicant: profile, editDialogOpen: true });
+        this.setState({ newApplicationEditor: profile, editDialogOpen: true });
       }
     }
   };
 
-  handleChangePrimaryAccepted = () => {
-    if (this.state.newPrimaryApplicant && this.state.newPrimaryApplicant.AD_Username) {
+  handleChangeEditorAccepted = () => {
+    if (this.state.newApplicationEditor && this.state.newApplicationEditor.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
-      this.changePrimaryApplicant(
+      this.changeApplicationEditor(
         this.state.applicationID,
-        this.state.newPrimaryApplicant.AD_Username,
+        this.state.newApplicationEditor.AD_Username,
       );
       this.handleCloseOkay();
     } else {
-      this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
+      this.snackbarText = 'Something went wrong while trying to save the new application editor.';
       this.snackbarSeverity = 'error';
       this.setState({ snackbarOpen: true, saving: 'failed' });
     }
   };
 
   /**
-   * Update the primary applicant of the application to the database
+   * Update the application editor of the application to the database
    * @param {Number} applicationID the application ID number
-   * @param {String} newPrimaryUsername the student username of the person who will be allowed to edit this application
+   * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
    */
-  async changePrimaryApplicant(applicationID, newPrimaryUsername) {
+  async changeApplicationEditor(applicationID, newEditorUsername) {
     this.setState({ saving: true });
     this.saveButtonAlertTimeout = null;
     let result = null;
     try {
-      result = await housing.changeApplicationModifier(applicationID, newPrimaryUsername);
+      result = await housing.changeApplicationEditor(applicationID, newEditorUsername);
     } catch {
       result = false;
     }
     if (result) {
       console.log(result); //! DEBUG
       this.setState({
-        primaryUsername: this.state.newPrimaryApplicant.AD_Username,
+        editorUsername: this.state.newApplicationEditor.AD_Username,
         saving: 'success',
       });
     } else {
-      this.snackbarText = 'Something went wrong while trying to save the new primary applicant.';
+      this.snackbarText = 'Something went wrong while trying to save the new application editor.';
       this.snackbarSeverity = 'error';
       this.setState({ snackbarOpen: true, saving: 'failed' });
     }
@@ -356,7 +356,7 @@ export default class StudentApplication extends Component {
     // The method is separated from callback because the housing API service must be handled inside an async method
     this.saveApplication(
       this.state.applicationID,
-      this.state.primaryUsername,
+      this.state.editorUsername,
       this.state.applicants,
     );
   };
@@ -364,15 +364,15 @@ export default class StudentApplication extends Component {
   /**
    * Save the current state of the application to the database
    * @param {Number} applicationID the application ID number if it is known, else it is -1
-   * @param {String} primaryUsername the student username of the person filling out the application
+   * @param {String} editorUsername the student username of the person filling out the application
    * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
    */
-  async saveApplication(applicationID, primaryUsername, applicants) {
+  async saveApplication(applicationID, editorUsername, applicants) {
     this.setState({ saving: true });
     this.saveButtonAlertTimeout = null;
     let result = null;
     try {
-      result = await housing.saveApartmentApplication(applicationID, primaryUsername, applicants);
+      result = await housing.saveApartmentApplication(applicationID, editorUsername, applicants);
     } catch {
       result = false;
     }
@@ -439,10 +439,10 @@ export default class StudentApplication extends Component {
 
       const primaryApplicantAlertText = (
         <span>
-          If you change the primary applicant, you will no longer be able to edit this application
+          If you change the application editor, you will no longer be able to edit this application
           yourself.
           <br />
-          Are you sure you want to change the primary applicant?
+          Are you sure you want to change the application editor?
         </span>
       );
 
@@ -471,8 +471,7 @@ export default class StudentApplication extends Component {
                                 <br />
                                 No existing applications found
                               </Typography>
-                            ) : this.props.userProfile.AD_Username ===
-                              this.state.primaryUsername ? (
+                            ) : this.props.userProfile.AD_Username === this.state.editorUsername ? (
                               <Typography variant="body1">
                                 Existing application for this semester:
                                 <br />
@@ -480,7 +479,7 @@ export default class StudentApplication extends Component {
                               </Typography>
                             ) : (
                               <Typography variant="body1">
-                                Only the primary applicant may edit the application.
+                                Only the application editor may edit the application.
                                 <br />
                                 Last Modified: [Insert Date Here]
                               </Typography>
@@ -496,8 +495,7 @@ export default class StudentApplication extends Component {
                               >
                                 Create a new application
                               </Button>
-                            ) : this.props.userProfile.AD_Username ===
-                              this.state.primaryUsername ? (
+                            ) : this.props.userProfile.AD_Username === this.state.editorUsername ? (
                               <Button
                                 variant="contained"
                                 onClick={this.handleShowApplication}
@@ -540,11 +538,11 @@ export default class StudentApplication extends Component {
                             <ApplicantList
                               maxNumApplicants={MAX_NUM_APPLICANTS}
                               userProfile={this.props.userProfile}
-                              primaryUsername={this.state.primaryUsername}
+                              editorUsername={this.state.editorUsername}
                               applicants={this.state.applicants}
                               saving={this.state.saving}
                               onSearchSubmit={this.handleSearchSubmit}
-                              onChangePrimary={this.handleChangePrimary}
+                              onChangeEditor={this.handleChangeEditor}
                               onApplicantRemove={this.handleApplicantRemove}
                               onSaveButtonClick={this.handleSaveButtonClick}
                               authentication={this.props.authentication}
@@ -553,11 +551,11 @@ export default class StudentApplication extends Component {
                               open={this.state.editDialogOpen}
                               onClose={this.handleCloseDialog}
                               severity={'warning'}
-                              title={'Change primary applicant?'}
+                              title={'Change application editor?'}
                               text={primaryApplicantAlertText}
                               cancelButtonClicked={this.handleCloseOkay}
                               cancelButtonName={'Cancel'}
-                              confirmButtonClicked={this.handleChangePrimaryAccepted}
+                              confirmButtonClicked={this.handleChangeEditorAccepted}
                               confirmButtonName={'Accept'}
                             />
                           </Grid>
@@ -567,7 +565,7 @@ export default class StudentApplication extends Component {
                         <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                           <Grid item>
                             <HallSelection
-                              primaryUsername={this.state.primaryUsername}
+                              editorUsername={this.state.editorUsername}
                               preferredHalls={this.state.preferredHalls}
                               saving={this.state.saving}
                               onHallInputChange={this.handleHallInputChange}
@@ -597,7 +595,7 @@ export default class StudentApplication extends Component {
                         <Grid item xs={12} lg={10}>
                           <Card>
                             <CardContent>
-                              {this.props.userProfile.AD_Username === this.state.primaryUsername ? (
+                              {this.props.userProfile.AD_Username === this.state.editorUsername ? (
                                 <Grid container direction="row" justify="flex-end">
                                   <Grid item xs={6} sm={8}>
                                     <Typography variant="body1">Placeholder Text</Typography>
