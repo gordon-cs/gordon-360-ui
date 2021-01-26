@@ -55,7 +55,7 @@ const changeApplicationEditor = async (applicationID, newEditorUsername) => {
     AprtAppID: applicationID,
     Username: newEditorUsername,
   };
-  return await http.post(`housing/change-modifier/`, newModifierDetails);
+  return await http.post(`housing/change-editor/`, newModifierDetails);
 };
 
 export default {
