@@ -13,7 +13,7 @@ import {
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import GordonPeopleSearch from '../../../../../../components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
-import SaveButton from '../ApartAppSaveButton';
+import SaveButton from '../SaveButton';
 import '../../../../apartmentApp.css';
 import '../../../../../PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
