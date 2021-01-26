@@ -34,3 +34,5 @@ const SaveButton = (props) => {
     );
   }
 };
+
+export default SaveButton;
