@@ -11,11 +11,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import GordonPeopleSearch from '../Header/components/PeopleSearch';
+import GordonPeopleSearch from '../../../../../../components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
 import SaveButton from '../ApartAppSaveButton';
-import '../../views/ApartmentApp/apartmentApp.css';
-import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
+import '../../../../apartmentApp.css';
+import '../../../../../PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
 // Create a list of applicants, displayed by name, username, and class standing.
 export default class ApplicantList extends Component {

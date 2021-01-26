@@ -4,10 +4,10 @@ import { Grid, Card, CardHeader, CardContent, List, Typography, Button } from '@
 import AddIcon from '@material-ui/icons/Add';
 import HallListItem from './components/HallListItem';
 import SaveButton from '../ApartAppSaveButton';
-import goStalk from '../../services/goStalk';
-import housing from '../../services/housing';
-import '../../views/ApartmentApp/apartmentApp.css';
-import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
+import goStalk from '../../../../../../services/goStalk';
+import housing from '../../../../../../services/housing';
+import '../../../../apartmentApp.css';
+import '../../../../../PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
 // Create a list of selection boxes to choosing preferred halls
 export default class HallSelection extends Component {

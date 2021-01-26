@@ -12,8 +12,8 @@ import {
 import GordonLoader from '../../../../components/Loader';
 import AlertDialogBox from '../../../../components/AlertDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
-import ApplicantList from '../../../../components/ApartmentApplicantList';
-import HallSelection from '../../../../components/ApartmentHallSelection';
+import ApplicantList from './components/ApartmentApplicantList';
+import HallSelection from './components/ApartmentHallSelection';
 import user from '../../../../services/user';
 import housing from '../../../../services/housing';
 import '../../apartmentApp.css';
