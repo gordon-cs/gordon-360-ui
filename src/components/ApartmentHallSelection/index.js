@@ -19,7 +19,7 @@ export default class HallSelection extends Component {
     super(props);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
-    this.handleAddDropdown = this.handleAddDropdown.bind(this);
+    this.handleHallAddButton = this.handleHallAddButton.bind(this);
     this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
     this.state = {
       // array of table data from backend
@@ -45,6 +45,12 @@ export default class HallSelection extends Component {
     }
   }
 
+  /**
+   * Callback for changes to hall list item name and/or rank
+   * @param {String} hallSelectionValue The name of the hall that was selected
+   * @param {String|Number} hallRankValue The rank value that the user assigned to this hall
+   * @param {Number} index The index of the hall in the list
+   */
   handleInputChange = (hallSelectionValue, hallRankValue, index) => {
     console.log('Called "handleInputChange" in ApartmentHallSelection component');
     console.log('HallName: ' + hallSelectionValue); //! DEBUG
@@ -53,6 +59,10 @@ export default class HallSelection extends Component {
     this.props.onHallInputChange(hallSelectionValue, hallRankValue, index);
   };
 
+  /**
+   * Callback for hall list remove button
+   * @param {Number} index The index of the hall to be removed from the list of perferred halls
+   */
   handleRemove = (index) => {
     // Make sure the chosen index was not null
     if (index !== null) {
@@ -61,10 +71,16 @@ export default class HallSelection extends Component {
     }
   };
 
-  handleAddDropdown = () => {
+  /**
+   * Callback for hall list add button
+   */
+  handleHallAddButton = () => {
     this.props.onHallAdd();
   };
 
+  /**
+   * Callback for apartment application save button
+   */
   handleSaveButtonClick = () => {
     this.props.onSaveButtonClick();
   };
@@ -109,7 +125,7 @@ export default class HallSelection extends Component {
                 variant="contained"
                 color="default"
                 startIcon={<AddIcon />}
-                onClick={this.handleAddDropdown}
+                onClick={this.handleHallAddButton}
               >
                 Add a Hall
               </Button>

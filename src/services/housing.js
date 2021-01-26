@@ -5,6 +5,7 @@
  */
 
 import http from './http';
+import './user';
 
 /**
  * @global
@@ -13,8 +14,8 @@ import http from './http';
  *
  */
 
-/**
- * @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
+/** For some reason this feature works in all the other files, but not in src/services/housing.js
+ * // @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
  */
 
 /**

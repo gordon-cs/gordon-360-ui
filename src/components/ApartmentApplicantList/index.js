@@ -31,6 +31,10 @@ export default class ApplicantList extends Component {
     this.loaderSize = 20;
   }
 
+  /**
+   * Callback for apartment people search submission
+   * @param {String} theChosenOne Username for student
+   */
   handleSelection = (theChosenOne) => {
     // Make sure the chosen username was not null
     if (theChosenOne) {
@@ -39,6 +43,10 @@ export default class ApplicantList extends Component {
     }
   };
 
+  /**
+   * Callback for changing the application editor
+   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
+   */
   handleChangeEditor = (profile) => {
     // Make sure the chosen profile was not null
     if (profile) {
@@ -47,14 +55,21 @@ export default class ApplicantList extends Component {
     }
   };
 
-  handleRemove = (profile) => {
+  /**
+   * Callback for applicant list remove button
+   * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
+   */
+  handleRemove = (profileToRemove) => {
     // Make sure the chosen profile was not null
-    if (profile) {
+    if (profileToRemove) {
       // Send the selected profile to the parent component
-      this.props.onApplicantRemove(profile);
+      this.props.onApplicantRemove(profileToRemove);
     }
   };
 
+  /**
+   * Callback for apartment application save button
+   */
   handleSaveButtonClick = () => {
     this.props.onSaveButtonClick();
   };

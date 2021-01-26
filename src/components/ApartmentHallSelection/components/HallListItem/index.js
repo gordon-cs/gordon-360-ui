@@ -46,6 +46,9 @@ export default class HallListItem extends Component {
     }
   }
 
+  /**
+   * Callback for changes to hall name dropdown
+   */
   handleHallInputChange = (event) => {
     console.log('Called "handleHallInputChange" in HallListItem component');
     if (event.target.value) {
@@ -60,6 +63,9 @@ export default class HallListItem extends Component {
     }
   };
 
+  /**
+   * Callback for changes to hall rank input field
+   */
   handleRankInputChange = (event) => {
     console.log('Called "handleRankInputChange" in HallListItem component');
     if (event.target.value !== null) {
@@ -71,6 +77,9 @@ export default class HallListItem extends Component {
     }
   };
 
+  /**
+   * Callback for hall list remove button
+   */
   handleRemove = () => {
     if (this.props.index !== null) {
       // Send this list item's index to the parent component
