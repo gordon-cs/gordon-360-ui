@@ -5,7 +5,7 @@ import GordonLoader from '../../components/Loader';
 import StudentApplication from './components/StudentApplication';
 import StaffMenu from './components/StaffMenu';
 import user from '../../services/user';
-// import housing from '../../services/housing';
+import housing from '../../services/housing';
 import './apartmentApp.scss';
 
 export default class ApartApp extends Component {
