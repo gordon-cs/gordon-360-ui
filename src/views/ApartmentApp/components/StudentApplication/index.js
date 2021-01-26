@@ -29,6 +29,7 @@ const MAX_NUM_APPLICANTS = 8;
 
 /**
  * Renders a card displaying the apartment application instructions
+ * @returns {*} HTML for the instructions card
  */
 const renderInstructionsCard = () => {
   return (

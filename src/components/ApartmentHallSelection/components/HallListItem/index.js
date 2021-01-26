@@ -48,6 +48,7 @@ export default class HallListItem extends Component {
 
   /**
    * Callback for changes to hall name dropdown
+   * @param {*} event
    */
   handleHallInputChange = (event) => {
     console.log('Called "handleHallInputChange" in HallListItem component');
@@ -65,6 +66,7 @@ export default class HallListItem extends Component {
 
   /**
    * Callback for changes to hall rank input field
+   * @param {*} event
    */
   handleRankInputChange = (event) => {
     console.log('Called "handleRankInputChange" in HallListItem component');

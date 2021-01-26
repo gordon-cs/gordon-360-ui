@@ -71,6 +71,7 @@ export default class ApplicantListItem extends Component {
 
   /**
    * Callback for displaying the applicant edit menu
+   * @param {*} event
    */
   handleMenuClick = (event) => {
     this.setState({ anchorEl: event.currentTarget });
