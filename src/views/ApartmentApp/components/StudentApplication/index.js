@@ -31,6 +31,7 @@ const MAX_NUM_APPLICANTS = 8;
  * Renders a card displaying the apartment application instructions
  */
 const renderInstructionsCard = () => {
+  // TODO: Refer to 'formatQuestion' in 'src/services/wellness.js' for ideas about how to implement the instructions
   return (
     <Card>
       <CardHeader title="Apartment Application Instructions" className="card-header" />
