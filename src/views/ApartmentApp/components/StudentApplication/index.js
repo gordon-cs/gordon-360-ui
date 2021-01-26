@@ -27,6 +27,9 @@ const MAX_NUM_APPLICANTS = 8;
  * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
  */
 
+/**
+ * Renders a card displaying the apartment application instructions
+ */
 const renderInstructionsCard = () => {
   return (
     <Card>
@@ -194,6 +197,9 @@ export default class StudentApplication extends Component {
     }
   };
 
+  /**
+   * Callback for applying the new application editor
+   */
   handleChangeEditorAccepted = () => {
     if (this.state.newApplicationEditor && this.state.newApplicationEditor.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
@@ -261,7 +267,7 @@ export default class StudentApplication extends Component {
   };
 
   /**
-   * Callback for hall list remove button
+   * Callback for changes to hall list item name and/or rank
    * @param {String} hallSelectionValue The name of the hall that was selected
    * @param {String|Number} hallRankValue The rank value that the user assigned to this hall
    * @param {Number} index The index of the hall in the list

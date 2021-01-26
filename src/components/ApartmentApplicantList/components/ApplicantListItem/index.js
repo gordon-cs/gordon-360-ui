@@ -48,6 +48,9 @@ export default class ApplicantListItem extends Component {
     this.loadAvatar();
   }
 
+  /**
+   * Load the applicant's avatar, to be display with their infomation on the applicant list
+   */
   async loadAvatar() {
     this.setState({ avatar: null });
     const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
@@ -66,14 +69,24 @@ export default class ApplicantListItem extends Component {
     this.setState({ avatar });
   }
 
+  /**
+   * Callback for displaying the applicant edit menu
+   */
   handleMenuClick = (event) => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
+  /**
+   * Callback for closing the applicant edit menu
+   */
   handleMenuClose = () => {
     this.setState({ anchorEl: null });
   };
 
+  /**
+   * Callback for changing the application editor
+   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
+   */
   handleChangeEditor = (profile) => {
     // Make sure the chosen profile was not null
     if (profile) {
@@ -83,11 +96,15 @@ export default class ApplicantListItem extends Component {
     }
   };
 
-  handleRemove = (profile) => {
+  /**
+   * Callback for applicant list remove button
+   * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
+   */
+  handleRemove = (profileToRemove) => {
     // Make sure the chosen profile was not null
-    if (profile) {
+    if (profileToRemove) {
       // Send the selected profile to the parent component
-      this.props.onApplicantRemove(profile);
+      this.props.onApplicantRemove(profileToRemove);
       this.handleMenuClose();
     }
   };
