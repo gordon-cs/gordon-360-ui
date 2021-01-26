@@ -249,7 +249,7 @@ const PeopleSearch = (props) => {
     }
   };
 
-  const getSearchParamsFromUrl = useCallback(() => {
+  const searchFromUrlParams = useCallback(() => {
     const urlParams = new URLSearchParams(window.location.search);
     let includeAlum = urlParams.get('includeAlumni') === 'true' || false;
     let firstName = urlParams.get('firstName').trim() || '';
@@ -297,10 +297,10 @@ const PeopleSearch = (props) => {
       if (!window.location.href.includes('?')) {
         window.location.reload();
       } else {
-        getSearchParamsFromUrl();
+        searchFromUrlParams();
       }
     };
-  }, [getSearchParamsFromUrl]);
+  }, [searchFromUrlParams]);
 
   useEffect(() => {
     const loadPage = async () => {
@@ -335,13 +335,13 @@ const PeopleSearch = (props) => {
         setPersonType(profile.PersonType);
 
         if (window.location.href.includes('?')) {
-          getSearchParamsFromUrl();
+          searchFromUrlParams();
         }
       }
     };
 
     loadPage();
-  }, [props.authentication, getSearchParamsFromUrl]);
+  }, [props.authentication, searchFromUrlParams]);
 
   const saveSearchParamsToHistory = () => {
     let searchParameters =
