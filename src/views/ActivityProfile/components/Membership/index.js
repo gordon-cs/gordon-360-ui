@@ -191,7 +191,8 @@ export default class Membership extends Component {
           // User is already a member of this involvement
           this.setState({ isUserAlreadyMemberSnackBarOpen: true });
         } else {
-          this.setState({ isSnackBarOpen: true });
+          this.setState({ isSnackBarOpen: true, openAddMember: false });
+          this.refresh();
         }
       } catch (error) {
         switch (error.name) {

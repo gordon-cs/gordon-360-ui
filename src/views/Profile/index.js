@@ -44,6 +44,7 @@ export default class Profile extends Component {
       linkedInLink: '',
       twitterLink: '',
       instagramLink: '',
+      handshakeLink: '',
       network: 'online',
       currentUser: '',
     };
@@ -149,6 +150,10 @@ export default class Profile extends Component {
         this.state.profile.Instagram === null || this.state.profile.Instagram === ''
           ? ''
           : socialMediaInfo.instagram.prefix + this.state.profile.Instagram,
+      handshakeLink:
+        this.state.profile.Handshake === null || this.state.profile.Handshake === ''
+          ? ''
+          : socialMediaInfo.handshake.prefix + this.state.profile.Handshake,
     });
   }
   checkPersonType(profile) {
@@ -189,7 +194,7 @@ export default class Profile extends Component {
   }
 
   render() {
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       if (this.state.error && this.state.error.name === 'NotFoundError') {
         return <Redirect to="/profilenotfound" />;
       }

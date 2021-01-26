@@ -46,6 +46,7 @@ export const Identification = (props) => {
   const [linkedInLink, setLinkedInLink] = useState('');
   const [twitterLink, setTwitterLink] = useState('');
   const [instagramLink, setInstagramLink] = useState('');
+  const [handshakeLink, setHandshakeLink] = useState('');
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState(false);
   const [snackbarKey, setSnackbarKey] = useState(0); // A key to make every snackbar display unique
@@ -152,6 +153,11 @@ export const Identification = (props) => {
         !props.profile.Instagram || props.profile.Instagram === ''
           ? ''
           : socialMediaInfo.instagram.prefix + props.profile.Instagram,
+      );
+      setHandshakeLink(
+        !props.profile.Handshake || props.profile.Handshake === ''
+          ? ''
+          : socialMediaInfo.handshake.prefix + props.profile.Handshake,
       );
     }
 
@@ -654,6 +660,8 @@ export const Identification = (props) => {
         setLinkedInLink={setLinkedInLink}
         instagramLink={instagramLink}
         setInstagramLink={setInstagramLink}
+        handshakeLink={handshakeLink}
+        setHandshakeLink={setHandshakeLink}
       />
     ) : (
       <></>
@@ -664,6 +672,7 @@ export const Identification = (props) => {
   let twitterButton;
   let linkedInButton;
   let instagramButton;
+  let handshakeButton;
   let editButton;
   let linkCount = 0; // To record whether or not any links are displayed
 
@@ -722,6 +731,21 @@ export const Identification = (props) => {
           rel="noopener noreferrer"
         >
           {socialMediaInfo.instagram.icon}
+        </a>
+      </Grid>
+    );
+    linkCount += 1;
+  }
+  if (handshakeLink !== '') {
+    handshakeButton = (
+      <Grid item>
+        <a
+          href={handshakeLink}
+          className="gc360-my-profile_icon"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {socialMediaInfo.handshake.icon}
         </a>
       </Grid>
     );
@@ -826,6 +850,7 @@ export const Identification = (props) => {
                     twitterButton ||
                     linkedInButton ||
                     instagramButton ||
+                    handshakeButton ||
                     props.myProf) && (
                     <Grid
                       item
@@ -840,6 +865,7 @@ export const Identification = (props) => {
                         {twitterButton}
                         {linkedInButton}
                         {instagramButton}
+                        {handshakeButton}
                         {props.network === 'online' && props.myProf && editButton}
                       </Grid>
                     </Grid>
