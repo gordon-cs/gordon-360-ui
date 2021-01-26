@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import 'date-fns';
 import {
   Grid,
   Card,

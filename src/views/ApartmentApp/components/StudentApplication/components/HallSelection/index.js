@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import 'date-fns';
 import { Grid, Card, CardHeader, CardContent, List, Typography, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import HallListItem from './components/HallListItem';
