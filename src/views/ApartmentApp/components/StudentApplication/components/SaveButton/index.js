@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Button } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { gordonColors } from '../../../../../../theme';
 import GordonLoader from '../../../../../../components/Loader';
 import './saveButton.css';
 
@@ -19,7 +18,7 @@ const SaveButton = (props) => {
     } else if (props.saving === 'failed') {
       return <ErrorIcon className="error" />;
     } else {
-      <GordonLoader size={loaderSize} />;
+      return <GordonLoader size={loaderSize} />;
     }
   } else {
     return (
