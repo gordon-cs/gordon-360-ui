@@ -3,9 +3,9 @@ import 'date-fns';
 import { Button } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { gordonColors } from '../../theme';
-import GordonLoader from '../Loader';
-import '../../views/ApartmentApp/apartmentApp.css';
+import { gordonColors } from '../../../../../../theme';
+import GordonLoader from '../../../../../../components/Loader';
+import '../../../../apartmentApp.css';
 const styles = {
   success: {
     color: gordonColors.secondary.green,

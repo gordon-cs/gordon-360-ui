@@ -17,9 +17,9 @@ import PersonIcon from '@material-ui/icons/Person';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import ClearIcon from '@material-ui/icons/Clear';
-import user from '../../../../services/user';
-import '../../../../views/ApartmentApp/apartmentApp.css';
-import '../../../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
+import user from '../../../../../../../../services/user';
+import '../../../../../../apartmentApp.css';
+import '../../../../../../../PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
 /**
  * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
