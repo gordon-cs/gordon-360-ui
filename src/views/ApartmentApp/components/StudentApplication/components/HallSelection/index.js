@@ -3,11 +3,11 @@ import 'date-fns';
 import { Grid, Card, CardHeader, CardContent, List, Typography, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import HallListItem from './components/HallListItem';
-import SaveButton from '../ApartAppSaveButton';
-import goStalk from '../../services/goStalk';
-import housing from '../../services/housing';
-import '../../views/ApartmentApp/apartmentApp.css';
-import '../../views/PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
+import SaveButton from '../SaveButton';
+import goStalk from '../../../../../../services/goStalk';
+import housing from '../../../../../../services/housing';
+import '../../../../apartmentApp.css';
+import '../../../../../PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
 /**
  * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
