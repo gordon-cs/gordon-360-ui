@@ -94,7 +94,7 @@ export default class StudentApplication extends Component {
   }
 
   /**
-   * Callback for loading an application that has been previously saved to the database
+   * Loads the user's saved apartment application, if one exists
    */
   async loadSavedApplication() {
     // TODO: Implement this once save/load of application data has been implemented in the backend
