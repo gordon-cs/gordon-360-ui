@@ -377,7 +377,7 @@ export default class StudentApplication extends Component {
       result = false;
     }
     if (result !== null && result !== false) {
-      console.log('result of saving:' + result); //! DEBUG
+      console.log('result of saving: ' + result); //! DEBUG
       this.setState({ applicationID: result, saving: 'success' });
     } else {
       this.snackbarText = 'Something went wrong while trying to save the application.';
