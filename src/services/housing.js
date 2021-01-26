@@ -14,17 +14,18 @@ import './user';
  *
  */
 
-/** For some reason this feature works in all the other files, but not in src/services/housing.js
+/**
+ * For some reason this feature works in all the other files, but not in src/services/housing.js
  * // @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
  */
 
 /**
+ * Note: Properties 'HallName' and 'HallRank' must be capitalized to match the backend
  * @global
  * @typedef ApartmentChoice
  * @property {String} HallName The name of the apartment hall
  * @property {Number} HallRank The rank assigned to this hall by the user
  */
-// NOTE: Properties 'HallName' and 'HallRank' must be capitalized to match the backend
 
 /**
  * @global

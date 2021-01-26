@@ -112,6 +112,7 @@ export default class StudentApplication extends Component {
   };
 
   handleSubmitApplication = () => {
+    // TODO: This callback should make sure all the fields contain valid entries before allowing the application to be submitted.
     try {
       //! Placeholder
       this.snackbarText = 'This feature is not yet implemented.';
@@ -435,6 +436,9 @@ export default class StudentApplication extends Component {
     }
   }
 
+  /**
+   * Callback for closing the snackbar
+   */
   handleCloseSnackbar = (event, reason) => {
     // Prevent the snackbar from closing if the user clicks outside the snackbar
     if (reason === 'clickaway') {
@@ -443,6 +447,9 @@ export default class StudentApplication extends Component {
     this.setState({ snackbarOpen: false });
   };
 
+  /**
+   * Callback for closing the alert dialog box
+   */
   handleCloseDialog = (event, reason) => {
     // Prevent the dialog box from closing if the user clicks outside the dialog box
     if (reason === 'clickaway') {
@@ -451,6 +458,9 @@ export default class StudentApplication extends Component {
     this.handleCloseOkay();
   };
 
+  /**
+   * Callback for the alert dialog box "Okay" button
+   */
   handleCloseOkay = () => {
     this.setState({ submitDialogOpen: false, editDialogOpen: false });
   };
