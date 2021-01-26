@@ -215,8 +215,6 @@ const PeopleSearch = (props) => {
     dept,
     building,
   ) => {
-    console.log('Called search function.');
-
     setHeader(<GordonLoader />);
     setPeopleSearchResults(null);
 
@@ -252,7 +250,6 @@ const PeopleSearch = (props) => {
   };
 
   const getSearchParamsFromUrl = useCallback(() => {
-    console.log('Called load params func');
     const urlParams = new URLSearchParams(window.location.search);
     let includeAlum = urlParams.get('includeAlumni') === 'true' || false;
     let firstName = urlParams.get('firstName').trim() || '';
@@ -297,23 +294,17 @@ const PeopleSearch = (props) => {
 
   useEffect(() => {
     window.onpopstate = () => {
-      console.log('Calling the window onpopstate handler');
       if (!window.location.href.includes('?')) {
-        console.log('Reloading the window');
         window.location.reload();
       } else {
-        console.log('Getting search params from url and searching');
         getSearchParamsFromUrl();
       }
     };
   }, [getSearchParamsFromUrl]);
 
   useEffect(() => {
-    console.log('authentication or Search function changed. Rebuilding loadPage func');
     const loadPage = async () => {
-      console.log('Called loadPage func');
       if (props.authentication) {
-        console.log('Fetching searchable data');
         const [
           profile,
           majors,
@@ -344,7 +335,6 @@ const PeopleSearch = (props) => {
         setPersonType(profile.PersonType);
 
         if (window.location.href.includes('?')) {
-          console.log('Getting params and searching from loadPage');
           getSearchParamsFromUrl();
         }
       }
@@ -354,7 +344,6 @@ const PeopleSearch = (props) => {
   }, [props.authentication, getSearchParamsFromUrl]);
 
   const saveSearchParamsToHistory = () => {
-    console.log('Called save params func');
     let searchParameters =
       `?firstName=${firstNameSearchValue}&lastName=${lastNameSearchValue}` +
       `&major=${majorSearchValue}&minor=${minorSearchValue}&hall=${hallSearchValue}&classType=${classTypeSearchValue}` +
@@ -364,7 +353,6 @@ const PeopleSearch = (props) => {
   };
 
   const clearSearchParams = () => {
-    console.log('Called clear params func');
     setIncludeAlmuni(false);
     setFirstNameSearchValue('');
     setLastNameSearchValue('');
