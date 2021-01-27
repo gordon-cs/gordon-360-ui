@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Grid,
@@ -21,174 +21,160 @@ import '../../../../../../apartmentApp.css';
 import '../../../../../../../PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
 // Based off src/views/PeopleSearch/components/PeopleSearchResult
-// but using this.props.profile of type StudentProfileInfo
+// but using props.profile of type StudentProfileInfo
 // rather than using this.props.Person of type PeopleSearchResult
-export default class ApplicantListItem extends Component {
-  constructor(props) {
-    super(props);
+const ApplicantListItem = (props) => {
+  const [avatar, setAvatar] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null); // A HTML element, or a function that returns it. It's used to set the position of the menu.
+  const [hasNickName, setHasNickname] = useState(Boolean);
+  const [personClass, setPersonClass] = useState(props.profile.Class);
 
-    this.state = {
-      avatar: null,
-      anchorEl: null, // A HTML element, or a function that returns it. It's used to set the position of the menu.
-    };
-  }
-
-  componentDidUpdate(newProps) {
-    if (this.props.profile.AD_Username !== newProps.profile.AD_Username) {
-      this.loadAvatar();
-    }
-  }
-
-  componentDidMount() {
-    this.loadAvatar();
-  }
-
-  async loadAvatar() {
-    this.setState({ avatar: null });
-    const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-      await user.getImage(this.props.profile.AD_Username),
-    ]);
-    let avatar;
-    if (this.props.profile.AD_Username) {
-      avatar = preferredImage || defaultImage;
-    } else {
-      avatar = (
-        <svg width="50" height="50" viewBox="0 0 50 50">
-          <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-        </svg>
-      );
-    }
-    this.setState({ avatar });
-  }
-
-  handleMenuClick = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleMenuClose = () => {
-    this.setState({ anchorEl: null });
-  };
-
-  handleChangeEditor = (profile) => {
-    // Make sure the chosen profile was not null
-    if (profile) {
-      // Send the selected profile to the parent component
-      this.props.onChangeEditor(profile);
-      this.handleMenuClose();
-    }
-  };
-
-  handleRemove = (profile) => {
-    // Make sure the chosen profile was not null
-    if (profile) {
-      // Send the selected profile to the parent component
-      this.props.onApplicantRemove(profile);
-      this.handleMenuClose();
-    }
-  };
-
-  render() {
-    const profile = this.props.profile;
-    let fullName = String(profile.fullName);
-    let personType, personClassJobTitle, nickname;
-
-    // set nicknames up
-    if (
-      profile.NickName !== null &&
-      profile.NickName !== '' &&
-      profile.FirstName !== profile.NickName
-    ) {
-      nickname = '(' + profile.NickName + ')';
-    }
-    // set classes up
-    if (String(profile.PersonType).includes('stu')) {
-      personType = 'Student';
-      if (profile.Class !== undefined) {
-        personClassJobTitle = profile.Class;
+  useEffect(() => {
+    /**
+     * Creates the Avatar image of the given user
+     */
+    async function loadAvatar() {
+      const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
+        await user.getImage(props.profile.AD_Username),
+      ]);
+      let newAvatar = null;
+      if (props.profile.AD_Username) {
+        newAvatar = preferredImage || defaultImage;
       }
-      // set job titles up
-    } else {
-      personType = 'Not Student';
-      if (profile.JobTitle !== undefined) {
-        personClassJobTitle = profile.JobTitle;
+      if (newAvatar === null) {
+        newAvatar = (
+          <svg width="50" height="50" viewBox="0 0 50 50">
+            <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+          </svg>
+        );
       }
+      setAvatar(newAvatar);
     }
 
-    return (
-      <ListItem
-        key={profile.AD_Username}
-        component={Link}
-        target="_blank"
-        to={`/profile/${profile.AD_Username}`}
-        className={'list-item'}
-      >
-        <ListItemAvatar>
-          {this.state.avatar ? (
-            <Avatar
-              className={`avatar`}
-              src={`data:image/jpg;base64,${this.state.avatar}`}
-              alt=""
-            />
-          ) : (
-            <Avatar>
-              <PersonIcon color="primary" />
-            </Avatar>
-          )}
-        </ListItemAvatar>
-        <Grid container alignItems="center" spacing={3}>
-          <Grid item xs={6}>
-            <ListItemText
-              primary={nickname ? fullName.replace(' ', ' ' + nickname + ' ') : fullName}
-              secondary={profile.AD_Username}
-              className={'list-item'}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <ListItemText
-              primary={personClassJobTitle}
-              secondary={personType}
-              className={'list-item'}
-            />
-          </Grid>
+    loadAvatar();
+
+    createNickname(props.profile);
+
+    if (String(props.profile.PersonType).includes('stu') && props.profile.Class !== undefined) {
+      setPersonClass(props.profile.Class);
+    } else {
+      setPersonClass('');
+    }
+  }, [props.profile]);
+
+  // Saves the nickname of the given user if available
+  function createNickname(profile) {
+    let Name = String(profile.fullName);
+    let FirstName = Name.split(' ')[0];
+    setHasNickname(FirstName !== profile.NickName && profile.NickName !== '');
+  }
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleChangeEditor = () => {
+    // Make sure the chosen profile was not null
+    if (props.profile) {
+      // Send the selected profile to the parent component
+      props.onChangeEditor(props.profile);
+      handleMenuClose();
+    }
+  };
+
+  const handleRemove = () => {
+    // Make sure the chosen profile was not null
+    if (props.profile) {
+      // Send the selected profile to the parent component
+      props.onApplicantRemove(props.profile);
+      handleMenuClose();
+    }
+  };
+
+  return (
+    <ListItem
+      key={props.profile.AD_Username}
+      component={Link}
+      target="_blank"
+      to={`/profile/${props.profile.AD_Username}`}
+      className={'list-item'}
+    >
+      <ListItemAvatar>
+        {avatar ? (
+          <Avatar className={`avatar`} src={`data:image/jpg;base64,${avatar}`} alt="" />
+        ) : (
+          <Avatar>
+            <PersonIcon color="primary" />
+          </Avatar>
+        )}
+      </ListItemAvatar>
+      <Grid container alignItems="center" spacing={1}>
+        <Grid item xs={12} sm>
+          <ListItemText
+            primary={
+              props.profile.Title &&
+              props.profile.Title !== '' &&
+              props.profile.PersonType === 'fac'
+                ? // If the user has a title
+                  hasNickName
+                  ? // If the user has a title and a nickname
+                    props.profile.Title +
+                    ' ' +
+                    props.profile.fullName +
+                    ' (' +
+                    props.profile.NickName +
+                    ')'
+                  : // If the user has a title and no nickname
+                    props.profile.Title + ' ' + props.profile.fullName
+                : // If the user doesn't have a title
+                hasNickName
+                ? // If the user doesn't have a title but has a nickname
+                  props.profile.fullName + ' (' + props.profile.NickName + ')'
+                : // If the user doesn't have a title or a nickname
+                  props.profile.fullName
+            }
+            secondary={personClass}
+            className={'list-item'}
+          />
         </Grid>
-        <ListItemSecondaryAction>
-          <Button
-            aria-controls="applicant-menu"
-            aria-haspopup="true"
-            disabled={this.props.isApplicationEditor}
-            onClick={this.handleMenuClick}
-          >
-            Edit
-            {this.props.isApplicationEditor ? <StarBorderIcon /> : <ArrowDropDownIcon />}
-          </Button>
-          <Menu
-            id="applicant-menu"
-            anchorEl={this.state.anchorEl}
-            keepMounted
-            open={Boolean(this.state.anchorEl)}
-            onClose={this.handleMenuClose}
-          >
-            <MenuItem
-              disabled={this.props.isApplicationEditor}
-              onClick={this.handleChangeEditor.bind(this, profile)}
-            >
-              <ListItemIcon>
-                <StarBorderIcon />
-              </ListItemIcon>
-              Make Editor
-            </MenuItem>
-            <MenuItem
-              disabled={this.props.isApplicationEditor}
-              onClick={this.handleRemove.bind(this, profile)}
-            >
-              <ListItemIcon>
-                <ClearIcon />
-              </ListItemIcon>
-              Remove
-            </MenuItem>
-          </Menu>
-        </ListItemSecondaryAction>
-      </ListItem>
-    );
-  }
-}
+      </Grid>
+      <ListItemSecondaryAction>
+        <Button
+          aria-controls="applicant-menu"
+          aria-haspopup="true"
+          disabled={props.isApplicationEditor}
+          onClick={handleMenuClick}
+        >
+          Edit
+          {props.isApplicationEditor ? <StarBorderIcon /> : <ArrowDropDownIcon />}
+        </Button>
+        <Menu
+          id="applicant-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem disabled={props.isApplicationEditor} onClick={handleChangeEditor}>
+            <ListItemIcon>
+              <StarBorderIcon />
+            </ListItemIcon>
+            Make Editor
+          </MenuItem>
+          <MenuItem disabled={props.isApplicationEditor} onClick={handleRemove}>
+            <ListItemIcon>
+              <ClearIcon />
+            </ListItemIcon>
+            Remove
+          </MenuItem>
+        </Menu>
+      </ListItemSecondaryAction>
+    </ListItem>
+  );
+};
+
+export default ApplicantListItem;

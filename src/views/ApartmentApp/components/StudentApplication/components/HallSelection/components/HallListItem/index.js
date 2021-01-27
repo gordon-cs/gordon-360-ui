@@ -15,14 +15,14 @@ import ApartmentIcon from '@material-ui/icons/Apartment';
 import ClearIcon from '@material-ui/icons/Clear';
 
 const HallListItem = (props) => {
-  const [hallSelectionValue, setHallSelectionValue] = useState(''); // Hall drop-down menu value
+  const [hallNameValue, setHallNameValue] = useState(''); // Hall drop-down menu value
   const [hallRankValue, setHallRankValue] = useState(1); // Rank drop-down menu value
 
   useEffect(() => {
     // Get the hall info for this list item from the component's props
     const getHallFromProps = () => {
       setHallRankValue(props.preferredHalls[props.index].hallRank);
-      setHallSelectionValue(props.preferredHalls[props.index].hallName);
+      setHallNameValue(props.preferredHalls[props.index].hallName);
     };
 
     getHallFromProps();
@@ -31,14 +31,16 @@ const HallListItem = (props) => {
   const handleHallInputChange = (event) => {
     console.log('Called "handleHallInputChange" in HallListItem component'); //! DEBUG
     if (event.target.value !== null) {
-      props.onHallInputChange(event.target.value, hallRankValue, props.index);
+      let newHallNameValue = event.target.value;
+      props.onHallInputChange(newHallNameValue, hallRankValue, props.index);
     }
   };
 
   const handleRankInputChange = (event) => {
     console.log('Called "handleRankInputChange" in HallListItem component'); //! DEBUG
     if (event.target.value !== null) {
-      props.onHallInputChange(hallSelectionValue, event.target.value, props.index);
+      let newHallRankValue = event.target.value;
+      props.onHallInputChange(hallNameValue, newHallRankValue, props.index);
     }
   };
 
@@ -85,7 +87,7 @@ const HallListItem = (props) => {
           <FormControl fullWidth>
             <InputLabel>Hall</InputLabel>
             <Select
-              value={hallSelectionValue}
+              value={hallNameValue}
               onChange={handleHallInputChange}
               input={<Input id={'hall' + index} />}
             >
