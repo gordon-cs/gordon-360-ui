@@ -21,8 +21,8 @@ const HallListItem = (props) => {
   useEffect(() => {
     // Get the hall info for this list item from the component's props
     const getHallFromProps = () => {
-      setHallRankValue(props.preferredHalls[props.index].hallRank);
-      setHallNameValue(props.preferredHalls[props.index].hallName);
+      setHallRankValue(props.preferredHalls[props.index].HallRank);
+      setHallNameValue(props.preferredHalls[props.index].HallName);
     };
 
     getHallFromProps();
@@ -32,7 +32,7 @@ const HallListItem = (props) => {
     console.log('Called "handleRankInputChange" in HallListItem component'); //! DEBUG
     if (event.target.value !== null) {
       let newHallRankValue = event.target.value;
-      props.onHallInputChange(hallNameValue, newHallRankValue, props.index);
+      props.onHallInputChange(newHallRankValue, hallNameValue, props.index);
     }
   };
 
@@ -40,7 +40,7 @@ const HallListItem = (props) => {
     console.log('Called "handleHallInputChange" in HallListItem component'); //! DEBUG
     if (event.target.value !== null) {
       let newHallNameValue = event.target.value;
-      props.onHallInputChange(newHallNameValue, hallRankValue, props.index);
+      props.onHallInputChange(hallRankValue, newHallNameValue, props.index);
     }
   };
 

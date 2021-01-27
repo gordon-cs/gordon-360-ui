@@ -41,7 +41,7 @@ const StudentApplication = (props) => {
   const [applicationID, setApplicationID] = useState(-1); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
   const [applicants, setApplicants] = useState([]);
-  const [preferredHalls, setPreferredHalls] = useState([{ hallRank: 1, hallName: '' }]);
+  const [preferredHalls, setPreferredHalls] = useState([{ HallRank: 1, HallName: '' }]);
   // const [offCampusProgramInfo, setOffCampusProgramInfo] = useState(new Map());
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
@@ -71,8 +71,7 @@ const StudentApplication = (props) => {
     // Check if the current user is on an application. Returns the application ID number if found
     let newApplicationID = -1; // await housing.getApplicationID();
     if (newApplicationID !== null && newApplicationID !== -1) {
-      setApplicationID(-1); //! Placeholder
-      /* setApplicationID(newApplicationID);
+      setApplicationID(newApplicationID);
       let applicationDetails = await housing.getApartmentApplication(newApplicationID);
       if (applicationDetails) {
         if (applicationDetails.Username) {
@@ -81,7 +80,7 @@ const StudentApplication = (props) => {
         if (applicationDetails.Applicants) {
           setApplicants(applicationDetails.Username);
         }
-      } */
+      }
     } else {
       // No existing application was found in the database
       setApplicationID(-1);
@@ -243,14 +242,14 @@ const StudentApplication = (props) => {
 
   /**
    * Callback for hall list remove button
-   * @param {String} hallSelectionValue The name of the hall that was selected
-   * @param {String|Number} hallRankValue The rank value that the user assigned to this hall
+   * @param {Number} hallRankValue The rank value that the user assigned to this hall
+   * @param {String} hallNameValue The name of the hall that was selected
    * @param {Number} index The index of the hall in the list
    */
-  const handleHallInputChange = (hallSelectionValue, hallRankValue, index) => {
+  const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
     console.log('Called "handleHallInputChange" in StudentApplication component'); //! DEBUG
-    console.log('hallName: ' + hallSelectionValue); //! DEBUG
-    console.log('hallRank: ' + hallRankValue); //! DEBUG
+    console.log('HallRank: ' + hallRankValue); //! DEBUG
+    console.log('HallName: ' + hallNameValue); //! DEBUG
     console.log('index: ' + index); //! DEBUG
     if (index !== null && index >= 0) {
       console.log('Attempting to update preferred halls'); //! DEBUG
@@ -260,24 +259,9 @@ const StudentApplication = (props) => {
       // Get the custom hallInfo object at the given index
       let newHallInfo = newPreferredHalls[index];
 
-      // Error checking on the hallSelectionValue before modifying the newHallInfo object
-      if (
-        hallSelectionValue !== null &&
-        hallSelectionValue !== preferredHalls[index].hallName &&
-        newPreferredHalls.some((hallInfo) => hallInfo.hallName === hallSelectionValue)
-      ) {
-        // Display an error if the selected hall is already in the list
-        setSnackbarText(String(hallSelectionValue) + ' is already in the list.');
-        setSnackbarSeverity('info');
-        setSnackbarOpen(true);
-      } else if (hallSelectionValue !== null) {
-        // Create a new custom hallInfo object
-        newHallInfo.hallName = hallSelectionValue;
-      }
-
       // Error checking on the hallRankValue before modifying the newHallInfo object
       if (hallRankValue !== null) {
-        newHallInfo.hallRank = Number(hallRankValue);
+        newHallInfo.HallRank = Number(hallRankValue);
       } else {
         // Display an error if the selected rank value is less or equal to zero
         setSnackbarText(
@@ -289,12 +273,27 @@ const StudentApplication = (props) => {
         setSnackbarOpen(true);
       }
 
+      // Error checking on the hallNameValue before modifying the newHallInfo object
+      if (
+        hallNameValue !== null &&
+        hallNameValue !== preferredHalls[index].HallName &&
+        newPreferredHalls.some((hallInfo) => hallInfo.HallName === hallNameValue)
+      ) {
+        // Display an error if the selected hall is already in the list
+        setSnackbarText(String(hallNameValue) + ' is already in the list.');
+        setSnackbarSeverity('info');
+        setSnackbarOpen(true);
+      } else if (hallNameValue !== null) {
+        // Create a new custom hallInfo object
+        newHallInfo.HallName = hallNameValue;
+      }
+
       newPreferredHalls[index] = newHallInfo; // replace the element at index with the new hall info object
       // preferredHalls.splice(index, 1, newHallInfo);
 
       // Sort the list of halls by the rank numbers
       newPreferredHalls.sort(function(a, b) {
-        return a.hallRank - b.hallRank;
+        return a.HallRank - b.HallRank;
       });
 
       console.log('Printing current list of preferred halls'); //! DEBUG
@@ -323,13 +322,13 @@ const StudentApplication = (props) => {
         // If any rank value is greater than the new maximum, then set it to that new max rank
         let maxRank = newPreferredHalls.length;
         newPreferredHalls.forEach((hallInfo, index) => {
-          if (hallInfo.hallRank > maxRank) {
-            newPreferredHalls[index].hallRank = maxRank;
+          if (hallInfo.HallRank > maxRank) {
+            newPreferredHalls[index].HallRank = maxRank;
           }
         });
       } else {
         // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
-        let newHallInfo = { hallName: '', hallRank: 1 };
+        let newHallInfo = { HallRank: 1, HallName: '' };
         newPreferredHalls[0] = newHallInfo;
       }
       console.log('Printing current list of preferred halls'); //! DEBUG
@@ -345,7 +344,7 @@ const StudentApplication = (props) => {
     console.log('Called "handleHallAdd" in StudentApplication component'); //1 DEBUG
     let newPreferredHalls = preferredHalls; // make a separate copy of the array
     let newHallRank = newPreferredHalls.length + 1;
-    newPreferredHalls.push({ hallRank: newHallRank, hallName: '' });
+    newPreferredHalls.push({ HallRank: newHallRank, HallName: '' });
     console.log('Printing current list of preferred halls'); //! DEBUG
     newPreferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
     setPreferredHalls(newPreferredHalls);

@@ -28,12 +28,12 @@ const HallSelection = (props) => {
     setAvailableHalls(unfilteredHalls.map((hall) => hall.trim()));
   };
 
-  const handleInputChange = (hallNameValue, hallRankValue, index) => {
+  const handleInputChange = (hallRankValue, hallNameValue, index) => {
     console.log('Called "handleInputChange" in ApartmentHallSelection component');
-    console.log('hallName: ' + hallNameValue); //! DEBUG
-    console.log('hallRank: ' + hallRankValue); //! DEBUG
+    console.log('HallRank: ' + hallRankValue); //! DEBUG
+    console.log('HallName: ' + hallNameValue); //! DEBUG
     console.log('index: ' + index); //! DEBUG
-    props.onHallInputChange(hallNameValue, hallRankValue, index);
+    props.onHallInputChange(hallRankValue, hallNameValue, index);
   };
 
   const handleRemove = (index) => {
@@ -63,7 +63,7 @@ const HallSelection = (props) => {
               {props.preferredHalls ? (
                 props.preferredHalls.map((preferredHall, index) => (
                   <HallListItem
-                    key={preferredHall.hallName + index}
+                    key={preferredHall.HallName + index}
                     index={index}
                     availableHalls={availableHalls}
                     editorUsername={props.editorUsername}
