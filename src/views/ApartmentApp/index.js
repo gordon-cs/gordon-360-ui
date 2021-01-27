@@ -97,11 +97,42 @@ const ApartApp = (props) => {
             <StaffMenu authentication={props.authentication} />
           </div>
         );
+      } else {
+        return (
+          <Grid container justify="center">
+            <Grid item xs={12} md={8}>
+              <Card>
+                <CardContent
+                  style={{
+                    margin: 'auto',
+                    textAlign: 'center',
+                  }}
+                >
+                  <br />
+                  <h1>Apartment application Unavailable</h1>
+                  <h4>Apartment application is available for students or housing staff only.</h4>
+                  <br />
+                  <br />
+                  <Button
+                    className="back-home-button"
+                    color="primary"
+                    variant="outlined"
+                    onClick={() => {
+                      window.location.pathname = '';
+                    }}
+                  >
+                    Back To Home
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        );
       }
-    } else if (networkStatus === 'offline' || !isUserStudent) {
-      // If the network is offline or the user type is non-student
+    } else {
+      // If the network is offline
       return (
-        <Grid container justify="center" spacing="16">
+        <Grid container justify="center">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent
@@ -110,39 +141,29 @@ const ApartApp = (props) => {
                   textAlign: 'center',
                 }}
               >
-                {networkStatus === 'offline' && (
-                  <Grid
-                    item
-                    xs={2}
-                    alignItems="center"
-                    style={{
-                      display: 'block',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                    }}
-                  >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
-                  </Grid>
-                )}
+                <Grid
+                  item
+                  xs={2}
+                  alignItems="center"
+                  style={{
+                    display: 'block',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
+                >
+                  <img
+                    src={require(`${'../../NoConnection.svg'}`)}
+                    alt="Internet Connection Lost"
+                  />
+                </Grid>
                 <br />
-                <h1>
-                  {networkStatus === 'offline'
-                    ? 'Please re-establish connection'
-                    : 'Apartment application Unavailable'}
-                </h1>
-                <h4>
-                  {networkStatus === 'offline'
-                    ? 'Apartment application entry has been disabled due to loss of network.'
-                    : 'Apartment application is available for students or housing staff only.'}
-                </h4>
+                <h1>Please Re-establish Connection</h1>
+                <h4>Viewing Apartment Applications has been deactivated due to loss of network.</h4>
                 <br />
                 <br />
                 <Button
+                  className="back-home-button"
                   color="primary"
-                  backgroundColor="white"
                   variant="outlined"
                   onClick={() => {
                     window.location.pathname = '';
