@@ -11,7 +11,6 @@ import {
   Select,
   IconButton,
 } from '@material-ui/core';
-import ApartmentIcon from '@material-ui/icons/Apartment';
 import ClearIcon from '@material-ui/icons/Clear';
 
 const HallListItem = (props) => {
@@ -67,9 +66,6 @@ const HallListItem = (props) => {
 
   return (
     <ListItem key={index} className={'list-item'}>
-      <ListItemIcon>
-        <ApartmentIcon color="primary" />
-      </ListItemIcon>
       <Grid container alignItems="center" spacing={3}>
         <Grid item xs={3} sm={2}>
           <FormControl fullWidth>

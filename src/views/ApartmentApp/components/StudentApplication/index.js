@@ -16,7 +16,6 @@ import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
 import housing from '../../../../services/housing';
 import user from '../../../../services/user';
-// import '../../apartmentApp.css';
 const MAX_NUM_APPLICANTS = 8;
 
 const InstructionsCard = () => (
