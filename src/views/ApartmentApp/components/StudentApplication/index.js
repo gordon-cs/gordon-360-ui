@@ -241,7 +241,7 @@ const StudentApplication = (props) => {
   };
 
   /**
-   * Callback for hall list remove button
+   * Callback for changes to hall list item name and/or rank
    * @param {Number} hallRankValue The rank value that the user assigned to this hall
    * @param {String} hallNameValue The name of the hall that was selected
    * @param {Number} index The index of the hall in the list
