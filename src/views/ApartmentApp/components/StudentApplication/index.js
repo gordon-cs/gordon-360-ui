@@ -58,35 +58,21 @@ const StudentApplication = (props) => {
   let offCampusProgramInfo = new Map();
   applicants.forEach((profile) => offCampusProgramInfo.set(profile.AD_Username, ''));
 
-  useEffect();
-
+  /**
+   * Attempt to load an existing application from the database if one exists
+   */
   useEffect(() => {
-    loadUserProfile();
     loadSavedApplication();
   });
-
-  /**
-   * Loads the user's profile info only once (at start)
-   */
-  const loadUserProfile = async () => {
-    setLoading(true);
-    try {
-      let newApplicants = applicants;
-      newApplicants.push(props.userProfile);
-      setApplicants(newApplicants);
-      setLoading(false);
-    } catch (error) {
-      // Do Nothing
-    }
-  };
 
   const loadSavedApplication = async () => {
     // TODO: Implement this once save/load of application data has been implemented in the backend
     setLoading(true);
     // Check if the current user is on an application. Returns the application ID number if found
-    let newApplicationID = await housing.getApplicationID();
+    let newApplicationID = -1; // await housing.getApplicationID();
     if (newApplicationID !== null && newApplicationID !== -1) {
-      setApplicationID(newApplicationID);
+      setApplicationID(-1); //! Placeholder
+      /* setApplicationID(newApplicationID);
       let applicationDetails = await housing.getApartmentApplication(newApplicationID);
       if (applicationDetails) {
         if (applicationDetails.Username) {
@@ -95,15 +81,22 @@ const StudentApplication = (props) => {
         if (applicationDetails.Applicants) {
           setApplicants(applicationDetails.Username);
         }
-      }
+      } */
     } else {
+      // No existing application was found in the database
       setApplicationID(-1);
       if (!editorUsername) {
         setEditorUsername(props.userProfile.AD_Username);
       }
       let newApplicants = applicants;
-      newApplicants.push(props.userProfile);
-      setApplicants(newApplicants);
+      if (
+        newApplicants.every(
+          (applicantProfile) => applicantProfile.AD_Username !== props.userProfile.AD_Username,
+        )
+      ) {
+        newApplicants.push(props.userProfile);
+        setApplicants(newApplicants);
+      }
     }
     setLoading(false);
   };
