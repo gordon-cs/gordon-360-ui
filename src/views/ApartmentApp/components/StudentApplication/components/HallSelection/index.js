@@ -11,9 +11,7 @@ const HallSelection = (props) => {
   const [availableHalls, setAvailableHalls] = useState([]); // array of hall names from backend
 
   useEffect(() => {
-    if (props.authentication) {
-      loadHalls();
-    }
+    loadHalls();
   });
 
   const loadHalls = async () => {
@@ -30,12 +28,12 @@ const HallSelection = (props) => {
     setAvailableHalls(unfilteredHalls.map((hall) => hall.trim()));
   };
 
-  const handleInputChange = (hallSelectionValue, hallRankValue, index) => {
+  const handleInputChange = (hallNameValue, hallRankValue, index) => {
     console.log('Called "handleInputChange" in ApartmentHallSelection component');
-    console.log('hallName: ' + hallSelectionValue); //! DEBUG
+    console.log('hallName: ' + hallNameValue); //! DEBUG
     console.log('hallRank: ' + hallRankValue); //! DEBUG
     console.log('index: ' + index); //! DEBUG
-    props.onHallInputChange(hallSelectionValue, hallRankValue, index);
+    props.onHallInputChange(hallNameValue, hallRankValue, index);
   };
 
   const handleRemove = (index) => {
