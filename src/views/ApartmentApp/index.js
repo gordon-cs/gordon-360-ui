@@ -15,58 +15,44 @@ const ApartApp = (props) => {
   const [canUseStaff, setCanUseStaff] = useState(false);
   const [isUserStudent, setIsUserStudent] = useState(false);
 
-  /* useEffect(() => {
-    loadProfile();
-  }); */
+  useEffect(() => {
+    loadUserProfile();
+    checkHousingStaff();
+  });
 
   /**
    * Loads the user's profile info only once (at start)
    */
-  /* const loadProfile = async () => {
-    this.setState({ loading: true });
+  const loadUserProfile = async () => {
+    setLoading(true);
     try {
-      const profile = await user.getProfileInfo();
-      this.setState({ userProfile: profile });
-      this.setState({ isUserStudent: String(profile.PersonType).includes('stu') });
-      this.setState({ loading: false });
+      user.getProfileInfo().then((data) => {
+        setUserProfile(data);
+        data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
+      });
     } catch (error) {
       // Do Nothing
     }
-  };  */
+    setLoading(false);
+  };
 
   /**
-   * Loads the user's profile info only once (at start)
+   * Check if the current user is authorized to view the application staff page
    */
-  useEffect(() => {
+  const checkHousingStaff = async () => {
     setLoading(true);
-    user.getProfileInfo().then((data) => {
-      setUserProfile(data);
-      data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
-    });
-    setLoading(false);
-  }, []);
-
-  // disabled lint in some lines in order to remove warning about race condition that does not apply
-  // in our current case.
-  useEffect(() => {
-    async function getCanUseStaff() {
-      try {
-        let canUse = await housing.checkStaff();
-
-        if (canUse.length === 1) {
-          setCanUseStaff(true);
-        } else {
-          setCanUseStaff(false);
-        }
-      } catch (error) {
+    try {
+      const isHousingStaff = await housing.checkHousingStaff();
+      if (isHousingStaff) {
+        setCanUseStaff(true);
+      } else {
         setCanUseStaff(false);
       }
+    } catch (error) {
+      setCanUseStaff(false);
     }
-
-    getCanUseStaff();
-
-    // eslint-disable-next-line
-  }, []);
+    setLoading(false);
+  };
 
   if (props.authentication) {
     /* Used to re-render the page when the network connection changes.
