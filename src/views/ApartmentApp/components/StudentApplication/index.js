@@ -1,4 +1,4 @@
-//Main apartment application page
+//Student apartment application page
 import React, { useState, useEffect } from 'react';
 import {
   Grid,
