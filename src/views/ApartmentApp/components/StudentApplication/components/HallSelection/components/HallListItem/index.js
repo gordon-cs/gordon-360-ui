@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   ListItem,
@@ -14,121 +14,93 @@ import {
 import ApartmentIcon from '@material-ui/icons/Apartment';
 import ClearIcon from '@material-ui/icons/Clear';
 
-export default class HallListItem extends Component {
-  constructor(props) {
-    super(props);
-    this.handleHallInputChange = this.handleHallInputChange.bind(this);
-    this.handleRankInputChange = this.handleRankInputChange.bind(this);
-    this.handleRemove = this.handleRemove.bind(this);
-    this.state = {
-      availableHalls: [], // array of table data from backend
-      hallSelectionValue: '', // Drop-down menu value
-      hallRankValue: this.props.index + 1,
+const HallListItem = (props) => {
+  const [hallSelectionValue, setHallSelectionValue] = useState(''); // Hall drop-down menu value
+  const [hallRankValue, setHallRankValue] = useState(1); // Rank drop-down menu value
+
+  useEffect(() => {
+    // Get the hall info for this list item from the component's props
+    const getHallFromProps = () => {
+      setHallRankValue(props.preferredHalls[props.index].hallRank);
+      setHallSelectionValue(props.preferredHalls[props.index].hallName);
     };
-  }
 
-  async componentDidMount() {
-    // Get the hall info for this list item
-    let hallInfo = this.props.preferredHalls[this.props.index];
-    let hallSelectionValue = hallInfo.hallName;
-    let hallRankValue = hallInfo.hallRank;
-    this.setState({ hallSelectionValue, hallRankValue });
-  }
+    getHallFromProps();
+  });
 
-  async componentDidUpdate(newProps) {
-    if (newProps && this.props.preferredHalls !== newProps.preferredHalls) {
-      // Get the hall info for this list item
-      let hallInfo = newProps.preferredHalls[newProps.index];
-      let hallSelectionValue = hallInfo.hallName;
-      let hallRankValue = hallInfo.hallRank;
-      this.setState({ hallSelectionValue, hallRankValue });
-    }
-  }
-
-  handleHallInputChange = (event) => {
-    console.log('Called "handleHallInputChange" in HallListItem component');
-    if (event.target.value) {
-      let hallSelectionValue = event.target.value;
-      if (!this.props.preferredHalls.some((hallInfo) => hallInfo.hallName === hallSelectionValue)) {
-        // Update the state only if the selected hall is NOT already in the list
-        this.setState({ hallSelectionValue });
-      }
-      let hallRankValue = this.state.hallRankValue;
-      let index = this.props.index;
-      this.props.onHallInputChange(hallSelectionValue, hallRankValue, index);
-    }
-  };
-
-  handleRankInputChange = (event) => {
-    console.log('Called "handleRankInputChange" in HallListItem component');
+  const handleHallInputChange = (event) => {
+    console.log('Called "handleHallInputChange" in HallListItem component'); //! DEBUG
     if (event.target.value !== null) {
-      let hallSelectionValue = this.state.hallSelectionValue;
-      let hallRankValue = event.target.value;
-      this.setState({ hallRankValue });
-      let index = this.props.index;
-      this.props.onHallInputChange(hallSelectionValue, hallRankValue, index);
+      props.onHallInputChange(event.target.value, hallRankValue, props.index);
     }
   };
 
-  handleRemove = () => {
-    if (this.props.index !== null) {
+  const handleRankInputChange = (event) => {
+    console.log('Called "handleRankInputChange" in HallListItem component'); //! DEBUG
+    if (event.target.value !== null) {
+      props.onHallInputChange(hallSelectionValue, event.target.value, props.index);
+    }
+  };
+
+  const handleRemove = () => {
+    if (props.index !== null) {
       // Send this list item's index to the parent component
-      this.props.onHallRemove(this.props.index);
+      props.onHallRemove(props.index);
     }
   };
 
-  render() {
-    const index = this.props.index;
+  const index = props.index;
 
-    const hallOptions = this.props.availableHalls.map((hallName) => (
-      <MenuItem value={hallName} key={hallName}>
-        {hallName}
-      </MenuItem>
-    ));
+  const hallOptions = props.availableHalls.map((hallName) => (
+    <MenuItem value={hallName} key={hallName}>
+      {hallName}
+    </MenuItem>
+  ));
 
-    const rankOptions = this.props.preferredHalls.map((_hall, i) => (
-      <MenuItem value={i + 1} key={i + 1}>
-        {i + 1}
-      </MenuItem>
-    ));
+  const rankOptions = props.preferredHalls.map((_hall, i) => (
+    <MenuItem value={i + 1} key={i + 1}>
+      {i + 1}
+    </MenuItem>
+  ));
 
-    return (
-      <ListItem key={index} className={'list-item'}>
-        <ListItemIcon>
-          <ApartmentIcon color="primary" />
-        </ListItemIcon>
-        <Grid container alignItems="center" spacing={3}>
-          <Grid item xs={3} sm={2}>
-            <FormControl fullWidth>
-              <InputLabel>Rank</InputLabel>
-              <Select
-                value={this.state.hallRankValue}
-                onChange={this.handleRankInputChange}
-                input={<Input id={'rank' + index} />}
-              >
-                {rankOptions}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={9} sm={10}>
-            <FormControl fullWidth>
-              <InputLabel>Hall</InputLabel>
-              <Select
-                value={this.state.hallSelectionValue}
-                onChange={this.handleHallInputChange}
-                input={<Input id={'hall' + index} />}
-              >
-                {hallOptions}
-              </Select>
-            </FormControl>
-          </Grid>
+  return (
+    <ListItem key={index} className={'list-item'}>
+      <ListItemIcon>
+        <ApartmentIcon color="primary" />
+      </ListItemIcon>
+      <Grid container alignItems="center" spacing={3}>
+        <Grid item xs={3} sm={2}>
+          <FormControl fullWidth>
+            <InputLabel>Rank</InputLabel>
+            <Select
+              value={hallRankValue}
+              onChange={handleRankInputChange}
+              input={<Input id={'rank' + index} />}
+            >
+              {rankOptions}
+            </Select>
+          </FormControl>
         </Grid>
-        <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete" onClick={this.handleRemove}>
-            <ClearIcon />
-          </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
-    );
-  }
-}
+        <Grid item xs={9} sm={10}>
+          <FormControl fullWidth>
+            <InputLabel>Hall</InputLabel>
+            <Select
+              value={hallSelectionValue}
+              onChange={handleHallInputChange}
+              input={<Input id={'hall' + index} />}
+            >
+              {hallOptions}
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+      <ListItemSecondaryAction>
+        <IconButton edge="end" aria-label="delete" onClick={handleRemove}>
+          <ClearIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+  );
+};
+
+export default HallListItem;
