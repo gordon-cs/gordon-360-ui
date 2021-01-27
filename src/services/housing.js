@@ -40,7 +40,7 @@ const changeApplicationModifier = async (applicationID, newPrimaryUsername) => {
     AprtAppID: applicationID,
     Username: newPrimaryUsername,
   };
-  return await http.post(`housing/change-modifier/`, newModifierDetails);
+  return await http.post(`housing/change-editor/`, newModifierDetails);
 };
 
 export default {
