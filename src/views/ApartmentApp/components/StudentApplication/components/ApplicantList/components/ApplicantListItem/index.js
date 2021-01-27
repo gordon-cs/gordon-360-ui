@@ -30,44 +30,47 @@ const ApplicantListItem = (props) => {
   const [personClass, setPersonClass] = useState(props.profile.Class);
 
   useEffect(() => {
-    /**
-     * Creates the Avatar image of the given user
-     */
-    async function loadAvatar() {
-      const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-        await user.getImage(props.profile.AD_Username),
-      ]);
-      let newAvatar = null;
-      if (props.profile.AD_Username) {
-        newAvatar = preferredImage || defaultImage;
-      }
-      if (newAvatar === null) {
-        newAvatar = (
-          <svg width="50" height="50" viewBox="0 0 50 50">
-            <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-          </svg>
-        );
-      }
-      setAvatar(newAvatar);
-    }
-
-    loadAvatar();
-
+    loadAvatar(props.profile);
     createNickname(props.profile);
-
     if (String(props.profile.PersonType).includes('stu') && props.profile.Class !== undefined) {
       setPersonClass(props.profile.Class);
     } else {
+      // Techincally, this case should never happen because the list does not allow the user to add a non-student to the applicant list
       setPersonClass('');
     }
   }, [props.profile]);
 
-  // Saves the nickname of the given user if available
-  function createNickname(profile) {
+  /**
+   * Creates the Avatar image of the given user
+   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the student represented by this list item
+   */
+  const loadAvatar = async (profile) => {
+    const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
+      await user.getImage(profile.AD_Username),
+    ]);
+    let newAvatar = null;
+    if (profile.AD_Username) {
+      newAvatar = preferredImage || defaultImage;
+    }
+    if (newAvatar === null) {
+      newAvatar = (
+        <svg width="50" height="50" viewBox="0 0 50 50">
+          <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+        </svg>
+      );
+    }
+    setAvatar(newAvatar);
+  };
+
+  /**
+   * Saves the nickname of the given user if available
+   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the student represented by this list item
+   */
+  const createNickname = (profile) => {
     let Name = String(profile.fullName);
     let FirstName = Name.split(' ')[0];
     setHasNickname(FirstName !== profile.NickName && profile.NickName !== '');
-  }
+  };
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
