@@ -17,8 +17,6 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import ClearIcon from '@material-ui/icons/Clear';
 import user from '../../../../../../../../services/user';
-import '../../../../../../apartmentApp.css';
-import '../../../../../../../PeopleSearch/components/PeopleSearchResult/peopleSearchResult.css';
 
 // Based off src/views/PeopleSearch/components/PeopleSearchResult
 // but using props.profile of type StudentProfileInfo
