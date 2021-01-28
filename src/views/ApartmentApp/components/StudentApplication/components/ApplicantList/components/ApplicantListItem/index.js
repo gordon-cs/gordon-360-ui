@@ -91,6 +91,10 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     }
   };
 
+  const displayName = hasNickName
+    ? profile.fullName + ' (' + profile.NickName + ')'
+    : profile.fullName;
+
   return (
     <ListItem
       key={profile.AD_Username}
@@ -110,13 +114,7 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
       </ListItemAvatar>
       <Grid container alignItems="center" spacing={1}>
         <Grid item xs={12} sm>
-          <ListItemText
-            primary={
-              hasNickName ? profile.fullName + ' (' + profile.NickName + ')' : profile.fullName
-            }
-            secondary={personClass}
-            className={'list-item'}
-          />
+          <ListItemText primary={displayName} secondary={personClass} className={'list-item'} />
         </Grid>
       </Grid>
       <ListItemSecondaryAction>
