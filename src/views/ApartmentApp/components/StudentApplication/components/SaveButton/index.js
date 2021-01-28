@@ -1,55 +1,32 @@
-import React, { Component } from 'react';
-import 'date-fns';
+import React from 'react';
 import { Button } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { gordonColors } from '../../../../../../theme';
 import GordonLoader from '../../../../../../components/Loader';
-import '../../../../apartmentApp.css';
-const styles = {
-  success: {
-    color: gordonColors.secondary.green,
-    fontSize: '26px',
-  },
-  error: {
-    color: gordonColors.secondary.red,
-    fontSize: '26px',
-  },
-};
+import './saveButton.css';
 
-export default class SaveButton extends Component {
-  constructor(props) {
-    super(props);
-    this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
-    this.loaderSize = 20;
-  }
+const SaveButton = ({ saving, onClick }) => {
+  const loaderSize = 20;
 
-  handleSaveButtonClick = () => {
-    this.props.onClick();
+  const handleSaveButtonClick = () => {
+    onClick();
   };
 
-  render() {
+  if (saving) {
+    if (saving === 'success') {
+      return <CheckCircleIcon className="success" />;
+    } else if (saving === 'failed') {
+      return <ErrorIcon className="error" />;
+    } else {
+      return <GordonLoader size={loaderSize} />;
+    }
+  } else {
     return (
-      <div>
-        {this.props.saving ? (
-          this.props.saving === 'success' ? (
-            <CheckCircleIcon style={styles.success} />
-          ) : this.props.saving === 'failed' ? (
-            <ErrorIcon style={styles.error} />
-          ) : (
-            <GordonLoader size={this.loaderSize} />
-          )
-        ) : (
-          <Button
-            disabled={this.props.saving}
-            variant="contained"
-            color="primary"
-            onClick={this.handleSaveButtonClick}
-          >
-            Save
-          </Button>
-        )}
-      </div>
+      <Button disabled={saving} variant="contained" color="primary" onClick={handleSaveButtonClick}>
+        Save
+      </Button>
     );
   }
-}
+};
+
+export default SaveButton;
