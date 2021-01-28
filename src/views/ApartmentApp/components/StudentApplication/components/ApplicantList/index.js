@@ -15,12 +15,23 @@ import ApplicantListItem from './components/ApplicantListItem';
 import SaveButton from '../SaveButton';
 
 // Create a list of applicants, displayed by name, username, and class standing.
-const ApplicantList = (props) => {
+const ApplicantList = ({
+  maxNumApplicants,
+  userProfile,
+  editorUsername,
+  applicants,
+  saving,
+  onSearchSubmit,
+  onChangeEditor,
+  onApplicantRemove,
+  onSaveButtonClick,
+  authentication,
+}) => {
   const handleSelection = (theChosenOne) => {
     // Make sure the chosen username was not null
     if (theChosenOne) {
       // Send the selected username to the parent component
-      props.onSearchSubmit(theChosenOne);
+      onSearchSubmit(theChosenOne);
     }
   };
 
@@ -28,7 +39,7 @@ const ApplicantList = (props) => {
     // Make sure the chosen profile was not null
     if (profile) {
       // Send the selected profile to the parent component
-      props.onChangeEditor(profile);
+      onChangeEditor(profile);
     }
   };
 
@@ -36,12 +47,12 @@ const ApplicantList = (props) => {
     // Make sure the chosen profile was not null
     if (profile) {
       // Send the selected profile to the parent component
-      props.onApplicantRemove(profile);
+      onApplicantRemove(profile);
     }
   };
 
   const handleSaveButtonClick = () => {
-    props.onSaveButtonClick();
+    onSaveButtonClick();
   };
 
   return (
@@ -50,11 +61,11 @@ const ApplicantList = (props) => {
         action={
           <GordonPeopleSearch
             disableLink
-            disabled={props.applicants.length > props.maxNumApplicants}
+            disabled={applicants.length > maxNumApplicants}
             icon={<GroupAddIcon />}
             customPlaceholderText={'Add Applicant'}
             onSearchSubmit={handleSelection}
-            authentication={props.authentication}
+            authentication={authentication}
           />
         }
         title="Student Applicants"
@@ -64,12 +75,12 @@ const ApplicantList = (props) => {
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={11}>
             <List className="applicant-list" aria-label="apartment applicants">
-              {props.applicants ? (
-                props.applicants.map((profile) => (
+              {applicants ? (
+                applicants.map((profile) => (
                   <ApplicantListItem
                     key={profile.AD_Username}
                     profile={profile}
-                    isApplicationEditor={profile.AD_Username === props.editorUsername}
+                    isApplicationEditor={profile.AD_Username === editorUsername}
                     onChangeEditor={handleChangeEditor}
                     onApplicantRemove={handleRemove}
                   />
@@ -85,18 +96,18 @@ const ApplicantList = (props) => {
             </List>
           </Grid>
           <Grid item xs={9}>
-            {props.saving === 'failed' ? (
+            {saving === 'failed' ? (
               <Typography variant="overline" color="error">
                 Something went wrong while trying to save the application
               </Typography>
-            ) : props.applicants.length >= props.maxNumApplicants ? (
+            ) : applicants.length >= maxNumApplicants ? (
               <Typography variant="overline" color="error">
-                You have reached the maximum number of applicants ({props.maxNumApplicants})
+                You have reached the maximum number of applicants ({maxNumApplicants})
               </Typography>
             ) : null}
           </Grid>
           <Grid item xs={3}>
-            <SaveButton saving={props.saving} onClick={handleSaveButtonClick} />
+            <SaveButton saving={saving} onClick={handleSaveButtonClick} />
           </Grid>
         </Grid>
       </CardContent>
