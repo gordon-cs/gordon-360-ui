@@ -59,12 +59,6 @@ const StudentApplication = ({ userProfile }) => {
   /**
    * Attempt to load an existing application from the database if one exists
    */
-  useEffect(() => {
-    loadSavedApplication();
-
-    // eslint-disable-next-line
-  }, []);
-
   const loadSavedApplication = async () => {
     // TODO: Implement this once save/load of application data has been implemented in the backend
     setLoading(true);
@@ -87,18 +81,22 @@ const StudentApplication = ({ userProfile }) => {
       if (!editorUsername) {
         setEditorUsername(userProfile.AD_Username);
       }
-      let newApplicants = applicants;
+      //! DEBUG: This 'if' is forced to 'true' for debug only, make sure to put it back to normal
       if (
-        newApplicants.every(
+        true ||
+        applicants.every(
           (applicantProfile) => applicantProfile.AD_Username !== userProfile.AD_Username,
         )
       ) {
-        newApplicants.push(userProfile);
-        setApplicants(newApplicants);
+        setApplicants(applicants.concat(userProfile));
       }
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    loadSavedApplication();
+  }, []);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
