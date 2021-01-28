@@ -115,3 +115,13 @@
     }
   }
 }
+
+a.rtc-link {
+  color: $primary-cyan;
+  text-decoration: underline;
+}
+
+a.rtc-link:hover {
+  color: $primary-blue;
+  text-decoration: underline;
+}

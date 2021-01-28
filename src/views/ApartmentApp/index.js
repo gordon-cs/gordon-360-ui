@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import 'date-fns';
+//Main apartment application page
+import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardContent, Button } from '@material-ui/core/';
 import GordonLoader from '../../components/Loader';
 import StudentApplication from './components/StudentApplication';
@@ -8,189 +8,116 @@ import user from '../../services/user';
 import housing from '../../services/housing';
 import './apartmentApp.scss';
 
-export default class ApartApp extends Component {
-  constructor(props) {
-    super(props);
-    this.peopleSearch = React.createRef();
-    this.state = {
-      isStu: Boolean,
-      isFac: Boolean,
-      isAlu: Boolean,
-      loading: true,
-      network: 'online',
-      userProfile: {},
-      isHousingStaff: Boolean,
-    };
-    this.snackbarText = '';
-    this.snackbarSeverity = '';
-    this.saveButtonAlertTimeout = null;
-  }
+const ApartApp = ({ authentication }) => {
+  const [loading, setLoading] = useState(true);
+  const [network, setNetwork] = useState('online');
+  const [userProfile, setUserProfile] = useState({});
+  const [canUseStaff, setCanUseStaff] = useState(false);
+  const [isUserStudent, setIsUserStudent] = useState(false);
 
-  componentDidMount() {
-    this.loadProfile();
-    this.checkHousingStaff();
-  }
-
-  /**
-   * Loads the user's profile info only once (at start)
-   */
-  async loadProfile() {
-    this.setState({ loading: true });
-    try {
-      const profile = await user.getProfileInfo();
-      this.setState({ userProfile: profile });
-      this.setState({ isStu: String(profile.PersonType).includes('stu') });
-      this.setState({ isFac: String(profile.PersonType).includes('fac') });
-      this.setState({ isAlu: String(profile.PersonType).includes('alu') });
-      this.setState({ loading: false });
-    } catch (error) {
-      // Do Nothing
-    }
-  }
+  useEffect(() => {
+    setLoading(true);
+    user.getProfileInfo().then((data) => {
+      setUserProfile(data);
+      data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
+    });
+    checkHousingStaff();
+    setLoading(false);
+  }, []);
 
   /**
    * Check if the current user is authorized to view the application staff page
    */
-  async checkHousingStaff() {
-    this.setState({ loading: true });
+  const checkHousingStaff = async () => {
     try {
       const isHousingStaff = await housing.checkHousingStaff();
       if (isHousingStaff) {
-        this.setState({ isHousingStaff: true });
+        setCanUseStaff(true);
       } else {
-        this.setState({ isHousingStaff: false });
+        setCanUseStaff(false);
       }
     } catch (error) {
-      this.setState({ isHousingStaff: false });
+      setCanUseStaff(false);
     }
-    this.setState({ loading: false });
-  }
+  };
 
-  render() {
-    if (this.props.authentication) {
-      /* Used to re-render the page when the network connection changes.
-       *  this.state.network is compared to the message received to prevent
-       *  multiple re-renders that creates extreme performance lost.
-       *  The origin of the message is checked to prevent cross-site scripting attacks
-       */
-      window.addEventListener('message', (event) => {
-        if (
-          event.data === 'online' &&
-          this.state.network === 'offline' &&
-          event.origin === window.location.origin
-        ) {
-          this.setState({ network: 'online' });
-        } else if (
-          event.data === 'offline' &&
-          this.state.network === 'online' &&
-          event.origin === window.location.origin
-        ) {
-          this.setState({ network: 'offline' });
-        }
-      });
+  if (authentication) {
+    /* Used to re-render the page when the network connection changes.
+     *  The state's network variable is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', (event) => {
+      if (
+        event.data === 'online' &&
+        network === 'offline' &&
+        event.origin === window.location.origin
+      ) {
+        this.setState({ network: 'online' });
+      } else if (
+        event.data === 'offline' &&
+        network === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        setNetwork('offline');
+      }
+    });
 
-      /**
-       * Gets status of current network connection for online/offline rendering
-       * Defaults to online in case of PWA not being possible
-       */
-      const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+    /**
+     * Gets status of current network connection for online/offline rendering
+     * Defaults to online in case of PWA not being possible
+     */
+    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-      if (networkStatus === 'online' && this.state.isStu && this.props.authentication) {
-        // If the network is online and the user type is student
+    if (networkStatus === 'online') {
+      if (loading) {
+        return <GordonLoader />;
+      } else if (isUserStudent) {
         return (
-          <div>
-            {this.state.loading ? (
-              <GordonLoader />
-            ) : (
-              <div className="student-apartment-application">
-                <StudentApplication
-                  userProfile={this.state.userProfile}
-                  authentication={this.props.authentication}
-                />
-              </div>
-            )}
+          <div className="student-apartment-application">
+            <StudentApplication userProfile={userProfile} />
           </div>
         );
-      } else if (
-        networkStatus === 'online' &&
-        !this.state.isStu &&
-        this.state.isHousingStaff &&
-        this.props.authentication
-      ) {
-        // If the network is online and the user is authorized to access the staff menu
+      } else if (canUseStaff) {
         return (
-          <div>
-            {this.state.loading ? (
-              <GordonLoader />
-            ) : (
-              <div className="staff-apartment-application">
-                <StaffMenu authentication={this.props.authentication} />
-              </div>
-            )}
+          <div className="staff-apartment-application">
+            <StaffMenu />
           </div>
         );
       } else {
-        // If the network is offline or the user type is non-student
-        if (networkStatus === 'offline' || !this.state.isStu) {
-          return (
-            <Grid container justify="center" spacing="16">
-              <Grid item xs={12} md={8}>
-                <Card>
-                  <CardContent
-                    style={{
-                      margin: 'auto',
-                      textAlign: 'center',
+        return (
+          <Grid container justify="center">
+            <Grid item xs={12} md={8}>
+              <Card>
+                <CardContent
+                  style={{
+                    margin: 'auto',
+                    textAlign: 'center',
+                  }}
+                >
+                  <br />
+                  <h1>Apartment application Unavailable</h1>
+                  <h4>Apartment application is available for students or housing staff only.</h4>
+                  <br />
+                  <br />
+                  <Button
+                    className="back-home-button"
+                    color="primary"
+                    variant="outlined"
+                    onClick={() => {
+                      window.location.pathname = '';
                     }}
                   >
-                    {networkStatus === 'offline' && (
-                      <Grid
-                        item
-                        xs={2}
-                        alignItems="center"
-                        style={{
-                          display: 'block',
-                          marginLeft: 'auto',
-                          marginRight: 'auto',
-                        }}
-                      >
-                        <img
-                          src={require(`${'../../NoConnection.svg'}`)}
-                          alt="Internet Connection Lost"
-                        />
-                      </Grid>
-                    )}
-                    <br />
-                    <h1>
-                      {networkStatus === 'offline'
-                        ? 'Please re-establish connection'
-                        : 'Apartment application Unavailable'}
-                    </h1>
-                    <h4>
-                      {networkStatus === 'offline'
-                        ? 'Apartment application entry has been disabled due to loss of network.'
-                        : 'Apartment application is available for students only.'}
-                    </h4>
-                    <br />
-                    <br />
-                    <Button
-                      color="primary"
-                      backgroundColor="white"
-                      variant="outlined"
-                      onClick={() => {
-                        window.location.pathname = '';
-                      }}
-                    >
-                      Back To Home
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Grid>
+                    Back To Home
+                  </Button>
+                </CardContent>
+              </Card>
             </Grid>
-          );
-        }
+          </Grid>
+        );
       }
     } else {
-      // The user is not logged in
+      // If the network is offline
       return (
         <Grid container justify="center">
           <Grid item xs={12} md={8}>
@@ -201,18 +128,35 @@ export default class ApartApp extends Component {
                   textAlign: 'center',
                 }}
               >
-                <h1>You are not logged in.</h1>
+                <Grid
+                  item
+                  xs={2}
+                  alignItems="center"
+                  style={{
+                    display: 'block',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
+                >
+                  <img
+                    src={require(`${'../../NoConnection.svg'}`)}
+                    alt="Internet Connection Lost"
+                  />
+                </Grid>
                 <br />
-                <h4>You must be logged in to use the Apartment Applications page.</h4>
+                <h1>Please Re-establish Connection</h1>
+                <h4>Viewing Apartment Applications has been deactivated due to loss of network.</h4>
+                <br />
                 <br />
                 <Button
+                  className="back-home-button"
                   color="primary"
-                  variant="contained"
+                  variant="outlined"
                   onClick={() => {
                     window.location.pathname = '';
                   }}
                 >
-                  Login
+                  Back To Home
                 </Button>
               </CardContent>
             </Card>
@@ -220,5 +164,37 @@ export default class ApartApp extends Component {
         </Grid>
       );
     }
+  } else {
+    // The user is not logged in
+    return (
+      <Grid container justify="center">
+        <Grid item xs={12} md={8}>
+          <Card>
+            <CardContent
+              style={{
+                margin: 'auto',
+                textAlign: 'center',
+              }}
+            >
+              <h1>You are not logged in.</h1>
+              <br />
+              <h4>You must be logged in to use the Apartment Applications page.</h4>
+              <br />
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  window.location.pathname = '';
+                }}
+              >
+                Login
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    );
   }
-}
+};
+
+export default ApartApp;

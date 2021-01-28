@@ -20,11 +20,11 @@ import './user';
  */
 
 /**
- * Note: Properties 'HallName' and 'HallRank' must be capitalized to match the backend
+ * Note: Properties 'HallRank' and 'HallName' must be capitalized to match the backend
  * @global
  * @typedef ApartmentChoice
- * @property {String} HallName The name of the apartment hall
  * @property {Number} HallRank The rank assigned to this hall by the user
+ * @property {String} HallName The name of the apartment hall
  */
 
 /**
@@ -93,11 +93,11 @@ const saveApartmentApplication = async (
  * @return {Promise.<Boolean>} Status of whether or not the operation was successful
  */
 const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
-  let newModifierDetails = {
+  let newEditorDetails = {
     AprtAppID: applicationID,
     Username: newEditorUsername,
   };
-  return await http.post(`housing/apartment/change-modifier/`, newModifierDetails);
+  return await http.put(`housing/apartment/change-editor/`, newEditorDetails);
 };
 
 /**

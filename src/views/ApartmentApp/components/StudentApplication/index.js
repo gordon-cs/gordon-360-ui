@@ -1,5 +1,5 @@
-//Main apartment application page
-import React, { Component } from 'react';
+//Student apartment application page
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Card,
@@ -14,9 +14,8 @@ import AlertDialogBox from '../../../../components/AlertDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
-import user from '../../../../services/user';
 import housing from '../../../../services/housing';
-import '../../apartmentApp.css';
+import user from '../../../../services/user';
 const MAX_NUM_APPLICANTS = 8;
 
 /**
@@ -30,171 +29,160 @@ const MAX_NUM_APPLICANTS = 8;
 /**
  * Renders a card displaying the apartment application instructions
  */
-const renderInstructionsCard = () => {
-  // TODO: Refer to 'formatQuestion' in 'src/services/wellness.js' for ideas about how to implement the instructions
-  return (
-    <Card>
-      <CardHeader title="Apartment Application Instructions" className="card-header" />
-      <CardContent>
-        <Typography variant="body1">Placeholder Text</Typography>
-        <Typography variant="body1">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
-          suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-          dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
-        </Typography>
-      </CardContent>
-    </Card>
-  );
-};
+const InstructionsCard = () => (
+  <Card>
+    <CardHeader title="Apartment Application Instructions" className="card-header" />
+    <CardContent>
+      <Typography variant="body1">Placeholder Text</Typography>
+      <Typography variant="body1">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
+        suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
+        dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
+      </Typography>
+    </CardContent>
+  </Card>
+);
 
-export default class StudentApplication extends Component {
-  constructor(props) {
-    super(props);
-    this.peopleSearch = React.createRef();
-    this.state = {
-      loading: true,
-      saving: false,
-      network: 'online',
-      applicationCardsOpen: false,
-      submitDialogOpen: false, // Use this for submitting app (later feature)
-      editDialogOpen: false,
-      applicationID: -1, // Default value of -1 indicate to backend that the application ID number is not yet known
-      editorUsername: null, // The username of the application editor
-      applicants: [],
-      preferredHalls: [{ HallName: '', HallRank: 1 }], // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
-    };
-    // Off-campus program info is stored as a Map, where the Key is a student's username and the corresponding Value is the department of that student's off-campus program
-    this.offCampusProgramInfo = new Map();
-    this.state.applicants.forEach((profile) =>
-      this.offCampusProgramInfo.set(profile.AD_Username, ''),
-    );
-    this.editDialogText = '';
-    this.snackbarText = '';
-    this.snackbarSeverity = '';
-    this.saveButtonAlertTimeout = null;
-  }
+const StudentApplication = ({ userProfile }) => {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  componentDidMount() {
-    this.loadSavedApplication();
-  }
+  const [applicationID, setApplicationID] = useState(-1); // Default value of -1 indicate to backend that the application ID number is not yet known
+  const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
+  const [applicants, setApplicants] = useState([]);
+  const [preferredHalls, setPreferredHalls] = useState([{ HallRank: 1, HallName: '' }]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
+  // const [offCampusProgramInfo, setOffCampusProgramInfo] = useState(new Map());
+
+  const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
+  const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
+  const [changeEditorDialogOpen, setChangeEditorDialogOpen] = useState(false);
+  const [submitDialogOpen, setSubmitDialogOpen] = useState(false); // Use this for submitting app (later feature)
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarText, setSnackbarText] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
+
+  // const peopleSearchRef = useRef();
+
+  // Off-campus program info is stored as a Map, where the Key is a student's username and the corresponding Value is the department of that student's off-campus program
+  let offCampusProgramInfo = new Map();
+  applicants.forEach((profile) => offCampusProgramInfo.set(profile.AD_Username, ''));
+
+  /**
+   * Attempt to load an existing application from the database if one exists
+   */
+  useEffect(() => {
+    loadSavedApplication();
+
+    // eslint-disable-next-line
+  }, []);
 
   /**
    * Loads the user's saved apartment application, if one exists
    */
-  async loadSavedApplication() {
-    this.setState({ loading: true });
+  const loadSavedApplication = async () => {
+    setLoading(true);
     // Check if the current user is on an application. Returns the application ID number if found
-    let applicationID = await housing.getApplicationID();
-    if (applicationID !== null && applicationID !== -1) {
-      this.setState({ applicationID });
-      let applicationDetails = housing.getApartmentApplication(applicationID);
+    let newApplicationID = await housing.getApplicationID();
+    if (newApplicationID !== null && newApplicationID !== -1) {
+      setApplicationID(newApplicationID);
+      let applicationDetails = await housing.getApartmentApplication(newApplicationID);
       if (applicationDetails) {
         if (applicationDetails.Username) {
-          this.setState({ editorUsername: applicationDetails.Username });
+          setEditorUsername(applicationDetails.Username);
         }
         if (applicationDetails.Applicants) {
-          this.setState({ applicants: applicationDetails.Applicants });
+          setApplicants(applicationDetails.Username);
         }
       }
     } else {
-      this.setState({ applicationID: -1 });
-      if (!this.state.editorUsername) {
-        this.setState({ editorUsername: this.props.userProfile.AD_Username });
+      // No existing application was found in the database
+      setApplicationID(-1);
+      if (!editorUsername) {
+        setEditorUsername(userProfile.AD_Username);
       }
-      let applicants = this.state.applicants;
-      applicants.push(this.props.userProfile);
-      this.setState({ applicants });
+      let newApplicants = applicants;
+      if (
+        newApplicants.every(
+          (applicantProfile) => applicantProfile.AD_Username !== userProfile.AD_Username,
+        )
+      ) {
+        newApplicants.push(userProfile);
+        setApplicants(newApplicants);
+      }
     }
-    this.setState({ loading: false });
-  }
-
-  handleShowApplication = () => {
-    this.setState({ applicationCardsOpen: true });
+    setLoading(false);
   };
 
-  handleSubmitApplication = () => {
-    // TODO: This callback should make sure all the fields contain valid entries before allowing the application to be submitted.
-    try {
-      //! Placeholder
-      this.snackbarText = 'This feature is not yet implemented.';
-      this.snackbarSeverity = 'info';
-    } catch {
-      this.snackbarText = 'Something went wrong while trying to submit the application.';
-      this.snackbarSeverity = 'error';
-    }
-    this.setState({ snackbarOpen: true, applicationCardsOpen: false });
+  const handleShowApplication = () => {
+    setApplicationCardsOpen(true);
   };
 
   /**
    * Callback for apartment people search submission
    * @param {String} searchSelection Username for student
    */
-  handleSearchSubmit = (searchSelection) => {
-    this.setState({ updating: true });
+  const handleSearchSubmit = (searchSelection) => {
     if (searchSelection) {
       // The method is separated from callback because user API service must be handled inside an async method
-      this.addApplicant(searchSelection);
+      addApplicant(searchSelection);
     }
-    this.setState({ updating: false });
   };
 
   /**
    * Add an applicant to the list, identified by username
    * @param {String} username Username for the new applicant
    */
-  async addApplicant(username) {
-    let applicants = this.state.applicants; // make a separate copy of the array
+  const addApplicant = async (username) => {
+    let newApplicants = applicants; // make a separate copy of the array
     try {
       // Get the profile of the selected user
-      let applicantProfile = await user.getProfileInfo(username);
-      if (applicants.length >= MAX_NUM_APPLICANTS) {
+      let newApplicantProfile = await user.getProfileInfo(username);
+      if (newApplicants.length >= MAX_NUM_APPLICANTS) {
         // Display an error if the user try to add an applicant when the list is full
-        this.snackbarText = 'You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants';
-        this.snackbarSeverity = 'warning';
-      } else if (!String(applicantProfile.PersonType).includes('stu')) {
+        setSnackbarText('You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants');
+        setSnackbarSeverity('warning');
+      } else if (!String(newApplicantProfile.PersonType).includes('stu')) {
         // Display an error if the selected user is not a student
-        this.snackbarText =
-          'Could not add ' + String(applicantProfile.fullName) + ' because they are not a student.';
-        this.snackbarSeverity = 'warning';
-      } else if (applicants.some((applicant) => applicant.AD_Username === username)) {
+        setSnackbarText(
+          'Could not add ' +
+            String(newApplicantProfile.fullName) +
+            ' because they are not a student.',
+        );
+        setSnackbarSeverity('warning');
+      } else if (
+        newApplicants.some((applicantProfile) => applicantProfile.AD_Username === username)
+      ) {
         // Display an error if the selected user is already in the list
-        this.snackbarText = String(applicantProfile.fullName) + ' is already in the list.';
-        this.snackbarSeverity = 'info';
+        setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
+        setSnackbarSeverity('info');
       } else {
-        // Check if the student is on an existing application
-        let applicationID = await housing.getApplicationID(username);
-        if (applicationID !== null && applicationID !== -1) {
-          // Display an error if the selected user is already on an existing application (in the database)
-          this.snackbarText =
-            String(applicantProfile.fullName) + ' is already on an existing application.';
-          this.snackbarSeverity = 'error';
-        } else {
-          // Add the profile object to the list of applicants
-          applicants.push(applicantProfile);
-          this.setState({ applicants });
-          if (this.state.applicants.some((applicant) => applicant.AD_Username === username)) {
-            this.snackbarText =
-              String(applicantProfile.fullName) + ' was successfully added to the list.';
-            this.snackbarSeverity = 'success';
-          }
+        // Add the profile object to the list of applicants
+        newApplicants.push(newApplicantProfile);
+        setApplicants(newApplicants);
+        if (applicants.some((applicantProfile) => applicantProfile.AD_Username === username)) {
+          setSnackbarText(
+            String(newApplicantProfile.fullName) + ' was successfully added to the list.',
+          );
+          setSnackbarSeverity('success');
         }
       }
     } catch (error) {
-      this.snackbarText = 'Something went wrong while trying to add this person. Please try again.';
-      this.snackbarSeverity = 'error';
+      setSnackbarText('Something went wrong while trying to add this person. Please try again.');
+      setSnackbarSeverity('error');
     }
-    this.setState({ snackbarOpen: true });
-  }
+    setSnackbarOpen(true);
+  };
 
   /**
    * Callback for changing the application editor
    * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
    */
-  handleChangeEditor = (profile) => {
-    this.setState({ updating: true });
+  const handleChangeEditor = (profile) => {
     if (profile) {
-      if (this.state.applicants.includes(profile)) {
-        this.setState({ newApplicationEditor: profile, editDialogOpen: true });
+      if (applicants.includes(profile)) {
+        setNewEditorProfile(profile);
+        setChangeEditorDialogOpen(true);
       }
     }
   };
@@ -202,18 +190,16 @@ export default class StudentApplication extends Component {
   /**
    * Callback for applying the new application editor
    */
-  handleChangeEditorAccepted = () => {
-    if (this.state.newApplicationEditor && this.state.newApplicationEditor.AD_Username) {
+  const handleChangeEditorAccepted = () => {
+    if (newEditorProfile && newEditorProfile.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
-      this.changeApplicationEditor(
-        this.state.applicationID,
-        this.state.newApplicationEditor.AD_Username,
-      );
-      this.handleCloseOkay();
+      changeApplicationEditor(applicationID, newEditorProfile.AD_Username);
+      handleCloseOkay();
     } else {
-      this.snackbarText = 'Something went wrong while trying to save the new application editor.';
-      this.snackbarSeverity = 'error';
-      this.setState({ snackbarOpen: true, saving: 'failed' });
+      setSnackbarText('Something went wrong while trying to save the new application editor.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      setSaving('failed');
     }
   };
 
@@ -222,9 +208,9 @@ export default class StudentApplication extends Component {
    * @param {Number} applicationID the application ID number
    * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
    */
-  async changeApplicationEditor(applicationID, newEditorUsername) {
-    this.setState({ saving: true });
-    this.saveButtonAlertTimeout = null;
+  const changeApplicationEditor = async (applicationID, newEditorUsername) => {
+    setSaving(true);
+    setSaveButtonAlertTimeout(null);
     let result = null;
     try {
       result = await housing.changeApartmentAppEditor(applicationID, newEditorUsername);
@@ -233,170 +219,162 @@ export default class StudentApplication extends Component {
     }
     if (result) {
       console.log(result); //! DEBUG
-      this.setState({
-        editorUsername: this.state.newApplicationEditor.AD_Username,
-        saving: 'success',
-      });
+      setEditorUsername(newEditorProfile.AD_Username);
+      setSaving('success');
     } else {
-      this.snackbarText = 'Something went wrong while trying to save the new application editor.';
-      this.snackbarSeverity = 'error';
-      this.setState({ snackbarOpen: true, saving: 'failed' });
+      setSnackbarText('Something went wrong while trying to save the new application editor.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      setSaving('failed');
     }
-    if (this.saveButtonAlertTimeout === null) {
+    if (saveButtonAlertTimeout === null) {
       // Shows the success icon for 6 seconds and then returns back to normal button
-      this.saveButtonAlertTimeout = setTimeout(() => {
-        this.saveButtonAlertTimeout = null;
-        this.setState({ saving: false });
-      }, 6000);
+      setSaveButtonAlertTimeout(
+        setTimeout(() => {
+          setSaveButtonAlertTimeout(null);
+          setSaving(false);
+        }, 6000),
+      );
     }
-  }
+  };
 
   /**
    * Callback for applicant list remove button
    * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
    */
-  handleApplicantRemove = (profileToRemove) => {
-    this.setState({ updating: true });
+  const handleApplicantRemove = (profileToRemove) => {
     if (profileToRemove) {
-      let applicants = this.state.applicants; // make a separate copy of the array
-      let index = applicants.indexOf(profileToRemove);
+      let newApplicants = applicants; // make a separate copy of the array
+      let index = newApplicants.indexOf(profileToRemove);
       if (index !== -1) {
-        applicants.splice(index, 1);
-        this.setState({ applicants });
+        newApplicants.splice(index, 1);
+        setApplicants(newApplicants);
       }
     }
-    this.setState({ updating: false });
   };
 
   /**
    * Callback for changes to hall list item name and/or rank
-   * @param {String} hallSelectionValue The name of the hall that was selected
-   * @param {String|Number} hallRankValue The rank value that the user assigned to this hall
+   * @param {Number} hallRankValue The rank value that the user assigned to this hall
+   * @param {String} hallNameValue The name of the hall that was selected
    * @param {Number} index The index of the hall in the list
    */
-  handleHallInputChange = (hallSelectionValue, hallRankValue, index) => {
+  const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
     console.log('Called "handleHallInputChange" in StudentApplication component'); //! DEBUG
-    console.log('HallName: ' + hallSelectionValue); //! DEBUG
     console.log('HallRank: ' + hallRankValue); //! DEBUG
+    console.log('HallName: ' + hallNameValue); //! DEBUG
     console.log('index: ' + index); //! DEBUG
-    this.setState({ updating: true });
     if (index !== null && index >= 0) {
       console.log('Attempting to update preferred halls'); //! DEBUG
 
-      let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
+      let newPreferredHalls = preferredHalls; // make a separate copy of the array
 
       // Get the custom hallInfo object at the given index
-      let newHallInfo = preferredHalls[index];
-
-      // Error checking on the hallSelectionValue before modifying the newHallInfo object
-      if (
-        hallSelectionValue !== null &&
-        hallSelectionValue !== this.state.preferredHalls[index].HallName &&
-        this.state.preferredHalls.some((hallInfo) => hallInfo.HallName === hallSelectionValue)
-      ) {
-        // Display an error if the selected hall is already in the list
-        this.snackbarText = String(hallSelectionValue) + ' is already in the list.';
-        this.snackbarSeverity = 'info';
-        this.setState({ snackbarOpen: true });
-      } else if (hallSelectionValue !== null) {
-        // Create a new custom hallInfo object
-        newHallInfo.HallName = hallSelectionValue;
-      }
+      let newHallInfo = newPreferredHalls[index];
 
       // Error checking on the hallRankValue before modifying the newHallInfo object
       if (hallRankValue !== null) {
         newHallInfo.HallRank = Number(hallRankValue);
       } else {
         // Display an error if the selected rank value is less or equal to zero
-        this.snackbarText =
+        setSnackbarText(
           'The "Rank" value expected a positive number, but you entered "' +
-          String(hallRankValue) +
-          '"';
-        this.snackbarSeverity = 'error';
-        this.setState({ snackbarOpen: true });
+            String(hallRankValue) +
+            '"',
+        );
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
       }
 
-      preferredHalls[index] = newHallInfo; // replace the element at index with the new hall info object
+      // Error checking on the hallNameValue before modifying the newHallInfo object
+      if (
+        hallNameValue !== null &&
+        hallNameValue !== preferredHalls[index].HallName &&
+        newPreferredHalls.some((hallInfo) => hallInfo.HallName === hallNameValue)
+      ) {
+        // Display an error if the selected hall is already in the list
+        setSnackbarText(String(hallNameValue) + ' is already in the list.');
+        setSnackbarSeverity('info');
+        setSnackbarOpen(true);
+      } else if (hallNameValue !== null) {
+        // Create a new custom hallInfo object
+        newHallInfo.HallName = hallNameValue;
+      }
+
+      newPreferredHalls[index] = newHallInfo; // replace the element at index with the new hall info object
       // preferredHalls.splice(index, 1, newHallInfo);
 
       // Sort the list of halls by the rank numbers
-      preferredHalls.sort(function(a, b) {
+      newPreferredHalls.sort(function(a, b) {
         return a.HallRank - b.HallRank;
       });
 
       console.log('Printing current list of preferred halls'); //! DEBUG
-      preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+      newPreferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
 
-      this.setState({ preferredHalls });
+      setPreferredHalls(newPreferredHalls);
     } else {
-      this.snackbarText = 'Something went wrong while trying to add this hall. Please try again.';
-      this.snackbarSeverity = 'error';
-      this.setState({ snackbarOpen: true });
+      setSnackbarText('Something went wrong while trying to add this hall. Please try again.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
-    this.setState({ updating: false });
   };
 
   /**
    * Callback for hall list remove button
    * @param {Number} index The index of the hall to be removed from the list of perferred halls
    */
-  handleHallRemove = (index) => {
+  const handleHallRemove = (index) => {
     console.log('Called "handleHallRemove" in StudentApplication component'); //! DEBUG
-    this.setState({ updating: true });
     console.log('index: ' + index); //! DEBUG
     if (index !== null && index !== -1) {
-      let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
+      let newPreferredHalls = preferredHalls; // make a separate copy of the array
       if (preferredHalls.length > 1) {
         // Remove the selected hall if the list has more than one element
-        preferredHalls.splice(index, 1);
+        newPreferredHalls.splice(index, 1);
         // If any rank value is greater than the new maximum, then set it to that new max rank
-        let maxRank = preferredHalls.length;
-        preferredHalls.forEach((hallInfo, index) => {
+        let maxRank = newPreferredHalls.length;
+        newPreferredHalls.forEach((hallInfo, index) => {
           if (hallInfo.HallRank > maxRank) {
-            preferredHalls[index].HallRank = maxRank;
+            newPreferredHalls[index].HallRank = maxRank;
           }
         });
       } else {
         // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
-        let newHallInfo = { HallName: '', HallRank: 1 };
-        preferredHalls[0] = newHallInfo;
+        let newHallInfo = { HallRank: 1, HallName: '' };
+        newPreferredHalls[0] = newHallInfo;
       }
       console.log('Printing current list of preferred halls'); //! DEBUG
-      preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
-      this.setState({ preferredHalls });
+      newPreferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+      setPreferredHalls(newPreferredHalls);
     }
-    this.setState({ updating: false });
   };
 
   /**
    * Callback for hall list add button
    */
-  handleHallAdd = () => {
+  const handleHallAdd = () => {
     console.log('Called "handleHallAdd" in StudentApplication component'); //1 DEBUG
-    this.setState({ updating: true });
-    let preferredHalls = this.state.preferredHalls; // make a separate copy of the array
-    let newHallRank = preferredHalls.length + 1;
-    preferredHalls.push({ HallName: '', HallRank: newHallRank });
+    let newPreferredHalls = preferredHalls; // make a separate copy of the array
+    let newHallRank = newPreferredHalls.length + 1;
+    newPreferredHalls.push({ HallRank: newHallRank, HallName: '' });
     console.log('Printing current list of preferred halls'); //! DEBUG
-    preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
-    this.setState({ preferredHalls, updating: false });
+    newPreferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
+    setPreferredHalls(newPreferredHalls);
   };
 
   /**
    * Callback for apartment application save button
    */
-  handleSaveButtonClick = () => {
+  const handleSaveButtonClick = () => {
     let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
     console.log(debugMessage); //! DEBUG
     // Filter out any hall entries that do not have a name selected
-    const preferredHalls = this.state.preferredHalls.filter((hallInfo) => hallInfo.HallName !== '');
-    // The method is separated from callback because the housing API service must be handled inside an async method
-    this.saveApplication(
-      this.state.applicationID,
-      this.state.editorUsername,
-      this.state.applicants,
-      preferredHalls,
+    const filteredPreferredHalls = this.state.preferredHalls.filter(
+      (hallInfo) => hallInfo.HallName !== '',
     );
+    // The method is separated from callback because the housing API service must be handled inside an async method
+    saveApplication(applicationID, editorUsername, applicants, filteredPreferredHalls);
   };
 
   /**
@@ -406,9 +384,9 @@ export default class StudentApplication extends Component {
    * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
    * @param {ApartmentChoice[]} preferredHalls Array of ApartmentChoice objects
    */
-  async saveApplication(applicationID, editorUsername, applicants, preferredHalls) {
-    this.setState({ saving: true });
-    this.saveButtonAlertTimeout = null;
+  const saveApplication = async (applicationID, editorUsername, applicants, preferredHalls) => {
+    setSaving(true);
+    setSaveButtonAlertTimeout(null);
     let result = null;
     try {
       result = await housing.saveApartmentApplication(
@@ -420,341 +398,314 @@ export default class StudentApplication extends Component {
     } catch {
       result = false;
     }
-    if (result !== null) {
-      console.log(result); //! DEBUG
-      this.setState({ applicationID: result, saving: 'success' });
+    if (result !== null && result !== false) {
+      console.log('result of saving: ' + result); //! DEBUG
+      setApplicationID(result);
+      setSaving('success');
     } else {
-      this.snackbarText = 'Something went wrong while trying to save the application.';
-      this.snackbarSeverity = 'error';
-      this.setState({ snackbarOpen: true, saving: 'failed' });
+      setSnackbarText('Something went wrong while trying to save the application.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      setSaving('failed');
     }
-    if (this.saveButtonAlertTimeout === null) {
+    if (saveButtonAlertTimeout === null) {
       // Shows the success icon for 6 seconds and then returns back to normal button
-      this.saveButtonAlertTimeout = setTimeout(() => {
-        this.saveButtonAlertTimeout = null;
-        this.setState({ saving: false });
-      }, 6000);
+      setSaveButtonAlertTimeout(
+        setTimeout(() => {
+          setSaveButtonAlertTimeout(null);
+          setSaving(false);
+        }, 6000),
+      );
     }
-  }
-
-  /**
-   * Callback for closing the snackbar
-   */
-  handleCloseSnackbar = (event, reason) => {
-    // Prevent the snackbar from closing if the user clicks outside the snackbar
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.setState({ snackbarOpen: false });
   };
 
   /**
-   * Callback for closing the alert dialog box
+   * Callback for apartment application submit button
    */
-  handleCloseDialog = (event, reason) => {
-    // Prevent the dialog box from closing if the user clicks outside the dialog box
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.handleCloseOkay();
+  const handleSubmitButtonClick = () => {
+    let debugMessage = 'DEBUG: Submit button was clicked'; //! DEBUG
+    console.log(debugMessage); //! DEBUG
+    setSubmitDialogOpen(true);
+  };
+
+  const handleSubmitAppAccepted = () => {
+    // The method is separated from callback because the housing API service must be handled inside an async method
+    submitApplication();
+    handleCloseOkay();
+  };
+
+  const submitApplication = async () => {
+    //! Placeholder
+    setApplicationCardsOpen(false);
   };
 
   /**
    * Callback for the alert dialog box "Okay" button
    */
-  handleCloseOkay = () => {
-    this.setState({ submitDialogOpen: false, editDialogOpen: false });
+  const handleCloseOkay = () => {
+    setChangeEditorDialogOpen(false);
+    setSubmitDialogOpen(false);
   };
 
-  render() {
-    if (this.props.authentication) {
-      /**
-       * Used to re-render the page when the network connection changes.
-       * this.state.network is compared to the message received to prevent
-       * multiple re-renders that creates extreme performance lost.
-       * The origin of the message is checked to prevent cross-site scripting attacks
-       */
-      window.addEventListener('message', (event) => {
-        if (
-          event.data === 'online' &&
-          this.state.network === 'offline' &&
-          event.origin === window.location.origin
-        ) {
-          this.setState({ network: 'online' });
-        } else if (
-          event.data === 'offline' &&
-          this.state.network === 'online' &&
-          event.origin === window.location.origin
-        ) {
-          this.setState({ network: 'offline' });
-        }
-      });
+  /**
+   * Callback for closing the alert dialog box
+   */
+  const handleCloseDialog = (event, reason) => {
+    // Prevent the dialog box from closing if the user clicks outside the dialog box
+    if (reason === 'clickaway') {
+      return;
+    }
+    handleCloseOkay();
+  };
 
-      const primaryApplicantAlertText = (
-        <span>
-          If you change the application editor, you will no longer be able to edit this application
-          yourself.
-          <br />
-          Are you sure you want to change the application editor?
-        </span>
-      );
+  /**
+   * Callback for closing the snackbar
+   */
+  const handleCloseSnackbar = (event, reason) => {
+    // Prevent the snackbar from closing if the user clicks outside the snackbar
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
 
-      /**
-       * Gets status of current network connection for online/offline rendering
-       * Defaults to online in case of PWA not being possible
-       */
-      const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
+  const changeEditorAlertText = (
+    <span>
+      If you change the application editor, you will no longer be able to edit this application
+      yourself.
+      <br />
+      Are you sure you want to change the application editor?
+    </span>
+  );
 
-      if (networkStatus === 'online' && this.props.authentication) {
-        return (
-          <div>
-            {this.state.loading ? (
-              <GordonLoader />
-            ) : (
-              <div className="apartment-application">
-                <Grid container justify="center" spacing={2}>
-                  <Grid item xs={12} lg={10}>
-                    <Card>
-                      <CardContent>
-                        <Grid container direction="row" justify="flex-end">
-                          <Grid item xs={6} sm={8}>
-                            {this.state.applicationID === -1 ? (
-                              <Typography variant="body1">
-                                Placeholder Text
-                                <br />
-                                No existing applications found
-                              </Typography>
-                            ) : this.props.userProfile.AD_Username === this.state.editorUsername ? (
-                              <Typography variant="body1">
-                                Existing application for this semester:
-                                <br />
-                                Last Modified: [Insert Date Here]
-                              </Typography>
-                            ) : (
-                              <Typography variant="body1">
-                                Only the application editor may edit the application.
-                                <br />
-                                Last Modified: [Insert Date Here]
-                              </Typography>
-                            )}
-                          </Grid>
-                          <Grid item xs={6} sm={4}>
-                            {this.state.applicationID === -1 ? (
-                              <Button
-                                variant="contained"
-                                onClick={this.handleShowApplication}
-                                color="primary"
-                                disabled={this.state.applicationCardsOpen}
-                              >
-                                Create a new application
-                              </Button>
-                            ) : this.props.userProfile.AD_Username === this.state.editorUsername ? (
-                              <Button
-                                variant="contained"
-                                onClick={this.handleShowApplication}
-                                color="primary"
-                                disabled={this.state.applicationCardsOpen}
-                              >
-                                Edit your application
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="contained"
-                                onClick={this.handleShowApplication}
-                                color="primary"
-                                disabled={this.state.applicationCardsOpen}
-                              >
-                                View your application
-                              </Button>
-                            )}
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                    {/* <Collapse in={!this.state.applicationCardsOpen} timeout="auto" unmountOnExit>
-                      {renderInstructionsCard()}
-                    </Collapse> */}
+  const submitAlertText = (
+    <span>
+      This feature is not yet implemented.
+      <br />
+      Clicking the "Accept" button will hide the application cards.
+    </span>
+  );
+
+  if (loading) {
+    return <GordonLoader />;
+  } else {
+    return (
+      <div className="apartment-application">
+        <Grid container justify="center" spacing={2}>
+          <Grid item xs={12} lg={10}>
+            <Card>
+              <CardContent>
+                <Grid container direction="row" justify="flex-end">
+                  <Grid item xs={6} sm={8}>
+                    {applicationID === -1 ? (
+                      <Typography variant="body1">
+                        Placeholder Text
+                        <br />
+                        No existing applications found
+                      </Typography>
+                    ) : userProfile.AD_Username === editorUsername ? (
+                      <Typography variant="body1">
+                        Existing application for this semester:
+                        <br />
+                        Last Modified: [Insert Date Here]
+                      </Typography>
+                    ) : (
+                      <Typography variant="body1">
+                        Only the application editor may edit the application.
+                        <br />
+                        Last Modified: [Insert Date Here]
+                      </Typography>
+                    )}
                   </Grid>
-                  <Grid item xs={12} md={8}>
-                    <Collapse in={!this.state.applicationCardsOpen} timeout="auto" unmountOnExit>
-                      {renderInstructionsCard()}
-                    </Collapse>
-                  </Grid>
-                  <Grid item>
-                    <Collapse in={this.state.applicationCardsOpen} timeout="auto" unmountOnExit>
-                      <Grid container direction="row-reverse" justify="center" spacing={2}>
-                        <Grid item xs={12} md={4}>
-                          {renderInstructionsCard()}
-                        </Grid>
-                        <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
-                          <Grid item>
-                            {this.props.userProfile.AD_Username === this.state.editorUsername ? (
-                              <ApplicantList
-                                maxNumApplicants={MAX_NUM_APPLICANTS}
-                                userProfile={this.props.userProfile}
-                                editorUsername={this.state.editorUsername}
-                                applicants={this.state.applicants}
-                                saving={this.state.saving}
-                                onSearchSubmit={this.handleSearchSubmit}
-                                onChangeEditor={this.handleChangeEditor}
-                                onApplicantRemove={this.handleApplicantRemove}
-                                onSaveButtonClick={this.handleSaveButtonClick}
-                                authentication={this.props.authentication}
-                              />
-                            ) : (
-                              <ApplicantList
-                                disabled
-                                maxNumApplicants={MAX_NUM_APPLICANTS}
-                                userProfile={this.props.userProfile}
-                                editorUsername={this.state.editorUsername}
-                                applicants={this.state.applicants}
-                                saving={this.state.saving}
-                                authentication={this.props.authentication}
-                              />
-                            )}
-                            <AlertDialogBox
-                              open={this.state.editDialogOpen}
-                              onClose={this.handleCloseDialog}
-                              severity={'warning'}
-                              title={'Change application editor?'}
-                              text={primaryApplicantAlertText}
-                              cancelButtonClicked={this.handleCloseOkay}
-                              cancelButtonName={'Cancel'}
-                              confirmButtonClicked={this.handleChangeEditorAccepted}
-                              confirmButtonName={'Accept'}
-                            />
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid container direction="row" justify="center" spacing={2}>
-                        <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
-                          <Grid item>
-                            {this.props.userProfile.AD_Username === this.state.editorUsername ? (
-                              <HallSelection
-                                editorUsername={this.state.editorUsername}
-                                preferredHalls={this.state.preferredHalls}
-                                saving={this.state.saving}
-                                onHallInputChange={this.handleHallInputChange}
-                                onHallRemove={this.handleHallRemove}
-                                onHallAdd={this.handleHallAdd}
-                                onSaveButtonClick={this.handleSaveButtonClick}
-                                authentication={this.props.authentication}
-                              />
-                            ) : (
-                              <HallSelection
-                                disabled
-                                editorUsername={this.state.editorUsername}
-                                preferredHalls={this.state.preferredHalls}
-                                saving={this.state.saving}
-                                authentication={this.props.authentication}
-                              />
-                            )}
-                          </Grid>
-                          <Grid item>
-                            <Card>
-                              <CardHeader title="Off-Campus Work Study" className="card-header" />
-                              <CardContent>
-                                <Typography variant="body1">Placeholder text</Typography>
-                              </CardContent>
-                            </Card>
-                          </Grid>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                          <Collapse
-                            in={this.props.userProfile.AD_Username === this.state.primaryUsername}
-                            timeout="auto"
-                            unmountOnExit
-                          >
-                            <Card>
-                              <CardHeader title="Agreements" className="card-header" />
-                              <CardContent>
-                                <Typography variant="body1">Placeholder text</Typography>
-                              </CardContent>
-                            </Card>
-                          </Collapse>
-                        </Grid>
-                        <Grid item xs={12} lg={10}>
-                          <Card>
-                            <CardContent>
-                              {this.props.userProfile.AD_Username === this.state.editorUsername ? (
-                                <Grid container direction="row" justify="flex-end">
-                                  <Grid item xs={6} sm={8}>
-                                    <Typography variant="body1">Placeholder Text</Typography>
-                                  </Grid>
-                                  <Grid item xs={6} sm={4}>
-                                    <Button
-                                      variant="contained"
-                                      onClick={this.handleSubmitApplication}
-                                      color="primary"
-                                      disabled={!this.state.applicationCardsOpen}
-                                    >
-                                      Submit Application
-                                    </Button>
-                                  </Grid>
-                                </Grid>
-                              ) : (
-                                <Grid container direction="row" justify="flex-end">
-                                  <Grid item xs={6} sm={8}>
-                                    <Typography variant="body1">
-                                      Placeholder Text for when the user is NOT the primary
-                                      applicant
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={6} sm={4}>
-                                    <Button variant="contained" color="primary" disabled>
-                                      Submit Application
-                                    </Button>
-                                  </Grid>
-                                </Grid>
-                              )}
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      </Grid>
-                    </Collapse>
+                  <Grid item xs={6} sm={4}>
+                    {applicationID === -1 ? (
+                      <Button
+                        variant="contained"
+                        onClick={handleShowApplication}
+                        color="primary"
+                        disabled={applicationCardsOpen}
+                      >
+                        Create a new application
+                      </Button>
+                    ) : userProfile.AD_Username === editorUsername ? (
+                      <Button
+                        variant="contained"
+                        onClick={handleShowApplication}
+                        color="primary"
+                        disabled={applicationCardsOpen}
+                      >
+                        Edit your application
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        onClick={handleShowApplication}
+                        color="primary"
+                        disabled={applicationCardsOpen}
+                      >
+                        View your application
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
-                <SimpleSnackbar
-                  text={this.snackbarText}
-                  severity={this.snackbarSeverity}
-                  open={this.state.snackbarOpen}
-                  onClose={this.handleCloseSnackbar}
-                />
-              </div>
-            )}
-          </div>
-        );
-      }
-    } else {
-      // The user is not logged in
-      return (
-        <Grid container justify="center">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <h1>You are not logged in.</h1>
-                <br />
-                <h4>You must be logged in to use the Apartment Applications page.</h4>
-                <br />
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Login
-                </Button>
               </CardContent>
             </Card>
           </Grid>
+          <Grid item xs={12} md={8}>
+            <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
+              <InstructionsCard />
+            </Collapse>
+          </Grid>
+          <Grid item>
+            <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
+              <Grid container direction="row-reverse" justify="center" spacing={2}>
+                <Grid item xs={12} md={4}>
+                  <InstructionsCard />
+                </Grid>
+                <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
+                  <Grid item>
+                    {userProfile.AD_Username === editorUsername ? (
+                      <ApplicantList
+                        maxNumApplicants={MAX_NUM_APPLICANTS}
+                        userProfile={userProfile}
+                        editorUsername={editorUsername}
+                        applicants={applicants}
+                        saving={saving}
+                        onSearchSubmit={handleSearchSubmit}
+                        onChangeEditor={handleChangeEditor}
+                        onApplicantRemove={handleApplicantRemove}
+                        onSaveButtonClick={handleSaveButtonClick}
+                      />
+                    ) : (
+                      <ApplicantList
+                        disabled
+                        maxNumApplicants={MAX_NUM_APPLICANTS}
+                        userProfile={userProfile}
+                        editorUsername={editorUsername}
+                        applicants={applicants}
+                        saving={saving}
+                      />
+                    )}
+
+                    <AlertDialogBox
+                      open={changeEditorDialogOpen}
+                      onClose={handleCloseDialog}
+                      severity={'warning'}
+                      title={'Change application editor?'}
+                      text={changeEditorAlertText}
+                      cancelButtonClicked={handleCloseOkay}
+                      cancelButtonName={'Cancel'}
+                      confirmButtonClicked={handleChangeEditorAccepted}
+                      confirmButtonName={'Accept'}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid container direction="row" justify="center" spacing={2}>
+                <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
+                  <Grid item>
+                    {this.props.userProfile.AD_Username === this.state.editorUsername ? (
+                      <HallSelection
+                        editorUsername={editorUsername}
+                        preferredHalls={preferredHalls}
+                        saving={saving}
+                        onHallAdd={handleHallAdd}
+                        onHallInputChange={handleHallInputChange}
+                        onHallRemove={handleHallRemove}
+                        onSaveButtonClick={handleSaveButtonClick}
+                      />
+                    ) : (
+                      <HallSelection
+                        disabled
+                        editorUsername={editorUsername}
+                        preferredHalls={preferredHalls}
+                        saving={saving}
+                      />
+                    )}
+                  </Grid>
+                  <Grid item>
+                    <Card>
+                      <CardHeader title="Off-Campus Work Study" className="card-header" />
+                      <CardContent>
+                        <Typography variant="body1">Placeholder text</Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Collapse
+                    in={userProfile.AD_Username === editorUsername}
+                    timeout="auto"
+                    unmountOnExit
+                  >
+                    <Card>
+                      <CardHeader title="Agreements" className="card-header" />
+                      <CardContent>
+                        <Typography variant="body1">Placeholder text</Typography>
+                      </CardContent>
+                    </Card>
+                  </Collapse>
+                </Grid>
+                <Grid item xs={12} lg={10}>
+                  <Card>
+                    <CardContent>
+                      {userProfile.AD_Username === editorUsername ? (
+                        <Grid container direction="row" justify="flex-end">
+                          <Grid item xs={6} sm={8}>
+                            <Typography variant="body1">Placeholder Text</Typography>
+                          </Grid>
+                          <Grid item xs={6} sm={4}>
+                            <Button
+                              variant="contained"
+                              onClick={handleSubmitButtonClick}
+                              color="primary"
+                              disabled={!applicationCardsOpen}
+                            >
+                              Submit Application
+                            </Button>
+                          </Grid>
+                          <AlertDialogBox
+                            open={submitDialogOpen}
+                            onClose={handleCloseDialog}
+                            severity={'warning'}
+                            title={'Submit apartment application?'}
+                            text={submitAlertText}
+                            cancelButtonClicked={handleCloseOkay}
+                            cancelButtonName={'Cancel'}
+                            confirmButtonClicked={handleSubmitAppAccepted}
+                            confirmButtonName={'Accept'}
+                          />
+                        </Grid>
+                      ) : (
+                        <Grid container direction="row" justify="flex-end">
+                          <Grid item xs={6} sm={8}>
+                            <Typography variant="body1">
+                              Placeholder Text for when the user is NOT the primary applicant
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={6} sm={4}>
+                            <Button variant="contained" color="primary" disabled>
+                              Submit Application
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      )}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Collapse>
+          </Grid>
         </Grid>
-      );
-    }
+        <SimpleSnackbar
+          text={snackbarText}
+          severity={snackbarSeverity}
+          open={snackbarOpen}
+          onClose={handleCloseSnackbar}
+        />
+      </div>
+    );
   }
-}
+};
+
+export default StudentApplication;
