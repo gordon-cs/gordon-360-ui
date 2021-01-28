@@ -16,31 +16,19 @@ const ApartApp = ({ authentication }) => {
   const [isUserStudent, setIsUserStudent] = useState(false);
 
   useEffect(() => {
-    loadUserProfile();
-    checkHousingStaff();
-  });
-
-  /**
-   * Loads the user's profile info only once (at start)
-   */
-  const loadUserProfile = async () => {
     setLoading(true);
-    try {
-      user.getProfileInfo().then((data) => {
-        setUserProfile(data);
-        data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
-      });
-    } catch (error) {
-      // Do Nothing
-    }
+    user.getProfileInfo().then((data) => {
+      setUserProfile(data);
+      data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
+    });
+    checkHousingStaff();
     setLoading(false);
-  };
+  }, []);
 
   /**
    * Check if the current user is authorized to view the application staff page
    */
   const checkHousingStaff = async () => {
-    setLoading(true);
     try {
       const isHousingStaff = await housing.checkHousingStaff();
       if (isHousingStaff) {
@@ -51,7 +39,6 @@ const ApartApp = ({ authentication }) => {
     } catch (error) {
       setCanUseStaff(false);
     }
-    setLoading(false);
   };
 
   if (authentication) {

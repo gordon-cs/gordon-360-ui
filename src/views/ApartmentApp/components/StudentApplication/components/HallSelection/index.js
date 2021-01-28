@@ -19,22 +19,22 @@ const HallSelection = ({
   const [availableHalls, setAvailableHalls] = useState([]); // array of hall names from backend
 
   useEffect(() => {
-    loadHalls();
-  });
+    const loadHalls = async () => {
+      let unfilteredHalls;
+      try {
+        // Get the halls available for apartments, filtered by the gender of the application editor
+        unfilteredHalls = await housing.getApartmentHalls(editorUsername);
+      } catch {
+        //! DEBUG: Fills in halls dropdown when the housing api endpoint is not yet implemented
+        // This list of halls is references from the 'Hall' dropdown on the PeopleSearch page
+        unfilteredHalls = await goStalk.getHalls();
+      }
+      //Remove spaces from strings
+      setAvailableHalls(unfilteredHalls.map((hall) => hall.trim()));
+    };
 
-  const loadHalls = async () => {
-    let unfilteredHalls;
-    try {
-      // Get the halls available for apartments, filtered by the gender of the application editor
-      unfilteredHalls = await housing.getApartmentHalls(editorUsername);
-    } catch {
-      //! DEBUG: Fills in halls dropdown when the housing api endpoint is not yet implemented
-      // This list of halls is references from the 'Hall' dropdown on the PeopleSearch page
-      unfilteredHalls = await goStalk.getHalls();
-    }
-    //Remove spaces from strings
-    setAvailableHalls(unfilteredHalls.map((hall) => hall.trim()));
-  };
+    loadHalls();
+  }, [editorUsername]);
 
   const handleInputChange = (hallRankValue, hallNameValue, index) => {
     onHallInputChange(hallRankValue, hallNameValue, index);

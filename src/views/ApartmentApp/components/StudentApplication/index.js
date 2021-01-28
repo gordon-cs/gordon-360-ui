@@ -61,7 +61,9 @@ const StudentApplication = ({ userProfile }) => {
    */
   useEffect(() => {
     loadSavedApplication();
-  });
+
+    // eslint-disable-next-line
+  }, []);
 
   const loadSavedApplication = async () => {
     // TODO: Implement this once save/load of application data has been implemented in the backend

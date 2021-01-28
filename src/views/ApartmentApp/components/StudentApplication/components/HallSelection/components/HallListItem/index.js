@@ -30,7 +30,7 @@ const HallListItem = ({
     };
 
     getHallFromProps();
-  });
+  }, [preferredHalls, index]);
 
   const handleRankInputChange = (event) => {
     if (event.target.value !== null) {
