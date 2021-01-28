@@ -32,7 +32,7 @@ const InstructionsCard = () => (
   </Card>
 );
 
-const StudentApplication = (props) => {
+const StudentApplication = ({ userProfile }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -83,15 +83,15 @@ const StudentApplication = (props) => {
       // No existing application was found in the database
       setApplicationID(-1);
       if (!editorUsername) {
-        setEditorUsername(props.userProfile.AD_Username);
+        setEditorUsername(userProfile.AD_Username);
       }
       let newApplicants = applicants;
       if (
         newApplicants.every(
-          (applicantProfile) => applicantProfile.AD_Username !== props.userProfile.AD_Username,
+          (applicantProfile) => applicantProfile.AD_Username !== userProfile.AD_Username,
         )
       ) {
-        newApplicants.push(props.userProfile);
+        newApplicants.push(userProfile);
         setApplicants(newApplicants);
       }
     }
@@ -452,204 +452,199 @@ const StudentApplication = (props) => {
     </span>
   );
 
-  return (
-    <div>
-      {loading ? (
-        <GordonLoader />
-      ) : (
-        <div className="apartment-application">
-          <Grid container justify="center" spacing={2}>
-            <Grid item xs={12} lg={10}>
-              <Card>
-                <CardContent>
-                  <Grid container direction="row" justify="flex-end">
-                    <Grid item xs={6} sm={8}>
-                      {applicationID === -1 ? (
-                        <Typography variant="body1">
-                          Placeholder Text
-                          <br />
-                          No existing applications found
-                        </Typography>
-                      ) : props.userProfile.AD_Username === editorUsername ? (
-                        <Typography variant="body1">
-                          Existing application for this semester:
-                          <br />
-                          Last Modified: [Insert Date Here]
-                        </Typography>
-                      ) : (
-                        <Typography variant="body1">
-                          Only the application editor may edit the application.
-                          <br />
-                          Last Modified: [Insert Date Here]
-                        </Typography>
-                      )}
-                    </Grid>
-                    <Grid item xs={6} sm={4}>
-                      {applicationID === -1 ? (
-                        <Button
-                          variant="contained"
-                          onClick={handleShowApplication}
-                          color="primary"
-                          disabled={applicationCardsOpen}
-                        >
-                          Create a new application
-                        </Button>
-                      ) : props.userProfile.AD_Username === editorUsername ? (
-                        <Button
-                          variant="contained"
-                          onClick={handleShowApplication}
-                          color="primary"
-                          disabled={applicationCardsOpen}
-                        >
-                          Edit your application
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="contained"
-                          onClick={handleShowApplication}
-                          color="primary"
-                          disabled={applicationCardsOpen}
-                        >
-                          View your application
-                        </Button>
-                      )}
-                    </Grid>
+  if (loading) {
+    return <GordonLoader />;
+  } else {
+    return (
+      <div className="apartment-application">
+        <Grid container justify="center" spacing={2}>
+          <Grid item xs={12} lg={10}>
+            <Card>
+              <CardContent>
+                <Grid container direction="row" justify="flex-end">
+                  <Grid item xs={6} sm={8}>
+                    {applicationID === -1 ? (
+                      <Typography variant="body1">
+                        Placeholder Text
+                        <br />
+                        No existing applications found
+                      </Typography>
+                    ) : userProfile.AD_Username === editorUsername ? (
+                      <Typography variant="body1">
+                        Existing application for this semester:
+                        <br />
+                        Last Modified: [Insert Date Here]
+                      </Typography>
+                    ) : (
+                      <Typography variant="body1">
+                        Only the application editor may edit the application.
+                        <br />
+                        Last Modified: [Insert Date Here]
+                      </Typography>
+                    )}
                   </Grid>
-                </CardContent>
-              </Card>
-              {/* <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-                      <InstructionsCard />
-                    </Collapse> */}
-            </Grid>
-            <Grid item xs={12} md={8}>
-              <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-                <InstructionsCard />
-              </Collapse>
-            </Grid>
-            <Grid item>
-              <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
-                <Grid container direction="row-reverse" justify="center" spacing={2}>
-                  <Grid item xs={12} md={4}>
-                    <InstructionsCard />
-                  </Grid>
-                  <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
-                    <Grid item>
-                      <ApplicantList
-                        maxNumApplicants={MAX_NUM_APPLICANTS}
-                        userProfile={props.userProfile}
-                        editorUsername={editorUsername}
-                        applicants={applicants}
-                        saving={saving}
-                        onSearchSubmit={handleSearchSubmit}
-                        onChangeEditor={handleChangeEditor}
-                        onApplicantRemove={handleApplicantRemove}
-                        onSaveButtonClick={handleSaveButtonClick}
-                      />
-                      <AlertDialogBox
-                        open={changeEditorDialogOpen}
-                        onClose={handleCloseDialog}
-                        severity={'warning'}
-                        title={'Change application editor?'}
-                        text={changeEditorAlertText}
-                        cancelButtonClicked={handleCloseOkay}
-                        cancelButtonName={'Cancel'}
-                        confirmButtonClicked={handleChangeEditorAccepted}
-                        confirmButtonName={'Accept'}
-                      />
-                    </Grid>
+                  <Grid item xs={6} sm={4}>
+                    {applicationID === -1 ? (
+                      <Button
+                        variant="contained"
+                        onClick={handleShowApplication}
+                        color="primary"
+                        disabled={applicationCardsOpen}
+                      >
+                        Create a new application
+                      </Button>
+                    ) : userProfile.AD_Username === editorUsername ? (
+                      <Button
+                        variant="contained"
+                        onClick={handleShowApplication}
+                        color="primary"
+                        disabled={applicationCardsOpen}
+                      >
+                        Edit your application
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        onClick={handleShowApplication}
+                        color="primary"
+                        disabled={applicationCardsOpen}
+                      >
+                        View your application
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
-                <Grid container direction="row" justify="center" spacing={2}>
-                  <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
-                    <Grid item>
-                      <HallSelection
-                        editorUsername={editorUsername}
-                        preferredHalls={preferredHalls}
-                        saving={saving}
-                        onHallAdd={handleHallAdd}
-                        onHallInputChange={handleHallInputChange}
-                        onHallRemove={handleHallRemove}
-                        onSaveButtonClick={handleSaveButtonClick}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Card>
-                        <CardHeader title="Off-Campus Work Study" className="card-header" />
-                        <CardContent>
-                          <Typography variant="body1">Placeholder text</Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
+              <InstructionsCard />
+            </Collapse>
+          </Grid>
+          <Grid item>
+            <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
+              <Grid container direction="row-reverse" justify="center" spacing={2}>
+                <Grid item xs={12} md={4}>
+                  <InstructionsCard />
+                </Grid>
+                <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
+                  <Grid item>
+                    <ApplicantList
+                      maxNumApplicants={MAX_NUM_APPLICANTS}
+                      userProfile={userProfile}
+                      editorUsername={editorUsername}
+                      applicants={applicants}
+                      saving={saving}
+                      onSearchSubmit={handleSearchSubmit}
+                      onChangeEditor={handleChangeEditor}
+                      onApplicantRemove={handleApplicantRemove}
+                      onSaveButtonClick={handleSaveButtonClick}
+                    />
+                    <AlertDialogBox
+                      open={changeEditorDialogOpen}
+                      onClose={handleCloseDialog}
+                      severity={'warning'}
+                      title={'Change application editor?'}
+                      text={changeEditorAlertText}
+                      cancelButtonClicked={handleCloseOkay}
+                      cancelButtonName={'Cancel'}
+                      confirmButtonClicked={handleChangeEditorAccepted}
+                      confirmButtonName={'Accept'}
+                    />
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                </Grid>
+              </Grid>
+              <Grid container direction="row" justify="center" spacing={2}>
+                <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
+                  <Grid item>
+                    <HallSelection
+                      editorUsername={editorUsername}
+                      preferredHalls={preferredHalls}
+                      saving={saving}
+                      onHallAdd={handleHallAdd}
+                      onHallInputChange={handleHallInputChange}
+                      onHallRemove={handleHallRemove}
+                      onSaveButtonClick={handleSaveButtonClick}
+                    />
+                  </Grid>
+                  <Grid item>
                     <Card>
-                      <CardHeader title="Agreements" className="card-header" />
+                      <CardHeader title="Off-Campus Work Study" className="card-header" />
                       <CardContent>
                         <Typography variant="body1">Placeholder text</Typography>
                       </CardContent>
                     </Card>
                   </Grid>
-                  <Grid item xs={12} lg={10}>
-                    <Card>
-                      <CardContent>
-                        {props.userProfile.AD_Username === editorUsername ? (
-                          <Grid container direction="row" justify="flex-end">
-                            <Grid item xs={6} sm={8}>
-                              <Typography variant="body1">Placeholder Text</Typography>
-                            </Grid>
-                            <Grid item xs={6} sm={4}>
-                              <Button
-                                variant="contained"
-                                onClick={handleSubmitButtonClick}
-                                color="primary"
-                                disabled={!applicationCardsOpen}
-                              >
-                                Submit Application
-                              </Button>
-                            </Grid>
-                            <AlertDialogBox
-                              open={submitDialogOpen}
-                              onClose={handleCloseDialog}
-                              severity={'warning'}
-                              title={'Submit apartment application?'}
-                              text={submitAlertText}
-                              cancelButtonClicked={handleCloseOkay}
-                              cancelButtonName={'Cancel'}
-                              confirmButtonClicked={handleSubmitAppAccepted}
-                              confirmButtonName={'Accept'}
-                            />
-                          </Grid>
-                        ) : (
-                          <Grid container direction="row" justify="flex-end">
-                            <Grid item xs={6} sm={8}>
-                              <Typography variant="body1">
-                                Placeholder Text for when the user is NOT the primary applicant
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={6} sm={4}>
-                              <Button variant="contained" color="primary" disabled>
-                                Submit Application
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </Grid>
                 </Grid>
-              </Collapse>
-            </Grid>
+                <Grid item xs={12} md={4}>
+                  <Card>
+                    <CardHeader title="Agreements" className="card-header" />
+                    <CardContent>
+                      <Typography variant="body1">Placeholder text</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid item xs={12} lg={10}>
+                  <Card>
+                    <CardContent>
+                      {userProfile.AD_Username === editorUsername ? (
+                        <Grid container direction="row" justify="flex-end">
+                          <Grid item xs={6} sm={8}>
+                            <Typography variant="body1">Placeholder Text</Typography>
+                          </Grid>
+                          <Grid item xs={6} sm={4}>
+                            <Button
+                              variant="contained"
+                              onClick={handleSubmitButtonClick}
+                              color="primary"
+                              disabled={!applicationCardsOpen}
+                            >
+                              Submit Application
+                            </Button>
+                          </Grid>
+                          <AlertDialogBox
+                            open={submitDialogOpen}
+                            onClose={handleCloseDialog}
+                            severity={'warning'}
+                            title={'Submit apartment application?'}
+                            text={submitAlertText}
+                            cancelButtonClicked={handleCloseOkay}
+                            cancelButtonName={'Cancel'}
+                            confirmButtonClicked={handleSubmitAppAccepted}
+                            confirmButtonName={'Accept'}
+                          />
+                        </Grid>
+                      ) : (
+                        <Grid container direction="row" justify="flex-end">
+                          <Grid item xs={6} sm={8}>
+                            <Typography variant="body1">
+                              Placeholder Text for when the user is NOT the primary applicant
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={6} sm={4}>
+                            <Button variant="contained" color="primary" disabled>
+                              Submit Application
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      )}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+            </Collapse>
           </Grid>
-          <SimpleSnackbar
-            text={snackbarText}
-            severity={snackbarSeverity}
-            open={snackbarOpen}
-            onClose={handleCloseSnackbar}
-          />
-        </div>
-      )}
-    </div>
-  );
+        </Grid>
+        <SimpleSnackbar
+          text={snackbarText}
+          severity={snackbarSeverity}
+          open={snackbarOpen}
+          onClose={handleCloseSnackbar}
+        />
+      </div>
+    );
+  }
 };
 
 export default StudentApplication;

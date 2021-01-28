@@ -5,29 +5,24 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import GordonLoader from '../../../../../../components/Loader';
 import './saveButton.css';
 
-const SaveButton = (props) => {
+const SaveButton = ({ saving, onClick }) => {
   const loaderSize = 20;
 
   const handleSaveButtonClick = () => {
-    props.onClick();
+    onClick();
   };
 
-  if (props.saving) {
-    if (props.saving === 'success') {
+  if (saving) {
+    if (saving === 'success') {
       return <CheckCircleIcon className="success" />;
-    } else if (props.saving === 'failed') {
+    } else if (saving === 'failed') {
       return <ErrorIcon className="error" />;
     } else {
       return <GordonLoader size={loaderSize} />;
     }
   } else {
     return (
-      <Button
-        disabled={props.saving}
-        variant="contained"
-        color="primary"
-        onClick={handleSaveButtonClick}
-      >
+      <Button disabled={saving} variant="contained" color="primary" onClick={handleSaveButtonClick}>
         Save
       </Button>
     );

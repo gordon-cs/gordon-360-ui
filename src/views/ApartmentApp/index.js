@@ -8,7 +8,7 @@ import user from '../../services/user';
 import housing from '../../services/housing';
 import './apartmentApp.scss';
 
-const ApartApp = (props) => {
+const ApartApp = ({ authentication }) => {
   const [loading, setLoading] = useState(true);
   const [network, setNetwork] = useState('online');
   const [userProfile, setUserProfile] = useState({});
@@ -54,7 +54,7 @@ const ApartApp = (props) => {
     setLoading(false);
   };
 
-  if (props.authentication) {
+  if (authentication) {
     /* Used to re-render the page when the network connection changes.
      *  The state's network variable is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.
@@ -88,13 +88,13 @@ const ApartApp = (props) => {
       } else if (isUserStudent) {
         return (
           <div className="student-apartment-application">
-            <StudentApplication userProfile={userProfile} authentication={props.authentication} />
+            <StudentApplication userProfile={userProfile} />
           </div>
         );
       } else if (canUseStaff) {
         return (
           <div className="staff-apartment-application">
-            <StaffMenu authentication={props.authentication} />
+            <StaffMenu />
           </div>
         );
       } else {
