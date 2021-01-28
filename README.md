@@ -18,14 +18,14 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 - [Environment Variables](#environment-variables)
 - [Testing](#testing)
 - [CI/CD](#ci/cd)
-  - [Contributing](#contributing)
+- [Contributing](#contributing)
 - [Known Issues](#known-issues)
 
 ## Getting Started
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
-Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
+Make sure Node.js is set up on your machine. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
 
 #### Windows:
 
@@ -73,7 +73,7 @@ By default, React will use the live server backend to allow seamless front end d
 
 ### Server Notes
 
-The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu` (used by Travis CI), `360train.gordon.edu`, and `360.gordon.edu`.
+The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu`, `360train.gordon.edu`, and `360.gordon.edu`.
 
 The backend server is hosted on `cts-360.gordon.edu`. This machine is also known as `360Api.gordon.edu` and `360ApiTrain.gordon.edu` (it also runs the frontend server for the old Ember site, and is thus also known as `360old.gordon.edu`).
 
@@ -323,6 +323,8 @@ Environment variables must be declared in all caps, must use snake case, and mus
 
 ## Testing
 
+The first forays into testing were made when we were still using Travis CI as our CI/CD solution. The below advice is probably still useful but will need updating.
+
 The foundations for a testing suite made up of Jasmine, Karma, and Travis CI have been laid. For one, package.json has the following dependencies listed:
 
 - `"jasmine-core": ">=3.4.0"`
@@ -359,7 +361,7 @@ and if it finds any builds that are newer than the most recent deployment, it wi
 1.  Click "Create pull request."
 1.  When the pull request is approved, merge it. This will trigger a build that will automatically deploy `master` to production.
 
-### Contributing
+## Contributing
 
 1. Clone the repository to the local machine.
 2. Create a new branch with a meaningful name (pertaining to the specific change being implemented).
