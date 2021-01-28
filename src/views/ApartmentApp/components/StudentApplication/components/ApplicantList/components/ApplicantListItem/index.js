@@ -21,43 +21,38 @@ import user from '../../../../../../../../services/user';
 // Based off src/views/PeopleSearch/components/PeopleSearchResult
 // but using props.profile of type StudentProfileInfo
 // rather than using this.props.Person of type PeopleSearchResult
-const ApplicantListItem = (props) => {
+const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApplicantRemove }) => {
   const [avatar, setAvatar] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null); // A HTML element, or a function that returns it. It's used to set the position of the menu.
-  const [hasNickName, setHasNickname] = useState(Boolean);
-  const [personClass, setPersonClass] = useState(props.profile.Class);
+  const [hasNickName, setHasNickname] = useState(false);
+  const [personClass, setPersonClass] = useState(profile.Class);
 
   useEffect(() => {
-    loadAvatar(props.profile);
-    createNickname(props.profile);
-    if (String(props.profile.PersonType).includes('stu') && props.profile.Class !== undefined) {
-      setPersonClass(props.profile.Class);
+    loadAvatar(profile);
+    createNickname(profile);
+    if (String(profile.PersonType).includes('stu') && profile.Class !== undefined) {
+      setPersonClass(profile.Class);
     } else {
       // Techincally, this case should never happen because the list does not allow the user to add a non-student to the applicant list
       setPersonClass('');
     }
-  }, [props.profile]);
+  }, [profile]);
 
   /**
    * Creates the Avatar image of the given user
    * @param {StudentProfileInfo} profile The StudentProfileInfo object for the student represented by this list item
    */
   const loadAvatar = async (profile) => {
-    const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-      await user.getImage(profile.AD_Username),
-    ]);
-    let newAvatar = null;
-    if (profile.AD_Username) {
-      newAvatar = preferredImage || defaultImage;
-    }
-    if (newAvatar === null) {
-      newAvatar = (
+    try {
+      const { def: defaultImage, pref: preferredImage } = await user.getImage(profile.AD_Username);
+      setAvatar(preferredImage || defaultImage);
+    } catch {
+      setAvatar(
         <svg width="50" height="50" viewBox="0 0 50 50">
           <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-        </svg>
+        </svg>,
       );
     }
-    setAvatar(newAvatar);
   };
 
   /**
@@ -80,28 +75,36 @@ const ApplicantListItem = (props) => {
 
   const handleChangeEditor = () => {
     // Make sure the chosen profile was not null
-    if (props.profile) {
+    if (profile) {
       // Send the selected profile to the parent component
-      props.onChangeEditor(props.profile);
+      onChangeEditor(profile);
       handleMenuClose();
     }
   };
 
   const handleRemove = () => {
     // Make sure the chosen profile was not null
-    if (props.profile) {
+    if (profile) {
       // Send the selected profile to the parent component
-      props.onApplicantRemove(props.profile);
+      onApplicantRemove(profile);
       handleMenuClose();
+    }
+  };
+
+  const displayName = () => {
+    if (hasNickName) {
+      return profile.fullName + ' (' + profile.NickName + ')';
+    } else {
+      return profile.fullName;
     }
   };
 
   return (
     <ListItem
-      key={props.profile.AD_Username}
+      key={profile.AD_Username}
       component={Link}
       target="_blank"
-      to={`/profile/${props.profile.AD_Username}`}
+      to={`/profile/${profile.AD_Username}`}
       className={'list-item'}
     >
       <ListItemAvatar>
@@ -115,43 +118,18 @@ const ApplicantListItem = (props) => {
       </ListItemAvatar>
       <Grid container alignItems="center" spacing={1}>
         <Grid item xs={12} sm>
-          <ListItemText
-            primary={
-              props.profile.Title &&
-              props.profile.Title !== '' &&
-              props.profile.PersonType === 'fac'
-                ? // If the user has a title
-                  hasNickName
-                  ? // If the user has a title and a nickname
-                    props.profile.Title +
-                    ' ' +
-                    props.profile.fullName +
-                    ' (' +
-                    props.profile.NickName +
-                    ')'
-                  : // If the user has a title and no nickname
-                    props.profile.Title + ' ' + props.profile.fullName
-                : // If the user doesn't have a title
-                hasNickName
-                ? // If the user doesn't have a title but has a nickname
-                  props.profile.fullName + ' (' + props.profile.NickName + ')'
-                : // If the user doesn't have a title or a nickname
-                  props.profile.fullName
-            }
-            secondary={personClass}
-            className={'list-item'}
-          />
+          <ListItemText primary={displayName} secondary={personClass} className={'list-item'} />
         </Grid>
       </Grid>
       <ListItemSecondaryAction>
         <Button
           aria-controls="applicant-menu"
           aria-haspopup="true"
-          disabled={props.isApplicationEditor}
+          disabled={isApplicationEditor}
           onClick={handleMenuClick}
         >
           Edit
-          {props.isApplicationEditor ? <StarBorderIcon /> : <ArrowDropDownIcon />}
+          {isApplicationEditor ? <StarBorderIcon /> : <ArrowDropDownIcon />}
         </Button>
         <Menu
           id="applicant-menu"
@@ -160,13 +138,13 @@ const ApplicantListItem = (props) => {
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
         >
-          <MenuItem disabled={props.isApplicationEditor} onClick={handleChangeEditor}>
+          <MenuItem disabled={isApplicationEditor} onClick={handleChangeEditor}>
             <ListItemIcon>
               <StarBorderIcon />
             </ListItemIcon>
             Make Editor
           </MenuItem>
-          <MenuItem disabled={props.isApplicationEditor} onClick={handleRemove}>
+          <MenuItem disabled={isApplicationEditor} onClick={handleRemove}>
             <ListItemIcon>
               <ClearIcon />
             </ListItemIcon>
