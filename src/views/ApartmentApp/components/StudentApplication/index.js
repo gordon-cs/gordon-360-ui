@@ -78,7 +78,7 @@ const StudentApplication = ({ userProfile }) => {
           setEditorUsername(applicationDetails.Username);
         }
         if (applicationDetails.Applicants) {
-          setApplicants(applicationDetails.Username);
+          setApplicants(applicationDetails.Applicants);
         }
       }
     } else {
