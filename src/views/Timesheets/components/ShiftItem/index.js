@@ -212,21 +212,19 @@ export default class ShiftItem extends Component {
     let shiftTooLong = false;
     let isOverlappingShift = false;
     let timeDiff;
-    let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
+    let calculatedTimeDiff = timeDiff / 3600000; //3,600,000 milliseconds in an hour.
     if (this.state.newDateTimeIn && this.state.newDateTimeOut) {
       enteredFutureTime =
         this.state.newDateTimeIn.getTime() > now || this.state.newDateTimeOut.getTime() > now;
       timeDiff = this.state.newDateTimeOut.getTime() - this.state.newDateTimeIn.getTime();
-      calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
+      calculatedTimeDiff = timeDiff / 3600000; //3,600,000 milliseconds in an hour.
       timeOutIsBeforeTimeIn = timeDiff < 0;
       zeroLengthShift = timeDiff === 0;
       shiftTooLong = calculatedTimeDiff > 20;
-      let roundedHourDifference = 0;
-      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.25) {
-        roundedHourDifference = 0.25;
-      } else if (calculatedTimeDiff >= 0.25) {
-        roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
-      }
+      let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
+      if (roundedHourDifference === 0.00) {
+        roundedHourDifference = 0.08; //minimum 1/12th hour for working a shift (5 minutes)
+      } 
 
       this.setState({
         newHoursWorked: roundedHourDifference,
