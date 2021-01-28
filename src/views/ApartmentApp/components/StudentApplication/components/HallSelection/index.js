@@ -37,10 +37,6 @@ const HallSelection = ({
   };
 
   const handleInputChange = (hallRankValue, hallNameValue, index) => {
-    console.log('Called "handleInputChange" in ApartmentHallSelection component');
-    console.log('HallRank: ' + hallRankValue); //! DEBUG
-    console.log('HallName: ' + hallNameValue); //! DEBUG
-    console.log('index: ' + index); //! DEBUG
     onHallInputChange(hallRankValue, hallNameValue, index);
   };
 

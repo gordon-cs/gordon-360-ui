@@ -33,7 +33,6 @@ const HallListItem = ({
   });
 
   const handleRankInputChange = (event) => {
-    console.log('Called "handleRankInputChange" in HallListItem component'); //! DEBUG
     if (event.target.value !== null) {
       let newHallRankValue = event.target.value;
       onHallInputChange(newHallRankValue, hallNameValue, index);
@@ -41,7 +40,6 @@ const HallListItem = ({
   };
 
   const handleHallInputChange = (event) => {
-    console.log('Called "handleHallInputChange" in HallListItem component'); //! DEBUG
     if (event.target.value !== null) {
       let newHallNameValue = event.target.value;
       onHallInputChange(hallRankValue, newHallNameValue, index);
