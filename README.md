@@ -1,4 +1,6 @@
-# Gordon 360 User Interface
+# Gordon 360 User Interface 
+
+![Lint and Build](https://github.com/gordon-cs/gordon-360-ui/workflows/Lint%20and%20Build/badge.svg)
 
 This project is the frontend of Gordon 360 in React. [The retired frontend](https://github.com/gordon-cs/Project-Bernard/) was built in EmberJS, but was deemed too slow and difficult to maintain. To see the specifics of the rebuild, see [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/develop/old_documentation/ROADMAP.md).
 
