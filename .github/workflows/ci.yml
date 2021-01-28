@@ -34,12 +34,13 @@ jobs:
       #     - name: Test
       #      run: npm test
 
-      - name: Upload Build artifacts for testing
-        if: ${{ github.ref == 'refs/heads/test-github-actions' }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-test
-          path: build
+      # Used to test deployment integration
+      # - name: Upload Build artifacts for testing
+      #   if: ${{ github.ref == 'refs/heads/test-github-actions' }}
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: build-test
+      #     path: build
 
       - name: Upload develop build artifacts for deployment
         if: ${{ github.ref == 'refs/heads/develop' }}
