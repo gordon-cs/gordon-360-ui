@@ -544,7 +544,6 @@ const StudentApplication = (props) => {
                         onChangeEditor={handleChangeEditor}
                         onApplicantRemove={handleApplicantRemove}
                         onSaveButtonClick={handleSaveButtonClick}
-                        authentication={props.authentication}
                       />
                       <AlertDialogBox
                         open={changeEditorDialogOpen}
@@ -567,11 +566,10 @@ const StudentApplication = (props) => {
                         editorUsername={editorUsername}
                         preferredHalls={preferredHalls}
                         saving={saving}
+                        onHallAdd={handleHallAdd}
                         onHallInputChange={handleHallInputChange}
                         onHallRemove={handleHallRemove}
-                        onHallAdd={handleHallAdd}
                         onSaveButtonClick={handleSaveButtonClick}
-                        authentication={props.authentication}
                       />
                     </Grid>
                     <Grid item>

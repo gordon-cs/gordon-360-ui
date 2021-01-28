@@ -7,7 +7,15 @@ import goStalk from '../../../../../../services/goStalk';
 import housing from '../../../../../../services/housing';
 
 // Create a list of selection boxes to choosing preferred halls
-const HallSelection = (props) => {
+const HallSelection = ({
+  editorUsername,
+  preferredHalls,
+  saving,
+  onHallAdd,
+  onHallInputChange,
+  onHallRemove,
+  onSaveButtonClick,
+}) => {
   const [availableHalls, setAvailableHalls] = useState([]); // array of hall names from backend
 
   useEffect(() => {
@@ -18,7 +26,7 @@ const HallSelection = (props) => {
     let unfilteredHalls;
     try {
       // Get the halls available for apartments, filtered by the gender of the application editor
-      unfilteredHalls = await housing.getApartmentHalls(props.editorUsername);
+      unfilteredHalls = await housing.getApartmentHalls(editorUsername);
     } catch {
       //! DEBUG: Fills in halls dropdown when the housing api endpoint is not yet implemented
       // This list of halls is references from the 'Hall' dropdown on the PeopleSearch page
@@ -33,23 +41,23 @@ const HallSelection = (props) => {
     console.log('HallRank: ' + hallRankValue); //! DEBUG
     console.log('HallName: ' + hallNameValue); //! DEBUG
     console.log('index: ' + index); //! DEBUG
-    props.onHallInputChange(hallRankValue, hallNameValue, index);
+    onHallInputChange(hallRankValue, hallNameValue, index);
   };
 
   const handleRemove = (index) => {
     // Make sure the chosen index was not null
     if (index !== null) {
       // Send the selected index to the parent component
-      props.onHallRemove(index);
+      onHallRemove(index);
     }
   };
 
   const handleAddDropdown = () => {
-    props.onHallAdd();
+    onHallAdd();
   };
 
   const handleSaveButtonClick = () => {
-    props.onSaveButtonClick();
+    onSaveButtonClick();
   };
 
   return (
@@ -60,17 +68,15 @@ const HallSelection = (props) => {
           <Grid item xs={11}></Grid>
           <Grid item xs={12}>
             <List className="hall-list" aria-label="apartment preferred halls">
-              {props.preferredHalls ? (
-                props.preferredHalls.map((preferredHall, index) => (
+              {preferredHalls ? (
+                preferredHalls.map((hallInfo, index) => (
                   <HallListItem
-                    key={preferredHall.HallName + index}
+                    key={hallInfo.HallName + index}
                     index={index}
                     availableHalls={availableHalls}
-                    editorUsername={props.editorUsername}
-                    preferredHalls={props.preferredHalls}
+                    preferredHalls={preferredHalls}
                     onHallInputChange={handleInputChange}
                     onHallRemove={handleRemove}
-                    authentication={props.authentication}
                   />
                 ))
               ) : (
@@ -78,10 +84,8 @@ const HallSelection = (props) => {
                   key={''}
                   index={0}
                   availableHalls={availableHalls}
-                  editorUsername={props.editorUsername}
-                  preferredHalls={props.preferredHalls}
+                  preferredHalls={preferredHalls}
                   onHallInputChange={handleInputChange}
-                  authentication={props.authentication}
                 />
               )}
             </List>
@@ -97,18 +101,18 @@ const HallSelection = (props) => {
             </Button>
           </Grid>
           <Grid item xs={9}>
-            {props.saving === 'failed' ? (
+            {saving === 'failed' ? (
               <Typography variant="overline" color="error">
                 Something when wrong while trying to save the application
               </Typography>
-            ) : props.preferredHalls.length >= availableHalls.length ? (
+            ) : preferredHalls.length >= availableHalls.length ? (
               <Typography variant="overline" color="error">
                 You have reached the maximum number of halls ({availableHalls.length})
               </Typography>
             ) : null}
           </Grid>
           <Grid item xs={3}>
-            <SaveButton saving={props.saving} onClick={handleSaveButtonClick} />
+            <SaveButton saving={saving} onClick={handleSaveButtonClick} />
           </Grid>
         </Grid>
       </CardContent>

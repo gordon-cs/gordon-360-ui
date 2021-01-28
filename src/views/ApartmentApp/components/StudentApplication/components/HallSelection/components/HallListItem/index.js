@@ -12,15 +12,21 @@ import {
 } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 
-const HallListItem = (props) => {
+const HallListItem = ({
+  index,
+  availableHalls,
+  preferredHalls,
+  onHallInputChange,
+  onHallRemove,
+}) => {
   const [hallRankValue, setHallRankValue] = useState(1); // Rank drop-down menu value
   const [hallNameValue, setHallNameValue] = useState(''); // Hall drop-down menu value
 
   useEffect(() => {
     // Get the hall info for this list item from the component's props
     const getHallFromProps = () => {
-      setHallRankValue(props.preferredHalls[props.index].HallRank);
-      setHallNameValue(props.preferredHalls[props.index].HallName);
+      setHallRankValue(preferredHalls[index].HallRank);
+      setHallNameValue(preferredHalls[index].HallName);
     };
 
     getHallFromProps();
@@ -30,7 +36,7 @@ const HallListItem = (props) => {
     console.log('Called "handleRankInputChange" in HallListItem component'); //! DEBUG
     if (event.target.value !== null) {
       let newHallRankValue = event.target.value;
-      props.onHallInputChange(newHallRankValue, hallNameValue, props.index);
+      onHallInputChange(newHallRankValue, hallNameValue, index);
     }
   };
 
@@ -38,26 +44,24 @@ const HallListItem = (props) => {
     console.log('Called "handleHallInputChange" in HallListItem component'); //! DEBUG
     if (event.target.value !== null) {
       let newHallNameValue = event.target.value;
-      props.onHallInputChange(hallRankValue, newHallNameValue, props.index);
+      onHallInputChange(hallRankValue, newHallNameValue, index);
     }
   };
 
   const handleRemove = () => {
-    if (props.index !== null) {
+    if (index !== null) {
       // Send this list item's index to the parent component
-      props.onHallRemove(props.index);
+      onHallRemove(index);
     }
   };
 
-  const index = props.index;
-
-  const hallOptions = props.availableHalls.map((hallName) => (
+  const hallOptions = availableHalls.map((hallName) => (
     <MenuItem value={hallName} key={hallName}>
       {hallName}
     </MenuItem>
   ));
 
-  const rankOptions = props.preferredHalls.map((_hall, i) => (
+  const rankOptions = preferredHalls.map((_hall, i) => (
     <MenuItem value={i + 1} key={i + 1}>
       {i + 1}
     </MenuItem>
