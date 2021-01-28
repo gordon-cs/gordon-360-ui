@@ -1,5 +1,5 @@
 //Student apartment application page
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Grid,
   Card,
@@ -8,6 +8,11 @@ import {
   Collapse,
   Button,
   Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
 } from '@material-ui/core/';
 import GordonLoader from '../../../../components/Loader';
 import AlertDialogBox from '../../../../components/AlertDialogBox';
@@ -32,11 +37,57 @@ const InstructionsCard = () => (
   </Card>
 );
 
+const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) => {
+  function createData(label, value) {
+    return { label, value };
+  }
+
+  let rows = [];
+
+  if (dateSubmitted) {
+    rows.push(createData('Last Submitted: ', dateSubmitted));
+  } else {
+    rows.push(createData('Last Submitted: ', 'Not yet submitted'));
+  }
+
+  if (dateModified) {
+    rows.push(createData('Last Modified: ', dateModified));
+  }
+
+  if (editorUsername) {
+    rows.push(createData('Application Editor: ', editorUsername));
+  }
+
+  return (
+    <Card>
+      <CardHeader title="Your Application Details" className="card-header" />
+      <CardContent>
+        <TableContainer>
+          <Table>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow key={row.label}>
+                  <TableCell component="th" scope="row">
+                    {row.label}
+                  </TableCell>
+                  <TableCell align="right">{row.value}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
+  );
+};
+
 const StudentApplication = ({ userProfile }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   const [applicationID, setApplicationID] = useState(-1); // Default value of -1 indicate to backend that the application ID number is not yet known
+  const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
+  const [dateModified, setDateModified] = useState(null); // The date the application was submitted, or null if not yet submitted
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
   const [applicants, setApplicants] = useState([]);
   const [preferredHalls, setPreferredHalls] = useState([{ HallRank: 1, HallName: '' }]);
@@ -59,7 +110,7 @@ const StudentApplication = ({ userProfile }) => {
   /**
    * Attempt to load an existing application from the database if one exists
    */
-  const loadSavedApplication = async () => {
+  const loadSavedApplication = useCallback(async () => {
     // TODO: Implement this once save/load of application data has been implemented in the backend
     setLoading(true);
     // Check if the current user is on an application. Returns the application ID number if found
@@ -68,6 +119,12 @@ const StudentApplication = ({ userProfile }) => {
       setApplicationID(newApplicationID);
       let applicationDetails = await housing.getApartmentApplication(newApplicationID);
       if (applicationDetails) {
+        if (applicationDetails.DateSubmitted) {
+          setDateSubmitted(applicationDetails.DateSubmitted);
+        }
+        if (applicationDetails.DateModified) {
+          setDateModified(applicationDetails.DateModified);
+        }
         if (applicationDetails.Username) {
           setEditorUsername(applicationDetails.Username);
         }
@@ -81,21 +138,22 @@ const StudentApplication = ({ userProfile }) => {
       if (!editorUsername) {
         setEditorUsername(userProfile.AD_Username);
       }
-      //! DEBUG: This 'if' is forced to 'true' for debug only, make sure to put it back to normal
       if (
-        true ||
         applicants.every(
           (applicantProfile) => applicantProfile.AD_Username !== userProfile.AD_Username,
         )
       ) {
-        setApplicants(applicants.concat(userProfile));
+        setApplicants((prevApplicants) => prevApplicants.concat(userProfile));
       }
     }
     setLoading(false);
-  };
+  }, [userProfile, editorUsername, applicants]);
 
+  // empty dependency array forces this to run only once at first render
   useEffect(() => {
     loadSavedApplication();
+
+    // eslint-disable-next-line
   }, []);
 
   const handleShowApplication = () => {
@@ -118,11 +176,10 @@ const StudentApplication = ({ userProfile }) => {
    * @param {String} username Username for student
    */
   const addApplicant = async (username) => {
-    let newApplicants = applicants; // make a separate copy of the array
     try {
       // Get the profile of the selected user
       let newApplicantProfile = await user.getProfileInfo(username);
-      if (newApplicants.length >= MAX_NUM_APPLICANTS) {
+      if (applicants.length >= MAX_NUM_APPLICANTS) {
         // Display an error if the user try to add an applicant when the list is full
         setSnackbarText('You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants');
         setSnackbarSeverity('warning');
@@ -136,17 +193,14 @@ const StudentApplication = ({ userProfile }) => {
         );
         setSnackbarSeverity('warning');
         setSnackbarOpen(true);
-      } else if (
-        newApplicants.some((applicantProfile) => applicantProfile.AD_Username === username)
-      ) {
+      } else if (applicants.some((applicantProfile) => applicantProfile.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
         setSnackbarSeverity('info');
         setSnackbarOpen(true);
       } else {
         // Add the profile object to the list of applicants
-        newApplicants.push(newApplicantProfile);
-        setApplicants(newApplicants);
+        setApplicants((prevApplicants) => prevApplicants.concat(newApplicantProfile));
         if (applicants.some((applicantProfile) => applicantProfile.AD_Username === username)) {
           setSnackbarText(
             String(newApplicantProfile.fullName) + ' was successfully added to the list.',
@@ -229,11 +283,9 @@ const StudentApplication = ({ userProfile }) => {
    */
   const handleApplicantRemove = (profileToRemove) => {
     if (profileToRemove) {
-      let newApplicants = applicants; // make a separate copy of the array
-      let index = newApplicants.indexOf(profileToRemove);
+      let index = applicants.indexOf(profileToRemove);
       if (index !== -1) {
-        newApplicants.splice(index, 1);
-        setApplicants(newApplicants);
+        setApplicants((prevApplicants) => prevApplicants.splice(index, 1));
       }
     }
   };
@@ -461,7 +513,7 @@ const StudentApplication = ({ userProfile }) => {
           <Grid item xs={12} lg={10}>
             <Card>
               <CardContent>
-                <Grid container direction="row" justify="flex-end">
+                <Grid container direction="row" justify="flex-end" spacing={2}>
                   <Grid item xs={6} sm={8}>
                     {applicationID === -1 ? (
                       <Typography variant="body1">
@@ -472,14 +524,10 @@ const StudentApplication = ({ userProfile }) => {
                     ) : userProfile.AD_Username === editorUsername ? (
                       <Typography variant="body1">
                         Existing application for this semester:
-                        <br />
-                        Last Modified: [Insert Date Here]
                       </Typography>
                     ) : (
                       <Typography variant="body1">
                         Only the application editor may edit the application.
-                        <br />
-                        Last Modified: [Insert Date Here]
                       </Typography>
                     )}
                   </Grid>
@@ -517,9 +565,28 @@ const StudentApplication = ({ userProfile }) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item>
             <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-              <InstructionsCard />
+              {applicationID === -1 ? (
+                <Grid container direction="row" justify="center" spacing={2}>
+                  <Grid item xs={12} md={8}>
+                    <InstructionsCard />
+                  </Grid>
+                </Grid>
+              ) : (
+                <Grid container direction="row" justify="center" spacing={2}>
+                  <Grid item xs={12} md={6} lg={4}>
+                    <ApplicationDataTable
+                      dateSubmitted={dateSubmitted}
+                      dateModified={dateModified}
+                      editorUsername={editorUsername}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={6}>
+                    <InstructionsCard />
+                  </Grid>
+                </Grid>
+              )}
             </Collapse>
           </Grid>
           <Grid item>

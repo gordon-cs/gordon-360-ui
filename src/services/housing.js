@@ -30,10 +30,12 @@ import './user'; // Needed for typedef of StudentProfileInfo
 /**
  * @global
  * @typedef ApplicationDetails
- * @property {Number} AprtAppID  Application ID number of this application
- * @property {String} Username  Username of the primary applicant
- * @property {String[]} Applicants  Array of student usernames
- * @property {ApartmentChoice[]} ApartmentChoices  Array of ApartmentChoice objects
+ * @property {Number} AprtAppID Application ID number of this application
+ * @property {*} DateSubmitted The date the application was submitted, or null if not yet submitted
+ * @property {*} DateModified The date the application was last modified
+ * @property {String} Username Username of the primary applicant
+ * @property {String[]} Applicants Array of student usernames
+ * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
  */
 
 /**
