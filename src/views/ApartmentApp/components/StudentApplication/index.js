@@ -149,12 +149,9 @@ const StudentApplication = ({ userProfile }) => {
     setLoading(false);
   }, [userProfile, editorUsername, applicants]);
 
-  // empty dependency array forces this to run only once at first render
   useEffect(() => {
     loadSavedApplication();
-
-    // eslint-disable-next-line
-  }, []);
+  }, [userProfile, loadSavedApplication]);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
@@ -339,9 +336,23 @@ const StudentApplication = ({ userProfile }) => {
       }
 
       newPreferredHalls[index] = newHallInfo; // replace the element at index with the new hall info object
-      // preferredHalls.splice(index, 1, newHallInfo);
 
-      // Sort the list of halls by the rank numbers
+      // Sort halls by name
+      newPreferredHalls.sort(function(a, b) {
+        var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
+        var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+
+        // names must be equal
+        return 0;
+      });
+
+      // Sort halls by rank
       newPreferredHalls.sort(function(a, b) {
         return a.HallRank - b.HallRank;
       });
