@@ -210,9 +210,9 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
                 component={NavLink}
                 to="/events"
               />
-              {disablableTab('People', <PeopleIcon />)}
+              {disablableTab('people', <PeopleIcon />)}
               {/* {disablableTab('Timesheets', WorkIcon)} */}
-              {disablableTab('Wellness', <WellnessIcon />)}
+              {disablableTab('wellness', <WellnessIcon />)}
             </Tabs>
           </div>
 
