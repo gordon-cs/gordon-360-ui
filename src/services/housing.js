@@ -39,6 +39,18 @@ import './user'; // Needed for typedef of StudentProfileInfo
  */
 
 /**
+ * Check if the current user is authorized to view the housing staff page for applications
+ * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
+ */
+const checkHousingStaff = async () => {
+  try {
+    return await http.get(`housing/staff`);
+  } catch {
+    return false;
+  }
+};
+
+/**
  * Check if a given student is on an existing application
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<Number>} Application's ID number
@@ -73,7 +85,7 @@ const saveApartmentApplication = async (
     Applicants: applicants.map((profile) => profile.AD_Username),
     ApartmentChoices: preferredHalls,
   };
-  return await http.post(`housing/save/`, applicationDetails);
+  return await http.post(`housing/apartment/save/`, applicationDetails);
 };
 
 /**
@@ -83,11 +95,11 @@ const saveApartmentApplication = async (
  * @return {Promise.<Boolean>} Status of whether or not the operation was successful
  */
 const changeApplicationEditor = async (applicationID, newEditorUsername) => {
-  let newModifierDetails = {
+  let newEditorDetails = {
     AprtAppID: applicationID,
     Username: newEditorUsername,
   };
-  return await http.post(`housing/change-editor/`, newModifierDetails);
+  return await http.post(`housing/apartment/change-editor/`, newEditorDetails);
 };
 
 /**
@@ -100,6 +112,7 @@ const getApartmentApplication = async (applicationID) => {
 };
 
 export default {
+  checkHousingStaff,
   getApplicationID,
   saveApartmentApplication,
   changeApplicationEditor,
