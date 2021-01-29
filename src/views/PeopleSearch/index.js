@@ -438,7 +438,7 @@ const PeopleSearch = (props) => {
   ));
 
   if (props.authentication) {
-    if (personType !== 'stu' && personType !== '') {
+    if (!personType.includes('stu') && personType !== '') {
       includeAlumniCheckbox = (
         <Grid item xs={12}>
           <FormControlLabel
