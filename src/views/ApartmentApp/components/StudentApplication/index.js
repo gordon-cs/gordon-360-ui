@@ -294,48 +294,33 @@ const StudentApplication = ({ userProfile }) => {
    * @param {Number} index The index of the hall in the list
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
-    console.log('Called "handleHallInputChange" in StudentApplication component'); //! DEBUG
-    console.log('HallRank: ' + hallRankValue); //! DEBUG
-    console.log('HallName: ' + hallNameValue); //! DEBUG
-    console.log('index: ' + index); //! DEBUG
     if (index !== null && index >= 0) {
-      console.log('Attempting to update preferred halls'); //! DEBUG
-
-      let newPreferredHalls = preferredHalls; // make a separate copy of the array
-
       // Get the custom hallInfo object at the given index
-      let newHallInfo = newPreferredHalls[index];
+      let newHallInfo = preferredHalls[index];
 
       // Error checking on the hallRankValue before modifying the newHallInfo object
       if (hallRankValue !== null) {
         newHallInfo.HallRank = Number(hallRankValue);
-      } else {
-        // Display an error if the selected rank value is less or equal to zero
-        setSnackbarText(
-          'The "Rank" value expected a positive number, but you entered "' +
-            String(hallRankValue) +
-            '"',
-        );
-        setSnackbarSeverity('error');
-        setSnackbarOpen(true);
       }
 
       // Error checking on the hallNameValue before modifying the newHallInfo object
       if (
         hallNameValue !== null &&
         hallNameValue !== preferredHalls[index].HallName &&
-        newPreferredHalls.some((hallInfo) => hallInfo.HallName === hallNameValue)
+        preferredHalls.some((hallInfo) => hallInfo.HallName === hallNameValue)
       ) {
         // Display an error if the selected hall is already in the list
         setSnackbarText(String(hallNameValue) + ' is already in the list.');
         setSnackbarSeverity('info');
         setSnackbarOpen(true);
       } else if (hallNameValue !== null) {
-        // Create a new custom hallInfo object
         newHallInfo.HallName = hallNameValue;
       }
 
-      newPreferredHalls[index] = newHallInfo; // replace the element at index with the new hall info object
+      // replace the element at index with the new hall info object
+      setPreferredHalls((prevPreferredHalls) => prevPreferredHalls.splice(index, 1, newHallInfo));
+
+      let newPreferredHalls = preferredHalls; // make a separate copy of the array
 
       // Sort halls by name
       newPreferredHalls.sort(function(a, b) {
@@ -357,9 +342,6 @@ const StudentApplication = ({ userProfile }) => {
         return a.HallRank - b.HallRank;
       });
 
-      console.log('Printing current list of preferred halls'); //! DEBUG
-      newPreferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
-
       setPreferredHalls(newPreferredHalls);
     } else {
       setSnackbarText('Something went wrong while trying to add this hall. Please try again.');
@@ -373,11 +355,9 @@ const StudentApplication = ({ userProfile }) => {
    * @param {Number} index The index of the hall to be removed from the list of perferred halls
    */
   const handleHallRemove = (index) => {
-    console.log('Called "handleHallRemove" in StudentApplication component'); //! DEBUG
-    console.log('index: ' + index); //! DEBUG
     if (index !== null && index !== -1) {
-      let newPreferredHalls = preferredHalls; // make a separate copy of the array
       if (preferredHalls.length > 1) {
+        let newPreferredHalls = preferredHalls; // make a separate copy of the array
         // Remove the selected hall if the list has more than one element
         newPreferredHalls.splice(index, 1);
         // If any rank value is greater than the new maximum, then set it to that new max rank
@@ -387,14 +367,13 @@ const StudentApplication = ({ userProfile }) => {
             newPreferredHalls[index].HallRank = maxRank;
           }
         });
+        setPreferredHalls(newPreferredHalls);
       } else {
         // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
-        let newHallInfo = { HallRank: 1, HallName: '' };
-        newPreferredHalls[0] = newHallInfo;
+        setPreferredHalls((prevPreferredHalls) =>
+          prevPreferredHalls.splice(0, 1, { HallRank: 1, HallName: '' }),
+        );
       }
-      console.log('Printing current list of preferred halls'); //! DEBUG
-      newPreferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
-      setPreferredHalls(newPreferredHalls);
     }
   };
 
@@ -402,13 +381,10 @@ const StudentApplication = ({ userProfile }) => {
    * Callback for hall list add button
    */
   const handleHallAdd = () => {
-    console.log('Called "handleHallAdd" in StudentApplication component'); //1 DEBUG
     let newHallRank = preferredHalls.length + 1;
     setPreferredHalls((prevPreferredHalls) =>
       prevPreferredHalls.concat({ HallRank: newHallRank, HallName: '' }),
     );
-    console.log('Printing current list of preferred halls'); //! DEBUG
-    preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
   };
 
   /**

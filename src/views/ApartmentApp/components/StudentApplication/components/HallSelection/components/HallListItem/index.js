@@ -28,7 +28,6 @@ const HallListItem = ({
     if (isEqual(previousInputs.current, [index, preferredHalls])) {
       return;
     }
-    console.log('HallListItem ' + index + ' called useEffect');
     // Get the hall info for this list item from the component's props
     const getHallFromProps = () => {
       setHallRankValue(preferredHalls[index].HallRank);
