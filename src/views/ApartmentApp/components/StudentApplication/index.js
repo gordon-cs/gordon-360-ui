@@ -392,12 +392,12 @@ const StudentApplication = ({ userProfile }) => {
    */
   const handleHallAdd = () => {
     console.log('Called "handleHallAdd" in StudentApplication component'); //1 DEBUG
-    let newPreferredHalls = preferredHalls; // make a separate copy of the array
-    let newHallRank = newPreferredHalls.length + 1;
-    newPreferredHalls.push({ HallRank: newHallRank, HallName: '' });
+    let newHallRank = preferredHalls.length + 1;
+    setPreferredHalls((prevPreferredHalls) =>
+      prevPreferredHalls.concat({ HallRank: newHallRank, HallName: '' }),
+    );
     console.log('Printing current list of preferred halls'); //! DEBUG
-    newPreferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
-    setPreferredHalls(newPreferredHalls);
+    preferredHalls.forEach((hall) => console.log(hall)); //! DEBUG
   };
 
   /**
