@@ -35,11 +35,26 @@ import './user';
 /**
  * @global
  * @typedef ApplicationDetails
- * @property {Number} AprtAppID  Application ID number of this application
- * @property {String} Username  Username of the primary applicant
- * @property {String[]} Applicants  Array of student usernames
- * @property {ApartmentChoice[]} ApartmentChoices  Array of ApartmentChoice objects
+ * @property {Number} AprtAppID Application ID number of this application
+ * @property {*} DateSubmitted The date the application was submitted, or null if not yet submitted
+ * @property {*} DateModified The date the application was last modified
+ * @property {String} Username Username of the primary applicant
+ * @property {String[]} Applicants Array of student usernames
+ * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
  */
+
+/**
+ * Check if the current user is authorized to view the housing staff page for applications
+ * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
+ */
+const checkHousingStaff = async () => {
+  return false; //! DEBUG
+  // try {
+  //   return await http.get(`housing/staff`);
+  // } catch {
+  //   return false;
+  // }
+};
 
 /**
  * Check if a given student is on an existing application
@@ -76,7 +91,7 @@ const saveApartmentApplication = async (
     Applicants: applicants.map((profile) => profile.AD_Username),
     ApartmentChoices: apartmentChoices,
   };
-  return await http.post(`housing/save/`, applicationDetails);
+  return await http.post(`housing/apartment/save/`, applicationDetails);
 };
 
 /**
@@ -86,11 +101,11 @@ const saveApartmentApplication = async (
  * @return {Promise.<Boolean>} Status of whether or not the operation was successful
  */
 const changeApplicationEditor = async (applicationID, newEditorUsername) => {
-  let newModifierDetails = {
+  let newEditorDetails = {
     AprtAppID: applicationID,
     Username: newEditorUsername,
   };
-  return await http.post(`housing/change-editor/`, newModifierDetails);
+  return await http.post(`housing/apartment/change-editor/`, newEditorDetails);
 };
 
 /**
@@ -103,6 +118,7 @@ const getApartmentApplication = async (applicationID) => {
 };
 
 export default {
+  checkHousingStaff,
   getApplicationID,
   saveApartmentApplication,
   changeApplicationEditor,
