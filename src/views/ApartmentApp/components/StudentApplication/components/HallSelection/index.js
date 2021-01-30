@@ -43,8 +43,8 @@ const HallSelection = ({
 
   /**
    * Callback for changes to hall list item name and/or rank
-   * @param {String} hallSelectionValue The name of the hall that was selected
-   * @param {String|Number} hallRankValue The rank value that the user assigned to this hall
+   * @param {Number} hallRankValue The rank value that the user assigned to this hall
+   * @param {String} hallNameValue The name of the hall that was selected
    * @param {Number} index The index of the hall in the list
    */
   const handleInputChange = (hallRankValue, hallNameValue, index) => {
