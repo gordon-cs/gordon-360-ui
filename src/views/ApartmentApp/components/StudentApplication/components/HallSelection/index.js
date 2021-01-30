@@ -39,7 +39,7 @@ const HallSelection = ({
     };
 
     loadHalls();
-  }, [editorUsername]);
+  });
 
   /**
    * Callback for changes to hall list item name and/or rank
@@ -88,12 +88,11 @@ const HallSelection = ({
               {preferredHalls ? (
                 preferredHalls.map((hallInfo, index) => (
                   <HallListItem
-                    key={hallInfo.HallName + index}
-                    index={index}
+                    key={index + hallInfo.HallRank + hallInfo.HallName}
                     disabled={disabled}
-                    editorUsername={editorUsername}
-                    availableHalls={availableHalls}
+                    index={index}
                     preferredHalls={preferredHalls}
+                    availableHalls={availableHalls}
                     onHallInputChange={handleInputChange}
                     onHallRemove={handleRemove}
                   />
@@ -101,11 +100,10 @@ const HallSelection = ({
               ) : (
                 <HallListItem
                   key={''}
-                  index={0}
                   disabled={disabled}
-                  editorUsername={editorUsername}
-                  availableHalls={availableHalls}
+                  index={0}
                   preferredHalls={preferredHalls}
+                  availableHalls={availableHalls}
                   onHallInputChange={handleInputChange}
                 />
               )}

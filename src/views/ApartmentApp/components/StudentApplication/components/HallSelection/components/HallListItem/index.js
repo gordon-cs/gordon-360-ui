@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import isEqual from 'lodash/isEqual';
 import {
   Grid,
   ListItem,
@@ -15,8 +16,8 @@ import ClearIcon from '@material-ui/icons/Clear';
 const HallListItem = ({
   disabled,
   index,
-  availableHalls,
   preferredHalls,
+  availableHalls,
   onHallInputChange,
   onHallRemove,
 }) => {
@@ -24,6 +25,10 @@ const HallListItem = ({
   const [hallNameValue, setHallNameValue] = useState(''); // Hall drop-down menu value
 
   useEffect(() => {
+    // Manually perform deep checking of the array to force update whenever an element of preferredHalls is changed
+    if (isEqual(previousInputs.current, [index, preferredHalls])) {
+      return;
+    }
     // Get the hall info for this list item from the component's props
     const getHallFromProps = () => {
       setHallRankValue(preferredHalls[index].HallRank);
@@ -31,7 +36,12 @@ const HallListItem = ({
     };
 
     getHallFromProps();
-  }, [preferredHalls, index]);
+  });
+
+  const previousInputs = useRef();
+  useEffect(() => {
+    previousInputs.current = [index, preferredHalls];
+  });
 
   /**
    * Callback for changes to hall rank input field
@@ -48,7 +58,7 @@ const HallListItem = ({
    * Callback for changes to hall name dropdown
    * @param {*} event
    */
-  const handleHallInputChange = (event) => {
+  const handleNameInputChange = (event) => {
     if (event.target.value !== null) {
       let newHallNameValue = event.target.value;
       onHallInputChange(hallRankValue, newHallNameValue, index);
@@ -99,7 +109,7 @@ const HallListItem = ({
             <Select
               disabled={disabled}
               value={hallNameValue}
-              onChange={handleHallInputChange}
+              onChange={handleNameInputChange}
               input={<Input id={'hall' + index} />}
             >
               {hallOptions}

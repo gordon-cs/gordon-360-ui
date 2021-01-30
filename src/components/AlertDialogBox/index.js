@@ -56,12 +56,7 @@ export default class AlertDialogBox extends Component {
           <DialogContentText id="alert-dialog-description">{this.props.text}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button
-            variant="contained"
-            onClick={this.props.cancelButtonClicked}
-            color="primary"
-            autofocus
-          >
+          <Button variant="contained" onClick={this.props.cancelButtonClicked} color="primary">
             {this.props.cancelButtonName}
           </Button>
           <Button variant="contained" onClick={this.props.confirmButtonClicked} color="primary">
