@@ -88,7 +88,7 @@ const saveApartmentApplication = async (
   if (applicationID === -1) {
     return await http.post(`housing/apartment/save/`, applicationDetails);
   } else {
-    return await http.put(`housing/apartment/edit/`, applicationDetails);
+    return await http.put(`housing/apartment/save/`, applicationDetails);
   }
 };
 
