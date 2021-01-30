@@ -92,7 +92,7 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) =
   );
 };
 
-const StudentApplication = ({ userProfile }) => {
+const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -623,6 +623,7 @@ const StudentApplication = ({ userProfile }) => {
                         onChangeEditor={handleChangeEditor}
                         onApplicantRemove={handleApplicantRemove}
                         onSaveButtonClick={handleSaveButtonClick}
+                        authentication={authentication}
                       />
                     ) : (
                       <ApplicantList

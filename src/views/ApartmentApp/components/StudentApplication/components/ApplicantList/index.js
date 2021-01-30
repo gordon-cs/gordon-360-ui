@@ -30,6 +30,7 @@ const ApplicantList = ({
   onChangeEditor,
   onApplicantRemove,
   onSaveButtonClick,
+  authentication,
 }) => {
   /**
    * Callback for apartment people search submission
@@ -84,6 +85,7 @@ const ApplicantList = ({
             icon={<GroupAddIcon />}
             customPlaceholderText={'Add Applicant'}
             onSearchSubmit={handleSelection}
+            authentication={authentication}
           />
         }
         title="Student Applicants"
