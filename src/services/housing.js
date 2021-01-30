@@ -71,7 +71,7 @@ const getApplicationID = async (username) => {
  * @param {String} editorUsername the student username of the person filling out the application
  * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
  * @param {ApartmentChoice[]} apartmentChoices Array of ApartmentChoice objects
- * @return {Promise.<Number>} Application's ID number
+ * @return {Promise.<Number|Boolean>} Application's ID number, or Boolean if updating an existing application
  */
 const saveApartmentApplication = async (
   applicationID,
@@ -85,7 +85,11 @@ const saveApartmentApplication = async (
     Applicants: applicants.map((applicantProfile) => applicantProfile.AD_Username),
     ApartmentChoices: apartmentChoices,
   };
-  return await http.post(`housing/apartment/save/`, applicationDetails);
+  if (applicationID === -1) {
+    return await http.post(`housing/apartment/save/`, applicationDetails);
+  } else {
+    return await http.put(`housing/apartment/edit/`, applicationDetails);
+  }
 };
 
 /**
