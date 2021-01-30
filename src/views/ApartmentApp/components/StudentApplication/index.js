@@ -437,9 +437,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
     } catch {
       result = false;
     }
-    if (result !== null && result !== false) {
-      console.log('result of saving: ' + result); //! DEBUG
-      setApplicationID(result);
+    console.log('result of saving: ' + result); //! DEBUG
+    if (result !== null && result !== false && result !== -1) {
+      if (typeof result === 'number') {
+        setApplicationID(result);
+      }
       setSaving('success');
     } else {
       setSnackbarText('Something went wrong while trying to save the application.');
