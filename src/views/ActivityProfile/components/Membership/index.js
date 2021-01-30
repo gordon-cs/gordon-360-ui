@@ -69,7 +69,7 @@ export default class Membership extends Component {
     this.breakpointWidth = 810;
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.getMembership();
     this.loadMembers();
   }

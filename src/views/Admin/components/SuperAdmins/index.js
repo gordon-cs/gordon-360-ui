@@ -30,7 +30,7 @@ export default class SuperAdmin extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadAdmins();
   }
 

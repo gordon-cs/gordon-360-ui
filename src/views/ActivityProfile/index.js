@@ -71,7 +71,7 @@ class ActivityProfile extends Component {
     this.cropperRef = React.createRef();
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.setState({ loading: true });
     const { sessionCode, activityCode } = this.props.match.params;
     if (this.props.authentication) {

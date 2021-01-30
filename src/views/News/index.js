@@ -73,7 +73,7 @@ export default class StudentNews extends Component {
     this.callFunction = this.callFunction.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({ loading: false });
     this.loadNews();
     this.loadUsername();

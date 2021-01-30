@@ -10,7 +10,7 @@ export default class Activities extends Component {
 
     this.state = {};
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadProfile();
   }
   async loadProfile() {}

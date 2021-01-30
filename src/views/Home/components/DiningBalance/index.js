@@ -22,7 +22,7 @@ export default class DiningBalance extends Component {
     this.balanceTypes = ['Dining Dollars', 'Swipes', 'Guest Swipes'];
     this.facStaffBalance = '';
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadData();
   }
 

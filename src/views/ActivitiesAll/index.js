@@ -49,7 +49,7 @@ export default class GordonActivitiesAll extends Component {
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     // this.setState({ loading: true });
     const { SessionCode: sessionCode } = await session.getCurrent();
     const [activities, types, sessions] = await Promise.all([

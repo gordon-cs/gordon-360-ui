@@ -14,7 +14,7 @@ export default class BannerSubmission extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadData();
   }
 
