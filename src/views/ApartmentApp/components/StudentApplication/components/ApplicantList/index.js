@@ -25,6 +25,7 @@ const ApplicantList = ({
   onChangeEditor,
   onApplicantRemove,
   onSaveButtonClick,
+  authentication,
 }) => {
   const handleSelection = (theChosenOne) => {
     // Make sure the chosen username was not null
@@ -64,6 +65,7 @@ const ApplicantList = ({
             icon={<GroupAddIcon />}
             customPlaceholderText={'Add Applicant'}
             onSearchSubmit={handleSelection}
+            authentication={authentication}
           />
         }
         title="Student Applicants"
