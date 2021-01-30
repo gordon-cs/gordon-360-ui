@@ -49,7 +49,7 @@ export default class App extends Component {
 
     this.setState({ error, errorInfo });
   }
-  componentWillMount() {
+  componentDidMount() {
     let authentication = isAuthenticated();
     this.setState({ authentication });
   }

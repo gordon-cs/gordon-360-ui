@@ -18,7 +18,7 @@ export default class Admin extends Component {
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     if (this.props.authentication) {
       const college_role = await user.getLocalInfo().college_role;
       this.setState({ isSuperAdmin: college_role === 'god' ? true : false });

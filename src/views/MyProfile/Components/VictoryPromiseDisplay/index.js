@@ -58,7 +58,7 @@ export default class VictoryPromiseDisplay extends React.Component {
     });
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.getVPScores();
   }
 

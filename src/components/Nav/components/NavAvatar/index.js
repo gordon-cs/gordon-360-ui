@@ -25,7 +25,7 @@ class GordonNavAvatar extends Component {
       network: 'online',
     };
   }
-  async componentWillMount() {
+  async componentDidMount() {
     this.loadAvatar(this.props.authentication);
   }
   async componentWillReceiveProps(newProps) {

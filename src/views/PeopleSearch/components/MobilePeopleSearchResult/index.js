@@ -27,7 +27,7 @@ export default class PeopleSearchResult extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadAvatar();
   }
 

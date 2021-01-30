@@ -94,7 +94,7 @@ export default class GordonHeader extends Component {
     this.updateTabHighlight();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.value = false;
     this.updateTabHighlight();
   }

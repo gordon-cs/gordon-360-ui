@@ -16,7 +16,7 @@ export default class InvolvementsStatus extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadInvolvementsOfThisStatus();
   }
 

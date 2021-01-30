@@ -28,7 +28,7 @@ export default class DailyNews extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadNews();
   }
 

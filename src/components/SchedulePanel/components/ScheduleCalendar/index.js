@@ -43,7 +43,7 @@ export default class GordonScheduleCalendar extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadData(this.props.profile);
   }
 

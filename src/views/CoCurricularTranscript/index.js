@@ -32,7 +32,7 @@ export default class Transcript extends Component {
     window.print();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.authentication) {
       this.loadTranscript();
     }

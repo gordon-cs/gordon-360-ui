@@ -27,7 +27,7 @@ export default class CategorizedNews extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadNews();
   }
 

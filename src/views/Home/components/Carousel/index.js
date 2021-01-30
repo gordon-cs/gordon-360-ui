@@ -18,7 +18,7 @@ export default class GordonCarousel extends Component {
 
     this.linkArray = [];
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadCarousel();
   }
   async loadCarousel() {

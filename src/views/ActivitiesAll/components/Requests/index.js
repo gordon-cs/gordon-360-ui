@@ -23,7 +23,7 @@ export default class Requests extends Component {
       open: false,
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadRequests();
   }
 

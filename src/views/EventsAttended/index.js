@@ -18,7 +18,7 @@ export default class EventsAttended extends Component {
       loading: true,
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.authentication) {
       this.loadEvents();
     }

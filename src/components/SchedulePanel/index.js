@@ -75,7 +75,7 @@ class GordonSchedulePanel extends Component {
     this.reloadHandler = this.reloadHandler.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadData(this.props.profile);
   }
 
