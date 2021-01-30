@@ -113,7 +113,7 @@ const ApartApp = ({ authentication }) => {
     if (isUserStudent) {
       return (
         <div className="student-apartment-application">
-          <StudentApplication userProfile={userProfile} />
+          <StudentApplication userProfile={userProfile} authentication={authentication} />
         </div>
       );
     } else if (canUseStaff) {
