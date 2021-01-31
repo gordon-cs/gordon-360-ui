@@ -185,7 +185,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const addApplicant = async (username) => {
     try {
       // Get the profile of the selected user
-      let newApplicantProfile = await user.getProfileInfo(username);
+      const newApplicantProfile = await user.getProfileInfo(username);
+
+      // Check if the selected user is already saved on an application in the database
+      let existingAppID = null;
+      try {
+        existingAppID = await housing.getApplicationID(username);
+      } catch {
+        existingAppID = false;
+      }
+
       if (applicants.length >= MAX_NUM_APPLICANTS) {
         // Display an error if the user try to add an applicant when the list is full
         setSnackbarText('You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants');
@@ -202,14 +211,26 @@ const StudentApplication = ({ userProfile, authentication }) => {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
         setSnackbarSeverity('info');
+      } else if (existingAppID && existingAppID !== applicationID) {
+        // Display an error if the selected user is already on a different application in the database
+        setSnackbarText(
+          String(newApplicantProfile.fullName) +
+            ' is already on another application for this semester.',
+        );
+        setSnackbarSeverity('info');
       } else {
         // Add the profile object to the list of applicants
         setApplicants((prevApplicants) => prevApplicants.concat(newApplicantProfile));
+
+        // Check that the applicant array was updated successfully
         if (applicants.some((applicantProfile) => applicantProfile.AD_Username === username)) {
           setSnackbarText(
             String(newApplicantProfile.fullName) + ' was successfully added to the list.',
           );
           setSnackbarSeverity('success');
+        } else {
+          // This should trigger the 'catch', causing the page to display the error snackbar
+          throw new Error('Something went wrong! Please contact CTS for help.');
         }
       }
     } catch (error) {
