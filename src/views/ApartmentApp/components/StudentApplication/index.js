@@ -128,13 +128,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
       let newApplicationID = null;
       try {
         newApplicationID = await housing.getApplicationID();
-        console.log('Attempted to get appID at page load: ' + newApplicationID); //! DEBUG
-      } catch {
-        // Do nothing
-        console.log('Attempting to get appID at page load resulted in an error'); //! DEBUG
-      }
-      newApplicationID = -1; //! DEBUG: Set the app ID to -1 since the load feature is not yet in the backend
-      if (newApplicationID !== null && newApplicationID !== -1) {
+        console.log('Retrieved Application ID: ' + newApplicationID);
+        if (newApplicationID === null || newApplicationID === -1) {
+          // Intentionally trigger the 'catch'
+          throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
+        }
         setApplicationID(newApplicationID);
         let applicationDetails = await housing.getApartmentApplication(newApplicationID);
         if (applicationDetails) {
@@ -151,8 +149,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
             setApplicants(applicationDetails.Applicants);
           }
         }
-      } else {
-        // No existing application was found in the database
+      } catch {
+        // No existing application was found in the database,
+        // or an error occurred while attempting to load the application
         setApplicationID(-1);
         if (!editorUsername) {
           if (
@@ -162,8 +161,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
           ) {
             setApplicants((prevApplicants) => prevApplicants.concat(userProfile));
           }
-		  // The editor username must be set last to prevent race condition
-	      setEditorUsername(userProfile.AD_Username);
+          // The editor username must be set last to prevent race condition
+          setEditorUsername(userProfile.AD_Username);
         }
       }
       setLoading(false);
@@ -225,8 +224,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarSeverity('info');
       } else if (existingAppID && existingAppID !== applicationID) {
         // Display an error if the selected user is already on a different application in the database
-		console.log(existingAppID);
-		console.log(applicationID);
         setSnackbarText(
           String(newApplicantProfile.fullName) +
             ' is already on another application for this semester.',
