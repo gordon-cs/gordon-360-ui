@@ -124,7 +124,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
     // TODO: Implement this once save/load of application data has been implemented in the backend
     setLoading(true);
     // Check if the current user is on an application. Returns the application ID number if found
-    let newApplicationID = await housing.getApplicationID();
+    let newApplicationID = null;
+    try {
+        newApplicationID = await housing.getApplicationID();
+        console.log('Attempted to get appID at page load: ' + newApplicationID); //! DEBUG
+    } catch {
+        // Do nothing
+        console.log('Attempting to get appID at page load resulted in an error'); //! DEBUG
+    }
+    newApplicationID = -1; //! DEBUG: Set the app ID to -1 since the load feature is not yet in the backend
     if (newApplicationID !== null && newApplicationID !== -1) {
       setApplicationID(newApplicationID);
       let applicationDetails = await housing.getApartmentApplication(newApplicationID);
