@@ -1,5 +1,5 @@
 //Student apartment application page
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Card,
@@ -117,59 +117,63 @@ const StudentApplication = ({ userProfile, authentication }) => {
   let offCampusProgramInfo = new Map();
   applicants.forEach((profile) => offCampusProgramInfo.set(profile.AD_Username, ''));
 
-  /**
-   * Loads the user's saved apartment application, if one exists
-   */
-  const loadSavedApplication = useCallback(async () => {
-    // TODO: Implement this once save/load of application data has been implemented in the backend
-    setLoading(true);
-    // Check if the current user is on an application. Returns the application ID number if found
-    let newApplicationID = null;
-    try {
+  useEffect(() => {
+    /**
+     * Loads the user's saved apartment application, if one exists
+     */
+    const loadSavedApplication = async () => {
+      // TODO: Implement this once save/load of application data has been implemented in the backend
+      setLoading(true);
+      // Check if the current user is on an application. Returns the application ID number if found
+      let newApplicationID = null;
+      try {
         newApplicationID = await housing.getApplicationID();
         console.log('Attempted to get appID at page load: ' + newApplicationID); //! DEBUG
-    } catch {
+      } catch {
         // Do nothing
         console.log('Attempting to get appID at page load resulted in an error'); //! DEBUG
-    }
-    newApplicationID = -1; //! DEBUG: Set the app ID to -1 since the load feature is not yet in the backend
-    if (newApplicationID !== null && newApplicationID !== -1) {
-      setApplicationID(newApplicationID);
-      let applicationDetails = await housing.getApartmentApplication(newApplicationID);
-      if (applicationDetails) {
-        if (applicationDetails.DateSubmitted) {
-          setDateSubmitted(applicationDetails.DateSubmitted);
+      }
+      newApplicationID = -1; //! DEBUG: Set the app ID to -1 since the load feature is not yet in the backend
+      if (newApplicationID !== null && newApplicationID !== -1) {
+        setApplicationID(newApplicationID);
+        let applicationDetails = await housing.getApartmentApplication(newApplicationID);
+        if (applicationDetails) {
+          if (applicationDetails.DateSubmitted) {
+            setDateSubmitted(applicationDetails.DateSubmitted);
+          }
+          if (applicationDetails.DateModified) {
+            setDateModified(applicationDetails.DateModified);
+          }
+          if (applicationDetails.Username) {
+            setEditorUsername(applicationDetails.Username);
+          }
+          if (applicationDetails.Applicants) {
+            setApplicants(applicationDetails.Applicants);
+          }
         }
-        if (applicationDetails.DateModified) {
-          setDateModified(applicationDetails.DateModified);
-        }
-        if (applicationDetails.Username) {
-          setEditorUsername(applicationDetails.Username);
-        }
-        if (applicationDetails.Applicants) {
-          setApplicants(applicationDetails.Applicants);
+      } else {
+        // No existing application was found in the database
+        setApplicationID(-1);
+        if (!editorUsername) {
+          if (
+            applicants.every(
+              (applicantProfile) => applicantProfile.AD_Username !== userProfile.AD_Username,
+            )
+          ) {
+            setApplicants((prevApplicants) => prevApplicants.concat(userProfile));
+          }
+		  // The editor username must be set last to prevent race condition
+	      setEditorUsername(userProfile.AD_Username);
         }
       }
-    } else {
-      // No existing application was found in the database
-      setApplicationID(-1);
-      if (!editorUsername) {
-        setEditorUsername(userProfile.AD_Username);
-      }
-      if (
-        applicants.every(
-          (applicantProfile) => applicantProfile.AD_Username !== userProfile.AD_Username,
-        )
-      ) {
-        setApplicants((prevApplicants) => prevApplicants.concat(userProfile));
-      }
-    }
-    setLoading(false);
-  }, [userProfile, editorUsername, applicants]);
+      setLoading(false);
+    };
 
-  useEffect(() => {
     loadSavedApplication();
-  }, [userProfile, loadSavedApplication]);
+
+	// We disable ESLint because we want to run this effect if and only if the state of 'userProfile' or 'editorUsername' are changed
+	// eslint-disable-next-line
+  }, [userProfile, editorUsername]);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
@@ -221,11 +225,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarSeverity('info');
       } else if (existingAppID && existingAppID !== applicationID) {
         // Display an error if the selected user is already on a different application in the database
+		console.log(existingAppID);
+		console.log(applicationID);
         setSnackbarText(
           String(newApplicantProfile.fullName) +
             ' is already on another application for this semester.',
         );
-        setSnackbarSeverity('info');
+        setSnackbarSeverity('warning');
       } else {
         // Add the profile object to the list of applicants
         setApplicants((prevApplicants) => prevApplicants.concat(newApplicantProfile));
