@@ -432,7 +432,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
     console.log(debugMessage); //! DEBUG
     // Filter out any hall entries that do not have a name selected
-    const filteredPreferredHalls = this.state.preferredHalls.filter(
+    const filteredPreferredHalls = preferredHalls.filter(
       (hallInfo) => hallInfo.HallName !== '',
     );
     // The method is separated from callback because the housing API service must be handled inside an async method
@@ -684,7 +684,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
               <Grid container direction="row" justify="center" spacing={2}>
                 <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
-                    {this.props.userProfile.AD_Username === this.state.editorUsername ? (
+                    {userProfile.AD_Username === editorUsername ? (
                       <HallSelection
                         editorUsername={editorUsername}
                         preferredHalls={preferredHalls}
