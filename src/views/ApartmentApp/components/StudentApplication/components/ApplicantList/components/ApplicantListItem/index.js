@@ -68,15 +68,15 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     let FirstName = Name.split(' ')[0];
     setHasNickname(FirstName !== profile.NickName && profile.NickName !== '');
   };
-  
+
   /**
    * Callback for displaying the applicant edit menu
-   * @param {*} event
+   * @param {*} event mouse event to be handled by callback
    */
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  
+
   /**
    * Callback for closing the applicant edit menu
    */

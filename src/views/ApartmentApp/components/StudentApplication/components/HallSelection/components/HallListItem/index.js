@@ -44,7 +44,7 @@ const HallListItem = ({
 
   /**
    * Callback for changes to hall rank input field
-   * @param {*} event
+   * @param {*} event change event to be handled by callback
    */
   const handleRankInputChange = (event) => {
     if (event.target.value !== null) {
@@ -55,7 +55,7 @@ const HallListItem = ({
 
   /**
    * Callback for changes to hall name dropdown
-   * @param {*} event
+   * @param {*} event change event to be handled by callback
    */
   const handleNameInputChange = (event) => {
     if (event.target.value !== null) {
