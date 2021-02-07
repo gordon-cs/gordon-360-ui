@@ -90,7 +90,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [dateModified, setDateModified] = useState(null); // The date the application was submitted, or null if not yet submitted
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
   const [applicants, setApplicants] = useState([]);
-  const [preferredHalls, setPreferredHalls] = useState([{ HallRank: 1, HallName: '' }]);
+  const [preferredHalls, setPreferredHalls] = useState([]);
   // const [offCampusProgramInfo, setOffCampusProgramInfo] = useState(new Map());
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
@@ -289,9 +289,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleApplicantRemove = (profileToRemove) => {
     if (profileToRemove) {
-      let index = applicants.indexOf(profileToRemove);
+      let newApplicants = applicants;
+      let index = newApplicants.indexOf(profileToRemove);
       if (index !== -1) {
-        setApplicants((prevApplicants) => prevApplicants.splice(index, 1));
+        newApplicants.splice(index, 1);
+        setApplicants(newApplicants);
       }
     }
   };
@@ -365,10 +367,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallRemove = (index) => {
     if (index !== null && index !== -1) {
-      if (preferredHalls.length > 1) {
-        let newPreferredHalls = preferredHalls; // make a separate copy of the array
-        // Remove the selected hall if the list has more than one element
-        newPreferredHalls.splice(index, 1);
+      let newPreferredHalls = preferredHalls; // make a separate copy of the array
+      // Remove the selected hall if the list has more than one element
+      newPreferredHalls.splice(index, 1);
+
+      if (preferredHalls.length > 0) {
         // If any rank value is greater than the new maximum, then set it to that new max rank
         let maxRank = newPreferredHalls.length;
         newPreferredHalls.forEach((hallInfo, index) => {
@@ -376,13 +379,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
             newPreferredHalls[index].HallRank = maxRank;
           }
         });
-        setPreferredHalls(newPreferredHalls);
+      }
+      setPreferredHalls(newPreferredHalls);
+      /*
       } else {
         // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
         setPreferredHalls((prevPreferredHalls) =>
           prevPreferredHalls.splice(0, 1, { HallRank: 1, HallName: '' }),
         );
       }
+      */
     }
   };
 
