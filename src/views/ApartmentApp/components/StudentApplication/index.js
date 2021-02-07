@@ -190,6 +190,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
         );
         setSnackbarSeverity('warning');
         setSnackbarOpen(true);
+      } else if (newApplicantProfile.Gender && newApplicantProfile.Gender !== userProfile.Gender) {
+        // Display an error if the selected user is not the same gender
+        setSnackbarText(
+          'Could not add ' +
+            String(newApplicantProfile.fullName) +
+            ' because they are not the same gender as the other applicants.',
+        );
+        setSnackbarSeverity('warning');
+        setSnackbarOpen(true);
       } else if (applicants.some((applicantProfile) => applicantProfile.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
