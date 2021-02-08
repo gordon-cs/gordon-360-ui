@@ -179,8 +179,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
     loadSavedApplication();
 
-	// We disable ESLint because we want to run this effect if and only if the state of 'userProfile' or 'editorUsername' are changed
-	// eslint-disable-next-line
+    // We disable ESLint because we want to run this effect if and only if the state of 'userProfile' or 'editorUsername' are changed
+    // eslint-disable-next-line
   }, [userProfile, editorUsername]);
 
   const handleShowApplication = () => {
@@ -444,9 +444,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
     console.log(debugMessage); //! DEBUG
     // Filter out any hall entries that do not have a name selected
-    const filteredPreferredHalls = preferredHalls.filter(
-      (hallInfo) => hallInfo.HallName !== '',
-    );
+    const filteredPreferredHalls = preferredHalls.filter((hallInfo) => hallInfo.HallName !== '');
     // The method is separated from callback because the housing API service must be handled inside an async method
     saveApplication(applicationID, editorUsername, applicants, filteredPreferredHalls);
   };
@@ -525,6 +523,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Callback for closing the alert dialog box
+   * @param {*} event close event to be handled by callback
+   * @param {*} reason the reason the close event was triggered
    */
   const handleCloseDialog = (event, reason) => {
     // Prevent the dialog box from closing if the user clicks outside the dialog box
@@ -536,6 +536,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Callback for closing the snackbar
+   * @param {*} event close event to be handled by callback
+   * @param {*} reason the reason the close event was triggered
    */
   const handleCloseSnackbar = (event, reason) => {
     // Prevent the snackbar from closing if the user clicks outside the snackbar
