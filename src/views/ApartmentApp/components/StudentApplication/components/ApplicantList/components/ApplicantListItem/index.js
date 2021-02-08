@@ -77,7 +77,7 @@ const ApplicantListItem = ({
 
   /**
    * Callback for displaying the applicant edit menu
-   * @param {*} event
+   * @param {*} event mouse event to be handled by callback
    */
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);

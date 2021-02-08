@@ -33,6 +33,7 @@ const MAX_NUM_APPLICANTS = 8;
 
 /**
  * Renders a card displaying the apartment application instructions
+ * @returns {JSX.Element} JSX Element for the instructions card
  */
 const InstructionsCard = () => (
   <Card>
@@ -48,6 +49,14 @@ const InstructionsCard = () => (
   </Card>
 );
 
+/**
+ * Renders a card displaying a table of data about the current application
+ * @param {Object} props The React component props
+ * @param {String} props.dateSubmitted The date the application was submitted
+ * @param {String} props.dateModified The date the application was last modified
+ * @param {String} props.editorUsername The username of the application's editor
+ * @returns {JSX.Element} JSX Element for the data table card
+ */
 const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) => {
   function createData(label, value) {
     return { label, value };
