@@ -84,7 +84,8 @@ const ApplicantList = ({
               ) : (
                 <ListItem key={'applicant-list-placeholder'} className={'list-item'}>
                   <ListItemText
-                    primary={'Use the search bar above to add applicants'}
+                    // primary={'Use the search bar below to add applicants'}
+                    primary={'If you are reading this, something went wrong. Please contact CTS'}
                     className={'list-item'}
                   />
                 </ListItem>
@@ -93,7 +94,6 @@ const ApplicantList = ({
                 <Grid container justify="center">
                   <Grid item>
                     <GordonPeopleSearch
-                      className={'list-item-search'}
                       disableLink
                       disabled={applicants.length > maxNumApplicants}
                       icon={<GroupAddIcon />}

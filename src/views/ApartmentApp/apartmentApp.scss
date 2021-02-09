@@ -33,3 +33,13 @@
   background-color: $neutral-white;
   color: $primary-blue;
 }
+
+.success {
+  color: $secondary-green;
+  font-size: medium;
+}
+
+.error {
+  color: $secondary-red;
+  font-size: medium;
+}
