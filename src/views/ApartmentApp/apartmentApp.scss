@@ -7,7 +7,6 @@
 }
 
 .list-item {
-  // text-align: start;
   color: $neutral-dark-gray;
 }
 
@@ -17,18 +16,16 @@
 }
 
 .list-item-search {
-  // text-align: start;
-  color: $neutral-dark-gray;
-  background-color: $neutral-white;
-}
+  @extend .list-item;
 
-.apartment-people-search {
-  color: $neutral-white;
-  background-color: $neutral-white;
-
-  .people-search-root {
-    background: $neutral-white;
-    border: 1px solid $neutral-white;
+  // overrides some styles of .gordon-people-search,
+  // others are inherited from src/components/Header/components/PeopleSearch/people-search.scss
+  .gordon-people-search {
+    .people-search-root {
+      background: $neutral-white; // override to white instead of blue
+      border: 1px solid $neutral-dark-gray; // override to black instead of white
+      width: auto; // Force auto width. The width will be adjusted by the Grid structure instead
+    }
   }
 }
 

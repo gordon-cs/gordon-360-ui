@@ -71,21 +71,6 @@ const ApplicantList = ({
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
             <List className="applicant-list" aria-label="apartment applicants">
-              <ListItem key={'applicant-list-peoplesearch'} className={'list-item-search'}>
-                <Grid container justify="center">
-                  <Grid item>
-                    <GordonPeopleSearch
-                      className={'apartment-people-search'}
-                      disableLink
-                      disabled={applicants.length > maxNumApplicants}
-                      icon={<GroupAddIcon />}
-                      customPlaceholderText={'Add Applicant'}
-                      onSearchSubmit={handleSelection}
-                      authentication={authentication}
-                    />
-                  </Grid>
-                </Grid>
-              </ListItem>
               {applicants ? (
                 applicants.map((profile) => (
                   <ApplicantListItem
@@ -104,6 +89,21 @@ const ApplicantList = ({
                   />
                 </ListItem>
               )}
+              <ListItem key={'applicant-list-peoplesearch'} className={'list-item-search'}>
+                <Grid container justify="center">
+                  <Grid item>
+                    <GordonPeopleSearch
+                      className={'list-item-search'}
+                      disableLink
+                      disabled={applicants.length > maxNumApplicants}
+                      icon={<GroupAddIcon />}
+                      customPlaceholderText={'Add Applicant'}
+                      onSearchSubmit={handleSelection}
+                      authentication={authentication}
+                    />
+                  </Grid>
+                </Grid>
+              </ListItem>
             </List>
           </Grid>
           <Collapse in={applicants.length > 1} timeout="auto" unmountOnExit>
