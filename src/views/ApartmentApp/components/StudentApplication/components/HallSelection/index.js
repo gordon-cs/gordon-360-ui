@@ -54,7 +54,6 @@ const HallSelection = ({
       <CardHeader title="Preferred Halls" className="card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
-          <Grid item xs={11}></Grid>
           <Grid item xs={12}>
             <List className="hall-list" aria-label="apartment preferred halls">
               {preferredHalls ? (
