@@ -11,7 +11,6 @@ import http from './http';
 import session from './session';
 import storage from './storage';
 import { socialMediaInfo } from '../socialMedia';
-import gordonEvent from './event';
 
 /**
  * @global
@@ -152,6 +151,8 @@ import gordonEvent from './event';
  * @property {String} Handshake Handshake
  * @property {String} LinkedIn LinkedIn
  * @property {String} PersonType Type of person
+ * @property {Number} ChapelRequired The number of CL&W credits the Student needs for this session
+ * @property {Number} ChapelAttended The number of CL&W credits the Student has attended
  */
 
 /**
@@ -377,16 +378,10 @@ const getLocalInfo = () => {
  * @return {CLWCredits} An Object of their current and required number of CL&W events,
  */
 const getChapelCredits = async () => {
-  const attendedEvents = await gordonEvent.getAttendedChapelEvents();
-
-  // Get required number of CL&W credits for the user, defaulting to thirty
-  let required = 30;
-  if (attendedEvents.length > 0) {
-    [{ Required: required }] = attendedEvents;
-  }
+  const { ChapelRequired: required, ChapelAttended: attended } = await getProfile();
 
   return {
-    current: attendedEvents.length || 0,
+    current: attended || 0,
     required,
   };
 };
@@ -421,7 +416,7 @@ const getAdvisors = async (username) => {
 };
 
 async function setAdvisors(profile) {
-  if(profile.AD_Username != null) {
+  if (profile.AD_Username != null) {
     profile.Advisors = await getAdvisors(profile.AD_Username);
   }
 }
@@ -622,9 +617,9 @@ function updateSocialLink(type, link) {
     case 'handshake':
       // hard coded a second prefix in because handshake supports 'app.' and 'gordon.' addresses
       let handshakeSecondPrefix = 'https://app.joinhandshake.com/users/';
-      
+
       // if using the 'app.joinhandshake' prefix
-      if(link.indexOf(handshakeSecondPrefix) === 0) {
+      if (link.indexOf(handshakeSecondPrefix) === 0) {
         linkToSend = link.substring(handshakeSecondPrefix.length);
       }
       // otherwise assume using the normal 'gordon.joinhandshake' prefix
