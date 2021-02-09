@@ -110,7 +110,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [dateModified, setDateModified] = useState(null); // The date the application was submitted, or null if not yet submitted
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
   const [applicants, setApplicants] = useState([]);
-  const [preferredHalls, setPreferredHalls] = useState([{ HallRank: 1, HallName: '' }]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
+  const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
   // const [offCampusProgramInfo, setOffCampusProgramInfo] = useState(new Map());
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
@@ -227,6 +227,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
             ' because they are not a student.',
         );
         setSnackbarSeverity('warning');
+      } else if (newApplicantProfile.Gender && newApplicantProfile.Gender !== userProfile.Gender) {
+        // Display an error if the selected user is not the same gender
+        setSnackbarText(
+          'Could not add ' +
+            String(newApplicantProfile.fullName) +
+            ' because they are not the same gender as the other applicants.',
+        );
+        setSnackbarSeverity('warning');
       } else if (applicants.some((applicantProfile) => applicantProfile.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
@@ -330,9 +338,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleApplicantRemove = (profileToRemove) => {
     if (profileToRemove) {
-      let index = applicants.indexOf(profileToRemove);
+      let newApplicants = applicants;
+      let index = newApplicants.indexOf(profileToRemove);
       if (index !== -1) {
-        setApplicants((prevApplicants) => prevApplicants.splice(index, 1));
+        newApplicants.splice(index, 1);
+        setApplicants(newApplicants);
       }
     }
   };
@@ -382,7 +392,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         if (nameA > nameB) {
           return 1;
         }
-
         // names must be equal
         return 0;
       });
@@ -406,10 +415,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallRemove = (index) => {
     if (index !== null && index !== -1) {
-      if (preferredHalls.length > 1) {
-        let newPreferredHalls = preferredHalls; // make a separate copy of the array
-        // Remove the selected hall if the list has more than one element
-        newPreferredHalls.splice(index, 1);
+      let newPreferredHalls = preferredHalls; // make a separate copy of the array
+      // Remove the selected hall if the list has more than one element
+      newPreferredHalls.splice(index, 1);
+
+      if (preferredHalls.length > 0) {
         // If any rank value is greater than the new maximum, then set it to that new max rank
         let maxRank = newPreferredHalls.length;
         newPreferredHalls.forEach((hallInfo, index) => {
@@ -417,13 +427,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
             newPreferredHalls[index].HallRank = maxRank;
           }
         });
-        setPreferredHalls(newPreferredHalls);
+      }
+      setPreferredHalls(newPreferredHalls);
+      /*
       } else {
         // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
         setPreferredHalls((prevPreferredHalls) =>
           prevPreferredHalls.splice(0, 1, { HallRank: 1, HallName: '' }),
         );
       }
+      */
     }
   };
 
