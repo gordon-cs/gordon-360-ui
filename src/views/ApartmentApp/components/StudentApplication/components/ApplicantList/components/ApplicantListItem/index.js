@@ -3,6 +3,7 @@ import isEqual from 'lodash/isEqual';
 import { Link } from 'react-router-dom';
 import {
   Grid,
+  Divider,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
@@ -92,50 +93,53 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     : profile.fullName;
 
   return (
-    <ListItem
-      key={profile.AD_Username}
-      component={Link}
-      target="_blank"
-      to={`/profile/${profile.AD_Username}`}
-      className={'list-item'}
-    >
-      <ListItemAvatar>
-        {avatar ? (
-          <Avatar className={`avatar`} src={`data:image/jpg;base64,${avatar}`} alt="" />
-        ) : (
-          <Avatar>
-            <PersonIcon color="primary" />
-          </Avatar>
-        )}
-      </ListItemAvatar>
-      <Grid container alignItems="center" spacing={1}>
-        <Grid item xs={8} sm>
-          <ListItemText primary={displayName} secondary={personClass} className={'list-item'} />
-        </Grid>
-      </Grid>
-      <ListItemSecondaryAction>
-        <Grid container justify="flex-end" alignItems="center" spacing={0}>
-          <Grid item xs>
-            <IconButton
-              aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
-              disabled={isApplicationEditor}
-              onClick={isApplicationEditor ? handleChangeEditor : null}
-            >
-              {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
-            </IconButton>
-          </Grid>
-          <Grid item xs>
-            <IconButton
-              aria-label="remove-applicant"
-              disabled={isApplicationEditor}
-              onClick={isApplicationEditor ? handleRemove : null}
-            >
-              <ClearIcon />
-            </IconButton>
+    <React.Fragment>
+      <ListItem
+        key={profile.AD_Username}
+        component={Link}
+        target="_blank"
+        to={`/profile/${profile.AD_Username}`}
+        className={'list-item'}
+      >
+        <ListItemAvatar>
+          {avatar ? (
+            <Avatar className={`avatar`} src={`data:image/jpg;base64,${avatar}`} alt="" />
+          ) : (
+            <Avatar>
+              <PersonIcon color="primary" />
+            </Avatar>
+          )}
+        </ListItemAvatar>
+        <Grid container alignItems="center" spacing={1}>
+          <Grid item xs={8} sm>
+            <ListItemText primary={displayName} secondary={personClass} className={'list-item'} />
           </Grid>
         </Grid>
-      </ListItemSecondaryAction>
-    </ListItem>
+        <ListItemSecondaryAction>
+          <Grid container justify="flex-end" alignItems="center" spacing={0}>
+            <Grid item xs>
+              <IconButton
+                aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
+                disabled={isApplicationEditor}
+                onClick={isApplicationEditor ? handleChangeEditor : null}
+              >
+                {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
+              </IconButton>
+            </Grid>
+            <Grid item xs>
+              <IconButton
+                aria-label="remove-applicant"
+                disabled={isApplicationEditor}
+                onClick={isApplicationEditor ? handleRemove : null}
+              >
+                <ClearIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </ListItemSecondaryAction>
+      </ListItem>
+      <Divider />
+    </React.Fragment>
   );
 };
 
