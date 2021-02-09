@@ -14,6 +14,8 @@ import {
   TableContainer,
   TableRow,
 } from '@material-ui/core/';
+import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import GordonLoader from '../../../../components/Loader';
 import AlertDialogBox from '../../../../components/AlertDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
@@ -79,6 +81,35 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) =
       </CardContent>
     </Card>
   );
+};
+
+const SaveButton = ({ disabled, saving, onClick }) => {
+  const loaderSize = 20;
+
+  const handleSaveButtonClick = () => {
+    onClick();
+  };
+
+  if (saving) {
+    if (saving === 'success') {
+      return <CheckCircleIcon className="success" />;
+    } else if (saving === 'failed') {
+      return <ErrorIcon className="error" />;
+    } else {
+      return <GordonLoader size={loaderSize} />;
+    }
+  } else {
+    return (
+      <Button
+        disabled={disabled || saving}
+        variant="contained"
+        color="primary"
+        onClick={handleSaveButtonClick}
+      >
+        Save & Continue
+      </Button>
+    );
+  }
 };
 
 const StudentApplication = ({ userProfile, authentication }) => {
@@ -152,6 +183,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
   useEffect(() => {
     loadSavedApplication();
   }, [userProfile, loadSavedApplication]);
+
+  useEffect(() => {}, [applicants, preferredHalls]);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
@@ -296,6 +329,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setApplicants(newApplicants);
       }
     }
+    applicants.forEach((element) => {
+      console.log(element);
+    });
   };
 
   /**
@@ -658,18 +694,27 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   <Card>
                     <CardContent>
                       {userProfile.AD_Username === editorUsername ? (
-                        <Grid container direction="row" justify="flex-end">
-                          <Grid item xs={6} sm={8}>
-                            <Typography variant="body1">Placeholder Text</Typography>
+                        <Grid container direction="row" justify="flex-end" spacing={2}>
+                          <Grid item xs={12} sm={6}>
+                            {saving === 'failed' ? (
+                              <Typography variant="overline" color="error">
+                                Something went wrong while trying to save the application
+                              </Typography>
+                            ) : (
+                              <Typography variant="body1">Placeholder Text</Typography>
+                            )}
                           </Grid>
-                          <Grid item xs={6} sm={4}>
+                          <Grid item xs={6} sm={3}>
+                            <SaveButton saving={saving} onSaveButtonClick={handleSaveButtonClick} />
+                          </Grid>
+                          <Grid item xs={6} sm={3}>
                             <Button
                               variant="contained"
                               onClick={handleSubmitButtonClick}
                               color="primary"
                               disabled={!applicationCardsOpen}
                             >
-                              Submit Application
+                              Save & Submit
                             </Button>
                           </Grid>
                           <AlertDialogBox
@@ -685,15 +730,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           />
                         </Grid>
                       ) : (
-                        <Grid container direction="row" justify="flex-end">
-                          <Grid item xs={6} sm={8}>
+                        <Grid container direction="row" justify="flex-end" spacing={2}>
+                          <Grid item xs={12} sm={8}>
                             <Typography variant="body1">
                               Placeholder Text for when the user is NOT the primary applicant
                             </Typography>
                           </Grid>
                           <Grid item xs={6} sm={4}>
+                            <SaveButton disabled />
+                          </Grid>
+                          <Grid item xs={6} sm={4}>
                             <Button variant="contained" color="primary" disabled>
-                              Submit Application
+                              Save & Submit
                             </Button>
                           </Grid>
                         </Grid>

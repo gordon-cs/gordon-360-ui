@@ -11,6 +11,27 @@
   color: $neutral-dark-gray;
 }
 
+.bordered-list-item {
+  @extend .list-item;
+  border: 1px solid $neutral-dark-gray;
+}
+
+.list-item-search {
+  // text-align: start;
+  color: $neutral-dark-gray;
+  background-color: $neutral-white;
+}
+
+.apartment-people-search {
+  color: $neutral-white;
+  background-color: $neutral-white;
+
+  .people-search-root {
+    background: $neutral-white;
+    border: 1px solid $neutral-white;
+  }
+}
+
 .back-home-button {
   background-color: $neutral-white;
   color: $primary-blue;

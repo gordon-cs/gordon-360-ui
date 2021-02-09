@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Card, CardHeader, CardContent, List, Typography, Button } from '@material-ui/core';
+import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import HallListItem from './components/HallListItem';
-import SaveButton from '../SaveButton';
 import goStalk from '../../../../../../services/goStalk';
 import housing from '../../../../../../services/housing';
 
@@ -10,11 +9,9 @@ import housing from '../../../../../../services/housing';
 const HallSelection = ({
   editorUsername,
   preferredHalls,
-  saving,
   onHallAdd,
   onHallInputChange,
   onHallRemove,
-  onSaveButtonClick,
 }) => {
   const [availableHalls, setAvailableHalls] = useState([]); // array of hall names from backend
 
@@ -50,10 +47,6 @@ const HallSelection = ({
 
   const handleAddDropdown = () => {
     onHallAdd();
-  };
-
-  const handleSaveButtonClick = () => {
-    onSaveButtonClick();
   };
 
   return (
@@ -95,20 +88,6 @@ const HallSelection = ({
             >
               Add a Hall
             </Button>
-          </Grid>
-          <Grid item xs={9}>
-            {saving === 'failed' ? (
-              <Typography variant="overline" color="error">
-                Something when wrong while trying to save the application
-              </Typography>
-            ) : preferredHalls.length >= availableHalls.length ? (
-              <Typography variant="overline" color="error">
-                You have reached the maximum number of halls ({availableHalls.length})
-              </Typography>
-            ) : null}
-          </Grid>
-          <Grid item xs={3}>
-            <SaveButton saving={saving} onClick={handleSaveButtonClick} />
           </Grid>
         </Grid>
       </CardContent>

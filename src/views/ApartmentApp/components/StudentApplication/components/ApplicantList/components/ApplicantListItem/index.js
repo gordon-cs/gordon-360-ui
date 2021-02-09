@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import isEqual from 'lodash/isEqual';
 import { Link } from 'react-router-dom';
 import {
   Grid,
@@ -7,13 +8,10 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Avatar,
-  Button,
-  Menu,
-  MenuItem,
-  ListItemIcon,
+  IconButton,
 } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import ClearIcon from '@material-ui/icons/Clear';
 import user from '../../../../../../../../services/user';
@@ -23,11 +21,14 @@ import user from '../../../../../../../../services/user';
 // rather than using this.props.Person of type PeopleSearchResult
 const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApplicantRemove }) => {
   const [avatar, setAvatar] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null); // A HTML element, or a function that returns it. It's used to set the position of the menu.
   const [hasNickName, setHasNickname] = useState(false);
   const [personClass, setPersonClass] = useState(profile.Class);
 
   useEffect(() => {
+    // Manually perform deep checking of the array to force update whenever an element of preferredHalls is changed
+    if (isEqual(previousInputs.current, [profile])) {
+      return;
+    }
     loadAvatar(profile);
     createNickname(profile);
     if (String(profile.PersonType).includes('stu') && profile.Class !== undefined) {
@@ -37,6 +38,11 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
       setPersonClass('');
     }
   }, [profile]);
+
+  const previousInputs = useRef();
+  useEffect(() => {
+    previousInputs.current = [profile];
+  });
 
   /**
    * Creates the Avatar image of the given user
@@ -65,20 +71,11 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     setHasNickname(FirstName !== profile.NickName && profile.NickName !== '');
   };
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
   const handleChangeEditor = () => {
     // Make sure the chosen profile was not null
     if (profile) {
       // Send the selected profile to the parent component
       onChangeEditor(profile);
-      handleMenuClose();
     }
   };
 
@@ -87,7 +84,6 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     if (profile) {
       // Send the selected profile to the parent component
       onApplicantRemove(profile);
-      handleMenuClose();
     }
   };
 
@@ -113,40 +109,31 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
         )}
       </ListItemAvatar>
       <Grid container alignItems="center" spacing={1}>
-        <Grid item xs={12} sm>
+        <Grid item xs={8} sm>
           <ListItemText primary={displayName} secondary={personClass} className={'list-item'} />
         </Grid>
       </Grid>
       <ListItemSecondaryAction>
-        <Button
-          aria-controls="applicant-menu"
-          aria-haspopup="true"
-          disabled={isApplicationEditor}
-          onClick={handleMenuClick}
-        >
-          Edit
-          {isApplicationEditor ? <StarBorderIcon /> : <ArrowDropDownIcon />}
-        </Button>
-        <Menu
-          id="applicant-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-        >
-          <MenuItem disabled={isApplicationEditor} onClick={handleChangeEditor}>
-            <ListItemIcon>
-              <StarBorderIcon />
-            </ListItemIcon>
-            Make Editor
-          </MenuItem>
-          <MenuItem disabled={isApplicationEditor} onClick={handleRemove}>
-            <ListItemIcon>
+        <Grid container justify="flex-end" alignItems="center" spacing={0}>
+          <Grid item xs>
+            <IconButton
+              aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
+              disabled={isApplicationEditor}
+              onClick={isApplicationEditor ? handleChangeEditor : null}
+            >
+              {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
+            </IconButton>
+          </Grid>
+          <Grid item xs>
+            <IconButton
+              aria-label="remove-applicant"
+              disabled={isApplicationEditor}
+              onClick={isApplicationEditor ? handleRemove : null}
+            >
               <ClearIcon />
-            </ListItemIcon>
-            Remove
-          </MenuItem>
-        </Menu>
+            </IconButton>
+          </Grid>
+        </Grid>
       </ListItemSecondaryAction>
     </ListItem>
   );

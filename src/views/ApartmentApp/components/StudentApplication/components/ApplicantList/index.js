@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import isEqual from 'lodash/isEqual';
 import {
   Grid,
   Card,
   CardHeader,
   CardContent,
+  Collapse,
   List,
   ListItem,
   ListItemText,
   Typography,
 } from '@material-ui/core';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import InfoIcon from '@material-ui/icons/Info';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 import GordonPeopleSearch from '../../../../../../components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
-import SaveButton from '../SaveButton';
 
 // Create a list of applicants, displayed by name, username, and class standing.
 const ApplicantList = ({
@@ -20,13 +23,23 @@ const ApplicantList = ({
   userProfile,
   editorUsername,
   applicants,
-  saving,
   onSearchSubmit,
   onChangeEditor,
   onApplicantRemove,
-  onSaveButtonClick,
   authentication,
 }) => {
+  useEffect(() => {
+    // Manually perform deep checking of the array to force update whenever an element of preferredHalls is changed
+    if (isEqual(previousInputs.current, [applicants])) {
+      return;
+    }
+  });
+
+  const previousInputs = useRef();
+  useEffect(() => {
+    previousInputs.current = [applicants];
+  });
+
   const handleSelection = (theChosenOne) => {
     // Make sure the chosen username was not null
     if (theChosenOne) {
@@ -51,30 +64,28 @@ const ApplicantList = ({
     }
   };
 
-  const handleSaveButtonClick = () => {
-    onSaveButtonClick();
-  };
-
   return (
     <Card>
-      <CardHeader
-        action={
-          <GordonPeopleSearch
-            disableLink
-            disabled={applicants.length > maxNumApplicants}
-            icon={<GroupAddIcon />}
-            customPlaceholderText={'Add Applicant'}
-            onSearchSubmit={handleSelection}
-            authentication={authentication}
-          />
-        }
-        title="Student Applicants"
-        className="card-header"
-      />
+      <CardHeader title="Student Applicants" className="card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
-          <Grid item xs={11}>
+          <Grid item xs={12}>
             <List className="applicant-list" aria-label="apartment applicants">
+              <ListItem key={'applicant-list-peoplesearch'} className={'list-item-search'}>
+                <Grid container justify="center">
+                  <Grid item>
+                    <GordonPeopleSearch
+                      className={'apartment-people-search'}
+                      disableLink
+                      disabled={applicants.length > maxNumApplicants}
+                      icon={<GroupAddIcon />}
+                      customPlaceholderText={'Add Applicant'}
+                      onSearchSubmit={handleSelection}
+                      authentication={authentication}
+                    />
+                  </Grid>
+                </Grid>
+              </ListItem>
               {applicants ? (
                 applicants.map((profile) => (
                   <ApplicantListItem
@@ -95,20 +106,18 @@ const ApplicantList = ({
               )}
             </List>
           </Grid>
-          <Grid item xs={9}>
-            {saving === 'failed' ? (
-              <Typography variant="overline" color="error">
-                Something went wrong while trying to save the application
-              </Typography>
-            ) : applicants.length >= maxNumApplicants ? (
-              <Typography variant="overline" color="error">
-                You have reached the maximum number of applicants ({maxNumApplicants})
-              </Typography>
-            ) : null}
-          </Grid>
-          <Grid item xs={3}>
-            <SaveButton saving={saving} onClick={handleSaveButtonClick} />
-          </Grid>
+          <Collapse in={applicants.length > 1} timeout="auto" unmountOnExit>
+            <Grid container>
+              <Grid item xs={2}>
+                <InfoIcon />
+              </Grid>
+              <Grid item xs={10}>
+                <Typography variant="body1">
+                  You can use the <StarBorderIcon /> to change the editor of this application.
+                </Typography>
+              </Grid>
+            </Grid>
+          </Collapse>
         </Grid>
       </CardContent>
     </Card>
