@@ -19,7 +19,7 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 - [Project File Organization](#file-organization)
 - [Environment Variables](#environment-variables)
 - [Testing](#testing)
-- [CI/CD](#ci/cd)
+- [Continuous Integration and Deployment](#continuous-integration-and-deployment)
 - [Contributing](#contributing)
 - [Known Issues](#known-issues)
 
@@ -342,7 +342,7 @@ The process for setting up this testing environment can be continued by followin
 
 Timesheets page testing [here](https://docs.google.com/document/d/1fi7_iwTQa7JFVRR3LtSDU3-MGpupOfbqhH-kEU5eMew/edit?usp=sharing)
 
-## CI/CD
+## Continuous Integration and Deployment
 
 GitHub Actions is our Continuous Integration and Continuous Deployment (CI/CD) solution. It is a GitHub product available for free to our public, open source repository.
 
@@ -368,7 +368,7 @@ In the unusual case that Train or Production have not been automatically deploye
 1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s). 
 1. Build the project by running `npm run build` in VSCode on a clone of the project set to the branch you want to deploy. The output will be in `path/to/the/repo/gordon-360-ui/build`.
 1. Connect to the `360-Frontend.gordon.edu` server. See [RemoteDesktopToVM](https://github.com/gordon-cs/gordon-360-api/blob/develop/RemoteDesktopToVM.md) in the API repo for instructions on how to connect.
-1. Open File Explorer and navigate to `D:\wwwroot\.
+1. Open File Explorer and navigate to `D:\wwwroot\`.
 1. Backup the existing deployment:
     1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
     1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
