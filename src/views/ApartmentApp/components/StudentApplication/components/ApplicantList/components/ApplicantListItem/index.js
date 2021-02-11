@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import isEqual from 'lodash/isEqual';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Grid,
@@ -11,10 +10,10 @@ import {
   Avatar,
   IconButton,
 } from '@material-ui/core';
-import PersonIcon from '@material-ui/icons/Person';
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
 import ClearIcon from '@material-ui/icons/Clear';
+import PersonIcon from '@material-ui/icons/Person';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import StarIcon from '@material-ui/icons/Star';
 import user from '../../../../../../../../services/user';
 
 // Based off src/views/PeopleSearch/components/PeopleSearchResult
@@ -26,24 +25,15 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
   const [personClass, setPersonClass] = useState(profile.Class);
 
   useEffect(() => {
-    // Manually perform deep checking of the array to force update whenever an element of preferredHalls is changed
-    if (isEqual(previousInputs.current, [profile])) {
-      return;
-    }
     loadAvatar(profile);
     createNickname(profile);
     if (String(profile.PersonType).includes('stu') && profile.Class !== undefined) {
       setPersonClass(profile.Class);
     } else {
-      // Techincally, this case should never happen because the list does not allow the user to add a non-student to the applicant list
+      // Technically, this case should never happen because the list does not allow the user to add a non-student to the applicant list
       setPersonClass('');
     }
   }, [profile]);
-
-  const previousInputs = useRef();
-  useEffect(() => {
-    previousInputs.current = [profile];
-  });
 
   /**
    * Creates the Avatar image of the given user

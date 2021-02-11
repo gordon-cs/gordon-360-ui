@@ -1,26 +1,30 @@
-import React, { useEffect, useRef } from 'react';
-import isEqual from 'lodash/isEqual';
+import React, { useState } from 'react';
 import {
   Grid,
   Card,
   CardHeader,
   CardContent,
   Collapse,
+  Divider,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
-  Typography,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import ClearIcon from '@material-ui/icons/Clear';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import InfoIcon from '@material-ui/icons/Info';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
+import HelpIcon from '@material-ui/icons/Help';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
 import GordonPeopleSearch from '../../../../../../components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
+import '../../../../apartmentApp.css';
 
 // Create a list of applicants, displayed by name, username, and class standing.
 const ApplicantList = ({
   maxNumApplicants,
-  userProfile,
   editorUsername,
   applicants,
   onSearchSubmit,
@@ -28,17 +32,7 @@ const ApplicantList = ({
   onApplicantRemove,
   authentication,
 }) => {
-  useEffect(() => {
-    // Manually perform deep checking of the array to force update whenever an element of preferredHalls is changed
-    if (isEqual(previousInputs.current, [applicants])) {
-      return;
-    }
-  });
-
-  const previousInputs = useRef();
-  useEffect(() => {
-    previousInputs.current = [applicants];
-  });
+  const [showHelp, setShowHelp] = useState(false);
 
   const handleSelection = (theChosenOne) => {
     // Make sure the chosen username was not null
@@ -71,6 +65,43 @@ const ApplicantList = ({
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
             <List className="applicant-list" aria-label="apartment applicants">
+              <ListItem
+                button
+                alignItems="center"
+                className={'list-item'}
+                onClick={() => setShowHelp((prev) => !prev)}
+              >
+                <ListItemIcon>
+                  <HelpIcon />
+                </ListItemIcon>
+                <ListItemText primary="Need Help?" />
+                {showHelp ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={showHelp} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding className={'bordered-list-item'}>
+                  <ListItem disableGutters className={'nested-list-item'}>
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Use the search bar below this list to add more applicants." />
+                  </ListItem>
+                  <Divider />
+                  <ListItem disableGutters className={'nested-list-item'}>
+                    <ListItemIcon>
+                      <StarBorder />
+                    </ListItemIcon>
+                    <ListItemText primary="Use the star button to change the editor of this applicant, if necessary." />
+                  </ListItem>
+                  <Divider />
+                  <ListItem disableGutters className={'nested-list-item'}>
+                    <ListItemIcon>
+                      <ClearIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Use the 'X' icon next to a student's name to remove them from this application" />
+                  </ListItem>
+                </List>
+              </Collapse>
+              <Divider />
               {applicants ? (
                 applicants.map((profile) => (
                   <ApplicantListItem
@@ -90,34 +121,20 @@ const ApplicantList = ({
                   />
                 </ListItem>
               )}
-              <ListItem key={'applicant-list-peoplesearch'} className={'list-item-search'}>
-                <Grid container justify="center">
-                  <Grid item>
-                    <GordonPeopleSearch
-                      disableLink
-                      disabled={applicants.length > maxNumApplicants}
-                      icon={<GroupAddIcon />}
-                      customPlaceholderText={'Add Applicant'}
-                      onSearchSubmit={handleSelection}
-                      authentication={authentication}
-                    />
-                  </Grid>
-                </Grid>
-              </ListItem>
             </List>
           </Grid>
-          <Collapse in={applicants.length > 1} timeout="auto" unmountOnExit>
-            <Grid container>
-              <Grid item xs={2}>
-                <InfoIcon />
-              </Grid>
-              <Grid item xs={10}>
-                <Typography variant="body1">
-                  You can use the <StarBorderIcon /> to change the editor of this application.
-                </Typography>
-              </Grid>
+          <Grid container item justify="center" xs={12}>
+            <Grid item xs={9} sm={5} className={'people-search-parent'}>
+              <GordonPeopleSearch
+                disableLink
+                disabled={applicants.length > maxNumApplicants}
+                icon={<GroupAddIcon />}
+                customPlaceholderText={'Add Applicant'}
+                onSearchSubmit={handleSelection}
+                authentication={authentication}
+              />
             </Grid>
-          </Collapse>
+          </Grid>
         </Grid>
       </CardContent>
     </Card>

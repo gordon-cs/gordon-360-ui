@@ -691,7 +691,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   </Card>
                 </Grid>
                 <Grid item xs={12} lg={10}>
-                  <Card>
+                  <Card className={'save-bar'}>
                     <CardContent>
                       {userProfile.AD_Username === editorUsername ? (
                         <Grid container direction="row" justify="flex-end" spacing={2}>
@@ -705,7 +705,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                             )}
                           </Grid>
                           <Grid item xs={6} sm={3}>
-                            <SaveButton saving={saving} onSaveButtonClick={handleSaveButtonClick} />
+                            <SaveButton saving={saving} onClick={handleSaveButtonClick} />
                           </Grid>
                           <Grid item xs={6} sm={3}>
                             <Button
