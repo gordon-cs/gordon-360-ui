@@ -80,9 +80,9 @@ const HallSelection = ({
           </Grid>
           <Grid item xs={12}>
             <Button
-              variant="contained"
-              color="default"
-              startIcon={<AddIcon />}
+              variant="outlined"
+              color="primary"
+              startIcon={<AddIcon fontSize="inherit" />}
               onClick={handleAddDropdown}
             >
               Add a Hall

@@ -104,6 +104,7 @@ const SaveButton = ({ disabled, saving, onClick }) => {
         disabled={disabled || saving}
         variant="contained"
         color="primary"
+        fullWidth
         onClick={handleSaveButtonClick}
       >
         Save & Continue
@@ -566,6 +567,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         variant="contained"
                         onClick={handleShowApplication}
                         color="primary"
+                        fullWidth
                         disabled={applicationCardsOpen}
                       >
                         Create a new application
@@ -575,6 +577,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         variant="contained"
                         onClick={handleShowApplication}
                         color="primary"
+                        fullWidth
                         disabled={applicationCardsOpen}
                       >
                         Edit your application
@@ -584,6 +587,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         variant="contained"
                         onClick={handleShowApplication}
                         color="primary"
+                        fullWidth
                         disabled={applicationCardsOpen}
                       >
                         View your application
@@ -704,6 +708,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                               variant="contained"
                               onClick={handleSubmitButtonClick}
                               color="primary"
+                              fullWidth
                               disabled={!applicationCardsOpen}
                             >
                               Save & Submit
@@ -732,7 +737,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                             <SaveButton disabled />
                           </Grid>
                           <Grid item xs={6} sm={3} lg={2}>
-                            <Button variant="contained" color="primary" disabled>
+                            <Button variant="contained" color="primary" fullWidth disabled>
                               Save & Submit
                             </Button>
                           </Grid>
