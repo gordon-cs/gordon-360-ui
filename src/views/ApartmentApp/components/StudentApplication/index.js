@@ -122,7 +122,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
   const [applicants, setApplicants] = useState([]);
   const [preferredHalls, setPreferredHalls] = useState([]);
-  // const [offCampusProgramInfo, setOffCampusProgramInfo] = useState(new Map());
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
@@ -132,11 +131,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
-
-  // const peopleSearchRef = useRef();
-
-  let offCampusProgramInfo = new Map();
-  applicants.forEach((profile) => offCampusProgramInfo.set(profile.AD_Username, ''));
 
   /**
    * Attempt to load an existing application from the database if one exists
@@ -170,11 +164,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setEditorUsername(userProfile.AD_Username);
       }
       if (
-        applicants.every(
-          (applicantProfile) => applicantProfile.AD_Username !== userProfile.AD_Username,
-        )
+        applicants.every((applicant) => applicant.Profile.AD_Username !== userProfile.AD_Username)
       ) {
-        setApplicants((prevApplicants) => prevApplicants.concat(userProfile));
+        setApplicants((prevApplicants) =>
+          prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
+        );
       }
     }
     setLoading(false);
@@ -184,7 +178,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
     loadSavedApplication();
   }, [userProfile, loadSavedApplication]);
 
-  useEffect(() => {}, [applicants, preferredHalls]);
+  useEffect(() => {
+    //! DEBUG
+    console.log('Array state variables changed. Printing contents:');
+    applicants.forEach((element) => {
+      console.log(element);
+    });
+    preferredHalls.forEach((element) => {
+      console.log(element);
+    });
+  }, [applicants, preferredHalls]);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
@@ -209,6 +212,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     try {
       // Get the profile of the selected user
       let newApplicantProfile = await user.getProfileInfo(username);
+      let newApplicantObject = { Profile: newApplicantProfile, OffCampusProgram: '' };
       if (applicants.length >= MAX_NUM_APPLICANTS) {
         // Display an error if the user try to add an applicant when the list is full
         setSnackbarText('You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants');
@@ -232,15 +236,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
         );
         setSnackbarSeverity('warning');
         setSnackbarOpen(true);
-      } else if (applicants.some((applicantProfile) => applicantProfile.AD_Username === username)) {
+      } else if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
         setSnackbarSeverity('info');
         setSnackbarOpen(true);
       } else {
         // Add the profile object to the list of applicants
-        setApplicants((prevApplicants) => prevApplicants.concat(newApplicantProfile));
-        if (applicants.some((applicantProfile) => applicantProfile.AD_Username === username)) {
+        setApplicants((prevApplicants) => prevApplicants.concat(newApplicantObject));
+        if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
           setSnackbarText(
             String(newApplicantProfile.fullName) + ' was successfully added to the list.',
           );
@@ -261,7 +265,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleChangeEditor = (profile) => {
     if (profile) {
-      if (applicants.includes(profile)) {
+      if (applicants.some((applicant) => applicant.Profile.AD_Username === profile.AD_Username)) {
         setNewEditorProfile(profile);
         setChangeEditorDialogOpen(true);
       }
@@ -322,16 +326,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleApplicantRemove = (profileToRemove) => {
     if (profileToRemove) {
-      let newApplicants = applicants;
-      let index = newApplicants.indexOf(profileToRemove);
-      if (index !== -1) {
-        newApplicants.splice(index, 1);
-        setApplicants(newApplicants);
-      }
+      setApplicants((prevApplicants) =>
+        prevApplicants.filter(
+          (applicant) => applicant.Profile.AD_Username !== profileToRemove.AD_Username,
+        ),
+      );
     }
-    applicants.forEach((element) => {
-      console.log(element);
-    });
   };
 
   /**
@@ -416,14 +416,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         });
       }
       setPreferredHalls(newPreferredHalls);
-      /*
-      } else {
-        // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
-        setPreferredHalls((prevPreferredHalls) =>
-          prevPreferredHalls.splice(0, 1, { HallRank: 1, HallName: '' }),
-        );
-      }
-      */
     }
   };
 
@@ -704,10 +696,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
                               <Typography variant="body1">Placeholder Text</Typography>
                             )}
                           </Grid>
-                          <Grid item xs={6} sm={3}>
+                          <Grid item xs={6} sm={3} lg={2}>
                             <SaveButton saving={saving} onClick={handleSaveButtonClick} />
                           </Grid>
-                          <Grid item xs={6} sm={3}>
+                          <Grid item xs={6} sm={3} lg={2}>
                             <Button
                               variant="contained"
                               onClick={handleSubmitButtonClick}
@@ -731,15 +723,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         </Grid>
                       ) : (
                         <Grid container direction="row" justify="flex-end" spacing={2}>
-                          <Grid item xs={12} sm={8}>
+                          <Grid item xs={12} sm={6}>
                             <Typography variant="body1">
                               Placeholder Text for when the user is NOT the primary applicant
                             </Typography>
                           </Grid>
-                          <Grid item xs={6} sm={4}>
+                          <Grid item xs={6} sm={3} lg={2}>
                             <SaveButton disabled />
                           </Grid>
-                          <Grid item xs={6} sm={4}>
+                          <Grid item xs={6} sm={3} lg={2}>
                             <Button variant="contained" color="primary" disabled>
                               Save & Submit
                             </Button>

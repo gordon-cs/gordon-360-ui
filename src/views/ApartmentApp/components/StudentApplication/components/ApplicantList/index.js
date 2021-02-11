@@ -103,11 +103,11 @@ const ApplicantList = ({
               </Collapse>
               <Divider />
               {applicants ? (
-                applicants.map((profile) => (
+                applicants.map((applicant) => (
                   <ApplicantListItem
-                    key={profile.AD_Username}
-                    profile={profile}
-                    isApplicationEditor={profile.AD_Username === editorUsername}
+                    key={applicant.Profile.AD_Username}
+                    profile={applicant.Profile}
+                    isApplicationEditor={applicant.Profile.AD_Username === editorUsername}
                     onChangeEditor={handleChangeEditor}
                     onApplicantRemove={handleRemove}
                   />

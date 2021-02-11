@@ -20,6 +20,13 @@ import './user'; // Needed for typedef of StudentProfileInfo
  */
 
 /**
+ * @global
+ * @typedef ApartmentApplicant
+ * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
+ * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
+ */
+
+/**
  * Note: Properties 'HallRank' and 'HallName' must be capitalized to match the backend
  * @global
  * @typedef ApartmentChoice
@@ -70,7 +77,7 @@ const getApplicationID = async (username) => {
  * Save the current state of the application to the database
  * @param {Number} applicationID the application ID number if it is known, else it is -1
  * @param {String} editorUsername the student username of the person filling out the application
- * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
+ * @param {ApartmentApplicant[]} applicants Array of ApartmentApplicant objects
  * @param {ApartmentChoice[]} preferredHalls Array of ApartmentChoice objects
  * @return {Promise.<Number>} Application's ID number
  */
@@ -83,7 +90,8 @@ const saveApartmentApplication = async (
   let applicationDetails = {
     AprtAppID: applicationID,
     Username: editorUsername,
-    Applicants: applicants.map((profile) => profile.AD_Username),
+    Applicants: applicants.map((applicant) => applicant.Profile.AD_Username),
+    // Applicants: applicants.map((applicant) => { Username: applicant.Profile.AD_Username, OffCampusProgram: applicant.OffCampusProgram }); // This is the correct code for when the backend has been updated expect the off-campus program info
     ApartmentChoices: preferredHalls,
   };
   return await http.post(`housing/apartment/save/`, applicationDetails);
