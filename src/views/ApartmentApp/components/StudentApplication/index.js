@@ -183,10 +183,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
     //! DEBUG
     console.log('Array state variables changed. Printing contents:');
     applicants.forEach((element) => {
-      console.log(element);
+      console.log(element.Profile.AD_Username);
     });
     preferredHalls.forEach((element) => {
-      console.log(element);
+      console.log(element.HallName + ', ' + element.HallRank);
     });
   }, [applicants, preferredHalls]);
 
@@ -686,8 +686,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </CardContent>
                   </Card>
                 </Grid>
-                <Grid item xs={12} lg={10}>
-                  <Card className={'save-bar'}>
+                <Grid item xs={12} lg={10} className={'save-bar'}>
+                  <Card className={'save-bar-card'} variant="outlined">
                     <CardContent>
                       {userProfile.AD_Username === editorUsername ? (
                         <Grid container direction="row" justify="flex-end" spacing={2}>
