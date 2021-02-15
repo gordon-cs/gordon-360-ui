@@ -55,7 +55,7 @@ const HallSelection = ({
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
-            <List className="hall-list" aria-label="apartment preferred halls">
+            <List className="hall-list" aria-label="apartment preferred halls" disablePadding>
               {preferredHalls ? (
                 preferredHalls.map((hallInfo, index) => (
                   <HallListItem
