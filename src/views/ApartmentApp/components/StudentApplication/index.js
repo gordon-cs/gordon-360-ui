@@ -163,6 +163,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     let newApplicationID = null;
     try {
       newApplicationID = await housing.getApplicationID();
+      //! DEBUG
       console.log('Retrieved Application ID: ' + newApplicationID);
       if (newApplicationID === null || newApplicationID === -1) {
         // Intentionally trigger the 'catch'
