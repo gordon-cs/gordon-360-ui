@@ -2,20 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Grid,
+  Divider,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
   Avatar,
-  Button,
-  Menu,
-  MenuItem,
-  ListItemIcon,
+  IconButton,
 } from '@material-ui/core';
-import PersonIcon from '@material-ui/icons/Person';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
 import ClearIcon from '@material-ui/icons/Clear';
+import PersonIcon from '@material-ui/icons/Person';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import StarIcon from '@material-ui/icons/Star';
 import user from '../../../../../../../../services/user';
 
 /**
@@ -27,7 +25,6 @@ import user from '../../../../../../../../services/user';
 // rather than using this.props.Person of type PeopleSearchResult
 const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApplicantRemove }) => {
   const [avatar, setAvatar] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null); // A HTML element, or a function that returns it. It's used to set the position of the menu.
   const [hasNickName, setHasNickname] = useState(false);
   const [personClass, setPersonClass] = useState(profile.Class);
 
@@ -37,7 +34,7 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     if (String(profile.PersonType).includes('stu') && profile.Class !== undefined) {
       setPersonClass(profile.Class);
     } else {
-      // Techincally, this case should never happen because the list does not allow the user to add a non-student to the applicant list
+      // Technically, this case should never happen because the list does not allow the user to add a non-student to the applicant list
       setPersonClass('');
     }
   }, [profile]);
@@ -70,21 +67,6 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
   };
 
   /**
-   * Callback for displaying the applicant edit menu
-   * @param {*} event mouse event to be handled by callback
-   */
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  /**
-   * Callback for closing the applicant edit menu
-   */
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  /**
    * Callback for changing the application editor
    * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
    */
@@ -93,7 +75,6 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     if (profile) {
       // Send the selected profile to the parent component
       onChangeEditor(profile);
-      handleMenuClose();
     }
   };
 
@@ -106,7 +87,6 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     if (profile) {
       // Send the selected profile to the parent component
       onApplicantRemove(profile);
-      handleMenuClose();
     }
   };
 
@@ -115,59 +95,53 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     : profile.fullName;
 
   return (
-    <ListItem
-      key={profile.AD_Username}
-      component={Link}
-      target="_blank"
-      to={`/profile/${profile.AD_Username}`}
-      className={'list-item'}
-    >
-      <ListItemAvatar>
-        {avatar ? (
-          <Avatar className={`avatar`} src={`data:image/jpg;base64,${avatar}`} alt="" />
-        ) : (
-          <Avatar>
-            <PersonIcon color="primary" />
-          </Avatar>
-        )}
-      </ListItemAvatar>
-      <Grid container alignItems="center" spacing={1}>
-        <Grid item xs={12} sm>
-          <ListItemText primary={displayName} secondary={personClass} className={'list-item'} />
+    <React.Fragment>
+      <ListItem
+        key={profile.AD_Username}
+        component={Link}
+        target="_blank"
+        to={`/profile/${profile.AD_Username}`}
+        className={'list-item'}
+      >
+        <ListItemAvatar>
+          {avatar ? (
+            <Avatar className={`avatar`} src={`data:image/jpg;base64,${avatar}`} alt="" />
+          ) : (
+            <Avatar>
+              <PersonIcon color="primary" />
+            </Avatar>
+          )}
+        </ListItemAvatar>
+        <Grid container alignItems="center" spacing={1}>
+          <Grid item xs={8} sm>
+            <ListItemText primary={displayName} secondary={personClass} className={'list-item'} />
+          </Grid>
         </Grid>
-      </Grid>
-      <ListItemSecondaryAction>
-        <Button
-          aria-controls="applicant-menu"
-          aria-haspopup="true"
-          disabled={isApplicationEditor}
-          onClick={handleMenuClick}
-        >
-          Edit
-          {isApplicationEditor ? <StarBorderIcon /> : <ArrowDropDownIcon />}
-        </Button>
-        <Menu
-          id="applicant-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
-        >
-          <MenuItem disabled={isApplicationEditor} onClick={handleChangeEditor}>
-            <ListItemIcon>
-              <StarBorderIcon />
-            </ListItemIcon>
-            Make Editor
-          </MenuItem>
-          <MenuItem disabled={isApplicationEditor} onClick={handleRemove}>
-            <ListItemIcon>
-              <ClearIcon />
-            </ListItemIcon>
-            Remove
-          </MenuItem>
-        </Menu>
-      </ListItemSecondaryAction>
-    </ListItem>
+        <ListItemSecondaryAction>
+          <Grid container justify="flex-end" alignItems="center" spacing={0}>
+            <Grid item xs>
+              <IconButton
+                aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
+                disabled={isApplicationEditor}
+                onClick={handleChangeEditor}
+              >
+                {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
+              </IconButton>
+            </Grid>
+            <Grid item xs>
+              <IconButton
+                aria-label="remove-applicant"
+                disabled={isApplicationEditor}
+                onClick={handleRemove}
+              >
+                <ClearIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </ListItemSecondaryAction>
+      </ListItem>
+      <Divider />
+    </React.Fragment>
   );
 };
 

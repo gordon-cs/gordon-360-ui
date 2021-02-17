@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
 import {
   Grid,
+  Divider,
   ListItem,
   ListItemSecondaryAction,
   MenuItem,
@@ -87,39 +88,42 @@ const HallListItem = ({
   ));
 
   return (
-    <ListItem key={index} className={'list-item'}>
-      <Grid container alignItems="center" spacing={3}>
-        <Grid item xs={3} sm={2}>
-          <FormControl fullWidth>
-            <InputLabel>Rank</InputLabel>
-            <Select
-              value={hallRankValue}
-              onChange={handleRankInputChange}
-              input={<Input id={'rank' + index} />}
-            >
-              {rankOptions}
-            </Select>
-          </FormControl>
+    <React.Fragment>
+      <ListItem key={index} className={'list-item'}>
+        <Grid container alignItems="center" spacing={3}>
+          <Grid item xs={3} sm={2}>
+            <FormControl fullWidth>
+              <InputLabel>Rank</InputLabel>
+              <Select
+                value={hallRankValue}
+                onChange={handleRankInputChange}
+                input={<Input id={'rank' + index} />}
+              >
+                {rankOptions}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={9} sm={10}>
+            <FormControl fullWidth>
+              <InputLabel>Hall</InputLabel>
+              <Select
+                value={hallNameValue}
+                onChange={handleNameInputChange}
+                input={<Input id={'hall' + index} />}
+              >
+                {hallOptions}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
-        <Grid item xs={9} sm={10}>
-          <FormControl fullWidth>
-            <InputLabel>Hall</InputLabel>
-            <Select
-              value={hallNameValue}
-              onChange={handleNameInputChange}
-              input={<Input id={'hall' + index} />}
-            >
-              {hallOptions}
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid>
-      <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="delete" onClick={handleRemove}>
-          <ClearIcon />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="delete" onClick={handleRemove}>
+            <ClearIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+      <Divider />
+    </React.Fragment>
   );
 };
 

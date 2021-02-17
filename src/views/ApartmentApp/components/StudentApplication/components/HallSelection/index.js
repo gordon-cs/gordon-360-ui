@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Card, CardHeader, CardContent, List, Typography, Button } from '@material-ui/core';
+import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import HallListItem from './components/HallListItem';
-import SaveButton from '../SaveButton';
 import goStalk from '../../../../../../services/goStalk';
 import housing from '../../../../../../services/housing';
 
@@ -14,11 +13,9 @@ import housing from '../../../../../../services/housing';
 const HallSelection = ({
   editorUsername,
   preferredHalls,
-  saving,
   onHallAdd,
   onHallInputChange,
   onHallRemove,
-  onSaveButtonClick,
 }) => {
   const [availableHalls, setAvailableHalls] = useState([]); // array of hall names from backend
 
@@ -69,25 +66,17 @@ const HallSelection = ({
     onHallAdd();
   };
 
-  /**
-   * Callback for apartment application save button
-   */
-  const handleSaveButtonClick = () => {
-    onSaveButtonClick();
-  };
-
   return (
     <Card>
       <CardHeader title="Preferred Halls" className="card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
-          <Grid item xs={11}></Grid>
           <Grid item xs={12}>
-            <List className="hall-list" aria-label="apartment preferred halls">
+            <List className="hall-list" aria-label="apartment preferred halls" disablePadding>
               {preferredHalls ? (
                 preferredHalls.map((hallInfo, index) => (
                   <HallListItem
-                    key={index + hallInfo.HallRank + hallInfo.HallName}
+                    key={hallInfo.HallRank + hallInfo.HallName}
                     index={index}
                     preferredHalls={preferredHalls}
                     availableHalls={availableHalls}
@@ -108,27 +97,13 @@ const HallSelection = ({
           </Grid>
           <Grid item xs={12}>
             <Button
-              variant="contained"
-              color="default"
-              startIcon={<AddIcon />}
+              variant="outlined"
+              color="primary"
+              startIcon={<AddIcon fontSize="inherit" />}
               onClick={handleAddDropdown}
             >
               Add a Hall
             </Button>
-          </Grid>
-          <Grid item xs={9}>
-            {saving === 'failed' ? (
-              <Typography variant="overline" color="error">
-                Something when wrong while trying to save the application
-              </Typography>
-            ) : preferredHalls.length >= availableHalls.length ? (
-              <Typography variant="overline" color="error">
-                You have reached the maximum number of halls ({availableHalls.length})
-              </Typography>
-            ) : null}
-          </Grid>
-          <Grid item xs={3}>
-            <SaveButton saving={saving} onClick={handleSaveButtonClick} />
           </Grid>
         </Grid>
       </CardContent>
