@@ -673,7 +673,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     <Card>
                       <CardHeader title="Off-Campus Work Study" className="card-header" />
                       <CardContent>
-                        <Typography variant="body1">Placeholder text</Typography>
+                          <offCampusSection
+                           
+                           programMembers={applicants}
+                           onMemberAdd={handle}
+                           onMemberInputChange,
+                           onMemberRemove,
+                          saving={saving}
+                          onHallAdd={handleHallAdd}
+                          onHallInputChange={handleHallInputChange}
+                          onHallRemove={handleHallRemove}
+                          onSaveButtonClick={handleSaveButtonClick}
+                          />
                       </CardContent>
                     </Card>
                   </Grid>
