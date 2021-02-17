@@ -1,18 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Grid,
   Card,
   CardHeader,
   CardContent,
+  Collapse,
+  Divider,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
-  Typography,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import ClearIcon from '@material-ui/icons/Clear';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import HelpIcon from '@material-ui/icons/Help';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
 import GordonPeopleSearch from '../../../../../../components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
-import SaveButton from '../SaveButton';
+import '../../../../apartmentApp.css';
 
 /**
  * @typedef { import('../../services/user').StudentProfileInfo } StudentProfileInfo
@@ -22,16 +30,15 @@ import SaveButton from '../SaveButton';
 const ApplicantList = ({
   disabled,
   maxNumApplicants,
-  userProfile,
   editorUsername,
   applicants,
-  saving,
   onSearchSubmit,
   onChangeEditor,
   onApplicantRemove,
-  onSaveButtonClick,
   authentication,
 }) => {
+  const [showHelp, setShowHelp] = useState(false);
+
   /**
    * Callback for apartment people search submission
    * @param {String} theChosenOne Username for student
@@ -68,40 +75,57 @@ const ApplicantList = ({
     }
   };
 
-  /**
-   * Callback for apartment application save button
-   */
-  const handleSaveButtonClick = () => {
-    onSaveButtonClick();
-  };
-
   return (
     <Card>
-      <CardHeader
-        action={
-          <GordonPeopleSearch
-            disableLink
-            disabled={disabled || applicants.length > maxNumApplicants}
-            icon={<GroupAddIcon />}
-            customPlaceholderText={'Add Applicant'}
-            onSearchSubmit={handleSelection}
-            authentication={authentication}
-          />
-        }
-        title="Student Applicants"
-        className="card-header"
-      />
+      <CardHeader title="Student Applicants" className="card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
-          <Grid item xs={11}>
+          <Grid item xs={12}>
             <List className="applicant-list" aria-label="apartment applicants">
+              <ListItem
+                button
+                alignItems="center"
+                className={'list-item'}
+                onClick={() => setShowHelp((prev) => !prev)}
+              >
+                <ListItemIcon>
+                  <HelpIcon />
+                </ListItemIcon>
+                <ListItemText primary="Need Help?" />
+                {showHelp ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={showHelp} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding className={'bordered-list-item'}>
+                  <ListItem disableGutters className={'nested-list-item'}>
+                    <ListItemIcon>
+                      <AddIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Use the search bar below this list to add more applicants." />
+                  </ListItem>
+                  <Divider />
+                  <ListItem disableGutters className={'nested-list-item'}>
+                    <ListItemIcon>
+                      <StarBorder />
+                    </ListItemIcon>
+                    <ListItemText primary="Use the star button to change the editor of this applicant, if necessary." />
+                  </ListItem>
+                  <Divider />
+                  <ListItem disableGutters className={'nested-list-item'}>
+                    <ListItemIcon>
+                      <ClearIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Use the 'X' icon next to a student's name to remove them from this application" />
+                  </ListItem>
+                </List>
+              </Collapse>
+              <Divider />
               {applicants ? (
-                applicants.map((profile) => (
+                applicants.map((applicant) => (
                   <ApplicantListItem
-                    key={profile.AD_Username}
+                    key={applicant.Profile.AD_Username}
                     disabled={disabled}
-                    profile={profile}
-                    isApplicationEditor={profile.AD_Username === editorUsername}
+                    profile={applicant.Profile}
+                    isApplicationEditor={applicant.Profile.AD_Username === editorUsername}
                     onChangeEditor={handleChangeEditor}
                     onApplicantRemove={handleRemove}
                   />
@@ -109,26 +133,25 @@ const ApplicantList = ({
               ) : (
                 <ListItem key={'applicant-list-placeholder'} className={'list-item'}>
                   <ListItemText
-                    primary={'Use the search bar above to add applicants'}
+                    // primary={'Use the search bar below to add applicants'}
+                    primary={'If you are reading this, something went wrong. Please contact CTS'}
                     className={'list-item'}
                   />
                 </ListItem>
               )}
             </List>
           </Grid>
-          <Grid item xs={9}>
-            {saving === 'failed' ? (
-              <Typography variant="overline" color="error">
-                Something went wrong while trying to save the application
-              </Typography>
-            ) : applicants.length >= maxNumApplicants ? (
-              <Typography variant="overline" color="error">
-                You have reached the maximum number of applicants ({maxNumApplicants})
-              </Typography>
-            ) : null}
-          </Grid>
-          <Grid item xs={3}>
-            <SaveButton disabled={disabled} saving={saving} onClick={handleSaveButtonClick} />
+          <Grid container item justify="center" xs={12}>
+            <Grid item xs={9} sm={5} className={'people-search-parent'}>
+              <GordonPeopleSearch
+                disableLink
+                disabled={disabled || applicants.length > maxNumApplicants}
+                icon={<GroupAddIcon />}
+                customPlaceholderText={'Add Applicant'}
+                onSearchSubmit={handleSelection}
+                authentication={authentication}
+              />
+            </Grid>
           </Grid>
         </Grid>
       </CardContent>

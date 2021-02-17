@@ -14,6 +14,8 @@ import {
   TableContainer,
   TableRow,
 } from '@material-ui/core/';
+import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import GordonLoader from '../../../../components/Loader';
 import AlertDialogBox from '../../../../components/AlertDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
@@ -101,6 +103,36 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) =
   );
 };
 
+const SaveButton = ({ disabled, saving, onClick }) => {
+  const loaderSize = 20;
+
+  const handleSaveButtonClick = () => {
+    onClick();
+  };
+
+  if (saving) {
+    if (saving === 'success') {
+      return <CheckCircleIcon className="success" />;
+    } else if (saving === 'failed') {
+      return <ErrorIcon className="error" />;
+    } else {
+      return <GordonLoader size={loaderSize} />;
+    }
+  } else {
+    return (
+      <Button
+        disabled={disabled || saving}
+        variant="contained"
+        color="primary"
+        fullWidth
+        onClick={handleSaveButtonClick}
+      >
+        Save & Continue
+      </Button>
+    );
+  }
+};
+
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -111,7 +143,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
   const [applicants, setApplicants] = useState([]);
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
-  // const [offCampusProgramInfo, setOffCampusProgramInfo] = useState(new Map());
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
@@ -122,18 +153,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
 
-  // Off-campus program info is stored as a Map, where the Key is a student's username and the corresponding Value is the department of that student's off-campus program
-  let offCampusProgramInfo = new Map();
-  applicants.forEach((profile) => offCampusProgramInfo.set(profile.AD_Username, ''));
-
-  useEffect(() => {
     /**
      * Loads the user's saved apartment application, if one exists
      */
-    const loadSavedApplication = async () => {
-      // TODO: Implement this once save/load of application data has been implemented in the backend
-      setLoading(true);
-      // Check if the current user is on an application. Returns the application ID number if found
+  const loadSavedApplication = useCallback(async () => {
+    // TODO: Implement this once save/load of application data has been implemented in the backend
+    setLoading(true);
+    // Check if the current user is on an application. Returns the application ID number if found
       let newApplicationID = null;
       try {
         newApplicationID = await housing.getApplicationID();
@@ -164,25 +190,39 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setApplicationID(-1);
         if (!editorUsername) {
           if (
-            applicants.every(
-              (applicantProfile) => applicantProfile.AD_Username !== userProfile.AD_Username,
-            )
-          ) {
-            setApplicants((prevApplicants) => prevApplicants.concat(userProfile));
-          }
+            applicants.every((applicant) => applicant.Profile.AD_Username !== userProfile.AD_Username)
+      ) {
+        setApplicants((prevApplicants) =>
+          prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
+        );
+      }
           // The editor username must be set last to prevent race condition
           setEditorUsername(userProfile.AD_Username);
         }
       }
       setLoading(false);
-    };
+  }, [userProfile, editorUsername, applicants]);
 
     loadSavedApplication();
 
+<<<<<<<
     // We disable ESLint because we want to run this effect if and only if the state of 'userProfile' or 'editorUsername' are changed
     // eslint-disable-next-line
   }, [userProfile, editorUsername]);
 
+=======
+  useEffect(() => {
+    //! DEBUG
+    console.log('Array state variables changed. Printing contents:');
+    applicants.forEach((element) => {
+      console.log(element.Profile.AD_Username);
+    });
+    preferredHalls.forEach((element) => {
+      console.log(element.HallName + ', ' + element.HallRank);
+    });
+  }, [applicants, preferredHalls]);
+
+>>>>>>>
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
   };
@@ -206,6 +246,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     try {
       // Get the profile of the selected user
       const newApplicantProfile = await user.getProfileInfo(username);
+      let newApplicantObject = { Profile: newApplicantProfile, OffCampusProgram: '' };
 
       // Check if the selected user is already saved on an application in the database
       let existingAppID = null;
@@ -235,7 +276,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
             ' because they are not the same gender as the other applicants.',
         );
         setSnackbarSeverity('warning');
-      } else if (applicants.some((applicantProfile) => applicantProfile.AD_Username === username)) {
+      } else if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
         setSnackbarSeverity('info');
@@ -248,10 +289,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarSeverity('warning');
       } else {
         // Add the profile object to the list of applicants
-        setApplicants((prevApplicants) => prevApplicants.concat(newApplicantProfile));
+        setApplicants((prevApplicants) => prevApplicants.concat(newApplicantObject));
 
         // Check that the applicant array was updated successfully
-        if (applicants.some((applicantProfile) => applicantProfile.AD_Username === username)) {
+        if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
           setSnackbarText(
             String(newApplicantProfile.fullName) + ' was successfully added to the list.',
           );
@@ -274,7 +315,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleChangeEditor = (profile) => {
     if (profile) {
-      if (applicants.includes(profile)) {
+      if (applicants.some((applicant) => applicant.Profile.AD_Username === profile.AD_Username)) {
         setNewEditorProfile(profile);
         setChangeEditorDialogOpen(true);
       }
@@ -338,12 +379,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleApplicantRemove = (profileToRemove) => {
     if (profileToRemove) {
-      let newApplicants = applicants;
-      let index = newApplicants.indexOf(profileToRemove);
-      if (index !== -1) {
-        newApplicants.splice(index, 1);
-        setApplicants(newApplicants);
-      }
+      setApplicants((prevApplicants) =>
+        prevApplicants.filter(
+          (applicant) => applicant.Profile.AD_Username !== profileToRemove.AD_Username,
+        ),
+      );
     }
   };
 
@@ -429,14 +469,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         });
       }
       setPreferredHalls(newPreferredHalls);
-      /*
-      } else {
-        // Reset the first and only element to "empty" if there is 1 or 0 elements in the list
-        setPreferredHalls((prevPreferredHalls) =>
-          prevPreferredHalls.splice(0, 1, { HallRank: 1, HallName: '' }),
-        );
-      }
-      */
     }
   };
 
@@ -610,6 +642,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         variant="contained"
                         onClick={handleShowApplication}
                         color="primary"
+                        fullWidth
                         disabled={applicationCardsOpen}
                       >
                         Create a new application
@@ -619,6 +652,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         variant="contained"
                         onClick={handleShowApplication}
                         color="primary"
+                        fullWidth
                         disabled={applicationCardsOpen}
                       >
                         Edit your application
@@ -628,6 +662,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         variant="contained"
                         onClick={handleShowApplication}
                         color="primary"
+                        fullWidth
                         disabled={applicationCardsOpen}
                       >
                         View your application
@@ -753,22 +788,32 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Card>
                   </Collapse>
                 </Grid>
-                <Grid item xs={12} lg={10}>
-                  <Card>
+                <Grid item xs={12} lg={10} className={'save-bar'}>
+                  <Card className={'save-bar-card'} variant="outlined">
                     <CardContent>
                       {userProfile.AD_Username === editorUsername ? (
-                        <Grid container direction="row" justify="flex-end">
-                          <Grid item xs={6} sm={8}>
-                            <Typography variant="body1">Placeholder Text</Typography>
+                        <Grid container direction="row" justify="flex-end" spacing={2}>
+                          <Grid item xs={12} sm={6}>
+                            {saving === 'failed' ? (
+                              <Typography variant="overline" color="error">
+                                Something went wrong while trying to save the application
+                              </Typography>
+                            ) : (
+                              <Typography variant="body1">Placeholder Text</Typography>
+                            )}
                           </Grid>
-                          <Grid item xs={6} sm={4}>
+                          <Grid item xs={6} sm={3} lg={2}>
+                            <SaveButton saving={saving} onClick={handleSaveButtonClick} />
+                          </Grid>
+                          <Grid item xs={6} sm={3} lg={2}>
                             <Button
                               variant="contained"
                               onClick={handleSubmitButtonClick}
                               color="primary"
+                              fullWidth
                               disabled={!applicationCardsOpen}
                             >
-                              Submit Application
+                              Save & Submit
                             </Button>
                           </Grid>
                           <AlertDialogBox
@@ -784,15 +829,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           />
                         </Grid>
                       ) : (
-                        <Grid container direction="row" justify="flex-end">
-                          <Grid item xs={6} sm={8}>
+                        <Grid container direction="row" justify="flex-end" spacing={2}>
+                          <Grid item xs={12} sm={6}>
                             <Typography variant="body1">
                               Placeholder Text for when the user is NOT the primary applicant
                             </Typography>
                           </Grid>
-                          <Grid item xs={6} sm={4}>
-                            <Button variant="contained" color="primary" disabled>
-                              Submit Application
+                          <Grid item xs={6} sm={3} lg={2}>
+                            <SaveButton disabled />
+                          </Grid>
+                          <Grid item xs={6} sm={3} lg={2}>
+                            <Button variant="contained" color="primary" fullWidth disabled>
+                              Save & Submit
                             </Button>
                           </Grid>
                         </Grid>

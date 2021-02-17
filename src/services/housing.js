@@ -20,6 +20,20 @@ import './user';
  */
 
 /**
+ * @global
+ * @typedef ApartmentApplicant
+ * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
+ * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
+ */
+
+/**
+ * @global
+ * @typedef ApplicantPartialInfo
+ * @property {String} Username The username of this applicant
+ * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
+ */
+
+/**
  * Note: Properties 'HallRank' and 'HallName' must be capitalized to match the backend
  * @global
  * @typedef ApartmentChoice
@@ -35,7 +49,7 @@ import './user';
  * @property {*} DateSubmitted The date the application was submitted, or null if not yet submitted
  * @property {*} DateModified The date the application was last modified
  * @property {String} Username Username of the primary applicant
- * @property {String[]} Applicants Array of student usernames
+ * @property {ApplicantPartialInfo[]} Applicants Array of objects with applicant username and off-campus program
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
  */
 
@@ -70,9 +84,9 @@ const getApplicationID = async (username) => {
  * Save the current state of the application to the database
  * @param {Number} applicationID the application ID number if it is known, else it is -1
  * @param {String} editorUsername the student username of the person filling out the application
- * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
+ * @param {ApartmentApplicant[]} applicants Array of ApartmentApplicant objects
  * @param {ApartmentChoice[]} apartmentChoices Array of ApartmentChoice objects
- * @return {Promise.<Number|Boolean>} Application's ID number, or Boolean if updating an existing application
+ * @return {Promise.<Number>} Application's ID number
  */
 const saveApartmentApplication = async (
   applicationID,
@@ -83,7 +97,8 @@ const saveApartmentApplication = async (
   let applicationDetails = {
     AprtAppID: applicationID,
     Username: editorUsername,
-    Applicants: applicants.map((applicantProfile) => applicantProfile.AD_Username),
+    Applicants: applicants.map((applicant) => applicant.Profile.AD_Username),
+    // Applicants: applicants.map((applicant) => { Username: applicant.Profile.AD_Username, OffCampusProgram: applicant.OffCampusProgram }); // This is the correct code for when the backend has been updated expect the off-campus program info
     ApartmentChoices: apartmentChoices,
   };
   if (applicationID === -1) {
