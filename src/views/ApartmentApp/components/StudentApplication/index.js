@@ -1,5 +1,5 @@
 //Student apartment application page
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Grid,
   Card,
@@ -153,64 +153,60 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
 
-    /**
-     * Loads the user's saved apartment application, if one exists
-     */
+  /**
+   * Loads the user's saved apartment application, if one exists
+   */
   const loadSavedApplication = useCallback(async () => {
     // TODO: Implement this once save/load of application data has been implemented in the backend
     setLoading(true);
     // Check if the current user is on an application. Returns the application ID number if found
-      let newApplicationID = null;
-      try {
-        newApplicationID = await housing.getApplicationID();
-        console.log('Retrieved Application ID: ' + newApplicationID);
-        if (newApplicationID === null || newApplicationID === -1) {
-          // Intentionally trigger the 'catch'
-          throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
-        }
-        setApplicationID(newApplicationID);
-        let applicationDetails = await housing.getApartmentApplication(newApplicationID);
-        if (applicationDetails) {
-          if (applicationDetails.DateSubmitted) {
-            setDateSubmitted(applicationDetails.DateSubmitted);
-          }
-          if (applicationDetails.DateModified) {
-            setDateModified(applicationDetails.DateModified);
-          }
-          if (applicationDetails.Username) {
-            setEditorUsername(applicationDetails.Username);
-          }
-          if (applicationDetails.Applicants) {
-            setApplicants(applicationDetails.Applicants);
-          }
-        }
-      } catch {
-        // No existing application was found in the database,
-        // or an error occurred while attempting to load the application
-        setApplicationID(-1);
-        if (!editorUsername) {
-          if (
-            applicants.every((applicant) => applicant.Profile.AD_Username !== userProfile.AD_Username)
-      ) {
-        setApplicants((prevApplicants) =>
-          prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
-        );
+    let newApplicationID = null;
+    try {
+      newApplicationID = await housing.getApplicationID();
+      console.log('Retrieved Application ID: ' + newApplicationID);
+      if (newApplicationID === null || newApplicationID === -1) {
+        // Intentionally trigger the 'catch'
+        throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
       }
-          // The editor username must be set last to prevent race condition
-          setEditorUsername(userProfile.AD_Username);
+      setApplicationID(newApplicationID);
+      let applicationDetails = await housing.getApartmentApplication(newApplicationID);
+      if (applicationDetails) {
+        if (applicationDetails.DateSubmitted) {
+          setDateSubmitted(applicationDetails.DateSubmitted);
+        }
+        if (applicationDetails.DateModified) {
+          setDateModified(applicationDetails.DateModified);
+        }
+        if (applicationDetails.Username) {
+          setEditorUsername(applicationDetails.Username);
+        }
+        if (applicationDetails.Applicants) {
+          setApplicants(applicationDetails.Applicants);
         }
       }
-      setLoading(false);
+    } catch {
+      // No existing application was found in the database,
+      // or an error occurred while attempting to load the application
+      setApplicationID(-1);
+      if (!editorUsername) {
+        if (
+          applicants.every((applicant) => applicant.Profile.AD_Username !== userProfile.AD_Username)
+        ) {
+          setApplicants((prevApplicants) =>
+            prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
+          );
+        }
+        // The editor username must be set last to prevent race condition
+        setEditorUsername(userProfile.AD_Username);
+      }
+    }
+    setLoading(false);
   }, [userProfile, editorUsername, applicants]);
 
+  useEffect(() => {
     loadSavedApplication();
+  }, [userProfile, loadSavedApplication]);
 
-<<<<<<<
-    // We disable ESLint because we want to run this effect if and only if the state of 'userProfile' or 'editorUsername' are changed
-    // eslint-disable-next-line
-  }, [userProfile, editorUsername]);
-
-=======
   useEffect(() => {
     //! DEBUG
     console.log('Array state variables changed. Printing contents:');
@@ -222,7 +218,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
     });
   }, [applicants, preferredHalls]);
 
->>>>>>>
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
   };
