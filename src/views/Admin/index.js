@@ -3,12 +3,12 @@ import { Button, Card, CardContent, Grid } from '@material-ui/core';
 import InvolvementsStatus from './components/InvolvementsStatus';
 import SuperAdmin from './components/SuperAdmins';
 import user from '../../services/user';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 import OfflinePanel from '../../components/OfflinePanel';
 
 const Admin = (props) => {
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   useEffect(() => {
     const getRole = async () => {

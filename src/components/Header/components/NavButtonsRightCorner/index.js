@@ -7,7 +7,7 @@ import user from '../../../../services/user';
 import GordonQuickLinksDialog from '../../../QuickLinksDialog';
 import { gordonColors } from '../../../../theme';
 import GordonNavButton from '../../../NavButton';
-import { useNetworkIsOnline } from '../../../../context/NetworkContext';
+import { useNetworkStatus } from '../../../../contexts/NetworkContext';
 import './index.css';
 
 /**
@@ -28,7 +28,7 @@ const GordonNavButtonsRightCorner = ({
   open,
 }) => {
   const [linkOpen, setLinkOpen] = useState(false);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   const useStyles = makeStyles({
     paper: {

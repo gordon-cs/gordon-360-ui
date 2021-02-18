@@ -38,7 +38,7 @@ import PeopleSearchResult from './components/PeopleSearchResult';
 import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
 import GordonLoader from '../../components/Loader';
 import './peopleSearch.css';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 import OfflinePanel from '../../components/OfflinePanel';
 
 const styles = {
@@ -181,7 +181,7 @@ const PeopleSearch = (props) => {
   const [peopleSearchResults, setPeopleSearchResults] = useState(null);
   const [header, setHeader] = useState('');
 
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   const handleAcademicsExpandClick = () => {
     setHomeExpanded(false);

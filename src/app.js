@@ -7,7 +7,7 @@ import MomentUtils from '@date-io/moment';
 import './app.css';
 import analytics from './services/analytics';
 import { isAuthenticated } from './services/auth';
-import NetworkContextProvider from './context/NetworkContext';
+import NetworkContextProvider from './contexts/NetworkContext';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import OfflineBanner from './components/OfflineBanner';

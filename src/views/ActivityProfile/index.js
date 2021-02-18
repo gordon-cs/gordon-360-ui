@@ -28,7 +28,7 @@ import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 import OfflinePanel from '../../components/OfflinePanel';
 
 const CROP_DIM = 320; // pixels
@@ -58,7 +58,7 @@ const ActivityProfile = ({ authentication, match }) => {
   const [openEditActivity, setOpenEditActivity] = useState(false);
   const [openRemoveImage, setOpenRemoveImage] = useState(false);
   const [emailList, setEmailList] = useState([]);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
   const cropperRef = useRef();
 
   const load = useCallback(async () => {

@@ -14,14 +14,14 @@ import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
 import '../../app.css';
 import './myProfile.css';
 import 'cropperjs/dist/cropper.css';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 
 const MyProfile = (props) => {
   const [loading, setLoading] = useState(true);
   const [memberships, setMemberships] = useState([]);
   const [personType, setPersonType] = useState(null);
   const [profile, setProfile] = useState({});
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   /**
    * Loads the user's profile info only once (at start)

@@ -22,7 +22,7 @@ import userService from './../../services/user';
 import NewsList from '../News/components/NewsList';
 import GordonLoader from '../../components/Loader';
 import OfflinePanel from '../../components/OfflinePanel';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 
 const styles = {
   searchBar: {
@@ -57,7 +57,7 @@ const StudentNews = ({ authentication }) => {
   const [currentUsername, setCurrentUsername] = useState('');
   // false if not editing, newsID if editing
   const [currentlyEditing, setCurrentlyEditing] = useState(false);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   const load = async () => {
     setLoading(true);

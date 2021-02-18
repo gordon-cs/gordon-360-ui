@@ -8,7 +8,7 @@ import WorkIcon from '@material-ui/icons/Work';
 import WellnessIcon from '@material-ui/icons/LocalHospital';
 import { signOut } from '../../../../services/auth';
 import user from '../../../../services/user';
-import { useNetworkIsOnline } from '../../../../context/NetworkContext';
+import { useNetworkStatus } from '../../../../contexts/NetworkContext';
 import GordonQuickLinksDialog from '../../../QuickLinksDialog';
 import GordonDialogBox from '../../../GordonDialogBox/index';
 import GordonNavButton from '../../../NavButton';
@@ -17,7 +17,7 @@ import './nav-links.css';
 const GordonNavLinks = (props) => {
   const [areLinksOpen, setAreLinksOpen] = useState(false);
   const [dialog, setDialog] = useState(null);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   /**
    * Signs user out

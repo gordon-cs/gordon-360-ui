@@ -18,7 +18,7 @@ import GordonLoader from '../../components/Loader';
 import user from './../../services/user';
 import { gordonColors } from '../../theme';
 import Requests from './components/Requests';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 
 const GordonActivitiesAll = (props) => {
   const [error, setError] = useState(null);
@@ -33,7 +33,7 @@ const GordonActivitiesAll = (props) => {
   const [sessions, setSessions] = useState([]);
   const [type, setType] = useState('');
   const [types, setTypes] = useState([]);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   useEffect(() => {
     window.onpopstate = (e) => {

@@ -1,11 +1,11 @@
 import React from 'react';
 
 import './feedback.css';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 import OfflinePanel from '../../components/OfflinePanel';
 
 const Feedback = () => {
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   if (isOnline) {
     return (

@@ -21,7 +21,7 @@ import session from '../../services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
 import { projectName } from '../../project-name';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 
 const Login = (props) => {
   const [isIE, setIsIE] = useState(false);
@@ -33,7 +33,7 @@ const Login = (props) => {
   const [openPWAInstructions, setOpenPWAInstructions] = useState(false);
   const [showPWALink, setShowPWALink] = useState(false);
   const [deferredPWAPrompt, setDeferredPWAPrompt] = useState(null);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   useEffect(() => {
     let ua = navigator.userAgent;

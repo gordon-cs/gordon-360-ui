@@ -2,10 +2,10 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { gordonColors } from '../../theme';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 
 export default function OfflineBanner({ authentication, currentPath }) {
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   /**
    * Creates the classes for the offline banner depending on the current page

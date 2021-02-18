@@ -29,7 +29,7 @@ import GordonLoader from '../../components/Loader';
 import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 import OfflinePanel from '../../components/OfflinePanel';
 
 const useStyles = makeStyles((theme) => ({
@@ -69,7 +69,7 @@ const Timesheets = (props) => {
   const [isUserStudent, setIsUserStudent] = useState(false);
   const [hourTypes, setHourTypes] = useState(null);
   const [selectedHourType, setSelectedHourType] = useState('R');
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   // Sets the person type of the user
   useEffect(() => {

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import './activity-grid.css';
 import '../../../../app.css';
-import { useNetworkIsOnline } from '../../../../context/NetworkContext';
+import { useNetworkStatus } from '../../../../contexts/NetworkContext';
 
 const gridListCols = (width) => {
   switch (width) {
@@ -43,7 +43,7 @@ const offlineStyle = {
 };
 
 const GordonActivityGrid = ({ activities, sessionCode, width, noInvolvementsText }) => {
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   let content;
 

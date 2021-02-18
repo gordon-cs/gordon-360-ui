@@ -11,14 +11,14 @@ import user from '../../services/user';
 import wellness from '../../services/wellness';
 import Login from '../Login';
 import './home.css';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
   const [hasAnswered, setHasAnswered] = useState(null);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   useEffect(() => {
     if (authentication) {

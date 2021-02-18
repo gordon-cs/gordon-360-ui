@@ -6,12 +6,12 @@ import MyProfileActivityList from '../MyProfileActivityList/index';
 import ProfileActivityList from '../ProfileActivityList/index';
 import Typography from '@material-ui/core/Typography';
 import './index.css';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 
 export const Involvements = (props) => {
   const [involvementsAndTheirPrivacy, setInvolvementsAndTheirPrivacy] = useState([]);
   const [publicMemberships, setPublicMemberships] = useState([]);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   /**
    * Loads the user's profile info only once (at start)

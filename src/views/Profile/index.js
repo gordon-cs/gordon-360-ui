@@ -14,7 +14,7 @@ import { Redirect } from 'react-router';
 
 import './profile.css';
 import '../../app.css';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 import OfflinePanel from '../../components/OfflinePanel';
 
 //Public profile view
@@ -23,7 +23,7 @@ const Profile = ({ authentication, match }) => {
   const [error, setError] = useState(null);
   const [profile, setProfile] = useState({});
   const [memberships, setMemberships] = useState([]);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   useEffect(() => {
     if (authentication) {

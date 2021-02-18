@@ -12,7 +12,7 @@ const NetworkConext = createContext();
  *
  * @return {boolean} true if connected to the network, false otherwise.
  */
-export const useNetworkIsOnline = () => {
+export const useNetworkStatus = () => {
   const context = useContext(NetworkConext);
   if (context === undefined) {
     throw new Error(`useNetworkStatus must be called within NetworkContextProvider`);

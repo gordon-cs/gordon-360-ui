@@ -15,7 +15,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
 import peopleSearch from '../../../../services/people-search';
-import { useNetworkIsOnline } from '../../../../context/NetworkContext';
+import { useNetworkStatus } from '../../../../contexts/NetworkContext';
 
 const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 400;
@@ -56,7 +56,7 @@ const GordonPeopleSearch = (props) => {
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
   const downshiftRef = useRef(null);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   const getSuggestions = async (query) => {
     setQuery(query.replace(/[^a-zA-Z0-9'\-.\s]/gm, ''));

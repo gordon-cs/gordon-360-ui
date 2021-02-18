@@ -24,7 +24,7 @@ import routes from '../../routes';
 import { projectName } from '../../project-name';
 import GordonDialogBox from '../GordonDialogBox/index';
 import { windowBreakWidths } from '../../theme';
-import { useNetworkIsOnline } from '../../context/NetworkContext';
+import { useNetworkStatus } from '../../contexts/NetworkContext';
 
 const getRouteName = (route) => {
   if (route.name) {
@@ -47,7 +47,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   const [tabIndex, setTabIndex] = useState(null);
   const [dialog, setDialog] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isOnline = useNetworkIsOnline();
+  const isOnline = useNetworkStatus();
 
   /**
    * Update the tab highlight indicator based on the url
