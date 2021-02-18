@@ -107,7 +107,7 @@ VS Code users will also see a ruler at the 100 character mark, helping the devel
 
 Links to the homepages of libraries used in this project, listed here for easy reference.
 
-- [Material-UI](https://material-ui-next.com)
+- [Material-UI](https://next.material-ui.com/)
 
   Material-UI is a widely-used React implementation of Google's Material Design. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
 
