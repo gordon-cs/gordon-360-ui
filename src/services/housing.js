@@ -40,7 +40,6 @@ import './user';
  * @property {Number} HallRank The rank assigned to this hall by the user
  * @property {String} HallName The name of the apartment hall
  */
-// NOTE: Properties 'HallName' and 'HallRank' must be capitalized to match the backend
 
 /**
  * @global
