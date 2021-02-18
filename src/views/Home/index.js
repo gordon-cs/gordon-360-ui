@@ -11,6 +11,7 @@ import user from '../../services/user';
 import wellness from '../../services/wellness';
 import storage from '../../services/storage';
 import Login from '../Login';
+import GuestWelcome from './components/GuestWelcome';
 import './home.css';
 
 const Home = ({ authentication, onLogIn }) => {
@@ -76,6 +77,7 @@ const Home = ({ authentication, onLogIn }) => {
   } else if (!isAuthenticated) {
     return (
       <div className="gordon-login">
+        <GuestWelcome />
         <Login onLogIn={onLogIn} />
       </div>
     );
