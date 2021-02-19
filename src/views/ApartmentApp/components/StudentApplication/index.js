@@ -182,7 +182,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setEditorUsername(applicationDetails.Username);
         }
         if (applicationDetails.Applicants) {
-          setApplicants(applicationDetails.Applicants);
+          applicationDetails.Applicants.forEach(async (applicantInfo) => {
+            const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
+            setApplicants((prevApplicants) =>
+              prevApplicants.concat({
+                Profile: newApplicantProfile,
+                OffCampusProgram: applicantInfo.OffCampusProgram,
+              }),
+            );
+          });
         }
       }
     } catch {
