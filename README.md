@@ -34,13 +34,17 @@ Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtua
 - Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
   - Extract the file and run it.
   - The installer will ask you where to install NVM. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
-  - After the installation completes, open a terminal and run these commands in order:
-    - `nvm install 9.11.1`
-    - `nvm use 9.11.1`
+  - After this, simply run `nvm install`.
 
 #### Linux:
 
-Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, run `nvm install 9.11.1` then run `nvm use 9.11.1`.
+Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, do so.
+
+#### Troubleshooting NVM
+
+- If a developer accidentally follows the above Windows instructions on CS-RDSH-02, the environment variable for NVM will be set by their installation to a path within their user directory. Thus, many if not all other users on the machine will lose access to NVM. To fix this, any user can open Powershell as administrator and run `choco install -y nvm`. (The `-y` option answers `yes` to any prompts that occur during the installation.) Users should log out and back in to see the fix take effect. As usual, you can check if this worked by opening a terminal and running the command `nvm`. If the output says `Running version...`, then it is all set.
+
+- Sometimes, the .json package management files in develop are missing a dependency and `npm install` throws an error. The error says something like "This is most likely not a problem with npm itself...and is related to npm not being able to find a file". The best solution we have found is to delete the whole `node_modules` directory, delete the file `package-lock.json`, and then run `npm install`. Warning, the deletions can take several minutes because they are large files. 
 
 <!-- ### Front End Development (Note) -->
 <h3 id="front-end">Front End Development (Note)</h3>
