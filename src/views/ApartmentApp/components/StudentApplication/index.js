@@ -162,7 +162,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     // Check if the current user is on an application. Returns the application ID number if found
     let newApplicationID = null;
     try {
-      newApplicationID = await housing.getApplicationID();
+      newApplicationID = await housing.getCurrentApplicationID();
       //! DEBUG
       console.log('Retrieved Application ID: ' + newApplicationID);
       if (newApplicationID === null || newApplicationID === -1) {
@@ -255,7 +255,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       // Check if the selected user is already saved on an application in the database
       let existingAppID = null;
       try {
-        existingAppID = await housing.getApplicationID(username);
+        existingAppID = await housing.getCurrentApplicationID(username);
       } catch {
         existingAppID = false;
       }

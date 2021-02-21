@@ -65,11 +65,11 @@ const checkHousingStaff = async () => {
 };
 
 /**
- * Check if a given student is on an existing application
+ * Check if a given student is on an existing application from the current semester
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<Number>} Application's ID number
  */
-const getApplicationID = async (username) => {
+const getCurrentApplicationID = async (username) => {
   let applicationID;
   if (username) {
     applicationID = await http.get(`housing/apartment/${username}/`);
@@ -132,7 +132,7 @@ const getApartmentApplication = async (applicationID) => {
 
 export default {
   checkHousingStaff,
-  getApplicationID,
+  getCurrentApplicationID,
   saveApartmentApplication,
   changeApartmentAppEditor,
   getApartmentApplication,
