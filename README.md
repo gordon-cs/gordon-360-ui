@@ -1,4 +1,6 @@
-# Gordon 360 User Interface
+# Gordon 360 User Interface 
+
+![Lint and Build](https://github.com/gordon-cs/gordon-360-ui/workflows/Lint%20and%20Build/badge.svg)
 
 This project is the frontend of Gordon 360 in React. [The retired frontend](https://github.com/gordon-cs/Project-Bernard/) was built in EmberJS, but was deemed too slow and difficult to maintain. To see the specifics of the rebuild, see [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/develop/old_documentation/ROADMAP.md).
 
@@ -17,15 +19,15 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 - [Project File Organization](#file-organization)
 - [Environment Variables](#environment-variables)
 - [Testing](#testing)
-- [Deployment](#deployment)
-  - [Contributing](#contributing)
+- [CI/CD](#ci/cd)
+- [Contributing](#contributing)
 - [Known Issues](#known-issues)
 
 ## Getting Started
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
-Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
+Make sure Node.js is set up on your machine. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
 
 #### Windows:
 
@@ -73,7 +75,7 @@ By default, React will use the live server backend to allow seamless front end d
 
 ### Server Notes
 
-The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu` (used by Travis CI), `360train.gordon.edu`, and `360.gordon.edu`.
+The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu`, `360train.gordon.edu`, and `360.gordon.edu`.
 
 The backend server is hosted on `cts-360.gordon.edu`. This machine is also known as `360Api.gordon.edu` and `360ApiTrain.gordon.edu` (it also runs the frontend server for the old Ember site, and is thus also known as `360old.gordon.edu`).
 
@@ -82,20 +84,6 @@ The backend server is hosted on `cts-360.gordon.edu`. This machine is also known
 As noted earlier, gordon-360-ui uses React Router for routing URLs to different views. This works as expected when running the front-end locally with `npm start`. However, when the production build is running on the IIS Server, React Router only handles link clicks; manual URL entry and use of browser navigation buttons results in a 404 error. This is because URLs are sent to the IIS Server (as HTTP requests) before they are handled by React Router. Because none of the URLs correspond to actual directories on the server root, a 404 error results.
 
 To remedy this, a `web.config` file with [these contents](https://gist.githubusercontent.com/lcostea/f17663ebf041b103d98989b6b52d8353/raw/6744846d241c9b785df9054fecbcfc4f2e5dda80/web.config) can be placed in the server's root directory (`D:\wwwroot\360train.gordon.edu`). This file is read by the IIS Server. It provides commands to the URL Rewrite extension (which must be installed in the "Internet Information Services (IIS) Manager" program and can be downloaded from [The Official Microsoft IIS Site](https://www.iis.net/downloads/microsoft/url-rewrite)) which tells the server to reroute all invalid URLs to the server's root directory, eliminating the 404 errors and allowing React Router to handle URLs as expected.
-
-##### The Bad News, and a Workaround
-
-Unfortunately, due to some yet-to-be-fathomed fluke, our attempts to make this `web.config` file be automatically copied to the server root upon deployment have as of yet been foiled. When placed in the `public` directory of our repository (along with other files which are automatically copied over to the server root by an `scp` command in `deploy.sh`), the `web.config` file is copied to the `static` directory on the server rather than to the server root, and the contents of the file are erased (the file is empty). We theorize that this issue is caused by a hiccup in the implementation of `scp` within [PowerShell Server](https://www.nsoftware.com/powershell/server/), a third-party, proprietary program used on the server to facilitate `ssh` connections. (This behavior also occurred with a small number of arbitrarily-named test files, so it is not specific to the "`web.config`" filename.) The file can be placed in the server root directory manually, but it will be removed upon the next deployment (by the deployment script).
-
-Currently, a reasonably elegant workaround has been created by adding a couple of lines to the `deploy.sh` script in the `scripts` directory of the repository. The contents of the `web_config` file (located in the root of the repo) are loaded into a shell variable at the beginning of script execution, and the contents of the file are transferred to the server using an `ssh` connection. This is done by simply echoing the contents of the file (from the aforementioned variable) and redirecting console output (in PowerShell on the server) into a (new) file called `web.config`. This solution achieves the desired result, and allows the contents of the file to be stored in the repo (in the `web_config` file), making future editing much easier than if the file was stored only on the server.
-
-##### Previous Workaround
-
-Our original workaround was in the form of a PowerShell script which automatically copies `web.config` to the server root whenever it is removed. The script is located at `D:\scripts\webconfig\webconfig-filecheck.ps1` and contains a constantly-running while loop. A task has been created in Windows Task Scheduler which, if enabled, starts running the script every morning at 2:00 AM, but automatic execution of this task has been disabled since the creation of the new workaround described above. This task still exists and can be restarted if it is ever needed. (The back-up `web.config` file is located in the same directory as the script.)
-
-Currently, the script and task only exist on the server for the development site (`360train.gordon.edu`). Analogous changes must be made to the server root directories for the production site (`360.gordon.edu`) if this functionality is desired there.
-
-(The current workaround described earlier should work on any server and does not need the PowerShell script or the task in order to work.)
 
 ### Editor Recommendations
 
@@ -337,6 +325,8 @@ Environment variables must be declared in all caps, must use snake case, and mus
 
 ## Testing
 
+The first forays into testing were made when we were still using Travis CI as our CI/CD solution. The below advice is probably still useful but will need updating.
+
 The foundations for a testing suite made up of Jasmine, Karma, and Travis CI have been laid. For one, package.json has the following dependencies listed:
 
 - `"jasmine-core": ">=3.4.0"`
@@ -352,15 +342,15 @@ The process for setting up this testing environment can be continued by followin
 
 Timesheets page testing [here](https://docs.google.com/document/d/1fi7_iwTQa7JFVRR3LtSDU3-MGpupOfbqhH-kEU5eMew/edit?usp=sharing)
 
-## Deployment
+## CI/CD
 
-The deployment script `./scripts/deploy.sh` requires several environment variables to be defined in the Travis CI environment. These variables are documented at the top of the deployment script.
+GitHub Actions is our Continuous Integration and Continuous Deployment (CI/CD) solution. It is a GitHub product available for free to our public, open source repository.
 
-One of these variables is the GITHUB_TOKEN. This is used to authenticate Travis-CI with the repo. This token needs to belong to a current administrator of the repo. (You can generate a personal access token with repo access from your GitHub profile settings).
+GHA uses [workflows](.github/workflows), which are YAML files that describe jobs to run when events occur in GitHub. The current workflow, in `ci.yml`, is called `Lint and Build`.
+This workflow runs everytime a commit is pushed to a branch in GitHub. It lints and builds these commits to ensure they are satisfactory for our project. Additionally, when commits are pushed to the `develop` or `master` branches (which should only be via pull requests because they are protected branches), this workflow will save the build artifacts on GitHub. These artifacts can be found by navigating to Actions in the repo and selecting a workflow run for one of those branches.
 
-The script deploys to either staging or production based on the branch it is running from. The `develop` branch deploys to staging, while the `master` branch deploys to production.
-
-`develop` is the default branch on the repository, so all branches should be based on it and should merge back into it. Changes merged into `develop` will automatically deploy to the staging environment.
+These uploaded artifacts are vital to our CD solution. Because GitHub Actions are running on ephemeral cloud servers, we have no way of securely giving them access to push files
+to the 360 server. Instead, deployment uses a powershell script that is run via a scheduled task on the 360 server. The `Deploy 360Train` and `Deploy 360Prod` scheduled tasks both run the powershell script `Deploy360FrontEnd.ps1`, located at `D:\Scripts\Deploy` in the 360 frontend server. This script polls GitHub for new builds of the appropriate branch, and if it finds any builds that are newer than the most recent deployment, it will download the new build, backup the existing build, and overwrite the site's files with the new build. Transcripts from each deployment can be found at `D:\Scripts\Deploy\Transcripts`.
 
 ### Deploying to Production
 
@@ -371,7 +361,22 @@ The script deploys to either staging or production based on the branch it is run
 1.  Click "Create pull request."
 1.  When the pull request is approved, merge it. This will trigger a build that will automatically deploy `master` to production.
 
-### Contributing
+### Deploying Manually
+
+In the unusual case that Train or Production have not been automatically deployed (which should happen within five minutes of a finished Lint and Build action on the appropriate branch), it is possible to deploy manually. 
+
+1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s). 
+1. Build the project by running `npm run build` in VSCode on a clone of the project set to the branch you want to deploy. The output will be in `path/to/the/repo/gordon-360-ui/build`.
+1. Connect to the `360-Frontend.gordon.edu` server. See [RemoteDesktopToVM](https://github.com/gordon-cs/gordon-360-api/blob/develop/RemoteDesktopToVM.md) in the API repo for instructions on how to connect.
+1. Open File Explorer and navigate to `D:\wwwroot\.
+1. Backup the existing deployment:
+    1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
+    1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
+1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above. 
+1. Check the appropriate site, refreshing if necessary, to ensure it deployed successfully and is stable.
+1. If you need to restore to a backup, simply copy the contents of the desired backup folder and overwrite the appropriate site's folder.
+
+## Contributing
 
 1. Clone the repository to the local machine.
 2. Create a new branch with a meaningful name (pertaining to the specific change being implemented).
