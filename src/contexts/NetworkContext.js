@@ -1,25 +1,7 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import storage from '../services/storage';
 
-const NetworkContext = createContext();
-
-/**
- * Custom hook to subscribe to network status.
- *
- * Value is retrieved from local storage initially and updated by service worker firing events
- *
- * Can be used by any functional component under the NetworkContextProvider in App.js
- *
- * @returns {boolean} true if connected to the network, false otherwise.
- */
-export const useNetworkStatus = () => {
-  const context = useContext(NetworkContext);
-  if (context === undefined) {
-    throw new Error(`useNetworkStatus must be called within NetworkContextProvider`);
-  }
-
-  return context;
-};
+export const NetworkContext = createContext();
 
 const NetworkContextProvider = ({ children }) => {
   const [isOnline, setIsOnline] = useState('online');
