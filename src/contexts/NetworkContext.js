@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import storage from '../services/storage';
 
-const NetworkConext = createContext();
+const NetworkContext = createContext();
 
 /**
  * Custom hook to subscribe to network status.
@@ -13,7 +13,7 @@ const NetworkConext = createContext();
  * @returns {boolean} true if connected to the network, false otherwise.
  */
 export const useNetworkStatus = () => {
-  const context = useContext(NetworkConext);
+  const context = useContext(NetworkContext);
   if (context === undefined) {
     throw new Error(`useNetworkStatus must be called within NetworkContextProvider`);
   }
@@ -55,7 +55,7 @@ const NetworkContextProvider = ({ children }) => {
     return () => window.removeEventListener('message', updateNetworkStatus);
   }, []);
 
-  return <NetworkConext.Provider value={isOnline}>{children}</NetworkConext.Provider>;
+  return <NetworkContext.Provider value={isOnline}>{children}</NetworkContext.Provider>;
 };
 
 export default NetworkContextProvider;
