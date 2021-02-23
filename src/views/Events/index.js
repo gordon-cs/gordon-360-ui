@@ -10,14 +10,48 @@ import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
 import { gordonColors } from './../../theme';
+import clsx from 'clsx';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 import './event.scss';
+import { ListItemText } from '@material-ui/core';
 
 const styles = {
   searchBar: {
     margin: '0 auto',
   },
 };
+
+  const formControl = {
+    minWidth: 120,
+    maxWidth: 300,
+  };
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const campusEvents = [
+  "CL&W Credits",
+  "Admissions",
+  "Arts",
+  "Athletics",
+  "CEC",
+  "Chapel Office",
+  "Student Life"
+]
 
 export default class Events extends Component {
   constructor(props) {
@@ -254,67 +288,62 @@ export default class Events extends Component {
       content = <EventList events={this.state.filteredEvents} />;
     }
 
+    let eventsAtGordon = [];
+
+    const handleChange = (event) => {
+      console.log("event target value is" + event.target.value);
+      if (event.target.value == "CL&W Credits") {
+        this.filterEvents("chapelCredits");
+      } else if (event.target.value == "Admissions") {
+        this.filterEvents("admissions");
+      } else if (event.target.value == "Arts") {
+        this.filterEvents("art");
+      } else if (event.target.value == "Athletics") {
+        this.filterEvents("sports");
+      } else if (event.target.value == "CEC") {
+        this.filterEvents("cec");
+      } else if (event.target.value == "Chapel Office") {
+        this.filterEvents("chapelOffice");
+      } else if (event.target.value == "Student Life") {
+        this.filterEvents("studentLife");
+      }
+      if (!(eventsAtGordon.indexOf(event.target.value) > -1)) {
+        eventsAtGordon.push(event.target.value);
+      }
+      console.log("eventsAtGordon are " + eventsAtGordon);
+    }
+
     let filter;
     if (this.state.loading === true) {
     } else {
       filter = (
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <FormGroup row>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.chapelCredits}
-                  onChange={this.filterEvents('chapelCredits')}
-                />
-              }
-              label="CL&amp;W Credit"
-            />
+            <FormControl className={formControl}>
+              <InputLabel id = "event-checkboxes-label">Events</InputLabel>
+              <Select
+              labelId = "event-checkboxes-label"
+              id = "event-checkboxes"
+              multiple
+              value = {eventsAtGordon}
+              onChange = {handleChange}
+              input = {<Input />}
+              renderValue = {(selected) => selected.join(",")}
+              MenuProps = {MenuProps}
+              >
+                {campusEvents.map((campusEvent) => (
+                  <MenuItem key={campusEvent} value={campusEvent}>
+                    <Checkbox checked = {eventsAtGordon.indexOf(campusEvent) > -1} />
+                    <ListItemText primary={campusEvent} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <FormControlLabel
               control={
                 <Checkbox checked={this.state.includePast} onChange={this.togglePastEvents} />
               }
               label="Include Past"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.admissions}
-                  onChange={this.filterEvents('admissions')}
-                />
-              }
-              label="Admissions"
-            />
-            <FormControlLabel
-              control={<Checkbox checked={this.state.art} onChange={this.filterEvents('art')} />}
-              label="Arts"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox checked={this.state.sports} onChange={this.filterEvents('sports')} />
-              }
-              label="Athletics"
-            />
-            <FormControlLabel
-              control={<Checkbox checked={this.state.cec} onChange={this.filterEvents('cec')} />}
-              label="CEC"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.chapelOffice}
-                  onChange={this.filterEvents('chapelOffice')}
-                />
-              }
-              label="Chapel Office"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.studentLife}
-                  onChange={this.filterEvents('studentLife')}
-                />
-              }
-              label="Student Life"
             />
           </FormGroup>
         </Collapse>
