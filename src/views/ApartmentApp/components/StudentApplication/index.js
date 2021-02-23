@@ -27,7 +27,7 @@ const MAX_NUM_APPLICANTS = 8;
 
 const InstructionsCard = () => (
   <Card>
-    <CardHeader title="Apartment Application Instructions" className="card-header" />
+    <CardHeader title="Apartment Application Instructions" className="apartment-card-header" />
     <CardContent>
       <Typography variant="body1">Placeholder Text</Typography>
       <Typography variant="body1">
@@ -62,7 +62,7 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) =
 
   return (
     <Card>
-      <CardHeader title="Your Application Details" className="card-header" />
+      <CardHeader title="Your Application Details" className="apartment-card-header" />
       <CardContent>
         <TableContainer>
           <Table>
@@ -660,6 +660,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
                     <HallSelection
+                      authentication
                       editorUsername={editorUsername}
                       preferredHalls={preferredHalls}
                       saving={saving}
@@ -671,7 +672,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   </Grid>
                   <Grid item>
                     <Card>
-                      <CardHeader title="Off-Campus Work Study" className="card-header" />
+                      <CardHeader title="Off-Campus Work Study" className="apartment-card-header" />
                       <CardContent>
                         <Typography variant="body1">Placeholder text</Typography>
                       </CardContent>
@@ -680,7 +681,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <Card>
-                    <CardHeader title="Agreements" className="card-header" />
+                    <CardHeader title="Agreements" className="apartment-card-header" />
                     <CardContent>
                       <Typography variant="body1">Placeholder text</Typography>
                     </CardContent>
