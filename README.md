@@ -1,4 +1,4 @@
-# Gordon 360 User Interface 
+# Gordon 360 User Interface
 
 ![Lint and Build](https://github.com/gordon-cs/gordon-360-ui/workflows/Lint%20and%20Build/badge.svg)
 
@@ -22,10 +22,11 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 - [Continuous Integration and Deployment](#continuous-integration-and-deployment)
 - [Contributing](#contributing)
 - [Known Issues](#known-issues)
+- [History](#history)
 
 ## Getting Started
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Read the user guide [here](https://github.com/facebook/create-react-app/blob/master/packages/cra-template/template/README.md).
 
 Make sure Node.js is set up on your machine. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
 
@@ -57,7 +58,7 @@ After cloning this repo, and after any major changes to local code (like changin
 
 By default, React will use the live server backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI repository, use the following steps:
 
-- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
+- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-api-locally),
 
   - Clone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
@@ -93,7 +94,7 @@ The following extensions are recommended for any code editor used to develop thi
 
 - [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) ensures that indentation style, line endings, and file endings are consistent across editors and operating systems
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) checks syntax correctness for JavaScript (`.js` files)
-- [Stylelint](https://marketplace.visualstudio.com/items?itemName=shinnn.stylelint) checks syntax correctness for Sass (`.scss` files)
+- [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) checks syntax correctness for Sass (`.scss` files)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) automatically formats JavaScript, Sass, JSON, and Markdown files on save
 
 If you are using VS Code, you can use the following keyboard shortcuts to run the app:
@@ -363,16 +364,16 @@ to the 360 server. Instead, deployment uses a powershell script that is run via 
 
 ### Deploying Manually
 
-In the unusual case that Train or Production have not been automatically deployed (which should happen within five minutes of a finished Lint and Build action on the appropriate branch), it is possible to deploy manually. 
+In the unusual case that Train or Production have not been automatically deployed (which should happen within five minutes of a finished Lint and Build action on the appropriate branch), it is possible to deploy manually.
 
-1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s). 
+1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s).
 1. Build the project by running `npm run build` in VSCode on a clone of the project set to the branch you want to deploy. The output will be in `path/to/the/repo/gordon-360-ui/build`.
 1. Connect to the `360-Frontend.gordon.edu` server. See [RemoteDesktopToVM](https://github.com/gordon-cs/gordon-360-api/blob/develop/RemoteDesktopToVM.md) in the API repo for instructions on how to connect.
 1. Open File Explorer and navigate to `D:\wwwroot\`.
 1. Backup the existing deployment:
     1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
     1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
-1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above. 
+1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above.
 1. Check the appropriate site, refreshing if necessary, to ensure it deployed successfully and is stable.
 1. If you need to restore to a backup, simply copy the contents of the desired backup folder and overwrite the appropriate site's folder.
 
