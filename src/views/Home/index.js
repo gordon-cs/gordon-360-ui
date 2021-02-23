@@ -77,8 +77,14 @@ const Home = ({ authentication, onLogIn }) => {
   } else if (!isAuthenticated) {
     return (
       <div className="gordon-login">
-        <GuestWelcome />
-        <Login onLogIn={onLogIn} />
+        <Grid container justify="center" spacing={2}>
+          <Grid item xs={8} sm={9} md={8}>
+            <Login onLogIn={onLogIn} />
+          </Grid>
+          <Grid item xs = {4} sm={3} md={4}>
+            <GuestWelcome />
+          </Grid>
+        </Grid>
       </div>
     );
   } else if (networkStatus === 'online' && !hasAnswered) {
