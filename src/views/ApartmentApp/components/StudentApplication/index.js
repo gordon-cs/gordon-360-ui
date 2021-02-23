@@ -86,10 +86,6 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) =
 const SaveButton = ({ disabled, saving, onClick }) => {
   const loaderSize = 20;
 
-  const handleSaveButtonClick = () => {
-    onClick();
-  };
-
   if (saving) {
     if (saving === 'success') {
       return <CheckCircleIcon className="success" />;
@@ -105,7 +101,7 @@ const SaveButton = ({ disabled, saving, onClick }) => {
         variant="contained"
         color="primary"
         fullWidth
-        onClick={handleSaveButtonClick}
+        onClick={onClick}
       >
         Save & Continue
       </Button>
