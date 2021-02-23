@@ -5,6 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 // Learn more about Dialog's API at https://material-ui.com/api/dialog/
 // Learn more about Alert's API at https://material-ui.com/api/alert/
@@ -31,9 +32,9 @@ import Button from '@material-ui/core/Button';
  * @prop {String} text The content of the dialog box
  * @prop {onClickCallback} buttonClicked A function called when the confirming button is clicked
  * @prop {String} buttonName The text of the button confirming the dialog is read/accepted
- * @prop {String} [severity] The severity of the alert (Examples: "error", "warning", "info", etc.)
  * @prop {onClickCallback} [cancelButtonClicked] A function called when the canceling button is clicked
  * @prop {String} [cancelButtonName] The text of the button canceling the dialog is read/accepted
+ * @prop {String} [severity] The severity of the alert (Examples: "error", "warning", "info", etc.)
  *
  * @extends {Component<Props>}
  */
@@ -46,14 +47,31 @@ export default class GordonDialogBox extends Component {
         aria-labelledby={this.props.labelledby}
         aria-describedby={this.props.describedby}
       >
-        <DialogTitle>{this.props.title}</DialogTitle>
-        <DialogContent>
+        <DialogTitle id="alert-dialog-title">
+          {this.props.severity ? (
+            <Alert variant="filled" severity={this.props.severity}>
+              <AlertTitle>
+                <strong>{this.props.title}</strong>
+              </AlertTitle>
+            </Alert>
+          ) : (
+            this.props.title
+          )}
+        </DialogTitle>
+        <DialogContent id="alert-dialog-description">
           <DialogContentText>{this.props.text}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={this.props.buttonClicked} color="primary">
-            {this.props.buttonName}
-          </Button>
+          {this.props.cancelButtonName && (
+            <Button variant="contained" onClick={this.props.cancelButtonClicked} color="primary">
+              {this.props.cancelButtonName}
+            </Button>
+          )}
+          {this.props.buttonName && (
+            <Button variant="contained" onClick={this.props.buttonClicked} color="primary">
+              {this.props.buttonName}
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     );
