@@ -94,7 +94,7 @@ The following extensions are recommended for any code editor used to develop thi
 
 - [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) ensures that indentation style, line endings, and file endings are consistent across editors and operating systems
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) checks syntax correctness for JavaScript (`.js` files)
-- [Stylelint](https://marketplace.visualstudio.com/items?itemName=glen-84.sass-lint) checks syntax correctness for Sass (`.scss` files)
+- [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) checks syntax correctness for Sass (`.scss` files)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) automatically formats JavaScript, Sass, JSON, and Markdown files on save
 
 If you are using VS Code, you can use the following keyboard shortcuts to run the app:
