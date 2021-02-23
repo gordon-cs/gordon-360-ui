@@ -27,18 +27,22 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
 
-Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtual machine, it should be setup already. To check if it is on a machine, open a terminal and run the command `nvm`. If the output says `Running version...`, then Node.js is setup. If not, the following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
+Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtual machine, it should be setup already. To check if it is on a machine, open a terminal and run the command `nvm`. If the output says `'nvm' is not recognized...`, then Node.js has not been setup. In that case, follow the below procedures to install nvm (Node Version Manager) onto the machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
 
 #### Windows:
 
-- Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
+- Download the latest release of nvm from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
   - Extract the file and run it.
-  - The installer will ask you where to install NVM. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
-  - After this, run `nvm install --lts`, which installs the latest stable version of nvm.
+  - The installer will ask you where to install nvm. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
+  - After this, go to https://nodejs.org/en/ and look for the version labeled "lts" (which indicates the latest stable version). 
+  - Finally, run `nvm install <version>` where <version> is the version you found.
 
 #### Linux:
 
-Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, do so.
+- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm. 
+- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`.
+- Then, tell nvm that you want to use that verion: `nvm use node`. 
+To use a specific Node version - usually the latest Long Term Support (LTS) version - replace `node` in the above commands with the desired version or alias, e.g. `nvm install 14.15.4` for version 14.15.4 or `nvm install --lts` for the latest LTS.
 
 #### Troubleshooting NVM
 
