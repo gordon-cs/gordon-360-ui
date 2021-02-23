@@ -29,11 +29,11 @@ const ApplicationRow = ({ key, applicationDetails }) => {
         <TableCell component="th" scope="row">
           {applicationDetails.AprtAppID}
         </TableCell>
-        <TableCell align="right">{applicationDetails.EditorUsername}</TableCell>
+        <TableCell align="right">{applicationDetails.Username}</TableCell>
         <TableCell align="right">{applicationDetails.Applicants.length}</TableCell>
         <TableCell align="right">{applicationDetails.Gender}</TableCell>
         <TableCell align="right">
-          {applicationDetails.ApartmentChoice[0].HallName || 'N/A'}
+          {applicationDetails.ApartmentChoices[0].HallName || 'N/A'}
         </TableCell>
         <TableCell align="right">{applicationDetails.TotalPoints || 'N/A'}</TableCell>
         <TableCell align="right">{applicationDetails.AvgPoints || 'N/A'}</TableCell>

@@ -40,9 +40,12 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @property {Number} AprtAppID Application ID number of this application
  * @property {*} DateSubmitted The date the application was submitted, or null if not yet submitted
  * @property {*} DateModified The date the application was last modified
- * @property {String} Username Username of the primary applicant
+ * @property {String} Username Username of the application editor
+ * @property {String} Gender Gender
  * @property {String[]} Applicants Array of student usernames
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
+ * @property {Number} TotalPoints The total application points associated with this application
+ * @property {Number} AvgPoints The average application points per applicant
  */
 
 /**
