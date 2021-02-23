@@ -76,7 +76,6 @@ const ApplicationsTable = ({ applications }) => (
 
 const StaffMenu = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [applications, setApplications] = useState([]);
 
   /**
@@ -92,7 +91,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
       setApplications(applicationDetailsArray);
     }
     setLoading(false);
-  });
+  }, []);
 
   useEffect(() => {
     loadAllCurrentApplications();
