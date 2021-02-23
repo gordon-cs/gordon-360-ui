@@ -58,7 +58,7 @@ After cloning this repo, and after any major changes to local code (like changin
 
 By default, React will use the live server backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI repository, use the following steps:
 
-- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#machines-and-sites),
+- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-api-locally),
 
   - Clone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
