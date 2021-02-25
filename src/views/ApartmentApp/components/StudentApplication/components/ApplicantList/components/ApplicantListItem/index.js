@@ -22,8 +22,14 @@ import user from '../../../../../../../../services/user';
 
 // Based off src/views/PeopleSearch/components/PeopleSearchResult
 // but using props.profile of type StudentProfileInfo
-// rather than using this.props.Person of type PeopleSearchResult
-const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApplicantRemove }) => {
+// rather than using Person of type PeopleSearchResult
+const ApplicantListItem = ({
+  disabled,
+  profile,
+  isApplicationEditor,
+  onChangeEditor,
+  onApplicantRemove,
+}) => {
   const [avatar, setAvatar] = useState(null);
   const [hasNickName, setHasNickname] = useState(false);
   const [personClass, setPersonClass] = useState(profile.Class);
@@ -122,7 +128,7 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
             <Grid item xs>
               <IconButton
                 aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
-                disabled={isApplicationEditor}
+                disabled={isApplicationEditor || disabled}
                 onClick={handleChangeEditor}
               >
                 {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
@@ -131,7 +137,7 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
             <Grid item xs>
               <IconButton
                 aria-label="remove-applicant"
-                disabled={isApplicationEditor}
+                disabled={isApplicationEditor || disabled}
                 onClick={handleRemove}
               >
                 <ClearIcon />

@@ -15,6 +15,7 @@ import {
 import ClearIcon from '@material-ui/icons/Clear';
 
 const HallListItem = ({
+  disabled,
   index,
   preferredHalls,
   availableHalls,
@@ -95,6 +96,7 @@ const HallListItem = ({
             <FormControl fullWidth>
               <InputLabel>Rank</InputLabel>
               <Select
+                disabled={disabled}
                 value={hallRankValue}
                 onChange={handleRankInputChange}
                 input={<Input id={'rank' + index} />}
@@ -107,6 +109,7 @@ const HallListItem = ({
             <FormControl fullWidth>
               <InputLabel>Hall</InputLabel>
               <Select
+                disabled={disabled}
                 value={hallNameValue}
                 onChange={handleNameInputChange}
                 input={<Input id={'hall' + index} />}
@@ -117,7 +120,7 @@ const HallListItem = ({
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete" onClick={handleRemove}>
+          <IconButton edge="end" aria-label="delete" disabled={disabled} onClick={handleRemove}>
             <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>

@@ -11,6 +11,7 @@ import housing from '../../../../../../services/housing';
 
 // Create a list of selection boxes to choosing preferred halls
 const HallSelection = ({
+  disabled,
   editorUsername,
   preferredHalls,
   onHallAdd,
@@ -77,6 +78,7 @@ const HallSelection = ({
                 preferredHalls.map((hallInfo, index) => (
                   <HallListItem
                     key={hallInfo.HallRank + hallInfo.HallName}
+                    disabled={disabled}
                     index={index}
                     preferredHalls={preferredHalls}
                     availableHalls={availableHalls}
@@ -87,6 +89,7 @@ const HallSelection = ({
               ) : (
                 <HallListItem
                   key={''}
+                  disabled={disabled}
                   index={0}
                   preferredHalls={preferredHalls}
                   availableHalls={availableHalls}
@@ -97,6 +100,7 @@ const HallSelection = ({
           </Grid>
           <Grid item xs={12}>
             <Button
+              disabled={disabled}
               variant="outlined"
               color="primary"
               startIcon={<AddIcon fontSize="inherit" />}

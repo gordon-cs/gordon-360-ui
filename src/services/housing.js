@@ -14,10 +14,6 @@ import './user';
  *
  */
 
-/** For some reason this feature works in all the other files, but not in src/services/housing.js
- * // @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
- */
-
 /**
  * For some reason this feature works in all the other files, but not in src/services/housing.js
  * // @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
@@ -31,13 +27,19 @@ import './user';
  */
 
 /**
+ * @global
+ * @typedef ApplicantPartialInfo
+ * @property {String} Username The username of this applicant
+ * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
+ */
+
+/**
  * Note: Properties 'HallRank' and 'HallName' must be capitalized to match the backend
  * @global
  * @typedef ApartmentChoice
  * @property {Number} HallRank The rank assigned to this hall by the user
  * @property {String} HallName The name of the apartment hall
  */
-// NOTE: Properties 'HallName' and 'HallRank' must be capitalized to match the backend
 
 /**
  * @global
@@ -46,7 +48,7 @@ import './user';
  * @property {*} DateSubmitted The date the application was submitted, or null if not yet submitted
  * @property {*} DateModified The date the application was last modified
  * @property {String} Username Username of the primary applicant
- * @property {String[]} Applicants Array of student usernames
+ * @property {ApplicantPartialInfo[]} Applicants Array of objects with applicant username and off-campus program
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
  */
 
@@ -55,20 +57,19 @@ import './user';
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingStaff = async () => {
-  return false; //! DEBUG
-  // try {
-  //   return await http.get(`housing/staff`);
-  // } catch {
-  //   return false;
-  // }
+  try {
+    return await http.get(`housing/staff`);
+  } catch {
+    return false;
+  }
 };
 
 /**
- * Check if a given student is on an existing application
+ * Check if a given student is on an existing application from the current semester
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<Number>} Application's ID number
  */
-const getApplicationID = async (username) => {
+const getCurrentApplicationID = async (username) => {
   let applicationID;
   if (username) {
     applicationID = await http.get(`housing/apartment/${username}/`);
@@ -112,7 +113,7 @@ const saveApartmentApplication = async (
  * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
  * @return {Promise.<Boolean>} Status of whether or not the operation was successful
  */
-const changeApplicationEditor = async (applicationID, newEditorUsername) => {
+const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
   let newEditorDetails = {
     AprtAppID: applicationID,
     Username: newEditorUsername,
@@ -131,8 +132,8 @@ const getApartmentApplication = async (applicationID) => {
 
 export default {
   checkHousingStaff,
-  getApplicationID,
+  getCurrentApplicationID,
   saveApartmentApplication,
-  changeApplicationEditor,
+  changeApartmentAppEditor,
   getApartmentApplication,
 };

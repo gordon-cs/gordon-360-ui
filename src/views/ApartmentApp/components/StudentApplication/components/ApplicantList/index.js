@@ -28,6 +28,7 @@ import '../../../../apartmentApp.css';
 
 // Create a list of applicants, displayed by name, username, and class standing.
 const ApplicantList = ({
+  disabled,
   maxNumApplicants,
   editorUsername,
   applicants,
@@ -122,6 +123,7 @@ const ApplicantList = ({
                 applicants.map((applicant) => (
                   <ApplicantListItem
                     key={applicant.Profile.AD_Username}
+                    disabled={disabled}
                     profile={applicant.Profile}
                     isApplicationEditor={applicant.Profile.AD_Username === editorUsername}
                     onChangeEditor={handleChangeEditor}
@@ -143,7 +145,7 @@ const ApplicantList = ({
             <Grid item xs={9} sm={5} className={'people-search-parent'}>
               <GordonPeopleSearch
                 disableLink
-                disabled={applicants.length > maxNumApplicants}
+                disabled={disabled || applicants.length > maxNumApplicants}
                 icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={handleSelection}
