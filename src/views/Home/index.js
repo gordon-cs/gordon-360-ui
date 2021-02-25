@@ -78,10 +78,10 @@ const Home = ({ authentication, onLogIn }) => {
     return (
       <div className="gordon-login">
         <Grid container justify="center" spacing={2}>
-          <Grid item xs={8} sm={9} md={8}>
+          <Grid item xs={8}>
             <Login onLogIn={onLogIn} />
           </Grid>
-          <Grid item xs = {4} sm={3} md={4}>
+          <Grid item xs = {4}>
             <GuestWelcome />
           </Grid>
         </Grid>
