@@ -17,7 +17,7 @@ import {
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import GordonLoader from '../../../../components/Loader';
-import AlertDialogBox from '../../../../components/AlertDialogBox';
+import GordonDialogBox from '../../../../components/GordonDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
@@ -638,16 +638,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       onSaveButtonClick={handleSaveButtonClick}
                       authentication={authentication}
                     />
-                    <AlertDialogBox
+                    <GordonDialogBox
                       open={changeEditorDialogOpen}
                       onClose={handleCloseDialog}
-                      severity={'warning'}
+                      labelledby={'applicant-warning-dialog'}
+                      describedby={'changing-application-editor'}
                       title={'Change application editor?'}
                       text={changeEditorAlertText}
-                      cancelButtonClicked={handleCloseOkay}
-                      cancelButtonName={'Cancel'}
                       confirmButtonClicked={handleChangeEditorAccepted}
                       confirmButtonName={'Accept'}
+                      cancelButtonClicked={handleCloseOkay}
+                      cancelButtonName={'Cancel'}
+                      severity={'warning'}
                     />
                   </Grid>
                 </Grid>
@@ -711,16 +713,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
                               Save & Submit
                             </Button>
                           </Grid>
-                          <AlertDialogBox
+                          <GordonDialogBox
                             open={submitDialogOpen}
                             onClose={handleCloseDialog}
-                            severity={'warning'}
+                            labelledby={'submit-application-dialog'}
+                            describedby={'confirm-application'}
                             title={'Submit apartment application?'}
                             text={submitAlertText}
+                            buttonClicked={handleSubmitAppAccepted}
+                            buttonName={'Accept'}
                             cancelButtonClicked={handleCloseOkay}
                             cancelButtonName={'Cancel'}
-                            confirmButtonClicked={handleSubmitAppAccepted}
-                            confirmButtonName={'Accept'}
+                            severity={'warning'}
                           />
                         </Grid>
                       ) : (
