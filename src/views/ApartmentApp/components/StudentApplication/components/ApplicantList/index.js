@@ -60,7 +60,7 @@ const ApplicantList = ({
 
   return (
     <Card>
-      <CardHeader title="Student Applicants" className="card-header" />
+      <CardHeader title="Student Applicants" className="apartment-card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>

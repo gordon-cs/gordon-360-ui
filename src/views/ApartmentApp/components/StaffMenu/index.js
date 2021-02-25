@@ -8,7 +8,10 @@ const StaffMenu = () => {
     <Grid container justify="center">
       <Grid item xs={12} md={8}>
         <Card>
-          <CardHeader title="Apartment Application Staff Interface" className="card-header" />
+          <CardHeader
+            title="Apartment Application Staff Interface"
+            className="apartment-card-header"
+          />
           <CardContent>
             <h1>
               Apartment application is currently available for students only. Support for staff will
