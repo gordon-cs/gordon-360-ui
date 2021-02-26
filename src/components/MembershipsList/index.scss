@@ -1,6 +1,6 @@
 @import '../../vars';
 
-.involvements {
+.memberships {
   &-header {
     padding-left: 1rem;
     background-color: $primary-blue;
@@ -18,7 +18,7 @@
         color: white !important;
         margin: 0.5rem 0.5rem 1rem 0.5rem !important;
       }
-      .noInvolvements {
+      .noMemberships {
         padding-left: 16px;
         color: $primary-cyan;
       }
@@ -27,7 +27,7 @@
 }
 
 @media (max-width: $break-sm) {
-  .involvements {
+  .memberships {
     &-header {
       padding-left: 0rem;
       justify-content: center;

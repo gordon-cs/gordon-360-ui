@@ -1,6 +1,6 @@
-@import '../../vars';
+@import '../../../../vars';
 
-.my-profile-info-card {
+.membership-info-card {
   &-description {
     hyphens: auto;
     -ms-hyphens: auto;
@@ -41,7 +41,7 @@
 }
 
 @media (max-width: 500px) {
-  .my-profile-info-card {
+  .membership-info-card {
     padding: 1.5rem 0rem;
     flex-direction: column-reverse;
     &-description {
@@ -54,7 +54,7 @@
         border-left: 2px solid $primary-blue;
       }
     }
-    &-image {
+    &-picture {
       max-width: 100% !important;
       justify-content: center;
 

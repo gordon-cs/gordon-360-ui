@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import GordonLoader from '../../components/Loader';
 import GordonSchedulePanel from '../../components/SchedulePanel';
 import { Identification } from '../../components/Identification/index';
-import { Involvements } from '../../components/Involvements/index';
+import MembershipsList from '../../components/MembershipsList';
 import Office from './../../components/OfficeList';
 import ProfileList from './../../components/ProfileList';
 import storage from '../../services/storage';
@@ -127,7 +127,7 @@ const MyProfile = (props) => {
               </Grid>
 
               <Grid item xs={12} lg={5}>
-                <Involvements userID={profile.ID} myProf={true} />
+                <MembershipsList userID={profile.ID} myProf={true} />
               </Grid>
             </Grid>
           </div>

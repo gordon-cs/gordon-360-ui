@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-
 import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import activity from '../../services/activity';
 import membershipService from '../../services/membership';
-import SimpleSnackbar from '../Snackbar';
-import MyProfileActivityList from '../MyProfileActivityList/index';
-import ProfileActivityList from '../ProfileActivityList/index';
-import './index.css';
 import user from '../../services/user';
+import GordonSnackbar from '../Snackbar';
 import GordonLoader from '../Loader';
+import MembershipInfoCard from './components/MembershipInfoCard';
+import './index.css';
 
-export const Involvements = ({ userID = null, username = null, myProf }) => {
+const MembershipsList = ({ userID = null, username = null, myProf }) => {
   const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
@@ -37,26 +35,23 @@ export const Involvements = ({ userID = null, username = null, myProf }) => {
     loadMemberships();
   }, [myProf, username, userID]);
 
-  const InvolvementsList = () => {
+  const MembershipsList = () => {
     if (memberships.length === 0) {
       return (
         <Link to={`/involvements`}>
-          <Typography variant="body2" className="noInvolvements">
+          <Typography variant="body2" className="noMemberships">
             No Involvements to display. Click here to see Involvements around campus!
           </Typography>
         </Link>
       );
-    } else if (myProf) {
+    } else {
       return memberships.map((membership) => (
-        <MyProfileActivityList
+        <MembershipInfoCard
+          myProf={myProf}
           membership={membership}
           key={membership.MembershipID}
           onTogglePrivacy={toggleMembershipPrivacy}
         />
-      ));
-    } else {
-      return memberships.map((membership) => (
-        <ProfileActivityList Activity={membership} key={membership.MembershipID} />
       ));
     }
   };
@@ -64,15 +59,15 @@ export const Involvements = ({ userID = null, username = null, myProf }) => {
   const toggleMembershipPrivacy = async (membership) => {
     try {
       await membershipService.toggleMembershipPrivacy(membership);
+      createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
       setMemberships(
         memberships.map((m) => {
           if (m.MembershipID === membership.MembershipID) m.Privacy = !m.Privacy;
           return m;
         }),
       );
-      createSnackbar(membership.Privacy ? 'Membership Visible' : 'Membership Hidden', 'Success');
     } catch {
-      createSnackbar('Privacy Change Failed', 'Error');
+      createSnackbar('Privacy Change Failed', 'error');
     }
   };
 
@@ -86,32 +81,32 @@ export const Involvements = ({ userID = null, username = null, myProf }) => {
 
   return (
     <>
-      <Grid item xs={12} className="involvements">
-        <Grid container className="involvements-header">
+      <Grid item xs={12} className="memberships">
+        <Grid container className="memberships-header">
           <CardHeader title="Involvements" />
         </Grid>
-        <Card className="involvements-card">
-          <CardContent className="involvements-card-content">
+        <Card className="memberships-card">
+          <CardContent className="memberships-card-content">
             {myProf && (
               <Grid container justify="center">
                 <Link className="gc360-link" to="/transcript">
-                  <Button variant="contained" className="involvements-card-content-button">
+                  <Button variant="contained" className="memberships-card-content-button">
                     Experience Transcript
                   </Button>
                 </Link>
               </Grid>
             )}
             <List>
-              <InvolvementsList />
+              <MembershipsList />
             </List>
           </CardContent>
         </Card>
       </Grid>
       {myProf && (
-        <SimpleSnackbar
+        <GordonSnackbar
           open={snackbar.open}
           text={snackbar.message}
-          severity={'success'}
+          severity={snackbar.severity}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'left',
@@ -122,3 +117,5 @@ export const Involvements = ({ userID = null, username = null, myProf }) => {
     </>
   );
 };
+
+export default MembershipsList;

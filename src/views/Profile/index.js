@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import user from './../../services/user';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
-import { Involvements } from '../../components/Involvements/index';
+import MembershipsList from '../../components/MembershipsList';
 import Button from '@material-ui/core/Button';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
@@ -232,7 +232,7 @@ export default class Profile extends Component {
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
-                  <Involvements username={this.state.profile.AD_Username} myProf={false} />
+                  <MembershipsList username={this.state.profile.AD_Username} myProf={false} />
                 </Grid>
               </Grid>
             )}
