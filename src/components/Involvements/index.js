@@ -8,62 +8,69 @@ import SimpleSnackbar from '../Snackbar';
 import MyProfileActivityList from '../MyProfileActivityList/index';
 import ProfileActivityList from '../ProfileActivityList/index';
 import './index.css';
+import user from '../../services/user';
+import GordonLoader from '../Loader';
 
-export const Involvements = (props) => {
-  const [involvementsAndTheirPrivacy, setInvolvementsAndTheirPrivacy] = useState([]);
+export const Involvements = ({ userID = null, username = null, myProf }) => {
+  const [memberships, setMemberships] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
 
-  /**
-   * Loads the user's profile info only once (at start)
-   */
   useEffect(() => {
-    async function loadInvolvements() {
-      try {
-        // Creates the involvements list for the My Profile View
-        if (props.myProf) {
-          const involvementsAndTheirPrivacy = await getInvolvementAndPrivacyDictionary(
-            props.memberships,
-          );
-          setInvolvementsAndTheirPrivacy(involvementsAndTheirPrivacy);
-        }
-      } catch (error) {
-        // Do Nothing
+    async function loadMemberships() {
+      setLoading(true);
+      if (myProf) {
+        const myMemberships = await user.getMembershipsAlphabetically(userID);
+        await Promise.all(
+          myMemberships.map(async (membership) => {
+            const involvement = await activity.get(membership.ActivityCode);
+            membership.IsInvolvementPrivate = involvement.Privacy;
+          }),
+        );
+        setMemberships(myMemberships);
+      } else {
+        const publicMemberships = await user.getPublicMemberships(username);
+        setMemberships(publicMemberships);
       }
+      setLoading(false);
     }
-    loadInvolvements();
-  }, [props.memberships, props.myProf]);
+    loadMemberships();
+  }, [myProf, username, userID]);
 
-  function createInvolvementsList() {
-    if (props.memberships.length === 0) {
+  const InvolvementsList = () => {
+    if (memberships.length === 0) {
       return (
-        <div>
-          <Link to={`/involvements`}>
-            <Typography variant="body2" className="noInvolvements">
-              No Involvements to display. Click here to see Involvements around campus!
-            </Typography>
-          </Link>
-        </div>
+        <Link to={`/involvements`}>
+          <Typography variant="body2" className="noInvolvements">
+            No Involvements to display. Click here to see Involvements around campus!
+          </Typography>
+        </Link>
       );
-    } else if (props.myProf) {
-      return involvementsAndTheirPrivacy.map((involvementPrivacyKeyValuePair) => (
+    } else if (myProf) {
+      return memberships.map((membership) => (
         <MyProfileActivityList
-          membership={involvementPrivacyKeyValuePair.key}
-          isPrivateInvolvement={involvementPrivacyKeyValuePair.value}
+          membership={membership}
+          key={membership.MembershipID}
           onTogglePrivacy={toggleMembershipPrivacy}
         />
       ));
     } else {
-      return props.memberships.map((activity) => (
-        <ProfileActivityList Activity={activity} key={activity.MembershipID} />
+      return memberships.map((membership) => (
+        <ProfileActivityList Activity={membership} key={membership.MembershipID} />
       ));
     }
-  }
+  };
 
   const toggleMembershipPrivacy = async (membership) => {
     try {
       await membershipService.toggleMembershipPrivacy(membership);
-      createSnackbar(membership.Privacy ? 'Membership Hidden' : 'Membership Visible', 'Success');
-      membership.Privacy = !membership.Privacy;
+      setMemberships(
+        memberships.map((m) => {
+          if (m.MembershipID === membership.MembershipID) m.Privacy = !m.Privacy;
+          return m;
+        }),
+      );
+      createSnackbar(membership.Privacy ? 'Membership Visible' : 'Membership Hidden', 'Success');
     } catch {
       createSnackbar('Privacy Change Failed', 'Error');
     }
@@ -73,17 +80,8 @@ export const Involvements = (props) => {
     setSnackbar({ message, severity, open: true });
   };
 
-  // Gets the privacy data of each membership of the user
-  async function getInvolvementAndPrivacyDictionary(membershipsList) {
-    let involvementAndPrivacyDictionary = [];
-    for (let i = 0; i < membershipsList.length; i++) {
-      let involvement = await activity.get(membershipsList[i].ActivityCode);
-      involvementAndPrivacyDictionary.push({
-        key: membershipsList[i],
-        value: involvement.Privacy,
-      });
-    }
-    return involvementAndPrivacyDictionary;
+  if (loading) {
+    return <GordonLoader />;
   }
 
   return (
@@ -94,7 +92,7 @@ export const Involvements = (props) => {
         </Grid>
         <Card className="involvements-card">
           <CardContent className="involvements-card-content">
-            {props.myProf && (
+            {myProf && (
               <Grid container justify="center">
                 <Link className="gc360-link" to="/transcript">
                   <Button variant="contained" className="involvements-card-content-button">
@@ -103,11 +101,13 @@ export const Involvements = (props) => {
                 </Link>
               </Grid>
             )}
-            <List>{createInvolvementsList()}</List>
+            <List>
+              <InvolvementsList />
+            </List>
           </CardContent>
         </Card>
       </Grid>
-      {props.myProf && (
+      {myProf && (
         <SimpleSnackbar
           open={snackbar.open}
           text={snackbar.message}

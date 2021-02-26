@@ -12,13 +12,11 @@ import ProfileList from './../../components/ProfileList';
 import storage from '../../services/storage';
 import user from './../../services/user';
 import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
-import '../../app.css';
 import './myProfile.css';
 import 'cropperjs/dist/cropper.css';
 
 const MyProfile = (props) => {
   const [loading, setLoading] = useState(true);
-  const [memberships, setMemberships] = useState([]);
   const [network, setNetwork] = useState('online');
   const [officeInfo, setOfficeInfo] = useState(null);
   const [personType, setPersonType] = useState(null);
@@ -40,8 +38,6 @@ const MyProfile = (props) => {
         setPersonType(personType);
         let officeInfo = <Office profile={profile} />;
         setOfficeInfo(officeInfo);
-        const memberships = await user.getMembershipsAlphabetically(profile.ID);
-        setMemberships(memberships);
         setLoading(false);
       } catch (error) {
         // Do Nothing
@@ -131,7 +127,7 @@ const MyProfile = (props) => {
               </Grid>
 
               <Grid item xs={12} lg={5}>
-                <Involvements memberships={memberships} myProf={true} />
+                <Involvements userID={profile.ID} myProf={true} />
               </Grid>
             </Grid>
           </div>

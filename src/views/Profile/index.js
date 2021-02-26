@@ -36,7 +36,6 @@ export default class Profile extends Component {
       preview: null,
       loading: true,
       profile: {},
-      memberships: [],
       files: [],
       photoDialogOpen: false,
       socialLinksDialogOpen: false,
@@ -121,12 +120,11 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(searchedUser.match.params.username),
       ]);
-      const memberships = await user.getPublicMemberships(searchedUser.match.params.username);
       const prefImage = preferredImage;
       const defImage = defaultImage;
       this.hasNickName(profile);
       this.setSubheader(profile);
-      this.setState({ prefImage, defImage, loading: false, memberships });
+      this.setState({ prefImage, defImage, loading: false });
     } catch (error) {
       this.setState({ error });
       console.log(error);
@@ -234,7 +232,7 @@ export default class Profile extends Component {
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
-                  <Involvements memberships={this.state.memberships} myProf={false} />
+                  <Involvements username={this.state.profile.AD_Username} myProf={false} />
                 </Grid>
               </Grid>
             )}

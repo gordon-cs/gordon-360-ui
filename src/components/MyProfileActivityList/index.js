@@ -6,14 +6,14 @@ import LockIcon from '@material-ui/icons/Lock';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
 import './index.css';
 
-const MyProfileActivityList = ({ membership, isPrivateInvolvement, onTogglePrivacy }) => {
+const MyProfileActivityList = ({ membership, onTogglePrivacy }) => {
   const isOnline = useNetworkStatus();
 
   const OnlineOnlyLink = ({ children }) => {
     const linkClass = classnames({
       'gc360-link': isOnline,
-      'private-membership': isPrivateInvolvement || membership.Privacy,
-      'public-membership': !(isPrivateInvolvement || membership.Privacy),
+      'private-membership': membership.IsInvolvementPrivate || membership.Privacy,
+      'public-membership': !(membership.IsInvolvementPrivate || membership.Privacy),
     });
     if (isOnline) {
       return (
@@ -44,7 +44,7 @@ const MyProfileActivityList = ({ membership, isPrivateInvolvement, onTogglePriva
           alignItems="center"
           className="my-profile-info-card-description"
         >
-          <Grid container xs={8} alignItem="center">
+          <Grid container xs={8} alignItems="center">
             <List>
               <ListItem className="my-profile-info-card-description-text">
                 <OnlineOnlyLink>
@@ -62,7 +62,7 @@ const MyProfileActivityList = ({ membership, isPrivateInvolvement, onTogglePriva
             <Grid container>
               <Grid item xs={12} align="center">
                 {isOnline &&
-                  (isPrivateInvolvement ? (
+                  (membership.IsInvolvementPrivate ? (
                     <LockIcon className="lock-icon" />
                   ) : (
                     <Switch
@@ -75,7 +75,7 @@ const MyProfileActivityList = ({ membership, isPrivateInvolvement, onTogglePriva
               </Grid>
               <Grid item xs={12} align="center">
                 <Typography>
-                  {membership.Privacy || isPrivateInvolvement ? 'Private' : 'Public'}
+                  {membership.Privacy || membership.IsInvolvementPrivate ? 'Private' : 'Public'}
                 </Typography>
               </Grid>
             </Grid>
