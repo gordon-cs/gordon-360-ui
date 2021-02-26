@@ -12,8 +12,6 @@ import './index.css';
 export const Involvements = (props) => {
   const [involvementsAndTheirPrivacy, setInvolvementsAndTheirPrivacy] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
-  const [publicMemberships, setPublicMemberships] = useState([]);
-  console.log(snackbar);
 
   /**
    * Loads the user's profile info only once (at start)
@@ -28,9 +26,6 @@ export const Involvements = (props) => {
           );
           setInvolvementsAndTheirPrivacy(involvementsAndTheirPrivacy);
         }
-        // Creates the involvements list for the Public Profile view
-        const memberships = await getPublicMemberships(props.memberships);
-        setPublicMemberships(memberships);
       } catch (error) {
         // Do Nothing
       }
@@ -38,48 +33,29 @@ export const Involvements = (props) => {
     loadInvolvements();
   }, [props.memberships, props.myProf]);
 
-  // Creates the Involvements list
   function createInvolvementsList() {
-    // Creates the Involvements list for the My Profile page
-    if (props.myProf) {
-      // If the user has no memberships
-      if (props.memberships.length === 0) {
-        return (
-          <div>
-            <Link to={`/involvements`}>
-              <Typography variant="body2" className="noInvolvements">
-                No Involvements to display. Click here to see Involvements around campus!
-              </Typography>
-            </Link>
-          </div>
-        );
-      }
-      // If the user has memberships
-      else {
-        return involvementsAndTheirPrivacy.map((involvementPrivacyKeyValuePair) => (
-          <MyProfileActivityList
-            membership={involvementPrivacyKeyValuePair.key}
-            isPrivateInvolvement={involvementPrivacyKeyValuePair.value}
-            onTogglePrivacy={toggleMembershipPrivacy}
-          />
-        ));
-      }
-    }
-
-    // Creates the Involvements list for the Public Profile Page
-    else {
-      // If the user has no public Involvements, say so on the page
-      if (publicMemberships.length === 0) {
-        return (
-          <Typography variant="h6" align="center">
-            No Involvements to display
-          </Typography>
-        );
-      } else {
-        return publicMemberships.map((activity) => (
-          <ProfileActivityList Activity={activity} key={activity.MembershipID} />
-        ));
-      }
+    if (props.memberships.length === 0) {
+      return (
+        <div>
+          <Link to={`/involvements`}>
+            <Typography variant="body2" className="noInvolvements">
+              No Involvements to display. Click here to see Involvements around campus!
+            </Typography>
+          </Link>
+        </div>
+      );
+    } else if (props.myProf) {
+      return involvementsAndTheirPrivacy.map((involvementPrivacyKeyValuePair) => (
+        <MyProfileActivityList
+          membership={involvementPrivacyKeyValuePair.key}
+          isPrivateInvolvement={involvementPrivacyKeyValuePair.value}
+          onTogglePrivacy={toggleMembershipPrivacy}
+        />
+      ));
+    } else {
+      return props.memberships.map((activity) => (
+        <ProfileActivityList Activity={activity} key={activity.MembershipID} />
+      ));
     }
   }
 
@@ -108,20 +84,6 @@ export const Involvements = (props) => {
       });
     }
     return involvementAndPrivacyDictionary;
-  }
-
-  // Gets the list of public memberships
-  async function getPublicMemberships(membershipsList) {
-    let memberships = [];
-    for (let i = 0; i < membershipsList.length; i++) {
-      let involvement = await activity.get(membershipsList[i].ActivityCode);
-      // Checks to see if the involvement is a private involvement. If not and the involvement's
-      // privacy is set to false, it's added to the list of involvements to display
-      if (!involvement.Privacy && !membershipsList[i].Privacy) {
-        memberships.push(membershipsList[i]);
-      }
-    }
-    return memberships;
   }
 
   return (
