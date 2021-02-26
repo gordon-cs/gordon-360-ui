@@ -1,7 +1,7 @@
 @import '../../vars';
 
 .my-profile-info-card {
-  &-info-one {
+  &-description {
     hyphens: auto;
     -ms-hyphens: auto;
     -moz-hyphens: auto;
@@ -14,7 +14,7 @@
       }
     }
   }
-  &-info-two {
+  &-image {
     justify-content: flex-end;
     img {
       width: 100% !important;
@@ -26,13 +26,25 @@
       }
     }
   }
+  .private-membership {
+    opacity: 0.5;
+  }
+
+  .public-membership {
+    opacity: 1;
+  }
+}
+
+.snackbar-icon {
+  margin-bottom: -4.5pt;
+  margin-right: 0.5rem;
 }
 
 @media (max-width: 500px) {
   .my-profile-info-card {
     padding: 1.5rem 0rem;
     flex-direction: column-reverse;
-    &-info-one {
+    &-description {
       max-width: 100% !important;
       justify-content: center;
       flex-direction: row-reverse;
@@ -42,7 +54,7 @@
         border-left: 2px solid $primary-blue;
       }
     }
-    &-info-two {
+    &-image {
       max-width: 100% !important;
       justify-content: center;
 
