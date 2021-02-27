@@ -318,9 +318,9 @@ export default class Events extends Component {
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <FormGroup row>
             <FormControl className={formControl}>
-              <InputLabel id = "event-checkboxes-label">Events</InputLabel>
+              <InputLabel id = "event-fillters">Events</InputLabel>
               <Select
-              labelId = "event-checkboxes-label"
+              labelId = "event-filters"
               id = "event-checkboxes"
               multiple
               value = {eventsAtGordon}
