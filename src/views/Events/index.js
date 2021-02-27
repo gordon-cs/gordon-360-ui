@@ -41,6 +41,7 @@ const MenuProps = {
   },
 };
 
+
 const campusEvents = [
   "CL&W Credits",
   "Admissions",
@@ -50,6 +51,16 @@ const campusEvents = [
   "Chapel Office",
   "Student Life"
 ]
+
+const filters = {
+  "CL&W Credits": "chapelCredits",
+  "Admissions": "admissions",
+  "Arts": "art",
+  "Athletics": "sports",
+  "CEC": "cec",
+  "Chapel Office": "chapelOffice",
+  "Student Life": "studentLife"
+}
 
 export default class Events extends Component {
   constructor(props) {
@@ -290,21 +301,7 @@ export default class Events extends Component {
 
     const handleChange = (event) => {
       console.log("event target value is" + event.target.value);
-      if (event.target.value == "CL&W Credits") {
-        this.filterEvents("chapelCredits");
-      } else if (event.target.value == "Admissions") {
-        this.filterEvents("admissions");
-      } else if (event.target.value == "Arts") {
-        this.filterEvents("art");
-      } else if (event.target.value == "Athletics") {
-        this.filterEvents("sports");
-      } else if (event.target.value == "CEC") {
-        this.filterEvents("cec");
-      } else if (event.target.value == "Chapel Office") {
-        this.filterEvents("chapelOffice");
-      } else if (event.target.value == "Student Life") {
-        this.filterEvents("studentLife");
-      }
+      this.filterEvents(filters[event.target.value]);
       if (!(eventsAtGordon.indexOf(event.target.value) > -1)) {
         eventsAtGordon.push(event.target.value);
       }
