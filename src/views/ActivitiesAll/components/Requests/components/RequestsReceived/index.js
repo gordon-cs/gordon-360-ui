@@ -86,7 +86,7 @@ export default class RequestReceived extends Component {
     let displayedRequests;
     if (requests.length === 0) {
       displayedRequests =
-          <Typography variant="body2" style={{ color: 'gray', textAlign: 'center', padding: '32px'}}>
+          <Typography variant="body2" className = "message_text">
             No Requests to Show
           </Typography>
     } else {
