@@ -10,8 +10,6 @@ import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
 import { gordonColors } from './../../theme';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
