@@ -81,10 +81,12 @@ export default class Events extends Component {
       includePast: false,
       loading: true,
       hasFilters: false,
+      activeFilters: []
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
     this.clearFilters = this.clearFilters.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.isMobileView = false;
     this.breakpointWidth = 540;
   }
@@ -288,6 +290,14 @@ export default class Events extends Component {
     else return false;
   }
 
+  handleChange = (event) => {
+    console.log("event target value is" + event.target.value);
+    this.filterEvents(filters[event.target.value]);
+    console.log("filters[event.target.value] is " + filters[event.target.value]);
+    this.setState({activeFilters: event.target.value });
+    console.log("active filters are "+ this.state.activeFilters);
+  }
+
   render() {
     let content;
 
@@ -297,17 +307,6 @@ export default class Events extends Component {
       content = <EventList events={this.state.filteredEvents} />;
     }
 
-    let eventsAtGordon = [];
-
-    const handleChange = (event) => {
-      console.log("event target value is" + event.target.value);
-      this.filterEvents(filters[event.target.value]);
-      if (!(eventsAtGordon.indexOf(event.target.value) > -1)) {
-        eventsAtGordon.push(event.target.value);
-      }
-      console.log("eventsAtGordon are " + eventsAtGordon);
-    }
-
     let filter;
     if (this.state.loading === true) {
     } else {
@@ -315,20 +314,20 @@ export default class Events extends Component {
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <FormGroup row>
             <FormControl className={formControl}>
-              <InputLabel id = "event-fillters">Events</InputLabel>
+              <InputLabel id = "event-filters">Events</InputLabel>
               <Select
               labelId = "event-filters"
               id = "event-checkboxes"
               multiple
-              value = {eventsAtGordon}
-              onChange = {handleChange}
+              value = {this.state.activeFilters}
+              onChange = {this.handleChange}
               input = {<Input />}
               renderValue = {(selected) => selected.join(",")}
               MenuProps = {MenuProps}
               >
                 {campusEvents.map((campusEvent) => (
                   <MenuItem key={campusEvent} value={campusEvent}>
-                    <Checkbox checked = {eventsAtGordon.indexOf(campusEvent) > -1} />
+                    <Checkbox checked = {this.state.activeFilters.indexOf(campusEvent) > -1} />
                     <ListItemText primary={campusEvent} />
                   </MenuItem>
                 ))}
