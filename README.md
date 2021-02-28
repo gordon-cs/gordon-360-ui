@@ -1,4 +1,4 @@
-# Gordon 360 User Interface 
+# Gordon 360 User Interface
 
 ![Lint and Build](https://github.com/gordon-cs/gordon-360-ui/workflows/Lint%20and%20Build/badge.svg)
 
@@ -153,6 +153,10 @@ Links to the homepages of libraries used in this project, listed here for easy r
 - [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
 
   Provides easy routing, allowing transitions between views with back button support and URL management.
+
+- [react-csv](https://github.com/react-csv/react-csv)
+
+  Provides components that allow React to easily generate a CSV file from given data. This data can be an array of arrays, an array of literal objects, or strings.
 
 ## Code Style
 
@@ -363,16 +367,16 @@ to the 360 server. Instead, deployment uses a powershell script that is run via 
 
 ### Deploying Manually
 
-In the unusual case that Train or Production have not been automatically deployed (which should happen within five minutes of a finished Lint and Build action on the appropriate branch), it is possible to deploy manually. 
+In the unusual case that Train or Production have not been automatically deployed (which should happen within five minutes of a finished Lint and Build action on the appropriate branch), it is possible to deploy manually.
 
-1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s). 
+1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s).
 1. Build the project by running `npm run build` in VSCode on a clone of the project set to the branch you want to deploy. The output will be in `path/to/the/repo/gordon-360-ui/build`.
 1. Connect to the `360-Frontend.gordon.edu` server. See [RemoteDesktopToVM](https://github.com/gordon-cs/gordon-360-api/blob/develop/RemoteDesktopToVM.md) in the API repo for instructions on how to connect.
 1. Open File Explorer and navigate to `D:\wwwroot\`.
 1. Backup the existing deployment:
-    1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
-    1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
-1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above. 
+   1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
+   1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
+1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above.
 1. Check the appropriate site, refreshing if necessary, to ensure it deployed successfully and is stable.
 1. If you need to restore to a backup, simply copy the contents of the desired backup folder and overwrite the appropriate site's folder.
 

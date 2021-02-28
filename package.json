@@ -27,6 +27,7 @@
     "react-big-calendar": ">=0.21.0",
     "react-chartjs-2": ">=2.7.4",
     "react-cropper": ">=1.0.1",
+    "react-csv": "^2.0.3",
     "react-document-title": ">=2.0.3",
     "react-dom": ">=16.2.0",
     "react-dropzone": ">=10.1.5",
