@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { CSVLink } from 'react-csv';
 import {
   Grid,
   Card,
@@ -16,16 +17,17 @@ import {
 } from '@material-ui/core/';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { DateTime } from 'luxon';
 import GordonLoader from '../../../../components/Loader';
 import housing from '../../../../services/housing';
 import '../../apartmentApp.css';
 
-const ApplicationRow = ({ key, applicationDetails }) => {
+const ApplicationRow = ({ keyPassthrough, applicationDetails }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
     <React.Fragment>
-      <TableRow key={key}>
+      <TableRow key={keyPassthrough}>
         <TableCell component="th" scope="row">
           {applicationDetails.AprtAppID}
         </TableCell>
@@ -66,6 +68,7 @@ const ApplicationsTable = ({ applications }) => (
         {applications.map((applicationDetails) => (
           <ApplicationRow
             key={applicationDetails.AprtAppID}
+            keyPassthrough={applicationDetails.AprtAppID}
             applicationDetails={applicationDetails}
           />
         ))}
@@ -77,6 +80,7 @@ const ApplicationsTable = ({ applications }) => (
 const StaffMenu = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [applications, setApplications] = useState([]);
+  const [filename, setFilename] = useState('apartment-applications.csv');
 
   /**
    * Attempt to load an all existing application for the current semester
@@ -95,7 +99,59 @@ const StaffMenu = ({ userProfile, authentication }) => {
 
   useEffect(() => {
     loadAllCurrentApplications();
+
+    // Generate the CSV filename using today's date
+    let date = new Date();
+    let dateText = DateTime.fromJSDate(date).toISODate();
+    setFilename('apartment-applications-' + dateText + '.csv');
   }, [userProfile, loadAllCurrentApplications]);
+
+  /**
+   * Generate arrays of objects to be converted to a CSV
+   * @param {ApplicationDetails[]} applicationDetailsArray an array of ApplicationDetails objects
+   * @return {Object[]} Array of literal objects that is compatible with react-csv
+   */
+  const generateCSVData = (applicationDetailsArray) => {
+    let applicationData = [];
+    let applicantData = [];
+    let apartmentChoiceData = [];
+    applicationDetailsArray.forEach((applicationDetails) => {
+      let newApplicationData = {
+        AprtAppID: applicationDetails.AprtAppID,
+        DateSubmitted: applicationDetails.DateSubmitted,
+        DateModified: applicationDetails.DateModified,
+        EditorUsername: applicationDetails.Username,
+        Gender: applicationDetails.Gender,
+        Applicants: applicationDetails.Applicants.map((applicant) => applicant.Username),
+        ApartmentChoices: applicationDetails.ApartmentChoices.map(
+          (apartmentChoice) => String(apartmentChoice.HallRank) + '-' + apartmentChoice.HallName,
+        ),
+        TotalPoints: applicationDetails.TotalPoints,
+        AvgPoints: applicationDetails.AvgPoints,
+      };
+      applicationData.push(newApplicationData);
+
+      applicationDetails.Applicants.forEach((applicant) => {
+        let newApplicantData = {
+          AprtAppID: applicationDetails.AprtAppID,
+          Username: applicant.Username,
+          OffCampusProgram: applicant.OffCampusProgram,
+        };
+        applicantData.push(newApplicantData);
+      });
+
+      applicationDetails.ApartmentChoices.forEach((apartmentChoice) => {
+        let newApplicantData = {
+          AprtAppID: applicationDetails.AprtAppID,
+          HallRank: apartmentChoice.HallRank,
+          HallName: apartmentChoice.HallName,
+        };
+        apartmentChoiceData.push(newApplicantData);
+      });
+    });
+    // The other data arrays will be used later, this is still a WIP
+    return applicationData;
+  };
 
   const handleDownloadCSV = () => {
     //! This feature is not yet implemented. This is a placeholder
@@ -108,20 +164,6 @@ const StaffMenu = ({ userProfile, authentication }) => {
   } else {
     return (
       <Grid container justify="center" spacing={2}>
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardHeader
-              title="Apartment Application Staff Interface"
-              className="apartment-card-header"
-            />
-            <CardContent>
-              <h1>
-                Apartment application is currently available for students only. Support for staff
-                will come soon!
-              </h1>
-            </CardContent>
-          </Card>
-        </Grid>
         <Grid item xs={12} lg={10}>
           <Card>
             <CardHeader title="I'll put a title here in a sec" className="apartment-card-header" />
@@ -140,8 +182,12 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     color="primary"
                     fullWidth
                     disabled={!authentication}
+                    component={CSVLink}
+                    data={generateCSVData(applications)}
+                    filename={filename}
+                    target="_blank"
                   >
-                    Create a new application
+                    Download
                   </Button>
                 </Grid>
               </Grid>

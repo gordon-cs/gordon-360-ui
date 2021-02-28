@@ -53,7 +53,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingStaff = async () => {
-  return false; //! DEBUG
+  return true; //! DEBUG
   // try {
   //   return await http.get(`housing/staff`);
   // } catch {
@@ -123,10 +123,36 @@ const getApartmentApplication = async (applicationID) => {
   return await http.get(`housing/apartment/load/${applicationID}/`);
 };
 
+/**
+ * Get active apartment applications for the current semester
+ * @return {Promise.<ApplicationDetails>[]} Application details
+ */
+const getAllApartmentApplications = async () => {
+  let dummyApplicationDetails = {
+    AprtAppID: 42,
+    DateSubmitted: '2030-03-14',
+    DateModified: '2030-03-14',
+    Username: 'Bobby.Tables',
+    Gender: 'M',
+    Applicants: [
+      { Username: 'Bobby.Tables', OffCampusProgram: 'Computer Science' },
+      { Username: 'Frederick.Fox', OffCampusProgram: '' },
+      { Username: 'Tommy.Turtle', OffCampusProgram: 'Education' },
+    ],
+    ApartmentChoices: [
+      { HallRank: 1, HallName: 'Gantley' },
+      { HallRank: 2, HallName: 'Tavilla' },
+    ],
+  }; //! DEBUG: This exists purely for testing the features without the backend. The commented-out line below is the actual code to use once the endpoint has been created in the backend
+  return [dummyApplicationDetails];
+  // return await http.get(`housing/staff/apartment/load-all/`);
+};
+
 export default {
   checkHousingStaff,
   getApplicationID,
   saveApartmentApplication,
   changeApplicationEditor,
   getApartmentApplication,
+  getAllApartmentApplications,
 };

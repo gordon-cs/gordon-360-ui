@@ -19,7 +19,7 @@ const ApartApp = ({ authentication }) => {
   const [networkStatus, setNetworkStatus] = useState('online');
 
   /**
-   * @type {[StudentProfileInfo, Function]} UserProfile
+   * @type {[StudentProfileInfo, React.Dispatch<React.SetStateAction<StudentProfileInfo>>]} UserProfile
    */
   const [userProfile, setUserProfile] = useState({});
   const [isUserStudent, setIsUserStudent] = useState(false);
@@ -110,16 +110,16 @@ const ApartApp = ({ authentication }) => {
       </Grid>
     );
   } else if (networkStatus === 'online') {
-    if (isUserStudent) {
+    if (canUseStaff) {
+      return (
+        <div className="staff-apartment-application">
+          <StaffMenu userProfile={userProfile} authentication={authentication} />
+        </div>
+      );
+    } else if (isUserStudent) {
       return (
         <div className="student-apartment-application">
           <StudentApplication userProfile={userProfile} authentication={authentication} />
-        </div>
-      );
-    } else if (canUseStaff) {
-      return (
-        <div className="staff-apartment-application">
-          <StaffMenu />
         </div>
       );
     } else {
