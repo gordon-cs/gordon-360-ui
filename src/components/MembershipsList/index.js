@@ -3,13 +3,19 @@ import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@
 import { Link } from 'react-router-dom';
 import activity from '../../services/activity';
 import membershipService from '../../services/membership';
-import user from '../../services/user';
+import userService from '../../services/user';
 import GordonSnackbar from '../Snackbar';
 import GordonLoader from '../Loader';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import './index.css';
 
-const MembershipsList = ({ userID = null, username = null, myProf }) => {
+/**
+ * A List of memberships for display on the Profile and MyProfile views.
+ * @param {string} user Either the user's ID number for MyProfile or the username for Profile
+ * @param {boolean} myProf Whether this is shown in MyProfile or not
+ * @returns {JSX} A list of the user's memberships
+ */
+const MembershipsList = ({ user, myProf }) => {
   const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
@@ -18,7 +24,7 @@ const MembershipsList = ({ userID = null, username = null, myProf }) => {
     async function loadMemberships() {
       setLoading(true);
       if (myProf) {
-        const myMemberships = await user.getMembershipsAlphabetically(userID);
+        const myMemberships = await userService.getMembershipsAlphabetically(user);
         await Promise.all(
           myMemberships.map(async (membership) => {
             const involvement = await activity.get(membership.ActivityCode);
@@ -27,13 +33,13 @@ const MembershipsList = ({ userID = null, username = null, myProf }) => {
         );
         setMemberships(myMemberships);
       } else {
-        const publicMemberships = await user.getPublicMemberships(username);
+        const publicMemberships = await userService.getPublicMemberships(user);
         setMemberships(publicMemberships);
       }
       setLoading(false);
     }
     loadMemberships();
-  }, [myProf, username, userID]);
+  }, [myProf, user]);
 
   const MembershipsList = () => {
     if (memberships.length === 0) {

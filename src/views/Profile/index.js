@@ -232,7 +232,7 @@ export default class Profile extends Component {
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
-                  <MembershipsList username={this.state.profile.AD_Username} myProf={false} />
+                  <MembershipsList user={this.state.profile.AD_Username} myProf={false} />
                 </Grid>
               </Grid>
             )}

@@ -15,6 +15,8 @@ import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
 import './myProfile.css';
 import 'cropperjs/dist/cropper.css';
 
+//TODO: Refactor Network awareness into ProfileList, Identification, VictoryPromiseDisplay, and GordonSchedulePanel
+
 const MyProfile = (props) => {
   const [loading, setLoading] = useState(true);
   const [network, setNetwork] = useState('online');
@@ -127,7 +129,7 @@ const MyProfile = (props) => {
               </Grid>
 
               <Grid item xs={12} lg={5}>
-                <MembershipsList userID={profile.ID} myProf={true} />
+                <MembershipsList user={profile.ID} myProf={true} />
               </Grid>
             </Grid>
           </div>
