@@ -17,7 +17,7 @@ import {
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import GordonLoader from '../../../../components/Loader';
-import AlertDialogBox from '../../../../components/AlertDialogBox';
+import GordonDialogBox from '../../../../components/GordonDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
@@ -39,7 +39,7 @@ const MAX_NUM_APPLICANTS = 8;
  */
 const InstructionsCard = () => (
   <Card>
-    <CardHeader title="Apartment Application Instructions" className="card-header" />
+    <CardHeader title="Apartment Application Instructions" className="apartment-card-header" />
     <CardContent>
       <Typography variant="body1">Placeholder Text</Typography>
       <Typography variant="body1">
@@ -82,7 +82,7 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) =
 
   return (
     <Card>
-      <CardHeader title="Your Application Details" className="card-header" />
+      <CardHeader title="Your Application Details" className="apartment-card-header" />
       <CardContent>
         <TableContainer>
           <Table>
@@ -106,10 +106,6 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) =
 const SaveButton = ({ disabled, saving, onClick }) => {
   const loaderSize = 20;
 
-  const handleSaveButtonClick = () => {
-    onClick();
-  };
-
   if (saving) {
     if (saving === 'success') {
       return <CheckCircleIcon className="success" />;
@@ -125,7 +121,7 @@ const SaveButton = ({ disabled, saving, onClick }) => {
         variant="contained"
         color="primary"
         fullWidth
-        onClick={handleSaveButtonClick}
+        onClick={onClick}
       >
         Save & Continue
       </Button>
@@ -733,16 +729,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       />
                     )}
 
-                    <AlertDialogBox
+                    <GordonDialogBox
                       open={changeEditorDialogOpen}
                       onClose={handleCloseDialog}
-                      severity={'warning'}
+                      labelledby={'applicant-warning-dialog'}
+                      describedby={'changing-application-editor'}
                       title={'Change application editor?'}
                       text={changeEditorAlertText}
-                      cancelButtonClicked={handleCloseOkay}
-                      cancelButtonName={'Cancel'}
                       confirmButtonClicked={handleChangeEditorAccepted}
                       confirmButtonName={'Accept'}
+                      cancelButtonClicked={handleCloseOkay}
+                      cancelButtonName={'Cancel'}
+                      severity={'warning'}
                     />
                   </Grid>
                 </Grid>
@@ -752,6 +750,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   <Grid item>
                     {userProfile.AD_Username === editorUsername ? (
                       <HallSelection
+                        authentication
                         editorUsername={editorUsername}
                         preferredHalls={preferredHalls}
                         saving={saving}
@@ -763,6 +762,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     ) : (
                       <HallSelection
                         disabled
+                        authentication
                         editorUsername={editorUsername}
                         preferredHalls={preferredHalls}
                         saving={saving}
@@ -771,7 +771,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   </Grid>
                   <Grid item>
                     <Card>
-                      <CardHeader title="Off-Campus Work Study" className="card-header" />
+                      <CardHeader title="Off-Campus Work Study" className="apartment-card-header" />
                       <CardContent>
                         <Typography variant="body1">Placeholder text</Typography>
                       </CardContent>
@@ -785,7 +785,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     unmountOnExit
                   >
                     <Card>
-                      <CardHeader title="Agreements" className="card-header" />
+                      <CardHeader title="Agreements" className="apartment-card-header" />
                       <CardContent>
                         <Typography variant="body1">Placeholder text</Typography>
                       </CardContent>
@@ -820,16 +820,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
                               Save & Submit
                             </Button>
                           </Grid>
-                          <AlertDialogBox
+                          <GordonDialogBox
                             open={submitDialogOpen}
                             onClose={handleCloseDialog}
-                            severity={'warning'}
+                            labelledby={'submit-application-dialog'}
+                            describedby={'confirm-application'}
                             title={'Submit apartment application?'}
                             text={submitAlertText}
+                            buttonClicked={handleSubmitAppAccepted}
+                            buttonName={'Accept'}
                             cancelButtonClicked={handleCloseOkay}
                             cancelButtonName={'Cancel'}
-                            confirmButtonClicked={handleSubmitAppAccepted}
-                            confirmButtonName={'Accept'}
+                            severity={'warning'}
                           />
                         </Grid>
                       ) : (

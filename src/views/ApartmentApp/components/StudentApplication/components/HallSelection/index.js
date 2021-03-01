@@ -12,13 +12,14 @@ import housing from '../../../../../../services/housing';
 // Create a list of selection boxes to choosing preferred halls
 const HallSelection = ({
   disabled,
+  authentication,
   editorUsername,
   preferredHalls,
   onHallAdd,
   onHallInputChange,
   onHallRemove,
 }) => {
-  const [availableHalls, setAvailableHalls] = useState([]); // array of hall names from backend
+  const [halls, setHalls] = useState([]); // array of hall names from backend
 
   useEffect(() => {
     const loadHalls = async () => {
@@ -32,11 +33,14 @@ const HallSelection = ({
         unfilteredHalls = await goStalk.getHalls();
       }
       //Remove spaces from strings
-      setAvailableHalls(unfilteredHalls.map((hall) => hall.trim()));
+      let availableHalls = unfilteredHalls.map((hall) => hall.trim());
+      setHalls(availableHalls);
     };
 
-    loadHalls();
-  });
+    if (authentication) {
+      loadHalls();
+    }
+  }, [authentication, editorUsername]);
 
   /**
    * Callback for changes to hall list item name and/or rank
@@ -60,16 +64,9 @@ const HallSelection = ({
     }
   };
 
-  /**
-   * Callback for hall list add button
-   */
-  const handleAddDropdown = () => {
-    onHallAdd();
-  };
-
   return (
     <Card>
-      <CardHeader title="Preferred Halls" className="card-header" />
+      <CardHeader title="Preferred Halls" className="apartment-card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
@@ -81,7 +78,7 @@ const HallSelection = ({
                     disabled={disabled}
                     index={index}
                     preferredHalls={preferredHalls}
-                    availableHalls={availableHalls}
+                    halls={halls}
                     onHallInputChange={handleInputChange}
                     onHallRemove={handleRemove}
                   />
@@ -92,7 +89,7 @@ const HallSelection = ({
                   disabled={disabled}
                   index={0}
                   preferredHalls={preferredHalls}
-                  availableHalls={availableHalls}
+                  halls={halls}
                   onHallInputChange={handleInputChange}
                 />
               )}
@@ -104,7 +101,7 @@ const HallSelection = ({
               variant="outlined"
               color="primary"
               startIcon={<AddIcon fontSize="inherit" />}
-              onClick={handleAddDropdown}
+              onClick={onHallAdd}
             >
               Add a Hall
             </Button>
