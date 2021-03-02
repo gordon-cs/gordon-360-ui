@@ -1,81 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CSVLink } from 'react-csv';
-import {
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Button,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  TableHead,
-  IconButton,
-} from '@material-ui/core/';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
 import { DateTime } from 'luxon';
 import GordonLoader from '../../../../components/Loader';
 import housing from '../../../../services/housing';
+import ApplicationsTable from './components/ApplicationTable';
 import '../../apartmentApp.css';
-
-const ApplicationRow = ({ keyPassthrough, applicationDetails }) => {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <React.Fragment>
-      <TableRow key={keyPassthrough}>
-        <TableCell component="th" scope="row">
-          {applicationDetails.AprtAppID}
-        </TableCell>
-        <TableCell align="right">{applicationDetails.Username}</TableCell>
-        <TableCell align="right">{applicationDetails.Applicants.length}</TableCell>
-        <TableCell align="right">{applicationDetails.Gender}</TableCell>
-        <TableCell align="right">
-          {applicationDetails.ApartmentChoices[0].HallName || 'N/A'}
-        </TableCell>
-        <TableCell align="right">{applicationDetails.TotalPoints || 'N/A'}</TableCell>
-        <TableCell align="right">{applicationDetails.AvgPoints || 'N/A'}</TableCell>
-        <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-};
-
-const ApplicationsTable = ({ applications }) => (
-  <TableContainer>
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Application ID</TableCell>
-          <TableCell>Names</TableCell>
-          <TableCell># of Applicants</TableCell>
-          <TableCell>Gender</TableCell>
-          <TableCell>Preferred Halls</TableCell>
-          <TableCell>Total Points</TableCell>
-          <TableCell>Avg. Points</TableCell>
-          <TableCell>Details</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {applications.map((applicationDetails) => (
-          <ApplicationRow
-            key={applicationDetails.AprtAppID}
-            keyPassthrough={applicationDetails.AprtAppID}
-            applicationDetails={applicationDetails}
-          />
-        ))}
-      </TableBody>
-    </Table>
-  </TableContainer>
-);
 
 const StaffMenu = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
@@ -135,7 +65,10 @@ const StaffMenu = ({ userProfile, authentication }) => {
         let newApplicantData = {
           AprtAppID: applicationDetails.AprtAppID,
           Username: applicant.Username,
+          Age: applicant.Age,
           OffCampusProgram: applicant.OffCampusProgram,
+          Probation: applicant.Probation,
+          Points: applicant.Point,
         };
         applicantData.push(newApplicantData);
       });
