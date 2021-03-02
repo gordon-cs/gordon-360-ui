@@ -21,9 +21,19 @@ import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * @global
- * @typedef ApartmentApplicant
+ * @typedef ApartmentApplicant Applicant info used by the student application page
  * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
  * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
+ */
+
+/**
+ * @global
+ * @typedef FullApplicantInfo Applicant info used by the staff menu
+ * @property {String} Username The username of this applicant
+ * @property {Number} Age The age of the student (in years) (only visible to housing admin)
+ * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
+ * @property {String} Probation Indicates whether the student has a disiplinary probation (visble only to housing admin)
+ * @property {Number} Points The number of application points for this student (only visible to housing admin)
  */
 
 /**
@@ -40,9 +50,9 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @property {Number} AprtAppID Application ID number of this application
  * @property {*} DateSubmitted The date the application was submitted, or null if not yet submitted
  * @property {*} DateModified The date the application was last modified
- * @property {String} Username Username of the application editor
+ * @property {String} EditorUsername Username of the application editor
  * @property {String} Gender Gender
- * @property {String[]} Applicants Array of student usernames
+ * @property {FullApplicantInfo[]} Applicants Array of student usernames
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
  * @property {Number} TotalPoints The total application points associated with this application
  * @property {Number} AvgPoints The average application points per applicant
@@ -132,20 +142,45 @@ const getAllApartmentApplications = async () => {
     AprtAppID: 42,
     DateSubmitted: '2030-03-14',
     DateModified: '2030-03-14',
-    Username: 'Bobby.Tables',
+    EditorUsername: 'Bobby.Tables',
     Gender: 'M',
     Applicants: [
-      { Username: 'Bobby.Tables', OffCampusProgram: 'Computer Science' },
-      { Username: 'Frederick.Fox', OffCampusProgram: '' },
-      { Username: 'Tommy.Turtle', OffCampusProgram: 'Education' },
+      {
+        Username: 'Bobby.Tables',
+        Age: 21,
+        OffCampusProgram: 'Computer Science',
+        Probation: 'no',
+        Points: 7,
+      },
+      { Username: 'Frederick.Fox', Age: 20, OffCampusProgram: '', Probation: 'yes', Points: 5 },
+      {
+        Username: 'Tommy.Turtle',
+        Age: 22,
+        OffCampusProgram: 'Education',
+        Probation: 'no',
+        Points: 6,
+      },
     ],
     ApartmentChoices: [
       { HallRank: 1, HallName: 'Gantley' },
       { HallRank: 2, HallName: 'Tavilla' },
     ],
   }; //! DEBUG: This exists purely for testing the features without the backend. The commented-out line below is the actual code to use once the endpoint has been created in the backend
-  return [dummyApplicationDetails];
-  // return await http.get(`housing/staff/apartment/load-all/`);
+  let applicationDetailsArray = [dummyApplicationDetails];
+  // let applicationDetailsArray = await http.get(`housing/staff/apartment/load-all/`);
+
+  // Calculate the total and average points for each application
+  applicationDetailsArray.forEach((applicationDetails) => {
+    let totalPoints = 0;
+    applicationDetails.Applicants.forEach((applicant) => {
+      totalPoints += applicant.Points;
+    });
+    let avgPoints = totalPoints / applicationDetails.Applicants.length;
+    applicationDetails.TotalPoints = totalPoints;
+    applicationDetails.AvgPoints = avgPoints;
+  });
+
+  return applicationDetailsArray;
 };
 
 export default {
