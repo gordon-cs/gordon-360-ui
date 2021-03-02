@@ -8,3 +8,12 @@
 .guest-welcome-message {
   color: $neutral-white;
 }
+
+.guest-welcome-logo {
+  background-color: $primary-blue;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  width: 50%;
+  height: auto;
+}
