@@ -5,7 +5,7 @@
  */
 
 import http from './http';
-import './user';
+import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * @global
