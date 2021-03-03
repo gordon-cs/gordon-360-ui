@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import SuperAdminList from './components/SuperAdminList';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
 import GordonLoader from '../../../../components/Loader';
 import admin from '../../../../services/admin';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { gordonColors } from '../../../../theme';
 import membership from '../../../../services/membership';
+
+import {
+  Typography,
+  Card,
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@material-ui/core';
 
 export default class SuperAdmin extends Component {
   constructor(props) {
