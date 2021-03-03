@@ -43,6 +43,8 @@ const getRouteName = (route) => {
   );
 };
 
+const Link = React.forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
+
 const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   const [tabIndex, setTabIndex] = useState(null);
   const [dialog, setDialog] = useState('');
@@ -156,7 +158,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
       );
     } else {
       const route = `/${name.toLowerCase()}`;
-      return <Tab className="tab" icon={icon} label={name} component={NavLink} to={route} />;
+      return <Tab className="tab" icon={icon} label={name} component={Link} to={route} />;
     }
   };
 
@@ -188,19 +190,19 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
 
           <div className="center-container">
             <Tabs centered value={tabIndex} onChange={(event, value) => setTabIndex(value)}>
-              <Tab className="tab" icon={<HomeIcon />} label="Home" component={NavLink} to="/" />
+              <Tab className="tab" icon={<HomeIcon />} label="Home" component={Link} to="/" />
               <Tab
                 className="tab"
                 icon={<LocalActivityIcon />}
                 label="Involvements"
-                component={NavLink}
+                component={Link}
                 to="/involvements"
               />
               <Tab
                 className="tab"
                 icon={<EventIcon />}
                 label="Events"
-                component={NavLink}
+                component={Link}
                 to="/events"
               />
               {disablableTab('People', <PeopleIcon />)}
