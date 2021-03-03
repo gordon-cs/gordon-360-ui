@@ -46,7 +46,7 @@ const getRouteName = (route) => {
 const Link = React.forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
 const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
-  const [tabIndex, setTabIndex] = useState(null);
+  const [tabIndex, setTabIndex] = useState(0);
   const [dialog, setDialog] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isOnline = useNetworkStatus();
