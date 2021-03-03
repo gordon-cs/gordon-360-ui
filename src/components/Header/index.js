@@ -19,7 +19,7 @@ import { Route, Switch, NavLink } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
-import { GordonNavButtonsRightCorner } from './components/NavButtonsRightCorner';
+import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
 import routes from '../../routes';
 import { projectName } from '../../project-name';
 import storage from '../../services/storage';
