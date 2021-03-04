@@ -128,18 +128,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
           </Card>
         </Grid>
         <Grid item xs={12} lg={10}>
-          <Card>
-            <CardHeader title="Results" className="apartment-card-header" />
-            <CardContent>
-              {applications ? (
-                <ApplicationsTable applications={applications} />
-              ) : (
-                <Typography variant="body1">
-                  Could not load any applications for the current semester.
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
+          <ApplicationsTable applications={applications} />
         </Grid>
       </Grid>
     );
