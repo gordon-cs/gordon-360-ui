@@ -1,0 +1,10 @@
+@import '../../../../../../vars';
+
+.stylize-table-row {
+  :nth-of-type(even) {
+    background: $neutral-light-gray;
+  }
+  :nth-of-type(odd) {
+    background: $neutral-white;
+  }
+}
