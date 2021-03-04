@@ -65,7 +65,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
 const checkHousingStaff = async () => {
   return true; //! DEBUG
   // try {
-  //   return await http.get(`housing/staff`);
+  //   return await http.get(`housing/admin`);
   // } catch {
   //   return false;
   // }
@@ -167,7 +167,7 @@ const getAllApartmentApplications = async () => {
     ],
   }; //! DEBUG: This exists purely for testing the features without the backend. The commented-out line below is the actual code to use once the endpoint has been created in the backend
   let applicationDetailsArray = [dummyApplicationDetails];
-  // let applicationDetailsArray = await http.get(`housing/staff/apartment/load-all/`);
+  // let applicationDetailsArray = await http.get(`housing/apartment/load/`);
 
   // Calculate the total and average points for each application
   applicationDetailsArray.forEach((applicationDetails) => {
