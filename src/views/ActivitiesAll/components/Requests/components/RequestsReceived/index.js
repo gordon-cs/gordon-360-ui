@@ -88,7 +88,10 @@ export default class RequestReceived extends Component {
     //Requests and buttons
     let displayedRequests;
     if (requests.length === 0) {
-      displayedRequests = <Typography>No requests to show</Typography>;
+      displayedRequests =
+          <Typography variant="body2" className = "message_text">
+            No Requests to Show
+          </Typography>
     } else {
       displayedRequests = requests
         .slice(0)
