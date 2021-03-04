@@ -62,13 +62,31 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * Check if the current user is authorized to view the housing staff page for applications
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
-const checkHousingStaff = async () => {
+const checkHousingAdmin = async () => {
   return true; //! DEBUG
   // try {
   //   return await http.get(`housing/admin`);
   // } catch {
   //   return false;
   // }
+};
+
+/**
+ * Add a user to the housing admin whitelist
+ * @param {String} [username] Username in firstname.lastname format
+ * @return {Response} response of http request
+ */
+const addHousingAdmin = (username) => {
+  return http.post(`housing/admin/${username}/`);
+};
+
+/**
+ * Delete a user to the housing admin whitelist
+ * @param {String} [username] Username in firstname.lastname format
+ * @return {Response} response of http request
+ */
+const deleteHousingAdmin = (username) => {
+  return http.del(`housing/admin/${username}/`);
 };
 
 /**
@@ -184,7 +202,9 @@ const getAllApartmentApplications = async () => {
 };
 
 export default {
-  checkHousingStaff,
+  checkHousingAdmin,
+  addHousingAdmin,
+  deleteHousingAdmin,
   getApplicationID,
   saveApartmentApplication,
   changeApplicationEditor,

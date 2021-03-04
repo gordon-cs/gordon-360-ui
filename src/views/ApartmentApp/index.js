@@ -69,7 +69,7 @@ const ApartApp = ({ authentication }) => {
     setLoading(true);
     const [profileInfo, isHousingStaff] = await Promise.all([
       user.getProfileInfo(),
-      housing.checkHousingStaff(),
+      housing.checkHousingAdmin(),
     ]);
     setUserProfile(profileInfo);
     profileInfo.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
