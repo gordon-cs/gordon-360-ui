@@ -147,10 +147,7 @@ export const GordonNavAvatarRightCorner = (props) => {
           aria-label="More"
           aria-owns={'global-menu'}
           aria-haspopup="true"
-          onClick={(event) => {
-            // Handles opening the menu
-            props.onClick();
-          }}
+          onClick={props.onClick}
         >
           {avatar}
         </IconButton>

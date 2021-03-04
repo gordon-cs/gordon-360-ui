@@ -35,6 +35,7 @@ const GordonNavButtonsRightCorner = ({
   authentication,
   openDialogBox,
   open,
+  anchorEl,
 }) => {
   const [linkOpen, setLinkOpen] = useState(false);
   const isOnline = useNetworkStatus();
@@ -123,9 +124,10 @@ const GordonNavButtonsRightCorner = ({
         <Popover
           classes={classes}
           anchorOrigin={{
-            vertical: 78,
+            vertical: 'bottom',
             horizontal: 'right',
           }}
+          anchorEl={anchorEl}
           transformOrigin={{
             vertical: 'top',
             horizontal: 'right',

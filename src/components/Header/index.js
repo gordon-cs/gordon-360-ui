@@ -49,6 +49,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const [dialog, setDialog] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [anchorElement, setAnchorElement] = useState(null);
   const isOnline = useNetworkStatus();
 
   /**
@@ -89,7 +90,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     window.addEventListener('resize', resize);
 
     return () => window.removeEventListener('resize', resize);
-  }, [isMenuOpen]);
+  }, []);
 
   const createDialogBox = () => {
     if (dialog === 'offline') {
@@ -162,6 +163,17 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     }
   };
 
+  const handleOpenMenu = (event) => {
+    console.log(event);
+    setAnchorElement(event.currentTarget);
+    setIsMenuOpen(true);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorElement(null);
+    setIsMenuOpen(false);
+  };
+
   return (
     <section className="gordon-header">
       <AppBar className="app-bar" position="static">
@@ -216,7 +228,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
           <GordonNavAvatarRightCorner
             onSignOut={onSignOut}
             authentication={authentication}
-            onClick={() => setIsMenuOpen((o) => !o)}
+            onClick={handleOpenMenu}
             menuOpened={isMenuOpen}
           />
 
@@ -225,7 +237,8 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             openDialogBox={setDialog}
             onSignOut={onSignOut}
             authentication={authentication}
-            onClose={() => setIsMenuOpen((o) => !o)}
+            anchorEl={anchorElement}
+            onClose={handleCloseMenu}
           />
 
           {createDialogBox()}
