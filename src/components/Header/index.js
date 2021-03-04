@@ -164,7 +164,6 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   };
 
   const handleOpenMenu = (event) => {
-    console.log(event);
     setAnchorElement(event.currentTarget);
     setIsMenuOpen(true);
   };

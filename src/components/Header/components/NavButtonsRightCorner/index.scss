@@ -12,3 +12,9 @@
   border-right-color: transparent;
   transform: rotate(45deg);
 }
+
+.right-side-nav-buttons {
+  .MuiPopover-paper {
+    overflow: visible;
+  }
+}

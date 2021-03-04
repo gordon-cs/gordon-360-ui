@@ -1,24 +1,12 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import List from '@material-ui/core/List';
 import { signOut } from '../../../../services/auth';
 import user from '../../../../services/user';
 import GordonQuickLinksDialog from '../../../QuickLinksDialog';
-import { gordonColors } from '../../../../theme';
 import GordonNavButton from '../../../NavButton';
 import useNetworkStatus from '../../../../hooks/useNetworkStatus';
 import './index.css';
-
-const useStyles = makeStyles({
-  paper: {
-    width: 160,
-    border: `1.5px solid ${gordonColors.primary.blue}`,
-    borderRadius: '8px',
-    overflowX: 'visible',
-    overflowY: 'visible',
-  },
-});
 
 /**
  *
@@ -40,11 +28,6 @@ const GordonNavButtonsRightCorner = ({
   const [linkOpen, setLinkOpen] = useState(false);
   const isOnline = useNetworkStatus();
 
-  const classes = useStyles();
-
-  /**
-   * Closes the menu and logs out the user
-   */
   function closeAndSignOut() {
     onClose();
     signOut();
@@ -122,7 +105,6 @@ const GordonNavButtonsRightCorner = ({
     <>
       <div id="right-side-menu">
         <Popover
-          classes={classes}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -134,6 +116,7 @@ const GordonNavButtonsRightCorner = ({
           }}
           open={open}
           onClose={onClose}
+          className="right-side-nav-buttons"
         >
           <List id="right-side-menu-list" disablePadding={true}>
             <div id="right-menu-triangle" />

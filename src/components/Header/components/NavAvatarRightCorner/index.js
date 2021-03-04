@@ -69,7 +69,7 @@ export const GordonNavAvatarRightCorner = ({ authentication, onClick }) => {
       // The origin of the message is checked to prevent cross-site scripting attacks
       window.addEventListener('message', (event) => {
         if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
-          loadAvatar(authentication);
+          loadAvatar();
         }
       });
 
