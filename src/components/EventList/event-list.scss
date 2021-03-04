@@ -13,17 +13,17 @@
 }
 
 .event-item:hover .event-column {
-  color: #fff;
+  color: $neutral-white;
 }
 
 .event-item:hover .descriptionText {
-  color: #fff;
+  color: $neutral-white;
 }
 
 // Make rows alternate white and grey
 /* stylelint-disable */
 .event-list > section:nth-child(even) {
-  background: #ebeaea;
+  background: $neutral-light-gray;
   &:hover {
     background-color: $primary-cyan;
     cursor: pointer;
@@ -31,7 +31,7 @@
 }
 
 .event-list > section:nth-child(odd) {
-  background: #ffffff;
+  background: $neutral-white;
   &:hover {
     background-color: $primary-cyan;
     cursor: pointer;
