@@ -1,15 +1,38 @@
 @import '../../../../../../vars';
 
+.stylized-table-toolbar {
+  color: $primary-blue;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
 .stylized-table-head {
-  background-color: $primary-blue;
-  color: $neutral-white;
+  .MuiTableCell-head {
+    background-color: $primary-blue !important;
+    color: $neutral-white !important;
+  }
+  // .MuiTableCell-stickyHeader {
+  //   background-color: $primary-blue !important;
+  // }
 }
 
 // Make rows alternate white and grey
-.stylize-table-row > :nth-of-type(even) {
+.striped-table > tr:nth-child(even) {
   background-color: $neutral-light-gray;
 }
 
-.stylize-table-row > :nth-of-type(odd) {
+.striped-table > tr:nth-child(odd) {
+  background-color: $neutral-white;
+}
+
+// Make rows alternate white and grey but in groups of two
+// (Needed to make the collapsible sub-tables match the row above
+.double-striped-table > tr:nth-child(4n),
+.double-striped-table > tr:nth-child(4n - 1) {
+  background-color: $neutral-light-gray;
+}
+
+.double-striped-table > tr:nth-child(4n - 2),
+.double-striped-table > tr:nth-child(4n - 3) {
   background-color: $neutral-white;
 }

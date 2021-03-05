@@ -12,13 +12,13 @@ import {
 
 const ApplicantSubTable = ({ applicants }) => (
   <Box margin={1}>
-    <Toolbar className={'stylized-table-head'}>
+    <Toolbar className={'stylized-table-toolbar'} disableGutters>
       <Typography variant="h6" gutterBottom component="div">
         Applicants
       </Typography>
     </Toolbar>
-    <Table size="small" aria-label="purchases">
-      <TableHead>
+    <Table size="small" aria-label="applicants">
+      <TableHead className={'stylized-table-head'}>
         <TableRow>
           <TableCell>Name</TableCell>
           <TableCell align="center">Age</TableCell>
@@ -27,9 +27,9 @@ const ApplicantSubTable = ({ applicants }) => (
           <TableCell align="right">Points</TableCell>
         </TableRow>
       </TableHead>
-      <TableBody>
+      <TableBody className={'striped-table'}>
         {applicants.map((applicantInfo) => (
-          <TableRow className={'stylized-table-row'} key={applicantInfo.Username}>
+          <TableRow key={applicantInfo.Username}>
             <TableCell component="th" scope="row">
               {applicantInfo.Username}
             </TableCell>

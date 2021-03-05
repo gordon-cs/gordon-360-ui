@@ -22,7 +22,7 @@ const ApplicationsTable = ({ applications }) => (
         <TableContainer>
           <Table stickyHeader>
             <TableHead className={'stylized-table-head'}>
-              <TableRow className={'stylized-table-head'}>
+              <TableRow>
                 <TableCell align="center">Application ID</TableCell>
                 <TableCell align="center">Editor</TableCell>
                 <TableCell align="center"># of Applicants</TableCell>
@@ -33,10 +33,9 @@ const ApplicationsTable = ({ applications }) => (
                 <TableCell align="center">Details</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody className={'double-striped-table'}>
               {applications.map((applicationDetails) => (
                 <ApplicationRow
-                  className={'stylized-table-row'}
                   key={applicationDetails.AprtAppID}
                   applicationDetails={applicationDetails}
                 />

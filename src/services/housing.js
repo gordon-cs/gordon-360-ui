@@ -178,6 +178,20 @@ const getAllApartmentApplications = async () => {
         Probation: 'no',
         Points: 6,
       },
+      {
+        Username: 'Tommy2.Turtle',
+        Age: 22,
+        OffCampusProgram: 'Education',
+        Probation: 'no',
+        Points: 6,
+      },
+      {
+        Username: 'Tommy3.Turtle',
+        Age: 22,
+        OffCampusProgram: 'Education',
+        Probation: 'no',
+        Points: 6,
+      },
     ],
     ApartmentChoices: [
       { HallRank: 1, HallName: 'Gantley' },

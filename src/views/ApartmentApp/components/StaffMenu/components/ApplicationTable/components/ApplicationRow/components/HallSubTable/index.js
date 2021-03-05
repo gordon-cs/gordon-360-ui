@@ -12,21 +12,21 @@ import {
 
 const HallSubTable = ({ apartmentChoices }) => (
   <Box margin={1}>
-    <Toolbar className={'stylized-table-head'}>
+    <Toolbar className={'stylized-table-toolbar'} disableGutters>
       <Typography variant="h6" gutterBottom component="div">
         Preferred Halls
       </Typography>
     </Toolbar>
-    <Table size="small" aria-label="purchases">
-      <TableHead>
+    <Table size="small" aria-label="halls">
+      <TableHead className={'stylized-table-head'}>
         <TableRow>
           <TableCell align="right">Rank</TableCell>
           <TableCell>Name</TableCell>
         </TableRow>
       </TableHead>
-      <TableBody>
+      <TableBody className={'striped-table'}>
         {apartmentChoices.map((apartmentChoice) => (
-          <TableRow className={'stylized-table-row'} key={apartmentChoice.HallName}>
+          <TableRow key={apartmentChoice.HallName}>
             <TableCell align="right">{apartmentChoice.HallRank}</TableCell>
             <TableCell>{apartmentChoice.HallName}</TableCell>
           </TableRow>

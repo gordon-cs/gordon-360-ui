@@ -11,11 +11,7 @@ const ApplicationRow = ({ applicationDetails }) => {
 
   return (
     <React.Fragment>
-      <TableRow
-        className={'stylized-table-row'}
-        key={applicationDetails.AprtAppID}
-        onClick={() => setOpen(!open)}
-      >
+      <TableRow key={applicationDetails.AprtAppID} onClick={() => setOpen(!open)}>
         <TableCell align="center" component="th" scope="row">
           {applicationDetails.AprtAppID}
         </TableCell>
