@@ -46,41 +46,44 @@ const StaffMenu = ({ userProfile, authentication }) => {
     let applicantData = [];
     let apartmentChoiceData = [];
     applicationDetailsArray.forEach((applicationDetails) => {
-      let newApplicationData = {
-        AprtAppID: applicationDetails.AprtAppID,
-        DateSubmitted: applicationDetails.DateSubmitted,
-        DateModified: applicationDetails.DateModified,
-        EditorUsername: applicationDetails.Username,
-        Gender: applicationDetails.Gender,
-        Applicants: applicationDetails.Applicants.map((applicant) => applicant.Username),
-        ApartmentChoices: applicationDetails.ApartmentChoices.map(
-          (apartmentChoice) => String(apartmentChoice.HallRank) + '-' + apartmentChoice.HallName,
-        ),
-        TotalPoints: applicationDetails.TotalPoints,
-        AvgPoints: applicationDetails.AvgPoints,
-      };
-      applicationData.push(newApplicationData);
-
-      applicationDetails.Applicants.forEach((applicant) => {
-        let newApplicantData = {
+      // Only add the applications that have been submitted
+      if (applicationDetails.DateSubmitted) {
+        let newApplicationData = {
           AprtAppID: applicationDetails.AprtAppID,
-          Username: applicant.Username,
-          Age: applicant.Age,
-          OffCampusProgram: applicant.OffCampusProgram,
-          Probation: applicant.Probation,
-          Points: applicant.Point,
+          DateSubmitted: applicationDetails.DateSubmitted,
+          DateModified: applicationDetails.DateModified,
+          EditorUsername: applicationDetails.Username,
+          Gender: applicationDetails.Gender,
+          Applicants: applicationDetails.Applicants.map((applicant) => applicant.Username),
+          ApartmentChoices: applicationDetails.ApartmentChoices.map(
+            (apartmentChoice) => String(apartmentChoice.HallRank) + '-' + apartmentChoice.HallName,
+          ),
+          TotalPoints: applicationDetails.TotalPoints,
+          AvgPoints: applicationDetails.AvgPoints,
         };
-        applicantData.push(newApplicantData);
-      });
+        applicationData.push(newApplicationData);
 
-      applicationDetails.ApartmentChoices.forEach((apartmentChoice) => {
-        let newApplicantData = {
-          AprtAppID: applicationDetails.AprtAppID,
-          HallRank: apartmentChoice.HallRank,
-          HallName: apartmentChoice.HallName,
-        };
-        apartmentChoiceData.push(newApplicantData);
-      });
+        applicationDetails.Applicants.forEach((applicant) => {
+          let newApplicantData = {
+            AprtAppID: applicationDetails.AprtAppID,
+            Username: applicant.Username,
+            Age: applicant.Age,
+            OffCampusProgram: applicant.OffCampusProgram,
+            Probation: applicant.Probation,
+            Points: applicant.Point,
+          };
+          applicantData.push(newApplicantData);
+        });
+
+        applicationDetails.ApartmentChoices.forEach((apartmentChoice) => {
+          let newApplicantData = {
+            AprtAppID: applicationDetails.AprtAppID,
+            HallRank: apartmentChoice.HallRank,
+            HallName: apartmentChoice.HallName,
+          };
+          apartmentChoiceData.push(newApplicantData);
+        });
+      }
     });
     // The other data arrays will be used later, this is still a WIP
     return applicationData;
@@ -99,7 +102,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
       <Grid container justify="center" spacing={2}>
         <Grid item xs={12} lg={10}>
           <Card>
-            <CardHeader title="I'll put a title here in a sec" className="apartment-card-header" />
+            <CardHeader title="Download Applications" className="apartment-card-header" />
             <CardContent>
               <Grid container direction="row" justify="flex-end" spacing={2}>
                 <Grid item xs={6} sm={8}>

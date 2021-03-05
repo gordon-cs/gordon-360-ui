@@ -16,7 +16,7 @@ import './applicationTable.css';
 
 const ApplicationsTable = ({ applications }) => (
   <Card>
-    <CardHeader title="Results" className="apartment-card-header" />
+    <CardHeader title="Apartment Applications" className="apartment-card-header" />
     <CardContent>
       {applications ? (
         <TableContainer>
