@@ -3,7 +3,7 @@
 .pwa-instructions {
   &-title {
     background-color: $primary-blue !important;
-    color: white;
+    color: $neutral-white;
     padding: 1rem;
   }
   &-content {
@@ -27,7 +27,7 @@
           margin-bottom: 1rem;
           &-toggles {
             .MuiToggleButtonGroup-grouped:not(:first-child) {
-              border-left: 1px solid #ffffff8f;
+              border-left: 1px solid $neutral-white-opacity50;
             }
           }
         }
