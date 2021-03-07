@@ -7,6 +7,15 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from '@material-ui/core';
+
 // Learn more about Dialog's API at https://material-ui.com/api/dialog/
 // Learn more about Alert's API at https://material-ui.com/api/alert/
 
