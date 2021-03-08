@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CSVLink } from 'react-csv';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
-import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import { DateTime } from 'luxon';
 import GordonLoader from '../../../../components/Loader';
 import housing from '../../../../services/housing';
@@ -119,7 +119,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
                   <Button
                     variant="contained"
                     color="primary"
-                    startIcon={<SaveAltIcon />}
+                    startIcon={<GetAppIcon />}
                     disabled={!authentication}
                     component={CSVLink}
                     data={applicationJsonArray}
@@ -133,7 +133,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
                   <Button
                     variant="contained"
                     color="primary"
-                    startIcon={<SaveAltIcon />}
+                    startIcon={<GetAppIcon />}
                     disabled={!authentication}
                     component={CSVLink}
                     data={applicantJsonArray}
@@ -147,7 +147,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
                   <Button
                     variant="contained"
                     color="primary"
-                    startIcon={<SaveAltIcon />}
+                    startIcon={<GetAppIcon />}
                     disabled={!authentication}
                     component={CSVLink}
                     data={apartmentChoiceJsonArray}
