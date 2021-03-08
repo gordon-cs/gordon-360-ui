@@ -1,6 +1,5 @@
 //Main timesheets page
 import React, { useState, useRef, useEffect } from 'react';
-import 'date-fns';
 import {
   Grid,
   Card,
