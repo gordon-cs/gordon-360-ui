@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CSVLink } from 'react-csv';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import { DateTime } from 'luxon';
 import GordonLoader from '../../../../components/Loader';
 import housing from '../../../../services/housing';
@@ -12,7 +13,6 @@ import '../../apartmentApp.css';
  * @typedef { import('../../../../services/housing').FullApplicantInfo } FullApplicantInfo
  * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
  */
-
 
 const StaffMenu = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,9 @@ const StaffMenu = ({ userProfile, authentication }) => {
   const loadAllCurrentApplications = useCallback(async () => {
     setLoading(true);
     let applicationDetailsArray = await housing.getAllApartmentApplications();
-    if (applicationDetailsArray) { setApplications(applicationDetailsArray); }
+    if (applicationDetailsArray) {
+      setApplications(applicationDetailsArray);
+    }
     setLoading(false);
   }, []);
 
@@ -70,7 +72,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
     applicationDetailsArray.forEach((applicationDetails) => {
       // Only add the applications that have been submitted
       if (applicationDetails.DateSubmitted) {
-        let {Applicants, ApartmentChoices, ...filteredApplicationDetails} = applicationDetails;
+        let { Applicants, ApartmentChoices, ...filteredApplicationDetails } = applicationDetails;
         applicationsForCsv.push(filteredApplicationDetails);
 
         Applicants.forEach((applicant) => {
@@ -93,13 +95,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
 
   useEffect(() => {
     generateCSVData(applications);
-  }, [applications, generateCSVData])
-
-  const handleDownloadCSV = () => {
-    //! This feature is not yet implemented. This is a placeholder
-    console.log('Good news: The button worked.');
-    console.log('Bad news: This feature is not yet implemented.');
-  };
+  }, [applications, generateCSVData]);
 
   if (loading) {
     return <GordonLoader />;
@@ -110,33 +106,34 @@ const StaffMenu = ({ userProfile, authentication }) => {
           <Card>
             <CardHeader title="Download Apartment Applications" className="apartment-card-header" />
             <CardContent>
-              <Grid container direction="row" justify="flex-end" spacing={2}>
-                <Grid item xs={6} sm={8}>
+              <Grid container direction="row" spacing={2} padded>
+                <Grid item xs={12}>
                   <Typography variant="body1">
-                    Click the button to download a spreadsheet of the submitted applications for the
-                    current semester
+                    Use the buttons below to download a spreadsheet of the submitted applications
+                    for the current semester
                   </Typography>
                 </Grid>
-                <Grid item xs={6} sm={4}>
+              </Grid>
+              <Grid container justify="center" alignItems="center" spacing={2}>
+                <Grid item>
                   <Button
                     variant="contained"
-                    onClick={handleDownloadCSV}
                     color="primary"
-                    fullWidth
+                    startIcon={<SaveAltIcon />}
                     disabled={!authentication}
                     component={CSVLink}
                     data={applicationJsonArray}
                     filename={`${filePrefix}-summary-${dateStr}.csv`}
                     target="_blank"
                   >
-                    Download Application Information
+                    Download Application Group Summary
                   </Button>
-                </Grid> <Grid item xs={6} sm={4}>
+                </Grid>
+                <Grid item>
                   <Button
                     variant="contained"
-                    onClick={handleDownloadCSV}
                     color="primary"
-                    fullWidth
+                    startIcon={<SaveAltIcon />}
                     disabled={!authentication}
                     component={CSVLink}
                     data={applicantJsonArray}
@@ -145,12 +142,12 @@ const StaffMenu = ({ userProfile, authentication }) => {
                   >
                     Download Applicant Information
                   </Button>
-                </Grid> <Grid item xs={6} sm={4}>
+                </Grid>
+                <Grid item>
                   <Button
                     variant="contained"
-                    onClick={handleDownloadCSV}
                     color="primary"
-                    fullWidth
+                    startIcon={<SaveAltIcon />}
                     disabled={!authentication}
                     component={CSVLink}
                     data={apartmentChoiceJsonArray}
