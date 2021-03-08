@@ -15,6 +15,7 @@ import {
 import ClearIcon from '@material-ui/icons/Clear';
 
 const HallListItem = ({
+  disabled,
   index,
   preferredHalls,
   availableHalls,
@@ -43,6 +44,10 @@ const HallListItem = ({
     previousInputs.current = [index, preferredHalls];
   });
 
+  /**
+   * Callback for changes to hall rank input field
+   * @param {*} event change event to be handled by callback
+   */
   const handleRankInputChange = (event) => {
     if (event.target.value !== null) {
       let newHallRankValue = event.target.value;
@@ -50,6 +55,10 @@ const HallListItem = ({
     }
   };
 
+  /**
+   * Callback for changes to hall name dropdown
+   * @param {*} event change event to be handled by callback
+   */
   const handleNameInputChange = (event) => {
     if (event.target.value !== null) {
       let newHallNameValue = event.target.value;
@@ -57,6 +66,9 @@ const HallListItem = ({
     }
   };
 
+  /**
+   * Callback for hall list remove button
+   */
   const handleRemove = () => {
     if (index !== null) {
       // Send this list item's index to the parent component
@@ -84,6 +96,7 @@ const HallListItem = ({
             <FormControl fullWidth>
               <InputLabel>Rank</InputLabel>
               <Select
+                disabled={disabled}
                 value={hallRankValue}
                 onChange={handleRankInputChange}
                 input={<Input id={'rank' + index} />}
@@ -96,6 +109,7 @@ const HallListItem = ({
             <FormControl fullWidth>
               <InputLabel>Hall</InputLabel>
               <Select
+                disabled={disabled}
                 value={hallNameValue}
                 onChange={handleNameInputChange}
                 input={<Input id={'hall' + index} />}
@@ -106,7 +120,7 @@ const HallListItem = ({
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete" onClick={handleRemove}>
+          <IconButton edge="end" aria-label="delete" disabled={disabled} onClick={handleRemove}>
             <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>

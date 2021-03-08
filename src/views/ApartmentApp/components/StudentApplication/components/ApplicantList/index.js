@@ -22,8 +22,13 @@ import GordonPeopleSearch from '../../../../../../components/Header/components/P
 import ApplicantListItem from './components/ApplicantListItem';
 import '../../../../apartmentApp.css';
 
+/**
+ * @typedef { import('../../services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
 // Create a list of applicants, displayed by name, username, and class standing.
 const ApplicantList = ({
+  disabled,
   maxNumApplicants,
   editorUsername,
   applicants,
@@ -34,6 +39,10 @@ const ApplicantList = ({
 }) => {
   const [showHelp, setShowHelp] = useState(false);
 
+  /**
+   * Callback for apartment people search submission
+   * @param {String} theChosenOne Username for student
+   */
   const handleSelection = (theChosenOne) => {
     // Make sure the chosen username was not null
     if (theChosenOne) {
@@ -42,6 +51,10 @@ const ApplicantList = ({
     }
   };
 
+  /**
+   * Callback for changing the application editor
+   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
+   */
   const handleChangeEditor = (profile) => {
     // Make sure the chosen profile was not null
     if (profile) {
@@ -50,11 +63,15 @@ const ApplicantList = ({
     }
   };
 
-  const handleRemove = (profile) => {
+  /**
+   * Callback for applicant list remove button
+   * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
+   */
+  const handleRemove = (profileToRemove) => {
     // Make sure the chosen profile was not null
-    if (profile) {
+    if (profileToRemove) {
       // Send the selected profile to the parent component
-      onApplicantRemove(profile);
+      onApplicantRemove(profileToRemove);
     }
   };
 
@@ -106,6 +123,7 @@ const ApplicantList = ({
                 applicants.map((applicant) => (
                   <ApplicantListItem
                     key={applicant.Profile.AD_Username}
+                    disabled={disabled}
                     profile={applicant.Profile}
                     isApplicationEditor={applicant.Profile.AD_Username === editorUsername}
                     onChangeEditor={handleChangeEditor}
@@ -127,7 +145,7 @@ const ApplicantList = ({
             <Grid item xs={9} sm={5} className={'people-search-parent'}>
               <GordonPeopleSearch
                 disableLink
-                disabled={applicants.length > maxNumApplicants}
+                disabled={disabled || applicants.length > maxNumApplicants}
                 icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={handleSelection}
