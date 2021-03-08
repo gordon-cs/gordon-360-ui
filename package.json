@@ -9,7 +9,7 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.42",
     "@material-ui/pickers": "^3.2.8",
-    "caniuse-lite": "^1.0.30001021",
+    "caniuse-lite": "^1.0.30001197",
     "chart.js": "^2.9.3",
     "classnames": ">=2.2.5",
     "cropperjs": "^1.5.6",
