@@ -7,87 +7,93 @@ import housing from '../../../../services/housing';
 import ApplicationsTable from './components/ApplicationTable';
 import '../../apartmentApp.css';
 
+/**
+ * @typedef { import('../../../../services/housing').ApplicationDetails } ApplicationDetails
+ * @typedef { import('../../../../services/housing').FullApplicantInfo } FullApplicantInfo
+ * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ */
+
+
 const StaffMenu = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
+
+  /**
+   * @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} ApplicationDetails
+   */
   const [applications, setApplications] = useState([]);
-  const [filename, setFilename] = useState('apartment-applications.csv');
+
+  /**
+   * @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} Array of application details, formatted for use with react-csv
+   */
+  const [applicationJsonArray, setApplicationJsonArray] = useState([]);
+
+  /**
+   * @type {[FullApplicantInfo[], React.Dispatch<React.SetStateAction<FullApplicantInfo[]>>]} Array of applicant info, formatted for use with react-csv
+   */
+  const [applicantJsonArray, setApplicantJsonArray] = useState([]);
+
+  /**
+   * @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info, formatted for use with react-csv
+   */
+  const [apartmentChoiceJsonArray, setApartmentChoiceJsonArray] = useState([]);
+
+  const [dateStr, setDateStr] = useState('');
+  const filePrefix = 'apartapp';
 
   /**
    * Attempt to load an all existing application for the current semester
    */
   const loadAllCurrentApplications = useCallback(async () => {
-    // TODO: Implement this once save/load of application data has been implemented in the backend
     setLoading(true);
     let applicationDetailsArray = await housing.getAllApartmentApplications();
-    if (applicationDetailsArray) {
-      //? Some additional processing may be needed in the future, rather than just directly assigning the state variable.
-      //? Details will not be known until the corresponding endpoint has been finalized for the backend
-      setApplications(applicationDetailsArray);
-    }
+    if (applicationDetailsArray) { setApplications(applicationDetailsArray); }
     setLoading(false);
   }, []);
 
   useEffect(() => {
     loadAllCurrentApplications();
 
-    // Generate the CSV filename using today's date
+    // Generate string of today's date in ISO format for use in CSV filename
     let date = new Date();
-    let dateText = DateTime.fromJSDate(date).toISODate();
-    setFilename('apartment-applications-' + dateText + '.csv');
+    let dateStr = DateTime.fromJSDate(date).toISODate();
+    setDateStr(dateStr);
   }, [userProfile, loadAllCurrentApplications]);
 
   /**
    * Generate arrays of objects to be converted to a CSV
    * @param {ApplicationDetails[]} applicationDetailsArray an array of ApplicationDetails objects
-   * @return {Object[]} Array of literal objects that is compatible with react-csv
    */
-  const generateCSVData = (applicationDetailsArray) => {
-    let applicationData = [];
-    let applicantData = [];
-    let apartmentChoiceData = [];
+  const generateCSVData = useCallback((applicationDetailsArray) => {
+    let applicationsForCsv = [];
+    let applicantsForCsv = [];
+    let apartmentChoicesForCsv = [];
     applicationDetailsArray.forEach((applicationDetails) => {
       // Only add the applications that have been submitted
       if (applicationDetails.DateSubmitted) {
-        let newApplicationData = {
-          AprtAppID: applicationDetails.AprtAppID,
-          DateSubmitted: applicationDetails.DateSubmitted,
-          DateModified: applicationDetails.DateModified,
-          EditorUsername: applicationDetails.Username,
-          Gender: applicationDetails.Gender,
-          Applicants: applicationDetails.Applicants.map((applicant) => applicant.Username),
-          ApartmentChoices: applicationDetails.ApartmentChoices.map(
-            (apartmentChoice) => String(apartmentChoice.HallRank) + '-' + apartmentChoice.HallName,
-          ),
-          TotalPoints: applicationDetails.TotalPoints,
-          AvgPoints: applicationDetails.AvgPoints,
-        };
-        applicationData.push(newApplicationData);
+        let {Applicants, ApartmentChoices, ...filteredApplicationDetails} = applicationDetails;
+        applicationsForCsv.push(filteredApplicationDetails);
 
-        applicationDetails.Applicants.forEach((applicant) => {
-          let newApplicantData = {
-            AprtAppID: applicationDetails.AprtAppID,
-            Username: applicant.Username,
-            Age: applicant.Age,
-            OffCampusProgram: applicant.OffCampusProgram,
-            Probation: applicant.Probation,
-            Points: applicant.Point,
-          };
-          applicantData.push(newApplicantData);
+        Applicants.forEach((applicant) => {
+          let filteredApplicantInfo = applicant;
+          filteredApplicantInfo.AprtAppID = applicationDetails.AprtAppID;
+          applicantsForCsv.push(filteredApplicantInfo);
         });
 
-        applicationDetails.ApartmentChoices.forEach((apartmentChoice) => {
-          let newApplicantData = {
-            AprtAppID: applicationDetails.AprtAppID,
-            HallRank: apartmentChoice.HallRank,
-            HallName: apartmentChoice.HallName,
-          };
-          apartmentChoiceData.push(newApplicantData);
+        ApartmentChoices.forEach((apartmentChoice) => {
+          let filteredApartmentChoice = apartmentChoice;
+          filteredApartmentChoice.AprtAppID = applicationDetails.AprtAppID;
+          apartmentChoicesForCsv.push(filteredApartmentChoice);
         });
       }
     });
-    // The other data arrays will be used later, this is still a WIP
-    return applicationData;
-  };
+    setApplicationJsonArray(applicationsForCsv);
+    setApplicantJsonArray(applicantsForCsv);
+    setApartmentChoiceJsonArray(apartmentChoicesForCsv);
+  }, []);
+
+  useEffect(() => {
+    generateCSVData(applications);
+  }, [applications, generateCSVData])
 
   const handleDownloadCSV = () => {
     //! This feature is not yet implemented. This is a placeholder
@@ -102,7 +108,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
       <Grid container justify="center" spacing={2}>
         <Grid item xs={12} lg={10}>
           <Card>
-            <CardHeader title="Download Applications" className="apartment-card-header" />
+            <CardHeader title="Download Apartment Applications" className="apartment-card-header" />
             <CardContent>
               <Grid container direction="row" justify="flex-end" spacing={2}>
                 <Grid item xs={6} sm={8}>
@@ -119,11 +125,39 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     fullWidth
                     disabled={!authentication}
                     component={CSVLink}
-                    data={generateCSVData(applications)}
-                    filename={filename}
+                    data={applicationJsonArray}
+                    filename={`${filePrefix}-summary-${dateStr}.csv`}
                     target="_blank"
                   >
-                    Download
+                    Download Application Information
+                  </Button>
+                </Grid> <Grid item xs={6} sm={4}>
+                  <Button
+                    variant="contained"
+                    onClick={handleDownloadCSV}
+                    color="primary"
+                    fullWidth
+                    disabled={!authentication}
+                    component={CSVLink}
+                    data={applicantJsonArray}
+                    filename={`${filePrefix}-applicants-${dateStr}.csv`}
+                    target="_blank"
+                  >
+                    Download Applicant Information
+                  </Button>
+                </Grid> <Grid item xs={6} sm={4}>
+                  <Button
+                    variant="contained"
+                    onClick={handleDownloadCSV}
+                    color="primary"
+                    fullWidth
+                    disabled={!authentication}
+                    component={CSVLink}
+                    data={apartmentChoiceJsonArray}
+                    filename={`${filePrefix}-halls-${dateStr}.csv`}
+                    target="_blank"
+                  >
+                    Download Apartment Hall Choices
                   </Button>
                 </Grid>
               </Grid>

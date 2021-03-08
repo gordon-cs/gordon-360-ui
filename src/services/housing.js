@@ -29,6 +29,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
 /**
  * @global
  * @typedef FullApplicantInfo Applicant info used by the staff menu
+ * @property {Number} AprtAppID Application ID number of this application
  * @property {String} Username The username of this applicant
  * @property {Number} Age The age of the student (in years) (only visible to housing admin)
  * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
@@ -40,6 +41,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * Note: Properties 'HallRank' and 'HallName' must be capitalized to match the backend
  * @global
  * @typedef ApartmentChoice
+ * @property {Number} [AprtAppID] Application ID number of this application
  * @property {Number} HallRank The rank assigned to this hall by the user
  * @property {String} HallName The name of the apartment hall
  */
