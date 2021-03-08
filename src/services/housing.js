@@ -200,7 +200,9 @@ const getAllApartmentApplications = async () => {
       { HallRank: 2, HallName: 'Tavilla' },
     ],
   }; //! DEBUG: This exists purely for testing the features without the backend. The commented-out line below is the actual code to use once the endpoint has been created in the backend
-  let applicationDetailsArray = [dummyApplicationDetails];
+  let { ...dummyData2 } = dummyApplicationDetails;
+  dummyData2.AprtAppID = 43;
+  let applicationDetailsArray = [dummyApplicationDetails, dummyData2];
   // let applicationDetailsArray = await http.get(`housing/apartment/load/`);
 
   // Calculate the total and average points for each application

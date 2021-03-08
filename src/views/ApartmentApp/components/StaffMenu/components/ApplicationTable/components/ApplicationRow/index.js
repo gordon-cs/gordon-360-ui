@@ -23,7 +23,7 @@ const ApplicationRow = ({ applicationDetails }) => {
         </TableCell>
         <TableCell align="center">{applicationDetails.TotalPoints || 'N/A'}</TableCell>
         <TableCell align="center">{applicationDetails.AvgPoints || 'N/A'}</TableCell>
-        <TableCell align="center">
+        <TableCell align="center" padding="none">
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>

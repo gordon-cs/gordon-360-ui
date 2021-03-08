@@ -7,7 +7,9 @@
 }
 
 .stylized-table-head {
-  .MuiTableCell-head {
+  .MuiTableCell-head,
+  .MuiTableSortLabel-root.MuiTableSortLabel-active,
+  .MuiTableSortLabel-icon {
     background-color: $primary-blue !important;
     color: $neutral-white !important;
   }
