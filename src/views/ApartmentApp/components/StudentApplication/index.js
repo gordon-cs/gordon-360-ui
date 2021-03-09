@@ -1,18 +1,19 @@
 //Student apartment application page
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Collapse,
   Button,
-  Typography,
+  Card,
+  CardContent,
+  CardHeader,
+  Collapse,
+  DataGrid,
+  Grid,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
+  Typography,
 } from '@material-ui/core/';
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -25,19 +26,105 @@ import housing from '../../../../services/housing';
 import user from '../../../../services/user';
 const MAX_NUM_APPLICANTS = 8;
 
-const InstructionsCard = () => (
-  <Card>
-    <CardHeader title="Apartment Application Instructions" className="apartment-card-header" />
-    <CardContent>
-      <Typography variant="body1">Placeholder Text</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
-        suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-        dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
-      </Typography>
-    </CardContent>
-  </Card>
-);
+const InstructionsCard = () => {
+  const [apartmentSelectionDate, setApartmentSelectionDate] = useState();
+  const [thisYear, setThisYear] = useState();
+
+  useEffect(() => {
+    const getYear = () => setThisYear(new Date().getFullYear());
+
+    getYear();
+
+    // let selectionDate = housing.getApartmentSelectionDate();
+    let selectionDate = 'Apr. 23'; // API endpoint for this is planned for the future
+    setApartmentSelectionDate(selectionDate);
+  }, []);
+
+  const columns = [
+    { field: 'description', headerName: 'Description', sortable: false, width: 70 },
+    { field: 'points', headerName: 'Points', type: 'number', sortable: false, width: 130 },
+  ];
+
+  const rows = [
+    { description: 'Current Freshman', points: 1 },
+    { description: 'Current Sophomore', points: 1 },
+    { description: 'Current Junior', points: 1 },
+    { description: 'Current Senior', points: 1 },
+    { description: '23+ years old', points: 1 },
+    { description: 'Full-time, off-campus program credit', points: 1 },
+    { description: 'Academic probation', points: -1 },
+    { description: 'Possible academic suspension', points: -2 },
+    { description: `${thisYear - 1}-${thisYear} Disciplinary Probation`, points: -3 },
+  ];
+
+  return (
+    <Card>
+      <CardHeader title="Apartment Application Instructions" className="apartment-card-header" />
+      <CardContent>
+        <Typography variant="subtitle1" gutterBottom>
+          <strong>
+            On-Campus Apartments
+            <br />
+            Information and Guidelines
+          </strong>
+        </Typography>
+        <Typography variant="body1">
+          Apartments provide an alternative to the traditional residence hall setting and offer a
+          unique community experience. To be eligible to live in an apartment, students must be at
+          least 20 years old as of Sept. 1, {thisYear} <strong>or</strong> a current junior or
+          senior. Students who were on disciplinary probation at any time during the {thisYear - 1}-
+          {thisYear} academic year must also receive approval from the Dean of Student Care to be
+          eligible to apply for an apartment. Each applicant must be registered as a full-time
+          student by apartment selection night ({apartmentSelectionDate}).
+        </Typography>
+        <Typography variant="body1">
+          Each group of students desiring to live in a Tavilla or Bromley apartment or in The
+          Village must submit an application. Your application can include a student who is studying
+          aproad or not enrolled for the Spring {thisYear} semester &ndash; simply list their name
+          on the application.
+        </Typography>
+        <Typography variant="body1">
+          <strong>Full-time, off-campus program credit:</strong> Students fulfilling academic
+          program requirements through student teaching or a full-time internship will qualify for
+          the full-time, off-campus program credit. It is the responsibility of applicants to claim
+          this credit on the application.
+        </Typography>
+        <Typography variant="body1">
+          <strong>Applications must be for a full apartment:</strong> If applying for a six-person
+          apartment, there must be six people on the application who will be here for the{' '}
+          <strong class="over-emphasized">fall semester</strong> (four people on a four-person
+          application, etc.). Applications with an incorrect number of applicants will not be
+          considered.
+        </Typography>
+        <Typography variant="body1">
+          <strong>An application is not a guarantee!</strong>
+          <br />
+          Due to the large number of applications typically recieved for apartments, not all
+          applications will be awarded an apartment. If you do not receive an apartment, you will
+          need to secure housing through the housing lottery.
+        </Typography>
+        <Typography variant="body1">
+          <strong>How are apartments awarded?</strong>
+          <br />
+          Apartments are awarded in order of point total for each type fo apartment (4-person,
+          6-person, etc.). Each individual on an application will have points given/taken away using
+          the following scale:
+        </Typography>
+        <DataGrid rows={rows} columns={columns} />
+        <Typography variant="body1">
+          <strong>If You Are Approved...</strong>
+          <br />
+          You will be notified of your placement in an apartment/Village{' '}
+          <strong>
+            <emphasis>building</emphasis>
+          </strong>{' '}
+          no later than {apartmentSelectionDate}. Further information about specific apartment/room
+          selection will be communicated in that email.
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+};
 
 const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) => {
   function createData(label, value) {

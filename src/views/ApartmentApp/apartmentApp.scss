@@ -1,5 +1,10 @@
 @import '../../vars';
 
+strong.over-emphasized {
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+
 .apartment-card-header {
   background-color: $primary-blue;
   color: $neutral-white;
