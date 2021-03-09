@@ -14,6 +14,7 @@ import Login from '../Login';
 import GuestWelcome from './components/GuestWelcome';
 import './home.css';
 
+
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
@@ -77,12 +78,12 @@ const Home = ({ authentication, onLogIn }) => {
   } else if (!isAuthenticated) {
     return (
       <div className="gordon-login">
-        <Grid container justify="center" spacing={2}>
-          <Grid item xs={8}>
-            <Login onLogIn={onLogIn} />
-          </Grid>
-          <Grid item xs = {4}>
+        <Grid container direction="column" justify="flex-start" alignItems="center">
+        <Grid item xs = {2}>
             <GuestWelcome />
+          </Grid>
+          <Grid item xs={10}>
+            <Login onLogIn={onLogIn} />
           </Grid>
         </Grid>
       </div>
