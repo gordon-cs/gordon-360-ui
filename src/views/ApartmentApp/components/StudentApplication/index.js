@@ -6,8 +6,8 @@ import {
   CardContent,
   CardHeader,
   Collapse,
-  DataGrid,
   Grid,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -40,16 +40,11 @@ const InstructionsCard = () => {
     setApartmentSelectionDate(selectionDate);
   }, []);
 
-  const columns = [
-    { field: 'description', headerName: 'Description', sortable: false, width: 70 },
-    { field: 'points', headerName: 'Points', type: 'number', sortable: false, width: 130 },
-  ];
-
   const rows = [
     { description: 'Current Freshman', points: 1 },
-    { description: 'Current Sophomore', points: 1 },
-    { description: 'Current Junior', points: 1 },
-    { description: 'Current Senior', points: 1 },
+    { description: 'Current Sophomore', points: 2 },
+    { description: 'Current Junior', points: 3 },
+    { description: 'Current Senior', points: 4 },
     { description: '23+ years old', points: 1 },
     { description: 'Full-time, off-campus program credit', points: 1 },
     { description: 'Academic probation', points: -1 },
@@ -59,16 +54,13 @@ const InstructionsCard = () => {
 
   return (
     <Card>
-      <CardHeader title="Apartment Application Instructions" className="apartment-card-header" />
+      <CardHeader
+        title="On-Campus Apartments"
+        subheader="Information and Guidelines"
+        className="apartment-card-header"
+      />
       <CardContent>
-        <Typography variant="subtitle1" gutterBottom>
-          <strong>
-            On-Campus Apartments
-            <br />
-            Information and Guidelines
-          </strong>
-        </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" paragraph>
           Apartments provide an alternative to the traditional residence hall setting and offer a
           unique community experience. To be eligible to live in an apartment, students must be at
           least 20 years old as of Sept. 1, {thisYear} <strong>or</strong> a current junior or
@@ -77,41 +69,56 @@ const InstructionsCard = () => {
           eligible to apply for an apartment. Each applicant must be registered as a full-time
           student by apartment selection night ({apartmentSelectionDate}).
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" paragraph>
           Each group of students desiring to live in a Tavilla or Bromley apartment or in The
           Village must submit an application. Your application can include a student who is studying
           aproad or not enrolled for the Spring {thisYear} semester &ndash; simply list their name
           on the application.
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" paragraph>
           <strong>Full-time, off-campus program credit:</strong> Students fulfilling academic
           program requirements through student teaching or a full-time internship will qualify for
           the full-time, off-campus program credit. It is the responsibility of applicants to claim
           this credit on the application.
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" paragraph>
           <strong>Applications must be for a full apartment:</strong> If applying for a six-person
           apartment, there must be six people on the application who will be here for the{' '}
           <strong class="over-emphasized">fall semester</strong> (four people on a four-person
           application, etc.). Applications with an incorrect number of applicants will not be
           considered.
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" paragraph>
           <strong>An application is not a guarantee!</strong>
           <br />
           Due to the large number of applications typically recieved for apartments, not all
           applications will be awarded an apartment. If you do not receive an apartment, you will
           need to secure housing through the housing lottery.
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" paragraph>
           <strong>How are apartments awarded?</strong>
           <br />
           Apartments are awarded in order of point total for each type fo apartment (4-person,
           6-person, etc.). Each individual on an application will have points given/taken away using
           the following scale:
         </Typography>
-        <DataGrid rows={rows} columns={columns} />
-        <Typography variant="body1">
+        <Grid container justify="center" spacing={2}>
+          <Grid item xs={12} lg={9}>
+            <TableContainer component={Paper}>
+              <Table size="small">
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow key={row.description}>
+                      <TableCell>{row.description}</TableCell>
+                      <TableCell>{row.points}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Grid>
+        </Grid>
+        <Typography variant="body1" paragraph>
           <strong>If You Are Approved...</strong>
           <br />
           You will be notified of your placement in an apartment/Village{' '}

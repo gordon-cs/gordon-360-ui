@@ -9,6 +9,10 @@ strong.over-emphasized {
   background-color: $primary-blue;
   color: $neutral-white;
   padding: '10px';
+  .MuiTypography-colorTextSecondary {
+    color: $neutral-light-gray;
+    font-size: 1.25rem;
+  }
 }
 
 .list-item {
