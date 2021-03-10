@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
 import GordonLoader from '../../components/Loader';
 import GordonSchedulePanel from '../../components/SchedulePanel';
 import { Identification } from '../../components/Identification/index';
@@ -15,7 +11,7 @@ import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
 import './myProfile.css';
 import 'cropperjs/dist/cropper.css';
 
-//TODO: Refactor Network awareness into ProfileList, Identification, VictoryPromiseDisplay, and GordonSchedulePanel
+import { Button, Card, CardContent, Grid } from '@material-ui/core';
 
 const MyProfile = (props) => {
   const [loading, setLoading] = useState(true);

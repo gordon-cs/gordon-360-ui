@@ -11,7 +11,7 @@
 .gc360-profile {
   &_icon {
     font-size: 28px;
-    color: black;
+    color: $neutral-black;
     transition: color 200ms;
     &:hover {
       color: $primary-cyan !important;
@@ -27,7 +27,7 @@
 }
 
 .edit-icon {
-  color: #000;
+  color: $neutral-black;
   transition: color 200ms;
 
   &:hover {

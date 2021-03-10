@@ -1,12 +1,8 @@
-import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import user from './../../services/user';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
 import MembershipsList from '../../components/MembershipsList';
-import Button from '@material-ui/core/Button';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import GordonSchedulePanel from '../../components/SchedulePanel';
@@ -16,6 +12,8 @@ import { Redirect } from 'react-router';
 
 import './profile.css';
 import '../../app.css';
+
+import { Grid, Card, CardContent, Button } from '@material-ui/core';
 
 //Public profile view
 export default class Profile extends Component {
