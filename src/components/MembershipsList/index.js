@@ -68,7 +68,9 @@ const MembershipsList = ({ user, myProf }) => {
       createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
       setMemberships(
         memberships.map((m) => {
-          if (m.MembershipID === membership.MembershipID) m.Privacy = !m.Privacy;
+          if (m.MembershipID === membership.MembershipID) {
+            m.Privacy = !m.Privacy;
+          }
           return m;
         }),
       );
