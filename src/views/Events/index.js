@@ -185,7 +185,6 @@ export default class Events extends Component {
       this.setFilter(name);
       const events = await gordonEvent.getFilteredEvents(this.state);
       this.setState({ filteredEvents: events, loading: false });
-      console.log("Filtering events...");
       this.createURLParameters();
   }
 
@@ -308,11 +307,10 @@ export default class Events extends Component {
   }
 
   handleChange = async (event) => {
-    console.log("event target value is" + event.target.value);
     await this.setState({activeFilters: event.target.value });
-    this.filterEvents(filters[event.target.value]);
-    console.log("filters[event.target.value] is " + filters[event.target.value]);
-    console.log("active filters are "+ this.state.activeFilters);
+    for (let i in event.target.value) {
+      this.filterEvents(filters[event.target.value[i]]);
+    }
   }
 
   render() {
