@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import LinkIcon from '@material-ui/icons/InsertLink';
-import Typography from '@material-ui/core/Typography';
 
-import { ListItemIcon } from '@material-ui/core';
+import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Typography } from '@material-ui/core';
 
 import '../../../../app.css';
 

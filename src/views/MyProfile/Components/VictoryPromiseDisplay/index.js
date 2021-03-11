@@ -1,18 +1,13 @@
-import Grid from '@material-ui/core/Grid';
 import React from 'react';
-import CardHeader from '@material-ui/core/CardHeader';
-import Tooltip from '@material-ui/core/Tooltip';
 import { gordonColors } from '../../../../theme';
 import { Polar } from 'react-chartjs-2';
 import victory from '../../../../services/victory';
 import './VictoryPromise.css';
-import Button from '@material-ui/core/Button';
 import './VictoryPromise.css';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import './VictoryPromise.css';
+
+import { Grid, CardHeader, Tooltip, Button, Typography, Card, CardContent } from '@material-ui/core';
 
 export default class VictoryPromiseDisplay extends React.Component {
   constructor(props) {
