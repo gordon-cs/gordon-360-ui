@@ -1,5 +1,8 @@
+import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import { Divider, ListItem, Typography, Grid } from '@material-ui/core';
+import ListItem from '@material-ui/core/ListItem';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 export default class Majors extends Component {
   constructor(props) {

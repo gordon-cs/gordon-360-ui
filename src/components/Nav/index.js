@@ -1,11 +1,12 @@
+import Drawer from '@material-ui/core/Drawer';
+import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import './nav.css';
 import GordonNavAvatar from './components/NavAvatar';
 import GordonNavLinks from './components/NavLinks';
-
-import { Drawer, Divider, Hidden } from '@material-ui/core';
 
 export default class GordonNav extends Component {
   render() {

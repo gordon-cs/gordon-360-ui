@@ -1,3 +1,7 @@
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
@@ -5,10 +9,13 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import WorkIcon from '@material-ui/icons/Work';
 import WellnessIcon from '@material-ui/icons/LocalHospital';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { Route, Switch, NavLink, Link } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
@@ -19,7 +26,10 @@ import storage from '../../services/storage';
 import GordonDialogBox from '../GordonDialogBox/index';
 import { windowBreakWidths } from '../../theme';
 
-import { AppBar, Toolbar, Typography, IconButton, Tabs, Tab, Button } from '@material-ui/core';
+
+const WrapLink = React.forwardRef((props, ref) => <Link ref={ref} {...props} />)
+
+
 
 const getRouteName = (route) => {
   if (route.name) {
@@ -416,7 +426,11 @@ export default class GordonHeader extends Component {
 
     return wellnessTab;
   }
+
   render() {
+
+    const loginButton = <Button className='login-button' component={ WrapLink } to='/' > Login </Button>
+
     return (
       <section className="gordon-header">
         <AppBar className="app-bar" position="static">
@@ -467,7 +481,11 @@ export default class GordonHeader extends Component {
               </Tabs>
             </div>
 
-            <GordonPeopleSearch authentication={this.props.authentication} />
+            {
+              this.props.authentication ?
+                <GordonPeopleSearch authentication={this.props.authentication} />
+              : loginButton
+            }
 
             <GordonNavAvatarRightCorner
               onSignOut={this.props.onSignOut}

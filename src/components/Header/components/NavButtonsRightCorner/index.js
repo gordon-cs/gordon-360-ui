@@ -11,13 +11,13 @@ import {
   createMyProfileButton,
   createSignInOutButton,
 } from './navButtons';
+import Popover from '@material-ui/core/Popover';
+import List from '@material-ui/core/List';
 import PropTypes from 'prop-types';
 import QuickLinksDialog from '../../../QuickLinksDialog';
 import { gordonColors } from '../../../../theme';
 import storage from '../../../../services/storage';
 import './index.css';
-
-import { Popover, List } from '@material-ui/core';
 
 export const GordonNavButtonsRightCorner = (props) => {
   const [linkOpen, setLinkOpen] = useState(false);

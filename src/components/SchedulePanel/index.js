@@ -1,6 +1,13 @@
 import React, { Component, Fragment } from 'react';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Switch from '@material-ui/core/Switch';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { gordonColors } from '../../theme';
 import MyScheduleDialog from './components/myScheduleDialog';
@@ -14,16 +21,6 @@ import { Markup } from 'interweave';
 import myschedule from '../../services/myschedule';
 
 import GordonLoader from '../../components/Loader';
-
-import {
-  Grid,
-  Button,
-  Switch,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  Typography,
-} from '@material-ui/core';
 
 // Default values
 const STARTHOUR = '08:00';

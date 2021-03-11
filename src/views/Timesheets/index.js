@@ -164,8 +164,12 @@ const Timesheets = (props) => {
   };
 
   if (props.authentication) {
-    const getJobs = (dateIn, dateOut) => {
-      jobs.getJobs(canUseStaff, dateIn, dateOut).then((result) => {
+    const getActiveJobsForUser = (dateIn, dateOut) => {
+      let details = {
+        shift_start_datetime: dateIn.toISOString(),
+        shift_end_datetime: dateOut.toISOString(),
+      };
+      jobs.getActiveJobsForUser(canUseStaff, details).then((result) => {
         setUserJobs(result);
       });
     };
@@ -182,7 +186,7 @@ const Timesheets = (props) => {
         setIsOverlappingShift(false);
         handleTimeErrors(date, selectedDateOut);
         if (selectedDateOut !== null) {
-          getJobs(date, selectedDateOut);
+          getActiveJobsForUser(date, selectedDateOut);
         }
       }
     };
@@ -195,7 +199,7 @@ const Timesheets = (props) => {
         setIsOverlappingShift(false);
         handleTimeErrors(selectedDateIn, date);
         if (selectedDateIn !== null) {
-          getJobs(selectedDateIn, date);
+          getActiveJobsForUser(selectedDateIn, date);
         }
       }
     };
@@ -226,8 +230,8 @@ const Timesheets = (props) => {
         if (calculatedTimeDiff2 > 0) {
           saveShift(
             selectedJob.EMLID,
-            timeIn2,
-            timeOut2,
+            timeIn2.toLocaleString(),
+            timeOut2.toLocaleString(),
             roundedHourDifference2,
             selectedHourType,
             userShiftNotes,
@@ -265,8 +269,8 @@ const Timesheets = (props) => {
 
       saveShift(
         selectedJob.EMLID,
-        timeIn,
-        timeOut,
+        timeIn.toLocaleString(),
+        timeOut.toLocaleString(),
         roundedHourDifference,
         selectedHourType,
         userShiftNotes,

@@ -5,7 +5,7 @@
   grid-template-rows: auto auto auto;
   &_title {
     background-color: $primary-blue;
-    color: $neutral-white;
+    color: white;
     text-align: center;
     grid-row: 1;
   }
@@ -18,7 +18,7 @@
     &_text {
       grid-row: 1;
       grid-column: 1;
-      color: $neutral-gray;
+      color: #888888;
       text-align: center;
     }
     &_facebook {

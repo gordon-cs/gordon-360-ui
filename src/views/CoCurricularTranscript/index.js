@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 import { gordonColors } from '../../theme';
 import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
 import user from './../../services/user';
 import GordonLoader from './../../components/Loader';
 import './coCurricularTranscript.css';
-
-import { Grid, Button, Card, CardContent, Typography } from '@material-ui/core';
 
 //This component creates the overall interface for the CoCurricularTranscript (card, heading,
 //download button), and contains a InvolvementsList object for displaying the content

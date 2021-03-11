@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Badge from '@material-ui/core/Badge';
 
 import { gordonColors } from '../../../../../../theme';
 import membership from '../../../../../../services/membership';
 import './requests.css';
-
-import {
-  Button,
-  Grid,
-  Typography,
-  Divider,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  Badge,
-} from '@material-ui/core';
 
 export default class RequestReceived extends Component {
   constructor(props) {
@@ -88,10 +85,7 @@ export default class RequestReceived extends Component {
     //Requests and buttons
     let displayedRequests;
     if (requests.length === 0) {
-      displayedRequests =
-          <Typography variant="body2" className = "message_text">
-            No Requests to Show
-          </Typography>
+      displayedRequests = <Typography>No requests to show</Typography>;
     } else {
       displayedRequests = requests
         .slice(0)

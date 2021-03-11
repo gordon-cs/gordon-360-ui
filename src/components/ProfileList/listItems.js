@@ -1,10 +1,13 @@
 import React from 'react';
+import Typography from '@material-ui/core/Typography';
+import ListItem from '@material-ui/core/ListItem';
+import Grid from '@material-ui/core/Grid';
+import Switch from '@material-ui/core/Switch';
+import Divider from '@material-ui/core/Divider';
 import Majors from './../../components/MajorList';
 import Minors from './../../components/MinorList';
 import Advisors from './../../components/AdvisorList';
 import LockIcon from '@material-ui/icons/Lock';
-
-import { Typography, ListItem, Grid, Switch, Divider } from '@material-ui/core';
 
 /**
  * Creates the Home List Item

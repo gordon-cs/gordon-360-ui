@@ -4,7 +4,10 @@
 // This file is being preserved for now as the news features are still in development
 
 import React, { Component } from 'react';
-import { Button, Grid, Typography, Collapse } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Collapse from '@material-ui/core/Collapse';
+import { Button } from '@material-ui/core';
 import { gordonColors } from '../../../../../../theme';
 import NewsService from '../../../../../../services/news';
 import NewsItem from '../NewsItem';

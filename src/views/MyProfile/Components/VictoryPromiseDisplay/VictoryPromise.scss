@@ -1,16 +1,16 @@
 @import '../../../../vars';
 
 .victory-promise {
-  background-color: $neutral-white;
+  background-color: white;
   overflow: hidden;
   border-radius: 4px;
   height: 100%;
-  box-shadow: 0px 2px 1px -1px $neutral-black-opacity20,
-    0px 1px 1px 0px $neutral-black-opacity15, 0px 1px 3px 0px $neutral-black-opacity125;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 
   &-header {
     background: $primary-blue;
-    color: $neutral-white;
+    color: white;
     padding-left: 1rem;
   }
   &-container {
@@ -23,7 +23,7 @@
       &-container {
         &-button-style {
           background-color: $primary-cyan !important;
-          color: $neutral-white !important;
+          color: white !important;
           margin: 1rem auto 2rem auto !important;
         }
         &-content {
@@ -41,7 +41,7 @@
               margin: 0%;
               &:hover {
                 transition: box-shadow 0.2s;
-                box-shadow: 0px 3px 10px 0px $neutral-black-opacity20;
+                box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.2);
               }
             }
           }

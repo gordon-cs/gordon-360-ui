@@ -5,7 +5,7 @@
   border: 2px solid $primary-blue;
   border-radius: 0.5rem;
   opacity: 0.92;
-  box-shadow: 0 5px 22px $neutral-black-opacity55;
+  box-shadow: 0 5px 22px rgba(0, 0, 0, 0.5);
 }
 .login-img {
   margin: 1rem;
