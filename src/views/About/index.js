@@ -1,10 +1,12 @@
+import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
 import { gordonColors } from '../../theme';
 import Version from '../../services/version';
 import { projectName } from '../../project-name';
 import './about.css';
-
-import { Typography, Grid, Button, Card } from '@material-ui/core';
 
 export default class About extends Component {
   constructor(props) {

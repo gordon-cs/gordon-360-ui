@@ -54,7 +54,7 @@ a {
   -webkit-overflow-scrolling: touch;
   padding: 1rem 0.5rem;
   width: 100%;
-  background-color: $neutral-light-gray;
+  background-color: #ebeaea;
   &-container {
     height: 100%;
   }
@@ -62,15 +62,15 @@ a {
 
 // style for links that are menu items or buttons (not just text)
 .gc360-link {
-  color: $neutral-black;
+  color: black;
   &:hover {
-    color: $neutral-black !important;
+    color: black !important;
     text-decoration: none !important;
   }
 }
 // style for links that are simply text and therefore need more of a sign that they are clickable
 .gc360-text-link {
-  color: $neutral-black;
+  color: black;
   transition: color 200ms;
   &:hover {
     color: $primary-cyan !important;

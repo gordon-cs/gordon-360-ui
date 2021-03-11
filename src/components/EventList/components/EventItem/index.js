@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
+import CardContent from '@material-ui/core/CardContent';
+import Collapse from '@material-ui/core/Collapse';
+import Grid from '@material-ui/core/Grid';
 import './event-item.css';
-
-import { Typography, CardContent, Collapse, Grid } from '@material-ui/core';
 
 //Switched to table rows
 export default class GordonEventItem extends Component {

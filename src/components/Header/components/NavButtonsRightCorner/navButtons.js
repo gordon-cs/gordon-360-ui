@@ -1,8 +1,8 @@
 import React from 'react';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import { NavLink } from 'react-router-dom';
 import user from '../../../../services/user';
-
-import { ListItem, ListItemText } from '@material-ui/core';
 
 /**
  * Creates the Links button.

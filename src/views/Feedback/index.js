@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 
 import './feedback.css';
-import { Button, Grid, Card, CardContent } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 export default class Feedback extends Component {
   constructor(props) {

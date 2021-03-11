@@ -1,3 +1,4 @@
+import Grid from '@material-ui/core/Grid';
 import React, { useState, useEffect } from 'react';
 import GordonLoader from '../../components/Loader';
 import WellnessQuestion from '../../components/WellnessQuestion';
@@ -12,7 +13,6 @@ import storage from '../../services/storage';
 import Login from '../Login';
 import GuestWelcome from './components/GuestWelcome';
 import './home.css';
-import { Grid } from '@material-ui/core';
 
 
 const Home = ({ authentication, onLogIn }) => {

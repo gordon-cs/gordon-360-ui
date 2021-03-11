@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import user from './../../services/user';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import Snackbar from '@material-ui/core/Snackbar';
 import ErrorIcon from '@material-ui/icons/Error';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import IconButton from '@material-ui/core/IconButton';
 import './profileList.css';
 import { withStyles } from '@material-ui/core/styles';
 import { gordonColors } from '../../theme';
@@ -20,8 +27,6 @@ import {
   createSpouseItem,
 } from './listItems';
 import '../../app.css';
-
-import { Typography, Grid, Card, CardHeader, CardContent, Snackbar, IconButton } from '@material-ui/core';
 
 const PRIVATE_INFO = 'Private as requested.';
 

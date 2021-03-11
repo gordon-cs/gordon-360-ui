@@ -1,10 +1,13 @@
+import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
+import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
+import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import '../../app.css';
 import './index.css';
-
-import { Grid, Divider, Typography, List, ListItem } from '@material-ui/core';
 
 export default class ProfileActivityList extends Component {
   render() {

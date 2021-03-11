@@ -1,4 +1,7 @@
 import React from 'react';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import { NavLink } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
@@ -7,8 +10,6 @@ import PeopleIcon from '@material-ui/icons/People';
 import user from '../../../../services/user';
 import WorkIcon from '@material-ui/icons/Work';
 import WellnessIcon from '@material-ui/icons/LocalHospital';
-
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 
 /**
  * Creates the Links button.

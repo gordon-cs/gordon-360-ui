@@ -5,11 +5,6 @@
 
 import http from './http';
 
-const dateFormat = new Intl.DateTimeFormat('en', {
-  timeStyle: 'medium',
-  dateStyle: 'short',
-});
-
 /**
  * Get Whether or not the user can use staff timesheets
  * @return {Promise.<Number>} User's employee ID
@@ -21,20 +16,14 @@ const getStaffPageForUser = async () => {
 /**
  * Get active jobs for current user
  * @param {Boolean} canUseStaff Whether user can use staff timesheets
- * @param {Date} shiftStart The start of the shift to get jobs for
- * @param {Date} shiftEnd The end of the shift to get jobs for
+ * @param {String} details The user's details
  * @return {Promise.<String>} User's active jobs
  */
-const getJobs = (canUseStaff, shiftStart, shiftEnd) => {
-  const urlParams = `?shiftStart=${dateFormat.format(shiftStart)}&shiftEnd=${dateFormat.format(
-    shiftEnd,
-  )}`;
-
+const getActiveJobsForUser = (canUseStaff, details) => {
   if (canUseStaff) {
-    return http.get('jobs/staff' + urlParams);
-  } else {
-    return http.get('jobs' + urlParams);
+    return http.post(`jobs/JobsStaff`, details); // Is a HttpPost, but says get?
   }
+  return http.post(`jobs/getJobs`, details);
 };
 
 /**
@@ -69,27 +58,33 @@ const saveShiftForUser = async (
   hoursType,
   shiftNotes,
 ) => {
-  const shiftDetails = {
+  if (canUseStaff) {
+    let shiftDetails = {
+      EML: eml,
+      SHIFT_START_DATETIME: shiftStart,
+      SHIFT_END_DATETIME: shiftEnd,
+      HOURS_WORKED: hoursWorked,
+      HOURS_TYPE: hoursType,
+      SHIFT_NOTES: shiftNotes,
+    };
+    return await http.post(`jobs/saveShiftStaff/`, shiftDetails);
+  }
+  let shiftDetails = {
     EML: eml,
-    SHIFT_START_DATETIME: dateFormat.format(shiftStart),
-    SHIFT_END_DATETIME: dateFormat.format(shiftEnd),
+    SHIFT_START_DATETIME: shiftStart,
+    SHIFT_END_DATETIME: shiftEnd,
     HOURS_WORKED: hoursWorked,
-    HOURS_TYPE: canUseStaff ? hoursType : null,
     SHIFT_NOTES: shiftNotes,
   };
-  if (canUseStaff) {
-    return await http.post(`jobs/saveShiftStaff/`, shiftDetails);
-  } else {
-    return await http.post(`jobs/saveShift/`, shiftDetails);
-  }
+  return await http.post(`jobs/saveShift/`, shiftDetails);
 };
 
 const editShift = async (canUseStaff, rowID, newShiftStart, newShiftEnd, newHoursWorked) => {
   let newShiftDetails = {
     ID: rowID,
     EML: null,
-    SHIFT_START_DATETIME: dateFormat.format(newShiftStart),
-    SHIFT_END_DATETIME: dateFormat.format(newShiftEnd),
+    SHIFT_START_DATETIME: newShiftStart.toLocaleString(),
+    SHIFT_END_DATETIME: newShiftEnd.toLocaleString(),
     HOURS_WORKED: newHoursWorked,
     SHIFT_NOTES: null,
     LAST_CHANGED_BY: null,
@@ -114,21 +109,31 @@ const getSupervisorNameForJob = (canUseStaff, supervisorID) => {
   return http.get(`jobs/supervisorName/${supervisorID}`);
 };
 
-const submitShiftsForUser = (canUseStaff, shifts, submittedTo) => {
-  const shiftDetails = (shift) => ({
-    ID_NUM: shift.ID_NUM,
-    EML: shift.EML,
-    SHIFT_END_DATETIME: dateFormat.format(new Date(shift.SHIFT_END_DATETIME)),
-    SUBMITTED_TO: submittedTo,
-    HOURS_TYPE: canUseStaff ? shift.HOURS_TYPE : null,
-    LAST_CHANGED_BY: shift.LAST_CHANGED_BY,
-  });
-
+const submitShiftsForUser = (canUseStaff, shiftsToSubmit, submittedTo) => {
+  let shifts = [];
   if (canUseStaff) {
-    return http.post(`jobs/submitShiftsStaff`, shifts.map(shiftDetails));
-  } else {
-    return http.post(`jobs/submitShifts`, shifts.map(shiftDetails));
+    for (let i = 0; i < shiftsToSubmit.length; i++) {
+      shifts.push({
+        ID_NUM: shiftsToSubmit[i].ID_NUM,
+        EML: shiftsToSubmit[i].EML,
+        SHIFT_END_DATETIME: shiftsToSubmit[i].SHIFT_END_DATETIME,
+        SUBMITTED_TO: submittedTo,
+        HOURS_TYPE: shiftsToSubmit[i].HOURS_TYPE,
+        LAST_CHANGED_BY: shiftsToSubmit[i].LAST_CHANGED_BY,
+      });
+      return http.post(`jobs/submitShiftsStaff`, shifts);
+    }
   }
+  for (let i = 0; i < shiftsToSubmit.length; i++) {
+    shifts.push({
+      ID_NUM: shiftsToSubmit[i].ID_NUM,
+      EML: shiftsToSubmit[i].EML,
+      SHIFT_END_DATETIME: shiftsToSubmit[i].SHIFT_END_DATETIME,
+      SUBMITTED_TO: submittedTo,
+      LAST_CHANGED_BY: shiftsToSubmit[i].LAST_CHANGED_BY,
+    });
+  }
+  return http.post(`jobs/submitShifts`, shifts);
 };
 
 const clockIn = (data) => {
@@ -149,7 +154,7 @@ const getHourTypes = () => {
 
 export default {
   getStaffPageForUser,
-  getJobs,
+  getActiveJobsForUser,
   getSavedShiftsForUser,
   saveShiftForUser,
   editShift,

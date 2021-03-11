@@ -27,7 +27,7 @@ $image-side-width-desktop: 90px;
       grid-row: 2;
       background-color: $primary-blue;
       text-align: center;
-      color: $neutral-white; //white;
+      color: white;
     }
     &_content {
       display: grid;
@@ -53,8 +53,8 @@ $image-side-width-desktop: 90px;
         align-items: center;
         outline: none;
         &:hover {
-          background-color: $neutral-light-gray2;
-          box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
+          background-color: #dddddd;
+          box-shadow: 0 0 0 0.25rem #dddddd;
         }
         &_img {
           border-radius: 0.5rem;
@@ -104,14 +104,14 @@ $image-side-width-desktop: 90px;
     display: flex;
     align-items: center;
     flex-direction: column;
-    background-color: $neutral-white;
+    background-color: white;
     border-radius: 4px;
     height: 100%;
-    box-shadow: 0px 2px 1px -1px $neutral-black-opacity20, 0px 1px 1px 0px $neutral-black-opacity15,
-      0px 1px 3px 0px $neutral-black-opacity125;
+    box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 3px 0px rgba(0, 0, 0, 0.12);
     &-header {
       background-color: $primary-blue;
-      color: $neutral-white;
+      color: white;
       padding-left: 1rem;
       hyphens: auto;
     }
@@ -153,7 +153,7 @@ $image-side-width-desktop: 90px;
                   left: 50%;
                   transform: translate(-50%, -50%);
                   width: 100%;
-                  color: $neutral-white;
+                  color: white;
                   background: transparentize(
                     $primary-blue,
                     0.5
@@ -204,12 +204,12 @@ $image-side-width-desktop: 90px;
             max-width: 600px;
             transition: width 500ms;
             margin: auto 1rem;
-            color: $neutral-black-opacity90;
+            color: rgba(0, 0, 0, 0.87);
             overflow-wrap: anywhere;
             overflow: hidden;
             hyphens: auto;
             &-social-media {
-              border-bottom: 1px solid $neutral-black-opacity55;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.54);
               margin-bottom: 1rem !important;
               .gc360-my-profile {
                 &_icon {
@@ -227,7 +227,7 @@ $image-side-width-desktop: 90px;
               }
             }
             &-class {
-              color: $neutral-black-opacity55;
+              color: rgba(0, 0, 0, 0.54);
             }
             &-job-title {
               opacity: 0.7;
@@ -258,7 +258,7 @@ $image-side-width-desktop: 90px;
         }
         &-button {
           font-size: 1rem !important;
-          color: $neutral-white !important;
+          color: white !important;
           background-color: $primary-cyan !important;
           margin-bottom: 1rem !important;
         }

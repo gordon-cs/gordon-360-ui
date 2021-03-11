@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import activity from '../../services/activity';
 import storage from '../../services/storage';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
+import List from '@material-ui/core/List';
 import MyProfileActivityList from '../MyProfileActivityList/index';
 import ProfileActivityList from '../ProfileActivityList/index';
+import Typography from '@material-ui/core/Typography';
 import './index.css';
-
-import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@material-ui/core';
 
 export const Involvements = (props) => {
   const [involvementsAndTheirPrivacy, setInvolvementsAndTheirPrivacy] = useState([]);

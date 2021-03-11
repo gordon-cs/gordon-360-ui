@@ -9,7 +9,7 @@
 
     .status-time {
       font-size: calc(14px + 1vw);
-      color: $neutral-white;
+      color: white;
       padding-bottom: 30px;
     }
 
@@ -18,7 +18,7 @@
       height: calc(70px + 3vw);
       width: calc(70px + 3vw);
       background-color: $wellness-green;
-      color: $neutral-white;
+      color: white;
       border-radius: 50%;
       display: inline-block;
       animation-name: animationCheck;
@@ -31,10 +31,10 @@
   @keyframes animationCheck {
     from {
       background-color: $wellness-green;
-      color: $neutral-white;
+      color: white;
     }
     to {
-      background-color: $neutral-white;
+      background-color: white;
       color: $wellness-green;
     }
   }
@@ -85,7 +85,7 @@
 
     .status-time {
       font-size: calc(14px + 1vw);
-      color: $neutral-gray2;
+      color: $neutral-gray;
       padding-bottom: 30px;
     }
 
@@ -94,7 +94,7 @@
       height: calc(70px + 3vw);
       width: calc(70px + 3vw);
       background-color: $wellness-red;
-      color: $neutral-gray2;
+      color: $neutral-gray;
       border-radius: 50%;
       display: inline-block;
       animation-name: animationCross;
@@ -107,10 +107,10 @@
   @keyframes animationCross {
     from {
       background-color: $wellness-red;
-      color: $neutral-gray2;
+      color: $neutral-gray;
     }
     to {
-      background-color: $neutral-gray2;
+      background-color: $neutral-gray;
       color: $wellness-red;
     }
   }
