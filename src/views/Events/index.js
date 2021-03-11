@@ -162,14 +162,31 @@ export default class Events extends Component {
     }
   }
 
-  filterEvents(name) {
-    return async (event) => {
-      this.setState({ loading: true });
-      await this.setState({ [name]: event.target.checked });
+  async setFilter(name) {
+    if (name === "chapelCredits") {
+      await this.setState({ chapelCredits: true });
+    } else if (name === "admissions") {
+      await this.setState({ admissions: true });
+    } else if (name === "art") {
+      await this.setState({ art: true });
+    } else if (name === "sports") {
+      await this.setState({sports: true});
+    } else if (name === "cec") {
+      await this.setState({ cec: true });
+    } else if (name === "chapelOffice") {
+      await this.setState({ chapelOffice: true });
+    } else if (name === "studentLife") {
+      await this.setState({ studentLife: true });
+    }
+  }
+
+  async filterEvents(name) {
+      this.setState({ loading: true })
+      this.setFilter(name);
       const events = await gordonEvent.getFilteredEvents(this.state);
       this.setState({ filteredEvents: events, loading: false });
+      console.log("Filtering events...");
       this.createURLParameters();
-    };
   }
 
   /**
@@ -290,11 +307,11 @@ export default class Events extends Component {
     else return false;
   }
 
-  handleChange = (event) => {
+  handleChange = async (event) => {
     console.log("event target value is" + event.target.value);
+    await this.setState({activeFilters: event.target.value });
     this.filterEvents(filters[event.target.value]);
     console.log("filters[event.target.value] is " + filters[event.target.value]);
-    this.setState({activeFilters: event.target.value });
     console.log("active filters are "+ this.state.activeFilters);
   }
 
