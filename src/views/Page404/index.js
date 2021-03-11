@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Typography } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
+import { Typography, Grid } from '@material-ui/core';
 import mascot from './mascot.svg';
 import ScottieDog from './components/ScottieDog';
 
