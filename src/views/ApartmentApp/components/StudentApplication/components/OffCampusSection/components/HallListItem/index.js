@@ -18,18 +18,16 @@ const ProgramListItem = ({
   index,
   programMembers,
   availableMajors,
-  onMemberInputChange,
-  onMemberRemove,
+  availableApplicants,
+  onOffCampusApplicantRemove,
 }) => {
-  const [applicantMemberValue, setMemberValue] = useState(1); // Rank drop-down menu value
-  const [memberDepartmentValue, setDepartmentValue] = useState(''); // Hall drop-down menu value
+  const [applicantMemberValue, setMemberValue] = useState(1); // Applicant drop-down menu value
+  const [applicantDepartmentValue, setDepartmentValue] = useState(''); // Major drop-down menu value
 
   useEffect(() => {
-    // Manually perform deep checking of the array to force update whenever an element of preferredHalls is changed
     if (isEqual(previousInputs.current, [index, programMembers])) {
       return;
     }
-    // Get the hall info for this list item from the component's props
     const getMembersFromProps = () => {
       setMemberValue(programMembers[index].applicantMember);
       setDepartmentValue(programMembers[index].memberDepartment);
@@ -43,29 +41,15 @@ const ProgramListItem = ({
     previousInputs.current = [index, programMembers];
   });
 
-  const handleMemberInputChange = (event) => {
-    if (event.target.value !== null) {
-      let newMemberValue = event.target.value;
-      onMemberInputChange(applicantMemberValue, newMemberValue, index);
-    }
-  };
-
-  const handleDepartmentInputChange = (event) => {
-    if (event.target.value !== null) {
-      let newMemberDepartmentValue = event.target.value;
-      onMemberInputChange(memberDepartmentValue, newMemberDepartmentValue, index);
-    }
-  };
-
   const handleRemove = () => {
     if (index !== null) {
       // Send this list item's index to the parent component
-      onMemberRemove(index);
+      onOffCampusApplicantRemove(index);
     }
   };
 
-  const memberOptions = programMembers.map((memberName) => (
-    <MenuItem value={memberName} key={memberName}>
+  const memberOptions = availableApplicants.map((applicantName) => (
+    <MenuItem value={applicantName} key={applicantName}>
       {memberName}
     </MenuItem>
   ));
@@ -85,7 +69,6 @@ const ProgramListItem = ({
               <InputLabel>Member</InputLabel>
               <Select
                 value={applicantMemberValue}
-                onChange={handleMemberInputChange}
                 input={<Input id={'member' + index} />}
               >
                 {memberOptions}
@@ -97,7 +80,6 @@ const ProgramListItem = ({
               <InputLabel>department</InputLabel>
               <Select
                 value={memberDepartmentValue}
-                onChange={handleDepartmentInputChange}
                 input={<Input id={'department' + index} />}
               >
                 {departmentOptions}

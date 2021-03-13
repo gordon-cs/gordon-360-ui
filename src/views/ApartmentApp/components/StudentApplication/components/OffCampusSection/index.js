@@ -7,9 +7,9 @@ import goStalk from '../../../../../../services/goStalk';
 // Create a list of selection boxes to choosing preferred halls
 const OffCampusSection = ({
   programMembers,
-  onMemberAdd,
-  onMemberInputChange,
-  onMemberRemove,
+  availableApplicants,
+  onOffCampusApplicantAdd,
+  onOffCampusApplicantRemove
 }) => {
   const [availableMajors, setAvailableMajors] = useState([]);
 
@@ -31,20 +31,16 @@ const OffCampusSection = ({
     loadDepartments();
   });
 
-  const handleInputChange = (applicantMemberValue, memberDepartmentValue, index) => {
-    onMemberInputChange(applicantMemberValue, memberDepartmentValue, index);
-  };
-
   const handleRemove = (index) => {
     // Make sure the chosen index was not null
     if (index !== null) {
       // Send the selected index to the parent component
-      onMemberRemove(index);
+      onOffCampusApplicantRemove(index);
     }
   };
 
   const handleAddDropdown = () => {
-    onMemberAdd();
+    onOffCampusApplicantAdd();
   };
 
   return (
@@ -61,8 +57,8 @@ const OffCampusSection = ({
                     index={index}
                     programMembers={programMembers}
                     availableMajors={availableMajors}
-                    onMemberInputChange={handleInputChange}
-                    onMemberRemove={handleRemove}
+                    availableApplicants={availableApplicants}
+                    onOffCampusApplicantRemove={handleRemove}
                   />
                 ))
               ) : (
@@ -71,7 +67,8 @@ const OffCampusSection = ({
                   index={0}
                   programMembers={programMembers}
                   availableMajors={availableMajors}
-                  onMemberInputChange={handleInputChange}
+                  availableApplicants={availableApplicants}
+                  onOffCampusApplicantRemove={handleRemove}
                 />
               )}
             </List>
@@ -83,7 +80,7 @@ const OffCampusSection = ({
               startIcon={<AddIcon fontSize="inherit" />}
               onClick={handleAddDropdown}
             >
-              Add a Member
+              Add an applicant who is completing an off campus program
             </Button>
           </Grid>
         </Grid>
