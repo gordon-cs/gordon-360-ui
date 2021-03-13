@@ -1,6 +1,4 @@
-import List from '@material-ui/core/List';
 import GordonDialogBox from '../../../GordonDialogBox/index';
-import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { signOut } from '../../../../services/auth';
@@ -21,6 +19,8 @@ import {
   createWellnessButton,
 } from './navButtons.js';
 import './nav-links.css';
+
+import { List, Divider } from '@material-ui/core';
 
 export default class GordonNavLinks extends Component {
   constructor(props) {

@@ -1,22 +1,16 @@
-import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
-import Switch from '@material-ui/core/Switch';
 import membership from './../../services/membership';
-import List from '@material-ui/core/List';
 import LockIcon from '@material-ui/icons/Lock';
-import ListItem from '@material-ui/core/ListItem';
-import Snackbar from '@material-ui/core/Snackbar';
 import ErrorIcon from '@material-ui/icons/Error';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import IconButton from '@material-ui/core/IconButton';
 import '../ProfileList/profileList.css';
 import '../../app.css';
 import './index.css';
+
+import { Grid, Divider, Typography, Switch, List, ListItem, Snackbar, IconButton } from '@material-ui/core';
 
 export default class MyProfileActivityList extends Component {
   constructor(props) {
