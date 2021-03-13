@@ -41,47 +41,27 @@ const MenuProps = {
   },
 };
 
-
-const campusEvents = [
-  "CL&W Credits",
-  "Admissions",
-  "Arts",
-  "Athletics",
-  "CEC",
-  "Chapel Office",
-  "Student Life"
-]
-
-const filters = {
-  "CL&W Credits": "chapelCredits",
-  "Admissions": "admissions",
-  "Arts": "art",
-  "Athletics": "sports",
-  "CEC": "cec",
-  "Chapel Office": "chapelOffice",
-  "Student Life": "studentLife"
-}
-
 export default class Events extends Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
       search: '',
-      chapelCredits: false,
-      art: false,
-      sports: false,
-      cec: false,
-      studentLife: false,
-      admissions: false,
-      chapelOffice: false,
       allEvents: [],
       events: [],
       filteredEvents: [],
       includePast: false,
       loading: true,
       hasFilters: false,
-      activeFilters: []
+      activeFilters: {
+        "CL&W Credits": false,
+        "Admissions": false,
+        "Arts": false,
+        "Athletics": false,
+        "CEC": false,
+        "Chapel Office": false,
+        "Student Life": false
+      }
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
@@ -146,7 +126,7 @@ export default class Events extends Component {
       });
 
       this.setState({ loading: true });
-      const events = await gordonEvent.getFilteredEvents(this.state);
+      const events = await gordonEvent.getFilteredEvents(this.state.activeFilters, this.state.allEvents, this.state.search);
       this.setState({ filteredEvents: events, loading: false, open: hasFilters ? true : false });
 
       // If the include past filter is on, we get the events from the past
@@ -162,27 +142,8 @@ export default class Events extends Component {
     }
   }
 
-  async setFilter(name) {
-    if (name === "chapelCredits") {
-      await this.setState({ chapelCredits: true });
-    } else if (name === "admissions") {
-      await this.setState({ admissions: true });
-    } else if (name === "art") {
-      await this.setState({ art: true });
-    } else if (name === "sports") {
-      await this.setState({sports: true});
-    } else if (name === "cec") {
-      await this.setState({ cec: true });
-    } else if (name === "chapelOffice") {
-      await this.setState({ chapelOffice: true });
-    } else if (name === "studentLife") {
-      await this.setState({ studentLife: true });
-    }
-  }
-
   async filterEvents(name) {
       this.setState({ loading: true })
-      this.setFilter(name);
       const events = await gordonEvent.getFilteredEvents(this.state);
       this.setState({ filteredEvents: events, loading: false });
       this.createURLParameters();
@@ -252,7 +213,7 @@ export default class Events extends Component {
       await this.setState({
         [name]: event.target.value,
       });
-      const events = await gordonEvent.getFilteredEvents(this.state);
+      const events = await gordonEvent.getFilteredEvents(this.state, this.state.allEvents, this.state.search);
       this.setState({ filteredEvents: events, loading: false });
     };
   }
@@ -270,7 +231,7 @@ export default class Events extends Component {
     // Gets all the events included in the past along with all filters previously active
     this.createURLParameters();
     // Filter events to reflect boxes still checked
-    const events = gordonEvent.getFilteredEvents(this.state);
+    const events = gordonEvent.getFilteredEvents(this.state.activeFilters, this.state.allEvents, this.state.search);
     this.setState({ filteredEvents: events, loading: false });
   }
 
@@ -307,10 +268,19 @@ export default class Events extends Component {
   }
 
   handleChange = async (event) => {
-    await this.setState({activeFilters: event.target.value });
-    for (let i in event.target.value) {
-      this.filterEvents(filters[event.target.value[i]]);
+    console.log("handleChange called");
+    const selectedFilters = event.target.value;
+    console.log("selctedFilters are " + selectedFilters);
+    const newActiveFilters = {};
+    for (let filter in this.state.activeFilters) {
+      console.log(filter);
+      newActiveFilters[filter] = selectedFilters.includes(filter);
     }
+    console.log({newActiveFilters});
+    await this.setState({activeFilters: newActiveFilters });
+    //call getFilteredEvents set state with new filteredevents
+    const events = gordonEvent.getFilteredEvents(this.state.activeFilters, this.state.allEvents, this.state.search);
+    await this.setState({ filteredEvents: events });
   }
 
   render() {
@@ -334,16 +304,16 @@ export default class Events extends Component {
               labelId = "event-filters"
               id = "event-checkboxes"
               multiple
-              value = {this.state.activeFilters}
+              value = {Object.keys(this.state.activeFilters).filter(f => this.state.activeFilters[f])}
               onChange = {this.handleChange}
               input = {<Input />}
               renderValue = {(selected) => selected.join(",")}
               MenuProps = {MenuProps}
               >
-                {campusEvents.map((campusEvent) => (
-                  <MenuItem key={campusEvent} value={campusEvent}>
-                    <Checkbox checked = {this.state.activeFilters.indexOf(campusEvent) > -1} />
-                    <ListItemText primary={campusEvent} />
+                {Object.keys(this.state.activeFilters).map((filtername) => (
+                  <MenuItem key={filtername} value={filtername}>
+                    <Checkbox checked = {this.state.activeFilters[filtername]} />
+                    <ListItemText primary={filtername} />
                   </MenuItem>
                 ))}
               </Select>

@@ -117,33 +117,33 @@ function formatevent(event) {
 function filterbyCategory(filters, allEvents) {
   let filteredEvents = [];
   if (
-    filters.chapelOffice ||
-    filters.art ||
-    filters.cec ||
-    filters.admissions ||
-    filters.sports ||
-    filters.studentLife ||
-    filters.chapelCredits
+    filters["Chapel Office"] ||
+    filters["Arts"] ||
+    filters["CEC"] ||
+    filters["Admissions"] ||
+    filters["Athletics"] ||
+    filters["Student Life"] ||
+    filters["CL&W Credits"]
   ) {
     for (let i = 0; i < allEvents.length; i++) {
-      if (filters.chapelOffice && allEvents[i].Organization === 'Chapel Office') {
+      if (filters["Chapel Office"] && allEvents[i].Organization === 'Chapel Office') {
         filteredEvents.push(allEvents[i]);
       } else if (
-        filters.art &&
+        filters["Arts"] &&
         (allEvents[i].Organization === 'Music Department' ||
           allEvents[i].Organization === 'Theatre' ||
           allEvents[i].Organization === 'Art Department')
       ) {
         filteredEvents.push(allEvents[i]);
-      } else if (filters.cec && allEvents[i].Organization === 'Campus Events Council (CEC)') {
+      } else if (filters["CEC"] && allEvents[i].Organization === 'Campus Events Council (CEC)') {
         filteredEvents.push(allEvents[i]);
-      } else if (filters.admissions && allEvents[i].Organization === 'Admissions') {
+      } else if (filters["Admissions"] && allEvents[i].Organization === 'Admissions') {
         filteredEvents.push(allEvents[i]);
-      } else if (filters.sports && allEvents[i].Organization === 'Athletics') {
+      } else if (filters["Athletics"] && allEvents[i].Organization === 'Athletics') {
         filteredEvents.push(allEvents[i]);
-      } else if (filters.studentLife && allEvents[i].Organization === 'Office of Student Life') {
+      } else if (filters["Student Life"] && allEvents[i].Organization === 'Office of Student Life') {
         filteredEvents.push(allEvents[i]);
-      } else if (filters.chapelCredits && allEvents[i].HasCLAWCredit) {
+      } else if (filters["CL&W Credits"] && allEvents[i].HasCLAWCredit) {
         filteredEvents.push(allEvents[i]);
       }
     }
@@ -206,8 +206,7 @@ const getFutureEvents = (allEvents) => {
  * @param {Object} filters the events and filters to use
  * @returns {Event[]} The filtered events
  */
-const getFilteredEvents = (filters) => {
-  const allEvents = filters.events;
+const getFilteredEvents = (filters, allEvents, search) => {
   let filteredEvents = [];
   let shownEvents = [];
   filteredEvents = filterbyCategory(filters, allEvents);
@@ -215,20 +214,20 @@ const getFilteredEvents = (filters) => {
     filteredEvents = allEvents;
   }
 
-  if (filters.search !== '') {
+  if (search !== '') {
     shownEvents = [];
     for (let i = 0; i < filteredEvents.length; i++) {
       // search through the event title
-      if (filteredEvents[i].title.toLowerCase().includes(filters.search.toLowerCase())) {
+      if (filteredEvents[i].title.toLowerCase().includes(search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
         // search through the date
-      } else if (filteredEvents[i].timeRange.toLowerCase().includes(filters.search.toLowerCase())) {
+      } else if (filteredEvents[i].timeRange.toLowerCase().includes(search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
         // search through the event times
-      } else if (filteredEvents[i].date.toLowerCase().includes(filters.search.toLowerCase())) {
+      } else if (filteredEvents[i].date.toLowerCase().includes(search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
         // search through the location
-      } else if (filteredEvents[i].location.toLowerCase().includes(filters.search.toLowerCase())) {
+      } else if (filteredEvents[i].location.toLowerCase().includes(search.toLowerCase())) {
         shownEvents.push(filteredEvents[i]);
       }
     }
