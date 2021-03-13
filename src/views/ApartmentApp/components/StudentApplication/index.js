@@ -281,7 +281,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
       // The method is separated from callback because the housing API service must be handled inside an async method
       changeApplicationEditor(applicationID, newEditorProfile.AD_Username);
       handleCloseOkay();
-      setUnsavedChanges(true);
     } else {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
       setSnackbarSeverity('error');
@@ -377,7 +376,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       let newPreferredHalls = preferredHalls; // make a separate copy of the array
 
       // Sort halls by name
-      newPreferredHalls.sort(function(a, b) {
+      newPreferredHalls.sort(function (a, b) {
         var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
         var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
         if (nameA < nameB) {
@@ -391,7 +390,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       });
 
       // Sort halls by rank
-      newPreferredHalls.sort(function(a, b) {
+      newPreferredHalls.sort(function (a, b) {
         return a.HallRank - b.HallRank;
       });
 
