@@ -132,6 +132,7 @@ const SaveButton = ({ disabled, saving, onClick }) => {
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   const [applicationID, setApplicationID] = useState(-1); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
@@ -205,6 +206,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setEditorUsername(userProfile.AD_Username);
       }
     }
+    setUnsavedChanges(false);
     setLoading(false);
   }, [userProfile, editorUsername, applicants]);
 
@@ -301,6 +303,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           // This should trigger the 'catch', causing the page to display the error snackbar
           throw new Error('Something went wrong! Please contact CTS for help.');
         }
+        setUnsavedChanges(true);
       }
     } catch (error) {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
@@ -356,6 +359,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       console.log(result); //! DEBUG
       setEditorUsername(newEditorProfile.AD_Username);
       setSaving('success');
+      setUnsavedChanges(true);
     } else {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
       setSnackbarSeverity('error');
@@ -384,6 +388,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           (applicant) => applicant.Profile.AD_Username !== profileToRemove.AD_Username,
         ),
       );
+      setUnsavedChanges(true);
     }
   };
 
@@ -423,7 +428,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       let newPreferredHalls = preferredHalls; // make a separate copy of the array
 
       // Sort halls by name
-      newPreferredHalls.sort(function(a, b) {
+      newPreferredHalls.sort(function (a, b) {
         var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
         var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
         if (nameA < nameB) {
@@ -437,11 +442,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
       });
 
       // Sort halls by rank
-      newPreferredHalls.sort(function(a, b) {
+      newPreferredHalls.sort(function (a, b) {
         return a.HallRank - b.HallRank;
       });
 
       setPreferredHalls(newPreferredHalls);
+      setUnsavedChanges(true);
     } else {
       setSnackbarText('Something went wrong while trying to add this hall. Please try again.');
       setSnackbarSeverity('error');
@@ -469,6 +475,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         });
       }
       setPreferredHalls(newPreferredHalls);
+      setUnsavedChanges(true);
     }
   };
 
@@ -521,6 +528,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setApplicationID(result);
       }
       setSaving('success');
+      setUnsavedChanges(false);
     } else {
       setSnackbarText('Something went wrong while trying to save the application.');
       setSnackbarSeverity('error');
@@ -807,7 +815,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
                             )}
                           </Grid>
                           <Grid item xs={6} sm={3} lg={2}>
-                            <SaveButton saving={saving} onClick={handleSaveButtonClick} />
+                            <SaveButton
+                              saving={saving}
+                              onClick={handleSaveButtonClick}
+                              disabled={!unsavedChanges}
+                            />
                           </Grid>
                           <Grid item xs={6} sm={3} lg={2}>
                             <Button
@@ -815,7 +827,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                               onClick={handleSubmitButtonClick}
                               color="primary"
                               fullWidth
-                              disabled={!applicationCardsOpen}
+                              disabled={!applicationCardsOpen || !unsavedChanges}
                             >
                               Save & Submit
                             </Button>
