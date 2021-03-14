@@ -123,6 +123,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
   const [applicants, setApplicants] = useState([]);
   const [preferredHalls, setPreferredHalls] = useState([]);
+  const [offCampusApplicants, setOffCampusApplicants] = useState([]);
+
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
@@ -431,6 +433,28 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
+ * Callback for offcampus list remove button
+ * @param {Number} index The index of the OCapplicant to be removed from the list of perferred halls
+ */
+  const handleOffCampusApplicantRemove = (index) => {
+    if (index !== null && index !== -1) {
+      let newOCApplicantList = offCampusApplicants; // make a separate copy of the array
+      // Remove the selected hall if the list has more than one element
+      newOCApplicantList.splice(index, 1);
+      setOffCampusApplicants(newOCApplicantList);
+    }
+  };
+
+  /**
+   * Callback for hall list add button
+   */
+  const handleOffCampusApplicantAdd = () => {
+    setOffCampusApplicants((prevOffCampusApplicants) =>
+      prevOffCampusApplicants.concat({ OCApplicantName: '', Program: '' }),
+    );
+  };
+
+  /**
    * Callback for apartment application save button
    */
   const handleSaveButtonClick = () => {
@@ -674,15 +698,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       <CardHeader title="Off-Campus Work Study" className="card-header" />
                       <CardContent>
                           <offCampusSection
-                           
-                           programMembers={applicants}
-                           onMemberAdd={handle}
-                           onMemberInputChange,
-                           onMemberRemove,
+                          offCampusApplicantList={offCampusApplicants}
+                          availableApplicants={applicants}
+                          onOffCampusAdd={handleOffCampusApplicantAdd}
+                          onOffCampusRemove={handleOffCampusApplicantRemove}
                           saving={saving}
-                          onHallAdd={handleHallAdd}
-                          onHallInputChange={handleHallInputChange}
-                          onHallRemove={handleHallRemove}
                           onSaveButtonClick={handleSaveButtonClick}
                           />
                       </CardContent>

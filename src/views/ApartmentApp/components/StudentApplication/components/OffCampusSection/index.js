@@ -6,7 +6,7 @@ import goStalk from '../../../../../../services/goStalk';
 
 // Create a list of selection boxes to choosing preferred halls
 const OffCampusSection = ({
-  programMembers,
+  offCampusApplicantList,
   availableApplicants,
   onOffCampusApplicantAdd,
   onOffCampusApplicantRemove
@@ -50,14 +50,14 @@ const OffCampusSection = ({
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
             <List className="hall-list" aria-label="apartment preferred halls" disablePadding>
-              {programMembers ? (
-                programMembers.map((memberInfo, index) => (
+              {offCampusApplicantList ? (
+                offCampusApplicantList.map((memberInfo, index) => (
                   <ProgramListItem
                     key={memberInfo.applicantMember + memberInfo.memberDepartment}
                     index={index}
-                    programMembers={programMembers}
-                    availableMajors={availableMajors}
+                    offCampusApplicantList={offCampusApplicantList}
                     availableApplicants={availableApplicants}
+                    availableMajors={availableMajors}
                     onOffCampusApplicantRemove={handleRemove}
                   />
                 ))
@@ -65,9 +65,9 @@ const OffCampusSection = ({
                 <ProgramListItem
                   key={''}
                   index={0}
-                  programMembers={programMembers}
-                  availableMajors={availableMajors}
+                  offCampusApplicantList={offCampusApplicantList}
                   availableApplicants={availableApplicants}
+                  availableMajors={availableMajors}
                   onOffCampusApplicantRemove={handleRemove}
                 />
               )}
