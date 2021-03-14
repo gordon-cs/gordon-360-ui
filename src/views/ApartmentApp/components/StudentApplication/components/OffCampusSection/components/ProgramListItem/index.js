@@ -45,7 +45,7 @@ const ProgramListItem = ({
   const handleApplicantInputChange = (event) => {
     if (event.target.value !== null) {
       let newApplicantMemberValue = event.target.value;
-      onOffCampusChanged(newApplicantMemberValue, hallNameValue, index);
+      onOffCampusChanged(newApplicantMemberValue, applicantDepartmentValue, index);
     }
   };
 
@@ -95,7 +95,7 @@ const ProgramListItem = ({
             <FormControl fullWidth>
               <InputLabel>department</InputLabel>
               <Select
-                onChange={handleMajorInputChange}
+                onChange={handleDepartmentInputChange}
                 value={applicantDepartmentValue}
                 input={<Input id={'department' + index} />}
               >
