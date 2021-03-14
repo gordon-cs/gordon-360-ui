@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
 
 import { gordonColors } from '../../../../theme';
 import session from '../../../../services/session';
 import GordonLoader from '../../../../components/Loader';
+
+import { Card, CardHeader, CardContent, Typography, Grid } from '@material-ui/core';
 
 export default class DaysLeft extends Component {
   constructor(props) {

@@ -2,6 +2,14 @@ import React from 'react';
 import { Grid, Card, CardHeader, CardContent } from '@material-ui/core/';
 import '../../apartmentApp.css';
 
+/**
+ * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
+/**
+ * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ */
+
 const StaffMenu = () => {
   // This feature not yet implemented
   return (

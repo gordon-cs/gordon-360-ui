@@ -1,15 +1,5 @@
-import Grid from '@material-ui/core/Grid';
-import CardHeader from '@material-ui/core/CardHeader';
 import React, { useState, useEffect, useRef } from 'react';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
 import Dropzone from 'react-dropzone';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Typography from '@material-ui/core/Typography';
 import EmailIcon from '@material-ui/icons/Email';
 import user from '../../services/user';
 import { gordonColors } from '../../theme';
@@ -22,12 +12,25 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
 import defaultGordonImage from './defaultGordonImage';
 import GordonLoader from '../Loader/index';
 import { windowBreakWidths } from '../../theme';
 import './index.css';
+
+import {
+  Grid,
+  CardHeader,
+  Button,
+  Tooltip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+  Snackbar,
+  IconButton,
+} from '@material-ui/core';
 
 export const Identification = (props) => {
   const CROP_DIM = 200; // pixels
