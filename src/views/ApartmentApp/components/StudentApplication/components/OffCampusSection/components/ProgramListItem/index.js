@@ -49,10 +49,10 @@ const ProgramListItem = ({
     }
   };
 
-  const handleMajorInputChange = (event) => {
+  const handleDepartmentInputChange = (event) => {
     if (event.target.value !== null) {
-      let newApplicantMajorValue = event.target.value;
-      onOffCampusChanged(applicantMemberValue, newApplicantMajorValue, index);
+      let newApplicantDepartmentValue = event.target.value;
+      onOffCampusChanged(applicantMemberValue, newApplicantDepartmentValue, index);
     }
   };
 
@@ -83,7 +83,7 @@ const ProgramListItem = ({
             <FormControl fullWidth>
               <InputLabel>Member</InputLabel>
               <Select
-                onChange={handhandleApplicantInputChange}
+                onChange={handleApplicantInputChange}
                 value={applicantMemberValue}
                 input={<Input id={'member' + index} />}
               >
@@ -95,7 +95,7 @@ const ProgramListItem = ({
             <FormControl fullWidth>
               <InputLabel>department</InputLabel>
               <Select
-                onChange={handhandleDepartmentInputChange}
+                onChange={handleMajorInputChange}
                 value={applicantDepartmentValue}
                 input={<Input id={'department' + index} />}
               >

@@ -33,7 +33,7 @@ const OffCampusSection = ({
   });
 
   const handleInputChange = (ApplicantNameValue, ApplicantMajorValue, index) => {
-    onHallInputChange(ApplicantNameValue, ApplicantMajorValue, index);
+    onOffCampusChanged(ApplicantNameValue, ApplicantMajorValue, index);
   };
 
   const handleRemove = (index) => {
@@ -63,7 +63,7 @@ const OffCampusSection = ({
                     offCampusApplicantList={offCampusApplicantList}
                     availableMajors={availableMajors}
                     availableApplicants={availableApplicants}
-                    onOffCampusChanged={onOffCampusChanged}
+                    onOffCampusChanged={handleInputChange}
                     onOffCampusApplicantRemove={handleRemove}
                   />
                 ))
@@ -74,7 +74,7 @@ const OffCampusSection = ({
                   offCampusApplicantList={offCampusApplicantList}
                   availableMajors={availableMajors}
                   availableApplicants={availableApplicants}
-                  onOffCampusChanged={onOffCampusChanged}
+                  onOffCampusChanged={handleInputChange}
                   onOffCampusApplicantRemove={handleRemove}
                 />
               )}
