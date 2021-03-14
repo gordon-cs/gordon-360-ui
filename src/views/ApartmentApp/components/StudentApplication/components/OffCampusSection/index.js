@@ -8,6 +8,7 @@ import goStalk from '../../../../../../services/goStalk';
 const OffCampusSection = ({
   offCampusApplicantList,
   availableApplicants,
+  onOffCampusChanged,
   onOffCampusApplicantAdd,
   onOffCampusApplicantRemove
 }) => {
@@ -30,6 +31,10 @@ const OffCampusSection = ({
 
     loadDepartments();
   });
+
+  const handleInputChange = (ApplicantNameValue, ApplicantMajorValue, index) => {
+    onHallInputChange(ApplicantNameValue, ApplicantMajorValue, index);
+  };
 
   const handleRemove = (index) => {
     // Make sure the chosen index was not null
@@ -56,8 +61,9 @@ const OffCampusSection = ({
                     key={memberInfo.applicantMember + memberInfo.memberDepartment}
                     index={index}
                     offCampusApplicantList={offCampusApplicantList}
-                    availableApplicants={availableApplicants}
                     availableMajors={availableMajors}
+                    availableApplicants={availableApplicants}
+                    onOffCampusChanged={onOffCampusChanged}
                     onOffCampusApplicantRemove={handleRemove}
                   />
                 ))
@@ -66,8 +72,9 @@ const OffCampusSection = ({
                   key={''}
                   index={0}
                   offCampusApplicantList={offCampusApplicantList}
-                  availableApplicants={availableApplicants}
                   availableMajors={availableMajors}
+                  availableApplicants={availableApplicants}
+                  onOffCampusChanged={onOffCampusChanged}
                   onOffCampusApplicantRemove={handleRemove}
                 />
               )}

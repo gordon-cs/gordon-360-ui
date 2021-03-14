@@ -323,6 +323,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
   };
 
+
+
   /**
    * Callback for applicant list remove button
    * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
@@ -394,6 +396,51 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setPreferredHalls(newPreferredHalls);
     } else {
       setSnackbarText('Something went wrong while trying to add this hall. Please try again.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    }
+  };
+
+  /**
+   * Callback for changes to hall list item name and/or rank
+   * @param {Number} offCampusNameValue The name value that the user assigned to this applicant
+   * @param {String} offCampusMajorValue The major that the applicant is doing an OC program for
+   * @param {Number} index The index of the hall in the list
+   */
+  const handleOCApplicantInputChange = (offCampusNameValue, offCampusMajorValue, index) => {
+    if (index !== null && index >= 0) {
+      // Get the custom hallInfo object at the given index
+      let newOCInfo = offCampusApplicants[index];
+      newOCInfo.name = offCampusNameValue;
+
+      // Error checking on the offCampusNameValue before modifying the newHallInfo object
+      if (offCampusMajorValue !== null) {
+        newOCInfo.major = String(offCampusMajorValue);
+      }
+
+      // Error checking on the hallNameValue before modifying the newHallInfo object
+      if (
+        offCampusNameValue !== null &&
+        offCampusNameValue !== offCampusApplicants[index] &&
+        offCampusApplicants.some((newOCInfo) => newOCInfo.name === offCampusNameValue)
+      ) {
+        // Display an error if the selected hall is already in the list
+        setSnackbarText(String(offCampusNameValue) + ' is already in the list.');
+        setSnackbarSeverity('info');
+        setSnackbarOpen(true);
+      } else if (offCampusNameValue !== null) {
+        newOCInfo.name = offCampusNameValue;
+      }
+
+      // replace the element at index with the new hall info object
+      setOffCampusApplicants((prevOffCampusApplicants) => prevOffCampusApplicants.splice(index, 1, newOCInfo));
+
+      let newOffCampusApplicants = offCampusApplicants; // make a separate copy of the array
+
+
+      setOffCampusApplicants(newOffCampusApplicants);
+    } else {
+      setSnackbarText('Something went wrong while trying to add this applicant. Please try again.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
     }
@@ -697,9 +744,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     <Card>
                       <CardHeader title="Off-Campus Work Study" className="card-header" />
                       <CardContent>
-                          <offCampusSection
+                        <offCampusSection
                           offCampusApplicantList={offCampusApplicants}
                           availableApplicants={applicants}
+                          onOffCampusChanged={handleOCApplicantInputChange}
                           onOffCampusAdd={handleOffCampusApplicantAdd}
                           onOffCampusRemove={handleOffCampusApplicantRemove}
                           saving={saving}

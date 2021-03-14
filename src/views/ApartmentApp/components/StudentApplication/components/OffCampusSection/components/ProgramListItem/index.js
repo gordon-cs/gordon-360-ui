@@ -19,9 +19,10 @@ const ProgramListItem = ({
   offCampusApplicantList,
   availableMajors,
   availableApplicants,
+  onOffCampusChanged,
   onOffCampusApplicantRemove,
 }) => {
-  const [applicantMemberValue, setMemberValue] = useState(1); // Applicant drop-down menu value
+  const [applicantMemberValue, setMemberValue] = useState(''); // Applicant drop-down menu value
   const [applicantDepartmentValue, setDepartmentValue] = useState(''); // Major drop-down menu value
 
   useEffect(() => {
@@ -29,8 +30,8 @@ const ProgramListItem = ({
       return;
     }
     const getMembersFromProps = () => {
-      setMemberValue(offCampusApplicantList[index].applicantMember);
-      setDepartmentValue(offCampusApplicantList[index].memberDepartment);
+      setMemberValue(offCampusApplicantList[index].name);
+      setDepartmentValue(offCampusApplicantList[index].major);
     };
 
     getMembersFromProps();
@@ -40,6 +41,20 @@ const ProgramListItem = ({
   useEffect(() => {
     previousInputs.current = [index, offCampusApplicantList];
   });
+
+  const handleApplicantInputChange = (event) => {
+    if (event.target.value !== null) {
+      let newApplicantMemberValue = event.target.value;
+      onOffCampusChanged(newApplicantMemberValue, hallNameValue, index);
+    }
+  };
+
+  const handleMajorInputChange = (event) => {
+    if (event.target.value !== null) {
+      let newApplicantMajorValue = event.target.value;
+      onOffCampusChanged(applicantMemberValue, newApplicantMajorValue, index);
+    }
+  };
 
   const handleRemove = () => {
     if (index !== null) {
@@ -68,6 +83,7 @@ const ProgramListItem = ({
             <FormControl fullWidth>
               <InputLabel>Member</InputLabel>
               <Select
+                onChange={handhandleApplicantInputChange}
                 value={applicantMemberValue}
                 input={<Input id={'member' + index} />}
               >
@@ -79,6 +95,7 @@ const ProgramListItem = ({
             <FormControl fullWidth>
               <InputLabel>department</InputLabel>
               <Select
+                onChange={handhandleDepartmentInputChange}
                 value={memberDepartmentValue}
                 input={<Input id={'department' + index} />}
               >
