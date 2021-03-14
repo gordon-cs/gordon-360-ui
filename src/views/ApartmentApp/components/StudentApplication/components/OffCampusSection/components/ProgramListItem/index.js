@@ -65,7 +65,7 @@ const ProgramListItem = ({
 
   const memberOptions = availableApplicants.map((applicantName) => (
     <MenuItem value={applicantName} key={applicantName}>
-      {memberName}
+      {applicantName}
     </MenuItem>
   ));
 
@@ -96,7 +96,7 @@ const ProgramListItem = ({
               <InputLabel>department</InputLabel>
               <Select
                 onChange={handhandleDepartmentInputChange}
-                value={memberDepartmentValue}
+                value={applicantDepartmentValue}
                 input={<Input id={'department' + index} />}
               >
                 {departmentOptions}

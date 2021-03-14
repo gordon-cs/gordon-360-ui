@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import HallListItem from './components/HallListItem';
+import ProgramListItem from './components/ProgramListItem';
 import goStalk from '../../../../../../services/goStalk';
 
 // Create a list of selection boxes to choosing preferred halls
