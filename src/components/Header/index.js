@@ -30,7 +30,6 @@ import { windowBreakWidths } from '../../theme';
 const WrapLink = React.forwardRef((props, ref) => <Link ref={ref} {...props} />)
 
 
-
 const getRouteName = (route) => {
   if (route.name) {
     return () => (
