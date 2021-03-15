@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\views",
+    "\\src\\views\\ApartmentApp",
+    "\\src\\views\\ApartmentApp\\components",
+    "\\src\\views\\ApartmentApp\\components\\StudentApplication",
+    "\\src\\views\\ApartmentApp\\components\\StudentApplication\\components",
+    "\\src\\views\\ApartmentApp\\components\\StudentApplication\\components\\HallSelection",
+    "\\src\\views\\ApartmentApp\\components\\StudentApplication\\components\\HallSelection\\components",
+    "\\src\\views\\ApartmentApp\\components\\StudentApplication\\components\\HallSelection\\components\\HallListItem"
+  ],
+  "SelectedNode": "\\src\\views\\ApartmentApp\\components\\StudentApplication\\index.js",
+  "PreviewInSolutionExplorer": true
+}
