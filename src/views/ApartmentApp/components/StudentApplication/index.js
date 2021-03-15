@@ -21,7 +21,7 @@ import AlertDialogBox from '../../../../components/AlertDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
-import offCampusSection from './components/OffCampusSection';
+import OffCampusSection from './components/OffCampusSection';
 import housing from '../../../../services/housing';
 import user from '../../../../services/user';
 const MAX_NUM_APPLICANTS = 8;
@@ -406,29 +406,27 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
-   * Callback for changes to hall list item name and/or rank
+   * Callback for changes to off campus list item name and/or major
    * @param {Number} offCampusNameValue The name value that the user assigned to this applicant
    * @param {String} offCampusMajorValue The major that the applicant is doing an OC program for
-   * @param {Number} index The index of the hall in the list
+   * @param {Number} index The index of the person
    */
-  const handleOCApplicantInputChange = (offCampusNameValue, offCampusMajorValue, index) => {
+  const handleOffCampusChanged = (offCampusNameValue, offCampusMajorValue, index) => {
     if (index !== null && index >= 0) {
-      // Get the custom hallInfo object at the given index
-      let newOCInfo = offCampusApplicants[index];
-      newOCInfo.name = offCampusNameValue;
 
-      // Error checking on the offCampusNameValue before modifying the newHallInfo object
+      let newOCInfo = offCampusApplicants[index];
+
+      // Error checking on the offCampusMajorValue before modifying the newHallInfo object
       if (offCampusMajorValue !== null) {
         newOCInfo.major = String(offCampusMajorValue);
       }
 
-      // Error checking on the hallNameValue before modifying the newHallInfo object
+      // Error checking on the hallNameValue before modifying the newOCInfo object
       if (
         offCampusNameValue !== null &&
         offCampusNameValue !== offCampusApplicants[index] &&
-        offCampusApplicants.some((newOCInfo) => newOCInfo.name === offCampusNameValue)
+        offCampusApplicants.some((OCInfo) => OCInfo.name === offCampusNameValue)
       ) {
-        // Display an error if the selected hall is already in the list
         setSnackbarText(String(offCampusNameValue) + ' is already in the list.');
         setSnackbarSeverity('info');
         setSnackbarOpen(true);
@@ -748,15 +746,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     <Card>
                       <CardHeader title="Off-Campus Work Study" className="card-header" />
                       <CardContent>
-                        <offCampusSection
+                        <OffCampusSection
                           offCampusApplicantList={offCampusApplicants}
                           availableApplicants={applicants}
-                          onOffCampusChanged={handleOCApplicantInputChange}
+                          onOffCampusChanged={handleOffCampusChanged}
                           onOffCampusAdd={handleOffCampusApplicantAdd}
                           onOffCampusRemove={handleOffCampusApplicantRemove}
                           saving={saving}
                           onSaveButtonClick={handleSaveButtonClick}
-                          />
+                        />
                       </CardContent>
                     </Card>
                   </Grid>

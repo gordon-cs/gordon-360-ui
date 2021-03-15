@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
+import { Grid, Card, CardHeader, CardContent, List, Button, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ProgramListItem from './components/ProgramListItem';
 import goStalk from '../../../../../../services/goStalk';
@@ -9,8 +9,8 @@ const OffCampusSection = ({
   offCampusApplicantList,
   availableApplicants,
   onOffCampusChanged,
-  onOffCampusApplicantAdd,
-  onOffCampusApplicantRemove
+  onOffCampusAdd,
+  onOffCampusRemove
 }) => {
   const [availableMajors, setAvailableMajors] = useState([]);
 
@@ -40,17 +40,16 @@ const OffCampusSection = ({
     // Make sure the chosen index was not null
     if (index !== null) {
       // Send the selected index to the parent component
-      onOffCampusApplicantRemove(index);
+      onOffCampusRemove(index);
     }
   };
 
   const handleAddDropdown = () => {
-    onOffCampusApplicantAdd();
+    onOffCampusAdd();
   };
 
   return (
     <Card>
-      <CardHeader title="Off Campus Program Applicants" className="card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
@@ -87,7 +86,7 @@ const OffCampusSection = ({
               startIcon={<AddIcon fontSize="inherit" />}
               onClick={handleAddDropdown}
             >
-              Add an applicant who is completing an off campus program
+              Add an off campus program applicant
             </Button>
           </Grid>
         </Grid>
