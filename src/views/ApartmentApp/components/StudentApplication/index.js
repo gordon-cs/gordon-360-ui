@@ -36,7 +36,7 @@ const InstructionsCard = () => {
     getYear();
 
     // let selectionDate = housing.getApartmentSelectionDate();
-    let selectionDate = 'Apr. 23'; // API endpoint for this is planned for the future
+    let selectionDate = 'Apr. 27'; // API endpoint for this is planned for the future
     setApartmentSelectionDate(selectionDate);
   }, []);
 
@@ -98,11 +98,11 @@ const InstructionsCard = () => {
         <Typography variant="body1" paragraph>
           <strong>How are apartments awarded?</strong>
           <br />
-          Apartments are awarded in order of point total for each type fo apartment (4-person,
+          Apartments are awarded in order of point total for each type of apartment (4-person,
           6-person, etc.). Each individual on an application will have points given/taken away using
           the following scale:
         </Typography>
-        <Grid container justify="center" spacing={2}>
+        <Grid container justify="center" spacing={2} gutterBottom>
           <Grid item xs={12} lg={9}>
             <TableContainer component={Paper}>
               <Table size="small">
@@ -461,7 +461,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       let newPreferredHalls = preferredHalls; // make a separate copy of the array
 
       // Sort halls by name
-      newPreferredHalls.sort(function(a, b) {
+      newPreferredHalls.sort(function (a, b) {
         var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
         var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
         if (nameA < nameB) {
@@ -475,7 +475,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       });
 
       // Sort halls by rank
-      newPreferredHalls.sort(function(a, b) {
+      newPreferredHalls.sort(function (a, b) {
         return a.HallRank - b.HallRank;
       });
 
