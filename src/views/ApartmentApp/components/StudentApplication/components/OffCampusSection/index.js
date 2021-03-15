@@ -4,7 +4,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ProgramListItem from './components/ProgramListItem';
 import goStalk from '../../../../../../services/goStalk';
 
-// Create a list of selection boxes to choosing preferred halls
+// Create a list of selection boxes to choosing which applicants are doing off campus programs.
 const OffCampusSection = ({
   offCampusApplicantList,
   availableApplicants,
@@ -18,11 +18,11 @@ const OffCampusSection = ({
     const loadDepartments = async () => {
       let unfilteredDepartments;
       try {
-        // Get the halls available for apartments, filtered by the gender of the application editor
+        // Get the majors that the applicants may be completing off campus programs for
         unfilteredDepartments = await goStalk.getMajors();
       }
       catch {
-        // Get the halls available for apartments, filtered by the gender of the application editor
+        // Get the majors that the applicants may be completing off campus programs for
         unfilteredDepartments = await goStalk.getMajors();
       }
       //Remove spaces from strings
@@ -50,11 +50,11 @@ const OffCampusSection = ({
 
   return (
     <Card>
-      <CardHeader title="Preferred Halls" className="card-header" />
+      <CardHeader title="Off Campus Program Applicants" className="card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
-            <List className="hall-list" aria-label="apartment preferred halls" disablePadding>
+            <List className="off-Campus-list" aria-label="apartment applicants off campus programs" disablePadding>
               {offCampusApplicantList ? (
                 offCampusApplicantList.map((memberInfo, index) => (
                   <ProgramListItem

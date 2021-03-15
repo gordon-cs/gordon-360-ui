@@ -190,7 +190,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
     preferredHalls.forEach((element) => {
       console.log(element.HallName + ', ' + element.HallRank);
     });
-  }, [applicants, preferredHalls]);
+    offCampusApplicants.forEach((element) => {
+      console.log(element.name + ', ' + element.major);
+    });
+  }, [applicants, preferredHalls,offCampusApplicants]);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
