@@ -77,9 +77,10 @@ const Home = ({ authentication, onLogIn }) => {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
     return (
-      <div className="gordon-login">
-        <Grid container direction="column" justify="flex-start" alignItems="center">
-        <Grid item xs = {2}>
+      <div className='gordon-login'>
+        <Grid container direction='column' justify='center'
+              alignItems='center'>
+          <Grid item xs = {2}>
             <GuestWelcome />
           </Grid>
           <Grid item xs={10}>

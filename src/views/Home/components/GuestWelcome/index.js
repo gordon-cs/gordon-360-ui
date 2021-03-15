@@ -7,7 +7,7 @@ const GuestWelcome = () => {
   return (
     <Card>
       <CardContent className='guest-welcome-card'>
-        <Typography className='guest-welcome-message' variant='p'>
+        <Typography className='guest-welcome-message'>
           Welcome to the Guest view of Gordon360.
         </Typography>
       </CardContent>
