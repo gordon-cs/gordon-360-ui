@@ -21,6 +21,7 @@ import AlertDialogBox from '../../../../components/AlertDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
+import offCampusSection from './components/OffCampusSection';
 import housing from '../../../../services/housing';
 import user from '../../../../services/user';
 const MAX_NUM_APPLICANTS = 8;
