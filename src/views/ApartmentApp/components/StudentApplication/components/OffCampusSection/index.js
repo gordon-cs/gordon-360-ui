@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Card, CardHeader, CardContent, List, Button, Typography } from '@material-ui/core';
+import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ProgramListItem from './components/ProgramListItem';
 import goStalk from '../../../../../../services/goStalk';
@@ -10,7 +10,7 @@ const OffCampusSection = ({
   availableApplicants,
   onOffCampusChanged,
   onOffCampusAdd,
-  onOffCampusRemove
+  onOffCampusRemove,
 }) => {
   const [availableMajors, setAvailableMajors] = useState([]);
 
@@ -20,8 +20,7 @@ const OffCampusSection = ({
       try {
         // Get the majors that the applicants may be completing off campus programs for
         unfilteredDepartments = await goStalk.getMajors();
-      }
-      catch {
+      } catch {
         // Get the majors that the applicants may be completing off campus programs for
         unfilteredDepartments = await goStalk.getMajors();
       }
@@ -50,10 +49,15 @@ const OffCampusSection = ({
 
   return (
     <Card>
+      <CardHeader title="Off-Campus Work Study" className="card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
-            <List className="off-Campus-list" aria-label="apartment applicants off campus programs" disablePadding>
+            <List
+              className="off-Campus-list"
+              aria-label="apartment applicants off campus programs"
+              disablePadding
+            >
               {offCampusApplicantList ? (
                 offCampusApplicantList.map((memberInfo, index) => (
                   <ProgramListItem

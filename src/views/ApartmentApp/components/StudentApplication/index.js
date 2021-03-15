@@ -126,7 +126,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [preferredHalls, setPreferredHalls] = useState([]);
   const [offCampusApplicants, setOffCampusApplicants] = useState([]);
 
-
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
   const [changeEditorDialogOpen, setChangeEditorDialogOpen] = useState(false);
@@ -194,7 +193,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     offCampusApplicants.forEach((element) => {
       console.log(element.name + ', ' + element.major);
     });
-  }, [applicants, preferredHalls,offCampusApplicants]);
+  }, [applicants, preferredHalls, offCampusApplicants]);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
@@ -327,8 +326,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
   };
 
-
-
   /**
    * Callback for applicant list remove button
    * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
@@ -413,7 +410,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleOffCampusChanged = (offCampusNameValue, offCampusMajorValue, index) => {
     if (index !== null && index >= 0) {
-
       let newOCInfo = offCampusApplicants[index];
 
       // Error checking on the offCampusMajorValue before modifying the newHallInfo object
@@ -435,10 +431,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
       }
 
       // replace the element at index with the new hall info object
-      setOffCampusApplicants((prevOffCampusApplicants) => prevOffCampusApplicants.splice(index, 1, newOCInfo));
+      setOffCampusApplicants((prevOffCampusApplicants) =>
+        prevOffCampusApplicants.splice(index, 1, newOCInfo),
+      );
 
       let newOffCampusApplicants = offCampusApplicants; // make a separate copy of the array
-
 
       setOffCampusApplicants(newOffCampusApplicants);
     } else {
@@ -482,9 +479,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
- * Callback for offcampus list remove button
- * @param {Number} index The index of the OCapplicant to be removed from the list of perferred halls
- */
+   * Callback for offcampus list remove button
+   * @param {Number} index The index of the OCapplicant to be removed from the list of perferred halls
+   */
   const handleOffCampusApplicantRemove = (index) => {
     if (index !== null && index !== -1) {
       let newOCApplicantList = offCampusApplicants; // make a separate copy of the array
@@ -744,18 +741,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   </Grid>
                   <Grid item>
                     <Card>
-                      <CardHeader title="Off-Campus Work Study" className="card-header" />
-                      <CardContent>
-                        <OffCampusSection
-                          offCampusApplicantList={offCampusApplicants}
-                          availableApplicants={applicants}
-                          onOffCampusChanged={handleOffCampusChanged}
-                          onOffCampusAdd={handleOffCampusApplicantAdd}
-                          onOffCampusRemove={handleOffCampusApplicantRemove}
-                          saving={saving}
-                          onSaveButtonClick={handleSaveButtonClick}
-                        />
-                      </CardContent>
+                      <OffCampusSection
+                        offCampusApplicantList={offCampusApplicants}
+                        availableApplicants={applicants}
+                        onOffCampusChanged={handleOffCampusChanged}
+                        onOffCampusAdd={handleOffCampusApplicantAdd}
+                        onOffCampusRemove={handleOffCampusApplicantRemove}
+                        saving={saving}
+                        onSaveButtonClick={handleSaveButtonClick}
+                      />
                     </Card>
                   </Grid>
                 </Grid>
