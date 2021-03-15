@@ -2,46 +2,49 @@
 @import '../../vars';
 
 .gordon-login {
-  height: calc(100% + 2rem);
-  padding: 2rem;
-  text-align: center;
+  // height: calc(100% + 2rem);
+  // padding: 2rem;
+  // text-align: center;
   margin: -1rem;
+  background: url(campusFull.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
   background-size: cover;
-  background-origin: border-box;
 
   @media (min-width: 3840px) {
     // Larger than 4K
     background-image: url(campusFull.jpg);
-    height: 100vh;
+    //height: 100vh;
   }
 
   @media (max-width: 3840px) {
     // 4K or smaller
     background-image: url(campus4K.jpg);
-    height: 100vh;
+   // height: 100vh;
   }
 
   @media (max-width: 1920px) {
     // 1080p Full HD or smaller
     background-image: url(campusHD.jpg);
-    height: 100vh;
+   // height: 100vh;
   }
 
   @media (max-width: 1366px) {
     // 1366 x 768 or smaller
     background-image: url(campus1366.jpg);
-    height: 100vh;
+    //height: 100vh;
   }
 
   @media (max-width: 600px) {
     // 600 pixels or smaller (larger mobile device)
     background-image: url(campusMobileLG.jpg);
-    height: 100vh;
+    //height: 100vh;
   }
 
   @media (max-width: 400px) {
     // 400 pixels or smaller (smaller mobile device)
     background-image: url(campusMobileSM.jpg);
-    height: 100vh;
+    //height: 100vh;
   }
 }
