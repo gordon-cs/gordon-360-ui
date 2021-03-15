@@ -56,7 +56,7 @@ export const Identification = (props) => {
   const [snackbarType, setSnackbarType] = useState(''); // Either success or error
   const [userProfile, setUserProfile] = useState(null);
   const [currentWidth, setCurrentWidth] = useState(null);
-  const cropper = useRef();
+  const cropperRef = useRef();
   let photoDialogErrorTimeout = null;
 
   // Styles used throughout this component
@@ -221,7 +221,9 @@ export const Identification = (props) => {
    */
   function handleCloseSubmit() {
     if (showCropper != null) {
-      let croppedImage = cropper.current.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      let croppedImage = cropperRef.current.cropper
+        .getCroppedCanvas({ width: CROP_DIM })
+        .toDataURL();
       let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       let response = user.postImage(croppedImage);
       response
@@ -457,7 +459,7 @@ export const Identification = (props) => {
   function onDropAccepted(fileList) {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
-    reader.onload = function() {
+    reader.onload = function () {
       var dataURL = reader.result.toString();
       var i = new Image();
       i.onload = async () => {
@@ -493,7 +495,7 @@ export const Identification = (props) => {
   function onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      cropper.current.zoomTo(1);
+      cropperRef.current.cropper.zoomTo(1);
     }
   }
 
@@ -560,7 +562,7 @@ export const Identification = (props) => {
             {showCropper && (
               <div className="gc360-photo-dialog-box_content_cropper">
                 <Cropper
-                  ref={cropper}
+                  ref={cropperRef}
                   src={showCropper}
                   style={{
                     'max-width': maxCropPreviewWidth(),

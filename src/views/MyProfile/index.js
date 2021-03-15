@@ -8,9 +8,7 @@ import ProfileList from './../../components/ProfileList';
 import storage from '../../services/storage';
 import user from './../../services/user';
 import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
-import '../../app.css';
 import './myProfile.css';
-import 'cropperjs/dist/cropper.css';
 
 import { Button, Card, CardContent, Grid } from '@material-ui/core';
 
