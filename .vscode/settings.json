@@ -17,6 +17,6 @@
     // "editor.formatOnSave": true
   },
   "extensions.ignoreRecommendations": true,
-  "files.autoSave": "off",
+  "files.autoSave": "afterDelay",
   "debug.allowBreakpointsEverywhere": true
 }
