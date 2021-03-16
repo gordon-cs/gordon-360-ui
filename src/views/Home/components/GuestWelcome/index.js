@@ -8,7 +8,8 @@ const GuestWelcome = () => {
     <Card>
       <CardContent className='guest-welcome-card'>
         <Typography className='guest-welcome-message'>
-          Welcome to the Guest view of Gordon360.
+          Welcome to the Guest view of Gordon360. As a guest, you have access to
+          a limited view of the site. Login is required for full access.
         </Typography>
       </CardContent>
     </Card>
