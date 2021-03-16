@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import GordonLoader from '../../components/Loader';
 import GordonSchedulePanel from '../../components/SchedulePanel';
 import { Identification } from '../../components/Identification/index';
-import { Involvements } from '../../components/Involvements/index';
+import MembershipsList from '../../components/MembershipsList';
 import Office from './../../components/OfficeList';
 import ProfileList from './../../components/ProfileList';
 import storage from '../../services/storage';
@@ -14,7 +14,6 @@ import { Button, Card, CardContent, Grid } from '@material-ui/core';
 
 const MyProfile = (props) => {
   const [loading, setLoading] = useState(true);
-  const [memberships, setMemberships] = useState([]);
   const [network, setNetwork] = useState('online');
   const [officeInfo, setOfficeInfo] = useState(null);
   const [personType, setPersonType] = useState(null);
@@ -36,8 +35,6 @@ const MyProfile = (props) => {
         setPersonType(personType);
         let officeInfo = <Office profile={profile} />;
         setOfficeInfo(officeInfo);
-        const memberships = await user.getMembershipsAlphabetically(profile.ID);
-        setMemberships(memberships);
         setLoading(false);
       } catch (error) {
         // Do Nothing
@@ -127,7 +124,7 @@ const MyProfile = (props) => {
               </Grid>
 
               <Grid item xs={12} lg={5}>
-                <Involvements memberships={memberships} myProf={true} />
+                <MembershipsList user={profile.ID} myProf={true} />
               </Grid>
             </Grid>
           </div>
