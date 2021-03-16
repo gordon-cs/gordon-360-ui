@@ -74,7 +74,7 @@ const styles = {
   colorChecked: {},
   icon: {
     color: gordonColors.neutral.grayShades[900],
-  }
+  },
 };
 
 const noResultsCard = (
@@ -641,7 +641,7 @@ class PeopleSearch extends Component {
 
     // Lower case using js to remove all caps, then capitalize with css
     const countryOptions = this.state.countries.map((country) => (
-      <MenuItem value={country} key={country} style={{textTransform: "capitalize"}}>
+      <MenuItem value={country} key={country} style={{ textTransform: 'capitalize' }}>
         {country.toLowerCase()}
       </MenuItem>
     ));
@@ -685,7 +685,7 @@ class PeopleSearch extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.props.authentication) {
-      if (this.state.personType !== 'stu' && this.state.personType !== '') {
+      if (this.state.personType && !this.state.personType.includes('stu')) {
         includeAlumniCheckbox = (
           <Grid item xs={12} justify="left">
             <FormControlLabel
@@ -778,17 +778,20 @@ class PeopleSearch extends Component {
 
       // Creates the PeopleSearch page depending on the status of the network found in local storage
       let PeopleSearch;
-      let searchPageTitle = <div>Search the
-        <b style={{color: gordonColors.primary.cyan}}> Gordon </b>
-        Community</div>;
-      
+      let searchPageTitle = (
+        <div>
+          Search the
+          <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+          Community
+        </div>
+      );
+
       if (networkStatus === 'online') {
         PeopleSearch = (
           <Grid container justify="center" spacing={6}>
             <Grid item xs={12} md={8} direction="row">
-              <Card style={{ padding: '0 3vw', }}>
+              <Card style={{ padding: '0 3vw' }}>
                 <CardContent>
-                  
                   <CardHeader title={searchPageTitle} />
 
                   {/* Search Section 1: General Info */}
@@ -865,8 +868,8 @@ class PeopleSearch extends Component {
                     </Grid>
                     {includeAlumniCheckbox}
                   </Grid>
-                  
-                  <br/>
+
+                  <br />
 
                   {/* Advanced Filtering */}
                   <Grid
@@ -874,20 +877,22 @@ class PeopleSearch extends Component {
                     spacing={2}
                     justify="center"
                     alignItems="center"
-                    style={{padding: "8px"}}
+                    style={{ padding: '8px' }}
                   >
                     <Grid item>
                       <Button
                         color="primary"
                         style={
-                          this.state.majorSearchValue !== '' || 
-                          this.state.minorSearchValue !== '' || 
-                          this.state.classTypeSearchValue !== '' ? 
-                          {
-                            backgroundColor: gordonColors.primary.cyan,
-                            color: "#ffffff"
-                          } : {}}
-                        variant={this.state.academicsExpanded ? "contained" : "outlined"}
+                          this.state.majorSearchValue !== '' ||
+                          this.state.minorSearchValue !== '' ||
+                          this.state.classTypeSearchValue !== ''
+                            ? {
+                                backgroundColor: gordonColors.primary.cyan,
+                                color: '#ffffff',
+                              }
+                            : {}
+                        }
+                        variant={this.state.academicsExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleAcademicsExpandClick}
                       >
                         <AddIcon fontSize="inherit" />
@@ -898,14 +903,16 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.homeCitySearchValue !== '' || 
-                          this.state.stateSearchValue !== '' || 
-                          this.state.countrySearchValue !== '' ? 
-                          {
-                            backgroundColor: gordonColors.primary.cyan,
-                            color: "#ffffff"
-                          } : {}}
-                        variant={this.state.homeExpanded ? "contained" : "outlined"}
+                          this.state.homeCitySearchValue !== '' ||
+                          this.state.stateSearchValue !== '' ||
+                          this.state.countrySearchValue !== ''
+                            ? {
+                                backgroundColor: gordonColors.primary.cyan,
+                                color: '#ffffff',
+                              }
+                            : {}
+                        }
+                        variant={this.state.homeExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleHomeExpandClick}
                       >
                         <AddIcon fontSize="inherit" />
@@ -915,22 +922,24 @@ class PeopleSearch extends Component {
                     <Grid item>
                       <Button
                         color="primary"
-                        variant={this.state.offDepExpanded ? "contained" : "outlined"}
+                        variant={this.state.offDepExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleOffDepExpandClick}
                         style={
-                          this.state.departmentSearchValue !== '' || 
-                          this.state.buildingSearchValue !== '' ? 
-                          {
-                            backgroundColor: gordonColors.primary.cyan,
-                            color: "#ffffff"
-                          } : {}}
+                          this.state.departmentSearchValue !== '' ||
+                          this.state.buildingSearchValue !== ''
+                            ? {
+                                backgroundColor: gordonColors.primary.cyan,
+                                color: '#ffffff',
+                              }
+                            : {}
+                        }
                       >
                         <AddIcon fontSize="inherit" />
                         Office Info
                       </Button>
                     </Grid>
                   </Grid>
-                  
+
                   {/* Expandable search filters */}
                   <Collapse
                     in={this.state.academicsExpanded}
@@ -1099,70 +1108,70 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Collapse>
                   <Collapse
-                      in={this.state.offDepExpanded}
-                      timeout="auto"
-                      unmountOnExit
-                      style={styles.CardContent}
-                    >
-                      <Grid container spacing={2} alignItems="flex-end">
-                        <Media
-                          query="(min-width: 600px)"
-                          render={() => (
-                            <Grid item>
-                              <FaBriefcase style={styles.FontAwesome} className={classes.icon} />
-                            </Grid>
-                          )}
-                        />
-                        <Grid item xs={11}>
-                          <FormControl fullWidth>
-                            <InputLabel>Department</InputLabel>
-                            <Select
-                              value={this.state.departmentSearchValue}
-                              onChange={this.handleDepartmentInputChange}
-                              input={<Input id="department-type" />}
-                            >
-                              <MenuItem label="All Departments" value="">
-                                <em>All</em>
-                              </MenuItem>
-                              {departmentOptions}
-                            </Select>
-                          </FormControl>
-                        </Grid>
+                    in={this.state.offDepExpanded}
+                    timeout="auto"
+                    unmountOnExit
+                    style={styles.CardContent}
+                  >
+                    <Grid container spacing={2} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <FaBriefcase style={styles.FontAwesome} className={classes.icon} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Department</InputLabel>
+                          <Select
+                            value={this.state.departmentSearchValue}
+                            onChange={this.handleDepartmentInputChange}
+                            input={<Input id="department-type" />}
+                          >
+                            <MenuItem label="All Departments" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {departmentOptions}
+                          </Select>
+                        </FormControl>
                       </Grid>
-                      <Grid container spacing={2} alignItems="flex-end">
-                        <Media
-                          query="(min-width: 600px)"
-                          render={() => (
-                            <Grid item>
-                              <FaBuilding style={styles.FontAwesome} className={classes.icon} />
-                            </Grid>
-                          )}
-                        />
-                        <Grid item xs={11}>
-                          <FormControl fullWidth>
-                            <InputLabel>Building</InputLabel>
-                            <Select
-                              value={this.state.buildingSearchValue}
-                              onChange={this.handleBuildingInputChange}
-                              input={<Input id="building-type" />}
-                            >
-                              <MenuItem label="All Buildings" value="">
-                                <em>All</em>
-                              </MenuItem>
-                              {buildingOptions}
-                            </Select>
-                          </FormControl>
-                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} alignItems="flex-end">
+                      <Media
+                        query="(min-width: 600px)"
+                        render={() => (
+                          <Grid item>
+                            <FaBuilding style={styles.FontAwesome} className={classes.icon} />
+                          </Grid>
+                        )}
+                      />
+                      <Grid item xs={11}>
+                        <FormControl fullWidth>
+                          <InputLabel>Building</InputLabel>
+                          <Select
+                            value={this.state.buildingSearchValue}
+                            onChange={this.handleBuildingInputChange}
+                            input={<Input id="building-type" />}
+                          >
+                            <MenuItem label="All Buildings" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {buildingOptions}
+                          </Select>
+                        </FormControl>
                       </Grid>
-                    </Collapse> 
+                    </Grid>
+                  </Collapse>
                 </CardContent>
-                
+
                 <CardActions>
                   <Grid container xs={12} justify="center" spacing={2}>
                     {/* Clear All Button */}
                     <Grid item xs={8} sm={'auto'}>
                       <Button
-                        style={{backgroundColor: gordonColors.neutral.lightGray}}
+                        style={{ backgroundColor: gordonColors.neutral.lightGray }}
                         fullWidth
                         variant="contained"
                         onClick={() => {
@@ -1218,9 +1227,9 @@ class PeopleSearch extends Component {
                     </Grid>
                   </Grid>
                 </CardActions>
-                <br/>
+                <br />
               </Card>
-              <br/>
+              <br />
               <Card>
                 {this.state.header}
                 {this.state.peopleSearchResults}
