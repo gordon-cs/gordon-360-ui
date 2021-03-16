@@ -77,6 +77,12 @@ const Home = ({ authentication, onLogIn }) => {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
     return (
+      /*
+          In order to actually center the components, nested containers had to be used.
+          Otherwise, the welcome card would be aligned to the left, and not centered above
+          login, as desired. If alignItem='stretch' was not used in the login grid item,
+          the form would be squashed, also not what we want.
+      */
       <div className='gordon-login'>
         <Grid container direction='column' justify='center' alignItems='center'>
           <Grid item xs={4}>
