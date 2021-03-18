@@ -18,7 +18,7 @@ const HallListItem = ({
   disabled,
   index,
   preferredHalls,
-  availableHalls,
+  halls,
   onHallInputChange,
   onHallRemove,
 }) => {
@@ -76,7 +76,7 @@ const HallListItem = ({
     }
   };
 
-  const hallOptions = availableHalls.map((hallName) => (
+  const hallOptions = halls.map((hallName) => (
     <MenuItem value={hallName} key={hallName}>
       {hallName}
     </MenuItem>
