@@ -7,7 +7,15 @@ import './VictoryPromise.css';
 import { withStyles } from '@material-ui/core/styles';
 import './VictoryPromise.css';
 
-import { Grid, CardHeader, Tooltip, Button, Typography, Card, CardContent } from '@material-ui/core';
+import {
+  Grid,
+  CardHeader,
+  Tooltip,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+} from '@material-ui/core';
 
 export default class VictoryPromiseDisplay extends React.Component {
   constructor(props) {
@@ -114,7 +122,7 @@ export default class VictoryPromiseDisplay extends React.Component {
           },
           tooltips: {
             callbacks: {
-              label: function(tooltipItem, data) {
+              label: function (tooltipItem, data) {
                 var label = data.labels[tooltipItem.index];
                 return label + ': 0';
               },
@@ -142,7 +150,7 @@ export default class VictoryPromiseDisplay extends React.Component {
           },
           tooltips: {
             callbacks: {
-              label: function(tooltipItem, data) {
+              label: function (tooltipItem, data) {
                 var label = data.labels[tooltipItem.index];
                 if (tooltipItem.yLabel < min) {
                   return label + ': 0';

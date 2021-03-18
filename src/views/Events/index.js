@@ -6,7 +6,15 @@ import { gordonColors } from './../../theme';
 
 import './event.scss';
 
-import { Grid, TextField, FormGroup, FormControlLabel, Checkbox, Button, Collapse } from '@material-ui/core';
+import {
+  Grid,
+  TextField,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  Collapse,
+} from '@material-ui/core';
 
 const styles = {
   searchBar: {

@@ -382,7 +382,7 @@ export default class StudentNews extends Component {
                 </Grid>
               </Grid>
 
-              {/* NOTE: leaving helper text for now in case 
+              {/* NOTE: leaving helper text for now in case
               that is better than disabling submit button */}
               {/* Create Posting */}
               <Dialog open={this.state.openPostActivity} fullWidth>
