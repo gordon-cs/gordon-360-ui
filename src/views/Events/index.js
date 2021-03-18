@@ -213,7 +213,7 @@ export default class Events extends Component {
       await this.setState({
         [name]: event.target.value,
       });
-      const events = await gordonEvent.getFilteredEvents(this.state, this.state.allEvents, this.state.search);
+      const events = await gordonEvent.getFilteredEvents(this.state, this.state.events, this.state.search);
       this.setState({ filteredEvents: events, loading: false });
     };
   }
@@ -231,7 +231,7 @@ export default class Events extends Component {
     // Gets all the events included in the past along with all filters previously active
     this.createURLParameters();
     // Filter events to reflect boxes still checked
-    const events = gordonEvent.getFilteredEvents(this.state.activeFilters, this.state.allEvents, this.state.search);
+    const events = gordonEvent.getFilteredEvents(this.state.activeFilters, this.state.events, this.state.search);
     this.setState({ filteredEvents: events, loading: false });
   }
 
@@ -279,7 +279,7 @@ export default class Events extends Component {
     console.log({newActiveFilters});
     await this.setState({activeFilters: newActiveFilters });
     //call getFilteredEvents set state with new filteredevents
-    const events = gordonEvent.getFilteredEvents(this.state.activeFilters, this.state.allEvents, this.state.search);
+    const events = gordonEvent.getFilteredEvents(this.state.activeFilters, this.state.events, this.state.search);
     await this.setState({ filteredEvents: events });
   }
 
