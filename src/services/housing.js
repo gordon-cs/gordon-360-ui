@@ -122,9 +122,14 @@ const saveApartmentApplication = async (
 ) => {
   let applicationDetails = {
     AprtAppID: applicationID,
-    Username: editorUsername,
-    Applicants: applicants.map((applicant) => applicant.Profile.AD_Username),
-    // Applicants: applicants.map((applicant) => { Username: applicant.Profile.AD_Username, OffCampusProgram: applicant.OffCampusProgram }); // This is the correct code for when the backend has been updated expect the off-campus program info
+    EditorUsername: editorUsername,
+    Applicants: applicants.map((applicant) => [
+      {
+        AprtAppID: applicationID,
+        Username: applicant.Profile.AD_Username,
+        OffCampusProgram: applicant.OffCampusProgram,
+      },
+    ]), // This is the correct code for when the backend has been updated expect the off-campus program info
     ApartmentChoices: apartmentChoices,
   };
   if (applicationID === -1) {
@@ -150,11 +155,11 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
 
 /**
  * Get active apartment application for given application ID number
- * @param {String} applicationID the application ID number for the desired application
+ * @param {Number} applicationID the application ID number for the desired application
  * @return {Promise.<ApplicationDetails>} Application details
  */
 const getApartmentApplication = async (applicationID) => {
-  return await http.get(`housing/apartment/load/${applicationID}/`);
+  return await http.get(`housing/apartment/applications/${applicationID}/`);
 };
 
 /**
@@ -207,7 +212,7 @@ const getAllApartmentApplications = async () => {
   let { ...dummyData2 } = dummyApplicationDetails;
   dummyData2.AprtAppID = 43;
   let applicationDetailsArray = [dummyApplicationDetails, dummyData2];
-  // let applicationDetailsArray = await http.get(`housing/apartment/load/`);
+  // let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
 
   // Calculate the total and average points for each application
   applicationDetailsArray.forEach((applicationDetails) => {
