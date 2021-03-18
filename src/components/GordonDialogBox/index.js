@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
+
 
 // Learn more about Dialog's API at https://material-ui.com/api/dialog/
 // Learn more about Alert's API at https://material-ui.com/api/alert/

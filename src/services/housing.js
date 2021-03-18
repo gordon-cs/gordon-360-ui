@@ -92,11 +92,11 @@ const deleteHousingAdmin = (username) => {
 };
 
 /**
- * Check if a given student is on an existing application
+ * Check if a given student is on an existing application from the current semester
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<Number>} Application's ID number
  */
-const getApplicationID = async (username) => {
+const getCurrentApplicationID = async (username) => {
   let applicationID;
   if (username) {
     applicationID = await http.get(`housing/apartment/${username}/`);
@@ -111,23 +111,27 @@ const getApplicationID = async (username) => {
  * @param {Number} applicationID the application ID number if it is known, else it is -1
  * @param {String} editorUsername the student username of the person filling out the application
  * @param {ApartmentApplicant[]} applicants Array of ApartmentApplicant objects
- * @param {ApartmentChoice[]} preferredHalls Array of ApartmentChoice objects
+ * @param {ApartmentChoice[]} apartmentChoices Array of ApartmentChoice objects
  * @return {Promise.<Number>} Application's ID number
  */
 const saveApartmentApplication = async (
   applicationID,
   editorUsername,
   applicants,
-  preferredHalls,
+  apartmentChoices,
 ) => {
   let applicationDetails = {
     AprtAppID: applicationID,
     Username: editorUsername,
     Applicants: applicants.map((applicant) => applicant.Profile.AD_Username),
     // Applicants: applicants.map((applicant) => { Username: applicant.Profile.AD_Username, OffCampusProgram: applicant.OffCampusProgram }); // This is the correct code for when the backend has been updated expect the off-campus program info
-    ApartmentChoices: preferredHalls,
+    ApartmentChoices: apartmentChoices,
   };
-  return await http.post(`housing/apartment/save/`, applicationDetails);
+  if (applicationID === -1) {
+    return await http.post(`housing/apartment/save/`, applicationDetails);
+  } else {
+    return await http.put(`housing/apartment/save/`, applicationDetails);
+  }
 };
 
 /**
@@ -136,12 +140,12 @@ const saveApartmentApplication = async (
  * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
  * @return {Promise.<Boolean>} Status of whether or not the operation was successful
  */
-const changeApplicationEditor = async (applicationID, newEditorUsername) => {
+const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
   let newEditorDetails = {
     AprtAppID: applicationID,
     Username: newEditorUsername,
   };
-  return await http.post(`housing/apartment/change-editor/`, newEditorDetails);
+  return await http.put(`housing/apartment/change-editor/`, newEditorDetails);
 };
 
 /**
@@ -223,9 +227,9 @@ export default {
   checkHousingAdmin,
   addHousingAdmin,
   deleteHousingAdmin,
-  getApplicationID,
+  getCurrentApplicationID,
   saveApartmentApplication,
-  changeApplicationEditor,
+  changeApartmentAppEditor,
   getApartmentApplication,
   getAllApartmentApplications,
 };

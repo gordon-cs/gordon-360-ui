@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
-import Collapse from '@material-ui/core/Collapse';
 import gordonEvent from './../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
 import { gordonColors } from './../../theme';
 
 import './event.scss';
+
+import { Grid, TextField, FormGroup, FormControlLabel, Checkbox, Button, Collapse } from '@material-ui/core';
 
 const styles = {
   searchBar: {

@@ -1,18 +1,7 @@
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Dropzone from 'react-dropzone';
-import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import activity from '../../services/activity';
 import './activity-profile.css';
 import Cropper from 'react-cropper';
@@ -25,7 +14,20 @@ import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
 import user from '../../services/user';
-import { CardHeader } from '@material-ui/core';
+import {
+  CardHeader,
+  Button,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 //import '../../app.js';
 
 const CROP_DIM = 320; // pixels

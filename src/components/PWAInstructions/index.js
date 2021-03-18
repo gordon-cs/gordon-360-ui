@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { gordonColors } from '../../theme';
 import './index.css';
+
+import { Button, Dialog, DialogContent, Typography, Grid } from '@material-ui/core';
 
 // Button styles
 let styles = {
