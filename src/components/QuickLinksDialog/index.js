@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 
-import GordonDialog from '@material-ui/core/Dialog';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 import PropTypes from 'prop-types';
 
 import GordonLinksList from './components/LinksList';
 import './quicklinksdialog.css';
+
+import {
+  Dialog as GordonDialog,
+  DialogTitle as MuiDialogTitle,
+  DialogContent as MuiDialogContent,
+  Typography,
+} from '@material-ui/core';
 
 const styles = (theme) => ({
   root: {

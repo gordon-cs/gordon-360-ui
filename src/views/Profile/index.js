@@ -1,12 +1,8 @@
-import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import user from './../../services/user';
 import ProfileList from './../../components/ProfileList';
 import Office from './../../components/OfficeList';
-import { Involvements } from '../../components/Involvements/index';
-import Button from '@material-ui/core/Button';
+import MembershipsList from '../../components/MembershipsList';
 import GordonLoader from './../../components/Loader';
 import { socialMediaInfo } from '../../socialMedia';
 import GordonSchedulePanel from '../../components/SchedulePanel';
@@ -16,6 +12,8 @@ import { Redirect } from 'react-router';
 
 import './profile.css';
 import '../../app.css';
+
+import { Grid, Card, CardContent, Button } from '@material-ui/core';
 
 //Public profile view
 export default class Profile extends Component {
@@ -36,7 +34,6 @@ export default class Profile extends Component {
       preview: null,
       loading: true,
       profile: {},
-      memberships: [],
       files: [],
       photoDialogOpen: false,
       socialLinksDialogOpen: false,
@@ -121,12 +118,11 @@ export default class Profile extends Component {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(searchedUser.match.params.username),
       ]);
-      const memberships = await user.getPublicMemberships(searchedUser.match.params.username);
       const prefImage = preferredImage;
       const defImage = defaultImage;
       this.hasNickName(profile);
       this.setSubheader(profile);
-      this.setState({ prefImage, defImage, loading: false, memberships });
+      this.setState({ prefImage, defImage, loading: false });
     } catch (error) {
       this.setState({ error });
       console.log(error);
@@ -234,7 +230,7 @@ export default class Profile extends Component {
                 </Grid>
 
                 <Grid item xs={12} lg={5}>
-                  <Involvements memberships={this.state.memberships} myProf={false} />
+                  <MembershipsList user={this.state.profile.AD_Username} myProf={false} />
                 </Grid>
               </Grid>
             )}

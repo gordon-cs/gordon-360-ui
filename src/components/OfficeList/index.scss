@@ -1,10 +1,10 @@
 @import '../../vars';
 
 .office-list-card {
-  background-color: red;
+  background-color: $alternative-red;
   &-header {
     background-color: $primary-blue;
-    color: white;
+    color: $neutral-white;
     padding-left: 1rem;
   }
   &-content {
@@ -28,7 +28,7 @@
 
 @media (max-width: $break-sm) {
   .office-list-card {
-    background-color: red;
+    background-color: $alternative-red;
     &-header {
       padding-left: 0rem;
       justify-content: center;
