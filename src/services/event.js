@@ -200,7 +200,7 @@ const getFilteredEvents = (events, filters, search) => {
  * The returned closure determines whether a given `event` matches the`search` string
  *
  * @param {string} search The string to search for
- * @returns {(e: Event) => boolean} A function that matches a given event against `search`
+ * @returns {function(Event): boolean} A function that matches a given event against `search`
  */
 const makeMatchesSearch = (search) => (event) => {
   const matchableSearchString = search.toLowerCase();
@@ -218,7 +218,7 @@ const makeMatchesSearch = (search) => (event) => {
  * The returned closure determines whether a given `event` matches any filter in `filters`
  *
  * @param {string[]} filters The list of filters to match an event against
- * @returns {(e: Event) => boolean} A function that matches a given event against `filters`
+ * @returns {function(Event): boolean} A function that matches a given event against `filters`
  */
 const makeMatchesFilters = (filters) => (event) => {
   // Since we've closed over filters, we can match the event against only the enabled filters
