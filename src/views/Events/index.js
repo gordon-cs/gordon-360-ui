@@ -59,10 +59,8 @@ export default class Events extends Component {
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
     this.clearFilters = this.clearFilters.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChangeFilters = this.handleChangeFilters.bind(this);
     this.search = this.search.bind(this);
-    this.isMobileView = false;
-    this.breakpointWidth = 540;
   }
 
   componentDidUpdate() {
@@ -77,11 +75,6 @@ export default class Events extends Component {
 
   componentDidMount() {
     this.loadEvents();
-    window.addEventListener('resize', this.resize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
   }
 
   //this loads the filters based on the URL params- this will allow for back button and linking
@@ -222,23 +215,7 @@ export default class Events extends Component {
     this.loadPrevious();
   }
 
-  //Has to rerender on screen resize in order for table to switch to the mobile view
-  resize = () => {
-    if (this.breakpointPassed()) {
-      this.isMobileView = !this.isMobileView;
-      this.forceUpdate();
-    }
-  };
-
-  //checks if the screen has been resized past the mobile breakpoint
-  //allows for forceUpdate to only be called when necessary, improving resizing performance
-  breakpointPassed() {
-    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
-    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
-    else return false;
-  }
-
-  handleChange = async (event) => {
+  handleChangeFilters = async (event) => {
     this.setState({ loading: true, filters: event.target.value });
     const events = gordonEvent.getFilteredEvents(
       this.state.events,
@@ -271,7 +248,7 @@ export default class Events extends Component {
                 id="event-checkboxes"
                 multiple
                 value={this.state.filters}
-                onChange={this.handleChange}
+                onChange={this.handleChangeFilters}
                 input={<Input />}
                 renderValue={(selected) => (
                   <div className="filter-chips">
