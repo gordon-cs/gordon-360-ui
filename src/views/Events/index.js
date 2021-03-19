@@ -108,6 +108,9 @@ const Events = (props) => {
       if (includePast) url += '&Past';
       url = filters.reduce((url, filter) => (url += `&${encodeURIComponent(filter)}`), url);
       props.history.push(url);
+    } else if (props.location.search) {
+      // If no params but current url has params, then push url with no params
+      props.history.push();
     }
   };
 
