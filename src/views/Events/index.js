@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Button from '@material-ui/core/Button';
-import Collapse from '@material-ui/core/Collapse';
-import gordonEvent from './../../services/event';
+import gordonEvent, { EVENT_FILTERS } from './../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
 import { gordonColors } from './../../theme';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 
 import './event.scss';
-import { ListItemText } from '@material-ui/core';
+import {
+  Button,
+  Checkbox,
+  Chip,
+  Collapse,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from '@material-ui/core';
 
 const styles = {
   searchBar: {
@@ -25,22 +27,21 @@ const styles = {
   },
 };
 
-  const formControl = {
-    minWidth: 120,
-    maxWidth: 300,
-  };
+// const formControl = {
+//   minWidth: 120,
+//   maxWidth: 300,
+// };
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
+// const ITEM_HEIGHT = 48;
+// const ITEM_PADDING_TOP = 8;
+// const MenuProps = {
+//   PaperProps: {
+//     style: {
+//       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+//       width: 250,
+//     },
+//   },
+// };
 export default class Events extends Component {
   constructor(props) {
     super(props);
@@ -53,20 +54,13 @@ export default class Events extends Component {
       includePast: false,
       loading: true,
       hasFilters: false,
-      activeFilters: {
-        "CL&W Credits": false,
-        "Admissions": false,
-        "Arts": false,
-        "Athletics": false,
-        "CEC": false,
-        "Chapel Office": false,
-        "Student Life": false
-      }
+      filters: [],
     };
     this.handleExpandClick = this.handleExpandClick.bind(this);
     this.togglePastEvents = this.togglePastEvents.bind(this);
     this.clearFilters = this.clearFilters.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.search = this.search.bind(this);
     this.isMobileView = false;
     this.breakpointWidth = 540;
   }
@@ -94,39 +88,32 @@ export default class Events extends Component {
   async loadPrevious() {
     if (window.location.href.includes('?')) {
       const urlParams = new URLSearchParams(this.props.location.search);
-      let includePast = urlParams.has('Past') ? true : false;
-      let chapelCredits = urlParams.has('CLW') ? true : false;
-      let admissions = urlParams.has('Admissions') ? true : false;
-      let art = urlParams.has('Arts') ? true : false;
-      let sports = urlParams.has('Athletics') ? true : false;
-      let cec = urlParams.has('CEC') ? true : false;
-      let chapelOffice = urlParams.has('ChapelOffice') ? true : false;
-      let studentLife = urlParams.has('StudentLife') ? true : false;
+      const filtersFromURL = [];
+      let includePast = false;
+
       // Determines if any filters are activated
-      let hasFilters =
-        includePast ||
-        chapelCredits ||
-        admissions ||
-        art ||
-        sports ||
-        cec ||
-        chapelOffice ||
-        studentLife;
+      for (const key of urlParams.keys()) {
+        if (key === 'Past') {
+          includePast = true;
+        } else {
+          filtersFromURL.push(key);
+        }
+      }
+
+      let hasFilters = includePast || filtersFromURL.length > 0;
 
       this.setState({
         includePast,
-        chapelCredits,
-        admissions,
-        art,
-        sports,
-        cec,
-        chapelOffice,
-        studentLife,
-        hasFilters,
+        filters: filtersFromURL,
+        loading: true,
       });
 
-      this.setState({ loading: true });
-      const events = await gordonEvent.getFilteredEvents(this.state.activeFilters, this.state.allEvents, this.state.search);
+      const events = gordonEvent.getFilteredEvents(
+        this.state.allEvents,
+        filtersFromURL,
+        this.state.search,
+      );
+      console.log('Got filtered events in LoadPrevious:', events);
       this.setState({ filteredEvents: events, loading: false, open: hasFilters ? true : false });
 
       // If the include past filter is on, we get the events from the past
@@ -142,13 +129,6 @@ export default class Events extends Component {
     }
   }
 
-  async filterEvents(name) {
-      this.setState({ loading: true })
-      const events = await gordonEvent.getFilteredEvents(this.state);
-      this.setState({ filteredEvents: events, loading: false });
-      this.createURLParameters();
-  }
-
   /**
    * Creates an updated URL depending on the state
    *
@@ -158,24 +138,14 @@ export default class Events extends Component {
   createURLParameters() {
     let url = '?';
     if (this.state.includePast) url += '&Past';
-    if (this.state.chapelCredits) url += '&CLW';
-    if (this.state.admissions) url += '&Admissions';
-    if (this.state.art) url += '&Arts';
-    if (this.state.sports) url += '&Athletics';
-    if (this.state.cec) url += '&CEC';
-    if (this.state.chapelOffice) url += '&ChapelOffice';
-    if (this.state.studentLife) url += '&StudentLife';
+    url = this.state.filters.reduce(
+      (url, filter) => (url += `&${encodeURIComponent(filter)}`),
+      url,
+    );
+    console.log('Built url params:', url);
     this.props.history.push(url);
     // Determines if any filters are activated
-    let hasFilters =
-      this.state.includePast ||
-      this.state.chapelCredits ||
-      this.state.admissions ||
-      this.state.art ||
-      this.state.sports ||
-      this.state.cec ||
-      this.state.chapelOffice ||
-      this.state.studentLife;
+    let hasFilters = this.state.includePast || this.state.filters.length > 0;
     this.setState({ hasFilters });
   }
 
@@ -192,13 +162,7 @@ export default class Events extends Component {
     this.setState(
       {
         includePast: true,
-        chapelCredits: false,
-        admissions: false,
-        art: false,
-        sports: false,
-        cec: false,
-        chapelOffice: false,
-        studentLife: false,
+        filters: [],
       },
       async () => {
         // Set includePast to true above so that it is "toggled" to false by the below method
@@ -208,30 +172,37 @@ export default class Events extends Component {
     );
   }
 
-  search(name) {
-    return async (event) => {
-      await this.setState({
-        [name]: event.target.value,
-      });
-      const events = await gordonEvent.getFilteredEvents(this.state, this.state.events, this.state.search);
-      this.setState({ filteredEvents: events, loading: false });
-    };
+  search(event) {
+    this.setState({
+      loading: true,
+      search: event.target.value,
+    });
+    const events = gordonEvent.getFilteredEvents(
+      this.state.events,
+      this.state.filters,
+      event.target.value,
+    );
+    this.setState({ filteredEvents: events, loading: false });
   }
 
   async togglePastEvents() {
     //set events to all or to all future
     if (this.state.includePast === false) {
       this.setState({ includePast: true });
-      await this.setState({ events: this.state.allEvents });
+      this.setState({ events: this.state.allEvents });
     } else {
       this.setState({ includePast: false });
       const futureEvents = gordonEvent.getFutureEvents(this.state.allEvents);
-      await this.setState({ events: futureEvents });
+      this.setState({ events: futureEvents });
     }
     // Gets all the events included in the past along with all filters previously active
     this.createURLParameters();
     // Filter events to reflect boxes still checked
-    const events = gordonEvent.getFilteredEvents(this.state.activeFilters, this.state.events, this.state.search);
+    const events = gordonEvent.getFilteredEvents(
+      this.state.events,
+      this.state.filters,
+      this.state.search,
+    );
     this.setState({ filteredEvents: events, loading: false });
   }
 
@@ -268,22 +239,17 @@ export default class Events extends Component {
   }
 
   handleChange = async (event) => {
-    console.log("handleChange called");
-    const selectedFilters = event.target.value;
-    console.log("selctedFilters are " + selectedFilters);
-    const newActiveFilters = {};
-    for (let filter in this.state.activeFilters) {
-      console.log(filter);
-      newActiveFilters[filter] = selectedFilters.includes(filter);
-    }
-    console.log({newActiveFilters});
-    await this.setState({activeFilters: newActiveFilters });
-    //call getFilteredEvents set state with new filteredevents
-    const events = gordonEvent.getFilteredEvents(this.state.activeFilters, this.state.events, this.state.search);
-    await this.setState({ filteredEvents: events });
-  }
+    this.setState({ loading: true, filters: event.target.value });
+    const events = gordonEvent.getFilteredEvents(
+      this.state.events,
+      event.target.value,
+      this.state.search,
+    );
+    this.setState({ loading: false, filteredEvents: events });
+  };
 
   render() {
+    console.log('Rendering events with state', this.state);
     let content;
 
     if (this.state.loading === true) {
@@ -298,22 +264,31 @@ export default class Events extends Component {
       filter = (
         <Collapse in={this.state.open} timeout="auto" unmountOnExit>
           <FormGroup row>
-            <FormControl className={formControl}>
-              <InputLabel id = "event-filters">Events</InputLabel>
+            <FormControl>
+              <InputLabel id="event-filters">Events</InputLabel>
               <Select
-              labelId = "event-filters"
-              id = "event-checkboxes"
-              multiple
-              value = {Object.keys(this.state.activeFilters).filter(f => this.state.activeFilters[f])}
-              onChange = {this.handleChange}
-              input = {<Input />}
-              renderValue = {(selected) => selected.join(",")}
-              MenuProps = {MenuProps}
+                labelId="event-filters"
+                id="event-checkboxes"
+                multiple
+                value={this.state.filters}
+                onChange={this.handleChange}
+                input={<Input />}
+                renderValue={(selected) => (
+                  <div className="filter-chips">
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} className="filter-chip" />
+                    ))}
+                  </div>
+                )}
+                // MenuProps={MenuProps}
               >
-                {Object.keys(this.state.activeFilters).map((filtername) => (
-                  <MenuItem key={filtername} value={filtername}>
-                    <Checkbox checked = {this.state.activeFilters[filtername]} />
-                    <ListItemText primary={filtername} />
+                {EVENT_FILTERS.map((filterName) => (
+                  <MenuItem
+                    key={filterName}
+                    value={filterName}
+                    // style={getStyles(filterName, personName, theme)}
+                  >
+                    {filterName}
                   </MenuItem>
                 ))}
               </Select>
@@ -361,7 +336,7 @@ export default class Events extends Component {
                   id="search"
                   label="Search"
                   value={this.state.search}
-                  onChange={this.search('search')}
+                  onChange={this.search}
                   fullWidth
                 />
               </Grid>
