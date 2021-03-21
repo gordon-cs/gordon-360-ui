@@ -81,12 +81,6 @@ const Events = (props) => {
     setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
   }, [events, filters, search]);
 
-  const clearFilters = () => {
-    setIncludePast(false);
-    setFilters([]);
-    setURLParams(false, []);
-  };
-
   const handleChangeFilters = async (event) => {
     setFilters(event.target.value);
     setURLParams(includePast, event.target.value);
