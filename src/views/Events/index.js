@@ -125,7 +125,7 @@ const Events = (props) => {
   const filter = (
     <Collapse in={open} timeout="auto" unmountOnExit>
       <FormGroup row>
-        <FormControl>
+        <FormControl style = {{minWidth: 120}}>
           <InputLabel id="event-filters">Filters</InputLabel>
           <Select
             labelId="event-filters"
