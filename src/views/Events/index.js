@@ -27,7 +27,7 @@ const styles = {
   },
 };
 const Events = (props) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [search, setSearch] = useState('');
   const [allEvents, setAllEvents] = useState([]);
   const [events, setEvents] = useState([]);
@@ -80,11 +80,6 @@ const Events = (props) => {
   useEffect(() => {
     setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
   }, [events, filters, search]);
-
-  const handleExpandClick = () => {
-    clearFilters();
-    setOpen(!open);
-  };
 
   const clearFilters = () => {
     setIncludePast(false);
@@ -218,9 +213,6 @@ const Events = (props) => {
               style={{ paddingTop: '1rem' }}
               className={'buttonWrapper'}
             >
-              <Button variant="contained" style={style.button} onClick={handleExpandClick}>
-                {open && (includePast || filters.length > 0) ? 'CLEAR FILTERS' : 'FILTERS'}
-              </Button>
               {props.authentication && (
                 <Button
                   variant="contained"
