@@ -77,13 +77,13 @@ const StaffMenu = ({ userProfile, authentication }) => {
 
         Applicants.forEach((applicant) => {
           let filteredApplicantInfo = applicant;
-          filteredApplicantInfo.AprtAppID = applicationDetails.AprtAppID;
+          filteredApplicantInfo.ApplicationID = applicationDetails.ApplicationID;
           applicantsForCsv.push(filteredApplicantInfo);
         });
 
         ApartmentChoices.forEach((apartmentChoice) => {
           let filteredApartmentChoice = apartmentChoice;
-          filteredApartmentChoice.AprtAppID = applicationDetails.AprtAppID;
+          filteredApartmentChoice.ApplicationID = applicationDetails.ApplicationID;
           apartmentChoicesForCsv.push(filteredApartmentChoice);
         });
       }

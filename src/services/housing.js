@@ -29,7 +29,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
 /**
  * @global
  * @typedef FullApplicantInfo Applicant info used by the staff menu
- * @property {Number} AprtAppID Application ID number of this application
+ * @property {Number} ApplicationID Application ID number of this application
  * @property {String} Username The username of this applicant
  * @property {Number} Age The age of the student (in years) (only visible to housing admin)
  * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
@@ -41,7 +41,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * Note: Properties 'HallRank' and 'HallName' must be capitalized to match the backend
  * @global
  * @typedef ApartmentChoice
- * @property {Number} [AprtAppID] Application ID number of this application
+ * @property {Number} [ApplicationID] Application ID number of this application
  * @property {Number} HallRank The rank assigned to this hall by the user
  * @property {String} HallName The name of the apartment hall
  */
@@ -49,7 +49,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
 /**
  * @global
  * @typedef ApplicationDetails
- * @property {Number} AprtAppID Application ID number of this application
+ * @property {Number} ApplicationID Application ID number of this application
  * @property {*} DateSubmitted The date the application was submitted, or null if not yet submitted
  * @property {*} DateModified The date the application was last modified
  * @property {String} EditorUsername Username of the application editor
@@ -121,11 +121,11 @@ const saveApartmentApplication = async (
   apartmentChoices,
 ) => {
   let applicationDetails = {
-    AprtAppID: applicationID,
+    ApplicationID: applicationID,
     EditorUsername: editorUsername,
     Applicants: applicants.map((applicant) => [
       {
-        AprtAppID: applicationID,
+        ApplicationID: applicationID,
         Username: applicant.Profile.AD_Username,
         OffCampusProgram: applicant.OffCampusProgram,
       },
@@ -147,7 +147,7 @@ const saveApartmentApplication = async (
  */
 const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
   let newEditorDetails = {
-    AprtAppID: applicationID,
+    ApplicationID: applicationID,
     Username: newEditorUsername,
   };
   return await http.put(`housing/apartment/change-editor/`, newEditorDetails);
@@ -168,7 +168,7 @@ const getApartmentApplication = async (applicationID) => {
  */
 const getAllApartmentApplications = async () => {
   let dummyApplicationDetails = {
-    AprtAppID: 42,
+    ApplicationID: 42,
     DateSubmitted: '2030-03-14',
     DateModified: '2030-03-14',
     EditorUsername: 'Bobby.Tables',
@@ -210,7 +210,7 @@ const getAllApartmentApplications = async () => {
     ],
   }; //! DEBUG: This exists purely for testing the features without the backend. The commented-out line below is the actual code to use once the endpoint has been created in the backend
   let { ...dummyData2 } = dummyApplicationDetails;
-  dummyData2.AprtAppID = 43;
+  dummyData2.ApplicationID = 43;
   let applicationDetailsArray = [dummyApplicationDetails, dummyData2];
   // let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
 

@@ -100,7 +100,7 @@ const ApplicationsTable = ({ applications }) => {
                 {stableSort(applications, getComparator(order, orderBy)).map(
                   (applicationDetails, index) => (
                     <ApplicationRow
-                      key={applicationDetails.AprtAppID}
+                      key={applicationDetails.ApplicationID}
                       applicationDetails={applicationDetails}
                     />
                   ),

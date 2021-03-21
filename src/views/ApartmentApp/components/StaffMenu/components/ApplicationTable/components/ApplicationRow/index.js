@@ -11,9 +11,9 @@ const ApplicationRow = ({ applicationDetails }) => {
 
   return (
     <React.Fragment>
-      <TableRow key={applicationDetails.AprtAppID} onClick={() => setOpen(!open)}>
+      <TableRow key={applicationDetails.ApplicationID} onClick={() => setOpen(!open)}>
         <TableCell align="center" component="th" scope="row">
-          {applicationDetails.AprtAppID}
+          {applicationDetails.ApplicationID}
         </TableCell>
         <TableCell align="center">{applicationDetails.EditorUsername}</TableCell>
         <TableCell align="center">{applicationDetails.Applicants.length}</TableCell>
