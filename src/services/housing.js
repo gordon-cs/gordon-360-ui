@@ -133,9 +133,9 @@ const saveApartmentApplication = async (
     ApartmentChoices: apartmentChoices,
   };
   if (applicationID === -1) {
-    return await http.post(`housing/apartment/save/`, applicationDetails);
+    return await http.post(`housing/apartment/applications/`, applicationDetails);
   } else {
-    return await http.put(`housing/apartment/save/`, applicationDetails);
+    return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
   }
 };
 
@@ -148,9 +148,12 @@ const saveApartmentApplication = async (
 const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
   let newEditorDetails = {
     ApplicationID: applicationID,
-    Username: newEditorUsername,
+    EditorUsername: newEditorUsername,
   };
-  return await http.put(`housing/apartment/change-editor/`, newEditorDetails);
+  return await http.put(
+    `housing/apartment/applications/${applicationID}/${newEditorUsername}/`,
+    newEditorDetails,
+  );
 };
 
 /**
