@@ -126,7 +126,7 @@ const Events = (props) => {
     <Collapse in={open} timeout="auto" unmountOnExit>
       <FormGroup row>
         <FormControl>
-          <InputLabel id="event-filters">Events</InputLabel>
+          <InputLabel id="event-filters">Filters</InputLabel>
           <Select
             labelId="event-filters"
             id="event-checkboxes"
