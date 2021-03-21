@@ -114,6 +114,15 @@ const Events = (props) => {
     }
   };
 
+  const filterFormControl = {
+    minWidth: 120, 
+    backgroundColor: gordonColors.neutral.darkGray
+  }
+
+  const eventFilterLabel = {
+    color: gordonColors.neutral.lightGray
+  }
+
   let content;
 
   if (loading === true) {
@@ -125,8 +134,8 @@ const Events = (props) => {
   const filter = (
     <Collapse in={open} timeout="auto" unmountOnExit>
       <FormGroup row>
-        <FormControl style = {{minWidth: 120}}>
-          <InputLabel id="event-filters">Filters</InputLabel>
+        <FormControl style = {filterFormControl}>
+          <InputLabel id="event-filters" style = {eventFilterLabel}>Filters</InputLabel>
           <Select
             labelId="event-filters"
             id="event-checkboxes"
