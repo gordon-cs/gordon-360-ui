@@ -2,9 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import gordonEvent, { EVENT_FILTERS } from '../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
-import { gordonColors } from './../../theme';
 
-import './event.scss';
+import './event.css';
 import {
   Button,
   Checkbox,
@@ -12,20 +11,13 @@ import {
   Collapse,
   FormControl,
   FormControlLabel,
-  FormGroup,
   Grid,
-  Input,
   InputLabel,
   MenuItem,
   Select,
   TextField,
 } from '@material-ui/core';
 
-const styles = {
-  searchBar: {
-    margin: '0 auto',
-  },
-};
 const Events = (props) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -97,7 +89,7 @@ const Events = (props) => {
     setURLParams(includePast, event.target.value);
   };
 
-  const handleChangeIncludePast = (event) => {
+  const handleChangeIncludePast = () => {
     setIncludePast(!includePast);
     setURLParams(!includePast, filters);
   };
@@ -114,15 +106,6 @@ const Events = (props) => {
     }
   };
 
-  const filterFormControl = {
-    minWidth: 120, 
-    backgroundColor: gordonColors.neutral.darkGray
-  }
-
-  const eventFilterLabel = {
-    color: gordonColors.neutral.lightGray
-  }
-
   let content;
 
   if (loading === true) {
@@ -133,16 +116,15 @@ const Events = (props) => {
 
   const filter = (
     <Collapse in={open} timeout="auto" unmountOnExit>
-      <FormGroup row>
-        <FormControl style = {filterFormControl}>
-          <InputLabel id="event-filters" style = {eventFilterLabel}>Filters</InputLabel>
+      <div className="event-filters-wrapper">
+        <FormControl>
+          <InputLabel id="event-filters">Filters</InputLabel>
           <Select
             labelId="event-filters"
             id="event-checkboxes"
             multiple
             value={filters}
             onChange={handleChangeFilters}
-            input={<Input />}
             renderValue={(selected) => (
               <div className="filter-chips">
                 {selected.map((value) => (
@@ -150,14 +132,10 @@ const Events = (props) => {
                 ))}
               </div>
             )}
-            // MenuProps={MenuProps}
+            className="event-filters-select"
           >
             {EVENT_FILTERS.map((filterName) => (
-              <MenuItem
-                key={filterName}
-                value={filterName}
-                // style={getStyles(filterName, personName, theme)}
-              >
+              <MenuItem key={filterName} value={filterName}>
                 {filterName}
               </MenuItem>
             ))}
@@ -167,22 +145,10 @@ const Events = (props) => {
           control={<Checkbox checked={includePast} onChange={handleChangeIncludePast} />}
           label="Include Past"
         />
-      </FormGroup>
+      </div>
     </Collapse>
   );
 
-  const style = {
-    button: {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-
-      attendedEvents: {
-        background: gordonColors.primary.cyan,
-        color: 'white',
-        marginLeft: '0.88rem',
-      },
-    },
-  };
   return (
     <section>
       <Grid container justify="center">
@@ -195,9 +161,9 @@ const Events = (props) => {
           lg={8}
           alignContent="center"
           justify="center"
-          style={{ paddingBottom: '1rem' }}
+          className="event-buttons"
         >
-          <Grid container alignItems="baseline" justify="center" style={styles.searchBar}>
+          <Grid container alignItems="baseline" justify="center">
             <Grid container xs={12} sm={5} md={8} lg={7}>
               <TextField
                 id="search"
@@ -215,18 +181,13 @@ const Events = (props) => {
               sm={6}
               md={4}
               lg={5}
-              style={{ paddingTop: '1rem' }}
-              className={'buttonWrapper'}
+              className="buttonWrapper"
             >
-              <Button variant="contained" style={style.button} onClick={handleExpandClick}>
+              <Button variant="contained" onClick={handleExpandClick}>
                 {open && (includePast || filters.length > 0) ? 'CLEAR FILTERS' : 'FILTERS'}
               </Button>
               {props.authentication && (
-                <Button
-                  variant="contained"
-                  style={style.button.attendedEvents}
-                  onClick={() => props.history.push('/attended')}
-                >
+                <Button variant="contained" onClick={() => props.history.push('/attended')}>
                   ATTENDED CL&amp;W
                 </Button>
               )}
