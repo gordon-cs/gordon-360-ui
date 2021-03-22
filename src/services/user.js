@@ -507,6 +507,13 @@ const getSessionMembershipsWithoutGuests = async (id, session) => {
   return myCurrentInvolvementsWithoutGuests;
 };
 
+//Take student's  memberships and group by activity code BETA
+const getMembershipsByActivityCode = async (id, session) => {
+  let myInvolvements = await getMemberships(id);
+  myInvolvements.sort(compareByActCode);
+  return myInvolvements;
+};
+
 /**
  * Get requests sent by a specific student
  * @param {String} id Identifier for student
@@ -651,6 +658,7 @@ export default {
   getCurrentMemberships,
   getCurrentMembershipsWithoutGuests,
   getSessionMembershipsWithoutGuests,
+  getMembershipsByActivityCode,
   getLeaderPositions,
   getSentMembershipRequests,
   getProfileInfo,
