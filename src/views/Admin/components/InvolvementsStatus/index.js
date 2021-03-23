@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import { gordonColors } from '../../../../theme';
 import GordonLoader from '../../../../components/Loader';
 import activity from '../../../../services/activity';
 import InvolvementStatusList from './components/InvolvementStatusList/index';
-import Card from '@material-ui/core/Card';
+import { Typography, Divider, Card } from '@material-ui/core';
 
 export default class InvolvementsStatus extends Component {
   constructor(props) {
