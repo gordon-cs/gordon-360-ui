@@ -1,48 +1,49 @@
 //Main timesheets page
-import React, { useState, useRef, useEffect } from 'react';
+// import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import {
-  Grid,
+  // Grid,
   Card,
   CardContent,
-  CardHeader,
-  Link,
-  Tooltip,
-  FormControl,
-  InputLabel,
-  Select,
-  Input,
-  MenuItem,
-  Button,
+  // CardHeader,
+  // Link,
+  // Tooltip,
+  // FormControl,
+  // InputLabel,
+  // Select,
+  // Input,
+  // MenuItem,
+  // Button,
   Typography,
-  TextField,
+  // TextField,
 } from '@material-ui/core/';
-import DateFnsUtils from '@date-io/date-fns';
-import jobs from '../../services/jobs';
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
-import ShiftDisplay from './components/ShiftDisplay';
-import { withStyles } from '@material-ui/core/styles';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { gordonColors } from '../../theme';
+// import DateFnsUtils from '@date-io/date-fns';
+// import jobs from '../../services/jobs';
+// import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
+// import ShiftDisplay from './components/ShiftDisplay';
+// import { withStyles } from '@material-ui/core/styles';
+// import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+// import { gordonColors } from '../../theme';
 import './timesheets.css';
-import GordonLoader from '../../components/Loader';
-import { makeStyles } from '@material-ui/core/styles';
-import SimpleSnackbar from '../../components/Snackbar';
-import user from '../../services/user';
+// import GordonLoader from '../../components/Loader';
+// import { makeStyles } from '@material-ui/core/styles';
+// import SimpleSnackbar from '../../components/Snackbar';
+// import user from '../../services/user';
 
-const useStyles = makeStyles((theme) => ({
-  customWidth: {
-    maxWidth: 500,
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   customWidth: {
+//     maxWidth: 500,
+//   },
+// }));
 
-const CustomTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: theme.palette.common.black,
-    color: 'rgba(255, 255, 255, 0.87)',
-    boxShadow: theme.shadows[1],
-    fontSize: 12,
-  },
-}))(Tooltip);
+// const CustomTooltip = withStyles((theme) => ({
+//   tooltip: {
+//     backgroundColor: theme.palette.common.black,
+//     color: 'rgba(255, 255, 255, 0.87)',
+//     boxShadow: theme.shadows[1],
+//     fontSize: 12,
+//   },
+// }))(Tooltip);
 
 const Timesheets = (props) => {
   return (
