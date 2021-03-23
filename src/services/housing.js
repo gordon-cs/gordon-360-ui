@@ -151,7 +151,7 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
     EditorUsername: newEditorUsername,
   };
   return await http.put(
-    `housing/apartment/applications/${applicationID}/${newEditorUsername}/`,
+    `housing/apartment/applications/${applicationID}/editor/`,
     newEditorDetails,
   );
 };
