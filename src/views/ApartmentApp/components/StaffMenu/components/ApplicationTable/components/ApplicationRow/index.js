@@ -6,13 +6,13 @@ import ApplicantSubTable from './components/ApplicantSubTable';
 import HallSubTable from './components/HallSubTable';
 import './applicationRow.css';
 
-const ApplicationRow = ({ applicationDetails }) => {
+const ApplicationRow = ({ applicationDetails, labelId }) => {
   const [open, setOpen] = React.useState(false);
 
   return (
     <React.Fragment>
       <TableRow key={applicationDetails.ApplicationID} onClick={() => setOpen(!open)}>
-        <TableCell align="center" component="th" scope="row">
+        <TableCell align="center" component="th" id={labelId} scope="row">
           {applicationDetails.ApplicationID}
         </TableCell>
         <TableCell align="center">{applicationDetails.EditorUsername}</TableCell>

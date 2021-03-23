@@ -5,13 +5,10 @@ import {
   CardContent,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
   Typography,
 } from '@material-ui/core/';
+import ApplicationsTableHead from './components/ApplicationsTableHead';
 import ApplicationRow from './components/ApplicationRow';
 import './applicationTable.css';
 
@@ -44,16 +41,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  { id: 'apart-app-id', numeric: true, disablePadding: false, label: 'Application ID' },
-  { id: 'editor-username', numeric: false, disablePadding: true, label: 'Editor' },
-  { id: 'num-applicants', numeric: true, disablePadding: false, label: '# of Applicants' },
-  { id: 'gender', numeric: false, disablePadding: true, label: 'Gender' },
-  { id: 'hall', numeric: false, disablePadding: true, label: 'First Hall Choice' },
-  { id: 'total-pts', numeric: true, disablePadding: false, label: 'Total Points' },
-  { id: 'avg-pts', numeric: true, disablePadding: false, label: 'Avg. Points' },
-];
-
 const ApplicationsTable = ({ applications }) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('apart-app-id');
@@ -64,10 +51,6 @@ const ApplicationsTable = ({ applications }) => {
     setOrderBy(property);
   };
 
-  const createSortHandler = (property) => (event) => {
-    handleRequestSort(event, property);
-  };
-
   return (
     <Card>
       <CardHeader title="Apartment Applications" className="apartment-card-header" />
@@ -75,35 +58,24 @@ const ApplicationsTable = ({ applications }) => {
         {applications ? (
           <TableContainer>
             <Table stickyHeader>
-              <TableHead className={'stylized-table-head'}>
-                <TableRow>
-                  {headCells.map((headCell) => (
-                    <TableCell
-                      key={headCell.id}
-                      align={headCell.numeric ? 'right' : 'left'}
-                      padding={headCell.disablePadding ? 'none' : 'default'}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                      <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : 'asc'}
-                        onClick={createSortHandler(headCell.id)}
-                      >
-                        {headCell.label}
-                      </TableSortLabel>
-                    </TableCell>
-                  ))}
-                  <TableCell align="center">Details</TableCell>
-                </TableRow>
-              </TableHead>
+              <ApplicationsTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+              />
               <TableBody className={'double-striped-table'}>
                 {stableSort(applications, getComparator(order, orderBy)).map(
-                  (applicationDetails, index) => (
-                    <ApplicationRow
-                      key={applicationDetails.ApplicationID}
-                      applicationDetails={applicationDetails}
-                    />
-                  ),
+                  (applicationDetails, index) => {
+                    const labelId = `application-table-${index}`;
+
+                    return (
+                      <ApplicationRow
+                        key={applicationDetails.ApplicationID}
+                        applicationDetails={applicationDetails}
+                        labelId={labelId}
+                      />
+                    );
+                  },
                 )}
               </TableBody>
             </Table>
