@@ -1,6 +1,4 @@
-.MuiGrid-item {
-  text-align: center;
-}
+@import '../../vars.scss';
 
 .header-tooltip-container {
   display: inline-flex;
@@ -13,4 +11,8 @@
   top: 0;
   margin-right: -2px;
   margin-top: 8px;
+}
+
+a.temp-go-link {
+  color: $primary-cyan;
 }
