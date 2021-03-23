@@ -19,7 +19,7 @@ import {
 } from '@material-ui/core';
 
 const Events = (props) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [allEvents, setAllEvents] = useState([]);
   const [events, setEvents] = useState([]);
@@ -76,6 +76,17 @@ const Events = (props) => {
   const handleChangeFilters = async (event) => {
     setFilters(event.target.value);
     setURLParams(includePast, event.target.value);
+  };
+
+  const handleExpandClick = () => {
+    clearFilters();
+    setOpen(!open);
+  };
+
+  const clearFilters = () => {
+    setIncludePast(false);
+    setFilters([]);
+    setURLParams(false, []);
   };
 
   const handleChangeIncludePast = () => {
