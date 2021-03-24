@@ -210,16 +210,6 @@ class IDUploader extends Component {
     const { preview } = this.state;
 
     const style = {
-      img: {
-        width: '200px',
-        height: '200px',
-      },
-
-      centerGridContainer: {
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-      },
 
       button: {
         background: gordonColors.primary.cyan,
@@ -234,11 +224,6 @@ class IDUploader extends Component {
 
       uncontainedButton: {
         color: gordonColors.primary.cyan,
-      },
-
-      media: {
-        // ⚠️ object-fit is not supported by IE 11.
-        objectFit: 'cover',
       },
 
       instructionsText: {
