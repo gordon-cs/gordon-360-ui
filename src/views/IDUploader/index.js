@@ -77,7 +77,7 @@ class IDUploader extends Component {
       this.setState({ submitDialogOpen: true });
     } catch (error) {
       let errorMessage = ', but image failed to post with error: ' + error;
-      logMessage = errorMessage + logMessage;
+      logMessage += errorMessage;
       if (attemptNumber < 5) {
         this.postCroppedImage(croppedImage, attemptNumber + 1);
       } else {
