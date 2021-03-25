@@ -69,15 +69,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setApplicationID(newApplicationID);
       let applicationDetails = await housing.getApartmentApplication(newApplicationID);
       if (applicationDetails) {
-        if (applicationDetails.DateSubmitted) {
-          setDateSubmitted(applicationDetails.DateSubmitted);
-        }
-        if (applicationDetails.DateModified) {
-          setDateModified(applicationDetails.DateModified);
-        }
-        if (applicationDetails.Username) {
-          setEditorUsername(applicationDetails.Username);
-        }
+        setDateSubmitted(applicationDetails.DateSubmitted ?? null);
+        setDateModified(applicationDetails.DateModified ?? null);
+        setEditorUsername(applicationDetails.EditorUsername ?? null);
         if (applicationDetails.Applicants) {
           applicationDetails.Applicants.forEach(async (applicantInfo) => {
             const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
