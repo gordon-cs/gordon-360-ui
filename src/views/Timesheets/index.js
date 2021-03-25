@@ -17,7 +17,7 @@ import {
   TextField,
 } from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
-import { isValid } from 'date-fns';
+import { isValid, setSeconds, setMilliseconds } from 'date-fns';
 import jobsService from '../../services/jobs';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import ShiftDisplay from './components/ShiftDisplay';
@@ -33,6 +33,8 @@ import useNetworkStatus from '../../hooks/useNetworkStatus';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift if 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
+
+const withZeroSeconds = (date) => setSeconds(setMilliseconds(date, 0), 0);
 
 const useStyles = makeStyles((theme) => ({
   customWidth: {
@@ -103,7 +105,9 @@ const Timesheets = (props) => {
         if (status[0].currentState) {
           setClockInOut('Clock Out');
 
-          handleDateChangeInClock(new Date(status[0].timestamp));
+          const clockInDate = withZeroSeconds(new Date(status[0].timestamp));
+
+          setSelectedDateIn(clockInDate);
         } else {
           setClockInOut('Clock In');
         }
@@ -179,16 +183,6 @@ const Timesheets = (props) => {
     setHoursWorkedInDecimal(roundedShiftLength);
 
     return true;
-  };
-
-  //had to be defined outside of the authentication condition so that the ui could update
-  // before cheking to see if user is authenticated.
-  const handleDateChangeInClock = (date) => {
-    if (date) {
-      date.setSeconds(0);
-      date.setMilliseconds(0);
-      setSelectedDateIn(date);
-    }
   };
 
   const tooltipRef = useRef();
@@ -446,12 +440,12 @@ const Timesheets = (props) => {
       if (clockInOut === 'Clock In') {
         setClockInOut('Clock Out');
         await jobsService.clockIn(true);
-        setSelectedDateIn(new Date());
+        setSelectedDateIn(withZeroSeconds(new Date()));
       }
       if (clockInOut === 'Clock Out') {
         setClockInOut('Reset');
         await jobsService.clockIn(false);
-        setSelectedDateOut(new Date());
+        setSelectedDateOut(withZeroSeconds(new Date()));
         await jobsService.deleteClockIn();
       }
       if (clockInOut === 'Reset') {
