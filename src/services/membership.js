@@ -149,20 +149,10 @@ const get = (activityCode, sessionCode) => {
 
 //Change the privacy value for a club membership
 const toggleMembershipPrivacy = async (userMembership) => {
-  let currentMembershipPrivacy = userMembership.Privacy;
-  let newMembershipPrivacy = !currentMembershipPrivacy;
-  let setMembershipPrivacy = async function(value) {
-    return await http
-      .put('memberships/' + userMembership.MembershipID + '/privacy/' + value, value)
-      .then(() => {
-        // Changes the membership's privacy to the new privacy
-        userMembership.Privacy = newMembershipPrivacy;
-        return true;
-      })
-      .catch(false);
-  };
-
-  return setMembershipPrivacy(newMembershipPrivacy);
+  return await http.put(
+    `memberships/${userMembership.MembershipID}/privacy/${!userMembership.Privacy}`,
+    !userMembership.Privacy,
+  );
 };
 
 /**
