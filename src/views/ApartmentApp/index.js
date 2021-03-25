@@ -4,9 +4,9 @@ import { Grid, Card, CardContent, Button } from '@material-ui/core/';
 import GordonLoader from '../../components/Loader';
 import StudentApplication from './components/StudentApplication';
 import StaffMenu from './components/StaffMenu';
+import useNetworkStatus from '../../hooks/useNetworkStatus';
 import user from '../../services/user';
 import housing from '../../services/housing';
-import storage from '../../services/storage';
 import './apartmentApp.scss';
 
 /**
@@ -16,7 +16,6 @@ import './apartmentApp.scss';
 const ApartApp = ({ authentication }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
-  const [networkStatus, setNetworkStatus] = useState('online');
 
   /**
    * @type {[StudentProfileInfo, Function]} UserProfile
@@ -25,31 +24,7 @@ const ApartApp = ({ authentication }) => {
   const [isUserStudent, setIsUserStudent] = useState(false);
   const [canUseStaff, setCanUseStaff] = useState(false);
 
-  useEffect(() => {
-    // Retrieve network status from local storage or default to online
-    try {
-      setNetworkStatus(storage.get('network-status'));
-    } catch (error) {
-      setNetworkStatus('online');
-    }
-
-    /* Used to re-render the page when the network connection changes.
-     * The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      setNetworkStatus((prevStatus) => {
-        if (
-          event.origin === window.location.origin &&
-          (event.data === 'online' || event.data === 'offline')
-        ) {
-          return event.data;
-        }
-        return prevStatus;
-      });
-    });
-
-    return () => window.removeEventListener('message', () => {});
-  }, []);
+  const isOnline = useNetworkStatus();
 
   useEffect(() => {
     if (authentication) {
@@ -72,8 +47,8 @@ const ApartApp = ({ authentication }) => {
       housing.checkHousingStaff(),
     ]);
     setUserProfile(profileInfo);
-    profileInfo.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
-    isHousingStaff ? setCanUseStaff(true) : setCanUseStaff(false);
+    setIsUserStudent(profileInfo.PersonType.includes('stu'));
+    setCanUseStaff(isHousingStaff);
     setLoading(false);
   };
 
@@ -109,7 +84,7 @@ const ApartApp = ({ authentication }) => {
         </Grid>
       </Grid>
     );
-  } else if (networkStatus === 'online') {
+  } else if (isOnline) {
     if (isUserStudent) {
       return (
         <div className="student-apartment-application">
