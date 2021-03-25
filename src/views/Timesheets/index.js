@@ -17,7 +17,7 @@ import {
   TextField,
 } from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
-import { isValid, setSeconds, setMilliseconds } from 'date-fns';
+import { isValid, isWithinInterval, addDays, set } from 'date-fns';
 import jobsService from '../../services/jobs';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import ShiftDisplay from './components/ShiftDisplay';
@@ -34,7 +34,8 @@ import useNetworkStatus from '../../hooks/useNetworkStatus';
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift if 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
 
-const withZeroSeconds = (date) => setSeconds(setMilliseconds(date, 0), 0);
+const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
+const withNoTime = (date) => set(date, { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
 
 const useStyles = makeStyles((theme) => ({
   customWidth: {
@@ -105,7 +106,7 @@ const Timesheets = (props) => {
         if (status[0].currentState) {
           setClockInOut('Clock Out');
 
-          const clockInDate = withZeroSeconds(new Date(status[0].timestamp));
+          const clockInDate = withNoSeconds(new Date(status[0].timestamp));
 
           setSelectedDateIn(clockInDate);
         } else {
@@ -334,118 +335,23 @@ const Timesheets = (props) => {
       <></>
     );
 
-    const isLeapYear = (date) => {
-      if (date.getFullYear() % 4 === 0) {
-        if (date.getFullYear() % 100 === 0) {
-          if (date.getFullYear() % 400 !== 0) {
-            return false;
-          } else {
-            return true;
-          }
-        } else {
-          return true;
-        }
-      } else {
-        return false;
-      }
-    };
-
-    const getNextDate = (date) => {
-      let is30DayMonth =
-        date.getMonth() === 3 ||
-        date.getMonth() === 5 ||
-        date.getMonth() === 8 ||
-        date.getMonth() === 10;
-
-      let isFebruary = date.getMonth() === 1;
-      let isDecember = date.getMonth() === 11;
-      let nextDate;
-      let monthToReturn;
-      let yearToReturn;
-
-      if (isFebruary) {
-        if (isLeapYear(date)) {
-          if (date.getDate() === 29) {
-            nextDate = 1;
-            monthToReturn = 2;
-            yearToReturn = date.getFullYear();
-          } else {
-            nextDate = date.getDate() + 1;
-            monthToReturn = date.getMonth();
-            yearToReturn = date.getFullYear();
-          }
-        } else if (date.getDate() === 28) {
-          nextDate = 1;
-          monthToReturn = 2;
-          yearToReturn = date.getFullYear();
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      } else if (isDecember) {
-        if (date.getDate() === 31) {
-          nextDate = 1;
-          monthToReturn = 0;
-          yearToReturn = date.getFullYear() + 1;
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      } else if (is30DayMonth) {
-        if (date.getDate() === 30) {
-          nextDate = 1;
-          monthToReturn = date.getMonth() + 1;
-          yearToReturn = date.getFullYear();
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      } else {
-        if (date.getDate() === 31) {
-          nextDate = 1;
-          monthToReturn = date.getMonth() + 1;
-          yearToReturn = date.getFullYear();
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      }
-
-      return {
-        date: nextDate,
-        month: monthToReturn,
-        year: yearToReturn,
-      };
-    };
-
     const disableDisallowedDays = (date) => {
-      let dayIn = selectedDateIn;
-      let nextDate = getNextDate(dayIn);
-      let shouldDisableDate = !(
-        (date.getDate() === dayIn.getDate() &&
-          date.getMonth() === dayIn.getMonth() &&
-          date.getYear() === dayIn.getYear()) ||
-        (date.getDate() === nextDate.date &&
-          date.getMonth() === nextDate.month &&
-          date.getFullYear() === nextDate.year)
-      );
-      return shouldDisableDate;
+      return !isWithinInterval(withNoTime(date), {
+        start: withNoTime(selectedDateIn),
+        end: withNoTime(addDays(selectedDateIn, 1)),
+      });
     };
 
     const changeState = async () => {
       if (clockInOut === 'Clock In') {
         setClockInOut('Clock Out');
         await jobsService.clockIn(true);
-        setSelectedDateIn(withZeroSeconds(new Date()));
+        setSelectedDateIn(withNoSeconds(new Date()));
       }
       if (clockInOut === 'Clock Out') {
         setClockInOut('Reset');
         await jobsService.clockIn(false);
-        setSelectedDateOut(withZeroSeconds(new Date()));
+        setSelectedDateOut(withNoSeconds(new Date()));
         await jobsService.deleteClockIn();
       }
       if (clockInOut === 'Reset') {
