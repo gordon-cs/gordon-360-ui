@@ -33,21 +33,21 @@
         }
         &-instructions {
           &-choice {
-            color: #ce392e;
+            color: $secondary-red;
             padding: 1rem 0rem;
           }
           &-text {
             padding-bottom: 0.5rem;
             &-step {
-              color: #014983;
+              color: $primary-blue;
             }
             &-instruction {
-              color: #31342b;
+              color: $neutral-dark-gray;
               a {
                 text-decoration: none;
                 color: $primary-blue;
                 &:hover {
-                  color: #0078da;
+                  color: $primary-cyan;
                 }
               }
             }
