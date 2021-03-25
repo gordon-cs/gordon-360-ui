@@ -17,7 +17,8 @@ import {
   TextField,
 } from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
-import jobs from '../../services/jobs';
+import { isValid } from 'date-fns';
+import jobsService from '../../services/jobs';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import ShiftDisplay from './components/ShiftDisplay';
 import { withStyles } from '@material-ui/core/styles';
@@ -29,6 +30,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
+
+const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift if 5 minutes, 1/12 hour
+const MILLISECONDS_PER_HOUR = 3600000;
 
 const useStyles = makeStyles((theme) => ({
   customWidth: {
@@ -50,13 +54,8 @@ const Timesheets = (props) => {
   const [selectedDateIn, setSelectedDateIn] = useState(null);
   const [selectedDateOut, setSelectedDateOut] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [shiftTooLong, setShiftTooLong] = useState(false);
-  const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = useState(false);
-  const [isZeroLengthShift, setIsZeroLengthShift] = useState(false);
-  const [enteredFutureTime, setEnteredFutureTime] = useState(false);
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = useState(0.0);
   const [userShiftNotes, setUserShiftNotes] = useState('');
-  const [isOverlappingShift, setIsOverlappingShift] = useState(false);
   const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -64,9 +63,10 @@ const Timesheets = (props) => {
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [clockInOut, setClockInOut] = useState('Clock In');
   const [canUseStaff, setCanUseStaff] = useState(null);
-  const [isUserStudent, setIsUserStudent] = useState(false);
+  const [isUserStudent, setIsUserStudent] = useState(true);
   const [hourTypes, setHourTypes] = useState(null);
   const [selectedHourType, setSelectedHourType] = useState('R');
+  const [errorText, setErrorText] = useState(null);
   const isOnline = useNetworkStatus();
 
   // Sets the person type of the user
@@ -81,8 +81,8 @@ const Timesheets = (props) => {
   useEffect(() => {
     async function getCanUseStaff() {
       try {
-        let canUse = await jobs.getStaffPageForUser();
-        let hourTypes = await jobs.getHourTypes();
+        let canUse = await jobsService.getStaffPageForUser();
+        let hourTypes = await jobsService.getHourTypes();
 
         if (canUse.length === 1) {
           setCanUseStaff(true);
@@ -99,7 +99,7 @@ const Timesheets = (props) => {
     // status is notted by either true or false. true being clocked in.
     async function getClockInOutStatus() {
       try {
-        let status = await jobs.clockOut();
+        let status = await jobsService.clockOut();
 
         if (status[0].currentState) {
           setClockInOut('Clock Out');
@@ -119,6 +119,69 @@ const Timesheets = (props) => {
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    const loadJobs = async () => {
+      const areShiftTimesValid = validateShiftTimes(selectedDateIn, selectedDateOut);
+      if (areShiftTimesValid) {
+        const jobs = await jobsService.getJobs(canUseStaff, selectedDateIn, selectedDateOut);
+        setUserJobs(jobs);
+      }
+    };
+    loadJobs();
+  }, [canUseStaff, selectedDateIn, selectedDateOut]);
+
+  const validateShiftTimes = (timeIn, timeOut) => {
+    if (timeIn === null || timeOut === null) {
+      setErrorText(null);
+      return false;
+    }
+
+    if (!isValid(timeIn)) {
+      setErrorText('Start time is not a valid date.');
+      return false;
+    }
+
+    if (!isValid(timeOut)) {
+      setErrorText('End time is not a valid date.');
+      return false;
+    }
+
+    const now = Date.now();
+    if (timeIn.getTime() > now || timeOut.getTime() > now) {
+      setErrorText('A shift cannot begin or end in the future.');
+      return false;
+    }
+
+    const shiftLength = timeOut.getTime() - timeIn.getTime();
+
+    if (shiftLength < 0) {
+      setErrorText('A shift cannot end before it starts.');
+      return false;
+    }
+
+    if (shiftLength === 0) {
+      setErrorText('The entered shift has zero length.');
+      return false;
+    }
+
+    const shiftLengthInHours = shiftLength / MILLISECONDS_PER_HOUR;
+
+    if (shiftLengthInHours > 20) {
+      setErrorText('A shift cannot be longer than 20 hours.');
+      return false;
+    }
+
+    setErrorText(null);
+
+    let roundedShiftLength = (Math.round(shiftLengthInHours * 12) / 12).toFixed(2);
+    if (roundedShiftLength < MINIMUM_SHIFT_LENGTH) {
+      roundedShiftLength = MINIMUM_SHIFT_LENGTH;
+    }
+    setHoursWorkedInDecimal(roundedShiftLength);
+
+    return true;
+  };
+
   //had to be defined outside of the authentication condition so that the ui could update
   // before cheking to see if user is authenticated.
   const handleDateChangeInClock = (date) => {
@@ -126,78 +189,15 @@ const Timesheets = (props) => {
       date.setSeconds(0);
       date.setMilliseconds(0);
       setSelectedDateIn(date);
-      setIsOverlappingShift(false);
-      handleTimeErrors(date, selectedDateOut);
     }
   };
 
   const tooltipRef = useRef();
   const classes = useStyles();
 
-  const handleTimeErrors = (timeIn, timeOut) => {
-    if (timeIn !== null && timeOut !== null) {
-      checkForFutureDate(timeIn, timeOut);
-      let timeDiff = timeOut.getTime() - timeIn.getTime();
-      let calculatedTimeDiff = timeDiff / 3600000; //3,600,000 milliseconds in an hour.
-      let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
-      if (roundedHourDifference < 0.08) {
-        roundedHourDifference = 0.08; //minimum 1/12th hour (5 minutes) for working a shift.
-      }
-      setHoursWorkedInDecimal(roundedHourDifference);
-      let hoursWorked = Math.floor(calculatedTimeDiff);
-      let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60).toFixed(2);
-
-      if (minutesWorked >= 60) {
-        hoursWorked++;
-        minutesWorked = 0;
-      }
-
-      setTimeOutIsBeforeTimeIn(timeDiff < 0);
-      setIsZeroLengthShift(timeDiff === 0);
-      setShiftTooLong(calculatedTimeDiff > 20);
-    }
-  };
-
-  const checkForFutureDate = (dateIn, dateOut) => {
-    let now = Date.now();
-    setEnteredFutureTime(dateIn.getTime() > now || dateOut.getTime() > now);
-  };
-
   if (props.authentication) {
-    const getJobs = (dateIn, dateOut) => {
-      jobs.getJobs(canUseStaff, dateIn, dateOut).then((result) => {
-        setUserJobs(result);
-      });
-    };
-
     const getSavedShiftsForUser = () => {
-      return jobs.getSavedShiftsForUser(canUseStaff);
-    };
-
-    const handleDateChangeIn = (date) => {
-      if (date) {
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        setSelectedDateIn(date);
-        setIsOverlappingShift(false);
-        handleTimeErrors(date, selectedDateOut);
-        if (selectedDateOut !== null) {
-          getJobs(date, selectedDateOut);
-        }
-      }
-    };
-
-    const handleDateChangeOut = (date) => {
-      if (date) {
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        setSelectedDateOut(date);
-        setIsOverlappingShift(false);
-        handleTimeErrors(selectedDateIn, date);
-        if (selectedDateIn !== null) {
-          getJobs(selectedDateIn, date);
-        }
-      }
+      return jobsService.getSavedShiftsForUser(canUseStaff);
     };
 
     const handleSaveButtonClick = () => {
@@ -216,10 +216,10 @@ const Timesheets = (props) => {
         timeOut.setMinutes(59);
 
         let timeDiff2 = timeOut2.getTime() - timeIn2.getTime();
-        let calculatedTimeDiff2 = timeDiff2 / 3600000; //3,600,000 milliseconds in an hour.
+        let calculatedTimeDiff2 = timeDiff2 / MILLISECONDS_PER_HOUR;
         let roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 12) / 12).toFixed(2);
-        if (roundedHourDifference2 < 0.08) {
-          roundedHourDifference2 = 0.08; //minimum 1/12th hour (5 minutes) for working a shift.
+        if (roundedHourDifference2 < MINIMUM_SHIFT_LENGTH) {
+          roundedHourDifference2 = MINIMUM_SHIFT_LENGTH; //minimum 1/12th hour (5 minutes) for working a shift.
         }
 
         // Do not save the shift if it has zero length
@@ -264,10 +264,10 @@ const Timesheets = (props) => {
       }
 
       let timeDiff1 = timeOut.getTime() - timeIn.getTime();
-      let calculatedTimeDiff = timeDiff1 / 3600000; //3,600,000 milliseconds in an hour.
+      let calculatedTimeDiff = timeDiff1 / MILLISECONDS_PER_HOUR;
       let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
-      if (roundedHourDifference < 0.08) {
-        roundedHourDifference = 0.08; //minimum 1/12th hour (5 minutes) for working a shift.
+      if (roundedHourDifference < MINIMUM_SHIFT_LENGTH) {
+        roundedHourDifference = MINIMUM_SHIFT_LENGTH; //minimum 1/12th hour (5 minutes) for working a shift.
       }
 
       saveShift(
@@ -311,7 +311,7 @@ const Timesheets = (props) => {
     };
 
     const saveShift = async (eml, shiftStart, shiftEnd, hoursWorked, hoursType, shiftNotes) => {
-      await jobs.saveShiftForUser(
+      await jobsService.saveShiftForUser(
         canUseStaff,
         eml,
         shiftStart,
@@ -446,16 +446,14 @@ const Timesheets = (props) => {
     const changeState = async () => {
       if (clockInOut === 'Clock In') {
         setClockInOut('Clock Out');
-        await jobs.clockIn(true);
-        let clockInDate = new Date();
-        handleDateChangeIn(clockInDate);
+        await jobsService.clockIn(true);
+        setSelectedDateIn(new Date());
       }
       if (clockInOut === 'Clock Out') {
         setClockInOut('Reset');
-        await jobs.clockIn(false);
-        let clockOutDate = new Date();
-        handleDateChangeOut(clockOutDate);
-        await jobs.deleteClockIn();
+        await jobsService.clockIn(false);
+        setSelectedDateOut(new Date());
+        await jobsService.deleteClockIn();
       }
       if (clockInOut === 'Reset') {
         setClockInOut('Clock In');
@@ -514,41 +512,6 @@ const Timesheets = (props) => {
       </FormControl>
     );
 
-    let errorText;
-    if (enteredFutureTime) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          A shift cannot begin or end in the future.
-        </Typography>
-      );
-    } else if (timeOutIsBeforeTimeIn) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          A shift cannot end before it starts.
-        </Typography>
-      );
-    } else if (isZeroLengthShift) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          The entered shift has zero length.
-        </Typography>
-      );
-    } else if (shiftTooLong) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          A shift cannot be longer than 20 hours.
-        </Typography>
-      );
-    } else if (isOverlappingShift) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          You have already entered hours that fall within this time frame.
-        </Typography>
-      );
-    } else {
-      errorText = <></>;
-    }
-
     const handleShiftNotesChanged = (event) => {
       setUserShiftNotes(event.target.value);
     };
@@ -558,11 +521,7 @@ const Timesheets = (props) => {
     ) : (
       <Button
         disabled={
-          enteredFutureTime ||
-          timeOutIsBeforeTimeIn ||
-          isOverlappingShift ||
-          shiftTooLong ||
-          isZeroLengthShift ||
+          errorText ||
           selectedDateIn === null ||
           selectedDateOut === null ||
           selectedJob === null ||
@@ -647,7 +606,7 @@ const Timesheets = (props) => {
                           helperText="MM-DD-YY HH-MM AM/PM"
                           format="MM/dd/yy hh:mm a"
                           value={selectedDateIn}
-                          onChange={handleDateChangeIn}
+                          onChange={setSelectedDateIn}
                         />
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
@@ -668,7 +627,7 @@ const Timesheets = (props) => {
                           format="MM/dd/yy hh:mm a"
                           openTo="hours"
                           value={selectedDateOut}
-                          onChange={handleDateChangeOut}
+                          onChange={setSelectedDateOut}
                         />
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
@@ -695,9 +654,13 @@ const Timesheets = (props) => {
                           Hours worked: {hoursWorkedInDecimal}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
-                        {errorText}
-                      </Grid>
+                      {errorText && (
+                        <Grid item xs={12}>
+                          <Typography variant="overline" color="error">
+                            {errorText}
+                          </Typography>
+                        </Grid>
+                      )}
                       <Grid item xs={12}>
                         {saveButton}
                       </Grid>
