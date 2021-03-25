@@ -36,7 +36,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   const [applicationID, setApplicationID] = useState(-1); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
-  const [dateModified, setDateModified] = useState(null); // The date the application was submitted, or null if not yet submitted
+  const [dateModified, setDateModified] = useState(null); // The date the application was last modified, or null if not yet saved/modified
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
   const [applicants, setApplicants] = useState([]);
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
