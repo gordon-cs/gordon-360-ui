@@ -221,7 +221,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for applying the new application editor
    */
   const handleChangeEditorAccepted = () => {
-    if (newEditorProfile && newEditorProfile.AD_Username) {
+    if (newEditorProfile?.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
       changeApplicationEditor(applicationID, newEditorProfile.AD_Username);
       handleCloseOkay();
@@ -349,7 +349,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Callback for hall list remove button
-   * @param {Number} index The index of the hall to be removed from the list of perferred halls
+   * @param {Number} index The index of the hall to be removed from the list of preferred halls
    */
   const handleHallRemove = (index) => {
     if (index !== null && index !== -1) {
@@ -415,10 +415,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       result = false;
     }
     console.log('result of saving: ' + result); //! DEBUG
-    if (result !== null && result !== false && result !== -1) {
-      if (typeof result === 'number') {
-        setApplicationID(result);
-      }
+    if (result !== null && result !== false && result !== -1 && typeof result === 'number') {
+      setApplicationID(result);
       setSaving('success');
       setUnsavedChanges(false);
     } else {
