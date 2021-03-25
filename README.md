@@ -379,8 +379,8 @@ In the unusual case that Train or Production have not been automatically deploye
 1. Connect to the `360-Frontend.gordon.edu` server. See [RemoteDesktopToVM](https://github.com/gordon-cs/gordon-360-api/blob/develop/RemoteDesktopToVM.md) in the API repo for instructions on how to connect.
 1. Open File Explorer and navigate to `D:\wwwroot\`.
 1. Backup the existing deployment:
-    1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
-    1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
+   1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
+   1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
 1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above.
 1. Check the appropriate site, refreshing if necessary, to ensure it deployed successfully and is stable.
 1. If you need to restore to a backup, simply copy the contents of the desired backup folder and overwrite the appropriate site's folder.
@@ -415,3 +415,5 @@ In the unusual case that Train or Production have not been automatically deploye
 
 - The student timesheets project was done as a senior project by a trio of seniors Nathanial Rudenberg, Adam Princiotta, and Jacob Bradley. The handoff documentation for this project was a revision and update to the existing documentation which is in the [Connect Local Backend to React](#connect-local-backend-to-react) section of the README. The design document can be found [here](https://docs.google.com/document/d/1CepyCiMzBXQVM--JwKKstniU_H1TodzxHLuCqcHxLjk/edit?usp=sharing)
 - [Student Timesheets Final Presentation](https://docs.google.com/presentation/d/162V-DLuaEUyHDS2Diu09k5f4Tpo2iuoMtIDUyowa7eQ/edit?usp=sharing)
+
+- The apartment applications project ~was done as~ is a senior project by Josh Rogers, Christian Kunis, Gahngnin Kim, and Nick Noormand. The design document for the UI can be found [here](https://docs.google.com/document/d/16gvjNApyNMJbqjnwv2DSP0EvY4JJdjVZZAiST3MAZEo/edit?usp=sharing)

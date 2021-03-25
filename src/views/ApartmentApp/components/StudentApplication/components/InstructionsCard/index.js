@@ -13,6 +13,10 @@ import {
   Typography,
 } from '@material-ui/core/';
 
+/**
+ * Renders a card displaying the apartment application instructions
+ * @returns {JSX.Element} JSX Element for the instructions card
+ */
 const InstructionsCard = () => {
   const [apartmentSelectionDate, setApartmentSelectionDate] = useState();
   const [thisYear, setThisYear] = useState();

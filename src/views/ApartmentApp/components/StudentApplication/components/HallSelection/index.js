@@ -5,8 +5,13 @@ import HallListItem from './components/HallListItem';
 import goStalk from '../../../../../../services/goStalk';
 import housing from '../../../../../../services/housing';
 
+/**
+ * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
+ */
+
 // Create a list of selection boxes to choosing preferred halls
 const HallSelection = ({
+  disabled,
   authentication,
   editorUsername,
   preferredHalls,
@@ -37,10 +42,20 @@ const HallSelection = ({
     }
   }, [authentication, editorUsername]);
 
+  /**
+   * Callback for changes to hall list item name and/or rank
+   * @param {Number} hallRankValue The rank value that the user assigned to this hall
+   * @param {String} hallNameValue The name of the hall that was selected
+   * @param {Number} index The index of the hall in the list
+   */
   const handleInputChange = (hallRankValue, hallNameValue, index) => {
     onHallInputChange(hallRankValue, hallNameValue, index);
   };
 
+  /**
+   * Callback for hall list remove button
+   * @param {Number} index The index of the hall to be removed from the list of perferred halls
+   */
   const handleRemove = (index) => {
     // Make sure the chosen index was not null
     if (index !== null) {
@@ -60,6 +75,7 @@ const HallSelection = ({
                 preferredHalls.map((hallInfo, index) => (
                   <HallListItem
                     key={hallInfo.HallRank + hallInfo.HallName}
+                    disabled={disabled}
                     index={index}
                     preferredHalls={preferredHalls}
                     halls={halls}
@@ -70,6 +86,7 @@ const HallSelection = ({
               ) : (
                 <HallListItem
                   key={''}
+                  disabled={disabled}
                   index={0}
                   preferredHalls={preferredHalls}
                   halls={halls}
@@ -80,6 +97,7 @@ const HallSelection = ({
           </Grid>
           <Grid item xs={12}>
             <Button
+              disabled={disabled}
               variant="outlined"
               color="primary"
               startIcon={<AddIcon fontSize="inherit" />}

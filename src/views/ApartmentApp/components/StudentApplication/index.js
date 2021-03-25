@@ -21,16 +21,25 @@ import housing from '../../../../services/housing';
 import user from '../../../../services/user';
 const MAX_NUM_APPLICANTS = 8;
 
+/**
+ * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
+/**
+ * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ */
+
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   const [applicationID, setApplicationID] = useState(-1); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
   const [dateModified, setDateModified] = useState(null); // The date the application was submitted, or null if not yet submitted
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
   const [applicants, setApplicants] = useState([]);
-  const [preferredHalls, setPreferredHalls] = useState([]);
+  const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
@@ -42,14 +51,21 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
 
   /**
-   * Attempt to load an existing application from the database if one exists
+   * Loads the user's saved apartment application, if one exists
    */
   const loadSavedApplication = useCallback(async () => {
     // TODO: Implement this once save/load of application data has been implemented in the backend
     setLoading(true);
     // Check if the current user is on an application. Returns the application ID number if found
-    let newApplicationID = -1; // await housing.getApplicationID();
-    if (newApplicationID !== null && newApplicationID !== -1) {
+    let newApplicationID = null;
+    try {
+      newApplicationID = await housing.getCurrentApplicationID();
+      //! DEBUG
+      console.log('Retrieved Application ID: ' + newApplicationID);
+      if (newApplicationID === null || newApplicationID === -1) {
+        // Intentionally trigger the 'catch'
+        throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
+      }
       setApplicationID(newApplicationID);
       let applicationDetails = await housing.getApartmentApplication(newApplicationID);
       if (applicationDetails) {
@@ -63,23 +79,34 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setEditorUsername(applicationDetails.Username);
         }
         if (applicationDetails.Applicants) {
-          setApplicants(applicationDetails.Applicants);
+          applicationDetails.Applicants.forEach(async (applicantInfo) => {
+            const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
+            setApplicants((prevApplicants) =>
+              prevApplicants.concat({
+                Profile: newApplicantProfile,
+                OffCampusProgram: applicantInfo.OffCampusProgram,
+              }),
+            );
+          });
         }
       }
-    } else {
-      // No existing application was found in the database
+    } catch {
+      // No existing application was found in the database,
+      // or an error occurred while attempting to load the application
       setApplicationID(-1);
       if (!editorUsername) {
+        if (
+          applicants.every((applicant) => applicant.Profile.AD_Username !== userProfile.AD_Username)
+        ) {
+          setApplicants((prevApplicants) =>
+            prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
+          );
+        }
+        // The editor username must be set last to prevent race condition
         setEditorUsername(userProfile.AD_Username);
       }
-      if (
-        applicants.every((applicant) => applicant.Profile.AD_Username !== userProfile.AD_Username)
-      ) {
-        setApplicants((prevApplicants) =>
-          prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
-        );
-      }
     }
+    setUnsavedChanges(false);
     setLoading(false);
   }, [userProfile, editorUsername, applicants]);
 
@@ -115,18 +142,26 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Add an applicant to the list, identified by username
-   * @param {String} username Username for student
+   * @param {String} username Username for the new applicant
    */
   const addApplicant = async (username) => {
     try {
       // Get the profile of the selected user
-      let newApplicantProfile = await user.getProfileInfo(username);
+      const newApplicantProfile = await user.getProfileInfo(username);
       let newApplicantObject = { Profile: newApplicantProfile, OffCampusProgram: '' };
+
+      // Check if the selected user is already saved on an application in the database
+      let existingAppID = null;
+      try {
+        existingAppID = await housing.getCurrentApplicationID(username);
+      } catch {
+        existingAppID = false;
+      }
+
       if (applicants.length >= MAX_NUM_APPLICANTS) {
         // Display an error if the user try to add an applicant when the list is full
         setSnackbarText('You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants');
         setSnackbarSeverity('warning');
-        setSnackbarOpen(true);
       } else if (!String(newApplicantProfile.PersonType).includes('stu')) {
         // Display an error if the selected user is not a student
         setSnackbarText(
@@ -135,7 +170,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
             ' because they are not a student.',
         );
         setSnackbarSeverity('warning');
-        setSnackbarOpen(true);
       } else if (newApplicantProfile.Gender && newApplicantProfile.Gender !== userProfile.Gender) {
         // Display an error if the selected user is not the same gender
         setSnackbarText(
@@ -144,28 +178,38 @@ const StudentApplication = ({ userProfile, authentication }) => {
             ' because they are not the same gender as the other applicants.',
         );
         setSnackbarSeverity('warning');
-        setSnackbarOpen(true);
       } else if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
         setSnackbarSeverity('info');
-        setSnackbarOpen(true);
+      } else if (existingAppID && existingAppID !== applicationID) {
+        // Display an error if the selected user is already on a different application in the database
+        setSnackbarText(
+          String(newApplicantProfile.fullName) +
+            ' is already on another application for this semester.',
+        );
+        setSnackbarSeverity('warning');
       } else {
         // Add the profile object to the list of applicants
         setApplicants((prevApplicants) => prevApplicants.concat(newApplicantObject));
+
+        // Check that the applicant array was updated successfully
         if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
           setSnackbarText(
             String(newApplicantProfile.fullName) + ' was successfully added to the list.',
           );
           setSnackbarSeverity('success');
-          setSnackbarOpen(true);
+        } else {
+          // This should trigger the 'catch', causing the page to display the error snackbar
+          throw new Error('Something went wrong! Please contact CTS for help.');
         }
+        setUnsavedChanges(true);
       }
     } catch (error) {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
       setSnackbarSeverity('error');
-      setSnackbarOpen(true);
     }
+    setSnackbarOpen(true);
   };
 
   /**
@@ -181,6 +225,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
   };
 
+  /**
+   * Callback for applying the new application editor
+   */
   const handleChangeEditorAccepted = () => {
     if (newEditorProfile && newEditorProfile.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
@@ -204,7 +251,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setSaveButtonAlertTimeout(null);
     let result = null;
     try {
-      result = await housing.changeApplicationEditor(applicationID, newEditorUsername);
+      result = await housing.changeApartmentAppEditor(applicationID, newEditorUsername);
     } catch {
       result = false;
     }
@@ -212,6 +259,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       console.log(result); //! DEBUG
       setEditorUsername(newEditorProfile.AD_Username);
       setSaving('success');
+      setUnsavedChanges(true);
     } else {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
       setSnackbarSeverity('error');
@@ -240,6 +288,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           (applicant) => applicant.Profile.AD_Username !== profileToRemove.AD_Username,
         ),
       );
+      setUnsavedChanges(true);
     }
   };
 
@@ -298,6 +347,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       });
 
       setPreferredHalls(newPreferredHalls);
+      setUnsavedChanges(true);
     } else {
       setSnackbarText('Something went wrong while trying to add this hall. Please try again.');
       setSnackbarSeverity('error');
@@ -325,6 +375,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         });
       }
       setPreferredHalls(newPreferredHalls);
+      setUnsavedChanges(true);
     }
   };
 
@@ -344,8 +395,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleSaveButtonClick = () => {
     let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
     console.log(debugMessage); //! DEBUG
+    // Filter out any hall entries that do not have a name selected
+    const filteredPreferredHalls = preferredHalls.filter((hallInfo) => hallInfo.HallName !== '');
     // The method is separated from callback because the housing API service must be handled inside an async method
-    saveApplication(applicationID, editorUsername, applicants);
+    saveApplication(applicationID, editorUsername, applicants, filteredPreferredHalls);
   };
 
   /**
@@ -353,20 +406,29 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {Number} applicationID the application ID number if it is known, else it is -1
    * @param {String} editorUsername the student username of the person filling out the application
    * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
+   * @param {ApartmentChoice[]} preferredHalls Array of ApartmentChoice objects
    */
-  const saveApplication = async (applicationID, editorUsername, applicants) => {
+  const saveApplication = async (applicationID, editorUsername, applicants, preferredHalls) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
     let result = null;
     try {
-      result = await housing.saveApartmentApplication(applicationID, editorUsername, applicants);
+      result = await housing.saveApartmentApplication(
+        applicationID,
+        editorUsername,
+        applicants,
+        preferredHalls,
+      );
     } catch {
       result = false;
     }
-    if (result !== null && result !== false) {
-      console.log('result of saving: ' + result); //! DEBUG
-      setApplicationID(result);
+    console.log('result of saving: ' + result); //! DEBUG
+    if (result !== null && result !== false && result !== -1) {
+      if (typeof result === 'number') {
+        setApplicationID(result);
+      }
       setSaving('success');
+      setUnsavedChanges(false);
     } else {
       setSnackbarText('Something went wrong while trying to save the application.');
       setSnackbarSeverity('error');
@@ -404,11 +466,19 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setApplicationCardsOpen(false);
   };
 
+  /**
+   * Callback for the alert dialog box "Okay" button
+   */
   const handleCloseOkay = () => {
     setChangeEditorDialogOpen(false);
     setSubmitDialogOpen(false);
   };
 
+  /**
+   * Callback for closing the alert dialog box
+   * @param {*} event close event to be handled by callback
+   * @param {*} reason the reason the close event was triggered
+   */
   const handleCloseDialog = (event, reason) => {
     // Prevent the dialog box from closing if the user clicks outside the dialog box
     if (reason === 'clickaway') {
@@ -417,6 +487,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
     handleCloseOkay();
   };
 
+  /**
+   * Callback for closing the snackbar
+   * @param {*} event close event to be handled by callback
+   * @param {*} reason the reason the close event was triggered
+   */
   const handleCloseSnackbar = (event, reason) => {
     // Prevent the snackbar from closing if the user clicks outside the snackbar
     if (reason === 'clickaway') {
@@ -538,18 +613,30 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 </Grid>
                 <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
-                    <ApplicantList
-                      maxNumApplicants={MAX_NUM_APPLICANTS}
-                      userProfile={userProfile}
-                      editorUsername={editorUsername}
-                      applicants={applicants}
-                      saving={saving}
-                      onSearchSubmit={handleSearchSubmit}
-                      onChangeEditor={handleChangeEditor}
-                      onApplicantRemove={handleApplicantRemove}
-                      onSaveButtonClick={handleSaveButtonClick}
-                      authentication={authentication}
-                    />
+                    {userProfile.AD_Username === editorUsername ? (
+                      <ApplicantList
+                        maxNumApplicants={MAX_NUM_APPLICANTS}
+                        userProfile={userProfile}
+                        editorUsername={editorUsername}
+                        applicants={applicants}
+                        saving={saving}
+                        onSearchSubmit={handleSearchSubmit}
+                        onChangeEditor={handleChangeEditor}
+                        onApplicantRemove={handleApplicantRemove}
+                        onSaveButtonClick={handleSaveButtonClick}
+                        authentication={authentication}
+                      />
+                    ) : (
+                      <ApplicantList
+                        disabled
+                        maxNumApplicants={MAX_NUM_APPLICANTS}
+                        userProfile={userProfile}
+                        editorUsername={editorUsername}
+                        applicants={applicants}
+                        saving={saving}
+                      />
+                    )}
+
                     <GordonDialogBox
                       open={changeEditorDialogOpen}
                       onClose={handleCloseDialog}
@@ -569,16 +656,26 @@ const StudentApplication = ({ userProfile, authentication }) => {
               <Grid container direction="row" justify="center" spacing={2}>
                 <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
-                    <HallSelection
-                      authentication
-                      editorUsername={editorUsername}
-                      preferredHalls={preferredHalls}
-                      saving={saving}
-                      onHallAdd={handleHallAdd}
-                      onHallInputChange={handleHallInputChange}
-                      onHallRemove={handleHallRemove}
-                      onSaveButtonClick={handleSaveButtonClick}
-                    />
+                    {userProfile.AD_Username === editorUsername ? (
+                      <HallSelection
+                        authentication
+                        editorUsername={editorUsername}
+                        preferredHalls={preferredHalls}
+                        saving={saving}
+                        onHallAdd={handleHallAdd}
+                        onHallInputChange={handleHallInputChange}
+                        onHallRemove={handleHallRemove}
+                        onSaveButtonClick={handleSaveButtonClick}
+                      />
+                    ) : (
+                      <HallSelection
+                        disabled
+                        authentication
+                        editorUsername={editorUsername}
+                        preferredHalls={preferredHalls}
+                        saving={saving}
+                      />
+                    )}
                   </Grid>
                   <Grid item>
                     <Card>
@@ -590,12 +687,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <Card>
-                    <CardHeader title="Agreements" className="apartment-card-header" />
-                    <CardContent>
-                      <Typography variant="body1">Placeholder text</Typography>
-                    </CardContent>
-                  </Card>
+                  <Collapse
+                    in={userProfile.AD_Username === editorUsername}
+                    timeout="auto"
+                    unmountOnExit
+                  >
+                    <Card>
+                      <CardHeader title="Agreements" className="apartment-card-header" />
+                      <CardContent>
+                        <Typography variant="body1">Placeholder text</Typography>
+                      </CardContent>
+                    </Card>
+                  </Collapse>
                 </Grid>
                 <Grid item xs={12} lg={10} className={'save-bar'}>
                   <Card className={'save-bar-card'} variant="outlined">
@@ -612,7 +715,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
                             )}
                           </Grid>
                           <Grid item xs={6} sm={3} lg={2}>
-                            <SaveButton saving={saving} onClick={handleSaveButtonClick} />
+                            <SaveButton
+                              saving={saving}
+                              onClick={handleSaveButtonClick}
+                              disabled={!unsavedChanges}
+                            />
                           </Grid>
                           <Grid item xs={6} sm={3} lg={2}>
                             <Button
@@ -620,7 +727,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                               onClick={handleSubmitButtonClick}
                               color="primary"
                               fullWidth
-                              disabled={!applicationCardsOpen}
+                              disabled={!applicationCardsOpen || !unsavedChanges}
                             >
                               Save & Submit
                             </Button>
