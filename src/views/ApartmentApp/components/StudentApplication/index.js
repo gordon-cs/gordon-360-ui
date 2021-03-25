@@ -597,10 +597,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           </Grid>
           <Grid item>
             <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
-              <Grid container direction="row-reverse" justify="center" spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <InstructionsCard />
-                </Grid>
+              <Grid container direction="row" justify="center" spacing={2}>
                 <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
                     {userProfile.AD_Username === editorUsername ? (
@@ -641,10 +638,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       severity={'warning'}
                     />
                   </Grid>
-                </Grid>
-              </Grid>
-              <Grid container direction="row" justify="center" spacing={2}>
-                <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
                     {userProfile.AD_Username === editorUsername ? (
                       <HallSelection
@@ -676,20 +669,27 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Card>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} md={4}>
-                  <Collapse
-                    in={userProfile.AD_Username === editorUsername}
-                    timeout="auto"
-                    unmountOnExit
-                  >
-                    <Card>
-                      <CardHeader title="Agreements" className="apartment-card-header" />
-                      <CardContent>
-                        <Typography variant="body1">Placeholder text</Typography>
-                      </CardContent>
-                    </Card>
-                  </Collapse>
+                <Grid container item xs={12} md={4} direction="column" spacing={2}>
+                  <Grid item>
+                    <Collapse
+                      in={userProfile.AD_Username === editorUsername}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <Card>
+                        <CardHeader title="Agreements" className="apartment-card-header" />
+                        <CardContent>
+                          <Typography variant="body1">Placeholder text</Typography>
+                        </CardContent>
+                      </Card>
+                    </Collapse>
+                  </Grid>
+                  <Grid item>
+                    <InstructionsCard />
+                  </Grid>
                 </Grid>
+              </Grid>
+              <Grid container direction="row" justify="center" spacing={2} className={'save-bar'}>
                 <Grid item xs={12} lg={10} className={'save-bar'}>
                   <Card className={'save-bar-card'} variant="outlined">
                     <CardContent>
