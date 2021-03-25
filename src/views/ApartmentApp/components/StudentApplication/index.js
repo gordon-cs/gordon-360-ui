@@ -89,7 +89,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       // or an error occurred while attempting to load the application
       setApplicationID(-1);
       if (!editorUsername) {
-        if (applicants[0].Profile.AD_Username !== userProfile.AD_Username) {
+        if (applicants[0]?.Profile.AD_Username !== userProfile.AD_Username) {
           setApplicants((prevApplicants) =>
             prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
           );
