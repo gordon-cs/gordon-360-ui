@@ -69,12 +69,11 @@ const Timesheets = (props) => {
   const [errorText, setErrorText] = useState(null);
   const isOnline = useNetworkStatus();
 
-  // Sets the person type of the user
   useEffect(() => {
-    user.getProfileInfo().then((data) => {
-      data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
-    });
-  });
+    if (props.authentication) {
+      user.getProfileInfo().then((profile) => setIsUserStudent(profile.PersonType.includes('stu')));
+    }
+  }, [props.authentication]);
 
   // disabled lint in some lines in order to remove warning about race condition that does not apply
   // in our current case.
