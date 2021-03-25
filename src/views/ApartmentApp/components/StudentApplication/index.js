@@ -89,7 +89,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       // or an error occurred while attempting to load the application
       setApplicationID(-1);
       if (!editorUsername) {
-        if (applicants[0].Profile.AD_Username !== userProfile.AD_Username) {
+        if (applicants[0]?.Profile.AD_Username !== userProfile.AD_Username) {
           setApplicants((prevApplicants) =>
             prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
           );
@@ -221,7 +221,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for applying the new application editor
    */
   const handleChangeEditorAccepted = () => {
-    if (newEditorProfile && newEditorProfile.AD_Username) {
+    if (newEditorProfile?.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
       changeApplicationEditor(applicationID, newEditorProfile.AD_Username);
       handleCloseOkay();
@@ -349,7 +349,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Callback for hall list remove button
-   * @param {Number} index The index of the hall to be removed from the list of perferred halls
+   * @param {Number} index The index of the hall to be removed from the list of preferred halls
    */
   const handleHallRemove = (index) => {
     if (index !== null && index !== -1) {
@@ -415,10 +415,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       result = false;
     }
     console.log('result of saving: ' + result); //! DEBUG
-    if (result !== null && result !== false && result !== -1) {
-      if (typeof result === 'number') {
-        setApplicationID(result);
-      }
+    if (result !== null && result !== false && result !== -1 && typeof result === 'number') {
+      setApplicationID(result);
       setSaving('success');
       setUnsavedChanges(false);
     } else {
@@ -599,10 +597,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           </Grid>
           <Grid item>
             <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
-              <Grid container direction="row-reverse" justify="center" spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <InstructionsCard />
-                </Grid>
+              <Grid container direction="row" justify="center" spacing={2}>
                 <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
                     {userProfile.AD_Username === editorUsername ? (
@@ -643,10 +638,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       severity={'warning'}
                     />
                   </Grid>
-                </Grid>
-              </Grid>
-              <Grid container direction="row" justify="center" spacing={2}>
-                <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
                     {userProfile.AD_Username === editorUsername ? (
                       <HallSelection
@@ -678,20 +669,27 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Card>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} md={4}>
-                  <Collapse
-                    in={userProfile.AD_Username === editorUsername}
-                    timeout="auto"
-                    unmountOnExit
-                  >
-                    <Card>
-                      <CardHeader title="Agreements" className="apartment-card-header" />
-                      <CardContent>
-                        <Typography variant="body1">Placeholder text</Typography>
-                      </CardContent>
-                    </Card>
-                  </Collapse>
+                <Grid container item xs={12} md={4} direction="column" spacing={2}>
+                  <Grid item>
+                    <Collapse
+                      in={userProfile.AD_Username === editorUsername}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <Card>
+                        <CardHeader title="Agreements" className="apartment-card-header" />
+                        <CardContent>
+                          <Typography variant="body1">Placeholder text</Typography>
+                        </CardContent>
+                      </Card>
+                    </Collapse>
+                  </Grid>
+                  <Grid item>
+                    <InstructionsCard />
+                  </Grid>
                 </Grid>
+              </Grid>
+              <Grid container direction="row" justify="center" spacing={2} className={'save-bar'}>
                 <Grid item xs={12} lg={10} className={'save-bar'}>
                   <Card className={'save-bar-card'} variant="outlined">
                     <CardContent>
