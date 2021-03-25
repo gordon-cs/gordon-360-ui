@@ -1,26 +1,22 @@
 //Student apartment application page
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Collapse,
   Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Collapse,
+  Grid,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
 } from '@material-ui/core/';
-import ErrorIcon from '@material-ui/icons/Error';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import GordonLoader from '../../../../components/Loader';
 import GordonDialogBox from '../../../../components/GordonDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
+import InstructionsCard from './components/InstructionsCard';
+import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
+import SaveButton from './components/SaveButton';
 import housing from '../../../../services/housing';
 import user from '../../../../services/user';
 const MAX_NUM_APPLICANTS = 8;
@@ -32,102 +28,6 @@ const MAX_NUM_APPLICANTS = 8;
 /**
  * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
  */
-
-/**
- * Renders a card displaying the apartment application instructions
- * @returns {JSX.Element} JSX Element for the instructions card
- */
-const InstructionsCard = () => (
-  <Card>
-    <CardHeader title="Apartment Application Instructions" className="apartment-card-header" />
-    <CardContent>
-      <Typography variant="body1">Placeholder Text</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
-        suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-        dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
-      </Typography>
-    </CardContent>
-  </Card>
-);
-
-/**
- * Renders a card displaying a table of data about the current application
- * @param {Object} props The React component props
- * @param {String} props.dateSubmitted The date the application was submitted
- * @param {String} props.dateModified The date the application was last modified
- * @param {String} props.editorUsername The username of the application's editor
- * @returns {JSX.Element} JSX Element for the data table card
- */
-const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) => {
-  function createData(label, value) {
-    return { label, value };
-  }
-
-  let rows = [];
-
-  if (dateSubmitted) {
-    rows.push(createData('Last Submitted: ', dateSubmitted));
-  } else {
-    rows.push(createData('Last Submitted: ', 'Not yet submitted'));
-  }
-
-  if (dateModified) {
-    rows.push(createData('Last Modified: ', dateModified));
-  }
-
-  if (editorUsername) {
-    rows.push(createData('Application Editor: ', editorUsername));
-  }
-
-  return (
-    <Card>
-      <CardHeader title="Your Application Details" className="apartment-card-header" />
-      <CardContent>
-        <TableContainer>
-          <Table>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow key={row.label}>
-                  <TableCell component="th" scope="row">
-                    {row.label}
-                  </TableCell>
-                  <TableCell align="right">{row.value}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </CardContent>
-    </Card>
-  );
-};
-
-const SaveButton = ({ disabled, saving, onClick }) => {
-  const loaderSize = 20;
-
-  if (saving) {
-    if (saving === 'success') {
-      return <CheckCircleIcon className="success" />;
-    } else if (saving === 'failed') {
-      return <ErrorIcon className="error" />;
-    } else {
-      return <GordonLoader size={loaderSize} />;
-    }
-  } else {
-    return (
-      <Button
-        disabled={disabled || saving}
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={onClick}
-      >
-        Save & Continue
-      </Button>
-    );
-  }
-};
 
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
