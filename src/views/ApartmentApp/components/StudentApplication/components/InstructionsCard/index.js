@@ -75,7 +75,7 @@ const InstructionsCard = () => {
         <Typography variant="body1" paragraph>
           <strong>Applications must be for a full apartment:</strong> If applying for a six-person
           apartment, there must be six people on the application who will be here for the{' '}
-          <strong class="over-emphasized">fall semester</strong> (four people on a four-person
+          <strong className="over-emphasized">fall semester</strong> (four people on a four-person
           application, etc.). Applications with an incorrect number of applicants will not be
           considered.
         </Typography>
@@ -93,7 +93,7 @@ const InstructionsCard = () => {
           6-person, etc.). Each individual on an application will have points given/taken away using
           the following scale:
         </Typography>
-        <Grid container justify="center" spacing={2} gutterBottom>
+        <Grid container justify="center" spacing={3}>
           <Grid item xs={12} lg={9}>
             <TableContainer component={Paper}>
               <Table size="small">
@@ -109,12 +109,13 @@ const InstructionsCard = () => {
             </TableContainer>
           </Grid>
         </Grid>
+        <br />
         <Typography variant="body1" paragraph>
           <strong>If You Are Approved...</strong>
           <br />
           You will be notified of your placement in an apartment/Village{' '}
           <strong>
-            <emphasis>building</emphasis>
+            <em>building</em>
           </strong>{' '}
           no later than {apartmentSelectionDate}. Further information about specific apartment/room
           selection will be communicated in that email.
