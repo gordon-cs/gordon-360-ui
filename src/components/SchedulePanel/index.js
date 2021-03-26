@@ -8,7 +8,7 @@ import RemoveScheduleDialog from './components/RemoveScheduleDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
 import schedulecontrol from './../../services/schedulecontrol';
-import urlRegex from 'url-regex';
+import urlRegex from 'url-regex-safe';
 import { Markup } from 'interweave';
 
 import myschedule from '../../services/myschedule';

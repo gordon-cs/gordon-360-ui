@@ -12,7 +12,6 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import { gordonColors } from '../../../../theme';

@@ -1,6 +1,5 @@
 //Main timesheets page
 import React, { useState, useRef, useEffect } from 'react';
-import 'date-fns';
 import {
   Grid,
   Card,
@@ -240,10 +239,17 @@ const Timesheets = (props) => {
               setSnackbarOpen(true);
             })
             .catch((err) => {
+              console.log(err);
               setSaving(false);
               if (typeof err === 'string' && err.toLowerCase().includes('overlap')) {
                 setSnackbarText(
                   'The shift was automatically split because it spanned a pay week, but one of the two derived shifts conflicted with a previously entered one. Please review your saved shifts.',
+                );
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
+              } else if (err?.Message?.toLowerCase()?.includes('invalid shift times')) {
+                setSnackbarText(
+                  'There was a problem saving your shift. Double check your shift start time and end time, and contact CTS if the problem persists.',
                 );
                 setSnackbarSeverity('error');
                 setSnackbarOpen(true);
@@ -282,11 +288,18 @@ const Timesheets = (props) => {
         })
         .catch((err) => {
           setSaving(false);
+          console.log(err);
           if (typeof err === 'string' && err.toLowerCase().includes('overlap')) {
             setSnackbarText(
               'You have already entered hours that fall within this time frame. Please review the times you entered above and try again.',
             );
             setSnackbarSeverity('warning');
+            setSnackbarOpen(true);
+          } else if (err?.Message?.toLowerCase()?.includes('invalid shift times')) {
+            setSnackbarText(
+              'There was a problem saving your shift. Double check your shift start time and end time, and contact CTS if the problem persists.',
+            );
+            setSnackbarSeverity('error');
             setSnackbarOpen(true);
           } else {
             setSnackbarText('There was a problem saving the shift.');

@@ -8,7 +8,7 @@ import WellnessIcon from '@material-ui/icons/LocalHospital';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { Route, Switch, NavLink, Link } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
@@ -20,6 +20,8 @@ import GordonDialogBox from '../GordonDialogBox/index';
 import { windowBreakWidths } from '../../theme';
 
 import { AppBar, Toolbar, Typography, IconButton, Tabs, Tab, Button } from '@material-ui/core';
+
+const WrapLink = React.forwardRef((props, ref) => <Link ref={ref} {...props} />)
 
 const getRouteName = (route) => {
   if (route.name) {
@@ -416,7 +418,11 @@ export default class GordonHeader extends Component {
 
     return wellnessTab;
   }
+
   render() {
+
+    const loginButton = <Button className='login-button' component={ WrapLink } to='/' > Login </Button>
+
     return (
       <section className="gordon-header">
         <AppBar className="app-bar" position="static">
@@ -467,7 +473,11 @@ export default class GordonHeader extends Component {
               </Tabs>
             </div>
 
-            <GordonPeopleSearch authentication={this.props.authentication} />
+            {
+              this.props.authentication ?
+                <GordonPeopleSearch authentication={this.props.authentication} />
+              : loginButton
+            }
 
             <GordonNavAvatarRightCorner
               onSignOut={this.props.onSignOut}
