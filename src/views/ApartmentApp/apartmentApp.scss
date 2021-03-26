@@ -1,9 +1,18 @@
 @import '../../vars';
 
+strong.over-emphasized {
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+
 .apartment-card-header {
   background-color: $primary-blue;
   color: $neutral-white;
   padding: '10px';
+  .MuiTypography-colorTextSecondary {
+    color: $neutral-light-gray;
+    font-size: 1.25rem;
+  }
 }
 
 .list-item {
@@ -70,5 +79,6 @@
 
   .save-bar-card {
     box-shadow: 0px 0px 10px;
+    position: sticky;
   }
 }

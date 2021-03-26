@@ -1,26 +1,22 @@
 //Student apartment application page
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Collapse,
   Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Collapse,
+  Grid,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
 } from '@material-ui/core/';
-import ErrorIcon from '@material-ui/icons/Error';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import GordonLoader from '../../../../components/Loader';
 import GordonDialogBox from '../../../../components/GordonDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
+import InstructionsCard from './components/InstructionsCard';
+import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
+import SaveButton from './components/SaveButton';
 import housing from '../../../../services/housing';
 import user from '../../../../services/user';
 const MAX_NUM_APPLICANTS = 8;
@@ -33,102 +29,6 @@ const MAX_NUM_APPLICANTS = 8;
  * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
  */
 
-/**
- * Renders a card displaying the apartment application instructions
- * @returns {JSX.Element} JSX Element for the instructions card
- */
-const InstructionsCard = () => (
-  <Card>
-    <CardHeader title="Apartment Application Instructions" className="apartment-card-header" />
-    <CardContent>
-      <Typography variant="body1">Placeholder Text</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
-        suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-        dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
-      </Typography>
-    </CardContent>
-  </Card>
-);
-
-/**
- * Renders a card displaying a table of data about the current application
- * @param {Object} props The React component props
- * @param {String} props.dateSubmitted The date the application was submitted
- * @param {String} props.dateModified The date the application was last modified
- * @param {String} props.editorUsername The username of the application's editor
- * @returns {JSX.Element} JSX Element for the data table card
- */
-const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) => {
-  function createData(label, value) {
-    return { label, value };
-  }
-
-  let rows = [];
-
-  if (dateSubmitted) {
-    rows.push(createData('Last Submitted: ', dateSubmitted));
-  } else {
-    rows.push(createData('Last Submitted: ', 'Not yet submitted'));
-  }
-
-  if (dateModified) {
-    rows.push(createData('Last Modified: ', dateModified));
-  }
-
-  if (editorUsername) {
-    rows.push(createData('Application Editor: ', editorUsername));
-  }
-
-  return (
-    <Card>
-      <CardHeader title="Your Application Details" className="apartment-card-header" />
-      <CardContent>
-        <TableContainer>
-          <Table>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow key={row.label}>
-                  <TableCell component="th" scope="row">
-                    {row.label}
-                  </TableCell>
-                  <TableCell align="right">{row.value}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </CardContent>
-    </Card>
-  );
-};
-
-const SaveButton = ({ disabled, saving, onClick }) => {
-  const loaderSize = 20;
-
-  if (saving) {
-    if (saving === 'success') {
-      return <CheckCircleIcon className="success" />;
-    } else if (saving === 'failed') {
-      return <ErrorIcon className="error" />;
-    } else {
-      return <GordonLoader size={loaderSize} />;
-    }
-  } else {
-    return (
-      <Button
-        disabled={disabled || saving}
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={onClick}
-      >
-        Save & Continue
-      </Button>
-    );
-  }
-};
-
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -136,7 +36,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   const [applicationID, setApplicationID] = useState(-1); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
-  const [dateModified, setDateModified] = useState(null); // The date the application was submitted, or null if not yet submitted
+  const [dateModified, setDateModified] = useState(null); // The date the application was last modified, or null if not yet saved/modified
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
   const [applicants, setApplicants] = useState([]);
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
@@ -169,15 +69,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setApplicationID(newApplicationID);
       let applicationDetails = await housing.getApartmentApplication(newApplicationID);
       if (applicationDetails) {
-        if (applicationDetails.DateSubmitted) {
-          setDateSubmitted(applicationDetails.DateSubmitted);
-        }
-        if (applicationDetails.DateModified) {
-          setDateModified(applicationDetails.DateModified);
-        }
-        if (applicationDetails.Username) {
-          setEditorUsername(applicationDetails.Username);
-        }
+        setDateSubmitted(applicationDetails.DateSubmitted ?? null);
+        setDateModified(applicationDetails.DateModified ?? null);
+        setEditorUsername(applicationDetails.EditorUsername ?? null);
         if (applicationDetails.Applicants) {
           applicationDetails.Applicants.forEach(async (applicantInfo) => {
             const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
@@ -195,9 +89,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       // or an error occurred while attempting to load the application
       setApplicationID(-1);
       if (!editorUsername) {
-        if (
-          applicants.every((applicant) => applicant.Profile.AD_Username !== userProfile.AD_Username)
-        ) {
+        if (applicants[0]?.Profile.AD_Username !== userProfile.AD_Username) {
           setApplicants((prevApplicants) =>
             prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
           );
@@ -329,7 +221,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for applying the new application editor
    */
   const handleChangeEditorAccepted = () => {
-    if (newEditorProfile && newEditorProfile.AD_Username) {
+    if (newEditorProfile?.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
       changeApplicationEditor(applicationID, newEditorProfile.AD_Username);
       handleCloseOkay();
@@ -457,7 +349,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Callback for hall list remove button
-   * @param {Number} index The index of the hall to be removed from the list of perferred halls
+   * @param {Number} index The index of the hall to be removed from the list of preferred halls
    */
   const handleHallRemove = (index) => {
     if (index !== null && index !== -1) {
@@ -523,10 +415,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       result = false;
     }
     console.log('result of saving: ' + result); //! DEBUG
-    if (result !== null && result !== false && result !== -1) {
-      if (typeof result === 'number') {
-        setApplicationID(result);
-      }
+    if (result !== null && result !== false && result !== -1 && typeof result === 'number') {
+      setApplicationID(result);
       setSaving('success');
       setUnsavedChanges(false);
     } else {
@@ -707,10 +597,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           </Grid>
           <Grid item>
             <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
-              <Grid container direction="row-reverse" justify="center" spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <InstructionsCard />
-                </Grid>
+              <Grid container direction="row" justify="center" spacing={2}>
                 <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
                     {userProfile.AD_Username === editorUsername ? (
@@ -751,10 +638,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       severity={'warning'}
                     />
                   </Grid>
-                </Grid>
-              </Grid>
-              <Grid container direction="row" justify="center" spacing={2}>
-                <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
                     {userProfile.AD_Username === editorUsername ? (
                       <HallSelection
@@ -786,20 +669,27 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Card>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} md={4}>
-                  <Collapse
-                    in={userProfile.AD_Username === editorUsername}
-                    timeout="auto"
-                    unmountOnExit
-                  >
-                    <Card>
-                      <CardHeader title="Agreements" className="apartment-card-header" />
-                      <CardContent>
-                        <Typography variant="body1">Placeholder text</Typography>
-                      </CardContent>
-                    </Card>
-                  </Collapse>
+                <Grid container item xs={12} md={4} direction="column" spacing={2}>
+                  <Grid item>
+                    <Collapse
+                      in={userProfile.AD_Username === editorUsername}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <Card>
+                        <CardHeader title="Agreements" className="apartment-card-header" />
+                        <CardContent>
+                          <Typography variant="body1">Placeholder text</Typography>
+                        </CardContent>
+                      </Card>
+                    </Collapse>
+                  </Grid>
+                  <Grid item>
+                    <InstructionsCard />
+                  </Grid>
                 </Grid>
+              </Grid>
+              <Grid container direction="row" justify="center" spacing={2} className={'save-bar'}>
                 <Grid item xs={12} lg={10} className={'save-bar'}>
                   <Card className={'save-bar-card'} variant="outlined">
                     <CardContent>

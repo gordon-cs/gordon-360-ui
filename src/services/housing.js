@@ -71,12 +71,23 @@ const checkHousingStaff = async () => {
  */
 const getCurrentApplicationID = async (username) => {
   let applicationID;
-  if (username) {
-    applicationID = await http.get(`housing/apartment/${username}/`);
-  } else {
-    applicationID = await http.get('housing/apartment');
+  let err;
+  try {
+    if (username) {
+      applicationID = await http.get(`housing/apartment/${username}/`);
+    } else {
+      applicationID = await http.get('housing/apartment');
+    }
+  } catch (e) {
+    // handle thrown 404 errors
+    if (e.status !== 404) throw e;
+    err = e;
+    applicationID = false;
+    console.log('A 404 code indicates that an application was not found for this applicant');
   }
-  return applicationID;
+  // handle "unhandled" requests, `this.status = 404`s, and 404 errors
+  var status = (this.status = (err && err.status) || this.status || 404);
+  if (status !== 404) return applicationID;
 };
 
 /**
