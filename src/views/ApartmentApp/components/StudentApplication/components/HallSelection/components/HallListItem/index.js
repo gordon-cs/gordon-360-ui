@@ -17,6 +17,8 @@ import ClearIcon from '@material-ui/icons/Clear';
 const HallListItem = ({
   disabled,
   index,
+  hallRank,
+  hallName,
   preferredHalls,
   halls,
   onHallInputChange,
@@ -25,6 +27,12 @@ const HallListItem = ({
   const [hallRankValue, setHallRankValue] = useState(1); // Rank drop-down menu value
   const [hallNameValue, setHallNameValue] = useState(''); // Hall drop-down menu value
 
+  useEffect(() => {
+    setHallRankValue(hallRank);
+    setHallNameValue(hallName);
+  }, [hallRank, hallName]);
+
+  //! DEPRECATED
   useEffect(() => {
     // Manually perform deep checking of the array to force update whenever an element of preferredHalls is changed
     if (isEqual(previousInputs.current, [index, preferredHalls])) {
@@ -39,6 +47,7 @@ const HallListItem = ({
     getHallFromProps();
   });
 
+  //! DEPRECATED
   const previousInputs = useRef();
   useEffect(() => {
     previousInputs.current = [index, preferredHalls];
