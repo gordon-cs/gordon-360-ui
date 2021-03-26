@@ -21,22 +21,27 @@ import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * @global
- * @typedef ApartmentApplicant
+ * @typedef ApartmentApplicant Applicant info used by the student application page
  * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
  * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
  */
 
 /**
  * @global
- * @typedef ApplicantPartialInfo
+ * @typedef FullApplicantInfo Applicant info used by the staff menu
+ * @property {Number} ApplicationID Application ID number of this application
  * @property {String} Username The username of this applicant
+ * @property {Number} Age The age of the student (in years) (only visible to housing admin)
  * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
+ * @property {String} Probation Indicates whether the student has a disiplinary probation (visble only to housing admin)
+ * @property {Number} Points The number of application points for this student (only visible to housing admin)
  */
 
 /**
  * Note: Properties 'HallRank' and 'HallName' must be capitalized to match the backend
  * @global
  * @typedef ApartmentChoice
+ * @property {Number} [ApplicationID] Application ID number of this application
  * @property {Number} HallRank The rank assigned to this hall by the user
  * @property {String} HallName The name of the apartment hall
  */
@@ -44,24 +49,45 @@ import './user'; // Needed for typedef of StudentProfileInfo
 /**
  * @global
  * @typedef ApplicationDetails
- * @property {Number} AprtAppID Application ID number of this application
+ * @property {Number} ApplicationID Application ID number of this application
  * @property {*} DateSubmitted The date the application was submitted, or null if not yet submitted
  * @property {*} DateModified The date the application was last modified
- * @property {String} Username Username of the primary applicant
- * @property {ApplicantPartialInfo[]} Applicants Array of objects with applicant username and off-campus program
+ * @property {String} EditorUsername Username of the application editor
+ * @property {String} Gender Gender
+ * @property {FullApplicantInfo[]} Applicants Array of student usernames
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
+ * @property {Number} TotalPoints The total application points associated with this application
+ * @property {Number} AvgPoints The average application points per applicant
  */
 
 /**
  * Check if the current user is authorized to view the housing staff page for applications
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
-const checkHousingStaff = async () => {
+const checkHousingAdmin = async () => {
   try {
-    return await http.get(`housing/staff`);
+    return await http.get(`housing/admin`);
   } catch {
     return false;
   }
+};
+
+/**
+ * Add a user to the housing admin whitelist
+ * @param {String} [username] Username in firstname.lastname format
+ * @return {Response} response of http request
+ */
+const addHousingAdmin = (username) => {
+  return http.post(`housing/admin/${username}/`);
+};
+
+/**
+ * Delete a user to the housing admin whitelist
+ * @param {String} [username] Username in firstname.lastname format
+ * @return {Response} response of http request
+ */
+const deleteHousingAdmin = (username) => {
+  return http.del(`housing/admin/${username}/`);
 };
 
 /**
@@ -105,16 +131,21 @@ const saveApartmentApplication = async (
   apartmentChoices,
 ) => {
   let applicationDetails = {
-    AprtAppID: applicationID,
-    Username: editorUsername,
-    Applicants: applicants.map((applicant) => applicant.Profile.AD_Username),
-    // Applicants: applicants.map((applicant) => { Username: applicant.Profile.AD_Username, OffCampusProgram: applicant.OffCampusProgram }); // This is the correct code for when the backend has been updated expect the off-campus program info
+    ApplicationID: applicationID,
+    EditorUsername: editorUsername,
+    Applicants: applicants.map((applicant) => [
+      {
+        ApplicationID: applicationID,
+        Username: applicant.Profile.AD_Username,
+        OffCampusProgram: applicant.OffCampusProgram,
+      },
+    ]), // This is the correct code for when the backend has been updated expect the off-campus program info
     ApartmentChoices: apartmentChoices,
   };
   if (applicationID === -1) {
-    return await http.post(`housing/apartment/save/`, applicationDetails);
+    return await http.post(`housing/apartment/applications/`, applicationDetails);
   } else {
-    return await http.put(`housing/apartment/save/`, applicationDetails);
+    return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
   }
 };
 
@@ -126,25 +157,52 @@ const saveApartmentApplication = async (
  */
 const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
   let newEditorDetails = {
-    AprtAppID: applicationID,
-    Username: newEditorUsername,
+    ApplicationID: applicationID,
+    EditorUsername: newEditorUsername,
   };
-  return await http.put(`housing/apartment/change-editor/`, newEditorDetails);
+  return await http.put(
+    `housing/apartment/applications/${applicationID}/editor/`,
+    newEditorDetails,
+  );
 };
 
 /**
  * Get active apartment application for given application ID number
- * @param {String} applicationID the application ID number for the desired application
+ * @param {Number} applicationID the application ID number for the desired application
  * @return {Promise.<ApplicationDetails>} Application details
  */
 const getApartmentApplication = async (applicationID) => {
-  return await http.get(`housing/apartment/load/${applicationID}/`);
+  return await http.get(`housing/apartment/applications/${applicationID}/`);
+};
+
+/**
+ * Get active apartment applications for the current semester
+ * @return {Promise.<ApplicationDetails>[]} Application details
+ */
+const getAllApartmentApplications = async () => {
+  let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+
+  // Calculate the total and average points for each application
+  applicationDetailsArray.forEach((applicationDetails) => {
+    let totalPoints = 0;
+    applicationDetails.Applicants.forEach((applicant) => {
+      totalPoints += applicant.Points;
+    });
+    let avgPoints = totalPoints / applicationDetails.Applicants.length;
+    applicationDetails.TotalPoints = totalPoints;
+    applicationDetails.AvgPoints = avgPoints;
+  });
+
+  return applicationDetailsArray;
 };
 
 export default {
-  checkHousingStaff,
+  checkHousingAdmin,
+  addHousingAdmin,
+  deleteHousingAdmin,
   getCurrentApplicationID,
   saveApartmentApplication,
   changeApartmentAppEditor,
   getApartmentApplication,
+  getAllApartmentApplications,
 };
