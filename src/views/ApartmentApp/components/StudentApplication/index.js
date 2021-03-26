@@ -23,9 +23,7 @@ const MAX_NUM_APPLICANTS = 8;
 
 /**
  * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
- */
-
-/**
+ * @typedef { import('../../../../services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
  */
 
@@ -45,7 +43,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
   const [dateModified, setDateModified] = useState(null); // The date the application was last modified, or null if not yet saved/modified
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
+
+  /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info */
   const [applicants, setApplicants] = useState([]);
+
+  /** @type @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info */
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
