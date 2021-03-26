@@ -52,7 +52,7 @@ export default class SuperAdmin extends Component {
     if (!adminEmail.toLowerCase().includes('@gordon.edu')) {
       adminEmail = adminEmail + '@gordon.edu';
     }
-    let addID = await membership.getEmailAccount(adminEmail).then(function(result) {
+    let addID = await membership.getEmailAccount(adminEmail).then(function (result) {
       return result.GordonID;
     });
     let data = {

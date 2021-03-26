@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import gordonEvent, { EVENT_FILTERS } from '../../services/event';
 import EventList from '../../components/EventList';
 import GordonLoader from '../../components/Loader';
-
 import './event.css';
 import {
   Button,
