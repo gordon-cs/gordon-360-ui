@@ -67,8 +67,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     let newApplicationID = null;
     try {
       newApplicationID = await housing.getCurrentApplicationID();
-      //! DEBUG
-      console.log('Retrieved Application ID: ' + newApplicationID);
+      console.log('Retrieved Application ID: ' + newApplicationID); //! DEBUG
       if (newApplicationID === null || newApplicationID === -1) {
         // Intentionally trigger the 'catch'
         throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
