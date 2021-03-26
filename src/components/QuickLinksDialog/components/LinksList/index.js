@@ -10,7 +10,10 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import '../../../../app.css';
+import CanvasIcon from './images/Canvas.ico';
+import GordonIcon from './images/GordonFavicon.ico';
+import GOIcon from './images/GoGordonFavicon.ico';
+import MyGordonIcon from './images/MyGordonFavicon.ico';
 
 function ListItemLink(props) {
   return <ListItem component="a" {...props} />;
@@ -30,13 +33,7 @@ export default class GordonLinksList extends Component {
             className="gc360-text-link"
           >
             <ListItemIcon>
-              <img
-                className="gordon"
-                src={require(`${'../Images/GordonFavicon.ico'}`)}
-                alt="gordon"
-                width="16"
-                height="16"
-              />
+              <img className="gordon" src={GordonIcon} alt="gordon" width="16" height="16" />
             </ListItemIcon>
             <ListItemText primary="Gordon College" />
           </ListItemLink>
@@ -47,13 +44,7 @@ export default class GordonLinksList extends Component {
             className="gc360-text-link"
           >
             <ListItemIcon>
-              <img
-                className="mygordon"
-                src={require(`${'../Images/MyGordonFavicon.ico'}`)}
-                alt="my gordon"
-                width="16"
-                height="16"
-              />
+              <img className="mygordon" src={MyGordonIcon} alt="my gordon" width="16" height="16" />
             </ListItemIcon>
             <ListItemText primary="My Gordon" />
           </ListItemLink>
@@ -64,13 +55,7 @@ export default class GordonLinksList extends Component {
             className="gc360-text-link"
           >
             <ListItemIcon>
-              <img
-                className="gogordon"
-                src={require(`${'../Images/GoGordonFavicon.ico'}`)}
-                alt="go gordon"
-                width="16"
-                height="16"
-              />
+              <img className="gogordon" src={GOIcon} alt="go gordon" width="16" height="16" />
             </ListItemIcon>
             <ListItemText primary="Go Gordon" />
           </ListItemLink>
@@ -81,13 +66,7 @@ export default class GordonLinksList extends Component {
             className="gc360-text-link"
           >
             <ListItemIcon>
-              <img
-                className="canvas"
-                src={require(`${'../Images/Canvas.ico'}`)}
-                alt="canvas"
-                width="16"
-                height="16"
-              />
+              <img className="canvas" src={CanvasIcon} alt="canvas" width="16" height="16" />
             </ListItemIcon>
             <ListItemText primary="Canvas" />
           </ListItemLink>

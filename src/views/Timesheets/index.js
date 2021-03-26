@@ -28,6 +28,7 @@ import GordonLoader from '../../components/Loader';
 import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
+import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
 
 const useStyles = makeStyles((theme) => ({
   customWidth: {
@@ -791,10 +792,7 @@ const Timesheets = (props) => {
                         marginRight: 'auto',
                       }}
                     >
-                      <img
-                        src={require(`${'../../NoConnection.svg'}`)}
-                        alt="Internet Connection Lost"
-                      />
+                      <NoConnectionImage />
                     </Grid>
                   )}
                   <br />
