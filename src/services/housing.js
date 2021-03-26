@@ -65,7 +65,6 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingAdmin = async () => {
-  // return true; //! DEBUG
   try {
     return await http.get(`housing/admin`);
   } catch {
