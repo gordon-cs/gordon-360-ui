@@ -300,14 +300,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       // Get the custom hallInfo object at the given index
       let newHallInfo = preferredHalls[index];
 
-      // Error checking on the hallRankValue before modifying the newHallInfo object
-      if (hallRankValue !== null) {
-        newHallInfo.HallRank = Number(hallRankValue);
-      }
-
       // Error checking on the hallNameValue before modifying the newHallInfo object
       if (
-        hallNameValue !== null &&
         hallNameValue !== preferredHalls[index].HallName &&
         preferredHalls.some((hallInfo) => hallInfo.HallName === hallNameValue)
       ) {
@@ -315,35 +309,45 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarText(String(hallNameValue) + ' is already in the list.');
         setSnackbarSeverity('info');
         setSnackbarOpen(true);
-      } else if (hallNameValue !== null) {
-        newHallInfo.HallName = hallNameValue;
+      } else {
+        newHallInfo.HallRank = Number(hallRankValue) ?? preferredHalls[index].HallRank;
+        newHallInfo.HallName = hallNameValue ?? preferredHalls[index].HallName;
       }
 
-      // replace the element at index with the new hall info object
-      setPreferredHalls((prevPreferredHalls) => prevPreferredHalls.splice(index, 1, newHallInfo));
+      setPreferredHalls((prevPreferredHalls) => {
+        // replace the element at index with the new hall info object
+        let newPreferredHalls = prevPreferredHalls.map((prevHallInfo, j) => {
+          if (j === index) {
+            return newHallInfo;
+          } else {
+            return prevHallInfo;
+          }
+        });
 
-      let newPreferredHalls = preferredHalls; // make a separate copy of the array
+        // Sort halls by name
+        newPreferredHalls.sort(function (a, b) {
+          var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
+          var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          // names must be equal
+          return 0;
+        });
 
-      // Sort halls by name
-      newPreferredHalls.sort(function (a, b) {
-        var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
-        var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        }
-        // names must be equal
-        return 0;
+        // Sort halls by rank
+        newPreferredHalls.sort(function (a, b) {
+          return a.HallRank - b.HallRank;
+        });
+
+        return {
+          newPreferredHalls,
+        };
       });
 
-      // Sort halls by rank
-      newPreferredHalls.sort(function (a, b) {
-        return a.HallRank - b.HallRank;
-      });
-
-      setPreferredHalls(newPreferredHalls);
       setUnsavedChanges(true);
     } else {
       setSnackbarText('Something went wrong while trying to add this hall. Please try again.');
@@ -358,20 +362,24 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallRemove = (index) => {
     if (index !== null && index !== -1) {
-      let newPreferredHalls = preferredHalls; // make a separate copy of the array
-      // Remove the selected hall if the list has more than one element
-      newPreferredHalls.splice(index, 1);
+      setPreferredHalls((prevPreferredHalls) => {
+        let newPreferredHalls = prevPreferredHalls.filter((_hall, j) => j !== index);
+        // let newPreferredHalls = prevPreferredHalls.filter((hallInfo) => hallInfo.HallName !== hallNameToRemove);
 
-      if (preferredHalls.length > 0) {
-        // If any rank value is greater than the new maximum, then set it to that new max rank
-        let maxRank = newPreferredHalls.length;
-        newPreferredHalls.forEach((hallInfo, index) => {
-          if (hallInfo.HallRank > maxRank) {
-            newPreferredHalls[index].HallRank = maxRank;
-          }
-        });
-      }
-      setPreferredHalls(newPreferredHalls);
+        if (newPreferredHalls.length > 0) {
+          // If any rank value is greater than the new maximum, then set it to that new max rank
+          let maxRank = newPreferredHalls.length;
+          newPreferredHalls.forEach((hallInfo, index) => {
+            if (hallInfo.HallRank > maxRank) {
+              newPreferredHalls[index].HallRank = maxRank;
+            }
+          });
+        }
+
+        return {
+          newPreferredHalls,
+        };
+      });
       setUnsavedChanges(true);
     }
   };
