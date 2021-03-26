@@ -136,10 +136,10 @@ const saveApartmentApplication = async (
     ]), // This is the correct code for when the backend has been updated expect the off-campus program info
     ApartmentChoices: apartmentChoices,
   };
-  if (applicationID === -1) {
-    return await http.post(`housing/apartment/applications/`, applicationDetails);
-  } else {
+  if (applicationID) {
     return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
+  } else {
+    return await http.post(`housing/apartment/applications/`, applicationDetails);
   }
 };
 

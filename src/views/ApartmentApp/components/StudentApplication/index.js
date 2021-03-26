@@ -39,14 +39,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [saving, setSaving] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
-  const [applicationID, setApplicationID] = useState(-1); // Default value of -1 indicate to backend that the application ID number is not yet known
+  const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
   const [dateModified, setDateModified] = useState(null); // The date the application was last modified, or null if not yet saved/modified
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
-
   /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info */
   const [applicants, setApplicants] = useState([]);
-
   /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info */
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
 
@@ -97,13 +95,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
     } catch {
       // No existing application was found in the database,
       // or an error occurred while attempting to load the application
-      setApplicationID(-1);
+      setApplicationID(null);
       if (!editorUsername) {
-        if (!applicants?.length > 0) {
-          setApplicants([{ Profile: userProfile, OffCampusProgram: '' }]);
-        }
         // The editor username must be set last to prevent race condition
         setEditorUsername(userProfile.AD_Username);
+      }
+      if (!applicants?.length > 0) {
+        setApplicants([{ Profile: userProfile, OffCampusProgram: '' }]);
       }
     }
     setUnsavedChanges(false);
@@ -117,9 +115,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
   useEffect(() => {
     //! DEBUG
     console.log('Array state variables changed. Printing contents:');
+    console.log('Applicants:');
     applicants.forEach((element) => {
-      console.log(element.Profile.AD_Username);
+      console.log(element.Profile.AD_Username + ', ' + element.OffCampusProgram);
     });
+    console.log('Preferred Halls:');
     preferredHalls.forEach((element) => {
       console.log(element.HallName + ', ' + element.HallRank);
     });
@@ -192,17 +192,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
       } else {
         // Add the profile object to the list of applicants
         setApplicants((prevApplicants) => [...prevApplicants, newApplicantObject]);
-
-        // Check that the applicant array was updated successfully
-        if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
-          setSnackbarText(
-            String(newApplicantProfile.fullName) + ' was successfully added to the list.',
-          );
-          setSnackbarSeverity('success');
-        } else {
-          // This should trigger the 'catch', causing the page to display the error snackbar
-          throw new Error('Something went wrong! Please contact CTS for help.');
-        }
         setUnsavedChanges(true);
       }
     } catch (error) {
@@ -300,8 +289,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
     if (index !== null && index >= 0) {
-      // Get the custom hallInfo object at the given index
-      let newHallInfo = preferredHalls[index];
+      let newHallInfo = {
+        HallRank: Number(hallRankValue) ?? preferredHalls[index].HallRank,
+        HallName: hallNameValue ?? preferredHalls[index].HallName,
+      };
 
       // Error checking on the hallNameValue before modifying the newHallInfo object
       if (
@@ -312,9 +303,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarText(String(hallNameValue) + ' is already in the list.');
         setSnackbarSeverity('info');
         setSnackbarOpen(true);
-      } else {
-        newHallInfo.HallRank = Number(hallRankValue) ?? preferredHalls[index].HallRank;
-        newHallInfo.HallName = hallNameValue ?? preferredHalls[index].HallName;
+
+        // Set the new hall info back to the name it was previously
+        newHallInfo.HallName = preferredHalls[index].HallName;
       }
 
       setPreferredHalls((prevPreferredHalls) => {
@@ -327,28 +318,28 @@ const StudentApplication = ({ userProfile, authentication }) => {
           }
         });
 
-        // Sort halls by name
-        newPreferredHalls.sort(function (a, b) {
-          var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
-          var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-          // names must be equal
-          return 0;
-        });
+        if (newPreferredHalls.length > 1) {
+          // Sort halls by name
+          newPreferredHalls.sort(function (a, b) {
+            var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
+            var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            // names must be equal
+            return 0;
+          });
 
-        // Sort halls by rank
-        newPreferredHalls.sort(function (a, b) {
-          return a.HallRank - b.HallRank;
-        });
+          // Sort halls by rank
+          newPreferredHalls.sort(function (a, b) {
+            return a.HallRank - b.HallRank;
+          });
+        }
 
-        return {
-          newPreferredHalls,
-        };
+        return newPreferredHalls;
       });
 
       setUnsavedChanges(true);
@@ -379,9 +370,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           });
         }
 
-        return {
-          newPreferredHalls,
-        };
+        return newPreferredHalls;
       });
       setUnsavedChanges(true);
     }
@@ -411,7 +400,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Save the current state of the application to the database
    * @param {Number} applicationID the application ID number if it is known, else it is -1
    * @param {String} editorUsername the student username of the person filling out the application
-   * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
+   * @param {ApartmentApplicant[]} applicants Array of ApartmentApplicant objects
    * @param {ApartmentChoice[]} preferredHalls Array of ApartmentChoice objects
    */
   const saveApplication = async (applicationID, editorUsername, applicants, preferredHalls) => {
@@ -532,7 +521,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
               <CardContent>
                 <Grid container direction="row" justify="flex-end" spacing={2}>
                   <Grid item xs={6} sm={8}>
-                    {applicationID === -1 ? (
+                    {!applicationID ? (
                       <Typography variant="body1">
                         Placeholder Text
                         <br />
@@ -549,7 +538,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     )}
                   </Grid>
                   <Grid item xs={6} sm={4}>
-                    {applicationID === -1 ? (
+                    {!applicationID ? (
                       <Button
                         variant="contained"
                         onClick={handleShowApplication}
@@ -587,7 +576,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           </Grid>
           <Grid item>
             <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-              {applicationID === -1 ? (
+              {!applicationID ? (
                 <Grid container direction="row" justify="center" spacing={2}>
                   <Grid item xs={12} md={8}>
                     <InstructionsCard />
