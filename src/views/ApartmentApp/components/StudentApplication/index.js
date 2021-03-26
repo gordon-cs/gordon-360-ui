@@ -82,12 +82,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
         if (applicationDetails.Applicants) {
           applicationDetails.Applicants.forEach(async (applicantInfo) => {
             const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
-            setApplicants((prevApplicants) =>
-              prevApplicants.concat({
+            setApplicants((prevApplicants) => [
+              ...prevApplicants,
+              {
                 Profile: newApplicantProfile,
                 OffCampusProgram: applicantInfo.OffCampusProgram,
-              }),
-            );
+              },
+            ]);
           });
         }
       }
@@ -97,9 +98,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setApplicationID(-1);
       if (!editorUsername) {
         if (applicants[0]?.Profile.AD_Username !== userProfile.AD_Username) {
-          setApplicants((prevApplicants) =>
-            prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
-          );
+          setApplicants((prevApplicants) => [{ Profile: userProfile, OffCampusProgram: '' }]);
         }
         // The editor username must be set last to prevent race condition
         setEditorUsername(userProfile.AD_Username);
@@ -190,7 +189,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarSeverity('warning');
       } else {
         // Add the profile object to the list of applicants
-        setApplicants((prevApplicants) => prevApplicants.concat(newApplicantObject));
+        setApplicants((prevApplicants) => [...prevApplicants, newApplicantObject]);
 
         // Check that the applicant array was updated successfully
         if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
@@ -383,9 +382,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallAdd = () => {
     let newHallRank = preferredHalls.length + 1;
-    setPreferredHalls((prevPreferredHalls) =>
-      prevPreferredHalls.concat({ HallRank: newHallRank, HallName: '' }),
-    );
+    setPreferredHalls((prevPreferredHalls) => [
+      ...prevPreferredHalls,
+      { HallRank: newHallRank, HallName: '' },
+    ]);
   };
 
   /**
