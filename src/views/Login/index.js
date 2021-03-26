@@ -22,6 +22,8 @@ import {
   Snackbar,
   IconButton,
   Fab,
+  Container,
+  Box,
 } from '@material-ui/core';
 
 // To temporarily disable the Login Hang message, set this boolean to false
@@ -185,9 +187,9 @@ export default class Login extends Component {
 
   render() {
     return (
-      <Grid container alignItems="center" justify="center" spacing={0}>
+      <Container>
         <DocumentTitle title={`Login | ${projectName}`} />
-        <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
+        <Box className="container">
           <img className="login-img" src={GordonLogoVerticalWhite} alt={`${projectName}`} />
           <form onSubmit={this.logIn}>
             <Typography variant="subtitle1">Welcome to {projectName}!</Typography>
@@ -238,7 +240,7 @@ export default class Login extends Component {
               </Button>
             </section>
           </form>
-        </Grid>
+        </Box>
         {this.state.network === 'online' && this.state.showPWALink && (
           <Grid
             container
@@ -390,7 +392,7 @@ export default class Login extends Component {
             </IconButton>,
           ]}
         />
-      </Grid>
+      </Container>
     );
   }
 }
