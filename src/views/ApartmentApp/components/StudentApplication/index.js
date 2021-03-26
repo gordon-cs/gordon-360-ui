@@ -54,7 +54,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false); // Use this for submitting app (later feature)
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('info');
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
 
   /**
@@ -193,6 +193,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         // Add the profile object to the list of applicants
         setApplicants((prevApplicants) => [...prevApplicants, newApplicantObject]);
         setUnsavedChanges(true);
+        return;
       }
     } catch (error) {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
@@ -765,7 +766,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         </Grid>
         <SimpleSnackbar
           text={snackbarText}
-          severity={snackbarSeverity}
+          severity={snackbarSeverity ?? 'info'}
           open={snackbarOpen}
           onClose={handleCloseSnackbar}
         />
