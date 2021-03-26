@@ -43,14 +43,6 @@ const HallSelection = ({
     }
   }, [authentication, editorUsername]);
 
-  //! DEBUG
-  useEffect(() => {
-    console.log(preferredHalls);
-    preferredHalls.forEach((element) => {
-      console.log(element.HallName + ', ' + element.HallRank);
-    });
-  }, [preferredHalls]);
-
   /**
    * Callback for changes to hall list item name and/or rank
    * @param {Number} hallRankValue The rank value that the user assigned to this hall
