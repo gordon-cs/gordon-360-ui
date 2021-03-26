@@ -39,10 +39,8 @@ div.guest-landing-page {
   }
 }
 
-.guest-welcome-card {
+.MuiCard-root.guest-welcome-card {
   background-color: $primary-blue;
-}
-
-.guest-welcome-message {
   color: $neutral-white;
+  opacity: 0.92;
 }

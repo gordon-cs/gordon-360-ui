@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Typography } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import Login from '../../../Login';
 import './guest-welcome.css';
@@ -13,11 +13,12 @@ const GuestWelcome = ({ onLogIn }) => {
       spacing={2}
     >
       <Grid item md={5}>
-        <Card raised>
-          <CardContent className="guest-welcome-card">
-            <Typography className="guest-welcome-message">
-              Welcome to the Guest view of Gordon360. As a guest, you have access to a limited view
-              of the site. Login is required for full access.
+        <Card raised className="guest-welcome-card">
+          <CardHeader title="Welcome to Gordon360!" />
+          <CardContent>
+            <Typography>
+              As a guest, you have access to a limited view of the site. Login is required for full
+              access.
             </Typography>
           </CardContent>
         </Card>
