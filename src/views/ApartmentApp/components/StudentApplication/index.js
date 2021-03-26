@@ -1,5 +1,5 @@
 //Student apartment application page
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Card,
@@ -60,57 +60,67 @@ const StudentApplication = ({ userProfile, authentication }) => {
   /**
    * Loads the user's saved apartment application, if one exists
    */
-  const loadSavedApplication = useCallback(async () => {
-    // TODO: Implement this once save/load of application data has been implemented in the backend
-    setLoading(true);
-    // Check if the current user is on an application. Returns the application ID number if found
-    let newApplicationID = null;
-    try {
-      newApplicationID = await housing.getCurrentApplicationID();
-      console.log('Retrieved Application ID: ' + newApplicationID); //! DEBUG
-      if (newApplicationID === null || newApplicationID === -1) {
-        // Intentionally trigger the 'catch'
-        throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
-      }
-      setApplicationID(newApplicationID);
-      let applicationDetails = await housing.getApartmentApplication(newApplicationID);
-      if (applicationDetails) {
-        setDateSubmitted(applicationDetails.DateSubmitted ?? null);
-        setDateModified(applicationDetails.DateModified ?? null);
-        setEditorUsername(applicationDetails.EditorUsername ?? null);
-        if (applicationDetails.Applicants) {
-          applicationDetails.Applicants.forEach(async (applicantInfo) => {
-            const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
-            setApplicants((prevApplicants) => [
-              ...prevApplicants,
-              {
-                Profile: newApplicantProfile,
-                OffCampusProgram: applicantInfo.OffCampusProgram,
-              },
-            ]);
-          });
-        }
-        setPreferredHalls(applicationDetails?.ApartmentChoices ?? []);
-      }
-    } catch {
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const handleError = (_error) => {
       // No existing application was found in the database,
       // or an error occurred while attempting to load the application
       setApplicationID(null);
-      if (!editorUsername) {
-        // The editor username must be set last to prevent race condition
-        setEditorUsername(userProfile.AD_Username);
-      }
-      if (!applicants?.length > 0) {
-        setApplicants([{ Profile: userProfile, OffCampusProgram: '' }]);
-      }
-    }
-    setUnsavedChanges(false);
-    setLoading(false);
-  }, [userProfile, editorUsername, applicants]);
+      setEditorUsername((prevEditorUsername) => prevEditorUsername ?? userProfile.AD_Username);
+      setApplicants((prevApplicants) =>
+        prevApplicants.length ? prevApplicants : [{ Profile: userProfile, OffCampusProgram: '' }],
+      );
+    };
 
-  useEffect(() => {
-    loadSavedApplication();
-  }, [userProfile, loadSavedApplication]);
+    if (!applicationID) {
+      setLoading(true);
+      // Check if the current user is on an application. Returns the application ID number if found
+      housing
+        .getCurrentApplicationID()
+        .then((newApplicationID) => {
+          console.log('Retrieved Application ID: ' + newApplicationID); //! DEBUG
+          if (newApplicationID === null || newApplicationID === -1) {
+            // Intentionally trigger the 'catch'
+            throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
+          } else if (isSubscribed) {
+            setApplicationID(newApplicationID);
+            housing
+              .getApartmentApplication(newApplicationID)
+              .then((applicationDetails) => {
+                if (isSubscribed && applicationDetails) {
+                  setDateSubmitted(applicationDetails.DateSubmitted ?? null);
+                  setDateModified(applicationDetails.DateModified ?? null);
+                  setEditorUsername(applicationDetails.EditorUsername ?? null);
+                  if (applicationDetails.Applicants) {
+                    applicationDetails.Applicants.forEach(async (applicantInfo) => {
+                      const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
+                      setApplicants((prevApplicants) => [
+                        ...prevApplicants,
+                        {
+                          Profile: newApplicantProfile,
+                          OffCampusProgram: applicantInfo.OffCampusProgram,
+                        },
+                      ]);
+                    });
+                  }
+                  setPreferredHalls(applicationDetails?.ApartmentChoices ?? []);
+                }
+              })
+              .catch((error) => {
+                handleError(error);
+              });
+          }
+        })
+        .catch((error) => {
+          handleError(error);
+        });
+      setUnsavedChanges(false);
+      setLoading(false);
+    }
+
+    return () => (isSubscribed = false);
+  }, [userProfile, applicationID, editorUsername, applicants]);
 
   useEffect(() => {
     //! DEBUG
