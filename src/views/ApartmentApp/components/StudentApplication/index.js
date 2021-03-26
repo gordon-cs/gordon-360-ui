@@ -29,6 +29,13 @@ const MAX_NUM_APPLICANTS = 8;
  * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
  */
 
+/**
+ * Renders the page for the student apartment application
+ * @param {Object} props The React component props
+ * @param {*} props.authentication The user authentication
+ * @param {StudentProfileInfo} props.userProfile The student profile info of the current user
+ * @returns {JSX.Element} JSX Element for the student application web page
+ */
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
