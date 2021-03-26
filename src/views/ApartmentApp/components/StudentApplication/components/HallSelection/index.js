@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import HallListItem from './components/HallListItem';
@@ -41,6 +42,14 @@ const HallSelection = ({
       loadHalls();
     }
   }, [authentication, editorUsername]);
+
+  //! DEBUG
+  useEffect(() => {
+    console.log(preferredHalls);
+    preferredHalls.forEach((element) => {
+      console.log(element.HallName + ', ' + element.HallRank);
+    });
+  }, [preferredHalls]);
 
   /**
    * Callback for changes to hall list item name and/or rank
@@ -112,6 +121,16 @@ const HallSelection = ({
       </CardContent>
     </Card>
   );
+};
+
+HallSelection.propTypes = {
+  disabled: PropTypes.bool,
+  authentication: PropTypes.any,
+  editorUsername: PropTypes.string.isRequired,
+  preferredHalls: PropTypes.array.isRequired,
+  onHallAdd: PropTypes.func,
+  onHallInputChange: PropTypes.func,
+  onHallRemove: PropTypes.func,
 };
 
 export default HallSelection;

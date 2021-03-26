@@ -47,7 +47,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info */
   const [applicants, setApplicants] = useState([]);
 
-  /** @type @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info */
+  /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info */
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
@@ -92,14 +92,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
             ]);
           });
         }
+        setPreferredHalls(applicationDetails?.ApartmentChoices ?? []);
       }
     } catch {
       // No existing application was found in the database,
       // or an error occurred while attempting to load the application
       setApplicationID(-1);
       if (!editorUsername) {
-        if (applicants[0]?.Profile.AD_Username !== userProfile.AD_Username) {
-          setApplicants((prevApplicants) => [{ Profile: userProfile, OffCampusProgram: '' }]);
+        if (!applicants?.length > 0) {
+          setApplicants([{ Profile: userProfile, OffCampusProgram: '' }]);
         }
         // The editor username must be set last to prevent race condition
         setEditorUsername(userProfile.AD_Username);
@@ -390,11 +391,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for hall list add button
    */
   const handleHallAdd = () => {
-    let newHallRank = preferredHalls.length + 1;
-    setPreferredHalls((prevPreferredHalls) => [
-      ...prevPreferredHalls,
-      { HallRank: newHallRank, HallName: '' },
-    ]);
+    const newHallInfo = { HallRank: preferredHalls.length + 1, HallName: '' };
+    setPreferredHalls((prevPreferredHalls) => [...prevPreferredHalls, newHallInfo]);
   };
 
   /**
