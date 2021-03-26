@@ -13,7 +13,7 @@ import membership from '../../services/membership';
 import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
-import { ReactComponent as NoConnection } from '../../NoConnection.svg';
+import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
 import user from '../../services/user';
 import {
   CardHeader,
@@ -748,7 +748,7 @@ class ActivityProfile extends Component {
                     marginRight: 'auto',
                   }}
                 >
-                  <NoConnection />
+                  <NoConnectionImage />
                 </Grid>
                 <br />
                 <h1>Please Re-establish Connection</h1>

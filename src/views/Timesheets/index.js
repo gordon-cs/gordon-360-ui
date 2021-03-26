@@ -28,7 +28,7 @@ import GordonLoader from '../../components/Loader';
 import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
-import { ReactComponent as NoConnection } from '../../NoConnection.svg';
+import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
 
 const useStyles = makeStyles((theme) => ({
   customWidth: {
@@ -792,7 +792,7 @@ const Timesheets = (props) => {
                         marginRight: 'auto',
                       }}
                     >
-                      <NoConnection />
+                      <NoConnectionImage />
                     </Grid>
                   )}
                   <br />

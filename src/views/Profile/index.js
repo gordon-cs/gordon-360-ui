@@ -9,7 +9,7 @@ import GordonSchedulePanel from '../../components/SchedulePanel';
 import { Identification } from '../../components/Identification/index';
 import storage from '../../services/storage';
 import { Redirect } from 'react-router';
-import { ReactComponent as NoConnection } from '../../NoConnection.svg';
+import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
 
 import './profile.css';
 
@@ -257,7 +257,7 @@ export default class Profile extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <NoConnection />
+                    <NoConnectionImage />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>
