@@ -41,7 +41,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
   const filePrefix = 'apartapp';
 
   /**
-   * Attempt to load an all existing application for the current semester
+   * Attempt to load all existing applications for the current semester
    */
   const loadAllCurrentApplications = useCallback(async () => {
     setLoading(true);
