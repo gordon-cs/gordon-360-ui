@@ -34,6 +34,7 @@ import CityIcon from '@material-ui/icons/LocationCity';
 import goStalk from '../../services/goStalk';
 import user from '../../services/user';
 import { gordonColors } from '../../theme';
+import { ReactComponent as NoConnection } from '../../NoConnection.svg';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
 import GordonLoader from '../../components/Loader';
@@ -1258,10 +1259,7 @@ class PeopleSearch extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
+                    <NoConnection />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>

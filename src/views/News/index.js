@@ -21,6 +21,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import { ReactComponent as NoConnection } from '../../NoConnection.svg';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
 // import Dropzone from 'react-dropzone';
@@ -518,10 +519,7 @@ export default class StudentNews extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
+                    <NoConnection />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>
