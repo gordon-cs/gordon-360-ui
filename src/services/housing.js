@@ -125,16 +125,17 @@ const saveApartmentApplication = async (
   apartmentChoices,
 ) => {
   let applicationDetails = {
-    ApplicationID: applicationID,
+    ApplicationID: applicationID ?? -1,
     EditorUsername: editorUsername,
-    Applicants: applicants.map((applicant) => [
-      {
-        ApplicationID: applicationID,
-        Username: applicant.Profile.AD_Username,
-        OffCampusProgram: applicant.OffCampusProgram,
-      },
-    ]), // This is the correct code for when the backend has been updated expect the off-campus program info
-    ApartmentChoices: apartmentChoices,
+    Applicants: applicants.map((applicant) => ({
+      ApplicationID: applicant?.ApplicationID ?? applicationID ?? -1,
+      Username: applicant.Profile.AD_Username,
+      OffCampusProgram: applicant?.OffCampusProgram ?? '',
+    })),
+    ApartmentChoices: apartmentChoices.map((apartmentChoice) => ({
+      ApplicationID: apartmentChoice?.ApplicationID ?? applicationID ?? -1,
+      ...apartmentChoice,
+    })),
   };
   if (applicationID) {
     return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);

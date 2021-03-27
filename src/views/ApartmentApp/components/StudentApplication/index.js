@@ -39,6 +39,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [saving, setSaving] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
+  /** @type {[Number, React.Dispatch<React.SetStateAction<Number>>]} */
   const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
   const [dateModified, setDateModified] = useState(null); // The date the application was last modified, or null if not yet saved/modified
@@ -71,6 +72,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setApplicants((prevApplicants) =>
         prevApplicants.length ? prevApplicants : [{ Profile: userProfile, OffCampusProgram: '' }],
       );
+      setUnsavedChanges(true);
     };
 
     if (!applicationID) {
@@ -105,6 +107,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     });
                   }
                   setPreferredHalls(applicationDetails?.ApartmentChoices ?? []);
+                  setUnsavedChanges(false);
                 }
               })
               .catch((error) => {
@@ -115,7 +118,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         .catch((error) => {
           handleError(error);
         });
-      setUnsavedChanges(false);
       setLoading(false);
     }
 
@@ -123,6 +125,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   }, [userProfile, applicationID, editorUsername, applicants]);
 
   useEffect(() => {
+    // setUnsavedChanges(true);
     //! DEBUG
     console.log('Array state variables changed. Printing contents:');
     console.log('Applicants:');

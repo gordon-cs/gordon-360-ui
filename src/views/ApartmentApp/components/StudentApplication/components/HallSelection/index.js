@@ -118,7 +118,7 @@ const HallSelection = ({
 HallSelection.propTypes = {
   disabled: PropTypes.bool,
   authentication: PropTypes.any,
-  editorUsername: PropTypes.string.isRequired,
+  editorUsername: PropTypes.string,
   preferredHalls: PropTypes.array.isRequired,
   onHallAdd: PropTypes.func,
   onHallInputChange: PropTypes.func,
