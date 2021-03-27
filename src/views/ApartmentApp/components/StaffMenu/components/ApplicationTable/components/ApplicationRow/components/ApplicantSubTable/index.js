@@ -17,7 +17,7 @@ const ApplicantSubTable = ({ applicants }) => (
         Applicants
       </Typography>
     </Toolbar>
-    <Table size="small" aria-label="applicants">
+    <Table size="small" aria-label="applicants" className={'sub-table'}>
       <TableHead className={'stylized-table-head'}>
         <TableRow>
           <TableCell>Name</TableCell>

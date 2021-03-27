@@ -17,7 +17,7 @@ const HallSubTable = ({ apartmentChoices }) => (
         Preferred Halls
       </Typography>
     </Toolbar>
-    <Table size="small" aria-label="halls">
+    <Table size="small" aria-label="halls" className={'sub-table'}>
       <TableHead className={'stylized-table-head'}>
         <TableRow>
           <TableCell align="right">Rank</TableCell>
