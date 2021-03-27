@@ -27,9 +27,35 @@ const ApartApp = ({ authentication }) => {
   const isOnline = useNetworkStatus();
 
   useEffect(() => {
+    let isSubscribed = true;
     if (authentication) {
-      loadPage();
+      setLoading(true);
+
+      user
+        .getProfileInfo()
+        .then((profileInfo) => {
+          if (isSubscribed) {
+            setUserProfile(profileInfo);
+            setIsUserStudent(profileInfo.PersonType.includes('stu'));
+          }
+        })
+        .catch(() => {});
+
+      housing
+        .checkHousingAdmin()
+        .then((isHousingAdmin) => {
+          if (isSubscribed) {
+            setCanUseStaff(isHousingAdmin ?? false);
+          }
+        })
+        .catch(() => {
+          if (isSubscribed) {
+            setCanUseStaff(false);
+          }
+        });
+
       setIsAuthenticated(true);
+      setLoading(false);
     } else {
       // Clear out component's person-specific state when authentication becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
@@ -38,19 +64,22 @@ const ApartApp = ({ authentication }) => {
       setIsAuthenticated(false);
       setLoading(false);
     }
+
+    return () => (isSubscribed = false);
   }, [authentication]);
 
-  const loadPage = async () => {
-    setLoading(true);
-    const [profileInfo, isHousingStaff] = await Promise.all([
-      user.getProfileInfo(),
-      housing.checkHousingAdmin(),
-    ]);
-    setUserProfile(profileInfo);
-    setIsUserStudent(profileInfo.PersonType.includes('stu'));
-    setCanUseStaff(isHousingStaff);
-    setLoading(false);
-  };
+  // const loadPage = async () => {
+  //   setLoading(true);
+
+  //   const [profileInfo, isHousingStaff] = await Promise.all([
+  //     user.getProfileInfo(),
+  //     housing.checkHousingAdmin(),
+  //   ]);
+  //   setUserProfile(profileInfo);
+  //   setIsUserStudent(profileInfo.PersonType.includes('stu'));
+  //   setCanUseStaff(isHousingStaff);
+  //   setLoading(false);
+  // };
 
   if (loading) {
     return <GordonLoader />;
