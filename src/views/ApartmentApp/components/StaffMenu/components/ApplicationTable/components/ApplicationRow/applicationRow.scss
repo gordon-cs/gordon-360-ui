@@ -1,6 +1,11 @@
 @import '../../../../../../../../vars';
 
-.apartment-sub-table {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+.MuiTableCell-root.collapsible-row {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.MuiTable-root.sub-table {
+  border-left: 2px solid $neutral-black-opacity10;
+  border-right: 2px solid $neutral-black-opacity10;
 }
