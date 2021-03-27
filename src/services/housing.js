@@ -61,7 +61,10 @@ import './user'; // Needed for typedef of StudentProfileInfo
 const checkHousingAdmin = async () => {
   try {
     return await http.get(`housing/admin`);
-  } catch {
+  } catch (err) {
+    // handle thrown 404 errors
+    if (err.status !== 404) throw err;
+    console.log('A 404 code indicates that current user was not found on the list of admins');
     return false;
   }
 };
