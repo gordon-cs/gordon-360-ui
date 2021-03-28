@@ -75,7 +75,7 @@ const approveRequest = (requestID) => {
  * @return {boolean} True if given id is a group admin, else false
  */
 const checkAdmin = (id, sessionCode, activityCode) => {
-  let isGroupAdmin = getAllGroupAdmins(activityCode).then(function(result) {
+  let isGroupAdmin = getAllGroupAdmins(activityCode).then(function (result) {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
         if (result[i].SessionCode === sessionCode) {
@@ -141,7 +141,7 @@ const filterCurrent = (memberArray, sessionCode) => {
  * @return {Member[]} List of members in given session
  */
 const get = (activityCode, sessionCode) => {
-  let allMembership = getAll(activityCode).then(function(result) {
+  let allMembership = getAll(activityCode).then(function (result) {
     return filterCurrent(result, sessionCode);
   });
   return allMembership;
@@ -203,7 +203,7 @@ const getMembersNum = (activityCode, sessionCode) =>
  * @return {Member[]} Array of the given student's memberships
  */
 const getIndividualMembership = (userID) =>
-  http.get(`memberships/student/${userID}`).then(function(result) {
+  http.get(`memberships/student/${userID}`).then(function (result) {
     return result;
   });
 
@@ -214,7 +214,7 @@ const getIndividualMembership = (userID) =>
  * @return {Request[]} List of requests for activity and session
  */
 const getRequests = (activityCode, sessionCode) => {
-  let allRequests = http.get(`requests/activity/${activityCode}`).then(function(result) {
+  let allRequests = http.get(`requests/activity/${activityCode}`).then(function (result) {
     return filterCurrentRequests(result, sessionCode);
   });
   return allRequests;
@@ -241,7 +241,7 @@ const filterCurrentRequests = (requestsArray, sessionCode) => {
 
 // Get the difference in days bewteen today and specified date
 // Returns integer and printable string
-const getDiffDays = function(date) {
+const getDiffDays = function (date) {
   let currentDate = new Date();
   let requestDate = new Date(date);
   let timeDiff = Math.abs(currentDate.getTime() - requestDate.getTime());
@@ -286,7 +286,7 @@ function requestMembership(data) {
  *                  and membershipID if in specific activity and session
  */
 const search = (id, sessionCode, activityCode) => {
-  let found = http.get(`memberships/student/${id}`).then(function(result) {
+  let found = http.get(`memberships/student/${id}`).then(function (result) {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
         if (result[i].SessionCode === sessionCode) {
