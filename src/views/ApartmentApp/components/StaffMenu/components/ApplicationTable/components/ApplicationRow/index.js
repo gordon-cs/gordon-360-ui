@@ -4,7 +4,6 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import ApplicantSubTable from './components/ApplicantSubTable';
 import HallSubTable from './components/HallSubTable';
-import './applicationRow.css';
 
 const ApplicationRow = ({ applicationDetails, labelId }) => {
   const [open, setOpen] = React.useState(false);
