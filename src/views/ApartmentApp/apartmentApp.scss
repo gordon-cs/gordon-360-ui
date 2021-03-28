@@ -31,7 +31,7 @@
     border: 1px solid $primary-blue;
   }
 
-  .people-search-parent {
+  & .people-search-parent {
     @extend .list-item;
 
     // overrides some styles of .gordon-people-search,
@@ -57,22 +57,22 @@
     }
   }
 
-  .back-home-button {
+  & .back-home-button {
     background-color: $neutral-white;
     color: $primary-blue;
   }
 
-  .success {
+  & .success {
     color: $secondary-green;
     font-size: medium;
   }
 
-  .error {
+  & .error {
     color: $secondary-red;
     font-size: medium;
   }
 
-  .save-bar {
+  & .save-bar {
     position: -webkit-sticky;
     position: sticky;
     bottom: 0px;
