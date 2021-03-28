@@ -1,5 +1,5 @@
 //Student apartment application page
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Card,
@@ -23,22 +23,30 @@ const MAX_NUM_APPLICANTS = 8;
 
 /**
  * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
- */
-
-/**
+ * @typedef { import('../../../../services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
  */
 
+/**
+ * Renders the page for the student apartment application
+ * @param {Object} props The React component props
+ * @param {*} props.authentication The user authentication
+ * @param {StudentProfileInfo} props.userProfile The student profile info of the current user
+ * @returns {JSX.Element} JSX Element for the student application web page
+ */
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
-  const [applicationID, setApplicationID] = useState(-1); // Default value of -1 indicate to backend that the application ID number is not yet known
+  /** @type {[Number, React.Dispatch<React.SetStateAction<Number>>]} */
+  const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
   const [dateModified, setDateModified] = useState(null); // The date the application was last modified, or null if not yet saved/modified
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
+  /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info */
   const [applicants, setApplicants] = useState([]);
+  /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info */
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
@@ -47,71 +55,84 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false); // Use this for submitting app (later feature)
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('info');
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
 
   /**
    * Loads the user's saved apartment application, if one exists
    */
-  const loadSavedApplication = useCallback(async () => {
-    // TODO: Implement this once save/load of application data has been implemented in the backend
-    setLoading(true);
-    // Check if the current user is on an application. Returns the application ID number if found
-    let newApplicationID = null;
-    try {
-      newApplicationID = await housing.getCurrentApplicationID();
-      //! DEBUG
-      console.log('Retrieved Application ID: ' + newApplicationID);
-      if (newApplicationID === null || newApplicationID === -1) {
-        // Intentionally trigger the 'catch'
-        throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
-      }
-      setApplicationID(newApplicationID);
-      let applicationDetails = await housing.getApartmentApplication(newApplicationID);
-      if (applicationDetails) {
-        setDateSubmitted(applicationDetails.DateSubmitted ?? null);
-        setDateModified(applicationDetails.DateModified ?? null);
-        setEditorUsername(applicationDetails.EditorUsername ?? null);
-        if (applicationDetails.Applicants) {
-          applicationDetails.Applicants.forEach(async (applicantInfo) => {
-            const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
-            setApplicants((prevApplicants) =>
-              prevApplicants.concat({
-                Profile: newApplicantProfile,
-                OffCampusProgram: applicantInfo.OffCampusProgram,
-              }),
-            );
-          });
-        }
-      }
-    } catch {
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const handleError = (_error) => {
       // No existing application was found in the database,
       // or an error occurred while attempting to load the application
-      setApplicationID(-1);
-      if (!editorUsername) {
-        if (applicants[0]?.Profile.AD_Username !== userProfile.AD_Username) {
-          setApplicants((prevApplicants) =>
-            prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
-          );
-        }
-        // The editor username must be set last to prevent race condition
-        setEditorUsername(userProfile.AD_Username);
-      }
+      setApplicationID(null);
+      setEditorUsername((prevEditorUsername) => prevEditorUsername ?? userProfile.AD_Username);
+      setApplicants((prevApplicants) =>
+        prevApplicants.length ? prevApplicants : [{ Profile: userProfile, OffCampusProgram: '' }],
+      );
+      setUnsavedChanges(true);
+    };
+
+    if (!applicationID) {
+      setLoading(true);
+      // Check if the current user is on an application. Returns the application ID number if found
+      housing
+        .getCurrentApplicationID()
+        .then((newApplicationID) => {
+          console.log('Retrieved Application ID: ' + newApplicationID); //! DEBUG
+          if (newApplicationID === null || newApplicationID === -1) {
+            // Intentionally trigger the 'catch'
+            throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
+          } else if (isSubscribed) {
+            setApplicationID(newApplicationID);
+            housing
+              .getApartmentApplication(newApplicationID)
+              .then((applicationDetails) => {
+                if (isSubscribed && applicationDetails) {
+                  setDateSubmitted(applicationDetails.DateSubmitted ?? null);
+                  setDateModified(applicationDetails.DateModified ?? null);
+                  setEditorUsername(applicationDetails.EditorUsername ?? null);
+                  if (applicationDetails.Applicants) {
+                    applicationDetails.Applicants.forEach(async (applicantInfo) => {
+                      const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
+                      setApplicants((prevApplicants) => [
+                        ...prevApplicants,
+                        {
+                          Profile: newApplicantProfile,
+                          OffCampusProgram: applicantInfo.OffCampusProgram,
+                        },
+                      ]);
+                    });
+                  }
+                  setPreferredHalls(applicationDetails?.ApartmentChoices ?? []);
+                  setUnsavedChanges(false);
+                }
+              })
+              .catch((error) => {
+                handleError(error);
+              });
+          }
+        })
+        .catch((error) => {
+          handleError(error);
+        });
+      setLoading(false);
     }
-    setUnsavedChanges(false);
-    setLoading(false);
-  }, [userProfile, editorUsername, applicants]);
+
+    return () => (isSubscribed = false);
+  }, [userProfile, applicationID, editorUsername, applicants]);
 
   useEffect(() => {
-    loadSavedApplication();
-  }, [userProfile, loadSavedApplication]);
-
-  useEffect(() => {
+    // setUnsavedChanges(true);
     //! DEBUG
     console.log('Array state variables changed. Printing contents:');
+    console.log('Applicants:');
     applicants.forEach((element) => {
-      console.log(element.Profile.AD_Username);
+      console.log(element.Profile.AD_Username + ', ' + element.OffCampusProgram);
     });
+    console.log('Preferred Halls:');
     preferredHalls.forEach((element) => {
       console.log(element.HallName + ', ' + element.HallRank);
     });
@@ -183,19 +204,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarSeverity('warning');
       } else {
         // Add the profile object to the list of applicants
-        setApplicants((prevApplicants) => prevApplicants.concat(newApplicantObject));
-
-        // Check that the applicant array was updated successfully
-        if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
-          setSnackbarText(
-            String(newApplicantProfile.fullName) + ' was successfully added to the list.',
-          );
-          setSnackbarSeverity('success');
-        } else {
-          // This should trigger the 'catch', causing the page to display the error snackbar
-          throw new Error('Something went wrong! Please contact CTS for help.');
-        }
+        setApplicants((prevApplicants) => [...prevApplicants, newApplicantObject]);
         setUnsavedChanges(true);
+        return;
       }
     } catch (error) {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
@@ -292,17 +303,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
     if (index !== null && index >= 0) {
-      // Get the custom hallInfo object at the given index
-      let newHallInfo = preferredHalls[index];
-
-      // Error checking on the hallRankValue before modifying the newHallInfo object
-      if (hallRankValue !== null) {
-        newHallInfo.HallRank = Number(hallRankValue);
-      }
+      let newHallInfo = {
+        HallRank: Number(hallRankValue) ?? preferredHalls[index].HallRank,
+        HallName: hallNameValue ?? preferredHalls[index].HallName,
+      };
 
       // Error checking on the hallNameValue before modifying the newHallInfo object
       if (
-        hallNameValue !== null &&
         hallNameValue !== preferredHalls[index].HallName &&
         preferredHalls.some((hallInfo) => hallInfo.HallName === hallNameValue)
       ) {
@@ -310,35 +317,45 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarText(String(hallNameValue) + ' is already in the list.');
         setSnackbarSeverity('info');
         setSnackbarOpen(true);
-      } else if (hallNameValue !== null) {
-        newHallInfo.HallName = hallNameValue;
+
+        // Set the new hall info back to the name it was previously
+        newHallInfo.HallName = preferredHalls[index].HallName;
       }
 
-      // replace the element at index with the new hall info object
-      setPreferredHalls((prevPreferredHalls) => prevPreferredHalls.splice(index, 1, newHallInfo));
+      setPreferredHalls((prevPreferredHalls) => {
+        // replace the element at index with the new hall info object
+        let newPreferredHalls = prevPreferredHalls.map((prevHallInfo, j) => {
+          if (j === index) {
+            return newHallInfo;
+          } else {
+            return prevHallInfo;
+          }
+        });
 
-      let newPreferredHalls = preferredHalls; // make a separate copy of the array
+        if (newPreferredHalls.length > 1) {
+          // Sort halls by name
+          newPreferredHalls.sort(function (a, b) {
+            var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
+            var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            // names must be equal
+            return 0;
+          });
 
-      // Sort halls by name
-      newPreferredHalls.sort(function (a, b) {
-        var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
-        var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
-        if (nameA < nameB) {
-          return -1;
+          // Sort halls by rank
+          newPreferredHalls.sort(function (a, b) {
+            return a.HallRank - b.HallRank;
+          });
         }
-        if (nameA > nameB) {
-          return 1;
-        }
-        // names must be equal
-        return 0;
+
+        return newPreferredHalls;
       });
 
-      // Sort halls by rank
-      newPreferredHalls.sort(function (a, b) {
-        return a.HallRank - b.HallRank;
-      });
-
-      setPreferredHalls(newPreferredHalls);
       setUnsavedChanges(true);
     } else {
       setSnackbarText('Something went wrong while trying to add this hall. Please try again.');
@@ -353,20 +370,21 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallRemove = (index) => {
     if (index !== null && index !== -1) {
-      let newPreferredHalls = preferredHalls; // make a separate copy of the array
-      // Remove the selected hall if the list has more than one element
-      newPreferredHalls.splice(index, 1);
+      setPreferredHalls((prevPreferredHalls) => {
+        let newPreferredHalls = prevPreferredHalls.filter((_hall, j) => j !== index);
 
-      if (preferredHalls.length > 0) {
-        // If any rank value is greater than the new maximum, then set it to that new max rank
-        let maxRank = newPreferredHalls.length;
-        newPreferredHalls.forEach((hallInfo, index) => {
-          if (hallInfo.HallRank > maxRank) {
-            newPreferredHalls[index].HallRank = maxRank;
-          }
-        });
-      }
-      setPreferredHalls(newPreferredHalls);
+        if (newPreferredHalls.length > 0) {
+          // If any rank value is greater than the new maximum, then set it to that new max rank
+          let maxRank = newPreferredHalls.length;
+          newPreferredHalls.forEach((hallInfo, index) => {
+            if (hallInfo.HallRank > maxRank) {
+              newPreferredHalls[index].HallRank = maxRank;
+            }
+          });
+        }
+
+        return newPreferredHalls;
+      });
       setUnsavedChanges(true);
     }
   };
@@ -375,10 +393,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for hall list add button
    */
   const handleHallAdd = () => {
-    let newHallRank = preferredHalls.length + 1;
-    setPreferredHalls((prevPreferredHalls) =>
-      prevPreferredHalls.concat({ HallRank: newHallRank, HallName: '' }),
-    );
+    const newHallInfo = { HallRank: preferredHalls.length + 1, HallName: '' };
+    setPreferredHalls((prevPreferredHalls) => [...prevPreferredHalls, newHallInfo]);
   };
 
   /**
@@ -397,7 +413,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Save the current state of the application to the database
    * @param {Number} applicationID the application ID number if it is known, else it is -1
    * @param {String} editorUsername the student username of the person filling out the application
-   * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
+   * @param {ApartmentApplicant[]} applicants Array of ApartmentApplicant objects
    * @param {ApartmentChoice[]} preferredHalls Array of ApartmentChoice objects
    */
   const saveApplication = async (applicationID, editorUsername, applicants, preferredHalls) => {
@@ -518,56 +534,66 @@ const StudentApplication = ({ userProfile, authentication }) => {
               <Card>
                 <CardContent>
                   <Grid container direction="row" justify="flex-end" spacing={2}>
-                    <Grid item xs={6} sm={8}>
-                      {applicationID === -1 ? (
-                        <Typography variant="body1">
-                          Placeholder Text
-                          <br />
-                          No existing applications found
-                        </Typography>
-                      ) : userProfile.AD_Username === editorUsername ? (
-                        <Typography variant="body1">
-                          Existing application for this semester:
-                        </Typography>
-                      ) : (
-                        <Typography variant="body1">
-                          Only the application editor may edit the application.
-                        </Typography>
-                      )}
-                    </Grid>
-                    <Grid item xs={6} sm={4}>
-                      {applicationID === -1 ? (
-                        <Button
-                          variant="contained"
-                          onClick={handleShowApplication}
-                          color="primary"
-                          fullWidth
-                          disabled={applicationCardsOpen}
-                        >
-                          Create a new application
-                        </Button>
-                      ) : userProfile.AD_Username === editorUsername ? (
-                        <Button
-                          variant="contained"
-                          onClick={handleShowApplication}
-                          color="primary"
-                          fullWidth
-                          disabled={applicationCardsOpen}
-                        >
-                          Edit your application
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="contained"
-                          onClick={handleShowApplication}
-                          color="primary"
-                          fullWidth
-                          disabled={applicationCardsOpen}
-                        >
-                          View your application
-                        </Button>
-                      )}
-                    </Grid>
+                    {!applicationID ? (
+                      <React.Fragment>
+                        <Grid item xs={6} sm={8}>
+                          <Typography variant="body1">
+                            Placeholder Text
+                            <br />
+                            No existing applications found
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6} sm={4}>
+                          <Button
+                            variant="contained"
+                            onClick={handleShowApplication}
+                            color="primary"
+                            fullWidth
+                            disabled={applicationCardsOpen}
+                          >
+                            Create a new application
+                          </Button>
+                        </Grid>
+                      </React.Fragment>
+                    ) : userProfile.AD_Username === editorUsername ? (
+                      <React.Fragment>
+                        <Grid item xs={6} sm={8}>
+                          <Typography variant="body1">
+                            Existing application for this semester:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6} sm={4}>
+                          <Button
+                            variant="contained"
+                            onClick={handleShowApplication}
+                            color="primary"
+                            fullWidth
+                            disabled={applicationCardsOpen}
+                          >
+                            Edit your application
+                          </Button>
+                        </Grid>
+                      </React.Fragment>
+                    ) : (
+                      <React.Fragment>
+                        <Grid item xs={6} sm={8}>
+                          <Typography variant="body1">
+                            Only the application editor may edit the application.
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6} sm={4}>
+                          <Button
+                            variant="contained"
+                            onClick={handleShowApplication}
+                            color="primary"
+                            fullWidth
+                            disabled={applicationCardsOpen}
+                          >
+                            View your application
+                          </Button>
+                        </Grid>
+                      </React.Fragment>
+                    )}
                   </Grid>
                 </CardContent>
               </Card>
@@ -773,7 +799,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         </Grid>
         <SimpleSnackbar
           text={snackbarText}
-          severity={snackbarSeverity}
+          severity={snackbarSeverity ?? 'info'}
           open={snackbarOpen}
           onClose={handleCloseSnackbar}
         />

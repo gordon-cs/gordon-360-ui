@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import HallListItem from './components/HallListItem';
@@ -112,6 +113,16 @@ const HallSelection = ({
       </CardContent>
     </Card>
   );
+};
+
+HallSelection.propTypes = {
+  disabled: PropTypes.bool,
+  authentication: PropTypes.any,
+  editorUsername: PropTypes.string,
+  preferredHalls: PropTypes.array.isRequired,
+  onHallAdd: PropTypes.func,
+  onHallInputChange: PropTypes.func,
+  onHallRemove: PropTypes.func,
 };
 
 export default HallSelection;

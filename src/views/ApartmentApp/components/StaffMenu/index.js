@@ -10,31 +10,30 @@ import '../../apartmentApp.css';
 
 /**
  * @typedef { import('../../../../services/housing').ApplicationDetails } ApplicationDetails
- * @typedef { import('../../../../services/housing').FullApplicantInfo } FullApplicantInfo
+ * @typedef { import('../../../../services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
  */
 
+/**
+ * Renders the page for the apartment application housing staff menu
+ * @param {Object} props The React component props
+ * @param {*} props.authentication The user authentication
+ * @param {StudentProfileInfo} props.userProfile The student profile info of the current user
+ * @returns {JSX.Element} JSX Element for the staff menu web page
+ */
 const StaffMenu = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
 
-  /**
-   * @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} ApplicationDetails
-   */
+  /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} ApplicationDetails */
   const [applications, setApplications] = useState([]);
 
-  /**
-   * @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} Array of application details, formatted for use with react-csv
-   */
+  /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} Array of application details, formatted for use with react-csv */
   const [applicationJsonArray, setApplicationJsonArray] = useState([]);
 
-  /**
-   * @type {[FullApplicantInfo[], React.Dispatch<React.SetStateAction<FullApplicantInfo[]>>]} Array of applicant info, formatted for use with react-csv
-   */
+  /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info, formatted for use with react-csv */
   const [applicantJsonArray, setApplicantJsonArray] = useState([]);
 
-  /**
-   * @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info, formatted for use with react-csv
-   */
+  /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info, formatted for use with react-csv */
   const [apartmentChoiceJsonArray, setApartmentChoiceJsonArray] = useState([]);
 
   const [dateStr, setDateStr] = useState('');
