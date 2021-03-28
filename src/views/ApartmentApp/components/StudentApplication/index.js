@@ -372,7 +372,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
     if (index !== null && index !== -1) {
       setPreferredHalls((prevPreferredHalls) => {
         let newPreferredHalls = prevPreferredHalls.filter((_hall, j) => j !== index);
-        // let newPreferredHalls = prevPreferredHalls.filter((hallInfo) => hallInfo.HallName !== hallNameToRemove);
 
         if (newPreferredHalls.length > 0) {
           // If any rank value is greater than the new maximum, then set it to that new max rank
