@@ -68,18 +68,6 @@ const ApartApp = ({ authentication }) => {
     return () => (isSubscribed = false);
   }, [authentication]);
 
-  // const loadPage = async () => {
-  //   setLoading(true);
-
-  //   const [profileInfo, isHousingStaff] = await Promise.all([
-  //     user.getProfileInfo(),
-  //     housing.checkHousingAdmin(),
-  //   ]);
-  //   setUserProfile(profileInfo);
-  //   setIsUserStudent(profileInfo.PersonType.includes('stu'));
-  //   setCanUseStaff(isHousingStaff);
-  //   setLoading(false);
-  // };
 
   if (loading) {
     return <GordonLoader />;
