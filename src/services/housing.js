@@ -21,15 +21,9 @@ import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * @global
- * @typedef ApartmentApplicant Applicant info used by the student application page
- * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
- * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
- */
-
-/**
- * @global
- * @typedef FullApplicantInfo Applicant info used by the staff menu
+ * @typedef ApartmentApplicant
  * @property {Number} ApplicationID Application ID number of this application
+ * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
  * @property {String} Username The username of this applicant
  * @property {Number} Age The age of the student (in years) (only visible to housing admin)
  * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
@@ -54,7 +48,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @property {*} DateModified The date the application was last modified
  * @property {String} EditorUsername Username of the application editor
  * @property {String} Gender Gender
- * @property {FullApplicantInfo[]} Applicants Array of student usernames
+ * @property {ApartmentApplicant[]} Applicants Array of ApartmentApplicant objects
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
  * @property {Number} TotalPoints The total application points associated with this application
  * @property {Number} AvgPoints The average application points per applicant
@@ -67,7 +61,10 @@ import './user'; // Needed for typedef of StudentProfileInfo
 const checkHousingAdmin = async () => {
   try {
     return await http.get(`housing/admin`);
-  } catch {
+  } catch (err) {
+    // handle thrown 404 errors
+    if (err.status !== 404) throw err;
+    console.log('A 404 code indicates that current user was not found on the list of admins');
     return false;
   }
 };
@@ -97,23 +94,19 @@ const deleteHousingAdmin = (username) => {
  */
 const getCurrentApplicationID = async (username) => {
   let applicationID;
-  let err;
   try {
     if (username) {
       applicationID = await http.get(`housing/apartment/${username}/`);
     } else {
       applicationID = await http.get('housing/apartment');
     }
-  } catch (e) {
+  } catch (err) {
     // handle thrown 404 errors
-    if (e.status !== 404) throw e;
-    err = e;
+    if (err.status !== 404) throw err;
     applicationID = false;
     console.log('A 404 code indicates that an application was not found for this applicant');
   }
-  // handle "unhandled" requests, `this.status = 404`s, and 404 errors
-  var status = (this.status = (err && err.status) || this.status || 404);
-  if (status !== 404) return applicationID;
+  return applicationID;
 };
 
 /**
@@ -131,21 +124,22 @@ const saveApartmentApplication = async (
   apartmentChoices,
 ) => {
   let applicationDetails = {
-    ApplicationID: applicationID,
+    ApplicationID: applicationID ?? -1,
     EditorUsername: editorUsername,
-    Applicants: applicants.map((applicant) => [
-      {
-        ApplicationID: applicationID,
-        Username: applicant.Profile.AD_Username,
-        OffCampusProgram: applicant.OffCampusProgram,
-      },
-    ]), // This is the correct code for when the backend has been updated expect the off-campus program info
-    ApartmentChoices: apartmentChoices,
+    Applicants: applicants.map((applicant) => ({
+      ApplicationID: applicant?.ApplicationID ?? applicationID ?? -1,
+      Username: applicant.Profile.AD_Username,
+      OffCampusProgram: applicant?.OffCampusProgram ?? '',
+    })),
+    ApartmentChoices: apartmentChoices.map((apartmentChoice) => ({
+      ApplicationID: apartmentChoice?.ApplicationID ?? applicationID ?? -1,
+      ...apartmentChoice,
+    })),
   };
-  if (applicationID === -1) {
-    return await http.post(`housing/apartment/applications/`, applicationDetails);
-  } else {
+  if (applicationID) {
     return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
+  } else {
+    return await http.post(`housing/apartment/applications/`, applicationDetails);
   }
 };
 
