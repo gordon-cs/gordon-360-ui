@@ -1,12 +1,13 @@
 @import '../../vars';
 
-.student-apartment-application {
-  strong.over-emphasized {
+.student-apartment-application,
+.apartment-application {
+  & strong.over-emphasized {
     text-transform: uppercase;
     text-decoration: underline;
   }
 
-  .apartment-card-header {
+  & .apartment-card-header {
     background-color: $primary-blue;
     color: $neutral-white;
     padding: '10px';
@@ -16,16 +17,16 @@
     }
   }
 
-  .list-item {
+  & .list-item {
     color: $neutral-dark-gray;
   }
 
-  .nested-list-item {
+  & .nested-list-item {
     padding-left: 48px;
     padding-right: 16px;
   }
 
-  .bordered-list-item {
+  & .bordered-list-item {
     @extend .list-item;
     border: 1px solid $primary-blue;
   }
@@ -79,7 +80,7 @@
     margin-top: 8px; // The <Grid> seems to be ignoring these
 
     .save-bar-card {
-      box-shadow: 0px 0px 10px;
+      box-shadow: 0px 0px 8px;
       position: sticky;
     }
   }
