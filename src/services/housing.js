@@ -65,11 +65,12 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingAdmin = async () => {
-  try {
-    return await http.get(`housing/admin`);
-  } catch {
-    return false;
-  }
+  return true;
+  // try {
+  //   return await http.get(`housing/admin`);
+  // } catch {
+  //   return false;
+  // }
 };
 
 /**
@@ -176,7 +177,87 @@ const getApartmentApplication = async (applicationID) => {
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getAllApartmentApplications = async () => {
-  let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+  // let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+  let applicationDetailsArray = [
+    {
+      ApplicationID: 42,
+      DateSubmitted: new Date('2022-03-14'),
+      DateModified: new Date('2022-03-14'),
+      EditorUsername: 'Tommy.Turtle',
+      Gender: 'M',
+      Applicants: [
+        {
+          ApplicationID: 42,
+          Username: 'Tommy.Turtle',
+          Age: 21,
+          OffCampusProgram: '',
+          Probation: 'N',
+          Points: 6,
+        },
+        {
+          ApplicationID: 42,
+          Username: 'Borrus.Buffalo',
+          Age: 20,
+          OffCampusProgram: '',
+          Probation: 'N',
+          Points: 5,
+        },
+      ],
+      ApartmentChoices: [
+        {
+          HallRank: 1,
+          HallName: 'Gantley',
+        },
+        {
+          HallRank: 2,
+          HallName: 'KOSC',
+        },
+        {
+          HallRank: 3,
+          HallName: 'Not-a-real-dorm',
+        },
+      ],
+    },
+    {
+      ApplicationID: 36,
+      DateSubmitted: new Date('2022-03-14'),
+      DateModified: new Date('2022-03-14'),
+      EditorUsername: 'Zippy.Zebra',
+      Gender: 'F',
+      Applicants: [
+        {
+          ApplicationID: 42,
+          Username: 'Zippy.Zebra',
+          Age: 22,
+          OffCampusProgram: '',
+          Probation: 'N',
+          Points: 6,
+        },
+        {
+          ApplicationID: 42,
+          Username: 'Charlene.Cat',
+          Age: 21,
+          OffCampusProgram: '',
+          Probation: 'N',
+          Points: 5,
+        },
+      ],
+      ApartmentChoices: [
+        {
+          HallRank: 1,
+          HallName: 'Gantley',
+        },
+        {
+          HallRank: 2,
+          HallName: 'KOSC',
+        },
+        {
+          HallRank: 3,
+          HallName: 'Not-a-real-dorm',
+        },
+      ],
+    },
+  ];
 
   // Calculate the total and average points for each application
   applicationDetailsArray.forEach((applicationDetails) => {

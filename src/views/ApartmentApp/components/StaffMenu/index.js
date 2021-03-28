@@ -47,7 +47,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
     setLoading(true);
     let applicationDetailsArray = await housing.getAllApartmentApplications();
     if (applicationDetailsArray) {
-      setApplications(applicationDetailsArray);
+      setApplications(applicationDetailsArray ?? []);
     }
     setLoading(false);
   }, []);
