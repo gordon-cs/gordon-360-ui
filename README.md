@@ -163,6 +163,10 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
   Provides easy routing, allowing transitions between views with back button support and URL management.
 
+- [react-csv](https://github.com/react-csv/react-csv)
+
+  Provides components that allow React to easily generate a CSV file from given data. This data can be an array of arrays, an array of literal objects, or strings.
+
 ## Code Style
 
 This project uses [Prettier](https://prettier.io/), an "opinionated code formatter," to automatically format JavaScript, JSON, Sass, and Markdown files according to a common style.
@@ -410,6 +414,8 @@ In the unusual case that Train or Production have not been automatically deploye
 - An admin is able to remove themselves (on admin view), which causes major issues.
 
 - Staff-timesheets is almost working, with the exception of the edit shift and remove shift function. the API endpoints are all set up and seem to be working to send and get data. The add and save shift functions work like expected but the submit function has yet to be tested with a supervisor. In order to address these issues we have to make sure that we re work the ui in order to make sure that we are sending all the necessary info to edit and delete a saved shift. Previously it was thought that we would not have to change the way that the front end worked and we would simply have to integrate the backend for staff time sheets into the jobs controller. This proved to be wrong. It seems that there are more things that we have not accounted for that a staff's shift has and a student does not. Due to lack of testing and time we were not able to find the necessary changes that need to be made, however, we do know that it revolved around the fact that staff has an extra variable called HOURS_TYPE. We accounted for the variable in our submit and save shift functions in our back end and front end, as we expected that to be the case.
+
+- On the ApartApp admin page, the sort feature of the applications table is not yet working.
 
 ## History
 
