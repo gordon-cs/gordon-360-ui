@@ -31,7 +31,7 @@ import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
 
-const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift if 5 minutes, 1/12 hour
+const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
 
 const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
