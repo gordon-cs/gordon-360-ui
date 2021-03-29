@@ -45,9 +45,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
   const loadAllCurrentApplications = useCallback(async () => {
     setLoading(true);
     let applicationDetailsArray = await housing.getAllApartmentApplications();
-    if (applicationDetailsArray) {
-      setApplications(applicationDetailsArray ?? []);
-    }
+    setApplications(applicationDetailsArray ?? []);
     setLoading(false);
   }, []);
 
