@@ -15,15 +15,24 @@ import {
 import ClearIcon from '@material-ui/icons/Clear';
 
 const HallListItem = ({
+  disabled,
   index,
+  hallRank,
+  hallName,
   preferredHalls,
-  availableHalls,
+  halls,
   onHallInputChange,
   onHallRemove,
 }) => {
   const [hallRankValue, setHallRankValue] = useState(1); // Rank drop-down menu value
   const [hallNameValue, setHallNameValue] = useState(''); // Hall drop-down menu value
 
+  useEffect(() => {
+    setHallRankValue(hallRank);
+    setHallNameValue(hallName);
+  }, [hallRank, hallName]);
+
+  //! DEPRECATED
   useEffect(() => {
     // Manually perform deep checking of the array to force update whenever an element of preferredHalls is changed
     if (isEqual(previousInputs.current, [index, preferredHalls])) {
@@ -38,11 +47,16 @@ const HallListItem = ({
     getHallFromProps();
   });
 
+  //! DEPRECATED
   const previousInputs = useRef();
   useEffect(() => {
     previousInputs.current = [index, preferredHalls];
   });
 
+  /**
+   * Callback for changes to hall rank input field
+   * @param {*} event change event to be handled by callback
+   */
   const handleRankInputChange = (event) => {
     if (event.target.value !== null) {
       let newHallRankValue = event.target.value;
@@ -50,6 +64,10 @@ const HallListItem = ({
     }
   };
 
+  /**
+   * Callback for changes to hall name dropdown
+   * @param {*} event change event to be handled by callback
+   */
   const handleNameInputChange = (event) => {
     if (event.target.value !== null) {
       let newHallNameValue = event.target.value;
@@ -57,6 +75,9 @@ const HallListItem = ({
     }
   };
 
+  /**
+   * Callback for hall list remove button
+   */
   const handleRemove = () => {
     if (index !== null) {
       // Send this list item's index to the parent component
@@ -64,7 +85,7 @@ const HallListItem = ({
     }
   };
 
-  const hallOptions = availableHalls.map((hallName) => (
+  const hallOptions = halls.map((hallName) => (
     <MenuItem value={hallName} key={hallName}>
       {hallName}
     </MenuItem>
@@ -84,6 +105,7 @@ const HallListItem = ({
             <FormControl fullWidth>
               <InputLabel>Rank</InputLabel>
               <Select
+                disabled={disabled}
                 value={hallRankValue}
                 onChange={handleRankInputChange}
                 input={<Input id={'rank' + index} />}
@@ -96,6 +118,7 @@ const HallListItem = ({
             <FormControl fullWidth>
               <InputLabel>Hall</InputLabel>
               <Select
+                disabled={disabled}
                 value={hallNameValue}
                 onChange={handleNameInputChange}
                 input={<Input id={'hall' + index} />}
@@ -106,7 +129,7 @@ const HallListItem = ({
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete" onClick={handleRemove}>
+          <IconButton edge="end" aria-label="delete" disabled={disabled} onClick={handleRemove}>
             <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>

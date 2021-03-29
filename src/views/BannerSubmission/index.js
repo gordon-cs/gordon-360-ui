@@ -1,12 +1,9 @@
-import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../theme';
 import Version from '../../services/version';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import './banner.css';
+
+import { Typography, Grid, Button, Card, CardContent } from '@material-ui/core';
 
 export default class BannerSubmission extends Component {
   constructor(props) {
