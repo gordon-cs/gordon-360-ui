@@ -7,7 +7,7 @@ import StaffMenu from './components/StaffMenu';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
 import user from '../../services/user';
 import housing from '../../services/housing';
-import './apartmentApp.scss';
+import './apartmentApp.css';
 
 /**
  * @typedef { import('../../services/user').StudentProfileInfo } StudentProfileInfo
@@ -67,7 +67,6 @@ const ApartApp = ({ authentication }) => {
 
     return () => (isSubscribed = false);
   }, [authentication]);
-
 
   if (loading) {
     return <GordonLoader />;

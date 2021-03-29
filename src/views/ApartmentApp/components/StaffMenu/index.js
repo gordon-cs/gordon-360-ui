@@ -6,7 +6,6 @@ import { DateTime } from 'luxon';
 import GordonLoader from '../../../../components/Loader';
 import housing from '../../../../services/housing';
 import ApplicationsTable from './components/ApplicationTable';
-import '../../apartmentApp.css';
 
 /**
  * @typedef { import('../../../../services/housing').ApplicationDetails } ApplicationDetails
