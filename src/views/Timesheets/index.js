@@ -30,6 +30,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from '../../components/Snackbar';
 import user from '../../services/user';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
+import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
@@ -620,10 +621,7 @@ const Timesheets = (props) => {
                         marginRight: 'auto',
                       }}
                     >
-                      <img
-                        src={require(`${'../../NoConnection.svg'}`)}
-                        alt="Internet Connection Lost"
-                      />
+                      <NoConnectionImage />
                     </Grid>
                   )}
                   <br />

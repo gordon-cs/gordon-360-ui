@@ -2,7 +2,16 @@ import React, { Component } from 'react';
 import '../../app.css';
 import './index.css';
 
-import { Divider, ListItem, Typography, Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
+import {
+  Divider,
+  ListItem,
+  Typography,
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  List,
+} from '@material-ui/core';
 
 // A list of grid row lengths to align all content depending on the amount of items per row
 const rowWidths = {

@@ -21,7 +21,15 @@ import {
 } from './listItems';
 import '../../app.css';
 
-import { Typography, Grid, Card, CardHeader, CardContent, Snackbar, IconButton } from '@material-ui/core';
+import {
+  Typography,
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  Snackbar,
+  IconButton,
+} from '@material-ui/core';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -237,12 +245,11 @@ class ProfileList extends Component {
     // Creates the Advisors List Item
     let advisors;
     // only show on personal profile
-    if(this.props.myProf) {
-      advisors = createAdvisorsListItem(
-        this.props.profile, 
-        rowWidths, 
-        { privateTextStyle, gridStyle }
-      );
+    if (this.props.myProf) {
+      advisors = createAdvisorsListItem(this.props.profile, rowWidths, {
+        privateTextStyle,
+        gridStyle,
+      });
     } else {
       advisors = null;
     }

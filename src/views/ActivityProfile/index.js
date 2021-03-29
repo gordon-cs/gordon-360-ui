@@ -13,6 +13,7 @@ import membership from '../../services/membership';
 import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
+import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
 import user from '../../services/user';
 import {
   CardHeader,
@@ -28,7 +29,6 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-//import '../../app.js';
 
 const CROP_DIM = 320; // pixels
 
@@ -748,10 +748,7 @@ class ActivityProfile extends Component {
                     marginRight: 'auto',
                   }}
                 >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
+                  <NoConnectionImage />
                 </Grid>
                 <br />
                 <h1>Please Re-establish Connection</h1>
