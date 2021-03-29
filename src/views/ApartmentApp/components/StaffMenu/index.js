@@ -75,15 +75,17 @@ const StaffMenu = ({ userProfile, authentication }) => {
         applicationsForCsv.push(filteredApplicationDetails);
 
         Applicants.forEach((applicant) => {
-          let filteredApplicantInfo = applicant;
-          filteredApplicantInfo.ApplicationID = applicationDetails.ApplicationID;
-          applicantsForCsv.push(filteredApplicantInfo);
+          applicantsForCsv.push({
+            ApplicationID: applicant.ApplicationID ?? applicationDetails.ApplicationID,
+            ...applicant,
+          });
         });
 
         ApartmentChoices.forEach((apartmentChoice) => {
-          let filteredApartmentChoice = apartmentChoice;
-          filteredApartmentChoice.ApplicationID = applicationDetails.ApplicationID;
-          apartmentChoicesForCsv.push(filteredApartmentChoice);
+          apartmentChoicesForCsv.push({
+            ApplicationID: apartmentChoice.ApplicationID ?? applicationDetails.ApplicationID,
+            ...apartmentChoice,
+          });
         });
       }
     });
