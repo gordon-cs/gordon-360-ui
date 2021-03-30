@@ -23,21 +23,11 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) =
     return { label, value };
   }
 
-  let rows = [];
-
-  if (dateSubmitted) {
-    rows.push(createData('Last Submitted: ', dateSubmitted));
-  } else {
-    rows.push(createData('Last Submitted: ', 'Not yet submitted'));
-  }
-
-  if (dateModified) {
-    rows.push(createData('Last Modified: ', dateModified));
-  }
-
-  if (editorUsername) {
-    rows.push(createData('Application Editor: ', editorUsername));
-  }
+  let rows = [
+    createData('Last Submitted: ', dateSubmitted ?? 'Not yet submitted'),
+    createData('Last Modified: ', dateModified ?? 'Not yet saved'),
+    createData('Application Editor: ', editorUsername ?? 'None'),
+  ];
 
   return (
     <Card>

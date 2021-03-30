@@ -530,87 +530,99 @@ const StudentApplication = ({ userProfile, authentication }) => {
       <div className="apartment-application">
         <Grid container justify="center" spacing={2}>
           <Grid item xs={12} lg={10}>
-            <Card>
-              <CardContent>
-                <Grid container direction="row" justify="flex-end" spacing={2}>
-                  <Grid item xs={6} sm={8}>
-                    {!applicationID ? (
-                      <Typography variant="body1">
-                        Placeholder Text
-                        <br />
-                        No existing applications found
-                      </Typography>
-                    ) : userProfile.AD_Username === editorUsername ? (
-                      <Typography variant="body1">
-                        Existing application for this semester:
-                      </Typography>
-                    ) : (
-                      <Typography variant="body1">
-                        Only the application editor may edit the application.
-                      </Typography>
-                    )}
-                  </Grid>
-                  <Grid item xs={6} sm={4}>
-                    {!applicationID ? (
-                      <Button
-                        variant="contained"
-                        onClick={handleShowApplication}
-                        color="primary"
-                        fullWidth
-                        disabled={applicationCardsOpen}
-                      >
-                        Create a new application
-                      </Button>
-                    ) : userProfile.AD_Username === editorUsername ? (
-                      <Button
-                        variant="contained"
-                        onClick={handleShowApplication}
-                        color="primary"
-                        fullWidth
-                        disabled={applicationCardsOpen}
-                      >
-                        Edit your application
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        onClick={handleShowApplication}
-                        color="primary"
-                        fullWidth
-                        disabled={applicationCardsOpen}
-                      >
-                        View your application
-                      </Button>
-                    )}
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item>
             <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-              {!applicationID ? (
-                <Grid container direction="row" justify="center" spacing={2}>
-                  <Grid item xs={12} md={8}>
-                    <InstructionsCard />
+              <Card>
+                <CardContent>
+                  <Grid container direction="row" justify="flex-end" spacing={2}>
+                    {!applicationID ? (
+                      <React.Fragment>
+                        <Grid item xs={6} sm={8}>
+                          <Typography variant="body1">
+                            Placeholder Text
+                            <br />
+                            No existing applications found
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6} sm={4}>
+                          <Button
+                            variant="contained"
+                            onClick={handleShowApplication}
+                            color="primary"
+                            fullWidth
+                            disabled={applicationCardsOpen}
+                          >
+                            Create a new application
+                          </Button>
+                        </Grid>
+                      </React.Fragment>
+                    ) : userProfile.AD_Username === editorUsername ? (
+                      <React.Fragment>
+                        <Grid item xs={6} sm={8}>
+                          <Typography variant="body1">
+                            Existing application for this semester:
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6} sm={4}>
+                          <Button
+                            variant="contained"
+                            onClick={handleShowApplication}
+                            color="primary"
+                            fullWidth
+                            disabled={applicationCardsOpen}
+                          >
+                            Edit your application
+                          </Button>
+                        </Grid>
+                      </React.Fragment>
+                    ) : (
+                      <React.Fragment>
+                        <Grid item xs={6} sm={8}>
+                          <Typography variant="body1">
+                            Only the application editor may edit the application.
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6} sm={4}>
+                          <Button
+                            variant="contained"
+                            onClick={handleShowApplication}
+                            color="primary"
+                            fullWidth
+                            disabled={applicationCardsOpen}
+                          >
+                            View your application
+                          </Button>
+                        </Grid>
+                      </React.Fragment>
+                    )}
                   </Grid>
-                </Grid>
-              ) : (
-                <Grid container direction="row" justify="center" spacing={2}>
-                  <Grid item xs={12} md={6} lg={4}>
-                    <ApplicationDataTable
-                      dateSubmitted={dateSubmitted}
-                      dateModified={dateModified}
-                      editorUsername={editorUsername}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6} lg={6}>
-                    <InstructionsCard />
-                  </Grid>
-                </Grid>
-              )}
+                </CardContent>
+              </Card>
             </Collapse>
           </Grid>
+          {applicationID ? (
+            <React.Fragment>
+              <Grid item xs={12} md={6} lg={4}>
+                <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
+                  <ApplicationDataTable
+                    dateSubmitted={dateSubmitted}
+                    dateModified={dateModified}
+                    editorUsername={editorUsername}
+                  />
+                </Collapse>
+              </Grid>
+              <Grid item xs={12} md={8}>
+                <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
+                  <InstructionsCard />
+                </Collapse>
+              </Grid>
+            </React.Fragment>
+          ) : (
+            <Grid item xs={12} md={8}>
+              <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
+                <InstructionsCard />
+              </Collapse>
+            </Grid>
+          )}
           <Grid item>
             <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
               <Grid container direction="row" justify="center" spacing={2}>
@@ -698,6 +710,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           <Typography variant="body1">Placeholder text</Typography>
                         </CardContent>
                       </Card>
+                    </Collapse>
+                  </Grid>
+                  <Grid item>
+                    <Collapse in={!applicationID} timeout="auto" unmountOnExit>
+                      <ApplicationDataTable
+                        dateSubmitted={dateSubmitted}
+                        dateModified={dateModified}
+                        editorUsername={editorUsername}
+                      />
                     </Collapse>
                   </Grid>
                   <Grid item>

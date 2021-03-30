@@ -6,7 +6,6 @@ import { DateTime } from 'luxon';
 import GordonLoader from '../../../../components/Loader';
 import housing from '../../../../services/housing';
 import ApplicationsTable from './components/ApplicationTable';
-import '../../apartmentApp.css';
 
 /**
  * @typedef { import('../../../../services/housing').ApplicationDetails } ApplicationDetails
@@ -27,13 +26,13 @@ const StaffMenu = ({ userProfile, authentication }) => {
   /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} ApplicationDetails */
   const [applications, setApplications] = useState([]);
 
-  /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} Array of application details, formatted for use with react-csv */
+  /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} Array of application details, after being formatted for use with react-csv */
   const [applicationJsonArray, setApplicationJsonArray] = useState([]);
 
-  /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info, formatted for use with react-csv */
+  /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info, after being formatted for use with react-csv */
   const [applicantJsonArray, setApplicantJsonArray] = useState([]);
 
-  /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info, formatted for use with react-csv */
+  /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info, after being formatted for use with react-csv */
   const [apartmentChoiceJsonArray, setApartmentChoiceJsonArray] = useState([]);
 
   const [dateStr, setDateStr] = useState('');
@@ -45,9 +44,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
   const loadAllCurrentApplications = useCallback(async () => {
     setLoading(true);
     let applicationDetailsArray = await housing.getAllApartmentApplications();
-    if (applicationDetailsArray) {
-      setApplications(applicationDetailsArray);
-    }
+    setApplications(applicationDetailsArray ?? []);
     setLoading(false);
   }, []);
 
@@ -75,15 +72,17 @@ const StaffMenu = ({ userProfile, authentication }) => {
         applicationsForCsv.push(filteredApplicationDetails);
 
         Applicants.forEach((applicant) => {
-          let filteredApplicantInfo = applicant;
-          filteredApplicantInfo.ApplicationID = applicationDetails.ApplicationID;
-          applicantsForCsv.push(filteredApplicantInfo);
+          applicantsForCsv.push({
+            ApplicationID: applicant.ApplicationID ?? applicationDetails.ApplicationID,
+            ...applicant,
+          });
         });
 
         ApartmentChoices.forEach((apartmentChoice) => {
-          let filteredApartmentChoice = apartmentChoice;
-          filteredApartmentChoice.ApplicationID = applicationDetails.ApplicationID;
-          apartmentChoicesForCsv.push(filteredApartmentChoice);
+          apartmentChoicesForCsv.push({
+            ApplicationID: apartmentChoice.ApplicationID ?? applicationDetails.ApplicationID,
+            ...apartmentChoice,
+          });
         });
       }
     });
