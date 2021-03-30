@@ -59,15 +59,14 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingAdmin = async () => {
-  return false;
-  /*try {
+  try {
     return await http.get(`housing/admin`);
   } catch (err) {
     // handle thrown 404 errors
     if (err.status !== 404) throw err;
     console.log('A 404 code indicates that current user was not found on the list of admins');
     return false;
-  }*/
+  }
 };
 
 /**
@@ -175,9 +174,10 @@ const getApartmentApplication = async (applicationID) => {
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getAllApartmentApplications = async () => {
-  // let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+  let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
 
-  //! DEBUG: This exists purely for testing the features without the backend. The commented-out line below is the actual code to use once the endpoint has been created in the backend
+  //! DEBUG: This exists purely for testing the features without the backend.
+  /*
   let applicationDetailsArray = [
     {
       ApplicationID: 15,
@@ -302,6 +302,7 @@ const getAllApartmentApplications = async () => {
       ],
     },
   ];
+  */
 
   // Calculate the total and average points for each application
   applicationDetailsArray.forEach((applicationDetails) => {
