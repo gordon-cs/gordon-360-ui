@@ -59,14 +59,15 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingAdmin = async () => {
-  try {
+  return true;
+  /*try {
     return await http.get(`housing/admin`);
   } catch (err) {
     // handle thrown 404 errors
     if (err.status !== 404) throw err;
     console.log('A 404 code indicates that current user was not found on the list of admins');
     return false;
-  }
+  }*/
 };
 
 /**
@@ -174,7 +175,131 @@ const getApartmentApplication = async (applicationID) => {
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getAllApartmentApplications = async () => {
-  let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+  // let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+
+  //! DEBUG: This exists purely for testing the features without the backend. The commented-out line below is the actual code to use once the endpoint has been created in the backend
+  let applicationDetailsArray = [
+    {
+      AprtAppID: 42,
+      DateSubmitted: '2030-03-14',
+      DateModified: '2030-03-14',
+      EditorUsername: 'Bobby.Tables',
+      Gender: 'M',
+      Applicants: [
+        {
+          Username: 'Bobby.Tables',
+          Age: 21,
+          OffCampusProgram: 'Computer Science',
+          Probation: 'no',
+          Points: 7,
+        },
+        { Username: 'Frederick.Fox', Age: 20, OffCampusProgram: '', Probation: 'yes', Points: 5 },
+        {
+          Username: 'Tommy.Turtle',
+          Age: 22,
+          OffCampusProgram: 'Education',
+          Probation: 'no',
+          Points: 6,
+        },
+        {
+          Username: 'Tommy2.Turtle',
+          Age: 22,
+          OffCampusProgram: 'Education',
+          Probation: 'no',
+          Points: 6,
+        },
+        {
+          Username: 'Tommy3.Turtle',
+          Age: 22,
+          OffCampusProgram: 'Education',
+          Probation: 'no',
+          Points: 6,
+        },
+      ],
+      ApartmentChoices: [
+        { HallRank: 1, HallName: 'Gantley' },
+        { HallRank: 2, HallName: 'Tavilla' },
+      ],
+    },
+    {
+      ApplicationID: 42,
+      DateSubmitted: new Date('2022-03-14'),
+      DateModified: new Date('2022-03-14'),
+      EditorUsername: 'Tommy.Turtle',
+      Gender: 'M',
+      Applicants: [
+        {
+          ApplicationID: 42,
+          Username: 'Tommy.Turtle',
+          Age: 21,
+          OffCampusProgram: '',
+          Probation: 'N',
+          Points: 6,
+        },
+        {
+          ApplicationID: 42,
+          Username: 'Borrus.Buffalo',
+          Age: 20,
+          OffCampusProgram: '',
+          Probation: 'N',
+          Points: 5,
+        },
+      ],
+      ApartmentChoices: [
+        {
+          HallRank: 1,
+          HallName: 'Gantley',
+        },
+        {
+          HallRank: 2,
+          HallName: 'KOSC',
+        },
+        {
+          HallRank: 3,
+          HallName: 'Not-a-real-dorm',
+        },
+      ],
+    },
+    {
+      ApplicationID: 36,
+      DateSubmitted: new Date('2022-03-14'),
+      DateModified: new Date('2022-03-14'),
+      EditorUsername: 'Zippy.Zebra',
+      Gender: 'F',
+      Applicants: [
+        {
+          ApplicationID: 42,
+          Username: 'Zippy.Zebra',
+          Age: 22,
+          OffCampusProgram: '',
+          Probation: 'N',
+          Points: 6,
+        },
+        {
+          ApplicationID: 42,
+          Username: 'Charlene.Cat',
+          Age: 21,
+          OffCampusProgram: '',
+          Probation: 'N',
+          Points: 5,
+        },
+      ],
+      ApartmentChoices: [
+        {
+          HallRank: 1,
+          HallName: 'Gantley',
+        },
+        {
+          HallRank: 2,
+          HallName: 'KOSC',
+        },
+        {
+          HallRank: 3,
+          HallName: 'Not-a-real-dorm',
+        },
+      ],
+    },
+  ];
 
   // Calculate the total and average points for each application
   applicationDetailsArray.forEach((applicationDetails) => {
