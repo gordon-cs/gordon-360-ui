@@ -12,6 +12,7 @@ import {
 import GordonLoader from '../../../../components/Loader';
 import GordonDialogBox from '../../../../components/GordonDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
+import ApartmentHeader from './components/ApartmentHeader';
 import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
@@ -531,72 +532,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
         <Grid container justify="center" spacing={2}>
           <Grid item xs={12} lg={10}>
             <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-              <Card>
-                <CardContent>
-                  <Grid container direction="row" justify="flex-end" spacing={2}>
-                    {!applicationID ? (
-                      <React.Fragment>
-                        <Grid item xs={6} sm={8}>
-                          <Typography variant="body1">
-                            Placeholder Text
-                            <br />
-                            No existing applications found
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6} sm={4}>
-                          <Button
-                            variant="contained"
-                            onClick={handleShowApplication}
-                            color="primary"
-                            fullWidth
-                            disabled={applicationCardsOpen}
-                          >
-                            Create a new application
-                          </Button>
-                        </Grid>
-                      </React.Fragment>
-                    ) : userProfile.AD_Username === editorUsername ? (
-                      <React.Fragment>
-                        <Grid item xs={6} sm={8}>
-                          <Typography variant="body1">
-                            Existing application for this semester:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6} sm={4}>
-                          <Button
-                            variant="contained"
-                            onClick={handleShowApplication}
-                            color="primary"
-                            fullWidth
-                            disabled={applicationCardsOpen}
-                          >
-                            Edit your application
-                          </Button>
-                        </Grid>
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>
-                        <Grid item xs={6} sm={8}>
-                          <Typography variant="body1">
-                            Only the application editor may edit the application.
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6} sm={4}>
-                          <Button
-                            variant="contained"
-                            onClick={handleShowApplication}
-                            color="primary"
-                            fullWidth
-                            disabled={applicationCardsOpen}
-                          >
-                            View your application
-                          </Button>
-                        </Grid>
-                      </React.Fragment>
-                    )}
-                  </Grid>
-                </CardContent>
-              </Card>
+              <ApartmentHeader
+                applicationCardsOpen={applicationCardsOpen}
+                applicationID={applicationID}
+                editorUsername={editorUsername}
+                userProfile={userProfile}
+                onShowApplication={handleShowApplication}
+              />
             </Collapse>
           </Grid>
           {applicationID ? (
@@ -623,6 +565,17 @@ const StudentApplication = ({ userProfile, authentication }) => {
               </Collapse>
             </Grid>
           )}
+          <Grid item xs={12} lg={10}>
+            <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
+              <ApartmentHeader
+                applicationCardsOpen={applicationCardsOpen}
+                applicationID={applicationID}
+                editorUsername={editorUsername}
+                userProfile={userProfile}
+                onShowApplication={handleShowApplication}
+              />
+            </Collapse>
+          </Grid>
           <Grid item>
             <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
               <Grid container direction="row" justify="center" spacing={2}>
