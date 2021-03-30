@@ -713,7 +713,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Collapse>
                   </Grid>
                   <Grid item>
-                    <Collapse in={!applicationID} timeout="auto" unmountOnExit>
+                    <Collapse in={applicationID} timeout="auto" unmountOnExit>
                       <ApplicationDataTable
                         dateSubmitted={dateSubmitted}
                         dateModified={dateModified}
