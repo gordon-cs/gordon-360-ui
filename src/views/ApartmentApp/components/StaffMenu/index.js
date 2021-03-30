@@ -26,13 +26,13 @@ const StaffMenu = ({ userProfile, authentication }) => {
   /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} ApplicationDetails */
   const [applications, setApplications] = useState([]);
 
-  /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} Array of application details, formatted for use with react-csv */
+  /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} Array of application details, after being formatted for use with react-csv */
   const [applicationJsonArray, setApplicationJsonArray] = useState([]);
 
-  /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info, formatted for use with react-csv */
+  /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info, after being formatted for use with react-csv */
   const [applicantJsonArray, setApplicantJsonArray] = useState([]);
 
-  /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info, formatted for use with react-csv */
+  /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info, after being formatted for use with react-csv */
   const [apartmentChoiceJsonArray, setApartmentChoiceJsonArray] = useState([]);
 
   const [dateStr, setDateStr] = useState('');

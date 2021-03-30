@@ -8,15 +8,14 @@ import http from './http';
 import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
+ * @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
+ */
+
+/**
  * @global
  * @typedef boolean
  * @property {status}
  *
- */
-
-/**
- * For some reason this feature works in all the other files, but not in src/services/housing.js
- * // @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
  */
 
 /**
@@ -26,6 +25,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
  * @property {String} Username The username of this applicant
  * @property {Number} Age The age of the student (in years) (only visible to housing admin)
+ * @property {String} Class Class
  * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
  * @property {String} Probation Indicates whether the student has a disiplinary probation (visble only to housing admin)
  * @property {Number} Points The number of application points for this student (only visible to housing admin)
