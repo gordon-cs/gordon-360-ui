@@ -59,6 +59,7 @@ const ApartApp = ({ authentication }) => {
     } else {
       // Clear out component's person-specific state when authentication becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
+      setUserProfile(null);
       setCanUseStaff(false);
       setIsUserStudent(false);
       setIsAuthenticated(false);
