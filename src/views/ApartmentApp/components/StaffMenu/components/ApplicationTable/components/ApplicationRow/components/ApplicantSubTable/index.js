@@ -31,7 +31,7 @@ const ApplicantSubTable = ({ applicants }) => (
       <TableHead className={'stylized-table-head'}>
         <TableRow>
           <TableCell>Name</TableCell>
-          <TableCell align="center">Age</TableCell>
+          <TableCell align="center">Age (As of Sept. 1, 2020)</TableCell>
           <TableCell>Class</TableCell>
           <TableCell>Off-Campus Program</TableCell>
           <TableCell>Probation</TableCell>

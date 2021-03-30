@@ -59,7 +59,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingAdmin = async () => {
-  return true;
+  return false;
   /*try {
     return await http.get(`housing/admin`);
   } catch (err) {
@@ -180,15 +180,16 @@ const getAllApartmentApplications = async () => {
   //! DEBUG: This exists purely for testing the features without the backend. The commented-out line below is the actual code to use once the endpoint has been created in the backend
   let applicationDetailsArray = [
     {
-      AprtAppID: 42,
-      DateSubmitted: '2030-03-14',
-      DateModified: '2030-03-14',
+      ApplicationID: 15,
+      DateSubmitted: new Date('2030-03-14'),
+      DateModified: new Date('2030-03-14'),
       EditorUsername: 'Bobby.Tables',
       Gender: 'M',
       Applicants: [
         {
           Username: 'Bobby.Tables',
           Age: 21,
+          Class: 'Senior',
           OffCampusProgram: 'Computer Science',
           Probation: 'no',
           Points: 7,
@@ -197,6 +198,7 @@ const getAllApartmentApplications = async () => {
         {
           Username: 'Tommy.Turtle',
           Age: 22,
+          Class: 'Junior',
           OffCampusProgram: 'Education',
           Probation: 'no',
           Points: 6,
@@ -233,7 +235,7 @@ const getAllApartmentApplications = async () => {
           Username: 'Tommy.Turtle',
           Age: 21,
           OffCampusProgram: '',
-          Probation: 'N',
+          Probation: 'no',
           Points: 6,
         },
         {
@@ -241,7 +243,7 @@ const getAllApartmentApplications = async () => {
           Username: 'Borrus.Buffalo',
           Age: 20,
           OffCampusProgram: '',
-          Probation: 'N',
+          Probation: 'no',
           Points: 5,
         },
       ],
@@ -272,7 +274,7 @@ const getAllApartmentApplications = async () => {
           Username: 'Zippy.Zebra',
           Age: 22,
           OffCampusProgram: '',
-          Probation: 'N',
+          Probation: 'no',
           Points: 6,
         },
         {
@@ -280,7 +282,7 @@ const getAllApartmentApplications = async () => {
           Username: 'Charlene.Cat',
           Age: 21,
           OffCampusProgram: '',
-          Probation: 'N',
+          Probation: 'no',
           Points: 5,
         },
       ],
