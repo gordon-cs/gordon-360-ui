@@ -13,8 +13,8 @@ import {
 /**
  * Renders a card displaying a table of data about the current application
  * @param {Object} props The React component props
- * @param {String} props.dateSubmitted The date the application was submitted
- * @param {String} props.dateModified The date the application was last modified
+ * @param {DateTime} props.dateSubmitted The date the application was submitted
+ * @param {DateTime} props.dateModified The date the application was last modified
  * @param {String} props.editorUsername The username of the application's editor
  * @returns {JSX.Element} JSX Element for the data table card
  */
@@ -24,8 +24,11 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) =
   }
 
   let rows = [
-    createData('Last Submitted: ', dateSubmitted ?? 'Not yet submitted'),
-    createData('Last Modified: ', dateModified ?? 'Not yet saved'),
+    createData(
+      'Last Submitted: ',
+      DateTime.fromJSDate(dateSubmitted).toISODate() ?? 'Not yet submitted',
+    ),
+    createData('Last Modified: ', DateTime.fromJSDate(dateModified).toISODate() ?? 'Not yet saved'),
     createData('Application Editor: ', editorUsername ?? 'None'),
   ];
 
