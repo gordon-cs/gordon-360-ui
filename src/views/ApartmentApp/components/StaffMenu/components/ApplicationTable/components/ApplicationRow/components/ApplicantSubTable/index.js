@@ -10,6 +10,16 @@ import {
   Typography,
 } from '@material-ui/core/';
 
+/**
+ * @typedef { import('../../../../../../../../../../services/housing').ApartmentApplicant } ApartmentApplicant
+ */
+
+/**
+ * Renders the applicant sub-table for the apartment application staff page
+ * @param {Object} props The React component props
+ * @param {ApartmentApplicant[]} props.applicants Array of applicant info
+ * @returns {JSX.Element} JSX Element for the applicant sub-table
+ */
 const ApplicantSubTable = ({ applicants }) => (
   <Box margin={1}>
     <Toolbar className={'stylized-table-toolbar'} disableGutters>
@@ -22,6 +32,7 @@ const ApplicantSubTable = ({ applicants }) => (
         <TableRow>
           <TableCell>Name</TableCell>
           <TableCell align="center">Age</TableCell>
+          <TableCell>Class</TableCell>
           <TableCell>Off-Campus Program</TableCell>
           <TableCell>Probation</TableCell>
           <TableCell align="right">Points</TableCell>
@@ -34,6 +45,7 @@ const ApplicantSubTable = ({ applicants }) => (
               {applicantInfo.Username}
             </TableCell>
             <TableCell align="center">{applicantInfo.Age}</TableCell>
+            <TableCell>{applicantInfo.Class}</TableCell>
             <TableCell>{applicantInfo.OffCampusProgram}</TableCell>
             <TableCell>{applicantInfo.Probation}</TableCell>
             <TableCell align="right">{applicantInfo.Points}</TableCell>
