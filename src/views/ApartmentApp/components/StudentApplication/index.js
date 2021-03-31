@@ -26,6 +26,7 @@ const MAX_NUM_APPLICANTS = 8;
  * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
  * @typedef { import('../../../../services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('../../../../services/housing').ApplicationDetails } ApplicationDetails
  */
 
 /**
@@ -40,6 +41,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [saving, setSaving] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
+  /** @type {[ApplicationDetails, React.Dispatch<React.SetStateAction<ApplicationDetails>>]} */
+  const [applicationDetails, setApplicationDetails] = useState(null);
   /** @type {[Number, React.Dispatch<React.SetStateAction<Number>>]} */
   const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
@@ -76,7 +79,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setUnsavedChanges(true);
     };
 
-    if (!applicationID) {
+    if (!applicationID || !applicationDetails) {
       setLoading(true);
       // Check if the current user is on an application. Returns the application ID number if found
       housing
@@ -90,13 +93,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
             setApplicationID(newApplicationID);
             housing
               .getApartmentApplication(newApplicationID)
-              .then((applicationDetails) => {
-                if (isSubscribed && applicationDetails) {
-                  setDateSubmitted(applicationDetails.DateSubmitted ?? null);
-                  setDateModified(applicationDetails.DateModified ?? null);
-                  setEditorUsername(applicationDetails.EditorUsername ?? null);
-                  if (applicationDetails.Applicants) {
-                    applicationDetails.Applicants.forEach(async (applicantInfo) => {
+              .then((newApplicationDetails) => {
+                if (isSubscribed && newApplicationDetails) {
+                  setApplicationDetails(newApplicationDetails);
+                  setDateSubmitted(newApplicationDetails.DateSubmitted ?? null);
+                  setDateModified(newApplicationDetails.DateModified ?? null);
+                  setEditorUsername(newApplicationDetails.EditorUsername ?? null);
+                  if (newApplicationDetails.Applicants) {
+                    newApplicationDetails.Applicants.forEach(async (applicantInfo) => {
                       const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
                       setApplicants((prevApplicants) => [
                         ...prevApplicants,
@@ -107,7 +111,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       ]);
                     });
                   }
-                  setPreferredHalls(applicationDetails?.ApartmentChoices ?? []);
+                  setPreferredHalls(newApplicationDetails?.ApartmentChoices ?? []);
                   setUnsavedChanges(false);
                 }
               })
@@ -123,7 +127,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
 
     return () => (isSubscribed = false);
-  }, [userProfile, applicationID, editorUsername, applicants]);
+  }, [userProfile, applicationDetails, applicationID, editorUsername, applicants]);
 
   useEffect(() => {
     // setUnsavedChanges(true);
