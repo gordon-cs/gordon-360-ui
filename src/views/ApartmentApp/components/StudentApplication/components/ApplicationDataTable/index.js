@@ -9,6 +9,7 @@ import {
   TableContainer,
   TableRow,
 } from '@material-ui/core/';
+import { DateTime } from 'luxon';
 
 /**
  * Renders a card displaying a table of data about the current application
@@ -18,7 +19,7 @@ import {
  * @param {String} props.editorUsername The username of the application's editor
  * @returns {JSX.Element} JSX Element for the data table card
  */
-const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) => {
+const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, editorEmail }) => {
   function createData(label, value) {
     return { label, value };
   }
