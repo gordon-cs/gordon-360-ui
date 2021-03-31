@@ -32,6 +32,9 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, edi
     createData('Last Modified: ', DateTime.fromJSDate(dateModified).toISODate() ?? 'Not yet saved'),
     createData('Application Editor: ', editorUsername ?? 'None'),
   ];
+  if (editorUsername && editorEmail) {
+    rows.push(createData('Application Editor Email:', editorEmail ?? 'Unknown'));
+  }
 
   return (
     <Card>

@@ -553,6 +553,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     dateSubmitted={dateSubmitted}
                     dateModified={dateModified}
                     editorUsername={editorUsername}
+                    editorEmail={applicationDetails.EditorEmail}
                   />
                 </Collapse>
               </Grid>
@@ -675,6 +676,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         dateSubmitted={dateSubmitted}
                         dateModified={dateModified}
                         editorUsername={editorUsername}
+                        editorEmail={applicationDetails.EditorEmail}
                       />
                     </Collapse>
                   </Grid>
