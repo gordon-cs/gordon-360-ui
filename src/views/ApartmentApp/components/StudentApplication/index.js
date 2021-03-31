@@ -100,15 +100,21 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   setDateModified(newApplicationDetails.DateModified ?? null);
                   setEditorUsername(newApplicationDetails.EditorUsername ?? null);
                   if (newApplicationDetails.Applicants) {
-                    newApplicationDetails.Applicants.forEach(async (applicantInfo) => {
-                      const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
-                      setApplicants((prevApplicants) => [
-                        ...prevApplicants,
-                        {
-                          Profile: newApplicantProfile,
-                          OffCampusProgram: applicantInfo.OffCampusProgram,
-                        },
-                      ]);
+                    newApplicationDetails.Applicants.forEach(async (newApplicantInfo) => {
+                      if (newApplicantInfo.Profile !== null) {
+                        setApplicants((prevApplicants) => [...prevApplicants, newApplicantInfo]);
+                      } else {
+                        const newApplicantProfile = await user.getProfileInfo(
+                          newApplicantInfo.Username,
+                        );
+                        setApplicants((prevApplicants) => [
+                          ...prevApplicants,
+                          {
+                            Profile: newApplicantProfile,
+                            ...newApplicantInfo,
+                          },
+                        ]);
+                      }
                     });
                   }
                   setPreferredHalls(newApplicationDetails?.ApartmentChoices ?? []);
