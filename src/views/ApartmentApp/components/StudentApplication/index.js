@@ -716,7 +716,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
                                 onClick={handleSubmitButtonClick}
                                 color="primary"
                                 fullWidth
-                                disabled={!applicationCardsOpen || !unsavedChanges}
+                                disabled={
+                                  !applicationCardsOpen ||
+                                  !unsavedChanges ||
+                                  !(applicationDetails.Applicants.length > 0) ||
+                                  !(applicationDetails.ApartmentChoices.length > 0)
+                                }
                               >
                                 Save & Submit
                               </Button>
