@@ -43,7 +43,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   /** @type {[ApplicationDetails, React.Dispatch<React.SetStateAction<ApplicationDetails>>]} */
-  const [applicationDetails, setApplicationDetails] = useState(null);
+  const [applicationDetails, setApplicationDetails] = useState({
+    ApplicationID: null,
+    DateSubmitted: null,
+    DateModified: null,
+    EditorUsername: null,
+    EditorEmail: null,
+    Applicants: [],
+    ApartmentChoices: [],
+  });
   /** @type {[Number, React.Dispatch<React.SetStateAction<Number>>]} */
   const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
@@ -569,7 +577,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   dateSubmitted={dateSubmitted}
                   dateModified={dateModified}
                   editorUsername={editorUsername}
-                  editorEmail={applicationDetails.EditorEmail}
+                  editorEmail={applicationDetails?.EditorEmail}
                 />
               </Collapse>
             </Grid>
