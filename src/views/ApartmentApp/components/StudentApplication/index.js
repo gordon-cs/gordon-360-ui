@@ -17,6 +17,7 @@ import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
+import Agreements from './components/Agreements';
 import SaveButton from './components/SaveButton';
 import housing from '../../../../services/housing';
 import user from '../../../../services/user';
@@ -52,6 +53,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [applicants, setApplicants] = useState([]);
   /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info */
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
+
+  const [agreements, setAgreements] = useState(false); // Represents the state of the agreements card. True if all checkboxes checked, false otherwise
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
@@ -409,6 +412,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
+   * Callback for agreements card
+   * @param {Boolean} newAgreementsState The new state of the agreements
+   */
+  const handleAgreementsStateChange = (newAgreementsState) => {
+    setAgreements(newAgreementsState);
+  };
+
+  /**
    * Callback for apartment application save button
    */
   const handleSaveButtonClick = () => {
@@ -656,12 +667,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 <Grid container item xs={12} md={4} direction="column" spacing={2}>
                   {userProfile.AD_Username === editorUsername && (
                     <Grid item>
-                      <Card>
-                        <CardHeader title="Agreements" className="apartment-card-header" />
-                        <CardContent>
-                          <Typography variant="body1">Placeholder text</Typography>
-                        </CardContent>
-                      </Card>
+                      <Agreements onChange={handleAgreementsStateChange} />
                     </Grid>
                   )}
                   <Grid item>
@@ -708,7 +714,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                                 onClick={handleSubmitButtonClick}
                                 color="primary"
                                 fullWidth
-                                disabled={!applicationCardsOpen || !unsavedChanges}
+                                disabled={!applicationCardsOpen || !agreements || !unsavedChanges}
                               >
                                 Save & Submit
                               </Button>
