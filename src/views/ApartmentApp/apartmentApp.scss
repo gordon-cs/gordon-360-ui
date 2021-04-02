@@ -82,4 +82,12 @@
       position: sticky;
     }
   }
+
+  & .apartment-agreements-form-control {
+    text-align: left;
+    &-option {
+      padding-top: 0rem;
+      padding-bottom: 1rem;
+    }
+  }
 }
