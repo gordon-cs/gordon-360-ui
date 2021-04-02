@@ -73,10 +73,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
 
         Applicants.forEach((applicant) => {
           if (applicant.ApplicationID) {
-            applicantsForCsv.push({
-              ApplicationID: applicant.ApplicationID,
-              ...applicant,
-            });
+            applicantsForCsv.push(applicant);
           } else {
             applicantsForCsv.push({
               ApplicationID: applicationDetails.ApplicationID,
