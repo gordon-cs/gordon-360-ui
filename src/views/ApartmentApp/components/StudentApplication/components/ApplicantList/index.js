@@ -118,7 +118,7 @@ const ApplicantList = ({
                 </List>
               </Collapse>
               <Divider />
-              {applicants ? (
+              {applicants?.length > 0 ? (
                 applicants.map((applicant) => (
                   <ApplicantListItem
                     key={applicant.Profile.AD_Username}
@@ -144,7 +144,7 @@ const ApplicantList = ({
             <Grid item xs={9} sm={5} className={'people-search-parent'}>
               <GordonPeopleSearch
                 disableLink
-                disabled={disabled || applicants.length > maxNumApplicants}
+                disabled={disabled || applicants?.length > maxNumApplicants}
                 icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={handleSelection}

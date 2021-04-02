@@ -72,7 +72,7 @@ const HallSelection = ({
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
             <List className="hall-list" aria-label="apartment preferred halls" disablePadding>
-              {preferredHalls ? (
+              {preferredHalls?.length > 0 ? (
                 preferredHalls.map((hallInfo, index) => (
                   <HallListItem
                     key={hallInfo.HallRank + hallInfo.HallName}
