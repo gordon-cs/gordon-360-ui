@@ -8,7 +8,9 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  Typography,
 } from '@material-ui/core/';
+import EmailIcon from '@material-ui/icons/Email';
 import { DateTime } from 'luxon';
 
 /**
@@ -32,9 +34,6 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, edi
     createData('Last Modified: ', DateTime.fromJSDate(dateModified).toISODate() ?? 'Not yet saved'),
     createData('Application Editor: ', editorUsername ?? 'None'),
   ];
-  if (editorUsername && editorEmail) {
-    rows.push(createData('Application Editor Email:', editorEmail ?? 'Unknown'));
-  }
 
   return (
     <Card>
@@ -51,6 +50,18 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, edi
                   <TableCell align="right">{row.value}</TableCell>
                 </TableRow>
               ))}
+              {editorUsername && editorEmail && (
+                <TableRow>
+                  <TableCell colSpan={2}>
+                    <a href={`mailto:${editorEmail}`}>
+                      <div className="identification-card-content-card-container-info-email-container">
+                        <EmailIcon className="identification-card-content-card-container-info-email-container-icon" />
+                        <Typography paragraph>{editorEmail}</Typography>
+                      </div>
+                    </a>
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
