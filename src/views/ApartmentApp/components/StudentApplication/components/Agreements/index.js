@@ -8,6 +8,7 @@ import {
   FormControl,
   FormGroup,
   FormControlLabel,
+  FormHelperText,
 } from '@material-ui/core/';
 
 /**
@@ -48,7 +49,9 @@ const Agreements = ({ onChange }) => {
           component="fieldset"
           className="apartment-agreements-form-control"
         >
-          <FormLabel component="legend">Pick two</FormLabel>
+          <FormLabel component="legend">
+            Please read the following agreements before submitting the application
+          </FormLabel>
           <FormGroup>
             <FormControlLabel
               control={<Checkbox checked={temp1} onChange={handleChange} name="agreement1" />}
@@ -91,7 +94,7 @@ const Agreements = ({ onChange }) => {
               label="We certify that all information provided on this application is accurate, to the best of our knowledge"
             />
           </FormGroup>
-          {/* <FormHelperText>You can display an error</FormHelperText> */}
+          <FormHelperText>You must check all agreements before you can submit</FormHelperText>
         </FormControl>
       </CardContent>
     </Card>
