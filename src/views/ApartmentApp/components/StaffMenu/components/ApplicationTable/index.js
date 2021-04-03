@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { orderBy } from 'lodash';
 import {
   Card,
   CardHeader,
@@ -12,43 +13,14 @@ import ApplicationsTableHead from './components/ApplicationsTableHead';
 import ApplicationRow from './components/ApplicationRow';
 import './applicationTable.css';
 
-// Code copied from https://material-ui.com/components/tables/#sorting-amp-selecting
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-// Code copied from https://material-ui.com/components/tables/#sorting-amp-selecting
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// Code copied from https://material-ui.com/components/tables/#sorting-amp-selecting
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
 const ApplicationsTable = ({ applications }) => {
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('apart-app-id');
+  const [iteratee, setIteratee] = useState('apart-app-id');
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
+  const handleRequestSort = (_event, property) => {
+    const isAsc = iteratee === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
+    setIteratee(property);
   };
 
   return (
@@ -60,23 +32,17 @@ const ApplicationsTable = ({ applications }) => {
             <Table stickyHeader>
               <ApplicationsTableHead
                 order={order}
-                orderBy={orderBy}
+                orderBy={iteratee}
                 onRequestSort={handleRequestSort}
               />
               <TableBody className={'double-striped-table'}>
-                {stableSort(applications, getComparator(order, orderBy)).map(
-                  (applicationDetails, index) => {
-                    const labelId = `application-table-${index}`;
-
-                    return (
-                      <ApplicationRow
-                        key={applicationDetails.ApplicationID}
-                        applicationDetails={applicationDetails}
-                        labelId={labelId}
-                      />
-                    );
-                  },
-                )}
+                {orderBy(applications, [iteratee], [order]).map((applicationDetails, index) => (
+                  <ApplicationRow
+                    key={applicationDetails.ApplicationID}
+                    applicationDetails={applicationDetails}
+                    labelId={`application-table-${index}`}
+                  />
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
