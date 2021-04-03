@@ -85,9 +85,12 @@
 
   & .apartment-agreements-form-control {
     text-align: left;
-    &-option {
-      padding-top: 0rem;
-      padding-bottom: 1rem;
+    &-label {
+      color: $neutral-dark-gray;
+    }
+    & .MuiDivider-root {
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
     }
   }
 }

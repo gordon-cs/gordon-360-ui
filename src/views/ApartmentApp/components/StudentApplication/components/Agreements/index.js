@@ -4,6 +4,7 @@ import {
   CardContent,
   CardHeader,
   Checkbox,
+  Divider,
   FormLabel,
   FormControl,
   FormGroup,
@@ -13,6 +14,8 @@ import {
 
 /**
  * Renders a card displaying the apartment application instructions
+ * @param {Object} props The React component props
+ * @param {*} props.onChange The user authentication
  * @returns {JSX.Element} JSX Element for the instructions card
  */
 const Agreements = ({ onChange }) => {
@@ -62,43 +65,64 @@ const Agreements = ({ onChange }) => {
     },
   ]);
 
-  const handleChange = (event) => {
-    setCheckboxes({ ...checkboxes, [event.target.name]: event.target.checked });
-    onChange(checkboxes.filter((checkbox) => checkbox.checked).length === checkboxes.length);
+  const handleChange = (event, index) => {
+    // I don't know why, but it only works correctly if you explictly assign the new custom object to a variable, rather than returning the custom object declaration inline within the checkboxes.map()
+    let newCheckboxObj = { checked: event.target.checked, label: checkboxes[index].label };
+    setCheckboxes((prevCheckboxes) =>
+      prevCheckboxes.map((prevCheckbox, j) => (j === index ? newCheckboxObj : prevCheckbox)),
+    );
+    onChange(checkboxes.every((checkbox) => checkbox.checked));
   };
 
-  const error = checkboxes.filter((checkbox) => checkbox.checked).length !== checkboxes.length;
+  const AgreementChecklistItem = ({ checked, index, label, onChange }) => (
+    <React.Fragment>
+      <FormControlLabel
+        className="apartment-agreements-form-control-option"
+        control={
+          <Checkbox
+            checked={checked}
+            onChange={(event) => onChange(event, index)}
+            name={'agreement-' + 1}
+          />
+        }
+        label={label}
+        key={index}
+      />
+      <Divider />
+    </React.Fragment>
+  );
+
+  const error = checkboxes.some((checkbox) => !checkbox.checked);
 
   return (
     <Card>
       <CardHeader title="Agreements" className="apartment-card-header" />
       <CardContent>
-        <FormControl
-          required
-          error={error}
-          component="fieldset"
-          className="apartment-agreements-form-control"
-        >
-          <FormLabel component="legend">
-            Please read the following agreements before submitting the application
-          </FormLabel>
+        <FormControl component="fieldset" className="apartment-agreements-form-control">
+          {error && (
+            <FormLabel component="legend" className="apartment-agreements-form-control-label">
+              Use the checkboxes next to each statement to indicate your group's understanding
+              and/or affirmative answer. Failure to complete this section will result in the
+              disqualification of the application.
+            </FormLabel>
+          )}
           <FormGroup>
+            <Divider />
             {checkboxes.map((checkbox, index) => (
-              <FormControlLabel
-                className="apartment-agreements-form-control-option"
-                control={
-                  <Checkbox
-                    checked={checkbox.checked}
-                    onChange={handleChange}
-                    name={'agreement' + index}
-                  />
-                }
+              <AgreementChecklistItem
+                checked={checkbox.checked}
+                index={index}
+                key={index}
                 label={checkbox.label}
+                onChange={handleChange}
               />
             ))}
           </FormGroup>
           {error && (
-            <FormHelperText>You must check all agreements before you can submit</FormHelperText>
+            <FormHelperText>
+              You must read and complete this section before you will be allowed to submit this
+              application
+            </FormHelperText>
           )}
         </FormControl>
       </CardContent>
