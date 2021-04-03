@@ -9,7 +9,7 @@ import {
   TableContainer,
   Typography,
 } from '@material-ui/core/';
-import ApplicationsTableHead from './components/ApplicationsTableHead';
+import ApplicationTableHead from './components/ApplicationTableHead';
 import ApplicationRow from './components/ApplicationRow';
 import './applicationTable.css';
 
@@ -30,7 +30,7 @@ const ApplicationsTable = ({ applications }) => {
         {applications?.length > 0 ? (
           <TableContainer>
             <Table stickyHeader>
-              <ApplicationsTableHead
+              <ApplicationTableHead
                 order={order}
                 orderBy={iteratee}
                 onRequestSort={handleRequestSort}
