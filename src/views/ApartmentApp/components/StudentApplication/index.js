@@ -1,5 +1,6 @@
 //Student apartment application page
 import React, { useState, useEffect } from 'react';
+import { sortBy } from 'lodash';
 import {
   Button,
   Card,
@@ -343,33 +344,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
       setPreferredHalls((prevPreferredHalls) => {
         // replace the element at index with the new hall info object
-        let newPreferredHalls = prevPreferredHalls.map((prevHallInfo, j) => {
-          if (j === index) {
-            return newHallInfo;
-          } else {
-            return prevHallInfo;
-          }
-        });
+        let newPreferredHalls = prevPreferredHalls.map((prevHallInfo, j) =>
+          j === index ? newHallInfo : prevHallInfo,
+        );
 
         if (newPreferredHalls.length > 1) {
-          // Sort halls by name
-          newPreferredHalls.sort(function (a, b) {
-            var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
-            // names must be equal
-            return 0;
-          });
-
-          // Sort halls by rank
-          newPreferredHalls.sort(function (a, b) {
-            return a.HallRank - b.HallRank;
-          });
+          // Sort halls by rank and name
+          sortBy(newPreferredHalls, ['HallRank', 'HallName']);
         }
 
         return newPreferredHalls;
@@ -385,12 +366,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Callback for hall list remove button
-   * @param {Number} index The index of the hall to be removed from the list of preferred halls
+   * @param {Number} indexToRemove The index of the hall to be removed from the list of preferred halls
    */
-  const handleHallRemove = (index) => {
-    if (index !== null && index !== -1) {
+  const handleHallRemove = (indexToRemove) => {
+    if (indexToRemove !== null && indexToRemove !== -1) {
       setPreferredHalls((prevPreferredHalls) => {
-        let newPreferredHalls = prevPreferredHalls.filter((_hall, j) => j !== index);
+        let newPreferredHalls = prevPreferredHalls.filter(
+          (_hall, index) => index !== indexToRemove,
+        );
 
         if (newPreferredHalls.length > 0) {
           // If any rank value is greater than the new maximum, then set it to that new max rank
