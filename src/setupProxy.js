@@ -10,6 +10,6 @@ module.exports = (app) => {
   app.use('/token', createProxyMiddleware({ target: 'https://360ApiTrain.gordon.edu/', changeOrigin: true }));
 
   // @LOCALHOST
-  // app.use(proxy('/api', { target: 'http://localhost:2477/', changeOrigin: true }));
-  // app.use(proxy('/token', { target: 'http://localhost:2477/', changeOrigin: true }));
+  // app.use('/api', createProxyMiddleware({ target: 'http://localhost:2477/', changeOrigin: true }));
+  // app.use('/token', createProxyMiddleware({ target: 'http://localhost:2477/', changeOrigin: true }));
 };

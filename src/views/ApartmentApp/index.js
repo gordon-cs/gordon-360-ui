@@ -7,7 +7,7 @@ import StaffMenu from './components/StaffMenu';
 import useNetworkStatus from '../../hooks/useNetworkStatus';
 import user from '../../services/user';
 import housing from '../../services/housing';
-import './apartmentApp.scss';
+import './apartmentApp.css';
 
 /**
  * @typedef { import('../../services/user').StudentProfileInfo } StudentProfileInfo
@@ -59,6 +59,7 @@ const ApartApp = ({ authentication }) => {
     } else {
       // Clear out component's person-specific state when authentication becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
+      setUserProfile(null);
       setCanUseStaff(false);
       setIsUserStudent(false);
       setIsAuthenticated(false);
@@ -67,7 +68,6 @@ const ApartApp = ({ authentication }) => {
 
     return () => (isSubscribed = false);
   }, [authentication]);
-
 
   if (loading) {
     return <GordonLoader />;
