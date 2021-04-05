@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import isEqual from 'lodash/isEqual';
 import {
   Grid,
@@ -11,6 +11,7 @@ import {
   InputLabel,
   Select,
   IconButton,
+  Typography
 } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 
@@ -31,7 +32,7 @@ const ProgramListItem = ({
   const handleDepartmentInputChange = (event) => {
     if (event.target.value !== null) {
       let newApplicantDepartmentValue = event.target.value;
-      onOffCampusChanged(applicantMemberValue, newApplicantDepartmentValue, index);
+      onOffCampusChanged(applicant, newApplicantDepartmentValue, index);
     }
   };
 
@@ -46,7 +47,7 @@ const ProgramListItem = ({
       <ListItem key={index} className={'list-item'}>
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={3} sm={2}>
-          <Typography>{applicant}</Typography>
+          <Typography>{applicant.fullName}</Typography>
           </Grid>
           <Grid item xs={9} sm={10}>
             <FormControl fullWidth>
@@ -62,11 +63,6 @@ const ProgramListItem = ({
             </FormControl>
           </Grid>
         </Grid>
-        <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete" disabled={disabled} onClick={handleRemove}>
-            <ClearIcon />
-          </IconButton>
-        </ListItemSecondaryAction>
       </ListItem>
       <Divider />
     </React.Fragment>

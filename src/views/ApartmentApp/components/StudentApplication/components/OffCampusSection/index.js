@@ -50,7 +50,7 @@ const OffCampusSection = ({
                     disabled={disabled}
                     index={index}
                     applicantProgram={memberInfo.offCampusProgram}
-                    applicant={memberInfo.Profile.fullName}
+                    applicant={memberInfo.Profile}
                     availableMajors={availableMajors}
                     onOffCampusChanged={handleInputChange}
                   />
