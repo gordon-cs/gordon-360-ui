@@ -9,8 +9,6 @@ const OffCampusSection = ({
   disabled,
   availableApplicants,
   onOffCampusChanged,
-  onOffCampusAdd,
-  onOffCampusRemove,
 }) => {
   const [availableMajors, setAvailableMajors] = useState([]);
 
@@ -35,64 +33,30 @@ const OffCampusSection = ({
     onOffCampusChanged(ApplicantNameValue, ApplicantMajorValue, index);
   };
 
-  const handleRemove = (index) => {
-    // Make sure the chosen index was not null
-    if (index !== null) {
-      // Send the selected index to the parent component
-      onOffCampusRemove(index);
-    }
-  };
-
-  const handleAddDropdown = () => {
-    onOffCampusAdd();
-  };
-
   return (
     <Card>
       <CardHeader title="Off-Campus Work Study" className="apartment-card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
-          <Grid item xs={12}>
+          <Grid item>
             <List
               className="off-campus-list"
               aria-label="apartment applicants off campus programs"
               disablePadding
             >
-              {availableApplicants ? (
-                availableApplicants.map((memberInfo, index) => (
+              {availableApplicants.map((memberInfo, index) => (
                   <ProgramListItem
                     key={memberInfo.applicantMember + memberInfo.memberDepartment}
                     disabled={disabled}
                     index={index}
+                    applicantProgram={memberInfo.offCampusProgram}
+                    applicant={memberInfo.Profile.fullName}
                     availableMajors={availableMajors}
-                    availableApplicants={availableApplicants}
                     onOffCampusChanged={handleInputChange}
-                    onOffCampusApplicantRemove={handleRemove}
                   />
                 ))
-              ) : (
-                <ProgramListItem
-                  key={''}
-                  disabled={disabled}
-                  index={0}
-                  availableMajors={availableMajors}
-                  availableApplicants={availableApplicants}
-                  onOffCampusChanged={handleInputChange}
-                  onOffCampusApplicantRemove={handleRemove}
-                />
-              )}
+              }
             </List>
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              disabled={disabled}
-              variant="outlined"
-              color="primary"
-              startIcon={<AddIcon fontSize="inherit" />}
-              onClick={handleAddDropdown}
-            >
-              Add an off campus program applicant
-            </Button>
           </Grid>
         </Grid>
       </CardContent>

@@ -18,36 +18,15 @@ const ProgramListItem = ({
   disabled,
   index,
   availableMajors,
-  availableApplicants,
+  applicantProgram,
+  applicant,
   onOffCampusChanged,
-  onOffCampusApplicantRemove,
 }) => {
-  const [applicantMemberValue, setMemberValue] = useState(''); // Applicant drop-down menu value
   const [applicantDepartmentValue, setDepartmentValue] = useState(''); // Major drop-down menu value
 
   useEffect(() => {
-    if (isEqual(previousInputs.current, [index, availableApplicants])) {
-      return;
-    }
-    const getMembersFromProps = () => {
-      setMemberValue(availableApplicants[index].name);
-      setDepartmentValue(availableApplicants[index].major);
-    };
-
-    getMembersFromProps();
+    setDepartmentValue(applicantProgram);
   });
-
-  const previousInputs = useRef();
-  useEffect(() => {
-    previousInputs.current = [index, availableApplicants];
-  });
-
-  const handleApplicantInputChange = (event) => {
-    if (event.target.value !== null) {
-      let newApplicantMemberValue = event.target.value;
-      onOffCampusChanged(newApplicantMemberValue, applicantDepartmentValue, index);
-    }
-  };
 
   const handleDepartmentInputChange = (event) => {
     if (event.target.value !== null) {
@@ -55,19 +34,6 @@ const ProgramListItem = ({
       onOffCampusChanged(applicantMemberValue, newApplicantDepartmentValue, index);
     }
   };
-
-  const handleRemove = () => {
-    if (index !== null) {
-      // Send this list item's index to the parent component
-      onOffCampusApplicantRemove(index);
-    }
-  };
-
-  const memberOptions = availableApplicants.map((applicantName) => (
-    <MenuItem value={applicantName} key={applicantName}>
-      {applicantName}
-    </MenuItem>
-  ));
 
   const departmentOptions = availableMajors.map((programName) => (
     <MenuItem value={programName} key={programName}>
@@ -80,17 +46,7 @@ const ProgramListItem = ({
       <ListItem key={index} className={'list-item'}>
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={3} sm={2}>
-            <FormControl fullWidth>
-              <InputLabel>Member</InputLabel>
-              <Select
-                disabled={disabled}
-                onChange={handleApplicantInputChange}
-                value={applicantMemberValue}
-                input={<Input id={'member' + index} />}
-              >
-                {memberOptions}
-              </Select>
-            </FormControl>
+          <Typography>{applicant}</Typography>
           </Grid>
           <Grid item xs={9} sm={10}>
             <FormControl fullWidth>

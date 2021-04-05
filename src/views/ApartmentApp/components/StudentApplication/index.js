@@ -371,24 +371,22 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {Number} offCampusNameValue The name value that the user assigned to this applicant
    * @param {String} offCampusMajorValue The program that the applicant is doing an OC program for
    */
-  const handleOffCampusChanged = (offCampusUserName, offCampusProgramValue) => {
+  const handleOffCampusChanged = (offCampusUserName, offCampusProgramValue, index) => {
       try {
         // Get the profile of the selected user
-        const tempApplicantProfile = await user.getProfileInfo(offCampusUserName);
-        let tempApplicant = { Profile: tempApplicantProfile, OffCampusProgram: offCampusProgramValue};
+        let newApplicant = applicants.filter((applicant) => offCampusUserName === applicant.Profile.AD_Username);
+        newApplicant.OffCampusProgram = offCampusProgramValue;
       // Error checking on the hallNameValue before modifying the newHallInfo object
-      if(applicants.some((applicant) => applicant.Profile.OffCampusProgram === tempApplicant.Profile.OffCampusProgram))
-      {
-
-      }
-      else{
-        setSnackbarText(String(offCampusUserName) + ' is already in the list.');
-        setSnackbarSeverity('info');
-        setSnackbarOpen(true);
-      }
-
-        // Set the new hall info back to the name it was previously
-        newHallInfo.HallName = preferredHalls[index].HallName;
+        setApplicants((previousapplicants) => ( 
+          // replace the element at index with the new hall info object
+          previousapplicants.map((applicant, j) => {
+            if (offCampusUserName === applicant.Profile.AD_Username) {
+              return newApplicant;
+            } else {
+              return applicant;
+            }
+          })
+        ));
       } 
     catch (error) {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
