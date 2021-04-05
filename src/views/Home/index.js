@@ -10,8 +10,10 @@ import user from '../../services/user';
 import wellness from '../../services/wellness';
 import storage from '../../services/storage';
 import Login from '../Login';
+import GuestWelcome from './components/GuestWelcome';
 import './home.css';
 import { Grid } from '@material-ui/core';
+
 
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
@@ -75,8 +77,21 @@ const Home = ({ authentication, onLogIn }) => {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
     return (
-      <div className="gordon-login">
-        <Login onLogIn={onLogIn} />
+      /*
+          In order to actually center the components, nested containers had to be used.
+          Otherwise, the welcome card would be aligned to the left, and not centered above
+          login, as desired. If alignItem='stretch' was not used in the login grid item,
+          the form would be squashed, also not what we want.
+      */
+      <div className='gordon-login'>
+        <Grid container direction='column' justify='center' alignItems='center'>
+          <Grid item xs={4}>
+            <GuestWelcome />
+          </Grid>
+          <Grid item xs={10} container alignItems='stretch'>
+            <Login onLogIn={onLogIn} />
+          </Grid>
+        </Grid>
       </div>
     );
   } else if (networkStatus === 'online' && !hasAnswered) {

@@ -368,8 +368,12 @@ function createAdvisorsListItem(profile, rowWidths, styles) {
   // Shows the advisor(s) if the user is a student or 'non assigned' if there are none
   if (String(profile.PersonType).includes('stu')) {
     return (
-      <Advisors advisors={profile.Advisors} rowWidths={rowWidths} gridStyle={styles.gridStyle} 
-                styles={styles.privateTextStyle} />
+      <Advisors
+        advisors={profile.Advisors}
+        rowWidths={rowWidths}
+        gridStyle={styles.gridStyle}
+        styles={styles.privateTextStyle}
+      />
     );
   }
 }
