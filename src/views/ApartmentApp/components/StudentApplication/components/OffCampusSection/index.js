@@ -7,7 +7,7 @@ import goStalk from '../../../../../../services/goStalk';
 // Create a list of selection boxes to choosing which applicants are doing off campus programs.
 const OffCampusSection = ({
   disabled,
-  availableApplicants,
+  applicants,
   onOffCampusChanged,
 }) => {
   const [availableMajors, setAvailableMajors] = useState([]);
@@ -44,7 +44,7 @@ const OffCampusSection = ({
               aria-label="apartment applicants off campus programs"
               disablePadding
             >
-              {availableApplicants.map((memberInfo, index) => (
+              {applicants.map((memberInfo, index) => (
                   <ProgramListItem
                     key={memberInfo.applicantMember + memberInfo.memberDepartment}
                     disabled={disabled}

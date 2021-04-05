@@ -49,7 +49,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [applicants, setApplicants] = useState([]);
   /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info */
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
-  const [offCampusApplicants, setOffCampusApplicants] = useState([]); //! Deprecated. The 'applicants' array should be used directly instead
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
@@ -427,27 +426,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setPreferredHalls((prevPreferredHalls) => [...prevPreferredHalls, newHallInfo]);
   };
 
-  /**
-   * Callback for offcampus list remove button
-   * @param {Number} index The index of the OCapplicant to be removed from the list of perferred halls
-   */
-  const handleOffCampusApplicantRemove = (index) => {
-    if (index !== null && index !== -1) {
-      let newOCApplicantList = offCampusApplicants; // make a separate copy of the array
-      // Remove the selected hall if the list has more than one element
-      newOCApplicantList.splice(index, 1);
-      setOffCampusApplicants(newOCApplicantList);
-    }
-  };
-
-  /**
-   * Callback for hall list add button
-   */
-  const handleOffCampusApplicantAdd = () => {
-    setOffCampusApplicants((prevOffCampusApplicants) =>
-      prevOffCampusApplicants.concat({ OCApplicantName: '', Program: '' }),
-    );
-  };
 
   /**
    * Callback for apartment application save button
@@ -731,10 +709,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   <Grid item>
                     <Card>
                       <OffCampusSection
-                        availableApplicants={applicants}
+                        applicants={applicants}
                         onOffCampusChanged={handleOffCampusChanged}
-                        onOffCampusAdd={handleOffCampusApplicantAdd}
-                        onOffCampusRemove={handleOffCampusApplicantRemove}
                         saving={saving}
                         onSaveButtonClick={handleSaveButtonClick}
                       />
