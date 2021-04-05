@@ -8,7 +8,7 @@ import WellnessIcon from '@material-ui/icons/LocalHospital';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { Route, Switch, NavLink, Link } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
@@ -20,6 +20,8 @@ import GordonDialogBox from '../GordonDialogBox/index';
 import { windowBreakWidths } from '../../theme';
 
 import { AppBar, Toolbar, Typography, IconButton, Tabs, Tab, Button } from '@material-ui/core';
+
+const WrapLink = React.forwardRef((props, ref) => <Link ref={ref} {...props} />);
 
 const getRouteName = (route) => {
   if (route.name) {
@@ -260,36 +262,24 @@ export default class GordonHeader extends Component {
       // Network Status: Online -  Not Authenticated
       else {
         peopleTab = (
-          <div onClick={(clicked) => this.openDialogBox('unauthorized', 'people search')}>
-            <Tab
-              className="tab"
-              icon={<PeopleIcon />}
-              label="People"
-              component={Button}
-              style={{ color: 'white' }}
-              disabled={true}
-            />
-          </div>
+          <Tab
+            className="tab disabled-tab"
+            icon={<PeopleIcon />}
+            label="People"
+            onClick={() => this.openDialogBox('unauthorized', 'people search')}
+          />
         );
       }
     }
     // Network Status: Offline
     else {
       peopleTab = (
-        <div
-          onClick={(clicked) => {
-            this.openDialogBox('offline', '');
-          }}
-        >
-          <Tab
-            className="tab"
-            icon={<PeopleIcon />}
-            label="People"
-            component={Button}
-            style={{ color: 'white' }}
-            disabled={true}
-          />
-        </div>
+        <Tab
+          className="tab disabled-tab"
+          icon={<PeopleIcon />}
+          label="People"
+          onClick={() => this.openDialogBox('offline', '')}
+        />
       );
     }
 
@@ -323,32 +313,24 @@ export default class GordonHeader extends Component {
       // Network Status: Online - Not Authenticated
       else {
         timesheetsTab = (
-          <div onClick={(clicked) => this.openDialogBox('unauthorized', 'timesheets view')}>
-            <Tab
-              className="tab"
-              icon={<WorkIcon />}
-              label="Timesheets"
-              component={NavLink}
-              to="/timesheets"
-              disabled={true}
-            />
-          </div>
+          <Tab
+            className="tab disabled-tab"
+            icon={<WorkIcon />}
+            label="Timesheets"
+            onClick={() => this.openDialogBox('unauthorized', 'timesheets view')}
+          />
         );
       }
     }
     // Network Status: Offline
     else {
       timesheetsTab = (
-        <div onClick={(clicked) => this.openDialogBox('offline', '')}>
-          <Tab
-            className="tab"
-            icon={<WorkIcon />}
-            label="Timesheets"
-            component={NavLink}
-            to="/timesheets"
-            disabled={true}
-          />
-        </div>
+        <Tab
+          className="tab disabled-tab"
+          icon={<WorkIcon />}
+          label="Timesheets"
+          onClick={() => this.openDialogBox('offline', '')}
+        />
       );
     }
 
@@ -381,42 +363,43 @@ export default class GordonHeader extends Component {
       // Network Status: Online -  Not Authenticated
       else {
         wellnessTab = (
-          <div onClick={(clicked) => this.openDialogBox('unauthorized', 'wellness check')}>
-            <Tab
-              className="tab"
-              icon={<WellnessIcon />}
-              label="Wellness"
-              component={Button}
-              style={{ color: 'white' }}
-              disabled={true}
-            />
-          </div>
+          <Tab
+            className="tab disabled-tab"
+            icon={<WellnessIcon />}
+            label="Wellness"
+            onClick={() => this.openDialogBox('unauthorized', 'wellness check')}
+          />
         );
       }
     }
     // Network Status: Offline
     else {
       wellnessTab = (
-        <div
-          onClick={(clicked) => {
-            this.openDialogBox('offline', '');
-          }}
-        >
-          <Tab
-            className="tab"
-            icon={<WellnessIcon />}
-            label="Wellness"
-            component={Button}
-            style={{ color: 'white' }}
-            disabled={true}
-          />
-        </div>
+        <Tab
+          className="tab disabled-tab"
+          icon={<WellnessIcon />}
+          label="Wellness"
+          onClick={() => this.openDialogBox('offline', '')}
+        />
       );
     }
 
     return wellnessTab;
   }
+
   render() {
+    const loginButton = (
+      <Button
+        className="login-button"
+        variant="contained"
+        color="secondary"
+        component={WrapLink}
+        to="/"
+      >
+        Login
+      </Button>
+    );
+
     return (
       <section className="gordon-header">
         <AppBar className="app-bar" position="static">
@@ -467,7 +450,11 @@ export default class GordonHeader extends Component {
               </Tabs>
             </div>
 
-            <GordonPeopleSearch authentication={this.props.authentication} />
+            {this.props.authentication ? (
+              <GordonPeopleSearch authentication={this.props.authentication} />
+            ) : (
+              loginButton
+            )}
 
             <GordonNavAvatarRightCorner
               onSignOut={this.props.onSignOut}

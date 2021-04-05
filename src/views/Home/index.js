@@ -9,7 +9,7 @@ import NewsCard from './components/NewsCard';
 import user from '../../services/user';
 import wellness from '../../services/wellness';
 import storage from '../../services/storage';
-import Login from '../Login';
+import GuestWelcome from './components/GuestWelcome';
 import './home.css';
 import { Grid } from '@material-ui/core';
 
@@ -74,11 +74,7 @@ const Home = ({ authentication, onLogIn }) => {
   if (loading) {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
-    return (
-      <div className="gordon-login">
-        <Login onLogIn={onLogIn} />
-      </div>
-    );
+    return <GuestWelcome onLogIn={onLogIn} />;
   } else if (networkStatus === 'online' && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else {

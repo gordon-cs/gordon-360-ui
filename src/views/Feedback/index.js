@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
 import './feedback.css';
 import { Button, Grid, Card, CardContent } from '@material-ui/core';
 
@@ -78,10 +78,7 @@ export default class Feedback extends Component {
                     marginRight: 'auto',
                   }}
                 >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
+                  <NoConnectionImage />
                 </Grid>
                 <br />
                 <h1>Please Re-establish Connection</h1>
