@@ -12,6 +12,7 @@ import {
 import GordonLoader from '../../../../components/Loader';
 import GordonDialogBox from '../../../../components/GordonDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
+import ApartmentHeader from './components/ApartmentHeader';
 import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
@@ -26,6 +27,7 @@ const MAX_NUM_APPLICANTS = 8;
  * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
  * @typedef { import('../../../../services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('../../../../services/housing').ApplicationDetails } ApplicationDetails
  */
 
 /**
@@ -40,6 +42,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [saving, setSaving] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
+  /** @type {[ApplicationDetails, React.Dispatch<React.SetStateAction<ApplicationDetails>>]} */
+  const [applicationDetails, setApplicationDetails] = useState({
+    ApplicationID: null,
+    DateSubmitted: null,
+    DateModified: null,
+    EditorUsername: null,
+    EditorEmail: null,
+    Applicants: [],
+    ApartmentChoices: [],
+  });
   /** @type {[Number, React.Dispatch<React.SetStateAction<Number>>]} */
   const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
@@ -76,7 +88,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setUnsavedChanges(true);
     };
 
-    if (!applicationID) {
+    if (!applicationID || !applicationDetails) {
       setLoading(true);
       // Check if the current user is on an application. Returns the application ID number if found
       housing
@@ -90,24 +102,31 @@ const StudentApplication = ({ userProfile, authentication }) => {
             setApplicationID(newApplicationID);
             housing
               .getApartmentApplication(newApplicationID)
-              .then((applicationDetails) => {
-                if (isSubscribed && applicationDetails) {
-                  setDateSubmitted(applicationDetails.DateSubmitted ?? null);
-                  setDateModified(applicationDetails.DateModified ?? null);
-                  setEditorUsername(applicationDetails.EditorUsername ?? null);
-                  if (applicationDetails.Applicants) {
-                    applicationDetails.Applicants.forEach(async (applicantInfo) => {
-                      const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
-                      setApplicants((prevApplicants) => [
-                        ...prevApplicants,
-                        {
-                          Profile: newApplicantProfile,
-                          OffCampusProgram: applicantInfo.OffCampusProgram,
-                        },
-                      ]);
+              .then((newApplicationDetails) => {
+                if (isSubscribed && newApplicationDetails) {
+                  setApplicationDetails(newApplicationDetails);
+                  setDateSubmitted(newApplicationDetails.DateSubmitted ?? null);
+                  setDateModified(newApplicationDetails.DateModified ?? null);
+                  setEditorUsername(newApplicationDetails.EditorUsername ?? null);
+                  if (newApplicationDetails.Applicants) {
+                    newApplicationDetails.Applicants.forEach(async (newApplicantInfo) => {
+                      if (newApplicantInfo.Profile !== null) {
+                        setApplicants((prevApplicants) => [...prevApplicants, newApplicantInfo]);
+                      } else {
+                        const newApplicantProfile = await user.getProfileInfo(
+                          newApplicantInfo.Username,
+                        );
+                        setApplicants((prevApplicants) => [
+                          ...prevApplicants,
+                          {
+                            Profile: newApplicantProfile,
+                            ...newApplicantInfo,
+                          },
+                        ]);
+                      }
                     });
                   }
-                  setPreferredHalls(applicationDetails?.ApartmentChoices ?? []);
+                  setPreferredHalls(newApplicationDetails?.ApartmentChoices ?? []);
                   setUnsavedChanges(false);
                 }
               })
@@ -123,7 +142,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
 
     return () => (isSubscribed = false);
-  }, [userProfile, applicationID, editorUsername, applicants]);
+  }, [userProfile, applicationDetails, applicationID, editorUsername, applicants]);
 
   useEffect(() => {
     // setUnsavedChanges(true);
@@ -563,98 +582,43 @@ const StudentApplication = ({ userProfile, authentication }) => {
         <Grid container justify="center" spacing={2}>
           <Grid item xs={12} lg={10}>
             <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-              <Card>
-                <CardContent>
-                  <Grid container direction="row" justify="flex-end" spacing={2}>
-                    {!applicationID ? (
-                      <React.Fragment>
-                        <Grid item xs={6} sm={8}>
-                          <Typography variant="body1">
-                            Placeholder Text
-                            <br />
-                            No existing applications found
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6} sm={4}>
-                          <Button
-                            variant="contained"
-                            onClick={handleShowApplication}
-                            color="primary"
-                            fullWidth
-                            disabled={applicationCardsOpen}
-                          >
-                            Create a new application
-                          </Button>
-                        </Grid>
-                      </React.Fragment>
-                    ) : userProfile.AD_Username === editorUsername ? (
-                      <React.Fragment>
-                        <Grid item xs={6} sm={8}>
-                          <Typography variant="body1">
-                            Existing application for this semester:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6} sm={4}>
-                          <Button
-                            variant="contained"
-                            onClick={handleShowApplication}
-                            color="primary"
-                            fullWidth
-                            disabled={applicationCardsOpen}
-                          >
-                            Edit your application
-                          </Button>
-                        </Grid>
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>
-                        <Grid item xs={6} sm={8}>
-                          <Typography variant="body1">
-                            Only the application editor may edit the application.
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6} sm={4}>
-                          <Button
-                            variant="contained"
-                            onClick={handleShowApplication}
-                            color="primary"
-                            fullWidth
-                            disabled={applicationCardsOpen}
-                          >
-                            View your application
-                          </Button>
-                        </Grid>
-                      </React.Fragment>
-                    )}
-                  </Grid>
-                </CardContent>
-              </Card>
+              <ApartmentHeader
+                applicationCardsOpen={applicationCardsOpen}
+                applicationID={applicationID}
+                editorUsername={editorUsername}
+                userProfile={userProfile}
+                onShowApplication={handleShowApplication}
+              />
             </Collapse>
           </Grid>
-          {applicationID ? (
-            <React.Fragment>
-              <Grid item xs={12} md={6} lg={4}>
-                <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-                  <ApplicationDataTable
-                    dateSubmitted={dateSubmitted}
-                    dateModified={dateModified}
-                    editorUsername={editorUsername}
-                  />
-                </Collapse>
-              </Grid>
-              <Grid item xs={12} md={8}>
-                <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-                  <InstructionsCard />
-                </Collapse>
-              </Grid>
-            </React.Fragment>
-          ) : (
-            <Grid item xs={12} md={8}>
+          {applicationID && (
+            <Grid item xs={12} md={6} lg={4}>
               <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-                <InstructionsCard />
+                <ApplicationDataTable
+                  dateSubmitted={dateSubmitted}
+                  dateModified={dateModified}
+                  editorUsername={editorUsername}
+                  editorEmail={applicationDetails?.EditorEmail}
+                />
               </Collapse>
             </Grid>
           )}
+          <Grid item xs={12} md={8}>
+            <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
+              <InstructionsCard />
+            </Collapse>
+          </Grid>
+          <Grid item xs={12} lg={10}>
+            <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
+              <ApartmentHeader
+                applicationCardsOpen={applicationCardsOpen}
+                applicationID={applicationID}
+                editorUsername={editorUsername}
+                userProfile={userProfile}
+                onShowApplication={handleShowApplication}
+              />
+            </Collapse>
+          </Grid>
           <Grid item>
             <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
               <Grid container direction="row" justify="center" spacing={2}>
@@ -732,26 +696,23 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   </Grid>
                 </Grid>
                 <Grid container item xs={12} md={4} direction="column" spacing={2}>
-                  <Grid item>
-                    <Collapse
-                      in={userProfile.AD_Username === editorUsername}
-                      timeout="auto"
-                      unmountOnExit
-                    >
+                  {userProfile.AD_Username === editorUsername && (
+                    <Grid item>
                       <Card>
                         <CardHeader title="Agreements" className="apartment-card-header" />
                         <CardContent>
                           <Typography variant="body1">Placeholder text</Typography>
                         </CardContent>
                       </Card>
-                    </Collapse>
-                  </Grid>
+                    </Grid>
+                  )}
                   <Grid item>
-                    <Collapse in={!applicationID} timeout="auto" unmountOnExit>
+                    <Collapse in={applicationID} timeout="auto" unmountOnExit>
                       <ApplicationDataTable
                         dateSubmitted={dateSubmitted}
                         dateModified={dateModified}
                         editorUsername={editorUsername}
+                        editorEmail={applicationDetails.EditorEmail}
                       />
                     </Collapse>
                   </Grid>
@@ -764,66 +725,74 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 <Grid item xs={12} lg={10} className={'save-bar'}>
                   <Card className={'save-bar-card'} variant="outlined">
                     <CardContent>
-                      {userProfile.AD_Username === editorUsername ? (
-                        <Grid container direction="row" justify="flex-end" spacing={2}>
-                          <Grid item xs={12} sm={6}>
-                            {saving === 'failed' ? (
-                              <Typography variant="overline" color="error">
-                                Something went wrong while trying to save the application
-                              </Typography>
-                            ) : (
-                              <Typography variant="body1">Placeholder Text</Typography>
-                            )}
-                          </Grid>
-                          <Grid item xs={6} sm={3} lg={2}>
-                            <SaveButton
-                              saving={saving}
-                              onClick={handleSaveButtonClick}
-                              disabled={!unsavedChanges}
+                      <Grid container direction="row" justify="flex-end" spacing={2}>
+                        {userProfile.AD_Username === editorUsername ? (
+                          <React.Fragment>
+                            <Grid item xs={12} sm={6}>
+                              {saving === 'failed' ? (
+                                <Typography variant="overline" color="error">
+                                  Something went wrong while trying to save the application
+                                </Typography>
+                              ) : (
+                                <Typography variant="body1">Placeholder Text</Typography>
+                              )}
+                            </Grid>
+                            <Grid item xs={6} sm={3} lg={2}>
+                              <SaveButton
+                                saving={saving}
+                                onClick={handleSaveButtonClick}
+                                disabled={!unsavedChanges}
+                              />
+                            </Grid>
+                            <Grid item xs={6} sm={3} lg={2}>
+                              <Button
+                                variant="contained"
+                                onClick={handleSubmitButtonClick}
+                                color="primary"
+                                fullWidth
+                                disabled={
+                                  !applicationCardsOpen ||
+                                  !unsavedChanges ||
+                                  !(applicationDetails.Applicants.length > 0) ||
+                                  !(applicationDetails.ApartmentChoices.length > 0)
+                                }
+                              >
+                                Save & Submit
+                              </Button>
+                            </Grid>
+                            <GordonDialogBox
+                              open={submitDialogOpen}
+                              onClose={handleCloseDialog}
+                              labelledby={'submit-application-dialog'}
+                              describedby={'confirm-application'}
+                              title={'Submit apartment application?'}
+                              text={submitAlertText}
+                              buttonClicked={handleSubmitAppAccepted}
+                              buttonName={'Accept'}
+                              cancelButtonClicked={handleCloseOkay}
+                              cancelButtonName={'Cancel'}
+                              severity={'warning'}
                             />
-                          </Grid>
-                          <Grid item xs={6} sm={3} lg={2}>
-                            <Button
-                              variant="contained"
-                              onClick={handleSubmitButtonClick}
-                              color="primary"
-                              fullWidth
-                              disabled={!applicationCardsOpen || !unsavedChanges}
-                            >
-                              Save & Submit
-                            </Button>
-                          </Grid>
-                          <GordonDialogBox
-                            open={submitDialogOpen}
-                            onClose={handleCloseDialog}
-                            labelledby={'submit-application-dialog'}
-                            describedby={'confirm-application'}
-                            title={'Submit apartment application?'}
-                            text={submitAlertText}
-                            buttonClicked={handleSubmitAppAccepted}
-                            buttonName={'Accept'}
-                            cancelButtonClicked={handleCloseOkay}
-                            cancelButtonName={'Cancel'}
-                            severity={'warning'}
-                          />
-                        </Grid>
-                      ) : (
-                        <Grid container direction="row" justify="flex-end" spacing={2}>
-                          <Grid item xs={12} sm={6}>
-                            <Typography variant="body1">
-                              Placeholder Text for when the user is NOT the primary applicant
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6} sm={3} lg={2}>
-                            <SaveButton disabled />
-                          </Grid>
-                          <Grid item xs={6} sm={3} lg={2}>
-                            <Button variant="contained" color="primary" fullWidth disabled>
-                              Save & Submit
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      )}
+                          </React.Fragment>
+                        ) : (
+                          <React.Fragment>
+                            <Grid item xs={12} sm={6}>
+                              <Typography variant="body1">
+                                You are not the editor of this application, so you cannot edit or
+                                save changes to this applications.
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6} sm={3} lg={2}>
+                              <SaveButton disabled />
+                            </Grid>
+                            <Grid item xs={6} sm={3} lg={2}>
+                              <Button variant="contained" color="primary" fullWidth disabled>
+                                Save & Submit
+                              </Button>
+                            </Grid>
+                          </React.Fragment>
+                        )}
+                      </Grid>
                     </CardContent>
                   </Card>
                 </Grid>

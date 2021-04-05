@@ -55,7 +55,7 @@ const ApplicationsTable = ({ applications }) => {
     <Card>
       <CardHeader title="Apartment Applications" className="apartment-card-header" />
       <CardContent>
-        {applications ? (
+        {applications?.length > 0 ? (
           <TableContainer>
             <Table stickyHeader>
               <ApplicationsTableHead

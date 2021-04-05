@@ -18,10 +18,10 @@ const ApplicationRow = ({ applicationDetails, labelId }) => {
         <TableCell align="center">{applicationDetails.Applicants.length}</TableCell>
         <TableCell align="center">{applicationDetails.Gender}</TableCell>
         <TableCell align="center">
-          {applicationDetails.ApartmentChoices[0].HallName || 'N/A'}
+          {applicationDetails.ApartmentChoices[0]?.HallName ?? 'N/A'}
         </TableCell>
-        <TableCell align="center">{applicationDetails.TotalPoints || 'N/A'}</TableCell>
-        <TableCell align="center">{applicationDetails.AvgPoints || 'N/A'}</TableCell>
+        <TableCell align="center">{applicationDetails.TotalPoints ?? 'N/A'}</TableCell>
+        <TableCell align="center">{applicationDetails.AvgPoints ?? 'N/A'}</TableCell>
         <TableCell align="center" padding="none">
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
