@@ -20,7 +20,6 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
 import GordonPeopleSearch from '../../../../../../components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
-import '../../../../apartmentApp.css';
 
 /**
  * @typedef { import('../../services/user').StudentProfileInfo } StudentProfileInfo
