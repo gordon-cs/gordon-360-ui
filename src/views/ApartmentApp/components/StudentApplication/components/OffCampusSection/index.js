@@ -4,11 +4,7 @@ import ProgramListItem from './components/ProgramListItem';
 import goStalk from '../../../../../../services/goStalk';
 
 // Create a list of selection boxes to choosing which applicants are doing off campus programs.
-const OffCampusSection = ({
-  disabled,
-  applicants,
-  onOffCampusChanged,
-}) => {
+const OffCampusSection = ({ disabled, applicants, onOffCampusChanged }) => {
   const [availableMajors, setAvailableMajors] = useState([]);
 
   useEffect(() => {
@@ -37,13 +33,14 @@ const OffCampusSection = ({
       <CardHeader title="Off-Campus Work Study" className="apartment-card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
-          <Grid item>
+          <Grid item xs={12}>
             <List
               className="off-campus-list"
               aria-label="apartment applicants off campus programs"
               disablePadding
             >
-              {applicants.map((memberInfo, index) => (
+              {applicants?.length > 0 &&
+                applicants.map((memberInfo, index) => (
                   <ProgramListItem
                     key={memberInfo.applicantMember + memberInfo.memberDepartment}
                     disabled={disabled}
@@ -53,8 +50,7 @@ const OffCampusSection = ({
                     availableMajors={availableMajors}
                     onOffCampusChanged={handleInputChange}
                   />
-                ))
-              }
+                ))}
             </List>
           </Grid>
         </Grid>

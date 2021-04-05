@@ -8,7 +8,7 @@ import {
   Input,
   InputLabel,
   Select,
-  Typography
+  Typography,
 } from '@material-ui/core';
 
 const ProgramListItem = ({
@@ -23,7 +23,7 @@ const ProgramListItem = ({
 
   useEffect(() => {
     setDepartmentValue(applicantProgram);
-  },[applicantProgram]);
+  }, [applicantProgram]);
 
   const handleDepartmentInputChange = (event) => {
     if (event.target.value !== null) {
@@ -43,7 +43,7 @@ const ProgramListItem = ({
       <ListItem key={index} className={'list-item'}>
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={3} sm={2}>
-          <Typography>{applicant.fullName}</Typography>
+            <Typography>{applicant.fullName}</Typography>
           </Grid>
           <Grid item xs={9} sm={10}>
             <FormControl fullWidth>
