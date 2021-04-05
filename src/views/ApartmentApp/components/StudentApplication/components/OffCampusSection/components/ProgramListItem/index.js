@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import isEqual from 'lodash/isEqual';
 import {
   Grid,
   Divider,
   ListItem,
-  ListItemSecondaryAction,
   MenuItem,
   FormControl,
   Input,
   InputLabel,
   Select,
-  IconButton,
   Typography
 } from '@material-ui/core';
-import ClearIcon from '@material-ui/icons/Clear';
 
 const ProgramListItem = ({
   disabled,
@@ -27,7 +23,7 @@ const ProgramListItem = ({
 
   useEffect(() => {
     setDepartmentValue(applicantProgram);
-  });
+  },[applicantProgram]);
 
   const handleDepartmentInputChange = (event) => {
     if (event.target.value !== null) {

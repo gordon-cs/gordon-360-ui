@@ -373,13 +373,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleOffCampusChanged = (offCampusUserName, offCampusProgramValue, index) => {
       try {
         // Get the profile of the selected user
-        let newApplicant = applicants.filter((applicant) => offCampusUserName === applicant.Profile.AD_Username);
-        newApplicant.OffCampusProgram = offCampusProgramValue;
+        let newApplicant = {
+          OffCampusProgram: offCampusProgramValue
+          ,...applicants[index]
+        }
       // Error checking on the hallNameValue before modifying the newHallInfo object
         setApplicants((previousapplicants) => ( 
           // replace the element at index with the new hall info object
           previousapplicants.map((applicant, j) => {
-            if (offCampusUserName === applicant.Profile.AD_Username) {
+            if (index === j) {
               return newApplicant;
             } else {
               return applicant;

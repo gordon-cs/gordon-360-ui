@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
 import ProgramListItem from './components/ProgramListItem';
 import goStalk from '../../../../../../services/goStalk';
 
