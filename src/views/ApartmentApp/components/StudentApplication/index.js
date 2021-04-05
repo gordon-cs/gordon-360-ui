@@ -1,130 +1,55 @@
 //Student apartment application page
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Collapse,
   Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Collapse,
+  Grid,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
 } from '@material-ui/core/';
-import ErrorIcon from '@material-ui/icons/Error';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import GordonLoader from '../../../../components/Loader';
-import AlertDialogBox from '../../../../components/AlertDialogBox';
+import GordonDialogBox from '../../../../components/GordonDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
+import InstructionsCard from './components/InstructionsCard';
+import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
 import OffCampusSection from './components/OffCampusSection';
+import SaveButton from './components/SaveButton';
 import housing from '../../../../services/housing';
 import user from '../../../../services/user';
 const MAX_NUM_APPLICANTS = 8;
 
-const InstructionsCard = () => (
-  <Card>
-    <CardHeader title="Apartment Application Instructions" className="card-header" />
-    <CardContent>
-      <Typography variant="body1">Placeholder Text</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
-        suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-        dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
-      </Typography>
-    </CardContent>
-  </Card>
-);
+/**
+ * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
+ * @typedef { import('../../../../services/housing').ApartmentApplicant } ApartmentApplicant
+ * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ */
 
-const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername }) => {
-  function createData(label, value) {
-    return { label, value };
-  }
-
-  let rows = [];
-
-  if (dateSubmitted) {
-    rows.push(createData('Last Submitted: ', dateSubmitted));
-  } else {
-    rows.push(createData('Last Submitted: ', 'Not yet submitted'));
-  }
-
-  if (dateModified) {
-    rows.push(createData('Last Modified: ', dateModified));
-  }
-
-  if (editorUsername) {
-    rows.push(createData('Application Editor: ', editorUsername));
-  }
-
-  return (
-    <Card>
-      <CardHeader title="Your Application Details" className="card-header" />
-      <CardContent>
-        <TableContainer>
-          <Table>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow key={row.label}>
-                  <TableCell component="th" scope="row">
-                    {row.label}
-                  </TableCell>
-                  <TableCell align="right">{row.value}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </CardContent>
-    </Card>
-  );
-};
-
-const SaveButton = ({ disabled, saving, onClick }) => {
-  const loaderSize = 20;
-
-  const handleSaveButtonClick = () => {
-    onClick();
-  };
-
-  if (saving) {
-    if (saving === 'success') {
-      return <CheckCircleIcon className="success" />;
-    } else if (saving === 'failed') {
-      return <ErrorIcon className="error" />;
-    } else {
-      return <GordonLoader size={loaderSize} />;
-    }
-  } else {
-    return (
-      <Button
-        disabled={disabled || saving}
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={handleSaveButtonClick}
-      >
-        Save & Continue
-      </Button>
-    );
-  }
-};
-
+/**
+ * Renders the page for the student apartment application
+ * @param {Object} props The React component props
+ * @param {*} props.authentication The user authentication
+ * @param {StudentProfileInfo} props.userProfile The student profile info of the current user
+ * @returns {JSX.Element} JSX Element for the student application web page
+ */
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
 
-  const [applicationID, setApplicationID] = useState(-1); // Default value of -1 indicate to backend that the application ID number is not yet known
+  /** @type {[Number, React.Dispatch<React.SetStateAction<Number>>]} */
+  const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
-  const [dateModified, setDateModified] = useState(null); // The date the application was submitted, or null if not yet submitted
+  const [dateModified, setDateModified] = useState(null); // The date the application was last modified, or null if not yet saved/modified
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
+  /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info */
   const [applicants, setApplicants] = useState([]);
-  const [preferredHalls, setPreferredHalls] = useState([]);
-  const [offCampusApplicants, setOffCampusApplicants] = useState([]);
+  /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info */
+  const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
+  const [offCampusApplicants, setOffCampusApplicants] = useState([]); //! Deprecated. The 'applicants' array should be used directly instead
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
@@ -132,61 +57,84 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false); // Use this for submitting app (later feature)
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('info');
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
 
   /**
-   * Attempt to load an existing application from the database if one exists
+   * Loads the user's saved apartment application, if one exists
    */
-  const loadSavedApplication = useCallback(async () => {
-    // TODO: Implement this once save/load of application data has been implemented in the backend
-    setLoading(true);
-    // Check if the current user is on an application. Returns the application ID number if found
-    let newApplicationID = -1; // await housing.getApplicationID();
-    if (newApplicationID !== null && newApplicationID !== -1) {
-      setApplicationID(newApplicationID);
-      let applicationDetails = await housing.getApartmentApplication(newApplicationID);
-      if (applicationDetails) {
-        if (applicationDetails.DateSubmitted) {
-          setDateSubmitted(applicationDetails.DateSubmitted);
-        }
-        if (applicationDetails.DateModified) {
-          setDateModified(applicationDetails.DateModified);
-        }
-        if (applicationDetails.Username) {
-          setEditorUsername(applicationDetails.Username);
-        }
-        if (applicationDetails.Applicants) {
-          setApplicants(applicationDetails.Applicants);
-        }
-      }
-    } else {
-      // No existing application was found in the database
-      setApplicationID(-1);
-      if (!editorUsername) {
-        setEditorUsername(userProfile.AD_Username);
-      }
-      if (
-        applicants.every((applicant) => applicant.Profile.AD_Username !== userProfile.AD_Username)
-      ) {
-        setApplicants((prevApplicants) =>
-          prevApplicants.concat({ Profile: userProfile, OffCampusProgram: '' }),
-        );
-      }
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const handleError = (_error) => {
+      // No existing application was found in the database,
+      // or an error occurred while attempting to load the application
+      setApplicationID(null);
+      setEditorUsername((prevEditorUsername) => prevEditorUsername ?? userProfile.AD_Username);
+      setApplicants((prevApplicants) =>
+        prevApplicants.length ? prevApplicants : [{ Profile: userProfile, OffCampusProgram: '' }],
+      );
+      setUnsavedChanges(true);
+    };
+
+    if (!applicationID) {
+      setLoading(true);
+      // Check if the current user is on an application. Returns the application ID number if found
+      housing
+        .getCurrentApplicationID()
+        .then((newApplicationID) => {
+          console.log('Retrieved Application ID: ' + newApplicationID); //! DEBUG
+          if (newApplicationID === null || newApplicationID === -1) {
+            // Intentionally trigger the 'catch'
+            throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
+          } else if (isSubscribed) {
+            setApplicationID(newApplicationID);
+            housing
+              .getApartmentApplication(newApplicationID)
+              .then((applicationDetails) => {
+                if (isSubscribed && applicationDetails) {
+                  setDateSubmitted(applicationDetails.DateSubmitted ?? null);
+                  setDateModified(applicationDetails.DateModified ?? null);
+                  setEditorUsername(applicationDetails.EditorUsername ?? null);
+                  if (applicationDetails.Applicants) {
+                    applicationDetails.Applicants.forEach(async (applicantInfo) => {
+                      const newApplicantProfile = await user.getProfileInfo(applicantInfo.Username);
+                      setApplicants((prevApplicants) => [
+                        ...prevApplicants,
+                        {
+                          Profile: newApplicantProfile,
+                          OffCampusProgram: applicantInfo.OffCampusProgram,
+                        },
+                      ]);
+                    });
+                  }
+                  setPreferredHalls(applicationDetails?.ApartmentChoices ?? []);
+                  setUnsavedChanges(false);
+                }
+              })
+              .catch((error) => {
+                handleError(error);
+              });
+          }
+        })
+        .catch((error) => {
+          handleError(error);
+        });
+      setLoading(false);
     }
-    setLoading(false);
-  }, [userProfile, editorUsername, applicants]);
+
+    return () => (isSubscribed = false);
+  }, [userProfile, applicationID, editorUsername, applicants]);
 
   useEffect(() => {
-    loadSavedApplication();
-  }, [userProfile, loadSavedApplication]);
-
-  useEffect(() => {
+    // setUnsavedChanges(true);
     //! DEBUG
     console.log('Array state variables changed. Printing contents:');
+    console.log('Applicants:');
     applicants.forEach((element) => {
-      console.log(element.Profile.AD_Username);
+      console.log(element.Profile.AD_Username + ', ' + element.OffCampusProgram);
     });
+    console.log('Preferred Halls:');
     preferredHalls.forEach((element) => {
       console.log(element.HallName + ', ' + element.HallRank);
     });
@@ -209,18 +157,26 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Add an applicant to the list, identified by username
-   * @param {String} username Username for student
+   * @param {String} username Username for the new applicant
    */
   const addApplicant = async (username) => {
     try {
       // Get the profile of the selected user
-      let newApplicantProfile = await user.getProfileInfo(username);
+      const newApplicantProfile = await user.getProfileInfo(username);
       let newApplicantObject = { Profile: newApplicantProfile, OffCampusProgram: '' };
+
+      // Check if the selected user is already saved on an application in the database
+      let existingAppID = null;
+      try {
+        existingAppID = await housing.getCurrentApplicationID(username);
+      } catch {
+        existingAppID = false;
+      }
+
       if (applicants.length >= MAX_NUM_APPLICANTS) {
         // Display an error if the user try to add an applicant when the list is full
         setSnackbarText('You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants');
         setSnackbarSeverity('warning');
-        setSnackbarOpen(true);
       } else if (!String(newApplicantProfile.PersonType).includes('stu')) {
         // Display an error if the selected user is not a student
         setSnackbarText(
@@ -229,7 +185,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
             ' because they are not a student.',
         );
         setSnackbarSeverity('warning');
-        setSnackbarOpen(true);
       } else if (newApplicantProfile.Gender && newApplicantProfile.Gender !== userProfile.Gender) {
         // Display an error if the selected user is not the same gender
         setSnackbarText(
@@ -238,28 +193,28 @@ const StudentApplication = ({ userProfile, authentication }) => {
             ' because they are not the same gender as the other applicants.',
         );
         setSnackbarSeverity('warning');
-        setSnackbarOpen(true);
       } else if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
         setSnackbarSeverity('info');
-        setSnackbarOpen(true);
+      } else if (existingAppID && existingAppID !== applicationID) {
+        // Display an error if the selected user is already on a different application in the database
+        setSnackbarText(
+          String(newApplicantProfile.fullName) +
+            ' is already on another application for this semester.',
+        );
+        setSnackbarSeverity('warning');
       } else {
         // Add the profile object to the list of applicants
-        setApplicants((prevApplicants) => prevApplicants.concat(newApplicantObject));
-        if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
-          setSnackbarText(
-            String(newApplicantProfile.fullName) + ' was successfully added to the list.',
-          );
-          setSnackbarSeverity('success');
-          setSnackbarOpen(true);
-        }
+        setApplicants((prevApplicants) => [...prevApplicants, newApplicantObject]);
+        setUnsavedChanges(true);
+        return;
       }
     } catch (error) {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
       setSnackbarSeverity('error');
-      setSnackbarOpen(true);
     }
+    setSnackbarOpen(true);
   };
 
   /**
@@ -275,8 +230,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
   };
 
+  /**
+   * Callback for applying the new application editor
+   */
   const handleChangeEditorAccepted = () => {
-    if (newEditorProfile && newEditorProfile.AD_Username) {
+    if (newEditorProfile?.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
       changeApplicationEditor(applicationID, newEditorProfile.AD_Username);
       handleCloseOkay();
@@ -298,7 +256,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setSaveButtonAlertTimeout(null);
     let result = null;
     try {
-      result = await housing.changeApplicationEditor(applicationID, newEditorUsername);
+      result = await housing.changeApartmentAppEditor(applicationID, newEditorUsername);
     } catch {
       result = false;
     }
@@ -306,6 +264,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       console.log(result); //! DEBUG
       setEditorUsername(newEditorProfile.AD_Username);
       setSaving('success');
+      setUnsavedChanges(true);
     } else {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
       setSnackbarSeverity('error');
@@ -334,6 +293,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           (applicant) => applicant.Profile.AD_Username !== profileToRemove.AD_Username,
         ),
       );
+      setUnsavedChanges(true);
     }
   };
 
@@ -345,17 +305,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
     if (index !== null && index >= 0) {
-      // Get the custom hallInfo object at the given index
-      let newHallInfo = preferredHalls[index];
-
-      // Error checking on the hallRankValue before modifying the newHallInfo object
-      if (hallRankValue !== null) {
-        newHallInfo.HallRank = Number(hallRankValue);
-      }
+      let newHallInfo = {
+        HallRank: Number(hallRankValue) ?? preferredHalls[index].HallRank,
+        HallName: hallNameValue ?? preferredHalls[index].HallName,
+      };
 
       // Error checking on the hallNameValue before modifying the newHallInfo object
       if (
-        hallNameValue !== null &&
         hallNameValue !== preferredHalls[index].HallName &&
         preferredHalls.some((hallInfo) => hallInfo.HallName === hallNameValue)
       ) {
@@ -363,35 +319,46 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarText(String(hallNameValue) + ' is already in the list.');
         setSnackbarSeverity('info');
         setSnackbarOpen(true);
-      } else if (hallNameValue !== null) {
-        newHallInfo.HallName = hallNameValue;
+
+        // Set the new hall info back to the name it was previously
+        newHallInfo.HallName = preferredHalls[index].HallName;
       }
 
-      // replace the element at index with the new hall info object
-      setPreferredHalls((prevPreferredHalls) => prevPreferredHalls.splice(index, 1, newHallInfo));
+      setPreferredHalls((prevPreferredHalls) => {
+        // replace the element at index with the new hall info object
+        let newPreferredHalls = prevPreferredHalls.map((prevHallInfo, j) => {
+          if (j === index) {
+            return newHallInfo;
+          } else {
+            return prevHallInfo;
+          }
+        });
 
-      let newPreferredHalls = preferredHalls; // make a separate copy of the array
+        if (newPreferredHalls.length > 1) {
+          // Sort halls by name
+          newPreferredHalls.sort(function (a, b) {
+            var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
+            var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            // names must be equal
+            return 0;
+          });
 
-      // Sort halls by name
-      newPreferredHalls.sort(function(a, b) {
-        var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
-        var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
-        if (nameA < nameB) {
-          return -1;
+          // Sort halls by rank
+          newPreferredHalls.sort(function (a, b) {
+            return a.HallRank - b.HallRank;
+          });
         }
-        if (nameA > nameB) {
-          return 1;
-        }
-        // names must be equal
-        return 0;
+
+        return newPreferredHalls;
       });
 
-      // Sort halls by rank
-      newPreferredHalls.sort(function(a, b) {
-        return a.HallRank - b.HallRank;
-      });
-
-      setPreferredHalls(newPreferredHalls);
+      setUnsavedChanges(true);
     } else {
       setSnackbarText('Something went wrong while trying to add this hall. Please try again.');
       setSnackbarSeverity('error');
@@ -444,24 +411,26 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Callback for hall list remove button
-   * @param {Number} index The index of the hall to be removed from the list of perferred halls
+   * @param {Number} index The index of the hall to be removed from the list of preferred halls
    */
   const handleHallRemove = (index) => {
     if (index !== null && index !== -1) {
-      let newPreferredHalls = preferredHalls; // make a separate copy of the array
-      // Remove the selected hall if the list has more than one element
-      newPreferredHalls.splice(index, 1);
+      setPreferredHalls((prevPreferredHalls) => {
+        let newPreferredHalls = prevPreferredHalls.filter((_hall, j) => j !== index);
 
-      if (preferredHalls.length > 0) {
-        // If any rank value is greater than the new maximum, then set it to that new max rank
-        let maxRank = newPreferredHalls.length;
-        newPreferredHalls.forEach((hallInfo, index) => {
-          if (hallInfo.HallRank > maxRank) {
-            newPreferredHalls[index].HallRank = maxRank;
-          }
-        });
-      }
-      setPreferredHalls(newPreferredHalls);
+        if (newPreferredHalls.length > 0) {
+          // If any rank value is greater than the new maximum, then set it to that new max rank
+          let maxRank = newPreferredHalls.length;
+          newPreferredHalls.forEach((hallInfo, index) => {
+            if (hallInfo.HallRank > maxRank) {
+              newPreferredHalls[index].HallRank = maxRank;
+            }
+          });
+        }
+
+        return newPreferredHalls;
+      });
+      setUnsavedChanges(true);
     }
   };
 
@@ -469,10 +438,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for hall list add button
    */
   const handleHallAdd = () => {
-    let newHallRank = preferredHalls.length + 1;
-    setPreferredHalls((prevPreferredHalls) =>
-      prevPreferredHalls.concat({ HallRank: newHallRank, HallName: '' }),
-    );
+    const newHallInfo = { HallRank: preferredHalls.length + 1, HallName: '' };
+    setPreferredHalls((prevPreferredHalls) => [...prevPreferredHalls, newHallInfo]);
   };
 
   /**
@@ -503,29 +470,38 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleSaveButtonClick = () => {
     let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
     console.log(debugMessage); //! DEBUG
+    // Filter out any hall entries that do not have a name selected
+    const filteredPreferredHalls = preferredHalls.filter((hallInfo) => hallInfo.HallName !== '');
     // The method is separated from callback because the housing API service must be handled inside an async method
-    saveApplication(applicationID, editorUsername, applicants);
+    saveApplication(applicationID, editorUsername, applicants, filteredPreferredHalls);
   };
 
   /**
    * Save the current state of the application to the database
    * @param {Number} applicationID the application ID number if it is known, else it is -1
    * @param {String} editorUsername the student username of the person filling out the application
-   * @param {StudentProfileInfo[]} applicants Array of StudentProfileInfo objects
+   * @param {ApartmentApplicant[]} applicants Array of ApartmentApplicant objects
+   * @param {ApartmentChoice[]} preferredHalls Array of ApartmentChoice objects
    */
-  const saveApplication = async (applicationID, editorUsername, applicants) => {
+  const saveApplication = async (applicationID, editorUsername, applicants, preferredHalls) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
     let result = null;
     try {
-      result = await housing.saveApartmentApplication(applicationID, editorUsername, applicants);
+      result = await housing.saveApartmentApplication(
+        applicationID,
+        editorUsername,
+        applicants,
+        preferredHalls,
+      );
     } catch {
       result = false;
     }
-    if (result !== null && result !== false) {
-      console.log('result of saving: ' + result); //! DEBUG
+    console.log('result of saving: ' + result); //! DEBUG
+    if (result !== null && result !== false && result !== -1 && typeof result === 'number') {
       setApplicationID(result);
       setSaving('success');
+      setUnsavedChanges(false);
     } else {
       setSnackbarText('Something went wrong while trying to save the application.');
       setSnackbarSeverity('error');
@@ -563,11 +539,19 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setApplicationCardsOpen(false);
   };
 
+  /**
+   * Callback for the alert dialog box "Okay" button
+   */
   const handleCloseOkay = () => {
     setChangeEditorDialogOpen(false);
     setSubmitDialogOpen(false);
   };
 
+  /**
+   * Callback for closing the alert dialog box
+   * @param {*} event close event to be handled by callback
+   * @param {*} reason the reason the close event was triggered
+   */
   const handleCloseDialog = (event, reason) => {
     // Prevent the dialog box from closing if the user clicks outside the dialog box
     if (reason === 'clickaway') {
@@ -576,6 +560,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
     handleCloseOkay();
   };
 
+  /**
+   * Callback for closing the snackbar
+   * @param {*} event close event to be handled by callback
+   * @param {*} reason the reason the close event was triggered
+   */
   const handleCloseSnackbar = (event, reason) => {
     // Prevent the snackbar from closing if the user clicks outside the snackbar
     if (reason === 'clickaway') {
@@ -612,7 +601,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
               <CardContent>
                 <Grid container direction="row" justify="flex-end" spacing={2}>
                   <Grid item xs={6} sm={8}>
-                    {applicationID === -1 ? (
+                    {!applicationID ? (
                       <Typography variant="body1">
                         Placeholder Text
                         <br />
@@ -629,7 +618,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     )}
                   </Grid>
                   <Grid item xs={6} sm={4}>
-                    {applicationID === -1 ? (
+                    {!applicationID ? (
                       <Button
                         variant="contained"
                         onClick={handleShowApplication}
@@ -667,7 +656,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           </Grid>
           <Grid item>
             <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-              {applicationID === -1 ? (
+              {!applicationID ? (
                 <Grid container direction="row" justify="center" spacing={2}>
                   <Grid item xs={12} md={8}>
                     <InstructionsCard />
@@ -691,50 +680,68 @@ const StudentApplication = ({ userProfile, authentication }) => {
           </Grid>
           <Grid item>
             <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
-              <Grid container direction="row-reverse" justify="center" spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <InstructionsCard />
-                </Grid>
-                <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
-                  <Grid item>
-                    <ApplicantList
-                      maxNumApplicants={MAX_NUM_APPLICANTS}
-                      userProfile={userProfile}
-                      editorUsername={editorUsername}
-                      applicants={applicants}
-                      saving={saving}
-                      onSearchSubmit={handleSearchSubmit}
-                      onChangeEditor={handleChangeEditor}
-                      onApplicantRemove={handleApplicantRemove}
-                      onSaveButtonClick={handleSaveButtonClick}
-                      authentication={authentication}
-                    />
-                    <AlertDialogBox
-                      open={changeEditorDialogOpen}
-                      onClose={handleCloseDialog}
-                      severity={'warning'}
-                      title={'Change application editor?'}
-                      text={changeEditorAlertText}
-                      cancelButtonClicked={handleCloseOkay}
-                      cancelButtonName={'Cancel'}
-                      confirmButtonClicked={handleChangeEditorAccepted}
-                      confirmButtonName={'Accept'}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
               <Grid container direction="row" justify="center" spacing={2}>
                 <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
                   <Grid item>
-                    <HallSelection
-                      editorUsername={editorUsername}
-                      preferredHalls={preferredHalls}
-                      saving={saving}
-                      onHallAdd={handleHallAdd}
-                      onHallInputChange={handleHallInputChange}
-                      onHallRemove={handleHallRemove}
-                      onSaveButtonClick={handleSaveButtonClick}
+                    {userProfile.AD_Username === editorUsername ? (
+                      <ApplicantList
+                        maxNumApplicants={MAX_NUM_APPLICANTS}
+                        userProfile={userProfile}
+                        editorUsername={editorUsername}
+                        applicants={applicants}
+                        saving={saving}
+                        onSearchSubmit={handleSearchSubmit}
+                        onChangeEditor={handleChangeEditor}
+                        onApplicantRemove={handleApplicantRemove}
+                        onSaveButtonClick={handleSaveButtonClick}
+                        authentication={authentication}
+                      />
+                    ) : (
+                      <ApplicantList
+                        disabled
+                        maxNumApplicants={MAX_NUM_APPLICANTS}
+                        userProfile={userProfile}
+                        editorUsername={editorUsername}
+                        applicants={applicants}
+                        saving={saving}
+                      />
+                    )}
+
+                    <GordonDialogBox
+                      open={changeEditorDialogOpen}
+                      onClose={handleCloseDialog}
+                      labelledby={'applicant-warning-dialog'}
+                      describedby={'changing-application-editor'}
+                      title={'Change application editor?'}
+                      text={changeEditorAlertText}
+                      confirmButtonClicked={handleChangeEditorAccepted}
+                      confirmButtonName={'Accept'}
+                      cancelButtonClicked={handleCloseOkay}
+                      cancelButtonName={'Cancel'}
+                      severity={'warning'}
                     />
+                  </Grid>
+                  <Grid item>
+                    {userProfile.AD_Username === editorUsername ? (
+                      <HallSelection
+                        authentication
+                        editorUsername={editorUsername}
+                        preferredHalls={preferredHalls}
+                        saving={saving}
+                        onHallAdd={handleHallAdd}
+                        onHallInputChange={handleHallInputChange}
+                        onHallRemove={handleHallRemove}
+                        onSaveButtonClick={handleSaveButtonClick}
+                      />
+                    ) : (
+                      <HallSelection
+                        disabled
+                        authentication
+                        editorUsername={editorUsername}
+                        preferredHalls={preferredHalls}
+                        saving={saving}
+                      />
+                    )}
                   </Grid>
                   <Grid item>
                     <Card>
@@ -749,14 +756,27 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Card>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} md={4}>
-                  <Card>
-                    <CardHeader title="Agreements" className="card-header" />
-                    <CardContent>
-                      <Typography variant="body1">Placeholder text</Typography>
-                    </CardContent>
-                  </Card>
+                <Grid container item xs={12} md={4} direction="column" spacing={2}>
+                  <Grid item>
+                    <Collapse
+                      in={userProfile.AD_Username === editorUsername}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <Card>
+                        <CardHeader title="Agreements" className="apartment-card-header" />
+                        <CardContent>
+                          <Typography variant="body1">Placeholder text</Typography>
+                        </CardContent>
+                      </Card>
+                    </Collapse>
+                  </Grid>
+                  <Grid item>
+                    <InstructionsCard />
+                  </Grid>
                 </Grid>
+              </Grid>
+              <Grid container direction="row" justify="center" spacing={2} className={'save-bar'}>
                 <Grid item xs={12} lg={10} className={'save-bar'}>
                   <Card className={'save-bar-card'} variant="outlined">
                     <CardContent>
@@ -772,7 +792,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
                             )}
                           </Grid>
                           <Grid item xs={6} sm={3} lg={2}>
-                            <SaveButton saving={saving} onClick={handleSaveButtonClick} />
+                            <SaveButton
+                              saving={saving}
+                              onClick={handleSaveButtonClick}
+                              disabled={!unsavedChanges}
+                            />
                           </Grid>
                           <Grid item xs={6} sm={3} lg={2}>
                             <Button
@@ -780,21 +804,23 @@ const StudentApplication = ({ userProfile, authentication }) => {
                               onClick={handleSubmitButtonClick}
                               color="primary"
                               fullWidth
-                              disabled={!applicationCardsOpen}
+                              disabled={!applicationCardsOpen || !unsavedChanges}
                             >
                               Save & Submit
                             </Button>
                           </Grid>
-                          <AlertDialogBox
+                          <GordonDialogBox
                             open={submitDialogOpen}
                             onClose={handleCloseDialog}
-                            severity={'warning'}
+                            labelledby={'submit-application-dialog'}
+                            describedby={'confirm-application'}
                             title={'Submit apartment application?'}
                             text={submitAlertText}
+                            buttonClicked={handleSubmitAppAccepted}
+                            buttonName={'Accept'}
                             cancelButtonClicked={handleCloseOkay}
                             cancelButtonName={'Cancel'}
-                            confirmButtonClicked={handleSubmitAppAccepted}
-                            confirmButtonName={'Accept'}
+                            severity={'warning'}
                           />
                         </Grid>
                       ) : (
@@ -823,7 +849,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         </Grid>
         <SimpleSnackbar
           text={snackbarText}
-          severity={snackbarSeverity}
+          severity={snackbarSeverity ?? 'info'}
           open={snackbarOpen}
           onClose={handleCloseSnackbar}
         />

@@ -16,10 +16,20 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import user from '../../../../../../../../services/user';
 
+/**
+ * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
 // Based off src/views/PeopleSearch/components/PeopleSearchResult
 // but using props.profile of type StudentProfileInfo
-// rather than using this.props.Person of type PeopleSearchResult
-const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApplicantRemove }) => {
+// rather than using Person of type PeopleSearchResult
+const ApplicantListItem = ({
+  disabled,
+  profile,
+  isApplicationEditor,
+  onChangeEditor,
+  onApplicantRemove,
+}) => {
   const [avatar, setAvatar] = useState(null);
   const [hasNickName, setHasNickname] = useState(false);
   const [personClass, setPersonClass] = useState(profile.Class);
@@ -62,6 +72,10 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     setHasNickname(FirstName !== profile.NickName && profile.NickName !== '');
   };
 
+  /**
+   * Callback for changing the application editor
+   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
+   */
   const handleChangeEditor = () => {
     // Make sure the chosen profile was not null
     if (profile) {
@@ -70,6 +84,10 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
     }
   };
 
+  /**
+   * Callback for applicant list remove button
+   * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
+   */
   const handleRemove = () => {
     // Make sure the chosen profile was not null
     if (profile) {
@@ -110,7 +128,7 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
             <Grid item xs>
               <IconButton
                 aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
-                disabled={isApplicationEditor}
+                disabled={isApplicationEditor || disabled}
                 onClick={handleChangeEditor}
               >
                 {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
@@ -119,7 +137,7 @@ const ApplicantListItem = ({ profile, isApplicationEditor, onChangeEditor, onApp
             <Grid item xs>
               <IconButton
                 aria-label="remove-applicant"
-                disabled={isApplicationEditor}
+                disabled={isApplicationEditor || disabled}
                 onClick={handleRemove}
               >
                 <ClearIcon />

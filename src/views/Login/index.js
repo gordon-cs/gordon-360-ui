@@ -1,19 +1,9 @@
-// TODO: When login page hang/refresh issue is solved, remove all code marked "Login Hang"
-
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import amber from '@material-ui/core/colors/amber'; // Login Hang
-import Fab from '@material-ui/core/Fab';
 import PWAInstructions from '../../components/PWAInstructions/index';
 import './login.css';
 import { authenticate } from '../../services/auth';
@@ -22,6 +12,17 @@ import session from '../../services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { gordonColors } from '../../theme';
 import { projectName } from '../../project-name';
+
+import {
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+  Grid,
+  Snackbar,
+  IconButton,
+  Fab,
+} from '@material-ui/core';
 
 // To temporarily disable the Login Hang message, set this boolean to false
 const LOGIN_BUG_MESSAGE = true; // Login Hang

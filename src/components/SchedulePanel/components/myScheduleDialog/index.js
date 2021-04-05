@@ -1,19 +1,21 @@
 import React, { Fragment } from 'react';
 
-import Typography from '@material-ui/core/Typography';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import FormGroup from '@material-ui/core/FormGroup';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import { gordonColors } from '../../../../theme';
-import Checkbox from '@material-ui/core/Checkbox';
 import myschedule from '../../../../services/myschedule';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { FormHelperText } from '@material-ui/core';
+import {
+  FormHelperText,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  FormGroup,
+  TextField,
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+} from '@material-ui/core';
 import { KeyboardTimePicker } from '@material-ui/pickers';
 
 // Default values

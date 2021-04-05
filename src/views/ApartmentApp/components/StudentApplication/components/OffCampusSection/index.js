@@ -6,6 +6,11 @@ import goStalk from '../../../../../../services/goStalk';
 
 // Create a list of selection boxes to choosing which applicants are doing off campus programs.
 const OffCampusSection = ({
+<<<<<<< HEAD
+=======
+  disabled,
+  offCampusApplicantList,
+>>>>>>> 6ceaced472c58acb838d3ee65e23b6da7a2bfe94
   availableApplicants,
   onOffCampusChanged,
   onOffCampusAdd,
@@ -48,12 +53,12 @@ const OffCampusSection = ({
 
   return (
     <Card>
-      <CardHeader title="Off-Campus Work Study" className="card-header" />
+      <CardHeader title="Off-Campus Work Study" className="apartment-card-header" />
       <CardContent>
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
             <List
-              className="off-Campus-list"
+              className="off-campus-list"
               aria-label="apartment applicants off campus programs"
               disablePadding
             >
@@ -61,6 +66,7 @@ const OffCampusSection = ({
                 availableApplicants.map((memberInfo, index) => (
                   <ProgramListItem
                     key={memberInfo.applicantMember + memberInfo.memberDepartment}
+                    disabled={disabled}
                     index={index}
                     availableMajors={availableMajors}
                     availableApplicants={availableApplicants}
@@ -71,6 +77,7 @@ const OffCampusSection = ({
               ) : (
                 <ProgramListItem
                   key={''}
+                  disabled={disabled}
                   index={0}
                   availableMajors={availableMajors}
                   availableApplicants={availableApplicants}
@@ -82,6 +89,7 @@ const OffCampusSection = ({
           </Grid>
           <Grid item xs={12}>
             <Button
+              disabled={disabled}
               variant="outlined"
               color="primary"
               startIcon={<AddIcon fontSize="inherit" />}

@@ -15,6 +15,7 @@ import {
 import ClearIcon from '@material-ui/icons/Clear';
 
 const ProgramListItem = ({
+  disabled,
   index,
   availableMajors,
   availableApplicants,
@@ -82,6 +83,7 @@ const ProgramListItem = ({
             <FormControl fullWidth>
               <InputLabel>Member</InputLabel>
               <Select
+                disabled={disabled}
                 onChange={handleApplicantInputChange}
                 value={applicantMemberValue}
                 input={<Input id={'member' + index} />}
@@ -94,6 +96,7 @@ const ProgramListItem = ({
             <FormControl fullWidth>
               <InputLabel>department</InputLabel>
               <Select
+                disabled={disabled}
                 onChange={handleDepartmentInputChange}
                 value={applicantDepartmentValue}
                 input={<Input id={'department' + index} />}
@@ -104,7 +107,7 @@ const ProgramListItem = ({
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete" onClick={handleRemove}>
+          <IconButton edge="end" aria-label="delete" disabled={disabled} onClick={handleRemove}>
             <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>
