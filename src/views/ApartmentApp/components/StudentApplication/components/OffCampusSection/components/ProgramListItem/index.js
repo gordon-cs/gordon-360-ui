@@ -16,7 +16,6 @@ import ClearIcon from '@material-ui/icons/Clear';
 
 const ProgramListItem = ({
   index,
-  offCampusApplicantList,
   availableMajors,
   availableApplicants,
   onOffCampusChanged,
@@ -26,12 +25,12 @@ const ProgramListItem = ({
   const [applicantDepartmentValue, setDepartmentValue] = useState(''); // Major drop-down menu value
 
   useEffect(() => {
-    if (isEqual(previousInputs.current, [index, offCampusApplicantList])) {
+    if (isEqual(previousInputs.current, [index, availableApplicants])) {
       return;
     }
     const getMembersFromProps = () => {
-      setMemberValue(offCampusApplicantList[index].name);
-      setDepartmentValue(offCampusApplicantList[index].major);
+      setMemberValue(availableApplicants[index].name);
+      setDepartmentValue(availableApplicants[index].major);
     };
 
     getMembersFromProps();
@@ -39,7 +38,7 @@ const ProgramListItem = ({
 
   const previousInputs = useRef();
   useEffect(() => {
-    previousInputs.current = [index, offCampusApplicantList];
+    previousInputs.current = [index, availableApplicants];
   });
 
   const handleApplicantInputChange = (event) => {

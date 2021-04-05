@@ -190,10 +190,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     preferredHalls.forEach((element) => {
       console.log(element.HallName + ', ' + element.HallRank);
     });
-    offCampusApplicants.forEach((element) => {
-      console.log(element.name + ', ' + element.major);
-    });
-  }, [applicants, preferredHalls, offCampusApplicants]);
+  }, [applicants, preferredHalls]);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
@@ -410,32 +407,32 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleOffCampusChanged = (offCampusNameValue, offCampusMajorValue, index) => {
     if (index !== null && index >= 0) {
-      let newOCInfo = offCampusApplicants[index];
+      let newOCInfo = applicants[index];
 
       // Error checking on the offCampusMajorValue before modifying the newHallInfo object
       if (offCampusMajorValue !== null) {
         newOCInfo.major = String(offCampusMajorValue);
       }
 
-      // Error checking on the hallNameValue before modifying the newOCInfo object
-      if (
-        offCampusNameValue !== null &&
-        offCampusNameValue !== offCampusApplicants[index] &&
-        offCampusApplicants.some((OCInfo) => OCInfo.name === offCampusNameValue)
-      ) {
-        setSnackbarText(String(offCampusNameValue) + ' is already in the list.');
-        setSnackbarSeverity('info');
-        setSnackbarOpen(true);
-      } else if (offCampusNameValue !== null) {
-        newOCInfo.name = offCampusNameValue;
-      }
+      // // Error checking on the hallNameValue before modifying the newOCInfo object
+      // if (
+      //   offCampusNameValue !== null &&
+      //   offCampusNameValue !== applicants[index] &&
+      //   applicants.some((OCInfo) => OCInfo.name === offCampusNameValue)
+      // ) {
+      //   setSnackbarText(String(offCampusNameValue) + ' is already in the list.');
+      //   setSnackbarSeverity('info');
+      //   setSnackbarOpen(true);
+      // } else if (offCampusNameValue !== null) {
+      //   newOCInfo.name = offCampusNameValue;
+      // }
 
       // replace the element at index with the new hall info object
       setOffCampusApplicants((prevOffCampusApplicants) =>
         prevOffCampusApplicants.splice(index, 1, newOCInfo),
       );
 
-      let newOffCampusApplicants = offCampusApplicants; // make a separate copy of the array
+      let newOffCampusApplicants = applicants; // make a separate copy of the array
 
       setOffCampusApplicants(newOffCampusApplicants);
     } else {
@@ -742,7 +739,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   <Grid item>
                     <Card>
                       <OffCampusSection
-                        offCampusApplicantList={offCampusApplicants}
                         availableApplicants={applicants}
                         onOffCampusChanged={handleOffCampusChanged}
                         onOffCampusAdd={handleOffCampusApplicantAdd}
