@@ -369,43 +369,30 @@ const StudentApplication = ({ userProfile, authentication }) => {
   /**
    * Callback for changes to off campus list item name and/or major
    * @param {Number} offCampusNameValue The name value that the user assigned to this applicant
-   * @param {String} offCampusMajorValue The major that the applicant is doing an OC program for
-   * @param {Number} index The index of the person
+   * @param {String} offCampusMajorValue The program that the applicant is doing an OC program for
    */
-  const handleOffCampusChanged = (offCampusNameValue, offCampusMajorValue, index) => {
-    if (index !== null && index >= 0) {
-      let newOCInfo = applicants[index];
+  const handleOffCampusChanged = (offCampusUserName, offCampusProgramValue) => {
+      try {
+        // Get the profile of the selected user
+        const tempApplicantProfile = await user.getProfileInfo(offCampusUserName);
+        let tempApplicant = { Profile: tempApplicantProfile, OffCampusProgram: offCampusProgramValue};
+      // Error checking on the hallNameValue before modifying the newHallInfo object
+      if(applicants.some((applicant) => applicant.Profile.OffCampusProgram === tempApplicant.Profile.OffCampusProgram))
+      {
 
-      // Error checking on the offCampusMajorValue before modifying the newHallInfo object
-      if (offCampusMajorValue !== null) {
-        newOCInfo.major = String(offCampusMajorValue);
+      }
+      else{
+        setSnackbarText(String(offCampusUserName) + ' is already in the list.');
+        setSnackbarSeverity('info');
+        setSnackbarOpen(true);
       }
 
-      // // Error checking on the hallNameValue before modifying the newOCInfo object
-      // if (
-      //   offCampusNameValue !== null &&
-      //   offCampusNameValue !== applicants[index] &&
-      //   applicants.some((OCInfo) => OCInfo.name === offCampusNameValue)
-      // ) {
-      //   setSnackbarText(String(offCampusNameValue) + ' is already in the list.');
-      //   setSnackbarSeverity('info');
-      //   setSnackbarOpen(true);
-      // } else if (offCampusNameValue !== null) {
-      //   newOCInfo.name = offCampusNameValue;
-      // }
-
-      // replace the element at index with the new hall info object
-      setOffCampusApplicants((prevOffCampusApplicants) =>
-        prevOffCampusApplicants.splice(index, 1, newOCInfo),
-      );
-
-      let newOffCampusApplicants = applicants; // make a separate copy of the array
-
-      setOffCampusApplicants(newOffCampusApplicants);
-    } else {
-      setSnackbarText('Something went wrong while trying to add this applicant. Please try again.');
+        // Set the new hall info back to the name it was previously
+        newHallInfo.HallName = preferredHalls[index].HallName;
+      } 
+    catch (error) {
+      setSnackbarText('Something went wrong while trying to add this person. Please try again.');
       setSnackbarSeverity('error');
-      setSnackbarOpen(true);
     }
   };
 

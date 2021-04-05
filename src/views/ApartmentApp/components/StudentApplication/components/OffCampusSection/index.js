@@ -6,11 +6,7 @@ import goStalk from '../../../../../../services/goStalk';
 
 // Create a list of selection boxes to choosing which applicants are doing off campus programs.
 const OffCampusSection = ({
-<<<<<<< HEAD
-=======
   disabled,
-  offCampusApplicantList,
->>>>>>> 6ceaced472c58acb838d3ee65e23b6da7a2bfe94
   availableApplicants,
   onOffCampusChanged,
   onOffCampusAdd,
