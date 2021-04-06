@@ -581,7 +581,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         userProfile={userProfile}
                         editorUsername={editorUsername}
                         applicants={applicants}
-                        saving={saving}
                         onSearchSubmit={handleSearchSubmit}
                         onChangeEditor={handleChangeEditor}
                         onApplicantRemove={handleApplicantRemove}
@@ -595,7 +594,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         userProfile={userProfile}
                         editorUsername={editorUsername}
                         applicants={applicants}
-                        saving={saving}
                       />
                     )}
 
@@ -619,7 +617,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         authentication
                         editorUsername={editorUsername}
                         preferredHalls={preferredHalls}
-                        saving={saving}
                         onHallAdd={handleHallAdd}
                         onHallInputChange={handleHallInputChange}
                         onHallRemove={handleHallRemove}
@@ -631,7 +628,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         authentication
                         editorUsername={editorUsername}
                         preferredHalls={preferredHalls}
-                        saving={saving}
                       />
                     )}
                   </Grid>
