@@ -27,7 +27,7 @@ const HallSelection = ({
       let unfilteredHalls;
       try {
         // Get the halls available for apartments, filtered by the gender of the application editor
-        unfilteredHalls = await housing.getApartmentHalls(editorUsername);
+        unfilteredHalls = await housing.getApartmentHalls();
       } catch {
         //! DEBUG: Fills in halls dropdown when the housing api endpoint is not yet implemented
         // This list of halls is references from the 'Hall' dropdown on the PeopleSearch page
