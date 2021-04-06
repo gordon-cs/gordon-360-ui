@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import newsService from './../../../../services/news';
+import newsService from 'services/news';
 import EditIcon from '@material-ui/icons/Edit';
-import storage from '../../../../services/storage';
+import storage from 'services/storage';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
 

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import './index.css';
 
 import DesktopChromeInstall from './images/Desktop/Desktop-Chrome-Install-360.png';

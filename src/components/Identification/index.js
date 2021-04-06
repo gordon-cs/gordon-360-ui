@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Dropzone from 'react-dropzone';
 import EmailIcon from '@material-ui/icons/Email';
-import user from '../../services/user';
-import { gordonColors } from '../../theme';
+import user from 'services/user';
+import { gordonColors } from 'theme';
 import LinksDialog from './Components/LinksDialog/index';
-import { socialMediaInfo } from '../../socialMedia';
+import { socialMediaInfo } from 'socialMedia';
 import { Link } from 'react-router-dom';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -13,8 +13,8 @@ import ErrorIcon from '@material-ui/icons/Error';
 import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
 import defaultGordonImage from './defaultGordonImage';
-import GordonLoader from '../Loader/index';
-import { windowBreakWidths } from '../../theme';
+import GordonLoader from 'components/Loader/index';
+import { windowBreakWidths } from 'theme';
 import './index.css';
 
 import {

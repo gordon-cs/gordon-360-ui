@@ -2,18 +2,18 @@ import React, { Component, Fragment } from 'react';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import MyScheduleDialog from './components/myScheduleDialog';
 import RemoveScheduleDialog from './components/RemoveScheduleDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
-import schedulecontrol from './../../services/schedulecontrol';
+import schedulecontrol from 'services/schedulecontrol';
 import urlRegex from 'url-regex-safe';
 import { Markup } from 'interweave';
 
-import myschedule from '../../services/myschedule';
+import myschedule from 'services/myschedule';
 
-import GordonLoader from '../../components/Loader';
+import GordonLoader from 'components/Loader';
 
 import {
   Grid,

@@ -1,9 +1,9 @@
-import GordonDialogBox from '../../../GordonDialogBox/index';
+import GordonDialogBox from 'components/GordonDialogBox/index';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { signOut } from '../../../../services/auth';
-import storage from '../../../../services/storage';
-import QuickLinksDialog from '../../../QuickLinksDialog';
+import { signOut } from 'services/auth';
+import storage from 'services/storage';
+import QuickLinksDialog from 'components/QuickLinksDialog';
 import {
   createLinksButton,
   createFeedbackButton,

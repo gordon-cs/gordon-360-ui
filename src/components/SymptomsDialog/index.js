@@ -7,7 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
-import wellness, { StatusColors } from '../../services/wellness';
+import wellness, { StatusColors } from 'services/wellness';
 import './index.css';
 
 const SymptomsDialog = ({ isOpen, setIsOpen, setStatus }) => {

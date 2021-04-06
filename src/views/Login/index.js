@@ -4,14 +4,14 @@ import DocumentTitle from 'react-document-title';
 import CloseIcon from '@material-ui/icons/Close';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import amber from '@material-ui/core/colors/amber'; // Login Hang
-import PWAInstructions from '../../components/PWAInstructions/index';
+import PWAInstructions from 'components/PWAInstructions/index';
 import './login.css';
-import { authenticate } from '../../services/auth';
-import storage from '../../services/storage';
-import session from '../../services/session';
+import { authenticate } from 'services/auth';
+import storage from 'services/storage';
+import session from 'services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
-import { gordonColors } from '../../theme';
-import { projectName } from '../../project-name';
+import { gordonColors } from 'theme';
+import { projectName } from 'project-name';
 
 import {
   Button,

@@ -18,19 +18,19 @@ import {
 } from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
 import { isValid, isWithinInterval, addDays, set } from 'date-fns';
-import jobsService from '../../services/jobs';
+import jobsService from 'services/jobs';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import ShiftDisplay from './components/ShiftDisplay';
 import { withStyles } from '@material-ui/core/styles';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import './timesheets.css';
-import GordonLoader from '../../components/Loader';
+import GordonLoader from 'components/Loader';
 import { makeStyles } from '@material-ui/core/styles';
-import SimpleSnackbar from '../../components/Snackbar';
-import user from '../../services/user';
-import useNetworkStatus from '../../hooks/useNetworkStatus';
-import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
+import SimpleSnackbar from 'components/Snackbar';
+import user from 'services/user';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;

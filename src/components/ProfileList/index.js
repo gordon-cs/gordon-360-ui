@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import user from './../../services/user';
+import user from 'services/user';
 import ErrorIcon from '@material-ui/icons/Error';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import './profileList.css';
 import { withStyles } from '@material-ui/core/styles';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import {
   createHomeListItem,
   createHomePhoneListItem,
@@ -19,7 +19,6 @@ import {
   createStudentIDItem,
   createSpouseItem,
 } from './listItems';
-import '../../app.css';
 
 import {
   Typography,

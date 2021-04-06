@@ -2,10 +2,9 @@ import { GridList, GridListTile, Paper, Typography, withWidth } from '@material-
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import storage from '../../../../services/storage';
+import storage from 'services/storage';
 
 import './activity-grid.css';
-import '../../../../app.css';
 
 const gridListCols = (width) => {
   switch (width) {
