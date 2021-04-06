@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 import { Check, Remove, Clear } from '@material-ui/icons';
-import { StatusColors } from '../../../../services/wellness';
-import SymptomsDialog from '../../../../components/SymptomsDialog';
+import { StatusColors } from 'services/wellness';
+import SymptomsDialog from 'components/SymptomsDialog';
 import './index.css';
 
 const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {

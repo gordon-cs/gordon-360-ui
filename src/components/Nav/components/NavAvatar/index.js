@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './nav-avatar.css';
-import '../../../../app.css';
-import user from '../../../../services/user';
+import user from 'services/user';
 
 import { Avatar, Button, Typography } from '@material-ui/core';
 

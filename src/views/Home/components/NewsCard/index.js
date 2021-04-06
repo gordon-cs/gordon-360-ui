@@ -7,9 +7,9 @@
 import React, { Component } from 'react';
 import { CardContent } from '@material-ui/core';
 import { Button, Grid, CardHeader, Card, Typography } from '@material-ui/core';
-import { gordonColors } from '../../../../theme';
-import NewsService from '../../../../services/news';
-import NewsItem from '../../../News/components/NewsItem';
+import { gordonColors } from 'theme';
+import NewsService from 'services/news';
+import NewsItem from 'views/News/components/NewsItem';
 // import CategorizedNews from './components/CategorizedNews';
 
 export default class DailyNews extends Component {

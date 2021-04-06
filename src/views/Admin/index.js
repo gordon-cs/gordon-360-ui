@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import InvolvementsStatus from './components/InvolvementsStatus';
 import SuperAdmin from './components/SuperAdmins';
-import user from '../../services/user';
+import user from 'services/user';
 import { Button, Grid, Card, CardContent } from '@material-ui/core';
-import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 
 export default class Admin extends Component {
   constructor(props) {

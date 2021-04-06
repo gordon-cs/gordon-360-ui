@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { gordonColors } from '../../../../../../theme';
-import membership from '../../../../../../services/membership';
+import { gordonColors } from 'theme';
+import membership from 'services/membership';
 import './requests.css';
 
 import {

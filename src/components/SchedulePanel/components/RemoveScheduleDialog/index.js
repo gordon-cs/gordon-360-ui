@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { gordonColors } from '../../../../theme';
+import { gordonColors } from 'theme';
 
 import { Dialog, DialogTitle, DialogActions, Button } from '@material-ui/core';
 

@@ -13,11 +13,11 @@ import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import { GordonNavButtonsRightCorner } from './components/NavButtonsRightCorner';
-import routes from '../../routes';
-import { projectName } from '../../project-name';
-import storage from '../../services/storage';
-import GordonDialogBox from '../GordonDialogBox/index';
-import { windowBreakWidths } from '../../theme';
+import routes from 'routes';
+import { projectName } from 'project-name';
+import storage from 'services/storage';
+import GordonDialogBox from 'components/GordonDialogBox/index';
+import { windowBreakWidths } from 'theme';
 
 import { AppBar, Toolbar, Typography, IconButton, Tabs, Tab, Button } from '@material-ui/core';
 

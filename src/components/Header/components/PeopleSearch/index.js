@@ -3,7 +3,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
-import peopleSearch from '../../../../services/people-search';
+import peopleSearch from 'services/people-search';
 
 import {
   TextField,
