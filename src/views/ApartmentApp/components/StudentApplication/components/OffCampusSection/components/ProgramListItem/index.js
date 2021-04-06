@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Grid,
   Divider,
-  ListItem,
-  MenuItem,
   FormControl,
+  Grid,
   Input,
   InputLabel,
+  ListItem,
+  ListItemText,
+  MenuItem,
   Select,
-  Typography,
 } from '@material-ui/core';
 
 const ProgramListItem = ({
   disabled,
   index,
-  applicant,
+  applicantProfile,
   offCampusProgram,
   departments,
   onOffCampusInputChange,
@@ -40,18 +40,18 @@ const ProgramListItem = ({
 
   return (
     <React.Fragment>
-      <ListItem key={index} className={'list-item'}>
-        <Grid container alignItems="center" spacing={3}>
-          <Grid item xs={3} sm={2}>
-            <Typography>{applicant.fullName}</Typography>
+      <ListItem key={applicantProfile.AD_Username} className={'list-item'}>
+        <Grid container alignItems="flex-end" spacing={1}>
+          <Grid item xs={12} sm={4}>
+            <ListItemText primary={applicantProfile.fullName} className={'list-item'} />
           </Grid>
-          <Grid item xs={9} sm={10}>
+          <Grid item xs={12} sm={8}>
             <FormControl fullWidth>
-              <InputLabel>department</InputLabel>
+              <InputLabel>Department</InputLabel>
               <Select
                 disabled={disabled}
-                onChange={handleDepartmentInputChange}
                 value={applicantDepartmentValue}
+                onChange={handleDepartmentInputChange}
                 input={<Input id={'department' + index} />}
               >
                 {departmentOptions}

@@ -48,8 +48,8 @@ const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInp
                     key={applicant.Profile.AD_Username}
                     disabled={disabled}
                     index={index}
-                    applicant={applicant.Profile}
-                    applicantProgram={applicant.OffCampusProgram}
+                    applicantProfile={applicant.Profile}
+                    offCampusProgram={applicant.OffCampusProgram}
                     departments={departments}
                     onOffCampusInputChange={handleInputChange}
                   />
