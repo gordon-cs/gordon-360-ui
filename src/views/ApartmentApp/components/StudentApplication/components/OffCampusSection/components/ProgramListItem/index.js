@@ -14,27 +14,27 @@ import {
 const ProgramListItem = ({
   disabled,
   index,
-  availableMajors,
-  applicantProgram,
   applicant,
-  onOffCampusChanged,
+  offCampusProgram,
+  departments,
+  onOffCampusInputChange,
 }) => {
   const [applicantDepartmentValue, setDepartmentValue] = useState(''); // Major drop-down menu value
 
   useEffect(() => {
-    setDepartmentValue(applicantProgram);
-  }, [applicantProgram]);
+    setDepartmentValue(offCampusProgram ?? '');
+  }, [offCampusProgram]);
 
   const handleDepartmentInputChange = (event) => {
     if (event.target.value !== null) {
       let newApplicantDepartmentValue = event.target.value;
-      onOffCampusChanged(applicant, newApplicantDepartmentValue, index);
+      onOffCampusInputChange(newApplicantDepartmentValue, index);
     }
   };
 
-  const departmentOptions = availableMajors.map((programName) => (
-    <MenuItem value={programName} key={programName}>
-      {programName}
+  const departmentOptions = departments.map((departmentName) => (
+    <MenuItem value={departmentName} key={departmentName}>
+      {departmentName}
     </MenuItem>
   ));
 

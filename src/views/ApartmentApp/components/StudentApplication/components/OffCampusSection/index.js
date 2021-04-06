@@ -1,31 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
 import ProgramListItem from './components/ProgramListItem';
 import goStalk from '../../../../../../services/goStalk';
 
 // Create a list of selection boxes to choosing which applicants are doing off campus programs.
-const OffCampusSection = ({ disabled, applicants, onOffCampusChanged }) => {
-  const [availableMajors, setAvailableMajors] = useState([]);
+const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInputChange }) => {
+  const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
     const loadDepartments = async () => {
-      let unfilteredDepartments;
-      try {
-        // Get the majors that the applicants may be completing off campus programs for
-        unfilteredDepartments = await goStalk.getMajors();
-      } catch {
-        // Get the majors that the applicants may be completing off campus programs for
-        unfilteredDepartments = await goStalk.getMajors();
-      }
+      // Get the majors that the applicants may be completing off campus programs for
+      let unfilteredDepartments = await goStalk.getDepartments();
       //Remove spaces from strings
-      setAvailableMajors(unfilteredDepartments.map((major) => major.trim()));
+      let availableDepartments = unfilteredDepartments.map((department) => department.trim());
+      setDepartments(availableDepartments);
     };
 
-    loadDepartments();
-  });
+    if (authentication) {
+      loadDepartments();
+    }
+  }, [authentication]);
 
-  const handleInputChange = (ApplicantNameValue, ApplicantMajorValue, index) => {
-    onOffCampusChanged(ApplicantNameValue, ApplicantMajorValue, index);
+  /**
+   * Callback for changes to off-campus program info
+   * @param {String} offCampusProgramValue The program that the applicant is doing an OC program for
+   * @param {Number} index The index of the applicant in the list
+   */
+  const handleInputChange = (offCampusProgramValue, index) => {
+    onOffCampusInputChange(offCampusProgramValue, index);
   };
 
   return (
@@ -40,15 +43,15 @@ const OffCampusSection = ({ disabled, applicants, onOffCampusChanged }) => {
               disablePadding
             >
               {applicants?.length > 0 &&
-                applicants.map((memberInfo, index) => (
+                applicants.map((applicant, index) => (
                   <ProgramListItem
-                    key={memberInfo.applicantMember + memberInfo.memberDepartment}
+                    key={applicant.Profile.AD_Username}
                     disabled={disabled}
                     index={index}
-                    applicantProgram={memberInfo.offCampusProgram}
-                    applicant={memberInfo.Profile}
-                    availableMajors={availableMajors}
-                    onOffCampusChanged={handleInputChange}
+                    applicant={applicant.Profile}
+                    applicantProgram={applicant.OffCampusProgram}
+                    departments={departments}
+                    onOffCampusInputChange={handleInputChange}
                   />
                 ))}
             </List>
@@ -57,6 +60,13 @@ const OffCampusSection = ({ disabled, applicants, onOffCampusChanged }) => {
       </CardContent>
     </Card>
   );
+};
+
+OffCampusSection.propTypes = {
+  disabled: PropTypes.bool,
+  authentication: PropTypes.any,
+  applicants: PropTypes.array.isRequired,
+  onOffCampusInputChange: PropTypes.func,
 };
 
 export default OffCampusSection;

@@ -385,31 +385,33 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
-   * Callback for changes to off campus list item name and/or major
-   * @param {Number} offCampusNameValue The name value that the user assigned to this applicant
-   * @param {String} offCampusMajorValue The program that the applicant is doing an OC program for
+   * Callback for changes to off-campus program info
+   * @param {String} offCampusProgramValue The program that the applicant is doing an OC program for
+   * @param {Number} index The index of the applicant in the list
    */
-  const handleOffCampusChanged = (offCampusUserName, offCampusProgramValue, index) => {
-    try {
+  const handleOffCampusInputChange = (offCampusProgramValue, index) => {
+    if (index !== null && index >= 0) {
       // Get the profile of the selected user
+      const applicant = applicants[index];
       let newApplicant = {
-        OffCampusProgram: offCampusProgramValue,
-        ...applicants[index],
+        ...applicant,
+        OffCampusProgram: offCampusProgramValue ?? applicant.OffCampusProgram,
       };
       // Error checking on the hallNameValue before modifying the newHallInfo object
-      setApplicants((previousapplicants) =>
+      setApplicants((prevApplicants) =>
         // replace the element at index with the new hall info object
-        previousapplicants.map((applicant, j) => {
-          if (index === j) {
+        prevApplicants.map((prevApplicant, j) => {
+          if (j === index) {
             return newApplicant;
           } else {
-            return applicant;
+            return prevApplicant;
           }
         }),
       );
-    } catch (error) {
+    } else {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
       setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
   };
 
@@ -683,14 +685,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     )}
                   </Grid>
                   <Grid item>
-                    <Card>
+                    {userProfile.AD_Username === editorUsername ? (
                       <OffCampusSection
+                        authentication
                         applicants={applicants}
-                        onOffCampusChanged={handleOffCampusChanged}
-                        saving={saving}
-                        onSaveButtonClick={handleSaveButtonClick}
+                        onOffCampusInputChange={handleOffCampusInputChange}
                       />
-                    </Card>
+                    ) : (
+                      <OffCampusSection disabled authentication applicants={applicants} />
+                    )}
                   </Grid>
                 </Grid>
                 <Grid container item xs={12} md={4} direction="column" spacing={2}>
