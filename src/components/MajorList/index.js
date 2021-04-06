@@ -31,7 +31,7 @@ export default class Majors extends Component {
       });
       content = <Typography>{majorText}</Typography>;
 
-      if(this.props.majors.length === 0) {
+      if (this.props.majors.length === 0) {
         content = <Typography>Undecided</Typography>;
       }
 

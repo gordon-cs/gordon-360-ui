@@ -109,4 +109,10 @@ $drawer-width: 240px;
   .menu-button-icon {
     color: $neutral-white;
   }
+
+  .login-button {
+    background-color: $primary-cyan;
+    color: $neutral-white;
+    &:hover { background-color:$secondary-red; }
+  }
 }

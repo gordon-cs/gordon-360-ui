@@ -8,7 +8,7 @@ import RemoveScheduleDialog from './components/RemoveScheduleDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
 import schedulecontrol from './../../services/schedulecontrol';
-import urlRegex from 'url-regex';
+import urlRegex from 'url-regex-safe';
 import { Markup } from 'interweave';
 
 import myschedule from '../../services/myschedule';
@@ -241,7 +241,7 @@ class GordonSchedulePanel extends Component {
   }
 
   render() {
-    const replaced = this.state.description.replace(urlRegex({ strict: false }), function(url) {
+    const replaced = this.state.description.replace(urlRegex({ strict: false }), function (url) {
       if (url.split('://')[0] !== 'http' && url.split('://')[0] !== 'https') {
         return '<a target="_blank" rel="noopener" href="https://' + url + '">' + url + '</a>';
       } else {
