@@ -64,6 +64,8 @@ const checkHousingAdmin = async () => {
     return await http.get(`housing/admin`);
   } catch (err) {
     // handle thrown 404 errors
+    console.log(err);
+    console.log(err.status);
     if (err.status !== 404) throw err;
     console.log('A 404 code indicates that current user was not found on the list of admins');
     return false;
