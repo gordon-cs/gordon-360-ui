@@ -98,7 +98,7 @@ const deleteHousingAdmin = (username) => {
  * @return {Promise.<ApartmentHalls[]>} List of halls
  */
 const getApartmentHalls = () => {
-  return http.get('housing/apartment/halls');
+  return http.get('housing/halls/apartments');
 };
 
 /**
