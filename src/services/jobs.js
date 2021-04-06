@@ -5,9 +5,12 @@
 
 import http from './http';
 
-const dateFormat = new Intl.DateTimeFormat('en', {
-  timeStyle: 'medium',
-  dateStyle: 'short',
+const dateFormatter = Intl.DateTimeFormat('en', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
 });
 
 /**
@@ -26,9 +29,9 @@ const getStaffPageForUser = async () => {
  * @return {Promise.<String>} User's active jobs
  */
 const getJobs = (canUseStaff, shiftStart, shiftEnd) => {
-  const urlParams = `?shiftStart=${dateFormat.format(shiftStart)}&shiftEnd=${dateFormat.format(
-    shiftEnd,
-  )}`;
+  const urlParams = `?shiftStart=${dateFormatter.format(
+    shiftStart,
+  )}&shiftEnd=${dateFormatter.format(shiftEnd)}`;
 
   if (canUseStaff) {
     return http.get('jobs/staff' + urlParams);
@@ -71,8 +74,8 @@ const saveShiftForUser = async (
 ) => {
   const shiftDetails = {
     EML: eml,
-    SHIFT_START_DATETIME: dateFormat.format(shiftStart),
-    SHIFT_END_DATETIME: dateFormat.format(shiftEnd),
+    SHIFT_START_DATETIME: dateFormatter.format(shiftStart),
+    SHIFT_END_DATETIME: dateFormatter.format(shiftEnd),
     HOURS_WORKED: hoursWorked,
     HOURS_TYPE: canUseStaff ? hoursType : null,
     SHIFT_NOTES: shiftNotes,
@@ -88,8 +91,8 @@ const editShift = async (canUseStaff, rowID, newShiftStart, newShiftEnd, newHour
   let newShiftDetails = {
     ID: rowID,
     EML: null,
-    SHIFT_START_DATETIME: dateFormat.format(newShiftStart),
-    SHIFT_END_DATETIME: dateFormat.format(newShiftEnd),
+    SHIFT_START_DATETIME: dateFormatter.format(newShiftStart),
+    SHIFT_END_DATETIME: dateFormatter.format(newShiftEnd),
     HOURS_WORKED: newHoursWorked,
     SHIFT_NOTES: null,
     LAST_CHANGED_BY: null,
@@ -118,7 +121,7 @@ const submitShiftsForUser = (canUseStaff, shifts, submittedTo) => {
   const shiftDetails = (shift) => ({
     ID_NUM: shift.ID_NUM,
     EML: shift.EML,
-    SHIFT_END_DATETIME: dateFormat.format(new Date(shift.SHIFT_END_DATETIME)),
+    SHIFT_END_DATETIME: dateFormatter.format(new Date(shift.SHIFT_END_DATETIME)),
     SUBMITTED_TO: submittedTo,
     HOURS_TYPE: canUseStaff ? shift.HOURS_TYPE : null,
     LAST_CHANGED_BY: shift.LAST_CHANGED_BY,

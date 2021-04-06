@@ -13,6 +13,7 @@ import membership from '../../services/membership';
 import emails from '../../services/emails';
 import session from '../../services/session';
 import { gordonColors } from '../../theme';
+import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
 import user from '../../services/user';
 import {
   CardHeader,
@@ -28,7 +29,6 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-//import '../../app.js';
 
 const CROP_DIM = 320; // pixels
 
@@ -68,6 +68,7 @@ class ActivityProfile extends Component {
       participationDescription: [],
       network: 'online',
     };
+    this.cropperRef = React.createRef();
   }
 
   async componentWillMount() {
@@ -155,10 +156,10 @@ class ActivityProfile extends Component {
   onDropAccepted(fileList) {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
-    reader.onload = function() {
+    reader.onload = function () {
       var dataURL = reader.result.toString();
       var i = new Image();
-      i.onload = function() {
+      i.onload = function () {
         if (i.width < CROP_DIM || i.height < CROP_DIM) {
           alert(
             'Sorry, your image is too small! Image dimensions must be at least 320 x 320 pixels.',
@@ -206,7 +207,7 @@ class ActivityProfile extends Component {
   onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      this.refs.cropper.zoomTo(1);
+      this.cropperRef.current.cropper.zoomTo(1);
     }
   }
 
@@ -273,7 +274,9 @@ class ActivityProfile extends Component {
   handleCloseSelect = () => {
     if (this.state.preview != null) {
       this.setState({ image: this.state.preview });
-      var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      var croppedImage = this.cropperRef.current.cropper
+        .getCroppedCanvas({ width: CROP_DIM })
+        .toDataURL();
       this.setState({ image: croppedImage, photoOpen: false, preview: null });
     }
   };
@@ -446,7 +449,7 @@ class ActivityProfile extends Component {
                         {preview && (
                           <Grid container justify="center" spacing={6}>
                             <Cropper
-                              ref="cropper"
+                              ref={this.cropperRef}
                               src={preview}
                               style={{
                                 'max-width': this.maxCropPreviewWidth(),
@@ -745,10 +748,7 @@ class ActivityProfile extends Component {
                     marginRight: 'auto',
                   }}
                 >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
+                  <NoConnectionImage />
                 </Grid>
                 <br />
                 <h1>Please Re-establish Connection</h1>

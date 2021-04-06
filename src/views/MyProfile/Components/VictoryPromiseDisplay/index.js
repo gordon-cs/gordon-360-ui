@@ -3,11 +3,25 @@ import { gordonColors } from '../../../../theme';
 import { Polar } from 'react-chartjs-2';
 import victory from '../../../../services/victory';
 import './VictoryPromise.css';
-import './VictoryPromise.css';
 import { withStyles } from '@material-ui/core/styles';
-import './VictoryPromise.css';
+import {ReactComponent as OffCC} from './images/Off-CC.svg'
+import {ReactComponent as OnCC} from './images/On-CC.svg'
+import {ReactComponent as OffIM} from './images/Off-IM.svg'
+import {ReactComponent as OnIM} from './images/On-IM.svg'
+import {ReactComponent as OffLW} from './images/Off-LW.svg'
+import {ReactComponent as OnLW} from './images/On-LW.svg'
+import {ReactComponent as OffLS} from './images/Off-LS.svg'
+import {ReactComponent as OnLS} from './images/On-LS.svg'
 
-import { Grid, CardHeader, Tooltip, Button, Typography, Card, CardContent } from '@material-ui/core';
+import {
+  Grid,
+  CardHeader,
+  Tooltip,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+} from '@material-ui/core';
 
 export default class VictoryPromiseDisplay extends React.Component {
   constructor(props) {
@@ -114,7 +128,7 @@ export default class VictoryPromiseDisplay extends React.Component {
           },
           tooltips: {
             callbacks: {
-              label: function(tooltipItem, data) {
+              label: function (tooltipItem, data) {
                 var label = data.labels[tooltipItem.index];
                 return label + ': 0';
               },
@@ -142,7 +156,7 @@ export default class VictoryPromiseDisplay extends React.Component {
           },
           tooltips: {
             callbacks: {
-              label: function(tooltipItem, data) {
+              label: function (tooltipItem, data) {
                 var label = data.labels[tooltipItem.index];
                 if (tooltipItem.yLabel < min) {
                   return label + ': 0';
@@ -189,73 +203,48 @@ export default class VictoryPromiseDisplay extends React.Component {
 
     if (this.state.CC_ON) {
       IMG_CC = (
-        <img
-          className="victory-promise-container-card-container-content-box-layout-vpdesign"
-          src={require('./images/On-CC.svg')}
-          alt="Christian Character"
-        />
+        <OnCC className="victory-promise-icon"/>
+
       );
     } else {
       IMG_CC = (
-        <img
-          className="victory-promise-container-card-container-content-box-layout-vpdesign"
-          src={require('./images/Off-CC.svg')}
-          alt="Christian Character"
-        />
+        <OffCC className="victory-promise-icon"/>
       );
     }
 
     if (this.state.IM_ON) {
       IMG_IM = (
-        <img
-          className="victory-promise-container-card-container-content-box-layout-vpdesign"
-          src={require('./images/On-IM.svg')}
-          alt="Intellectual Maturity"
-        />
+        <OnIM className="victory-promise-icon"/>
       );
     } else {
       IMG_IM = (
-        <img
-          className="victory-promise-container-card-container-content-box-layout-vpdesign"
-          src={require('./images/Off-IM.svg')}
-          alt="Intellectual Maturity"
-        />
+        <OffIM className="victory-promise-icon"/>
       );
     }
 
     if (this.state.LS_ON) {
       IMG_LS = (
-        <img
-          className="victory-promise-container-card-container-content-box-layout-vpdesign"
-          src={require('./images/On-LS.svg')}
-          alt="Lives of Service"
-        />
+
+        <OnLS className="victory-promise-icon"/>
+
       );
     } else {
       IMG_LS = (
-        <img
-          className="victory-promise-container-card-container-content-box-layout-vpdesign"
-          src={require('./images/Off-LS.svg')}
-          alt="Lives of Service"
-        />
+
+        <OffLS className="victory-promise-icon"/>
+
       );
     }
 
     if (this.state.LW_ON) {
       IMG_LW = (
-        <img
-          className="victory-promise-container-card-container-content-box-layout-vpdesign"
-          src={require('./images/On-LW.svg')}
-          alt="Leadership Worldwide"
-        />
+
+        <OnLW className="victory-promise-icon"/>
+
       );
     } else {
       IMG_LW = (
-        <img
-          className="victory-promise-container-card-container-content-box-layout-vpdesign"
-          src={require('./images/Off-LW.svg')}
-          alt="Leadership Worldwide"
-        />
+<OffLW className="victory-promise-icon" />
       );
     }
 
