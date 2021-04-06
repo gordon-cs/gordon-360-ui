@@ -64,10 +64,11 @@ const checkHousingAdmin = async () => {
     return await http.get(`housing/admin`);
   } catch (err) {
     // handle thrown 404 errors
-    console.log(err);
-    console.log(err.status);
-    if (err.status !== 404) throw err;
-    console.log('A 404 code indicates that current user was not found on the list of admins');
+    if (err.status === 404 || err.name.includes('NotFound')) {
+      console.log('A 404 code indicates that current user was not found on the list of admins');
+    } else {
+      throw err;
+    }
     return false;
   }
 };
@@ -105,9 +106,12 @@ const getCurrentApplicationID = async (username) => {
     }
   } catch (err) {
     // handle thrown 404 errors
-    if (err.status !== 404) throw err;
+    if (err.status === 404 || err.name.includes('NotFound')) {
+      console.log('A 404 code indicates that an application was not found for this applicant');
+    } else {
+      throw err;
+    }
     applicationID = false;
-    console.log('A 404 code indicates that an application was not found for this applicant');
   }
   return applicationID;
 };

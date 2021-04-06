@@ -99,6 +99,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
             throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
           } else if (isSubscribed) {
             setApplicationID(newApplicationID);
+            setUnsavedChanges(false);
             housing
               .getApartmentApplication(newApplicationID)
               .then((newApplicationDetails) => {
@@ -107,24 +108,22 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   setDateSubmitted(newApplicationDetails.DateSubmitted ?? null);
                   setDateModified(newApplicationDetails.DateModified ?? null);
                   setEditorUsername(newApplicationDetails.EditorUsername ?? null);
-                  if (newApplicationDetails.Applicants) {
-                    newApplicationDetails.Applicants.forEach(async (newApplicantInfo) => {
-                      if (newApplicantInfo.Profile !== null) {
-                        setApplicants((prevApplicants) => [...prevApplicants, newApplicantInfo]);
-                      } else {
-                        const newApplicantProfile = await user.getProfileInfo(
-                          newApplicantInfo.Username,
-                        );
-                        setApplicants((prevApplicants) => [
-                          ...prevApplicants,
-                          {
-                            Profile: newApplicantProfile,
-                            ...newApplicantInfo,
-                          },
-                        ]);
-                      }
-                    });
-                  }
+                  setApplicants((prevApplicants) => {
+                    if (newApplicationDetails.Applicants?.length > 0) {
+                      return newApplicationDetails.Applicants.map(async (newApplicantInfo) => {
+                        if (newApplicantInfo.Profile !== null) {
+                          return newApplicantInfo;
+                        } else {
+                          const newApplicantProfile = await user.getProfileInfo(
+                            newApplicantInfo.Username,
+                          );
+                          return { Profile: newApplicantProfile, ...newApplicantInfo };
+                        }
+                      });
+                    } else {
+                      return prevApplicants;
+                    }
+                  });
                   setPreferredHalls(newApplicationDetails?.ApartmentChoices ?? []);
                   setUnsavedChanges(false);
                 }
@@ -543,7 +542,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
   );
 
   if (loading) {
-    return <GordonLoader />;
+    return (
+      <Grid container justify="center" spacing={2}>
+        <Grid item xs={12} md={8}>
+          <GordonLoader />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <InstructionsCard />
+        </Grid>
+      </Grid>
+    );
   } else {
     return (
       <div className="apartment-application">
@@ -559,7 +567,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
               />
             </Collapse>
           </Grid>
-          {applicationID && (
+          {applicationID > 0 && (
             <Grid item xs={12} md={6} lg={4}>
               <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
                 <ApplicationDataTable
@@ -673,7 +681,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Grid>
                   )}
                   <Grid item>
-                    <Collapse in={applicationID} timeout="auto" unmountOnExit>
+                    <Collapse in={applicationID > 0} timeout="auto" unmountOnExit>
                       <ApplicationDataTable
                         dateSubmitted={dateSubmitted}
                         dateModified={dateModified}
