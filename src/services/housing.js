@@ -166,7 +166,18 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  * @return {Promise.<ApplicationDetails>} Application details
  */
 const getApartmentApplication = async (applicationID) => {
-  return await http.get(`housing/apartment/applications/${applicationID}/`);
+  try {
+    return await http.get(`housing/apartment/applications/${applicationID}/`);
+  } catch (err) {
+    if (err.status === 404 || err.name.includes('NotFound')) {
+      console.log(
+        'Received 404 indicates that the requested application was found in the database',
+      );
+    } else {
+      throw err;
+    }
+    return null;
+  }
 };
 
 /**
@@ -174,20 +185,16 @@ const getApartmentApplication = async (applicationID) => {
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getAllApartmentApplications = async () => {
-  let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
-
-  // Calculate the total and average points for each application
-  applicationDetailsArray.forEach((applicationDetails) => {
-    let totalPoints = 0;
-    applicationDetails.Applicants.forEach((applicant) => {
-      totalPoints += applicant.Points;
-    });
-    let avgPoints = totalPoints / applicationDetails.Applicants.length;
-    applicationDetails.TotalPoints = totalPoints;
-    applicationDetails.AvgPoints = avgPoints;
-  });
-
-  return applicationDetailsArray;
+  try {
+    return await http.get(`housing/admin/apartment/applications/`);
+  } catch (err) {
+    if (err.status === 404 || err.name.includes('NotFound')) {
+      console.log('Received 404 indicates that no applications were found in the database');
+    } else {
+      throw err;
+    }
+    return []; // Return an empty array if no applications were found
+  }
 };
 
 export default {
