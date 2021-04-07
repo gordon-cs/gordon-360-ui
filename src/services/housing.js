@@ -171,7 +171,7 @@ const getApartmentApplication = async (applicationID) => {
   } catch (err) {
     if (err.status === 404 || err.name.includes('NotFound')) {
       console.log(
-        'Received 404 indicates that the requested application was found in the database',
+        'Received 404 indicates that the requested application was not found in the database',
       );
     } else {
       throw err;
