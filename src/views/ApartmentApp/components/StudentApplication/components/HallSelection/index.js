@@ -25,7 +25,7 @@ const HallSelection = ({
 
   useEffect(() => {
     const loadHalls = async () => {
-      setHalls(housing.getApartmentHalls());
+      setHalls(await housing.getApartmentHalls());
     };
 
     if (authentication) {
