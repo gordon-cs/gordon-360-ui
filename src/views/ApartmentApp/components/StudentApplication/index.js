@@ -77,9 +77,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Loads the user's saved apartment application, if one exists
    */
   useEffect(() => {
-    const handleError = (_error) => {
-      // No existing application was found in the database,
-      // or an error occurred while attempting to load the application
+    const initializeNewApplication = () => {
       setApplicationID(null);
       setEditorUsername((prevEditorUsername) => prevEditorUsername ?? userProfile.AD_Username);
       setApplicants((prevApplicants) =>
@@ -94,8 +92,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         // Check if the current user is on an application. Returns the application ID number if found
         const newApplicationID = await housing.getCurrentApplicationID();
         if (newApplicationID === null || newApplicationID === -1) {
-          // Intentionally trigger the 'catch'
-          throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
+          initializeNewApplication();
         } else {
           setApplicationID(newApplicationID);
           setUnsavedChanges(false);
@@ -111,7 +108,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           }
         }
       } catch (error) {
-        handleError(error);
+        initializeNewApplication();
       } finally {
         setLoading(false);
       }
