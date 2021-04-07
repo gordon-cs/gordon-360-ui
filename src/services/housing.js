@@ -189,7 +189,18 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  * @return {Promise.<ApplicationDetails>} Application details
  */
 const getApartmentApplication = async (applicationID) => {
-  return await http.get(`housing/apartment/applications/${applicationID}/`);
+  try {
+    return await http.get(`housing/apartment/applications/${applicationID}/`);
+  } catch (err) {
+    if (err?.status === 404 || err?.name?.includes('NotFound')) {
+      console.log(
+        'Received 404 indicates that the requested application was not found in the database',
+      );
+    } else {
+      throw err;
+    }
+    return null;
+  }
 };
 
 /**
@@ -197,148 +208,16 @@ const getApartmentApplication = async (applicationID) => {
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getAllApartmentApplications = async () => {
-  let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
-
-  //! DEBUG: This exists purely for testing the features without the backend.
-  /*
-  let applicationDetailsArray = [
-    {
-      ApplicationID: 15,
-      DateSubmitted: new Date('2030-03-14'),
-      DateModified: new Date('2030-03-14'),
-      EditorUsername: 'Bobby.Tables',
-      Gender: 'M',
-      Applicants: [
-        {
-          Username: 'Bobby.Tables',
-          Age: 21,
-          Class: 'Senior',
-          OffCampusProgram: 'Computer Science',
-          Probation: 'no',
-          Points: 7,
-        },
-        { Username: 'Frederick.Fox', Age: 20, OffCampusProgram: '', Probation: 'yes', Points: 5 },
-        {
-          Username: 'Tommy.Turtle',
-          Age: 22,
-          Class: 'Junior',
-          OffCampusProgram: 'Education',
-          Probation: 'no',
-          Points: 6,
-        },
-        {
-          Username: 'Tommy2.Turtle',
-          Age: 22,
-          OffCampusProgram: 'Education',
-          Probation: 'no',
-          Points: 6,
-        },
-        {
-          Username: 'Tommy3.Turtle',
-          Age: 22,
-          OffCampusProgram: 'Education',
-          Probation: 'no',
-          Points: 6,
-        },
-      ],
-      ApartmentChoices: [
-        { HallRank: 1, HallName: 'Gantley' },
-        { HallRank: 2, HallName: 'Tavilla' },
-      ],
-    },
-    {
-      ApplicationID: 42,
-      DateSubmitted: new Date('2022-03-14'),
-      DateModified: new Date('2022-03-14'),
-      EditorUsername: 'Tommy.Turtle',
-      Gender: 'M',
-      Applicants: [
-        {
-          ApplicationID: 42,
-          Username: 'Tommy.Turtle',
-          Age: 21,
-          OffCampusProgram: '',
-          Probation: 'no',
-          Points: 6,
-        },
-        {
-          ApplicationID: 42,
-          Username: 'Borrus.Buffalo',
-          Age: 20,
-          OffCampusProgram: '',
-          Probation: 'no',
-          Points: 5,
-        },
-      ],
-      ApartmentChoices: [
-        {
-          HallRank: 1,
-          HallName: 'Gantley',
-        },
-        {
-          HallRank: 2,
-          HallName: 'KOSC',
-        },
-        {
-          HallRank: 3,
-          HallName: 'Not-a-real-dorm',
-        },
-      ],
-    },
-    {
-      ApplicationID: 36,
-      DateSubmitted: new Date('2022-03-14'),
-      DateModified: new Date('2022-03-14'),
-      EditorUsername: 'Zippy.Zebra',
-      Gender: 'F',
-      Applicants: [
-        {
-          ApplicationID: 42,
-          Username: 'Zippy.Zebra',
-          Age: 22,
-          OffCampusProgram: '',
-          Probation: 'no',
-          Points: 6,
-        },
-        {
-          ApplicationID: 42,
-          Username: 'Charlene.Cat',
-          Age: 21,
-          OffCampusProgram: '',
-          Probation: 'no',
-          Points: 5,
-        },
-      ],
-      ApartmentChoices: [
-        {
-          HallRank: 1,
-          HallName: 'Gantley',
-        },
-        {
-          HallRank: 2,
-          HallName: 'KOSC',
-        },
-        {
-          HallRank: 3,
-          HallName: 'Not-a-real-dorm',
-        },
-      ],
-    },
-  ];
-  */
-
-  // Calculate the total and average points for each application
-  applicationDetailsArray.forEach((applicationDetails) => {
-    let totalPoints = 0;
-    applicationDetails.Applicants.forEach((applicant) => {
-      totalPoints += applicant.Points;
-    });
-    let avgPoints = totalPoints / applicationDetails.Applicants.length;
-    applicationDetails.TotalPoints = totalPoints;
-    applicationDetails.AvgPoints = avgPoints;
-  });
-
-  return applicationDetailsArray;
+  try {
+    return await http.get(`housing/admin/apartment/applications/`);
+  } catch (err) {
+    if (err?.status === 404 || err?.name?.includes('NotFound')) {
+      console.log('Received 404 indicates that no applications were found in the database');
+    } else {
+      throw err;
+    }
+    return []; // Return an empty array if no applications were found
+  }
 };
 
 export default {
