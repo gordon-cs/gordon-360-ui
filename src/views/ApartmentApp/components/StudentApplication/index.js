@@ -78,7 +78,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   useEffect(() => {
     const handleError = (_error) => {
-      console.log('Handling error loading application details');
       // No existing application was found in the database,
       // or an error occurred while attempting to load the application
       setApplicationID(null);
