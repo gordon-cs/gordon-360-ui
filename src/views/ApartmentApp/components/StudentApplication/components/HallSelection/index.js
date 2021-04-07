@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import HallListItem from './components/HallListItem';
-import goStalk from '../../../../../../services/goStalk';
 import housing from '../../../../../../services/housing';
 
 /**
