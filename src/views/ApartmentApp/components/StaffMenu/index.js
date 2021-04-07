@@ -71,16 +71,12 @@ const StaffMenu = ({ userProfile, authentication }) => {
         let { Applicants, ApartmentChoices, ...filteredApplicationDetails } = applicationDetails;
         applicationsForCsv.push(filteredApplicationDetails);
 
-        Applicants.forEach((applicant) => {
-          if (applicant.ApplicationID) {
-            applicantsForCsv.push(applicant);
-          } else {
-            applicantsForCsv.push({
-              ApplicationID: applicationDetails.ApplicationID,
-              ...applicant,
-            });
-          }
-        });
+        Applicants.forEach((applicant) =>
+          applicantsForCsv.push({
+            ApplicationID: applicant.ApplicationID ?? applicationDetails.ApplicationID,
+            ...applicant,
+          }),
+        );
 
         ApartmentChoices.forEach((apartmentChoice) => {
           apartmentChoicesForCsv.push({
