@@ -57,42 +57,51 @@ const StaffMenu = ({ userProfile, authentication }) => {
     setDateStr(dateStr);
   }, [userProfile, loadAllCurrentApplications]);
 
-  /**
-   * Generate arrays of objects to be converted to a CSV
-   * @param {ApplicationDetails[]} applicationDetailsArray an array of ApplicationDetails objects
-   */
-  const generateCSVData = useCallback((applicationDetailsArray) => {
-    let applicationsForCsv = [];
-    let applicantsForCsv = [];
-    let apartmentChoicesForCsv = [];
-    applicationDetailsArray.forEach(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
-      // Only add the applications that have been submitted
-      if (applicationDetails.DateSubmitted) {
-        applicationsForCsv.push(applicationDetails);
-
-        Applicants.forEach(({ Profile, ...applicant }) =>
-          applicantsForCsv.push({
-            ApplicationID: applicant.ApplicationID ?? applicationDetails.ApplicationID,
-            ...applicant,
-          }),
-        );
-
-        ApartmentChoices.forEach((apartmentChoice) => {
-          apartmentChoicesForCsv.push({
-            ApplicationID: apartmentChoice.ApplicationID ?? applicationDetails.ApplicationID,
-            ...apartmentChoice,
-          });
-        });
-      }
-    });
-    setApplicationJsonArray(applicationsForCsv);
-    setApplicantJsonArray(applicantsForCsv);
-    setApartmentChoiceJsonArray(apartmentChoicesForCsv);
-  }, []);
-
   useEffect(() => {
+    /**
+     * Generate arrays of objects to be converted to a CSV
+     * @param {ApplicationDetails[]} applicationDetailsArray an array of ApplicationDetails objects
+     */
+    const generateCSVData = (applicationDetailsArray) => {
+      setApplicationJsonArray(
+        applicationDetailsArray
+          ?.filter((applicationDetails) => applicationDetails?.DateSubmitted) // Only add the applications that have been submitted
+          ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
+            const applicationID = applicationDetails.ApplicationID;
+
+            setApplicantJsonArray((prevApplicantsJsonArray) =>
+              Applicants?.length > 0
+                ? [
+                    ...prevApplicantsJsonArray,
+                    ...Applicants?.map(({ Profile, StudentID, ...applicant }) =>
+                      applicant.ApplicationID > 0
+                        ? applicant
+                        : { ApplicationID: applicationID, ...applicant },
+                    ),
+                  ]
+                : prevApplicantsJsonArray,
+            );
+
+            setApartmentChoiceJsonArray((prevApartmentChoiceJsonArray) =>
+              ApartmentChoices?.length > 0
+                ? [
+                    ...prevApartmentChoiceJsonArray,
+                    ...ApartmentChoices.map((apartmentChoice) =>
+                      apartmentChoice.ApplicationID > 0
+                        ? apartmentChoice
+                        : { ApplicationID: applicationID, ...apartmentChoice },
+                    ),
+                  ]
+                : prevApartmentChoiceJsonArray,
+            );
+
+            return applicationDetails;
+          }) ?? [],
+      );
+    };
+
     generateCSVData(applications);
-  }, [applications, generateCSVData]);
+  }, [applications]);
 
   if (loading) {
     return <GordonLoader />;
