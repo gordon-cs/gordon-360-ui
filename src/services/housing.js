@@ -20,6 +20,14 @@ import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * @global
+ * @typedef ApartmentHall
+ * @property {Number} RoomCapacity Number of people per room/apartment   (not yet implemented in API)
+ * @property {String} Gender Gender ('M', 'F', or '' for both)   (not yet implemented in API)
+ * @property {String} Name The name of the hall
+ */
+
+/**
+ * @global
  * @typedef ApartmentApplicant
  * @property {Number} ApplicationID Application ID number of this application
  * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
@@ -75,7 +83,7 @@ const checkHousingAdmin = async () => {
 
 /**
  * Add a user to the housing admin whitelist
- * @param {String} [username] Username in firstname.lastname format
+ * @param {String} username Username in firstname.lastname format
  * @return {Response} response of http request
  */
 const addHousingAdmin = (username) => {
@@ -84,11 +92,19 @@ const addHousingAdmin = (username) => {
 
 /**
  * Delete a user to the housing admin whitelist
- * @param {String} [username] Username in firstname.lastname format
+ * @param {String} username Username in firstname.lastname format
  * @return {Response} response of http request
  */
 const deleteHousingAdmin = (username) => {
   return http.del(`housing/admin/${username}/`);
+};
+
+/**
+ * Get all halls
+ * @return {Promise.<ApartmentHall[]>} List of halls
+ */
+const getApartmentHalls = () => {
+  return http.get('housing/halls/apartments');
 };
 
 /**
@@ -329,6 +345,7 @@ export default {
   checkHousingAdmin,
   addHousingAdmin,
   deleteHousingAdmin,
+  getApartmentHalls,
   getCurrentApplicationID,
   saveApartmentApplication,
   changeApartmentAppEditor,
