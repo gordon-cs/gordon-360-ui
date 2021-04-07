@@ -36,7 +36,7 @@ const ApplicantListItem = ({
 
   useEffect(() => {
     loadAvatar(profile);
-    createNickname(profile);
+    setHasNickname(profile.FirstName === profile.NickName && profile.NickName !== '');
     if (String(profile.PersonType).includes('stu') && profile.Class !== undefined) {
       setPersonClass(profile.Class);
     } else {
@@ -60,14 +60,6 @@ const ApplicantListItem = ({
         </svg>,
       );
     }
-  };
-
-  /**
-   * Saves the nickname of the given user if available
-   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the student represented by this list item
-   */
-  const createNickname = (profile) => {
-    setHasNickname(profile.FirstName !== profile.NickName && profile.NickName !== '');
   };
 
   /**
