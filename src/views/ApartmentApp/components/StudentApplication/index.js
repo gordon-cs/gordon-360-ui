@@ -105,20 +105,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
             setDateSubmitted(newApplicationDetails.DateSubmitted ?? null);
             setDateModified(newApplicationDetails.DateModified ?? null);
             setEditorUsername(newApplicationDetails.EditorUsername ?? null);
-            if (newApplicationDetails.Applicants?.length > 0) {
-              Promise.all(
-                newApplicationDetails.Applicants.map(async (newApplicantInfo) => {
-                  if (newApplicantInfo.Profile !== null) {
-                    return newApplicantInfo;
-                  } else {
-                    const newApplicantProfile = await user.getProfileInfo(
-                      newApplicantInfo.Username,
-                    );
-                    return { Profile: newApplicantProfile, ...newApplicantInfo };
-                  }
-                }),
-              ).then((newApplicants) => setApplicants(newApplicants));
-            }
+            setApplicants(newApplicationDetails?.Applicants ?? []);
             setPreferredHalls(newApplicationDetails?.ApartmentChoices ?? []);
             setUnsavedChanges(false);
           }
