@@ -108,7 +108,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={!authentication}
+                    disabled={applicationJsonArray?.length < 1} // This check works correctly for both Number and null
                     component={CSVLink}
                     data={applicationJsonArray}
                     filename={`${filePrefix}-summary-${dateStr}.csv`}
@@ -122,7 +122,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={!authentication}
+                    disabled={applicantJsonArray?.length < 1}
                     component={CSVLink}
                     data={applicantJsonArray}
                     filename={`${filePrefix}-applicants-${dateStr}.csv`}
@@ -136,7 +136,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={!authentication}
+                    disabled={apartmentChoiceJsonArray?.length < 1}
                     component={CSVLink}
                     data={apartmentChoiceJsonArray}
                     filename={`${filePrefix}-halls-${dateStr}.csv`}
