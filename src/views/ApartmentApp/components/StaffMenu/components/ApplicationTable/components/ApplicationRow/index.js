@@ -15,7 +15,7 @@ const ApplicationRow = ({ applicationDetails, labelId }) => {
           {applicationDetails.ApplicationID}
         </TableCell>
         <TableCell align="center">{applicationDetails.EditorUsername}</TableCell>
-        <TableCell align="center">{applicationDetails.Applicants.length}</TableCell>
+        <TableCell align="center">{applicationDetails.Applicants?.length ?? 0}</TableCell>
         <TableCell align="center">{applicationDetails.Gender}</TableCell>
         <TableCell align="center">
           {applicationDetails.ApartmentChoices[0]?.HallName ?? 'N/A'}
