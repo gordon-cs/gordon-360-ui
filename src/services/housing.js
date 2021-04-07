@@ -169,7 +169,7 @@ const getApartmentApplication = async (applicationID) => {
   try {
     return await http.get(`housing/apartment/applications/${applicationID}/`);
   } catch (err) {
-    if (err.status === 404 || err.name.includes('NotFound')) {
+    if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log(
         'Received 404 indicates that the requested application was not found in the database',
       );
@@ -188,7 +188,7 @@ const getAllApartmentApplications = async () => {
   try {
     return await http.get(`housing/admin/apartment/applications/`);
   } catch (err) {
-    if (err.status === 404 || err.name.includes('NotFound')) {
+    if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log('Received 404 indicates that no applications were found in the database');
     } else {
       throw err;
