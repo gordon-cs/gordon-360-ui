@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { CSVLink } from 'react-csv';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { DateTime } from 'luxon';
 import GordonLoader from '../../../../components/Loader';
 import housing from '../../../../services/housing';
@@ -143,6 +144,24 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     target="_blank"
                   >
                     Download Apartment Hall Choices
+                  </Button>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={9} md={6} lg={3}>
+          <Card>
+            <CardContent>
+              <Grid container direction="row" spacing={2} padded>
+                <Grid item xs={12}>
+                  <Button
+                    variant="filled"
+                    color="primary"
+                    startIcon={<RefreshIcon />}
+                    onClick={loadAllCurrentApplications}
+                  >
+                    Refresh Application Data
                   </Button>
                 </Grid>
               </Grid>
