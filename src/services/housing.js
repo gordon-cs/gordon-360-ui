@@ -20,6 +20,14 @@ import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * @global
+ * @typedef ApartmentHall
+ * @property {Number} RoomCapacity Number of people per room/apartment   (not yet implemented in API)
+ * @property {String} Gender Gender ('M', 'F', or '' for both)   (not yet implemented in API)
+ * @property {String} Name The name of the hall
+ */
+
+/**
+ * @global
  * @typedef ApartmentApplicant
  * @property {Number} ApplicationID Application ID number of this application
  * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
@@ -44,9 +52,10 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @global
  * @typedef ApplicationDetails
  * @property {Number} ApplicationID Application ID number of this application
- * @property {*} DateSubmitted The date the application was submitted, or null if not yet submitted
- * @property {*} DateModified The date the application was last modified
+ * @property {DateTime} DateSubmitted The date the application was submitted, or null if not yet submitted
+ * @property {DateTime} DateModified The date the application was last modified
  * @property {String} EditorUsername Username of the application editor
+ * @property {String} EditorEmail Email address of the application editor
  * @property {String} Gender Gender
  * @property {ApartmentApplicant[]} Applicants Array of ApartmentApplicant objects
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
@@ -63,15 +72,18 @@ const checkHousingAdmin = async () => {
     return await http.get(`housing/admin`);
   } catch (err) {
     // handle thrown 404 errors
-    if (err.status !== 404) throw err;
-    console.log('A 404 code indicates that current user was not found on the list of admins');
+    if (err.status === 404 || err.name.includes('NotFound')) {
+      console.log('A 404 code indicates that current user was not found on the list of admins');
+    } else {
+      throw err;
+    }
     return false;
   }
 };
 
 /**
  * Add a user to the housing admin whitelist
- * @param {String} [username] Username in firstname.lastname format
+ * @param {String} username Username in firstname.lastname format
  * @return {Response} response of http request
  */
 const addHousingAdmin = (username) => {
@@ -80,11 +92,19 @@ const addHousingAdmin = (username) => {
 
 /**
  * Delete a user to the housing admin whitelist
- * @param {String} [username] Username in firstname.lastname format
+ * @param {String} username Username in firstname.lastname format
  * @return {Response} response of http request
  */
 const deleteHousingAdmin = (username) => {
   return http.del(`housing/admin/${username}/`);
+};
+
+/**
+ * Get all halls
+ * @return {Promise.<ApartmentHall[]>} List of halls
+ */
+const getApartmentHalls = () => {
+  return http.get('housing/halls/apartments');
 };
 
 /**
@@ -102,9 +122,12 @@ const getCurrentApplicationID = async (username) => {
     }
   } catch (err) {
     // handle thrown 404 errors
-    if (err.status !== 404) throw err;
+    if (err.status === 404 || err.name.includes('NotFound')) {
+      console.log('A 404 code indicates that an application was not found for this applicant');
+    } else {
+      throw err;
+    }
     applicationID = false;
-    console.log('A 404 code indicates that an application was not found for this applicant');
   }
   return applicationID;
 };
@@ -201,6 +224,7 @@ export default {
   checkHousingAdmin,
   addHousingAdmin,
   deleteHousingAdmin,
+  getApartmentHalls,
   getCurrentApplicationID,
   saveApartmentApplication,
   changeApartmentAppEditor,

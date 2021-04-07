@@ -82,4 +82,15 @@
       position: sticky;
     }
   }
+
+  & .apartment-agreements-form-control {
+    text-align: left;
+    &-label {
+      color: $neutral-dark-gray;
+    }
+    & .MuiDivider-root {
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+    }
+  }
 }
