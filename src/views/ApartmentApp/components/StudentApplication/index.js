@@ -21,7 +21,17 @@ import Agreements from './components/Agreements';
 import SaveButton from './components/SaveButton';
 import housing from '../../../../services/housing';
 import user from '../../../../services/user';
+
 const MAX_NUM_APPLICANTS = 8;
+const BLANK_APPLICATION_DETAILS = {
+  ApplicationID: null,
+  DateSubmitted: null,
+  DateModified: null,
+  EditorUsername: null,
+  EditorEmail: null,
+  Applicants: [],
+  ApartmentChoices: [],
+};
 
 /**
  * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
@@ -43,15 +53,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   /** @type {[ApplicationDetails, React.Dispatch<React.SetStateAction<ApplicationDetails>>]} */
-  const [applicationDetails, setApplicationDetails] = useState({
-    ApplicationID: null,
-    DateSubmitted: null,
-    DateModified: null,
-    EditorUsername: null,
-    EditorEmail: null,
-    Applicants: [],
-    ApartmentChoices: [],
-  });
+  const [applicationDetails, setApplicationDetails] = useState(BLANK_APPLICATION_DETAILS);
   /** @type {[Number, React.Dispatch<React.SetStateAction<Number>>]} */
   const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
@@ -78,12 +80,17 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   useEffect(() => {
     const initializeNewApplication = () => {
+      const initialApplicants = [{ Profile: userProfile, OffCampusProgram: '' }];
       setApplicationID(null);
-      setEditorUsername((prevEditorUsername) => prevEditorUsername ?? userProfile.AD_Username);
-      setApplicants((prevApplicants) =>
-        prevApplicants.length ? prevApplicants : [{ Profile: userProfile, OffCampusProgram: '' }],
-      );
+      setEditorUsername(userProfile.AD_Username);
+      setApplicants(initialApplicants);
       setUnsavedChanges(true);
+      setApplicationDetails({
+        ...BLANK_APPLICATION_DETAILS,
+        EditorUsername: userProfile.AD_Username,
+        Applicants: initialApplicants,
+        EditorEmail: userProfile.Email,
+      });
     };
 
     const loadApplication = async () => {
