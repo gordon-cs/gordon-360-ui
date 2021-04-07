@@ -97,8 +97,8 @@ const ApplicantListItem = ({
   };
 
   const displayName = hasNickName
-    ? profile.fullName + ' (' + profile.NickName + ')'
-    : profile.fullName;
+    ? `${profile.FirstName} ${profile.LastName} (${profile.NickName})`
+    : `${profile.FirstName} ${profile.LastName}`;
 
   return (
     <React.Fragment>
