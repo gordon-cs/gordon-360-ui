@@ -24,9 +24,7 @@ const ApplicantSubTable = ({ applicants }) => {
   const [thisYear, setThisYear] = useState();
 
   useEffect(() => {
-    const getYear = () => setThisYear(new Date().getFullYear());
-
-    getYear();
+    setThisYear(new Date().getFullYear());
   }, []);
 
   return (
