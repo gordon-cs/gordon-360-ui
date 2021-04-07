@@ -127,7 +127,7 @@ const getCurrentApplicationID = async (username) => {
     } else {
       throw err;
     }
-    applicationID = false;
+    applicationID = null;
   }
   return applicationID;
 };

@@ -65,22 +65,17 @@ const StaffMenu = ({ userProfile, authentication }) => {
     let applicationsForCsv = [];
     let applicantsForCsv = [];
     let apartmentChoicesForCsv = [];
-    applicationDetailsArray.forEach((applicationDetails) => {
+    applicationDetailsArray.forEach(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
       // Only add the applications that have been submitted
       if (applicationDetails.DateSubmitted) {
-        let { Applicants, ApartmentChoices, ...filteredApplicationDetails } = applicationDetails;
-        applicationsForCsv.push(filteredApplicationDetails);
+        applicationsForCsv.push(applicationDetails);
 
-        Applicants.forEach((applicant) => {
-          if (applicant.ApplicationID) {
-            applicantsForCsv.push(applicant);
-          } else {
-            applicantsForCsv.push({
-              ApplicationID: applicationDetails.ApplicationID,
-              ...applicant,
-            });
-          }
-        });
+        Applicants.forEach(({ Profile, ...applicant }) =>
+          applicantsForCsv.push({
+            ApplicationID: applicant.ApplicationID ?? applicationDetails.ApplicationID,
+            ...applicant,
+          }),
+        );
 
         ApartmentChoices.forEach((apartmentChoice) => {
           apartmentChoicesForCsv.push({
