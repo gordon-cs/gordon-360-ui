@@ -36,7 +36,7 @@ const ApplicantListItem = ({
 
   useEffect(() => {
     loadAvatar(profile);
-    setHasNickname(profile.FirstName === profile.NickName && profile.NickName !== '');
+    setHasNickname(profile.FirstName !== profile.NickName && profile.NickName !== '');
     if (String(profile.PersonType).includes('stu') && profile.Class !== undefined) {
       setPersonClass(profile.Class);
     } else {
