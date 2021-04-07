@@ -67,9 +67,7 @@ const ApplicantListItem = ({
    * @param {StudentProfileInfo} profile The StudentProfileInfo object for the student represented by this list item
    */
   const createNickname = (profile) => {
-    let Name = String(profile.fullName);
-    let FirstName = Name.split(' ')[0];
-    setHasNickname(FirstName !== profile.NickName && profile.NickName !== '');
+    setHasNickname(profile.FirstName !== profile.NickName && profile.NickName !== '');
   };
 
   /**
@@ -97,8 +95,8 @@ const ApplicantListItem = ({
   };
 
   const displayName = hasNickName
-    ? profile.fullName + ' (' + profile.NickName + ')'
-    : profile.fullName;
+    ? `${profile.FirstName} ${profile.LastName} (${profile.NickName})`
+    : `${profile.FirstName} ${profile.LastName}`;
 
   return (
     <React.Fragment>
