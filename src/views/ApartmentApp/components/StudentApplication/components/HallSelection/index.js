@@ -7,6 +7,7 @@ import goStalk from '../../../../../../services/goStalk';
 import housing from '../../../../../../services/housing';
 
 /**
+ * @typedef { import('../../services/housing').ApartmentHall } ApartmentHall
  * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
  */
 
@@ -20,22 +21,12 @@ const HallSelection = ({
   onHallInputChange,
   onHallRemove,
 }) => {
+  /** @type {[ApartmentHall[], React.Dispatch<React.SetStateAction<ApartmentHall[]>>]} Array of apartment halls */
   const [halls, setHalls] = useState([]); // array of hall names from backend
 
   useEffect(() => {
     const loadHalls = async () => {
-      let unfilteredHalls;
-      try {
-        // Get the halls available for apartments, filtered by the gender of the application editor
-        unfilteredHalls = await housing.getApartmentHalls();
-      } catch {
-        //! DEBUG: Fills in halls dropdown when the housing api endpoint is not yet implemented
-        // This list of halls is references from the 'Hall' dropdown on the PeopleSearch page
-        unfilteredHalls = await goStalk.getHalls();
-      }
-      //Remove spaces from strings
-      let availableHalls = unfilteredHalls.map((hall) => hall.trim());
-      setHalls(availableHalls);
+      setHalls(housing.getApartmentHalls());
     };
 
     if (authentication) {

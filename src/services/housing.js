@@ -20,9 +20,11 @@ import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * @global
- * @typedef ApartmentHalls
+ * @typedef ApartmentHall
+ * @property {Number} RoomCapacity Number of people per room/apartment   (not yet implemented in API)
+ * @property {String} Gender Gender ('M', 'F', or '' for both)   (not yet implemented in API)
  * @property {String} Name The name of the hall
-s */
+ */
 
 /**
  * @global
@@ -95,7 +97,7 @@ const deleteHousingAdmin = (username) => {
 
 /**
  * Get all halls
- * @return {Promise.<ApartmentHalls[]>} List of halls
+ * @return {Promise.<ApartmentHall[]>} List of halls
  */
 const getApartmentHalls = () => {
   return http.get('housing/halls/apartments');
