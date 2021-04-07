@@ -29,9 +29,9 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, edi
   let rows = [
     createData(
       'Last Submitted: ',
-      DateTime.fromJSDate(dateSubmitted).toISODate() ?? 'Not yet submitted',
+      DateTime.fromISO(dateSubmitted).toISODate() ?? 'Not yet submitted',
     ),
-    createData('Last Modified: ', DateTime.fromJSDate(dateModified).toISODate() ?? 'Not yet saved'),
+    createData('Last Modified: ', DateTime.fromISO(dateModified).toISODate() ?? 'Not yet saved'),
     createData('Application Editor: ', editorUsername ?? 'None'),
   ];
 
