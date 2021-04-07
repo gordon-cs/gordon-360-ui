@@ -64,31 +64,21 @@ const StaffMenu = ({ userProfile, authentication }) => {
         ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
           const applicationID = applicationDetails.ApplicationID;
 
-          setApplicantJsonArray((prevApplicantsJsonArray) =>
-            Applicants?.length > 0
-              ? [
-                  ...prevApplicantsJsonArray,
-                  ...Applicants?.map(({ Profile, StudentID, ...applicant }) =>
-                    applicant.ApplicationID > 0
-                      ? applicant
-                      : { ApplicationID: applicationID, ...applicant },
-                  ),
-                ]
-              : prevApplicantsJsonArray,
-          );
+          setApplicantJsonArray((prevApplicantsJsonArray) => [
+            ...prevApplicantsJsonArray,
+            ...Applicants.map(({ Profile, StudentID, ...applicant }) => ({
+              ApplicationID: applicant.ApplicationID ?? applicationID,
+              ...applicant,
+            })),
+          ]);
 
-          setApartmentChoiceJsonArray((prevApartmentChoiceJsonArray) =>
-            ApartmentChoices?.length > 0
-              ? [
-                  ...prevApartmentChoiceJsonArray,
-                  ...ApartmentChoices.map((apartmentChoice) =>
-                    apartmentChoice.ApplicationID > 0
-                      ? apartmentChoice
-                      : { ApplicationID: applicationID, ...apartmentChoice },
-                  ),
-                ]
-              : prevApartmentChoiceJsonArray,
-          );
+          setApartmentChoiceJsonArray((prevApartmentChoiceJsonArray) => [
+            ...prevApartmentChoiceJsonArray,
+            ...ApartmentChoices.map((apartmentChoice) => ({
+              ApplicationID: apartmentChoice.ApplicationID ?? applicationID,
+              ...apartmentChoice,
+            })),
+          ]);
 
           return applicationDetails;
         }) ?? [],
