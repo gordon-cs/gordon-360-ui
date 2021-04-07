@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Grid,
   Divider,
@@ -41,14 +41,6 @@ const HallListItem = ({
   onHallInputChange,
   onHallRemove,
 }) => {
-  const [hallRankValue, setHallRankValue] = useState(1); // Rank drop-down menu value
-  const [hallNameValue, setHallNameValue] = useState(''); // Hall drop-down menu value
-
-  useEffect(() => {
-    setHallRankValue(hallRank);
-    setHallNameValue(hallName);
-  }, [hallRank, hallName]);
-
   /**
    * Callback for changes to hall rank input field
    * @param {*} event change event to be handled by callback
@@ -56,7 +48,7 @@ const HallListItem = ({
   const handleRankInputChange = (event) => {
     if (event.target.value !== null) {
       let newHallRankValue = event.target.value;
-      onHallInputChange(newHallRankValue, hallNameValue, index);
+      onHallInputChange(newHallRankValue, hallName, index);
     }
   };
 
@@ -67,7 +59,7 @@ const HallListItem = ({
   const handleNameInputChange = (event) => {
     if (event.target.value !== null) {
       let newHallNameValue = event.target.value;
-      onHallInputChange(hallRankValue, newHallNameValue, index);
+      onHallInputChange(hallRank, newHallNameValue, index);
     }
   };
 
@@ -102,7 +94,7 @@ const HallListItem = ({
               <InputLabel>Rank</InputLabel>
               <Select
                 disabled={disabled}
-                value={hallRankValue}
+                value={hallRank}
                 onChange={handleRankInputChange}
                 input={<Input id={'rank' + index} />}
               >
@@ -115,7 +107,7 @@ const HallListItem = ({
               <InputLabel>Hall</InputLabel>
               <Select
                 disabled={disabled}
-                value={hallNameValue}
+                value={hallName}
                 onChange={handleNameInputChange}
                 input={<Input id={'hall' + index} />}
               >
