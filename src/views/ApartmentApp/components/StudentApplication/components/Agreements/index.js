@@ -56,7 +56,7 @@ const Agreements = ({ onChange }) => {
     {
       checked: false,
       label:
-        'We have read and understand all of the information and guidelines listed in Section 4',
+        'We have read and understand all of the information and guidelines listed in the Instructions section',
     },
     {
       checked: false,
