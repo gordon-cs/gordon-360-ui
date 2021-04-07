@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import isEqual from 'lodash/isEqual';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Divider,
@@ -31,27 +30,6 @@ const HallListItem = ({
     setHallRankValue(hallRank);
     setHallNameValue(hallName);
   }, [hallRank, hallName]);
-
-  //! DEPRECATED
-  useEffect(() => {
-    // Manually perform deep checking of the array to force update whenever an element of preferredHalls is changed
-    if (isEqual(previousInputs.current, [index, preferredHalls])) {
-      return;
-    }
-    // Get the hall info for this list item from the component's props
-    const getHallFromProps = () => {
-      setHallRankValue(preferredHalls[index].HallRank);
-      setHallNameValue(preferredHalls[index].HallName);
-    };
-
-    getHallFromProps();
-  });
-
-  //! DEPRECATED
-  const previousInputs = useRef();
-  useEffect(() => {
-    previousInputs.current = [index, preferredHalls];
-  });
 
   /**
    * Callback for changes to hall rank input field

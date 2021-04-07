@@ -44,9 +44,10 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @global
  * @typedef ApplicationDetails
  * @property {Number} ApplicationID Application ID number of this application
- * @property {*} DateSubmitted The date the application was submitted, or null if not yet submitted
- * @property {*} DateModified The date the application was last modified
+ * @property {DateTime} DateSubmitted The date the application was submitted, or null if not yet submitted
+ * @property {DateTime} DateModified The date the application was last modified
  * @property {String} EditorUsername Username of the application editor
+ * @property {String} EditorEmail Email address of the application editor
  * @property {String} Gender Gender
  * @property {ApartmentApplicant[]} Applicants Array of ApartmentApplicant objects
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
@@ -63,8 +64,11 @@ const checkHousingAdmin = async () => {
     return await http.get(`housing/admin`);
   } catch (err) {
     // handle thrown 404 errors
-    if (err.status !== 404) throw err;
-    console.log('A 404 code indicates that current user was not found on the list of admins');
+    if (err.status === 404 || err.name.includes('NotFound')) {
+      console.log('A 404 code indicates that current user was not found on the list of admins');
+    } else {
+      throw err;
+    }
     return false;
   }
 };
@@ -102,9 +106,12 @@ const getCurrentApplicationID = async (username) => {
     }
   } catch (err) {
     // handle thrown 404 errors
-    if (err.status !== 404) throw err;
+    if (err.status === 404 || err.name.includes('NotFound')) {
+      console.log('A 404 code indicates that an application was not found for this applicant');
+    } else {
+      throw err;
+    }
     applicationID = false;
-    console.log('A 404 code indicates that an application was not found for this applicant');
   }
   return applicationID;
 };
@@ -175,6 +182,134 @@ const getApartmentApplication = async (applicationID) => {
  */
 const getAllApartmentApplications = async () => {
   let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+
+  //! DEBUG: This exists purely for testing the features without the backend.
+  /*
+  let applicationDetailsArray = [
+    {
+      ApplicationID: 15,
+      DateSubmitted: new Date('2030-03-14'),
+      DateModified: new Date('2030-03-14'),
+      EditorUsername: 'Bobby.Tables',
+      Gender: 'M',
+      Applicants: [
+        {
+          Username: 'Bobby.Tables',
+          Age: 21,
+          Class: 'Senior',
+          OffCampusProgram: 'Computer Science',
+          Probation: 'no',
+          Points: 7,
+        },
+        { Username: 'Frederick.Fox', Age: 20, OffCampusProgram: '', Probation: 'yes', Points: 5 },
+        {
+          Username: 'Tommy.Turtle',
+          Age: 22,
+          Class: 'Junior',
+          OffCampusProgram: 'Education',
+          Probation: 'no',
+          Points: 6,
+        },
+        {
+          Username: 'Tommy2.Turtle',
+          Age: 22,
+          OffCampusProgram: 'Education',
+          Probation: 'no',
+          Points: 6,
+        },
+        {
+          Username: 'Tommy3.Turtle',
+          Age: 22,
+          OffCampusProgram: 'Education',
+          Probation: 'no',
+          Points: 6,
+        },
+      ],
+      ApartmentChoices: [
+        { HallRank: 1, HallName: 'Gantley' },
+        { HallRank: 2, HallName: 'Tavilla' },
+      ],
+    },
+    {
+      ApplicationID: 42,
+      DateSubmitted: new Date('2022-03-14'),
+      DateModified: new Date('2022-03-14'),
+      EditorUsername: 'Tommy.Turtle',
+      Gender: 'M',
+      Applicants: [
+        {
+          ApplicationID: 42,
+          Username: 'Tommy.Turtle',
+          Age: 21,
+          OffCampusProgram: '',
+          Probation: 'no',
+          Points: 6,
+        },
+        {
+          ApplicationID: 42,
+          Username: 'Borrus.Buffalo',
+          Age: 20,
+          OffCampusProgram: '',
+          Probation: 'no',
+          Points: 5,
+        },
+      ],
+      ApartmentChoices: [
+        {
+          HallRank: 1,
+          HallName: 'Gantley',
+        },
+        {
+          HallRank: 2,
+          HallName: 'KOSC',
+        },
+        {
+          HallRank: 3,
+          HallName: 'Not-a-real-dorm',
+        },
+      ],
+    },
+    {
+      ApplicationID: 36,
+      DateSubmitted: new Date('2022-03-14'),
+      DateModified: new Date('2022-03-14'),
+      EditorUsername: 'Zippy.Zebra',
+      Gender: 'F',
+      Applicants: [
+        {
+          ApplicationID: 42,
+          Username: 'Zippy.Zebra',
+          Age: 22,
+          OffCampusProgram: '',
+          Probation: 'no',
+          Points: 6,
+        },
+        {
+          ApplicationID: 42,
+          Username: 'Charlene.Cat',
+          Age: 21,
+          OffCampusProgram: '',
+          Probation: 'no',
+          Points: 5,
+        },
+      ],
+      ApartmentChoices: [
+        {
+          HallRank: 1,
+          HallName: 'Gantley',
+        },
+        {
+          HallRank: 2,
+          HallName: 'KOSC',
+        },
+        {
+          HallRank: 3,
+          HallName: 'Not-a-real-dorm',
+        },
+      ],
+    },
+  ];
+  */
 
   // Calculate the total and average points for each application
   applicationDetailsArray.forEach((applicationDetails) => {
