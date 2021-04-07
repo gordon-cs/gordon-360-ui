@@ -58,49 +58,41 @@ const StaffMenu = ({ userProfile, authentication }) => {
   }, [userProfile, loadAllCurrentApplications]);
 
   useEffect(() => {
-    /**
-     * Generate arrays of objects to be converted to a CSV
-     * @param {ApplicationDetails[]} applicationDetailsArray an array of ApplicationDetails objects
-     */
-    const generateCSVData = (applicationDetailsArray) => {
-      setApplicationJsonArray(
-        applicationDetailsArray
-          ?.filter((applicationDetails) => applicationDetails?.DateSubmitted) // Only add the applications that have been submitted
-          ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
-            const applicationID = applicationDetails.ApplicationID;
+    setApplicationJsonArray(
+      applications
+        ?.filter((applicationDetails) => applicationDetails?.DateSubmitted) // Only add the applications that have been submitted
+        ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
+          const applicationID = applicationDetails.ApplicationID;
 
-            setApplicantJsonArray((prevApplicantsJsonArray) =>
-              Applicants?.length > 0
-                ? [
-                    ...prevApplicantsJsonArray,
-                    ...Applicants?.map(({ Profile, StudentID, ...applicant }) =>
-                      applicant.ApplicationID > 0
-                        ? applicant
-                        : { ApplicationID: applicationID, ...applicant },
-                    ),
-                  ]
-                : prevApplicantsJsonArray,
-            );
+          setApplicantJsonArray((prevApplicantsJsonArray) =>
+            Applicants?.length > 0
+              ? [
+                  ...prevApplicantsJsonArray,
+                  ...Applicants?.map(({ Profile, StudentID, ...applicant }) =>
+                    applicant.ApplicationID > 0
+                      ? applicant
+                      : { ApplicationID: applicationID, ...applicant },
+                  ),
+                ]
+              : prevApplicantsJsonArray,
+          );
 
-            setApartmentChoiceJsonArray((prevApartmentChoiceJsonArray) =>
-              ApartmentChoices?.length > 0
-                ? [
-                    ...prevApartmentChoiceJsonArray,
-                    ...ApartmentChoices.map((apartmentChoice) =>
-                      apartmentChoice.ApplicationID > 0
-                        ? apartmentChoice
-                        : { ApplicationID: applicationID, ...apartmentChoice },
-                    ),
-                  ]
-                : prevApartmentChoiceJsonArray,
-            );
+          setApartmentChoiceJsonArray((prevApartmentChoiceJsonArray) =>
+            ApartmentChoices?.length > 0
+              ? [
+                  ...prevApartmentChoiceJsonArray,
+                  ...ApartmentChoices.map((apartmentChoice) =>
+                    apartmentChoice.ApplicationID > 0
+                      ? apartmentChoice
+                      : { ApplicationID: applicationID, ...apartmentChoice },
+                  ),
+                ]
+              : prevApartmentChoiceJsonArray,
+          );
 
-            return applicationDetails;
-          }) ?? [],
-      );
-    };
-
-    generateCSVData(applications);
+          return applicationDetails;
+        }) ?? [],
+    );
   }, [applications]);
 
   if (loading) {
