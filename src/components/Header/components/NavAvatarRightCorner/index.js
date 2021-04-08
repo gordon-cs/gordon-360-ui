@@ -12,13 +12,15 @@ import user from 'services/user';
  */
 function getInitials(username) {
   try {
-    return username
-      .split('.') // Split name into separate words
-      .map((name) => name[0]) // Get first letter of each part of name
-      .join('') // Join initials back into a string
-      .toUpperCase();
+    return (
+      username
+        ?.split('.') // Split name into separate words
+        ?.map((name) => name?.[0]) // Get first letter of each part of name
+        ?.join('') // Join initials back into a string
+        ?.toUpperCase() ?? null
+    );
   } catch {
-    return '';
+    return null;
   }
 }
 

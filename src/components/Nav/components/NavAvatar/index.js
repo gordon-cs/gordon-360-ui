@@ -4,6 +4,25 @@ import { Link } from 'react-router-dom';
 import './nav-avatar.css';
 import user from 'services/user';
 
+/**
+ * Gets the initials of the current user
+ * @param {String} username the username to extract initials from
+ * @returns {String} The initials of the user if available
+ */
+function getInitials(username) {
+  try {
+    return (
+      username
+        ?.split('.') // Split name into separate words
+        ?.map((name) => name?.[0]) // Get first letter of each part of name
+        ?.join('') // Join initials back into a string
+        ?.toUpperCase() ?? null
+    );
+  } catch {
+    return null;
+  }
+}
+
 const GordonNavAvatar = ({ authentication, onLinkClick }) => {
   const [email, setEmail] = useState();
   const [image, setImage] = useState();
@@ -47,22 +66,11 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
     }
   }, [authentication]);
 
-  const getInitials = () => {
-    if (username) {
-      return username
-        .split('.') // Split name into separate words
-        .map((name) => name[0]) // Get first letter of each part of name
-        .join('') // Join initials back into a string
-        .toUpperCase();
-    }
-    return '';
-  };
-
   const avatar = authentication ? (
     image ? (
       <Avatar className="avatar image" src={`data:image/jpg;base64,${image}`} />
     ) : (
-      <Avatar className="avatar placeholder">{getInitials()}</Avatar>
+      <Avatar className="avatar placeholder">{getInitials(username)}</Avatar>
     )
   ) : (
     <Avatar className="avatar placeholder">Guest</Avatar>
