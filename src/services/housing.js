@@ -54,7 +54,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @typedef ApplicationDetails
  * @property {Number} ApplicationID Application ID number of this application
  * @property {DateTime} [DateSubmitted] The date the application was submitted, or null if not yet submitted
- * @property {DateTime} DateModified The date the application was last modified
+ * @property {DateTime} [DateModified] The date the application was last modified
  * @property {StudentProfileInfo} EditorProfile The StudentProfileInfo object representing the application editor
  * @property {String} EditorUsername Username of the application editor
  * @property {String} [EditorEmail] Email address of the application editor
@@ -141,7 +141,7 @@ const getCurrentApplicationID = async (username) => {
  */
 const saveApartmentApplication = async (applicationDetails) => {
   let applicationID = applicationDetails.ApplicationID;
-  if (applicationID) {
+  if (applicationID > 0) {
     return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
   } else {
     return await http.post(`housing/apartment/applications/`, applicationDetails);
