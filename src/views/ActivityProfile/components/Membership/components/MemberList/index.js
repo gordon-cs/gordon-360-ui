@@ -1,31 +1,34 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
-import Snackbar from '@material-ui/core/Snackbar';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
 import Error from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
-import { gordonColors } from '../../../../../../theme';
-import user from '../../../../../../services/user';
-import membership from '../../../../../../services/membership';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import membership from 'services/membership';
+
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  ExpansionPanel,
+  ExpansionPanelDetails,
+  ExpansionPanelSummary,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  MenuItem,
+  Snackbar,
+  Select,
+  TextField,
+  Typography,
+  Divider,
+  IconButton,
+} from '@material-ui/core';
 
 export default class MemberList extends Component {
   constructor(props) {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 import { Check, Remove, Clear } from '@material-ui/icons';
-import { StatusColors } from '../../../../services/wellness';
-import SymptomsDialog from '../../../../components/SymptomsDialog';
+import { StatusColors } from 'services/wellness';
+import SymptomsDialog from 'components/SymptomsDialog';
 import './index.css';
 
 const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
@@ -78,10 +78,10 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
-                  href="https://forms.office.com/Pages/ResponsePage.aspx?id=2-xRAi1Od0CUmEAyiseU6VaZ78BOMQJAiGjLu2N4tPZURDQ0UUdUOTkwV0NPOFlYTTVOTlNCRFZLOS4u"
+                  href="https://forms.office.com/r/BFdQwaTBR1"
                   className="rtc-link"
                 >
-                  the Return to Campus form
+                  the Post-Easter Break Return to Campus form
                 </a>{' '}
                 before checking in.
               </Typography>

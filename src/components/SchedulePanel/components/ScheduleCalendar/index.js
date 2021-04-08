@@ -3,10 +3,10 @@ import Moment from 'moment';
 
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 
-import GordonLoader from '../../../Loader';
-import schedule from '../../../../services/schedule';
-import myschedule from '../../../../services/myschedule';
-import session from '../../../../services/session';
+import GordonLoader from 'components/Loader';
+import schedule from 'services/schedule';
+import myschedule from 'services/myschedule';
+import session from 'services/session';
 
 import './schedulecalendar.css';
 

@@ -1,7 +1,3 @@
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
@@ -9,22 +5,23 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 // import WorkIcon from '@material-ui/icons/Work';
 import WellnessIcon from '@material-ui/icons/LocalHospital';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
-import { Route, Switch, NavLink } from 'react-router-dom';
+import { Route, Switch, NavLink, Link } from 'react-router-dom';
 import './header.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
-import routes from '../../routes';
-import { projectName } from '../../project-name';
-import GordonDialogBox from '../GordonDialogBox/index';
-import { windowBreakWidths } from '../../theme';
-import useNetworkStatus from '../../hooks/useNetworkStatus';
+import routes from 'routes';
+import { projectName } from 'project-name';
+import GordonDialogBox from 'components/GordonDialogBox/index';
+import { windowBreakWidths } from 'theme';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+
+import { AppBar, Toolbar, Typography, IconButton, Tabs, Tab, Button } from '@material-ui/core';
+
+const WrapLink = React.forwardRef((props, ref) => <Link ref={ref} {...props} />);
 
 const getRouteName = (route) => {
   if (route.name) {
@@ -129,37 +126,25 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   const disablableTab = (name, icon) => {
     if (!isOnline) {
       return (
-        <div
-          onClick={() => {
-            setDialog('offline');
-          }}
-        >
-          <Tab
-            className="tab"
-            icon={icon}
-            label={name}
-            component={Button}
-            style={{ color: 'white' }}
-            disabled={true}
-          />
-        </div>
+        <Tab
+          className="tab disabled-tab"
+          icon={icon}
+          label={name}
+          onClick={() => setDialog('offline')}
+        />
       );
     } else if (!authentication) {
       return (
-        <div onClick={() => setDialog('unauthorized')}>
-          <Tab
-            className="tab"
-            icon={icon}
-            label={name}
-            component={Button}
-            style={{ color: 'white' }}
-            disabled={true}
-          />
-        </div>
+        <Tab
+          className="tab disabled-tab"
+          icon={icon}
+          label={name}
+          onClick={() => setDialog('unauthorized')}
+        />
       );
     } else {
       const route = `/${name.toLowerCase()}`;
-      return <Tab className="tab" icon={icon} label={name} component={Link} to={route} />;
+      return <Tab className="tab" icon={icon} label={name} component={NavLink} to={route} />;
     }
   };
 
@@ -172,6 +157,18 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     setAnchorElement(null);
     setIsMenuOpen(false);
   };
+
+  const loginButton = (
+    <Button
+      className="login-button"
+      variant="contained"
+      color="secondary"
+      component={WrapLink}
+      to="/"
+    >
+      Login
+    </Button>
+  );
 
   return (
     <section className="gordon-header">
@@ -222,7 +219,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             </Tabs>
           </div>
 
-          <GordonPeopleSearch authentication={authentication} />
+          {authentication ? <GordonPeopleSearch authentication={authentication} /> : loginButton}
 
           <GordonNavAvatarRightCorner
             onSignOut={onSignOut}

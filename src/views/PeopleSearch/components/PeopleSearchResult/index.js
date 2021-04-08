@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import IMG from 'react-graceful-image';
-import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
+import { Typography, Grid, Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import user from '../../../../services/user';
-import Divider from '@material-ui/core/Divider';
+import user from 'services/user';
 import { Link } from 'react-router-dom';
 
 import './peopleSearchResult.css';
-import '../../../../app.css';
 
 export default class PeopleSearchResult extends Component {
   constructor(props) {

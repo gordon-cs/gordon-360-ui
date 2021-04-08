@@ -1,8 +1,5 @@
-import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import { Divider, ListItem, Typography, Grid } from '@material-ui/core';
 
 export default class Advisors extends Component {
   constructor(props) {
@@ -56,7 +53,7 @@ export default class Advisors extends Component {
         );
       }
     }
-    
+
     // The advisors list will not be shown if fails to load
 
     if (this.props.advisors) {

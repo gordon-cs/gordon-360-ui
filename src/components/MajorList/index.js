@@ -1,8 +1,5 @@
-import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import { Divider, ListItem, Typography, Grid } from '@material-ui/core';
 
 export default class Majors extends Component {
   constructor(props) {
@@ -34,7 +31,7 @@ export default class Majors extends Component {
       });
       content = <Typography>{majorText}</Typography>;
 
-      if(this.props.majors.length === 0) {
+      if (this.props.majors.length === 0) {
         content = <Typography>Undecided</Typography>;
       }
 

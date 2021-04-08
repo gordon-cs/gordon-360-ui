@@ -5,15 +5,11 @@
 // May be a potential future feature, but not sure
 
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import CardHeader from '@material-ui/core/CardHeader';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
 import { CardContent } from '@material-ui/core';
-import { Button } from '@material-ui/core';
-import { gordonColors } from '../../../../theme';
-import NewsService from '../../../../services/news';
-import NewsItem from '../../../News/components/NewsItem';
+import { Button, Grid, CardHeader, Card, Typography } from '@material-ui/core';
+import { gordonColors } from 'theme';
+import NewsService from 'services/news';
+import NewsItem from 'views/News/components/NewsItem';
 // import CategorizedNews from './components/CategorizedNews';
 
 export default class DailyNews extends Component {

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Popover from '@material-ui/core/Popover';
 import List from '@material-ui/core/List';
-import { signOut } from '../../../../services/auth';
-import user from '../../../../services/user';
-import GordonQuickLinksDialog from '../../../QuickLinksDialog';
-import GordonNavButton from '../../../NavButton';
-import useNetworkStatus from '../../../../hooks/useNetworkStatus';
+import { signOut } from 'services/auth';
+import user from 'services/user';
+import GordonQuickLinksDialog from 'components/QuickLinksDialog';
+import GordonNavButton from 'components/NavButton';
+import useNetworkStatus from 'hooks/useNetworkStatus';
 import './index.css';
 
 /**

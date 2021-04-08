@@ -1,17 +1,14 @@
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
-import CardContent from '@material-ui/core/CardContent';
-import Collapse from '@material-ui/core/Collapse';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import newsService from './../../../../services/news';
+import newsService from 'services/news';
 import EditIcon from '@material-ui/icons/Edit';
-import storage from '../../../../services/storage';
+import storage from 'services/storage';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
 
 import './newsItem.scss';
+
+import { Typography, CardContent, Collapse, Grid, Button } from '@material-ui/core';
 
 export default class NewsItem extends Component {
   constructor(props) {

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-import GordonLoader from '../../components/Loader';
-import WellnessQuestion from '../../components/WellnessQuestion';
+import GordonLoader from 'components/Loader';
+import WellnessQuestion from 'components/WellnessQuestion';
 import HealthStatus from './components/HealthStatus';
-import Login from '../Login';
-import wellness from '../../services/wellness';
-import user from '../../services/user';
+import Login from 'views/Login';
+import wellness from 'services/wellness';
+import user from 'services/user';
 
 import './index.css';
 

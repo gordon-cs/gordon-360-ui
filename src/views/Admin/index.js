@@ -1,11 +1,9 @@
-import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 import InvolvementsStatus from './components/InvolvementsStatus';
 import SuperAdmin from './components/SuperAdmins';
-import user from '../../services/user';
-import { Button } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import user from 'services/user';
+import { Button, Grid, Card, CardContent } from '@material-ui/core';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 
 export default class Admin extends Component {
   constructor(props) {
@@ -97,10 +95,7 @@ export default class Admin extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
+                    <NoConnectionImage />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>

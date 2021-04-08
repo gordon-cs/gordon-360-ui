@@ -1,10 +1,8 @@
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import { Avatar, Button, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './nav-avatar.css';
-import user from '../../../../services/user';
+import user from 'services/user';
 
 const GordonNavAvatar = ({ authentication, onLinkClick }) => {
   const [email, setEmail] = useState();

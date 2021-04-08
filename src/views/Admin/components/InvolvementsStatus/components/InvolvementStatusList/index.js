@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
-import session from '../../../../../../services/session';
+import session from 'services/session';
 
-import '../../../../../../app.css';
+import { Typography, Grid } from '@material-ui/core';
 
 export default class InvolvementStatusList extends Component {
   constructor(props) {

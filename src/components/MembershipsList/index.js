@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import activity from '../../services/activity';
-import membershipService from '../../services/membership';
-import userService from '../../services/user';
-import GordonSnackbar from '../Snackbar';
-import GordonLoader from '../Loader';
+import activity from 'services/activity';
+import membershipService from 'services/membership';
+import userService from 'services/user';
+import GordonSnackbar from 'components/Snackbar';
+import GordonLoader from 'components/Loader';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import './index.css';
 
@@ -68,7 +68,9 @@ const MembershipsList = ({ user, myProf }) => {
       createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
       setMemberships(
         memberships.map((m) => {
-          if (m.MembershipID === membership.MembershipID) m.Privacy = !m.Privacy;
+          if (m.MembershipID === membership.MembershipID) {
+            m.Privacy = !m.Privacy;
+          }
           return m;
         }),
       );

@@ -1,26 +1,29 @@
 import React, { Component, Fragment } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Switch from '@material-ui/core/Switch';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import MyScheduleDialog from './components/myScheduleDialog';
 import RemoveScheduleDialog from './components/RemoveScheduleDialog';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
-import schedulecontrol from './../../services/schedulecontrol';
-import urlRegex from 'url-regex';
+import schedulecontrol from 'services/schedulecontrol';
+import urlRegex from 'url-regex-safe';
 import { Markup } from 'interweave';
 
-import myschedule from '../../services/myschedule';
+import myschedule from 'services/myschedule';
 
-import GordonLoader from '../../components/Loader';
+import GordonLoader from 'components/Loader';
+
+import {
+  Grid,
+  Button,
+  Switch,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Typography,
+} from '@material-ui/core';
 
 // Default values
 const STARTHOUR = '08:00';
@@ -238,7 +241,7 @@ class GordonSchedulePanel extends Component {
   }
 
   render() {
-    const replaced = this.state.description.replace(urlRegex({ strict: false }), function(url) {
+    const replaced = this.state.description.replace(urlRegex({ strict: false }), function (url) {
       if (url.split('://')[0] !== 'http' && url.split('://')[0] !== 'https') {
         return '<a target="_blank" rel="noopener" href="https://' + url + '">' + url + '</a>';
       } else {

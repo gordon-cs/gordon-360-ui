@@ -3,17 +3,17 @@
 .profile-list-card {
   &-header {
     background-color: $primary-blue;
-    color: white;
+    color: $neutral-white;
     padding-left: 1rem;
   }
   &-content {
     .lock-icon {
-      color: #9e9e9e;
+      color: $neutral-gray3;
     }
     .disclaimer {
       color: $secondary-red !important;
       &-note {
-        background-color: #ffe8e7;
+        background-color: $neutral-light-gray;
         padding: 0.3rem 1rem;
         margin-top: 1rem;
         border-radius: 5px;

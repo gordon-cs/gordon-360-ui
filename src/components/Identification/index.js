@@ -1,20 +1,10 @@
-import Grid from '@material-ui/core/Grid';
-import CardHeader from '@material-ui/core/CardHeader';
 import React, { useState, useEffect, useRef } from 'react';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
 import Dropzone from 'react-dropzone';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Typography from '@material-ui/core/Typography';
 import EmailIcon from '@material-ui/icons/Email';
-import user from '../../services/user';
-import { gordonColors } from '../../theme';
+import user from 'services/user';
+import { gordonColors } from 'theme';
 import LinksDialog from './Components/LinksDialog/index';
-import { socialMediaInfo } from '../../socialMedia';
+import { socialMediaInfo } from 'socialMedia';
 import { Link } from 'react-router-dom';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -22,12 +12,25 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
 import defaultGordonImage from './defaultGordonImage';
-import GordonLoader from '../Loader/index';
-import { windowBreakWidths } from '../../theme';
+import GordonLoader from 'components/Loader/index';
+import { windowBreakWidths } from 'theme';
 import './index.css';
+
+import {
+  Grid,
+  CardHeader,
+  Button,
+  Tooltip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+  Snackbar,
+  IconButton,
+} from '@material-ui/core';
 
 export const Identification = (props) => {
   const CROP_DIM = 200; // pixels
@@ -53,7 +56,7 @@ export const Identification = (props) => {
   const [snackbarType, setSnackbarType] = useState(''); // Either success or error
   const [userProfile, setUserProfile] = useState(null);
   const [currentWidth, setCurrentWidth] = useState(null);
-  const cropper = useRef();
+  const cropperRef = useRef();
   let photoDialogErrorTimeout = null;
 
   // Styles used throughout this component
@@ -218,7 +221,9 @@ export const Identification = (props) => {
    */
   function handleCloseSubmit() {
     if (showCropper != null) {
-      let croppedImage = cropper.current.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      let croppedImage = cropperRef.current.cropper
+        .getCroppedCanvas({ width: CROP_DIM })
+        .toDataURL();
       let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       let response = user.postImage(croppedImage);
       response
@@ -454,7 +459,7 @@ export const Identification = (props) => {
   function onDropAccepted(fileList) {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
-    reader.onload = function() {
+    reader.onload = function () {
       var dataURL = reader.result.toString();
       var i = new Image();
       i.onload = async () => {
@@ -490,7 +495,7 @@ export const Identification = (props) => {
   function onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      cropper.current.zoomTo(1);
+      cropperRef.current.cropper.zoomTo(1);
     }
   }
 
@@ -557,7 +562,7 @@ export const Identification = (props) => {
             {showCropper && (
               <div className="gc360-photo-dialog-box_content_cropper">
                 <Cropper
-                  ref={cropper}
+                  ref={cropperRef}
                   src={showCropper}
                   style={{
                     'max-width': maxCropPreviewWidth(),

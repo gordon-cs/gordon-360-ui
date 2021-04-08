@@ -1,8 +1,8 @@
 // SUMMER 2020 NOTE:
 // This file is a backup of progress made at some point on student news
-// It came up during merge conflicts, and I recreated this file to 
+// It came up during merge conflicts, and I recreated this file to
 //       have as reference of things we may want to add
-// Major things found: viewing news when offline results in a card being displayed, 
+// Major things found: viewing news when offline results in a card being displayed,
 //        pwa may only work with this version as well
 // This file may be discarded once all the appropriate things are added to the main news index
 // - Cameron Abbot
@@ -86,7 +86,7 @@ export default class StudentNews extends Component {
           openPostActivity: false,
         });
       }
-  
+
   search(name) {
     return async event => {
       await this.setState({
@@ -196,7 +196,7 @@ export default class StudentNews extends Component {
             <Dialog open={this.state.openPostActivity} fullWidth>
                   <DialogTitle> Post on Student News </DialogTitle>
                   <DialogContent>
-                    
+
                     <form style={styles.addNewsForm} onSubmit={this.handleSubmit}>
                       <Grid container>
                         <Grid item>

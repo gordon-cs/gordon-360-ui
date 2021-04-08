@@ -1,25 +1,10 @@
-import Drawer from '@material-ui/core/Drawer';
-import Divider from '@material-ui/core/Divider';
-import Hidden from '@material-ui/core/Hidden';
+import { Divider, Drawer, Hidden } from '@material-ui/core';
 import React from 'react';
-
-import './nav.css';
 import GordonNavAvatar from './components/NavAvatar';
 import GordonNavLinks from './components/NavLinks';
+import './nav.css';
 
 const GordonNav = ({ onDrawerToggle, authentication, onSignOut, drawerOpen }) => {
-  const drawer = (
-    <>
-      <GordonNavAvatar onLinkClick={onDrawerToggle} authentication={authentication} />
-      <Divider />
-      <GordonNavLinks
-        onLinkClick={onDrawerToggle}
-        onSignOut={onSignOut}
-        authentication={authentication}
-      />
-    </>
-  );
-
   return (
     <section className="gordon-nav">
       <Hidden mdUp>
@@ -34,7 +19,13 @@ const GordonNav = ({ onDrawerToggle, authentication, onSignOut, drawerOpen }) =>
             keepMounted: true, // Better open performance on mobile.
           }}
         >
-          {drawer}
+          <GordonNavAvatar onLinkClick={onDrawerToggle} authentication={authentication} />
+          <Divider />
+          <GordonNavLinks
+            onLinkClick={onDrawerToggle}
+            onSignOut={onSignOut}
+            authentication={authentication}
+          />
         </Drawer>
       </Hidden>
       <Hidden mdDown implementation="css">

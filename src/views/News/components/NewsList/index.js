@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import List from '@material-ui/core/List';
 
 import NewsItem from '../NewsItem';
-import { gordonColors } from '../../../../theme';
+import { gordonColors } from 'theme';
 import './newsList.scss';
+
+import { Grid, Typography, Card, List } from '@material-ui/core';
 
 export default class NewsList extends Component {
   constructor(props) {

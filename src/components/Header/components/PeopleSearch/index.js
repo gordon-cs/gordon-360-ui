@@ -1,20 +1,24 @@
 import Downshift from 'downshift';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
-import Typography from '@material-ui/core/Typography';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
-import peopleSearch from '../../../../services/people-search';
+import peopleSearch from 'services/people-search';
+
+import {
+  TextField,
+  InputAdornment,
+  Paper,
+  MenuItem,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from '@material-ui/core';
+
 const MIN_QUERY_LENGTH = 2;
 
 //  TextBox Input Field

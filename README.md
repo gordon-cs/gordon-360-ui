@@ -1,4 +1,4 @@
-# Gordon 360 User Interface 
+# Gordon 360 User Interface
 
 ![Lint and Build](https://github.com/gordon-cs/gordon-360-ui/workflows/Lint%20and%20Build/badge.svg)
 
@@ -22,25 +22,34 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 - [Continuous Integration and Deployment](#continuous-integration-and-deployment)
 - [Contributing](#contributing)
 - [Known Issues](#known-issues)
+- [History](#history)
 
 ## Getting Started
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Read the user guide [here](https://github.com/facebook/create-react-app/blob/master/packages/cra-template/template/README.md).
 
-Make sure Node.js is set up on your machine. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
+Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtual machine, it should be setup already. To check if it is on a machine, open a terminal and run the command `nvm`. If the output says `'nvm' is not recognized...`, then Node.js has not been setup. In that case, follow the below procedures to install nvm (Node Version Manager) onto the machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
 
 #### Windows:
 
-- Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
+- Download the latest release of nvm from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
   - Extract the file and run it.
-  - The installer will ask you where to install NVM. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
-  - After the installation completes, open a terminal and run these commands in order:
-    - `nvm install 9.11.1`
-    - `nvm use 9.11.1`
+  - The installer will ask you where to install nvm. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
+  - After this, go to https://nodejs.org/en/ and look for the version labeled "lts" (which indicates the latest stable version).
+  - Finally, run `nvm install <version>` where <version> is the version you found.
 
 #### Linux:
 
-Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, run `nvm install 9.11.1` then run `nvm use 9.11.1`.
+- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm.
+- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`.
+- Then, tell nvm that you want to use that verion: `nvm use node`.
+  To use a specific Node version - usually the latest Long Term Support (LTS) version - replace `node` in the above commands with the desired version or alias, e.g. `nvm install 14.15.4` for version 14.15.4 or `nvm install --lts` for the latest LTS.
+
+#### Troubleshooting NVM
+
+- If a developer accidentally follows the above Windows instructions on CS-RDSH-02, the environment variable for NVM will be set by their installation to a path within their user directory. Thus, many if not all other users on the machine will lose access to NVM. To fix this, any user can open Powershell as administrator and run `choco install -y nvm`. (The `-y` option answers `yes` to any prompts that occur during the installation.) Then, in a Powershell terminal not running as admin, run `nvm install --lts`. Users should log out and back in to see the fix take effect. As usual, you can check if this worked by opening a terminal and running the command `nvm`. If the output says `Running version...`, then it is all set.
+
+- Sometimes, the .json package management files in develop are missing a dependency and `npm install` throws an error. The error says something like "This is most likely not a problem with npm itself...and is related to npm not being able to find a file". The best solution we have found is to delete the whole `node_modules` directory, delete the file `package-lock.json`, and then run `npm install`. Warning, the deletions can take several minutes because they are large files.
 
 <!-- ### Front End Development (Note) -->
 <h3 id="front-end">Front End Development (Note)</h3>
@@ -57,7 +66,7 @@ After cloning this repo, and after any major changes to local code (like changin
 
 By default, React will use the live server backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI repository, use the following steps:
 
-- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
+- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-api-locally),
 
   - Clone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
@@ -93,7 +102,7 @@ The following extensions are recommended for any code editor used to develop thi
 
 - [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) ensures that indentation style, line endings, and file endings are consistent across editors and operating systems
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) checks syntax correctness for JavaScript (`.js` files)
-- [Stylelint](https://marketplace.visualstudio.com/items?itemName=shinnn.stylelint) checks syntax correctness for Sass (`.scss` files)
+- [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) checks syntax correctness for Sass (`.scss` files)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) automatically formats JavaScript, Sass, JSON, and Markdown files on save
 
 If you are using VS Code, you can use the following keyboard shortcuts to run the app:
@@ -327,18 +336,18 @@ Environment variables must be declared in all caps, must use snake case, and mus
 
 The first forays into testing were made when we were still using Travis CI as our CI/CD solution. The below advice is probably still useful but will need updating.
 
-The foundations for a testing suite made up of Jasmine, Karma, and Travis CI have been laid. For one, package.json has the following dependencies listed:
-
-- `"jasmine-core": ">=3.4.0"`
-- `"karma": ">=4.1.0",`
-- `"karma-chrome-launcher": ">=2.2.0"`
-- `"karma-firefox-launcher": ">=1.1.0"`
-- `"karma-jasmine": ">=2.0.1"`
-- `"karma-safari-launcher": ">=1.0.0"`
-
-Secondly, there is a github account, `gordon-360-ci`, made solely for Travis CI and continuous integration services like it. Specifically, it was from this account that Travis' environment variable `GITHUB_TOKEN` was generated. The login credentials for this account can be found in a file called `ci-credentials` on the CS-RDSH-02 virtual machine, specifically in `C:\Users\Public\Public Documents\` (or `/c/users/public/documents\` when in git-bash).
-
-The process for setting up this testing environment can be continued by following the directions [here](https://www.sitepoint.com/testing-javascript-jasmine-travis-karma/) and the advice [here](https://www.arroyolabs.com/2016/08/unit-testing-your-javascipt-with-jasmine-karmajs-travis-ci/) about using Chromium instead of Chrome. Note that some steps from the first link have been completed, from the step about running `karma init my.conf.js` to the beginning, exclusively. Also, there is already a `.travis.yml` file in the project folder, but it may need some lines of code that the .yml in the directions has.
+> The foundations for a testing suite made up of Jasmine, Karma, and Travis CI have been laid. For one, package.json has the following dependencies listed:
+>
+> - `"jasmine-core": ">=3.4.0"`
+> - `"karma": ">=4.1.0",`
+> - `"karma-chrome-launcher": ">=2.2.0"`
+> - `"karma-firefox-launcher": ">=1.1.0"`
+> - `"karma-jasmine": ">=2.0.1"`
+> - `"karma-safari-launcher": ">=1.0.0"`
+>
+> Secondly, there is a github account, `gordon-360-ci`, made solely for Travis CI and continuous integration services like it. Specifically, it was from this account that Travis' environment variable `GITHUB_TOKEN` was generated. The login credentials for this account can be found in a file called `ci-credentials` on the CS-RDSH-02 virtual machine, specifically in `C:\Users\Public\Public Documents\` (or `/c/users/public/documents\` when in git-bash).
+>
+> The process for setting up this testing environment can be continued by following the directions [here](https://www.sitepoint.com/testing-javascript-jasmine-travis-karma/) and the advice [here](https://www.arroyolabs.com/2016/08/unit-testing-your-javascipt-with-jasmine-karmajs-travis-ci/) about using Chromium instead of Chrome. Note that some steps from the first link have been completed, from the step about running `karma init my.conf.js` to the beginning, exclusively. Also, there is already a `.travis.yml` file in the project folder, but it may need some lines of code that the .yml in the directions has.
 
 Timesheets page testing [here](https://docs.google.com/document/d/1fi7_iwTQa7JFVRR3LtSDU3-MGpupOfbqhH-kEU5eMew/edit?usp=sharing)
 
@@ -363,16 +372,16 @@ to the 360 server. Instead, deployment uses a powershell script that is run via 
 
 ### Deploying Manually
 
-In the unusual case that Train or Production have not been automatically deployed (which should happen within five minutes of a finished Lint and Build action on the appropriate branch), it is possible to deploy manually. 
+In the unusual case that Train or Production have not been automatically deployed (which should happen within five minutes of a finished Lint and Build action on the appropriate branch), it is possible to deploy manually.
 
-1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s). 
+1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s).
 1. Build the project by running `npm run build` in VSCode on a clone of the project set to the branch you want to deploy. The output will be in `path/to/the/repo/gordon-360-ui/build`.
 1. Connect to the `360-Frontend.gordon.edu` server. See [RemoteDesktopToVM](https://github.com/gordon-cs/gordon-360-api/blob/develop/RemoteDesktopToVM.md) in the API repo for instructions on how to connect.
 1. Open File Explorer and navigate to `D:\wwwroot\`.
 1. Backup the existing deployment:
-    1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
-    1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
-1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above. 
+   1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
+   1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
+1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above.
 1. Check the appropriate site, refreshing if necessary, to ensure it deployed successfully and is stable.
 1. If you need to restore to a backup, simply copy the contents of the desired backup folder and overwrite the appropriate site's folder.
 
