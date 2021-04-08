@@ -1,0 +1,9 @@
+@import '../../../../../vars.scss';
+
+.personal-info-list-item {
+  hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  word-break: break-word;
+}

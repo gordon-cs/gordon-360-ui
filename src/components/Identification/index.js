@@ -32,7 +32,7 @@ import {
   IconButton,
 } from '@material-ui/core';
 
-export const Identification = (props) => {
+const Identification = (props) => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState(null);
   const [defaultUserImage, setDefaultUserImage] = useState(null);
@@ -1030,3 +1030,5 @@ export const Identification = (props) => {
     </div>
   );
 };
+
+export default Identification;

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import user from 'services/user';
-import ProfileList from 'components/ProfileList';
-import Office from 'components/OfficeList';
+import PersonalInfoList from 'components/Profile/PersonalInfoList';
+import Office from 'components/Profile/OfficeList';
 import MembershipsList from 'components/MembershipsList';
 import GordonLoader from 'components/Loader';
 import { socialMediaInfo } from 'socialMedia';
 import GordonSchedulePanel from 'components/SchedulePanel';
-import { Identification } from 'components/Identification/index';
+import Identification from 'components/Identification';
 import storage from 'services/storage';
 import { Redirect } from 'react-router';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
@@ -104,11 +104,7 @@ export default class Profile extends Component {
     try {
       const profile = await user.getProfileInfo(searchedUser.match.params.username);
       const curUser = await user.getProfileInfo();
-      let profileinfo = (
-        <ProfileList profile={profile} myProf={false}>
-          {' '}
-        </ProfileList>
-      );
+      let profileinfo = <PersonalInfoList profile={profile} myProf={false} />;
       let officeinfo = <Office profile={profile} />;
       this.setState({ currentUser: curUser });
       this.setState({ profileinfo: profileinfo });

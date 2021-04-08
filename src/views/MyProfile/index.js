@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonSchedulePanel from 'components/SchedulePanel';
-import { Identification } from 'components/Identification/index';
+import Identification from 'components/Identification';
 import MembershipsList from 'components/MembershipsList';
-import Office from 'components/OfficeList';
-import ProfileList from 'components/ProfileList';
+import Office from 'components/Profile/OfficeList';
+import PersonalInfoList from 'components/Profile/PersonalInfoList';
 import storage from 'services/storage';
 import user from 'services/user';
 import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
@@ -29,7 +29,7 @@ const MyProfile = (props) => {
       try {
         let profile = await user.getProfileInfo();
         setProfile(profile);
-        let profileInfo = <ProfileList profile={profile} myProf={true} network={network} />;
+        let profileInfo = <PersonalInfoList profile={profile} myProf={true} network={network} />;
         setProfileInfo(profileInfo);
         const personType = String(profile.PersonType);
         setPersonType(personType);
