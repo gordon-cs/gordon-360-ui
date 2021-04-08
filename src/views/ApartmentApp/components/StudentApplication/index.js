@@ -55,14 +55,25 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /** @type {[ApplicationDetails, React.Dispatch<React.SetStateAction<ApplicationDetails>>]} */
   const [applicationDetails, setApplicationDetails] = useState(BLANK_APPLICATION_DETAILS);
+
+  //! Will be deprecated soon, replaced with setApplicationDetails
   /** @type {[Number, React.Dispatch<React.SetStateAction<Number>>]} */
   const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
+  //! Will be deprecated soon, replaced with setApplicationDetails
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
+  //! Will be deprecated soon, replaced with setApplicationDetails
   const [dateModified, setDateModified] = useState(null); // The date the application was last modified, or null if not yet saved/modified
+  //! Will be deprecated soon, replaced with setApplicationDetails
   const [editorUsername, setEditorUsername] = useState(null); // The username of the application editor
+
+  //! Will be deprecated soon, replaced with setApplicationDetails
   /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info */
   const [applicants, setApplicants] = useState([]);
+
+  //! Will be deprecated soon, replaced with setApplicationDetails
   /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info */
+
+  //! Will be deprecated soon, replaced with setApplicationDetails
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
 
   const [agreements, setAgreements] = useState(false); // Represents the state of the agreements card. True if all checkboxes checked, false otherwise
@@ -82,9 +93,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
   useEffect(() => {
     const initializeNewApplication = () => {
       const initialApplicants = [{ Profile: userProfile, OffCampusProgram: '' }];
-      setApplicationID(null);
-      setEditorUsername(userProfile.AD_Username);
-      setApplicants(initialApplicants);
+      setApplicationID(null); //! Will be deprecated soon, replaced with setApplicationDetails
+      setEditorUsername(userProfile.AD_Username); //! Will be deprecated soon, replaced with setApplicationDetails
+      setApplicants(initialApplicants); //! Will be deprecated soon, replaced with setApplicationDetails
       setUnsavedChanges(true);
       setApplicationDetails({
         ...BLANK_APPLICATION_DETAILS,
@@ -102,16 +113,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
         if (newApplicationID === null || newApplicationID === -1) {
           initializeNewApplication();
         } else {
-          setApplicationID(newApplicationID);
+          setApplicationID(newApplicationID); //! Will be deprecated soon, replaced with setApplicationDetails
           setUnsavedChanges(false);
           const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
           if (newApplicationDetails) {
             setApplicationDetails(newApplicationDetails);
-            setDateSubmitted(newApplicationDetails.DateSubmitted ?? null);
-            setDateModified(newApplicationDetails.DateModified ?? null);
-            setEditorUsername(newApplicationDetails.EditorUsername ?? null);
-            setApplicants(newApplicationDetails?.Applicants ?? []);
-            setPreferredHalls(newApplicationDetails?.ApartmentChoices ?? []);
+            setDateSubmitted(newApplicationDetails.DateSubmitted ?? null); //! Will be deprecated soon, replaced with setApplicationDetails
+            setDateModified(newApplicationDetails.DateModified ?? null); //! Will be deprecated soon, replaced with setApplicationDetails
+            setEditorUsername(newApplicationDetails.EditorUsername ?? null); //! Will be deprecated soon, replaced with setApplicationDetails
+            setApplicants(newApplicationDetails?.Applicants ?? []); //! Will be deprecated soon, replaced with setApplicationDetails
+            setPreferredHalls(newApplicationDetails?.ApartmentChoices ?? []); //! Will be deprecated soon, replaced with setApplicationDetails
             setUnsavedChanges(false);
           }
         }
@@ -205,7 +216,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarSeverity('warning');
       } else {
         // Add the profile object to the list of applicants
-        setApplicants((prevApplicants) => [...prevApplicants, newApplicantObject]);
+        setApplicants((prevApplicants) => [...prevApplicants, newApplicantObject]); //! Will be deprecated soon, replaced with setApplicationDetails
         setApplicationDetails((prevApplicationDetails) => ({
           ...prevApplicationDetails,
           Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
@@ -265,9 +276,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
     if (result) {
       console.log(result); //! DEBUG
-      setEditorUsername(newEditorProfile.AD_Username);
+      setEditorUsername(newEditorProfile.AD_Username); //! Will be deprecated soon, replaced with setApplicationDetails
+      setApplicationDetails((prevApplicationDetails) => ({
+        ...prevApplicationDetails,
+        EditorProfile: newEditorProfile,
+        EditorUsername: newEditorProfile.AD_Username,
+      }));
       setSaving('success');
       setUnsavedChanges(true);
+      // loadApplication(); //? Coming soon to a feature near you
     } else {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
       setSnackbarSeverity('error');
@@ -291,11 +308,19 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleApplicantRemove = (profileToRemove) => {
     if (profileToRemove) {
-      setApplicants((prevApplicants) =>
+      setApplicants((
+        prevApplicants, //! Will be deprecated soon, replaced with setApplicationDetails
+      ) =>
         prevApplicants.filter(
           (applicant) => applicant.Profile.AD_Username !== profileToRemove.AD_Username,
         ),
       );
+      setApplicationDetails((prevApplicationDetails) => ({
+        ...prevApplicationDetails,
+        Applicants: prevApplicationDetails.Applicants.filter(
+          (applicant) => applicant.Profile.AD_Username !== profileToRemove.AD_Username,
+        ),
+      }));
       setUnsavedChanges(true);
     }
   };
@@ -308,7 +333,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
     if (index !== null && index >= 0) {
-      let newHallInfo = {
+      let newApartmentChoice = {
         HallRank: Number(hallRankValue) ?? preferredHalls[index].HallRank,
         HallName: hallNameValue ?? preferredHalls[index].HallName,
       };
@@ -324,22 +349,30 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarOpen(true);
 
         // Set the new hall info back to the name it was previously
-        newHallInfo.HallName = preferredHalls[index].HallName;
+        newApartmentChoice.HallName = preferredHalls[index].HallName;
       }
 
-      setPreferredHalls((prevPreferredHalls) => {
-        // replace the element at index with the new hall info object
-        let newPreferredHalls = prevPreferredHalls.map((prevHallInfo, j) =>
-          j === index ? newHallInfo : prevHallInfo,
-        );
+      setPreferredHalls((
+        prevPreferredHalls, //! Will be deprecated soon, replaced with setApplicationDetails
+      ) =>
+        sortBy(
+          // replace the element at index with the new hall info object
+          prevPreferredHalls.map((prevApartmentChoice, j) =>
+            j === index ? newApartmentChoice : prevApartmentChoice,
+          ),
+          ['HallRank', 'HallName'], // Sort halls by rank and name
+        ),
+      );
 
-        if (newPreferredHalls.length > 1) {
-          // Sort halls by rank and name
-          sortBy(newPreferredHalls, ['HallRank', 'HallName']);
-        }
-
-        return newPreferredHalls;
-      });
+      setApplicationDetails((prevApplicationDetails) => ({
+        ...prevApplicationDetails,
+        ApartmentChoices: sortBy(
+          prevApplicationDetails.ApartmentChoices.map((prevApartmentChoice, j) =>
+            j === index ? newApartmentChoice : prevApartmentChoice,
+          ),
+          ['HallRank', 'HallName'],
+        ),
+      }));
 
       setUnsavedChanges(true);
     } else {
@@ -356,6 +389,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleHallRemove = (indexToRemove) => {
     if (indexToRemove !== null && indexToRemove !== -1) {
       setPreferredHalls((prevPreferredHalls) => {
+        //! Will be deprecated soon, replaced with setApplicationDetails
         let newPreferredHalls = prevPreferredHalls.filter(
           (_hall, index) => index !== indexToRemove,
         );
@@ -372,6 +406,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
         return newPreferredHalls;
       });
+
+      setApplicationDetails((prevApplicationDetails) => ({
+        ...prevApplicationDetails,
+        ApartmentChoices: prevApplicationDetails.ApartmentChoices.filter(
+          (_hall, index) => index !== indexToRemove,
+        ).map((apartmentChoice, _index, apartmentChoices) =>
+          // If any rank value is greater than the new maximum, then set it to that new max rank
+          apartmentChoice.HallRank > apartmentChoices.length
+            ? { ...apartmentChoice, HallRank: apartmentChoices.length }
+            : apartmentChoice,
+        ),
+      }));
       setUnsavedChanges(true);
     }
   };
@@ -381,7 +427,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallAdd = () => {
     const newHallInfo = { HallRank: preferredHalls.length + 1, HallName: '' };
-    setPreferredHalls((prevPreferredHalls) => [...prevPreferredHalls, newHallInfo]);
+    setPreferredHalls((prevPreferredHalls) => [...prevPreferredHalls, newHallInfo]); //! Will be deprecated soon, replaced with setApplicationDetails
+    setApplicationDetails((prevApplicationDetails) => ({
+      ...prevApplicationDetails,
+      ApartmentChoices: [...prevApplicationDetails.ApartmentChoices, newHallInfo],
+    }));
   };
 
   /**
@@ -427,7 +477,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
     console.log('result of saving: ' + result); //! DEBUG
     if (result !== null && result !== false && result !== -1 && typeof result === 'number') {
-      setApplicationID(result);
+      setApplicationID(result); //! Will be deprecated soon, replaced with setApplicationDetails
+      setApplicationDetails((prevApplicationDetails) => ({
+        ...prevApplicationDetails,
+        ApplicationID: result ?? prevApplicationDetails.ApplicationID,
+      }));
       setSaving('success');
       setUnsavedChanges(false);
     } else {
