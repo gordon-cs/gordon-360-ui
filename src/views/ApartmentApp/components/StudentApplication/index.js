@@ -89,8 +89,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setApplicationDetails({
         ...BLANK_APPLICATION_DETAILS,
         EditorUsername: userProfile.AD_Username,
-        Applicants: initialApplicants,
         EditorEmail: userProfile.Email,
+        Applicants: initialApplicants,
       });
     };
 
@@ -206,6 +206,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
       } else {
         // Add the profile object to the list of applicants
         setApplicants((prevApplicants) => [...prevApplicants, newApplicantObject]);
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
+        }));
         setUnsavedChanges(true);
         return;
       }

@@ -32,7 +32,8 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @property {Number} ApplicationID Application ID number of this application
  * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
  * @property {String} Username The username of this applicant
- * @property {Number} Age The age of the student (in years) (only visible to housing admin)
+ * @property {DateTime} [BirthDate] The birthday of this applicant (only visible to housing admin)
+ * @property {Number} [Age] The age of the student (in years) (only visible to housing admin)
  * @property {String} Class Class
  * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
  * @property {String} Probation Indicates whether the student has a disiplinary probation (visble only to housing admin)
@@ -52,11 +53,12 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @global
  * @typedef ApplicationDetails
  * @property {Number} ApplicationID Application ID number of this application
- * @property {DateTime} DateSubmitted The date the application was submitted, or null if not yet submitted
+ * @property {DateTime} [DateSubmitted] The date the application was submitted, or null if not yet submitted
  * @property {DateTime} DateModified The date the application was last modified
+ * @property {StudentProfileInfo} EditorProfile The StudentProfileInfo object representing the application editor
  * @property {String} EditorUsername Username of the application editor
- * @property {String} EditorEmail Email address of the application editor
- * @property {String} Gender Gender
+ * @property {String} [EditorEmail] Email address of the application editor
+ * @property {String} [Gender] Gender
  * @property {ApartmentApplicant[]} Applicants Array of ApartmentApplicant objects
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
  * @property {Number} TotalPoints The total application points associated with this application
@@ -134,31 +136,11 @@ const getCurrentApplicationID = async (username) => {
 
 /**
  * Save the current state of the application to the database
- * @param {Number} applicationID the application ID number if it is known, else it is -1
- * @param {String} editorUsername the student username of the person filling out the application
- * @param {ApartmentApplicant[]} applicants Array of ApartmentApplicant objects
- * @param {ApartmentChoice[]} apartmentChoices Array of ApartmentChoice objects
+ * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
  * @return {Promise.<Number>} Application's ID number
  */
-const saveApartmentApplication = async (
-  applicationID,
-  editorUsername,
-  applicants,
-  apartmentChoices,
-) => {
-  let applicationDetails = {
-    ApplicationID: applicationID ?? -1,
-    EditorUsername: editorUsername,
-    Applicants: applicants.map((applicant) => ({
-      ApplicationID: applicant?.ApplicationID ?? applicationID ?? -1,
-      Username: applicant.Profile.AD_Username,
-      OffCampusProgram: applicant?.OffCampusProgram ?? '',
-    })),
-    ApartmentChoices: apartmentChoices.map((apartmentChoice) => ({
-      ApplicationID: apartmentChoice?.ApplicationID ?? applicationID ?? -1,
-      ...apartmentChoice,
-    })),
-  };
+const saveApartmentApplication = async (applicationDetails) => {
+  let applicationID = applicationDetails.ApplicationID;
   if (applicationID) {
     return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
   } else {
