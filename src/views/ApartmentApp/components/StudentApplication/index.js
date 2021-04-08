@@ -172,6 +172,76 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
+   * Check whether a given applicant is valid for this current application
+   *
+   * @async
+   * @function isApplicantValid
+   * @param {ApartmentApplicant} applicant The applicant to be checked
+   * @return {Boolean} True if valid, otherwise false
+   */
+  const isApplicantValid = async (applicant) => {
+    // Check that the applicant contains the required fields
+    if (applicant?.Profile === null) {
+      return false;
+    }
+
+    if (applicant?.OffCampusProgram === null) {
+      applicant.OffCampusProgram = '';
+    }
+
+    if (applicants.length >= MAX_NUM_APPLICANTS) {
+      // Display an error if the user try to add an applicant when the list is full
+      setSnackbarText(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants'`);
+      setSnackbarSeverity('warning');
+      return false;
+    }
+
+    if (!String(applicant.Profile.PersonType).includes('stu')) {
+      // Display an error if the selected user is not a student
+      setSnackbarText(
+        'Could not add ' +
+          String(applicant.Profile.fullName) +
+          ' as an applicant because they are not a student.',
+      );
+      setSnackbarSeverity('warning');
+      return false;
+    }
+
+    // Use any of the follow sources for the gender of the application
+    const applicationGender =
+      applicationDetails.Gender ?? applicationDetails.EditorProfile?.Gender ?? userProfile.Gender;
+
+    if (applicant.Profile.Gender && applicant.Profile.Gender !== applicationGender) {
+      // Display an error if the selected user is not the same gender
+      setSnackbarText(
+        'Could not add ' +
+          String(applicant.Profile.fullName) +
+          ' as an applicant because they are not the same gender as the other applicants.',
+      );
+      setSnackbarSeverity('warning');
+      return false;
+    }
+
+    // Check if the selected user is already saved on an application in the database
+    let existingAppID = null;
+    try {
+      existingAppID = await housing.getCurrentApplicationID(applicant.Profile.AD_Username);
+      if (existingAppID && existingAppID !== applicationDetails.ApplicationID) {
+        // Display an error if the given applicant is already on a different application in the database
+        setSnackbarText(
+          String(applicant.fullName) + ' is already on another application for this semester.',
+        );
+        setSnackbarSeverity('warning');
+        return false;
+      }
+    } catch {
+      // Do nothing
+    }
+
+    return true;
+  };
+
+  /**
    * Add an applicant to the list, identified by username
    *
    * @async
@@ -184,46 +254,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
       const newApplicantProfile = await user.getProfileInfo(username);
       let newApplicantObject = { Profile: newApplicantProfile, OffCampusProgram: '' };
 
-      // Check if the selected user is already saved on an application in the database
-      let existingAppID = null;
-      try {
-        existingAppID = await housing.getCurrentApplicationID(username);
-      } catch {
-        existingAppID = false;
-      }
-
-      if (applicants.length >= MAX_NUM_APPLICANTS) {
-        // Display an error if the user try to add an applicant when the list is full
-        setSnackbarText('You cannot add more than ' + MAX_NUM_APPLICANTS + ' applicants');
-        setSnackbarSeverity('warning');
-      } else if (!String(newApplicantProfile.PersonType).includes('stu')) {
-        // Display an error if the selected user is not a student
-        setSnackbarText(
-          'Could not add ' +
-            String(newApplicantProfile.fullName) +
-            ' because they are not a student.',
-        );
-        setSnackbarSeverity('warning');
-      } else if (newApplicantProfile.Gender && newApplicantProfile.Gender !== userProfile.Gender) {
-        // Display an error if the selected user is not the same gender
-        setSnackbarText(
-          'Could not add ' +
-            String(newApplicantProfile.fullName) +
-            ' because they are not the same gender as the other applicants.',
-        );
-        setSnackbarSeverity('warning');
-      } else if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
+      if (applicants.some((applicant) => applicant.Profile.AD_Username === username)) {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
         setSnackbarSeverity('info');
-      } else if (existingAppID && existingAppID !== applicationID) {
-        // Display an error if the selected user is already on a different application in the database
-        setSnackbarText(
-          String(newApplicantProfile.fullName) +
-            ' is already on another application for this semester.',
-        );
-        setSnackbarSeverity('warning');
-      } else {
+      } else if (isApplicantValid(newApplicantObject)) {
         // Add the profile object to the list of applicants
         setApplicants((prevApplicants) => [...prevApplicants, newApplicantObject]); //! Will be deprecated soon, replaced with setApplicationDetails
         setApplicationDetails((prevApplicationDetails) => ({
