@@ -88,7 +88,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
 
   /**
-   * Loads the user's saved apartment application, if one exists
+   * Load the user's saved apartment application, if one exists
    */
   useEffect(() => {
     const initializeNewApplication = () => {
@@ -105,6 +105,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
       });
     };
 
+    /**
+     * Load the user's saved apartment application, if one exists
+     *
+     * @async
+     * @function loadApplication
+     */
     const loadApplication = async () => {
       try {
         setLoading(true);
@@ -167,6 +173,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Add an applicant to the list, identified by username
+   *
+   * @async
+   * @function addApplicant
    * @param {String} username Username for the new applicant
    */
   const addApplicant = async (username) => {
@@ -262,6 +271,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Update the application editor of the application to the database
+   *
+   * @async
+   * @function changeApplicationEditor
    * @param {Number} applicationID the application ID number
    * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
    */
@@ -456,6 +468,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Save the current state of the application to the database
+   *
+   * @async
+   * @function saveApplication
    * @param {Number} applicationID the application ID number if it is known, else it is -1
    * @param {String} editorUsername the student username of the person filling out the application
    * @param {ApartmentApplicant[]} applicants Array of ApartmentApplicant objects
@@ -466,12 +481,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setSaveButtonAlertTimeout(null);
     let result = null;
     try {
-      result = await housing.saveApartmentApplication(
-        applicationID,
-        editorUsername,
-        applicants,
-        preferredHalls,
-      );
+      result = await housing.saveApartmentApplication(applicationDetails);
     } catch {
       result = false;
     }
@@ -516,8 +526,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
     handleCloseOkay();
   };
 
+  /**
+   * Submit the current application as completed
+   *
+   * @async
+   * @function changeApplicationEditor
+   */
   const submitApplication = async () => {
-    //! Placeholder
+    // housing.submitApplication(applicationDetails);
     setApplicationCardsOpen(false);
   };
 
