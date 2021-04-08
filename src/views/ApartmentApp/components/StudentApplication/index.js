@@ -512,24 +512,29 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
     let result = null;
-    try {
-      result = await housing.saveApartmentApplication(applicationDetails);
-    } catch {
-      result = false;
-    }
-    console.log('result of saving: ' + result); //! DEBUG
-    if (result !== null && result !== false && result !== -1 && typeof result === 'number') {
-      setApplicationID(result); //! Will be deprecated soon, replaced with setApplicationDetails
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        ApplicationID: result ?? prevApplicationDetails.ApplicationID,
-      }));
-      setSaving('success');
-      setUnsavedChanges(false);
+    if (applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
+      try {
+        result = await housing.saveApartmentApplication(applicationDetails);
+      } catch {
+        result = false;
+      }
+      console.log('result of saving: ' + result); //! DEBUG
+      if (typeof result === 'number' && result > 0) {
+        setApplicationID(result); //! Will be deprecated soon, replaced with setApplicationDetails
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          ApplicationID: result ?? prevApplicationDetails.ApplicationID,
+        }));
+        setSaving('success');
+        setUnsavedChanges(false);
+      } else {
+        setSnackbarText('Something went wrong while trying to save the application.');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+        setSaving('failed');
+      }
     } else {
-      setSnackbarText('Something went wrong while trying to save the application.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
+      // The `isApplicantValid` function will handle the snackbar message
       setSaving('failed');
     }
     if (saveButtonAlertTimeout === null) {
@@ -565,8 +570,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function changeApplicationEditor
    */
   const submitApplication = async () => {
-    // housing.submitApplication(applicationDetails);
-    setApplicationCardsOpen(false);
+    if (applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
+      console.log('All applicants are valid'); //! DEBUG:
+      try {
+        //TODO: Feature not yet added to the API
+        // housing.submitApplication(applicationDetails);
+        setApplicationCardsOpen(false);
+      } catch {}
+    } else {
+      console.log('Not all applicants are valid'); //! DEBUG:
+    }
   };
 
   /**
