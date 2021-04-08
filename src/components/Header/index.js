@@ -21,8 +21,6 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 
 import { AppBar, Toolbar, Typography, IconButton, Tabs, Tab, Button } from '@material-ui/core';
 
-const WrapLink = React.forwardRef((props, ref) => <Link ref={ref} {...props} />);
-
 const getRouteName = (route) => {
   if (route.name) {
     return () => (
@@ -40,7 +38,8 @@ const getRouteName = (route) => {
   );
 };
 
-const Link = React.forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
+const ForwardLink = React.forwardRef((props, ref) => <Link ref={ref} {...props} />);
+const ForwardNavLink = React.forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
 const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   const [tabIndex, setTabIndex] = useState(0);
@@ -144,7 +143,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
       );
     } else {
       const route = `/${name.toLowerCase()}`;
-      return <Tab className="tab" icon={icon} label={name} component={NavLink} to={route} />;
+      return <Tab className="tab" icon={icon} label={name} component={ForwardNavLink} to={route} />;
     }
   };
 
@@ -163,7 +162,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
       className="login-button"
       variant="contained"
       color="secondary"
-      component={WrapLink}
+      component={ForwardLink}
       to="/"
     >
       Login
@@ -198,19 +197,25 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
 
           <div className="center-container">
             <Tabs centered value={tabIndex} onChange={(event, value) => setTabIndex(value)}>
-              <Tab className="tab" icon={<HomeIcon />} label="Home" component={Link} to="/" />
+              <Tab
+                className="tab"
+                icon={<HomeIcon />}
+                label="Home"
+                component={ForwardNavLink}
+                to="/"
+              />
               <Tab
                 className="tab"
                 icon={<LocalActivityIcon />}
                 label="Involvements"
-                component={Link}
+                component={ForwardNavLink}
                 to="/involvements"
               />
               <Tab
                 className="tab"
                 icon={<EventIcon />}
                 label="Events"
-                component={Link}
+                component={ForwardNavLink}
                 to="/events"
               />
               {disablableTab('People', <PeopleIcon />)}
