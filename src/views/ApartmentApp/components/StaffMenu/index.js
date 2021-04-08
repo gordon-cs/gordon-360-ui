@@ -28,13 +28,13 @@ const StaffMenu = ({ userProfile, authentication }) => {
   const [applications, setApplications] = useState([]);
 
   /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} Array of application details, after being formatted for use with react-csv */
-  const [applicationJsonArray, setApplicationJsonArray] = useState([]);
+  const [applicationsForCSV, setApplicationsForCSV] = useState([]);
 
   /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info, after being formatted for use with react-csv */
-  const [applicantJsonArray, setApplicantJsonArray] = useState([]);
+  const [applicantsForCSV, setApplicantsForCSV] = useState([]);
 
   /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info, after being formatted for use with react-csv */
-  const [apartmentChoiceJsonArray, setApartmentChoiceJsonArray] = useState([]);
+  const [apartmentChoicesForCSV, setApartmentChoicesForCSV] = useState([]);
 
   const [dateStr, setDateStr] = useState('');
   const filePrefix = 'apartapp';
@@ -59,26 +59,29 @@ const StaffMenu = ({ userProfile, authentication }) => {
   }, [userProfile, loadAllCurrentApplications]);
 
   useEffect(() => {
-    setApplicationJsonArray(
+    setApplicationsForCSV(
       applications
         ?.filter((applicationDetails) => applicationDetails?.DateSubmitted) // Only add the applications that have been submitted
         ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
-          const applicationID = applicationDetails.ApplicationID;
+          // Filter out the Applicants and ApartmentChoices arrays from the applicationDetails so that they may be added to the corresponding CSV files
 
-          setApplicantJsonArray((prevApplicantsJsonArray) => [
-            ...prevApplicantsJsonArray,
-            ...Applicants.map(({ Profile, StudentID, ...applicant }) => ({
-              ApplicationID: applicant.ApplicationID ?? applicationID,
-              ...applicant,
-            })),
+          /*
+           * Append the Applicants from each ApplicationDetails object onto the combined array of
+           * all Applicants, which is the array that is used when generating the CSV files
+           */
+          setApplicantsForCSV((prevApplicantsForCSV) => [
+            ...prevApplicantsForCSV,
+            ...Applicants.map(({ Profile, StudentID, ...applicant }) => applicant),
+            // Filter out the Profile and StudentID properties from applicant so that they do not get included in the CSV file
           ]);
 
-          setApartmentChoiceJsonArray((prevApartmentChoiceJsonArray) => [
-            ...prevApartmentChoiceJsonArray,
-            ...ApartmentChoices.map((apartmentChoice) => ({
-              ApplicationID: apartmentChoice.ApplicationID ?? applicationID,
-              ...apartmentChoice,
-            })),
+          /**
+           * Append the ApartmentChoices from each ApplicationDetails object onto the combined array
+           * of all ApartmentChoices, which is the array that is used when generating the CSV files
+           */
+          setApartmentChoicesForCSV((prevApartmentChoicesForCSV) => [
+            ...prevApartmentChoicesForCSV,
+            ...ApartmentChoices,
           ]);
 
           return applicationDetails;
@@ -109,9 +112,9 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={applicationJsonArray?.length < 1} // This check works correctly for both Number and null
+                    disabled={applicationsForCSV?.length < 1}
                     component={CSVLink}
-                    data={applicationJsonArray}
+                    data={applicationsForCSV}
                     filename={`${filePrefix}-summary-${dateStr}.csv`}
                     target="_blank"
                   >
@@ -123,9 +126,9 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={applicantJsonArray?.length < 1}
+                    disabled={applicantsForCSV?.length < 1}
                     component={CSVLink}
-                    data={applicantJsonArray}
+                    data={applicantsForCSV}
                     filename={`${filePrefix}-applicants-${dateStr}.csv`}
                     target="_blank"
                   >
@@ -137,9 +140,9 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={apartmentChoiceJsonArray?.length < 1}
+                    disabled={apartmentChoicesForCSV?.length < 1}
                     component={CSVLink}
-                    data={apartmentChoiceJsonArray}
+                    data={apartmentChoicesForCSV}
                     filename={`${filePrefix}-halls-${dateStr}.csv`}
                     target="_blank"
                   >
