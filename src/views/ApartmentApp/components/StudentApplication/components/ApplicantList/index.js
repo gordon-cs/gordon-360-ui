@@ -132,7 +132,6 @@ const ApplicantList = ({
               ) : (
                 <ListItem key={'applicant-list-placeholder'} className={'list-item'}>
                   <ListItemText
-                    // primary={'Use the search bar below to add applicants'}
                     primary={'If you are reading this, something went wrong. Please contact CTS'}
                     className={'list-item'}
                   />
