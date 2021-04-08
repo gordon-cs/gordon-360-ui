@@ -57,9 +57,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [applicationDetails, setApplicationDetails] = useState(BLANK_APPLICATION_DETAILS);
 
   //! Will be deprecated soon, replaced with setApplicationDetails
-  /** @type {[Number, React.Dispatch<React.SetStateAction<Number>>]} */
-  const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
-  //! Will be deprecated soon, replaced with setApplicationDetails
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
   //! Will be deprecated soon, replaced with setApplicationDetails
   const [dateModified, setDateModified] = useState(null); // The date the application was last modified, or null if not yet saved/modified
@@ -93,7 +90,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   useEffect(() => {
     const initializeNewApplication = () => {
       const initialApplicants = [{ Profile: userProfile, OffCampusProgram: '' }];
-      setApplicationID(null); //! Will be deprecated soon, replaced with setApplicationDetails
       setEditorUsername(userProfile.AD_Username); //! Will be deprecated soon, replaced with setApplicationDetails
       setApplicants(initialApplicants); //! Will be deprecated soon, replaced with setApplicationDetails
       setUnsavedChanges(true);
@@ -119,7 +115,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         if (newApplicationID === null || newApplicationID === -1) {
           initializeNewApplication();
         } else {
-          setApplicationID(newApplicationID); //! Will be deprecated soon, replaced with setApplicationDetails
           setUnsavedChanges(false);
           const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
           if (newApplicationDetails) {
@@ -294,7 +289,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleChangeEditorAccepted = () => {
     if (newEditorProfile?.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
-      changeApplicationEditor(applicationID, newEditorProfile.AD_Username);
+      changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated soon
+      // saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
       handleCloseOkay();
     } else {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
@@ -309,19 +305,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
    *
    * @async
    * @function changeApplicationEditor
-   * @param {Number} applicationID the application ID number
    * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
    */
-  const changeApplicationEditor = async (applicationID, newEditorUsername) => {
+  const changeApplicationEditor = async (newEditorUsername) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
-    let result = null;
     try {
-      result = await housing.changeApartmentAppEditor(applicationID, newEditorUsername);
-    } catch {
-      result = false;
-    }
-    if (result) {
+      const result = await housing.changeApartmentAppEditor(
+        applicationDetails.ApplicationID,
+        newEditorUsername,
+      );
       console.log(result); //! DEBUG
       setEditorUsername(newEditorProfile.AD_Username); //! Will be deprecated soon, replaced with setApplicationDetails
       setApplicationDetails((prevApplicationDetails) => ({
@@ -332,20 +325,21 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setSaving('success');
       setUnsavedChanges(true);
       // loadApplication(); //? Coming soon to a feature near you
-    } else {
+    } catch {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
       setSaving('failed');
-    }
-    if (saveButtonAlertTimeout === null) {
-      // Shows the success icon for 6 seconds and then returns back to normal button
-      setSaveButtonAlertTimeout(
-        setTimeout(() => {
-          setSaveButtonAlertTimeout(null);
-          setSaving(false);
-        }, 6000),
-      );
+    } finally {
+      if (saveButtonAlertTimeout === null) {
+        // Shows the success icon for 6 seconds and then returns back to normal button
+        setSaveButtonAlertTimeout(
+          setTimeout(() => {
+            setSaveButtonAlertTimeout(null);
+            setSaving(false);
+          }, 6000),
+        );
+      }
     }
   };
 
@@ -493,12 +487,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for apartment application save button
    */
   const handleSaveButtonClick = () => {
-    let debugMessage = 'DEBUG: Save button was clicked'; //! DEBUG
-    console.log(debugMessage); //! DEBUG
-    // Filter out any hall entries that do not have a name selected
-    const filteredPreferredHalls = preferredHalls.filter((hallInfo) => hallInfo.HallName !== '');
     // The method is separated from callback because the housing API service must be handled inside an async method
-    saveApartmentApplication(applicationID, editorUsername, applicants, filteredPreferredHalls);
+    saveApartmentApplication(applicationDetails);
   };
 
   /**
@@ -511,40 +501,39 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const saveApartmentApplication = async (applicationDetails) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
-    let result = null;
-    if (applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
-      try {
-        result = await housing.saveApartmentApplication(applicationDetails);
-      } catch {
-        result = false;
-      }
-      console.log('result of saving: ' + result); //! DEBUG
-      if (typeof result === 'number' && result > 0) {
-        setApplicationID(result); //! Will be deprecated soon, replaced with setApplicationDetails
+    try {
+      if (
+        applicationDetails.Applicants.length === 0 ||
+        applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))
+      ) {
+        const result = await housing.saveApartmentApplication(applicationDetails);
+        console.log('result of saving: ' + result); //! DEBUG
         setApplicationDetails((prevApplicationDetails) => ({
           ...prevApplicationDetails,
           ApplicationID: result ?? prevApplicationDetails.ApplicationID,
         }));
         setSaving('success');
         setUnsavedChanges(false);
+        // loadApplication(); //? Coming soon to a feature near you
       } else {
-        setSnackbarText('Something went wrong while trying to save the application.');
-        setSnackbarSeverity('error');
-        setSnackbarOpen(true);
+        // The `isApplicantValid` function will handle the snackbar message
         setSaving('failed');
       }
-    } else {
-      // The `isApplicantValid` function will handle the snackbar message
+    } catch {
+      setSnackbarText('Something went wrong while trying to save the application.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
       setSaving('failed');
-    }
-    if (saveButtonAlertTimeout === null) {
-      // Shows the success icon for 6 seconds and then returns back to normal button
-      setSaveButtonAlertTimeout(
-        setTimeout(() => {
-          setSaveButtonAlertTimeout(null);
-          setSaving(false);
-        }, 6000),
-      );
+    } finally {
+      if (saveButtonAlertTimeout === null) {
+        // Shows the success icon for 6 seconds and then returns back to normal button
+        setSaveButtonAlertTimeout(
+          setTimeout(() => {
+            setSaveButtonAlertTimeout(null);
+            setSaving(false);
+          }, 6000),
+        );
+      }
     }
   };
 
@@ -652,14 +641,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
             <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
               <ApartmentHeader
                 applicationCardsOpen={applicationCardsOpen}
-                applicationID={applicationID}
-                editorUsername={editorUsername}
+                applicationDetails={applicationDetails}
                 userProfile={userProfile}
                 onShowApplication={handleShowApplication}
               />
             </Collapse>
           </Grid>
-          {applicationID > 0 && (
+          {applicationDetails.ApplicationID > 0 && (
             <Grid item xs={12} md={6} lg={4}>
               <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
                 <ApplicationDataTable
@@ -680,8 +668,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
             <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
               <ApartmentHeader
                 applicationCardsOpen={applicationCardsOpen}
-                applicationID={applicationID}
-                editorUsername={editorUsername}
+                applicationDetails={applicationDetails}
                 userProfile={userProfile}
                 onShowApplication={handleShowApplication}
               />
@@ -764,7 +751,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Grid>
                   )}
                   <Grid item>
-                    <Collapse in={applicationID > 0} timeout="auto" unmountOnExit>
+                    <Collapse
+                      in={applicationDetails.ApplicationID > 0}
+                      timeout="auto"
+                      unmountOnExit
+                    >
                       <ApplicationDataTable
                         dateSubmitted={dateSubmitted}
                         dateModified={dateModified}

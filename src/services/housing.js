@@ -124,12 +124,11 @@ const getApartmentHalls = async () => {
  * @return {Promise.<Number>} Application's ID number
  */
 const getCurrentApplicationID = async (username) => {
-  let applicationID;
   try {
     if (username) {
-      applicationID = await http.get(`housing/apartment/${username}/`);
+      return await http.get(`housing/apartment/${username}/`);
     } else {
-      applicationID = await http.get('housing/apartment');
+      return await http.get('housing/apartment');
     }
   } catch (err) {
     // handle thrown 404 errors
@@ -138,9 +137,8 @@ const getCurrentApplicationID = async (username) => {
     } else {
       throw err;
     }
-    applicationID = null;
+    return null;
   }
-  return applicationID;
 };
 
 /**
@@ -152,7 +150,15 @@ const getCurrentApplicationID = async (username) => {
  * @return {Promise.<Number>} Application's ID number //TODO: Update these API endpoints to return the ApplicationDetails rather than just the ApplicationID (Suggested by Dr. Tuck)
  */
 const saveApartmentApplication = async (applicationDetails) => {
-  let applicationID = applicationDetails.ApplicationID;
+  // Filter out any hall entries that do not have a name selected
+  applicationDetails = {
+    ...applicationDetails,
+    ApartmentChoices: applicationDetails.ApartmentChoices.filter(
+      (apartmentChoice) => apartmentChoice.HallName,
+    ),
+  };
+
+  const applicationID = applicationDetails.ApplicationID;
   if (applicationID > 0) {
     return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
   } else {

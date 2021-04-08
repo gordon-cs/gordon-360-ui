@@ -3,8 +3,7 @@ import { Button, Card, CardContent, Grid, Typography } from '@material-ui/core/'
 
 const ApartmentHeader = ({
   applicationCardsOpen,
-  applicationID,
-  editorUsername,
+  applicationDetails,
   userProfile,
   onShowApplication,
 }) => {
@@ -12,7 +11,7 @@ const ApartmentHeader = ({
     <Card>
       <CardContent>
         <Grid container direction="row" justify="flex-end" spacing={2}>
-          {!applicationID ? (
+          {applicationDetails.ApplicationID < 1 ? (
             <React.Fragment>
               <Grid item xs={6} sm={8}>
                 <Typography variant="body1">
@@ -33,7 +32,7 @@ const ApartmentHeader = ({
                 </Button>
               </Grid>
             </React.Fragment>
-          ) : userProfile.AD_Username === editorUsername ? (
+          ) : userProfile.AD_Username === applicationDetails.EditorProfile.AD_Username ? (
             <React.Fragment>
               <Grid item xs={6} sm={8}>
                 <Typography variant="body1">Existing application for this semester:</Typography>
