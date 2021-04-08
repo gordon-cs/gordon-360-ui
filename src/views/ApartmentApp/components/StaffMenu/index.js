@@ -65,7 +65,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
         ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
           // Filter out the Applicants and ApartmentChoices arrays from the applicationDetails so that they may be added to the corresponding CSV files
 
-          /*
+          /**
            * Append the Applicants from each ApplicationDetails object onto the combined array of
            * all Applicants, which is the array that is used when generating the CSV files
            */

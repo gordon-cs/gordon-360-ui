@@ -24,12 +24,19 @@ const HallSelection = ({
   const [halls, setHalls] = useState([]); // array of hall names from backend
 
   useEffect(() => {
-    const loadHalls = async () => {
+    /**
+     * Get the list of apartment halls from the database
+     * (Coming soon: list of apartment halls filtered by gender of the current user)
+     *
+     * @async
+     * @function loadHalls
+     */
+    const loadApartmentHalls = async () => {
       setHalls(await housing.getApartmentHalls());
     };
 
     if (authentication) {
-      loadHalls();
+      loadApartmentHalls();
     }
   }, [authentication, editorUsername]);
 

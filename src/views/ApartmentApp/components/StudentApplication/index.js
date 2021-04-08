@@ -463,20 +463,17 @@ const StudentApplication = ({ userProfile, authentication }) => {
     // Filter out any hall entries that do not have a name selected
     const filteredPreferredHalls = preferredHalls.filter((hallInfo) => hallInfo.HallName !== '');
     // The method is separated from callback because the housing API service must be handled inside an async method
-    saveApplication(applicationID, editorUsername, applicants, filteredPreferredHalls);
+    saveApartmentApplication(applicationID, editorUsername, applicants, filteredPreferredHalls);
   };
 
   /**
    * Save the current state of the application to the database
    *
    * @async
-   * @function saveApplication
-   * @param {Number} applicationID the application ID number if it is known, else it is -1
-   * @param {String} editorUsername the student username of the person filling out the application
-   * @param {ApartmentApplicant[]} applicants Array of ApartmentApplicant objects
-   * @param {ApartmentChoice[]} preferredHalls Array of ApartmentChoice objects
+   * @function saveApartmentApplication
+   * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
    */
-  const saveApplication = async (applicationID, editorUsername, applicants, preferredHalls) => {
+  const saveApartmentApplication = async (applicationDetails) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
     let result = null;

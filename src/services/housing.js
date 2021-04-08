@@ -67,6 +67,9 @@ import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * Check if the current user is authorized to view the housing staff page for applications
+ *
+ * @async
+ * @function checkHousingAdmin
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingAdmin = async () => {
@@ -102,15 +105,21 @@ const deleteHousingAdmin = (username) => {
 };
 
 /**
- * Get all halls
+ * Get the list of apartment halls from the database
+ *
+ * @async
+ * @function getApartmentHalls
  * @return {Promise.<ApartmentHall[]>} List of halls
  */
-const getApartmentHalls = () => {
+const getApartmentHalls = async () => {
   return http.get('housing/halls/apartments');
 };
 
 /**
  * Check if a given student is on an existing application from the current semester
+ *
+ * @async
+ * @function getCurrentApplicationID
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<Number>} Application's ID number
  */
@@ -136,8 +145,11 @@ const getCurrentApplicationID = async (username) => {
 
 /**
  * Save the current state of the application to the database
+ *
+ * @async
+ * @function saveApartmentApplication
  * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
- * @return {Promise.<Number>} Application's ID number
+ * @return {Promise.<Number>} Application's ID number //TODO: Update these API endpoints to return the ApplicationDetails rather than just the ApplicationID (Suggested by Dr. Tuck)
  */
 const saveApartmentApplication = async (applicationDetails) => {
   let applicationID = applicationDetails.ApplicationID;
@@ -150,6 +162,9 @@ const saveApartmentApplication = async (applicationDetails) => {
 
 /**
  * Update the application editor of the application to the database
+ *
+ * @async
+ * @function changeApartmentAppEditor
  * @param {Number} applicationID the application ID number
  * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
  * @return {Promise.<Boolean>} Status of whether or not the operation was successful
@@ -167,6 +182,9 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
 
 /**
  * Get active apartment application for given application ID number
+ *
+ * @async
+ * @function getApartmentApplication
  * @param {Number} applicationID the application ID number for the desired application
  * @return {Promise.<ApplicationDetails>} Application details
  */
@@ -187,6 +205,9 @@ const getApartmentApplication = async (applicationID) => {
 
 /**
  * Get active apartment applications for the current semester
+ *
+ * @async
+ * @function getAllApartmentApplications
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getAllApartmentApplications = async () => {

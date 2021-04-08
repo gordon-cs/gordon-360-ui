@@ -47,6 +47,9 @@ const ApplicantListItem = ({
 
   /**
    * Creates the Avatar image of the given user
+   *
+   * @async
+   * @function loadAvatar
    * @param {StudentProfileInfo} profile The StudentProfileInfo object for the student represented by this list item
    */
   const loadAvatar = async (profile) => {
