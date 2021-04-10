@@ -516,51 +516,52 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   if (loading) {
     return (
-      <Grid container justify="center">
-        <Grid container item xs={12} lg={10} xl={8} justify="center" spacing={2}>
-          <Grid item xs={12}>
-            <GordonLoader />
-          </Grid>
-          <Grid item xs={12}>
-            <InstructionsCard />
+      <div className="apartment-application">
+        <Grid container justify="center">
+          <Grid container item xs={12} lg={10} xl={8} justify="center" spacing={2}>
+            <Grid item xs={12}>
+              <GordonLoader />
+            </Grid>
+            <Grid item xs={12}>
+              <InstructionsCard />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </div>
     );
   } else {
     return (
       <div className="apartment-application">
         <Grid container justify="center">
           <Grid container item xs={12} lg={10} xl={8} justify="center" spacing={2}>
-            <Grid item xs={12}>
-              <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-                <ApartmentHeader
-                  applicationCardsOpen={applicationCardsOpen}
-                  applicationID={applicationID}
-                  editorUsername={editorUsername}
-                  userProfile={userProfile}
-                  onShowApplication={handleShowApplication}
-                />
-              </Collapse>
-            </Grid>
-
-            <Grid container item xs={12} justify="center" spacing={2}>
-              {!applicationCardsOpen && applicationID > 0 && (
-                <Grid item xs={12} sm={8} md={6} lg={4} xl={3}>
-                  <ApplicationDataTable
-                    dateSubmitted={dateSubmitted}
-                    dateModified={dateModified}
+            {!applicationCardsOpen && (
+              <React.Fragment>
+                <Grid item xs={12}>
+                  <ApartmentHeader
+                    applicationCardsOpen={applicationCardsOpen}
+                    applicationID={applicationID}
                     editorUsername={editorUsername}
-                    editorEmail={applicationDetails?.EditorEmail}
+                    userProfile={userProfile}
+                    onShowApplication={handleShowApplication}
                   />
                 </Grid>
-              )}
-              <Grid item xs={12} lg>
-                <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-                  <InstructionsCard />
-                </Collapse>
-              </Grid>
-            </Grid>
+                <Grid container item xs={12} justify="center" spacing={2}>
+                  {applicationID > 0 && (
+                    <Grid item xs={12} sm={8} md={6} lg={4} xl={3}>
+                      <ApplicationDataTable
+                        dateSubmitted={dateSubmitted}
+                        dateModified={dateModified}
+                        editorUsername={editorUsername}
+                        editorEmail={applicationDetails?.EditorEmail}
+                      />
+                    </Grid>
+                  )}
+                  <Grid item xs={12} lg>
+                    <InstructionsCard />
+                  </Grid>
+                </Grid>
+              </React.Fragment>
+            )}
             <Grid item xs={12}>
               <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
                 <Grid container direction="row" justify="center" spacing={2}>
