@@ -38,15 +38,12 @@ const ApartApp = ({ authentication }) => {
           setCanUseStaff(await housing.checkHousingAdmin());
         } catch {
           setCanUseStaff(false);
-        } finally {
-          setLoading(false);
         }
       } catch {
         setUserProfile(null);
         setCanUseStaff(false);
         setIsUserStudent(false);
       } finally {
-        setIsAuthenticated(true);
         setLoading(false);
       }
     };
