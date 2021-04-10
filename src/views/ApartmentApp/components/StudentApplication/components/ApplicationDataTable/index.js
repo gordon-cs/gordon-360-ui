@@ -16,8 +16,8 @@ import { DateTime } from 'luxon';
 /**
  * Renders a card displaying a table of data about the current application
  * @param {Object} props The React component props
- * @param {DateTime} props.dateSubmitted The date the application was submitted
- * @param {DateTime} props.dateModified The date the application was last modified
+ * @param {String} props.dateSubmitted The date the application was submitted
+ * @param {String} props.dateModified The date the application was last modified
  * @param {String} props.editorUsername The username of the application's editor
  * @returns {JSX.Element} JSX Element for the data table card
  */
@@ -29,9 +29,12 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, edi
   let rows = [
     createData(
       'Last Submitted: ',
-      DateTime.fromISO(dateSubmitted).toISODate() ?? 'Not yet submitted',
+      DateTime.fromISO(dateSubmitted).toLocaleString() ?? 'Not yet submitted',
     ),
-    createData('Last Modified: ', DateTime.fromISO(dateModified).toISODate() ?? 'Not yet saved'),
+    createData(
+      'Last Modified: ',
+      DateTime.fromISO(dateModified).toLocaleString() ?? 'Not yet saved',
+    ),
     createData('Application Editor: ', editorUsername ?? 'None'),
   ];
 
@@ -56,7 +59,7 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, edi
                     <a href={`mailto:${editorEmail}`}>
                       <div className="identification-card-content-card-container-info-email-container">
                         <EmailIcon className="identification-card-content-card-container-info-email-container-icon" />
-                        <Typography paragraph>{editorEmail}</Typography>
+                        <Typography variant="body1">{editorEmail}</Typography>
                       </div>
                     </a>
                   </TableCell>
