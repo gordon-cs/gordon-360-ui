@@ -70,14 +70,15 @@
     font-size: medium;
   }
 
-  & .save-bar {
+  & .MuiGrid-item.sticky-page-bottom-bar {
     position: -webkit-sticky;
     position: sticky;
     bottom: 0px;
     border-top: 8px; // The <Grid> seems to be ignoring these, I will investigate this in the near future
     margin-top: 8px; // The <Grid> seems to be ignoring these
 
-    .save-bar-card {
+    .MuiCard-root,
+    .sticky-page-bottom-bar {
       box-shadow: 0px 0px 8px;
       position: sticky;
     }

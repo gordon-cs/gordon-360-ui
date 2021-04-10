@@ -516,173 +516,175 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   if (loading) {
     return (
-      <Grid container justify="center" spacing={2}>
-        <Grid item xs={12} md={8}>
-          <GordonLoader />
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <InstructionsCard />
+      <Grid container justify="center">
+        <Grid container item xs={12} lg={10} xl={8} justify="center" spacing={2}>
+          <Grid item xs={12}>
+            <GordonLoader />
+          </Grid>
+          <Grid item xs={12}>
+            <InstructionsCard />
+          </Grid>
         </Grid>
       </Grid>
     );
   } else {
     return (
       <div className="apartment-application">
-        <Grid container justify="center" spacing={2}>
-          <Grid item xs={12} lg={10}>
-            <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-              <ApartmentHeader
-                applicationCardsOpen={applicationCardsOpen}
-                applicationID={applicationID}
-                editorUsername={editorUsername}
-                userProfile={userProfile}
-                onShowApplication={handleShowApplication}
-              />
-            </Collapse>
-          </Grid>
-          {applicationID > 0 && (
-            <Grid item xs={12} md={6} lg={4}>
+        <Grid container justify="center">
+          <Grid container item xs={12} lg={10} xl={8} justify="center" spacing={2}>
+            <Grid item xs={12}>
               <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-                <ApplicationDataTable
-                  dateSubmitted={dateSubmitted}
-                  dateModified={dateModified}
+                <ApartmentHeader
+                  applicationCardsOpen={applicationCardsOpen}
+                  applicationID={applicationID}
                   editorUsername={editorUsername}
-                  editorEmail={applicationDetails?.EditorEmail}
+                  userProfile={userProfile}
+                  onShowApplication={handleShowApplication}
                 />
               </Collapse>
             </Grid>
-          )}
-          <Grid item xs={12} md={8}>
-            <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-              <InstructionsCard />
-            </Collapse>
-          </Grid>
-          <Grid item xs={12} lg={10}>
-            <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
-              <ApartmentHeader
-                applicationCardsOpen={applicationCardsOpen}
-                applicationID={applicationID}
-                editorUsername={editorUsername}
-                userProfile={userProfile}
-                onShowApplication={handleShowApplication}
-              />
-            </Collapse>
-          </Grid>
-          <Grid item>
-            <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
-              <Grid container direction="row" justify="center" spacing={2}>
-                <Grid container item xs={12} md={8} lg={6} direction="column" spacing={2}>
-                  <Grid item>
-                    {userProfile.AD_Username === editorUsername ? (
-                      <ApplicantList
-                        maxNumApplicants={MAX_NUM_APPLICANTS}
-                        userProfile={userProfile}
-                        editorUsername={editorUsername}
-                        applicants={applicants}
-                        onSearchSubmit={handleSearchSubmit}
-                        onChangeEditor={handleChangeEditor}
-                        onApplicantRemove={handleApplicantRemove}
-                        onSaveButtonClick={handleSaveButtonClick}
-                        authentication={authentication}
-                      />
-                    ) : (
-                      <ApplicantList
-                        disabled
-                        maxNumApplicants={MAX_NUM_APPLICANTS}
-                        userProfile={userProfile}
-                        editorUsername={editorUsername}
-                        applicants={applicants}
-                      />
-                    )}
 
-                    <GordonDialogBox
-                      open={changeEditorDialogOpen}
-                      onClose={handleCloseDialog}
-                      labelledby={'applicant-warning-dialog'}
-                      describedby={'changing-application-editor'}
-                      title={'Change application editor?'}
-                      text={changeEditorAlertText}
-                      confirmButtonClicked={handleChangeEditorAccepted}
-                      confirmButtonName={'Accept'}
-                      cancelButtonClicked={handleCloseOkay}
-                      cancelButtonName={'Cancel'}
-                      severity={'warning'}
-                    />
-                  </Grid>
-                  <Grid item>
-                    {userProfile.AD_Username === editorUsername ? (
-                      <HallSelection
-                        authentication
-                        editorUsername={editorUsername}
-                        preferredHalls={preferredHalls}
-                        onHallAdd={handleHallAdd}
-                        onHallInputChange={handleHallInputChange}
-                        onHallRemove={handleHallRemove}
-                        onSaveButtonClick={handleSaveButtonClick}
-                      />
-                    ) : (
-                      <HallSelection
-                        disabled
-                        authentication
-                        editorUsername={editorUsername}
-                        preferredHalls={preferredHalls}
-                      />
-                    )}
-                  </Grid>
-                  <Grid item>
-                    <Card>
-                      <CardHeader title="Off-Campus Work Study" className="apartment-card-header" />
-                      <CardContent>
-                        <Typography variant="body1">Placeholder text</Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+            <Grid container item xs={12} justify="center" spacing={2}>
+              {!applicationCardsOpen && applicationID > 0 && (
+                <Grid item xs={12} sm={8} md={6} lg={4} xl={3}>
+                  <ApplicationDataTable
+                    dateSubmitted={dateSubmitted}
+                    dateModified={dateModified}
+                    editorUsername={editorUsername}
+                    editorEmail={applicationDetails?.EditorEmail}
+                  />
                 </Grid>
-                <Grid container item xs={12} md={4} direction="column" spacing={2}>
-                  {userProfile.AD_Username === editorUsername && (
+              )}
+              <Grid item xs={12} lg>
+                <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
+                  <InstructionsCard />
+                </Collapse>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
+                <Grid container direction="row" justify="center" spacing={2}>
+                  <Grid container item md={7} xl={6} direction="column" spacing={2}>
                     <Grid item>
-                      <Agreements onChange={handleAgreementsStateChange} />
-                    </Grid>
-                  )}
-                  <Grid item>
-                    <Collapse in={applicationID > 0} timeout="auto" unmountOnExit>
-                      <ApplicationDataTable
-                        dateSubmitted={dateSubmitted}
-                        dateModified={dateModified}
-                        editorUsername={editorUsername}
-                        editorEmail={applicationDetails.EditorEmail}
+                      {userProfile.AD_Username === editorUsername ? (
+                        <ApplicantList
+                          maxNumApplicants={MAX_NUM_APPLICANTS}
+                          userProfile={userProfile}
+                          editorUsername={editorUsername}
+                          applicants={applicants}
+                          onSearchSubmit={handleSearchSubmit}
+                          onChangeEditor={handleChangeEditor}
+                          onApplicantRemove={handleApplicantRemove}
+                          onSaveButtonClick={handleSaveButtonClick}
+                          authentication={authentication}
+                        />
+                      ) : (
+                        <ApplicantList
+                          disabled
+                          maxNumApplicants={MAX_NUM_APPLICANTS}
+                          userProfile={userProfile}
+                          editorUsername={editorUsername}
+                          applicants={applicants}
+                        />
+                      )}
+
+                      <GordonDialogBox
+                        open={changeEditorDialogOpen}
+                        onClose={handleCloseDialog}
+                        labelledby={'applicant-warning-dialog'}
+                        describedby={'changing-application-editor'}
+                        title={'Change application editor?'}
+                        text={changeEditorAlertText}
+                        confirmButtonClicked={handleChangeEditorAccepted}
+                        confirmButtonName={'Accept'}
+                        cancelButtonClicked={handleCloseOkay}
+                        cancelButtonName={'Cancel'}
+                        severity={'warning'}
                       />
-                    </Collapse>
+                    </Grid>
+                    <Grid item>
+                      {userProfile.AD_Username === editorUsername ? (
+                        <HallSelection
+                          authentication
+                          editorUsername={editorUsername}
+                          preferredHalls={preferredHalls}
+                          onHallAdd={handleHallAdd}
+                          onHallInputChange={handleHallInputChange}
+                          onHallRemove={handleHallRemove}
+                          onSaveButtonClick={handleSaveButtonClick}
+                        />
+                      ) : (
+                        <HallSelection
+                          disabled
+                          authentication
+                          editorUsername={editorUsername}
+                          preferredHalls={preferredHalls}
+                        />
+                      )}
+                    </Grid>
+                    <Grid item>
+                      <Card>
+                        <CardHeader
+                          title="Off-Campus Work Study"
+                          className="apartment-card-header"
+                        />
+                        <CardContent>
+                          <Typography variant="body1">Placeholder text</Typography>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                  <Grid container item md direction="column" spacing={2}>
+                    {userProfile.AD_Username === editorUsername && (
+                      <Grid item>
+                        <Agreements onChange={handleAgreementsStateChange} />
+                      </Grid>
+                    )}
+                    <Grid item>
+                      <Collapse in={applicationID > 0} timeout="auto" unmountOnExit>
+                        <ApplicationDataTable
+                          dateSubmitted={dateSubmitted}
+                          dateModified={dateModified}
+                          editorUsername={editorUsername}
+                          editorEmail={applicationDetails.EditorEmail}
+                        />
+                      </Collapse>
+                    </Grid>
                   </Grid>
                   <Grid item>
                     <InstructionsCard />
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid container direction="row" justify="center" spacing={2} className={'save-bar'}>
-                <Grid item xs={12} lg={10} className={'save-bar'}>
-                  <Card className={'save-bar-card'} variant="outlined">
-                    <CardContent>
-                      <Grid container direction="row" justify="flex-end" spacing={2}>
-                        {userProfile.AD_Username === editorUsername ? (
-                          <React.Fragment>
-                            <Grid item xs={12} sm={6}>
-                              {saving === 'failed' ? (
-                                <Typography variant="overline" color="error">
-                                  Something went wrong while trying to save the application
-                                </Typography>
-                              ) : (
-                                <Typography variant="body1">Placeholder Text</Typography>
-                              )}
-                            </Grid>
-                            <Grid item xs={6} sm={3} lg={2}>
+              </Collapse>
+            </Grid>
+            <Grid item xs={12} className={'sticky-page-bottom-bar'}>
+              {applicationCardsOpen ? (
+                <Card className={'sticky-page-bottom-bar'} variant="outlined">
+                  <CardContent>
+                    {/* TODO: Move this card to it's own sub-component */}
+                    <Grid container direction="row" justify="flex-end" spacing={2}>
+                      {userProfile.AD_Username === editorUsername ? (
+                        <React.Fragment>
+                          <Grid item xs={12} sm={6}>
+                            {saving === 'failed' ? (
+                              <Typography variant="overline" color="error">
+                                Something went wrong while trying to save the application
+                              </Typography>
+                            ) : unsavedChanges ? (
+                              <Typography variant="body1">You have unsaved changes</Typography>
+                            ) : (
+                              <Typography variant="body1">All changes to be saved</Typography>
+                            )}
+                          </Grid>
+                          <Grid container item xs={12} sm={6} lg={4} spacing={2}>
+                            <Grid item xs={6}>
                               <SaveButton
                                 saving={saving}
                                 onClick={handleSaveButtonClick}
                                 disabled={!unsavedChanges}
                               />
                             </Grid>
-                            <Grid item xs={6} sm={3} lg={2}>
+                            <Grid item xs={6}>
                               <Button
                                 variant="contained"
                                 onClick={handleSubmitButtonClick}
@@ -698,44 +700,54 @@ const StudentApplication = ({ userProfile, authentication }) => {
                                 Save & Submit
                               </Button>
                             </Grid>
-                            <GordonDialogBox
-                              open={submitDialogOpen}
-                              onClose={handleCloseDialog}
-                              labelledby={'submit-application-dialog'}
-                              describedby={'confirm-application'}
-                              title={'Submit apartment application?'}
-                              text={submitAlertText}
-                              buttonClicked={handleSubmitAppAccepted}
-                              buttonName={'Accept'}
-                              cancelButtonClicked={handleCloseOkay}
-                              cancelButtonName={'Cancel'}
-                              severity={'warning'}
-                            />
-                          </React.Fragment>
-                        ) : (
-                          <React.Fragment>
-                            <Grid item xs={12} sm={6}>
-                              <Typography variant="body1">
-                                You are not the editor of this application, so you cannot edit or
-                                save changes to this applications.
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={6} sm={3} lg={2}>
+                          </Grid>
+                          <GordonDialogBox
+                            open={submitDialogOpen}
+                            onClose={handleCloseDialog}
+                            labelledby={'submit-application-dialog'}
+                            describedby={'confirm-application'}
+                            title={'Submit apartment application?'}
+                            text={submitAlertText}
+                            buttonClicked={handleSubmitAppAccepted}
+                            buttonName={'Accept'}
+                            cancelButtonClicked={handleCloseOkay}
+                            cancelButtonName={'Cancel'}
+                            severity={'warning'}
+                          />
+                        </React.Fragment>
+                      ) : (
+                        <React.Fragment>
+                          <Grid item xs={12} sm={6}>
+                            <Typography variant="body1">
+                              You are not the editor of this application, so you cannot edit or save
+                              changes to this applications.
+                            </Typography>
+                          </Grid>
+                          <Grid container item xs={12} sm={6} lg={4} spacing={2}>
+                            <Grid item xs={6}>
                               <SaveButton disabled />
                             </Grid>
-                            <Grid item xs={6} sm={3} lg={2}>
+                            <Grid item xs={6}>
                               <Button variant="contained" color="primary" fullWidth disabled>
                                 Save & Submit
                               </Button>
                             </Grid>
-                          </React.Fragment>
-                        )}
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Collapse>
+                          </Grid>
+                        </React.Fragment>
+                      )}
+                    </Grid>
+                  </CardContent>
+                </Card>
+              ) : (
+                <ApartmentHeader
+                  applicationCardsOpen={applicationCardsOpen}
+                  applicationID={applicationID}
+                  editorUsername={editorUsername}
+                  userProfile={userProfile}
+                  onShowApplication={handleShowApplication}
+                />
+              )}
+            </Grid>
           </Grid>
         </Grid>
         <SimpleSnackbar
