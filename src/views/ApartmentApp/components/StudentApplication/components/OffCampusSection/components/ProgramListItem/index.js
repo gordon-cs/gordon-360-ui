@@ -19,7 +19,7 @@ const ProgramListItem = ({
   departments,
   onOffCampusInputChange,
 }) => {
-  const [applicantDepartmentValue, setDepartmentValue] = useState(''); // Major drop-down menu value
+  const [applicantDepartmentValue, setDepartmentValue] = useState(''); // Department drop-down menu value
 
   useEffect(() => {
     setDepartmentValue(offCampusProgram ?? '');
