@@ -176,7 +176,7 @@ export default class Membership extends Component {
 
       // Try to add member
       try {
-        let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
+        let addID = await membership.getEmailAccount(memberEmail).then(function (result) {
           return result.GordonID;
         });
         let data = {

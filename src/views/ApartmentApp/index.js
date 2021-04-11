@@ -30,6 +30,7 @@ const ApartApp = ({ authentication }) => {
     let isSubscribed = true;
     if (authentication) {
       setLoading(true);
+      setIsAuthenticated(true);
 
       user
         .getProfileInfo()

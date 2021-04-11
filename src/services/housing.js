@@ -20,6 +20,14 @@ import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * @global
+ * @typedef ApartmentHall
+ * @property {Number} RoomCapacity Number of people per room/apartment   (not yet implemented in API)
+ * @property {String} Gender Gender ('M', 'F', or '' for both)   (not yet implemented in API)
+ * @property {String} Name The name of the hall
+ */
+
+/**
+ * @global
  * @typedef ApartmentApplicant
  * @property {Number} ApplicationID Application ID number of this application
  * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
@@ -64,15 +72,18 @@ const checkHousingAdmin = async () => {
     return await http.get(`housing/admin`);
   } catch (err) {
     // handle thrown 404 errors
-    if (err.status !== 404) throw err;
-    console.log('A 404 code indicates that current user was not found on the list of admins');
+    if (err.status === 404 || err.name.includes('NotFound')) {
+      console.log('A 404 code indicates that current user was not found on the list of admins');
+    } else {
+      throw err;
+    }
     return false;
   }
 };
 
 /**
  * Add a user to the housing admin whitelist
- * @param {String} [username] Username in firstname.lastname format
+ * @param {String} username Username in firstname.lastname format
  * @return {Response} response of http request
  */
 const addHousingAdmin = (username) => {
@@ -81,11 +92,19 @@ const addHousingAdmin = (username) => {
 
 /**
  * Delete a user to the housing admin whitelist
- * @param {String} [username] Username in firstname.lastname format
+ * @param {String} username Username in firstname.lastname format
  * @return {Response} response of http request
  */
 const deleteHousingAdmin = (username) => {
   return http.del(`housing/admin/${username}/`);
+};
+
+/**
+ * Get all halls
+ * @return {Promise.<ApartmentHall[]>} List of halls
+ */
+const getApartmentHalls = () => {
+  return http.get('housing/halls/apartments');
 };
 
 /**
@@ -103,9 +122,12 @@ const getCurrentApplicationID = async (username) => {
     }
   } catch (err) {
     // handle thrown 404 errors
-    if (err.status !== 404) throw err;
-    applicationID = false;
-    console.log('A 404 code indicates that an application was not found for this applicant');
+    if (err.status === 404 || err.name.includes('NotFound')) {
+      console.log('A 404 code indicates that an application was not found for this applicant');
+    } else {
+      throw err;
+    }
+    applicationID = null;
   }
   return applicationID;
 };
@@ -167,7 +189,18 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  * @return {Promise.<ApplicationDetails>} Application details
  */
 const getApartmentApplication = async (applicationID) => {
-  return await http.get(`housing/apartment/applications/${applicationID}/`);
+  try {
+    return await http.get(`housing/apartment/applications/${applicationID}/`);
+  } catch (err) {
+    if (err?.status === 404 || err?.name?.includes('NotFound')) {
+      console.log(
+        'Received 404 indicates that the requested application was not found in the database',
+      );
+    } else {
+      throw err;
+    }
+    return null;
+  }
 };
 
 /**
@@ -175,154 +208,23 @@ const getApartmentApplication = async (applicationID) => {
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getAllApartmentApplications = async () => {
-  let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
-
-  //! DEBUG: This exists purely for testing the features without the backend.
-  /*
-  let applicationDetailsArray = [
-    {
-      ApplicationID: 15,
-      DateSubmitted: new Date('2030-03-14'),
-      DateModified: new Date('2030-03-14'),
-      EditorUsername: 'Bobby.Tables',
-      Gender: 'M',
-      Applicants: [
-        {
-          Username: 'Bobby.Tables',
-          Age: 21,
-          Class: 'Senior',
-          OffCampusProgram: 'Computer Science',
-          Probation: 'no',
-          Points: 7,
-        },
-        { Username: 'Frederick.Fox', Age: 20, OffCampusProgram: '', Probation: 'yes', Points: 5 },
-        {
-          Username: 'Tommy.Turtle',
-          Age: 22,
-          Class: 'Junior',
-          OffCampusProgram: 'Education',
-          Probation: 'no',
-          Points: 6,
-        },
-        {
-          Username: 'Tommy2.Turtle',
-          Age: 22,
-          OffCampusProgram: 'Education',
-          Probation: 'no',
-          Points: 6,
-        },
-        {
-          Username: 'Tommy3.Turtle',
-          Age: 22,
-          OffCampusProgram: 'Education',
-          Probation: 'no',
-          Points: 6,
-        },
-      ],
-      ApartmentChoices: [
-        { HallRank: 1, HallName: 'Gantley' },
-        { HallRank: 2, HallName: 'Tavilla' },
-      ],
-    },
-    {
-      ApplicationID: 42,
-      DateSubmitted: new Date('2022-03-14'),
-      DateModified: new Date('2022-03-14'),
-      EditorUsername: 'Tommy.Turtle',
-      Gender: 'M',
-      Applicants: [
-        {
-          ApplicationID: 42,
-          Username: 'Tommy.Turtle',
-          Age: 21,
-          OffCampusProgram: '',
-          Probation: 'no',
-          Points: 6,
-        },
-        {
-          ApplicationID: 42,
-          Username: 'Borrus.Buffalo',
-          Age: 20,
-          OffCampusProgram: '',
-          Probation: 'no',
-          Points: 5,
-        },
-      ],
-      ApartmentChoices: [
-        {
-          HallRank: 1,
-          HallName: 'Gantley',
-        },
-        {
-          HallRank: 2,
-          HallName: 'KOSC',
-        },
-        {
-          HallRank: 3,
-          HallName: 'Not-a-real-dorm',
-        },
-      ],
-    },
-    {
-      ApplicationID: 36,
-      DateSubmitted: new Date('2022-03-14'),
-      DateModified: new Date('2022-03-14'),
-      EditorUsername: 'Zippy.Zebra',
-      Gender: 'F',
-      Applicants: [
-        {
-          ApplicationID: 42,
-          Username: 'Zippy.Zebra',
-          Age: 22,
-          OffCampusProgram: '',
-          Probation: 'no',
-          Points: 6,
-        },
-        {
-          ApplicationID: 42,
-          Username: 'Charlene.Cat',
-          Age: 21,
-          OffCampusProgram: '',
-          Probation: 'no',
-          Points: 5,
-        },
-      ],
-      ApartmentChoices: [
-        {
-          HallRank: 1,
-          HallName: 'Gantley',
-        },
-        {
-          HallRank: 2,
-          HallName: 'KOSC',
-        },
-        {
-          HallRank: 3,
-          HallName: 'Not-a-real-dorm',
-        },
-      ],
-    },
-  ];
-  */
-
-  // Calculate the total and average points for each application
-  applicationDetailsArray.forEach((applicationDetails) => {
-    let totalPoints = 0;
-    applicationDetails.Applicants.forEach((applicant) => {
-      totalPoints += applicant.Points;
-    });
-    let avgPoints = totalPoints / applicationDetails.Applicants.length;
-    applicationDetails.TotalPoints = totalPoints;
-    applicationDetails.AvgPoints = avgPoints;
-  });
-
-  return applicationDetailsArray;
+  try {
+    return await http.get(`housing/admin/apartment/applications/`);
+  } catch (err) {
+    if (err?.status === 404 || err?.name?.includes('NotFound')) {
+      console.log('Received 404 indicates that no applications were found in the database');
+    } else {
+      throw err;
+    }
+    return []; // Return an empty array if no applications were found
+  }
 };
 
 export default {
   checkHousingAdmin,
   addHousingAdmin,
   deleteHousingAdmin,
+  getApartmentHalls,
   getCurrentApplicationID,
   saveApartmentApplication,
   changeApartmentAppEditor,

@@ -1,5 +1,6 @@
 //Student apartment application page
 import React, { useState, useEffect } from 'react';
+import { sortBy } from 'lodash';
 import {
   Button,
   Card,
@@ -17,11 +18,21 @@ import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
-import OffCampusSection from './components/OffCampusSection';
+import Agreements from './components/Agreements';
 import SaveButton from './components/SaveButton';
 import housing from '../../../../services/housing';
 import user from '../../../../services/user';
+
 const MAX_NUM_APPLICANTS = 8;
+const BLANK_APPLICATION_DETAILS = {
+  ApplicationID: null,
+  DateSubmitted: null,
+  DateModified: null,
+  EditorUsername: null,
+  EditorEmail: null,
+  Applicants: [],
+  ApartmentChoices: [],
+};
 
 /**
  * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
@@ -43,15 +54,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   /** @type {[ApplicationDetails, React.Dispatch<React.SetStateAction<ApplicationDetails>>]} */
-  const [applicationDetails, setApplicationDetails] = useState({
-    ApplicationID: null,
-    DateSubmitted: null,
-    DateModified: null,
-    EditorUsername: null,
-    EditorEmail: null,
-    Applicants: [],
-    ApartmentChoices: [],
-  });
+  const [applicationDetails, setApplicationDetails] = useState(BLANK_APPLICATION_DETAILS);
   /** @type {[Number, React.Dispatch<React.SetStateAction<Number>>]} */
   const [applicationID, setApplicationID] = useState(null); // Default value of -1 indicate to backend that the application ID number is not yet known
   const [dateSubmitted, setDateSubmitted] = useState(null); // The date the application was submitted, or null if not yet submitted
@@ -61,6 +64,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [applicants, setApplicants] = useState([]);
   /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info */
   const [preferredHalls, setPreferredHalls] = useState([]); // Properties 'HallName' and 'HallRank' must be capitalized to match the backend
+
+  const [agreements, setAgreements] = useState(false); // Represents the state of the agreements card. True if all checkboxes checked, false otherwise
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
@@ -75,74 +80,50 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Loads the user's saved apartment application, if one exists
    */
   useEffect(() => {
-    let isSubscribed = true;
-
-    const handleError = (_error) => {
-      // No existing application was found in the database,
-      // or an error occurred while attempting to load the application
+    const initializeNewApplication = () => {
+      const initialApplicants = [{ Profile: userProfile, OffCampusProgram: '' }];
       setApplicationID(null);
-      setEditorUsername((prevEditorUsername) => prevEditorUsername ?? userProfile.AD_Username);
-      setApplicants((prevApplicants) =>
-        prevApplicants.length ? prevApplicants : [{ Profile: userProfile, OffCampusProgram: '' }],
-      );
+      setEditorUsername(userProfile.AD_Username);
+      setApplicants(initialApplicants);
       setUnsavedChanges(true);
+      setApplicationDetails({
+        ...BLANK_APPLICATION_DETAILS,
+        EditorUsername: userProfile.AD_Username,
+        Applicants: initialApplicants,
+        EditorEmail: userProfile.Email,
+      });
     };
 
-    if (!applicationID || !applicationDetails) {
-      setLoading(true);
-      // Check if the current user is on an application. Returns the application ID number if found
-      housing
-        .getCurrentApplicationID()
-        .then((newApplicationID) => {
-          console.log('Retrieved Application ID: ' + newApplicationID); //! DEBUG
-          if (newApplicationID === null || newApplicationID === -1) {
-            // Intentionally trigger the 'catch'
-            throw new Error("Invalid value of 'newApplicationID' = " + newApplicationID);
-          } else if (isSubscribed) {
-            setApplicationID(newApplicationID);
-            housing
-              .getApartmentApplication(newApplicationID)
-              .then((newApplicationDetails) => {
-                if (isSubscribed && newApplicationDetails) {
-                  setApplicationDetails(newApplicationDetails);
-                  setDateSubmitted(newApplicationDetails.DateSubmitted ?? null);
-                  setDateModified(newApplicationDetails.DateModified ?? null);
-                  setEditorUsername(newApplicationDetails.EditorUsername ?? null);
-                  if (newApplicationDetails.Applicants) {
-                    newApplicationDetails.Applicants.forEach(async (newApplicantInfo) => {
-                      if (newApplicantInfo.Profile !== null) {
-                        setApplicants((prevApplicants) => [...prevApplicants, newApplicantInfo]);
-                      } else {
-                        const newApplicantProfile = await user.getProfileInfo(
-                          newApplicantInfo.Username,
-                        );
-                        setApplicants((prevApplicants) => [
-                          ...prevApplicants,
-                          {
-                            Profile: newApplicantProfile,
-                            ...newApplicantInfo,
-                          },
-                        ]);
-                      }
-                    });
-                  }
-                  setPreferredHalls(newApplicationDetails?.ApartmentChoices ?? []);
-                  setUnsavedChanges(false);
-                }
-              })
-              .catch((error) => {
-                handleError(error);
-              });
+    const loadApplication = async () => {
+      try {
+        setLoading(true);
+        // Check if the current user is on an application. Returns the application ID number if found
+        const newApplicationID = await housing.getCurrentApplicationID();
+        if (newApplicationID === null || newApplicationID === -1) {
+          initializeNewApplication();
+        } else {
+          setApplicationID(newApplicationID);
+          setUnsavedChanges(false);
+          const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
+          if (newApplicationDetails) {
+            setApplicationDetails(newApplicationDetails);
+            setDateSubmitted(newApplicationDetails.DateSubmitted ?? null);
+            setDateModified(newApplicationDetails.DateModified ?? null);
+            setEditorUsername(newApplicationDetails.EditorUsername ?? null);
+            setApplicants(newApplicationDetails?.Applicants ?? []);
+            setPreferredHalls(newApplicationDetails?.ApartmentChoices ?? []);
+            setUnsavedChanges(false);
           }
-        })
-        .catch((error) => {
-          handleError(error);
-        });
-      setLoading(false);
-    }
+        }
+      } catch (error) {
+        initializeNewApplication();
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return () => (isSubscribed = false);
-  }, [userProfile, applicationDetails, applicationID, editorUsername, applicants]);
+    loadApplication();
+  }, [userProfile]);
 
   useEffect(() => {
     // setUnsavedChanges(true);
@@ -150,7 +131,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     console.log('Array state variables changed. Printing contents:');
     console.log('Applicants:');
     applicants.forEach((element) => {
-      console.log(element.Profile.AD_Username + ', ' + element.OffCampusProgram);
+      console.log(element?.Profile?.AD_Username ?? null + ', ' + element.OffCampusProgram);
     });
     console.log('Preferred Halls:');
     preferredHalls.forEach((element) => {
@@ -344,33 +325,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
       setPreferredHalls((prevPreferredHalls) => {
         // replace the element at index with the new hall info object
-        let newPreferredHalls = prevPreferredHalls.map((prevHallInfo, j) => {
-          if (j === index) {
-            return newHallInfo;
-          } else {
-            return prevHallInfo;
-          }
-        });
+        let newPreferredHalls = prevPreferredHalls.map((prevHallInfo, j) =>
+          j === index ? newHallInfo : prevHallInfo,
+        );
 
         if (newPreferredHalls.length > 1) {
-          // Sort halls by name
-          newPreferredHalls.sort(function (a, b) {
-            var nameA = a.HallName.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.HallName.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
-            // names must be equal
-            return 0;
-          });
-
-          // Sort halls by rank
-          newPreferredHalls.sort(function (a, b) {
-            return a.HallRank - b.HallRank;
-          });
+          // Sort halls by rank and name
+          sortBy(newPreferredHalls, ['HallRank', 'HallName']);
         }
 
         return newPreferredHalls;
@@ -417,12 +378,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Callback for hall list remove button
-   * @param {Number} index The index of the hall to be removed from the list of preferred halls
+   * @param {Number} indexToRemove The index of the hall to be removed from the list of preferred halls
    */
-  const handleHallRemove = (index) => {
-    if (index !== null && index !== -1) {
+  const handleHallRemove = (indexToRemove) => {
+    if (indexToRemove !== null && indexToRemove !== -1) {
       setPreferredHalls((prevPreferredHalls) => {
-        let newPreferredHalls = prevPreferredHalls.filter((_hall, j) => j !== index);
+        let newPreferredHalls = prevPreferredHalls.filter(
+          (_hall, index) => index !== indexToRemove,
+        );
 
         if (newPreferredHalls.length > 0) {
           // If any rank value is greater than the new maximum, then set it to that new max rank
@@ -446,6 +409,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleHallAdd = () => {
     const newHallInfo = { HallRank: preferredHalls.length + 1, HallName: '' };
     setPreferredHalls((prevPreferredHalls) => [...prevPreferredHalls, newHallInfo]);
+  };
+
+  /**
+   * Callback for agreements card
+   * @param {Boolean} newAgreementsState The new state of the agreements
+   */
+  const handleAgreementsStateChange = (newAgreementsState) => {
+    setAgreements(newAgreementsState);
   };
 
   /**
@@ -575,7 +546,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
   );
 
   if (loading) {
-    return <GordonLoader />;
+    return (
+      <Grid container justify="center" spacing={2}>
+        <Grid item xs={12} md={8}>
+          <GordonLoader />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <InstructionsCard />
+        </Grid>
+      </Grid>
+    );
   } else {
     return (
       <div className="apartment-application">
@@ -591,7 +571,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
               />
             </Collapse>
           </Grid>
-          {applicationID && (
+          {applicationID > 0 && (
             <Grid item xs={12} md={6} lg={4}>
               <Collapse in={!applicationCardsOpen} timeout="auto" unmountOnExit>
                 <ApplicationDataTable
@@ -630,7 +610,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         userProfile={userProfile}
                         editorUsername={editorUsername}
                         applicants={applicants}
-                        saving={saving}
                         onSearchSubmit={handleSearchSubmit}
                         onChangeEditor={handleChangeEditor}
                         onApplicantRemove={handleApplicantRemove}
@@ -644,7 +623,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         userProfile={userProfile}
                         editorUsername={editorUsername}
                         applicants={applicants}
-                        saving={saving}
                       />
                     )}
 
@@ -668,7 +646,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         authentication
                         editorUsername={editorUsername}
                         preferredHalls={preferredHalls}
-                        saving={saving}
                         onHallAdd={handleHallAdd}
                         onHallInputChange={handleHallInputChange}
                         onHallRemove={handleHallRemove}
@@ -680,7 +657,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         authentication
                         editorUsername={editorUsername}
                         preferredHalls={preferredHalls}
-                        saving={saving}
                       />
                     )}
                   </Grid>
@@ -699,16 +675,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 <Grid container item xs={12} md={4} direction="column" spacing={2}>
                   {userProfile.AD_Username === editorUsername && (
                     <Grid item>
-                      <Card>
-                        <CardHeader title="Agreements" className="apartment-card-header" />
-                        <CardContent>
-                          <Typography variant="body1">Placeholder text</Typography>
-                        </CardContent>
-                      </Card>
+                      <Agreements onChange={handleAgreementsStateChange} />
                     </Grid>
                   )}
                   <Grid item>
-                    <Collapse in={applicationID} timeout="auto" unmountOnExit>
+                    <Collapse in={applicationID > 0} timeout="auto" unmountOnExit>
                       <ApplicationDataTable
                         dateSubmitted={dateSubmitted}
                         dateModified={dateModified}
@@ -753,7 +724,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                                 fullWidth
                                 disabled={
                                   !applicationCardsOpen ||
-                                  !unsavedChanges ||
+                                  !agreements ||
                                   !(applicationDetails.Applicants.length > 0) ||
                                   !(applicationDetails.ApartmentChoices.length > 0)
                                 }

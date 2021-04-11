@@ -12,7 +12,6 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import { gordonColors } from '../../../../theme';
@@ -222,9 +221,9 @@ export default class ShiftItem extends Component {
       zeroLengthShift = timeDiff === 0;
       shiftTooLong = calculatedTimeDiff > 20;
       let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
-      if (roundedHourDifference === 0.00) {
+      if (roundedHourDifference === 0.0) {
         roundedHourDifference = 0.08; //minimum 1/12th hour for working a shift (5 minutes)
-      } 
+      }
 
       this.setState({
         newHoursWorked: roundedHourDifference,

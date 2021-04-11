@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Grid,
   Divider,
@@ -13,6 +13,24 @@ import {
 } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 
+/**
+ * @typedef { import('../../services/housing').ApartmentHall } ApartmentHall
+ * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
+ */
+
+/**
+ * Renders the list item for the apartment hall choice list
+ * @param {Object} props The React component props
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {Number} props.index The index of this list item
+ * @param {Number} props.hallRank The rank assigned to this hall by the user
+ * @param {String} props.hallName The name of the apartment hall
+ * @param {ApartmentChoice[]} props.preferredHalls Array of apartment choices
+ * @param {ApartmentHall[]} props.halls Array of apartment halls available
+ * @param {CallbackFcn} props.onHallInputChange Callback for dropdown menu change
+ * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
+ * @returns {JSX.Element} JSX Element for the hall list item
+ */
 const HallListItem = ({
   disabled,
   index,
@@ -23,14 +41,6 @@ const HallListItem = ({
   onHallInputChange,
   onHallRemove,
 }) => {
-  const [hallRankValue, setHallRankValue] = useState(1); // Rank drop-down menu value
-  const [hallNameValue, setHallNameValue] = useState(''); // Hall drop-down menu value
-
-  useEffect(() => {
-    setHallRankValue(hallRank);
-    setHallNameValue(hallName);
-  }, [hallRank, hallName]);
-
   /**
    * Callback for changes to hall rank input field
    * @param {*} event change event to be handled by callback
@@ -38,7 +48,7 @@ const HallListItem = ({
   const handleRankInputChange = (event) => {
     if (event.target.value !== null) {
       let newHallRankValue = event.target.value;
-      onHallInputChange(newHallRankValue, hallNameValue, index);
+      onHallInputChange(newHallRankValue, hallName, index);
     }
   };
 
@@ -49,7 +59,7 @@ const HallListItem = ({
   const handleNameInputChange = (event) => {
     if (event.target.value !== null) {
       let newHallNameValue = event.target.value;
-      onHallInputChange(hallRankValue, newHallNameValue, index);
+      onHallInputChange(hallRank, newHallNameValue, index);
     }
   };
 
@@ -63,9 +73,9 @@ const HallListItem = ({
     }
   };
 
-  const hallOptions = halls.map((hallName) => (
-    <MenuItem value={hallName} key={hallName}>
-      {hallName}
+  const hallOptions = halls.map((hall) => (
+    <MenuItem value={hall.Name} key={hall.Name}>
+      {hall.Name}
     </MenuItem>
   ));
 
@@ -84,7 +94,7 @@ const HallListItem = ({
               <InputLabel>Rank</InputLabel>
               <Select
                 disabled={disabled}
-                value={hallRankValue}
+                value={hallRank}
                 onChange={handleRankInputChange}
                 input={<Input id={'rank' + index} />}
               >
@@ -97,7 +107,7 @@ const HallListItem = ({
               <InputLabel>Hall</InputLabel>
               <Select
                 disabled={disabled}
-                value={hallNameValue}
+                value={hallName}
                 onChange={handleNameInputChange}
                 input={<Input id={'hall' + index} />}
               >

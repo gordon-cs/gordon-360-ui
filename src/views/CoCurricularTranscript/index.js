@@ -89,7 +89,7 @@ export default class Transcript extends Component {
   // Param: activities - an array of Activity components with props Activity and Sessions
   // Returns: the same array, sorted in order of most recent (newest) to least recent
   sortNewestFirst = (activities) => {
-    let sorted = activities.sort(function(a, b) {
+    let sorted = activities.sort(function (a, b) {
       let lastSessA = a.props.Sessions[a.props.Sessions.length - 1];
       let lastSessB = b.props.Sessions[b.props.Sessions.length - 1];
       return lastSessB - lastSessA;

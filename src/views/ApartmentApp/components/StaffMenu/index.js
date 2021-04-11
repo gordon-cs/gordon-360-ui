@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { CSVLink } from 'react-csv';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import { DateTime } from 'luxon';
 import GordonLoader from '../../../../components/Loader';
 import housing from '../../../../services/housing';
@@ -57,47 +58,33 @@ const StaffMenu = ({ userProfile, authentication }) => {
     setDateStr(dateStr);
   }, [userProfile, loadAllCurrentApplications]);
 
-  /**
-   * Generate arrays of objects to be converted to a CSV
-   * @param {ApplicationDetails[]} applicationDetailsArray an array of ApplicationDetails objects
-   */
-  const generateCSVData = useCallback((applicationDetailsArray) => {
-    let applicationsForCsv = [];
-    let applicantsForCsv = [];
-    let apartmentChoicesForCsv = [];
-    applicationDetailsArray.forEach((applicationDetails) => {
-      // Only add the applications that have been submitted
-      if (applicationDetails.DateSubmitted) {
-        let { Applicants, ApartmentChoices, ...filteredApplicationDetails } = applicationDetails;
-        applicationsForCsv.push(filteredApplicationDetails);
-
-        Applicants.forEach((applicant) => {
-          if (applicant.ApplicationID) {
-            applicantsForCsv.push(applicant);
-          } else {
-            applicantsForCsv.push({
-              ApplicationID: applicationDetails.ApplicationID,
-              ...applicant,
-            });
-          }
-        });
-
-        ApartmentChoices.forEach((apartmentChoice) => {
-          apartmentChoicesForCsv.push({
-            ApplicationID: apartmentChoice.ApplicationID ?? applicationDetails.ApplicationID,
-            ...apartmentChoice,
-          });
-        });
-      }
-    });
-    setApplicationJsonArray(applicationsForCsv);
-    setApplicantJsonArray(applicantsForCsv);
-    setApartmentChoiceJsonArray(apartmentChoicesForCsv);
-  }, []);
-
   useEffect(() => {
-    generateCSVData(applications);
-  }, [applications, generateCSVData]);
+    setApplicationJsonArray(
+      applications
+        ?.filter((applicationDetails) => applicationDetails?.DateSubmitted) // Only add the applications that have been submitted
+        ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
+          const applicationID = applicationDetails.ApplicationID;
+
+          setApplicantJsonArray((prevApplicantsJsonArray) => [
+            ...prevApplicantsJsonArray,
+            ...Applicants.map(({ Profile, StudentID, ...applicant }) => ({
+              ApplicationID: applicant.ApplicationID ?? applicationID,
+              ...applicant,
+            })),
+          ]);
+
+          setApartmentChoiceJsonArray((prevApartmentChoiceJsonArray) => [
+            ...prevApartmentChoiceJsonArray,
+            ...ApartmentChoices.map((apartmentChoice) => ({
+              ApplicationID: apartmentChoice.ApplicationID ?? applicationID,
+              ...apartmentChoice,
+            })),
+          ]);
+
+          return applicationDetails;
+        }) ?? [],
+    );
+  }, [applications]);
 
   if (loading) {
     return <GordonLoader />;
@@ -122,7 +109,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={!authentication}
+                    disabled={applicationJsonArray?.length < 1} // This check works correctly for both Number and null
                     component={CSVLink}
                     data={applicationJsonArray}
                     filename={`${filePrefix}-summary-${dateStr}.csv`}
@@ -136,7 +123,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={!authentication}
+                    disabled={applicantJsonArray?.length < 1}
                     component={CSVLink}
                     data={applicantJsonArray}
                     filename={`${filePrefix}-applicants-${dateStr}.csv`}
@@ -150,13 +137,31 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={!authentication}
+                    disabled={apartmentChoiceJsonArray?.length < 1}
                     component={CSVLink}
                     data={apartmentChoiceJsonArray}
                     filename={`${filePrefix}-halls-${dateStr}.csv`}
                     target="_blank"
                   >
                     Download Apartment Hall Choices
+                  </Button>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={9} md={6} lg={3}>
+          <Card>
+            <CardContent>
+              <Grid container direction="row" spacing={2} padded>
+                <Grid item xs={12}>
+                  <Button
+                    variant="filled"
+                    color="primary"
+                    startIcon={<RefreshIcon />}
+                    onClick={loadAllCurrentApplications}
+                  >
+                    Refresh Application Data
                   </Button>
                 </Grid>
               </Grid>

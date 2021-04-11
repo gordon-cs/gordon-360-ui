@@ -12,7 +12,7 @@ const headCells = [
   { id: 'avg-pts', numeric: true, disablePadding: false, label: 'Avg. Points' },
 ];
 
-const ApplicationsTableHead = ({ order, orderBy, onRequestSort }) => {
+const ApplicationTableHead = ({ order, orderBy, onRequestSort }) => {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -49,10 +49,10 @@ const ApplicationsTableHead = ({ order, orderBy, onRequestSort }) => {
   );
 };
 
-ApplicationsTableHead.propTypes = {
+ApplicationTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
 };
 
-export default ApplicationsTableHead;
+export default ApplicationTableHead;
