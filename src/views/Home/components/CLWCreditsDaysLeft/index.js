@@ -90,7 +90,10 @@ export default class CLWCreditsDaysLeft extends Component {
         legend: false,
       };
 
-      const { current, required } = this.state.chapelCredits;
+      //const { current, required } = this.state.chapelCredits;
+      //for testing purposes
+      const current = 18;
+      const required = 25;
       const remaining = current > required ? 0 : required - current;
 
       const data = {
@@ -143,7 +146,12 @@ export default class CLWCreditsDaysLeft extends Component {
               </div>
             </Grid>
           </Grid> */}
-          <Doughnut data={data} height={175} options={options} />
+          <Doughnut data={data} height={175} options={options} onElementsClick={elems => {
+            console.log(elems);
+            if (elems[1]._model.label === 'CL&W Credits Earned') {
+              window.location = "/attended";
+            }
+          }} />
           <div
             style={{
               marginTop: '1rem',
