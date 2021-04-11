@@ -100,6 +100,18 @@ const deleteHousingAdmin = (username) => {
 };
 
 /**
+ * Gets the date of apartment selection night
+ *
+ * @async
+ * @function
+ * @returns {Promise.<String>} The apartment selection date
+ */
+const getApartmentSelectionDate = async () => {
+  return 'Apr. 27';
+  // return http.get('housing/apartment/selection-date); // Not yet implemented in the API
+};
+
+/**
  * Get all halls
  * @return {Promise.<ApartmentHall[]>} List of halls
  */
@@ -224,6 +236,7 @@ export default {
   checkHousingAdmin,
   addHousingAdmin,
   deleteHousingAdmin,
+  getApartmentSelectionDate,
   getApartmentHalls,
   getCurrentApplicationID,
   saveApartmentApplication,
