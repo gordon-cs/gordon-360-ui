@@ -146,9 +146,8 @@ export default class CLWCreditsDaysLeft extends Component {
               </div>
             </Grid>
           </Grid> */}
-          <Doughnut data={data} height={175} options={options} onElementsClick={elems => {
-            console.log(elems);
-            if (elems[1]._model.label === 'CL&W Credits Earned') {
+          <Doughnut data={data} height={175} options={options} getElementAtEvent={elems => {
+            if (elems[0]._model.label === 'CL&W Credits Earned') {
               window.location = "/attended";
             }
           }} />
