@@ -1,10 +1,10 @@
 //Handles the fetching and preperation for displaying of shifts
 import React, { Component } from 'react';
 import { Grid, Card, CardContent, CardHeader, Tabs, Tab } from '@material-ui/core';
-import GordonLoader from '../../../../components/Loader';
-import SavedShiftsList from '../../components/SavedShiftsList';
-import jobs from '../../../../services/jobs';
-import SimpleSnackbar from '../../../../components/Snackbar';
+import GordonLoader from 'components/Loader';
+import SavedShiftsList from '../SavedShiftsList';
+import jobs from 'services/jobs';
+import SimpleSnackbar from 'components/Snackbar';
 import Media from 'react-media';
 import './ShiftDisplay.css';
 

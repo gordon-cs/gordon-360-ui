@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { gordonColors } from '../../../../../../theme';
-import admin from '../../../../../../services/admin';
+import { gordonColors } from 'theme';
+import admin from 'services/admin';
 
 import {
   Typography,

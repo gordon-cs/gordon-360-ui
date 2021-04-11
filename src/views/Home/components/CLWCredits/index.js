@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 
-import { gordonColors } from '../../../../theme';
-import user from '../../../../services/user';
-import GordonLoader from '../../../../components/Loader';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import GordonLoader from 'components/Loader';
 
 import { Card, CardContent, CardHeader } from '@material-ui/core';
 

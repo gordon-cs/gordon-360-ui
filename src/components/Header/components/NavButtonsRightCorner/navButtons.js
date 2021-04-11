@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import user from '../../../../services/user';
+import user from 'services/user';
 
 import { ListItem, ListItemText } from '@material-ui/core';
 

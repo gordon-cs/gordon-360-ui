@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { gordonColors } from '../../theme';
-import Version from '../../services/version';
-import { projectName } from '../../project-name';
+import { gordonColors } from 'theme';
+import Version from 'services/version';
+import { projectName } from 'project-name';
 import './about.css';
 
 import { Typography, Grid, Button, Card } from '@material-ui/core';

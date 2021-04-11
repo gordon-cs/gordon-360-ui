@@ -11,14 +11,14 @@ import {
 } from '@material-ui/core';
 import React, { Component } from 'react';
 import './activities-all.css';
-import activity from '../../services/activity';
-import session from '../../services/session';
+import activity from 'services/activity';
+import session from 'services/session';
 import GordonActivityGrid from './components/ActivityGrid';
-import GordonLoader from '../../components/Loader';
-import user from './../../services/user';
-import { gordonColors } from '../../theme';
+import GordonLoader from 'components/Loader';
+import user from 'services/user';
+import { gordonColors } from 'theme';
 import Requests from './components/Requests';
-import storage from '../../services/storage';
+import storage from 'services/storage';
 
 export default class GordonActivitiesAll extends Component {
   constructor(props) {

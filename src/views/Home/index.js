@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import GordonLoader from '../../components/Loader';
-import WellnessQuestion from '../../components/WellnessQuestion';
+import GordonLoader from 'components/Loader';
+import WellnessQuestion from 'components/WellnessQuestion';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
-import user from '../../services/user';
-import wellness from '../../services/wellness';
-import storage from '../../services/storage';
-import Login from '../Login';
+import user from 'services/user';
+import wellness from 'services/wellness';
+import storage from 'services/storage';
 import GuestWelcome from './components/GuestWelcome';
 import './home.css';
 import { Grid } from '@material-ui/core';
-
 
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
@@ -76,24 +74,7 @@ const Home = ({ authentication, onLogIn }) => {
   if (loading) {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
-    return (
-      /*
-          In order to actually center the components, nested containers had to be used.
-          Otherwise, the welcome card would be aligned to the left, and not centered above
-          login, as desired. If alignItem='stretch' was not used in the login grid item,
-          the form would be squashed, also not what we want.
-      */
-      <div className='gordon-login'>
-        <Grid container direction='column' justify='center' alignItems='center'>
-          <Grid item xs={4}>
-            <GuestWelcome />
-          </Grid>
-          <Grid item xs={10} container alignItems='stretch'>
-            <Login onLogIn={onLogIn} />
-          </Grid>
-        </Grid>
-      </div>
-    );
+    return <GuestWelcome onLogIn={onLogIn} />;
   } else if (networkStatus === 'online' && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else {
