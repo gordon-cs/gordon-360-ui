@@ -346,9 +346,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleOffCampusInputChange = (offCampusProgramValue, index) => {
     if (index !== null && index >= 0) {
       // Get the profile of the selected user
-      const applicant = applicants[index];
       let newApplicant = {
-        ...applicant,
+        ...applicants[index],
         OffCampusProgram: offCampusProgramValue ?? applicant.OffCampusProgram,
       };
       // Error checking on the hallNameValue before modifying the newHallInfo object
