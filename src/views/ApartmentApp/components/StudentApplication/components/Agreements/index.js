@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -11,6 +11,7 @@ import {
   FormControlLabel,
   FormHelperText,
 } from '@material-ui/core/';
+import housing from '../../../../../../services/housing';
 
 /**
  * Renders a card displaying the apartment application instructions
@@ -19,51 +20,63 @@ import {
  * @returns {JSX.Element} JSX Element for the instructions card
  */
 const Agreements = ({ onChange }) => {
-  const [checkboxes, setCheckboxes] = React.useState([
-    {
-      checked: false,
-      label: 'Each individual on the application has agreed to be on the application',
-    },
-    {
-      checked: false,
-      label:
-        'We understand that if someone on this application has not agreed to be on the application, our application will be disqualified',
-    },
-    {
-      checked: false,
-      label: 'Each individual on this application appears ONLY on this application',
-    },
-    {
-      checked: false,
-      label:
-        "We understand that if an individual on this application also appears on another group's application, our application could be disqualified",
-    },
-    {
-      checked: false,
-      label:
-        'Any individual on this application who has been on disciplinary probation at any point during the 2019-2020 academic year has been approved to apply by the Dean of Student Care or the Director of Residence Life',
-    },
-    {
-      checked: false,
-      label:
-        'Each individual on this application intends to register as a full-time student by apartment selection night (Apr. 23)',
-    },
-    {
-      checked: false,
-      label:
-        'We understand that if any member of our application fails to register as a full-time student by Apr. 23, our application could be disqualified',
-    },
-    {
-      checked: false,
-      label:
-        'We have read and understand all of the information and guidelines listed in the Instructions section',
-    },
-    {
-      checked: false,
-      label:
-        'We certify that all information provided on this application is accurate, to the best of our knowledge',
-    },
-  ]);
+  const [checkboxes, setCheckboxes] = useState([]);
+
+  useEffect(() => {
+    const loadAgreements = async () => {
+      const currentYear = new Date().getFullYear();
+      const selectionDate = await housing.getApartmentSelectionDate();
+
+      let newCheckboxes = [
+        {
+          checked: false,
+          label: 'Each individual on the application has agreed to be on the application',
+        },
+        {
+          checked: false,
+          label:
+            'We understand that if someone on this application has not agreed to be on the application, our application will be disqualified',
+        },
+        {
+          checked: false,
+          label: 'Each individual on this application appears ONLY on this application',
+        },
+        {
+          checked: false,
+          label:
+            "We understand that if an individual on this application also appears on another group's application, our application could be disqualified",
+        },
+        {
+          checked: false,
+          label: `Any individual on this application who has been on disciplinary probation at any point during the ${
+            currentYear - 1
+          }-${currentYear} academic year has been approved to apply by the Dean of Student Care or the Director of Residence Life`,
+        },
+        {
+          checked: false,
+          label: `Each individual on this application intends to register as a full-time student by apartment selection night (${selectionDate})`,
+        },
+        {
+          checked: false,
+          label: `We understand that if any member of our application fails to register as a full-time student by ${selectionDate}, our application could be disqualified`,
+        },
+        {
+          checked: false,
+          label:
+            'We have read and understand all of the information and guidelines listed in the Instructions section',
+        },
+        {
+          checked: false,
+          label:
+            'We certify that all information provided on this application is accurate, to the best of our knowledge',
+        },
+      ];
+
+      setCheckboxes(newCheckboxes);
+    };
+
+    loadAgreements();
+  }, []);
 
   const handleChange = (event, index) => {
     // I don't know why, but it only works correctly if you explictly assign the new custom object to a variable, rather than returning the custom object declaration inline within the checkboxes.map()
