@@ -348,14 +348,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
       // Get the profile of the selected user
       let newApplicant = {
         ...applicants[index],
-        OffCampusProgram: offCampusProgramValue ?? applicant.OffCampusProgram,
+        OffCampusProgram: offCampusProgramValue ?? applicants[index].OffCampusProgram,
       };
       // Error checking on the hallNameValue before modifying the newHallInfo object
       setApplicants((prevApplicants) =>
         // replace the element at index with the new hall info object
-        prevApplicants.map((prevApplicant, j) =>
-          j === index ? newApplicant : prevApplicant,
-        ),
+        prevApplicants.map((prevApplicant, j) => (j === index ? newApplicant : prevApplicant)),
       );
     } else {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');

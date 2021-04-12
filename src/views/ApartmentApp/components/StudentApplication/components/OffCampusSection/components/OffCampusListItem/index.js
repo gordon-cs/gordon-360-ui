@@ -19,12 +19,6 @@ const OffCampusListItem = ({
   departments,
   onOffCampusInputChange,
 }) => {
-  const [applicantDepartmentValue, setDepartmentValue] = useState(''); // Department drop-down menu value
-
-  useEffect(() => {
-    setDepartmentValue(offCampusProgram ?? '');
-  }, [offCampusProgram]);
-
   const handleDepartmentInputChange = (event) => {
     if (event.target.value !== null) {
       let newApplicantDepartmentValue = event.target.value;
