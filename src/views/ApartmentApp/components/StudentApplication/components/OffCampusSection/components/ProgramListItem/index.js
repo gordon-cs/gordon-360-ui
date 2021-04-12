@@ -50,7 +50,7 @@ const ProgramListItem = ({
               <InputLabel>Department</InputLabel>
               <Select
                 disabled={disabled}
-                value={applicantDepartmentValue}
+                value={offCampusProgram}
                 onChange={handleDepartmentInputChange}
                 input={<Input id={'department' + index} />}
               >
