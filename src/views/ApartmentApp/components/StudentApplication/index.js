@@ -1,15 +1,7 @@
 //Student apartment application page
 import React, { useState, useEffect } from 'react';
 import { sortBy } from 'lodash';
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Collapse,
-  Grid,
-  Typography,
-} from '@material-ui/core/';
+import { Button, Card, CardContent, Collapse, Grid, Typography } from '@material-ui/core/';
 import GordonLoader from '../../../../components/Loader';
 import GordonDialogBox from '../../../../components/GordonDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
