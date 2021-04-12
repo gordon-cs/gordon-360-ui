@@ -354,13 +354,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
       // Error checking on the hallNameValue before modifying the newHallInfo object
       setApplicants((prevApplicants) =>
         // replace the element at index with the new hall info object
-        prevApplicants.map((prevApplicant, j) => {
-          if (j === index) {
-            return newApplicant;
-          } else {
-            return prevApplicant;
-          }
-        }),
+        prevApplicants.map((prevApplicant, j) =>
+          j === index ? newApplicant : prevApplicant,
+        ),
       );
     } else {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
