@@ -11,7 +11,7 @@ import {
   Select,
 } from '@material-ui/core';
 
-const ProgramListItem = ({
+const OffCampusListItem = ({
   disabled,
   index,
   applicantProfile,
@@ -65,4 +65,4 @@ const ProgramListItem = ({
   );
 };
 
-export default ProgramListItem;
+export default OffCampusListItem;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
-import ProgramListItem from './components/ProgramListItem';
+import OffCampusListItem from './components/OffCampusListItem';
 import goStalk from '../../../../../../services/goStalk';
 
 // Create a list of selection boxes to choosing which applicants are doing off campus programs.
@@ -10,7 +10,7 @@ const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInp
 
   useEffect(() => {
     const loadDepartments = async () => {
-      // Get the majors that the applicants may be completing off campus programs for
+      // Get the departments that the applicants may be completing off campus programs for
       let unfilteredDepartments = await goStalk.getDepartments();
       //Remove spaces from strings
       let availableDepartments = unfilteredDepartments.map((department) => department.trim());
@@ -24,11 +24,11 @@ const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInp
 
   /**
    * Callback for changes to off-campus program info
-   * @param {String} offCampusProgramValue The program that the applicant is doing an OC program for
+   * @param {String} offCampusListItemValue The program that the applicant is doing an OC program for
    * @param {Number} index The index of the applicant in the list
    */
-  const handleInputChange = (offCampusProgramValue, index) => {
-    onOffCampusInputChange(offCampusProgramValue, index);
+  const handleInputChange = (offCampusListItemValue, index) => {
+    onOffCampusInputChange(offCampusListItemValue, index);
   };
 
   return (
@@ -44,7 +44,7 @@ const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInp
             >
               {applicants?.length > 0 &&
                 applicants.map((applicant, index) => (
-                  <ProgramListItem
+                  <OffCampusListItem
                     key={applicant.Profile.AD_Username}
                     disabled={disabled}
                     index={index}
