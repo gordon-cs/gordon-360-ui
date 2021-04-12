@@ -24,7 +24,7 @@ const Agreements = ({ onChange }) => {
 
   useEffect(() => {
     const loadAgreements = async () => {
-      const currentYear = Number(new Date().getFullYear);
+      const currentYear = new Date().getFullYear();
       const selectionDate = await housing.getApartmentSelectionDate();
 
       let newCheckboxes = [

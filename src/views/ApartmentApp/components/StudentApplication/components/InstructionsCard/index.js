@@ -23,11 +23,8 @@ const InstructionsCard = () => {
   const [thisYear, setThisYear] = useState();
 
   useEffect(() => {
-    const getYear = () => setThisYear(new Date().getFullYear());
-    const loadApartmentSelectionDate = async () =>
-      setApartmentSelectionDate(await housing.getApartmentSelectionDate());
-
-    getYear();
+    setThisYear(new Date().getFullYear());
+    setApartmentSelectionDate(await housing.getApartmentSelectionDate();
     loadApartmentSelectionDate();
   }, []);
 

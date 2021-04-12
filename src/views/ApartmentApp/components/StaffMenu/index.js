@@ -53,7 +53,7 @@ const StaffMenu = ({ userProfile, authentication }) => {
     loadAllCurrentApplications();
 
     // Generate string of today's date in ISO format for use in CSV filename
-    setDateStr(DateTime.now().toISODate());
+    setDateStr(DateTime.now().toISODate({ includeOffset: false }));
   }, [userProfile, loadAllCurrentApplications]);
 
   useEffect(() => {
