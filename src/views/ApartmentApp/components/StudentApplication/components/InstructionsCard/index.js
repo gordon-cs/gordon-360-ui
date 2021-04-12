@@ -24,8 +24,9 @@ const InstructionsCard = () => {
 
   useEffect(() => {
     setThisYear(new Date().getFullYear());
-    setApartmentSelectionDate(await housing.getApartmentSelectionDate();
-    loadApartmentSelectionDate();
+    housing
+      .getApartmentSelectionDate()
+      .then((selectionDate) => setApartmentSelectionDate(selectionDate));
   }, []);
 
   const rows = [
