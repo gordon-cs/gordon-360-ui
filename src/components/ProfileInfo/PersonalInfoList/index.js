@@ -10,6 +10,7 @@ import {
   Card,
   CardHeader,
   CardContent,
+  List,
   Switch,
   FormControlLabel,
 } from '@material-ui/core';
@@ -269,22 +270,24 @@ const PersonalInfoList = ({
       <Card
         className={`personal-info-list  ${myProf ? 'my-personal-info' : 'public-personal-info'}`}
       >
-        <Grid container className="header">
+        <Grid container className="personal-info-list-header">
           <CardHeader title="Personal Information" />
         </Grid>
         <CardContent>
-          {majors}
-          {minors}
-          {advisors}
-          {onOffCampus}
-          {dormInfo}
-          {mailLocation}
-          {mobilePhoneListItem}
-          {homePhoneListItem}
-          {studentID}
-          {home}
-          {spouse}
-          {disclaimer}
+          <List>
+            {majors}
+            {minors}
+            {advisors}
+            {onOffCampus}
+            {dormInfo}
+            {mailLocation}
+            {mobilePhoneListItem}
+            {homePhoneListItem}
+            {studentID}
+            {home}
+            {spouse}
+            {disclaimer}
+          </List>
         </CardContent>
       </Card>
 

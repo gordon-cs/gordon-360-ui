@@ -3,7 +3,7 @@ import GordonLoader from 'components/Loader';
 import GordonSchedulePanel from 'components/SchedulePanel';
 import Identification from 'components/Identification';
 import MembershipsList from 'components/MembershipsList';
-import Office from 'components/ProfileInfo/OfficeList';
+import OfficeInfoList from 'components/ProfileInfo/OfficeInfoList';
 import PersonalInfoList from 'components/ProfileInfo/PersonalInfoList';
 import storage from 'services/storage';
 import user from 'services/user';
@@ -33,7 +33,7 @@ const MyProfile = (props) => {
         setProfileInfo(profileInfo);
         const personType = String(profile.PersonType);
         setPersonType(personType);
-        let officeInfo = <Office profile={profile} />;
+        let officeInfo = <OfficeInfoList profile={profile} />;
         setOfficeInfo(officeInfo);
         setLoading(false);
       } catch (error) {

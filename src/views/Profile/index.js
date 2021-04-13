@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import user from 'services/user';
 import PersonalInfoList from 'components/ProfileInfo/PersonalInfoList';
-import Office from 'components/ProfileInfo/OfficeList';
+import OfficeInfoList from 'components/ProfileInfo/OfficeInfoList';
 import MembershipsList from 'components/MembershipsList';
 import GordonLoader from 'components/Loader';
 import { socialMediaInfo } from 'socialMedia';
@@ -105,7 +105,7 @@ export default class Profile extends Component {
       const profile = await user.getProfileInfo(searchedUser.match.params.username);
       const curUser = await user.getProfileInfo();
       let profileinfo = <PersonalInfoList profile={profile} myProf={false} />;
-      let officeinfo = <Office profile={profile} />;
+      let officeinfo = <OfficeInfoList profile={profile} />;
       this.setState({ currentUser: curUser });
       this.setState({ profileinfo: profileinfo });
       this.setState({ officeinfo: officeinfo });
