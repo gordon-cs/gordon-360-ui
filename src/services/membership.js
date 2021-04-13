@@ -75,7 +75,7 @@ const approveRequest = (requestID) => {
  * @return {boolean} True if given id is a group admin, else false
  */
 const checkAdmin = (id, sessionCode, activityCode) => {
-  let isGroupAdmin = getAllGroupAdmins(activityCode).then(function(result) {
+  let isGroupAdmin = getAllGroupAdmins(activityCode).then(function (result) {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
         if (result[i].SessionCode === sessionCode) {
@@ -141,7 +141,7 @@ const filterCurrent = (memberArray, sessionCode) => {
  * @return {Member[]} List of members in given session
  */
 const get = (activityCode, sessionCode) => {
-  let allMembership = getAll(activityCode).then(function(result) {
+  let allMembership = getAll(activityCode).then(function (result) {
     return filterCurrent(result, sessionCode);
   });
   return allMembership;
@@ -203,9 +203,39 @@ const getMembersNum = (activityCode, sessionCode) =>
  * @return {Member[]} Array of the given student's memberships
  */
 const getIndividualMembership = (userID) =>
-  http.get(`memberships/student/${userID}`).then(function(result) {
+  http.get(`memberships/student/${userID}`).then(function (result) {
     return result;
   });
+
+/**
+ * Group memberships by Activity code
+ * @param {String} id ID of user
+ * @return {grouped} array of activies containing arrays of each activitie's instances
+ */
+
+const groupByActivityCode = (id) => {
+  console.log("entered groupByActivityCode");
+  const memberships = getIndividualMembership(id);
+  let grouped = [];
+  console.log("memberships: ");
+  console.log(memberships);
+  console.log("currrent length of memberships: " + memberships.length);
+  while (memberships.length > 0 ) {
+    console.log("Entered while loop");
+    if (grouped.search(memberships[0].ActivityCode)) {
+      console.log("Activity already in list");
+      grouped[memberships[0]].push(memberships[0]);
+    } else {
+      console.log("Activity not in array already")
+      let x = [];
+      x.push(memberships[0]);
+      grouped.push(x);
+    }
+    memberships.pop();
+  }
+  console.log(grouped);
+  return grouped;
+};
 
 /**
  * Get requests for specific activity and filtered by session code
@@ -214,7 +244,7 @@ const getIndividualMembership = (userID) =>
  * @return {Request[]} List of requests for activity and session
  */
 const getRequests = (activityCode, sessionCode) => {
-  let allRequests = http.get(`requests/activity/${activityCode}`).then(function(result) {
+  let allRequests = http.get(`requests/activity/${activityCode}`).then(function (result) {
     return filterCurrentRequests(result, sessionCode);
   });
   return allRequests;
@@ -241,7 +271,7 @@ const filterCurrentRequests = (requestsArray, sessionCode) => {
 
 // Get the difference in days bewteen today and specified date
 // Returns integer and printable string
-const getDiffDays = function(date) {
+const getDiffDays = function (date) {
   let currentDate = new Date();
   let requestDate = new Date(date);
   let timeDiff = Math.abs(currentDate.getTime() - requestDate.getTime());
@@ -286,7 +316,7 @@ function requestMembership(data) {
  *                  and membershipID if in specific activity and session
  */
 const search = (id, sessionCode, activityCode) => {
-  let found = http.get(`memberships/student/${id}`).then(function(result) {
+  let found = http.get(`memberships/student/${id}`).then(function (result) {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
         if (result[i].SessionCode === sessionCode) {
@@ -331,4 +361,5 @@ export default {
   search,
   toggleGroupAdmin,
   toggleMembershipPrivacy,
+  groupByActivityCode,
 };

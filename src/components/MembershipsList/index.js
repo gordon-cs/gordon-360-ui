@@ -24,7 +24,8 @@ const MembershipsList = ({ user, myProf }) => {
     async function loadMemberships() {
       setLoading(true);
       if (myProf) {
-        const myMemberships = await userService.getMembershipsByActivityCode(user);
+        const myMemberships = await membershipService.groupByActivityCode(user);
+        console.log(myMemberships);
         await Promise.all(
           myMemberships.map(async (membership) => {
             const involvement = await activity.get(membership.ActivityCode);
