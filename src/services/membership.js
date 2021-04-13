@@ -206,6 +206,36 @@ const getIndividualMembership = (userID) =>
   });
 
 /**
+ * Group memberships by Activity code
+ * @param {String} id ID of user
+ * @return {grouped} array of activies containing arrays of each activitie's instances
+ */
+
+const groupByActivityCode = (id) => {
+  console.log("entered groupByActivityCode");
+  const memberships = getIndividualMembership(id);
+  let grouped = [];
+  console.log("memberships: ");
+  console.log(memberships);
+  console.log("currrent length of memberships: " + memberships.length);
+  while (memberships.length > 0 ) {
+    console.log("Entered while loop");
+    if (grouped.search(memberships[0].ActivityCode)) {
+      console.log("Activity already in list");
+      grouped[memberships[0]].push(memberships[0]);
+    } else {
+      console.log("Activity not in array already")
+      let x = [];
+      x.push(memberships[0]);
+      grouped.push(x);
+    }
+    memberships.pop();
+  }
+  console.log(grouped);
+  return grouped;
+};
+
+/**
  * Get requests for specific activity and filtered by session code
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
@@ -327,6 +357,7 @@ const membershipService = {
   search,
   toggleGroupAdmin,
   toggleMembershipPrivacy,
+  groupByActivityCode,
 };
 
 export default membershipService;

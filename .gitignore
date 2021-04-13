@@ -35,3 +35,4 @@ yarn-error.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+src/services/360API.code-workspace
