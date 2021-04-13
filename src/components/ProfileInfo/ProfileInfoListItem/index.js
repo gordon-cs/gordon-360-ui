@@ -2,7 +2,7 @@ import React from 'react';
 import { Divider, ListItem, Grid, Typography } from '@material-ui/core';
 import './index.scss';
 
-const InfoListItem = ({ title, contentText, ContentIcon = null, contentClass = null }) => {
+const ProfileInfoListItem = ({ title, contentText, ContentIcon = null, contentClass = null }) => {
   const gridSizeProps = ContentIcon ? { xs: 4, md: 3, lg: 4 } : { xs: 7 };
 
   return (
@@ -27,4 +27,4 @@ const InfoListItem = ({ title, contentText, ContentIcon = null, contentClass = n
   );
 };
 
-export default InfoListItem;
+export default ProfileInfoListItem;

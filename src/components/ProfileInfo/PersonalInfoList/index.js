@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import user from 'services/user';
 import './index.css';
-import InfoListItem from './components/InfoListItem';
+import ProfileInfoListItem from '../ProfileInfoListItem';
 import LockIcon from '@material-ui/icons/Lock';
 
 import {
@@ -104,7 +104,7 @@ const PersonalInfoList = ({
   };
 
   const homePhoneListItem = HomePhone ? (
-    <InfoListItem
+    <ProfileInfoListItem
       title="Home Phone:"
       contentText={
         myProf ? (
@@ -120,7 +120,7 @@ const PersonalInfoList = ({
   ) : null;
 
   const mobilePhoneListItem = MobilePhone ? (
-    <InfoListItem
+    <ProfileInfoListItem
       title="Mobile Phone:"
       contentText={
         myProf ? (
@@ -150,7 +150,7 @@ const PersonalInfoList = ({
   ) : null;
 
   const home = (
-    <InfoListItem
+    <ProfileInfoListItem
       title="Home:"
       contentText={
         <>
@@ -170,14 +170,14 @@ const PersonalInfoList = ({
 
   const minors =
     Minors?.length > 0 && isStudent ? (
-      <InfoListItem
+      <ProfileInfoListItem
         title={Minors?.length > 1 ? 'Minors:' : 'Minor:'}
         contentText={Minors?.join(', ')}
       />
     ) : null;
 
   const majors = isStudent ? (
-    <InfoListItem
+    <ProfileInfoListItem
       title={Majors?.length > 1 ? 'Majors:' : 'Major:'}
       contentText={Majors?.length < 1 ? 'Undecided' : Majors?.join(', ')}
     />
@@ -185,7 +185,7 @@ const PersonalInfoList = ({
 
   const advisors =
     myProf && isStudent ? (
-      <InfoListItem
+      <ProfileInfoListItem
         title={Advisors?.length > 1 ? 'Advisors:' : 'Advisor:'}
         contentText={
           Advisors?.length < 1
@@ -198,7 +198,7 @@ const PersonalInfoList = ({
 
   const onOffCampus =
     isStudent && OnOffCampus ? (
-      <InfoListItem
+      <ProfileInfoListItem
         title="On/Off Campus:"
         contentText={OnOffCampus}
         contentClass={isCampusLocationPrivate ? 'private' : null}
@@ -207,12 +207,12 @@ const PersonalInfoList = ({
 
   const mailLocation =
     isStudent && Mail_Location ? (
-      <InfoListItem title="Mailbox:" contentText={`#${Mail_Location}`} />
+      <ProfileInfoListItem title="Mailbox:" contentText={`#${Mail_Location}`} />
     ) : null;
 
   const dormInfo =
     isStudent && (BuildingDescription || Hall) ? (
-      <InfoListItem
+      <ProfileInfoListItem
         title="Dormitory:"
         contentText={
           <>
@@ -228,7 +228,7 @@ const PersonalInfoList = ({
 
   const studentID =
     isStudent && myProf ? (
-      <InfoListItem
+      <ProfileInfoListItem
         title="Student ID:"
         contentText={ID}
         ContentIcon={
@@ -245,7 +245,7 @@ const PersonalInfoList = ({
 
   const spouse =
     isFacStaff && SpouseName ? (
-      <InfoListItem
+      <ProfileInfoListItem
         title="Spouse:"
         contentText={SpouseName}
         contentClass={(keepPrivate && myProf) || isSpousePrivate ? 'private' : null}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import user from 'services/user';
-import PersonalInfoList from 'components/Profile/PersonalInfoList';
-import Office from 'components/Profile/OfficeList';
+import PersonalInfoList from 'components/ProfileInfo/PersonalInfoList';
+import Office from 'components/ProfileInfo/OfficeList';
 import MembershipsList from 'components/MembershipsList';
 import GordonLoader from 'components/Loader';
 import { socialMediaInfo } from 'socialMedia';
