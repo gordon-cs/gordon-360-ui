@@ -5,20 +5,18 @@ import Identification from 'components/ProfileInfo/Identification';
 import MembershipsList from 'components/ProfileInfo/MembershipsList';
 import OfficeInfoList from 'components/ProfileInfo/OfficeInfoList';
 import PersonalInfoList from 'components/ProfileInfo/PersonalInfoList';
-import storage from 'services/storage';
 import user from 'services/user';
 import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
 import './myProfile.css';
 
 import { Button, Card, CardContent, Grid } from '@material-ui/core';
+import useNetworkStatus from 'hooks/useNetworkStatus.js';
 
-const MyProfile = (props) => {
+const MyProfile = ({ authentication }) => {
   const [loading, setLoading] = useState(true);
-  const [network, setNetwork] = useState('online');
-  const [officeInfo, setOfficeInfo] = useState(null);
-  const [personType, setPersonType] = useState(null);
-  const [profile, setProfile] = useState({});
-  const [profileInfo, setProfileInfo] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const isOnline = useNetworkStatus();
+  const network = isOnline ? 'online' : 'offline';
 
   /**
    * Loads the user's profile info only once (at start)
@@ -27,64 +25,22 @@ const MyProfile = (props) => {
     async function loadProfile() {
       setLoading(true);
       try {
-        let profile = await user.getProfileInfo();
-        setProfile(profile);
-        let profileInfo = <PersonalInfoList profile={profile} myProf={true} network={network} />;
-        setProfileInfo(profileInfo);
-        const personType = String(profile.PersonType);
-        setPersonType(personType);
-        let officeInfo = <OfficeInfoList profile={profile} />;
-        setOfficeInfo(officeInfo);
+        setProfile(await user.getProfileInfo());
         setLoading(false);
       } catch (error) {
         // Do Nothing
       }
     }
-    loadProfile();
-  }, [network]);
 
-  useEffect(() => {
-    let networkStatus;
-    /* Attempts to get the network status from local storage.
-     * If not found, the default value is online
-     */
-    try {
-      networkStatus = storage.get('network-status');
-    } catch (error) {
-      // Defaults the network to online if not found in local storage
-      networkStatus = 'online';
+    if (authentication) {
+      loadProfile();
+    } else {
+      setProfile(null);
     }
-
-    // Saves the network's status to this component's state
-    setNetwork(networkStatus);
-  }, [network]);
-
-  useEffect(() => {
-    /* Used to re-render the page when the network connection changes.
-     *  The state's network variable is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('online');
-      } else if (
-        event.data === 'offline' &&
-        network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('offline');
-      }
-    });
-    return window.removeEventListener('message', () => {});
-  }, [network]);
+  }, [authentication]);
 
   // AUTHENTICATED
-  if (props.authentication) {
+  if (authentication) {
     if (loading) {
       return <GordonLoader />;
     } else {
@@ -93,13 +49,13 @@ const MyProfile = (props) => {
           <Grid
             item
             xs={12}
-            md={profile.PersonType === 'stu' ? 8 : 12}
-            lg={profile.PersonType === 'stu' ? 6 : 10}
+            md={profile?.PersonType?.includes('stu') ? 8 : 12}
+            lg={profile?.PersonType?.includes('stu') ? 6 : 10}
           >
             <Identification profile={profile} network={network} myProf={true} />
           </Grid>
 
-          {String(personType).includes('stu') && (
+          {profile?.PersonType?.includes('stu') && (
             <Grid item xs={12} md={4}>
               <VictoryPromiseDisplay network={network} />
             </Grid>
@@ -110,12 +66,12 @@ const MyProfile = (props) => {
           </Grid>
 
           <Grid item xs={12} lg={5}>
-            {officeInfo}
-            {profileInfo}
+            <OfficeInfoList profile={profile} />
+            <PersonalInfoList profile={profile} myProf={true} network={network} />
           </Grid>
 
           <Grid item xs={12} lg={5}>
-            <MembershipsList user={profile.ID} myProf={true} />
+            <MembershipsList user={profile?.ID} myProf={true} />
           </Grid>
         </Grid>
       );
