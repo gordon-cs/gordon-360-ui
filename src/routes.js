@@ -8,7 +8,7 @@ import Help from './views/Help';
 import CoCurricularTranscript from './views/CoCurricularTranscript';
 import Events from './views/Events';
 import EventsAttended from './views/EventsAttended';
-import Profile from './views/Profile';
+import PublicProfile from './views/PublicProfile';
 import MyProfile from './views/MyProfile';
 import Feedback from './views/Feedback';
 import PeopleSearch from './views/PeopleSearch';
@@ -81,7 +81,7 @@ export default [
   {
     name: 'Profile',
     path: '/profile/:username',
-    component: Profile,
+    component: PublicProfile,
   },
   {
     name: 'My Profile',
