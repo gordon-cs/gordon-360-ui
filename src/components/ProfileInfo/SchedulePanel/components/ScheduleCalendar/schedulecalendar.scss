@@ -1,7 +1,7 @@
-@import '../../../../vars';
+@import '../../../../../vars';
 
 // This is direct import from the API scss file. Needs to clean up some unnecessary design formats.
-@import '../../../../../node_modules/react-big-calendar/lib/sass/styles.scss';
+@import '../../../../../../node_modules/react-big-calendar/lib/sass/styles.scss';
 
 .rbc-btn {
   color: inherit;
@@ -208,7 +208,7 @@ button.rbc-input::-moz-focus-inner {
     text-align: center;
   }
   .rbc-toolbar button {
-    color: #373a3c;    
+    color: #373a3c;
     display: inline-block;
     margin: 0;
     text-align: center;

@@ -5,7 +5,7 @@ import OfficeInfoList from 'components/ProfileInfo/OfficeInfoList';
 import MembershipsList from 'components/ProfileInfo/MembershipsList';
 import GordonLoader from 'components/Loader';
 import { socialMediaInfo } from 'socialMedia';
-import GordonSchedulePanel from 'components/SchedulePanel';
+import GordonSchedulePanel from 'components/ProfileInfo/SchedulePanel';
 import Identification from 'components/ProfileInfo/Identification';
 import storage from 'services/storage';
 import { Redirect } from 'react-router';

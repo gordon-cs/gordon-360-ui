@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
-import GordonSchedulePanel from 'components/SchedulePanel';
+import GordonSchedulePanel from 'components/ProfileInfo/SchedulePanel';
 import Identification from 'components/ProfileInfo/Identification';
 import MembershipsList from 'components/ProfileInfo/MembershipsList';
 import OfficeInfoList from 'components/ProfileInfo/OfficeInfoList';
