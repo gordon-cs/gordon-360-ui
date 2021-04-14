@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonSchedulePanel from 'components/SchedulePanel';
-import Identification from 'components/Identification';
-import MembershipsList from 'components/MembershipsList';
+import Identification from 'components/ProfileInfo/Identification';
+import MembershipsList from 'components/ProfileInfo/MembershipsList';
 import OfficeInfoList from 'components/ProfileInfo/OfficeInfoList';
 import PersonalInfoList from 'components/ProfileInfo/PersonalInfoList';
 import storage from 'services/storage';
