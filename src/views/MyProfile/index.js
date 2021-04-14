@@ -95,7 +95,6 @@ const MyProfile = (props) => {
               <Grid
                 item
                 xs={12}
-                sm={12}
                 md={profile.PersonType === 'stu' ? 8 : 12}
                 lg={profile.PersonType === 'stu' ? 6 : 10}
               >
@@ -103,17 +102,13 @@ const MyProfile = (props) => {
               </Grid>
 
               {String(personType).includes('stu') && (
-                <Grid item xs={12} md={4} lg={4} sm={12}>
+                <Grid item xs={12} md={4}>
                   <VictoryPromiseDisplay network={network} />
                 </Grid>
               )}
 
-              <Grid item xs={12} lg={10} align="center">
-                <Grid container xs={12} lg={12} spacing={0} justify="center">
-                  <Grid item xs={12} lg={12}>
-                    <GordonSchedulePanel profile={profile} myProf={true} network={network} />
-                  </Grid>
-                </Grid>
+              <Grid item xs={12} lg={10}>
+                <GordonSchedulePanel profile={profile} myProf={true} network={network} />
               </Grid>
 
               <Grid item xs={12} lg={5}>

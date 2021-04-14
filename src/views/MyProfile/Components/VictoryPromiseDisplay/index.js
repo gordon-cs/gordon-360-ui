@@ -241,6 +241,7 @@ export default class VictoryPromiseDisplay extends React.Component {
       content = (
         <Grid
           xs={12}
+          item
           container
           justify="center"
           direction="column"
@@ -314,7 +315,7 @@ export default class VictoryPromiseDisplay extends React.Component {
 
     return (
       <div className="victory-promise">
-        <Grid container xs className="victory-promise-header">
+        <Grid container item xs className="victory-promise-header">
           <CardHeader title="Victory Promise" />
         </Grid>
         <Grid container className="victory-promise-container" alignItems="center" justify="center">
@@ -329,7 +330,7 @@ export default class VictoryPromiseDisplay extends React.Component {
                   Change Style
                 </Button>
               </Grid>
-              <Grid container xs className="victory-promise-container-card-container-content">
+              <Grid container item xs className="victory-promise-container-card-container-content">
                 {content}
               </Grid>
               {this.props.network === 'online' && (

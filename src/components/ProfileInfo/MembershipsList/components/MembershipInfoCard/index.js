@@ -34,16 +34,16 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
       <Grid container alignItems="center" justify="center" className="membership-info-card">
         <Grid
           container
+          item
           xs={8}
           sm={9}
-          md={9}
           lg={8}
           xl={9}
           justify="flex-start"
           alignItems="center"
           className="membership-info-card-description"
         >
-          <Grid container xs={8} alignItems="center">
+          <Grid item xs={8}>
             <List>
               <ListItem className="my-profile-info-card-description-text">
                 <OnlineOnlyLink>
@@ -58,26 +58,24 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
           </Grid>
 
           {myProf && (
-            <Grid container xs={4} alignItems="center">
-              <Grid container>
-                <Grid item xs={12} align="center">
-                  {isOnline &&
-                    (membership.IsInvolvementPrivate ? (
-                      <LockIcon className="lock-icon" />
-                    ) : (
-                      <Switch
-                        onChange={() => {
-                          onTogglePrivacy(membership);
-                        }}
-                        checked={!membership.Privacy}
-                      />
-                    ))}
-                </Grid>
-                <Grid item xs={12} align="center">
-                  <Typography>
-                    {membership.Privacy || membership.IsInvolvementPrivate ? 'Private' : 'Public'}
-                  </Typography>
-                </Grid>
+            <Grid container item xs={4} alignItems="center">
+              <Grid item xs={12}>
+                {isOnline &&
+                  (membership.IsInvolvementPrivate ? (
+                    <LockIcon className="lock-icon" />
+                  ) : (
+                    <Switch
+                      onChange={() => {
+                        onTogglePrivacy(membership);
+                      }}
+                      checked={!membership.Privacy}
+                    />
+                  ))}
+              </Grid>
+              <Grid item xs={12}>
+                <Typography>
+                  {membership.Privacy || membership.IsInvolvementPrivate ? 'Private' : 'Public'}
+                </Typography>
               </Grid>
             </Grid>
           )}
@@ -85,9 +83,9 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
 
         <Grid
           container
+          item
           xs={4}
           sm={3}
-          md={3}
           lg={4}
           xl={3}
           className="membership-info-card-image"
