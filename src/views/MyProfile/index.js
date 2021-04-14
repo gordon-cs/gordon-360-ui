@@ -85,49 +85,41 @@ const MyProfile = (props) => {
 
   // AUTHENTICATED
   if (props.authentication) {
-    // Creates the My Profile Page
-    let MyProfile = (
-      <div>
-        {loading && <GordonLoader />}
-        {!loading && (
-          <div className="personal-profile">
-            <Grid container justify="center" spacing={2}>
-              <Grid
-                item
-                xs={12}
-                md={profile.PersonType === 'stu' ? 8 : 12}
-                lg={profile.PersonType === 'stu' ? 6 : 10}
-              >
-                <Identification profile={profile} network={network} myProf={true} />
-              </Grid>
+    if (loading) {
+      return <GordonLoader />;
+    } else {
+      return (
+        <Grid container justify="center" spacing={2}>
+          <Grid
+            item
+            xs={12}
+            md={profile.PersonType === 'stu' ? 8 : 12}
+            lg={profile.PersonType === 'stu' ? 6 : 10}
+          >
+            <Identification profile={profile} network={network} myProf={true} />
+          </Grid>
 
-              {String(personType).includes('stu') && (
-                <Grid item xs={12} md={4}>
-                  <VictoryPromiseDisplay network={network} />
-                </Grid>
-              )}
-
-              <Grid item xs={12} lg={10}>
-                <GordonSchedulePanel profile={profile} myProf={true} network={network} />
-              </Grid>
-
-              <Grid item xs={12} lg={5}>
-                <Grid container spacing={2}>
-                  {officeInfo}
-                  {profileInfo}
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12} lg={5}>
-                <MembershipsList user={profile.ID} myProf={true} />
-              </Grid>
+          {String(personType).includes('stu') && (
+            <Grid item xs={12} md={4}>
+              <VictoryPromiseDisplay network={network} />
             </Grid>
-          </div>
-        )}
-      </div>
-    );
+          )}
 
-    return MyProfile;
+          <Grid item xs={12} lg={10}>
+            <GordonSchedulePanel profile={profile} myProf={true} network={network} />
+          </Grid>
+
+          <Grid item xs={12} lg={5}>
+            {officeInfo}
+            {profileInfo}
+          </Grid>
+
+          <Grid item xs={12} lg={5}>
+            <MembershipsList user={profile.ID} myProf={true} />
+          </Grid>
+        </Grid>
+      );
+    }
   }
   // NOT AUTHENTICATED
   else {

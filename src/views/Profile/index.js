@@ -191,46 +191,43 @@ export default class Profile extends Component {
         return <Redirect to="/profilenotfound" />;
       }
       // Creates the Public Profile page depending on the status of the network
-      let PublicProfile;
       if (this.state.network === 'online') {
-        PublicProfile = (
-          <div>
-            {this.state.loading && <GordonLoader />}
-            {!this.state.loading && (
-              <Grid container justify="center" spacing={2}>
-                <Grid item xs={12} lg={10}>
-                  <Identification
-                    profile={this.state.profile}
-                    network={this.state.network}
-                    myProf={false}
-                  />
-                </Grid>
+        if (this.state.loading) {
+          return <GordonLoader />;
+        } else {
+          return (
+            <Grid container justify="center" spacing={2}>
+              <Grid item xs={12} lg={10}>
+                <Identification
+                  profile={this.state.profile}
+                  network={this.state.network}
+                  myProf={false}
+                />
+              </Grid>
 
-                <Grid item xs={12} lg={10} align="center">
-                  <GordonSchedulePanel
-                    profile={this.state.profile}
-                    myProf={false}
-                    network={this.state.network}
-                  />
-                  >
-                </Grid>
+              <Grid item xs={12} lg={10} align="center">
+                <GordonSchedulePanel
+                  profile={this.state.profile}
+                  myProf={false}
+                  network={this.state.network}
+                />
+              </Grid>
 
-                <Grid item xs={12} lg={5}>
-                  <Grid container spacing={2}>
-                    {this.state.officeinfo}
-                    {this.state.profileinfo}
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12} lg={5}>
-                  <MembershipsList user={this.state.profile.AD_Username} myProf={false} />
+              <Grid item xs={12} lg={5}>
+                <Grid container spacing={2}>
+                  {this.state.officeinfo}
+                  {this.state.profileinfo}
                 </Grid>
               </Grid>
-            )}
-          </div>
-        );
+
+              <Grid item xs={12} lg={5}>
+                <MembershipsList user={this.state.profile.AD_Username} myProf={false} />
+              </Grid>
+            </Grid>
+          );
+        }
       } else {
-        PublicProfile = (
+        return (
           <Grid container justify="center" spacing={2}>
             <Grid item xs={12} md={8}>
               <Card>
@@ -273,8 +270,6 @@ export default class Profile extends Component {
           </Grid>
         );
       }
-
-      return PublicProfile;
     } else {
       return (
         <Grid container justify="center">
