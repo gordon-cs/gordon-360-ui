@@ -32,7 +32,7 @@ import {
   IconButton,
 } from '@material-ui/core';
 
-const Identification = (props) => {
+const Identification = ({ profile, myProf, network }) => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState(null);
   const [defaultUserImage, setDefaultUserImage] = useState(null);
@@ -99,15 +99,15 @@ const Identification = (props) => {
         // Gets the requested user's image. Depending on requested user's person type and the currently
         // signed-in user's person type, different images will be shown
         const { def: defaultImage, pref: preferredImage } =
-          props.profile.PersonType === 'fac'
+          profile.PersonType === 'fac'
             ? /**
                * The requested user's image is Faculty
                * If currently signed-in user is Faculty : Will receive default and preferred image
                * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
                */
-              await user.getImage(props.profile.AD_Username)
+              await user.getImage(profile.AD_Username)
             : // Checks to see if the current page is the My Profile page
-            props.myProf
+            myProf
             ? /**
                * This case will occur only if the currently signed-in user is Non-Faculty and are
                * on the My Profile page
@@ -118,7 +118,7 @@ const Identification = (props) => {
                * If currently signed-in user is Faculty : Will receive default and preferred image
                * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
                */
-              await user.getImage(props.profile.AD_Username);
+              await user.getImage(profile.AD_Username);
 
         // Sets the given user's preferred image. If a default image is given but the preferred is undefined,
         // then this could mean that the currently signed-in user is not allowed to see the preferred image or
@@ -131,47 +131,47 @@ const Identification = (props) => {
       } catch (error) {
         // Do nothing
       }
-      setUserProfile(props.profile);
+      setUserProfile(profile);
 
-      setIsImagePublic(props.profile.show_pic);
-      createNickname(props.profile);
+      setIsImagePublic(profile.show_pic);
+      createNickname(profile);
       // Set state of social media links to database values after load.
       // If not empty, null, or undefined, add domain name back in for display and buttons.
       setFacebookLink(
-        !props.profile.Facebook || props.profile.Facebook === ''
+        !profile.Facebook || profile.Facebook === ''
           ? ''
-          : socialMediaInfo.facebook.prefix + props.profile.Facebook,
+          : socialMediaInfo.facebook.prefix + profile.Facebook,
       );
       setTwitterLink(
-        !props.profile.Twitter || props.profile.Twitter === ''
+        !profile.Twitter || profile.Twitter === ''
           ? ''
-          : socialMediaInfo.twitter.prefix + props.profile.Twitter,
+          : socialMediaInfo.twitter.prefix + profile.Twitter,
       );
       setLinkedInLink(
-        !props.profile.LinkedIn || props.profile.LinkedIn === ''
+        !profile.LinkedIn || profile.LinkedIn === ''
           ? ''
-          : socialMediaInfo.linkedIn.prefix + props.profile.LinkedIn,
+          : socialMediaInfo.linkedIn.prefix + profile.LinkedIn,
       );
       setInstagramLink(
-        !props.profile.Instagram || props.profile.Instagram === ''
+        !profile.Instagram || profile.Instagram === ''
           ? ''
-          : socialMediaInfo.instagram.prefix + props.profile.Instagram,
+          : socialMediaInfo.instagram.prefix + profile.Instagram,
       );
       setHandshakeLink(
-        !props.profile.Handshake || props.profile.Handshake === ''
+        !profile.Handshake || profile.Handshake === ''
           ? ''
-          : socialMediaInfo.handshake.prefix + props.profile.Handshake,
+          : socialMediaInfo.handshake.prefix + profile.Handshake,
       );
     }
 
     loadUserProfile();
-  }, [props.profile, props.myProf]);
+  }, [profile, myProf]);
 
   /**
    * Gets the current breakpoint according to Material-UI's breakpoints
    */
   useEffect(() => {
-    if (props.myProf) {
+    if (myProf) {
       // Gets the current Material-UI Breakpoint
       function getMaterialUIBreakpoint(width) {
         let currentWidth = '';
@@ -207,7 +207,7 @@ const Identification = (props) => {
       // Removes the resize window event listener
       return window.removeEventListener('resize', () => {});
     }
-  }, [props.myProf]);
+  }, [myProf]);
 
   /**
    * Handles opening the Photo Updater Dialog Box
@@ -245,8 +245,8 @@ const Identification = (props) => {
            */
 
           const { def: defaultImage } =
-            props.profile.PersonType === 'fac'
-              ? await user.getImage(props.profile.AD_Username)
+            profile.PersonType === 'fac'
+              ? await user.getImage(profile.AD_Username)
               : await user.getImage();
 
           // Sets the user's preferred image
@@ -653,7 +653,7 @@ const Identification = (props) => {
   }
 
   let linksDialog =
-    props.network === 'online' ? (
+    network === 'online' ? (
       <LinksDialog
         createSnackbar={createSnackbar}
         handleSocialLinksClose={handleSocialLinksClose}
@@ -812,7 +812,7 @@ const Identification = (props) => {
                         alt="Profile"
                       />
 
-                      {props.network === 'online' && props.myProf && (
+                      {network === 'online' && myProf && (
                         <Typography
                           variant="body1"
                           className="identification-card-content-card-container-photo-main-container-tile-bar"
@@ -821,7 +821,7 @@ const Identification = (props) => {
                         </Typography>
                       )}
                     </div>
-                    {props.network === 'online' && props.myProf && (
+                    {network === 'online' && myProf && (
                       <div
                         onClick={handlePhotoOpen}
                         className="identification-card-content-card-container-photo-main-button"
@@ -856,7 +856,7 @@ const Identification = (props) => {
                     linkedInButton ||
                     instagramButton ||
                     handshakeButton ||
-                    props.myProf) && (
+                    myProf) && (
                     <Grid
                       item
                       className="identification-card-content-card-container-info-social-media"
@@ -871,7 +871,7 @@ const Identification = (props) => {
                         {linkedInButton}
                         {instagramButton}
                         {handshakeButton}
-                        {props.network === 'online' && props.myProf && editButton}
+                        {network === 'online' && myProf && editButton}
                       </Grid>
                     </Grid>
                   )}
@@ -938,7 +938,7 @@ const Identification = (props) => {
                     </a>
                   </Grid>
 
-                  {props.network === 'online' && createPhotoDialogBox()}
+                  {network === 'online' && createPhotoDialogBox()}
 
                   <Dialog
                     open={socialLinksOpen}
@@ -956,7 +956,7 @@ const Identification = (props) => {
             <GordonLoader />
           )}
 
-          {userProfile && props.network === 'online' && props.myProf && (
+          {userProfile && network === 'online' && myProf && (
             <Link
               to={`/profile/${userProfile.AD_Username}`}
               className="identification-card-content-public-profile-link"
