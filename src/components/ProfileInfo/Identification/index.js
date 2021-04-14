@@ -8,10 +8,6 @@ import { socialMediaInfo } from 'socialMedia';
 import { Link } from 'react-router-dom';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
-import WarningIcon from '@material-ui/icons/Warning';
-import CloseIcon from '@material-ui/icons/Close';
 import defaultGordonImage from './defaultGordonImage';
 import GordonLoader from 'components/Loader/index';
 import { windowBreakWidths } from 'theme';
@@ -28,9 +24,9 @@ import {
   DialogContentText,
   DialogTitle,
   Typography,
-  Snackbar,
   IconButton,
 } from '@material-ui/core';
+import SimpleSnackbar from 'components/Snackbar';
 
 const Identification = ({ profile, myProf, network }) => {
   const CROP_DIM = 200; // pixels
@@ -50,10 +46,7 @@ const Identification = ({ profile, myProf, network }) => {
   const [twitterLink, setTwitterLink] = useState('');
   const [instagramLink, setInstagramLink] = useState('');
   const [handshakeLink, setHandshakeLink] = useState('');
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState(false);
-  const [snackbarKey, setSnackbarKey] = useState(0); // A key to make every snackbar display unique
-  const [snackbarType, setSnackbarType] = useState(''); // Either success or error
+  const [snackbar, setSnackbar] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [currentWidth, setCurrentWidth] = useState(null);
   const cropperRef = useRef();
@@ -255,7 +248,7 @@ const Identification = ({ profile, myProf, network }) => {
           // Sets the user's default image
           setDefaultUserImage(defaultImage ? defaultImage : null);
           // Displays to the user that their photo has been submitted
-          createSnackbar('Photo Submitted', 'Success');
+          setSnackbar({ message: 'Photo Submitted', severity: 'success' });
           // Closes out the Photo Updater
           setOpenPhotoDialog(false);
           setShowCropper(null);
@@ -263,7 +256,7 @@ const Identification = ({ profile, myProf, network }) => {
         })
         .catch(() => {
           // Displays to the user that their photo failed to submit
-          createSnackbar('Photo Submission Failed', 'Error');
+          setSnackbar({ message: 'Photo Submission Failed', severity: 'error' });
         });
     }
   }
@@ -300,11 +293,11 @@ const Identification = ({ profile, myProf, network }) => {
           const { def: defaultImage } = await user.getImage(userProfile.AD_Username);
           setDefaultUserImage(defaultImage);
           // Displays to the user that their photo has been restored
-          createSnackbar('Original Photo Restored', 'Success');
+          setSnackbar({ message: 'Original Photo Restored', severity: 'success' });
         } catch {
           setDefaultUserImage(defaultGordonImage);
           // Displays to the user that getting their original photo failed
-          createSnackbar('Failed Retrieving Photo', 'Error');
+          setSnackbar({ message: 'Failed Retrieving Photo', severity: 'error' });
         }
         // Deletes the preferred image, clears any timeouts errors and closes out of the photo updater
         await clearPhotoDialogErrorTimeout();
@@ -316,21 +309,8 @@ const Identification = ({ profile, myProf, network }) => {
       // Promised Rejected - Display error to the user
       .catch(() => {
         // Displays to the user that resetting their photo failed
-        createSnackbar('Failed To Reset Photo', 'Error');
+        setSnackbar({ message: 'Failed To Reset Photo', severity: 'error' });
       });
-  }
-
-  /**
-   * Displays the snackbar to the user.
-   * @param {String} message The message to display to the user
-   * @param {String} messageType The message's type. Either a success or error
-   */
-  function createSnackbar(message, messageType) {
-    setSnackbarMessage(message);
-    setSnackbarType(messageType);
-    // Sets the snackbar key as either 0 or 1. This prevents a high number being made.
-    setSnackbarKey((snackbarKey + 1) % 2);
-    setIsSnackbarOpen(true);
   }
 
   /**
@@ -353,11 +333,14 @@ const Identification = ({ profile, myProf, network }) => {
       });
     // User's image privacy successfully changed
     if (changedPrivacy) {
-      createSnackbar(isImagePublic ? 'Public Photo Hidden' : ' Public Photo Visible', 'Success');
+      setSnackbar({
+        message: isImagePublic ? 'Public Photo Hidden' : ' Public Photo Visible',
+        severity: 'success',
+      });
     }
     // User's image privacy failed to change
     else {
-      createSnackbar('Privacy Change Failed', 'Error');
+      setSnackbar({ message: 'Privacy Change Failed', severity: 'error' });
     }
   }
 
@@ -499,19 +482,6 @@ const Identification = ({ profile, myProf, network }) => {
     }
   }
 
-  /**
-   * Closes the Snackbar
-   * @param {Event} event The Event object of closing out the Snackbar
-   * @param {String} reason The reason for closing out the Snackbar
-   */
-  function handleClose(event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setIsSnackbarOpen(false);
-  }
-
-  // Saves the nickname of the given user if available
   function createNickname(profile) {
     let Name = String(profile.fullName);
     let FirstName = Name.split(' ')[0];
@@ -529,7 +499,6 @@ const Identification = ({ profile, myProf, network }) => {
         className="gc360-photo-dialog"
         open={openPhotoDialog}
         keepMounted
-        onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
@@ -655,7 +624,7 @@ const Identification = ({ profile, myProf, network }) => {
   let linksDialog =
     network === 'online' ? (
       <LinksDialog
-        createSnackbar={createSnackbar}
+        createSnackbar={setSnackbar}
         handleSocialLinksClose={handleSocialLinksClose}
         facebookLink={facebookLink}
         setFacebookLink={setFacebookLink}
@@ -972,61 +941,12 @@ const Identification = ({ profile, myProf, network }) => {
         </div>
       </div>
 
-      <div>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          // Makes every snackbar unique to prevent the same snackbar from being updated
-          key={snackbarKey.toString()}
-          open={isSnackbarOpen}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={
-            // If the message type is Success
-            snackbarType === 'Success' ? (
-              <span id="message-id">
-                <CheckCircleIcon
-                  style={{
-                    marginBottom: '-4.5pt',
-                    marginRight: '0.5rem',
-                  }}
-                />
-                {snackbarMessage}
-              </span>
-            ) : snackbarType === 'Error' ? (
-              <span id="message-id">
-                <ErrorIcon
-                  style={{
-                    marginBottom: '-4.5pt',
-                    marginRight: '0.5rem',
-                  }}
-                />
-                {snackbarMessage}
-              </span>
-            ) : (
-              <span id="message-id">
-                <WarningIcon
-                  style={{
-                    marginBottom: '-4.5pt',
-                    marginRight: '0.5rem',
-                  }}
-                />
-                {snackbarMessage}
-              </span>
-            )
-          }
-          action={[
-            <IconButton key="close" aria-label="Close" color="inherit" onClick={handleClose}>
-              <CloseIcon />
-            </IconButton>,
-          ]}
-        />
-      </div>
+      <SimpleSnackbar
+        open={Boolean(snackbar)}
+        message={snackbar?.message}
+        severity={snackbar?.severity}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      />
     </div>
   );
 };

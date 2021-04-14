@@ -320,16 +320,16 @@ export default class LinksDialog extends React.Component {
     // All links updated successfully
     if (allPassed) {
       this.handleClose();
-      this.props.createSnackbar('Social Media Updated', 'Success');
+      this.props.createSnackbar('Social Media Updated', 'success');
     }
     // Not all links updated successfully
     else {
       console.log('Failed Updates: ', this.state.updatingFailedLinks);
       // If some links failed
       if (numOfFailedLinks !== responses.length)
-        this.props.createSnackbar('Not All Links Updated', 'Warning');
+        this.props.createSnackbar('Not All Links Updated', 'warning');
       // If all links failed
-      else this.props.createSnackbar('Failed Updating Link(s)', 'Error');
+      else this.props.createSnackbar('Failed Updating Link(s)', 'error');
     }
   }
 
