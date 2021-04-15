@@ -186,9 +186,8 @@ export default class CLWCreditsDaysLeft extends Component {
     return (
       <Card>
         <CardContent>
-          <Grid container direction="row" alignItems="flex-end">
-            <Grid item xs={7} align="left">
-              <CardHeader title={this.state.currSessionDescription} />
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={4} align="left">
               <Button
                 variant="contained"
                 style={style.button}
@@ -196,6 +195,9 @@ export default class CLWCreditsDaysLeft extends Component {
               >
                 ATTENDED EVENTS
               </Button>
+            </Grid>
+            <Grid item xs={3} align="center">
+              <CardHeader title={this.state.currSessionDescription} />
             </Grid>
             <Grid item xs={5} align="right">
               <Button
