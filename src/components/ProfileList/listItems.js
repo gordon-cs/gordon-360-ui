@@ -1,7 +1,7 @@
 import React from 'react';
-import Majors from './../../components/MajorList';
-import Minors from './../../components/MinorList';
-import Advisors from './../../components/AdvisorList';
+import Majors from 'components/MajorList';
+import Minors from 'components/MinorList';
+import Advisors from 'components/AdvisorList';
 import LockIcon from '@material-ui/icons/Lock';
 
 import { Typography, ListItem, Grid, Switch, Divider } from '@material-ui/core';

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PostAddIcon from '@material-ui/icons/PostAdd';
-import newsService from './../../services/news';
-import userService from './../../services/user';
-import NewsList from '../News/components/NewsList';
-import GordonLoader from '../../components/Loader';
+import newsService from 'services/news';
+import userService from 'services/user';
+import NewsList from './components/NewsList';
+import GordonLoader from 'components/Loader';
 import {
   Snackbar,
   IconButton,
@@ -21,7 +21,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
 // import Dropzone from 'react-dropzone';

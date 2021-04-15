@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import storage from '../services/storage';
+import storage from 'services/storage';
 
 export const NetworkContext = createContext();
 

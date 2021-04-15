@@ -52,8 +52,8 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @global
  * @typedef ApplicationDetails
  * @property {Number} ApplicationID Application ID number of this application
- * @property {DateTime} DateSubmitted The date the application was submitted, or null if not yet submitted
- * @property {DateTime} DateModified The date the application was last modified
+ * @property {String} DateSubmitted The date the application was submitted, or null if not yet submitted
+ * @property {String} DateModified The date the application was last modified
  * @property {String} EditorUsername Username of the application editor
  * @property {String} EditorEmail Email address of the application editor
  * @property {String} Gender Gender
@@ -97,6 +97,18 @@ const addHousingAdmin = (username) => {
  */
 const deleteHousingAdmin = (username) => {
   return http.del(`housing/admin/${username}/`);
+};
+
+/**
+ * Gets the date of apartment selection night
+ *
+ * @async
+ * @function
+ * @returns {Promise.<String>} The apartment selection date
+ */
+const getApartmentSelectionDate = async () => {
+  return 'Apr. 27';
+  // return http.get('housing/apartment/selection-date); // Not yet implemented in the API
 };
 
 /**
@@ -224,6 +236,7 @@ export default {
   checkHousingAdmin,
   addHousingAdmin,
   deleteHousingAdmin,
+  getApartmentSelectionDate,
   getApartmentHalls,
   getCurrentApplicationID,
   saveApartmentApplication,

@@ -4,7 +4,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
-import user from '../../../../services/user';
+import user from 'services/user';
 import WorkIcon from '@material-ui/icons/Work';
 import WellnessIcon from '@material-ui/icons/LocalHospital';
 

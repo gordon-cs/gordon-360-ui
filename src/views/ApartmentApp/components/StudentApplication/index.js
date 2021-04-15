@@ -1,15 +1,7 @@
 //Student apartment application page
 import React, { useState, useEffect } from 'react';
 import { sortBy } from 'lodash';
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Collapse,
-  Grid,
-  Typography,
-} from '@material-ui/core/';
+import { Button, Card, CardContent, Collapse, Grid, Typography } from '@material-ui/core/';
 import GordonLoader from '../../../../components/Loader';
 import GordonDialogBox from '../../../../components/GordonDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
@@ -18,6 +10,7 @@ import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
+import OffCampusSection from './components/OffCampusSection';
 import Agreements from './components/Agreements';
 import SaveButton from './components/SaveButton';
 import housing from '../../../../services/housing';
@@ -346,6 +339,30 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
+   * Callback for changes to off-campus program info
+   * @param {String} offCampusProgramValue The program that the applicant is doing an OC program for
+   * @param {Number} index The index of the applicant in the list
+   */
+  const handleOffCampusInputChange = (offCampusProgramValue, index) => {
+    if (index !== null && index >= 0) {
+      // Get the profile of the selected user
+      let newApplicant = {
+        ...applicants[index],
+        OffCampusProgram: offCampusProgramValue ?? applicants[index].OffCampusProgram,
+      };
+      // Error checking on the hallNameValue before modifying the newHallInfo object
+      setApplicants((prevApplicants) =>
+        // replace the element at index with the new hall info object
+        prevApplicants.map((prevApplicant, j) => (j === index ? newApplicant : prevApplicant)),
+      );
+    } else {
+      setSnackbarText('Something went wrong while trying to add this person. Please try again.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    }
+  };
+
+  /**
    * Callback for hall list remove button
    * @param {Number} indexToRemove The index of the hall to be removed from the list of preferred halls
    */
@@ -624,15 +641,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       )}
                     </Grid>
                     <Grid item>
-                      <Card>
-                        <CardHeader
-                          title="Off-Campus Work Study"
-                          className="apartment-card-header"
-                        />
-                        <CardContent>
-                          <Typography variant="body1">Placeholder text</Typography>
-                        </CardContent>
-                      </Card>
+                      {userProfile.AD_Username === editorUsername ? (
+                      <OffCampusSection
+                        authentication
+                        applicants={applicants}
+                        onOffCampusInputChange={handleOffCampusInputChange}
+                      />
+                    ) : (
+                      <OffCampusSection disabled authentication applicants={applicants} />
+                    )}
                     </Grid>
                   </Grid>
                   <Grid container item md direction="column" spacing={2}>

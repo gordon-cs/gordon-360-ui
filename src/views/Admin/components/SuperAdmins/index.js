@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import SuperAdminList from './components/SuperAdminList';
-import GordonLoader from '../../../../components/Loader';
-import admin from '../../../../services/admin';
-import { gordonColors } from '../../../../theme';
-import membership from '../../../../services/membership';
+import GordonLoader from 'components/Loader';
+import admin from 'services/admin';
+import { gordonColors } from 'theme';
+import membership from 'services/membership';
 
 import {
   Typography,

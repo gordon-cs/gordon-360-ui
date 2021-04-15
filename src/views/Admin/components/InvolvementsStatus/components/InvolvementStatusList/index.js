@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import session from '../../../../../../services/session';
-
-import '../../../../../../app.css';
+import session from 'services/session';
 
 import { Typography, Grid } from '@material-ui/core';
 
