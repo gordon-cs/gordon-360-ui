@@ -42,12 +42,12 @@ const HallListItem = ({
   onHallInputChange,
   onHallRemove,
 }) => {
-  const [isHallNameValid, setIsHallNameValid] = useState(true);
+  const [isHallNameValid, setIsHallNameValid] = useState(false);
 
-  useEffect(() => setIsHallNameValid(halls.some((hall) => hall.Name === hallName)), [
-    hallName,
-    halls,
-  ]);
+  useEffect(
+    () => setIsHallNameValid(hallName === '' || halls.some((hall) => hall.Name === hallName)),
+    [hallName, halls],
+  );
 
   /**
    * Callback for changes to hall rank input field

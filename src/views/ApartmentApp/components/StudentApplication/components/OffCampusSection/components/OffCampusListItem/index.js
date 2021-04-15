@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Divider,
   FormControl,
+  FormHelperText,
   Grid,
   Input,
   InputLabel,
@@ -19,6 +20,17 @@ const OffCampusListItem = ({
   departments,
   onOffCampusInputChange,
 }) => {
+  const [isSelectionValid, setIsSelectionValid] = useState(false);
+
+  useEffect(
+    () =>
+      setIsSelectionValid(
+        offCampusProgram === '' ||
+          departments.some((departmentName) => departmentName === offCampusProgram),
+      ),
+    [offCampusProgram, departments],
+  );
+
   const handleDepartmentInputChange = (event) => {
     if (event.target.value !== null) {
       let newApplicantDepartmentValue = event.target.value;
@@ -40,11 +52,11 @@ const OffCampusListItem = ({
             <ListItemText primary={applicantProfile.fullName} className={'list-item'} />
           </Grid>
           <Grid item xs={12} sm={8}>
-            <FormControl fullWidth>
+            <FormControl fullWidth error={!isSelectionValid}>
               <InputLabel>Department</InputLabel>
               <Select
                 disabled={disabled}
-                value={offCampusProgram}
+                value={isSelectionValid ? offCampusProgram : ''}
                 onChange={handleDepartmentInputChange}
                 input={<Input id={'department' + index} />}
               >
@@ -53,6 +65,11 @@ const OffCampusListItem = ({
                 </MenuItem>
                 {departmentOptions}
               </Select>
+              {!isSelectionValid && (
+                <FormHelperText>
+                  An error occurred while loading the application data
+                </FormHelperText>
+              )}
             </FormControl>
           </Grid>
         </Grid>
