@@ -631,7 +631,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       {userProfile.AD_Username === editorUsername ? (
                         <HallSelection
                           authentication
-                          editorUsername={editorUsername}
                           preferredHalls={preferredHalls}
                           onHallAdd={handleHallAdd}
                           onHallInputChange={handleHallInputChange}
@@ -639,12 +638,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           onSaveButtonClick={handleSaveButtonClick}
                         />
                       ) : (
-                        <HallSelection
-                          disabled
-                          authentication
-                          editorUsername={editorUsername}
-                          preferredHalls={preferredHalls}
-                        />
+                        <HallSelection disabled authentication preferredHalls={preferredHalls} />
                       )}
                     </Grid>
                     <Grid item>

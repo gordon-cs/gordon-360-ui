@@ -14,7 +14,6 @@ import housing from '../../../../../../services/housing';
 const HallSelection = ({
   disabled,
   authentication,
-  editorUsername,
   preferredHalls,
   onHallAdd,
   onHallInputChange,
@@ -31,7 +30,7 @@ const HallSelection = ({
     if (authentication) {
       loadHalls();
     }
-  }, [authentication, editorUsername]);
+  }, [authentication]);
 
   /**
    * Callback for changes to hall list item name and/or rank
