@@ -20,7 +20,17 @@ const OffCampusListItem = ({
   departments,
   onOffCampusInputChange,
 }) => {
+  const [hasNickName, setHasNickname] = useState(false);
   const [isSelectionValid, setIsSelectionValid] = useState(false);
+
+  useEffect(
+    () =>
+      setHasNickname(
+        applicantProfile.FirstName !== applicantProfile.NickName &&
+          applicantProfile.NickName !== '',
+      ),
+    [applicantProfile],
+  );
 
   useEffect(
     () =>
@@ -44,12 +54,19 @@ const OffCampusListItem = ({
     </MenuItem>
   ));
 
+  const displayName = hasNickName
+    ? `${applicantProfile.FirstName} ${applicantProfile.LastName} (${applicantProfile.NickName})`
+    : `${applicantProfile.FirstName} ${applicantProfile.LastName}`;
+
   return (
     <React.Fragment>
       <ListItem key={applicantProfile.AD_Username} className={'list-item'}>
         <Grid container alignItems="flex-end" spacing={1}>
           <Grid item xs={12} sm={4}>
-            <ListItemText primary={applicantProfile.fullName} className={'list-item'} />
+            <ListItemText
+              primary={displayName ?? applicantProfile.AD_Username}
+              className={'list-item'}
+            />
           </Grid>
           <Grid item xs={12} sm={8}>
             <FormControl fullWidth error={!isSelectionValid}>
