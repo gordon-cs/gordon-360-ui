@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { signOut } from '../../../../services/auth';
+import { signOut } from 'services/auth';
 import {
   createAboutButton,
   createAdminButton,
@@ -12,9 +12,9 @@ import {
   createSignInOutButton,
 } from './navButtons';
 import PropTypes from 'prop-types';
-import QuickLinksDialog from '../../../QuickLinksDialog';
-import { gordonColors } from '../../../../theme';
-import storage from '../../../../services/storage';
+import QuickLinksDialog from 'components/QuickLinksDialog';
+import { gordonColors } from 'theme';
+import storage from 'services/storage';
 import './index.css';
 
 import { Popover, List } from '@material-ui/core';

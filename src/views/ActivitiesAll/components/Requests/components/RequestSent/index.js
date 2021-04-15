@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Button, Grid, Typography, Divider } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 
-import { gordonColors } from '../../../../../../theme';
-import membership from '../../../../../../services/membership';
+import { gordonColors } from 'theme';
+import membership from 'services/membership';
 
 export default class RequestSent extends Component {
   constructor(props) {

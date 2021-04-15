@@ -10,7 +10,7 @@ import { AuthError } from './error';
 import http from './http';
 import session from './session';
 import storage from './storage';
-import { socialMediaInfo } from '../socialMedia';
+import { socialMediaInfo } from 'socialMedia';
 
 /**
  * @global
