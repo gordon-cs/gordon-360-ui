@@ -691,14 +691,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     !(applicationDetails.ApartmentChoices.length > 0)
                   }
                   saving={saving}
-                  submitDialogOpen={submitDialogOpen}
                   submitAlertText={submitAlertText}
+                  submitDialogOpen={submitDialogOpen}
                   unsavedChanges={unsavedChanges}
-                  onSaveButtonClick={handleSaveButtonClick}
-                  onSubmitButtonClick={handleSubmitButtonClick}
-                  onSubmitAppAccepted={handleSubmitAppAccepted}
                   onCloseDialog={handleCloseDialog}
                   onCloseOkay={handleCloseOkay}
+                  onSaveButtonClick={handleSaveButtonClick}
+                  onSubmitAppAccepted={handleSubmitAppAccepted}
+                  onSubmitButtonClick={handleSubmitButtonClick}
                 />
               ) : (
                 <ApartmentHeader

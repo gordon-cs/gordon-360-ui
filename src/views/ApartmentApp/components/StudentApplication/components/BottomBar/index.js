@@ -8,14 +8,14 @@ const BottomBar = ({
   canEditApplication,
   disabled,
   saving,
-  submitDialogOpen,
   submitAlertText,
+  submitDialogOpen,
   unsavedChanges,
-  onSaveButtonClick,
-  onSubmitButtonClick,
-  onSubmitAppAccepted,
   onCloseDialog,
   onCloseOkay,
+  onSaveButtonClick,
+  onSubmitAppAccepted,
+  onSubmitButtonClick,
 }) => (
   <Card className={'sticky-page-bottom-bar'} variant="outlined">
     <CardContent>
@@ -44,7 +44,7 @@ const BottomBar = ({
               <Grid item xs={6}>
                 <Button
                   variant="contained"
-                  onClick={onSaveButtonClick}
+                  onClick={onSubmitButtonClick}
                   color="primary"
                   fullWidth
                   disabled={disabled}
