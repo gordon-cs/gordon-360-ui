@@ -12,7 +12,7 @@ import ApplicantList from './components/ApplicantList';
 import HallSelection from './components/HallSelection';
 import OffCampusSection from './components/OffCampusSection';
 import Agreements from './components/Agreements';
-import SaveButton from './components/SaveButton';
+import BottomBar from './components/BottomBar';
 import housing from '../../../../services/housing';
 import user from '../../../../services/user';
 
@@ -45,6 +45,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [canEditApplication, setCanEditApplication] = useState(false);
 
   /** @type {[ApplicationDetails, React.Dispatch<React.SetStateAction<ApplicationDetails>>]} */
   const [applicationDetails, setApplicationDetails] = useState(BLANK_APPLICATION_DETAILS);
@@ -85,6 +86,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         Applicants: initialApplicants,
         EditorEmail: userProfile.Email,
       });
+      setCanEditApplication(true);
     };
 
     const loadApplication = async () => {
@@ -106,6 +108,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
             setApplicants(newApplicationDetails?.Applicants ?? []);
             setPreferredHalls(newApplicationDetails?.ApartmentChoices ?? []);
             setUnsavedChanges(false);
+            setCanEditApplication(
+              userProfile.AD_Username === newApplicationDetails.EditorUsername ?? false,
+            );
           }
         }
       } catch (error) {
@@ -642,14 +647,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Grid>
                     <Grid item>
                       {userProfile.AD_Username === editorUsername ? (
-                      <OffCampusSection
-                        authentication
-                        applicants={applicants}
-                        onOffCampusInputChange={handleOffCampusInputChange}
-                      />
-                    ) : (
-                      <OffCampusSection disabled authentication applicants={applicants} />
-                    )}
+                        <OffCampusSection
+                          authentication
+                          applicants={applicants}
+                          onOffCampusInputChange={handleOffCampusInputChange}
+                        />
+                      ) : (
+                        <OffCampusSection disabled authentication applicants={applicants} />
+                      )}
                     </Grid>
                   </Grid>
                   <Grid container item md direction="column" spacing={2}>
@@ -677,85 +682,24 @@ const StudentApplication = ({ userProfile, authentication }) => {
             </Grid>
             <Grid item xs={12} className={'sticky-page-bottom-bar'}>
               {applicationCardsOpen ? (
-                <Card className={'sticky-page-bottom-bar'} variant="outlined">
-                  <CardContent>
-                    {/* TODO: Move this card to it's own sub-component */}
-                    <Grid container direction="row" justify="flex-end" spacing={2}>
-                      {userProfile.AD_Username === editorUsername ? (
-                        <React.Fragment>
-                          <Grid item xs={12} sm={6}>
-                            {saving === 'failed' ? (
-                              <Typography variant="overline" color="error">
-                                Something went wrong while trying to save the application
-                              </Typography>
-                            ) : unsavedChanges ? (
-                              <Typography variant="body1">You have unsaved changes</Typography>
-                            ) : (
-                              <Typography variant="body1">All changes to be saved</Typography>
-                            )}
-                          </Grid>
-                          <Grid container item xs={12} sm={6} lg={4} spacing={2}>
-                            <Grid item xs={6}>
-                              <SaveButton
-                                saving={saving}
-                                onClick={handleSaveButtonClick}
-                                disabled={!unsavedChanges}
-                              />
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Button
-                                variant="contained"
-                                onClick={handleSubmitButtonClick}
-                                color="primary"
-                                fullWidth
-                                disabled={
-                                  !applicationCardsOpen ||
-                                  !agreements ||
-                                  !(applicationDetails.Applicants.length > 0) ||
-                                  !(applicationDetails.ApartmentChoices.length > 0)
-                                }
-                              >
-                                Save & Submit
-                              </Button>
-                            </Grid>
-                          </Grid>
-                          <GordonDialogBox
-                            open={submitDialogOpen}
-                            onClose={handleCloseDialog}
-                            labelledby={'submit-application-dialog'}
-                            describedby={'confirm-application'}
-                            title={'Submit apartment application?'}
-                            text={submitAlertText}
-                            buttonClicked={handleSubmitAppAccepted}
-                            buttonName={'Accept'}
-                            cancelButtonClicked={handleCloseOkay}
-                            cancelButtonName={'Cancel'}
-                            severity={'warning'}
-                          />
-                        </React.Fragment>
-                      ) : (
-                        <React.Fragment>
-                          <Grid item xs={12} sm={6}>
-                            <Typography variant="body1">
-                              You are not the editor of this application, so you cannot edit or save
-                              changes to this applications.
-                            </Typography>
-                          </Grid>
-                          <Grid container item xs={12} sm={6} lg={4} spacing={2}>
-                            <Grid item xs={6}>
-                              <SaveButton disabled />
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Button variant="contained" color="primary" fullWidth disabled>
-                                Save & Submit
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </React.Fragment>
-                      )}
-                    </Grid>
-                  </CardContent>
-                </Card>
+                <BottomBar
+                  canEditApplication={canEditApplication}
+                  disabled={
+                    !applicationCardsOpen ||
+                    !agreements ||
+                    !(applicationDetails.Applicants.length > 0) ||
+                    !(applicationDetails.ApartmentChoices.length > 0)
+                  }
+                  saving={saving}
+                  submitDialogOpen={submitDialogOpen}
+                  submitAlertText={submitAlertText}
+                  unsavedChanges={unsavedChanges}
+                  onSaveButtonClick={handleSaveButtonClick}
+                  onSubmitButtonClick={handleSubmitButtonClick}
+                  onSubmitAppAccepted={handleSubmitAppAccepted}
+                  onCloseDialog={handleCloseDialog}
+                  onCloseOkay={handleCloseOkay}
+                />
               ) : (
                 <ApartmentHeader
                   applicationCardsOpen={applicationCardsOpen}
