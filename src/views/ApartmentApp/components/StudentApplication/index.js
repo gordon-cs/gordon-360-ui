@@ -539,14 +539,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
     </span>
   );
 
-  const submitAlertText = (
-    <span>
-      This feature is not yet implemented.
-      <br />
-      Clicking the "Accept" button will hide the application cards.
-    </span>
-  );
-
   if (loading) {
     return (
       <div className="apartment-application">
@@ -621,7 +613,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           applicants={applicants}
                         />
                       )}
-
                       <GordonDialogBox
                         open={changeEditorDialogOpen}
                         onClose={handleCloseDialog}
@@ -702,7 +693,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     !(applicationDetails.ApartmentChoices.length > 0)
                   }
                   saving={saving}
-                  submitAlertText={submitAlertText}
                   submitDialogOpen={submitDialogOpen}
                   unsavedChanges={unsavedChanges}
                   onCloseDialog={handleCloseDialog}

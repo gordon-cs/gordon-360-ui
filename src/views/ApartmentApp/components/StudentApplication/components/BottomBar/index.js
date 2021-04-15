@@ -4,11 +4,18 @@ import GordonLoader from '../../../../../../components/Loader';
 import GordonDialogBox from '../../../../../../components/GordonDialogBox';
 import SaveButton from './components/SaveButton';
 
+const submitAlertText = (
+  <span>
+    This feature is not yet implemented.
+    <br />
+    Clicking the "Accept" button will simply hide the application cards.
+  </span>
+);
+
 const BottomBar = ({
   canEditApplication,
   disabled,
   saving,
-  submitAlertText,
   submitDialogOpen,
   unsavedChanges,
   onCloseDialog,
