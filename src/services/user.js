@@ -591,7 +591,6 @@ const getProfileInfo = async (username) => {
 
 function updateSocialLink(type, link) {
   let linkToSend;
-  let url;
   //Get link ready to send to API
   //Remove domain names
   switch (type) {
@@ -601,23 +600,16 @@ function updateSocialLink(type, link) {
     case 'twitter':
       linkToSend = link.substring(socialMediaInfo.twitter.prefix.length);
       break;
-    case 'linkedin': //linkedIn copy-paste leaves trailing slash causing problems
-      if (link.charAt(link.length - 1) === '/') {
-        linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length, link.length - 1);
-      } else {
-        linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length);
-      }
+    case 'linkedin':
+      linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length);
       break;
     case 'instagram':
       linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
       break;
     case 'handshake':
-      // hard coded a second prefix in because handshake supports 'app.' and 'gordon.' addresses
-      let handshakeSecondPrefix = 'https://app.joinhandshake.com/users/';
-
       // if using the 'app.joinhandshake' prefix
-      if (link.indexOf(handshakeSecondPrefix) === 0) {
-        linkToSend = link.substring(handshakeSecondPrefix.length);
+      if (link.indexOf(socialMediaInfo.handshake.prefix2) === 0) {
+        linkToSend = link.substring(socialMediaInfo.handshake.prefix2.length);
       }
       // otherwise assume using the normal 'gordon.joinhandshake' prefix
       else {
@@ -628,11 +620,11 @@ function updateSocialLink(type, link) {
       break;
   }
   linkToSend = encodeURIComponent(linkToSend);
-  url = {
+  const body = {
     [type]: linkToSend,
   };
-  //Send put request
-  return http.put('profiles/' + type, url).catch(() => {});
+
+  return http.put('profiles/' + type, body);
 }
 
 export default {

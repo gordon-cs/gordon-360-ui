@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Dropzone from 'react-dropzone';
 import EmailIcon from '@material-ui/icons/Email';
+import EditIcon from '@material-ui/icons/Edit';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import LinksDialog from './Components/LinksDialog/index';
@@ -131,29 +132,27 @@ const Identification = ({ profile, myProf, network }) => {
       // Set state of social media links to database values after load.
       // If not empty, null, or undefined, add domain name back in for display and buttons.
       setFacebookLink(
-        !profile.Facebook || profile.Facebook === ''
-          ? ''
-          : socialMediaInfo.facebook.prefix + profile.Facebook,
+        profile.Facebook
+          ? socialMediaInfo.facebook.prefix + decodeURIComponent(profile.Facebook)
+          : '',
       );
       setTwitterLink(
-        !profile.Twitter || profile.Twitter === ''
-          ? ''
-          : socialMediaInfo.twitter.prefix + profile.Twitter,
+        profile.Twitter ? socialMediaInfo.twitter.prefix + decodeURIComponent(profile.Twitter) : '',
       );
       setLinkedInLink(
-        !profile.LinkedIn || profile.LinkedIn === ''
-          ? ''
-          : socialMediaInfo.linkedIn.prefix + profile.LinkedIn,
+        profile.LinkedIn
+          ? socialMediaInfo.linkedIn.prefix + decodeURIComponent(profile.LinkedIn)
+          : '',
       );
       setInstagramLink(
-        !profile.Instagram || profile.Instagram === ''
-          ? ''
-          : socialMediaInfo.instagram.prefix + profile.Instagram,
+        profile.Instagram
+          ? socialMediaInfo.instagram.prefix + decodeURIComponent(profile.Instagram)
+          : '',
       );
       setHandshakeLink(
-        !profile.Handshake || profile.Handshake === ''
-          ? ''
-          : socialMediaInfo.handshake.prefix + profile.Handshake,
+        profile.Handshake
+          ? socialMediaInfo.handshake.prefix + decodeURIComponent(profile.Handshake)
+          : '',
       );
     }
 
@@ -625,16 +624,18 @@ const Identification = ({ profile, myProf, network }) => {
     network === 'online' ? (
       <LinksDialog
         createSnackbar={setSnackbar}
-        handleSocialLinksClose={handleSocialLinksClose}
-        facebookLink={facebookLink}
+        links={{
+          facebook: facebookLink,
+          twitter: twitterLink,
+          linkedIn: linkedInLink,
+          instagram: instagramLink,
+          handshake: handshakeLink,
+        }}
+        onClose={handleSocialLinksClose}
         setFacebookLink={setFacebookLink}
-        twitterLink={twitterLink}
         setTwitterLink={setTwitterLink}
-        linkedInLink={linkedInLink}
         setLinkedInLink={setLinkedInLink}
-        instagramLink={instagramLink}
         setInstagramLink={setInstagramLink}
-        handshakeLink={handshakeLink}
         setHandshakeLink={setHandshakeLink}
       />
     ) : (
@@ -729,7 +730,7 @@ const Identification = ({ profile, myProf, network }) => {
     editButton = (
       <Grid item>
         <IconButton className="gc360-my-profile_edit-icon" onClick={handleSocialLinksOpen}>
-          {socialMediaInfo.edit.icon}
+          <EditIcon />
         </IconButton>
       </Grid>
     );
@@ -943,9 +944,10 @@ const Identification = ({ profile, myProf, network }) => {
 
       <SimpleSnackbar
         open={Boolean(snackbar)}
-        message={snackbar?.message}
+        text={snackbar?.message}
         severity={snackbar?.severity}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        onClose={() => setSnackbar(null)}
       />
     </div>
   );
