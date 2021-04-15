@@ -65,7 +65,7 @@ const HallSelection = ({
               {preferredHalls?.length > 0 &&
                 preferredHalls.map((hallInfo, index) => (
                   <HallListItem
-                    key={hallInfo.HallRank + hallInfo.HallName}
+                    key={index + hallInfo.HallRank + hallInfo.HallName}
                     disabled={disabled}
                     index={index}
                     hallRank={hallInfo.HallRank}
