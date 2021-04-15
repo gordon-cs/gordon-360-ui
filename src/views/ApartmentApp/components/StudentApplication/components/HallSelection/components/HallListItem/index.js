@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Divider,
@@ -6,6 +6,7 @@ import {
   ListItemSecondaryAction,
   MenuItem,
   FormControl,
+  FormHelperText,
   Input,
   InputLabel,
   Select,
@@ -41,6 +42,13 @@ const HallListItem = ({
   onHallInputChange,
   onHallRemove,
 }) => {
+  const [isHallNameValid, setIsHallNameValid] = useState(true);
+
+  useEffect(() => setIsHallNameValid(halls.some((hall) => hall.Name === hallName)), [
+    hallName,
+    halls,
+  ]);
+
   /**
    * Callback for changes to hall rank input field
    * @param {*} event change event to be handled by callback
@@ -103,16 +111,21 @@ const HallListItem = ({
             </FormControl>
           </Grid>
           <Grid item xs={9} sm={10}>
-            <FormControl fullWidth>
+            <FormControl fullWidth error={!isHallNameValid}>
               <InputLabel>Hall</InputLabel>
               <Select
                 disabled={disabled}
-                value={hallName}
+                value={isHallNameValid ? hallName : ''}
                 onChange={handleNameInputChange}
                 input={<Input id={'hall' + index} />}
               >
                 {hallOptions}
               </Select>
+              {!isHallNameValid && (
+                <FormHelperText>
+                  An error occurred while loading the application data
+                </FormHelperText>
+              )}
             </FormControl>
           </Grid>
         </Grid>
