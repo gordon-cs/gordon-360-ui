@@ -12,6 +12,21 @@ import {
   Select,
 } from '@material-ui/core';
 
+/**
+ * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
+/**
+ * Renders the list item for the apartment off-campus program list
+ * @param {Object} props The React component props
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {Number} props.index The index of this list item
+ * @param {StudentProfileInfo} props.applicantProfile The StudentProfileInfo on the applicant
+ * @param {String} props.offCampusProgram The name of the department of the off-campus program
+ * @param {String[]} props.departments Array of departments available
+ * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
+ * @returns {JSX.Element} JSX Element for the hall list item
+ */
 const OffCampusListItem = ({
   disabled,
   index,
