@@ -15,8 +15,8 @@ import {
 import ClearIcon from '@material-ui/icons/Clear';
 
 /**
- * @typedef { import('../../services/housing').ApartmentHall } ApartmentHall
- * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApartmentHall } ApartmentHall
+ * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
  */
 
 /**

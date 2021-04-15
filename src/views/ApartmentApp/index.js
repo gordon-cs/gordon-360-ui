@@ -10,7 +10,7 @@ import housing from '../../services/housing';
 import './apartmentApp.css';
 
 /**
- * @typedef { import('../../services/user').StudentProfileInfo } StudentProfileInfo
+ * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
 
 const ApartApp = ({ authentication }) => {

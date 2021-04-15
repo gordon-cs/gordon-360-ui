@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core/';
 
 /**
- * @typedef { import('../../../../../../../../../../services/housing').ApartmentApplicant } ApartmentApplicant
+ * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
  */
 
 /**

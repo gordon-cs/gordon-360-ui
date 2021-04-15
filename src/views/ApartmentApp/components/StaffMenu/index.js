@@ -9,9 +9,9 @@ import housing from '../../../../services/housing';
 import ApplicationsTable from './components/ApplicationTable';
 
 /**
- * @typedef { import('../../../../services/housing').ApplicationDetails } ApplicationDetails
- * @typedef { import('../../../../services/housing').ApartmentApplicant } ApartmentApplicant
- * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
+ * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
+ * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
  */
 
 /**

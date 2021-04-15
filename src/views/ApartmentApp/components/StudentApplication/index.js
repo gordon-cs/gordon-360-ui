@@ -28,10 +28,10 @@ const BLANK_APPLICATION_DETAILS = {
 };
 
 /**
- * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
- * @typedef { import('../../../../services/housing').ApartmentApplicant } ApartmentApplicant
- * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
- * @typedef { import('../../../../services/housing').ApplicationDetails } ApplicationDetails
+ * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
+ * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
+ * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
  */
 
 /**

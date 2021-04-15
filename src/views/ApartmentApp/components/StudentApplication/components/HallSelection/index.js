@@ -6,8 +6,8 @@ import HallListItem from './components/HallListItem';
 import housing from '../../../../../../services/housing';
 
 /**
- * @typedef { import('../../services/housing').ApartmentHall } ApartmentHall
- * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApartmentHall } ApartmentHall
+ * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
  */
 
 // Create a list of selection boxes to choosing preferred halls
