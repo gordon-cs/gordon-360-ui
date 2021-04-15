@@ -444,7 +444,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       result = false;
     }
     console.log('result of saving: ' + result); //! DEBUG
-    if (result !== null && result !== false && result !== -1 && typeof result === 'number') {
+    if (result && typeof result === 'number') {
       setApplicationID(result);
       setSaving('success');
       setUnsavedChanges(false);
@@ -463,6 +463,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         }, 6000),
       );
     }
+    return result;
   };
 
   /**
@@ -471,7 +472,17 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleSubmitButtonClick = () => {
     let debugMessage = 'DEBUG: Submit button was clicked'; //! DEBUG
     console.log(debugMessage); //! DEBUG
-    setSubmitDialogOpen(true);
+    // Filter out any hall entries that do not have a name selected
+    const filteredPreferredHalls = preferredHalls.filter((hallInfo) => hallInfo.HallName !== '');
+    let saveResult = saveApplication(
+      applicationID,
+      editorUsername,
+      applicants,
+      filteredPreferredHalls,
+    );
+    if (saveResult) {
+      setSubmitDialogOpen(true);
+    }
   };
 
   const handleSubmitAppAccepted = () => {

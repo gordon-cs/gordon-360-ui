@@ -53,7 +53,7 @@ const BottomBar = ({
                 </Button>
               </Grid>
             </Grid>
-            <Backdrop open={saving && saving !== 'success' && saving !== 'failed'}>
+            <Backdrop open={saving && typeof result !== 'string'}>
               <GordonLoader />
             </Backdrop>
             <GordonDialogBox
