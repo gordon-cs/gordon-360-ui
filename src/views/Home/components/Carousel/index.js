@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import cms from '../../../../services/cms';
+import cms from 'services/cms';
 import ImageGallery from 'react-image-gallery';
-import GordonLoader from '../../../../components/Loader';
+import GordonLoader from 'components/Loader';
 
 export default class GordonCarousel extends Component {
   constructor(props) {

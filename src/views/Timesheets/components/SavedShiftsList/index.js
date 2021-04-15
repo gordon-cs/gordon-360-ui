@@ -18,9 +18,9 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import ShiftItem from '../ShiftItem';
-import { gordonColors } from '../../../../theme';
-import jobs from '../../../../services/jobs';
-import GordonLoader from '../../../../components/Loader';
+import { gordonColors } from 'theme';
+import jobs from 'services/jobs';
+import GordonLoader from 'components/Loader';
 import './SavedShiftsList.css';
 
 export default class SavedShiftsList extends Component {

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { NetworkContext } from '../contexts/NetworkContext.js';
+import { NetworkContext } from 'contexts/NetworkContext.js';
 
 /**
  * Custom hook to subscribe to network status.

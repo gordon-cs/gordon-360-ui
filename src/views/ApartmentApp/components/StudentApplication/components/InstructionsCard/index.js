@@ -12,6 +12,7 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core/';
+import housing from '../../../../../../services/housing';
 
 /**
  * Renders a card displaying the apartment application instructions
@@ -22,13 +23,10 @@ const InstructionsCard = () => {
   const [thisYear, setThisYear] = useState();
 
   useEffect(() => {
-    const getYear = () => setThisYear(new Date().getFullYear());
-
-    getYear();
-
-    // let selectionDate = housing.getApartmentSelectionDate();
-    let selectionDate = 'Apr. 27'; // API endpoint for this is planned for the future
-    setApartmentSelectionDate(selectionDate);
+    setThisYear(new Date().getFullYear());
+    housing
+      .getApartmentSelectionDate()
+      .then((selectionDate) => setApartmentSelectionDate(selectionDate));
   }, []);
 
   const rows = [

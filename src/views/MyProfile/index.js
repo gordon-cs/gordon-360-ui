@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import GordonLoader from '../../components/Loader';
-import GordonSchedulePanel from '../../components/SchedulePanel';
-import { Identification } from '../../components/Identification/index';
-import MembershipsList from '../../components/MembershipsList';
-import Office from './../../components/OfficeList';
-import ProfileList from './../../components/ProfileList';
-import storage from '../../services/storage';
-import user from './../../services/user';
+import GordonLoader from 'components/Loader';
+import GordonSchedulePanel from 'components/SchedulePanel';
+import { Identification } from 'components/Identification/index';
+import MembershipsList from 'components/MembershipsList';
+import Office from 'components/OfficeList';
+import ProfileList from 'components/ProfileList';
+import storage from 'services/storage';
+import user from 'services/user';
 import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
 import './myProfile.css';
 
