@@ -4,7 +4,7 @@ import { Button, Card, CardContent, Grid, Typography } from '@material-ui/core/'
 const ApartmentHeader = ({
   applicationCardsOpen,
   applicationDetails,
-  userProfile,
+  canEditApplication,
   onShowApplication,
 }) => {
   return (
@@ -32,7 +32,7 @@ const ApartmentHeader = ({
                 </Button>
               </Grid>
             </React.Fragment>
-          ) : userProfile.AD_Username === applicationDetails.EditorProfile.AD_Username ? (
+          ) : canEditApplication ? (
             <React.Fragment>
               <Grid item xs={6} sm={8}>
                 <Typography variant="body1">Existing application for this semester:</Typography>

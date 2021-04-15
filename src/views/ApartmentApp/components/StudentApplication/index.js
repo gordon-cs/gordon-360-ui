@@ -642,7 +642,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
               <ApartmentHeader
                 applicationCardsOpen={applicationCardsOpen}
                 applicationDetails={applicationDetails}
-                userProfile={userProfile}
+                canEditApplication={
+                  userProfile.AD_Username === applicationDetails.EditorProfile.AD_Username
+                }
                 onShowApplication={handleShowApplication}
               />
             </Collapse>
@@ -669,7 +671,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
               <ApartmentHeader
                 applicationCardsOpen={applicationCardsOpen}
                 applicationDetails={applicationDetails}
-                userProfile={userProfile}
+                canEditApplication={
+                  userProfile.AD_Username === applicationDetails.EditorProfile.AD_Username
+                }
                 onShowApplication={handleShowApplication}
               />
             </Collapse>
