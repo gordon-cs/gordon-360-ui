@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Dropzone from 'react-dropzone';
 import EmailIcon from '@material-ui/icons/Email';
-import EditIcon from '@material-ui/icons/Edit';
 import user from 'services/user';
 import { gordonColors } from 'theme';
-import LinksDialog from './components/LinksDialog/index';
-import { socialMediaInfo } from 'socialMedia';
 import { Link } from 'react-router-dom';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -25,9 +22,9 @@ import {
   DialogContentText,
   DialogTitle,
   Typography,
-  IconButton,
 } from '@material-ui/core';
 import SimpleSnackbar from 'components/Snackbar';
+import SocialMediaLinks from './components/SocialMediaLinks';
 
 const Identification = ({ profile, myProf, network }) => {
   const CROP_DIM = 200; // pixels
@@ -41,12 +38,6 @@ const Identification = ({ profile, myProf, network }) => {
   const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
   const [photoDialogError, setPhotoDialogError] = useState(null);
   const [cropperData, setCropperData] = useState({ cropBoxDim: null, aspectRatio: null });
-  const [socialLinksOpen, setSocialLinksOpen] = useState(false);
-  const [facebookLink, setFacebookLink] = useState('');
-  const [linkedInLink, setLinkedInLink] = useState('');
-  const [twitterLink, setTwitterLink] = useState('');
-  const [instagramLink, setInstagramLink] = useState('');
-  const [handshakeLink, setHandshakeLink] = useState('');
   const [snackbar, setSnackbar] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [currentWidth, setCurrentWidth] = useState(null);
@@ -129,31 +120,6 @@ const Identification = ({ profile, myProf, network }) => {
 
       setIsImagePublic(profile.show_pic);
       createNickname(profile);
-      // Set state of social media links to database values after load.
-      // If not empty, null, or undefined, add domain name back in for display and buttons.
-      setFacebookLink(
-        profile.Facebook
-          ? socialMediaInfo.facebook.prefix + decodeURIComponent(profile.Facebook)
-          : '',
-      );
-      setTwitterLink(
-        profile.Twitter ? socialMediaInfo.twitter.prefix + decodeURIComponent(profile.Twitter) : '',
-      );
-      setLinkedInLink(
-        profile.LinkedIn
-          ? socialMediaInfo.linkedIn.prefix + decodeURIComponent(profile.LinkedIn)
-          : '',
-      );
-      setInstagramLink(
-        profile.Instagram
-          ? socialMediaInfo.instagram.prefix + decodeURIComponent(profile.Instagram)
-          : '',
-      );
-      setHandshakeLink(
-        profile.Handshake
-          ? socialMediaInfo.handshake.prefix + decodeURIComponent(profile.Handshake)
-          : '',
-      );
     }
 
     loadUserProfile();
@@ -341,20 +307,6 @@ const Identification = ({ profile, myProf, network }) => {
     else {
       setSnackbar({ message: 'Privacy Change Failed', severity: 'error' });
     }
-  }
-
-  /**
-   * Handles opening the Social Media Dialog Box
-   */
-  function handleSocialLinksOpen() {
-    setSocialLinksOpen(true);
-  }
-
-  /**
-   * Handles closing the Social Media Dialog Box
-   */
-  function handleSocialLinksClose() {
-    setSocialLinksOpen(false);
   }
 
   /**
@@ -620,131 +572,6 @@ const Identification = ({ profile, myProf, network }) => {
     );
   }
 
-  let linksDialog =
-    network === 'online' ? (
-      <LinksDialog
-        createSnackbar={setSnackbar}
-        links={{
-          facebook: facebookLink,
-          twitter: twitterLink,
-          linkedIn: linkedInLink,
-          instagram: instagramLink,
-          handshake: handshakeLink,
-        }}
-        onClose={handleSocialLinksClose}
-        setFacebookLink={setFacebookLink}
-        setTwitterLink={setTwitterLink}
-        setLinkedInLink={setLinkedInLink}
-        setInstagramLink={setInstagramLink}
-        setHandshakeLink={setHandshakeLink}
-      />
-    ) : (
-      <></>
-    );
-
-  // Defines which social media icons will display
-  let facebookButton;
-  let twitterButton;
-  let linkedInButton;
-  let instagramButton;
-  let handshakeButton;
-  let editButton;
-  let linkCount = 0; // To record whether or not any links are displayed
-
-  if (facebookLink !== '') {
-    facebookButton = (
-      <Grid item>
-        <a
-          href={facebookLink}
-          className="gc360-my-profile_icon"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {socialMediaInfo.facebook.icon}
-        </a>
-      </Grid>
-    );
-    linkCount += 1;
-  }
-  if (twitterLink !== '') {
-    twitterButton = (
-      <Grid item>
-        <a
-          href={twitterLink}
-          className="gc360-my-profile_icon"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {socialMediaInfo.twitter.icon}
-        </a>
-      </Grid>
-    );
-    linkCount += 1;
-  }
-  if (linkedInLink !== '') {
-    linkedInButton = (
-      <Grid item>
-        <a
-          href={linkedInLink}
-          className="gc360-my-profile_icon"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {socialMediaInfo.linkedIn.icon}
-        </a>
-      </Grid>
-    );
-    linkCount += 1;
-  }
-  if (instagramLink !== '') {
-    instagramButton = (
-      <Grid item>
-        <a
-          href={instagramLink}
-          className="gc360-my-profile_icon"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {socialMediaInfo.instagram.icon}
-        </a>
-      </Grid>
-    );
-    linkCount += 1;
-  }
-  if (handshakeLink !== '') {
-    handshakeButton = (
-      <Grid item>
-        <a
-          href={handshakeLink}
-          className="gc360-my-profile_icon"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {socialMediaInfo.handshake.icon}
-        </a>
-      </Grid>
-    );
-    linkCount += 1;
-  }
-  if (linkCount > 0) {
-    editButton = (
-      <Grid item>
-        <IconButton className="gc360-my-profile_edit-icon" onClick={handleSocialLinksOpen}>
-          <EditIcon />
-        </IconButton>
-      </Grid>
-    );
-  } else {
-    editButton = (
-      <Grid container justify="center">
-        <Button onClick={handleSocialLinksOpen} style={style.socialMediaButton}>
-          EDIT SOCIAL MEDIA LINKS
-        </Button>
-      </Grid>
-    );
-  }
-
-  // RETURNS THE JSX OF THE IDENTIFICATION CARD
   return (
     <div className="identification">
       <div className="identification-card">
@@ -821,30 +648,11 @@ const Identification = ({ profile, myProf, network }) => {
                 </Grid>
 
                 <Grid item className="identification-card-content-card-container-info">
-                  {(facebookButton ||
-                    twitterButton ||
-                    linkedInButton ||
-                    instagramButton ||
-                    handshakeButton ||
-                    myProf) && (
-                    <Grid
-                      item
-                      className="identification-card-content-card-container-info-social-media"
-                    >
-                      <Grid
-                        container
-                        justify={linkCount < 3 ? 'space-evenly' : 'space-between'}
-                        alignItems="center"
-                      >
-                        {facebookButton}
-                        {twitterButton}
-                        {linkedInButton}
-                        {instagramButton}
-                        {handshakeButton}
-                        {network === 'online' && myProf && editButton}
-                      </Grid>
-                    </Grid>
-                  )}
+                  <SocialMediaLinks
+                    profile={profile}
+                    myProf={myProf}
+                    createSnackbar={setSnackbar}
+                  />
                   <Grid
                     item
                     xs={12}
@@ -909,16 +717,6 @@ const Identification = ({ profile, myProf, network }) => {
                   </Grid>
 
                   {network === 'online' && createPhotoDialogBox()}
-
-                  <Dialog
-                    open={socialLinksOpen}
-                    disableBackdropClick
-                    onClose={handleSocialLinksClose}
-                    aria-labelledby="alert-dialog-slide-title"
-                    aria-describedby="alert-dialog-slide-description"
-                  >
-                    {linksDialog}
-                  </Dialog>
                 </Grid>
               </Grid>
             </Grid>

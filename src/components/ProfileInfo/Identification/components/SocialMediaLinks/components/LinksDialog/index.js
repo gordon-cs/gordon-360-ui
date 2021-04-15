@@ -5,16 +5,7 @@ import { socialMediaInfo } from 'socialMedia';
 import './linksDialog.css';
 import UpdateLinkTextField from './components/UpdateLinkTextField';
 
-const LinksDialog = ({
-  links,
-  createSnackbar,
-  onClose,
-  setFacebookLink,
-  setTwitterLink,
-  setLinkedInLink,
-  setInstagramLink,
-  setHandshakeLink,
-}) => {
+const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   const [formErrors, setFormErrors] = useState([]);
   const [updatedLinks, setUpdatedLinks] = useState(links);
   const [failedUpdates, setFailedUpdates] = useState([]);
@@ -52,11 +43,7 @@ const LinksDialog = ({
       if (response.value === undefined) {
         setFailedUpdates((prevState) => [...prevState, [response.platform]]);
       } else {
-        if (response.platform === 'facebook') setFacebookLink(updatedLinks?.facebook);
-        else if (response.platform === 'twitter') setTwitterLink(updatedLinks?.twitter);
-        else if (response.platform === 'linkedIn') setLinkedInLink(updatedLinks?.linkedIn);
-        else if (response.platform === 'instagram') setInstagramLink(updatedLinks?.instagram);
-        else if (response.platform === 'handshake') setHandshakeLink(updatedLinks?.handshake);
+        setLinks({ ...links, [response.platform]: updatedLinks[response.platform] });
         setFailedUpdates((prevState) => prevState.filter((link) => link !== response.platform));
       }
     });
