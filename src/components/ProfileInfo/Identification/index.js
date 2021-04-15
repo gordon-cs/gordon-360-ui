@@ -4,7 +4,7 @@ import EmailIcon from '@material-ui/icons/Email';
 import EditIcon from '@material-ui/icons/Edit';
 import user from 'services/user';
 import { gordonColors } from 'theme';
-import LinksDialog from './Components/LinksDialog/index';
+import LinksDialog from './components/LinksDialog/index';
 import { socialMediaInfo } from 'socialMedia';
 import { Link } from 'react-router-dom';
 import Cropper from 'react-cropper';

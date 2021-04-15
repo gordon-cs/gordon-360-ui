@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import user from 'services/user';
 import { Button, DialogTitle, DialogActions, DialogContent, Typography } from '@material-ui/core';
 import { socialMediaInfo } from 'socialMedia';
-import { gordonColors } from 'theme';
 import './linksDialog.css';
 import UpdateLinkTextField from './components/UpdateLinkTextField';
 
