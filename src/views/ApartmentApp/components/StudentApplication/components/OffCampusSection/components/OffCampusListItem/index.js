@@ -48,6 +48,9 @@ const OffCampusListItem = ({
                 onChange={handleDepartmentInputChange}
                 input={<Input id={'department' + index} />}
               >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
                 {departmentOptions}
               </Select>
             </FormControl>

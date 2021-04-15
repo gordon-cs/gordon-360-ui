@@ -119,6 +119,9 @@ const HallListItem = ({
                 onChange={handleNameInputChange}
                 input={<Input id={'hall' + index} />}
               >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
                 {hallOptions}
               </Select>
               {!isHallNameValid && (
