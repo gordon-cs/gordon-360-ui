@@ -90,10 +90,7 @@ export default class CLWCreditsDaysLeft extends Component {
         legend: false,
       };
 
-      //const { current, required } = this.state.chapelCredits;
-      //for testing purposes
-      const current = 18;
-      const required = 25;
+      const { current, required } = this.state.chapelCredits;
       const remaining = current > required ? 0 : required - current;
 
       const data = {
@@ -146,11 +143,7 @@ export default class CLWCreditsDaysLeft extends Component {
               </div>
             </Grid>
           </Grid> */}
-          <Doughnut data={data} height={175} options={options} getElementAtEvent={elems => {
-            if (elems[0]._model.label === 'CL&W Credits Earned') {
-              window.location = "/attended";
-            }
-          }} />
+          <Doughnut data={data} height={175} options={options} />
           <div
             style={{
               marginTop: '1rem',
@@ -196,6 +189,13 @@ export default class CLWCreditsDaysLeft extends Component {
           <Grid container direction="row" alignItems="center">
             <Grid item xs={7} align="left">
               <CardHeader title={this.state.currSessionDescription} />
+              <Button
+                variant="contained"
+                style={style.button}
+                onClick={(event) => (window.location.href = '/attended')}
+              >
+                ATTENDED EVENTS
+              </Button>
             </Grid>
             <Grid item xs={5} align="right">
               <Button
