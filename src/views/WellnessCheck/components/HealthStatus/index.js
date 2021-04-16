@@ -63,13 +63,11 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
         <Card className="wellness-check">
           <CardContent>
             <CardHeader title={username} />
-            <Card>
-              <img
-                className="rounded-corners user-image"
-                src={`data:image/jpg;base64,${image}`}
-                alt={username}
-              />
-            </Card>
+            <img
+              className="rounded-corners user-image"
+              src={`data:image/jpg;base64,${image}`}
+              alt={username}
+            />
             {/* TODO: Remove following code block after Spring 2021 move in is complete */}
             {/* START */}
             {currentStatus === StatusColors.RED && (
@@ -87,7 +85,7 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
               </Typography>
             )}
             {/* END */}
-            <Grid spacing={2} className="wellness-status">
+            <Grid className="wellness-status">
               <Card className={currentStatus}>
                 <CardContent className="status-box">
                   <div className="status-time">{time}</div>
