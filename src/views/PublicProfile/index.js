@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import user from 'services/user';
-import PersonalInfoList from 'components/ProfileInfo/PersonalInfoList';
-import OfficeInfoList from 'components/ProfileInfo/OfficeInfoList';
-import MembershipsList from 'components/ProfileInfo/MembershipsList';
 import GordonLoader from 'components/Loader';
-import GordonSchedulePanel from 'components/ProfileInfo/SchedulePanel';
-import Identification from 'components/ProfileInfo/Identification';
 import { Redirect } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import { Grid, Card, CardContent, Button } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import './profile.css';
+import Profile from 'components/Profile';
 
-//Public profile view
 const PublicProfile = ({ authentication }) => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState({});
@@ -44,33 +39,11 @@ const PublicProfile = ({ authentication }) => {
     if (error && error.name === 'NotFoundError') {
       return <Redirect to="/profilenotfound" />;
     }
-    // Creates the Public Profile page depending on the status of the network
     if (network === 'online') {
       if (loading) {
         return <GordonLoader />;
       } else {
-        return (
-          <Grid container justify="center" spacing={2}>
-            <Grid item xs={12} lg={10}>
-              <Identification profile={profile} network={network} myProf={false} />
-            </Grid>
-
-            <Grid item xs={12} lg={10} align="center">
-              <GordonSchedulePanel profile={profile} myProf={false} network={network} />
-            </Grid>
-
-            <Grid item xs={12} lg={5}>
-              <Grid container spacing={2}>
-                <OfficeInfoList profile={profile} />
-                <PersonalInfoList profile={profile} myProf={false} />
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12} lg={5}>
-              <MembershipsList user={profile?.AD_Username} myProf={false} />
-            </Grid>
-          </Grid>
-        );
+        return <Profile profile={profile} myProf={false} />;
       }
     } else {
       return (

@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
-import GordonSchedulePanel from 'components/ProfileInfo/SchedulePanel';
-import Identification from 'components/ProfileInfo/Identification';
-import MembershipsList from 'components/ProfileInfo/MembershipsList';
-import OfficeInfoList from 'components/ProfileInfo/OfficeInfoList';
-import PersonalInfoList from 'components/ProfileInfo/PersonalInfoList';
+// import GordonSchedulePanel from 'components/Profile/SchedulePanel';
+// import Identification from 'components/Profile/Identification';
+// import MembershipsList from 'components/Profile/MembershipsList';
+// import OfficeInfoList from 'components/Profile/OfficeInfoList';
+// import PersonalInfoList from 'components/Profile/PersonalInfoList';
 import user from 'services/user';
-import VictoryPromiseDisplay from './Components/VictoryPromiseDisplay/index.js';
+// import VictoryPromiseDisplay from '../../components/Profile/VictoryPromiseDisplay/index.js';
+import Profile from 'components/Profile';
 import './myProfile.css';
 
 import { Button, Card, CardContent, Grid } from '@material-ui/core';
-import useNetworkStatus from 'hooks/useNetworkStatus.js';
 
 const MyProfile = ({ authentication }) => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
-  const isOnline = useNetworkStatus();
-  const network = isOnline ? 'online' : 'offline';
 
   /**
    * Loads the user's profile info only once (at start)
@@ -44,37 +42,38 @@ const MyProfile = ({ authentication }) => {
     if (loading) {
       return <GordonLoader />;
     } else {
-      return (
-        <Grid container justify="center" spacing={2}>
-          <Grid
-            item
-            xs={12}
-            md={profile?.PersonType?.includes('stu') ? 8 : 12}
-            lg={profile?.PersonType?.includes('stu') ? 6 : 10}
-          >
-            <Identification profile={profile} network={network} myProf={true} />
-          </Grid>
+      return <Profile profile={profile} myProf />;
+      // (
+      //   <Grid container justify="center" spacing={2}>
+      //     <Grid
+      //       item
+      //       xs={12}
+      //       md={profile?.PersonType?.includes('stu') ? 8 : 12}
+      //       lg={profile?.PersonType?.includes('stu') ? 6 : 10}
+      //     >
+      //       <Identification profile={profile} network={network} myProf={true} />
+      //     </Grid>
 
-          {profile?.PersonType?.includes('stu') && (
-            <Grid item xs={12} md={4}>
-              <VictoryPromiseDisplay network={network} />
-            </Grid>
-          )}
+      //     {profile?.PersonType?.includes('stu') && (
+      //       <Grid item xs={12} md={4}>
+      //         <VictoryPromiseDisplay network={network} />
+      //       </Grid>
+      //     )}
 
-          <Grid item xs={12} lg={10}>
-            <GordonSchedulePanel profile={profile} myProf={true} network={network} />
-          </Grid>
+      //     <Grid item xs={12} lg={10}>
+      //       <GordonSchedulePanel profile={profile} myProf={true} network={network} />
+      //     </Grid>
 
-          <Grid item xs={12} lg={5}>
-            <OfficeInfoList profile={profile} />
-            <PersonalInfoList profile={profile} myProf={true} network={network} />
-          </Grid>
+      //     <Grid item xs={12} lg={5}>
+      //       <OfficeInfoList profile={profile} />
+      //       <PersonalInfoList profile={profile} myProf={true} network={network} />
+      //     </Grid>
 
-          <Grid item xs={12} lg={5}>
-            <MembershipsList user={profile?.ID} myProf={true} />
-          </Grid>
-        </Grid>
-      );
+      //     <Grid item xs={12} lg={5}>
+      //       <MembershipsList user={profile?.ID} myProf={true} />
+      //     </Grid>
+      //   </Grid>
+      // );
     }
   }
   // NOT AUTHENTICATED
