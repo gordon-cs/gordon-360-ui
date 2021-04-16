@@ -250,6 +250,27 @@ function formatCountry(profile) {
   }
   return profile;
 }
+
+const formatSocialMediaLinks = ({
+  Facebook,
+  Twitter,
+  LinkedIn,
+  Instagram,
+  Handshake,
+  ...profile
+}) => {
+  profile.facebook = Facebook ? socialMediaInfo.facebook.prefix + decodeURIComponent(Facebook) : '';
+  profile.twitter = Twitter ? socialMediaInfo.twitter.prefix + decodeURIComponent(Twitter) : '';
+  profile.linkedIn = LinkedIn ? socialMediaInfo.linkedIn.prefix + decodeURIComponent(LinkedIn) : '';
+  profile.instagram = Instagram
+    ? socialMediaInfo.instagram.prefix + decodeURIComponent(Instagram)
+    : '';
+  profile.handshake = Handshake
+    ? socialMediaInfo.handshake.prefix + decodeURIComponent(Handshake)
+    : '';
+  return profile;
+};
+
 function setClass(profile) {
   if (String(profile.PersonType).includes('stu')) {
     switch (profile.Class) {
@@ -586,6 +607,7 @@ const getProfileInfo = async (username) => {
   setOnOffCampus(profile);
   setMinorObject(profile);
   await setAdvisors(profile);
+  profile = formatSocialMediaLinks(profile);
   return profile;
 };
 
