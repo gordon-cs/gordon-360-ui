@@ -23,10 +23,9 @@ import {
   DialogTitle,
   Typography,
 } from '@material-ui/core';
-import SimpleSnackbar from 'components/Snackbar';
 import SocialMediaLinks from './components/SocialMediaLinks';
 
-const Identification = ({ profile, myProf, network }) => {
+const Identification = ({ profile, myProf, network, createSnackbar }) => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState(null);
   const [defaultUserImage, setDefaultUserImage] = useState(null);
@@ -38,7 +37,6 @@ const Identification = ({ profile, myProf, network }) => {
   const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
   const [photoDialogError, setPhotoDialogError] = useState(null);
   const [cropperData, setCropperData] = useState({ cropBoxDim: null, aspectRatio: null });
-  const [snackbar, setSnackbar] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [currentWidth, setCurrentWidth] = useState(null);
   const cropperRef = useRef();
@@ -213,7 +211,7 @@ const Identification = ({ profile, myProf, network }) => {
           // Sets the user's default image
           setDefaultUserImage(defaultImage ? defaultImage : null);
           // Displays to the user that their photo has been submitted
-          setSnackbar({ message: 'Photo Submitted', severity: 'success' });
+          createSnackbar('Photo Submitted', 'success');
           // Closes out the Photo Updater
           setOpenPhotoDialog(false);
           setShowCropper(null);
@@ -221,7 +219,7 @@ const Identification = ({ profile, myProf, network }) => {
         })
         .catch(() => {
           // Displays to the user that their photo failed to submit
-          setSnackbar({ message: 'Photo Submission Failed', severity: 'error' });
+          createSnackbar('Photo Submission Failed', 'error');
         });
     }
   }
@@ -258,11 +256,11 @@ const Identification = ({ profile, myProf, network }) => {
           const { def: defaultImage } = await user.getImage(userProfile.AD_Username);
           setDefaultUserImage(defaultImage);
           // Displays to the user that their photo has been restored
-          setSnackbar({ message: 'Original Photo Restored', severity: 'success' });
+          createSnackbar('Original Photo Restored', 'success');
         } catch {
           setDefaultUserImage(defaultGordonImage);
           // Displays to the user that getting their original photo failed
-          setSnackbar({ message: 'Failed Retrieving Photo', severity: 'error' });
+          createSnackbar('Failed Retrieving Photo', 'error');
         }
         // Deletes the preferred image, clears any timeouts errors and closes out of the photo updater
         await clearPhotoDialogErrorTimeout();
@@ -274,7 +272,7 @@ const Identification = ({ profile, myProf, network }) => {
       // Promised Rejected - Display error to the user
       .catch(() => {
         // Displays to the user that resetting their photo failed
-        setSnackbar({ message: 'Failed To Reset Photo', severity: 'error' });
+        createSnackbar('Failed To Reset Photo', 'error');
       });
   }
 
@@ -298,14 +296,11 @@ const Identification = ({ profile, myProf, network }) => {
       });
     // User's image privacy successfully changed
     if (changedPrivacy) {
-      setSnackbar({
-        message: isImagePublic ? 'Public Photo Hidden' : ' Public Photo Visible',
-        severity: 'success',
-      });
+      createSnackbar(isImagePublic ? 'Public Photo Hidden' : ' Public Photo Visible', 'success');
     }
     // User's image privacy failed to change
     else {
-      setSnackbar({ message: 'Privacy Change Failed', severity: 'error' });
+      createSnackbar('Privacy Change Failed', 'error');
     }
   }
 
@@ -573,180 +568,166 @@ const Identification = ({ profile, myProf, network }) => {
   }
 
   return (
-    <div className="identification">
-      <div className="identification-card">
-        <Grid container className="identification-card-header">
-          {userProfile && <CardHeader title={`${userProfile.FirstName}'s Profile`} />}
-          {!userProfile && <CardHeader title="My Personal Profile" />}
-        </Grid>
+    <div className="identification-card">
+      <Grid container className="identification-card-header">
+        {userProfile && <CardHeader title={`${userProfile.FirstName}'s Profile`} />}
+        {!userProfile && <CardHeader title="My Personal Profile" />}
+      </Grid>
 
-        <div className="identification-card-content">
-          {/* SHOWS THE CARD'S CONTENT IF THE GIVEN USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
-          {userProfile && (defaultUserImage || preferredUserImage) ? (
-            <Grid container className="identification-card-content-card" justify="center">
-              <Grid
-                container
-                className="identification-card-content-card-container"
-                alignItems="center"
-                justify="space-evenly"
-              >
-                <Grid item className="identification-card-content-card-container-photo">
-                  <div className="identification-card-content-card-container-photo-main">
-                    <div className="identification-card-content-card-container-photo-main-container">
-                      <img
-                        className="identification-card-content-card-container-photo-main-container-image"
-                        src={`data:image/jpg;base64,${
-                          // Checks to see if the default and preferred photos should switch between bubbles
-                          isPhotosSwitched
-                            ? // Main Photo: Default
-                              defaultUserImage
-                            : // Main Photo: Preferred
-                            // If the given user doesn't have a preferred photo, then their default photo is shown
-                            hasPreferredImage
-                            ? preferredUserImage
-                            : defaultUserImage
-                        }`}
-                        alt="Profile"
-                      />
+      <div className="identification-card-content">
+        {/* SHOWS THE CARD'S CONTENT IF THE GIVEN USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
+        {userProfile && (defaultUserImage || preferredUserImage) ? (
+          <Grid container className="identification-card-content-card" justify="center">
+            <Grid
+              container
+              className="identification-card-content-card-container"
+              alignItems="center"
+              justify="space-evenly"
+            >
+              <Grid item className="identification-card-content-card-container-photo">
+                <div className="identification-card-content-card-container-photo-main">
+                  <div className="identification-card-content-card-container-photo-main-container">
+                    <img
+                      className="identification-card-content-card-container-photo-main-container-image"
+                      src={`data:image/jpg;base64,${
+                        // Checks to see if the default and preferred photos should switch between bubbles
+                        isPhotosSwitched
+                          ? // Main Photo: Default
+                            defaultUserImage
+                          : // Main Photo: Preferred
+                          // If the given user doesn't have a preferred photo, then their default photo is shown
+                          hasPreferredImage
+                          ? preferredUserImage
+                          : defaultUserImage
+                      }`}
+                      alt="Profile"
+                    />
 
-                      {network === 'online' && myProf && (
-                        <Typography
-                          variant="body1"
-                          className="identification-card-content-card-container-photo-main-container-tile-bar"
-                        >
-                          Photo Options
-                        </Typography>
-                      )}
-                    </div>
                     {network === 'online' && myProf && (
-                      <div
-                        onClick={handlePhotoOpen}
-                        className="identification-card-content-card-container-photo-main-button"
-                      ></div>
+                      <Typography
+                        variant="body1"
+                        className="identification-card-content-card-container-photo-main-container-tile-bar"
+                      >
+                        Photo Options
+                      </Typography>
                     )}
                   </div>
-                  {preferredUserImage && defaultUserImage && (
-                    <div className="identification-card-content-card-container-photo-side">
-                      <img
-                        className="identification-card-content-card-container-photo-side-image"
-                        src={`data:image/jpg;base64,${
-                          // Checks to see if the default and preferred photos should switch between bubbles
-                          isPhotosSwitched
-                            ? // Side Photo: Preferred
-                              preferredUserImage
-                            : // Side Photo: Default
-                              defaultUserImage
-                        }`}
-                        alt="Profile"
-                      />
-                      <div
-                        onClick={handlePhotoSwitch}
-                        className="identification-card-content-card-container-photo-side-button"
-                      ></div>
-                    </div>
+                  {network === 'online' && myProf && (
+                    <div
+                      onClick={handlePhotoOpen}
+                      className="identification-card-content-card-container-photo-main-button"
+                    ></div>
                   )}
+                </div>
+                {preferredUserImage && defaultUserImage && (
+                  <div className="identification-card-content-card-container-photo-side">
+                    <img
+                      className="identification-card-content-card-container-photo-side-image"
+                      src={`data:image/jpg;base64,${
+                        // Checks to see if the default and preferred photos should switch between bubbles
+                        isPhotosSwitched
+                          ? // Side Photo: Preferred
+                            preferredUserImage
+                          : // Side Photo: Default
+                            defaultUserImage
+                      }`}
+                      alt="Profile"
+                    />
+                    <div
+                      onClick={handlePhotoSwitch}
+                      className="identification-card-content-card-container-photo-side-button"
+                    ></div>
+                  </div>
+                )}
+              </Grid>
+
+              <Grid item className="identification-card-content-card-container-info">
+                <SocialMediaLinks
+                  profile={profile}
+                  myProf={myProf}
+                  createSnackbar={createSnackbar}
+                />
+                <Grid
+                  item
+                  xs={12}
+                  className="identification-card-content-card-container-info-class"
+                >
+                  {userProfile.Class && <Typography>{userProfile.Class}</Typography>}
                 </Grid>
 
-                <Grid item className="identification-card-content-card-container-info">
-                  <SocialMediaLinks
-                    profile={profile}
-                    myProf={myProf}
-                    createSnackbar={setSnackbar}
-                  />
-                  <Grid
-                    item
-                    xs={12}
-                    className="identification-card-content-card-container-info-class"
-                  >
-                    {userProfile.Class && <Typography>{userProfile.Class}</Typography>}
-                  </Grid>
-
-                  <Grid
-                    item
-                    xs={12}
-                    className="identification-card-content-card-container-info-name"
-                  >
-                    <Typography variant="h6" paragraph>
-                      {userProfile.Title &&
-                      userProfile.Title !== '' &&
-                      userProfile.PersonType === 'fac'
-                        ? // If the user has a title
-                          hasNickName
-                          ? // If the user has a title and a nickname
-                            userProfile.Title +
-                            ' ' +
-                            userProfile.fullName +
-                            ' (' +
-                            userProfile.NickName +
-                            ')'
-                          : // If the user has a title and no nickname
-                            userProfile.Title + ' ' + userProfile.fullName
-                        : // If the user doesn't have a title
+                <Grid item xs={12} className="identification-card-content-card-container-info-name">
+                  <Typography variant="h6" paragraph>
+                    {userProfile.Title &&
+                    userProfile.Title !== '' &&
+                    userProfile.PersonType === 'fac'
+                      ? // If the user has a title
                         hasNickName
-                        ? // If the user doesn't have a title but has a nickname
-                          userProfile.fullName + ' (' + userProfile.NickName + ')'
-                        : // If the user doesn't have a title or a nickname
-                          userProfile.fullName}
-                      {/* {hasNickName
+                        ? // If the user has a title and a nickname
+                          userProfile.Title +
+                          ' ' +
+                          userProfile.fullName +
+                          ' (' +
+                          userProfile.NickName +
+                          ')'
+                        : // If the user has a title and no nickname
+                          userProfile.Title + ' ' + userProfile.fullName
+                      : // If the user doesn't have a title
+                      hasNickName
+                      ? // If the user doesn't have a title but has a nickname
+                        userProfile.fullName + ' (' + userProfile.NickName + ')'
+                      : // If the user doesn't have a title or a nickname
+                        userProfile.fullName}
+                    {/* {hasNickName
                         ? userProfile.fullName + ' (' + userProfile.NickName + ')'
                         : userProfile.fullName} */}
-                    </Typography>
-                  </Grid>
-                  {userProfile.JobTitle && userProfile.JobTitle !== '' && (
-                    <Grid
-                      item
-                      xs={12}
-                      className="identification-card-content-card-container-info-job-title"
-                    >
-                      <Typography variant="h6" paragraph>
-                        {userProfile.JobTitle}
-                      </Typography>
-                    </Grid>
-                  )}
+                  </Typography>
+                </Grid>
+                {userProfile.JobTitle && userProfile.JobTitle !== '' && (
                   <Grid
                     item
                     xs={12}
-                    className="identification-card-content-card-container-info-email"
+                    className="identification-card-content-card-container-info-job-title"
                   >
-                    <a href={`mailto:${userProfile.Email}`}>
-                      <div className="identification-card-content-card-container-info-email-container">
-                        <EmailIcon className="identification-card-content-card-container-info-email-container-icon" />
-                        <Typography paragraph>{userProfile.Email}</Typography>
-                      </div>
-                    </a>
+                    <Typography variant="h6" paragraph>
+                      {userProfile.JobTitle}
+                    </Typography>
                   </Grid>
-
-                  {network === 'online' && createPhotoDialogBox()}
+                )}
+                <Grid
+                  item
+                  xs={12}
+                  className="identification-card-content-card-container-info-email"
+                >
+                  <a href={`mailto:${userProfile.Email}`}>
+                    <div className="identification-card-content-card-container-info-email-container">
+                      <EmailIcon className="identification-card-content-card-container-info-email-container-icon" />
+                      <Typography paragraph>{userProfile.Email}</Typography>
+                    </div>
+                  </a>
                 </Grid>
+
+                {network === 'online' && createPhotoDialogBox()}
               </Grid>
             </Grid>
-          ) : (
-            <GordonLoader />
-          )}
+          </Grid>
+        ) : (
+          <GordonLoader />
+        )}
 
-          {userProfile && network === 'online' && myProf && (
-            <Link
-              to={`/profile/${userProfile.AD_Username}`}
-              className="identification-card-content-public-profile-link"
+        {userProfile && network === 'online' && myProf && (
+          <Link
+            to={`/profile/${userProfile.AD_Username}`}
+            className="identification-card-content-public-profile-link"
+          >
+            <Button
+              className="identification-card-content-public-profile-link-button"
+              variant="contained"
             >
-              <Button
-                className="identification-card-content-public-profile-link-button"
-                variant="contained"
-              >
-                View My Public Profile
-              </Button>
-            </Link>
-          )}
-        </div>
+              View My Public Profile
+            </Button>
+          </Link>
+        )}
       </div>
-
-      <SimpleSnackbar
-        open={Boolean(snackbar)}
-        text={snackbar?.message}
-        severity={snackbar?.severity}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        onClose={() => setSnackbar(null)}
-      />
     </div>
   );
 };

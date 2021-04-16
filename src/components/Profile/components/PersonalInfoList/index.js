@@ -15,7 +15,6 @@ import {
   FormControlLabel,
 } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import GordonSnackbar from 'components/Snackbar';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -52,11 +51,11 @@ const PersonalInfoList = ({
     PersonType,
     SpouseName,
   },
+  createSnackbar,
 }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
   );
-  const [snackbar, setSnackbar] = useState(null);
   const isOnline = useNetworkStatus();
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
@@ -95,12 +94,12 @@ const PersonalInfoList = ({
       await user.setMobilePhonePrivacy(!isMobilePhonePrivate);
       setIsMobilePhonePrivate(!isMobilePhonePrivate);
 
-      setSnackbar({
-        message: isMobilePhonePrivate ? 'Mobile Phone Hidden' : 'Mobile Phone Visible',
-        severity: 'success',
-      });
+      createSnackbar(
+        isMobilePhonePrivate ? 'Mobile Phone Hidden' : 'Mobile Phone Visible',
+        'success',
+      );
     } catch {
-      setSnackbar({ message: 'Privacy Change Failed', severity: 'error' });
+      createSnackbar('Privacy Change Failed', 'error');
     }
   };
 
@@ -290,16 +289,6 @@ const PersonalInfoList = ({
           </List>
         </CardContent>
       </Card>
-
-      {myProf && (
-        <GordonSnackbar
-          open={Boolean(snackbar)}
-          onClose={() => setSnackbar(null)}
-          text={snackbar?.message}
-          severity={snackbar?.severity}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        />
-      )}
     </Grid>
   );
 };

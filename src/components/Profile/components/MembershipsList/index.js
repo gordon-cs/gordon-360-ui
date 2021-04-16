@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import activity from 'services/activity';
 import membershipService from 'services/membership';
 import userService from 'services/user';
-import GordonSnackbar from 'components/Snackbar';
 import GordonLoader from 'components/Loader';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import './index.css';
@@ -13,12 +12,12 @@ import './index.css';
  * A List of memberships for display on the Profile and MyProfile views.
  * @param {string} user Either the user's ID number for MyProfile or the username for Profile
  * @param {boolean} myProf Whether this is shown in MyProfile or not
+ * @param {Function} createSnackbar function to create a snackbar of whether an operation succeeded
  * @returns {JSX} A list of the user's memberships
  */
-const MembershipsList = ({ user, myProf }) => {
+const MembershipsList = ({ user, myProf, createSnackbar }) => {
   const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
 
   useEffect(() => {
     async function loadMemberships() {
@@ -79,10 +78,6 @@ const MembershipsList = ({ user, myProf }) => {
     }
   };
 
-  const createSnackbar = (message, severity) => {
-    setSnackbar({ message, severity, open: true });
-  };
-
   if (loading) {
     return <GordonLoader />;
   }
@@ -110,18 +105,6 @@ const MembershipsList = ({ user, myProf }) => {
           </CardContent>
         </Card>
       </Grid>
-      {myProf && (
-        <GordonSnackbar
-          open={snackbar.open}
-          text={snackbar.message}
-          severity={snackbar.severity}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-        />
-      )}
     </>
   );
 };

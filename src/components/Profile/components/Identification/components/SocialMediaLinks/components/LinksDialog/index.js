@@ -59,10 +59,10 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
 
     if (failedUpdates.length) {
       console.log('Failed Updates: ', failedUpdates);
-      createSnackbar({ message: 'Failed Updating Link(s)', severity: 'error' });
+      createSnackbar('Failed Updating Link(s)', 'error');
     } else {
       onClose();
-      createSnackbar({ message: 'Social Media Links Updated', severity: 'success' });
+      createSnackbar('Social Media Links Updated', 'success');
     }
   };
 
