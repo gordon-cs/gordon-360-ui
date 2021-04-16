@@ -1,5 +1,5 @@
 import { createBrowserHistory } from 'history';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { ThemeProvider } from '@material-ui/core/styles';
 import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -55,7 +55,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <MuiThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <NetworkContextProvider>
             <Router history={this.history}>
@@ -99,7 +99,7 @@ export default class App extends Component {
             </Router>
           </NetworkContextProvider>
         </MuiPickersUtilsProvider>
-      </MuiThemeProvider>
+      </ThemeProvider>
     );
   }
 }
