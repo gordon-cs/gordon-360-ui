@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import user from 'services/user';
-import { Button, DialogTitle, DialogActions, DialogContent, Typography } from '@material-ui/core';
+import {
+  Button,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  Typography,
+  TextField,
+} from '@material-ui/core';
 import { socialMediaInfo } from 'socialMedia';
 import './linksDialog.css';
-import UpdateLinkTextField from './components/UpdateLinkTextField';
 
 const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   const [formErrors, setFormErrors] = useState([]);
@@ -29,7 +35,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async () => {
     const responses = await Promise.all(
       Object.keys(updatedLinks)
         .filter((platform) => updatedLinks[platform] !== links[platform])
@@ -64,21 +70,31 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
         <Typography variant="body2" className="gc360-links-dialog_content_text">
           Paste or Edit your links below. When done, click Submit
         </Typography>
-        {Object.keys(socialMediaInfo).map((platform) => (
-          <UpdateLinkTextField
-            key={platform}
-            platform={platform}
-            label={`${platform} ${
-              failedUpdates.includes(platform)
-                ? '(failed)'
-                : updatedLinks[platform] !== links[platform]
-                ? '(updated)'
-                : 'link'
-            }`}
-            value={updatedLinks?.[platform]}
-            onChange={(event) => handleLinkUpdated(platform, event.target.value)}
-            error={formErrors.includes(platform)}
-          />
+        {socialMediaInfo.platforms.map((platform) => (
+          <div
+            className={`gc360-links-dialog_content_${platform} gc360-links-dialog_content_media`}
+          >
+            <div className="gc360-links-dialog_content_icon">{socialMediaInfo[platform].icon}</div>
+            <TextField
+              id={`${platform}-input`}
+              label={`${platform} ${
+                failedUpdates.includes(platform)
+                  ? '(failed)'
+                  : updatedLinks[platform] !== links[platform]
+                  ? '(updated)'
+                  : 'link'
+              }`}
+              value={updatedLinks?.[platform]}
+              onChange={(event) => handleLinkUpdated(platform, event.target.value)}
+              error={formErrors.includes(platform)}
+              helperText={formErrors.includes(platform) ? `Invalid ${platform} link` : null}
+              margin="dense"
+              fullWidth
+              multiline
+              className="gc360-links-dialog_content_field"
+              variant="outlined"
+            />
+          </div>
         ))}
       </DialogContent>
       <DialogActions className="gc360-links-dialog_actions">
