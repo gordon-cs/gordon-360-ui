@@ -41,7 +41,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
         .filter((platform) => updatedLinks[platform] !== links[platform]) // Remove unchanged links
         .map(async (platform) => ({
           platform: platform,
-          value: await user.updateSocialLink(platform.toLowerCase(), updatedLinks[platform]),
+          value: await user.updateSocialLink(platform, updatedLinks[platform]),
         })),
     );
 

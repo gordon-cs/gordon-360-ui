@@ -251,23 +251,13 @@ function formatCountry(profile) {
   return profile;
 }
 
-const formatSocialMediaLinks = ({
-  Facebook,
-  Twitter,
-  LinkedIn,
-  Instagram,
-  Handshake,
-  ...profile
-}) => {
-  profile.facebook = Facebook ? socialMediaInfo.facebook.prefix + decodeURIComponent(Facebook) : '';
-  profile.twitter = Twitter ? socialMediaInfo.twitter.prefix + decodeURIComponent(Twitter) : '';
-  profile.linkedIn = LinkedIn ? socialMediaInfo.linkedIn.prefix + decodeURIComponent(LinkedIn) : '';
-  profile.instagram = Instagram
-    ? socialMediaInfo.instagram.prefix + decodeURIComponent(Instagram)
-    : '';
-  profile.handshake = Handshake
-    ? socialMediaInfo.handshake.prefix + decodeURIComponent(Handshake)
-    : '';
+const formatSocialMediaLinks = (profile) => {
+  socialMediaInfo.platforms.map(
+    (platform) =>
+      (profile[platform] = profile[platform]
+        ? socialMediaInfo[platform].prefix + decodeURIComponent(profile[platform])
+        : ''),
+  );
   return profile;
 };
 
@@ -607,46 +597,23 @@ const getProfileInfo = async (username) => {
   setOnOffCampus(profile);
   setMinorObject(profile);
   await setAdvisors(profile);
-  profile = formatSocialMediaLinks(profile);
+  formatSocialMediaLinks(profile);
   return profile;
 };
 
-function updateSocialLink(type, link) {
+function updateSocialLink(platform, link) {
   let linkToSend;
-  //Get link ready to send to API
-  //Remove domain names
-  switch (type) {
-    case 'facebook':
-      linkToSend = link.substring(socialMediaInfo.facebook.prefix.length);
-      break;
-    case 'twitter':
-      linkToSend = link.substring(socialMediaInfo.twitter.prefix.length);
-      break;
-    case 'linkedin':
-      linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length);
-      break;
-    case 'instagram':
-      linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
-      break;
-    case 'handshake':
-      // if using the 'app.joinhandshake' prefix
-      if (link.indexOf(socialMediaInfo.handshake.prefix2) === 0) {
-        linkToSend = link.substring(socialMediaInfo.handshake.prefix2.length);
-      }
-      // otherwise assume using the normal 'gordon.joinhandshake' prefix
-      else {
-        linkToSend = link.substring(socialMediaInfo.handshake.prefix.length);
-      }
-      break;
-    default:
-      break;
+  if (link.indexOf(socialMediaInfo[platform].prefix2) === 0) {
+    linkToSend = link.substring(socialMediaInfo[platform].prefix2.length);
+  } else {
+    linkToSend = link.substring(socialMediaInfo[platform].prefix.length);
   }
-  linkToSend = encodeURIComponent(linkToSend);
+
   const body = {
-    [type]: linkToSend,
+    [platform]: encodeURIComponent(linkToSend),
   };
 
-  return http.put('profiles/' + type, body);
+  return http.put('profiles/' + platform, body);
 }
 
 export default {
