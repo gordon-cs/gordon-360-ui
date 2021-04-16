@@ -164,7 +164,9 @@ export default class CLWCreditsDaysLeft extends Component {
               <div className="label-text" style={{ color: daysColor }}>
                 {daysFinished}
               </div>
-              <div class="entry-text">{'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}</div>
+              <div className="entry-text">
+                {'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}
+              </div>
             </div>
             <div
               style={{
@@ -177,7 +179,7 @@ export default class CLWCreditsDaysLeft extends Component {
               <div className="label-text" style={{ color: chapelColor }}>
                 {current}
               </div>
-              <div class="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
+              <div className="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
             </div>
           </div>
         </div>
