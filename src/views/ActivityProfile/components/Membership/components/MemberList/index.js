@@ -15,9 +15,9 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   FormControl,
   FormControlLabel,
   Grid,
@@ -391,12 +391,12 @@ export default class MemberList extends Component {
           </Grid>
         );
         content = (
-          <ExpansionPanel
+          <Accordion
             defaultExpanded={
               (showLeaveButton || this.state.admin) && !(window.innerWidth < this.breakpointWidth)
             }
           >
-            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Grid container>
                 <Grid item xs={6} sm={7} md={8}>
                   <Typography>
@@ -410,14 +410,14 @@ export default class MemberList extends Component {
                   <Typography>{mailLoc}</Typography>
                 </Grid>
               </Grid>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            </AccordionSummary>
+            <AccordionDetails>
               <Grid container direction="column">
                 <Grid item>{options}</Grid>
                 <Grid item>{this.state.titleComment}</Grid>
               </Grid>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+            </AccordionDetails>
+          </Accordion>
         );
       }
     } else {

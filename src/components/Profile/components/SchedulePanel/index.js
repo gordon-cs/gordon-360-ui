@@ -19,9 +19,9 @@ import {
   Grid,
   Button,
   Switch,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
 } from '@material-ui/core';
 
@@ -358,15 +358,15 @@ class GordonSchedulePanel extends Component {
       schedulePanel = <GordonLoader />;
     } else {
       schedulePanel = (
-        <ExpansionPanel TransitionProps={{ unmountOnExit: true }} onChange={this.handleIsExpanded}>
-          <ExpansionPanelSummary
+        <Accordion TransitionProps={{ unmountOnExit: true }} onChange={this.handleIsExpanded}>
+          <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
             <Typography>{panelTitle} the Schedule</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
+          </AccordionSummary>
+          <AccordionDetails>
             <Grid container direction="row" xs={12} lg={12} justify="center">
               {this.props.network === 'online' && (
                 <Grid container direction="row" xs={12} lg={10}>
@@ -427,8 +427,8 @@ class GordonSchedulePanel extends Component {
               {myScheduleDialog}
               {removeScheduleDialog}
             </Fragment>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+          </AccordionDetails>
+        </Accordion>
       );
     }
 
