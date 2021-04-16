@@ -2,6 +2,7 @@ import React from 'react';
 import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram, FaHandshake } from 'react-icons/fa';
 
 export const socialMediaInfo = {
+  platforms: ['facebook', 'twitter', 'linkedIn', 'instagram', 'handshake'],
   facebook: {
     icon: <FaFacebookF />,
     prefix: 'https://www.facebook.com/',
