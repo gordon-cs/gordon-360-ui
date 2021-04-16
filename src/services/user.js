@@ -613,7 +613,7 @@ function updateSocialLink(platform, link) {
     [platform]: encodeURIComponent(linkToSend),
   };
 
-  return http.put('profiles/' + platform, body);
+  return http.put('profiles/' + platform.toLowerCase(), body);
 }
 
 export default {
