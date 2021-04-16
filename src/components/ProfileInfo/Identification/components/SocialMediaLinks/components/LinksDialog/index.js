@@ -15,7 +15,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   const [formErrors, setFormErrors] = useState([]);
   const [updatedLinks, setUpdatedLinks] = useState(links);
   const [failedUpdates, setFailedUpdates] = useState([]);
-  const hasUpdatedLink = Object.keys(updatedLinks).some(
+  const hasUpdatedLink = socialMediaInfo.platforms.some(
     (platform) => updatedLinks[platform] !== links[platform],
   );
 
@@ -37,8 +37,8 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
 
   const handleSubmit = async () => {
     const responses = await Promise.all(
-      Object.keys(updatedLinks)
-        .filter((platform) => updatedLinks[platform] !== links[platform])
+      socialMediaInfo.platforms
+        .filter((platform) => updatedLinks[platform] !== links[platform]) // Remove unchanged links
         .map(async (platform) => ({
           platform: platform,
           value: await user.updateSocialLink(platform.toLowerCase(), updatedLinks[platform]),
@@ -49,7 +49,10 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
       if (response.value === undefined) {
         setFailedUpdates((prevState) => [...prevState, [response.platform]]);
       } else {
-        setLinks({ ...links, [response.platform]: updatedLinks[response.platform] });
+        setLinks((prevLinks) => ({
+          ...prevLinks,
+          [response.platform]: updatedLinks[response.platform],
+        }));
         setFailedUpdates((prevState) => prevState.filter((link) => link !== response.platform));
       }
     });
@@ -72,6 +75,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
         </Typography>
         {socialMediaInfo.platforms.map((platform) => (
           <div
+            key={platform}
             className={`gc360-links-dialog_content_${platform} gc360-links-dialog_content_media`}
           >
             <div className="gc360-links-dialog_content_icon">{socialMediaInfo[platform].icon}</div>
@@ -84,7 +88,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
                   ? '(updated)'
                   : 'link'
               }`}
-              value={updatedLinks?.[platform]}
+              value={updatedLinks[platform]}
               onChange={(event) => handleLinkUpdated(platform, event.target.value)}
               error={formErrors.includes(platform)}
               helperText={formErrors.includes(platform) ? `Invalid ${platform} link` : null}
