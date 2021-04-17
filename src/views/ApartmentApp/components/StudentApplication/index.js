@@ -356,7 +356,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         prevApplicants.map((prevApplicant, j) => (j === index ? newApplicant : prevApplicant)),
       );
     } else {
-      setSnackbarText('Something went wrong while trying to add this person. Please try again.');
+      setSnackbarText('Something went wrong while trying to change the off-campus program. Please try again.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
     }
