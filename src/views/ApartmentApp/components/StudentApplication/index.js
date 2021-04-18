@@ -559,8 +559,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
         <Grid container justify="center">
           <Grid container item xs={12} lg={10} xl={8} justify="center" spacing={2}>
             {!applicationCardsOpen && (
-              <React.Fragment>
-                <Grid container item xs={12} justify="center" spacing={2}>
+              <Grid item xs={12}>
+                <Grid container direction="row" justify="center" spacing={2}>
                   {applicationID > 0 && (
                     <Grid item xs={12} sm={8} md={6} lg={4} xl={3}>
                       <ApplicationDataTable
@@ -575,7 +575,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     <InstructionsCard />
                   </Grid>
                 </Grid>
-              </React.Fragment>
+              </Grid>
             )}
             <Grid item xs={12}>
               <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
