@@ -20,7 +20,7 @@ const SaveButton = ({ disabled, saving, onClick }) => {
       <Button
         disabled={disabled || saving}
         variant="contained"
-        color="primary"
+        color="secondary"
         fullWidth
         onClick={onClick}
       >

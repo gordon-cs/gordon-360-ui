@@ -84,6 +84,10 @@
     }
   }
 
+  & .MuiButton-containedSecondary {
+    color: $neutral-white;
+  }
+
   & .apartment-agreements-form-control {
     text-align: left;
     &-label {

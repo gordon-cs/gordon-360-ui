@@ -82,7 +82,7 @@ const BottomBar = ({
               <Button
                 variant="contained"
                 onClick={onShowApplication}
-                color="primary"
+                color="secondary"
                 fullWidth
                 disabled={applicationCardsOpen}
               >
@@ -102,7 +102,7 @@ const BottomBar = ({
                 <Button
                   variant="contained"
                   onClick={canEditApplication && onSubmitButtonClick}
-                  color="primary"
+                  color="secondary"
                   fullWidth
                   disabled={!canEditApplication || disableSubmit}
                 >
