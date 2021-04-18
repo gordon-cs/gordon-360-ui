@@ -5,7 +5,6 @@ import { Collapse, Grid } from '@material-ui/core/';
 import GordonLoader from '../../../../components/Loader';
 import GordonDialogBox from '../../../../components/GordonDialogBox';
 import SimpleSnackbar from '../../../../components/Snackbar';
-import ApartmentHeader from './components/ApartmentHeader';
 import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
@@ -561,15 +560,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
           <Grid container item xs={12} lg={10} xl={8} justify="center" spacing={2}>
             {!applicationCardsOpen && (
               <React.Fragment>
-                <Grid item xs={12}>
-                  <ApartmentHeader
-                    applicationCardsOpen={applicationCardsOpen}
-                    applicationID={applicationID}
-                    editorUsername={editorUsername}
-                    userProfile={userProfile}
-                    onShowApplication={handleShowApplication}
-                  />
-                </Grid>
                 <Grid container item xs={12} justify="center" spacing={2}>
                   {applicationID > 0 && (
                     <Grid item xs={12} sm={8} md={6} lg={4} xl={3}>
@@ -677,33 +667,28 @@ const StudentApplication = ({ userProfile, authentication }) => {
               </Collapse>
             </Grid>
             <Grid item xs={12} className={'sticky-page-bottom-bar'}>
-              {applicationCardsOpen ? (
-                <BottomBar
-                  canEditApplication={canEditApplication}
-                  disabled={
-                    !applicationCardsOpen ||
-                    !agreements ||
-                    !(applicationDetails.Applicants.length > 0) ||
-                    !(applicationDetails.ApartmentChoices.length > 0)
-                  }
-                  saving={saving}
-                  submitDialogOpen={submitDialogOpen}
-                  unsavedChanges={unsavedChanges}
-                  onCloseDialog={handleCloseDialog}
-                  onCloseOkay={handleCloseOkay}
-                  onSaveButtonClick={handleSaveButtonClick}
-                  onSubmitAppAccepted={handleSubmitAppAccepted}
-                  onSubmitButtonClick={handleSubmitButtonClick}
-                />
-              ) : (
-                <ApartmentHeader
-                  applicationCardsOpen={applicationCardsOpen}
-                  applicationID={applicationID}
-                  editorUsername={editorUsername}
-                  userProfile={userProfile}
-                  onShowApplication={handleShowApplication}
-                />
-              )}
+              <BottomBar
+                applicationCardsOpen={applicationCardsOpen}
+                applicationID={applicationID}
+                canEditApplication={canEditApplication}
+                disableSubmit={
+                  !applicationCardsOpen ||
+                  !agreements ||
+                  !(applicationDetails.Applicants.length > 0) ||
+                  !(applicationDetails.ApartmentChoices.length > 0)
+                }
+                editorUsername={editorUsername}
+                saving={saving}
+                submitDialogOpen={submitDialogOpen}
+                unsavedChanges={unsavedChanges}
+                userProfile={userProfile}
+                onCloseDialog={handleCloseDialog}
+                onCloseOkay={handleCloseOkay}
+                onSaveButtonClick={handleSaveButtonClick}
+                onShowApplication={handleShowApplication}
+                onSubmitAppAccepted={handleSubmitAppAccepted}
+                onSubmitButtonClick={handleSubmitButtonClick}
+              />
             </Grid>
           </Grid>
         </Grid>
