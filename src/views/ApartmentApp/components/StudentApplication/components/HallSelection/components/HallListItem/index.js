@@ -97,7 +97,7 @@ const HallListItem = ({
     <React.Fragment>
       <ListItem key={index} className={'list-item'}>
         <Grid container alignItems="center" spacing={3}>
-          <Grid item xs={3} sm={2}>
+          <Grid item xs={4} sm={2}>
             <FormControl fullWidth>
               <InputLabel>Rank</InputLabel>
               <Select
@@ -110,7 +110,7 @@ const HallListItem = ({
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={9} sm={10}>
+          <Grid item xs={8} sm={10}>
             <FormControl fullWidth error={!isHallNameValid}>
               <InputLabel>Hall</InputLabel>
               <Select

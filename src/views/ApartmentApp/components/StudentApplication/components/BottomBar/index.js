@@ -28,43 +28,54 @@ const BottomBar = ({
   onSubmitAppAccepted,
   onSubmitButtonClick,
 }) => {
-  const dynamicContent = !applicationCardsOpen
-    ? !applicationID
-      ? {
-          primaryText: 'You are not on any applications for the current semester.',
-          secondaryText: 'Click the button to begin a new application.',
-          buttonLabel: 'Create a new application',
-        }
-      : canEditApplication
-      ? {
-          primaryText: 'You are on an existing application for this semester.',
-          secondaryText: "Click the button to edit your group's application.",
-          buttonLabel: 'Edit your application',
-        }
-      : {
-          primaryText:
-            'You are on an existing application for this semester, but you are not assigned as the editor.',
-          secondaryText: 'Only the application editor may edit the application.',
-          buttonLabel: 'View your application',
-        }
-    : saving === 'failed'
-    ? {
+  let dynamicContent = {
+    primaryText: '',
+    secondaryText: '',
+    openCardsButtonLabel: 'Open application',
+    itemProps: {},
+  };
+
+  if (!applicationCardsOpen) {
+    if (!applicationID) {
+      dynamicContent = {
+        primaryText: 'You are not on any applications for the current semester.',
+        secondaryText: 'Click the button to begin a new application.',
+        openCardsButtonLabel: 'Create a new application',
+      };
+    } else if (canEditApplication) {
+      dynamicContent = {
+        primaryText: 'You are on an existing application for this semester.',
+        secondaryText: "Click the button to edit your group's application.",
+        openCardsButtonLabel: 'Edit your application',
+      };
+    } else {
+      dynamicContent = {
+        primaryText:
+          'You are on an existing application for this semester, but you are not assigned as the editor.',
+        secondaryText: 'Only the application editor may edit the application.',
+        openCardsButtonLabel: 'View your application',
+      };
+    }
+  } else {
+    if (saving === 'failed') {
+      dynamicContent = {
         primaryText: 'Something went wrong while trying to save the application.',
-        secondaryText: null,
         itemProps: {
           variant: 'overline',
           color: 'error',
         },
-      }
-    : unsavedChanges
-    ? {
-        primaryText: 'You have unsaved changes.',
-        secondaryText: null,
-      }
-    : {
-        primaryText: 'All changes to be saved.',
-        secondaryText: null,
       };
+    } else if (!applicationID) {
+      // TODO: Improve the wording/phrasing of this primaryText
+      dynamicContent = {
+        primaryText: 'This application has not yet been saved',
+      };
+    } else if (unsavedChanges) {
+      dynamicContent = { primaryText: 'You have unsaved changes.' };
+    } else {
+      dynamicContent = { primaryText: 'All changes to be saved.' };
+    }
+  }
 
   return (
     <Card className={'sticky-page-bottom-bar'} variant="outlined">
@@ -86,7 +97,7 @@ const BottomBar = ({
                 fullWidth
                 disabled={applicationCardsOpen}
               >
-                {dynamicContent.buttonLabel}
+                {dynamicContent.openCardsButtonLabel}
               </Button>
             </Grid>
           ) : (
