@@ -9,19 +9,18 @@ import housing from '../../../../services/housing';
 import ApplicationsTable from './components/ApplicationTable';
 
 /**
- * @typedef { import('../../../../services/housing').ApplicationDetails } ApplicationDetails
- * @typedef { import('../../../../services/housing').ApartmentApplicant } ApartmentApplicant
- * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
+ * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
+ * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
  */
 
 /**
  * Renders the page for the apartment application housing staff menu
  * @param {Object} props The React component props
- * @param {*} props.authentication The user authentication
  * @param {StudentProfileInfo} props.userProfile The student profile info of the current user
  * @returns {JSX.Element} JSX Element for the staff menu web page
  */
-const StaffMenu = ({ userProfile, authentication }) => {
+const StaffMenu = ({ userProfile }) => {
   const [loading, setLoading] = useState(true);
 
   /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} ApplicationDetails */
