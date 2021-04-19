@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { sortBy } from 'lodash';
 import { CSVLink } from 'react-csv';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -56,34 +57,44 @@ const StaffMenu = ({ userProfile }) => {
   }, [userProfile, loadAllCurrentApplications]);
 
   useEffect(() => {
-    setApplicationsForCSV(
-      applications
-        ?.filter((applicationDetails) => applicationDetails?.DateSubmitted) // Only add the applications that have been submitted
-        ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
-          // Filter out the Applicants and ApartmentChoices arrays from the applicationDetails so that they may be added to the corresponding CSV files
+    setApplicationsForCSV(() => {
+      const filteredApplications =
+        applications
+          ?.filter((applicationDetails) => applicationDetails?.DateSubmitted) // Only add the applications that have been submitted
+          ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
+            // Filter out the Applicants and ApartmentChoices arrays from the applicationDetails so that they may be added to the corresponding CSV files
 
-          /**
-           * Append the Applicants from each ApplicationDetails object onto the combined array of
-           * all Applicants, which is the array that is used when generating the CSV files
-           */
-          setApplicantsForCSV((prevApplicantsForCSV) => [
-            ...prevApplicantsForCSV,
-            ...Applicants.map(({ Profile, StudentID, ...applicant }) => applicant),
-            // Filter out the Profile and StudentID properties from applicant so that they do not get included in the CSV file
-          ]);
+            /**
+             * Append the Applicants from each ApplicationDetails object onto the combined array of
+             * all Applicants, which is the array that is used when generating the CSV files
+             */
+            setApplicantsForCSV((prevApplicantsForCSV) =>
+              sortBy(
+                [
+                  ...prevApplicantsForCSV,
+                  ...Applicants.map(({ Profile, StudentID, ...applicant }) => applicant),
+                  // Filter out the Profile and StudentID properties from applicant so that they do not get included in the CSV file
+                ],
+                ['ApplicationID', 'Username'], // Sort applicants by applicationID and username
+              ),
+            );
 
-          /**
-           * Append the ApartmentChoices from each ApplicationDetails object onto the combined array
-           * of all ApartmentChoices, which is the array that is used when generating the CSV files
-           */
-          setApartmentChoicesForCSV((prevApartmentChoicesForCSV) => [
-            ...prevApartmentChoicesForCSV,
-            ...ApartmentChoices,
-          ]);
+            /**
+             * Append the ApartmentChoices from each ApplicationDetails object onto the combined array
+             * of all ApartmentChoices, which is the array that is used when generating the CSV files
+             */
+            setApartmentChoicesForCSV((prevApartmentChoicesForCSV) =>
+              sortBy(
+                [...prevApartmentChoicesForCSV, ...ApartmentChoices],
+                ['ApplicationID', 'HallRank', 'HallName'], // Sort halls by applicationID, rank, and name
+              ),
+            );
 
-          return applicationDetails;
-        }) ?? [],
-    );
+            return applicationDetails;
+          }) ?? [];
+
+      return sortBy(filteredApplications, ['ApplicationID']); // Sort applications by applicationID
+    });
   }, [applications]);
 
   if (loading) {
