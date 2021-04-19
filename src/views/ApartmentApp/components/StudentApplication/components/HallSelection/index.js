@@ -6,15 +6,14 @@ import HallListItem from './components/HallListItem';
 import housing from '../../../../../../services/housing';
 
 /**
- * @typedef { import('../../services/housing').ApartmentHall } ApartmentHall
- * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApartmentHall } ApartmentHall
+ * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
  */
 
 // Create a list of selection boxes to choosing preferred halls
 const HallSelection = ({
   disabled,
   authentication,
-  editorUsername,
   preferredHalls,
   onHallAdd,
   onHallInputChange,
@@ -38,7 +37,7 @@ const HallSelection = ({
     if (authentication) {
       loadApartmentHalls();
     }
-  }, [authentication, editorUsername]);
+  }, [authentication]);
 
   /**
    * Callback for changes to hall list item name and/or rank
@@ -72,7 +71,7 @@ const HallSelection = ({
               {preferredHalls?.length > 0 &&
                 preferredHalls.map((hallInfo, index) => (
                   <HallListItem
-                    key={hallInfo.HallRank + hallInfo.HallName}
+                    key={index + hallInfo.HallRank + hallInfo.HallName}
                     disabled={disabled}
                     index={index}
                     hallRank={hallInfo.HallRank}

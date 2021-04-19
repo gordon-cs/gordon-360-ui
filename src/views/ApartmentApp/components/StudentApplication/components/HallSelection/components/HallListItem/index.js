@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Divider,
@@ -6,6 +6,7 @@ import {
   ListItemSecondaryAction,
   MenuItem,
   FormControl,
+  FormHelperText,
   Input,
   InputLabel,
   Select,
@@ -14,8 +15,8 @@ import {
 import ClearIcon from '@material-ui/icons/Clear';
 
 /**
- * @typedef { import('../../services/housing').ApartmentHall } ApartmentHall
- * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApartmentHall } ApartmentHall
+ * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
  */
 
 /**
@@ -41,6 +42,13 @@ const HallListItem = ({
   onHallInputChange,
   onHallRemove,
 }) => {
+  const [isHallNameValid, setIsHallNameValid] = useState(false);
+
+  useEffect(
+    () => setIsHallNameValid(hallName === '' || halls.some((hall) => hall.Name === hallName)),
+    [hallName, halls],
+  );
+
   /**
    * Callback for changes to hall rank input field
    * @param {*} event change event to be handled by callback
@@ -89,7 +97,7 @@ const HallListItem = ({
     <React.Fragment>
       <ListItem key={index} className={'list-item'}>
         <Grid container alignItems="center" spacing={3}>
-          <Grid item xs={3} sm={2}>
+          <Grid item xs={4} sm={2}>
             <FormControl fullWidth>
               <InputLabel>Rank</InputLabel>
               <Select
@@ -102,17 +110,22 @@ const HallListItem = ({
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={9} sm={10}>
-            <FormControl fullWidth>
+          <Grid item xs={8} sm={10}>
+            <FormControl fullWidth error={!isHallNameValid}>
               <InputLabel>Hall</InputLabel>
               <Select
                 disabled={disabled}
-                value={hallName}
+                value={isHallNameValid ? hallName : ''}
                 onChange={handleNameInputChange}
                 input={<Input id={'hall' + index} />}
               >
                 {hallOptions}
               </Select>
+              {!isHallNameValid && (
+                <FormHelperText>
+                  An error occurred while loading the application data
+                </FormHelperText>
+              )}
             </FormControl>
           </Grid>
         </Grid>

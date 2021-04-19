@@ -22,7 +22,7 @@ import GordonPeopleSearch from '../../../../../../components/Header/components/P
 import ApplicantListItem from './components/ApplicantListItem';
 
 /**
- * @typedef { import('../../services/user').StudentProfileInfo } StudentProfileInfo
+ * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
 
 // Create a list of applicants, displayed by name, username, and class standing.

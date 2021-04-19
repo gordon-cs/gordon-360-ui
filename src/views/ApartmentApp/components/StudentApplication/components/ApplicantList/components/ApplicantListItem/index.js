@@ -17,7 +17,7 @@ import StarIcon from '@material-ui/icons/Star';
 import user from '../../../../../../../../services/user';
 
 /**
- * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
+ * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
 
 // Based off src/views/PeopleSearch/components/PeopleSearchResult

@@ -29,11 +29,11 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, edi
   let rows = [
     createData(
       'Last Submitted: ',
-      DateTime.fromISO(dateSubmitted).toLocaleString() ?? 'Not yet submitted',
+      dateSubmitted ? DateTime.fromISO(dateSubmitted).toLocaleString() : 'Not yet submitted',
     ),
     createData(
       'Last Modified: ',
-      DateTime.fromISO(dateModified).toLocaleString() ?? 'Not yet saved',
+      dateModified ? DateTime.fromISO(dateModified).toLocaleString() : 'Not yet saved',
     ),
     createData('Application Editor: ', editorUsername ?? 'None'),
   ];

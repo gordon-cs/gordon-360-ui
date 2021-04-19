@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@material-ui/core/';
 import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import GordonLoader from '../../../../../../components/Loader';
+import GordonLoader from '../../../../../../../../components/Loader';
 
 const SaveButton = ({ disabled, saving, onClick }) => {
   const loaderSize = 20;
@@ -20,7 +20,7 @@ const SaveButton = ({ disabled, saving, onClick }) => {
       <Button
         disabled={disabled || saving}
         variant="contained"
-        color="primary"
+        color="secondary"
         fullWidth
         onClick={onClick}
       >
