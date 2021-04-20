@@ -14,7 +14,7 @@ import housing from '../../../../../../services/housing';
 const HallSelection = ({
   disabled,
   authentication,
-  preferredHalls,
+  apartmentChoices,
   onHallAdd,
   onHallInputChange,
   onHallRemove,
@@ -68,15 +68,15 @@ const HallSelection = ({
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
             <List className="hall-list" aria-label="apartment preferred halls" disablePadding>
-              {preferredHalls?.length > 0 &&
-                preferredHalls.map((hallInfo, index) => (
+              {apartmentChoices?.length > 0 &&
+                apartmentChoices.map((hallInfo, index) => (
                   <HallListItem
                     key={index + hallInfo.HallRank + hallInfo.HallName}
                     disabled={disabled}
                     index={index}
                     hallRank={hallInfo.HallRank}
                     hallName={hallInfo.HallName}
-                    preferredHalls={preferredHalls}
+                    apartmentChoices={apartmentChoices}
                     halls={halls}
                     onHallInputChange={handleInputChange}
                     onHallRemove={handleRemove}
@@ -104,8 +104,7 @@ const HallSelection = ({
 HallSelection.propTypes = {
   disabled: PropTypes.bool,
   authentication: PropTypes.any,
-  editorUsername: PropTypes.string,
-  preferredHalls: PropTypes.array.isRequired,
+  apartmentChoices: PropTypes.array.isRequired,
   onHallAdd: PropTypes.func,
   onHallInputChange: PropTypes.func,
   onHallRemove: PropTypes.func,
