@@ -29,8 +29,7 @@ import ApplicantListItem from './components/ApplicantListItem';
 const ApplicantList = ({
   disabled,
   maxNumApplicants,
-  editorUsername,
-  applicants,
+  applicationDetails,
   onSearchSubmit,
   onChangeEditor,
   onApplicantRemove,
@@ -40,37 +39,13 @@ const ApplicantList = ({
 
   /**
    * Callback for apartment people search submission
-   * @param {String} theChosenOne Username for student
+   * @param {String} selectedUsername Username for student selected via the people search
    */
-  const handleSelection = (theChosenOne) => {
+  const handleSelection = (selectedUsername) => {
     // Make sure the chosen username was not null
-    if (theChosenOne) {
+    if (selectedUsername) {
       // Send the selected username to the parent component
-      onSearchSubmit(theChosenOne);
-    }
-  };
-
-  /**
-   * Callback for changing the application editor
-   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
-   */
-  const handleChangeEditor = (profile) => {
-    // Make sure the chosen profile was not null
-    if (profile) {
-      // Send the selected profile to the parent component
-      onChangeEditor(profile);
-    }
-  };
-
-  /**
-   * Callback for applicant list remove button
-   * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
-   */
-  const handleRemove = (profileToRemove) => {
-    // Make sure the chosen profile was not null
-    if (profileToRemove) {
-      // Send the selected profile to the parent component
-      onApplicantRemove(profileToRemove);
+      onSearchSubmit(selectedUsername);
     }
   };
 
@@ -118,15 +93,17 @@ const ApplicantList = ({
                 </List>
               </Collapse>
               <Divider />
-              {applicants?.length > 0 ? (
-                applicants.map((applicant) => (
+              {applicationDetails.Applicants?.length > 0 ? (
+                applicationDetails.Applicants.map((applicant) => (
                   <ApplicantListItem
                     key={applicant.Profile.AD_Username}
                     disabled={disabled}
                     profile={applicant.Profile}
-                    isApplicationEditor={applicant.Profile.AD_Username === editorUsername}
-                    onChangeEditor={handleChangeEditor}
-                    onApplicantRemove={handleRemove}
+                    isApplicationEditor={
+                      applicant.Profile.AD_Username === applicationDetails.EditorUsername
+                    }
+                    onChangeEditor={onChangeEditor}
+                    onApplicantRemove={onApplicantRemove}
                   />
                 ))
               ) : (
@@ -143,7 +120,7 @@ const ApplicantList = ({
             <Grid item xs={9} sm={5} className={'people-search-parent'}>
               <GordonPeopleSearch
                 disableLink
-                disabled={disabled || applicants?.length > maxNumApplicants}
+                disabled={disabled || applicationDetails.Applicants?.length > maxNumApplicants}
                 icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={handleSelection}
