@@ -4,6 +4,7 @@
  * @module membership
  */
 
+//import { ReorderRounded } from '@material-ui/icons';
 import http from './http';
 
 /**
@@ -208,28 +209,35 @@ const getIndividualMembership = (userID) =>
 /**
  * Group memberships by Activity code
  * @param {String} id ID of user
- * @return {grouped} array of activies containing arrays of each activitie's instances
+ * @return {grouped} array of activies containing arrays of each activitiy's instances
  */
 
-const groupByActivityCode = (id) => {
-  console.log("entered groupByActivityCode");
-  const memberships = getIndividualMembership(id);
+const groupByActivityCode = async (id) => {
+  let memberships = await getIndividualMembership(id);
   let grouped = [];
-  console.log("memberships: ");
   console.log(memberships);
-  console.log("currrent length of memberships: " + memberships.length);
-  while (memberships.length > 0 ) {
-    console.log("Entered while loop");
-    if (grouped.search(memberships[0].ActivityCode)) {
-      console.log("Activity already in list");
-      grouped[memberships[0]].push(memberships[0]);
+  console.log('currrent length of memberships: ' + memberships.length);
+  console.log('currrent length of grouped: ' + grouped.length);
+  var ogLen = memberships.length;
+  for (var i = 0; i < ogLen; i++) {
+    var curMembership = memberships.pop();
+    var curAct = curMembership.ActivityCode;
+    var condition = false;
+    for (var y; y < grouped.length; y++) { //try to find act code in grouped
+      if (grouped[y][0].ActivityCode === curAct) {
+        condition = true;
+      }
+    }
+    //var condition = grouped.some((item)=> item === curAct);
+    if (condition) {
+      console.log('Activity ' + curAct + ' already in list');
+      grouped[curMembership].push(curMembership);
     } else {
-      console.log("Activity not in array already")
+      console.log('Activity ' + curAct + '  not in array already');
       let x = [];
-      x.push(memberships[0]);
+      x.push(curMembership);
       grouped.push(x);
     }
-    memberships.pop();
   }
   console.log(grouped);
   return grouped;
