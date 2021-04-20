@@ -49,8 +49,8 @@ const StaffMenu = ({ userProfile }) => {
       applicationDetailsArray.map((applicationDetails) => ({
         ...applicationDetails,
         NumApplicants: applicationDetails.Applicants?.length ?? 0,
-        FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? 'None',
-      })) ?? [],
+        FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
+      })),
     );
     setLoading(false);
   }, []);
