@@ -215,25 +215,17 @@ const getIndividualMembership = (userID) =>
 const groupByActivityCode = async (id) => {
   let memberships = await getIndividualMembership(id);
   let grouped = [];
-  console.log(memberships);
-  console.log('currrent length of memberships: ' + memberships.length);
-  console.log('currrent length of grouped: ' + grouped.length);
   var ogLen = memberships.length;
   for (var i = 0; i < ogLen; i++) {
     var curMembership = memberships.pop();
     var curAct = curMembership.ActivityCode;
     var condition = false;
-    for (var y; y < grouped.length; y++) { //try to find act code in grouped
-      if (grouped[y][0].ActivityCode === curAct) {
-        condition = true;
-      }
-    }
-    //var condition = grouped.some((item)=> item === curAct);
+    // eslint-disable-next-line
+    condition = grouped.some((item)=> item[0].ActivityCode === curAct);
     if (condition) {
-      console.log('Activity ' + curAct + ' already in list');
-      grouped[curMembership].push(curMembership);
+      // eslint-disable-next-line
+      grouped.find((element) => element[0].ActivityCode === curAct).push(curMembership);
     } else {
-      console.log('Activity ' + curAct + '  not in array already');
       let x = [];
       x.push(curMembership);
       grouped.push(x);
