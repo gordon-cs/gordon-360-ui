@@ -15,7 +15,7 @@ import './applicationTable.css';
 
 const ApplicationsTable = ({ applications }) => {
   const [order, setOrder] = useState('asc');
-  const [iteratee, setIteratee] = useState('apart-app-id');
+  const [iteratee, setIteratee] = useState('ApplicationID');
 
   const handleRequestSort = (_event, property) => {
     const isAsc = iteratee === property && order === 'asc';
@@ -23,26 +23,34 @@ const ApplicationsTable = ({ applications }) => {
     setIteratee(property);
   };
 
+  const applicationsForTable = applications.map((applicationDetails) => ({
+    ...applicationDetails,
+    NumApplicants: applicationDetails.Applicants?.length ?? 0,
+    FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? 'None',
+  }));
+
   return (
     <Card>
       <CardHeader title="Apartment Applications" className="apartment-card-header" />
       <CardContent>
-        {applications?.length > 0 ? (
+        {applicationsForTable?.length > 0 ? (
           <TableContainer>
             <Table stickyHeader>
               <ApplicationTableHead
                 order={order}
-                orderBy={iteratee}
+                iteratee={iteratee}
                 onRequestSort={handleRequestSort}
               />
               <TableBody className={'double-striped-table'}>
-                {orderBy(applications, [iteratee], [order]).map((applicationDetails, index) => (
-                  <ApplicationRow
-                    key={applicationDetails.ApplicationID}
-                    applicationDetails={applicationDetails}
-                    labelId={`application-table-${index}`}
-                  />
-                ))}
+                {orderBy(applicationsForTable, [iteratee], [order]).map(
+                  (applicationDetails, index) => (
+                    <ApplicationRow
+                      key={applicationDetails.ApplicationID}
+                      applicationDetails={applicationDetails}
+                      labelId={`application-table-${index}`}
+                    />
+                  ),
+                )}
               </TableBody>
             </Table>
           </TableContainer>
