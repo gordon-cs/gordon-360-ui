@@ -79,13 +79,12 @@ const ApplicantListItem = ({
 
   /**
    * Callback for applicant list remove button
-   * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
    */
   const handleRemove = () => {
     // Make sure the chosen profile was not null
-    if (profile) {
+    if (profile?.AD_Username) {
       // Send the selected profile to the parent component
-      onApplicantRemove(profile);
+      onApplicantRemove(profile.AD_Username);
     }
   };
 
