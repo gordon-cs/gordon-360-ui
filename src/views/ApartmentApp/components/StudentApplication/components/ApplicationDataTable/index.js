@@ -28,9 +28,8 @@ const ApplicationDataTable = ({ applicationDetails }) => {
 
   let dateSubmitted = applicationDetails.DateSubmitted;
   let dateModified = applicationDetails.DateModified;
-  let editorUsername =
-    applicationDetails.EditorUsername ?? applicationDetails.EditorProfile?.AD_Username;
-  let editorEmail = applicationDetails.EditorEmail ?? applicationDetails.EditorProfile?.Email;
+  let editorUsername = applicationDetails.EditorProfile?.AD_Username;
+  let editorEmail = applicationDetails.EditorProfile?.Email;
   let rows = [
     createData(
       'Last Submitted: ',

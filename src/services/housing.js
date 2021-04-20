@@ -31,10 +31,10 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @typedef ApartmentApplicant
  * @property {Number} ApplicationID Application ID number of this application
  * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
- * @property {String} Username The username of this applicant
+ * @property {String} [Username] The username of this applicant
  * @property {DateTime} [BirthDate] The birthday of this applicant (only visible to housing admin)
  * @property {Number} [Age] The age of the student (in years) (only visible to housing admin)
- * @property {String} Class Class
+ * @property {String} [Class] Class
  * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
  * @property {String} Probation Indicates whether the student has a disiplinary probation (visble only to housing admin)
  * @property {Number} Points The number of application points for this student (only visible to housing admin)
@@ -56,7 +56,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @property {String} [DateSubmitted] The date the application was submitted, or null if not yet submitted
  * @property {String} [DateModified] The date the application was last modified, or null if not yet saved/modified
  * @property {StudentProfileInfo} EditorProfile The StudentProfileInfo object representing the application editor
- * @property {String} EditorUsername Username of the application editor
+ * @property {String} [EditorUsername] Username of the application editor
  * @property {String} [EditorEmail] Email address of the application editor
  * @property {String} [Gender] Gender
  * @property {ApartmentApplicant[]} Applicants Array of ApartmentApplicant objects
