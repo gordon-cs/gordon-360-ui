@@ -196,10 +196,10 @@ export default class CLWCreditsDaysLeft extends Component {
                 ATTENDED EVENTS
               </Button>
             </Grid>
-            <Grid item xs={3} align="center">
+            <Grid item xs={4} align="center">
               <CardHeader title={this.state.currSessionDescription} />
             </Grid>
-            <Grid item xs={5} align="right">
+            <Grid item xs={4} align="right">
               <Button
                 variant="contained"
                 style={style.button}
