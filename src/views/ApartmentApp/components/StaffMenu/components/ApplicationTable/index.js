@@ -23,17 +23,11 @@ const ApplicationsTable = ({ applications }) => {
     setIteratee(property);
   };
 
-  const applicationsForTable = applications.map((applicationDetails) => ({
-    ...applicationDetails,
-    NumApplicants: applicationDetails.Applicants?.length ?? 0,
-    FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? 'None',
-  }));
-
   return (
     <Card>
       <CardHeader title="Apartment Applications" className="apartment-card-header" />
       <CardContent>
-        {applicationsForTable?.length > 0 ? (
+        {applications?.length > 0 ? (
           <TableContainer>
             <Table stickyHeader>
               <ApplicationTableHead
@@ -42,15 +36,13 @@ const ApplicationsTable = ({ applications }) => {
                 onRequestSort={handleRequestSort}
               />
               <TableBody className={'double-striped-table'}>
-                {orderBy(applicationsForTable, [iteratee], [order]).map(
-                  (applicationDetails, index) => (
-                    <ApplicationRow
-                      key={applicationDetails.ApplicationID}
-                      applicationDetails={applicationDetails}
-                      labelId={`application-table-${index}`}
-                    />
-                  ),
-                )}
+                {orderBy(applications, [iteratee], [order]).map((applicationDetails, index) => (
+                  <ApplicationRow
+                    key={applicationDetails.ApplicationID}
+                    applicationDetails={applicationDetails}
+                    labelId={`application-table-${index}`}
+                  />
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
