@@ -54,7 +54,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @typedef ApplicationDetails
  * @property {Number} ApplicationID Application ID number of this application
  * @property {String} [DateSubmitted] The date the application was submitted, or null if not yet submitted
- * @property {String} [DateModified] The date the application was last modified
+ * @property {String} [DateModified] The date the application was last modified, or null if not yet saved/modified
  * @property {StudentProfileInfo} EditorProfile The StudentProfileInfo object representing the application editor
  * @property {String} EditorUsername Username of the application editor
  * @property {String} [EditorEmail] Email address of the application editor
