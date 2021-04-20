@@ -386,32 +386,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
-   * Callback for changes to off-campus program info
-   * @param {String} offCampusProgramValue The program that the applicant is doing an OC program for
-   * @param {Number} index The index of the applicant in the list
-   */
-  const handleOffCampusInputChange = (offCampusProgramValue, index) => {
-    if (index !== null && index >= 0) {
-      let newApplicant = {
-        ...applicationDetails.Applicants[index],
-        OffCampusProgram: offCampusProgramValue,
-      };
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        Applicants: prevApplicationDetails.Applicants.map((prevApplicant, j) =>
-          j === index ? newApplicant : prevApplicant,
-        ),
-      }));
-    } else {
-      setSnackbarText(
-        'Something went wrong while trying to change the off-campus program. Please try again.',
-      );
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-    }
-  };
-
-  /**
    * Callback for hall list remove button
    * @param {Number} indexToRemove The index of the hall to be removed from the list of preferred halls
    */
@@ -444,6 +418,32 @@ const StudentApplication = ({ userProfile, authentication }) => {
       ...prevApplicationDetails,
       ApartmentChoices: [...prevApplicationDetails.ApartmentChoices, newPlaceholderHall],
     }));
+  };
+
+  /**
+   * Callback for changes to off-campus program info
+   * @param {String} offCampusProgramValue The program that the applicant is doing an OC program for
+   * @param {Number} index The index of the applicant in the list
+   */
+  const handleOffCampusInputChange = (offCampusProgramValue, index) => {
+    if (index !== null && index >= 0) {
+      let newApplicant = {
+        ...applicationDetails.Applicants[index],
+        OffCampusProgram: offCampusProgramValue,
+      };
+      setApplicationDetails((prevApplicationDetails) => ({
+        ...prevApplicationDetails,
+        Applicants: prevApplicationDetails.Applicants.map((prevApplicant, j) =>
+          j === index ? newApplicant : prevApplicant,
+        ),
+      }));
+    } else {
+      setSnackbarText(
+        'Something went wrong while trying to change the off-campus program. Please try again.',
+      );
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    }
   };
 
   /**
