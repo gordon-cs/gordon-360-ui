@@ -13,19 +13,24 @@ import {
 import EmailIcon from '@material-ui/icons/Email';
 import { DateTime } from 'luxon';
 
+/** @typedef { import('services/housing').ApplicationDetails } ApplicationDetails */
+
 /**
  * Renders a card displaying a table of data about the current application
  * @param {Object} props The React component props
- * @param {String} props.dateSubmitted The date the application was submitted
- * @param {String} props.dateModified The date the application was last modified
- * @param {String} props.editorUsername The username of the application's editor
+ * @param {ApplicationDetails} props.applicationDetails Object containing the details of this application
  * @returns {JSX.Element} JSX Element for the data table card
  */
-const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, editorEmail }) => {
+const ApplicationDataTable = ({ applicationDetails }) => {
   function createData(label, value) {
     return { label, value };
   }
 
+  let dateSubmitted = applicationDetails.DateSubmitted;
+  let dateModified = applicationDetails.DateModified;
+  let editorUsername =
+    applicationDetails.EditorUsername ?? applicationDetails.EditorProfile?.AD_Username;
+  let editorEmail = applicationDetails.EditorEmail ?? applicationDetails.EditorProfile?.Email;
   let rows = [
     createData(
       'Last Submitted: ',
