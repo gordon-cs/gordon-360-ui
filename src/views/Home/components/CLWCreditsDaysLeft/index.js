@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Doughnut, defaults } from 'react-chartjs-2';
+import {Link} from "react-router-dom";
 
 import { gordonColors } from '../../../../theme';
 import user from '../../../../services/user';
@@ -205,7 +206,7 @@ export default class CLWCreditsDaysLeft extends Component {
                 variant="contained"
                 style={style.button}
                 component={Link}
-                to="/events?CLW%20Credits
+                to="/events?CLW%20Credits"
               >
                 MORE CREDITS
               </Button>
