@@ -191,7 +191,8 @@ export default class CLWCreditsDaysLeft extends Component {
               <Button
                 variant="contained"
                 style={style.button}
-                onClick={(event) => (window.location.href = '/attended')}
+                component={Link}
+                to="/attended"
               >
                 ATTENDED EVENTS
               </Button>
