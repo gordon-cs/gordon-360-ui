@@ -31,7 +31,7 @@ const static360Cache = [
   // Documents
   '/',
   '/events',
-  '/events?CLW',
+  '/events?CLW%20Credits',
   '/involvements',
   '/feedback',
   '/people',
@@ -119,15 +119,15 @@ async function createRemoteGuestLinks() {
 
   // Gets the current session to dynamically create links. The current session is also cached
   try {
-    await fetch(guestRequiredSource).then(async response => {
+    await fetch(guestRequiredSource).then(async (response) => {
       // Checks to make sure the response of the fetch is okay
       if (response.ok && !isFetchCanceled) {
         // Adds fetch response to cache
-        await caches.open(cacheVersion).then(cache => {
+        await caches.open(cacheVersion).then((cache) => {
           cache.put(response.url, response.clone());
         });
         // Uses the data of the current session to create the dynamic links for the Involvements page
-        response.json().then(currentSession => {
+        response.json().then((currentSession) => {
           guestRemoteLinks.push(
             `${apiSource}/activities/session/${currentSession.SessionCode}`,
             `${apiSource}/activities/session/${currentSession.SessionCode}/types`,
@@ -177,7 +177,7 @@ async function cacheGuestFiles() {
   // Links were created successfully
   else {
     // Caches local files
-    await caches.open(cacheVersion).then(cache => {
+    await caches.open(cacheVersion).then((cache) => {
       cache.addAll(static360Cache);
     });
 
@@ -240,11 +240,11 @@ async function cacheGuestFiles() {
 async function fetchGuestFile(link, attemptsLeft = 2) {
   // Attempts to do a fetch with the given link
   return await fetch(link)
-    .then(async response => {
+    .then(async (response) => {
       // Checks to make sure the response of the fetch is okay. If so, attempts to add the response
       // to cache if the fetch wasn't canceled
       if (response.ok && !isFetchCanceled) {
-        await caches.open(cacheVersion).then(cache => {
+        await caches.open(cacheVersion).then((cache) => {
           cache.put(response.url, response.clone());
         });
         saveSuccessfulGuestLink(response.url);
@@ -262,7 +262,7 @@ async function fetchGuestFile(link, attemptsLeft = 2) {
         return fetchGuestFile(response.url, attemptsLeft - 1);
       }
     })
-    .catch(error => {
+    .catch((error) => {
       // Since the fetch failed, if the fetch wasn't canceled, the fetch is attempted again until
       // there are no attempts left
       if (isFetchCanceled) {
