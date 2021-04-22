@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import Collapse from '@material-ui/core/Collapse';
 import { CardContent } from '@material-ui/core';
-import { Button } from '@material-ui/core';
-import { gordonColors } from '../../../../theme';
-import user from '../../../../services/user';
+import { Button, Grid, Typography, Card, Collapse } from '@material-ui/core';
+import { gordonColors } from 'theme';
+import user from 'services/user';
 import RequestsReceived from './components/RequestsReceived';
 import RequestSent from './components/RequestSent';
 

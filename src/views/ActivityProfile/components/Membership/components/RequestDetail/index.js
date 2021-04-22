@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 
-import { gordonColors } from '../../../../../../theme';
-import membership from '../../../../../../services/membership';
+import { gordonColors } from 'theme';
+import membership from 'services/membership';
+
+import { Button, Grid, Typography, Divider } from '@material-ui/core';
 
 export default class RequestReceived extends Component {
   constructor(props) {
@@ -67,7 +65,7 @@ export default class RequestReceived extends Component {
       content = requests
         .slice(0)
         .reverse()
-        .map(request => (
+        .map((request) => (
           <Grid item xs={12}>
             <Grid container spacing={8}>
               <Grid item xs={12}>

@@ -1,10 +1,13 @@
 # Gordon 360 User Interface
 
+![Lint and Build](https://github.com/gordon-cs/gordon-360-ui/workflows/Lint%20and%20Build/badge.svg)
+
 This project is the frontend of Gordon 360 in React. [The retired frontend](https://github.com/gordon-cs/Project-Bernard/) was built in EmberJS, but was deemed too slow and difficult to maintain. To see the specifics of the rebuild, see [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/develop/old_documentation/ROADMAP.md).
 
 ## Contents
 
 - [Getting Started](#getting-started)
+
   - [Front End Development](#front-end)
   - [Back End Development](#connect-local-backend-to-react)
   - [Server Notes](#server-notes)
@@ -16,26 +19,37 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 - [Project File Organization](#file-organization)
 - [Environment Variables](#environment-variables)
 - [Testing](#testing)
-- [Deployment](#deployment)
-  - [Contributing](#contributing)
+- [Continuous Integration and Deployment](#continuous-integration-and-deployment)
+- [Contributing](#contributing)
 - [Known Issues](#known-issues)
+- [History](#history)
 
 ## Getting Started
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Read the user guide [here](https://github.com/facebook/create-react-app/blob/master/packages/cra-template/template/README.md).
 
-Make sure Node.js is set up on your machine. Travis-CI uses version `9.11.1`; later versions may work as well. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
+Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtual machine, it should be setup already. To check if it is on a machine, open a terminal and run the command `nvm`. If the output says `'nvm' is not recognized...`, then Node.js has not been setup. In that case, follow the below procedures to install nvm (Node Version Manager) onto the machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
 
 #### Windows:
-- Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
-    - Extract the file and run it.
-    - The installer will ask you where to install NVM. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
-    - After the installation completes, open a terminal and run these commands in order:
-      - `nvm install 9.11.1`
-      - `nvm use 9.11.1`
 
-#### Linux: 
-Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, run `nvm install 9.11.1` then run `nvm use 9.11.1`.
+- Download the latest release of nvm from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
+  - Extract the file and run it.
+  - The installer will ask you where to install nvm. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
+  - After this, go to https://nodejs.org/en/ and look for the version labeled "lts" (which indicates the latest stable version).
+  - Finally, run `nvm install <version>` where <version> is the version you found.
+
+#### Linux:
+
+- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm.
+- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`.
+- Then, tell nvm that you want to use that verion: `nvm use node`.
+  To use a specific Node version - usually the latest Long Term Support (LTS) version - replace `node` in the above commands with the desired version or alias, e.g. `nvm install 14.15.4` for version 14.15.4 or `nvm install --lts` for the latest LTS.
+
+#### Troubleshooting NVM
+
+- If a developer accidentally follows the above Windows instructions on CS-RDSH-02, the environment variable for NVM will be set by their installation to a path within their user directory. Thus, many if not all other users on the machine will lose access to NVM. To fix this, any user can open Powershell as administrator and run `choco install -y nvm`. (The `-y` option answers `yes` to any prompts that occur during the installation.) Then, in a Powershell terminal not running as admin, run `nvm install --lts`. Users should log out and back in to see the fix take effect. As usual, you can check if this worked by opening a terminal and running the command `nvm`. If the output says `Running version...`, then it is all set.
+
+- Sometimes, the .json package management files in develop are missing a dependency and `npm install` throws an error. The error says something like "This is most likely not a problem with npm itself...and is related to npm not being able to find a file". The best solution we have found is to delete the whole `node_modules` directory, delete the file `package-lock.json`, and then run `npm install`. Warning, the deletions can take several minutes because they are large files.
 
 <!-- ### Front End Development (Note) -->
 <h3 id="front-end">Front End Development (Note)</h3>
@@ -43,6 +57,7 @@ Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubu
 When running the app, it will open in a browser at <http://localhost:3000>.
 
 After cloning this repo, and after any major changes to local code (like changing branches) run:
+
 - `npm install` (This gets the right packages installed in the directory)
 - `npm start` (This starts a local server, and prints the local URL)
 
@@ -51,7 +66,7 @@ After cloning this repo, and after any major changes to local code (like changin
 
 By default, React will use the live server backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI repository, use the following steps:
 
-- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
+- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-api-locally),
 
   - Clone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
@@ -69,7 +84,7 @@ By default, React will use the live server backend to allow seamless front end d
 
 ### Server Notes
 
-The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu` (used by Travis CI), `360train.gordon.edu`, and `360.gordon.edu`.
+The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu`, `360train.gordon.edu`, and `360.gordon.edu`.
 
 The backend server is hosted on `cts-360.gordon.edu`. This machine is also known as `360Api.gordon.edu` and `360ApiTrain.gordon.edu` (it also runs the frontend server for the old Ember site, and is thus also known as `360old.gordon.edu`).
 
@@ -79,20 +94,6 @@ As noted earlier, gordon-360-ui uses React Router for routing URLs to different 
 
 To remedy this, a `web.config` file with [these contents](https://gist.githubusercontent.com/lcostea/f17663ebf041b103d98989b6b52d8353/raw/6744846d241c9b785df9054fecbcfc4f2e5dda80/web.config) can be placed in the server's root directory (`D:\wwwroot\360train.gordon.edu`). This file is read by the IIS Server. It provides commands to the URL Rewrite extension (which must be installed in the "Internet Information Services (IIS) Manager" program and can be downloaded from [The Official Microsoft IIS Site](https://www.iis.net/downloads/microsoft/url-rewrite)) which tells the server to reroute all invalid URLs to the server's root directory, eliminating the 404 errors and allowing React Router to handle URLs as expected.
 
-##### The Bad News, and a Workaround
-
-Unfortunately, due to some yet-to-be-fathomed fluke, our attempts to make this `web.config` file be automatically copied to the server root upon deployment have as of yet been foiled. When placed in the `public` directory of our repository (along with other files which are automatically copied over to the server root by an `scp` command in `deploy.sh`), the `web.config` file is copied to the `static` directory on the server rather than to the server root, and the contents of the file are erased (the file is empty). We theorize that this issue is caused by a hiccup in the implementation of `scp` within [PowerShell Server](https://www.nsoftware.com/powershell/server/), a third-party, proprietary program used on the server to facilitate `ssh` connections. (This behavior also occurred with a small number of arbitrarily-named test files, so it is not specific to the "`web.config`" filename.) The file can be placed in the server root directory manually, but it will be removed upon the next deployment (by the deployment script).
-
-Currently, a reasonably elegant workaround has been created by adding a couple of lines to the `deploy.sh` script in the `scripts` directory of the repository. The contents of the `web_config` file (located in the root of the repo) are loaded into a shell variable at the beginning of script execution, and the contents of the file are transferred to the server using an `ssh` connection. This is done by simply echoing the contents of the file (from the aforementioned variable) and redirecting console output (in PowerShell on the server) into a (new) file called `web.config`. This solution achieves the desired result, and allows the contents of the file to be stored in the repo (in the `web_config` file), making future editing much easier than if the file was stored only on the server.
-
-##### Previous Workaround
-
-Our original workaround was in the form of a PowerShell script which automatically copies `web.config` to the server root whenever it is removed. The script is located at `D:\scripts\webconfig\webconfig-filecheck.ps1` and contains a constantly-running while loop. A task has been created in Windows Task Scheduler which, if enabled, starts running the script every morning at 2:00 AM, but automatic execution of this task has been disabled since the creation of the new workaround described above. This task still exists and can be restarted if it is ever needed. (The back-up `web.config` file is located in the same directory as the script.)
-
-Currently, the script and task only exist on the server for the development site (`360train.gordon.edu`). Analogous changes must be made to the server root directories for the production site (`360.gordon.edu`) if this functionality is desired there.
-
-(The current workaround described earlier should work on any server and does not need the PowerShell script or the task in order to work.)
-
 ### Editor Recommendations
 
 [Visual Studio Code](https://code.visualstudio.com/) is the recommended editor for this project. This editor is a lightweight IDE that has excellent support for JavaScript and other web languages. It also has a built-in terminal, Git integration, a debugger, and a rich extension ecosystem.
@@ -101,7 +102,7 @@ The following extensions are recommended for any code editor used to develop thi
 
 - [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) ensures that indentation style, line endings, and file endings are consistent across editors and operating systems
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) checks syntax correctness for JavaScript (`.js` files)
-- [Stylelint](https://marketplace.visualstudio.com/items?itemName=shinnn.stylelint) checks syntax correctness for Sass (`.scss` files)
+- [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) checks syntax correctness for Sass (`.scss` files)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) automatically formats JavaScript, Sass, JSON, and Markdown files on save
 
 If you are using VS Code, you can use the following keyboard shortcuts to run the app:
@@ -115,7 +116,7 @@ VS Code users will also see a ruler at the 100 character mark, helping the devel
 
 Links to the homepages of libraries used in this project, listed here for easy reference.
 
-- [Material-UI](https://material-ui-next.com)
+- [Material-UI](https://next.material-ui.com/)
 
   Material-UI is a widely-used React implementation of Google's Material Design. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
 
@@ -161,6 +162,10 @@ Links to the homepages of libraries used in this project, listed here for easy r
 - [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
 
   Provides easy routing, allowing transitions between views with back button support and URL management.
+
+- [react-csv](https://github.com/react-csv/react-csv)
+
+  Provides components that allow React to easily generate a CSV file from given data. This data can be an array of arrays, an array of literal objects, or strings.
 
 ## Code Style
 
@@ -333,30 +338,32 @@ Environment variables must be declared in all caps, must use snake case, and mus
 
 ## Testing
 
-The foundations for a testing suite made up of Jasmine, Karma, and Travis CI have been laid. For one, package.json has the following dependencies listed:
+The first forays into testing were made when we were still using Travis CI as our CI/CD solution. The below advice is probably still useful but will need updating.
 
-- `"jasmine-core": ">=3.4.0"`
-- `"karma": ">=4.1.0",`
-- `"karma-chrome-launcher": ">=2.2.0"`
-- `"karma-firefox-launcher": ">=1.1.0"`
-- `"karma-jasmine": ">=2.0.1"`
-- `"karma-safari-launcher": ">=1.0.0"`
-
-Secondly, there is a github account, `gordon-360-ci`, made solely for Travis CI and continuous integration services like it. Specifically, it was from this account that Travis' environment variable `GITHUB_TOKEN` was generated. The login credentials for this account can be found in a file called `ci-credentials` on the CS-RDSH-02 virtual machine, specifically in `C:\Users\Public\Public Documents\` (or `/c/users/public/documents\` when in git-bash).
-
-The process for setting up this testing environment can be continued by following the directions [here](https://www.sitepoint.com/testing-javascript-jasmine-travis-karma/) and the advice [here](https://www.arroyolabs.com/2016/08/unit-testing-your-javascipt-with-jasmine-karmajs-travis-ci/) about using Chromium instead of Chrome. Note that some steps from the first link have been completed, from the step about running `karma init my.conf.js` to the beginning, exclusively. Also, there is already a `.travis.yml` file in the project folder, but it may need some lines of code that the .yml in the directions has.
+> The foundations for a testing suite made up of Jasmine, Karma, and Travis CI have been laid. For one, package.json has the following dependencies listed:
+>
+> - `"jasmine-core": ">=3.4.0"`
+> - `"karma": ">=4.1.0",`
+> - `"karma-chrome-launcher": ">=2.2.0"`
+> - `"karma-firefox-launcher": ">=1.1.0"`
+> - `"karma-jasmine": ">=2.0.1"`
+> - `"karma-safari-launcher": ">=1.0.0"`
+>
+> Secondly, there is a github account, `gordon-360-ci`, made solely for Travis CI and continuous integration services like it. Specifically, it was from this account that Travis' environment variable `GITHUB_TOKEN` was generated. The login credentials for this account can be found in a file called `ci-credentials` on the CS-RDSH-02 virtual machine, specifically in `C:\Users\Public\Public Documents\` (or `/c/users/public/documents\` when in git-bash).
+>
+> The process for setting up this testing environment can be continued by following the directions [here](https://www.sitepoint.com/testing-javascript-jasmine-travis-karma/) and the advice [here](https://www.arroyolabs.com/2016/08/unit-testing-your-javascipt-with-jasmine-karmajs-travis-ci/) about using Chromium instead of Chrome. Note that some steps from the first link have been completed, from the step about running `karma init my.conf.js` to the beginning, exclusively. Also, there is already a `.travis.yml` file in the project folder, but it may need some lines of code that the .yml in the directions has.
 
 Timesheets page testing [here](https://docs.google.com/document/d/1fi7_iwTQa7JFVRR3LtSDU3-MGpupOfbqhH-kEU5eMew/edit?usp=sharing)
 
-## Deployment
+## Continuous Integration and Deployment
 
-The deployment script `./scripts/deploy.sh` requires several environment variables to be defined in the Travis CI environment. These variables are documented at the top of the deployment script.
+GitHub Actions is our Continuous Integration and Continuous Deployment (CI/CD) solution. It is a GitHub product available for free to our public, open source repository.
 
-One of these variables is the GITHUB_TOKEN. This is used to authenticate Travis-CI with the repo. This token needs to belong to a current administrator of the repo. (You can generate a personal access token with repo access from your GitHub profile settings).
+GHA uses [workflows](.github/workflows), which are YAML files that describe jobs to run when events occur in GitHub. The current workflow, in `ci.yml`, is called `Lint and Build`.
+This workflow runs everytime a commit is pushed to a branch in GitHub. It lints and builds these commits to ensure they are satisfactory for our project. Additionally, when commits are pushed to the `develop` or `master` branches (which should only be via pull requests because they are protected branches), this workflow will save the build artifacts on GitHub. These artifacts can be found by navigating to Actions in the repo and selecting a workflow run for one of those branches.
 
-The script deploys to either staging or production based on the branch it is running from. The `develop` branch deploys to staging, while the `master` branch deploys to production.
-
-`develop` is the default branch on the repository, so all branches should be based on it and should merge back into it. Changes merged into `develop` will automatically deploy to the staging environment.
+These uploaded artifacts are vital to our CD solution. Because GitHub Actions are running on ephemeral cloud servers, we have no way of securely giving them access to push files
+to the 360 server. Instead, deployment uses a powershell script that is run via a scheduled task on the 360 server. The `Deploy 360Train` and `Deploy 360Prod` scheduled tasks both run the powershell script `Deploy360FrontEnd.ps1`, located at `D:\Scripts\Deploy` in the 360 frontend server. This script polls GitHub for new builds of the appropriate branch, and if it finds any builds that are newer than the most recent deployment, it will download the new build, backup the existing build, and overwrite the site's files with the new build. Transcripts from each deployment can be found at `D:\Scripts\Deploy\Transcripts`.
 
 ### Deploying to Production
 
@@ -367,7 +374,23 @@ The script deploys to either staging or production based on the branch it is run
 1.  Click "Create pull request."
 1.  When the pull request is approved, merge it. This will trigger a build that will automatically deploy `master` to production.
 
-### Contributing
+### Deploying Manually
+
+In the unusual case that Train or Production have not been automatically deployed (which should happen within five minutes of a finished Lint and Build action on the appropriate branch), it is possible to deploy manually.
+
+1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s).
+1. Build the project by running `npm run build` in VSCode on a clone of the project set to the branch you want to deploy. The output will be in `path/to/the/repo/gordon-360-ui/build`.
+1. Connect to the `360-Frontend.gordon.edu` server. See [RemoteDesktopToVM](https://github.com/gordon-cs/gordon-360-api/blob/develop/RemoteDesktopToVM.md) in the API repo for instructions on how to connect.
+1. Open File Explorer and navigate to `D:\wwwroot\`.
+1. Backup the existing deployment:
+   1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
+   1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
+1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above.
+1. Check the appropriate site, refreshing if necessary, to ensure it deployed successfully and is stable.
+1. If you need to restore to a backup, simply copy the contents of the desired backup folder and overwrite the appropriate site's folder.
+
+## Contributing
+
 1. Clone the repository to the local machine.
 2. Create a new branch with a meaningful name (pertaining to the specific change being implemented).
 3. Commit to this branch, with changes focused solely on the branch's nominal purpose.
@@ -390,6 +413,13 @@ The script deploys to either staging or production based on the branch it is run
 
 - An admin is able to remove themselves (on admin view), which causes major issues.
 
+- Staff-timesheets is almost working, with the exception of the edit shift and remove shift function. the API endpoints are all set up and seem to be working to send and get data. The add and save shift functions work like expected but the submit function has yet to be tested with a supervisor. In order to address these issues we have to make sure that we re work the ui in order to make sure that we are sending all the necessary info to edit and delete a saved shift. Previously it was thought that we would not have to change the way that the front end worked and we would simply have to integrate the backend for staff time sheets into the jobs controller. This proved to be wrong. It seems that there are more things that we have not accounted for that a staff's shift has and a student does not. Due to lack of testing and time we were not able to find the necessary changes that need to be made, however, we do know that it revolved around the fact that staff has an extra variable called HOURS_TYPE. We accounted for the variable in our submit and save shift functions in our back end and front end, as we expected that to be the case.
+
+- On the ApartApp admin page, the sort feature of the applications table is not yet working.
+
 ## History
+
 - The student timesheets project was done as a senior project by a trio of seniors Nathanial Rudenberg, Adam Princiotta, and Jacob Bradley. The handoff documentation for this project was a revision and update to the existing documentation which is in the [Connect Local Backend to React](#connect-local-backend-to-react) section of the README. The design document can be found [here](https://docs.google.com/document/d/1CepyCiMzBXQVM--JwKKstniU_H1TodzxHLuCqcHxLjk/edit?usp=sharing)
 - [Student Timesheets Final Presentation](https://docs.google.com/presentation/d/162V-DLuaEUyHDS2Diu09k5f4Tpo2iuoMtIDUyowa7eQ/edit?usp=sharing)
+
+- The apartment applications project ~was done as~ is a senior project by Josh Rogers, Christian Kunis, Gahngnin Kim, and Nick Noormand. The design document for the UI can be found [here](https://docs.google.com/document/d/16gvjNApyNMJbqjnwv2DSP0EvY4JJdjVZZAiST3MAZEo/edit?usp=sharing)

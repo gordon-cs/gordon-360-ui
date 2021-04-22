@@ -5,15 +5,11 @@
 // May be a potential future feature, but not sure
 
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import CardHeader from '@material-ui/core/CardHeader';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
 import { CardContent } from '@material-ui/core';
-import { Button } from '@material-ui/core';
-import { gordonColors } from '../../../../theme';
-import NewsService from '../../../../services/news';
-import NewsItem from '../../../News/components/NewsItem';
+import { Button, Grid, CardHeader, Card, Typography } from '@material-ui/core';
+import { gordonColors } from 'theme';
+import NewsService from 'services/news';
+import NewsItem from 'views/News/components/NewsItem';
 // import CategorizedNews from './components/CategorizedNews';
 
 export default class DailyNews extends Component {
@@ -29,7 +25,7 @@ export default class DailyNews extends Component {
   }
 
   componentWillMount() {
-   this.loadNews();
+    this.loadNews();
   }
 
   // loads the news (not currently "by category")
@@ -37,9 +33,9 @@ export default class DailyNews extends Component {
     // let newsCategories = await NewsService.getCategories();
     let todaysNews = await NewsService.getTodaysNews();
 
-    this.setState({ 
-      // newsCategories: newsCategories, 
-      news: todaysNews
+    this.setState({
+      // newsCategories: newsCategories,
+      news: todaysNews,
     });
   }
 
@@ -63,44 +59,43 @@ export default class DailyNews extends Component {
     //     <CategorizedNews category={item.categoryID} />
     //   ));
 
-
     let news;
-    if(this.state.news.length > 0) {
-      news = this.state.news.map(item => (
-        <NewsItem 
-          posting={item} 
-          key={item.SNID} 
-          size="single" 
-          style={{border: "2px solid #bbb", marginBottom: "-2px"}} 
+    if (this.state.news.length > 0) {
+      news = this.state.news.map((item) => (
+        <NewsItem
+          posting={item}
+          key={item.SNID}
+          size="single"
+          style={{ border: '2px solid #bbb', marginBottom: '-2px' }}
         />
       ));
-    }
-    else {
+    } else {
       news = (
         <Grid item>
           <Typography variant="subtitle1">No News To Show</Typography>
         </Grid>
       );
     }
-    
 
     return (
       <Card>
-          <CardContent>
-            <Grid container direction="row" alignItems="center">
-              {/* title */}
-              <Grid item xs={7} align="left">
-                <CardHeader title="Today's Student News" />
-              </Grid>
-              {/* view all news */}
-              <Grid item xs={5} align="right">
-                <Button variant="contained" style={button}
-                  onClick={() => (window.location.pathname = '/news')}
-                >
-                  All News
-                </Button>
-              </Grid>
+        <CardContent>
+          <Grid container direction="row" alignItems="center">
+            {/* title */}
+            <Grid item xs={7} align="left">
+              <CardHeader title="Today's Student News" />
             </Grid>
+            {/* view all news */}
+            <Grid item xs={5} align="right">
+              <Button
+                variant="contained"
+                style={button}
+                onClick={() => (window.location.pathname = '/news')}
+              >
+                All News
+              </Button>
+            </Grid>
+          </Grid>
           {/* {categories} */}
           {news}
         </CardContent>

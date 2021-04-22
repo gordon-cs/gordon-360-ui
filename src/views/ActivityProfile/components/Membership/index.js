@@ -1,34 +1,35 @@
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import activity from '../../../../services/activity';
-import '../../activity-profile.css';
-import GordonLoader from '../../../../components/Loader';
+import activity from 'services/activity';
+import GordonLoader from 'components/Loader';
 import MemberList from './components/MemberList';
-import membership from '../../../../services/membership';
-import IconButton from '@material-ui/core/IconButton';
+import membership from 'services/membership';
 import RequestDetail from './components/RequestDetail';
 import CloseIcon from '@material-ui/icons/Close';
-import user from '../../../../services/user';
-import { gordonColors } from '../../../../theme';
+import user from 'services/user';
+import { gordonColors } from 'theme';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Error from '@material-ui/icons/Error';
-//import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 import AddPersonIcon from '@material-ui/icons/PersonAdd';
-import Divider from '@material-ui/core/Divider';
+
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  DialogTitle,
+  Grid,
+  FormControl,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  Snackbar,
+  IconButton,
+  Divider,
+} from '@material-ui/core';
 
 export default class Membership extends Component {
   constructor(props) {
@@ -97,7 +98,7 @@ export default class Membership extends Component {
     window.removeEventListener('resize', this.resize);
   }
 
-  handleSelectParticipationLevel = event => {
+  handleSelectParticipationLevel = (event) => {
     this.setState({ participationCode: event.target.value });
   };
 
@@ -109,7 +110,7 @@ export default class Membership extends Component {
     this.setState({ openJoin: true });
   }
 
-  handleText = name => event => {
+  handleText = (name) => (event) => {
     this.setState({ [name]: event.target.value });
   };
 
@@ -173,7 +174,7 @@ export default class Membership extends Component {
 
       // Try to add member
       try {
-        let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
+        let addID = await membership.getEmailAccount(memberEmail).then(function (result) {
           return result.GordonID;
         });
         let data = {
@@ -191,7 +192,8 @@ export default class Membership extends Component {
           // User is already a member of this involvement
           this.setState({ isUserAlreadyMemberSnackBarOpen: true });
         } else {
-          this.setState({ isSnackBarOpen: true });
+          this.setState({ isSnackBarOpen: true, openAddMember: false });
+          this.refresh();
         }
       } catch (error) {
         switch (error.name) {
@@ -533,7 +535,7 @@ export default class Membership extends Component {
             {adminView}
             <Card>
               {header}
-              {members.map(groupMember => (
+              {members.map((groupMember) => (
                 <MemberList
                   member={groupMember}
                   admin={this.state.isAdmin}

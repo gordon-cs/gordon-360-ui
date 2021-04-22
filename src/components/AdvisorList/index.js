@@ -1,8 +1,5 @@
-import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import { Divider, ListItem, Typography, Grid } from '@material-ui/core';
 
 export default class Advisors extends Component {
   constructor(props) {
@@ -26,14 +23,14 @@ export default class Advisors extends Component {
       // very last. If there's only one advisor, no comma will appear
       let advisorText = '';
 
-      this.props.advisors.forEach(advisor => {
+      this.props.advisors.forEach((advisor) => {
         // NOTE: The difference between the two statements that adds text to the variable
         // "advisorText" is that one of them adds BOTH a comma and a space
         advisor === lastItem
           ? (advisorText += `${advisor.Firstname + ' ' + advisor.Lastname}`)
           : (advisorText += `${advisor.Firstname + ' ' + advisor.Lastname}, `);
       });
-      content = <Typography>{advisorText}</Typography>;
+      content = <Typography style={this.props.styles}>{advisorText}</Typography>;
 
       if (this.props.advisors.length === 0) {
         advisorPrefix = (
@@ -41,11 +38,7 @@ export default class Advisors extends Component {
             <Typography>Advisor:</Typography>
           </div>
         );
-        content = (
-          <div>
-            <Typography>(not assigned)</Typography>
-          </div>
-        );
+        content = <Typography style={this.props.styles}>None assigned</Typography>;
       } else if (this.props.advisors.length === 1) {
         advisorPrefix = (
           <div>
@@ -60,13 +53,8 @@ export default class Advisors extends Component {
         );
       }
     }
-    // The advisors list is not available so the user sees an empty listing
-    //  CODE TO WOORK ON IN THE FUTURE IF THE USER'S ADVISORS FAILED TO LOAD
-    // advisorPrefix = (
-    //   <div>
-    //     <Typography>Advisor:</Typography>
-    //   </div>
-    // );
+
+    // The advisors list will not be shown if fails to load
 
     if (this.props.advisors) {
       return (

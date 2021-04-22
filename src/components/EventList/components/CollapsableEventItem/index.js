@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
 import React, { Component } from 'react';
-import CardContent from '@material-ui/core/CardContent';
-import Collapse from '@material-ui/core/Collapse';
-import Grid from '@material-ui/core/Grid';
 import './collapsable-event-item.css';
+
+import { Typography, CardContent, Collapse, Grid } from '@material-ui/core';
 
 //Switched to table rows
 export default class GordonCollapsableEventItem extends Component {
@@ -54,8 +52,6 @@ GordonCollapsableEventItem.propTypes = {
     Event_ID: PropTypes.string.isRequired,
     Event_Name: PropTypes.string.isRequired,
     Event_Title: PropTypes.string.isRequired,
-    Event_Type_Name: PropTypes.string,
-    Category_ID: PropTypes.number,
     Description: PropTypes.string,
     Occurrences: PropTypes.array,
   }).isRequired,

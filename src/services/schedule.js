@@ -23,7 +23,6 @@ import http from './http';
  * @property {TimeSpan} END_TIME
  */
 
-
 /**
  * Get course schedule for the current user
  * @return {Promise.<Schedule[]>} returns all the course schedules
@@ -41,7 +40,7 @@ const getScheduleMyProf = async () => {
  * @return {Promise.<Schedule[]>} returns all the course schedules
  */
 
-const getSchedule = async username => {
+const getSchedule = async (username) => {
   let schedule;
   schedule = await http.get(`schedule/${username}/`);
 
@@ -83,7 +82,7 @@ function checkDayofWeek(course) {
  */
 
 async function makeScheduleCourses(schedule) {
-  let course = await schedule.then(courseSchedule => {
+  let course = await schedule.then((courseSchedule) => {
     return courseSchedule;
   });
   let today = moment();

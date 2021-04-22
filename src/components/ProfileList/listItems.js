@@ -1,13 +1,10 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import ListItem from '@material-ui/core/ListItem';
-import Grid from '@material-ui/core/Grid';
-import Switch from '@material-ui/core/Switch';
-import Divider from '@material-ui/core/Divider';
-import Majors from './../../components/MajorList';
-import Minors from './../../components/MinorList';
-import Advisors from './../../components/AdvisorList';
+import Majors from 'components/MajorList';
+import Minors from 'components/MinorList';
+import Advisors from 'components/AdvisorList';
 import LockIcon from '@material-ui/icons/Lock';
+
+import { Typography, ListItem, Grid, Switch, Divider } from '@material-ui/core';
 
 /**
  * Creates the Home List Item
@@ -16,7 +13,7 @@ import LockIcon from '@material-ui/icons/Lock';
  * @param {String} privateInfo A string that determines if a piece of information is private
  * @param {Object} rowWidths Determines the grid lengths of this list item
  * @param {Object} styles An object of all styles that this list item uses
- * @param {Boolean} addressDisclaimer Determines if the declaimer style should be used
+ * @param {Boolean} addressDisclaimer Determines if the disclaimer style should be used
  *
  * @return {JSX} The JSX of the Home List Item
  */
@@ -368,10 +365,15 @@ function createMinorsListItem(profile, rowWidths, styles) {
  * @return {JSX} The JSX of the Advisors List Item
  */
 function createAdvisorsListItem(profile, rowWidths, styles) {
-  // Shows the advisor(s) if the user is a student and has any advisor
+  // Shows the advisor(s) if the user is a student or 'non assigned' if there are none
   if (String(profile.PersonType).includes('stu')) {
     return (
-      <Advisors advisors={profile.Advisors} rowWidths={rowWidths} gridStyle={styles.gridStyle} />
+      <Advisors
+        advisors={profile.Advisors}
+        rowWidths={rowWidths}
+        gridStyle={styles.gridStyle}
+        styles={styles.privateTextStyle}
+      />
     );
   }
 }
@@ -382,10 +384,11 @@ function createAdvisorsListItem(profile, rowWidths, styles) {
  * @param {Object} profile The profile of a user containing all information about them
  * @param {Object} rowWidths Determines the grid lengths of this list item
  * @param {Object} styles An object of all styles that this list item uses
+ * @param {Boolean} campusLocationDisclaimer Determines whether the disclaimer style should be used
  *
  * @return {JSX} The JSX of the Residence List Item
  */
-function createResidenceListItem(profile, rowWidths, styles) {
+function createResidenceListItem(profile, rowWidths, styles, campusLocationDisclaimer) {
   if (String(profile.PersonType).includes('stu') && profile.OnOffCampus !== '') {
     // Gets the row item widths
     const rowItemOne = rowWidths.twoItems.itemOne;
@@ -403,7 +406,9 @@ function createResidenceListItem(profile, rowWidths, styles) {
               style={styles.gridStyle.item}
               alignItems="center"
             >
-              <Typography>On/Off Campus:</Typography>
+              <Typography className={campusLocationDisclaimer ? 'disclaimer' : ''}>
+                On/Off Campus:
+              </Typography>
             </Grid>
             <Grid
               container
@@ -414,7 +419,9 @@ function createResidenceListItem(profile, rowWidths, styles) {
               style={styles.gridStyle.lastItem}
               alignItems="center"
             >
-              <Typography>{profile.OnOffCampus}</Typography>
+              <Typography className={campusLocationDisclaimer ? 'disclaimer' : ''}>
+                {profile.OnOffCampus}
+              </Typography>
             </Grid>
           </Grid>
         </ListItem>
@@ -431,10 +438,11 @@ function createResidenceListItem(profile, rowWidths, styles) {
  * @param {Object} rowWidths Determines the grid lengths of this list item
  * @param {Object} styles An object of all styles that this list item uses
  * @param {Boolean} myProf Determines if the current page is the My Profile page
+ * @param {Boolean} campusLocationDisclaimer Determines whether the disclaimer style should be used
  *
  * @return {JSX} The JSX of the Dorimitory List Item
  */
-function createDormitoryListItem(profile, rowWidths, styles, myProf) {
+function createDormitoryListItem(profile, rowWidths, styles, myProf, campusLocationDisclaimer) {
   if (String(profile.PersonType).includes('stu') && (profile.BuildingDescription || profile.Hall)) {
     // Gets the row item widths
     const rowItemOne = rowWidths.twoItems.itemOne;
@@ -452,7 +460,9 @@ function createDormitoryListItem(profile, rowWidths, styles, myProf) {
               style={styles.gridStyle.item}
               alignItems="center"
             >
-              <Typography>Dormitory: </Typography>
+              <Typography className={campusLocationDisclaimer ? 'disclaimer' : ''}>
+                Dormitory:{' '}
+              </Typography>
             </Grid>
             <Grid
               container
@@ -463,7 +473,7 @@ function createDormitoryListItem(profile, rowWidths, styles, myProf) {
               style={styles.gridStyle.lastItem}
               alignItems="center"
             >
-              <Typography>
+              <Typography className={campusLocationDisclaimer ? 'disclaimer' : ''}>
                 {profile.BuildingDescription ? profile.BuildingDescription : profile.Hall}
                 {myProf && profile.OnCampusRoom ? (
                   <span style={styles.privateTextStyle}>, Room {profile.OnCampusRoom}</span>

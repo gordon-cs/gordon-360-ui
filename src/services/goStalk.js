@@ -61,10 +61,17 @@ const search = (
   if (major === '' || major === null) {
     // eslint-disable-next-line
     major = 'C' + '\u266F';
-  } else if (major.includes('&') || major.includes('-')) {
+  } else if (
+    major.includes('&') ||
+    major.includes('-') ||
+    major.includes(':') ||
+    major.includes('/')
+  ) {
     // workaround to avoid breaking the backend
     major = major.replace('&', '_');
     major = major.replace('-', 'dash');
+    major = major.replace(':', 'colon');
+    major = major.replace('/', 'slash');
   }
   if (minor === '' || minor === null) {
     // eslint-disable-next-line
@@ -73,6 +80,7 @@ const search = (
     // workaround to avoid breaking the backend
     minor = minor.replace('&', '_');
   }
+  hall = hall.trim();
   if (hall === '' || hall === null) {
     // eslint-disable-next-line
     hall = 'C' + '\u266F';

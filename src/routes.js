@@ -4,6 +4,7 @@ import ActivitiesAll from './views/ActivitiesAll';
 import ActivityProfile from './views/ActivityProfile';
 import Home from './views/Home';
 import WellnessCheck from './views/WellnessCheck';
+import ApartmentApp from './views/ApartmentApp';
 import Help from './views/Help';
 import CoCurricularTranscript from './views/CoCurricularTranscript';
 import Events from './views/Events';
@@ -37,6 +38,11 @@ export default [
     name: 'Wellness',
     path: '/wellness',
     component: WellnessCheck,
+  },
+  {
+    name: 'Apartment App',
+    path: '/ApartApp',
+    component: ApartmentApp,
   },
   {
     name: 'Involvement Profile',
@@ -122,5 +128,5 @@ export default [
     name: 'Page Not Found',
     path: '*',
     component: Page404,
-  }
+  },
 ];

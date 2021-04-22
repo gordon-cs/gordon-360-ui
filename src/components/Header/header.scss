@@ -18,18 +18,16 @@ $drawer-width: 240px;
     color: $neutral-white;
     text-transform: capitalize;
     min-width: 90px;
-    &:hover {
-      color: $neutral-white !important;
-      text-decoration: none !important;
+
+    &.disabled-tab {
+      color: $neutral-white-opacity30;
     }
   }
 
-  .guestTab {
-    transition: min-width 0.2s;
-    color: $neutral-gray;
-    text-transform: capitalize;
-    min-width: 90px;
+  & .tab.tab:hover {
+    text-decoration: none;
   }
+
   .menu-button {
     margin-left: -12px;
   }
@@ -107,6 +105,10 @@ $drawer-width: 240px;
   }
 
   .menu-button-icon {
+    color: $neutral-white;
+  }
+
+  .login-button {
     color: $neutral-white;
   }
 }

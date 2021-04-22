@@ -1,11 +1,9 @@
-import Grid from '@material-ui/core/Grid';
 import React, { Component } from 'react';
 import InvolvementsStatus from './components/InvolvementsStatus';
 import SuperAdmin from './components/SuperAdmins';
-import user from '../../services/user';
-import { Button } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import user from 'services/user';
+import { Button, Grid, Card, CardContent } from '@material-ui/core';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 
 export default class Admin extends Component {
   constructor(props) {
@@ -19,7 +17,7 @@ export default class Admin extends Component {
   }
 
   async componentWillMount() {
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       const college_role = await user.getLocalInfo().college_role;
       this.setState({ isSuperAdmin: college_role === 'god' ? true : false });
     }
@@ -31,7 +29,7 @@ export default class Admin extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -55,7 +53,7 @@ export default class Admin extends Component {
     // Creates the My Profile button link depending on the status of the network found in local storage
     let Admin;
 
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       if (networkStatus === 'online') {
         if (this.state.isSuperAdmin) {
           Admin = (
@@ -97,10 +95,7 @@ export default class Admin extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
+                    <NoConnectionImage />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>
@@ -151,9 +146,8 @@ export default class Admin extends Component {
             </Card>
           </Grid>
         </Grid>
-      )
+      );
     }
-
 
     return Admin;
   }

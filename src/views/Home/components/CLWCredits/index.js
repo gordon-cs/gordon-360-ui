@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 
-import { gordonColors } from '../../../../theme';
-import user from '../../../../services/user';
-import GordonLoader from '../../../../components/Loader';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import GordonLoader from 'components/Loader';
+
+import { Card, CardContent, CardHeader } from '@material-ui/core';
 
 export default class ChapelProgress extends Component {
   constructor(props) {

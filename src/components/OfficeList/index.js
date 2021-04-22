@@ -1,14 +1,16 @@
-import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import List from '@material-ui/core/List';
-import '../../app.css';
 import './index.css';
+
+import {
+  Divider,
+  ListItem,
+  Typography,
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  List,
+} from '@material-ui/core';
 
 // A list of grid row lengths to align all content depending on the amount of items per row
 const rowWidths = {
@@ -48,7 +50,7 @@ const gridStyle = {
 
 export default class Office extends Component {
   render() {
-    let department, officeHours, officePhone, room, Office;
+    let department, officeHours, officePhone, room, mailstop, Office;
     if (String(this.props.profile.PersonType).includes('fac')) {
       if (
         this.props.profile.BuildingDescription === '' &&
@@ -212,6 +214,43 @@ export default class Office extends Component {
         );
       }
 
+      if (this.props.profile.Mail_Location !== '') {
+        // Gets the row item widths
+        const rowItemOne = rowWidths.itemOne;
+        const rowItemTwo = rowWidths.itemTwo;
+        mailstop = (
+          <div>
+            <ListItem>
+              <Grid container justify="center">
+                <Grid
+                  container
+                  xs={rowItemOne.xs}
+                  sm={rowItemOne.sm}
+                  md={rowItemOne.md}
+                  lg={rowItemOne.lg}
+                  style={gridStyle.item}
+                  alignItems="center"
+                >
+                  <Typography>Mailstop:</Typography>
+                </Grid>
+                <Grid
+                  container
+                  xs={rowItemTwo.xs}
+                  sm={rowItemTwo.sm}
+                  md={rowItemTwo.md}
+                  lg={rowItemTwo.lg}
+                  style={gridStyle.lastItem}
+                  alignItems="center"
+                >
+                  <Typography>{this.props.profile.Mail_Location}</Typography>
+                </Grid>
+              </Grid>
+            </ListItem>
+            <Divider />
+          </div>
+        );
+      }
+
       Office = (
         <Card className="office-list-card">
           <Grid container className="office-list-card-header">
@@ -221,6 +260,7 @@ export default class Office extends Component {
             <List>
               {department}
               {room}
+              {mailstop}
               {officePhone}
               {officeHours}
             </List>

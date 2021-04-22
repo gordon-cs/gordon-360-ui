@@ -2,12 +2,11 @@ import { GridList, GridListTile, Paper, Typography, withWidth } from '@material-
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import storage from '../../../../services/storage';
+import storage from 'services/storage';
 
 import './activity-grid.css';
-import '../../../../app.css';
 
-const gridListCols = width => {
+const gridListCols = (width) => {
   switch (width) {
     default:
       return 2;
@@ -26,7 +25,7 @@ const gridListCols = width => {
   }
 };
 
-const gridListCellHeight = width => {
+const gridListCellHeight = (width) => {
   switch (width) {
     default:
       return 250;
@@ -57,7 +56,7 @@ class GordonActivityGrid extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -101,7 +100,7 @@ class GordonActivityGrid extends Component {
       );
     } else if (Array.isArray(this.props.myInvolvements) && this.props.myInvolvements.length > 0) {
       // Creates the My Involvements cards
-      content = this.props.myInvolvements.map(activity => (
+      content = this.props.myInvolvements.map((activity) => (
         <GridListTile className="gc360-act-grid_container" rows="1">
           <Paper className="gc360-act-grid_paper" elevation={0}>
             <Link
@@ -132,7 +131,7 @@ class GordonActivityGrid extends Component {
       );
     } else if (Array.isArray(this.props.activities) && this.props.activities.length > 0) {
       // Creates the Involvements cards
-      content = this.props.activities.map(activity => (
+      content = this.props.activities.map((activity) => (
         <GridListTile className="gc360-act-grid_container">
           <Paper className="gc360-act-grid_paper" elevation={0}>
             {this.state.network === 'online' ? (

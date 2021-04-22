@@ -13,16 +13,16 @@ import {
 } from '@material-ui/core';
 import React, { Component, Fragment } from 'react';
 import Dropzone from 'react-dropzone';
-import { gordonColors } from '../../theme';
-import IdCardDefault from '../IDUploader/image-default.png';
-import IdCardGreen from '../IDUploader/image-green.png';
-import IdCardTop from '../IDUploader/image-top.png';
+import { gordonColors } from 'theme';
+import IdCardDefault from './image-default.png';
+import IdCardGreen from './image-green.png';
+import IdCardTop from './image-top.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
-import user from '../../services/user';
-import errorLog from '../../services/errorLog';
-import Login from '../Login';
+import user from 'services/user';
+import errorLog from 'services/errorLog';
+import Login from 'views/Login';
 
 const CROP_DIM = 1200; // pixels
 class IDUploader extends Component {
@@ -39,6 +39,7 @@ class IDUploader extends Component {
       files: [],
       IdCardPlaceholder: IdCardDefault,
     };
+    this.cropperRef = React.createRef();
   }
 
   handleUploadPhoto = () => {
@@ -47,7 +48,9 @@ class IDUploader extends Component {
 
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
-      var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      var croppedImage = this.cropperRef.current.cropper
+        .getCroppedCanvas({ width: CROP_DIM })
+        .toDataURL();
       this.postCroppedImage(croppedImage, 0);
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({
@@ -143,10 +146,10 @@ class IDUploader extends Component {
   onDropAccepted(fileList) {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
-    reader.onload = function() {
+    reader.onload = function () {
       var dataURL = reader.result.toString();
       var i = new Image();
-      i.onload = function() {
+      i.onload = function () {
         if (i.width < CROP_DIM || i.height < CROP_DIM) {
           alert(
             'Sorry, your image is too small! Image dimensions must be at least 1200 x 1200 pixels.',
@@ -174,15 +177,15 @@ class IDUploader extends Component {
   onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      this.refs.cropper.zoomTo(1);
+      this.cropperRef.current.cropper.zoomTo(1);
     }
   }
 
   onCropperMove() {
     // Keyboard support for cropping
-    document.addEventListener('keydown', e => {
-      if (this.refs.cropper != null) {
-        let data = this.refs.cropper.getCropBoxData();
+    document.addEventListener('keydown', (e) => {
+      if (this.cropperRef.current.cropper != null) {
+        let data = this.cropperRef.current.cropper.getCropBoxData();
         if (e.code === 'ArrowUp') {
           data.top -= 5;
         } else if (e.code === 'ArrowDown') {
@@ -198,7 +201,7 @@ class IDUploader extends Component {
           data.height -= 5;
           data.width -= 5;
         }
-        this.refs.cropper.setCropBoxData(data);
+        this.cropperRef.current.cropper.setCropBoxData(data);
       }
     });
   }
@@ -244,7 +247,7 @@ class IDUploader extends Component {
     };
 
     let content;
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       content = (
         <Fragment>
           <Grid item xs={12} md={6} lg={8}>
@@ -403,7 +406,7 @@ class IDUploader extends Component {
               {preview && (
                 <div className="gc360-id-dialog_content_cropper">
                   <Cropper
-                    ref="cropper"
+                    ref={this.cropperRef}
                     src={preview}
                     style={{
                       'max-width': this.maxCropPreviewWidth(),

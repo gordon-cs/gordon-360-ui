@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import cms from '../../../../services/cms';
+import cms from 'services/cms';
 import ImageGallery from 'react-image-gallery';
-import GordonLoader from '../../../../components/Loader';
+import GordonLoader from 'components/Loader';
 
 export default class GordonCarousel extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ export default class GordonCarousel extends Component {
     try {
       const carouselContent = await cms.getSlides();
       this.setState({ loading: false, carouselContent });
-      this.state.carouselContent.map(slide => this.linkArray.push(slide.ActionLink));
+      this.state.carouselContent.map((slide) => this.linkArray.push(slide.ActionLink));
     } catch (error) {
       this.setState({ error });
     }
@@ -48,7 +48,7 @@ export default class GordonCarousel extends Component {
       content = <GordonLoader />;
     } else {
       const images = [];
-      this.state.carouselContent.map(slide =>
+      this.state.carouselContent.map((slide) =>
         images.push({
           original: slide.ImagePath,
           originalAlt: slide.AltTag,
@@ -58,7 +58,7 @@ export default class GordonCarousel extends Component {
 
       content = (
         <ImageGallery
-          ref={i => (this._imageGallery = i)}
+          ref={(i) => (this._imageGallery = i)}
           showThumbnails={false}
           showFullscreenButton={false}
           showPlayButton={false}

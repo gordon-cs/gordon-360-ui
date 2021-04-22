@@ -1,154 +1,121 @@
-import { withStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Avatar, Button, Typography } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './nav-avatar.css';
-import '../../../../app.css';
-import user from '../../../../services/user';
+import user from 'services/user';
 
-const styles = theme => ({
-  drawerHeader: theme.mixins.toolbar,
-});
-
-class GordonNavAvatar extends Component {
-  constructor(props) {
-    super(props);
-    this.getInitials = this.getInitials.bind(this);
-    this.state = {
-      email: null,
-      image: null,
-      name: null,
-      username: null,
-      network: 'online',
-    };
-  }
-  async componentWillMount() {
-    this.loadAvatar(this.props.Authentication);
-  }
-  async componentWillReceiveProps(newProps) {
-    if (this.props.Authentication !== newProps.Authentication) {
-      this.loadAvatar(newProps.Authentication);
-    }
-  }
-
-  componentDidMount() {
-    /* Used to re-render the page when the user's profile picture changes
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', event => {
-      if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
-        this.loadAvatar(this.props.Authentication);
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    // Removes the window's event listener before unmounting the component
-    return window.removeEventListener('message', () => {});
-  }
-
-  async loadAvatar(Authentication) {
-    if (Authentication) {
-      const { name, user_name: username } = user.getLocalInfo();
-      this.setState({ name, username });
-      const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
-        await user.getProfileInfo(),
-        await user.getImage(),
-      ]);
-      const image = preferredImage || defaultImage;
-      this.setState({ email, image });
-    } else {
-      this.setState({ name: 'Guest', username: 'Guest' });
-    }
-  }
-
-  getInitials() {
-    if (this.state.username) {
-      return this.state.username
-        .split('.') // Split name into separate words
-        .map(name => name[0]) // Get first letter of each part of name
-        .join(''); // Join initials back into a string
-    }
-    return '';
-  }
-  render() {
-    const { classes } = this.props;
-    let content;
-    let buttonLink;
-    if (this.props.Authentication) {
-      let avatar = <Avatar className="avatar placeholder">{this.getInitials()}</Avatar>;
-      if (this.state.image) {
-        avatar = (
-          <Avatar className="avatar image" src={`data:image/jpg;base64,${this.state.image}`} />
-        );
-      }
-
-      // Link component to be used with Button component
-      buttonLink = ({ ...props }) => (
-        <Link
-          {...props}
-          to={`/myprofile`}
-          onClick={this.props.onLinkClick}
-          className="gc360-link"
-        />
-      );
-
-      content = (
-        <Button
-          className={`${classes.drawerHeader} gordon-nav-avatar`}
-          classes={{
-            root: 'gordon-nav-avatar button',
-            label: 'label',
-          }}
-          component={buttonLink}
-        >
-          <div className="gordon-nav-avatar">
-            {avatar}
-            <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
-              {this.state.name}
-            </Typography>
-            <Typography variant="caption" className="avatar-text" align="left" gutterBottom>
-              {this.state.email}
-            </Typography>
-          </div>
-        </Button>
-      );
-    } else {
-      let avatar = <Avatar className="avatar placeholder">Guest</Avatar>;
-      // Link component to be used with Button component
-      buttonLink = ({ ...props }) => (
-        <Link {...props} to={`/`} onClick={this.props.onLinkClick} className="gc360-link" />
-      );
-
-      content = (
-        <Button
-          className={`${classes.drawerHeader} gordon-nav-avatar`}
-          classes={{
-            root: 'gordon-nav-avatar button',
-            label: 'label',
-          }}
-          component={buttonLink}
-        >
-          <div className="gordon-nav-avatar">
-            {avatar}
-            <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
-              Guest
-            </Typography>
-          </div>
-        </Button>
-      );
-    }
-
-    return content;
+/**
+ * Gets the initials of the current user
+ * @param {String} username the username to extract initials from
+ * @returns {String} The initials of the user if available
+ */
+function getInitials(username) {
+  try {
+    return (
+      username
+        ?.split('.') // Split name into separate words
+        ?.map((name) => name?.[0]) // Get first letter of each part of name
+        ?.join('') // Join initials back into a string
+        ?.toUpperCase() ?? null
+    );
+  } catch {
+    return null;
   }
 }
 
-GordonNavAvatar.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
-  onLinkClick: PropTypes.func.isRequired,
+const GordonNavAvatar = ({ authentication, onLinkClick }) => {
+  const [email, setEmail] = useState();
+  const [image, setImage] = useState();
+  const [name, setName] = useState();
+  const [username, setUsername] = useState();
+
+  useEffect(() => {
+    async function loadAvatar() {
+      if (authentication) {
+        const { name, user_name } = user.getLocalInfo();
+        setName(name);
+        setUsername(user_name);
+
+        const [{ Email: email }, { def: defaultImage, pref: preferredImage }] = await Promise.all([
+          await user.getProfileInfo(),
+          await user.getImage(),
+        ]);
+        const image = preferredImage || defaultImage;
+        setEmail(email);
+        setImage(image);
+      } else {
+        setName('Guest');
+        setUsername('Guest');
+      }
+    }
+
+    loadAvatar();
+
+    if (authentication) {
+      // Used to re-render the page when the user's profile picture changes
+      // The origin of the message is checked to prevent cross-site scripting attacks
+      window.addEventListener('message', async (event) => {
+        if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
+          const { def: defaultImage, pref: preferredImage } = await user.getImage();
+          const image = preferredImage || defaultImage;
+          setImage(image);
+        }
+      });
+
+      return window.removeEventListener('message', () => {});
+    }
+  }, [authentication]);
+
+  const avatar = authentication ? (
+    image ? (
+      <Avatar className="avatar image" src={`data:image/jpg;base64,${image}`} />
+    ) : (
+      <Avatar className="avatar placeholder">{getInitials(username)}</Avatar>
+    )
+  ) : (
+    <Avatar className="avatar placeholder">Guest</Avatar>
+  );
+
+  const buttonLink = React.forwardRef((props, ref) => (
+    <Link
+      {...props}
+      innerRef={ref}
+      to={authentication ? `/myprofile` : '/'}
+      onClick={onLinkClick}
+      className="gc360-link"
+    />
+  ));
+
+  const label = authentication ? (
+    <>
+      <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
+        {name}
+      </Typography>
+      <Typography variant="caption" className="avatar-text" align="left" gutterBottom>
+        {email}
+      </Typography>
+    </>
+  ) : (
+    <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
+      Guest
+    </Typography>
+  );
+
+  return (
+    <Button
+      className={` gordon-nav-avatar`}
+      classes={{
+        root: 'gordon-nav-avatar button',
+        label: 'label',
+      }}
+      component={buttonLink}
+    >
+      <div className="gordon-nav-avatar">
+        {avatar}
+        {label}
+      </div>
+    </Button>
+  );
 };
 
-export default withStyles(styles, { withTheme: true })(GordonNavAvatar);
+export default GordonNavAvatar;

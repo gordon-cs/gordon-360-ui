@@ -5,7 +5,7 @@
   grid-template-rows: auto auto auto;
   &_title {
     background-color: $primary-blue;
-    color: white;
+    color: $neutral-white;
     text-align: center;
     grid-row: 1;
   }
@@ -18,7 +18,7 @@
     &_text {
       grid-row: 1;
       grid-column: 1;
-      color: #888888;
+      color: $neutral-gray;
       text-align: center;
     }
     &_facebook {
@@ -32,6 +32,9 @@
     }
     &_instagram {
       grid-row: 5;
+    }
+    &_handshake {
+      grid-row: 6;
     }
     &_media {
       display: grid;

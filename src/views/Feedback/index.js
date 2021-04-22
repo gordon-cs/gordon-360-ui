@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import './feedback.css';
-import { Button, Grid } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import { Button, Grid, Card, CardContent } from '@material-ui/core';
 
 export default class Feedback extends Component {
   constructor(props) {
@@ -20,7 +18,7 @@ export default class Feedback extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -80,10 +78,7 @@ export default class Feedback extends Component {
                     marginRight: 'auto',
                   }}
                 >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
+                  <NoConnectionImage />
                 </Grid>
                 <br />
                 <h1>Please Re-establish Connection</h1>

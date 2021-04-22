@@ -1,6 +1,5 @@
 //Main timesheets page
 import React, { useState, useRef, useEffect } from 'react';
-import 'date-fns';
 import {
   Grid,
   Card,
@@ -18,25 +17,34 @@ import {
   TextField,
 } from '@material-ui/core/';
 import DateFnsUtils from '@date-io/date-fns';
-import jobs from '../../services/jobs';
+import { isValid, isWithinInterval, addDays, set } from 'date-fns';
+import jobsService from 'services/jobs';
 import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
 import ShiftDisplay from './components/ShiftDisplay';
 import { withStyles } from '@material-ui/core/styles';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import './timesheets.css';
-import GordonLoader from '../../components/Loader';
+import GordonLoader from 'components/Loader';
 import { makeStyles } from '@material-ui/core/styles';
-import SimpleSnackbar from '../../components/Snackbar';
-import user from '../../services/user';
+import SimpleSnackbar from 'components/Snackbar';
+import user from 'services/user';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 
-const useStyles = makeStyles(theme => ({
+const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
+const MILLISECONDS_PER_HOUR = 3600000;
+
+const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
+const withNoTime = (date) => set(date, { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
+
+const useStyles = makeStyles((theme) => ({
   customWidth: {
     maxWidth: 500,
   },
 }));
 
-const CustomTooltip = withStyles(theme => ({
+const CustomTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
@@ -45,46 +53,39 @@ const CustomTooltip = withStyles(theme => ({
   },
 }))(Tooltip);
 
-const Timesheets = props => {
+const Timesheets = (props) => {
   const [userJobs, setUserJobs] = useState([]);
   const [selectedDateIn, setSelectedDateIn] = useState(null);
   const [selectedDateOut, setSelectedDateOut] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [shiftTooLong, setShiftTooLong] = useState(false);
-  const [timeOutIsBeforeTimeIn, setTimeOutIsBeforeTimeIn] = useState(false);
-  const [isZeroLengthShift, setIsZeroLengthShift] = useState(false);
-  const [enteredFutureTime, setEnteredFutureTime] = useState(false);
   const [hoursWorkedInDecimal, setHoursWorkedInDecimal] = useState(0.0);
   const [userShiftNotes, setUserShiftNotes] = useState('');
-  const [isOverlappingShift, setIsOverlappingShift] = useState(false);
   const [shiftDisplayComponent, setShiftDisplayComponent] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [network, setNetwork] = useState('online');
   const [saving, setSaving] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [clockInOut, setClockInOut] = useState('Clock In');
   const [canUseStaff, setCanUseStaff] = useState(null);
-  const [isUserStudent, setIsUserStudent] = useState(false);
+  const [isUserStudent, setIsUserStudent] = useState(true);
   const [hourTypes, setHourTypes] = useState(null);
   const [selectedHourType, setSelectedHourType] = useState('R');
+  const [errorText, setErrorText] = useState(null);
+  const isOnline = useNetworkStatus();
 
-  // Sets the person type of the user
   useEffect(() => {
-    user.getProfileInfo().then(data => {
-      data.PersonType.includes('stu') ? setIsUserStudent(true) : setIsUserStudent(false);
-    });
-  });
+    if (props.authentication) {
+      user.getProfileInfo().then((profile) => setIsUserStudent(profile.PersonType.includes('stu')));
+    }
+  }, [props.authentication]);
 
-  // disabled lint in some lines in order to remove warning about race condition that does not apply
-  // in our current case.
   useEffect(() => {
     async function getCanUseStaff() {
       try {
-        let canUse = await jobs.getStaffPageForUser();
-        let hourTypes = await jobs.getHourTypes();
+        const canUse = await jobsService.getStaffPageForUser();
 
         if (canUse.length === 1) {
+          const hourTypes = await jobsService.getHourTypes();
           setCanUseStaff(true);
           setHourTypes(hourTypes);
         } else {
@@ -94,17 +95,15 @@ const Timesheets = props => {
         //do nothing
       }
     }
-    // updates ui with the current status of the users clocked in feature
-    // either clocked in and ready to clock out or the opposite.
-    // status is notted by either true or false. true being clocked in.
+
     async function getClockInOutStatus() {
       try {
-        let status = await jobs.clockOut();
+        let status = await jobsService.clockOut();
 
         if (status[0].currentState) {
           setClockInOut('Clock Out');
 
-          handleDateChangeInClock(new Date(status[0].timestamp));
+          setSelectedDateIn(withNoSeconds(new Date(status[0].timestamp)));
         } else {
           setClockInOut('Clock In');
         }
@@ -115,95 +114,77 @@ const Timesheets = props => {
 
     getCanUseStaff();
     getClockInOutStatus();
-
-    // eslint-disable-next-line
   }, []);
 
-  //had to be defined outside of the authentication condition so that the ui could update
-  // before cheking to see if user is authenticated.
-  const handleDateChangeInClock = date => {
-    if (date) {
-      date.setSeconds(0);
-      date.setMilliseconds(0);
-      setSelectedDateIn(date);
-      setIsOverlappingShift(false);
-      handleTimeErrors(date, selectedDateOut);
+  useEffect(() => {
+    const loadJobs = async () => {
+      const areShiftTimesValid = validateShiftTimes(selectedDateIn, selectedDateOut);
+      if (areShiftTimesValid) {
+        const jobs = await jobsService.getJobs(canUseStaff, selectedDateIn, selectedDateOut);
+        setUserJobs(jobs);
+      }
+    };
+    loadJobs();
+  }, [canUseStaff, selectedDateIn, selectedDateOut]);
+
+  const validateShiftTimes = (timeIn, timeOut) => {
+    if (timeIn === null || timeOut === null) {
+      setErrorText(null);
+      return false;
     }
+
+    if (!isValid(timeIn)) {
+      setErrorText('Start time is not a valid date.');
+      return false;
+    }
+
+    if (!isValid(timeOut)) {
+      setErrorText('End time is not a valid date.');
+      return false;
+    }
+
+    const now = Date.now();
+    if (timeIn.getTime() > now || timeOut.getTime() > now) {
+      setErrorText('A shift cannot begin or end in the future.');
+      return false;
+    }
+
+    const shiftLength = timeOut.getTime() - timeIn.getTime();
+
+    if (shiftLength < 0) {
+      setErrorText('A shift cannot end before it starts.');
+      return false;
+    }
+
+    if (shiftLength === 0) {
+      setErrorText('The entered shift has zero length.');
+      return false;
+    }
+
+    const shiftLengthInHours = shiftLength / MILLISECONDS_PER_HOUR;
+
+    if (shiftLengthInHours > 20) {
+      setErrorText('A shift cannot be longer than 20 hours.');
+      return false;
+    }
+
+    setErrorText(null);
+
+    let roundedShiftLength = (Math.round(shiftLengthInHours * 12) / 12).toFixed(2);
+    if (roundedShiftLength < MINIMUM_SHIFT_LENGTH) {
+      roundedShiftLength = MINIMUM_SHIFT_LENGTH;
+    }
+    setHoursWorkedInDecimal(roundedShiftLength);
+
+    return true;
   };
 
   const tooltipRef = useRef();
   const classes = useStyles();
 
-  const handleTimeErrors = (timeIn, timeOut) => {
-    if (timeIn !== null && timeOut !== null) {
-      checkForFutureDate(timeIn, timeOut);
-      let timeDiff = timeOut.getTime() - timeIn.getTime();
-      let calculatedTimeDiff = timeDiff / 1000 / 60 / 60;
-      let roundedHourDifference = 0;
-      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.25) {
-        roundedHourDifference = 0.25;
-      } else if (calculatedTimeDiff >= 0.25) {
-        roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
-      }
-      setHoursWorkedInDecimal(roundedHourDifference);
-      let hoursWorked = Math.floor(calculatedTimeDiff);
-      let minutesWorked = Math.round((calculatedTimeDiff - hoursWorked) * 60).toFixed(2);
-
-      if (minutesWorked >= 60) {
-        hoursWorked++;
-        minutesWorked = 0;
-      }
-
-      setTimeOutIsBeforeTimeIn(timeDiff < 0);
-      setIsZeroLengthShift(timeDiff === 0);
-      setShiftTooLong(calculatedTimeDiff > 20);
-    }
-  };
-
-  const checkForFutureDate = (dateIn, dateOut) => {
-    let now = Date.now();
-    setEnteredFutureTime(dateIn.getTime() > now || dateOut.getTime() > now);
-  };
-
-  if (props.Authentication) {
-    const getActiveJobsForUser = (dateIn, dateOut) => {
-      let details = {
-        shift_start_datetime: dateIn.toLocaleString(),
-        shift_end_datetime: dateOut.toLocaleString(),
-      };
-      jobs.getActiveJobsForUser(canUseStaff, details).then(result => {
-        setUserJobs(result);
-      });
-    };
-
+  if (props.authentication) {
     const getSavedShiftsForUser = () => {
-      return jobs.getSavedShiftsForUser(canUseStaff);
-    };
-
-    const handleDateChangeIn = date => {
-      if (date) {
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        setSelectedDateIn(date);
-        setIsOverlappingShift(false);
-        handleTimeErrors(date, selectedDateOut);
-        if (selectedDateOut !== null) {
-          getActiveJobsForUser(date, selectedDateOut);
-        }
-      }
-    };
-
-    const handleDateChangeOut = date => {
-      if (date) {
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        setSelectedDateOut(date);
-        setIsOverlappingShift(false);
-        handleTimeErrors(selectedDateIn, date);
-        if (selectedDateIn !== null) {
-          getActiveJobsForUser(selectedDateIn, date);
-        }
-      }
+      return jobsService.getSavedShiftsForUser(canUseStaff);
     };
 
     const handleSaveButtonClick = () => {
@@ -222,20 +203,18 @@ const Timesheets = props => {
         timeOut.setMinutes(59);
 
         let timeDiff2 = timeOut2.getTime() - timeIn2.getTime();
-        let calculatedTimeDiff2 = timeDiff2 / 1000 / 60 / 60;
-        let roundedHourDifference2 = 0;
-        if (calculatedTimeDiff2 > 0 && calculatedTimeDiff2 < 0.25) {
-          roundedHourDifference2 = 0.25;
-        } else if (calculatedTimeDiff2 >= 0.25) {
-          roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 4) / 4).toFixed(2);
+        let calculatedTimeDiff2 = timeDiff2 / MILLISECONDS_PER_HOUR;
+        let roundedHourDifference2 = (Math.round(calculatedTimeDiff2 * 12) / 12).toFixed(2);
+        if (roundedHourDifference2 < MINIMUM_SHIFT_LENGTH) {
+          roundedHourDifference2 = MINIMUM_SHIFT_LENGTH; //minimum 1/12th hour (5 minutes) for working a shift.
         }
 
         // Do not save the shift if it has zero length
         if (calculatedTimeDiff2 > 0) {
           saveShift(
             selectedJob.EMLID,
-            timeIn2.toLocaleString(),
-            timeOut2.toLocaleString(),
+            timeIn2,
+            timeOut2,
             roundedHourDifference2,
             selectedHourType,
             userShiftNotes,
@@ -247,11 +226,18 @@ const Timesheets = props => {
               );
               setSnackbarOpen(true);
             })
-            .catch(err => {
+            .catch((err) => {
+              console.log(err);
               setSaving(false);
               if (typeof err === 'string' && err.toLowerCase().includes('overlap')) {
                 setSnackbarText(
                   'The shift was automatically split because it spanned a pay week, but one of the two derived shifts conflicted with a previously entered one. Please review your saved shifts.',
+                );
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
+              } else if (err?.Message?.toLowerCase()?.includes('invalid shift times')) {
+                setSnackbarText(
+                  'There was a problem saving your shift. Double check your shift start time and end time, and contact CTS if the problem persists.',
                 );
                 setSnackbarSeverity('error');
                 setSnackbarOpen(true);
@@ -265,23 +251,21 @@ const Timesheets = props => {
       }
 
       let timeDiff1 = timeOut.getTime() - timeIn.getTime();
-      let calculatedTimeDiff = timeDiff1 / 1000 / 60 / 60;
-      let roundedHourDifference;
-      if (calculatedTimeDiff > 0 && calculatedTimeDiff < 0.25) {
-        roundedHourDifference = 0.25;
-      } else {
-        roundedHourDifference = (Math.round(calculatedTimeDiff * 4) / 4).toFixed(2);
+      let calculatedTimeDiff = timeDiff1 / MILLISECONDS_PER_HOUR;
+      let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
+      if (roundedHourDifference < MINIMUM_SHIFT_LENGTH) {
+        roundedHourDifference = MINIMUM_SHIFT_LENGTH; //minimum 1/12th hour (5 minutes) for working a shift.
       }
 
       saveShift(
         selectedJob.EMLID,
-        timeIn.toLocaleString(),
-        timeOut.toLocaleString(),
+        timeIn,
+        timeOut,
         roundedHourDifference,
         selectedHourType,
         userShiftNotes,
       )
-        .then(result => {
+        .then((result) => {
           shiftDisplayComponent.loadShifts();
           setSelectedDateOut(null);
           setSelectedDateIn(null);
@@ -290,13 +274,20 @@ const Timesheets = props => {
           setHoursWorkedInDecimal(0);
           setSaving(false);
         })
-        .catch(err => {
+        .catch((err) => {
           setSaving(false);
+          console.log(err);
           if (typeof err === 'string' && err.toLowerCase().includes('overlap')) {
             setSnackbarText(
               'You have already entered hours that fall within this time frame. Please review the times you entered above and try again.',
             );
             setSnackbarSeverity('warning');
+            setSnackbarOpen(true);
+          } else if (err?.Message?.toLowerCase()?.includes('invalid shift times')) {
+            setSnackbarText(
+              'There was a problem saving your shift. Double check your shift start time and end time, and contact CTS if the problem persists.',
+            );
+            setSnackbarSeverity('error');
             setSnackbarOpen(true);
           } else {
             setSnackbarText('There was a problem saving the shift.');
@@ -307,7 +298,7 @@ const Timesheets = props => {
     };
 
     const saveShift = async (eml, shiftStart, shiftEnd, hoursWorked, hoursType, shiftNotes) => {
-      await jobs.saveShiftForUser(
+      await jobsService.saveShiftForUser(
         canUseStaff,
         eml,
         shiftStart,
@@ -319,7 +310,7 @@ const Timesheets = props => {
     };
 
     const jobsMenuItems = userJobs ? (
-      userJobs.map(job => (
+      userJobs.map((job) => (
         <MenuItem label={job.POSTITLE} value={job} key={job.EMLID}>
           {job.POSTITLE}
         </MenuItem>
@@ -328,7 +319,7 @@ const Timesheets = props => {
       <></>
     );
     const hourTypeMenuItems = hourTypes ? (
-      hourTypes.map(type => (
+      hourTypes.map((type) => (
         <MenuItem label={type.type_description} value={type.type_id} key={type.type_id}>
           {type.type_description}
         </MenuItem>
@@ -337,121 +328,24 @@ const Timesheets = props => {
       <></>
     );
 
-    const isLeapYear = date => {
-      if (date.getFullYear() % 4 === 0) {
-        if (date.getFullYear() % 100 === 0) {
-          if (date.getFullYear() % 400 !== 0) {
-            return false;
-          } else {
-            return true;
-          }
-        } else {
-          return true;
-        }
-      } else {
-        return false;
-      }
-    };
-
-    const getNextDate = date => {
-      let is30DayMonth =
-        date.getMonth() === 3 ||
-        date.getMonth() === 5 ||
-        date.getMonth() === 8 ||
-        date.getMonth() === 10;
-
-      let isFebruary = date.getMonth() === 1;
-      let isDecember = date.getMonth() === 11;
-      let nextDate;
-      let monthToReturn;
-      let yearToReturn;
-
-      if (isFebruary) {
-        if (isLeapYear(date)) {
-          if (date.getDate() === 29) {
-            nextDate = 1;
-            monthToReturn = 2;
-            yearToReturn = date.getFullYear();
-          } else {
-            nextDate = date.getDate() + 1;
-            monthToReturn = date.getMonth();
-            yearToReturn = date.getFullYear();
-          }
-        } else if (date.getDate() === 28) {
-          nextDate = 1;
-          monthToReturn = 2;
-          yearToReturn = date.getFullYear();
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      } else if (isDecember) {
-        if (date.getDate() === 31) {
-          nextDate = 1;
-          monthToReturn = 0;
-          yearToReturn = date.getFullYear() + 1;
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      } else if (is30DayMonth) {
-        if (date.getDate() === 30) {
-          nextDate = 1;
-          monthToReturn = date.getMonth() + 1;
-          yearToReturn = date.getFullYear();
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      } else {
-        if (date.getDate() === 31) {
-          nextDate = 1;
-          monthToReturn = date.getMonth() + 1;
-          yearToReturn = date.getFullYear();
-        } else {
-          nextDate = date.getDate() + 1;
-          monthToReturn = date.getMonth();
-          yearToReturn = date.getFullYear();
-        }
-      }
-
-      return {
-        date: nextDate,
-        month: monthToReturn,
-        year: yearToReturn,
-      };
-    };
-
-    const disableDisallowedDays = date => {
-      let dayIn = selectedDateIn;
-      let nextDate = getNextDate(dayIn);
-      let shouldDisableDate = !(
-        (date.getDate() === dayIn.getDate() &&
-          date.getMonth() === dayIn.getMonth() &&
-          date.getYear() === dayIn.getYear()) ||
-        (date.getDate() === nextDate.date &&
-          date.getMonth() === nextDate.month &&
-          date.getFullYear() === nextDate.year)
-      );
-      return shouldDisableDate;
+    const disableDisallowedDays = (date) => {
+      return !isWithinInterval(withNoTime(date), {
+        start: withNoTime(selectedDateIn),
+        end: withNoTime(addDays(selectedDateIn, 1)),
+      });
     };
 
     const changeState = async () => {
       if (clockInOut === 'Clock In') {
         setClockInOut('Clock Out');
-        await jobs.clockIn(true);
-        let clockInDate = new Date();
-        handleDateChangeIn(clockInDate);
+        await jobsService.clockIn(true);
+        setSelectedDateIn(withNoSeconds(new Date()));
       }
       if (clockInOut === 'Clock Out') {
         setClockInOut('Reset');
-        await jobs.clockIn(false);
-        let clockOutDate = new Date();
-        handleDateChangeOut(clockOutDate);
-        await jobs.deleteClockIn();
+        await jobsService.clockIn(false);
+        setSelectedDateOut(withNoSeconds(new Date()));
+        await jobsService.deleteClockIn();
       }
       if (clockInOut === 'Reset') {
         setClockInOut('Clock In');
@@ -467,32 +361,6 @@ const Timesheets = props => {
       setSnackbarOpen(false);
     };
 
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', event => {
-      if (
-        event.data === 'online' &&
-        network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('online');
-      } else if (
-        event.data === 'offline' &&
-        network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        setNetwork('offline');
-      }
-    });
-
-    /* Gets status of current network connection for online/offline rendering
-     *  Defaults to online in case of PWA not being possible
-     */
-    const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
     const jobDropdown = (
       <FormControl
         disabled={userJobs === null || userJobs.length === 0}
@@ -503,7 +371,7 @@ const Timesheets = props => {
         <InputLabel className="disable-select">Jobs</InputLabel>
         <Select
           value={selectedJob}
-          onChange={e => {
+          onChange={(e) => {
             setSelectedJob(e.target.value);
           }}
           input={<Input id="job" />}
@@ -526,7 +394,7 @@ const Timesheets = props => {
         <InputLabel className="disable-select">Hour Type</InputLabel>
         <Select
           value={selectedHourType}
-          onChange={e => {
+          onChange={(e) => {
             setSelectedHourType(e.target.value);
           }}
           input={<Input id="hour type" />}
@@ -536,42 +404,7 @@ const Timesheets = props => {
       </FormControl>
     );
 
-    let errorText;
-    if (enteredFutureTime) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          A shift cannot begin or end in the future.
-        </Typography>
-      );
-    } else if (timeOutIsBeforeTimeIn) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          A shift cannot end before it starts.
-        </Typography>
-      );
-    } else if (isZeroLengthShift) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          The entered shift has zero length.
-        </Typography>
-      );
-    } else if (shiftTooLong) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          A shift cannot be longer than 20 hours.
-        </Typography>
-      );
-    } else if (isOverlappingShift) {
-      errorText = (
-        <Typography variant="overline" color="error">
-          You have already entered hours that fall within this time frame.
-        </Typography>
-      );
-    } else {
-      errorText = <></>;
-    }
-
-    const handleShiftNotesChanged = event => {
+    const handleShiftNotesChanged = (event) => {
       setUserShiftNotes(event.target.value);
     };
 
@@ -580,11 +413,7 @@ const Timesheets = props => {
     ) : (
       <Button
         disabled={
-          enteredFutureTime ||
-          timeOutIsBeforeTimeIn ||
-          isOverlappingShift ||
-          shiftTooLong ||
-          isZeroLengthShift ||
+          errorText ||
           selectedDateIn === null ||
           selectedDateOut === null ||
           selectedJob === null ||
@@ -599,7 +428,7 @@ const Timesheets = props => {
       </Button>
     );
 
-    if (networkStatus === 'online' && isUserStudent && props.Authentication) {
+    if (isOnline && isUserStudent) {
       return (
         <>
           <Grid container spacing={2}>
@@ -669,7 +498,7 @@ const Timesheets = props => {
                           helperText="MM-DD-YY HH-MM AM/PM"
                           format="MM/dd/yy hh:mm a"
                           value={selectedDateIn}
-                          onChange={handleDateChangeIn}
+                          onChange={setSelectedDateIn}
                         />
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
@@ -690,7 +519,7 @@ const Timesheets = props => {
                           format="MM/dd/yy hh:mm a"
                           openTo="hours"
                           value={selectedDateOut}
-                          onChange={handleDateChangeOut}
+                          onChange={setSelectedDateOut}
                         />
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
@@ -717,9 +546,13 @@ const Timesheets = props => {
                           Hours worked: {hoursWorkedInDecimal}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
-                        {errorText}
-                      </Grid>
+                      {errorText && (
+                        <Grid item xs={12}>
+                          <Typography variant="overline" color="error">
+                            {errorText}
+                          </Typography>
+                        </Grid>
+                      )}
                       <Grid item xs={12}>
                         {saveButton}
                       </Grid>
@@ -766,7 +599,7 @@ const Timesheets = props => {
       );
     } else {
       // If the network is offline or the user type is non-student
-      if (networkStatus === 'offline' || !isUserStudent) {
+      if (!isOnline || !isUserStudent) {
         return (
           <Grid container justify="center" spacing="16">
             <Grid item xs={12} md={8}>
@@ -777,7 +610,7 @@ const Timesheets = props => {
                     textAlign: 'center',
                   }}
                 >
-                  {networkStatus === 'offline' && (
+                  {!isOnline && (
                     <Grid
                       item
                       xs={2}
@@ -788,20 +621,13 @@ const Timesheets = props => {
                         marginRight: 'auto',
                       }}
                     >
-                      <img
-                        src={require(`${'../../NoConnection.svg'}`)}
-                        alt="Internet Connection Lost"
-                      />
+                      <NoConnectionImage />
                     </Grid>
                   )}
                   <br />
-                  <h1>
-                    {networkStatus === 'offline'
-                      ? 'Please re-establish connection'
-                      : 'Timesheets Unavailable'}
-                  </h1>
+                  <h1>{!isOnline ? 'Please re-establish connection' : 'Timesheets Unavailable'}</h1>
                   <h4>
-                    {networkStatus === 'offline'
+                    {!isOnline
                       ? 'Timesheets entry has been disabled due to loss of network.'
                       : 'Timesheets is currently available for students only. Support for staff will come soon!'}
                   </h4>

@@ -1,27 +1,30 @@
-// TODO: When login page hang/refresh issue is solved, remove all code marked "Login Hang"
-
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import amber from '@material-ui/core/colors/amber'; // Login Hang
-import Fab from '@material-ui/core/Fab';
-import PWAInstructions from '../../components/PWAInstructions/index';
+import PWAInstructions from 'components/PWAInstructions/index';
 import './login.css';
-import { authenticate } from '../../services/auth';
-import storage from '../../services/storage';
-import session from '../../services/session';
+import { authenticate } from 'services/auth';
+import storage from 'services/storage';
+import session from 'services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
-import { gordonColors } from '../../theme';
-import { projectName } from '../../project-name';
+import { gordonColors } from 'theme';
+import { projectName } from 'project-name';
+
+import {
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+  Grid,
+  Snackbar,
+  IconButton,
+  Fab,
+  Container,
+  Box,
+} from '@material-ui/core';
 
 // To temporarily disable the Login Hang message, set this boolean to false
 const LOGIN_BUG_MESSAGE = true; // Login Hang
@@ -57,14 +60,14 @@ export default class Login extends Component {
     }
 
     // A window event listener to see if the browser has the PWA quick installation prompt available
-    window.addEventListener('beforeinstallprompt', e => {
+    window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       this.setState({ deferredPWAPrompt: e });
     });
 
     // A window event listener to see if the PWA was installed
-    window.addEventListener('appinstalled', evt => {
+    window.addEventListener('appinstalled', (evt) => {
       // Exits out the PWA Installation dialog box if already opened
       this.setState({ openPWAInstructions: false, showPWALink: false });
     });
@@ -90,7 +93,7 @@ export default class Login extends Component {
     /* Used to re-render PWA installation button. The PWA installation button should only show
      * when the user is online
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -129,7 +132,7 @@ export default class Login extends Component {
   }
 
   handleChange(prop) {
-    return event => {
+    return (event) => {
       this.setState({ [prop]: event.target.value });
     };
   }
@@ -184,12 +187,11 @@ export default class Login extends Component {
 
   render() {
     return (
-      <Grid container alignItems="center" justify="center" spacing={0}>
+      <Container>
         <DocumentTitle title={`Login | ${projectName}`} />
-        <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
+        <Box className="container">
           <img className="login-img" src={GordonLogoVerticalWhite} alt={`${projectName}`} />
           <form onSubmit={this.logIn}>
-            <Typography variant="subtitle1">Welcome to {projectName}!</Typography>
             <TextField
               id="username"
               label="Username"
@@ -237,21 +239,20 @@ export default class Login extends Component {
               </Button>
             </section>
           </form>
-        </Grid>
+        </Box>
         {this.state.network === 'online' && this.state.showPWALink && (
           <Grid
             container
-            xs={12}
             justify="center"
             style={{ margin: '0.5rem' }}
             onClick={() => {
               this.setState({ openPWAInstructions: true });
             }}
           >
-            <Grid xs={12} sm={6} md={5} lg={4} xl={4}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <Fab variant="extended" color="primary">
                 <GetAppIcon />
-                <Typography variant="subtitle1">&nbsp;Install Gordon 360</Typography>
+                <Typography variant="subtitle1">Install Gordon 360</Typography>
               </Fab>
             </Grid>
           </Grid>
@@ -389,7 +390,7 @@ export default class Login extends Component {
             </IconButton>,
           ]}
         />
-      </Grid>
+      </Container>
     );
   }
 }

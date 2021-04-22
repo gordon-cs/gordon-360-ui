@@ -15,9 +15,9 @@ import Select from 'material-ui/Select';
 import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 
-import { gordonColors } from '../../../../../../theme';
-import user from '../../../../../../services/user';
-import membership from '../../../../../../services/membership';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import membership from 'services/membership';
 
 export default class MemberDetail extends Component {
   constructor(props) {
@@ -72,7 +72,7 @@ export default class MemberDetail extends Component {
   }
 
   // Updates participation level dropdown
-  handleSelect = event => {
+  handleSelect = (event) => {
     this.setState({ participationDescription: event.target.value });
     switch (event.target.value) {
       case 'Member':
@@ -89,7 +89,7 @@ export default class MemberDetail extends Component {
     }
   };
 
-  handleText = name => event => {
+  handleText = (name) => (event) => {
     this.setState({ [name]: event.target.value });
   };
 

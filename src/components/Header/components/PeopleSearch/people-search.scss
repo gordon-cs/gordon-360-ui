@@ -9,6 +9,7 @@
     -webkit-overflow-scrolling: touch;
     right: 20px;
     border-radius: 4px;
+    z-index: 10;
   }
 
   .h {
@@ -36,9 +37,8 @@
   }
 
   .people-search-dropdown:hover .people-search-suggestion-selected {
-    background-color: white;
+    background-color: $neutral-white;
   }
-
 
   // .loading is shown first. After 350ms, .loading opacity and font-size go to 0. This is done
   // to give space for .no-results to increase in font size and change to normal opacity.
@@ -52,8 +52,14 @@
   }
 
   @keyframes show-no-results {
-    0% {font-size: 90%; opacity: 1;}
-    100% {font-size: 90%; opacity: 1;}
+    0% {
+      font-size: 90%;
+      opacity: 1;
+    }
+    100% {
+      font-size: 90%;
+      opacity: 1;
+    }
   }
 
   .loading {
@@ -64,8 +70,14 @@
   }
 
   @keyframes show-loading {
-    0% {font-size: 0; opacity: 0;}
-    100% {font-size: 0; opacity: 0;}
+    0% {
+      font-size: 0;
+      opacity: 0;
+    }
+    100% {
+      font-size: 0;
+      opacity: 0;
+    }
   }
 
   @media (min-width: 0px) {
@@ -184,10 +196,10 @@
     border: 1px solid $neutral-white;
     padding: 2px 10px;
     &:focus-within {
-      box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.25);
+      box-shadow: 0 3px 10px 0 $neutral-black-opacity20;
     }
     &:hover:not(:focus-within) {
-      box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.25);
+      box-shadow: 0 3px 5px 0 $neutral-black-opacity20;
     }
   }
 }

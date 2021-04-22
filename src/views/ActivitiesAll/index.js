@@ -11,14 +11,14 @@ import {
 } from '@material-ui/core';
 import React, { Component } from 'react';
 import './activities-all.css';
-import activity from '../../services/activity';
-import session from '../../services/session';
+import activity from 'services/activity';
+import session from 'services/session';
 import GordonActivityGrid from './components/ActivityGrid';
-import GordonLoader from '../../components/Loader';
-import user from './../../services/user';
-import { gordonColors } from '../../theme';
+import GordonLoader from 'components/Loader';
+import user from 'services/user';
+import { gordonColors } from 'theme';
 import Requests from './components/Requests';
-import storage from '../../services/storage';
+import storage from 'services/storage';
 
 export default class GordonActivitiesAll extends Component {
   constructor(props) {
@@ -44,7 +44,7 @@ export default class GordonActivitiesAll extends Component {
   }
 
   async componentDidUpdate() {
-    window.onpopstate = e => {
+    window.onpopstate = (e) => {
       window.location.reload();
     };
   }
@@ -80,7 +80,7 @@ export default class GordonActivitiesAll extends Component {
         activity.getTypes(tempSession),
       ]);
     }
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       try {
         const profile = await user.getProfileInfo();
         const myInvolvements = await user.getSessionMembershipsWithoutGuests(
@@ -179,7 +179,7 @@ export default class GordonActivitiesAll extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -230,7 +230,7 @@ export default class GordonActivitiesAll extends Component {
         allActivities,
         types,
         // If authenticated, gets the user's involvements for the selected session
-        myInvolvements: this.props.Authentication
+        myInvolvements: this.props.authentication
           ? await user.getSessionMembershipsWithoutGuests(this.state.profile.ID, this.state.session)
           : [],
         loading: false,
@@ -246,7 +246,7 @@ export default class GordonActivitiesAll extends Component {
    * @returns {Function} An asynchronous function that filters the activities based upon an event's data
    */
   filter(name) {
-    return event => {
+    return (event) => {
       this.setState({ [name]: event.target.value }, () => {
         const { allActivities, type, search } = this.state;
         this.setState({ activities: activity.filter(allActivities, type, search) });
@@ -272,7 +272,7 @@ export default class GordonActivitiesAll extends Component {
     else {
       // Gets the description of the session
       try {
-        let involvementDescription = this.state.sessions.filter(session => {
+        let involvementDescription = this.state.sessions.filter((session) => {
           return this.state.session === session.SessionCode;
         })[0].SessionDescription;
         myInvolvementsHeadingText = involvementDescription.toUpperCase();
@@ -330,7 +330,7 @@ export default class GordonActivitiesAll extends Component {
             </MenuItem>
           ))
         : this.state.sessions
-            .filter(item => item.SessionCode === this.state.session)
+            .filter((item) => item.SessionCode === this.state.session)
             .map(({ SessionDescription: description, SessionCode: code }) => (
               <MenuItem label={description} value={code} key={code}>
                 {description}
@@ -338,7 +338,7 @@ export default class GordonActivitiesAll extends Component {
             ));
 
     // Creates the current session's types list
-    const typeOptions = this.state.types.map(type => (
+    const typeOptions = this.state.types.map((type) => (
       <MenuItem value={type} key={type}>
         {type}
       </MenuItem>
@@ -392,7 +392,7 @@ export default class GordonActivitiesAll extends Component {
 
         <Grid container align="center" spacing={4} justify="center">
           {/* Shows the user's memberships requests if the user is online */}
-          {this.state.network === 'online' && this.props.Authentication && (
+          {this.state.network === 'online' && this.props.authentication && (
             <Grid item xs={12} lg={8}>
               <Card>
                 <Requests />
@@ -401,7 +401,7 @@ export default class GordonActivitiesAll extends Component {
           )}
 
           {/* Shows My Involvements Header if the user is authenticated */}
-          {this.props.Authentication && (
+          {this.props.authentication && (
             <Grid item xs={12} lg={8} fullWidth>
               <Card>
                 <div style={headerStyle}>
@@ -414,7 +414,7 @@ export default class GordonActivitiesAll extends Component {
           )}
 
           {/* Shows My Involvements Content if the user is authenticated */}
-          {this.props.Authentication && (
+          {this.props.authentication && (
             <Grid item xs={12} lg={8}>
               {myInvolvements}
             </Grid>

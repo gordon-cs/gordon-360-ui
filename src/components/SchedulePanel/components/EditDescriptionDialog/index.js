@@ -1,11 +1,8 @@
 import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import { gordonColors } from '../../../../theme';
+import { gordonColors } from 'theme';
 import './editdescriptiondialog.css';
+
+import { Dialog, DialogTitle, DialogActions, Button, TextField } from '@material-ui/core';
 
 export default class EditDescriptionDialog extends React.Component {
   constructor(props) {
@@ -27,18 +24,16 @@ export default class EditDescriptionDialog extends React.Component {
     }
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     var desc = this.state.descInput;
     this.props.onDialogSubmit(desc);
     this.handleClose();
   };
 
-  handleChange = name => e => {
+  handleChange = (name) => (e) => {
     this.setState({ [name]: e.target.value }, () => {});
   };
-
-
 
   handleClose = () => {
     this.props.handleEditDescriptionClose();

@@ -1,8 +1,5 @@
-import Divider from '@material-ui/core/Divider';
 import React, { Component } from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import { Divider, ListItem, Typography, Grid } from '@material-ui/core';
 
 export default class Minors extends Component {
   constructor(props) {
@@ -26,7 +23,7 @@ export default class Minors extends Component {
       // very last. If there's only one minor, no comma will appear
       let minorText = '';
 
-      this.props.minors.forEach(minor => {
+      this.props.minors.forEach((minor) => {
         // NOTE: The difference between the two statements that adds text to the variable
         // "majorText" is that one of them adds BOTH a comma and a space
         minor === lastItem ? (minorText += `${minor}`) : (minorText += `${minor}, `);

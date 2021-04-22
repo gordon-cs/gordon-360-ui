@@ -1,20 +1,10 @@
-import Grid from '@material-ui/core/Grid';
-import CardHeader from '@material-ui/core/CardHeader';
 import React, { useState, useEffect, useRef } from 'react';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
 import Dropzone from 'react-dropzone';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Typography from '@material-ui/core/Typography';
 import EmailIcon from '@material-ui/icons/Email';
-import user from '../../services/user';
-import { gordonColors } from '../../theme';
+import user from 'services/user';
+import { gordonColors } from 'theme';
 import LinksDialog from './Components/LinksDialog/index';
-import { socialMediaInfo } from '../../socialMedia';
+import { socialMediaInfo } from 'socialMedia';
 import { Link } from 'react-router-dom';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -22,14 +12,27 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import WarningIcon from '@material-ui/icons/Warning';
 import CloseIcon from '@material-ui/icons/Close';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
 import defaultGordonImage from './defaultGordonImage';
-import GordonLoader from '../Loader/index';
-import { windowBreakWidths } from '../../theme';
+import GordonLoader from 'components/Loader/index';
+import { windowBreakWidths } from 'theme';
 import './index.css';
 
-export const Identification = props => {
+import {
+  Grid,
+  CardHeader,
+  Button,
+  Tooltip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+  Snackbar,
+  IconButton,
+} from '@material-ui/core';
+
+export const Identification = (props) => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState(null);
   const [defaultUserImage, setDefaultUserImage] = useState(null);
@@ -46,13 +49,14 @@ export const Identification = props => {
   const [linkedInLink, setLinkedInLink] = useState('');
   const [twitterLink, setTwitterLink] = useState('');
   const [instagramLink, setInstagramLink] = useState('');
+  const [handshakeLink, setHandshakeLink] = useState('');
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState(false);
   const [snackbarKey, setSnackbarKey] = useState(0); // A key to make every snackbar display unique
   const [snackbarType, setSnackbarType] = useState(''); // Either success or error
   const [userProfile, setUserProfile] = useState(null);
   const [currentWidth, setCurrentWidth] = useState(null);
-  const cropper = useRef();
+  const cropperRef = useRef();
   let photoDialogErrorTimeout = null;
 
   // Styles used throughout this component
@@ -115,6 +119,7 @@ export const Identification = props => {
                * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
                */
               await user.getImage(props.profile.AD_Username);
+
         // Sets the given user's preferred image. If a default image is given but the preferred is undefined,
         // then this could mean that the currently signed-in user is not allowed to see the preferred image or
         // a preferred image wasn't set
@@ -151,6 +156,11 @@ export const Identification = props => {
         !props.profile.Instagram || props.profile.Instagram === ''
           ? ''
           : socialMediaInfo.instagram.prefix + props.profile.Instagram,
+      );
+      setHandshakeLink(
+        !props.profile.Handshake || props.profile.Handshake === ''
+          ? ''
+          : socialMediaInfo.handshake.prefix + props.profile.Handshake,
       );
     }
 
@@ -189,7 +199,7 @@ export const Identification = props => {
       }
 
       // An event listener for when the browser size changes to get the current Material-UI breakpoint
-      window.addEventListener('resize', event => {
+      window.addEventListener('resize', (event) => {
         setCurrentWidth(getMaterialUIBreakpoint(event.target.innerWidth));
       });
       // Sets the current Material-UI Breakpoint
@@ -211,7 +221,9 @@ export const Identification = props => {
    */
   function handleCloseSubmit() {
     if (showCropper != null) {
-      let croppedImage = cropper.current.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      let croppedImage = cropperRef.current.cropper
+        .getCroppedCanvas({ width: CROP_DIM })
+        .toDataURL();
       let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       let response = user.postImage(croppedImage);
       response
@@ -447,7 +459,7 @@ export const Identification = props => {
   function onDropAccepted(fileList) {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
-    reader.onload = function() {
+    reader.onload = function () {
       var dataURL = reader.result.toString();
       var i = new Image();
       i.onload = async () => {
@@ -483,7 +495,7 @@ export const Identification = props => {
   function onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      cropper.current.zoomTo(1);
+      cropperRef.current.cropper.zoomTo(1);
     }
   }
 
@@ -550,7 +562,7 @@ export const Identification = props => {
             {showCropper && (
               <div className="gc360-photo-dialog-box_content_cropper">
                 <Cropper
-                  ref={cropper}
+                  ref={cropperRef}
                   src={showCropper}
                   style={{
                     'max-width': maxCropPreviewWidth(),
@@ -653,6 +665,8 @@ export const Identification = props => {
         setLinkedInLink={setLinkedInLink}
         instagramLink={instagramLink}
         setInstagramLink={setInstagramLink}
+        handshakeLink={handshakeLink}
+        setHandshakeLink={setHandshakeLink}
       />
     ) : (
       <></>
@@ -663,6 +677,7 @@ export const Identification = props => {
   let twitterButton;
   let linkedInButton;
   let instagramButton;
+  let handshakeButton;
   let editButton;
   let linkCount = 0; // To record whether or not any links are displayed
 
@@ -721,6 +736,21 @@ export const Identification = props => {
           rel="noopener noreferrer"
         >
           {socialMediaInfo.instagram.icon}
+        </a>
+      </Grid>
+    );
+    linkCount += 1;
+  }
+  if (handshakeLink !== '') {
+    handshakeButton = (
+      <Grid item>
+        <a
+          href={handshakeLink}
+          className="gc360-my-profile_icon"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {socialMediaInfo.handshake.icon}
         </a>
       </Grid>
     );
@@ -825,6 +855,7 @@ export const Identification = props => {
                     twitterButton ||
                     linkedInButton ||
                     instagramButton ||
+                    handshakeButton ||
                     props.myProf) && (
                     <Grid
                       item
@@ -839,6 +870,7 @@ export const Identification = props => {
                         {twitterButton}
                         {linkedInButton}
                         {instagramButton}
+                        {handshakeButton}
                         {props.network === 'online' && props.myProf && editButton}
                       </Grid>
                     </Grid>

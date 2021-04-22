@@ -1,9 +1,7 @@
 import React, { Fragment } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
-import { gordonColors } from '../../../../theme';
+import { gordonColors } from 'theme';
+
+import { Dialog, DialogTitle, DialogActions, Button } from '@material-ui/core';
 
 export default class RemoveScheduleDialog extends React.Component {
   constructor(props) {
@@ -14,13 +12,11 @@ export default class RemoveScheduleDialog extends React.Component {
     };
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.onDialogSubmit();
     this.props.handleRemoveMyScheduleClose();
   };
-
-
 
   render() {
     const button = {

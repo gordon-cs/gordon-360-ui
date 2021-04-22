@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
 import IMG from 'react-graceful-image';
-import { Typography } from '@material-ui/core';
+import { Typography, Grid, Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import user from '../../../../services/user';
-import Divider from '@material-ui/core/Divider';
+import user from 'services/user';
 import { Link } from 'react-router-dom';
 
 import './mobilePeopleSearchResult.css';
-import '../../../../app.css';
 
 export default class PeopleSearchResult extends Component {
   constructor(props) {
@@ -99,7 +96,10 @@ export default class PeopleSearchResult extends Component {
       Person.Mail_Location !== null &&
       Person.Mail_Location !== ''
     ) {
-      personMailLocation = 'Mailbox #' + Person.Mail_Location;
+      personMailLocation =
+        Person.Type === 'Student'
+          ? 'Mailbox #' + Person.Mail_Location
+          : 'Mailstop ' + Person.Mail_Location;
     }
 
     return (
@@ -127,7 +127,7 @@ export default class PeopleSearchResult extends Component {
             <Grid
               item
               style={{
-                // a set width is necessary to keep profile images in line 
+                // a set width is necessary to keep profile images in line
                 // while maintaining center alignment
                 width: '260px',
               }}

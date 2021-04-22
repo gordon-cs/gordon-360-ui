@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import Email from '@material-ui/icons/Email';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
 
-import GordonLoader from '../../../../components/Loader';
+import GordonLoader from 'components/Loader';
+
+import { IconButton, List, ListItem, Typography } from '@material-ui/core';
 
 export default class GroupContacts extends Component {
   constructor(props) {
@@ -43,7 +41,7 @@ export default class GroupContacts extends Component {
               <strong>Group Contacts:</strong>
             </Typography>
             <List dense disablePadding>
-              {groupAdmin.map(activityGroupAdmin => (
+              {groupAdmin.map((activityGroupAdmin) => (
                 <ListItem className="contacts" key={activityGroupAdmin.Email}>
                   <IconButton
                     classes={{ root: 'email-button' }}

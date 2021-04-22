@@ -53,7 +53,7 @@ import http from './http';
  * @return {Promise<any>} Response
  */
 function addMembership(data) {
-  return http.post('memberships', data).catch(reason => {
+  return http.post('memberships', data).catch((reason) => {
     console.log(reason);
   });
 }
@@ -63,7 +63,7 @@ function addMembership(data) {
  * @param {String} requestID Request object
  * @return {Promise<any>} Response
  */
-const approveRequest = requestID => {
+const approveRequest = (requestID) => {
   return http.post(`requests/${requestID}/approve`);
 };
 
@@ -75,7 +75,7 @@ const approveRequest = requestID => {
  * @return {boolean} True if given id is a group admin, else false
  */
 const checkAdmin = (id, sessionCode, activityCode) => {
-  let isGroupAdmin = getAllGroupAdmins(activityCode).then(function(result) {
+  let isGroupAdmin = getAllGroupAdmins(activityCode).then(function (result) {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
         if (result[i].SessionCode === sessionCode) {
@@ -95,7 +95,7 @@ const checkAdmin = (id, sessionCode, activityCode) => {
  * @param {String} requestID Request object
  * @return {Promise<any>} Response
  */
-const denyRequest = requestID => {
+const denyRequest = (requestID) => {
   return http.post(`requests/${requestID}/deny`);
 };
 
@@ -104,7 +104,7 @@ const denyRequest = requestID => {
  * @param {String} requestID request id
  * @return {Promise.<Object>} deleted object
  */
-const cancelRequest = requestID => {
+const cancelRequest = (requestID) => {
   return http.del(`requests/${requestID}`);
 };
 
@@ -141,28 +141,18 @@ const filterCurrent = (memberArray, sessionCode) => {
  * @return {Member[]} List of members in given session
  */
 const get = (activityCode, sessionCode) => {
-  let allMembership = getAll(activityCode).then(function(result) {
+  let allMembership = getAll(activityCode).then(function (result) {
     return filterCurrent(result, sessionCode);
   });
   return allMembership;
 };
 
 //Change the privacy value for a club membership
-const toggleMembershipPrivacy = async userMembership => {
-  let currentMembershipPrivacy = userMembership.Privacy;
-  let newMembershipPrivacy = !currentMembershipPrivacy;
-  let setMembershipPrivacy = async function(value) {
-    return await http
-      .put('memberships/' + userMembership.MembershipID + '/privacy/' + value, value)
-      .then(() => {
-        // Changes the membership's privacy to the new privacy
-        userMembership.Privacy = newMembershipPrivacy;
-        return true;
-      })
-      .catch(false);
-  };
-
-  return setMembershipPrivacy(newMembershipPrivacy);
+const toggleMembershipPrivacy = async (userMembership) => {
+  return await http.put(
+    `memberships/${userMembership.MembershipID}/privacy/${!userMembership.Privacy}`,
+    !userMembership.Privacy,
+  );
 };
 
 /**
@@ -170,14 +160,14 @@ const toggleMembershipPrivacy = async userMembership => {
  * @param {String} activityCode Identifier for an activity
  * @return {Member[]} List of all memberships for activity
  */
-const getAll = activityCode => http.get(`memberships/activity/${activityCode}`);
+const getAll = (activityCode) => http.get(`memberships/activity/${activityCode}`);
 
 /**
  * Get all group admins
  * @param {String} activityCode Identifier for an activity
  * @return {Member[]} List of all group admins
  */
-const getAllGroupAdmins = activityCode =>
+const getAllGroupAdmins = (activityCode) =>
   http.get(`memberships/activity/${activityCode}/group-admin`);
 
 /**
@@ -185,7 +175,7 @@ const getAllGroupAdmins = activityCode =>
  * @param {String} email Email
  * @return {Object} Email details
  */
-const getEmailAccount = async email => {
+const getEmailAccount = async (email) => {
   return await http.get(`accounts/email/${email}/`);
 };
 
@@ -212,8 +202,8 @@ const getMembersNum = (activityCode, sessionCode) =>
  * @param {String} userID ID of user
  * @return {Member[]} Array of the given student's memberships
  */
-const getIndividualMembership = userID =>
-  http.get(`memberships/student/${userID}`).then(function(result) {
+const getIndividualMembership = (userID) =>
+  http.get(`memberships/student/${userID}`).then(function (result) {
     return result;
   });
 
@@ -224,7 +214,7 @@ const getIndividualMembership = userID =>
  * @return {Request[]} List of requests for activity and session
  */
 const getRequests = (activityCode, sessionCode) => {
-  let allRequests = http.get(`requests/activity/${activityCode}`).then(function(result) {
+  let allRequests = http.get(`requests/activity/${activityCode}`).then(function (result) {
     return filterCurrentRequests(result, sessionCode);
   });
   return allRequests;
@@ -251,7 +241,7 @@ const filterCurrentRequests = (requestsArray, sessionCode) => {
 
 // Get the difference in days bewteen today and specified date
 // Returns integer and printable string
-const getDiffDays = function(date) {
+const getDiffDays = function (date) {
   let currentDate = new Date();
   let requestDate = new Date(date);
   let timeDiff = Math.abs(currentDate.getTime() - requestDate.getTime());
@@ -272,7 +262,7 @@ const getDiffDays = function(date) {
  * @param {String} membershipID The membershipID to remove
  * @return {Promise.<Object>} Response body
  */
-const remove = membershipID => {
+const remove = (membershipID) => {
   return http.del(`memberships/${membershipID}`);
 };
 
@@ -282,7 +272,7 @@ const remove = membershipID => {
  * @return {Promise<Object>} Response body
  */
 function requestMembership(data) {
-  return http.post(`requests`, data).catch(reason => {
+  return http.post(`requests`, data).catch((reason) => {
     console.log(reason);
   });
 }
@@ -296,7 +286,7 @@ function requestMembership(data) {
  *                  and membershipID if in specific activity and session
  */
 const search = (id, sessionCode, activityCode) => {
-  let found = http.get(`memberships/student/${id}`).then(function(result) {
+  let found = http.get(`memberships/student/${id}`).then(function (result) {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
         if (result[i].SessionCode === sessionCode) {

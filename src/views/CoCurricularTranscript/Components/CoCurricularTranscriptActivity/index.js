@@ -6,12 +6,12 @@ export default class Activity extends Component {
   // where SE is 09 for fall, 01 for spring, 05 for summer
 
   // Returns: string of year in format YYYY
-  sliceYear = sesCode => {
+  sliceYear = (sesCode) => {
     return sesCode.slice(0, 4);
   };
 
   // Returns: string of month (Mon), month being the first month of the given semester
-  sliceStart = sesCode => {
+  sliceStart = (sesCode) => {
     switch (sesCode.slice(4, 6)) {
       case '09':
         return 'Sep';
@@ -26,7 +26,7 @@ export default class Activity extends Component {
   };
 
   // Returns: string of month (Mon), month being last month of the given semester
-  sliceEnd = sesCode => {
+  sliceEnd = (sesCode) => {
     switch (sesCode.slice(4, 6)) {
       case '09':
         return 'Dec';
@@ -46,7 +46,7 @@ export default class Activity extends Component {
   //                             year in which the later session started (YYYY)]
   // Returns: true if given month-year pairs are consecutive, false otherwise. Summers are not
   //        considered a break consecutiveness because there are no summer activities. */
-  checkConsecutiveness = dates => {
+  checkConsecutiveness = (dates) => {
     return (
       dates[1] === dates[3] ||
       (parseInt(dates[1], 10) + 1 === parseInt(dates[3], 10) &&
@@ -60,9 +60,9 @@ export default class Activity extends Component {
 
   // Param: sessionsList - a list of sessionCodes
   // Returns: A string representing the duration of the user's membership based on the sessionsList
-  formatDuration = sessionsList => {
+  formatDuration = (sessionsList) => {
     let duration = '';
-    sessionsList.sort(function(sessA, sessB) {
+    sessionsList.sort(function (sessA, sessB) {
       return sessA - sessB;
     });
 

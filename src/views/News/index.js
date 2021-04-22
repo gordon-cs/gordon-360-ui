@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
 import PostAddIcon from '@material-ui/icons/PostAdd';
-import Typography from '@material-ui/core/Typography';
-import newsService from './../../services/news';
-import userService from './../../services/user';
-import NewsList from '../News/components/NewsList';
-import GordonLoader from '../../components/Loader';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import MenuItem from '@material-ui/core/MenuItem';
-import { Snackbar, IconButton } from '@material-ui/core';
+import newsService from 'services/news';
+import userService from 'services/user';
+import NewsList from './components/NewsList';
+import GordonLoader from 'components/Loader';
+import {
+  Snackbar,
+  IconButton,
+  Grid,
+  TextField,
+  Button,
+  Fab,
+  Typography,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
 // import Dropzone from 'react-dropzone';
@@ -41,7 +45,6 @@ const styles = {
 };
 
 export default class StudentNews extends Component {
-  
   constructor(props) {
     super(props);
     this.state = {
@@ -71,7 +74,7 @@ export default class StudentNews extends Component {
   }
 
   componentWillMount() {
-    this.setState({ loading: false })
+    this.setState({ loading: false });
     this.loadNews();
     this.loadUsername();
   }
@@ -84,13 +87,13 @@ export default class StudentNews extends Component {
   }
 
   handlePostClick() {
-    this.setState({ 
+    this.setState({
       openPostActivity: true,
     });
   }
 
   handleWindowClose() {
-    this.setState({ 
+    this.setState({
       openPostActivity: false,
       newPostCategory: '',
       newPostSubject: '',
@@ -105,45 +108,47 @@ export default class StudentNews extends Component {
     if (reason === 'clickaway') {
       return;
     }
-    this.setState({snackbarOpen: false});
+    this.setState({ snackbarOpen: false });
   };
 
   // 'New Post' Handlers
   onChange(event) {
-    if(event.target.name === null || event.target.name === '') {
-      throw new Error("The name of the input must be set " +
-                "to the appropriate 'state' property value " +
-                "for the onChange() function to work");
+    if (event.target.name === null || event.target.name === '') {
+      throw new Error(
+        'The name of the input must be set ' +
+          "to the appropriate 'state' property value " +
+          'for the onChange() function to work',
+      );
     }
-    this.setState({[event.target.name]: event.target.value});
+    this.setState({ [event.target.name]: event.target.value });
   }
 
-  callFunction(functionName, param) {    
-    if(functionName == null) {
-      throw new Error("Function name not specified to callFunction (news)");
+  callFunction(functionName, param) {
+    if (functionName == null) {
+      throw new Error('Function name not specified to callFunction (news)');
     }
-    switch(functionName) {
+    switch (functionName) {
       case 'updateSnackbar':
-        if(param == null) {
+        if (param == null) {
           throw new Error("callFunction 'Update Snackbar' requires a parameter (news)");
         }
         this.updateSnackbar(param);
         break;
       case 'handleNewsItemEdit':
-        if(param == null) {
+        if (param == null) {
           throw new Error("callFunction 'handleNewsItemEdit' requires a parameter (news)");
         }
         this.handleNewsItemEdit(param);
         break;
       default:
-        console.log("callFunction function name not applicable, double check your parameter");
-      }
+        console.log('callFunction function name not applicable, double check your parameter');
+    }
   }
 
   // Function called when 'edit' clicked for a news item
   async handleNewsItemEdit(newsID) {
     let newsItem = await newsService.getPostingByID(newsID);
-    this.setState({ 
+    this.setState({
       openPostActivity: true,
       newPostCategory: newsItem.categoryID,
       newPostSubject: newsItem.Subject,
@@ -162,17 +167,16 @@ export default class StudentNews extends Component {
     let newsID = this.state.currentlyEditing;
     // create the JSON newData object to update with
     let newData = {
-      categoryID: this.state.newPostCategory, 
+      categoryID: this.state.newPostCategory,
       Subject: this.state.newPostSubject,
       Body: this.state.newPostBody,
     };
 
     // update the news item and give feedback
     let result = await newsService.editStudentNews(newsID, newData);
-    if(result === undefined) {
+    if (result === undefined) {
       this.updateSnackbar('News Posting Failed to Update');
-    }
-    else {
+    } else {
       this.updateSnackbar('News Posting Updated Successfully');
     }
 
@@ -185,17 +189,16 @@ export default class StudentNews extends Component {
   async handleSubmit() {
     // create the JSON newsItem object to post
     let newsItem = {
-      categoryID: this.state.newPostCategory, 
+      categoryID: this.state.newPostCategory,
       Subject: this.state.newPostSubject,
       Body: this.state.newPostBody,
     };
 
     // submit the news item and give feedback
     let result = await newsService.submitStudentNews(newsItem);
-    if(result === undefined) {
+    if (result === undefined) {
       this.updateSnackbar('News Posting Failed to Submit');
-    }
-    else {
+    } else {
       this.updateSnackbar('News Posting Submitted Successfully');
     }
 
@@ -209,13 +212,13 @@ export default class StudentNews extends Component {
   async loadNews() {
     this.setState({ loading: true });
 
-    if (this.props.Authentication) {
+    if (this.props.authentication) {
       const newsCategories = await newsService.getCategories();
       const personalUnapprovedNews = await newsService.getPersonalUnapprovedFormatted();
       const unexpiredNews = await newsService.getNotExpiredFormatted();
-      this.setState({ 
+      this.setState({
         loading: false,
-        categories: newsCategories, 
+        categories: newsCategories,
         news: unexpiredNews,
         personalUnapprovedNews: personalUnapprovedNews,
         filteredNews: unexpiredNews,
@@ -225,10 +228,10 @@ export default class StudentNews extends Component {
       // alert("Please sign in to access student news");
     }
   }
-  
+
   // TODO: Currently disabled and unused
   search() {
-    return async event => {
+    return async (event) => {
       // await ensures state has been updated before continuing
       await this.setState({
         search: event.target.value,
@@ -262,12 +265,12 @@ export default class StudentNews extends Component {
     window.removeEventListener('resize', this.resize);
   }
 
-
   render() {
     // if all of the inputs are filled, enable 'submit' button
-    let submitButtonDisabled = this.state.newPostCategory === '' ||
-                         this.state.newPostSubject === '' || 
-                         this.state.newPostBody === '';
+    let submitButtonDisabled =
+      this.state.newPostCategory === '' ||
+      this.state.newPostSubject === '' ||
+      this.state.newPostBody === '';
     let content;
 
     /* Used to re-render the page when the network connection changes.
@@ -275,7 +278,7 @@ export default class StudentNews extends Component {
      *  multiple re-renders that creates extreme performance lost.
      *  The origin of the message is checked to prevent cross-site scripting attacks
      */
-    window.addEventListener('message', event => {
+    window.addEventListener('message', (event) => {
       if (
         event.data === 'online' &&
         this.state.network === 'offline' &&
@@ -296,17 +299,19 @@ export default class StudentNews extends Component {
      */
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
-    if(this.props.Authentication) {
-
+    if (this.props.authentication) {
       if (this.state.loading === true) {
         content = <GordonLoader />;
-      } else if (this.state.news.length > 0) {
-        content = <NewsList 
-          news={this.state.filteredNews} 
-          personalUnapprovedNews={this.state.personalUnapprovedNews}
-          updateSnackbar={this.updateSnackbar}
-          currentUsername={this.state.currentUsername}
-          callFunction={this.callFunction} />;
+      } else if (this.state.news.length > 0 || this.state.personalUnapprovedNews.length > 0) {
+        content = (
+          <NewsList
+            news={this.state.filteredNews}
+            personalUnapprovedNews={this.state.personalUnapprovedNews}
+            updateSnackbar={this.updateSnackbar}
+            currentUsername={this.state.currentUsername}
+            callFunction={this.callFunction}
+          />
+        );
       } else {
         content = (
           <Grid item>
@@ -316,27 +321,32 @@ export default class StudentNews extends Component {
       }
 
       let submitButton = (
-        <Button 
+        <Button
           variant="contained"
           color="primary"
           onClick={this.handleSubmit.bind(this)}
-          disabled={submitButtonDisabled}>
+          disabled={submitButtonDisabled}
+        >
           Submit
         </Button>
       );
       let editButton = (
-        <Button 
+        <Button
           variant="contained"
           color="primary"
           onClick={this.handleUpdate.bind(this)}
-          disabled={submitButtonDisabled}>
+          disabled={submitButtonDisabled}
+        >
           Update
         </Button>
       );
 
       let news;
       // If the user is online
-      if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
+      if (
+        networkStatus === 'online' ||
+        (networkStatus === 'offline' && this.props.authentication)
+      ) {
         news = (
           <section>
             {/* Button to Create Posting */}
@@ -351,10 +361,15 @@ export default class StudentNews extends Component {
             </Fab>
 
             <Grid container justify="center">
-              
               {/* Search */}
               <Grid item xs={12} md={12} lg={8}>
-                <Grid container alignItems="baseline" justify="center" style={styles.searchBar} spacing={5}>
+                <Grid
+                  container
+                  alignItems="baseline"
+                  justify="center"
+                  style={styles.searchBar}
+                  spacing={5}
+                >
                   <Grid item xs={10} sm={8} md={8} lg={6}>
                     <TextField
                       id="search"
@@ -368,114 +383,113 @@ export default class StudentNews extends Component {
                 </Grid>
               </Grid>
 
-              {/* NOTE: leaving helper text for now in case 
+              {/* NOTE: leaving helper text for now in case
               that is better than disabling submit button */}
               {/* Create Posting */}
               <Dialog open={this.state.openPostActivity} fullWidth>
-                    <DialogTitle> Post on Student News </DialogTitle>
-                    <DialogContent>
-                      <Grid container>
-                        {/* CATEGORY ENTRY */}
-                        <Grid item>
-                            <TextField
-                              select
-                              label="Category"
-                              name="newPostCategory"
-                              value={this.state.newPostCategory}
-                              onChange={this.onChange.bind(this)}
-                              // helperText="Please choose a category."
-                              style={{minWidth: '7rem'}}
-                            >
-                              {this.state.categories.map((category) => 
-                                <MenuItem 
-                                  key={category.categoryID}
-                                  value={category.categoryID}>
-                                  {category.categoryName}
-                                </MenuItem>
-                              )}
-                            </TextField>
-                        </Grid>
-                        
-                        {/* SUBJECT ENTRY */}
-                        <Grid item xs={12}>
-                          <TextField
-                            label="Subject"
-                            margin="dense"
-                            fullWidth
-                            name="newPostSubject"
-                            value={this.state.newPostSubject}
-                            onChange={this.onChange.bind(this)}
-                            // helperText="Please enter a subject."
-                          />
-                        </Grid>
+                <DialogTitle> Post on Student News </DialogTitle>
+                <DialogContent>
+                  <Grid container>
+                    {/* CATEGORY ENTRY */}
+                    <Grid item>
+                      <TextField
+                        select
+                        label="Category"
+                        name="newPostCategory"
+                        value={this.state.newPostCategory}
+                        onChange={this.onChange.bind(this)}
+                        // helperText="Please choose a category."
+                        style={{ minWidth: '7rem' }}
+                      >
+                        {this.state.categories.map((category) => (
+                          <MenuItem key={category.categoryID} value={category.categoryID}>
+                            {category.categoryName}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
 
-                        {/* BODY ENTRY */}
-                        <Grid item xs={12}>
-                          <TextField
-                            label="Body"
-                            margin="normal"
-                            multiline
-                            fullWidth
-                            rows={4}
-                            variant="outlined"
-                            name="newPostBody"
-                            value={this.state.newPostBody}
-                            onChange={this.onChange.bind(this)}
-                            // helperText="Please enter a body."
-                          />
-                        </Grid>
+                    {/* SUBJECT ENTRY */}
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Subject"
+                        margin="dense"
+                        fullWidth
+                        name="newPostSubject"
+                        value={this.state.newPostSubject}
+                        onChange={this.onChange.bind(this)}
+                        // helperText="Please enter a subject."
+                      />
+                    </Grid>
 
-                        {/* Image dropzone will be added here */}
-                        {/* <Grid item xs={12}>
+                    {/* BODY ENTRY */}
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Body"
+                        margin="normal"
+                        multiline
+                        fullWidth
+                        rows={4}
+                        variant="outlined"
+                        name="newPostBody"
+                        value={this.state.newPostBody}
+                        onChange={this.onChange.bind(this)}
+                        // helperText="Please enter a body."
+                      />
+                    </Grid>
+
+                    {/* Image dropzone will be added here */}
+                    {/* <Grid item xs={12}>
                           <Dropzone></Dropzone>
                         </Grid> */}
-                        <Grid item>
-                           {/* SUBMISSION GUIDELINES */}
-                          <Typography variant="caption" color="textSecondary" display="block" >
-                            Student News is intended for announcing Gordon sponsored events, lost
-                             and found, rides, etc. All submissions must follow the Student News 
-                             guidelines and will be reviewed at the discretion of 
-                             The Office of Student Life... 
-                             <a
-                                href="https://gordonedu.sharepoint.com/:b:/g/StudentLife/admin/EY22_o3g6vFEsfT2nYY-8JwB34OlYmA1oaE1f4FTGD2gew"
-                              >
-                                More Details
-                              </a>
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </DialogContent>
+                    <Grid item>
+                      {/* SUBMISSION GUIDELINES */}
+                      <Typography variant="caption" color="textSecondary" display="block">
+                        Student News is intended for announcing Gordon sponsored events, lost and
+                        found, rides, etc. All submissions must follow the Student News guidelines
+                        and will be reviewed at the discretion of The Office of Student Life...
+                        <a href="https://gordonedu.sharepoint.com/:b:/g/StudentLife/admin/EY22_o3g6vFEsfT2nYY-8JwB34OlYmA1oaE1f4FTGD2gew">
+                          More Details
+                        </a>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </DialogContent>
 
-                    {/* CANCEL/SUBMIT/EDIT */}
-                    {<DialogActions>
-                      <Button 
-                        variant="contained" 
-                        onClick={this.handleWindowClose.bind(this)}>
-                        Cancel
-                      </Button>
-                      {this.state.currentlyEditing === false ? submitButton : editButton}
-                    </DialogActions>}
-                  </Dialog>
+                {/* CANCEL/SUBMIT/EDIT */}
+                {
+                  <DialogActions>
+                    <Button variant="contained" onClick={this.handleWindowClose.bind(this)}>
+                      Cancel
+                    </Button>
+                    {this.state.currentlyEditing === false ? submitButton : editButton}
+                  </DialogActions>
+                }
+              </Dialog>
 
-                  {/* USER FEEDBACK */}
-                  <Snackbar
-                    open={this.state.snackbarOpen}
-                    message={this.state.snackbarMessage}
-                    onClose={this.handleSnackbarClose}
-                    autoHideDuration='5000'
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                    }}
-                    action={[
-                      <IconButton key="close" aria-label="Close" 
-                                  color="inherit" onClick={this.handleSnackbarClose}>
-                        <CloseIcon />
-                      </IconButton>,
-                    ]}
-                  ></Snackbar>
+              {/* USER FEEDBACK */}
+              <Snackbar
+                open={this.state.snackbarOpen}
+                message={this.state.snackbarMessage}
+                onClose={this.handleSnackbarClose}
+                autoHideDuration="5000"
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                action={[
+                  <IconButton
+                    key="close"
+                    aria-label="Close"
+                    color="inherit"
+                    onClick={this.handleSnackbarClose}
+                  >
+                    <CloseIcon />
+                  </IconButton>,
+                ]}
+              ></Snackbar>
 
-              <Grid item xs={12} md={12} lg={8} style={{marginBottom: "7rem"}}>
+              <Grid item xs={12} md={12} lg={8} style={{ marginBottom: '7rem' }}>
                 {/* list of news */}
                 {content}
               </Grid>
@@ -505,10 +519,7 @@ export default class StudentNews extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
+                    <NoConnectionImage />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>
@@ -532,8 +543,7 @@ export default class StudentNews extends Component {
         );
       }
       return news;
-    }
-    else {
+    } else {
       return (
         <Grid container justify="center">
           <Grid item xs={12} md={8}>
