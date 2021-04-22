@@ -450,15 +450,10 @@ class IDUploader extends Component {
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>
             <DialogContentText className="submittedText">
-              We got your photo!<br />
-              {/* <img
-                src={this.state.IdCardPlaceholder}
-                alt="Placeholder ID."
-                className="placeholder-id"
-                style={{ maxWidth: '300px', maxHeight: '300px' }}
-              /> */}
-              <br />CTS will contact you if there’s an issue.<br />
-              Final posting of your ID photo to your account may take a couple of days, hang in there!
+              We got your photo!
+              <br />You should now see it on your MyProfile page, but it may
+              <br />take a couple of days for it to be approved for public view.
+              <br />CTS will contact you if there’s an issue.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
