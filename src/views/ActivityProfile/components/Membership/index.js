@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import activity from '../../../../services/activity';
-import '../../activity-profile.css';
-import GordonLoader from '../../../../components/Loader';
+import activity from 'services/activity';
+import GordonLoader from 'components/Loader';
 import MemberList from './components/MemberList';
-import membership from '../../../../services/membership';
+import membership from 'services/membership';
 import RequestDetail from './components/RequestDetail';
 import CloseIcon from '@material-ui/icons/Close';
-import user from '../../../../services/user';
-import { gordonColors } from '../../../../theme';
+import user from 'services/user';
+import { gordonColors } from 'theme';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Error from '@material-ui/icons/Error';
-//import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 import AddPersonIcon from '@material-ui/icons/PersonAdd';
 
 import {
@@ -176,7 +174,7 @@ export default class Membership extends Component {
 
       // Try to add member
       try {
-        let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
+        let addID = await membership.getEmailAccount(memberEmail).then(function (result) {
           return result.GordonID;
         });
         let data = {

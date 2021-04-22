@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
-import user from './../../services/user';
-import GordonLoader from './../../components/Loader';
+import user from 'services/user';
+import GordonLoader from 'components/Loader';
 import './coCurricularTranscript.css';
 
 import { Grid, Button, Card, CardContent, Typography } from '@material-ui/core';
@@ -89,7 +89,7 @@ export default class Transcript extends Component {
   // Param: activities - an array of Activity components with props Activity and Sessions
   // Returns: the same array, sorted in order of most recent (newest) to least recent
   sortNewestFirst = (activities) => {
-    let sorted = activities.sort(function(a, b) {
+    let sorted = activities.sort(function (a, b) {
       let lastSessA = a.props.Sessions[a.props.Sessions.length - 1];
       let lastSessB = b.props.Sessions[b.props.Sessions.length - 1];
       return lastSessB - lastSessA;

@@ -1,5 +1,5 @@
 import React from 'react';
-import user from '../../../../services/user';
+import user from 'services/user';
 import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram, FaHandshake } from 'react-icons/fa';
 // see socialMedia.js for pre-packaged icons of above and fix
 import {
@@ -10,8 +10,8 @@ import {
   Typography,
   TextField,
 } from '@material-ui/core';
-import { socialMediaInfo } from '../../../../socialMedia';
-import { gordonColors } from '../../../../theme';
+import { socialMediaInfo } from 'socialMedia';
+import { gordonColors } from 'theme';
 import './linksDialog.css';
 
 export default class LinksDialog extends React.Component {
@@ -119,8 +119,10 @@ export default class LinksDialog extends React.Component {
       case 'handshake':
         // hard coded a second prefix in because handshake supports 'app.' and 'gordon.' addresses
         // I know, the hard coding hurts me too.
-        hsValid = value === '' || value.indexOf(handshake.prefix) === 0
-                               || value.indexOf("https://app.joinhandshake.com/users/") === 0;
+        hsValid =
+          value === '' ||
+          value.indexOf(handshake.prefix) === 0 ||
+          value.indexOf('https://app.joinhandshake.com/users/') === 0;
         fieldValidationErrors.handshake = hsValid ? '' : handshake.error;
         break;
       default:
@@ -157,7 +159,11 @@ export default class LinksDialog extends React.Component {
     this.setState(
       {
         formValid:
-          this.state.fbValid && this.state.twValid && this.state.liValid && this.state.igValid && this.state.hsValid,
+          this.state.fbValid &&
+          this.state.twValid &&
+          this.state.liValid &&
+          this.state.igValid &&
+          this.state.hsValid,
       },
       () => {
         // If the form is valid and the links changed
@@ -184,7 +190,13 @@ export default class LinksDialog extends React.Component {
         else {
           this.setState({
             formHasDifferentLinks: false,
-            updatedLinks: { facebook: false, twitter: false, linkedIn: false, instagram: false, handshake: false },
+            updatedLinks: {
+              facebook: false,
+              twitter: false,
+              linkedIn: false,
+              instagram: false,
+              handshake: false,
+            },
           });
         }
       },
@@ -508,7 +520,7 @@ export default class LinksDialog extends React.Component {
                   : 'Handshake Link'
               }
               value={this.state.handshake}
-              onChange={event => {
+              onChange={(event) => {
                 this.handleChange('handshake', event);
               }}
               error={!this.state.hsValid}
@@ -532,14 +544,16 @@ export default class LinksDialog extends React.Component {
               variant="contained"
               style={style.submitButton}
             >
-              {// If there are any links that failed to update, show "resubmit". Otherwise, show "submit"
-              this.state.updatingFailedLinks.facebook ||
-              this.state.updatingFailedLinks.twitter ||
-              this.state.updatingFailedLinks.linkedIn ||
-              this.state.updatingFailedLinks.instagram ||
-              this.state.updatingFailedLinks.handshake
-                ? 'Resubmit'
-                : 'Submit'}
+              {
+                // If there are any links that failed to update, show "resubmit". Otherwise, show "submit"
+                this.state.updatingFailedLinks.facebook ||
+                this.state.updatingFailedLinks.twitter ||
+                this.state.updatingFailedLinks.linkedIn ||
+                this.state.updatingFailedLinks.instagram ||
+                this.state.updatingFailedLinks.handshake
+                  ? 'Resubmit'
+                  : 'Submit'
+              }
             </Button>
           )}
         </DialogActions>

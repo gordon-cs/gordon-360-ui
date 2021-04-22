@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PostAddIcon from '@material-ui/icons/PostAdd';
-import newsService from './../../services/news';
-import userService from './../../services/user';
-import NewsList from '../News/components/NewsList';
-import GordonLoader from '../../components/Loader';
+import newsService from 'services/news';
+import userService from 'services/user';
+import NewsList from './components/NewsList';
+import GordonLoader from 'components/Loader';
 import {
   Snackbar,
   IconButton,
@@ -21,6 +21,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
 // import Dropzone from 'react-dropzone';
@@ -382,7 +383,7 @@ export default class StudentNews extends Component {
                 </Grid>
               </Grid>
 
-              {/* NOTE: leaving helper text for now in case 
+              {/* NOTE: leaving helper text for now in case
               that is better than disabling submit button */}
               {/* Create Posting */}
               <Dialog open={this.state.openPostActivity} fullWidth>
@@ -518,10 +519,7 @@ export default class StudentNews extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
+                    <NoConnectionImage />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>

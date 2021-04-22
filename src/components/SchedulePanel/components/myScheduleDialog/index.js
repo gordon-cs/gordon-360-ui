@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 
-import { gordonColors } from '../../../../theme';
-import myschedule from '../../../../services/myschedule';
+import { gordonColors } from 'theme';
+import myschedule from 'services/myschedule';
 import {
   FormHelperText,
   Typography,

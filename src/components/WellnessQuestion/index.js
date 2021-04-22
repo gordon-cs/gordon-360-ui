@@ -13,9 +13,9 @@ import {
   RadioGroup,
 } from '@material-ui/core';
 
-import GordonLoader from '../Loader';
-import SymptomsDialog from '../SymptomsDialog';
-import wellness, { StatusColors } from '../../services/wellness.js';
+import GordonLoader from 'components/Loader';
+import SymptomsDialog from 'components/SymptomsDialog';
+import wellness, { StatusColors } from 'services/wellness.js';
 
 import './index.scss';
 

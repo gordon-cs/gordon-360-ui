@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import user from './../../services/user';
+import user from 'services/user';
 import ErrorIcon from '@material-ui/icons/Error';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import './profileList.css';
 import { withStyles } from '@material-ui/core/styles';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import {
   createHomeListItem,
   createHomePhoneListItem,
@@ -19,9 +19,16 @@ import {
   createStudentIDItem,
   createSpouseItem,
 } from './listItems';
-import '../../app.css';
 
-import { Typography, Grid, Card, CardHeader, CardContent, Snackbar, IconButton } from '@material-ui/core';
+import {
+  Typography,
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  Snackbar,
+  IconButton,
+} from '@material-ui/core';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -237,12 +244,11 @@ class ProfileList extends Component {
     // Creates the Advisors List Item
     let advisors;
     // only show on personal profile
-    if(this.props.myProf) {
-      advisors = createAdvisorsListItem(
-        this.props.profile, 
-        rowWidths, 
-        { privateTextStyle, gridStyle }
-      );
+    if (this.props.myProf) {
+      advisors = createAdvisorsListItem(this.props.profile, rowWidths, {
+        privateTextStyle,
+        gridStyle,
+      });
     } else {
       advisors = null;
     }

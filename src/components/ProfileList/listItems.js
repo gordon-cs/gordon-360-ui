@@ -1,7 +1,7 @@
 import React from 'react';
-import Majors from './../../components/MajorList';
-import Minors from './../../components/MinorList';
-import Advisors from './../../components/AdvisorList';
+import Majors from 'components/MajorList';
+import Minors from 'components/MinorList';
+import Advisors from 'components/AdvisorList';
 import LockIcon from '@material-ui/icons/Lock';
 
 import { Typography, ListItem, Grid, Switch, Divider } from '@material-ui/core';
@@ -368,8 +368,12 @@ function createAdvisorsListItem(profile, rowWidths, styles) {
   // Shows the advisor(s) if the user is a student or 'non assigned' if there are none
   if (String(profile.PersonType).includes('stu')) {
     return (
-      <Advisors advisors={profile.Advisors} rowWidths={rowWidths} gridStyle={styles.gridStyle} 
-                styles={styles.privateTextStyle} />
+      <Advisors
+        advisors={profile.Advisors}
+        rowWidths={rowWidths}
+        gridStyle={styles.gridStyle}
+        styles={styles.privateTextStyle}
+      />
     );
   }
 }

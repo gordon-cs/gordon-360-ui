@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { Divider, Grid, List, ListItem, Switch, Typography } from '@material-ui/core/';
 import { Link } from 'react-router-dom';
 import LockIcon from '@material-ui/icons/Lock';
-import useNetworkStatus from '../../../../hooks/useNetworkStatus';
+import useNetworkStatus from 'hooks/useNetworkStatus';
 import './index.css';
 
 const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {

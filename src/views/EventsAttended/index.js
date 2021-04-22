@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import event from './../../services/event';
-import GordonLoader from '../../components/Loader';
-import EventList from './../../components/EventList';
-import { gordonColors } from '../../theme';
+import event from 'services/event';
+import GordonLoader from 'components/Loader';
+import EventList from 'components/EventList';
+import { gordonColors } from 'theme';
 
 import { List, Grid, Card, CardContent, Button, Typography } from '@material-ui/core';
 

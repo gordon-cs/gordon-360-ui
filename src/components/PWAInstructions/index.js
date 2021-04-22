@@ -3,8 +3,26 @@ import { makeStyles } from '@material-ui/core/styles';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import './index.css';
+
+import DesktopChromeInstall from './images/Desktop/Desktop-Chrome-Install-360.png';
+import DesktopOpenChrome from './images/Desktop/Desktop-Open-Chrome.png';
+import DesktopInstallation from './images/Desktop/Desktop-Installation.png';
+import DesktopInstallButton from './images/Desktop/Desktop-Install-Button.png';
+import DesktopChromeMenu from './images/Desktop/Desktop-Chrome-Menu.png';
+
+import AndroidAddButton from './images/Mobile/Android/Android-Add-Button.jpg';
+import AndroidChromeAddHomeScreen from './images/Mobile/Android/Android-Chrome-AddToHomeScreen.jpg';
+import AndroidChromeMenu from './images/Mobile/Android/Android-Chrome-Menu.jpg';
+import AndroidInstall from './images/Mobile/Android/Android-Install.png';
+import AndroidOpenChrome from './images/Mobile/Android/Android-Open-Chrome.jpg';
+
+import AppleAddButton from './images/Mobile/Apple/iPhone-Add-Button.png';
+import AppleAddHomeScreenOne from './images/Mobile/Apple/iPhone-AddToHomeScreen-Button-One.png';
+import AppleAddHomeScreenTwo from './images/Mobile/Apple/iPhone-AddToHomeScreen-Button-Two.png';
+import AppleOpenSafari from './images/Mobile/Apple/iPhone-Open-Safari.png';
+import AppleShareButton from './images/Mobile/Apple/iPhone-Share-Button.png';
 
 import { Button, Dialog, DialogContent, Typography, Grid } from '@material-ui/core';
 
@@ -50,27 +68,27 @@ const devices = {
       [
         'Open Google Chrome and go to "360.gordon.edu". You may use other Chrome-based browsers such as Brave but Google Chrome is recommended. If you do not have Google Chrome installed,',
         'https://www.google.com/chrome/',
-        require('./images/Desktop/Desktop-Open-Chrome.png'),
+        DesktopOpenChrome,
         'Desktop Installation of Gordon 360 Step 1',
       ],
       [
         `Re-click on the button "Install Gordon 360" and click on "Install" to receive a prompt from your browser (Skip to step 5 afterwards). If you do not see the "Install" button, go to the next step.`,
-        require('./images/Desktop/Desktop-Installation.png'),
+        DesktopInstallation,
         'Desktop Installation Gordon 360 Step 2',
       ],
       [
         `Click on Google Chrome's menu which is located at the top right of the browser window (the three vertical dots).`,
-        require('./images/Desktop/Desktop-Chrome-Menu.png'),
+        DesktopChromeMenu,
         'Desktop Installation Gordon 360 Step 3',
       ],
       [
         'Once the menu is opened, click on "Install Gordon 360" which is located on the lower-end of the menu.',
-        require('./images/Desktop/Desktop-Chrome-Install-360.png'),
+        DesktopChromeInstall,
         'Android Installation Gordon 360 Step 4',
       ],
       [
         'Lastly, click "Install" to install Gordon 360 on your computer!',
-        require('./images/Desktop/Desktop-Install-Button.png'),
+        DesktopInstallButton,
         'Desktop Installation Gordon 360 Step 5',
       ],
     ],
@@ -80,27 +98,27 @@ const devices = {
     Apple: [
       [
         'Open Safari and go to "360.gordon.edu".',
-        require('./images/Mobile/Apple/iPhone-Open-Safari.png'),
+        AppleOpenSafari,
         'Apple Installation Gordon 360 Step 1',
       ],
       [
         'Tap on the share button located at the bottom of the screen in the center.',
-        require('./images/Mobile/Apple/iPhone-Share-Button.png'),
+        AppleShareButton,
         'Apple Installation Gordon 360 Step 2',
       ],
       [
         'For users on iOS 12 and below, scroll the second column to the right and tap on "Add to Home Screen" (Skip to step 5 afterwards). For users on iOS 13 and above, go to the next step.',
-        require('./images/Mobile/Apple/iPhone-AddToHomeScreen-Button-One.png'),
+        AppleAddHomeScreenOne,
         'Apple Installation Gordon 360 Step 3',
       ],
       [
         'For users on iOS 13 and above, scroll down and tap on "Add to Home Screen".',
-        require('./images/Mobile/Apple/iPhone-AddToHomeScreen-Button-Two.png'),
+        AppleAddHomeScreenTwo,
         'Apple Installation Gordon 360 Step 4',
       ],
       [
         'Lastly, tap on "Add" in the top right corner to install Gordon 360 on your home screen!',
-        require('./images/Mobile/Apple/iPhone-Add-Button.png'),
+        AppleAddButton,
         'Apple Installation Gordon 360 Step 5',
       ],
     ],
@@ -108,27 +126,27 @@ const devices = {
       [
         'Open Google Chrome and go to "360.gordon.edu". If you do not have Google Chrome installed,',
         'https://play.google.com/store/apps/details?id=com.android.chrome&hl=en_US',
-        require('./images/Mobile/Android/Android-Open-Chrome.jpg'),
+        AndroidOpenChrome,
         'Android Installation Gordon 360 Step 1',
       ],
       [
         `Re-tap on "Install Gordon 360" and tap on "Install" to receive a prompt from your browser (Skip to step 5 afterwards).`,
-        require('./images/Mobile/Android/Android-Install.png'),
+        AndroidInstall,
         'Mac Installation Gordon 360 Step 2',
       ],
       [
         `If you do not see the "Install" button, make sure your browser is Google Chrome. If it is, tap on Google Chrome's menu which is located at the top right of the screen (the three vertical dots).`,
-        require('./images/Mobile/Android/Android-Chrome-Menu.jpg'),
+        AndroidChromeMenu,
         'Android Installation Gordon 360 Step 3',
       ],
       [
         'Tap on "Add to Home screen".',
-        require('./images/Mobile/Android/Android-Chrome-AddToHomeScreen.jpg'),
+        AndroidChromeAddHomeScreen,
         'Android Installation Gordon 360 Step 4',
       ],
       [
         'Lastly, tap on "Add" to install Gordon 360 on your home screen!',
-        require('./images/Mobile/Android/Android-Add-Button.jpg'),
+        AndroidAddButton,
         'Android Installation Gordon 360 Step 5',
       ],
     ],

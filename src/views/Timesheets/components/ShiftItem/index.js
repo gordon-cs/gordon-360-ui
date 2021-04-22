@@ -14,7 +14,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
-import { gordonColors } from '../../../../theme';
+import { gordonColors } from 'theme';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import MessageOutlinedIcon from '@material-ui/icons/MessageOutlined';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
@@ -22,8 +22,8 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import './ShiftItem.css';
-import GordonLoader from '../../../../components/Loader';
-import SimpleSnackbar from '../../../../components/Snackbar';
+import GordonLoader from 'components/Loader';
+import SimpleSnackbar from 'components/Snackbar';
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
@@ -221,7 +221,7 @@ export default class ShiftItem extends Component {
       zeroLengthShift = timeDiff === 0;
       shiftTooLong = calculatedTimeDiff > 20;
       let roundedHourDifference = (Math.round(calculatedTimeDiff * 12) / 12).toFixed(2);
-      if (roundedHourDifference === 0.00) {
+      if (roundedHourDifference === 0.0) {
         roundedHourDifference = 0.08; //minimum 1/12th hour for working a shift (5 minutes)
       }
 

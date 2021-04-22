@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import { gordonColors } from '../../../../../../theme';
-import membership from '../../../../../../services/membership';
+import { gordonColors } from 'theme';
+import membership from 'services/membership';
 
 import { Button, Grid, Typography, Divider } from '@material-ui/core';
 

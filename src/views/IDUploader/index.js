@@ -13,16 +13,16 @@ import {
 } from '@material-ui/core';
 import React, { Component, Fragment } from 'react';
 import Dropzone from 'react-dropzone';
-import { gordonColors } from '../../theme';
-import IdCardDefault from '../IDUploader/image-default.png';
-import IdCardGreen from '../IDUploader/image-green.png';
-import IdCardTop from '../IDUploader/image-top.png';
+import { gordonColors } from 'theme';
+import IdCardDefault from './image-default.png';
+import IdCardGreen from './image-green.png';
+import IdCardTop from './image-top.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
-import user from '../../services/user';
-import errorLog from '../../services/errorLog';
-import Login from '../Login';
+import user from 'services/user';
+import errorLog from 'services/errorLog';
+import Login from 'views/Login';
 
 const CROP_DIM = 1200; // pixels
 class IDUploader extends Component {

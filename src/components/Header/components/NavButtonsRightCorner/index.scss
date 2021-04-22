@@ -2,7 +2,7 @@
 
 #right-menu-triangle {
   position: absolute;
-  right: 1.41rem;
+  right: 0.9rem;
   top: -0.55rem;
   background-color: $neutral-white;
   height: 1.1rem;
@@ -11,4 +11,10 @@
   border-bottom-color: transparent;
   border-right-color: transparent;
   transform: rotate(45deg);
+}
+
+.right-side-nav-buttons {
+  .MuiPopover-paper {
+    overflow: visible;
+  }
 }

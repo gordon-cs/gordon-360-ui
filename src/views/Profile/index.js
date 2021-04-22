@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import user from './../../services/user';
-import ProfileList from './../../components/ProfileList';
-import Office from './../../components/OfficeList';
-import MembershipsList from '../../components/MembershipsList';
-import GordonLoader from './../../components/Loader';
-import { socialMediaInfo } from '../../socialMedia';
-import GordonSchedulePanel from '../../components/SchedulePanel';
-import { Identification } from '../../components/Identification/index';
-import storage from '../../services/storage';
+import user from 'services/user';
+import ProfileList from 'components/ProfileList';
+import Office from 'components/OfficeList';
+import MembershipsList from 'components/MembershipsList';
+import GordonLoader from 'components/Loader';
+import { socialMediaInfo } from 'socialMedia';
+import GordonSchedulePanel from 'components/SchedulePanel';
+import { Identification } from 'components/Identification/index';
+import storage from 'services/storage';
 import { Redirect } from 'react-router';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 
 import './profile.css';
-import '../../app.css';
 
 import { Grid, Card, CardContent, Button } from '@material-ui/core';
 
@@ -257,10 +257,7 @@ export default class Profile extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
+                    <NoConnectionImage />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>

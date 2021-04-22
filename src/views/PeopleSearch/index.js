@@ -31,12 +31,13 @@ import {
 } from 'react-icons/fa';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
-import goStalk from '../../services/goStalk';
-import user from '../../services/user';
-import { gordonColors } from '../../theme';
+import goStalk from 'services/goStalk';
+import user from 'services/user';
+import { gordonColors } from 'theme';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
-import GordonLoader from '../../components/Loader';
+import GordonLoader from 'components/Loader';
 import './peopleSearch.css';
 
 const styles = {
@@ -1258,10 +1259,7 @@ class PeopleSearch extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
+                    <NoConnectionImage />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>

@@ -2,18 +2,19 @@ import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import activity from '../../services/activity';
+import activity from 'services/activity';
 import './activity-profile.css';
 import Cropper from 'react-cropper';
 import Advisors from './components/Advisors';
 import GroupContacts from './components/GroupContacts';
-import GordonLoader from '../../components/Loader';
+import GordonLoader from 'components/Loader';
 import Membership from './components/Membership';
-import membership from '../../services/membership';
-import emails from '../../services/emails';
-import session from '../../services/session';
-import { gordonColors } from '../../theme';
-import user from '../../services/user';
+import membership from 'services/membership';
+import emails from 'services/emails';
+import session from 'services/session';
+import { gordonColors } from 'theme';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
+import user from 'services/user';
 import {
   CardHeader,
   Button,
@@ -28,7 +29,6 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-//import '../../app.js';
 
 const CROP_DIM = 320; // pixels
 
@@ -748,10 +748,7 @@ class ActivityProfile extends Component {
                     marginRight: 'auto',
                   }}
                 >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
+                  <NoConnectionImage />
                 </Grid>
                 <br />
                 <h1>Please Re-establish Connection</h1>

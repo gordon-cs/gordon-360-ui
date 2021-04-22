@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import './help.css';
 
 import { Typography, Grid, Button, Card } from '@material-ui/core';
