@@ -51,10 +51,11 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
                     {membership[0].ActivityDescription}
                   </Typography>
                   <List>
-                    {membership.map((element) =>
+                    {membership.map((element) => (
                       <ListItem>
-                        {element.SessionDescription + " (" + element.ParticipationDescription + ")"}
-                      </ListItem>)}
+                        {element.SessionDescription + ' (' + element.ParticipationDescription + ')'}
+                      </ListItem>
+                    ))}
                   </List>
                   <Typography>{membership.ParticipationDescription}</Typography>
                 </OnlineOnlyLink>
@@ -80,9 +81,10 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
                 </Grid>
                 <Grid item xs={12} align="center">
                   <Typography>
-                    {membership[0].Privacy || membership[0].IsInvolvementPrivate ? 'Private' : 'Public'}
+                    {membership[0].Privacy || membership[0].IsInvolvementPrivate
+                      ? 'Private'
+                      : 'Public'}
                   </Typography>
-
                 </Grid>
               </Grid>
             </Grid>
@@ -100,7 +102,11 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
           alignItems="center"
         >
           <OnlineOnlyLink>
-            <img src={membership[0].ActivityImagePath} alt="" className={isOnline ? 'active' : ''} />
+            <img
+              src={membership[0].ActivityImagePath}
+              alt=""
+              className={isOnline ? 'active' : ''}
+            />
           </OnlineOnlyLink>
         </Grid>
       </Grid>

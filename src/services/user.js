@@ -238,7 +238,7 @@ function setMinorObject(data) {
 }
 function formatCountry(profile) {
   if (profile.Country) {
-    profile.Country = profile.Country.replace(/\w\S*/g, function(txt) {
+    profile.Country = profile.Country.replace(/\w\S*/g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
     if (profile.Country.includes(',')) {
@@ -341,10 +341,7 @@ function dataURItoBlob(dataURI) {
   else byteString = unescape(dataURI.split(',')[1]);
 
   // separate out the mime component
-  var mimeString = dataURI
-    .split(',')[0]
-    .split(':')[1]
-    .split(';')[0];
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
 
   // write the bytes of the string to a typed array
   var ia = new Uint8Array(byteString.length);
@@ -507,7 +504,7 @@ const getSessionMembershipsWithoutGuests = async (id, session) => {
   return myCurrentInvolvementsWithoutGuests;
 };
 
-//Take student's  memberships and group by activity code BETA
+//Take student's  memberships and group by activity code
 const getMembershipsByActivityCode = async (id, session) => {
   let myInvolvements = await getMemberships(id);
   myInvolvements.sort(compareByActCode);
