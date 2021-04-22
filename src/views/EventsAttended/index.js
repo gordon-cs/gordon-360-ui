@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import event from './../../services/event';
 import GordonLoader from '../../components/Loader';
 import EventList from './../../components/EventList';
+import { Link } from 'react-router-dom';
 import { gordonColors } from '../../theme';
 
 import { List, Grid, Card, CardContent, Button, Typography } from '@material-ui/core';
@@ -46,9 +47,8 @@ export default class EventsAttended extends Component {
               <Button
                 variant="contained"
                 style={style.button}
-                onClick={() => {
-                  this.props.history.push('/events?CLW');
-                }}
+                component={Link}
+                to="/events?CLW%20Credits"
               >
                 Need More Chapel Credits?
               </Button>
@@ -70,9 +70,8 @@ export default class EventsAttended extends Component {
             <Button
               variant="contained"
               style={style.button}
-              onClick={() => {
-                this.props.history.push('/events?CLW');
-              }}
+              component={Link}
+              to="/events?CLW%20Credits"
             >
               Need More Chapel Credits?
             </Button>
