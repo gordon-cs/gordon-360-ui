@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import '../../app.css';
 import './index.css';
 
 import {

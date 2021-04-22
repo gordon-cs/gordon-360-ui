@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Doughnut, defaults } from 'react-chartjs-2';
 import {Link} from "react-router-dom";
 
-import { gordonColors } from '../../../../theme';
-import user from '../../../../services/user';
-import session from '../../../../services/session';
-import GordonLoader from '../../../../components/Loader';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import session from 'services/session';
+import GordonLoader from 'components/Loader';
 
 import './CLWChart.css';
 

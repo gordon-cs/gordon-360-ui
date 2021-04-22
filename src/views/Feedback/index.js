@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import './feedback.css';
 import { Button, Grid, Card, CardContent } from '@material-ui/core';
 

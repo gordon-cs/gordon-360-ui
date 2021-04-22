@@ -1,17 +1,17 @@
 import React from 'react';
-import { gordonColors } from '../../../../theme';
+import { gordonColors } from 'theme';
 import { Polar } from 'react-chartjs-2';
-import victory from '../../../../services/victory';
+import victory from 'services/victory';
 import './VictoryPromise.css';
 import { withStyles } from '@material-ui/core/styles';
-import {ReactComponent as OffCC} from './images/Off-CC.svg'
-import {ReactComponent as OnCC} from './images/On-CC.svg'
-import {ReactComponent as OffIM} from './images/Off-IM.svg'
-import {ReactComponent as OnIM} from './images/On-IM.svg'
-import {ReactComponent as OffLW} from './images/Off-LW.svg'
-import {ReactComponent as OnLW} from './images/On-LW.svg'
-import {ReactComponent as OffLS} from './images/Off-LS.svg'
-import {ReactComponent as OnLS} from './images/On-LS.svg'
+import { ReactComponent as OffCC } from './images/Off-CC.svg';
+import { ReactComponent as OnCC } from './images/On-CC.svg';
+import { ReactComponent as OffIM } from './images/Off-IM.svg';
+import { ReactComponent as OnIM } from './images/On-IM.svg';
+import { ReactComponent as OffLW } from './images/Off-LW.svg';
+import { ReactComponent as OnLW } from './images/On-LW.svg';
+import { ReactComponent as OffLS } from './images/Off-LS.svg';
+import { ReactComponent as OnLS } from './images/On-LS.svg';
 
 import {
   Grid,
@@ -202,50 +202,27 @@ export default class VictoryPromiseDisplay extends React.Component {
     let IMG_LW;
 
     if (this.state.CC_ON) {
-      IMG_CC = (
-        <OnCC className="victory-promise-icon"/>
-
-      );
+      IMG_CC = <OnCC className="victory-promise-icon" />;
     } else {
-      IMG_CC = (
-        <OffCC className="victory-promise-icon"/>
-      );
+      IMG_CC = <OffCC className="victory-promise-icon" />;
     }
 
     if (this.state.IM_ON) {
-      IMG_IM = (
-        <OnIM className="victory-promise-icon"/>
-      );
+      IMG_IM = <OnIM className="victory-promise-icon" />;
     } else {
-      IMG_IM = (
-        <OffIM className="victory-promise-icon"/>
-      );
+      IMG_IM = <OffIM className="victory-promise-icon" />;
     }
 
     if (this.state.LS_ON) {
-      IMG_LS = (
-
-        <OnLS className="victory-promise-icon"/>
-
-      );
+      IMG_LS = <OnLS className="victory-promise-icon" />;
     } else {
-      IMG_LS = (
-
-        <OffLS className="victory-promise-icon"/>
-
-      );
+      IMG_LS = <OffLS className="victory-promise-icon" />;
     }
 
     if (this.state.LW_ON) {
-      IMG_LW = (
-
-        <OnLW className="victory-promise-icon"/>
-
-      );
+      IMG_LW = <OnLW className="victory-promise-icon" />;
     } else {
-      IMG_LW = (
-<OffLW className="victory-promise-icon" />
-      );
+      IMG_LW = <OffLW className="victory-promise-icon" />;
     }
 
     const HoverText = withStyles((theme) => ({

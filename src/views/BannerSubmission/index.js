@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { gordonColors } from '../../theme';
-import Version from '../../services/version';
+import { gordonColors } from 'theme';
+import Version from 'services/version';
 import './banner.css';
 
 import { Typography, Grid, Button, Card, CardContent } from '@material-ui/core';
