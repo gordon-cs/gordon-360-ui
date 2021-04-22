@@ -50,7 +50,12 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
                   <Typography fontWeight="fontWeightBold">
                     {membership[0].ActivityDescription}
                   </Typography>
-                  <Typography>{membership.SessionDescription}</Typography>
+                  <List>
+                    {membership.map((element) =>
+                      <ListItem>
+                        {element.SessionDescription + " (" + element.ParticipationDescription + ")"}
+                      </ListItem>)}
+                  </List>
                   <Typography>{membership.ParticipationDescription}</Typography>
                 </OnlineOnlyLink>
               </ListItem>
@@ -77,6 +82,7 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
                   <Typography>
                     {membership[0].Privacy || membership[0].IsInvolvementPrivate ? 'Private' : 'Public'}
                   </Typography>
+
                 </Grid>
               </Grid>
             </Grid>
