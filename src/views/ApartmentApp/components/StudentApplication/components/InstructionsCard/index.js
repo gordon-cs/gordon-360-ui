@@ -48,7 +48,7 @@ const InstructionsCard = () => {
         subheader="Information and Guidelines"
         className="apartment-card-header"
       />
-      <CardContent>
+      <CardContent className="apartment-instructions">
         <Typography variant="body1" paragraph>
           Apartments provide an alternative to the traditional residence hall setting and offer a
           unique community experience. To be eligible to live in an apartment, students must be at
