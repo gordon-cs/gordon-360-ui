@@ -614,7 +614,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
               <Grid item xs={12}>
                 <Grid container direction="row" justify="center" spacing={2}>
                   {applicationDetails.ApplicationID > 0 && (
-                    <Grid item xs={12} sm={8} md={6} lg={4} xl={3}>
+                    <Grid item xs={12} sm={8} md={6} lg={4} xl={4}>
                       <ApplicationDataTable applicationDetails={applicationDetails} />
                     </Grid>
                   )}
