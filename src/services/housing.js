@@ -31,9 +31,10 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @typedef ApartmentApplicant
  * @property {Number} ApplicationID Application ID number of this application
  * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
- * @property {String} Username The username of this applicant
- * @property {Number} Age The age of the student (in years) (only visible to housing admin)
- * @property {String} Class Class
+ * @property {String} [Username] The username of this applicant
+ * @property {DateTime} [BirthDate] The birthday of this applicant (only visible to housing admin)
+ * @property {Number} [Age] The age of the student (in years) (only visible to housing admin)
+ * @property {String} [Class] Class
  * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
  * @property {String} Probation Indicates whether the student has a disiplinary probation (visble only to housing admin)
  * @property {Number} Points The number of application points for this student (only visible to housing admin)
@@ -52,11 +53,12 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @global
  * @typedef ApplicationDetails
  * @property {Number} ApplicationID Application ID number of this application
- * @property {String} DateSubmitted The date the application was submitted, or null if not yet submitted
- * @property {String} DateModified The date the application was last modified
- * @property {String} EditorUsername Username of the application editor
- * @property {String} EditorEmail Email address of the application editor
- * @property {String} Gender Gender
+ * @property {String} [DateSubmitted] The date the application was submitted, or null if not yet submitted
+ * @property {String} [DateModified] The date the application was last modified, or null if not yet saved/modified
+ * @property {StudentProfileInfo} EditorProfile The StudentProfileInfo object representing the application editor
+ * @property {String} [EditorUsername] Username of the application editor
+ * @property {String} [EditorEmail] Email address of the application editor
+ * @property {String} [Gender] Gender
  * @property {ApartmentApplicant[]} Applicants Array of ApartmentApplicant objects
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
  * @property {Number} TotalPoints The total application points associated with this application
@@ -65,6 +67,9 @@ import './user'; // Needed for typedef of StudentProfileInfo
 
 /**
  * Check if the current user is authorized to view the housing staff page for applications
+ *
+ * @async
+ * @function checkHousingAdmin
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingAdmin = async () => {
@@ -112,25 +117,30 @@ const getApartmentSelectionDate = async () => {
 };
 
 /**
- * Get all halls
+ * Get the list of apartment halls from the database
+ *
+ * @async
+ * @function getApartmentHalls
  * @return {Promise.<ApartmentHall[]>} List of halls
  */
-const getApartmentHalls = () => {
+const getApartmentHalls = async () => {
   return http.get('housing/halls/apartments');
 };
 
 /**
  * Check if a given student is on an existing application from the current semester
+ *
+ * @async
+ * @function getCurrentApplicationID
  * @param {String} [username] Username in firstname.lastname format
  * @return {Promise.<Number>} Application's ID number
  */
 const getCurrentApplicationID = async (username) => {
-  let applicationID;
   try {
     if (username) {
-      applicationID = await http.get(`housing/apartment/${username}/`);
+      return await http.get(`housing/apartment/${username}/`);
     } else {
-      applicationID = await http.get('housing/apartment');
+      return await http.get('housing/apartment');
     }
   } catch (err) {
     // handle thrown 404 errors
@@ -139,39 +149,29 @@ const getCurrentApplicationID = async (username) => {
     } else {
       throw err;
     }
-    applicationID = null;
+    return null;
   }
-  return applicationID;
 };
 
 /**
  * Save the current state of the application to the database
- * @param {Number} applicationID the application ID number if it is known, else it is -1
- * @param {String} editorUsername the student username of the person filling out the application
- * @param {ApartmentApplicant[]} applicants Array of ApartmentApplicant objects
- * @param {ApartmentChoice[]} apartmentChoices Array of ApartmentChoice objects
- * @return {Promise.<Number>} Application's ID number
+ *
+ * @async
+ * @function saveApartmentApplication
+ * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
+ * @return {Promise.<Number>} Application's ID number //TODO: Update these API endpoints to return the ApplicationDetails rather than just the ApplicationID (Suggested by Dr. Tuck)
  */
-const saveApartmentApplication = async (
-  applicationID,
-  editorUsername,
-  applicants,
-  apartmentChoices,
-) => {
-  let applicationDetails = {
-    ApplicationID: applicationID ?? -1,
-    EditorUsername: editorUsername,
-    Applicants: applicants.map((applicant) => ({
-      ApplicationID: applicant?.ApplicationID ?? applicationID ?? -1,
-      Username: applicant.Profile.AD_Username,
-      OffCampusProgram: applicant?.OffCampusProgram ?? '',
-    })),
-    ApartmentChoices: apartmentChoices.map((apartmentChoice) => ({
-      ApplicationID: apartmentChoice?.ApplicationID ?? applicationID ?? -1,
-      ...apartmentChoice,
-    })),
+const saveApartmentApplication = async (applicationDetails) => {
+  // Filter out any hall entries that do not have a name selected
+  applicationDetails = {
+    ...applicationDetails,
+    ApartmentChoices: applicationDetails.ApartmentChoices.filter(
+      (apartmentChoice) => apartmentChoice.HallName,
+    ),
   };
-  if (applicationID) {
+
+  const applicationID = applicationDetails.ApplicationID;
+  if (applicationID > 0) {
     return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
   } else {
     return await http.post(`housing/apartment/applications/`, applicationDetails);
@@ -180,6 +180,9 @@ const saveApartmentApplication = async (
 
 /**
  * Update the application editor of the application to the database
+ *
+ * @async
+ * @function changeApartmentAppEditor
  * @param {Number} applicationID the application ID number
  * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
  * @return {Promise.<Boolean>} Status of whether or not the operation was successful
@@ -197,6 +200,9 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
 
 /**
  * Get active apartment application for given application ID number
+ *
+ * @async
+ * @function getApartmentApplication
  * @param {Number} applicationID the application ID number for the desired application
  * @return {Promise.<ApplicationDetails>} Application details
  */
@@ -217,6 +223,9 @@ const getApartmentApplication = async (applicationID) => {
 
 /**
  * Get active apartment applications for the current semester
+ *
+ * @async
+ * @function getAllApartmentApplications
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getAllApartmentApplications = async () => {

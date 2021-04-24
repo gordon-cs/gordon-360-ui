@@ -26,7 +26,7 @@ import ClearIcon from '@material-ui/icons/Clear';
  * @param {Number} props.index The index of this list item
  * @param {Number} props.hallRank The rank assigned to this hall by the user
  * @param {String} props.hallName The name of the apartment hall
- * @param {ApartmentChoice[]} props.preferredHalls Array of apartment choices
+ * @param {ApartmentChoice[]} props.apartmentChoices Array of apartment choices
  * @param {ApartmentHall[]} props.halls Array of apartment halls available
  * @param {CallbackFcn} props.onHallInputChange Callback for dropdown menu change
  * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
@@ -37,7 +37,7 @@ const HallListItem = ({
   index,
   hallRank,
   hallName,
-  preferredHalls,
+  apartmentChoices,
   halls,
   onHallInputChange,
   onHallRemove,
@@ -87,7 +87,7 @@ const HallListItem = ({
     </MenuItem>
   ));
 
-  const rankOptions = preferredHalls.map((_hall, i) => (
+  const rankOptions = apartmentChoices.map((_hall, i) => (
     <MenuItem value={i + 1} key={i + 1}>
       {i + 1}
     </MenuItem>

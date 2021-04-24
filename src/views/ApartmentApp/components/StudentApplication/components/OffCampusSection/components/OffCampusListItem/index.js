@@ -85,12 +85,13 @@ const OffCampusListItem = ({
           </Grid>
           <Grid item xs={12} sm={8}>
             <FormControl fullWidth error={!isSelectionValid}>
-              <InputLabel>Department</InputLabel>
+              <InputLabel shrink>Department</InputLabel>
               <Select
                 disabled={disabled}
                 value={isSelectionValid ? offCampusProgram : ''}
                 onChange={handleDepartmentInputChange}
                 input={<Input id={'department' + index} />}
+                displayEmpty
               >
                 <MenuItem value="">
                   <em>None</em>

@@ -17,7 +17,6 @@ const BottomBar = ({
   applicationID,
   canEditApplication,
   disableSubmit,
-  editorUsername,
   saving,
   submitDialogOpen,
   unsavedChanges,

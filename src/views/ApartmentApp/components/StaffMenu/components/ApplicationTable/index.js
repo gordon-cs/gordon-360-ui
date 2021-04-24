@@ -15,7 +15,7 @@ import './applicationTable.css';
 
 const ApplicationsTable = ({ applications }) => {
   const [order, setOrder] = useState('asc');
-  const [iteratee, setIteratee] = useState('apart-app-id');
+  const [iteratee, setIteratee] = useState('ApplicationID');
 
   const handleRequestSort = (_event, property) => {
     const isAsc = iteratee === property && order === 'asc';
@@ -32,7 +32,7 @@ const ApplicationsTable = ({ applications }) => {
             <Table stickyHeader>
               <ApplicationTableHead
                 order={order}
-                orderBy={iteratee}
+                iteratee={iteratee}
                 onRequestSort={handleRequestSort}
               />
               <TableBody className={'double-striped-table'}>
