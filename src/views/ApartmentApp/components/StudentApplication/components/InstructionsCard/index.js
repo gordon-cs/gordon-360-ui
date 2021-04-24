@@ -77,22 +77,24 @@ const InstructionsCard = () => {
           application, etc.). Applications with an incorrect number of applicants will not be
           considered.
         </Typography>
-        <Typography variant="body1" paragraph>
+        <Typography variant="subtitle1" gutterBottom>
           <strong>An application is not a guarantee!</strong>
-          <br />
+        </Typography>
+        <Typography variant="body1" paragraph>
           Due to the large number of applications typically recieved for apartments, not all
           applications will be awarded an apartment. If you do not receive an apartment, you will
           need to secure housing through the housing lottery.
         </Typography>
-        <Typography variant="body1" paragraph>
+        <Typography variant="subtitle1" gutterBottom>
           <strong>How are apartments awarded?</strong>
-          <br />
+        </Typography>
+        <Typography variant="body1" paragraph>
           Apartments are awarded in order of point total for each type of apartment (4-person,
           6-person, etc.). Each individual on an application will have points given/taken away using
           the following scale:
         </Typography>
         <Grid container justify="center" spacing={3}>
-          <Grid item xs={12} lg={9}>
+          <Grid item xs={11} lg={9}>
             <TableContainer component={Paper}>
               <Table size="small">
                 <TableBody>
@@ -108,9 +110,10 @@ const InstructionsCard = () => {
           </Grid>
         </Grid>
         <br />
-        <Typography variant="body1" paragraph>
+        <Typography variant="subtitle1" gutterBottom>
           <strong>If You Are Approved...</strong>
-          <br />
+        </Typography>
+        <Typography variant="body1" paragraph>
           You will be notified of your placement in an apartment/Village{' '}
           <strong>
             <em>building</em>
