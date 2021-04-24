@@ -532,7 +532,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Submit the current application as completed
    *
    * @async
-   * @function changeApplicationEditor
+   * @function submitApplication
    */
   const submitApplication = async () => {
     if (applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
