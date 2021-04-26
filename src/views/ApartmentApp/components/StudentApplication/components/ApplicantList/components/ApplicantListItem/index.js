@@ -17,7 +17,7 @@ import StarIcon from '@material-ui/icons/Star';
 import user from '../../../../../../../../services/user';
 
 /**
- * @typedef { import('../../../../services/user').StudentProfileInfo } StudentProfileInfo
+ * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
 
 // Based off src/views/PeopleSearch/components/PeopleSearchResult
@@ -47,6 +47,9 @@ const ApplicantListItem = ({
 
   /**
    * Creates the Avatar image of the given user
+   *
+   * @async
+   * @function loadAvatar
    * @param {StudentProfileInfo} profile The StudentProfileInfo object for the student represented by this list item
    */
   const loadAvatar = async (profile) => {
@@ -76,13 +79,12 @@ const ApplicantListItem = ({
 
   /**
    * Callback for applicant list remove button
-   * @param {StudentProfileInfo} profileToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
    */
   const handleRemove = () => {
     // Make sure the chosen profile was not null
-    if (profile) {
+    if (profile?.AD_Username) {
       // Send the selected profile to the parent component
-      onApplicantRemove(profile);
+      onApplicantRemove(profile.AD_Username);
     }
   };
 

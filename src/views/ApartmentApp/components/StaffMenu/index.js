@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { sortBy } from 'lodash';
 import { CSVLink } from 'react-csv';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -9,32 +10,31 @@ import housing from '../../../../services/housing';
 import ApplicationsTable from './components/ApplicationTable';
 
 /**
- * @typedef { import('../../../../services/housing').ApplicationDetails } ApplicationDetails
- * @typedef { import('../../../../services/housing').ApartmentApplicant } ApartmentApplicant
- * @typedef { import('../../../../services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
+ * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
+ * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
  */
 
 /**
  * Renders the page for the apartment application housing staff menu
  * @param {Object} props The React component props
- * @param {*} props.authentication The user authentication
  * @param {StudentProfileInfo} props.userProfile The student profile info of the current user
  * @returns {JSX.Element} JSX Element for the staff menu web page
  */
-const StaffMenu = ({ userProfile, authentication }) => {
+const StaffMenu = ({ userProfile }) => {
   const [loading, setLoading] = useState(true);
 
   /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} ApplicationDetails */
   const [applications, setApplications] = useState([]);
 
   /** @type {[ApplicationDetails[], React.Dispatch<React.SetStateAction<ApplicationDetails[]>>]} Array of application details, after being formatted for use with react-csv */
-  const [applicationJsonArray, setApplicationJsonArray] = useState([]);
+  const [applicationsForCSV, setApplicationsForCSV] = useState([]);
 
   /** @type {[ApartmentApplicant[], React.Dispatch<React.SetStateAction<ApartmentApplicant[]>>]} Array of applicant info, after being formatted for use with react-csv */
-  const [applicantJsonArray, setApplicantJsonArray] = useState([]);
+  const [applicantsForCSV, setApplicantsForCSV] = useState([]);
 
   /** @type {[ApartmentChoice[], React.Dispatch<React.SetStateAction<ApartmentChoice[]>>]} Array of apartment choice info, after being formatted for use with react-csv */
-  const [apartmentChoiceJsonArray, setApartmentChoiceJsonArray] = useState([]);
+  const [apartmentChoicesForCSV, setApartmentChoicesForCSV] = useState([]);
 
   const [dateStr, setDateStr] = useState('');
   const filePrefix = 'apartapp';
@@ -45,7 +45,13 @@ const StaffMenu = ({ userProfile, authentication }) => {
   const loadAllCurrentApplications = useCallback(async () => {
     setLoading(true);
     let applicationDetailsArray = await housing.getAllApartmentApplications();
-    setApplications(applicationDetailsArray ?? []);
+    setApplications(
+      applicationDetailsArray.map((applicationDetails) => ({
+        ...applicationDetails,
+        NumApplicants: applicationDetails.Applicants?.length ?? 0,
+        FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
+      })),
+    );
     setLoading(false);
   }, []);
 
@@ -53,37 +59,48 @@ const StaffMenu = ({ userProfile, authentication }) => {
     loadAllCurrentApplications();
 
     // Generate string of today's date in ISO format for use in CSV filename
-    let date = new Date();
-    let dateStr = DateTime.fromJSDate(date).toISODate();
-    setDateStr(dateStr);
+    setDateStr(DateTime.now().toISODate({ includeOffset: false }));
   }, [userProfile, loadAllCurrentApplications]);
 
   useEffect(() => {
-    setApplicationJsonArray(
-      applications
-        ?.filter((applicationDetails) => applicationDetails?.DateSubmitted) // Only add the applications that have been submitted
-        ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
-          const applicationID = applicationDetails.ApplicationID;
+    setApplicationsForCSV(() => {
+      const filteredApplications =
+        applications
+          ?.filter((applicationDetails) => applicationDetails?.DateSubmitted) // Only add the applications that have been submitted
+          ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
+            // Filter out the Applicants and ApartmentChoices arrays from the applicationDetails so that they may be added to the corresponding CSV files
 
-          setApplicantJsonArray((prevApplicantsJsonArray) => [
-            ...prevApplicantsJsonArray,
-            ...Applicants.map(({ Profile, StudentID, ...applicant }) => ({
-              ApplicationID: applicant.ApplicationID ?? applicationID,
-              ...applicant,
-            })),
-          ]);
+            /**
+             * Append the Applicants from each ApplicationDetails object onto the combined array of
+             * all Applicants, which is the array that is used when generating the CSV files
+             */
+            setApplicantsForCSV((prevApplicantsForCSV) =>
+              sortBy(
+                [
+                  ...prevApplicantsForCSV,
+                  ...Applicants.map(({ Profile, StudentID, ...applicant }) => applicant),
+                  // Filter out the Profile and StudentID properties from applicant so that they do not get included in the CSV file
+                ],
+                ['ApplicationID', 'Username'], // Sort applicants by applicationID and username
+              ),
+            );
 
-          setApartmentChoiceJsonArray((prevApartmentChoiceJsonArray) => [
-            ...prevApartmentChoiceJsonArray,
-            ...ApartmentChoices.map((apartmentChoice) => ({
-              ApplicationID: apartmentChoice.ApplicationID ?? applicationID,
-              ...apartmentChoice,
-            })),
-          ]);
+            /**
+             * Append the ApartmentChoices from each ApplicationDetails object onto the combined array
+             * of all ApartmentChoices, which is the array that is used when generating the CSV files
+             */
+            setApartmentChoicesForCSV((prevApartmentChoicesForCSV) =>
+              sortBy(
+                [...prevApartmentChoicesForCSV, ...ApartmentChoices],
+                ['ApplicationID', 'HallRank', 'HallName'], // Sort halls by applicationID, rank, and name
+              ),
+            );
 
-          return applicationDetails;
-        }) ?? [],
-    );
+            return applicationDetails;
+          }) ?? [];
+
+      return sortBy(filteredApplications, ['ApplicationID']); // Sort applications by applicationID
+    });
   }, [applications]);
 
   if (loading) {
@@ -109,9 +126,9 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={applicationJsonArray?.length < 1} // This check works correctly for both Number and null
+                    disabled={applicationsForCSV?.length < 1}
                     component={CSVLink}
-                    data={applicationJsonArray}
+                    data={applicationsForCSV}
                     filename={`${filePrefix}-summary-${dateStr}.csv`}
                     target="_blank"
                   >
@@ -123,9 +140,9 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={applicantJsonArray?.length < 1}
+                    disabled={applicantsForCSV?.length < 1}
                     component={CSVLink}
-                    data={applicantJsonArray}
+                    data={applicantsForCSV}
                     filename={`${filePrefix}-applicants-${dateStr}.csv`}
                     target="_blank"
                   >
@@ -137,9 +154,9 @@ const StaffMenu = ({ userProfile, authentication }) => {
                     variant="contained"
                     color="primary"
                     startIcon={<GetAppIcon />}
-                    disabled={apartmentChoiceJsonArray?.length < 1}
+                    disabled={apartmentChoicesForCSV?.length < 1}
                     component={CSVLink}
-                    data={apartmentChoiceJsonArray}
+                    data={apartmentChoicesForCSV}
                     filename={`${filePrefix}-halls-${dateStr}.csv`}
                     target="_blank"
                   >

@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core/';
 
 const headCells = [
-  { id: 'apart-app-id', numeric: true, disablePadding: false, label: 'Application ID' },
-  { id: 'editor-username', numeric: false, disablePadding: true, label: 'Editor' },
-  { id: 'num-applicants', numeric: true, disablePadding: false, label: '# of Applicants' },
-  { id: 'gender', numeric: false, disablePadding: true, label: 'Gender' },
-  { id: 'hall', numeric: false, disablePadding: true, label: 'First Hall Choice' },
-  { id: 'total-pts', numeric: true, disablePadding: false, label: 'Total Points' },
-  { id: 'avg-pts', numeric: true, disablePadding: false, label: 'Avg. Points' },
+  { id: 'ApplicationID', numeric: true, disablePadding: false, label: 'Application ID' },
+  { id: 'EditorUsername', numeric: false, disablePadding: true, label: 'Editor' },
+  { id: 'NumApplicants', numeric: true, disablePadding: false, label: '# of Applicants' },
+  { id: 'Gender', numeric: false, disablePadding: true, label: 'Gender' },
+  { id: 'FirstHall', numeric: false, disablePadding: true, label: 'First Hall Choice' },
+  { id: 'TotalPoints', numeric: true, disablePadding: false, label: 'Total Points' },
+  { id: 'AvgPoints', numeric: true, disablePadding: false, label: 'Avg. Points' },
 ];
 
-const ApplicationTableHead = ({ order, orderBy, onRequestSort }) => {
+const ApplicationTableHead = ({ iteratee, order, onRequestSort }) => {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -25,14 +25,14 @@ const ApplicationTableHead = ({ order, orderBy, onRequestSort }) => {
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCell.id ? order : false}
+            sortDirection={iteratee === headCell.id ? order : false}
           >
             <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              active={iteratee === headCell.id}
+              direction={iteratee === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
               aria-labelledby={
-                orderBy === headCell.id
+                iteratee === headCell.id
                   ? order === 'desc'
                     ? 'sorted descending'
                     : 'sorted ascending'
@@ -50,9 +50,9 @@ const ApplicationTableHead = ({ order, orderBy, onRequestSort }) => {
 };
 
 ApplicationTableHead.propTypes = {
-  onRequestSort: PropTypes.func.isRequired,
+  iteratee: PropTypes.string.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
+  onRequestSort: PropTypes.func.isRequired,
 };
 
 export default ApplicationTableHead;
