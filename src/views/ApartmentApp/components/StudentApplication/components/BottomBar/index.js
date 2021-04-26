@@ -23,6 +23,7 @@ const BottomBar = ({
   onCloseDialog,
   onCloseOkay,
   onSaveButtonClick,
+  onDeleteButtonClick,
   onShowApplication,
   onSubmitAppAccepted,
   onSubmitButtonClick,
@@ -102,6 +103,15 @@ const BottomBar = ({
           ) : (
             <Grid container item xs={12} sm={6} lg={4} spacing={2}>
               <Grid item xs>
+              <Button
+                  variant="contained"
+                  onClick={canEditApplication && onDeleteButtonClick}
+                  color="secondary"
+                  fullWidth
+                  disabled={!canEditApplication}
+                >
+                  DeleteApplication
+                </Button>
                 <SaveButton
                   saving={saving}
                   onClick={canEditApplication && onSaveButtonClick}

@@ -42,6 +42,7 @@ const BLANK_APPLICATION_DETAILS = {
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [canEditApplication, setCanEditApplication] = useState(false);
   const [agreements, setAgreements] = useState(false); // Represents the state of the agreements card. True if all checkboxes checked, false otherwise
@@ -59,6 +60,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('info');
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
+  const [deleteButtonAlertTimeout, setDeleteButtonAlertTimeout] = useState(null);
+
 
   /**
    * Load the user's saved apartment application, if one exists
@@ -462,6 +465,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
     saveApartmentApplication(applicationDetails);
   };
 
+    /**
+   * Callback for apartment application delete button
+   */
+     const handleDeleteButtonClick = () => {
+      // The method is separated from callback because the housing API service must be handled inside an async method
+      deleteApartmentApplication(applicationDetails);
+    };
+  
+
   /**
    * Save the current state of the application to the database
    *
@@ -502,6 +514,45 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSaveButtonAlertTimeout(
           setTimeout(() => {
             setSaveButtonAlertTimeout(null);
+            setSaving(false);
+          }, 6000),
+        );
+      }
+      return result;
+    }
+  };
+
+  /**
+   * Delete the current application in the database
+   *
+   * @async
+   * @function deleteApartmentApplication
+   * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
+   */
+   const deleteApartmentApplication = async (applicationDetails) => {
+    setDeleting(true);
+    setDeleteButtonAlertTimeout(null);
+    let result = null;
+    try {
+
+        const result = await housing.deleteApartmentApplication(applicationDetails);
+        console.log('result of deleting: ' + result); //! DEBUG
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          ApplicationID: result ?? prevApplicationDetails.ApplicationID,
+        }));
+        setDeleting('success');
+    } catch {
+      setSnackbarText('Something went wrong while trying to delete the application.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+      setSaving('failed');
+    } finally {
+      if (deleteButtonAlertTimeout === null) {
+        // Shows the success icon for 6 seconds and then returns back to normal button
+        setDeleteButtonAlertTimeout(
+          setTimeout(() => {
+            setDeleteButtonAlertTimeout(null);
             setSaving(false);
           }, 6000),
         );
@@ -730,6 +781,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 onCloseDialog={handleCloseDialog}
                 onCloseOkay={handleCloseOkay}
                 onSaveButtonClick={handleSaveButtonClick}
+                onDeleteButtonClick={handleDeleteButtonClick}
                 onShowApplication={handleShowApplication}
                 onSubmitAppAccepted={handleSubmitAppAccepted}
                 onSubmitButtonClick={handleSubmitButtonClick}
