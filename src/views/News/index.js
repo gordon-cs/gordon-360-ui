@@ -77,6 +77,7 @@ export default class StudentNews extends Component {
     this.setState({ loading: false });
     this.loadNews();
     this.loadUsername();
+    window.addEventListener('resize', this.resize);
   }
 
   async loadUsername() {
@@ -255,10 +256,6 @@ export default class StudentNews extends Component {
     if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
     if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
     else return false;
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
   }
 
   componentWillUnmount() {
