@@ -33,7 +33,7 @@ export default class App extends Component {
       error: null,
       errorInfo: null,
       drawerOpen: false,
-      authentication: false,
+      authentication: isAuthenticated(),
     };
   }
   onDrawerToggle() {
@@ -46,10 +46,6 @@ export default class App extends Component {
     }
 
     this.setState({ error, errorInfo });
-  }
-  componentDidMount() {
-    let authentication = isAuthenticated();
-    this.setState({ authentication });
   }
 
   onAuthChange() {
