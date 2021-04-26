@@ -241,6 +241,10 @@ const getAllApartmentApplications = async () => {
   }
 };
 
+const submitApplication = async (applicationID) => {
+  return http.post(`housing/apartment/applications/${applicationID}/submit`);
+};
+
 export default {
   checkHousingAdmin,
   addHousingAdmin,

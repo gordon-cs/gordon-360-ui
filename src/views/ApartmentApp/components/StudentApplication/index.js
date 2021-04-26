@@ -535,11 +535,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    if (applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
+    if (
+      applicationDetails.ApplicationID > 0 &&
+      applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))
+    ) {
       console.log('All applicants are valid'); //! DEBUG:
       try {
         //TODO: Feature not yet added to the API
-        // housing.submitApplication(applicationDetails);
+        housing.submitApplication(applicationDetails.ApplicationID);
         setApplicationCardsOpen(false);
       } catch {}
     } else {
