@@ -144,12 +144,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
   /**
    * Check whether a given applicant is valid for this current application
    *
-   * @async
    * @function isApplicantValid
    * @param {ApartmentApplicant} applicant The applicant to be checked
    * @return {Boolean} True if valid, otherwise false
    */
-  const isApplicantValid = async (applicant) => {
+  const isApplicantValid = (applicant) => {
     // Check that the applicant contains the required fields
     if (applicant?.Profile === null) {
       return false;
@@ -179,7 +178,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       return false;
     }
 
-    if (applicant.Profile.Gender && applicant.Profile.Gender !== applicationDetails.Gender) {
+    if (applicant.Profile.Gender !== applicationDetails.Gender) {
       // Display an error if the selected user is not the same gender
       setSnackbarText(
         `Could not add ${applicant.Profile.fullName} as an applicant because they are not the same gender as the other applicants.'`,
@@ -189,22 +188,28 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
 
     // Check if the selected user is already saved on an application in the database
-    let existingAppID = null;
-    try {
-      existingAppID = await housing.getCurrentApplicationID(applicant.Profile.AD_Username);
-      if (existingAppID > 0 && existingAppID !== applicationDetails.ApplicationID) {
-        // Display an error if the given applicant is already on a different application in the database
-        setSnackbarText(
-          `${applicant.Profile.fullName} is already on another application for this semester.'`,
-        );
-        setSnackbarSeverity('warning');
-        return false;
-      }
-    } catch {
-      // Do nothing
-    }
-
-    return true;
+    let result = true;
+    housing
+      .getCurrentApplicationID(applicant.Profile.AD_Username)
+      .then((existingAppID) => {
+        if (existingAppID > 0 && existingAppID !== applicationDetails.ApplicationID) {
+          // Display an error if the given applicant is already on a different application in the database
+          setSnackbarText(
+            `${applicant.Profile.fullName} is already on another application for this semester.'`,
+          );
+          setSnackbarSeverity('warning');
+          result = false;
+        } else {
+          result = true;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        result = false;
+      })
+      .finally(() => {
+        return result;
+      });
   };
 
   /**
