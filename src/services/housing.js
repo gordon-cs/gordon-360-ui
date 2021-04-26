@@ -256,4 +256,5 @@ export default {
   changeApartmentAppEditor,
   getApartmentApplication,
   getAllApartmentApplications,
+  submitApplication,
 };
