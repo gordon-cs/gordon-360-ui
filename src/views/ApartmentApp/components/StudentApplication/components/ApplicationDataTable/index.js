@@ -13,25 +13,32 @@ import {
 import EmailIcon from '@material-ui/icons/Email';
 import { DateTime } from 'luxon';
 
+/** @typedef { import('services/housing').ApplicationDetails } ApplicationDetails */
+
 /**
  * Renders a card displaying a table of data about the current application
  * @param {Object} props The React component props
- * @param {DateTime} props.dateSubmitted The date the application was submitted
- * @param {DateTime} props.dateModified The date the application was last modified
- * @param {String} props.editorUsername The username of the application's editor
+ * @param {ApplicationDetails} props.applicationDetails Object containing the details of this application
  * @returns {JSX.Element} JSX Element for the data table card
  */
-const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, editorEmail }) => {
+const ApplicationDataTable = ({ applicationDetails }) => {
   function createData(label, value) {
     return { label, value };
   }
 
+  let dateSubmitted = applicationDetails.DateSubmitted;
+  let dateModified = applicationDetails.DateModified;
+  let editorUsername = applicationDetails.EditorProfile?.AD_Username;
+  let editorEmail = applicationDetails.EditorProfile?.Email;
   let rows = [
     createData(
       'Last Submitted: ',
-      DateTime.fromISO(dateSubmitted).toISODate() ?? 'Not yet submitted',
+      dateSubmitted ? DateTime.fromISO(dateSubmitted).toLocaleString() : 'Not yet submitted',
     ),
-    createData('Last Modified: ', DateTime.fromISO(dateModified).toISODate() ?? 'Not yet saved'),
+    createData(
+      'Last Modified: ',
+      dateModified ? DateTime.fromISO(dateModified).toLocaleString() : 'Not yet saved',
+    ),
     createData('Application Editor: ', editorUsername ?? 'None'),
   ];
 
@@ -56,7 +63,7 @@ const ApplicationDataTable = ({ dateSubmitted, dateModified, editorUsername, edi
                     <a href={`mailto:${editorEmail}`}>
                       <div className="identification-card-content-card-container-info-email-container">
                         <EmailIcon className="identification-card-content-card-container-info-email-container-icon" />
-                        <Typography paragraph>{editorEmail}</Typography>
+                        <Typography variant="body1">{editorEmail}</Typography>
                       </div>
                     </a>
                   </TableCell>

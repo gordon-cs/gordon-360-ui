@@ -10,7 +10,7 @@ import housing from '../../services/housing';
 import './apartmentApp.css';
 
 /**
- * @typedef { import('../../services/user').StudentProfileInfo } StudentProfileInfo
+ * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
 
 const ApartApp = ({ authentication }) => {
@@ -97,7 +97,7 @@ const ApartApp = ({ authentication }) => {
     if (canUseStaff) {
       return (
         <div className="staff-apartment-application">
-          <StaffMenu userProfile={userProfile} authentication={authentication} />
+          <StaffMenu userProfile={userProfile} />
         </div>
       );
     } else if (isUserStudent) {

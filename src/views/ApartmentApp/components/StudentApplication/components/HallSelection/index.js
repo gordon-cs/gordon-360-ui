@@ -6,16 +6,15 @@ import HallListItem from './components/HallListItem';
 import housing from '../../../../../../services/housing';
 
 /**
- * @typedef { import('../../services/housing').ApartmentHall } ApartmentHall
- * @typedef { import('../../services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApartmentHall } ApartmentHall
+ * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
  */
 
 // Create a list of selection boxes to choosing preferred halls
 const HallSelection = ({
   disabled,
   authentication,
-  editorUsername,
-  preferredHalls,
+  apartmentChoices,
   onHallAdd,
   onHallInputChange,
   onHallRemove,
@@ -24,14 +23,21 @@ const HallSelection = ({
   const [halls, setHalls] = useState([]); // array of hall names from backend
 
   useEffect(() => {
-    const loadHalls = async () => {
+    /**
+     * Get the list of apartment halls from the database
+     * (Coming soon: list of apartment halls filtered by gender of the current user)
+     *
+     * @async
+     * @function loadHalls
+     */
+    const loadApartmentHalls = async () => {
       setHalls(await housing.getApartmentHalls());
     };
 
     if (authentication) {
-      loadHalls();
+      loadApartmentHalls();
     }
-  }, [authentication, editorUsername]);
+  }, [authentication]);
 
   /**
    * Callback for changes to hall list item name and/or rank
@@ -62,15 +68,15 @@ const HallSelection = ({
         <Grid container justify="space-between" spacing={2}>
           <Grid item xs={12}>
             <List className="hall-list" aria-label="apartment preferred halls" disablePadding>
-              {preferredHalls?.length > 0 &&
-                preferredHalls.map((hallInfo, index) => (
+              {apartmentChoices?.length > 0 &&
+                apartmentChoices.map((hallInfo, index) => (
                   <HallListItem
-                    key={hallInfo.HallRank + hallInfo.HallName}
+                    key={index + hallInfo.HallRank + hallInfo.HallName}
                     disabled={disabled}
                     index={index}
                     hallRank={hallInfo.HallRank}
                     hallName={hallInfo.HallName}
-                    preferredHalls={preferredHalls}
+                    apartmentChoices={apartmentChoices}
                     halls={halls}
                     onHallInputChange={handleInputChange}
                     onHallRemove={handleRemove}
@@ -98,8 +104,7 @@ const HallSelection = ({
 HallSelection.propTypes = {
   disabled: PropTypes.bool,
   authentication: PropTypes.any,
-  editorUsername: PropTypes.string,
-  preferredHalls: PropTypes.array.isRequired,
+  apartmentChoices: PropTypes.array.isRequired,
   onHallAdd: PropTypes.func,
   onHallInputChange: PropTypes.func,
   onHallRemove: PropTypes.func,
