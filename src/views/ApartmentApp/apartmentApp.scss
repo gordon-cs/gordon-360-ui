@@ -15,6 +15,21 @@
     }
   }
 
+  & .apartment-instructions {
+    & .MuiTypography-root {
+      padding: 0.25rem 0.75rem;
+    }
+
+    & .MuiTypography-paragraph {
+      text-align: left;
+    }
+
+    & .MuiTableContainer-root {
+      border: 1px solid $neutral-gray3;
+      border-radius: 4px;
+    }
+  }
+
   & .list-item {
     color: $neutral-dark-gray;
   }
