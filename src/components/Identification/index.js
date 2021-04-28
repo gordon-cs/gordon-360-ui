@@ -228,32 +228,11 @@ export const Identification = (props) => {
       let response = user.postImage(croppedImage);
       response
         .then(async () => {
-          /**
-           * Gets the user's default image and not their preferred since the variable "newImage"
-           * is the user's preferred picture. If fetching the user's default image
-           * fails, the Gordon Default Image will not replace it because we still have their
-           * preferred image to show. The Gordon Default Image is only a fallback when no image is
-           * available
-           */
-
-          /**
-           * If the currently signed-in user is Faculty, retrieving their specific profile images will
-           * return their default image. If the currently signed-in user is Non-Faculty, retrieving
-           * their profile images will only return their preferred making the default undefined.
-           * This is to prevent a bug where a student submitting their photo would see a default and
-           * preferred photo instead of just their preferred
-           */
-
-          const { def: defaultImage } =
-            props.profile.PersonType === 'fac'
-              ? await user.getImage(props.profile.AD_Username)
-              : await user.getImage();
-
           // Sets the user's preferred image
           setPreferredUserImage(newImage);
           setHasPreferredImage(true);
-          // Sets the user's default image
-          setDefaultUserImage(defaultImage ? defaultImage : null);
+          // Reset default image so we display only preferred on MyProfile
+          setDefaultUserImage(null);
           // Displays to the user that their photo has been submitted
           createSnackbar('Photo Submitted', 'Success');
           // Closes out the Photo Updater
