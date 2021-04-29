@@ -110,20 +110,24 @@ const StudentApplication = ({ userProfile, authentication }) => {
     loadApplication();
   }, [userProfile]);
 
+  //! DEBUG
   useEffect(() => {
-    // setUnsavedChanges(true);
     //! DEBUG
     console.debug('Array state variable. Printing contents:');
+    //! DEBUG
     console.debug('EditorUsername:');
     console.debug(applicationDetails?.EditorProfile?.AD_Username);
+    //! DEBUG
     console.debug('Applicants:');
-    applicationDetails.Applicants.forEach((element) => {
+    applicationDetails?.Applicants?.forEach((element) => {
       console.debug(`${element?.Profile?.AD_Username}, ${element.OffCampusProgram}`);
     });
+    //! DEBUG
     console.debug('Preferred Halls:');
-    applicationDetails.ApartmentChoices.forEach((element) => {
+    applicationDetails?.ApartmentChoices?.forEach((element) => {
       console.debug(`${element?.HallName}, ${element?.HallRank}`);
     });
+    //! DEBUG
   }, [applicationDetails]);
 
   const handleShowApplication = () => {
@@ -152,6 +156,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const isApplicantValid = async (applicant) => {
     // Check that the applicant contains the required fields
     if (applicant?.Profile === null) {
+      setSnackbarText('Something went wrong while trying to add this person. Please try again.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
       return false;
     }
 
@@ -165,8 +172,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
     if (applicationDetails.Applicants.length >= MAX_NUM_APPLICANTS) {
       // Display an error if the user try to add an applicant when the list is full
-      setSnackbarText(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants'`);
+      setSnackbarText(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants`);
       setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
       return false;
     }
 
@@ -176,28 +184,30 @@ const StudentApplication = ({ userProfile, authentication }) => {
         `Could not add ${applicant.Profile.fullName} as an applicant because they are not a student.`,
       );
       setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
       return false;
     }
 
-    if (applicant.Profile.Gender && applicant.Profile.Gender !== applicationDetails.Gender) {
+    if (applicant.Profile.Gender !== applicationDetails.Gender) {
       // Display an error if the selected user is not the same gender
       setSnackbarText(
-        `Could not add ${applicant.Profile.fullName} as an applicant because they are not the same gender as the other applicants.'`,
+        `Could not add ${applicant.Profile.fullName} as an applicant because they are not the same gender as the other applicants.`,
       );
       setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
       return false;
     }
 
     // Check if the selected user is already saved on an application in the database
-    let existingAppID = null;
     try {
-      existingAppID = await housing.getCurrentApplicationID(applicant.Profile.AD_Username);
+      let existingAppID = await housing.getCurrentApplicationID(applicant.Profile.AD_Username);
       if (existingAppID > 0 && existingAppID !== applicationDetails.ApplicationID) {
         // Display an error if the given applicant is already on a different application in the database
         setSnackbarText(
-          `${applicant.Profile.fullName} is already on another application for this semester.'`,
+          `${applicant.Profile.fullName} is already on another application for this semester.`,
         );
         setSnackbarSeverity('warning');
+        setSnackbarOpen(true);
         return false;
       }
     } catch {
@@ -232,14 +242,17 @@ const StudentApplication = ({ userProfile, authentication }) => {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
         setSnackbarSeverity('info');
-      } else if (isApplicantValid(newApplicantObject)) {
-        // Add the profile object to the list of applicants
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
-        }));
-        setUnsavedChanges(true);
-        return;
+      } else {
+        let applicantIsValid = await isApplicantValid(newApplicantObject);
+        if (applicantIsValid) {
+          // Add the profile object to the list of applicants
+          setApplicationDetails((prevApplicationDetails) => ({
+            ...prevApplicationDetails,
+            Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
+          }));
+          setUnsavedChanges(true);
+          return;
+        }
       }
     } catch (error) {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
@@ -271,8 +284,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleChangeEditorAccepted = () => {
     if (newEditorProfile?.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
-      changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated soon
-      // saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
+      if (applicationDetails.ApplicationID > 0) {
+        changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
+      } else {
+        try {
+          saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
+        } catch {
+          saveApartmentApplication(applicationDetails);
+          changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
+        }
+      }
       handleCloseOkay();
     } else {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
@@ -437,6 +458,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           j === index ? newApplicant : prevApplicant,
         ),
       }));
+      setUnsavedChanges(true);
     } else {
       setSnackbarText(
         'Something went wrong while trying to change the off-campus program. Please try again.',
@@ -535,15 +557,33 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    if (applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
-      console.log('All applicants are valid'); //! DEBUG:
-      try {
-        //TODO: Feature not yet added to the API
-        // housing.submitApplication(applicationDetails);
-        setApplicationCardsOpen(false);
-      } catch {}
-    } else {
+    const showGenericSubmitError = () => {
+      setSnackbarText('Something went wrong while trying to submit the application.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    };
+
+    if (!applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
       console.log('Not all applicants are valid'); //! DEBUG:
+      //? The specifics of snackbarText and snackbarSeverity are already set within the `isApplicantValid` helper function
+      setSnackbarOpen(true);
+    } else if (applicationDetails.ApplicationID > 0) {
+      console.log('All applicants are valid'); //! DEBUG:
+      housing
+        .submitApplication(applicationDetails.ApplicationID)
+        .then((result) => {
+          if (!result) {
+            showGenericSubmitError();
+          } else {
+            setApplicationCardsOpen(false);
+            // loadApplication(); //? Coming soon to a feature near you
+          }
+        })
+        .catch((err) => {
+          showGenericSubmitError();
+        });
+    } else {
+      showGenericSubmitError();
     }
   };
 
@@ -655,8 +695,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         describedby={'changing-application-editor'}
                         title={'Change application editor?'}
                         text={changeEditorAlertText}
-                        confirmButtonClicked={handleChangeEditorAccepted}
-                        confirmButtonName={'Accept'}
+                        buttonClicked={handleChangeEditorAccepted}
+                        buttonName={'Accept'}
                         cancelButtonClicked={handleCloseOkay}
                         cancelButtonName={'Cancel'}
                         severity={'warning'}

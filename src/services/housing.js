@@ -241,6 +241,18 @@ const getAllApartmentApplications = async () => {
   }
 };
 
+/**
+ * Submit the current application
+ *
+ * @async
+ * @function submitApplication
+ * @param {Number} applicationID the application ID number for the desired application
+ * @return {Promise.<Boolean>[]} Application details
+ */
+const submitApplication = async (applicationID) => {
+  return http.post(`housing/apartment/applications/${applicationID}/submit`);
+};
+
 export default {
   checkHousingAdmin,
   addHousingAdmin,
@@ -252,4 +264,5 @@ export default {
   changeApartmentAppEditor,
   getApartmentApplication,
   getAllApartmentApplications,
+  submitApplication,
 };
