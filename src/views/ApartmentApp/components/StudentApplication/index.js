@@ -185,7 +185,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     if (applicant.Profile.Gender !== applicationDetails.Gender) {
       // Display an error if the selected user is not the same gender
       setSnackbarText(
-        `Could not add ${applicant.Profile.fullName} as an applicant because they are not the same gender as the other applicants.'`,
+        `Could not add ${applicant.Profile.fullName} as an applicant because they are not the same gender as the other applicants.`,
       );
       setSnackbarSeverity('warning');
       return false;
