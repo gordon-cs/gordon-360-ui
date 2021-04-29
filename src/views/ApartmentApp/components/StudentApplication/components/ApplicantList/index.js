@@ -100,7 +100,7 @@ const ApplicantList = ({
                     disabled={disabled}
                     profile={applicant.Profile}
                     isApplicationEditor={
-                      applicant.Profile.AD_Username === applicationDetails.EditorUsername
+                      applicant.Profile.AD_Username === applicationDetails.EditorProfile.AD_Username
                     }
                     onChangeEditor={onChangeEditor}
                     onApplicantRemove={onApplicantRemove}
