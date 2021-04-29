@@ -163,7 +163,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
 
     if (applicant.Profile.fullName === null) {
-      applicant.Profile = user.formatName(applicant.Profile);
+      applicant.Profile.fullName = user.formatName(applicant.Profile);
     }
 
     if (applicant?.OffCampusProgram === null) {
