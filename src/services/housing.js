@@ -5,7 +5,7 @@
  */
 
 import http from './http';
-import './user'; // Needed for typedef of StudentProfileInfo
+import user from './user';
 
 /**
  * @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
@@ -199,6 +199,33 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
 };
 
 /**
+ * Helper function to fill in any missing properties of an applicant object's Profile, OffCampusProgram, etc.
+ *
+ * @async
+ * @function setApplicantInfo
+ * @param {ApartmentApplicant} applicant an object representing an apartment applicant
+ * @return {ApartmentApplicant} Application details
+ */
+const setApplicantInfo = async (applicant) => {
+  if (applicant.Profile === null) {
+    if (applicant.Username) {
+      user.getProfileInfo(applicant.Username).then((profile) => {
+        applicant.Profile = profile;
+      });
+    }
+  } else {
+    applicant.Profile = user.setFullname(applicant.Profile);
+    applicant.Profile = user.setClass(applicant.Profile);
+  }
+
+  if (applicant.OffCampusProgram === null) {
+    applicant.OffCampusProgram = '';
+  }
+
+  return applicant;
+};
+
+/**
  * Get active apartment application for given application ID number
  *
  * @async
@@ -208,7 +235,15 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  */
 const getApartmentApplication = async (applicationID) => {
   try {
-    return await http.get(`housing/apartment/applications/${applicationID}/`);
+    let applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
+    if (applicationResult?.Applicants?.length > 0) {
+      let applicants = await Promise.all(
+        applicationResult.Applicants.map((applicant) => setApplicantInfo(applicant)),
+      );
+      return { ...applicationResult, Applicants: applicants };
+    } else {
+      return applicationResult;
+    }
   } catch (err) {
     if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log(
