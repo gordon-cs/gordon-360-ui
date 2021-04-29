@@ -420,6 +420,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallAdd = () => {
     const newPlaceholderHall = {
+      ApplicationID: applicationDetails.ApplicationID,
       HallRank: applicationDetails.ApartmentChoices.length + 1,
       HallName: '',
     };
