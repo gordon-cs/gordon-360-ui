@@ -14,7 +14,9 @@ const ApplicationRow = ({ applicationDetails, labelId }) => {
         <TableCell align="center" component="th" id={labelId} scope="row">
           {applicationDetails.ApplicationID}
         </TableCell>
-        <TableCell align="center">{applicationDetails.EditorUsername}</TableCell>
+        <TableCell align="center">
+          {applicationDetails.EditorUsername ?? applicationDetails.EditorProfile.AD_Username}
+        </TableCell>
         <TableCell align="center">{applicationDetails.NumApplicants}</TableCell>
         <TableCell align="center">{applicationDetails.Gender}</TableCell>
         <TableCell align="center">{applicationDetails.FirstHall}</TableCell>
