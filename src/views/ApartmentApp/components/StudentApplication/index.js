@@ -284,8 +284,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleChangeEditorAccepted = () => {
     if (newEditorProfile?.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
-      changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
-      // saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
+      if (applicationDetails.ApplicationID > 0) {
+        changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
+      } else {
+        try {
+          saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
+        } catch {
+          saveApartmentApplication(applicationDetails);
+          changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
+        }
+      }
       handleCloseOkay();
     } else {
       setSnackbarText('Something went wrong while trying to save the new application editor.');

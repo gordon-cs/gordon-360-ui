@@ -97,7 +97,7 @@ const ApplicantList = ({
                 applicationDetails.Applicants.map((applicant) => (
                   <ApplicantListItem
                     key={applicant.Profile.AD_Username}
-                    disabled={disabled || applicationDetails.ApplicationID < 1}
+                    disabled={disabled}
                     profile={applicant.Profile}
                     isApplicationEditor={
                       applicant.Profile.AD_Username === applicationDetails.EditorProfile.AD_Username
