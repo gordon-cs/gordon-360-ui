@@ -4,11 +4,12 @@ import GordonLoader from '../../../../../../components/Loader';
 import GordonDialogBox from '../../../../../../components/GordonDialogBox';
 import SaveButton from './components/SaveButton';
 
+// TODO: Improve this text for the users
 const submitAlertText = (
   <span>
-    This feature is not yet implemented.
+    Please confirm that all the information you have entered is valid
     <br />
-    Clicking the "Accept" button will simply hide the application cards.
+    Click "Accept" below to submit this application
   </span>
 );
 

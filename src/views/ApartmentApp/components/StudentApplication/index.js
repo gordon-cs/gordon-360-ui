@@ -535,15 +535,33 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    if (applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
-      console.log('All applicants are valid'); //! DEBUG:
-      try {
-        //TODO: Feature not yet added to the API
-        // housing.submitApplication(applicationDetails);
-        setApplicationCardsOpen(false);
-      } catch {}
-    } else {
+    const showGenericSubmitError = () => {
+      setSnackbarText('Something went wrong while trying to submit the application.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    };
+
+    if (!applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
       console.log('Not all applicants are valid'); //! DEBUG:
+      //? The specifics of snackbarText and snackbarSeverity are already set within the `isApplicantValid` helper function
+      setSnackbarOpen(true);
+    } else if (applicationDetails.ApplicationID > 0) {
+      console.log('All applicants are valid'); //! DEBUG:
+      housing
+        .submitApplication(applicationDetails.ApplicationID)
+        .then((result) => {
+          if (!result) {
+            showGenericSubmitError();
+          } else {
+            setApplicationCardsOpen(false);
+            // loadApplication(); //? Coming soon to a feature near you
+          }
+        })
+        .catch((err) => {
+          showGenericSubmitError();
+        });
+    } else {
+      showGenericSubmitError();
     }
   };
 
