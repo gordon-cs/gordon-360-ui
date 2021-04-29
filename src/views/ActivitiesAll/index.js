@@ -49,7 +49,7 @@ export default class GordonActivitiesAll extends Component {
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     // this.setState({ loading: true });
     const { SessionCode: sessionCode } = await session.getCurrent();
     const [activities, types, sessions] = await Promise.all([
@@ -171,9 +171,7 @@ export default class GordonActivitiesAll extends Component {
       currentAcademicSession:
         this.state.currentAcademicSession === '' ? sessionCode : this.state.currentAcademicSession,
     });
-  }
 
-  componentDidMount() {
     /* Used to re-render the page when the network connection changes.
      *  this.state.network is compared to the message received to prevent
      *  multiple re-renders that creates extreme performance lost.

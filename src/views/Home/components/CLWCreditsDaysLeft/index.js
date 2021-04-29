@@ -26,7 +26,7 @@ export default class CLWCreditsDaysLeft extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadData();
   }
 

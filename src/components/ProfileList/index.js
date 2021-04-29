@@ -151,7 +151,7 @@ class ProfileList extends Component {
       return tele;
     }
   }
-  async componentWillMount() {
+  async componentDidMount() {
     this.setState({ isMobilePhonePrivate: this.props.profile.IsMobilePhonePrivate });
     if (!this.props.myProf) {
       this.setState({

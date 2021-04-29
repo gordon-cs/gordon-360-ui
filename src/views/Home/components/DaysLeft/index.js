@@ -20,7 +20,7 @@ export default class DaysLeft extends Component {
       loading: true,
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadDaysLeft();
   }
   async loadDaysLeft() {
