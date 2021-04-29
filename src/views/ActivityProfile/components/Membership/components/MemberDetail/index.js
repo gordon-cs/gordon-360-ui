@@ -43,7 +43,7 @@ export default class MemberDetail extends Component {
     this.onRemove = this.onRemove.bind(this);
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.setState({
       admin: this.props.admin,
       groupAdmin: this.props.groupAdmin,
