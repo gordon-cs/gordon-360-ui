@@ -181,7 +181,7 @@ import { socialMediaInfo } from 'socialMedia';
  * @property {String} CurrentBalance The current remaining meal plan balance
  */
 
-function addFullnameToProfile(profile) {
+function setFullname(profile) {
   profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
   return profile;
 }
@@ -584,7 +584,7 @@ const getEmploymentInfo = async () => {
 
 const getProfileInfo = async (username) => {
   let profile = await getProfile(username);
-  addFullnameToProfile(profile);
+  setFullname(profile);
   setClass(profile);
   setClassYear(profile);
   setMajorObject(profile);
@@ -642,7 +642,7 @@ function updateSocialLink(type, link) {
 }
 
 export default {
-  addFullnameToProfile,
+  setFullname,
   setMobilePhonePrivacy,
   setImagePrivacy,
   getMemberships,
