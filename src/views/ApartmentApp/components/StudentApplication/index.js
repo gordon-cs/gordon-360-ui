@@ -110,20 +110,24 @@ const StudentApplication = ({ userProfile, authentication }) => {
     loadApplication();
   }, [userProfile]);
 
+  //! DEBUG
   useEffect(() => {
-    // setUnsavedChanges(true);
     //! DEBUG
     console.debug('Array state variable. Printing contents:');
+    //! DEBUG
     console.debug('EditorUsername:');
     console.debug(applicationDetails?.EditorProfile?.AD_Username);
+    //! DEBUG
     console.debug('Applicants:');
-    applicationDetails.Applicants.forEach((element) => {
+    applicationDetails?.Applicants?.forEach((element) => {
       console.debug(`${element?.Profile?.AD_Username}, ${element.OffCampusProgram}`);
     });
+    //! DEBUG
     console.debug('Preferred Halls:');
-    applicationDetails.ApartmentChoices.forEach((element) => {
+    applicationDetails?.ApartmentChoices?.forEach((element) => {
       console.debug(`${element?.HallName}, ${element?.HallRank}`);
     });
+    //! DEBUG
   }, [applicationDetails]);
 
   const handleShowApplication = () => {
