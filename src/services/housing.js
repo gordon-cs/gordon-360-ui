@@ -225,6 +225,21 @@ const setApplicantInfo = async (applicant) => {
   return applicant;
 };
 
+const setApplicationDetails = async (applicationDetails) => {
+  applicationDetails = {
+    ...applicationDetails,
+    NumApplicants: applicationDetails.Applicants?.length ?? 0,
+    FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
+  };
+  if (applicationDetails.NumApplicants > 0) {
+    let applicants = await Promise.all(
+      applicationDetails.Applicants.map((applicant) => setApplicantInfo(applicant)),
+    );
+    applicationDetails.Applicants = applicants;
+  }
+  return applicationDetails;
+};
+
 /**
  * Get active apartment application for given application ID number
  *
@@ -236,14 +251,10 @@ const setApplicantInfo = async (applicant) => {
 const getApartmentApplication = async (applicationID) => {
   try {
     let applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
-    if (applicationResult?.Applicants?.length > 0) {
-      let applicants = await Promise.all(
-        applicationResult.Applicants.map((applicant) => setApplicantInfo(applicant)),
-      );
-      return { ...applicationResult, Applicants: applicants };
-    } else {
-      return applicationResult;
+    if (applicationResult) {
+      await setApplicationDetails(applicationResult);
     }
+    return applicationResult;
   } catch (err) {
     if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log(
@@ -265,7 +276,16 @@ const getApartmentApplication = async (applicationID) => {
  */
 const getAllApartmentApplications = async () => {
   try {
-    return await http.get(`housing/admin/apartment/applications/`);
+    let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+    if (applicationDetailsArray?.length > 0) {
+      let newApplicationDetailsArray = await Promise.all(
+        applicationDetailsArray.map((applicationDetails) =>
+          setApplicationDetails(applicationDetails),
+        ),
+      );
+      applicationDetailsArray = newApplicationDetailsArray;
+    }
+    return applicationDetailsArray;
   } catch (err) {
     if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log('Received 404 indicates that no applications were found in the database');
