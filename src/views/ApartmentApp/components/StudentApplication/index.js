@@ -148,13 +148,17 @@ const StudentApplication = ({ userProfile, authentication }) => {
   /**
    * Check whether a given applicant is valid for this current application
    *
+   * @async
    * @function isApplicantValid
    * @param {ApartmentApplicant} applicant The applicant to be checked
    * @return {Boolean} True if valid, otherwise false
    */
-  const isApplicantValid = (applicant) => {
+  const isApplicantValid = async (applicant) => {
     // Check that the applicant contains the required fields
     if (applicant?.Profile === null) {
+      setSnackbarText('Something went wrong while trying to add this person. Please try again.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
       return false;
     }
 
@@ -168,8 +172,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
     if (applicationDetails.Applicants.length >= MAX_NUM_APPLICANTS) {
       // Display an error if the user try to add an applicant when the list is full
-      setSnackbarText(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants'`);
+      setSnackbarText(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants`);
       setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
       return false;
     }
 
@@ -179,6 +184,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         `Could not add ${applicant.Profile.fullName} as an applicant because they are not a student.`,
       );
       setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
       return false;
     }
 
@@ -188,32 +194,27 @@ const StudentApplication = ({ userProfile, authentication }) => {
         `Could not add ${applicant.Profile.fullName} as an applicant because they are not the same gender as the other applicants.`,
       );
       setSnackbarSeverity('warning');
+      setSnackbarOpen(true);
       return false;
     }
 
     // Check if the selected user is already saved on an application in the database
-    let result = true;
-    housing
-      .getCurrentApplicationID(applicant.Profile.AD_Username)
-      .then((existingAppID) => {
-        if (existingAppID > 0 && existingAppID !== applicationDetails.ApplicationID) {
-          // Display an error if the given applicant is already on a different application in the database
-          setSnackbarText(
-            `${applicant.Profile.fullName} is already on another application for this semester.'`,
-          );
-          setSnackbarSeverity('warning');
-          result = false;
-        } else {
-          result = true;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        result = false;
-      })
-      .finally(() => {
-        return result;
-      });
+    try {
+      let existingAppID = await housing.getCurrentApplicationID(applicant.Profile.AD_Username);
+      if (existingAppID > 0 && existingAppID !== applicationDetails.ApplicationID) {
+        // Display an error if the given applicant is already on a different application in the database
+        setSnackbarText(
+          `${applicant.Profile.fullName} is already on another application for this semester.`,
+        );
+        setSnackbarSeverity('warning');
+        setSnackbarOpen(true);
+        return false;
+      }
+    } catch {
+      // Do nothing
+    }
+
+    return true;
   };
 
   /**
@@ -241,14 +242,17 @@ const StudentApplication = ({ userProfile, authentication }) => {
         // Display an error if the selected user is already in the list
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
         setSnackbarSeverity('info');
-      } else if (isApplicantValid(newApplicantObject)) {
-        // Add the profile object to the list of applicants
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
-        }));
-        setUnsavedChanges(true);
-        return;
+      } else {
+        let applicantIsValid = await isApplicantValid(newApplicantObject);
+        if (applicantIsValid) {
+          // Add the profile object to the list of applicants
+          setApplicationDetails((prevApplicationDetails) => ({
+            ...prevApplicationDetails,
+            Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
+          }));
+          setUnsavedChanges(true);
+          return;
+        }
       }
     } catch (error) {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
@@ -280,7 +284,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleChangeEditorAccepted = () => {
     if (newEditorProfile?.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
-      changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated soon
+      changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
       // saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
       handleCloseOkay();
     } else {
@@ -446,6 +450,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           j === index ? newApplicant : prevApplicant,
         ),
       }));
+      setUnsavedChanges(true);
     } else {
       setSnackbarText(
         'Something went wrong while trying to change the off-campus program. Please try again.',
@@ -682,8 +687,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         describedby={'changing-application-editor'}
                         title={'Change application editor?'}
                         text={changeEditorAlertText}
-                        confirmButtonClicked={handleChangeEditorAccepted}
-                        confirmButtonName={'Accept'}
+                        buttonClicked={handleChangeEditorAccepted}
+                        buttonName={'Accept'}
                         cancelButtonClicked={handleCloseOkay}
                         cancelButtonName={'Cancel'}
                         severity={'warning'}
