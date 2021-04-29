@@ -11,7 +11,7 @@ export default class InvolvementStatusList extends Component {
     this.state = { currentSession: '' };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     const { SessionCode: sessionCode } = await session.getCurrent();
     this.setState({ currentSession: sessionCode });
   }

@@ -166,7 +166,7 @@ export default class StudentNews extends Component {
 
     let news;
     // If the user is online
-    if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.Authentication)) {
+    if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.authentication)) {
       news = (
         <section>
           <Grid container justify="center">

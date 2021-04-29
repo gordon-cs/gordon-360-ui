@@ -13,7 +13,7 @@ export default class GroupContacts extends Component {
       activityGroupAdmins: [],
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadGroupContacts();
   }
   async loadGroupContacts() {
