@@ -153,7 +153,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {ApartmentApplicant} applicant The applicant to be checked
    * @return {Boolean} True if valid, otherwise false
    */
-  const isApplicantValid = async (applicant) => {
+  const isApplicantValid = (applicant) => {
     // Check that the applicant contains the required fields
     if (applicant?.Profile === null) {
       setSnackbarText('Something went wrong while trying to add this person. Please try again.');
@@ -199,8 +199,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
 
     // Check if the selected user is already saved on an application in the database
-    try {
-      let existingAppID = await housing.getCurrentApplicationID(applicant.Profile.AD_Username);
+    housing.getCurrentApplicationID(applicant.Profile.AD_Username).then((existingAppID) => {
       if (existingAppID > 0 && existingAppID !== applicationDetails.ApplicationID) {
         // Display an error if the given applicant is already on a different application in the database
         setSnackbarText(
@@ -210,9 +209,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarOpen(true);
         return false;
       }
-    } catch {
-      // Do nothing
-    }
+    });
 
     return true;
   };
@@ -243,8 +240,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
         setSnackbarSeverity('info');
       } else {
-        let applicantIsValid = await isApplicantValid(newApplicantObject);
-        if (applicantIsValid) {
+        if (isApplicantValid(newApplicantObject)) {
           // Add the profile object to the list of applicants
           setApplicationDetails((prevApplicationDetails) => ({
             ...prevApplicationDetails,
