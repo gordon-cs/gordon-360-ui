@@ -643,6 +643,7 @@ function updateSocialLink(type, link) {
 
 export default {
   setFullname,
+  setClass,
   setMobilePhonePrivacy,
   setImagePrivacy,
   getMemberships,

@@ -162,14 +162,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
       return false;
     }
 
-    if (applicant.Profile.fullName === null) {
-      applicant.Profile.fullName = user.setFullname(applicant.Profile);
-    }
-
-    if (applicant?.OffCampusProgram === null) {
-      applicant.OffCampusProgram = '';
-    }
-
     if (applicationDetails.Applicants.length >= MAX_NUM_APPLICANTS) {
       // Display an error if the user try to add an applicant when the list is full
       setSnackbarText(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants`);
@@ -428,6 +420,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallAdd = () => {
     const newPlaceholderHall = {
+      ApplicationID: applicationDetails.ApplicationID,
       HallRank: applicationDetails.ApartmentChoices.length + 1,
       HallName: '',
     };
