@@ -249,8 +249,9 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  */
 const setApplicantInfo = async (applicant) => {
   let profile = applicant.Profile;
-  profile = user.setFullname(profile);
-  profile = user.setClass(profile);
+  user.setFullname(profile);
+  user.setClass(profile);
+
   applicant.Profile = profile;
   applicant.Username = profile.AD_Username;
   applicant.Class = profile.Class; // This should be after the conversion from class = number to class = word

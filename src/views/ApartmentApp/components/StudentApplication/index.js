@@ -752,7 +752,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   !applicationCardsOpen ||
                   !agreements ||
                   !(applicationDetails?.Applicants?.length > 0) ||
-                  !(applicationDetails?.ApartmentChoices?.length > 0)
+                  !(
+                    applicationDetails?.ApartmentChoices?.filter(
+                      (apartmentChoice) => apartmentChoice.HallName,
+                    )?.length > 0
+                  )
                 }
                 saving={saving}
                 submitDialogOpen={submitDialogOpen}
