@@ -552,9 +552,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    const showGenericSubmitError = () => {
-      createSnackbar('Something went wrong while trying to submit the application.', 'error');
-    };
+    const genericSubmitErrorMessage =
+      'Something went wrong while trying to submit the application.';
 
     if (!applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
       console.log('Not all applicants are valid'); //! DEBUG:
@@ -564,17 +563,17 @@ const StudentApplication = ({ userProfile, authentication }) => {
         .submitApplication(applicationDetails.ApplicationID)
         .then((result) => {
           if (!result) {
-            showGenericSubmitError();
+            createSnackbar(genericSubmitErrorMessage, 'error');
           } else {
             setApplicationCardsOpen(false);
             // loadApplication(); //? Coming soon to a feature near you
           }
         })
         .catch((err) => {
-          showGenericSubmitError();
+          createSnackbar(genericSubmitErrorMessage, 'error');
         });
     } else {
-      showGenericSubmitError();
+      createSnackbar(genericSubmitErrorMessage, 'error');
     }
   };
 
