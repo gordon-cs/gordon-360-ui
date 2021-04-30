@@ -5,7 +5,7 @@
  */
 
 import http from './http';
-import './user'; // Needed for typedef of StudentProfileInfo
+import user from './user';
 
 /**
  * @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
@@ -199,6 +199,48 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
 };
 
 /**
+ * Helper function to fill in any missing properties of an applicant object's Profile, OffCampusProgram, etc.
+ *
+ * @async
+ * @function setApplicantInfo
+ * @param {ApartmentApplicant} applicant an object representing an apartment applicant
+ * @return {ApartmentApplicant} Application details
+ */
+const setApplicantInfo = async (applicant) => {
+  if (applicant.Profile === null) {
+    if (applicant.Username) {
+      user.getProfileInfo(applicant.Username).then((profile) => {
+        applicant.Profile = profile;
+      });
+    }
+  } else {
+    applicant.Profile = user.setFullname(applicant.Profile);
+    applicant.Profile = user.setClass(applicant.Profile);
+  }
+
+  if (applicant.OffCampusProgram === null) {
+    applicant.OffCampusProgram = '';
+  }
+
+  return applicant;
+};
+
+const setApplicationDetails = async (applicationDetails) => {
+  applicationDetails = {
+    ...applicationDetails,
+    NumApplicants: applicationDetails.Applicants?.length ?? 0,
+    FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
+  };
+  if (applicationDetails.NumApplicants > 0) {
+    let applicants = await Promise.all(
+      applicationDetails.Applicants.map((applicant) => setApplicantInfo(applicant)),
+    );
+    applicationDetails.Applicants = applicants;
+  }
+  return applicationDetails;
+};
+
+/**
  * Get active apartment application for given application ID number
  *
  * @async
@@ -208,7 +250,11 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  */
 const getApartmentApplication = async (applicationID) => {
   try {
-    return await http.get(`housing/apartment/applications/${applicationID}/`);
+    let applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
+    if (applicationResult) {
+      await setApplicationDetails(applicationResult);
+    }
+    return applicationResult;
   } catch (err) {
     if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log(
@@ -230,7 +276,16 @@ const getApartmentApplication = async (applicationID) => {
  */
 const getAllApartmentApplications = async () => {
   try {
-    return await http.get(`housing/admin/apartment/applications/`);
+    let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+    if (applicationDetailsArray?.length > 0) {
+      let newApplicationDetailsArray = await Promise.all(
+        applicationDetailsArray.map((applicationDetails) =>
+          setApplicationDetails(applicationDetails),
+        ),
+      );
+      applicationDetailsArray = newApplicationDetailsArray;
+    }
+    return applicationDetailsArray;
   } catch (err) {
     if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log('Received 404 indicates that no applications were found in the database');
