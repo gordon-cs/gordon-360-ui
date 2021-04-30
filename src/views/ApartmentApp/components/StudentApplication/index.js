@@ -170,6 +170,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       return false;
     }
 
+    applicant.Profile.fullName = `${applicant.Profile.FirstName}  ${applicant.Profile.LastName}`;
+
     if (!String(applicant.Profile.PersonType).includes('stu')) {
       // Display an error if the selected user is not a student
       setSnackbarText(
@@ -420,12 +422,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleHallAdd = () => {
     const newPlaceholderHall = {
       ApplicationID: applicationDetails.ApplicationID,
-      HallRank: applicationDetails.ApartmentChoices.length + 1,
+      HallRank: (applicationDetails.ApartmentChoices?.length ?? 0) + 1,
       HallName: '',
     };
     setApplicationDetails((prevApplicationDetails) => ({
       ...prevApplicationDetails,
-      ApartmentChoices: [...prevApplicationDetails.ApartmentChoices, newPlaceholderHall],
+      ApartmentChoices: [...(prevApplicationDetails.ApartmentChoices ?? []), newPlaceholderHall],
     }));
   };
 
@@ -749,8 +751,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 disableSubmit={
                   !applicationCardsOpen ||
                   !agreements ||
-                  !(applicationDetails.Applicants.length > 0) ||
-                  !(applicationDetails.ApartmentChoices.length > 0)
+                  !(applicationDetails?.Applicants?.length > 0) ||
+                  !(applicationDetails?.ApartmentChoices?.length > 0)
                 }
                 saving={saving}
                 submitDialogOpen={submitDialogOpen}
