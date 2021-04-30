@@ -248,19 +248,13 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  * @return {ApartmentApplicant} Application details
  */
 const setApplicantInfo = async (applicant) => {
-  if (applicant.Profile === null) {
-    if (applicant.Username) {
-      user.getProfileInfo(applicant.Username).then((profile) => {
-        applicant.Profile = profile;
-      });
-    }
-  } else {
-    applicant.Profile = user.setFullname(applicant.Profile);
-    applicant.Profile = user.setClass(applicant.Profile);
-  }
-  if (applicant.OffCampusProgram === null) {
-    applicant.OffCampusProgram = '';
-  }
+  let profile = applicant.Profile;
+  profile = user.setFullname(profile);
+  profile = user.setClass(profile);
+  applicant.Profile = profile;
+  applicant.Username = profile.AD_Username;
+  applicant.Class = profile.Class; // This should be after the conversion from class = number to class = word
+  applicant.OffCampusProgram = applicant.OffCampusProgram ?? '';
   return applicant;
 };
 
