@@ -207,20 +207,16 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  * @return {ApartmentApplicant} Application details
  */
 const setApplicantInfo = async (applicant) => {
-  if (applicant.Profile === null) {
-    if (applicant.Username) {
-      user.getProfileInfo(applicant.Username).then((profile) => {
-        applicant.Profile = profile;
-      });
-    }
-  } else {
-    applicant.Profile = user.setFullname(applicant.Profile);
-    applicant.Profile = user.setClass(applicant.Profile);
-  }
+  //! DEBUG: Temporary workaround for 'Profile.PersonType' being undefined
+  user.getProfileInfo(applicant.Username ?? applicant.Profile.Username).then((profile) => {
+    applicant.Profile = profile;
+  });
+  
+  //? Ideal solution, requires more testing once 'PersonType' issue is fixed
+  // applicant.Profile = user.setFullname(applicant.Profile);
+  // applicant.Profile = user.setClass(applicant.Profile);
 
-  if (applicant.OffCampusProgram === null) {
-    applicant.OffCampusProgram = '';
-  }
+  applicant.OffCampusProgram ??= '';
 
   return applicant;
 };
@@ -231,12 +227,7 @@ const setApplicationDetails = async (applicationDetails) => {
     NumApplicants: applicationDetails.Applicants?.length ?? 0,
     FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
   };
-  if (applicationDetails.NumApplicants > 0) {
-    let applicants = await Promise.all(
-      applicationDetails.Applicants.map((applicant) => setApplicantInfo(applicant)),
-    );
-    applicationDetails.Applicants = applicants;
-  }
+  applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) => setApplicantInfo(applicant));
   return applicationDetails;
 };
 
