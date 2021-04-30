@@ -216,7 +216,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const addApplicant = async (newApplicantUsername) => {
     try {
       // Get the profile of the selected user
-      let newApplicantProfile = await user.getProfileInfo(newApplicantUsername);
+      const newApplicantProfile = await user.getProfileInfo(newApplicantUsername);
       let newApplicantObject = {
         ApplicationID: applicationDetails.ApplicationID,
         Profile: newApplicantProfile,
