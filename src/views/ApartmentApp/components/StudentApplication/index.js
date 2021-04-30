@@ -290,10 +290,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
         try {
           saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
         } catch {
-          saveApartmentApplication(applicationDetails);
-          changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
+          saveApartmentApplication(applicationDetails).then(() => {
+            changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
+          });
         }
       }
+      setCanEditApplication(false);
       handleCloseOkay();
     } else {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
@@ -325,6 +327,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       }));
       setSaving('success');
       setUnsavedChanges(true);
+      setCanEditApplication(false);
       // loadApplication(); //? Coming soon to a feature near you
     } catch {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
