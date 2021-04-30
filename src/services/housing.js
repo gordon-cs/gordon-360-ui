@@ -73,18 +73,20 @@ import user from './user';
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingAdmin = async () => {
+  let result = null;
   try {
-    return await http.get(`housing/admin`);
+    result = await http.get(`housing/admin`);
   } catch (err) {
     // handle thrown 404 errors
-    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+    if (err?.status === 401 || err?.name?.includes('AuthError')) {
       console.log('Received 401 (Unauthorized)');
     } else if (err.status === 404 || err.name.includes('NotFound')) {
       console.log('A 404 code indicates that current user was not found on the list of admins');
     } else {
       throw err;
     }
-    return false;
+  } finally {
+    return result;
   }
 };
 
@@ -138,22 +140,24 @@ const getApartmentHalls = async () => {
  * @return {Promise.<Number>} Application's ID number
  */
 const getCurrentApplicationID = async (username) => {
+  let result = null;
   try {
     if (username) {
-      return await http.get(`housing/apartment/${username}/`);
+      result = await http.get(`housing/apartment/${username}/`);
     } else {
-      return await http.get('housing/apartment');
+      result = await http.get('housing/apartment');
     }
   } catch (err) {
     // handle thrown 404 errors
-    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+    if (err?.status === 401 || err?.name?.includes('AuthError')) {
       console.log('Received 401 (Unauthorized). This should never happen');
     } else if (err.status === 404 || err.name.includes('NotFound')) {
       console.log('A 404 code indicates that an application was not found for this applicant');
     } else {
       throw err;
     }
-    return null;
+  } finally {
+    return result;
   }
 };
 
@@ -175,14 +179,18 @@ const saveApartmentApplication = async (applicationDetails) => {
   };
 
   const applicationID = applicationDetails.ApplicationID;
+  let result = null;
   try {
     if (applicationID > 0) {
-      return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
+      result = await http.put(
+        `housing/apartment/applications/${applicationID}/`,
+        applicationDetails,
+      );
     } else {
-      return await http.post(`housing/apartment/applications/`, applicationDetails);
+      result = await http.post(`housing/apartment/applications/`, applicationDetails);
     }
   } catch (err) {
-    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+    if (err?.status === 401 || err?.name?.includes('AuthError')) {
       console.log('Received 401 (Unauthorized)');
     } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log(
@@ -191,7 +199,8 @@ const saveApartmentApplication = async (applicationDetails) => {
     } else {
       throw err;
     }
-    return null;
+  } finally {
+    return result;
   }
 };
 
@@ -209,13 +218,14 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
     ApplicationID: applicationID,
     EditorUsername: newEditorUsername,
   };
+  let result = null;
   try {
-    return await http.put(
+    result = await http.put(
       `housing/apartment/applications/${applicationID}/editor/`,
       newEditorDetails,
     );
   } catch (err) {
-    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+    if (err?.status === 401 || err?.name?.includes('AuthError')) {
       console.log('Received 401 (Unauthorized)');
     } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log(
@@ -224,7 +234,8 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
     } else {
       throw err;
     }
-    return null;
+  } finally {
+    return result;
   }
 };
 
@@ -247,11 +258,9 @@ const setApplicantInfo = async (applicant) => {
     applicant.Profile = user.setFullname(applicant.Profile);
     applicant.Profile = user.setClass(applicant.Profile);
   }
-
   if (applicant.OffCampusProgram === null) {
     applicant.OffCampusProgram = '';
   }
-
   return applicant;
 };
 
@@ -279,14 +288,14 @@ const setApplicationDetails = async (applicationDetails) => {
  * @return {Promise.<ApplicationDetails>} Application details
  */
 const getApartmentApplication = async (applicationID) => {
+  let applicationResult = null;
   try {
-    let applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
+    applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
     if (applicationResult) {
       await setApplicationDetails(applicationResult);
     }
-    return applicationResult;
   } catch (err) {
-    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+    if (err?.status === 401 || err?.name?.includes('AuthError')) {
       console.log('Received 401 (Unauthorized)');
     } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log(
@@ -295,7 +304,9 @@ const getApartmentApplication = async (applicationID) => {
     } else {
       throw err;
     }
-    return null;
+  } finally {
+    console.log(applicationResult); //! DEBUG:
+    return applicationResult;
   }
 };
 
@@ -307,26 +318,29 @@ const getApartmentApplication = async (applicationID) => {
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getAllApartmentApplications = async () => {
+  let result = [];
   try {
     let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+    result = applicationDetailsArray; // This is intensionally done first, rather than inside an 'else'
     if (applicationDetailsArray?.length > 0) {
-      let newApplicationDetailsArray = await Promise.all(
+      result = await Promise.all(
         applicationDetailsArray.map((applicationDetails) =>
           setApplicationDetails(applicationDetails),
         ),
       );
-      applicationDetailsArray = newApplicationDetailsArray;
     }
-    return applicationDetailsArray;
   } catch (err) {
-    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+    if (err?.status === 401 || err?.name?.includes('AuthError')) {
       console.log('Received 401 (Unauthorized)');
     } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log('Received 404 indicates that no applications were found in the database');
     } else {
       throw err;
     }
-    return []; // Return an empty array if no applications were found
+    result = []; // Return an empty array if no applications were found
+  } finally {
+    console.log(result); //! DEBUG:
+    return result;
   }
 };
 
