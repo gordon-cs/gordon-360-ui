@@ -12,6 +12,7 @@ import HallSelection from './components/HallSelection';
 import OffCampusSection from './components/OffCampusSection';
 import Agreements from './components/Agreements';
 import BottomBar from './components/BottomBar';
+import { AuthError, NotFoundError } from 'services/error';
 import housing from 'services/housing';
 import user from 'services/user';
 
@@ -314,11 +315,17 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setCanEditApplication(false);
       }
       // loadApplication(); //? Coming soon to a feature near you
-    } catch {
-      createSnackbar(
-        'Something went wrong while trying to save the new application editor.',
-        'error',
-      );
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to make changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar(
+          'Something went wrong while trying to save the new application editor.',
+          'error',
+        );
+      }
       setSaving('failed');
     } finally {
       if (saveButtonAlertTimeout === null) {

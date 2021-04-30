@@ -207,25 +207,10 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
     ApplicationID: applicationID,
     EditorUsername: newEditorUsername,
   };
-  let result = null;
-  try {
-    result = await http.put(
-      `housing/apartment/applications/${applicationID}/editor/`,
-      newEditorDetails,
-    );
-  } catch (err) {
-    if (err instanceof AuthError) {
-      console.log('Received 401 (Unauthorized)');
-    } else if (err instanceof NotFoundError) {
-      console.log(
-        'Received 404 indicates that the requested application was not found in the database',
-      );
-    } else {
-      throw err;
-    }
-  } finally {
-    return result;
-  }
+  return await http.put(
+    `housing/apartment/applications/${applicationID}/editor/`,
+    newEditorDetails,
+  );
 };
 
 /**
