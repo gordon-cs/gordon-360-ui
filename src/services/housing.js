@@ -225,6 +225,11 @@ function setApplicantInfo(applicant) {
   // user.setFullname(applicant.Profile);
   // user.setClass(applicant.Profile);
 
+  if (applicant.Class === null || Number(applicant.Class)) {
+    // Use converted Class from number ('1', '2', '3', ...) to words ('Freshman', 'Sophomore', ...)
+    applicant.Class = applicant.Profile.Class;
+  }
+
   applicant.OffCampusProgram ??= '';
 
   return applicant;
@@ -271,10 +276,10 @@ const getApartmentApplication = async (applicationID) => {
  * Get active apartment applications for the current semester
  *
  * @async
- * @function getAllApartmentApplications
+ * @function getSubmittedApartmentApplications
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
-const getAllApartmentApplications = async () => {
+const getSubmittedApartmentApplications = async () => {
   try {
     let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
     applicationDetailsArray.forEach((applicationDetails) =>
@@ -313,6 +318,6 @@ export default {
   saveApartmentApplication,
   changeApartmentAppEditor,
   getApartmentApplication,
-  getAllApartmentApplications,
+  getSubmittedApartmentApplications,
   submitApplication,
 };
