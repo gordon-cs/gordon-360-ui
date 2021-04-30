@@ -65,6 +65,8 @@ import user from './user';
  * @property {Number} AvgPoints The average application points per applicant
  */
 
+// const customErrorHandler = async () => {};
+
 /**
  * Check if the current user is authorized to view the housing staff page for applications
  *
@@ -77,6 +79,10 @@ const checkHousingAdmin = async () => {
   try {
     result = await http.get(`housing/admin`);
   } catch (err) {
+    console.log(err);
+    console.log(err.response);
+    console.log(err.response.status);
+    console.log(err.status);
     // handle thrown 404 errors
     if (err?.status === 401 || err?.name?.includes('AuthError')) {
       console.log('Received 401 (Unauthorized)');
@@ -242,37 +248,45 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
 /**
  * Helper function to fill in any missing properties of an applicant object's Profile, OffCampusProgram, etc.
  *
- * @async
  * @function setApplicantInfo
  * @param {ApartmentApplicant} applicant an object representing an apartment applicant
  * @return {ApartmentApplicant} Application details
  */
-const setApplicantInfo = async (applicant) => {
-  let profile = applicant.Profile;
-  user.setFullname(profile);
-  user.setClass(profile);
+function setApplicantInfo(applicant) {
+  //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
+  user.getProfileInfo(applicant.Username ?? applicant.Profile.AD_Username).then((profile) => {
+    applicant.Profile = profile;
+  });
 
-  applicant.Profile = profile;
-  applicant.Username = profile.AD_Username;
-  applicant.Class = profile.Class; // This should be after the conversion from class = number to class = word
-  applicant.OffCampusProgram = applicant.OffCampusProgram ?? '';
-  return applicant;
-};
+  /**
+   * The following commented out commands are implicitly handled by `user.getProfileInfo()`,
+   * so these lines are not needed while the above workaround is still in place
+   */
+  //? This is the ideal solution. Requires more testing after the 'PersonType' issue is fixed in the API
+  // user.setFullname(applicant.Profile);
+  // user.setClass(applicant.Profile);
 
-const setApplicationDetails = async (applicationDetails) => {
-  applicationDetails = {
-    ...applicationDetails,
-    NumApplicants: applicationDetails.Applicants?.length ?? 0,
-    FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
-  };
-  if (applicationDetails.NumApplicants > 0) {
-    let applicants = await Promise.all(
-      applicationDetails.Applicants.map((applicant) => setApplicantInfo(applicant)),
-    );
-    applicationDetails.Applicants = applicants;
+  if (applicant.Class === null || Number(applicant.Class)) {
+    // Use converted Class from number ('1', '2', '3', ...) to words ('Freshman', 'Sophomore', ...)
+    applicant.Class = applicant.Profile.Class;
   }
+
+  applicant.OffCampusProgram ??= '';
+
+  return applicant;
+}
+
+function setApplicationDetails(applicationDetails) {
+  console.debug(`formatting application # ${applicationDetails.ApplicationID}`);
+  applicationDetails.Applicants ??= [];
+  applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) =>
+    setApplicantInfo(applicant),
+  );
+  applicationDetails.ApartmentChoices ??= [];
+  applicationDetails.NumApplicants = applicationDetails.Applicants?.length ?? 0;
+  applicationDetails.FirstHall = applicationDetails.ApartmentChoices[0]?.HallName ?? '';
   return applicationDetails;
-};
+}
 
 /**
  * Get active apartment application for given application ID number
@@ -286,9 +300,7 @@ const getApartmentApplication = async (applicationID) => {
   let applicationResult = null;
   try {
     applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
-    if (applicationResult) {
-      await setApplicationDetails(applicationResult);
-    }
+    setApplicationDetails(applicationResult);
   } catch (err) {
     if (err?.status === 401 || err?.name?.includes('AuthError')) {
       console.log('Received 401 (Unauthorized)');
@@ -309,21 +321,17 @@ const getApartmentApplication = async (applicationID) => {
  * Get active apartment applications for the current semester
  *
  * @async
- * @function getAllApartmentApplications
+ * @function getSubmittedApartmentApplications
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
-const getAllApartmentApplications = async () => {
+const getSubmittedApartmentApplications = async () => {
   let result = [];
   try {
     let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+    applicationDetailsArray.forEach((applicationDetails) =>
+      setApplicationDetails(applicationDetails),
+    );
     result = applicationDetailsArray; // This is intensionally done first, rather than inside an 'else'
-    if (applicationDetailsArray?.length > 0) {
-      result = await Promise.all(
-        applicationDetailsArray.map((applicationDetails) =>
-          setApplicationDetails(applicationDetails),
-        ),
-      );
-    }
   } catch (err) {
     if (err?.status === 401 || err?.name?.includes('AuthError')) {
       console.log('Received 401 (Unauthorized)');
@@ -361,6 +369,6 @@ export default {
   saveApartmentApplication,
   changeApartmentAppEditor,
   getApartmentApplication,
-  getAllApartmentApplications,
+  getSubmittedApartmentApplications,
   submitApplication,
 };
