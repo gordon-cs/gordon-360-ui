@@ -222,8 +222,8 @@ function setApplicantInfo(applicant) {
    * so these lines are not needed while the above workaround is still in place
    */
   //? This is the ideal solution. Requires more testing after the 'PersonType' issue is fixed in the API
-  // applicant.Profile = user.setFullname(applicant.Profile);
-  // applicant.Profile = user.setClass(applicant.Profile);
+  // user.setFullname(applicant.Profile);
+  // user.setClass(applicant.Profile);
 
   applicant.OffCampusProgram ??= '';
 
@@ -231,6 +231,7 @@ function setApplicantInfo(applicant) {
 }
 
 function setApplicationDetails(applicationDetails) {
+  console.debug(`formatting application # ${applicationDetails.ApplicationID}`);
   applicationDetails.Applicants ??= [];
   applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) =>
     setApplicantInfo(applicant),
@@ -252,9 +253,7 @@ function setApplicationDetails(applicationDetails) {
 const getApartmentApplication = async (applicationID) => {
   try {
     let applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
-    if (applicationResult) {
-      await setApplicationDetails(applicationResult);
-    }
+    setApplicationDetails(applicationResult);
     return applicationResult;
   } catch (err) {
     if (err?.status === 404 || err?.name?.includes('NotFound')) {
@@ -278,14 +277,9 @@ const getApartmentApplication = async (applicationID) => {
 const getAllApartmentApplications = async () => {
   try {
     let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
-    if (applicationDetailsArray?.length > 0) {
-      let newApplicationDetailsArray = await Promise.all(
-        applicationDetailsArray.map((applicationDetails) =>
-          setApplicationDetails(applicationDetails),
-        ),
-      );
-      applicationDetailsArray = newApplicationDetailsArray;
-    }
+    applicationDetailsArray.forEach((applicationDetails) =>
+      setApplicationDetails(applicationDetails),
+    );
     return applicationDetailsArray;
   } catch (err) {
     if (err?.status === 404 || err?.name?.includes('NotFound')) {
