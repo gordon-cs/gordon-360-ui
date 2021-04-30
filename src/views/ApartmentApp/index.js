@@ -5,7 +5,6 @@ import GordonLoader from 'components/Loader';
 import StaffMenu from './components/StaffMenu';
 import StudentApplication from './components/StudentApplication';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { NotFoundError } from 'services/error';
 import housing from 'services/housing';
 import user from 'services/user';
 import './apartmentApp.css';
@@ -39,7 +38,6 @@ const ApartApp = ({ authentication }) => {
           setCanUseStaff(await housing.checkHousingAdmin());
         } catch (e) {
           console.debug(e);
-          console.debug(e instanceof NotFoundError);
           setCanUseStaff(false);
         }
       } catch {
