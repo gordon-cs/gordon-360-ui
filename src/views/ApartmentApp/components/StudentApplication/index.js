@@ -314,7 +314,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setUnsavedChanges(false);
         setCanEditApplication(false);
       }
-      // loadApplication(); //? Coming soon to a feature near you
+      loadApplication();
     } catch (e) {
       if (e instanceof AuthError) {
         createSnackbar('You are not authorized to make changes to this application.', 'error');
@@ -503,7 +503,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         }));
         setSaving('success');
         setUnsavedChanges(false);
-        // loadApplication(); //? Coming soon to a feature near you
+        loadApplication();
       } else {
         // The `isApplicantValid` function will handle the snackbar message
         setSaving('failed');
@@ -564,7 +564,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
             createSnackbar(genericSubmitErrorMessage, 'error');
           } else {
             setApplicationCardsOpen(false);
-            // loadApplication(); //? Coming soon to a feature near you
+            loadApplication();
           }
         })
         .catch((err) => {
