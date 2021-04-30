@@ -12,7 +12,7 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core/';
-import housing from '../../../../../../services/housing';
+import housing from 'services/housing';
 
 /**
  * Renders a card displaying the apartment application instructions

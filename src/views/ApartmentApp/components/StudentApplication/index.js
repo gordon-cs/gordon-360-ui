@@ -2,9 +2,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { sortBy } from 'lodash';
 import { Collapse, Grid } from '@material-ui/core/';
-import GordonLoader from '../../../../components/Loader';
-import GordonDialogBox from '../../../../components/GordonDialogBox';
-import GordonSnackbar from '../../../../components/Snackbar';
+import GordonLoader from 'components/Loader';
+import GordonDialogBox from 'components/GordonDialogBox';
+import GordonSnackbar from 'components/Snackbar';
 import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
@@ -12,8 +12,8 @@ import HallSelection from './components/HallSelection';
 import OffCampusSection from './components/OffCampusSection';
 import Agreements from './components/Agreements';
 import BottomBar from './components/BottomBar';
-import housing from '../../../../services/housing';
-import user from '../../../../services/user';
+import housing from 'services/housing';
+import user from 'services/user';
 
 const MAX_NUM_APPLICANTS = 8;
 const BLANK_APPLICATION_DETAILS = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backdrop, Button, Card, CardContent, Grid, Typography } from '@material-ui/core/';
-import GordonLoader from '../../../../../../components/Loader';
-import GordonDialogBox from '../../../../../../components/GordonDialogBox';
+import GordonLoader from 'components/Loader';
+import GordonDialogBox from 'components/GordonDialogBox';
 import SaveButton from './components/SaveButton';
 
 // TODO: Improve this text for the users

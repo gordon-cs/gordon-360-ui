@@ -1,13 +1,13 @@
 //Main apartment application page
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardContent, Button } from '@material-ui/core/';
-import GordonLoader from '../../components/Loader';
-import StudentApplication from './components/StudentApplication';
+import GordonLoader from 'components/Loader';
 import StaffMenu from './components/StaffMenu';
-import useNetworkStatus from '../../hooks/useNetworkStatus';
+import StudentApplication from './components/StudentApplication';
+import useNetworkStatus from 'hooks/useNetworkStatus';
 import { NotFoundError } from 'services/error';
-import housing from '../../services/housing';
-import user from '../../services/user';
+import housing from 'services/housing';
+import user from 'services/user';
 import './apartmentApp.css';
 
 /**
