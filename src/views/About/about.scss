@@ -1,9 +1,33 @@
 @import '../../vars';
 
-p {
-  margin-left: 15px;
-}
+.about {
+  margin: 1rem;
 
-div.indent {
-  padding-left: 20pt;
+  li {
+    list-style-type: '⮞ ';
+  }
+
+  & .MuiCard-root {
+    box-shadow: none;
+  }
+
+  &-title {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  &-contributors .MuiTypography-root {
+    white-space: pre-wrap;
+    margin-left: 1rem;
+  }
+
+  &-header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+  }
+
+  //TODO Issue #1098 - remove when timeshets.scss stops centering grid items
+  &-content {
+    text-align: start;
+  }
 }
