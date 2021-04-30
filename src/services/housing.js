@@ -4,6 +4,7 @@
  * @module housing
  */
 
+import { AuthError, NotFoundError } from './error';
 import http from './http';
 import user from './user';
 
@@ -35,7 +36,7 @@ import user from './user';
  * @property {DateTime} [BirthDate] The birthday of this applicant (only visible to housing admin)
  * @property {Number} [Age] The age of the student (in years) (only visible to housing admin)
  * @property {String} [Class] Class
- * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or 'None'
+ * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or '' (empty string)
  * @property {String} Probation Indicates whether the student has a disiplinary probation (visble only to housing admin)
  * @property {Number} Points The number of application points for this student (only visible to housing admin)
  */
@@ -75,25 +76,7 @@ import user from './user';
  * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingAdmin = async () => {
-  let result = null;
-  try {
-    result = await http.get(`housing/admin`);
-  } catch (err) {
-    console.log(err);
-    console.log(err.response);
-    console.log(err.response.status);
-    console.log(err.status);
-    // handle thrown 404 errors
-    if (err?.status === 401 || err?.name?.includes('AuthError')) {
-      console.log('Received 401 (Unauthorized)');
-    } else if (err.status === 404 || err.name.includes('NotFound')) {
-      console.log('A 404 code indicates that current user was not found on the list of admins');
-    } else {
-      throw err;
-    }
-  } finally {
-    return result;
-  }
+  return await http.get(`housing/admin`);
 };
 
 /**
@@ -155,9 +138,9 @@ const getCurrentApplicationID = async (username) => {
     }
   } catch (err) {
     // handle thrown 404 errors
-    if (err?.status === 401 || err?.name?.includes('AuthError')) {
+    if (err instanceof AuthError) {
       console.log('Received 401 (Unauthorized). This should never happen');
-    } else if (err.status === 404 || err.name.includes('NotFound')) {
+    } else if (err instanceof NotFoundError) {
       console.log('A 404 code indicates that an application was not found for this applicant');
     } else {
       throw err;
@@ -196,9 +179,9 @@ const saveApartmentApplication = async (applicationDetails) => {
       result = await http.post(`housing/apartment/applications/`, applicationDetails);
     }
   } catch (err) {
-    if (err?.status === 401 || err?.name?.includes('AuthError')) {
+    if (err instanceof AuthError) {
       console.log('Received 401 (Unauthorized)');
-    } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
+    } else if (err instanceof NotFoundError) {
       console.log(
         'Received 404 indicates that the requested application was not found in the database',
       );
@@ -231,9 +214,9 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
       newEditorDetails,
     );
   } catch (err) {
-    if (err?.status === 401 || err?.name?.includes('AuthError')) {
+    if (err instanceof AuthError) {
       console.log('Received 401 (Unauthorized)');
-    } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
+    } else if (err instanceof NotFoundError) {
       console.log(
         'Received 404 indicates that the requested application was not found in the database',
       );
@@ -271,18 +254,17 @@ function setApplicantInfo(applicant) {
     applicant.Class = applicant.Profile.Class;
   }
 
-  applicant.OffCampusProgram ??= '';
+  applicant.OffCampusProgram ?? (applicant.OffCampusProgram = '');
 
   return applicant;
 }
 
 function setApplicationDetails(applicationDetails) {
   console.debug(`formatting application # ${applicationDetails.ApplicationID}`);
-  applicationDetails.Applicants ??= [];
-  applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) =>
-    setApplicantInfo(applicant),
-  );
-  applicationDetails.ApartmentChoices ??= [];
+  applicationDetails.Gender = applicationDetails.EditorProfile.Gender;
+  applicationDetails.Applicants =
+    applicationDetails.Applicants?.map((applicant) => setApplicantInfo(applicant)) ?? [];
+  applicationDetails.ApartmentChoices ?? (applicationDetails.ApartmentChoices = []);
   applicationDetails.NumApplicants = applicationDetails.Applicants?.length ?? 0;
   applicationDetails.FirstHall = applicationDetails.ApartmentChoices[0]?.HallName ?? '';
   return applicationDetails;
@@ -302,9 +284,9 @@ const getApartmentApplication = async (applicationID) => {
     applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
     setApplicationDetails(applicationResult);
   } catch (err) {
-    if (err?.status === 401 || err?.name?.includes('AuthError')) {
+    if (err instanceof AuthError) {
       console.log('Received 401 (Unauthorized)');
-    } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
+    } else if (err instanceof NotFoundError) {
       console.log(
         'Received 404 indicates that the requested application was not found in the database',
       );
@@ -333,9 +315,9 @@ const getSubmittedApartmentApplications = async () => {
     );
     result = applicationDetailsArray; // This is intensionally done first, rather than inside an 'else'
   } catch (err) {
-    if (err?.status === 401 || err?.name?.includes('AuthError')) {
+    if (err instanceof AuthError) {
       console.log('Received 401 (Unauthorized)');
-    } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
+    } else if (err instanceof NotFoundError) {
       console.log('Received 404 indicates that no applications were found in the database');
     } else {
       throw err;
