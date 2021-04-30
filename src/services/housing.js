@@ -205,9 +205,9 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  * @param {ApartmentApplicant} applicant an object representing an apartment applicant
  * @return {ApartmentApplicant} Application details
  */
-const setApplicantInfo = (applicant) => {
+function setApplicantInfo(applicant) {
   //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
-  user.getProfileInfo(applicant.Username ?? applicant.Profile.Username).then((profile) => {
+  user.getProfileInfo(applicant.Username ?? applicant.Profile.AD_Username).then((profile) => {
     applicant.Profile = profile;
   });
 
@@ -222,19 +222,18 @@ const setApplicantInfo = (applicant) => {
   applicant.OffCampusProgram ??= '';
 
   return applicant;
-};
+}
 
-const setApplicationDetails = async (applicationDetails) => {
-  applicationDetails = {
-    ...applicationDetails,
-    NumApplicants: applicationDetails.Applicants?.length ?? 0,
-    FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
-  };
+function setApplicationDetails(applicationDetails) {
+  applicationDetails.Applicants ??= [];
   applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) =>
     setApplicantInfo(applicant),
   );
+  applicationDetails.ApartmentChoices ??= [];
+  applicationDetails.NumApplicants = applicationDetails.Applicants?.length ?? 0;
+  applicationDetails.FirstHall = applicationDetails.ApartmentChoices[0]?.HallName ?? '';
   return applicationDetails;
-};
+}
 
 /**
  * Get active apartment application for given application ID number
