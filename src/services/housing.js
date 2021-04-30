@@ -65,6 +65,8 @@ import user from './user';
  * @property {Number} AvgPoints The average application points per applicant
  */
 
+// const customErrorHandler = async () => {};
+
 /**
  * Check if the current user is authorized to view the housing staff page for applications
  *
@@ -76,6 +78,10 @@ const checkHousingAdmin = async () => {
   try {
     return await http.get(`housing/admin`);
   } catch (err) {
+    console.log(err);
+    console.log(err.response);
+    console.log(err.response.status);
+    console.log(err.status);
     // handle thrown 404 errors
     if (err.status === 404 || err.name.includes('NotFound')) {
       console.log('A 404 code indicates that current user was not found on the list of admins');
