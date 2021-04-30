@@ -77,7 +77,9 @@ const checkHousingAdmin = async () => {
     return await http.get(`housing/admin`);
   } catch (err) {
     // handle thrown 404 errors
-    if (err.status === 404 || err.name.includes('NotFound')) {
+    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+      console.log('Received 401 (Unauthorized)');
+    } else if (err.status === 404 || err.name.includes('NotFound')) {
       console.log('A 404 code indicates that current user was not found on the list of admins');
     } else {
       throw err;
@@ -144,7 +146,9 @@ const getCurrentApplicationID = async (username) => {
     }
   } catch (err) {
     // handle thrown 404 errors
-    if (err.status === 404 || err.name.includes('NotFound')) {
+    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+      console.log('Received 401 (Unauthorized). This should never happen');
+    } else if (err.status === 404 || err.name.includes('NotFound')) {
       console.log('A 404 code indicates that an application was not found for this applicant');
     } else {
       throw err;
@@ -171,10 +175,23 @@ const saveApartmentApplication = async (applicationDetails) => {
   };
 
   const applicationID = applicationDetails.ApplicationID;
-  if (applicationID > 0) {
-    return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
-  } else {
-    return await http.post(`housing/apartment/applications/`, applicationDetails);
+  try {
+    if (applicationID > 0) {
+      return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
+    } else {
+      return await http.post(`housing/apartment/applications/`, applicationDetails);
+    }
+  } catch (err) {
+    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+      console.log('Received 401 (Unauthorized)');
+    } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
+      console.log(
+        'Received 404 indicates that the requested application was not found in the database',
+      );
+    } else {
+      throw err;
+    }
+    return null;
   }
 };
 
@@ -192,10 +209,23 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
     ApplicationID: applicationID,
     EditorUsername: newEditorUsername,
   };
-  return await http.put(
-    `housing/apartment/applications/${applicationID}/editor/`,
-    newEditorDetails,
-  );
+  try {
+    return await http.put(
+      `housing/apartment/applications/${applicationID}/editor/`,
+      newEditorDetails,
+    );
+  } catch (err) {
+    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+      console.log('Received 401 (Unauthorized)');
+    } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
+      console.log(
+        'Received 404 indicates that the requested application was not found in the database',
+      );
+    } else {
+      throw err;
+    }
+    return null;
+  }
 };
 
 /**
@@ -256,7 +286,9 @@ const getApartmentApplication = async (applicationID) => {
     }
     return applicationResult;
   } catch (err) {
-    if (err?.status === 404 || err?.name?.includes('NotFound')) {
+    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+      console.log('Received 401 (Unauthorized)');
+    } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log(
         'Received 404 indicates that the requested application was not found in the database',
       );
@@ -287,7 +319,9 @@ const getAllApartmentApplications = async () => {
     }
     return applicationDetailsArray;
   } catch (err) {
-    if (err?.status === 404 || err?.name?.includes('NotFound')) {
+    if (err?.status === 401 || err?.name?.includes('Unauthorized')) {
+      console.log('Received 401 (Unauthorized)');
+    } else if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log('Received 404 indicates that no applications were found in the database');
     } else {
       throw err;
