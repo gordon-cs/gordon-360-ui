@@ -284,7 +284,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleChangeEditorAccepted = () => {
     if (newEditorProfile?.AD_Username) {
       // The method is separated from callback because the housing API service must be handled inside an async method
-      if (applicationDetails.ApplicationID > 0) {
+      if (applicationDetails.ApplicationID > 0 && !unsavedChanges) {
         changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
       } else {
         try {

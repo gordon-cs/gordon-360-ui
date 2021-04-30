@@ -105,14 +105,14 @@ const BottomBar = ({
               <Grid item xs>
                 <SaveButton
                   saving={saving}
-                  onClick={canEditApplication && onSaveButtonClick}
+                  onClick={canEditApplication ? onSaveButtonClick : undefined}
                   disabled={!canEditApplication || !unsavedChanges}
                 />
               </Grid>
               <Grid item xs>
                 <Button
                   variant="contained"
-                  onClick={canEditApplication && onSubmitButtonClick}
+                  onClick={canEditApplication ? onSubmitButtonClick : undefined}
                   color="secondary"
                   fullWidth
                   disabled={!canEditApplication || disableSubmit}
