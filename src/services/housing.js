@@ -201,18 +201,21 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
 /**
  * Helper function to fill in any missing properties of an applicant object's Profile, OffCampusProgram, etc.
  *
- * @async
  * @function setApplicantInfo
  * @param {ApartmentApplicant} applicant an object representing an apartment applicant
  * @return {ApartmentApplicant} Application details
  */
-const setApplicantInfo = async (applicant) => {
-  //! DEBUG: Temporary workaround for 'Profile.PersonType' being undefined
+const setApplicantInfo = (applicant) => {
+  //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
   user.getProfileInfo(applicant.Username ?? applicant.Profile.Username).then((profile) => {
     applicant.Profile = profile;
   });
-  
-  //? Ideal solution, requires more testing once 'PersonType' issue is fixed
+
+  /**
+   * The following commented out commands are implicitly handled by `user.getProfileInfo()`,
+   * so these lines are not needed while the above workaround is still in place
+   */
+  //? This is the ideal solution. Requires more testing after the 'PersonType' issue is fixed in the API
   // applicant.Profile = user.setFullname(applicant.Profile);
   // applicant.Profile = user.setClass(applicant.Profile);
 
@@ -227,7 +230,9 @@ const setApplicationDetails = async (applicationDetails) => {
     NumApplicants: applicationDetails.Applicants?.length ?? 0,
     FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
   };
-  applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) => setApplicantInfo(applicant));
+  applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) =>
+    setApplicantInfo(applicant),
+  );
   return applicationDetails;
 };
 
