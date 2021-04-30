@@ -40,7 +40,7 @@ export default [
     component: WellnessCheck,
   },
   {
-    name: 'Apartment App',
+    name: 'Apartment Application',
     path: '/ApartApp',
     component: ApartmentApp,
   },
