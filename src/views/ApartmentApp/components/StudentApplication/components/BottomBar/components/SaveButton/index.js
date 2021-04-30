@@ -11,7 +11,7 @@ const SaveButton = ({ disabled, saving, onClick }) => {
   let saveButtonIcon = <SaveIcon />;
   if (saving) {
     if (saving === 'success') {
-      saveButtonIcon = <CheckCircleIcon className="success" />;
+      saveButtonIcon = <CheckCircleIcon />;
     } else if (saving === 'failed') {
       saveButtonIcon = <ErrorIcon className="error" />;
     } else {
@@ -23,7 +23,7 @@ const SaveButton = ({ disabled, saving, onClick }) => {
 
   return (
     <Button
-      disabled={disabled || saving}
+      disabled={disabled || Boolean(saving)}
       variant="contained"
       color="secondary"
       startIcon={saveButtonIcon}
