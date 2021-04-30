@@ -256,12 +256,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
    */
   const handleChangeEditor = (profile) => {
-    if (profile) {
+    if (canEditApplication && profile) {
       if (
         applicationDetails.Applicants.some(
           (applicant) => applicant.Profile.AD_Username === profile.AD_Username,
         )
       ) {
+        if (unsavedChanges) {
+          saveApartmentApplication(applicationDetails);
+        }
         setNewEditorProfile(profile);
         setChangeEditorDialogOpen(true);
       }
@@ -276,9 +279,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       try {
         saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
       } catch {
-        saveApartmentApplication(applicationDetails).then(() => {
-          changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
-        });
+        changeApplicationEditor(newEditorProfile); //! Will be deprecated eventually...
       } finally {
         setCanEditApplication(false);
         handleCloseOkay();
@@ -296,24 +297,28 @@ const StudentApplication = ({ userProfile, authentication }) => {
    *
    * @async
    * @function changeApplicationEditor
-   * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
+   * @param {StudentProfileInfo} newEditorProfile the StudentProfileInfo object for the person who will be allowed to edit this application
    */
-  const changeApplicationEditor = async (newEditorUsername) => {
+  const changeApplicationEditor = async (newEditorProfile) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
+    let result = null;
     try {
-      const result = await housing.changeApartmentAppEditor(
+      result = await housing.changeApartmentAppEditor(
         applicationDetails.ApplicationID,
-        newEditorUsername,
+        newEditorProfile.AD_Username,
       );
+      console.log('Result of changeApartmentAppEditor:'); //! DEBUG
       console.log(result); //! DEBUG
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        EditorProfile: newEditorProfile,
-      }));
-      setSaving('success');
-      setUnsavedChanges(true);
-      setCanEditApplication(false);
+      if (result) {
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          EditorProfile: newEditorProfile,
+        }));
+        setSaving('success');
+        setUnsavedChanges(false);
+        setCanEditApplication(false);
+      }
       // loadApplication(); //? Coming soon to a feature near you
     } catch {
       setSnackbarText('Something went wrong while trying to save the new application editor.');
@@ -490,7 +495,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         applicationDetails.Applicants.length === 0 ||
         applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))
       ) {
-        const result = await housing.saveApartmentApplication(applicationDetails);
+        result = await housing.saveApartmentApplication(applicationDetails);
         console.log('result of saving: ' + result); //! DEBUG
         setApplicationDetails((prevApplicationDetails) => ({
           ...prevApplicationDetails,
@@ -613,6 +618,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   const changeEditorAlertText = (
     <span>
+      You are about to change the editor to {newEditorProfile.FirstName} {newEditorProfile.LastName}
+      <br />
       If you change the application editor, you will no longer be able to edit this application
       yourself.
       <br />
