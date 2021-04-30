@@ -105,18 +105,25 @@ const StudentApplication = ({ userProfile, authentication }) => {
     //! DEBUG
     console.debug('Array state variable. Printing contents:');
     //! DEBUG
+    console.debug('ApplicationID:');
+    console.debug(applicationDetails?.ApplicationID);
+    //! DEBUG
     console.debug('EditorUsername:');
     console.debug(applicationDetails?.EditorProfile?.AD_Username);
     //! DEBUG
-    console.debug('Applicants:');
+    console.debug('Applicants: [');
     applicationDetails?.Applicants?.forEach((element) => {
-      console.debug(`${element?.Profile?.AD_Username}, ${element.OffCampusProgram}`);
+      console.debug(
+        `${element?.Profile?.AD_Username}, OffCampus: ${element.OffCampusProgram}, Class: ${element?.Profile?.Class}, Gender: ${element?.Profile?.Gender}`,
+      );
     });
+    console.debug(']');
     //! DEBUG
-    console.debug('Preferred Halls:');
+    console.debug('Preferred Halls: [');
     applicationDetails?.ApartmentChoices?.forEach((element) => {
-      console.debug(`${element?.HallName}, ${element?.HallRank}`);
+      console.debug(`Rank: ${element?.HallRank}, Name: ${element?.HallName}`);
     });
+    console.debug(']');
     //! DEBUG
   }, [applicationDetails]);
 
