@@ -4,7 +4,7 @@ import { sortBy } from 'lodash';
 import { Collapse, Grid } from '@material-ui/core/';
 import GordonLoader from '../../../../components/Loader';
 import GordonDialogBox from '../../../../components/GordonDialogBox';
-import SimpleSnackbar from '../../../../components/Snackbar';
+import GordonSnackbar from '../../../../components/Snackbar';
 import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
@@ -55,9 +55,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [changeEditorDialogOpen, setChangeEditorDialogOpen] = useState(false);
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarText, setSnackbarText] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
 
   /**
@@ -156,17 +154,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const isApplicantValid = (applicant) => {
     // Check that the applicant contains the required fields
     if (applicant?.Profile === null) {
-      setSnackbarText('Something went wrong while trying to add this person. Please try again.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
+      createSnackbar(
+        'Something went wrong while trying to add this person. Please try again.',
+        'error',
+      );
       return false;
     }
 
     if (applicationDetails.Applicants.length >= MAX_NUM_APPLICANTS) {
       // Display an error if the user try to add an applicant when the list is full
-      setSnackbarText(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants`);
-      setSnackbarSeverity('warning');
-      setSnackbarOpen(true);
+      createSnackbar(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants`, 'warning');
       return false;
     }
 
@@ -174,21 +171,19 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
     if (!String(applicant.Profile.PersonType).includes('stu')) {
       // Display an error if the selected user is not a student
-      setSnackbarText(
+      createSnackbar(
         `Could not add ${applicant.Profile.fullName} as an applicant because they are not a student.`,
+        'warning',
       );
-      setSnackbarSeverity('warning');
-      setSnackbarOpen(true);
       return false;
     }
 
     if (applicant.Profile.Gender !== applicationDetails.Gender) {
       // Display an error if the selected user is not the same gender
-      setSnackbarText(
+      createSnackbar(
         `Could not add ${applicant.Profile.fullName} as an applicant because they are not the same gender as the other applicants.`,
+        'warning',
       );
-      setSnackbarSeverity('warning');
-      setSnackbarOpen(true);
       return false;
     }
 
@@ -196,11 +191,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
     housing.getCurrentApplicationID(applicant.Profile.AD_Username).then((existingAppID) => {
       if (existingAppID > 0 && existingAppID !== applicationDetails.ApplicationID) {
         // Display an error if the given applicant is already on a different application in the database
-        setSnackbarText(
+        createSnackbar(
           `${applicant.Profile.fullName} is already on another application for this semester.`,
+          'warning',
         );
-        setSnackbarSeverity('warning');
-        setSnackbarOpen(true);
         return false;
       }
     });
@@ -218,7 +212,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const addApplicant = async (newApplicantUsername) => {
     try {
       // Get the profile of the selected user
-      let newApplicantProfile = await user.getProfileInfo(newApplicantUsername);
+      const newApplicantProfile = await user.getProfileInfo(newApplicantUsername);
       let newApplicantObject = {
         ApplicationID: applicationDetails.ApplicationID,
         Profile: newApplicantProfile,
@@ -231,8 +225,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         )
       ) {
         // Display an error if the selected user is already in the list
-        setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
-        setSnackbarSeverity('info');
+        createSnackbar(String(newApplicantProfile.fullName) + ' is already in the list.', 'info');
       } else {
         if (isApplicantValid(newApplicantObject)) {
           // Add the profile object to the list of applicants
@@ -245,10 +238,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
         }
       }
     } catch (error) {
-      setSnackbarText('Something went wrong while trying to add this person. Please try again.');
-      setSnackbarSeverity('error');
+      createSnackbar(
+        'Something went wrong while trying to add this person. Please try again.',
+        'error',
+      );
     }
-    setSnackbarOpen(true);
   };
 
   /**
@@ -285,9 +279,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
         handleCloseOkay();
       }
     } else {
-      setSnackbarText('Something went wrong while trying to save the new application editor.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
+      createSnackbar(
+        'Something went wrong while trying to save the new application editor.',
+        'error',
+      );
       setSaving('failed');
     }
   };
@@ -321,9 +316,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
       }
       // loadApplication(); //? Coming soon to a feature near you
     } catch {
-      setSnackbarText('Something went wrong while trying to save the new application editor.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
+      createSnackbar(
+        'Something went wrong while trying to save the new application editor.',
+        'error',
+      );
       setSaving('failed');
     } finally {
       if (saveButtonAlertTimeout === null) {
@@ -374,9 +370,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         applicationDetails.ApartmentChoices.some((hallInfo) => hallInfo.HallName === hallNameValue)
       ) {
         // Display an error if the selected hall is already in the list
-        setSnackbarText(String(hallNameValue) + ' is already in the list.');
-        setSnackbarSeverity('info');
-        setSnackbarOpen(true);
+        createSnackbar(`${String(hallNameValue)} is already in the list.`, 'info');
 
         // Set the new hall info back to the name it was previously
         newApartmentChoice.HallName = applicationDetails.ApartmentChoices[index].HallName;
@@ -394,9 +388,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
       setUnsavedChanges(true);
     } else {
-      setSnackbarText('Something went wrong while trying to edit this hall. Please try again.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
+      createSnackbar(
+        'Something went wrong while trying to edit this hall. Please try again.',
+        'error',
+      );
     }
   };
 
@@ -455,11 +450,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
       }));
       setUnsavedChanges(true);
     } else {
-      setSnackbarText(
+      createSnackbar(
         'Something went wrong while trying to change the off-campus program. Please try again.',
+        'error',
       );
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
     }
   };
 
@@ -509,9 +503,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setSaving('failed');
       }
     } catch {
-      setSnackbarText('Something went wrong while trying to save the application.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
+      createSnackbar('Something went wrong while trying to save the application.', 'error');
       setSaving('failed');
     } finally {
       if (saveButtonAlertTimeout === null) {
@@ -552,33 +544,28 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    const showGenericSubmitError = () => {
-      setSnackbarText('Something went wrong while trying to submit the application.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-    };
+    const genericSubmitErrorMessage =
+      'Something went wrong while trying to submit the application.';
 
     if (!applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
       console.log('Not all applicants are valid'); //! DEBUG:
-      //? The specifics of snackbarText and snackbarSeverity are already set within the `isApplicantValid` helper function
-      setSnackbarOpen(true);
     } else if (applicationDetails.ApplicationID > 0) {
       console.log('All applicants are valid'); //! DEBUG:
       housing
         .submitApplication(applicationDetails.ApplicationID)
         .then((result) => {
           if (!result) {
-            showGenericSubmitError();
+            createSnackbar(genericSubmitErrorMessage, 'error');
           } else {
             setApplicationCardsOpen(false);
             // loadApplication(); //? Coming soon to a feature near you
           }
         })
         .catch((err) => {
-          showGenericSubmitError();
+          createSnackbar(genericSubmitErrorMessage, 'error');
         });
     } else {
-      showGenericSubmitError();
+      createSnackbar(genericSubmitErrorMessage, 'error');
     }
   };
 
@@ -603,17 +590,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
     handleCloseOkay();
   };
 
-  /**
-   * Callback for closing the snackbar
-   * @param {*} _event close event to be handled by callback
-   * @param {*} reason the reason the close event was triggered
-   */
-  const handleCloseSnackbar = (_event, reason) => {
-    // Prevent the snackbar from closing if the user clicks outside the snackbar
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpen(false);
+  const createSnackbar = (message, severity) => {
+    setSnackbar({ message, severity, open: true });
   };
 
   const changeEditorAlertText = (
@@ -778,11 +756,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
             </Grid>
           </Grid>
         </Grid>
-        <SimpleSnackbar
-          text={snackbarText}
-          severity={snackbarSeverity ?? 'info'}
-          open={snackbarOpen}
-          onClose={handleCloseSnackbar}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={(_event, reason) =>
+            reason !== 'clickaway' && setSnackbar((s) => ({ ...s, open: false }))
+          }
         />
       </div>
     );
