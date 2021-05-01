@@ -227,6 +227,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       let newApplicantObject = {
         ApplicationID: applicationDetails.ApplicationID,
         Profile: newApplicantProfile,
+        Username: newApplicantUsername, // Used for convenient array sorting.
         OffCampusProgram: '',
       };
 
@@ -237,16 +238,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
       ) {
         // Display an error if the selected user is already in the list
         createSnackbar(String(newApplicantProfile.fullName) + ' is already in the list.', 'info');
-      } else {
-        if (isApplicantValid(newApplicantObject)) {
-          // Add the profile object to the list of applicants
-          setApplicationDetails((prevApplicationDetails) => ({
-            ...prevApplicationDetails,
-            Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
-          }));
-          setUnsavedChanges(true);
-          return;
-        }
+      } else if (isApplicantValid(newApplicantObject)) {
+        // Add the profile object to the list of applicants
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
+        }));
+        setUnsavedChanges(true);
+        debugPrintApplicationDetails();
       }
     } catch (error) {
       createSnackbar(
