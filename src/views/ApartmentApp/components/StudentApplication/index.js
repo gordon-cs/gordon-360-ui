@@ -59,7 +59,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
 
-  function debugPrintApplicationDetails() {
+  function debugPrintApplicationDetails(applicationDetails) {
     //! DEBUG
     console.debug('Array state variable. Printing contents:');
     //! DEBUG
@@ -110,6 +110,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       if (newApplicationID > 0) {
         const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
         setApplicationDetails(newApplicationDetails);
+        debugPrintApplicationDetails(newApplicationDetails);
         setCanEditApplication(
           userProfile.AD_Username === newApplicationDetails.EditorProfile.AD_Username ?? false,
         );
@@ -131,7 +132,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
       }
     } finally {
       setNewEditorProfile(null);
-      debugPrintApplicationDetails();
       return result;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -250,7 +250,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
           Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
         }));
         setUnsavedChanges(true);
-        debugPrintApplicationDetails();
       }
     } catch (error) {
       createSnackbar(
@@ -373,7 +372,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         ),
       }));
       setUnsavedChanges(true);
-      debugPrintApplicationDetails();
     }
   };
 
@@ -419,7 +417,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
       }
 
       setUnsavedChanges(true);
-      debugPrintApplicationDetails();
     } else {
       createSnackbar(
         'Something went wrong while trying to edit this hall. Please try again.',
@@ -446,7 +443,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         ),
       }));
       setUnsavedChanges(true);
-      debugPrintApplicationDetails();
     }
   };
 
@@ -483,7 +479,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         ),
       }));
       setUnsavedChanges(true);
-      debugPrintApplicationDetails();
     } else {
       createSnackbar(
         'Something went wrong while trying to change the off-campus program. Please try again.',
