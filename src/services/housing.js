@@ -65,8 +65,6 @@ import user from './user';
  * @property {Number} AvgPoints The average application points per applicant
  */
 
-// const customErrorHandler = async () => {};
-
 /**
  * Check if the current user is authorized to view the housing staff page for applications
  *
