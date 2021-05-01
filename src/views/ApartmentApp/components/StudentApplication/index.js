@@ -59,13 +59,40 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
 
+  function debugPrintApplicationDetails() {
+    //! DEBUG
+    console.debug('Array state variable. Printing contents:');
+    //! DEBUG
+    console.debug('ApplicationID:');
+    console.debug(applicationDetails?.ApplicationID);
+    //! DEBUG
+    console.debug('EditorUsername:');
+    console.debug(applicationDetails?.EditorProfile?.AD_Username);
+    //! DEBUG
+    console.debug('Applicants: [');
+    applicationDetails?.Applicants?.forEach((element) => {
+      console.debug(
+        `${element?.Profile?.AD_Username}, OffCampus: ${element.OffCampusProgram}, Class: ${element?.Profile?.Class}, Gender: ${element?.Profile?.Gender}`,
+      );
+    });
+    console.debug(']');
+    //! DEBUG
+    console.debug('Preferred Halls: [');
+    applicationDetails?.ApartmentChoices?.forEach((element) => {
+      console.debug(`Rank: ${element?.HallRank}, Name: ${element?.HallName}`);
+    });
+    console.debug(']');
+    //! DEBUG
+  }
+
   /**
    * Load the user's saved apartment application, if one exists
    */
   const loadApplication = useCallback(async () => {
     const initializeNewApplication = () => {
-      const initialApplicants = [{ Profile: userProfile, OffCampusProgram: '' }];
-      setUnsavedChanges(true);
+      const initialApplicants = [
+        { Profile: userProfile, Username: userProfile.AD_Username, OffCampusProgram: '' },
+      ];
       setApplicationDetails({
         ...BLANK_APPLICATION_DETAILS,
         EditorProfile: userProfile,
@@ -73,6 +100,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         Applicants: initialApplicants,
       });
       setCanEditApplication(true);
+      setUnsavedChanges(true);
     };
 
     try {
@@ -103,39 +131,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setNewEditorProfile(null);
       setUnsavedChanges(false);
       setLoading(false);
+      debugPrintApplicationDetails();
     }
   }, [userProfile]);
 
   useEffect(() => {
     loadApplication();
   }, [userProfile, loadApplication]);
-
-  //! DEBUG
-  useEffect(() => {
-    //! DEBUG
-    console.debug('Array state variable. Printing contents:');
-    //! DEBUG
-    console.debug('ApplicationID:');
-    console.debug(applicationDetails?.ApplicationID);
-    //! DEBUG
-    console.debug('EditorUsername:');
-    console.debug(applicationDetails?.EditorProfile?.AD_Username);
-    //! DEBUG
-    console.debug('Applicants: [');
-    applicationDetails?.Applicants?.forEach((element) => {
-      console.debug(
-        `${element?.Profile?.AD_Username}, OffCampus: ${element.OffCampusProgram}, Class: ${element?.Profile?.Class}, Gender: ${element?.Profile?.Gender}`,
-      );
-    });
-    console.debug(']');
-    //! DEBUG
-    console.debug('Preferred Halls: [');
-    applicationDetails?.ApartmentChoices?.forEach((element) => {
-      console.debug(`Rank: ${element?.HallRank}, Name: ${element?.HallName}`);
-    });
-    console.debug(']');
-    //! DEBUG
-  }, [applicationDetails]);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
