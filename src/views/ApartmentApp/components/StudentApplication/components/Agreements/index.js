@@ -79,12 +79,13 @@ const Agreements = ({ onChange }) => {
   }, []);
 
   const handleChange = (event, index) => {
-    // I don't know why, but it only works correctly if you explictly assign the new custom object to a variable, rather than returning the custom object declaration inline within the checkboxes.map()
-    let newCheckboxObj = { checked: event.target.checked, label: checkboxes[index].label };
-    setCheckboxes((prevCheckboxes) =>
-      prevCheckboxes.map((prevCheckbox, j) => (j === index ? newCheckboxObj : prevCheckbox)),
-    );
-    onChange(checkboxes.every((checkbox) => checkbox.checked));
+    setCheckboxes((prevCheckboxes) => {
+      let newCheckboxes = prevCheckboxes.map((prevCheckbox, j) =>
+        j === index ? { ...prevCheckbox, checked: event.target.checked } : prevCheckbox,
+      );
+      onChange(newCheckboxes.every((checkbox) => checkbox.checked));
+      return newCheckboxes;
+    });
   };
 
   const AgreementChecklistItem = ({ checked, index, label, onChange }) => (
@@ -127,16 +128,14 @@ const Agreements = ({ onChange }) => {
                 index={index}
                 key={index}
                 label={checkbox.label}
-                onChange={handleChange}
+                onChange={(event, index) => handleChange(event, index)}
               />
             ))}
           </FormGroup>
-          {error && (
-            <FormHelperText>
-              You must read and complete this section before you will be allowed to submit this
-              application
-            </FormHelperText>
-          )}
+          <FormHelperText>
+            You must read and complete this section before you will be allowed to submit this
+            application
+          </FormHelperText>
         </FormControl>
       </CardContent>
     </Card>

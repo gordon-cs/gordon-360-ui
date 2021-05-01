@@ -1,5 +1,5 @@
 //Student apartment application page
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { sortBy } from 'lodash';
 import { Collapse, Grid } from '@material-ui/core/';
 import GordonLoader from '../../../../components/Loader';
@@ -61,7 +61,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   /**
    * Load the user's saved apartment application, if one exists
    */
-  useEffect(() => {
+  const loadApplication = useCallback(async () => {
     const initializeNewApplication = () => {
       const initialApplicants = [{ Profile: userProfile, OffCampusProgram: '' }];
       setUnsavedChanges(true);
@@ -74,39 +74,31 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setCanEditApplication(true);
     };
 
-    /**
-     * Load the user's saved apartment application, if one exists
-     *
-     * @async
-     * @function loadApplication
-     */
-    const loadApplication = async () => {
-      try {
-        setLoading(true);
-        // Check if the current user is on an application. Returns the application ID number if found
-        const newApplicationID = await housing.getCurrentApplicationID();
-        if (newApplicationID === null || newApplicationID === -1) {
-          initializeNewApplication();
-        } else {
-          setUnsavedChanges(false);
-          const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
-          if (newApplicationDetails) {
-            setApplicationDetails(newApplicationDetails);
-            setCanEditApplication(
-              userProfile.AD_Username === newApplicationDetails.EditorProfile.AD_Username ?? false,
-            );
-            setUnsavedChanges(false);
-          }
-        }
-      } catch (error) {
+    try {
+      setLoading(true);
+      // Check if the current user is on an application. Returns the application ID number if found
+      const newApplicationID = await housing.getCurrentApplicationID();
+      if (newApplicationID > 0) {
+        const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
+        setApplicationDetails(newApplicationDetails);
+        setCanEditApplication(
+          userProfile.AD_Username === newApplicationDetails.EditorProfile.AD_Username ?? false,
+        );
+        setNewEditorProfile(null);
+        setUnsavedChanges(false);
+      } else {
         initializeNewApplication();
-      } finally {
-        setLoading(false);
       }
-    };
-
-    loadApplication();
+    } catch (e) {
+      initializeNewApplication();
+    } finally {
+      setLoading(false);
+    }
   }, [userProfile]);
+
+  useEffect(() => {
+    loadApplication();
+  }, [userProfile, loadApplication]);
 
   //! DEBUG
   useEffect(() => {
@@ -166,6 +158,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       createSnackbar(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants`, 'warning');
       return false;
     }
+
+    applicant.Profile.fullName = `${applicant.Profile.FirstName}  ${applicant.Profile.LastName}`;
 
     if (!String(applicant.Profile.PersonType).includes('stu')) {
       // Display an error if the selected user is not a student
@@ -248,12 +242,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
    */
   const handleChangeEditor = (profile) => {
-    if (profile) {
+    if (canEditApplication && profile) {
       if (
         applicationDetails.Applicants.some(
           (applicant) => applicant.Profile.AD_Username === profile.AD_Username,
         )
       ) {
+        if (unsavedChanges) {
+          saveApartmentApplication(applicationDetails);
+        }
         setNewEditorProfile(profile);
         setChangeEditorDialogOpen(true);
       }
@@ -265,18 +262,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleChangeEditorAccepted = () => {
     if (newEditorProfile?.AD_Username) {
-      // The method is separated from callback because the housing API service must be handled inside an async method
-      if (applicationDetails.ApplicationID > 0) {
-        changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
-      } else {
-        try {
-          saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
-        } catch {
-          saveApartmentApplication(applicationDetails);
-          changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated eventually...
-        }
+      try {
+        saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
+      } catch {
+        changeApplicationEditor(newEditorProfile); //! Will be deprecated eventually...
+      } finally {
+        setCanEditApplication(false);
+        handleCloseOkay();
       }
-      handleCloseOkay();
     } else {
       createSnackbar(
         'Something went wrong while trying to save the new application editor.',
@@ -291,23 +284,28 @@ const StudentApplication = ({ userProfile, authentication }) => {
    *
    * @async
    * @function changeApplicationEditor
-   * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
+   * @param {StudentProfileInfo} newEditorProfile the StudentProfileInfo object for the person who will be allowed to edit this application
    */
-  const changeApplicationEditor = async (newEditorUsername) => {
+  const changeApplicationEditor = async (newEditorProfile) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
+    let result = null;
     try {
-      const result = await housing.changeApartmentAppEditor(
+      result = await housing.changeApartmentAppEditor(
         applicationDetails.ApplicationID,
-        newEditorUsername,
+        newEditorProfile.AD_Username,
       );
-      console.log(result); //! DEBUG
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        EditorProfile: newEditorProfile,
-      }));
-      setSaving('success');
-      setUnsavedChanges(true);
+      console.debug('Result of changeApartmentAppEditor:'); //! DEBUG
+      console.debug(result); //! DEBUG
+      if (result) {
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          EditorProfile: newEditorProfile,
+        }));
+        setSaving('success');
+        setUnsavedChanges(false);
+        setCanEditApplication(false);
+      }
       // loadApplication(); //? Coming soon to a feature near you
     } catch {
       createSnackbar(
@@ -416,12 +414,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleHallAdd = () => {
     const newPlaceholderHall = {
       ApplicationID: applicationDetails.ApplicationID,
-      HallRank: applicationDetails.ApartmentChoices.length + 1,
+      HallRank: (applicationDetails.ApartmentChoices?.length ?? 0) + 1,
       HallName: '',
     };
     setApplicationDetails((prevApplicationDetails) => ({
       ...prevApplicationDetails,
-      ApartmentChoices: [...prevApplicationDetails.ApartmentChoices, newPlaceholderHall],
+      ApartmentChoices: [...(prevApplicationDetails.ApartmentChoices ?? []), newPlaceholderHall],
     }));
   };
 
@@ -483,8 +481,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
         applicationDetails.Applicants.length === 0 ||
         applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))
       ) {
-        const result = await housing.saveApartmentApplication(applicationDetails);
-        console.log('result of saving: ' + result); //! DEBUG
+        result = await housing.saveApartmentApplication(applicationDetails);
+        console.debug('result of saving: ' + result); //! DEBUG
         setApplicationDetails((prevApplicationDetails) => ({
           ...prevApplicationDetails,
           ApplicationID: result ?? prevApplicationDetails.ApplicationID,
@@ -542,7 +540,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       'Something went wrong while trying to submit the application.';
 
     if (!applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
-      console.log('Not all applicants are valid'); //! DEBUG:
+      console.warning('Not all applicants are valid'); //! DEBUG:
     } else if (applicationDetails.ApplicationID > 0) {
       console.log('All applicants are valid'); //! DEBUG:
       housing
@@ -569,6 +567,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const handleCloseOkay = () => {
     setChangeEditorDialogOpen(false);
     setSubmitDialogOpen(false);
+    setNewEditorProfile(null);
   };
 
   /**
@@ -590,6 +589,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   const changeEditorAlertText = (
     <span>
+      You are about to change the editor to {newEditorProfile?.FirstName}{' '}
+      {newEditorProfile?.LastName}
+      <br />
       If you change the application editor, you will no longer be able to edit this application
       yourself.
       <br />
@@ -728,8 +730,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 disableSubmit={
                   !applicationCardsOpen ||
                   !agreements ||
-                  !(applicationDetails.Applicants.length > 0) ||
-                  !(applicationDetails.ApartmentChoices.length > 0)
+                  !(applicationDetails?.Applicants?.length > 0) ||
+                  !(
+                    applicationDetails?.ApartmentChoices?.filter(
+                      (apartmentChoice) => apartmentChoice.HallName,
+                    )?.length > 0
+                  )
                 }
                 saving={saving}
                 submitDialogOpen={submitDialogOpen}

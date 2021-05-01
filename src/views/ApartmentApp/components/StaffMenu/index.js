@@ -5,9 +5,10 @@ import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@materi
 import GetAppIcon from '@material-ui/icons/GetApp';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { DateTime } from 'luxon';
-import GordonLoader from '../../../../components/Loader';
-import housing from '../../../../services/housing';
 import ApplicationsTable from './components/ApplicationTable';
+import GordonLoader from '../../../../components/Loader';
+import { NotFoundError } from 'services/error';
+import housing from '../../../../services/housing';
 
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
@@ -43,10 +44,19 @@ const StaffMenu = ({ userProfile }) => {
    * Attempt to load all existing applications for the current semester
    */
   const loadAllCurrentApplications = useCallback(async () => {
-    setLoading(true);
-    let applicationDetailsArray = await housing.getSubmittedApartmentApplications();
-    setApplications(applicationDetailsArray);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const applicationDetailsArray = await housing.getSubmittedApartmentApplications();
+      setApplications(applicationDetailsArray);
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        setApplications([]);
+      } else {
+        console.error(e);
+      }
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
