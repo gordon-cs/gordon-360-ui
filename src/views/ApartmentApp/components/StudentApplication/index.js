@@ -307,24 +307,26 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const changeApplicationEditor = async (newEditorProfile) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
-    let result = null;
     try {
-      result = await housing.changeApartmentAppEditor(
+      const result = await housing.changeApartmentAppEditor(
         applicationDetails.ApplicationID,
         newEditorProfile.AD_Username,
       );
-      console.debug('Result of changeApartmentAppEditor:'); //! DEBUG
-      console.debug(result); //! DEBUG
       if (result) {
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          EditorProfile: newEditorProfile,
-        }));
-        setSaving('success');
-        setUnsavedChanges(false);
-        setCanEditApplication(false);
+        try {
+          loadApplication();
+        } catch {
+          setApplicationDetails((prevApplicationDetails) => ({
+            ...prevApplicationDetails,
+            EditorProfile: newEditorProfile,
+            Applicants: sortBy(prevApplicationDetails.Applicants, ['Username']),
+          }));
+        } finally {
+          setSaving('success');
+          setUnsavedChanges(false);
+          setCanEditApplication(false);
+        }
       }
-      loadApplication();
     } catch (e) {
       if (e instanceof AuthError) {
         createSnackbar('You are not authorized to make changes to this application.', 'error');
