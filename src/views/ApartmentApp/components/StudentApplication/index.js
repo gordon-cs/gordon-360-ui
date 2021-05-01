@@ -166,7 +166,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {ApartmentApplicant} applicant The applicant to be checked
    * @return {Boolean} True if valid, otherwise false
    */
-  const isApplicantValid = (applicant) => {
+  const isApplicantValid = async (applicant) => {
     // Check that the applicant contains the required fields
     if (applicant?.Profile === null) {
       createSnackbar(
@@ -204,18 +204,32 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
 
     // Check if the selected user is already saved on an application in the database
-    housing.getCurrentApplicationID(applicant.Profile.AD_Username).then((existingAppID) => {
+    let result = false;
+    try {
+      let existingAppID = await housing.getCurrentApplicationID(applicant.Profile.AD_Username);
       if (existingAppID > 0 && existingAppID !== applicationDetails.ApplicationID) {
         // Display an error if the given applicant is already on a different application in the database
         createSnackbar(
           `${applicant.Profile.fullName} is already on another application for this semester.`,
           'warning',
         );
-        return false;
+      } else {
+        result = true;
       }
-    });
-
-    return true;
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        result = true;
+      } else if (e instanceof AuthError) {
+        const debugMessage =
+          'Received a 401 (Unauthorized) response, which should not be possible in this case. Please try refreshing the page, or contact CTS for support.';
+        console.error(`Debug Message: ${debugMessage}`);
+        createSnackbar(debugMessage, 'error');
+      } else {
+        throw e;
+      }
+    } finally {
+      return result;
+    }
   };
 
   /**
@@ -243,19 +257,23 @@ const StudentApplication = ({ userProfile, authentication }) => {
       ) {
         // Display an error if the selected user is already in the list
         createSnackbar(String(newApplicantProfile.fullName) + ' is already in the list.', 'info');
-      } else if (isApplicantValid(newApplicantObject)) {
-        // Add the profile object to the list of applicants
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
-        }));
-        setUnsavedChanges(true);
+      } else {
+        let validApplicant = await isApplicantValid(newApplicantObject);
+        if (validApplicant) {
+          // Add the profile object to the list of applicants
+          setApplicationDetails((prevApplicationDetails) => ({
+            ...prevApplicationDetails,
+            Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
+          }));
+          setUnsavedChanges(true);
+        }
       }
     } catch (error) {
       createSnackbar(
         'Something went wrong while trying to add this person. Please try again.',
         'error',
       );
+      console.log(error);
     }
   };
 
@@ -509,28 +527,42 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @async
    * @function saveApartmentApplication
    * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
+   * @returns {Boolean} Indicates whether saving succeeded or failed
    */
   const saveApartmentApplication = async (applicationDetails) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
     let result = null;
     try {
-      if (
-        applicationDetails.Applicants.length === 0 ||
-        applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))
-      ) {
-        result = await housing.saveApartmentApplication(applicationDetails);
-        console.debug('result of saving: ' + result); //! DEBUG
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          ApplicationID: result ?? prevApplicationDetails.ApplicationID,
-        }));
-        setSaving('success');
-        setUnsavedChanges(false);
-        loadApplication();
-      } else {
-        // The `isApplicantValid` function will handle the snackbar message
+      if (applicationDetails.Applicants.length < 1) {
+        createSnackbar(
+          'Error: There are no applicants on this application. This should not be possible. Please refresh the page and try again.',
+          'error',
+        );
         setSaving('failed');
+      } else {
+        // This will produce an array of booleans. If all are true, then all applicants are valid
+        let validApplicants = await Promise.all(
+          applicationDetails.Applicants.map((applicant) => isApplicantValid(applicant)),
+        );
+        // No additional `else` is needed for this, since `isApplicantValid` handles the `createSnackbar` internally
+        if (validApplicants.every((v) => v)) {
+          result = await housing.saveApartmentApplication(applicationDetails);
+          console.debug('result of saving: ' + result); //! DEBUG
+          if (result) {
+            setApplicationDetails((prevApplicationDetails) => ({
+              ...prevApplicationDetails,
+              ApplicationID: result ?? prevApplicationDetails.ApplicationID,
+            }));
+            setSaving('success');
+            setUnsavedChanges(false);
+            loadApplication();
+          } else {
+            throw new Error(
+              `Did not receive an http error code, but received the response ${result}`,
+            );
+          }
+        }
       }
     } catch (e) {
       if (e instanceof AuthError) {
@@ -580,29 +612,47 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    if (!applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
-      console.error('Not all applicants are valid'); //! DEBUG:
-    } else if (applicationDetails.ApplicationID > 0) {
-      console.log('All applicants are valid'); //! DEBUG:
-      try {
-        const result = await housing.submitApplication(applicationDetails.ApplicationID);
-        if (result) {
-          setApplicationCardsOpen(false);
-          loadApplication();
-        } else {
-          throw new Error('Failed to submit application');
-        }
-      } catch (e) {
-        if (e instanceof AuthError) {
-          createSnackbar('You are not authorized to make changes to this application.', 'error');
-        } else if (e instanceof NotFoundError) {
-          createSnackbar('Error: This application was not found in the database.', 'error');
-        } else {
-          createSnackbar('Something went wrong while trying to submit the application.', 'error');
+    try {
+      if (applicationDetails.Applicants.length < 1) {
+        createSnackbar(
+          'Error: There are no applicants on this application. This should not be possible. Please refresh the page and try again.',
+          'error',
+        );
+        setSaving('failed');
+      } else {
+        // This will produce an array of booleans. If all are true, then all applicants are valid
+        let validApplicants = await Promise.all(
+          applicationDetails.Applicants.map((applicant) => isApplicantValid(applicant)),
+        );
+        // No additional `else` is needed for this, since `isApplicantValid` handles the `createSnackbar` internally
+        if (validApplicants.every((v) => v)) {
+          const result = await housing.submitApplication(applicationDetails.ApplicationID);
+          if (result) {
+            setApplicationCardsOpen(false);
+            loadApplication();
+          } else {
+            throw new Error('Failed to submit application');
+          }
         }
       }
-    } else {
-      createSnackbar('Something went wrong while trying to submit the application.', 'error');
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to make changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar('Something went wrong while trying to submit the application.', 'error');
+      }
+    } finally {
+      if (saveButtonAlertTimeout === null) {
+        // Shows the success icon for 6 seconds and then returns back to normal button
+        setSaveButtonAlertTimeout(
+          setTimeout(() => {
+            setSaveButtonAlertTimeout(null);
+            setSaving(false);
+          }, 6000),
+        );
+      }
     }
   };
 
