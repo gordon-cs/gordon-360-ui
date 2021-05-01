@@ -4,7 +4,6 @@
  * @module housing
  */
 
-import { AuthError, NotFoundError } from './error';
 import http from './http';
 import user from './user';
 
@@ -65,7 +64,6 @@ import user from './user';
  * @property {Number} TotalPoints The total application points associated with this application
  * @property {Number} AvgPoints The average application points per applicant
  */
-
 
 /**
  * Check if the current user is authorized to view the housing staff page for applications
@@ -128,24 +126,10 @@ const getApartmentHalls = async () => {
  * @return {Promise.<Number>} Application's ID number
  */
 const getCurrentApplicationID = async (username) => {
-  let result = null;
-  try {
-    if (username) {
-      result = await http.get(`housing/apartment/${username}/`);
-    } else {
-      result = await http.get('housing/apartment');
-    }
-  } catch (err) {
-    // handle thrown 404 errors
-    if (err instanceof AuthError) {
-      console.log('Received 401 (Unauthorized). This should never happen');
-    } else if (err instanceof NotFoundError) {
-      console.log('A 404 code indicates that an application was not found for this applicant');
-    } else {
-      throw err;
-    }
-  } finally {
-    return result;
+  if (username) {
+    return await http.get(`housing/apartment/${username}/`);
+  } else {
+    return await http.get('housing/apartment');
   }
 };
 
@@ -167,28 +151,10 @@ const saveApartmentApplication = async (applicationDetails) => {
   };
 
   const applicationID = applicationDetails.ApplicationID;
-  let result = null;
-  try {
-    if (applicationID > 0) {
-      result = await http.put(
-        `housing/apartment/applications/${applicationID}/`,
-        applicationDetails,
-      );
-    } else {
-      result = await http.post(`housing/apartment/applications/`, applicationDetails);
-    }
-  } catch (err) {
-    if (err instanceof AuthError) {
-      console.log('Received 401 (Unauthorized)');
-    } else if (err instanceof NotFoundError) {
-      console.log(
-        'Received 404 indicates that the requested application was not found in the database',
-      );
-    } else {
-      throw err;
-    }
-  } finally {
-    return result;
+  if (applicationID > 0) {
+    return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
+  } else {
+    return await http.post(`housing/apartment/applications/`, applicationDetails);
   }
 };
 
@@ -206,48 +172,30 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
     ApplicationID: applicationID,
     EditorUsername: newEditorUsername,
   };
-  let result = null;
-  try {
-    result = await http.put(
-      `housing/apartment/applications/${applicationID}/editor/`,
-      newEditorDetails,
-    );
-  } catch (err) {
-    if (err instanceof AuthError) {
-      console.log('Received 401 (Unauthorized)');
-    } else if (err instanceof NotFoundError) {
-      console.log(
-        'Received 404 indicates that the requested application was not found in the database',
-      );
-    } else {
-      throw err;
-    }
-  } finally {
-    return result;
-  }
+  return await http.put(
+    `housing/apartment/applications/${applicationID}/editor/`,
+    newEditorDetails,
+  );
 };
 
 /**
  * Helper function to fill in any missing properties of an applicant object's Profile, OffCampusProgram, etc.
  *
- * @function setApplicantInfo
+ * @function formatApplicantInfo
  * @param {ApartmentApplicant} applicant an object representing an apartment applicant
  * @return {ApartmentApplicant} Application details
  */
-function setApplicantInfo(applicant) {
-  //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
-  user.getProfileInfo(applicant.Username ?? applicant.Profile.AD_Username).then((profile) => {
-    applicant.Profile = profile;
-  });
+function formatApplicantInfo(applicant) {
+  // //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
+  // user.getProfileInfo(applicant.Username ?? applicant.Profile.AD_Username).then((profile) => {
+  //   applicant.Profile = profile;
+  // });
 
-  /**
-   * The following commented out commands are implicitly handled by `user.getProfileInfo()`,
-   * so these lines are not needed while the above workaround is still in place
-   */
-  //? This is the ideal solution. Requires more testing after the 'PersonType' issue is fixed in the API
-  // user.setFullname(applicant.Profile);
-  // user.setClass(applicant.Profile);
+  applicant.Profile.PersonType = 'stu';
+  user.setFullname(applicant.Profile);
+  user.setClass(applicant.Profile);
 
+  // The following 'Class' property is needed for the staff page
   if (applicant.Class === null || Number(applicant.Class)) {
     // Use converted Class from number ('1', '2', '3', ...) to words ('Freshman', 'Sophomore', ...)
     applicant.Class = applicant.Profile.Class;
@@ -258,11 +206,14 @@ function setApplicantInfo(applicant) {
   return applicant;
 }
 
-function setApplicationDetails(applicationDetails) {
+function formatApplicationDetails(applicationDetails) {
   console.debug(`formatting application # ${applicationDetails.ApplicationID}`);
+  applicationDetails.EditorProfile.PersonType = 'stu';
   applicationDetails.Gender = applicationDetails.EditorProfile.Gender;
-  applicationDetails.Applicants =
-    applicationDetails.Applicants?.map((applicant) => setApplicantInfo(applicant)) ?? [];
+  applicationDetails.Applicants ?? (applicationDetails.Applicants = []);
+  applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) =>
+    formatApplicantInfo(applicant),
+  );
   applicationDetails.ApartmentChoices ?? (applicationDetails.ApartmentChoices = []);
   applicationDetails.NumApplicants = applicationDetails.Applicants?.length ?? 0;
   applicationDetails.FirstHall = applicationDetails.ApartmentChoices[0]?.HallName ?? '';
@@ -278,24 +229,9 @@ function setApplicationDetails(applicationDetails) {
  * @return {Promise.<ApplicationDetails>} Application details
  */
 const getApartmentApplication = async (applicationID) => {
-  let applicationResult = null;
-  try {
-    applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
-    setApplicationDetails(applicationResult);
-  } catch (err) {
-    if (err instanceof AuthError) {
-      console.log('Received 401 (Unauthorized)');
-    } else if (err instanceof NotFoundError) {
-      console.log(
-        'Received 404 indicates that the requested application was not found in the database',
-      );
-    } else {
-      throw err;
-    }
-  } finally {
-    console.log(applicationResult); //! DEBUG:
-    return applicationResult;
-  }
+  let applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
+  formatApplicationDetails(applicationResult);
+  return applicationResult;
 };
 
 /**
@@ -306,26 +242,11 @@ const getApartmentApplication = async (applicationID) => {
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getSubmittedApartmentApplications = async () => {
-  let result = [];
-  try {
-    let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
-    applicationDetailsArray.forEach((applicationDetails) =>
-      setApplicationDetails(applicationDetails),
-    );
-    result = applicationDetailsArray; // This is intensionally done first, rather than inside an 'else'
-  } catch (err) {
-    if (err instanceof AuthError) {
-      console.log('Received 401 (Unauthorized)');
-    } else if (err instanceof NotFoundError) {
-      console.log('Received 404 indicates that no applications were found in the database');
-    } else {
-      throw err;
-    }
-    result = []; // Return an empty array if no applications were found
-  } finally {
-    console.log(result); //! DEBUG:
-    return result;
-  }
+  let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+  applicationDetailsArray.forEach((applicationDetails) =>
+    formatApplicationDetails(applicationDetails),
+  );
+  return applicationDetailsArray;
 };
 
 /**
@@ -337,7 +258,7 @@ const getSubmittedApartmentApplications = async () => {
  * @return {Promise.<Boolean>[]} Application details
  */
 const submitApplication = async (applicationID) => {
-  return http.post(`housing/apartment/applications/${applicationID}/submit`);
+  return http.put(`housing/apartment/applications/${applicationID}/submit`);
 };
 
 export default {

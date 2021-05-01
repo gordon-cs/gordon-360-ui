@@ -2,9 +2,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { sortBy } from 'lodash';
 import { Collapse, Grid } from '@material-ui/core/';
-import GordonLoader from '../../../../components/Loader';
-import GordonDialogBox from '../../../../components/GordonDialogBox';
-import GordonSnackbar from '../../../../components/Snackbar';
+import GordonLoader from 'components/Loader';
+import GordonDialogBox from 'components/GordonDialogBox';
+import GordonSnackbar from 'components/Snackbar';
 import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
@@ -12,8 +12,9 @@ import HallSelection from './components/HallSelection';
 import OffCampusSection from './components/OffCampusSection';
 import Agreements from './components/Agreements';
 import BottomBar from './components/BottomBar';
-import housing from '../../../../services/housing';
-import user from '../../../../services/user';
+import { AuthError, createError, NotFoundError } from 'services/error';
+import housing from 'services/housing';
+import user from 'services/user';
 
 const MAX_NUM_APPLICANTS = 8;
 const BLANK_APPLICATION_DETAILS = {
@@ -42,6 +43,7 @@ const BLANK_APPLICATION_DETAILS = {
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [canEditApplication, setCanEditApplication] = useState(false);
   const [agreements, setAgreements] = useState(false); // Represents the state of the agreements card. True if all checkboxes checked, false otherwise
@@ -57,14 +59,42 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
+  const [submitButtonAlertTimeout, setSubmitButtonAlertTimeout] = useState(null);
+
+  function debugPrintApplicationDetails(applicationDetails) {
+    //! DEBUG
+    console.debug('Array state variable. Printing contents:');
+    //! DEBUG
+    console.debug('ApplicationID:');
+    console.debug(applicationDetails?.ApplicationID);
+    //! DEBUG
+    console.debug('EditorUsername:');
+    console.debug(applicationDetails?.EditorProfile?.AD_Username);
+    //! DEBUG
+    console.debug('Applicants: [');
+    applicationDetails?.Applicants?.forEach((element) => {
+      console.debug(
+        `${element?.Profile?.AD_Username}, OffCampus: ${element.OffCampusProgram}, Class: ${element?.Profile?.Class}, Gender: ${element?.Profile?.Gender}`,
+      );
+    });
+    console.debug(']');
+    //! DEBUG
+    console.debug('Preferred Halls: [');
+    applicationDetails?.ApartmentChoices?.forEach((element) => {
+      console.debug(`Rank: ${element?.HallRank}, Name: ${element?.HallName}`);
+    });
+    console.debug(']');
+    //! DEBUG
+  }
 
   /**
    * Load the user's saved apartment application, if one exists
    */
   const loadApplication = useCallback(async () => {
     const initializeNewApplication = () => {
-      const initialApplicants = [{ Profile: userProfile, OffCampusProgram: '' }];
-      setUnsavedChanges(true);
+      const initialApplicants = [
+        { Profile: userProfile, Username: userProfile.AD_Username, OffCampusProgram: '' },
+      ];
       setApplicationDetails({
         ...BLANK_APPLICATION_DETAILS,
         EditorProfile: userProfile,
@@ -72,53 +102,48 @@ const StudentApplication = ({ userProfile, authentication }) => {
         Applicants: initialApplicants,
       });
       setCanEditApplication(true);
+      setUnsavedChanges(true);
     };
 
+    let result = false;
     try {
-      setLoading(true);
       // Check if the current user is on an application. Returns the application ID number if found
       const newApplicationID = await housing.getCurrentApplicationID();
       if (newApplicationID > 0) {
         const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
         setApplicationDetails(newApplicationDetails);
+        debugPrintApplicationDetails(newApplicationDetails);
         setCanEditApplication(
           userProfile.AD_Username === newApplicationDetails.EditorProfile.AD_Username ?? false,
         );
-        setNewEditorProfile(null);
         setUnsavedChanges(false);
+        result = true;
       } else {
-        initializeNewApplication();
+        throw createError(new Error('Invalid application ID'), { status: 404 });
       }
     } catch (e) {
-      initializeNewApplication();
+      if (e instanceof NotFoundError) {
+        initializeNewApplication();
+      } else if (e instanceof AuthError) {
+        const debugMessage =
+          'Received a 401 (Unauthorized) response, which should not be possible in this case. Please try refreshing the page, or contact CTS for support.';
+        console.error(`Debug Message: ${debugMessage}`);
+        createSnackbar(debugMessage, 'error');
+      } else {
+        throw e;
+      }
     } finally {
-      setLoading(false);
+      setNewEditorProfile(null);
+      return result;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userProfile]);
 
   useEffect(() => {
+    setLoading(true);
     loadApplication();
+    setLoading(false);
   }, [userProfile, loadApplication]);
-
-  //! DEBUG
-  useEffect(() => {
-    //! DEBUG
-    console.debug('Array state variable. Printing contents:');
-    //! DEBUG
-    console.debug('EditorUsername:');
-    console.debug(applicationDetails?.EditorProfile?.AD_Username);
-    //! DEBUG
-    console.debug('Applicants:');
-    applicationDetails?.Applicants?.forEach((element) => {
-      console.debug(`${element?.Profile?.AD_Username}, ${element.OffCampusProgram}`);
-    });
-    //! DEBUG
-    console.debug('Preferred Halls:');
-    applicationDetails?.ApartmentChoices?.forEach((element) => {
-      console.debug(`${element?.HallName}, ${element?.HallRank}`);
-    });
-    //! DEBUG
-  }, [applicationDetails]);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
@@ -143,7 +168,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {ApartmentApplicant} applicant The applicant to be checked
    * @return {Boolean} True if valid, otherwise false
    */
-  const isApplicantValid = (applicant) => {
+  const isApplicantValid = async (applicant) => {
     // Check that the applicant contains the required fields
     if (applicant?.Profile === null) {
       createSnackbar(
@@ -159,7 +184,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       return false;
     }
 
-    applicant.Profile.fullName = `${applicant.Profile.FirstName}  ${applicant.Profile.LastName}`;
+    applicant.Profile.fullName ??
+      (applicant.Profile.fullName = `${applicant.Profile.FirstName}  ${applicant.Profile.LastName}`);
 
     if (!String(applicant.Profile.PersonType).includes('stu')) {
       // Display an error if the selected user is not a student
@@ -180,18 +206,32 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
 
     // Check if the selected user is already saved on an application in the database
-    housing.getCurrentApplicationID(applicant.Profile.AD_Username).then((existingAppID) => {
+    let result = false;
+    try {
+      let existingAppID = await housing.getCurrentApplicationID(applicant.Profile.AD_Username);
       if (existingAppID > 0 && existingAppID !== applicationDetails.ApplicationID) {
         // Display an error if the given applicant is already on a different application in the database
         createSnackbar(
           `${applicant.Profile.fullName} is already on another application for this semester.`,
           'warning',
         );
-        return false;
+      } else {
+        result = true;
       }
-    });
-
-    return true;
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        result = true;
+      } else if (e instanceof AuthError) {
+        const debugMessage =
+          'Received a 401 (Unauthorized) response, which should not be possible in this case. Please try refreshing the page, or contact CTS for support.';
+        console.error(`Debug Message: ${debugMessage}`);
+        createSnackbar(debugMessage, 'error');
+      } else {
+        throw e;
+      }
+    } finally {
+      return result;
+    }
   };
 
   /**
@@ -208,6 +248,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       let newApplicantObject = {
         ApplicationID: applicationDetails.ApplicationID,
         Profile: newApplicantProfile,
+        Username: newApplicantUsername, // Used for convenient array sorting.
         OffCampusProgram: '',
       };
 
@@ -219,14 +260,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
         // Display an error if the selected user is already in the list
         createSnackbar(String(newApplicantProfile.fullName) + ' is already in the list.', 'info');
       } else {
-        if (isApplicantValid(newApplicantObject)) {
+        let validApplicant = await isApplicantValid(newApplicantObject);
+        if (validApplicant) {
           // Add the profile object to the list of applicants
           setApplicationDetails((prevApplicationDetails) => ({
             ...prevApplicationDetails,
             Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
           }));
           setUnsavedChanges(true);
-          return;
         }
       }
     } catch (error) {
@@ -234,6 +275,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         'Something went wrong while trying to add this person. Please try again.',
         'error',
       );
+      console.log(error);
     }
   };
 
@@ -289,29 +331,40 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const changeApplicationEditor = async (newEditorProfile) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
-    let result = null;
     try {
-      result = await housing.changeApartmentAppEditor(
+      const result = await housing.changeApartmentAppEditor(
         applicationDetails.ApplicationID,
         newEditorProfile.AD_Username,
       );
-      console.debug('Result of changeApartmentAppEditor:'); //! DEBUG
-      console.debug(result); //! DEBUG
       if (result) {
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          EditorProfile: newEditorProfile,
-        }));
-        setSaving('success');
-        setUnsavedChanges(false);
-        setCanEditApplication(false);
+        try {
+          const result = loadApplication();
+          if (!result) {
+            throw new Error('Failed to load apartment application.');
+          }
+        } catch {
+          setApplicationDetails((prevApplicationDetails) => ({
+            ...prevApplicationDetails,
+            EditorProfile: newEditorProfile,
+            Applicants: sortBy(prevApplicationDetails.Applicants, ['Username']),
+          }));
+        } finally {
+          setSaving('success');
+          setCanEditApplication(false);
+          setUnsavedChanges(false);
+        }
       }
-      // loadApplication(); //? Coming soon to a feature near you
-    } catch {
-      createSnackbar(
-        'Something went wrong while trying to save the new application editor.',
-        'error',
-      );
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to make changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar(
+          'Something went wrong while trying to save the new application editor.',
+          'error',
+        );
+      }
       setSaving('failed');
     } finally {
       if (saveButtonAlertTimeout === null) {
@@ -350,12 +403,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
     if (index !== null && index >= 0) {
-      let newApartmentChoice = {
-        ApplicationID: applicationDetails.ApplicationID,
-        HallRank: Number(hallRankValue) ?? applicationDetails.ApartmentChoices[index].HallRank,
-        HallName: hallNameValue ?? applicationDetails.ApartmentChoices[index].HallName,
-      };
-
       // Error checking on the hallNameValue before modifying the newHallInfo object
       if (
         hallNameValue !== applicationDetails.ApartmentChoices[index].HallName &&
@@ -364,19 +411,30 @@ const StudentApplication = ({ userProfile, authentication }) => {
         // Display an error if the selected hall is already in the list
         createSnackbar(`${String(hallNameValue)} is already in the list.`, 'info');
 
-        // Set the new hall info back to the name it was previously
-        newApartmentChoice.HallName = applicationDetails.ApartmentChoices[index].HallName;
-      }
-
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        ApartmentChoices: sortBy(
-          prevApplicationDetails.ApartmentChoices.map((prevApartmentChoice, j) =>
-            j === index ? newApartmentChoice : prevApartmentChoice,
+        // Leave the ApartmentChoice array unchanged, but refresh the sorting.
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          ApartmentChoices: sortBy(
+            prevApplicationDetails.ApartmentChoices,
+            ['HallRank', 'HallName'], // Sort halls by rank and name
           ),
-          ['HallRank', 'HallName'], // Sort halls by rank and name
-        ),
-      }));
+        }));
+      } else {
+        const newApartmentChoice = {
+          ApplicationID: applicationDetails.ApplicationID,
+          HallRank: Number(hallRankValue) ?? applicationDetails.ApartmentChoices[index].HallRank,
+          HallName: hallNameValue ?? applicationDetails.ApartmentChoices[index].HallName,
+        };
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          ApartmentChoices: sortBy(
+            prevApplicationDetails.ApartmentChoices.map((prevApartmentChoice, j) =>
+              j === index ? newApartmentChoice : prevApartmentChoice,
+            ),
+            ['HallRank', 'HallName'], // Sort halls by rank and name
+          ),
+        }));
+      }
 
       setUnsavedChanges(true);
     } else {
@@ -471,31 +529,51 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @async
    * @function saveApartmentApplication
    * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
+   * @returns {Boolean} Indicates whether saving succeeded or failed
    */
   const saveApartmentApplication = async (applicationDetails) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
     let result = null;
     try {
-      if (
-        applicationDetails.Applicants.length === 0 ||
-        applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))
-      ) {
-        result = await housing.saveApartmentApplication(applicationDetails);
-        console.debug('result of saving: ' + result); //! DEBUG
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          ApplicationID: result ?? prevApplicationDetails.ApplicationID,
-        }));
-        setSaving('success');
-        setUnsavedChanges(false);
-        // loadApplication(); //? Coming soon to a feature near you
-      } else {
-        // The `isApplicantValid` function will handle the snackbar message
+      if (applicationDetails.Applicants.length < 1) {
+        createSnackbar(
+          'Error: There are no applicants on this application. This should not be possible. Please refresh the page and try again.',
+          'error',
+        );
         setSaving('failed');
+      } else {
+        // This will produce an array of booleans. If all are true, then all applicants are valid
+        let validApplicants = await Promise.all(
+          applicationDetails.Applicants.map((applicant) => isApplicantValid(applicant)),
+        );
+        // No additional `else` is needed for this, since `isApplicantValid` handles the `createSnackbar` internally
+        if (validApplicants.every((v) => v)) {
+          result = await housing.saveApartmentApplication(applicationDetails);
+          console.debug('result of saving: ' + result); //! DEBUG
+          if (result) {
+            setApplicationDetails((prevApplicationDetails) => ({
+              ...prevApplicationDetails,
+              ApplicationID: result ?? prevApplicationDetails.ApplicationID,
+            }));
+            setSaving('success');
+            setUnsavedChanges(false);
+            loadApplication();
+          } else {
+            throw new Error(
+              `Did not receive an http error code, but received the response ${result}`,
+            );
+          }
+        }
       }
-    } catch {
-      createSnackbar('Something went wrong while trying to save the application.', 'error');
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to save changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar('Something went wrong while trying to save the application.', 'error');
+      }
       setSaving('failed');
     } finally {
       if (saveButtonAlertTimeout === null) {
@@ -536,28 +614,50 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    const genericSubmitErrorMessage =
-      'Something went wrong while trying to submit the application.';
-
-    if (!applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
-      console.warning('Not all applicants are valid'); //! DEBUG:
-    } else if (applicationDetails.ApplicationID > 0) {
-      console.log('All applicants are valid'); //! DEBUG:
-      housing
-        .submitApplication(applicationDetails.ApplicationID)
-        .then((result) => {
-          if (!result) {
-            createSnackbar(genericSubmitErrorMessage, 'error');
+    setSubmitStatus(true);
+    setSubmitButtonAlertTimeout(null);
+    try {
+      if (applicationDetails.Applicants.length < 1) {
+        createSnackbar(
+          'Error: There are no applicants on this application. This should not be possible. Please refresh the page and try again.',
+          'error',
+        );
+        setSaving('failed');
+      } else {
+        // This will produce an array of booleans. If all are true, then all applicants are valid
+        let validApplicants = await Promise.all(
+          applicationDetails.Applicants.map((applicant) => isApplicantValid(applicant)),
+        );
+        // No additional `else` is needed for this, since `isApplicantValid` handles the `createSnackbar` internally
+        if (validApplicants.every((v) => v)) {
+          const result = await housing.submitApplication(applicationDetails.ApplicationID);
+          if (result) {
+            setSubmitStatus('success');
+            loadApplication();
           } else {
-            setApplicationCardsOpen(false);
-            // loadApplication(); //? Coming soon to a feature near you
+            throw new Error('Failed to submit application');
           }
-        })
-        .catch((err) => {
-          createSnackbar(genericSubmitErrorMessage, 'error');
-        });
-    } else {
-      createSnackbar(genericSubmitErrorMessage, 'error');
+        }
+      }
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to make changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar('Something went wrong while trying to submit the application.', 'error');
+      }
+      setSubmitStatus('failed');
+    } finally {
+      if (submitButtonAlertTimeout === null) {
+        // Shows the success icon for 6 seconds and then returns back to normal button
+        setSubmitButtonAlertTimeout(
+          setTimeout(() => {
+            setSubmitButtonAlertTimeout(null);
+            setSubmitStatus(false);
+          }, 6000),
+        );
+      }
     }
   };
 
@@ -655,6 +755,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           maxNumApplicants={MAX_NUM_APPLICANTS}
                           userProfile={userProfile}
                           applicationDetails={applicationDetails}
+                          authentication={authentication}
                         />
                       )}
                       <GordonDialogBox
@@ -738,6 +839,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   )
                 }
                 saving={saving}
+                submitStatus={submitStatus}
                 submitDialogOpen={submitDialogOpen}
                 unsavedChanges={unsavedChanges}
                 onCloseDialog={handleCloseDialog}

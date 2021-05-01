@@ -1,7 +1,7 @@
 import React from 'react';
 import { Backdrop, Button, Card, CardContent, Grid, Typography } from '@material-ui/core/';
-import GordonLoader from '../../../../../../components/Loader';
-import GordonDialogBox from '../../../../../../components/GordonDialogBox';
+import GordonLoader from 'components/Loader';
+import GordonDialogBox from 'components/GordonDialogBox';
 import SaveButton from './components/SaveButton';
 
 // TODO: Improve this text for the users
@@ -19,6 +19,7 @@ const BottomBar = ({
   canEditApplication,
   disableSubmit,
   saving,
+  submitStatus,
   submitDialogOpen,
   unsavedChanges,
   onCloseDialog,
@@ -35,7 +36,12 @@ const BottomBar = ({
     itemProps: {},
   };
 
-  if (!applicationCardsOpen) {
+  if (submitStatus === 'success') {
+    dynamicContent = {
+      primaryText: 'The application was submitted successfully!',
+      openCardsButtonLabel: 'View your application',
+    };
+  } else if (!applicationCardsOpen) {
     if (!applicationID) {
       dynamicContent = {
         primaryText: 'You are not on any applications for the current semester.',
@@ -57,7 +63,15 @@ const BottomBar = ({
       };
     }
   } else {
-    if (saving === 'failed') {
+    if (submitStatus === 'failed') {
+      dynamicContent = {
+        primaryText: 'Something went wrong while trying to submit the application.',
+        itemProps: {
+          variant: 'overline',
+          color: 'error',
+        },
+      };
+    } else if (saving === 'failed') {
       dynamicContent = {
         primaryText: 'Something went wrong while trying to save the application.',
         itemProps: {
@@ -104,25 +118,23 @@ const BottomBar = ({
             <Grid container item xs={12} sm={6} lg={4} spacing={2}>
               <Grid item xs>
                 <SaveButton
-                  saving={saving}
-                  onClick={canEditApplication ? onSaveButtonClick : undefined}
                   disabled={!canEditApplication || !unsavedChanges}
+                  buttonText={'Save & Continue'}
+                  status={saving}
+                  onClick={canEditApplication ? onSaveButtonClick : undefined}
                 />
               </Grid>
               <Grid item xs>
-                <Button
-                  variant="contained"
-                  onClick={canEditApplication ? onSubmitButtonClick : undefined}
-                  color="secondary"
-                  fullWidth
+                <SaveButton
                   disabled={!canEditApplication || disableSubmit}
-                >
-                  Save & Submit
-                </Button>
+                  buttonText={'Save & Submit'}
+                  status={submitStatus}
+                  onClick={canEditApplication ? onSubmitButtonClick : undefined}
+                />
               </Grid>
             </Grid>
           )}
-          <Backdrop open={saving && typeof saving !== 'string'}>
+          <Backdrop open={saving === true || submitStatus === true}>
             <GordonLoader />
           </Backdrop>
           <GordonDialogBox

@@ -18,7 +18,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
-import GordonPeopleSearch from '../../../../../../components/Header/components/PeopleSearch';
+import GordonPeopleSearch from 'components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
 
 /**

@@ -14,7 +14,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import PersonIcon from '@material-ui/icons/Person';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
-import user from '../../../../../../../../services/user';
+import user from 'services/user';
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo

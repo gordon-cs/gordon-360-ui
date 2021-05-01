@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { sortBy } from 'lodash';
+import { DateTime } from 'luxon';
 import { CSVLink } from 'react-csv';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { DateTime } from 'luxon';
+import GordonLoader from 'components/Loader';
 import ApplicationsTable from './components/ApplicationTable';
-import GordonLoader from '../../../../components/Loader';
 import { NotFoundError } from 'services/error';
-import housing from '../../../../services/housing';
+import housing from 'services/housing';
 
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
@@ -53,6 +53,7 @@ const StaffMenu = ({ userProfile }) => {
         setApplications([]);
       } else {
         console.error(e);
+        throw e;
       }
     } finally {
       setLoading(false);

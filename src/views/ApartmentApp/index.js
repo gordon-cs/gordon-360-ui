@@ -1,14 +1,14 @@
 //Main apartment application page
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardContent, Button } from '@material-ui/core/';
-import GordonLoader from '../../components/Loader';
-import StudentApplication from './components/StudentApplication';
+import GordonLoader from 'components/Loader';
 import StaffMenu from './components/StaffMenu';
-import useNetworkStatus from '../../hooks/useNetworkStatus';
-import { NotFoundError } from 'services/error';
-import housing from '../../services/housing';
-import user from '../../services/user';
+import StudentApplication from './components/StudentApplication';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import housing from 'services/housing';
+import user from 'services/user';
 import './apartmentApp.css';
+import { NotFoundError } from 'services/error';
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -38,8 +38,9 @@ const ApartApp = ({ authentication }) => {
         try {
           setCanUseStaff(await housing.checkHousingAdmin());
         } catch (e) {
-          console.debug(e);
-          console.debug(e instanceof NotFoundError);
+          if (!(e instanceof NotFoundError)) {
+            console.debug(e);
+          }
           setCanUseStaff(false);
         }
       } catch {
