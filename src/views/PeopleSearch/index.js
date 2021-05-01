@@ -287,7 +287,7 @@ class PeopleSearch extends Component {
     }
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     if (this.props.authentication) {
       try {
         const profile = await user.getProfileInfo();

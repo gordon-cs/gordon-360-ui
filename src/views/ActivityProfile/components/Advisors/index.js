@@ -13,7 +13,7 @@ export default class Advisors extends Component {
       activityAdvisors: [],
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadAdvisors();
   }
   async loadAdvisors() {

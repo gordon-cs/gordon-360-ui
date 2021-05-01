@@ -1,34 +1,27 @@
 import React from 'react';
 import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram, FaHandshake } from 'react-icons/fa';
-import EditIcon from '@material-ui/icons/Edit';
 
 export const socialMediaInfo = {
-  facebook: {
+  platforms: ['Facebook', 'Twitter', 'LinkedIn', 'Instagram', 'Handshake'],
+  Facebook: {
     icon: <FaFacebookF />,
     prefix: 'https://www.facebook.com/',
-    error: 'Invalid Facebook link. ',
   },
-  twitter: {
+  Twitter: {
     icon: <FaTwitter />,
     prefix: 'https://twitter.com/',
-    error: 'Invalid Twitter link. ',
   },
-  linkedIn: {
+  LinkedIn: {
     icon: <FaLinkedin />,
     prefix: 'https://www.linkedin.com/in/',
-    error: 'Invalid LinkedIn link. ',
   },
-  instagram: {
+  Instagram: {
     icon: <FaInstagram />,
     prefix: 'https://www.instagram.com/',
-    error: 'Invalid Instagram link. ',
   },
-  handshake: {
+  Handshake: {
     icon: <FaHandshake />,
     prefix: 'https://gordon.joinhandshake.com/users/',
-    error: 'Invalid Handshake link. ',
-  },
-  edit: {
-    icon: <EditIcon />,
+    prefix2: 'https://app.joinhandshake.com/users/',
   },
 };

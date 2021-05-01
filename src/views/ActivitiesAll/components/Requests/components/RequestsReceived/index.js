@@ -28,7 +28,7 @@ export default class RequestReceived extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadRequests();
   }
 

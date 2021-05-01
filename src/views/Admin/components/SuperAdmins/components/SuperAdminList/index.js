@@ -24,7 +24,7 @@ export default class SuperAdminList extends Component {
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.setState({});
   }
 
