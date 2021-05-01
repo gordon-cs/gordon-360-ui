@@ -103,6 +103,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       setUnsavedChanges(true);
     };
 
+    let result = false;
     try {
       setLoading(true);
       // Check if the current user is on an application. Returns the application ID number if found
@@ -113,6 +114,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setCanEditApplication(
           userProfile.AD_Username === newApplicationDetails.EditorProfile.AD_Username ?? false,
         );
+        setUnsavedChanges(false);
+        result = true;
       } else {
         throw createError(new Error('Invalid application ID'), { status: 404 });
       }
@@ -129,9 +132,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
       }
     } finally {
       setNewEditorProfile(null);
-      setUnsavedChanges(false);
       setLoading(false);
       debugPrintApplicationDetails();
+      return result;
     }
   }, [userProfile]);
 
@@ -314,7 +317,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
       );
       if (result) {
         try {
-          loadApplication();
+          const result = loadApplication();
+          if (!result) {
+            throw new Error('Failed to load apartment application.');
+          }
         } catch {
           setApplicationDetails((prevApplicationDetails) => ({
             ...prevApplicationDetails,
@@ -323,8 +329,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
           }));
         } finally {
           setSaving('success');
-          setUnsavedChanges(false);
           setCanEditApplication(false);
+          setUnsavedChanges(false);
         }
       }
     } catch (e) {
@@ -529,8 +535,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
         // The `isApplicantValid` function will handle the snackbar message
         setSaving('failed');
       }
-    } catch {
-      createSnackbar('Something went wrong while trying to save the application.', 'error');
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to save changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar('Something went wrong while trying to save the application.', 'error');
+      }
       setSaving('failed');
     } finally {
       if (saveButtonAlertTimeout === null) {

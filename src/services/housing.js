@@ -154,28 +154,10 @@ const saveApartmentApplication = async (applicationDetails) => {
   };
 
   const applicationID = applicationDetails.ApplicationID;
-  let result = null;
-  try {
-    if (applicationID > 0) {
-      result = await http.put(
-        `housing/apartment/applications/${applicationID}/`,
-        applicationDetails,
-      );
-    } else {
-      result = await http.post(`housing/apartment/applications/`, applicationDetails);
-    }
-  } catch (err) {
-    if (err instanceof AuthError) {
-      console.log('Received 401 (Unauthorized)');
-    } else if (err instanceof NotFoundError) {
-      console.log(
-        'Received 404 indicates that the requested application was not found in the database',
-      );
-    } else {
-      throw err;
-    }
-  } finally {
-    return result;
+  if (applicationID > 0) {
+    return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
+  } else {
+    return await http.post(`housing/apartment/applications/`, applicationDetails);
   }
 };
 
