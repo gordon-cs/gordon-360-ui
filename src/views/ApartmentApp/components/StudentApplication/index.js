@@ -365,6 +365,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         ),
       }));
       setUnsavedChanges(true);
+      debugPrintApplicationDetails();
     }
   };
 
@@ -376,12 +377,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
     if (index !== null && index >= 0) {
-      let newApartmentChoice = {
-        ApplicationID: applicationDetails.ApplicationID,
-        HallRank: Number(hallRankValue) ?? applicationDetails.ApartmentChoices[index].HallRank,
-        HallName: hallNameValue ?? applicationDetails.ApartmentChoices[index].HallName,
-      };
-
       // Error checking on the hallNameValue before modifying the newHallInfo object
       if (
         hallNameValue !== applicationDetails.ApartmentChoices[index].HallName &&
@@ -390,21 +385,33 @@ const StudentApplication = ({ userProfile, authentication }) => {
         // Display an error if the selected hall is already in the list
         createSnackbar(`${String(hallNameValue)} is already in the list.`, 'info');
 
-        // Set the new hall info back to the name it was previously
-        newApartmentChoice.HallName = applicationDetails.ApartmentChoices[index].HallName;
+        // Leave the ApartmentChoice array unchanged, but refresh the sorting.
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          ApartmentChoices: sortBy(
+            prevApplicationDetails.ApartmentChoices,
+            ['HallRank', 'HallName'], // Sort halls by rank and name
+          ),
+        }));
+      } else {
+        const newApartmentChoice = {
+          ApplicationID: applicationDetails.ApplicationID,
+          HallRank: Number(hallRankValue) ?? applicationDetails.ApartmentChoices[index].HallRank,
+          HallName: hallNameValue ?? applicationDetails.ApartmentChoices[index].HallName,
+        };
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          ApartmentChoices: sortBy(
+            prevApplicationDetails.ApartmentChoices.map((prevApartmentChoice, j) =>
+              j === index ? newApartmentChoice : prevApartmentChoice,
+            ),
+            ['HallRank', 'HallName'], // Sort halls by rank and name
+          ),
+        }));
       }
 
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        ApartmentChoices: sortBy(
-          prevApplicationDetails.ApartmentChoices.map((prevApartmentChoice, j) =>
-            j === index ? newApartmentChoice : prevApartmentChoice,
-          ),
-          ['HallRank', 'HallName'], // Sort halls by rank and name
-        ),
-      }));
-
       setUnsavedChanges(true);
+      debugPrintApplicationDetails();
     } else {
       createSnackbar(
         'Something went wrong while trying to edit this hall. Please try again.',
@@ -431,6 +438,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         ),
       }));
       setUnsavedChanges(true);
+      debugPrintApplicationDetails();
     }
   };
 
@@ -467,6 +475,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         ),
       }));
       setUnsavedChanges(true);
+      debugPrintApplicationDetails();
     } else {
       createSnackbar(
         'Something went wrong while trying to change the off-campus program. Please try again.',
