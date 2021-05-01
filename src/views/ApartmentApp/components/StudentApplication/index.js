@@ -136,6 +136,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       debugPrintApplicationDetails();
       return result;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userProfile]);
 
   useEffect(() => {

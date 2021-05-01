@@ -53,6 +53,7 @@ const StaffMenu = ({ userProfile }) => {
         setApplications([]);
       } else {
         console.error(e);
+        throw e;
       }
     } finally {
       setLoading(false);

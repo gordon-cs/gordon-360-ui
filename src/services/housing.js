@@ -4,7 +4,6 @@
  * @module housing
  */
 
-import { AuthError, NotFoundError } from './error';
 import http from './http';
 import user from './user';
 
@@ -215,8 +214,10 @@ function setApplicantInfo(applicant) {
 function setApplicationDetails(applicationDetails) {
   console.debug(`formatting application # ${applicationDetails.ApplicationID}`);
   applicationDetails.Gender = applicationDetails.EditorProfile.Gender;
-  applicationDetails.Applicants =
-    applicationDetails.Applicants?.map((applicant) => setApplicantInfo(applicant)) ?? [];
+  applicationDetails.Applicants ?? (applicationDetails.Applicants = []);
+  applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) =>
+    setApplicantInfo(applicant),
+  );
   applicationDetails.ApartmentChoices ?? (applicationDetails.ApartmentChoices = []);
   applicationDetails.NumApplicants = applicationDetails.Applicants?.length ?? 0;
   applicationDetails.FirstHall = applicationDetails.ApartmentChoices[0]?.HallName ?? '';
@@ -245,26 +246,11 @@ const getApartmentApplication = async (applicationID) => {
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
 const getSubmittedApartmentApplications = async () => {
-  let result = [];
-  try {
-    let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
-    applicationDetailsArray.forEach((applicationDetails) =>
-      setApplicationDetails(applicationDetails),
-    );
-    result = applicationDetailsArray; // This is intensionally done first, rather than inside an 'else'
-  } catch (err) {
-    if (err instanceof AuthError) {
-      console.log('Received 401 (Unauthorized)');
-    } else if (err instanceof NotFoundError) {
-      console.log('Received 404 indicates that no applications were found in the database');
-    } else {
-      throw err;
-    }
-    result = []; // Return an empty array if no applications were found
-  } finally {
-    console.log(result); //! DEBUG:
-    return result;
-  }
+  let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+  applicationDetailsArray.forEach((applicationDetails) =>
+    setApplicationDetails(applicationDetails),
+  );
+  return applicationDetailsArray;
 };
 
 /**
