@@ -258,7 +258,7 @@ const getSubmittedApartmentApplications = async () => {
  * @return {Promise.<Boolean>[]} Application details
  */
 const submitApplication = async (applicationID) => {
-  return http.post(`housing/apartment/applications/${applicationID}/submit`);
+  return http.put(`housing/apartment/applications/${applicationID}/submit`);
 };
 
 export default {
