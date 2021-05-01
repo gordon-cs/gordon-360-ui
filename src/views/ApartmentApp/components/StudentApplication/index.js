@@ -105,7 +105,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
     let result = false;
     try {
-      setLoading(true);
       // Check if the current user is on an application. Returns the application ID number if found
       const newApplicationID = await housing.getCurrentApplicationID();
       if (newApplicationID > 0) {
@@ -132,7 +131,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
       }
     } finally {
       setNewEditorProfile(null);
-      setLoading(false);
       debugPrintApplicationDetails();
       return result;
     }
@@ -140,7 +138,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
   }, [userProfile]);
 
   useEffect(() => {
+    setLoading(true);
     loadApplication();
+    setLoading(false);
   }, [userProfile, loadApplication]);
 
   const handleShowApplication = () => {
@@ -182,7 +182,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       return false;
     }
 
-    applicant.Profile.fullName = `${applicant.Profile.FirstName}  ${applicant.Profile.LastName}`;
+    applicant.Profile.fullName ??
+      (applicant.Profile.fullName = `${applicant.Profile.FirstName}  ${applicant.Profile.LastName}`);
 
     if (!String(applicant.Profile.PersonType).includes('stu')) {
       // Display an error if the selected user is not a student
@@ -584,28 +585,29 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    const genericSubmitErrorMessage =
-      'Something went wrong while trying to submit the application.';
-
     if (!applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
-      console.warning('Not all applicants are valid'); //! DEBUG:
+      console.error('Not all applicants are valid'); //! DEBUG:
     } else if (applicationDetails.ApplicationID > 0) {
       console.log('All applicants are valid'); //! DEBUG:
-      housing
-        .submitApplication(applicationDetails.ApplicationID)
-        .then((result) => {
-          if (!result) {
-            createSnackbar(genericSubmitErrorMessage, 'error');
-          } else {
-            setApplicationCardsOpen(false);
-            loadApplication();
-          }
-        })
-        .catch((err) => {
-          createSnackbar(genericSubmitErrorMessage, 'error');
-        });
+      try {
+        const result = await housing.submitApplication(applicationDetails.ApplicationID);
+        if (result) {
+          setApplicationCardsOpen(false);
+          loadApplication();
+        } else {
+          throw new Error('Failed to submit application');
+        }
+      } catch (e) {
+        if (e instanceof AuthError) {
+          createSnackbar('You are not authorized to make changes to this application.', 'error');
+        } else if (e instanceof NotFoundError) {
+          createSnackbar('Error: This application was not found in the database.', 'error');
+        } else {
+          createSnackbar('Something went wrong while trying to submit the application.', 'error');
+        }
+      }
     } else {
-      createSnackbar(genericSubmitErrorMessage, 'error');
+      createSnackbar('Something went wrong while trying to submit the application.', 'error');
     }
   };
 
@@ -703,6 +705,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           maxNumApplicants={MAX_NUM_APPLICANTS}
                           userProfile={userProfile}
                           applicationDetails={applicationDetails}
+                          authentication={authentication}
                         />
                       )}
                       <GordonDialogBox

@@ -181,24 +181,21 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
 /**
  * Helper function to fill in any missing properties of an applicant object's Profile, OffCampusProgram, etc.
  *
- * @function setApplicantInfo
+ * @function formatApplicantInfo
  * @param {ApartmentApplicant} applicant an object representing an apartment applicant
  * @return {ApartmentApplicant} Application details
  */
-function setApplicantInfo(applicant) {
-  //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
-  user.getProfileInfo(applicant.Username ?? applicant.Profile.AD_Username).then((profile) => {
-    applicant.Profile = profile;
-  });
+function formatApplicantInfo(applicant) {
+  // //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
+  // user.getProfileInfo(applicant.Username ?? applicant.Profile.AD_Username).then((profile) => {
+  //   applicant.Profile = profile;
+  // });
 
-  /**
-   * The following commented out commands are implicitly handled by `user.getProfileInfo()`,
-   * so these lines are not needed while the above workaround is still in place
-   */
-  //? This is the ideal solution. Requires more testing after the 'PersonType' issue is fixed in the API
-  // user.setFullname(applicant.Profile);
-  // user.setClass(applicant.Profile);
+  applicant.Profile.PersonType = 'stu';
+  user.setFullname(applicant.Profile);
+  user.setClass(applicant.Profile);
 
+  // The following 'Class' property is needed for the staff page
   if (applicant.Class === null || Number(applicant.Class)) {
     // Use converted Class from number ('1', '2', '3', ...) to words ('Freshman', 'Sophomore', ...)
     applicant.Class = applicant.Profile.Class;
@@ -209,12 +206,13 @@ function setApplicantInfo(applicant) {
   return applicant;
 }
 
-function setApplicationDetails(applicationDetails) {
+function formatApplicationDetails(applicationDetails) {
   console.debug(`formatting application # ${applicationDetails.ApplicationID}`);
+  applicationDetails.EditorProfile.PersonType = 'stu';
   applicationDetails.Gender = applicationDetails.EditorProfile.Gender;
   applicationDetails.Applicants ?? (applicationDetails.Applicants = []);
   applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) =>
-    setApplicantInfo(applicant),
+    formatApplicantInfo(applicant),
   );
   applicationDetails.ApartmentChoices ?? (applicationDetails.ApartmentChoices = []);
   applicationDetails.NumApplicants = applicationDetails.Applicants?.length ?? 0;
@@ -232,7 +230,7 @@ function setApplicationDetails(applicationDetails) {
  */
 const getApartmentApplication = async (applicationID) => {
   let applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
-  setApplicationDetails(applicationResult);
+  formatApplicationDetails(applicationResult);
   return applicationResult;
 };
 
@@ -246,7 +244,7 @@ const getApartmentApplication = async (applicationID) => {
 const getSubmittedApartmentApplications = async () => {
   let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
   applicationDetailsArray.forEach((applicationDetails) =>
-    setApplicationDetails(applicationDetails),
+    formatApplicationDetails(applicationDetails),
   );
   return applicationDetailsArray;
 };
