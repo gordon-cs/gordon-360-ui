@@ -129,24 +129,10 @@ const getApartmentHalls = async () => {
  * @return {Promise.<Number>} Application's ID number
  */
 const getCurrentApplicationID = async (username) => {
-  let result = null;
-  try {
-    if (username) {
-      result = await http.get(`housing/apartment/${username}/`);
-    } else {
-      result = await http.get('housing/apartment');
-    }
-  } catch (err) {
-    // handle thrown 404 errors
-    if (err instanceof AuthError) {
-      console.log('Received 401 (Unauthorized). This should never happen');
-    } else if (err instanceof NotFoundError) {
-      console.log('A 404 code indicates that an application was not found for this applicant');
-    } else {
-      throw err;
-    }
-  } finally {
-    return result;
+  if (username) {
+    return await http.get(`housing/apartment/${username}/`);
+  } else {
+    return await http.get('housing/apartment');
   }
 };
 
@@ -264,24 +250,9 @@ function setApplicationDetails(applicationDetails) {
  * @return {Promise.<ApplicationDetails>} Application details
  */
 const getApartmentApplication = async (applicationID) => {
-  let applicationResult = null;
-  try {
-    applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
-    setApplicationDetails(applicationResult);
-  } catch (err) {
-    if (err instanceof AuthError) {
-      console.log('Received 401 (Unauthorized)');
-    } else if (err instanceof NotFoundError) {
-      console.log(
-        'Received 404 indicates that the requested application was not found in the database',
-      );
-    } else {
-      throw err;
-    }
-  } finally {
-    console.log(applicationResult); //! DEBUG:
-    return applicationResult;
-  }
+  let applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
+  setApplicationDetails(applicationResult);
+  return applicationResult;
 };
 
 /**

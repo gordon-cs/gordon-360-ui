@@ -12,7 +12,7 @@ import HallSelection from './components/HallSelection';
 import OffCampusSection from './components/OffCampusSection';
 import Agreements from './components/Agreements';
 import BottomBar from './components/BottomBar';
-import { AuthError, NotFoundError } from 'services/error';
+import { AuthError, createError, NotFoundError } from 'services/error';
 import housing from 'services/housing';
 import user from 'services/user';
 
@@ -85,14 +85,23 @@ const StudentApplication = ({ userProfile, authentication }) => {
         setCanEditApplication(
           userProfile.AD_Username === newApplicationDetails.EditorProfile.AD_Username ?? false,
         );
-        setNewEditorProfile(null);
-        setUnsavedChanges(false);
       } else {
-        initializeNewApplication();
+        throw createError(new Error('Invalid application ID'), { status: 404 });
       }
     } catch (e) {
-      initializeNewApplication();
+      if (e instanceof NotFoundError) {
+        initializeNewApplication();
+      } else if (e instanceof AuthError) {
+        const debugMessage =
+          'Received a 401 (Unauthorized) response, which should not be possible in this case. Please try refreshing the page, or contact CTS for support.';
+        console.error(`Debug Message: ${debugMessage}`);
+        createSnackbar(debugMessage, 'error');
+      } else {
+        throw e;
+      }
     } finally {
+      setNewEditorProfile(null);
+      setUnsavedChanges(false);
       setLoading(false);
     }
   }, [userProfile]);
