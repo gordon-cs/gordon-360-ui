@@ -8,6 +8,7 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 import housing from 'services/housing';
 import user from 'services/user';
 import './apartmentApp.css';
+import { NotFoundError } from 'services/error';
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -37,7 +38,9 @@ const ApartApp = ({ authentication }) => {
         try {
           setCanUseStaff(await housing.checkHousingAdmin());
         } catch (e) {
-          console.debug(e);
+          if (!(e instanceof NotFoundError)) {
+            console.debug(e);
+          }
           setCanUseStaff(false);
         }
       } catch {
