@@ -36,7 +36,12 @@ const BottomBar = ({
     itemProps: {},
   };
 
-  if (!applicationCardsOpen) {
+  if (submitStatus === 'success') {
+    dynamicContent = {
+      primaryText: 'The application was submitted successfully!',
+      openCardsButtonLabel: 'View your application',
+    };
+  } else if (!applicationCardsOpen) {
     if (!applicationID) {
       dynamicContent = {
         primaryText: 'You are not on any applications for the current semester.',

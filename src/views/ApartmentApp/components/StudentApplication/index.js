@@ -633,7 +633,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
           const result = await housing.submitApplication(applicationDetails.ApplicationID);
           if (result) {
             setSubmitStatus('success');
-            setApplicationCardsOpen(false);
             loadApplication();
           } else {
             throw new Error('Failed to submit application');
