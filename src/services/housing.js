@@ -5,7 +5,7 @@
  */
 
 import http from './http';
-import './user'; // Needed for typedef of StudentProfileInfo
+import user from './user';
 
 /**
  * @typedef { import('./user').StudentProfileInfo } StudentProfileInfo
@@ -65,6 +65,7 @@ import './user'; // Needed for typedef of StudentProfileInfo
  * @property {Number} AvgPoints The average application points per applicant
  */
 
+
 /**
  * Check if the current user is authorized to view the housing staff page for applications
  *
@@ -76,6 +77,10 @@ const checkHousingAdmin = async () => {
   try {
     return await http.get(`housing/admin`);
   } catch (err) {
+    console.log(err);
+    console.log(err.response);
+    console.log(err.response.status);
+    console.log(err.status);
     // handle thrown 404 errors
     if (err.status === 404 || err.name.includes('NotFound')) {
       console.log('A 404 code indicates that current user was not found on the list of admins');
@@ -199,6 +204,49 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
 };
 
 /**
+ * Helper function to fill in any missing properties of an applicant object's Profile, OffCampusProgram, etc.
+ *
+ * @function setApplicantInfo
+ * @param {ApartmentApplicant} applicant an object representing an apartment applicant
+ * @return {ApartmentApplicant} Application details
+ */
+function setApplicantInfo(applicant) {
+  //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
+  user.getProfileInfo(applicant.Username ?? applicant.Profile.AD_Username).then((profile) => {
+    applicant.Profile = profile;
+  });
+
+  /**
+   * The following commented out commands are implicitly handled by `user.getProfileInfo()`,
+   * so these lines are not needed while the above workaround is still in place
+   */
+  //? This is the ideal solution. Requires more testing after the 'PersonType' issue is fixed in the API
+  // user.setFullname(applicant.Profile);
+  // user.setClass(applicant.Profile);
+
+  if (applicant.Class === null || Number(applicant.Class)) {
+    // Use converted Class from number ('1', '2', '3', ...) to words ('Freshman', 'Sophomore', ...)
+    applicant.Class = applicant.Profile.Class;
+  }
+
+  applicant.OffCampusProgram ??= '';
+
+  return applicant;
+}
+
+function setApplicationDetails(applicationDetails) {
+  console.debug(`formatting application # ${applicationDetails.ApplicationID}`);
+  applicationDetails.Applicants ??= [];
+  applicationDetails.Applicants = applicationDetails.Applicants.map((applicant) =>
+    setApplicantInfo(applicant),
+  );
+  applicationDetails.ApartmentChoices ??= [];
+  applicationDetails.NumApplicants = applicationDetails.Applicants?.length ?? 0;
+  applicationDetails.FirstHall = applicationDetails.ApartmentChoices[0]?.HallName ?? '';
+  return applicationDetails;
+}
+
+/**
  * Get active apartment application for given application ID number
  *
  * @async
@@ -208,7 +256,9 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  */
 const getApartmentApplication = async (applicationID) => {
   try {
-    return await http.get(`housing/apartment/applications/${applicationID}/`);
+    let applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
+    setApplicationDetails(applicationResult);
+    return applicationResult;
   } catch (err) {
     if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log(
@@ -225,12 +275,16 @@ const getApartmentApplication = async (applicationID) => {
  * Get active apartment applications for the current semester
  *
  * @async
- * @function getAllApartmentApplications
+ * @function getSubmittedApartmentApplications
  * @return {Promise.<ApplicationDetails>[]} Application details
  */
-const getAllApartmentApplications = async () => {
+const getSubmittedApartmentApplications = async () => {
   try {
-    return await http.get(`housing/admin/apartment/applications/`);
+    let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
+    applicationDetailsArray.forEach((applicationDetails) =>
+      setApplicationDetails(applicationDetails),
+    );
+    return applicationDetailsArray;
   } catch (err) {
     if (err?.status === 404 || err?.name?.includes('NotFound')) {
       console.log('Received 404 indicates that no applications were found in the database');
@@ -263,6 +317,6 @@ export default {
   saveApartmentApplication,
   changeApartmentAppEditor,
   getApartmentApplication,
-  getAllApartmentApplications,
+  getSubmittedApartmentApplications,
   submitApplication,
 };

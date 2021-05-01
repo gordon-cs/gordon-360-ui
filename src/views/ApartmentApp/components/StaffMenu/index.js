@@ -10,9 +10,9 @@ import housing from '../../../../services/housing';
 import ApplicationsTable from './components/ApplicationTable';
 
 /**
- * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
  */
 
 /**
@@ -44,14 +44,8 @@ const StaffMenu = ({ userProfile }) => {
    */
   const loadAllCurrentApplications = useCallback(async () => {
     setLoading(true);
-    let applicationDetailsArray = await housing.getAllApartmentApplications();
-    setApplications(
-      applicationDetailsArray.map((applicationDetails) => ({
-        ...applicationDetails,
-        NumApplicants: applicationDetails.Applicants?.length ?? 0,
-        FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
-      })),
-    );
+    let applicationDetailsArray = await housing.getSubmittedApartmentApplications();
+    setApplications(applicationDetailsArray);
     setLoading(false);
   }, []);
 
