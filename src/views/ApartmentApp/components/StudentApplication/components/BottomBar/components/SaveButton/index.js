@@ -5,15 +5,15 @@ import ErrorIcon from '@material-ui/icons/Error';
 import SaveIcon from '@material-ui/icons/Save';
 import GordonLoader from 'components/Loader';
 
-const SaveButton = ({ disabled, saving, onClick }) => {
+const SaveButton = ({ buttonText, disabled, status, onClick }) => {
   const loaderSize = 20;
 
   let saveButtonIcon = <SaveIcon />;
-  if (saving) {
-    if (saving === 'success') {
+  if (status) {
+    if (status === 'success') {
       saveButtonIcon = <CheckCircleIcon />;
-    } else if (saving === 'failed') {
-      saveButtonIcon = <ErrorIcon className="error" />;
+    } else if (status === 'failed') {
+      saveButtonIcon = <ErrorIcon />;
     } else {
       saveButtonIcon = <GordonLoader size={loaderSize} />;
     }
@@ -23,14 +23,14 @@ const SaveButton = ({ disabled, saving, onClick }) => {
 
   return (
     <Button
-      disabled={disabled || Boolean(saving)}
+      disabled={disabled || Boolean(status)}
       variant="contained"
       color="secondary"
       startIcon={saveButtonIcon}
       fullWidth
       onClick={onClick}
     >
-      Save & Continue
+      {buttonText}
     </Button>
   );
 };

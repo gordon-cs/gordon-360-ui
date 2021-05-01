@@ -43,6 +43,7 @@ const BLANK_APPLICATION_DETAILS = {
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [canEditApplication, setCanEditApplication] = useState(false);
   const [agreements, setAgreements] = useState(false); // Represents the state of the agreements card. True if all checkboxes checked, false otherwise
@@ -58,6 +59,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
+  const [submitButtonAlertTimeout, setSubmitButtonAlertTimeout] = useState(null);
 
   function debugPrintApplicationDetails(applicationDetails) {
     //! DEBUG
@@ -612,6 +614,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
+    setSubmitStatus(true);
+    setSubmitButtonAlertTimeout(null);
     try {
       if (applicationDetails.Applicants.length < 1) {
         createSnackbar(
@@ -628,6 +632,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         if (validApplicants.every((v) => v)) {
           const result = await housing.submitApplication(applicationDetails.ApplicationID);
           if (result) {
+            setSubmitStatus('success');
             setApplicationCardsOpen(false);
             loadApplication();
           } else {
@@ -643,13 +648,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
       } else {
         createSnackbar('Something went wrong while trying to submit the application.', 'error');
       }
+      setSubmitStatus('failed');
     } finally {
-      if (saveButtonAlertTimeout === null) {
+      if (submitButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
-        setSaveButtonAlertTimeout(
+        setSubmitButtonAlertTimeout(
           setTimeout(() => {
-            setSaveButtonAlertTimeout(null);
-            setSaving(false);
+            setSubmitButtonAlertTimeout(null);
+            setSubmitStatus(false);
           }, 6000),
         );
       }
@@ -834,6 +840,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   )
                 }
                 saving={saving}
+                submitStatus={submitStatus}
                 submitDialogOpen={submitDialogOpen}
                 unsavedChanges={unsavedChanges}
                 onCloseDialog={handleCloseDialog}
