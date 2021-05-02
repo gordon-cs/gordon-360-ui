@@ -1,6 +1,7 @@
 import React from 'react';
 import { Backdrop, Button, Card, CardContent, Grid, Typography } from '@material-ui/core/';
 import DeleteIcon from '@material-ui/icons/Delete';
+import SaveIcon from '@material-ui/icons/Save';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import DynamicButton from './components/DynamicButton';
@@ -133,6 +134,7 @@ const BottomBar = ({
                   <DynamicButton
                     disabled={!canEditApplication || !unsavedChanges}
                     buttonText={'Save & Continue'}
+                    startIcon={<SaveIcon />}
                     status={saving}
                     onClick={canEditApplication ? onSaveButtonClick : undefined}
                   />
@@ -141,6 +143,7 @@ const BottomBar = ({
                   <DynamicButton
                     disabled={!canEditApplication || disableSubmit}
                     buttonText={'Submit'}
+                    startIcon={<SaveIcon />}
                     status={submitStatus}
                     onClick={canEditApplication ? onSubmitButtonClick : undefined}
                   />

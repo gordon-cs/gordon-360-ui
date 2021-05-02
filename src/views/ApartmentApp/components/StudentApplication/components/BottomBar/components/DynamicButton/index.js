@@ -2,23 +2,24 @@ import React from 'react';
 import { Button } from '@material-ui/core/';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
-import SaveIcon from '@material-ui/icons/Save';
 import GordonLoader from 'components/Loader';
 
-const DynamicButton = ({ buttonText, disabled, status, onClick }) => {
-  const loaderSize = 20;
+const LOADER_SIZE = 20;
 
-  let saveButtonIcon = <SaveIcon />;
-  if (status) {
-    if (status === 'success') {
-      saveButtonIcon = <CheckCircleIcon />;
-    } else if (status === 'failed') {
-      saveButtonIcon = <ErrorIcon />;
+const DynamicButton = ({ buttonText, disabled, startIcon = null, status, onClick }) => {
+  let dynamicIcon = startIcon;
+  if (startIcon) {
+    if (status) {
+      if (status === 'success') {
+        dynamicIcon = <CheckCircleIcon />;
+      } else if (status === 'failed') {
+        dynamicIcon = <ErrorIcon />;
+      } else {
+        dynamicIcon = <GordonLoader size={LOADER_SIZE} />;
+      }
     } else {
-      saveButtonIcon = <GordonLoader size={loaderSize} />;
+      dynamicIcon = startIcon;
     }
-  } else {
-    saveButtonIcon = <SaveIcon />;
   }
 
   return (
@@ -26,7 +27,7 @@ const DynamicButton = ({ buttonText, disabled, status, onClick }) => {
       disabled={disabled || Boolean(status)}
       variant="contained"
       color="secondary"
-      startIcon={saveButtonIcon}
+      startIcon={dynamicIcon}
       fullWidth
       onClick={onClick}
     >
