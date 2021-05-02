@@ -116,7 +116,7 @@ const BottomBar = ({
               {dynamicContent.secondaryText}
             </Typography>
           </Grid>
-          <Grid container item xs={12} sm={6} lg={6} spacing={2}>
+          <Grid container item xs={12} sm={7} lg={6} spacing={2}>
             {!applicationCardsOpen && (
               <Grid item xs>
                 <DynamicButton
