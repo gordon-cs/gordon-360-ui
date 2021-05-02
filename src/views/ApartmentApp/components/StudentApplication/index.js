@@ -16,6 +16,7 @@ import { AuthError, createError, NotFoundError } from 'services/error';
 import housing from 'services/housing';
 import user from 'services/user';
 
+const DYNAMIC_ICON_TIMEOUT = 6000;
 const MAX_NUM_APPLICANTS = 8;
 const BLANK_APPLICATION_DETAILS = {
   ApplicationID: null,
@@ -376,7 +377,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setTimeout(() => {
             setSaveButtonAlertTimeout(null);
             setSaving(false);
-          }, 6000),
+          }, DYNAMIC_ICON_TIMEOUT),
         );
       }
     }
@@ -527,14 +528,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
-   * Callback for apartment application delete button
-   */
-  const handleDeleteButtonClick = () => {
-    // The method is separated from callback because the housing API service must be handled inside an async method
-    deleteApartmentApplication(applicationDetails);
-  };
-
-  /**
    * Save the current state of the application to the database
    *
    * @async
@@ -593,7 +586,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setTimeout(() => {
             setSaveButtonAlertTimeout(null);
             setSaving(false);
-          }, 6000),
+          }, DYNAMIC_ICON_TIMEOUT),
         );
       }
       return result;
@@ -611,18 +604,26 @@ const StudentApplication = ({ userProfile, authentication }) => {
    *
    * @async
    * @function deleteApartmentApplication
-   * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
    */
-  const deleteApartmentApplication = async (applicationDetails) => {
+  const deleteApartmentApplication = async () => {
     setDeleting(true);
     setDeleteButtonAlertTimeout(null);
-    let result = null;
     try {
       const result = await housing.deleteApartmentApplication(applicationDetails);
-      setDeleting('success');
-      setApplicationCardsOpen(false);
-    } catch {
-      createSnackbar('Something went wrong while trying to delete the application.', 'error');
+      if (result) {
+        setDeleting('success');
+        setApplicationCardsOpen(false);
+      } else {
+        throw new Error('Failed to delete application');
+      }
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to make changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar('Something went wrong while trying to delete the application.', 'error');
+      }
       setDeleting('failed');
     } finally {
       if (deleteButtonAlertTimeout === null) {
@@ -631,10 +632,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setTimeout(() => {
             setDeleteButtonAlertTimeout(null);
             setDeleting(false);
-          }, 6000),
+          }, DYNAMIC_ICON_TIMEOUT),
         );
       }
-      return result;
     }
   };
 
@@ -704,7 +704,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setTimeout(() => {
             setSubmitButtonAlertTimeout(null);
             setSubmitStatus(false);
-          }, 6000),
+          }, DYNAMIC_ICON_TIMEOUT),
         );
       }
     }
