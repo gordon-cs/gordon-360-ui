@@ -69,7 +69,7 @@
     "eject": "react-scripts eject",
     "docs": "jsdoc --configure .jsdoc.json --recurse",
     "format": "prettier --write '{**/*.md,src/**/*.{js,scss}}'",
-    "lint": "npm run --silent lint-js & npm run --silent lint-scss",
+    "lint": "npm run --silent lint-js && npm run --silent lint-scss",
     "lint-js": "eslint --ext .js src",
     "lint-scss": "stylelint 'src/**/*.scss'",
     "precommit": "lint-staged"
