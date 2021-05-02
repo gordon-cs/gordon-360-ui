@@ -63,7 +63,7 @@
     "build-css": "node-sass src/ -o src/",
     "watch-css": "npm run build-css && node-sass src/ -o src/ --watch",
     "start-js": "react-scripts start",
-    "start": "npm run watch-css & npm run start-js",
+    "start": "npm run watch-css && npm run start-js",
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
