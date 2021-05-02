@@ -1,5 +1,6 @@
 import React from 'react';
 import { Backdrop, Button, Card, CardContent, Grid, Typography } from '@material-ui/core/';
+import DeleteIcon from '@material-ui/icons/Delete';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import SaveButton from './components/SaveButton';
@@ -113,47 +114,51 @@ const BottomBar = ({
               {dynamicContent.secondaryText}
             </Typography>
           </Grid>
-          {!applicationCardsOpen ? (
-            <Grid item xs={12} sm={4}>
-              <Button
-                variant="contained"
-                onClick={onShowApplication}
-                color="secondary"
-                fullWidth
-                disabled={applicationCardsOpen}
-              >
-                {dynamicContent.openCardsButtonLabel}
-              </Button>
-            </Grid>
-          ) : (
-            <Grid container item xs={12} sm={6} lg={4} spacing={2}>
+          <Grid container item xs={12} sm={6} lg={4} spacing={2}>
+            {!applicationCardsOpen ? (
               <Grid item xs>
                 <Button
                   variant="contained"
-                  onClick={canEditApplication && onDeleteButtonClick}
+                  onClick={onShowApplication}
                   color="secondary"
                   fullWidth
-                  disabled={!canEditApplication}
+                  disabled={applicationCardsOpen}
                 >
-                  DeleteApplication
+                  {dynamicContent.openCardsButtonLabel}
                 </Button>
-                <SaveButton
-                  disabled={!canEditApplication || !unsavedChanges}
-                  buttonText={'Save & Continue'}
-                  status={saving}
-                  onClick={canEditApplication ? onSaveButtonClick : undefined}
-                />
               </Grid>
+            ) : (
+              <>
+                <Grid item xs>
+                  <SaveButton
+                    disabled={!canEditApplication || !unsavedChanges}
+                    buttonText={'Save & Continue'}
+                    status={saving}
+                    onClick={canEditApplication ? onSaveButtonClick : undefined}
+                  />
+                </Grid>
+                <Grid item xs>
+                  <SaveButton
+                    disabled={!canEditApplication || disableSubmit}
+                    buttonText={'Submit'}
+                    status={submitStatus}
+                    onClick={canEditApplication ? onSubmitButtonClick : undefined}
+                  />
+                </Grid>
+              </>
+            )}
+            {applicationID && (
               <Grid item xs>
                 <SaveButton
-                  disabled={!canEditApplication || disableSubmit}
-                  buttonText={'Save & Submit'}
+                  disabled={!canEditApplication || !applicationID}
+                  buttonText={'Delete'}
+                  startIcon={<DeleteIcon />}
                   status={submitStatus}
-                  onClick={canEditApplication ? onSubmitButtonClick : undefined}
+                  onClick={canEditApplication ? onDeleteButtonClick : undefined}
                 />
               </Grid>
-            </Grid>
-          )}
+            )}
+          </Grid>
           <Backdrop open={saving === true || submitStatus === true}>
             <GordonLoader />
           </Backdrop>
