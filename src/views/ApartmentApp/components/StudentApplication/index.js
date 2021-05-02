@@ -42,9 +42,9 @@ const BLANK_APPLICATION_DETAILS = {
  */
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [canEditApplication, setCanEditApplication] = useState(false);
   const [agreements, setAgreements] = useState(false); // Represents the state of the agreements card. True if all checkboxes checked, false otherwise
@@ -57,11 +57,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [changeEditorDialogOpen, setChangeEditorDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [deleteButtonAlertTimeout, setDeleteButtonAlertTimeout] = useState(null);
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
   const [submitButtonAlertTimeout, setSubmitButtonAlertTimeout] = useState(null);
-  const [deleteButtonAlertTimeout, setDeleteButtonAlertTimeout] = useState(null);
 
   function debugPrintApplicationDetails(applicationDetails) {
     //! DEBUG
@@ -599,6 +600,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
     }
   };
 
+  const handleDeleteAppAccepted = () => {
+    // The method is separated from callback because the housing API service must be handled inside an async method
+    deleteApartmentApplication();
+    handleCloseOkay();
+  };
+
   /**
    * Delete the current application in the database
    *
@@ -612,24 +619,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
     let result = null;
     try {
       const result = await housing.deleteApartmentApplication(applicationDetails);
-      console.log('result of deleting: ' + result); //! DEBUG
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        ApplicationID: result ?? prevApplicationDetails.ApplicationID,
-      }));
       setDeleting('success');
+      setApplicationCardsOpen(false);
     } catch {
-      setSnackbarText('Something went wrong while trying to delete the application.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      setSaving('failed');
+      createSnackbar('Something went wrong while trying to delete the application.', 'error');
+      setDeleting('failed');
     } finally {
       if (deleteButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
         setDeleteButtonAlertTimeout(
           setTimeout(() => {
             setDeleteButtonAlertTimeout(null);
-            setSaving(false);
+            setDeleting(false);
           }, 6000),
         );
       }
@@ -876,24 +877,27 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 applicationCardsOpen={applicationCardsOpen}
                 applicationID={applicationDetails.ApplicationID}
                 canEditApplication={canEditApplication}
+                deleteDialogOpen={deleteDialogOpen}
+                deleting={deleting}
                 disableSubmit={
-                  !applicationCardsOpen ||
-                  !agreements ||
-                  !(applicationDetails?.Applicants?.length > 0) ||
                   !(
+                    applicationCardsOpen &&
+                    agreements &&
+                    applicationDetails?.Applicants?.length > 0 &&
                     applicationDetails?.ApartmentChoices?.filter(
                       (apartmentChoice) => apartmentChoice.HallName,
                     )?.length > 0
                   )
                 }
                 saving={saving}
-                submitStatus={submitStatus}
                 submitDialogOpen={submitDialogOpen}
+                submitStatus={submitStatus}
                 unsavedChanges={unsavedChanges}
                 onCloseDialog={handleCloseDialog}
                 onCloseOkay={handleCloseOkay}
+                onDeleteAppAccepted={handleDeleteAppAccepted}
+                onDeleteButtonClick={() => setDeleteDialogOpen(true)}
                 onSaveButtonClick={handleSaveButtonClick}
-                onDeleteButtonClick={handleDeleteButtonClick}
                 onShowApplication={handleShowApplication}
                 onSubmitAppAccepted={handleSubmitAppAccepted}
                 onSubmitButtonClick={handleSubmitButtonClick}
