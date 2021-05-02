@@ -19,7 +19,7 @@ export default class ChapelProgress extends Component {
       chapelCredits: {},
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadChapel();
   }
   async loadChapel() {
