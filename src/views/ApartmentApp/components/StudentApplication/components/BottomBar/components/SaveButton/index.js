@@ -1,33 +1,38 @@
 import React from 'react';
 import { Button } from '@material-ui/core/';
-import ErrorIcon from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import GordonLoader from '../../../../../../../../components/Loader';
+import ErrorIcon from '@material-ui/icons/Error';
+import SaveIcon from '@material-ui/icons/Save';
+import GordonLoader from 'components/Loader';
 
-const SaveButton = ({ disabled, saving, onClick }) => {
+const SaveButton = ({ buttonText, disabled, status, onClick }) => {
   const loaderSize = 20;
 
-  if (saving) {
-    if (saving === 'success') {
-      return <CheckCircleIcon className="success" />;
-    } else if (saving === 'failed') {
-      return <ErrorIcon className="error" />;
+  let saveButtonIcon = <SaveIcon />;
+  if (status) {
+    if (status === 'success') {
+      saveButtonIcon = <CheckCircleIcon />;
+    } else if (status === 'failed') {
+      saveButtonIcon = <ErrorIcon />;
     } else {
-      return <GordonLoader size={loaderSize} />;
+      saveButtonIcon = <GordonLoader size={loaderSize} />;
     }
   } else {
-    return (
-      <Button
-        disabled={disabled || saving}
-        variant="contained"
-        color="secondary"
-        fullWidth
-        onClick={onClick}
-      >
-        Save & Continue
-      </Button>
-    );
+    saveButtonIcon = <SaveIcon />;
   }
+
+  return (
+    <Button
+      disabled={disabled || Boolean(status)}
+      variant="contained"
+      color="secondary"
+      startIcon={saveButtonIcon}
+      fullWidth
+      onClick={onClick}
+    >
+      {buttonText}
+    </Button>
+  );
 };
 
 export default SaveButton;

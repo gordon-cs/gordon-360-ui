@@ -56,7 +56,7 @@ export default class MemberList extends Component {
     this.breakpointWidth = 810;
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.setState({
       admin: this.props.admin,
       groupAdmin: this.props.groupAdmin,

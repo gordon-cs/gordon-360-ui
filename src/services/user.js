@@ -181,10 +181,11 @@ import { socialMediaInfo } from 'socialMedia';
  * @property {String} CurrentBalance The current remaining meal plan balance
  */
 
-function formatName(profile) {
+function setFullname(profile) {
   profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
   return profile;
 }
+
 function setOnOffCampus(data) {
   switch (data.OnOffCampus) {
     case 'O':
@@ -204,12 +205,14 @@ function setOnOffCampus(data) {
   }
   return data;
 }
+
 function setClassYear(data) {
   if (data.PreferredClassYear) {
     data.ClassYear = data.PreferredClassYear;
   }
   return data;
 }
+
 function setMajorObject(data) {
   data.Majors = [];
   if (data.Major1Description) {
@@ -223,6 +226,7 @@ function setMajorObject(data) {
   }
   return data;
 }
+
 function setMinorObject(data) {
   data.Minors = [];
   if (data.Minor1Description) {
@@ -236,6 +240,7 @@ function setMinorObject(data) {
   }
   return data;
 }
+
 function formatCountry(profile) {
   if (profile.Country) {
     profile.Country = profile.Country.replace(/\w\S*/g, function (txt) {
@@ -250,6 +255,17 @@ function formatCountry(profile) {
   }
   return profile;
 }
+
+const formatSocialMediaLinks = (profile) => {
+  socialMediaInfo.platforms.map(
+    (platform) =>
+      (profile[platform] = profile[platform]
+        ? socialMediaInfo[platform].prefix + decodeURIComponent(profile[platform])
+        : ''),
+  );
+  return profile;
+};
+
 function setClass(profile) {
   if (String(profile.PersonType).includes('stu')) {
     switch (profile.Class) {
@@ -578,7 +594,7 @@ const getEmploymentInfo = async () => {
 
 const getProfileInfo = async (username) => {
   let profile = await getProfile(username);
-  formatName(profile);
+  setFullname(profile);
   setClass(profile);
   setClassYear(profile);
   setMajorObject(profile);
@@ -586,56 +602,28 @@ const getProfileInfo = async (username) => {
   setOnOffCampus(profile);
   setMinorObject(profile);
   await setAdvisors(profile);
+  formatSocialMediaLinks(profile);
   return profile;
 };
 
-function updateSocialLink(type, link) {
+function updateSocialLink(platform, link) {
   let linkToSend;
-  let url;
-  //Get link ready to send to API
-  //Remove domain names
-  switch (type) {
-    case 'facebook':
-      linkToSend = link.substring(socialMediaInfo.facebook.prefix.length);
-      break;
-    case 'twitter':
-      linkToSend = link.substring(socialMediaInfo.twitter.prefix.length);
-      break;
-    case 'linkedin': //linkedIn copy-paste leaves trailing slash causing problems
-      if (link.charAt(link.length - 1) === '/') {
-        linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length, link.length - 1);
-      } else {
-        linkToSend = link.substring(socialMediaInfo.linkedIn.prefix.length);
-      }
-      break;
-    case 'instagram':
-      linkToSend = link.substring(socialMediaInfo.instagram.prefix.length);
-      break;
-    case 'handshake':
-      // hard coded a second prefix in because handshake supports 'app.' and 'gordon.' addresses
-      let handshakeSecondPrefix = 'https://app.joinhandshake.com/users/';
-
-      // if using the 'app.joinhandshake' prefix
-      if (link.indexOf(handshakeSecondPrefix) === 0) {
-        linkToSend = link.substring(handshakeSecondPrefix.length);
-      }
-      // otherwise assume using the normal 'gordon.joinhandshake' prefix
-      else {
-        linkToSend = link.substring(socialMediaInfo.handshake.prefix.length);
-      }
-      break;
-    default:
-      break;
+  if (link.indexOf(socialMediaInfo[platform].prefix2) === 0) {
+    linkToSend = link.substring(socialMediaInfo[platform].prefix2.length);
+  } else {
+    linkToSend = link.substring(socialMediaInfo[platform].prefix.length);
   }
-  linkToSend = encodeURIComponent(linkToSend);
-  url = {
-    [type]: linkToSend,
+
+  const body = {
+    [platform]: encodeURIComponent(linkToSend),
   };
-  //Send put request
-  return http.put('profiles/' + type, url).catch(() => {});
+
+  return http.put('profiles/' + platform.toLowerCase(), body);
 }
 
 export default {
+  setFullname,
+  setClass,
   setMobilePhonePrivacy,
   setImagePrivacy,
   getMemberships,

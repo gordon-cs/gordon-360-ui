@@ -77,7 +77,7 @@ class IDUploader extends Component {
       this.setState({ submitDialogOpen: true });
     } catch (error) {
       let errorMessage = ', but image failed to post with error: ' + error;
-      logMessage = errorMessage + logMessage;
+      logMessage += errorMessage;
       if (attemptNumber < 5) {
         this.postCroppedImage(croppedImage, attemptNumber + 1);
       } else {
@@ -210,16 +210,6 @@ class IDUploader extends Component {
     const { preview } = this.state;
 
     const style = {
-      img: {
-        width: '200px',
-        height: '200px',
-      },
-
-      centerGridContainer: {
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-      },
 
       button: {
         background: gordonColors.primary.cyan,
@@ -234,11 +224,6 @@ class IDUploader extends Component {
 
       uncontainedButton: {
         color: gordonColors.primary.cyan,
-      },
-
-      media: {
-        // ⚠️ object-fit is not supported by IE 11.
-        objectFit: 'cover',
       },
 
       instructionsText: {
@@ -465,8 +450,10 @@ class IDUploader extends Component {
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>
             <DialogContentText className="submittedText">
-              Your ID photo has been sent successfully! <br /> CTS will contact you if your photo
-              does not meet the stated criteria.
+              We got your photo!
+              <br />You should now see it on your MyProfile page, but it may
+              <br />take a couple of days for it to be approved for public view.
+              <br />CTS will contact you if there’s an issue.
             </DialogContentText>
           </DialogContent>
           <DialogActions>

@@ -15,6 +15,21 @@
     }
   }
 
+  & .apartment-instructions {
+    & .MuiTypography-root {
+      padding: 0.25rem 0.75rem;
+    }
+
+    & .MuiTypography-paragraph {
+      text-align: left;
+    }
+
+    & .MuiTableContainer-root {
+      border: 1px solid $neutral-gray3;
+      border-radius: 4px;
+    }
+  }
+
   & .list-item {
     color: $neutral-dark-gray;
   }
@@ -60,14 +75,8 @@
     color: $primary-blue;
   }
 
-  & .success {
-    color: $secondary-green;
-    font-size: medium;
-  }
-
   & .error {
     color: $secondary-red;
-    font-size: medium;
   }
 
   & .MuiGrid-item.sticky-page-bottom-bar {
@@ -97,5 +106,9 @@
       margin-top: 0.5em;
       margin-bottom: 0.5em;
     }
+  }
+
+  & .MuiAlert-filledWarning {
+    background-color: $secondary-orange;
   }
 }
