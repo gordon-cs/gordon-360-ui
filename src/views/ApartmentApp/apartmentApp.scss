@@ -75,6 +75,10 @@
     color: $primary-blue;
   }
 
+  & .delete-button {
+    background-color: $secondary-red;
+  }
+
   & .error {
     color: $secondary-red;
   }

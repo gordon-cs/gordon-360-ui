@@ -6,7 +6,7 @@ import GordonLoader from 'components/Loader';
 
 const LOADER_SIZE = 20;
 
-const DynamicButton = ({ buttonText, disabled, startIcon = null, status, onClick }) => {
+const DynamicButton = ({ buttonText, className, disabled, startIcon, status, onClick }) => {
   let dynamicIcon = startIcon;
   if (startIcon) {
     if (status) {
@@ -24,6 +24,7 @@ const DynamicButton = ({ buttonText, disabled, startIcon = null, status, onClick
 
   return (
     <Button
+      className={className}
       disabled={disabled || Boolean(status)}
       variant="contained"
       color="secondary"

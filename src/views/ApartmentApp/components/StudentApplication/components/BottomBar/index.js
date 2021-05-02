@@ -1,6 +1,7 @@
 import React from 'react';
-import { Backdrop, Button, Card, CardContent, Grid, Typography } from '@material-ui/core/';
+import { Backdrop, Card, CardContent, Grid, Typography } from '@material-ui/core/';
 import DeleteIcon from '@material-ui/icons/Delete';
+import PublishIcon from '@material-ui/icons/Publish';
 import SaveIcon from '@material-ui/icons/Save';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -115,40 +116,15 @@ const BottomBar = ({
               {dynamicContent.secondaryText}
             </Typography>
           </Grid>
-          <Grid container item xs={12} sm={6} lg={4} spacing={2}>
-            {!applicationCardsOpen ? (
+          <Grid container item xs={12} sm={6} lg={6} spacing={2}>
+            {!applicationCardsOpen && (
               <Grid item xs>
-                <Button
-                  variant="contained"
-                  onClick={onShowApplication}
-                  color="secondary"
-                  fullWidth
+                <DynamicButton
                   disabled={applicationCardsOpen}
-                >
-                  {dynamicContent.openCardsButtonLabel}
-                </Button>
+                  buttonText={dynamicContent.openCardsButtonLabel}
+                  onClick={onShowApplication}
+                />
               </Grid>
-            ) : (
-              <>
-                <Grid item xs>
-                  <DynamicButton
-                    disabled={!canEditApplication || !unsavedChanges}
-                    buttonText={'Save & Continue'}
-                    startIcon={<SaveIcon />}
-                    status={saving}
-                    onClick={canEditApplication ? onSaveButtonClick : undefined}
-                  />
-                </Grid>
-                <Grid item xs>
-                  <DynamicButton
-                    disabled={!canEditApplication || disableSubmit}
-                    buttonText={'Submit'}
-                    startIcon={<SaveIcon />}
-                    status={submitStatus}
-                    onClick={canEditApplication ? onSubmitButtonClick : undefined}
-                  />
-                </Grid>
-              </>
             )}
             {applicationID && (
               <Grid item xs>
@@ -158,8 +134,31 @@ const BottomBar = ({
                   startIcon={<DeleteIcon />}
                   status={submitStatus}
                   onClick={canEditApplication ? onDeleteButtonClick : undefined}
+                  className={'delete-button'}
                 />
               </Grid>
+            )}
+            {applicationCardsOpen && (
+              <>
+                <Grid item xs>
+                  <DynamicButton
+                    disabled={false} //{!canEditApplication || !unsavedChanges}
+                    buttonText={'Save'}
+                    startIcon={<SaveIcon />}
+                    status={saving}
+                    onClick={canEditApplication ? onSaveButtonClick : undefined}
+                  />
+                </Grid>
+                <Grid item xs>
+                  <DynamicButton
+                    disabled={false} //{!canEditApplication || disableSubmit}
+                    buttonText={'Submit'}
+                    startIcon={<PublishIcon />}
+                    status={submitStatus}
+                    onClick={canEditApplication ? onSubmitButtonClick : undefined}
+                  />
+                </Grid>
+              </>
             )}
           </Grid>
           <Backdrop open={saving === true || submitStatus === true}>
