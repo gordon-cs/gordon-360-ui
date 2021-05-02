@@ -525,14 +525,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
     saveApartmentApplication(applicationDetails);
   };
 
-    /**
+  /**
    * Callback for apartment application delete button
    */
-     const handleDeleteButtonClick = () => {
-      // The method is separated from callback because the housing API service must be handled inside an async method
-      deleteApartmentApplication(applicationDetails);
-    };
-  
+  const handleDeleteButtonClick = () => {
+    // The method is separated from callback because the housing API service must be handled inside an async method
+    deleteApartmentApplication(applicationDetails);
+  };
 
   /**
    * Save the current state of the application to the database
@@ -607,19 +606,18 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function deleteApartmentApplication
    * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
    */
-   const deleteApartmentApplication = async (applicationDetails) => {
+  const deleteApartmentApplication = async (applicationDetails) => {
     setDeleting(true);
     setDeleteButtonAlertTimeout(null);
     let result = null;
     try {
-
-        const result = await housing.deleteApartmentApplication(applicationDetails);
-        console.log('result of deleting: ' + result); //! DEBUG
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          ApplicationID: result ?? prevApplicationDetails.ApplicationID,
-        }));
-        setDeleting('success');
+      const result = await housing.deleteApartmentApplication(applicationDetails);
+      console.log('result of deleting: ' + result); //! DEBUG
+      setApplicationDetails((prevApplicationDetails) => ({
+        ...prevApplicationDetails,
+        ApplicationID: result ?? prevApplicationDetails.ApplicationID,
+      }));
+      setDeleting('success');
     } catch {
       setSnackbarText('Something went wrong while trying to delete the application.');
       setSnackbarSeverity('error');
