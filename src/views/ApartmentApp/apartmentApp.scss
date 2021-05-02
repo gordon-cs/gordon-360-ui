@@ -79,6 +79,14 @@
     background-color: $secondary-red;
   }
 
+  & .save-button {
+    background-color: $primary-cyan;
+  }
+
+  & .submit-button {
+    background-color: $primary-blue;
+  }
+
   & .error {
     color: $secondary-red;
   }

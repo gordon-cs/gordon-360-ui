@@ -129,12 +129,12 @@ const BottomBar = ({
             {applicationID && (
               <Grid item xs>
                 <DynamicButton
+                  className={'delete-button'}
                   disabled={!canEditApplication || !applicationID}
                   buttonText={'Delete'}
                   startIcon={<DeleteIcon />}
                   status={submitStatus}
                   onClick={canEditApplication ? onDeleteButtonClick : undefined}
-                  className={'delete-button'}
                 />
               </Grid>
             )}
@@ -142,7 +142,8 @@ const BottomBar = ({
               <>
                 <Grid item xs>
                   <DynamicButton
-                    disabled={false} //{!canEditApplication || !unsavedChanges}
+                    className={'save-button'}
+                    disabled={!canEditApplication || !unsavedChanges}
                     buttonText={'Save'}
                     startIcon={<SaveIcon />}
                     status={saving}
@@ -151,7 +152,8 @@ const BottomBar = ({
                 </Grid>
                 <Grid item xs>
                   <DynamicButton
-                    disabled={false} //{!canEditApplication || disableSubmit}
+                    className={'submit-button'}
+                    disabled={!canEditApplication || disableSubmit}
                     buttonText={'Submit'}
                     startIcon={<PublishIcon />}
                     status={submitStatus}
