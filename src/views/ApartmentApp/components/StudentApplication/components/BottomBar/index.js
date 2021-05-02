@@ -4,6 +4,14 @@ import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import SaveButton from './components/SaveButton';
 
+const deleteAlertText = (
+  <span>
+    Are you sure you want to delete this application?
+    <br />
+    This action cannot be undone.
+  </span>
+);
+
 // TODO: Improve this text for the users
 const submitAlertText = (
   <span>
@@ -17,6 +25,7 @@ const BottomBar = ({
   applicationCardsOpen,
   applicationID,
   canEditApplication,
+  deleteDialogOpen,
   disableSubmit,
   saving,
   submitStatus,
@@ -24,8 +33,9 @@ const BottomBar = ({
   unsavedChanges,
   onCloseDialog,
   onCloseOkay,
-  onSaveButtonClick,
+  onDeleteAppAccepted,
   onDeleteButtonClick,
+  onSaveButtonClick,
   onShowApplication,
   onSubmitAppAccepted,
   onSubmitButtonClick,
@@ -118,7 +128,7 @@ const BottomBar = ({
           ) : (
             <Grid container item xs={12} sm={6} lg={4} spacing={2}>
               <Grid item xs>
-              <Button
+                <Button
                   variant="contained"
                   onClick={canEditApplication && onDeleteButtonClick}
                   color="secondary"
@@ -147,6 +157,19 @@ const BottomBar = ({
           <Backdrop open={saving === true || submitStatus === true}>
             <GordonLoader />
           </Backdrop>
+          <GordonDialogBox
+            open={deleteDialogOpen}
+            onClose={onCloseDialog}
+            labelledby={'submit-application-dialog'}
+            describedby={'confirm-application'}
+            title={'Delete apartment application?'}
+            text={deleteAlertText}
+            buttonClicked={onDeleteAppAccepted}
+            buttonName={'Accept'}
+            cancelButtonClicked={onCloseOkay}
+            cancelButtonName={'Cancel'}
+            severity={'warning'}
+          />
           <GordonDialogBox
             open={submitDialogOpen}
             onClose={onCloseDialog}
