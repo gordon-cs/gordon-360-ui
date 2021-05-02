@@ -715,6 +715,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleCloseOkay = () => {
     setChangeEditorDialogOpen(false);
+    setDeleteDialogOpen(false);
     setSubmitDialogOpen(false);
     setNewEditorProfile(null);
   };
