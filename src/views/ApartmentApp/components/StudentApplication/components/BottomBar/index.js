@@ -3,7 +3,7 @@ import { Backdrop, Button, Card, CardContent, Grid, Typography } from '@material
 import DeleteIcon from '@material-ui/icons/Delete';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
-import SaveButton from './components/SaveButton';
+import DynamicButton from './components/DynamicButton';
 
 const deleteAlertText = (
   <span>
@@ -130,7 +130,7 @@ const BottomBar = ({
             ) : (
               <>
                 <Grid item xs>
-                  <SaveButton
+                  <DynamicButton
                     disabled={!canEditApplication || !unsavedChanges}
                     buttonText={'Save & Continue'}
                     status={saving}
@@ -138,7 +138,7 @@ const BottomBar = ({
                   />
                 </Grid>
                 <Grid item xs>
-                  <SaveButton
+                  <DynamicButton
                     disabled={!canEditApplication || disableSubmit}
                     buttonText={'Submit'}
                     status={submitStatus}
@@ -149,7 +149,7 @@ const BottomBar = ({
             )}
             {applicationID && (
               <Grid item xs>
-                <SaveButton
+                <DynamicButton
                   disabled={!canEditApplication || !applicationID}
                   buttonText={'Delete'}
                   startIcon={<DeleteIcon />}

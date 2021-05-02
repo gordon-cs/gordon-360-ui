@@ -5,7 +5,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import SaveIcon from '@material-ui/icons/Save';
 import GordonLoader from 'components/Loader';
 
-const SaveButton = ({ buttonText, disabled, status, onClick }) => {
+const DynamicButton = ({ buttonText, disabled, status, onClick }) => {
   const loaderSize = 20;
 
   let saveButtonIcon = <SaveIcon />;
@@ -35,4 +35,4 @@ const SaveButton = ({ buttonText, disabled, status, onClick }) => {
   );
 };
 
-export default SaveButton;
+export default DynamicButton;
