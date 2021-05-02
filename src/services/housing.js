@@ -163,17 +163,12 @@ const saveApartmentApplication = async (applicationDetails) => {
  *
  * @async
  * @function deleteApartmentApplication
- * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
- * @return {Promise.<Number>} Application's ID number //TODO: Update these API endpoints to return the ApplicationDetails rather than just the ApplicationID (Suggested by Dr. Tuck)
+ * @param {Number} applicationID the application ID number
+ * @return {Promise.<Boolean>} Status of whether or not the operation was successful
  */
- const deleteApartmentApplication = async (applicationDetails) => {
-  const applicationID = applicationDetails.ApplicationID;
-  if (applicationID > 0) {
-    return await http.del(`housing/apartment/applications/${applicationID}/`);
-  } else {
-    //then the application doesn't exist and there is nothing to delete
-  }
- }
+const deleteApartmentApplication = async (applicationID) => {
+  return await http.del(`housing/apartment/applications/${applicationID}/`);
+};
 
 /**
  * Update the application editor of the application to the database
