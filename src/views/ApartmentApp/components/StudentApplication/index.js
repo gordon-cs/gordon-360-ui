@@ -342,8 +342,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       );
       if (result) {
         try {
-          const result = loadApplication();
-          if (!result) {
+          const loadingResult = loadApplication();
+          if (!loadingResult ) {
             throw new Error('Failed to load apartment application.');
           }
         } catch {
