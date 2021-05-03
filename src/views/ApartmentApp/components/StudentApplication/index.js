@@ -609,9 +609,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setDeleting(true);
     setDeleteButtonAlertTimeout(null);
     try {
-      const result = await housing.deleteApartmentApplication(applicationDetails);
+      const result = await housing.deleteApartmentApplication(applicationDetails.ApplicationID);
       if (result) {
         setDeleting('success');
+        loadApplication();
         setApplicationCardsOpen(false);
       } else {
         throw new Error('Failed to delete application');
@@ -642,8 +643,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for apartment application submit button
    */
   const handleSubmitButtonClick = () => {
-    let debugMessage = 'DEBUG: Submit button was clicked'; //! DEBUG
-    console.log(debugMessage); //! DEBUG
     let saveResult = saveApartmentApplication(applicationDetails);
     if (saveResult) {
       setSubmitDialogOpen(true);
@@ -679,7 +678,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         );
         // No additional `else` is needed for this, since `isApplicantValid` handles the `createSnackbar` internally
         if (validApplicants.every((v) => v)) {
-          const result = await housing.submitApplication(applicationDetails.ApplicationID);
+          let result = await housing.submitApplication(applicationDetails.ApplicationID);
           if (result) {
             setSubmitStatus('success');
             loadApplication();
