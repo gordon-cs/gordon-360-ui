@@ -12,7 +12,7 @@ const DynamicButton = ({ buttonText, className, color, disabled, startIcon, stat
     if (status) {
       if (status === 'success') {
         dynamicIcon = <CheckCircleIcon />;
-      } else if (status === 'failed') {
+      } else if (status === 'error') {
         dynamicIcon = <ErrorIcon />;
       } else {
         dynamicIcon = <GordonLoader size={LOADER_SIZE} />;

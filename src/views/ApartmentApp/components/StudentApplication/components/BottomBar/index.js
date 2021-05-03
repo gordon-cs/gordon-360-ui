@@ -3,9 +3,9 @@ import { Backdrop, Card, CardContent, Grid, Typography } from '@material-ui/core
 import DeleteIcon from '@material-ui/icons/Delete';
 import PublishIcon from '@material-ui/icons/Publish';
 import SaveIcon from '@material-ui/icons/Save';
-import GordonLoader from 'components/Loader';
+import DynamicButton from 'components/DynamicButton';
 import GordonDialogBox from 'components/GordonDialogBox';
-import DynamicButton from './components/DynamicButton';
+import GordonLoader from 'components/Loader';
 
 const deleteAlertText = (
   <span>
@@ -77,7 +77,7 @@ const BottomBar = ({
       };
     }
   } else {
-    if (submitStatus === 'failed') {
+    if (submitStatus === 'error') {
       dynamicContent = {
         primaryText: 'Something went wrong while trying to submit the application.',
         itemProps: {
@@ -85,7 +85,7 @@ const BottomBar = ({
           color: 'error',
         },
       };
-    } else if (saving === 'failed') {
+    } else if (saving === 'error') {
       dynamicContent = {
         primaryText: 'Something went wrong while trying to save the application.',
         itemProps: {

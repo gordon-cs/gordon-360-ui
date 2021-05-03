@@ -321,7 +321,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         'Something went wrong while trying to save the new application editor.',
         'error',
       );
-      setSaving('failed');
+      setSaving('error');
     }
   };
 
@@ -369,7 +369,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           'error',
         );
       }
-      setSaving('failed');
+      setSaving('error');
     } finally {
       if (saveButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
@@ -545,7 +545,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           'Error: There are no applicants on this application. This should not be possible. Please refresh the page and try again.',
           'error',
         );
-        setSaving('failed');
+        setSaving('error');
       } else {
         // This will produce an array of booleans. If all are true, then all applicants are valid
         let validApplicants = await Promise.all(
@@ -578,7 +578,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       } else {
         createSnackbar('Something went wrong while trying to save the application.', 'error');
       }
-      setSaving('failed');
+      setSaving('error');
     } finally {
       if (saveButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
@@ -624,7 +624,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       } else {
         createSnackbar('Something went wrong while trying to delete the application.', 'error');
       }
-      setDeleting('failed');
+      setDeleting('error');
     } finally {
       if (deleteButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
@@ -671,7 +671,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           'Error: There are no applicants on this application. This should not be possible. Please refresh the page and try again.',
           'error',
         );
-        setSaving('failed');
+        setSaving('error');
       } else {
         // This will produce an array of booleans. If all are true, then all applicants are valid
         let validApplicants = await Promise.all(
@@ -696,7 +696,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       } else {
         createSnackbar('Something went wrong while trying to submit the application.', 'error');
       }
-      setSubmitStatus('failed');
+      setSubmitStatus('error');
     } finally {
       if (submitButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
