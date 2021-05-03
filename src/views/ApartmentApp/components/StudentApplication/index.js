@@ -145,17 +145,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setLoading(false);
   }, [userProfile, loadApplication]);
 
-  const handleShowApplication = () => {
-    setApplicationCardsOpen(true);
-  };
-
   /**
    * Check whether a given applicant is valid for this current application
    *
    * @async
    * @function isApplicantValid
    * @param {ApartmentApplicant} applicant The applicant to be checked
-   * @return {Boolean} True if valid, otherwise false
+   * @return {Promise.<Boolean>} True if valid, otherwise false
    */
   const isApplicantValid = async (applicant) => {
     // Check that the applicant contains the required fields
@@ -247,9 +243,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
         )
       ) {
         // Display an error if the selected user is already in the list
-        createSnackbar(String(newApplicantProfile.fullName) + ' is already in the list.', 'info');
+        createSnackbar(`${newApplicantProfile.fullName} is already in the list.`, 'info');
       } else {
-        let validApplicant = await isApplicantValid(newApplicantObject);
+        const validApplicant = await isApplicantValid(newApplicantObject);
+        // Any relevant errors and snackbar messages are handled by `isApplicantValid()` internally
         if (validApplicant) {
           // Add the profile object to the list of applicants
           setApplicationDetails((prevApplicationDetails) => ({
@@ -834,7 +831,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 onCloseDialog={handleCloseDialog}
                 onCloseOkay={handleCloseOkay}
                 onSaveButtonClick={handleSaveButtonClick}
-                onShowApplication={handleShowApplication}
+                onShowApplication={() => setApplicationCardsOpen(true)}
                 onSubmitAppAccepted={handleSubmitAppAccepted}
                 onSubmitButtonClick={handleSubmitButtonClick}
               />
