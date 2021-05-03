@@ -89,6 +89,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Load the user's saved apartment application, if one exists
+   *
+   * @async
+   * @function loadApplication
+   * @returns {Promise.<Boolean>} Indicates whether loading succeeded or failed
    */
   const loadApplication = useCallback(async () => {
     const initializeNewApplication = () => {
@@ -499,7 +503,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @async
    * @function saveApartmentApplication
    * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
-   * @returns {Boolean} Indicates whether saving succeeded or failed
+   * @returns {Promise.<Number>} Indicates whether saving succeeded or failed
    */
   const saveApartmentApplication = async (applicationDetails) => {
     setSaving(true);
@@ -560,30 +564,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
-   * Callback for apartment application submit button
-   */
-  const handleSubmitButtonClick = () => {
-    let debugMessage = 'DEBUG: Submit button was clicked'; //! DEBUG
-    console.log(debugMessage); //! DEBUG
-    let saveResult = saveApartmentApplication(applicationDetails);
-    if (saveResult) {
-      setSubmitDialogOpen(true);
-    }
-  };
-
-  const handleSubmitAppAccepted = () => {
-    // The method is separated from callback because the housing API service must be handled inside an async method
-    submitApplication();
-    handleCloseOkay();
-  };
-
-  /**
    * Submit the current application as completed
    *
    * @async
    * @function submitApplication
    */
   const submitApplication = async () => {
+    handleCloseOkay();
     setSubmitStatus(true);
     setSubmitButtonAlertTimeout(null);
     try {
@@ -594,12 +581,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
         );
         setSaving('failed');
       } else {
-        // This will produce an array of booleans. If all are true, then all applicants are valid
-        let validApplicants = await Promise.all(
-          applicationDetails.Applicants.map((applicant) => isApplicantValid(applicant)),
-        );
-        // No additional `else` is needed for this, since `isApplicantValid` handles the `createSnackbar` internally
-        if (validApplicants.every((v) => v)) {
+        const saveResult = await saveApartmentApplication(applicationDetails);
+        if (saveResult) {
           const result = await housing.submitApplication(applicationDetails.ApplicationID);
           if (result) {
             setSubmitStatus('success');
@@ -814,8 +797,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 onCloseOkay={handleCloseOkay}
                 onSaveButtonClick={() => saveApartmentApplication(applicationDetails)}
                 onShowApplication={() => setApplicationCardsOpen(true)}
-                onSubmitAppAccepted={handleSubmitAppAccepted}
-                onSubmitButtonClick={handleSubmitButtonClick}
+                onSubmitAppAccepted={() => submitApplication()}
+                onSubmitButtonClick={() => setSubmitDialogOpen(true)}
               />
             </Grid>
           </Grid>
