@@ -670,7 +670,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setChangeEditorDialogOpen(false);
     setDeleteDialogOpen(false);
     setSubmitDialogOpen(false);
-    setNewEditorProfile(null);
   };
 
   const createSnackbar = (message, severity) => {
