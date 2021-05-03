@@ -120,29 +120,28 @@ const BottomBar = ({
             {!applicationCardsOpen && (
               <Grid item xs>
                 <DynamicButton
+                  color={'secondary'}
                   disabled={applicationCardsOpen}
                   buttonText={dynamicContent.openCardsButtonLabel}
                   onClick={onShowApplication}
                 />
               </Grid>
             )}
-            {applicationID && (
-              <Grid item xs>
-                <DynamicButton
-                  className={'delete-button'}
-                  disabled={!canEditApplication || !applicationID}
-                  buttonText={'Delete'}
-                  startIcon={<DeleteIcon />}
-                  status={submitStatus}
-                  onClick={canEditApplication ? onDeleteButtonClick : undefined}
-                />
-              </Grid>
-            )}
+            <Grid item xs>
+              <DynamicButton
+                className={'delete-button'}
+                disabled={!canEditApplication || !applicationID}
+                buttonText={'Delete'}
+                startIcon={<DeleteIcon />}
+                status={submitStatus}
+                onClick={canEditApplication ? onDeleteButtonClick : undefined}
+              />
+            </Grid>
             {applicationCardsOpen && (
               <>
                 <Grid item xs>
                   <DynamicButton
-                    className={'save-button'}
+                    color={'secondary'}
                     disabled={!canEditApplication || !unsavedChanges}
                     buttonText={'Save'}
                     startIcon={<SaveIcon />}
@@ -152,7 +151,7 @@ const BottomBar = ({
                 </Grid>
                 <Grid item xs>
                   <DynamicButton
-                    className={'submit-button'}
+                    color={'primary'}
                     disabled={!canEditApplication || disableSubmit}
                     buttonText={'Submit'}
                     startIcon={<PublishIcon />}
