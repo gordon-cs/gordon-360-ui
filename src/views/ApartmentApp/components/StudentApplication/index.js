@@ -328,7 +328,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       );
       if (result) {
         try {
-          const result = loadApplication();
+          const result = await loadApplication();
           if (!result) {
             throw new Error('Failed to load apartment application.');
           }
@@ -532,7 +532,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
             }));
             setSaving('success');
             setUnsavedChanges(false);
-            loadApplication();
+            await loadApplication();
           } else {
             throw new Error(
               `Did not receive an http error code, but received the response ${result}`,
@@ -586,7 +586,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           const result = await housing.submitApplication(applicationDetails.ApplicationID);
           if (result) {
             setSubmitStatus('success');
-            loadApplication();
+            await loadApplication();
           } else {
             throw new Error('Failed to submit application');
           }
