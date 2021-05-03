@@ -32,17 +32,10 @@ const ApplicantListItem = ({
 }) => {
   const [avatar, setAvatar] = useState(null);
   const [hasNickName, setHasNickname] = useState(false);
-  const [personClass, setPersonClass] = useState(profile.Class);
 
   useEffect(() => {
     loadAvatar(profile);
     setHasNickname(profile.FirstName !== profile.NickName && profile.NickName !== '');
-    if (String(profile.PersonType).includes('stu') && profile.Class !== undefined) {
-      setPersonClass(profile.Class);
-    } else {
-      // Technically, this case should never happen because the list does not allow the user to add a non-student to the applicant list
-      setPersonClass('');
-    }
   }, [profile]);
 
   /**
