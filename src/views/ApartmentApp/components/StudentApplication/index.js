@@ -150,17 +150,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
-   * Callback for apartment people search submission
-   * @param {String} searchSelection Username for student
-   */
-  const handleSearchSubmit = (searchSelection) => {
-    if (searchSelection) {
-      // The method is separated from callback because user API service must be handled inside an async method
-      addApplicant(searchSelection);
-    }
-  };
-
-  /**
    * Check whether a given applicant is valid for this current application
    *
    * @async
@@ -742,7 +731,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         <ApplicantList
                           maxNumApplicants={MAX_NUM_APPLICANTS}
                           applicationDetails={applicationDetails}
-                          onSearchSubmit={handleSearchSubmit}
+                          onSearchSubmit={(searchSelection) =>
+                            searchSelection ?? addApplicant(searchSelection)
+                          }
                           onChangeEditor={handleChangeEditor}
                           onApplicantRemove={handleApplicantRemove}
                           onSaveButtonClick={handleSaveButtonClick}
