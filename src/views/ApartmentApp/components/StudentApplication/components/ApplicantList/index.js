@@ -37,18 +37,6 @@ const ApplicantList = ({
 }) => {
   const [showHelp, setShowHelp] = useState(false);
 
-  /**
-   * Callback for apartment people search submission
-   * @param {String} selectedUsername Username for student selected via the people search
-   */
-  const handleSelection = (selectedUsername) => {
-    // Make sure the chosen username was not null
-    if (selectedUsername) {
-      // Send the selected username to the parent component
-      onSearchSubmit(selectedUsername);
-    }
-  };
-
   return (
     <Card>
       <CardHeader title="Student Applicants" className="apartment-card-header" />
@@ -123,7 +111,9 @@ const ApplicantList = ({
                 disabled={disabled || applicationDetails.Applicants?.length > maxNumApplicants}
                 icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
-                onSearchSubmit={handleSelection}
+                onSearchSubmit={(selectedUsername) =>
+                  selectedUsername ?? onSearchSubmit(selectedUsername)
+                }
                 authentication={authentication}
               />
             </Grid>

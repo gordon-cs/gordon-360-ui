@@ -65,29 +65,6 @@ const ApplicantListItem = ({
     }
   };
 
-  /**
-   * Callback for changing the application editor
-   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
-   */
-  const handleChangeEditor = () => {
-    // Make sure the chosen profile was not null
-    if (profile) {
-      // Send the selected profile to the parent component
-      onChangeEditor(profile);
-    }
-  };
-
-  /**
-   * Callback for applicant list remove button
-   */
-  const handleRemove = () => {
-    // Make sure the chosen profile was not null
-    if (profile?.AD_Username) {
-      // Send the selected profile to the parent component
-      onApplicantRemove(profile.AD_Username);
-    }
-  };
-
   const displayName = hasNickName
     ? `${profile.FirstName} ${profile.LastName} (${profile.NickName})`
     : `${profile.FirstName} ${profile.LastName}`;
@@ -121,7 +98,7 @@ const ApplicantListItem = ({
               <IconButton
                 aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
                 disabled={isApplicationEditor || disabled}
-                onClick={handleChangeEditor}
+                onClick={profile ? onChangeEditor(profile) : undefined}
               >
                 {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
               </IconButton>
@@ -130,7 +107,7 @@ const ApplicantListItem = ({
               <IconButton
                 aria-label="remove-applicant"
                 disabled={isApplicationEditor || disabled}
-                onClick={handleRemove}
+                onClick={profile?.AD_Username ? onApplicantRemove(profile.AD_Username) : undefined}
               >
                 <ClearIcon />
               </IconButton>
