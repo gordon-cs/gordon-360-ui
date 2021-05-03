@@ -29,6 +29,7 @@ const BottomBar = ({
   applicationID,
   canEditApplication,
   deleteDialogOpen,
+  deleting,
   disableSubmit,
   saving,
   submitDialogOpen,
@@ -133,7 +134,7 @@ const BottomBar = ({
                 disabled={!canEditApplication || !applicationID}
                 buttonText={'Delete'}
                 startIcon={<DeleteIcon />}
-                status={submitStatus}
+                status={deleting}
                 onClick={canEditApplication ? onDeleteButtonClick : undefined}
               />
             </Grid>
