@@ -304,6 +304,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       try {
         saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
       } catch {
+        console.debug('Using old method to change application editor.');
         changeApplicationEditor(newEditorProfile); //! Will be deprecated eventually...
       } finally {
         setCanEditApplication(false);
