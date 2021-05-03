@@ -112,7 +112,7 @@ const ApplicantList = ({
                 icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={(selectedUsername) =>
-                  selectedUsername ?? onSearchSubmit(selectedUsername)
+                  selectedUsername && onSearchSubmit(selectedUsername)
                 }
                 authentication={authentication}
               />

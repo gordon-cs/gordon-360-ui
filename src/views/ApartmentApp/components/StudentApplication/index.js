@@ -445,7 +445,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {Number} indexToRemove The index of the hall to be removed from the list of preferred halls
    */
   const handleHallRemove = (indexToRemove) => {
-    if (indexToRemove !== null && indexToRemove !== -1) {
+    if ((indexToRemove ?? -1) > -1) {
       setApplicationDetails((prevApplicationDetails) => ({
         ...prevApplicationDetails,
         ApartmentChoices: prevApplicationDetails.ApartmentChoices.filter(
@@ -732,7 +732,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           maxNumApplicants={MAX_NUM_APPLICANTS}
                           applicationDetails={applicationDetails}
                           onSearchSubmit={(searchSelection) =>
-                            searchSelection ?? addApplicant(searchSelection)
+                            searchSelection && addApplicant(searchSelection)
                           }
                           onChangeEditor={handleChangeEditor}
                           onApplicantRemove={handleApplicantRemove}
