@@ -67,7 +67,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   function debugPrintApplicationDetails(applicationDetails) {
     //! DEBUG
-    console.debug('Array state variable. Printing contents:');
+    console.debug('Application state variable. Printing contents:');
     //! DEBUG
     console.debug('ApplicationID:');
     console.debug(applicationDetails?.ApplicationID);
@@ -772,6 +772,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       ) : (
                         <HallSelection
                           disabled
+                          authentication
                           apartmentChoices={applicationDetails.ApartmentChoices ?? []}
                         />
                       )}
