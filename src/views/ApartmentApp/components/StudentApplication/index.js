@@ -623,19 +623,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
     setNewEditorProfile(null);
   };
 
-  /**
-   * Callback for closing the alert dialog box
-   * @param {*} _event close event to be handled by callback
-   * @param {*} reason the reason the close event was triggered
-   */
-  const handleCloseDialog = (_event, reason) => {
-    // Prevent the dialog box from closing if the user clicks outside the dialog box
-    if (reason === 'clickaway') {
-      return;
-    }
-    handleCloseOkay();
-  };
-
   const createSnackbar = (message, severity) => {
     setSnackbar({ message, severity, open: true });
   };
@@ -712,7 +699,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       )}
                       <GordonDialogBox
                         open={changeEditorDialogOpen}
-                        onClose={handleCloseDialog}
+                        onClose={(_event, reason) => reason !== 'clickaway' && handleCloseOkay()}
                         labelledby={'applicant-warning-dialog'}
                         describedby={'changing-application-editor'}
                         title={'Change application editor?'}
@@ -793,7 +780,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 submitStatus={submitStatus}
                 submitDialogOpen={submitDialogOpen}
                 unsavedChanges={unsavedChanges}
-                onCloseDialog={handleCloseDialog}
+                onCloseDialog={(_event, reason) => reason !== 'clickaway' && handleCloseOkay()}
                 onCloseOkay={handleCloseOkay}
                 onSaveButtonClick={() => saveApartmentApplication(applicationDetails)}
                 onShowApplication={() => setApplicationCardsOpen(true)}
