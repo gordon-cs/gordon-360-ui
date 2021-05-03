@@ -290,9 +290,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
           (applicant) => applicant.Profile.AD_Username === profile.AD_Username,
         )
       ) {
-        if (unsavedChanges) {
-          saveApartmentApplication(applicationDetails);
-        }
         setNewEditorProfile(profile);
         setChangeEditorDialogOpen(true);
       }
@@ -323,6 +320,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   /**
    * Update the application editor of the application to the database
+   *
+   * This function will be deprecated in the future
+   * It will be replaced with `saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile })`
    *
    * @async
    * @function changeApplicationEditor
@@ -693,7 +693,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       {newEditorProfile?.LastName}
       <br />
       If you change the application editor, you will no longer be able to edit this application
-      yourself.
+      yourself. All unsaved changes will be saved automatically.
       <br />
       Are you sure you want to change the application editor?
     </span>
@@ -741,7 +741,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       {canEditApplication ? (
                         <ApplicantList
                           maxNumApplicants={MAX_NUM_APPLICANTS}
-                          userProfile={userProfile}
                           applicationDetails={applicationDetails}
                           onSearchSubmit={handleSearchSubmit}
                           onChangeEditor={handleChangeEditor}
@@ -753,7 +752,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         <ApplicantList
                           disabled
                           maxNumApplicants={MAX_NUM_APPLICANTS}
-                          userProfile={userProfile}
                           applicationDetails={applicationDetails}
                           authentication={authentication}
                         />
