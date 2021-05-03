@@ -18,7 +18,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
-import GordonPeopleSearch from '../../../../../../components/Header/components/PeopleSearch';
+import GordonPeopleSearch from 'components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
 
 /**
@@ -100,7 +100,7 @@ const ApplicantList = ({
                     disabled={disabled}
                     profile={applicant.Profile}
                     isApplicationEditor={
-                      applicant.Profile.AD_Username === applicationDetails.EditorUsername
+                      applicant.Profile.AD_Username === applicationDetails.EditorProfile.AD_Username
                     }
                     onChangeEditor={onChangeEditor}
                     onApplicantRemove={onApplicantRemove}

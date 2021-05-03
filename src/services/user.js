@@ -181,10 +181,11 @@ import { socialMediaInfo } from 'socialMedia';
  * @property {String} CurrentBalance The current remaining meal plan balance
  */
 
-function formatName(profile) {
+function setFullname(profile) {
   profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
   return profile;
 }
+
 function setOnOffCampus(data) {
   switch (data.OnOffCampus) {
     case 'O':
@@ -204,12 +205,14 @@ function setOnOffCampus(data) {
   }
   return data;
 }
+
 function setClassYear(data) {
   if (data.PreferredClassYear) {
     data.ClassYear = data.PreferredClassYear;
   }
   return data;
 }
+
 function setMajorObject(data) {
   data.Majors = [];
   if (data.Major1Description) {
@@ -223,6 +226,7 @@ function setMajorObject(data) {
   }
   return data;
 }
+
 function setMinorObject(data) {
   data.Minors = [];
   if (data.Minor1Description) {
@@ -236,6 +240,7 @@ function setMinorObject(data) {
   }
   return data;
 }
+
 function formatCountry(profile) {
   if (profile.Country) {
     profile.Country = profile.Country.replace(/\w\S*/g, function (txt) {
@@ -589,7 +594,7 @@ const getEmploymentInfo = async () => {
 
 const getProfileInfo = async (username) => {
   let profile = await getProfile(username);
-  formatName(profile);
+  setFullname(profile);
   setClass(profile);
   setClassYear(profile);
   setMajorObject(profile);
@@ -617,6 +622,8 @@ function updateSocialLink(platform, link) {
 }
 
 export default {
+  setFullname,
+  setClass,
   setMobilePhonePrivacy,
   setImagePrivacy,
   getMemberships,

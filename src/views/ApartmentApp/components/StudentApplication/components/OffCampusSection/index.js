@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
 import OffCampusListItem from './components/OffCampusListItem';
-import goStalk from '../../../../../../services/goStalk';
+import goStalk from 'services/goStalk';
 
 // Create a list of selection boxes to choosing which applicants are doing off campus programs.
 const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInputChange }) => {

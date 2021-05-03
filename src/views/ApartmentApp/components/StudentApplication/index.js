@@ -1,10 +1,10 @@
 //Student apartment application page
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { sortBy } from 'lodash';
 import { Collapse, Grid } from '@material-ui/core/';
-import GordonLoader from '../../../../components/Loader';
-import GordonDialogBox from '../../../../components/GordonDialogBox';
-import SimpleSnackbar from '../../../../components/Snackbar';
+import GordonLoader from 'components/Loader';
+import GordonDialogBox from 'components/GordonDialogBox';
+import GordonSnackbar from 'components/Snackbar';
 import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
@@ -12,9 +12,11 @@ import HallSelection from './components/HallSelection';
 import OffCampusSection from './components/OffCampusSection';
 import Agreements from './components/Agreements';
 import BottomBar from './components/BottomBar';
-import housing from '../../../../services/housing';
-import user from '../../../../services/user';
+import { AuthError, createError, NotFoundError } from 'services/error';
+import housing from 'services/housing';
+import user from 'services/user';
 
+const DYNAMIC_ICON_TIMEOUT = 6000;
 const MAX_NUM_APPLICANTS = 8;
 const BLANK_APPLICATION_DETAILS = {
   ApplicationID: null,
@@ -41,7 +43,9 @@ const BLANK_APPLICATION_DETAILS = {
  */
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [canEditApplication, setCanEditApplication] = useState(false);
   const [agreements, setAgreements] = useState(false); // Represents the state of the agreements card. True if all checkboxes checked, false otherwise
@@ -54,19 +58,47 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [changeEditorDialogOpen, setChangeEditorDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarText, setSnackbarText] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('info');
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [deleteButtonAlertTimeout, setDeleteButtonAlertTimeout] = useState(null);
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
+  const [submitButtonAlertTimeout, setSubmitButtonAlertTimeout] = useState(null);
+
+  function debugPrintApplicationDetails(applicationDetails) {
+    //! DEBUG
+    console.debug('Array state variable. Printing contents:');
+    //! DEBUG
+    console.debug('ApplicationID:');
+    console.debug(applicationDetails?.ApplicationID);
+    //! DEBUG
+    console.debug('EditorUsername:');
+    console.debug(applicationDetails?.EditorProfile?.AD_Username);
+    //! DEBUG
+    console.debug('Applicants: [');
+    applicationDetails?.Applicants?.forEach((element) => {
+      console.debug(
+        `${element?.Profile?.AD_Username}, OffCampus: ${element.OffCampusProgram}, Class: ${element?.Profile?.Class}, Gender: ${element?.Profile?.Gender}`,
+      );
+    });
+    console.debug(']');
+    //! DEBUG
+    console.debug('Preferred Halls: [');
+    applicationDetails?.ApartmentChoices?.forEach((element) => {
+      console.debug(`Rank: ${element?.HallRank}, Name: ${element?.HallName}`);
+    });
+    console.debug(']');
+    //! DEBUG
+  }
 
   /**
    * Load the user's saved apartment application, if one exists
    */
-  useEffect(() => {
+  const loadApplication = useCallback(async () => {
     const initializeNewApplication = () => {
-      const initialApplicants = [{ Profile: userProfile, OffCampusProgram: '' }];
-      setUnsavedChanges(true);
+      const initialApplicants = [
+        { Profile: userProfile, Username: userProfile.AD_Username, OffCampusProgram: '' },
+      ];
       setApplicationDetails({
         ...BLANK_APPLICATION_DETAILS,
         EditorProfile: userProfile,
@@ -74,57 +106,48 @@ const StudentApplication = ({ userProfile, authentication }) => {
         Applicants: initialApplicants,
       });
       setCanEditApplication(true);
+      setUnsavedChanges(true);
     };
 
-    /**
-     * Load the user's saved apartment application, if one exists
-     *
-     * @async
-     * @function loadApplication
-     */
-    const loadApplication = async () => {
-      try {
-        setLoading(true);
-        // Check if the current user is on an application. Returns the application ID number if found
-        const newApplicationID = await housing.getCurrentApplicationID();
-        if (newApplicationID === null || newApplicationID === -1) {
-          initializeNewApplication();
-        } else {
-          setUnsavedChanges(false);
-          const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
-          if (newApplicationDetails) {
-            setApplicationDetails(newApplicationDetails);
-            setCanEditApplication(
-              userProfile.AD_Username === newApplicationDetails.EditorProfile.AD_Username ?? false,
-            );
-            setUnsavedChanges(false);
-          }
-        }
-      } catch (error) {
-        initializeNewApplication();
-      } finally {
-        setLoading(false);
+    let result = false;
+    try {
+      // Check if the current user is on an application. Returns the application ID number if found
+      const newApplicationID = await housing.getCurrentApplicationID();
+      if (newApplicationID > 0) {
+        const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
+        setApplicationDetails(newApplicationDetails);
+        debugPrintApplicationDetails(newApplicationDetails);
+        setCanEditApplication(
+          userProfile.AD_Username === newApplicationDetails.EditorProfile.AD_Username ?? false,
+        );
+        setUnsavedChanges(false);
+        result = true;
+      } else {
+        throw createError(new Error('Invalid application ID'), { status: 404 });
       }
-    };
-
-    loadApplication();
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        initializeNewApplication();
+      } else if (e instanceof AuthError) {
+        const debugMessage =
+          'Received a 401 (Unauthorized) response, which should not be possible in this case. Please try refreshing the page, or contact CTS for support.';
+        console.error(`Debug Message: ${debugMessage}`);
+        createSnackbar(debugMessage, 'error');
+      } else {
+        throw e;
+      }
+    } finally {
+      setNewEditorProfile(null);
+      return result;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userProfile]);
 
   useEffect(() => {
-    // setUnsavedChanges(true);
-    //! DEBUG
-    console.debug('Array state variable. Printing contents:');
-    console.debug('EditorUsername:');
-    console.debug(applicationDetails?.EditorProfile?.AD_Username);
-    console.debug('Applicants:');
-    applicationDetails.Applicants.forEach((element) => {
-      console.debug(`${element?.Profile?.AD_Username}, ${element.OffCampusProgram}`);
-    });
-    console.debug('Preferred Halls:');
-    applicationDetails.ApartmentChoices.forEach((element) => {
-      console.debug(`${element?.HallName}, ${element?.HallRank}`);
-    });
-  }, [applicationDetails]);
+    setLoading(true);
+    loadApplication();
+    setLoading(false);
+  }, [userProfile, loadApplication]);
 
   const handleShowApplication = () => {
     setApplicationCardsOpen(true);
@@ -152,59 +175,67 @@ const StudentApplication = ({ userProfile, authentication }) => {
   const isApplicantValid = async (applicant) => {
     // Check that the applicant contains the required fields
     if (applicant?.Profile === null) {
+      createSnackbar(
+        'Something went wrong while trying to add this person. Please try again.',
+        'error',
+      );
       return false;
-    }
-
-    if (applicant.Profile.fullName === null) {
-      applicant.Profile = user.formatName(applicant.Profile);
-    }
-
-    if (applicant?.OffCampusProgram === null) {
-      applicant.OffCampusProgram = '';
     }
 
     if (applicationDetails.Applicants.length >= MAX_NUM_APPLICANTS) {
       // Display an error if the user try to add an applicant when the list is full
-      setSnackbarText(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants'`);
-      setSnackbarSeverity('warning');
+      createSnackbar(`You cannot have more than ${MAX_NUM_APPLICANTS} applicants`, 'warning');
       return false;
     }
+
+    applicant.Profile.fullName ??
+      (applicant.Profile.fullName = `${applicant.Profile.FirstName}  ${applicant.Profile.LastName}`);
 
     if (!String(applicant.Profile.PersonType).includes('stu')) {
       // Display an error if the selected user is not a student
-      setSnackbarText(
+      createSnackbar(
         `Could not add ${applicant.Profile.fullName} as an applicant because they are not a student.`,
+        'warning',
       );
-      setSnackbarSeverity('warning');
       return false;
     }
 
-    if (applicant.Profile.Gender && applicant.Profile.Gender !== applicationDetails.Gender) {
+    if (applicant.Profile.Gender !== applicationDetails.Gender) {
       // Display an error if the selected user is not the same gender
-      setSnackbarText(
-        `Could not add ${applicant.Profile.fullName} as an applicant because they are not the same gender as the other applicants.'`,
+      createSnackbar(
+        `Could not add ${applicant.Profile.fullName} as an applicant because they are not the same gender as the other applicants.`,
+        'warning',
       );
-      setSnackbarSeverity('warning');
       return false;
     }
 
     // Check if the selected user is already saved on an application in the database
-    let existingAppID = null;
+    let result = false;
     try {
-      existingAppID = await housing.getCurrentApplicationID(applicant.Profile.AD_Username);
+      let existingAppID = await housing.getCurrentApplicationID(applicant.Profile.AD_Username);
       if (existingAppID > 0 && existingAppID !== applicationDetails.ApplicationID) {
         // Display an error if the given applicant is already on a different application in the database
-        setSnackbarText(
-          `${applicant.Profile.fullName} is already on another application for this semester.'`,
+        createSnackbar(
+          `${applicant.Profile.fullName} is already on another application for this semester.`,
+          'warning',
         );
-        setSnackbarSeverity('warning');
-        return false;
+      } else {
+        result = true;
       }
-    } catch {
-      // Do nothing
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        result = true;
+      } else if (e instanceof AuthError) {
+        const debugMessage =
+          'Received a 401 (Unauthorized) response, which should not be possible in this case. Please try refreshing the page, or contact CTS for support.';
+        console.error(`Debug Message: ${debugMessage}`);
+        createSnackbar(debugMessage, 'error');
+      } else {
+        throw e;
+      }
+    } finally {
+      return result;
     }
-
-    return true;
   };
 
   /**
@@ -221,6 +252,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       let newApplicantObject = {
         ApplicationID: applicationDetails.ApplicationID,
         Profile: newApplicantProfile,
+        Username: newApplicantUsername, // Used for convenient array sorting.
         OffCampusProgram: '',
       };
 
@@ -230,22 +262,25 @@ const StudentApplication = ({ userProfile, authentication }) => {
         )
       ) {
         // Display an error if the selected user is already in the list
-        setSnackbarText(String(newApplicantProfile.fullName) + ' is already in the list.');
-        setSnackbarSeverity('info');
-      } else if (isApplicantValid(newApplicantObject)) {
-        // Add the profile object to the list of applicants
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
-        }));
-        setUnsavedChanges(true);
-        return;
+        createSnackbar(String(newApplicantProfile.fullName) + ' is already in the list.', 'info');
+      } else {
+        let validApplicant = await isApplicantValid(newApplicantObject);
+        if (validApplicant) {
+          // Add the profile object to the list of applicants
+          setApplicationDetails((prevApplicationDetails) => ({
+            ...prevApplicationDetails,
+            Applicants: [...prevApplicationDetails.Applicants, newApplicantObject],
+          }));
+          setUnsavedChanges(true);
+        }
       }
     } catch (error) {
-      setSnackbarText('Something went wrong while trying to add this person. Please try again.');
-      setSnackbarSeverity('error');
+      createSnackbar(
+        'Something went wrong while trying to add this person. Please try again.',
+        'error',
+      );
+      console.log(error);
     }
-    setSnackbarOpen(true);
   };
 
   /**
@@ -253,12 +288,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
    */
   const handleChangeEditor = (profile) => {
-    if (profile) {
+    if (canEditApplication && profile) {
       if (
         applicationDetails.Applicants.some(
           (applicant) => applicant.Profile.AD_Username === profile.AD_Username,
         )
       ) {
+        if (unsavedChanges) {
+          saveApartmentApplication(applicationDetails);
+        }
         setNewEditorProfile(profile);
         setChangeEditorDialogOpen(true);
       }
@@ -270,15 +308,20 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleChangeEditorAccepted = () => {
     if (newEditorProfile?.AD_Username) {
-      // The method is separated from callback because the housing API service must be handled inside an async method
-      changeApplicationEditor(newEditorProfile.AD_Username); //! Will be deprecated soon
-      // saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
-      handleCloseOkay();
+      try {
+        saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
+      } catch {
+        changeApplicationEditor(newEditorProfile); //! Will be deprecated eventually...
+      } finally {
+        setCanEditApplication(false);
+        handleCloseOkay();
+      }
     } else {
-      setSnackbarText('Something went wrong while trying to save the new application editor.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      setSaving('failed');
+      createSnackbar(
+        'Something went wrong while trying to save the new application editor.',
+        'error',
+      );
+      setSaving('error');
     }
   };
 
@@ -287,29 +330,46 @@ const StudentApplication = ({ userProfile, authentication }) => {
    *
    * @async
    * @function changeApplicationEditor
-   * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
+   * @param {StudentProfileInfo} newEditorProfile the StudentProfileInfo object for the person who will be allowed to edit this application
    */
-  const changeApplicationEditor = async (newEditorUsername) => {
+  const changeApplicationEditor = async (newEditorProfile) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
     try {
       const result = await housing.changeApartmentAppEditor(
         applicationDetails.ApplicationID,
-        newEditorUsername,
+        newEditorProfile.AD_Username,
       );
-      console.log(result); //! DEBUG
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        EditorProfile: newEditorProfile,
-      }));
-      setSaving('success');
-      setUnsavedChanges(true);
-      // loadApplication(); //? Coming soon to a feature near you
-    } catch {
-      setSnackbarText('Something went wrong while trying to save the new application editor.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      setSaving('failed');
+      if (result) {
+        try {
+          const loadingResult = loadApplication();
+          if (!loadingResult ) {
+            throw new Error('Failed to load apartment application.');
+          }
+        } catch {
+          setApplicationDetails((prevApplicationDetails) => ({
+            ...prevApplicationDetails,
+            EditorProfile: newEditorProfile,
+            Applicants: sortBy(prevApplicationDetails.Applicants, ['Username']),
+          }));
+        } finally {
+          setSaving('success');
+          setCanEditApplication(false);
+          setUnsavedChanges(false);
+        }
+      }
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to make changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar(
+          'Something went wrong while trying to save the new application editor.',
+          'error',
+        );
+      }
+      setSaving('error');
     } finally {
       if (saveButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
@@ -317,7 +377,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setTimeout(() => {
             setSaveButtonAlertTimeout(null);
             setSaving(false);
-          }, 6000),
+          }, DYNAMIC_ICON_TIMEOUT),
         );
       }
     }
@@ -347,41 +407,45 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
     if (index !== null && index >= 0) {
-      let newApartmentChoice = {
-        ApplicationID: applicationDetails.ApplicationID,
-        HallRank: Number(hallRankValue) ?? applicationDetails.ApartmentChoices[index].HallRank,
-        HallName: hallNameValue ?? applicationDetails.ApartmentChoices[index].HallName,
-      };
-
       // Error checking on the hallNameValue before modifying the newHallInfo object
       if (
         hallNameValue !== applicationDetails.ApartmentChoices[index].HallName &&
         applicationDetails.ApartmentChoices.some((hallInfo) => hallInfo.HallName === hallNameValue)
       ) {
         // Display an error if the selected hall is already in the list
-        setSnackbarText(String(hallNameValue) + ' is already in the list.');
-        setSnackbarSeverity('info');
-        setSnackbarOpen(true);
+        createSnackbar(`${String(hallNameValue)} is already in the list.`, 'info');
 
-        // Set the new hall info back to the name it was previously
-        newApartmentChoice.HallName = applicationDetails.ApartmentChoices[index].HallName;
-      }
-
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        ApartmentChoices: sortBy(
-          prevApplicationDetails.ApartmentChoices.map((prevApartmentChoice, j) =>
-            j === index ? newApartmentChoice : prevApartmentChoice,
+        // Leave the ApartmentChoice array unchanged, but refresh the sorting.
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          ApartmentChoices: sortBy(
+            prevApplicationDetails.ApartmentChoices,
+            ['HallRank', 'HallName'], // Sort halls by rank and name
           ),
-          ['HallRank', 'HallName'], // Sort halls by rank and name
-        ),
-      }));
+        }));
+      } else {
+        const newApartmentChoice = {
+          ApplicationID: applicationDetails.ApplicationID,
+          HallRank: Number(hallRankValue) ?? applicationDetails.ApartmentChoices[index].HallRank,
+          HallName: hallNameValue ?? applicationDetails.ApartmentChoices[index].HallName,
+        };
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          ApartmentChoices: sortBy(
+            prevApplicationDetails.ApartmentChoices.map((prevApartmentChoice, j) =>
+              j === index ? newApartmentChoice : prevApartmentChoice,
+            ),
+            ['HallRank', 'HallName'], // Sort halls by rank and name
+          ),
+        }));
+      }
 
       setUnsavedChanges(true);
     } else {
-      setSnackbarText('Something went wrong while trying to edit this hall. Please try again.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
+      createSnackbar(
+        'Something went wrong while trying to edit this hall. Please try again.',
+        'error',
+      );
     }
   };
 
@@ -411,12 +475,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleHallAdd = () => {
     const newPlaceholderHall = {
-      HallRank: applicationDetails.ApartmentChoices.length + 1,
+      ApplicationID: applicationDetails.ApplicationID,
+      HallRank: (applicationDetails.ApartmentChoices?.length ?? 0) + 1,
       HallName: '',
     };
     setApplicationDetails((prevApplicationDetails) => ({
       ...prevApplicationDetails,
-      ApartmentChoices: [...prevApplicationDetails.ApartmentChoices, newPlaceholderHall],
+      ApartmentChoices: [...(prevApplicationDetails.ApartmentChoices ?? []), newPlaceholderHall],
     }));
   };
 
@@ -437,12 +502,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
           j === index ? newApplicant : prevApplicant,
         ),
       }));
+      setUnsavedChanges(true);
     } else {
-      setSnackbarText(
+      createSnackbar(
         'Something went wrong while trying to change the off-campus program. Please try again.',
+        'error',
       );
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
     }
   };
 
@@ -468,34 +533,52 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @async
    * @function saveApartmentApplication
    * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
+   * @returns {Boolean} Indicates whether saving succeeded or failed
    */
   const saveApartmentApplication = async (applicationDetails) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
     let result = null;
     try {
-      if (
-        applicationDetails.Applicants.length === 0 ||
-        applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))
-      ) {
-        const result = await housing.saveApartmentApplication(applicationDetails);
-        console.log('result of saving: ' + result); //! DEBUG
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          ApplicationID: result ?? prevApplicationDetails.ApplicationID,
-        }));
-        setSaving('success');
-        setUnsavedChanges(false);
-        // loadApplication(); //? Coming soon to a feature near you
+      if (applicationDetails.Applicants.length < 1) {
+        createSnackbar(
+          'Error: There are no applicants on this application. This should not be possible. Please refresh the page and try again.',
+          'error',
+        );
+        setSaving('error');
       } else {
-        // The `isApplicantValid` function will handle the snackbar message
-        setSaving('failed');
+        // This will produce an array of booleans. If all are true, then all applicants are valid
+        let validApplicants = await Promise.all(
+          applicationDetails.Applicants.map((applicant) => isApplicantValid(applicant)),
+        );
+        // No additional `else` is needed for this, since `isApplicantValid` handles the `createSnackbar` internally
+        if (validApplicants.every((v) => v)) {
+          result = await housing.saveApartmentApplication(applicationDetails);
+          console.debug('result of saving: ' + result); //! DEBUG
+          if (result) {
+            setApplicationDetails((prevApplicationDetails) => ({
+              ...prevApplicationDetails,
+              ApplicationID: result ?? prevApplicationDetails.ApplicationID,
+            }));
+            setSaving('success');
+            setUnsavedChanges(false);
+            loadApplication();
+          } else {
+            throw new Error(
+              `Did not receive an http error code, but received the response ${result}`,
+            );
+          }
+        }
       }
-    } catch {
-      setSnackbarText('Something went wrong while trying to save the application.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-      setSaving('failed');
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to save changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar('Something went wrong while trying to save the application.', 'error');
+      }
+      setSaving('error');
     } finally {
       if (saveButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
@@ -503,10 +586,56 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setTimeout(() => {
             setSaveButtonAlertTimeout(null);
             setSaving(false);
-          }, 6000),
+          }, DYNAMIC_ICON_TIMEOUT),
         );
       }
       return result;
+    }
+  };
+
+  const handleDeleteAppAccepted = () => {
+    // The method is separated from callback because the housing API service must be handled inside an async method
+    deleteApartmentApplication();
+    handleCloseOkay();
+  };
+
+  /**
+   * Delete the current application in the database
+   *
+   * @async
+   * @function deleteApartmentApplication
+   */
+  const deleteApartmentApplication = async () => {
+    setDeleting(true);
+    setDeleteButtonAlertTimeout(null);
+    try {
+      const result = await housing.deleteApartmentApplication(applicationDetails.ApplicationID);
+      if (result) {
+        setDeleting('success');
+        loadApplication();
+        setApplicationCardsOpen(false);
+      } else {
+        throw new Error('Failed to delete application');
+      }
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to make changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar('Something went wrong while trying to delete the application.', 'error');
+      }
+      setDeleting('error');
+    } finally {
+      if (deleteButtonAlertTimeout === null) {
+        // Shows the success icon for 6 seconds and then returns back to normal button
+        setDeleteButtonAlertTimeout(
+          setTimeout(() => {
+            setDeleteButtonAlertTimeout(null);
+            setDeleting(false);
+          }, DYNAMIC_ICON_TIMEOUT),
+        );
+      }
     }
   };
 
@@ -514,8 +643,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for apartment application submit button
    */
   const handleSubmitButtonClick = () => {
-    let debugMessage = 'DEBUG: Submit button was clicked'; //! DEBUG
-    console.log(debugMessage); //! DEBUG
     let saveResult = saveApartmentApplication(applicationDetails);
     if (saveResult) {
       setSubmitDialogOpen(true);
@@ -535,15 +662,50 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    if (applicationDetails.Applicants.every((applicant) => isApplicantValid(applicant))) {
-      console.log('All applicants are valid'); //! DEBUG:
-      try {
-        //TODO: Feature not yet added to the API
-        // housing.submitApplication(applicationDetails);
-        setApplicationCardsOpen(false);
-      } catch {}
-    } else {
-      console.log('Not all applicants are valid'); //! DEBUG:
+    setSubmitStatus(true);
+    setSubmitButtonAlertTimeout(null);
+    try {
+      if (applicationDetails.Applicants.length < 1) {
+        createSnackbar(
+          'Error: There are no applicants on this application. This should not be possible. Please refresh the page and try again.',
+          'error',
+        );
+        setSaving('error');
+      } else {
+        // This will produce an array of booleans. If all are true, then all applicants are valid
+        let validApplicants = await Promise.all(
+          applicationDetails.Applicants.map((applicant) => isApplicantValid(applicant)),
+        );
+        // No additional `else` is needed for this, since `isApplicantValid` handles the `createSnackbar` internally
+        if (validApplicants.every((v) => v)) {
+          let result = await housing.submitApplication(applicationDetails.ApplicationID);
+          if (result) {
+            setSubmitStatus('success');
+            loadApplication();
+          } else {
+            throw new Error('Failed to submit application');
+          }
+        }
+      }
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to make changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar('Something went wrong while trying to submit the application.', 'error');
+      }
+      setSubmitStatus('error');
+    } finally {
+      if (submitButtonAlertTimeout === null) {
+        // Shows the success icon for 6 seconds and then returns back to normal button
+        setSubmitButtonAlertTimeout(
+          setTimeout(() => {
+            setSubmitButtonAlertTimeout(null);
+            setSubmitStatus(false);
+          }, DYNAMIC_ICON_TIMEOUT),
+        );
+      }
     }
   };
 
@@ -552,7 +714,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleCloseOkay = () => {
     setChangeEditorDialogOpen(false);
+    setDeleteDialogOpen(false);
     setSubmitDialogOpen(false);
+    setNewEditorProfile(null);
   };
 
   /**
@@ -568,21 +732,15 @@ const StudentApplication = ({ userProfile, authentication }) => {
     handleCloseOkay();
   };
 
-  /**
-   * Callback for closing the snackbar
-   * @param {*} _event close event to be handled by callback
-   * @param {*} reason the reason the close event was triggered
-   */
-  const handleCloseSnackbar = (_event, reason) => {
-    // Prevent the snackbar from closing if the user clicks outside the snackbar
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpen(false);
+  const createSnackbar = (message, severity) => {
+    setSnackbar({ message, severity, open: true });
   };
 
   const changeEditorAlertText = (
     <span>
+      You are about to change the editor to {newEditorProfile?.FirstName}{' '}
+      {newEditorProfile?.LastName}
+      <br />
       If you change the application editor, you will no longer be able to edit this application
       yourself.
       <br />
@@ -614,7 +772,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
               <Grid item xs={12}>
                 <Grid container direction="row" justify="center" spacing={2}>
                   {applicationDetails.ApplicationID > 0 && (
-                    <Grid item xs={12} sm={8} md={6} lg={4} xl={3}>
+                    <Grid item xs={12} sm={8} md={6} lg={4} xl={4}>
                       <ApplicationDataTable applicationDetails={applicationDetails} />
                     </Grid>
                   )}
@@ -646,6 +804,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           maxNumApplicants={MAX_NUM_APPLICANTS}
                           userProfile={userProfile}
                           applicationDetails={applicationDetails}
+                          authentication={authentication}
                         />
                       )}
                       <GordonDialogBox
@@ -655,8 +814,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         describedby={'changing-application-editor'}
                         title={'Change application editor?'}
                         text={changeEditorAlertText}
-                        confirmButtonClicked={handleChangeEditorAccepted}
-                        confirmButtonName={'Accept'}
+                        buttonClicked={handleChangeEditorAccepted}
+                        buttonName={'Accept'}
                         cancelButtonClicked={handleCloseOkay}
                         cancelButtonName={'Cancel'}
                         severity={'warning'}
@@ -718,17 +877,27 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 applicationCardsOpen={applicationCardsOpen}
                 applicationID={applicationDetails.ApplicationID}
                 canEditApplication={canEditApplication}
+                deleteDialogOpen={deleteDialogOpen}
+                deleting={deleting}
                 disableSubmit={
-                  !applicationCardsOpen ||
-                  !agreements ||
-                  !(applicationDetails.Applicants.length > 0) ||
-                  !(applicationDetails.ApartmentChoices.length > 0)
+                  applicationDetails?.DateSubmitted ||
+                  !(
+                    applicationCardsOpen &&
+                    agreements &&
+                    applicationDetails?.Applicants?.length > 0 &&
+                    applicationDetails?.ApartmentChoices?.filter(
+                      (apartmentChoice) => apartmentChoice.HallName,
+                    )?.length > 0
+                  )
                 }
                 saving={saving}
                 submitDialogOpen={submitDialogOpen}
+                submitStatus={applicationDetails.DateSubmitted ? 'success' : submitStatus}
                 unsavedChanges={unsavedChanges}
                 onCloseDialog={handleCloseDialog}
                 onCloseOkay={handleCloseOkay}
+                onDeleteAppAccepted={handleDeleteAppAccepted}
+                onDeleteButtonClick={() => setDeleteDialogOpen(true)}
                 onSaveButtonClick={handleSaveButtonClick}
                 onShowApplication={handleShowApplication}
                 onSubmitAppAccepted={handleSubmitAppAccepted}
@@ -737,11 +906,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
             </Grid>
           </Grid>
         </Grid>
-        <SimpleSnackbar
-          text={snackbarText}
-          severity={snackbarSeverity ?? 'info'}
-          open={snackbarOpen}
-          onClose={handleCloseSnackbar}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={(_event, reason) =>
+            reason !== 'clickaway' && setSnackbar((s) => ({ ...s, open: false }))
+          }
         />
       </div>
     );

@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { sortBy } from 'lodash';
+import { DateTime } from 'luxon';
 import { CSVLink } from 'react-csv';
 import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { DateTime } from 'luxon';
-import GordonLoader from '../../../../components/Loader';
-import housing from '../../../../services/housing';
+import GordonLoader from 'components/Loader';
 import ApplicationsTable from './components/ApplicationTable';
+import { NotFoundError } from 'services/error';
+import housing from 'services/housing';
 
 /**
- * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
+ * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
  */
 
 /**
@@ -43,16 +44,20 @@ const StaffMenu = ({ userProfile }) => {
    * Attempt to load all existing applications for the current semester
    */
   const loadAllCurrentApplications = useCallback(async () => {
-    setLoading(true);
-    let applicationDetailsArray = await housing.getAllApartmentApplications();
-    setApplications(
-      applicationDetailsArray.map((applicationDetails) => ({
-        ...applicationDetails,
-        NumApplicants: applicationDetails.Applicants?.length ?? 0,
-        FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
-      })),
-    );
-    setLoading(false);
+    try {
+      setLoading(true);
+      const applicationDetailsArray = await housing.getSubmittedApartmentApplications();
+      setApplications(applicationDetailsArray);
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        setApplications([]);
+      } else {
+        console.error(e);
+        throw e;
+      }
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
