@@ -75,6 +75,15 @@
     color: $primary-blue;
   }
 
+  & .delete-button {
+    background-color: $secondary-red;
+    color: $neutral-white;
+    &:hover {
+      background-color: $wellness-red;
+      color: $neutral-white;
+    }
+  }
+
   & .error {
     color: $secondary-red;
   }
@@ -106,9 +115,5 @@
       margin-top: 0.5em;
       margin-bottom: 0.5em;
     }
-  }
-
-  & .MuiAlert-filledWarning {
-    background-color: $secondary-orange;
   }
 }
