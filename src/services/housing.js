@@ -103,7 +103,7 @@ const deleteHousingAdmin = (username) => {
  */
 const getApartmentSelectionDate = async () => {
   return 'Apr. 27';
-  // return http.get('housing/apartment/selection-date); // Not yet implemented in the API
+  // return await http.get('housing/apartment/selection-date); // Not yet implemented in the API
 };
 
 /**
@@ -114,7 +114,7 @@ const getApartmentSelectionDate = async () => {
  * @return {Promise.<ApartmentHall[]>} List of halls
  */
 const getApartmentHalls = async () => {
-  return http.get('housing/halls/apartments');
+  return await http.get('housing/halls/apartments');
 };
 
 /**
@@ -155,6 +155,22 @@ const saveApartmentApplication = async (applicationDetails) => {
     return await http.put(`housing/apartment/applications/${applicationID}/`, applicationDetails);
   } else {
     return await http.post(`housing/apartment/applications/`, applicationDetails);
+  }
+};
+
+/**
+ * Delete the current application in the database
+ *
+ * @async
+ * @function deleteApartmentApplication
+ * @param {Number} applicationID the application ID number
+ * @return {Promise.<Boolean>} Status of whether or not the operation was successful
+ */
+const deleteApartmentApplication = async (applicationID) => {
+  if (applicationID > 0) {
+    return await http.del(`housing/apartment/applications/${applicationID}/`);
+  } else {
+    throw new Error(`Invalid applicationID: ${applicationID}`);
   }
 };
 
@@ -258,7 +274,7 @@ const getSubmittedApartmentApplications = async () => {
  * @return {Promise.<Boolean>[]} Application details
  */
 const submitApplication = async (applicationID) => {
-  return http.put(`housing/apartment/applications/${applicationID}/submit`);
+  return await http.put(`housing/apartment/applications/${applicationID}/submit`);
 };
 
 export default {
@@ -269,6 +285,7 @@ export default {
   getApartmentHalls,
   getCurrentApplicationID,
   saveApartmentApplication,
+  deleteApartmentApplication,
   changeApartmentAppEditor,
   getApartmentApplication,
   getSubmittedApartmentApplications,
