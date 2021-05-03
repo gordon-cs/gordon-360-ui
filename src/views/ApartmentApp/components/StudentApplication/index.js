@@ -880,6 +880,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 deleteDialogOpen={deleteDialogOpen}
                 deleting={deleting}
                 disableSubmit={
+                  applicationDetails?.DateSubmitted ||
                   !(
                     applicationCardsOpen &&
                     agreements &&
@@ -891,7 +892,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 }
                 saving={saving}
                 submitDialogOpen={submitDialogOpen}
-                submitStatus={submitStatus}
+                submitStatus={applicationDetails.DateSubmitted ? 'success' : submitStatus}
                 unsavedChanges={unsavedChanges}
                 onCloseDialog={handleCloseDialog}
                 onCloseOkay={handleCloseOkay}
