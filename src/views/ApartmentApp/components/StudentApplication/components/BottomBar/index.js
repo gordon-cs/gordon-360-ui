@@ -1,8 +1,19 @@
 import React from 'react';
-import { Backdrop, Button, Card, CardContent, Grid, Typography } from '@material-ui/core/';
-import GordonLoader from 'components/Loader';
+import { Backdrop, Card, CardContent, Grid, Typography } from '@material-ui/core/';
+import DeleteIcon from '@material-ui/icons/Delete';
+import PublishIcon from '@material-ui/icons/Publish';
+import SaveIcon from '@material-ui/icons/Save';
+import DynamicButton from 'components/DynamicButton';
 import GordonDialogBox from 'components/GordonDialogBox';
-import SaveButton from './components/SaveButton';
+import GordonLoader from 'components/Loader';
+
+const deleteAlertText = (
+  <span>
+    Are you sure you want to delete this application?
+    <br />
+    This action cannot be undone.
+  </span>
+);
 
 // TODO: Improve this text for the users
 const submitAlertText = (
@@ -17,13 +28,17 @@ const BottomBar = ({
   applicationCardsOpen,
   applicationID,
   canEditApplication,
+  deleteDialogOpen,
+  deleting,
   disableSubmit,
   saving,
-  submitStatus,
   submitDialogOpen,
+  submitStatus,
   unsavedChanges,
   onCloseDialog,
   onCloseOkay,
+  onDeleteAppAccepted,
+  onDeleteButtonClick,
   onSaveButtonClick,
   onShowApplication,
   onSubmitAppAccepted,
@@ -63,7 +78,7 @@ const BottomBar = ({
       };
     }
   } else {
-    if (submitStatus === 'failed') {
+    if (submitStatus === 'error') {
       dynamicContent = {
         primaryText: 'Something went wrong while trying to submit the application.',
         itemProps: {
@@ -71,7 +86,7 @@ const BottomBar = ({
           color: 'error',
         },
       };
-    } else if (saving === 'failed') {
+    } else if (saving === 'error') {
       dynamicContent = {
         primaryText: 'Something went wrong while trying to save the application.',
         itemProps: {
@@ -102,41 +117,68 @@ const BottomBar = ({
               {dynamicContent.secondaryText}
             </Typography>
           </Grid>
-          {!applicationCardsOpen ? (
-            <Grid item xs={12} sm={4}>
-              <Button
-                variant="contained"
-                onClick={onShowApplication}
-                color="secondary"
-                fullWidth
-                disabled={applicationCardsOpen}
-              >
-                {dynamicContent.openCardsButtonLabel}
-              </Button>
-            </Grid>
-          ) : (
-            <Grid container item xs={12} sm={6} lg={4} spacing={2}>
+          <Grid container item xs={12} sm={7} lg={6} spacing={2}>
+            {!applicationCardsOpen && (
               <Grid item xs>
-                <SaveButton
-                  disabled={!canEditApplication || !unsavedChanges}
-                  buttonText={'Save & Continue'}
-                  status={saving}
-                  onClick={canEditApplication ? onSaveButtonClick : undefined}
+                <DynamicButton
+                  color={'secondary'}
+                  disabled={applicationCardsOpen}
+                  buttonText={dynamicContent.openCardsButtonLabel}
+                  onClick={onShowApplication}
                 />
               </Grid>
-              <Grid item xs>
-                <SaveButton
-                  disabled={!canEditApplication || disableSubmit}
-                  buttonText={'Save & Submit'}
-                  status={submitStatus}
-                  onClick={canEditApplication ? onSubmitButtonClick : undefined}
-                />
-              </Grid>
+            )}
+            <Grid item xs>
+              <DynamicButton
+                className={'delete-button'}
+                disabled={!canEditApplication || !applicationID}
+                buttonText={'Delete'}
+                startIcon={<DeleteIcon />}
+                status={deleting}
+                onClick={canEditApplication ? onDeleteButtonClick : undefined}
+              />
             </Grid>
-          )}
+            {applicationCardsOpen && (
+              <>
+                <Grid item xs>
+                  <DynamicButton
+                    color={'secondary'}
+                    disabled={!canEditApplication || !unsavedChanges}
+                    buttonText={'Save'}
+                    startIcon={<SaveIcon />}
+                    status={saving}
+                    onClick={canEditApplication ? onSaveButtonClick : undefined}
+                  />
+                </Grid>
+                <Grid item xs>
+                  <DynamicButton
+                    color={'primary'}
+                    disabled={!canEditApplication || disableSubmit}
+                    buttonText={'Submit'}
+                    startIcon={<PublishIcon />}
+                    status={submitStatus}
+                    onClick={canEditApplication ? onSubmitButtonClick : undefined}
+                  />
+                </Grid>
+              </>
+            )}
+          </Grid>
           <Backdrop open={saving === true || submitStatus === true}>
             <GordonLoader />
           </Backdrop>
+          <GordonDialogBox
+            open={deleteDialogOpen}
+            onClose={onCloseDialog}
+            labelledby={'submit-application-dialog'}
+            describedby={'confirm-application'}
+            title={'Delete apartment application?'}
+            text={deleteAlertText}
+            buttonClicked={onDeleteAppAccepted}
+            buttonName={'Accept'}
+            cancelButtonClicked={onCloseOkay}
+            cancelButtonName={'Cancel'}
+            severity={'warning'}
+          />
           <GordonDialogBox
             open={submitDialogOpen}
             onClose={onCloseDialog}

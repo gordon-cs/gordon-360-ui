@@ -16,6 +16,7 @@ import { AuthError, createError, NotFoundError } from 'services/error';
 import housing from 'services/housing';
 import user from 'services/user';
 
+const DYNAMIC_ICON_TIMEOUT = 6000;
 const MAX_NUM_APPLICANTS = 8;
 const BLANK_APPLICATION_DETAILS = {
   ApplicationID: null,
@@ -42,6 +43,7 @@ const BLANK_APPLICATION_DETAILS = {
  */
 const StudentApplication = ({ userProfile, authentication }) => {
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -56,8 +58,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [changeEditorDialogOpen, setChangeEditorDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [deleteButtonAlertTimeout, setDeleteButtonAlertTimeout] = useState(null);
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
   const [submitButtonAlertTimeout, setSubmitButtonAlertTimeout] = useState(null);
 
@@ -294,6 +298,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       try {
         saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
       } catch {
+        console.debug('Using old method to change application editor.');
         changeApplicationEditor(newEditorProfile); //! Will be deprecated eventually...
       } finally {
         setCanEditApplication(false);
@@ -304,7 +309,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         'Something went wrong while trying to save the new application editor.',
         'error',
       );
-      setSaving('failed');
+      setSaving('error');
     }
   };
 
@@ -328,8 +333,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
       );
       if (result) {
         try {
+<<<<<<< HEAD
           const result = await loadApplication();
           if (!result) {
+=======
+          const loadingResult = loadApplication();
+          if (!loadingResult ) {
+>>>>>>> apartapp-change-editor
             throw new Error('Failed to load apartment application.');
           }
         } catch {
@@ -355,7 +365,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           'error',
         );
       }
-      setSaving('failed');
+      setSaving('error');
     } finally {
       if (saveButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
@@ -363,7 +373,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setTimeout(() => {
             setSaveButtonAlertTimeout(null);
             setSaving(false);
-          }, 6000),
+          }, DYNAMIC_ICON_TIMEOUT),
         );
       }
     }
@@ -515,7 +525,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           'Error: There are no applicants on this application. This should not be possible. Please refresh the page and try again.',
           'error',
         );
-        setSaving('failed');
+        setSaving('error');
       } else {
         // This will produce an array of booleans. If all are true, then all applicants are valid
         let validApplicants = await Promise.all(
@@ -548,7 +558,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       } else {
         createSnackbar('Something went wrong while trying to save the application.', 'error');
       }
-      setSaving('failed');
+      setSaving('error');
     } finally {
       if (saveButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
@@ -556,10 +566,56 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setTimeout(() => {
             setSaveButtonAlertTimeout(null);
             setSaving(false);
-          }, 6000),
+          }, DYNAMIC_ICON_TIMEOUT),
         );
       }
       return result;
+    }
+  };
+
+  const handleDeleteAppAccepted = () => {
+    // The method is separated from callback because the housing API service must be handled inside an async method
+    deleteApartmentApplication();
+    handleCloseOkay();
+  };
+
+  /**
+   * Delete the current application in the database
+   *
+   * @async
+   * @function deleteApartmentApplication
+   */
+  const deleteApartmentApplication = async () => {
+    setDeleting(true);
+    setDeleteButtonAlertTimeout(null);
+    try {
+      const result = await housing.deleteApartmentApplication(applicationDetails.ApplicationID);
+      if (result) {
+        setDeleting('success');
+        loadApplication();
+        setApplicationCardsOpen(false);
+      } else {
+        throw new Error('Failed to delete application');
+      }
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to make changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar('Something went wrong while trying to delete the application.', 'error');
+      }
+      setDeleting('error');
+    } finally {
+      if (deleteButtonAlertTimeout === null) {
+        // Shows the success icon for 6 seconds and then returns back to normal button
+        setDeleteButtonAlertTimeout(
+          setTimeout(() => {
+            setDeleteButtonAlertTimeout(null);
+            setDeleting(false);
+          }, DYNAMIC_ICON_TIMEOUT),
+        );
+      }
     }
   };
 
@@ -579,7 +635,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           'Error: There are no applicants on this application. This should not be possible. Please refresh the page and try again.',
           'error',
         );
-        setSaving('failed');
+        setSaving('error');
       } else {
         // The checking of valid applicants is performed inside `saveApartmentApplication()` function
         const saveResult = await saveApartmentApplication(applicationDetails);
@@ -603,7 +659,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       } else {
         createSnackbar('Something went wrong while trying to submit the application.', 'error');
       }
-      setSubmitStatus('failed');
+      setSubmitStatus('error');
     } finally {
       if (submitButtonAlertTimeout === null) {
         // Shows the success icon for 6 seconds and then returns back to normal button
@@ -611,7 +667,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           setTimeout(() => {
             setSubmitButtonAlertTimeout(null);
             setSubmitStatus(false);
-          }, 6000),
+          }, DYNAMIC_ICON_TIMEOUT),
         );
       }
     }
@@ -622,6 +678,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    */
   const handleCloseDialog = () => {
     setChangeEditorDialogOpen(false);
+    setDeleteDialogOpen(false);
     setSubmitDialogOpen(false);
     setNewEditorProfile(null);
   };
@@ -769,22 +826,27 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 applicationCardsOpen={applicationCardsOpen}
                 applicationID={applicationDetails.ApplicationID}
                 canEditApplication={canEditApplication}
+                deleteDialogOpen={deleteDialogOpen}
+                deleting={deleting}
                 disableSubmit={
-                  !applicationCardsOpen ||
-                  !agreements ||
-                  !(applicationDetails?.Applicants?.length > 0) ||
+                  applicationDetails?.DateSubmitted ||
                   !(
+                    applicationCardsOpen &&
+                    agreements &&
+                    applicationDetails?.Applicants?.length > 0 &&
                     applicationDetails?.ApartmentChoices?.filter(
                       (apartmentChoice) => apartmentChoice.HallName,
                     )?.length > 0
                   )
                 }
                 saving={saving}
-                submitStatus={submitStatus}
                 submitDialogOpen={submitDialogOpen}
+                submitStatus={applicationDetails.DateSubmitted ? 'success' : submitStatus}
                 unsavedChanges={unsavedChanges}
                 onCloseDialog={(_event, reason) => reason !== 'clickaway' && handleCloseDialog()}
                 onCloseOkay={handleCloseDialog}
+                onDeleteAppAccepted={handleDeleteAppAccepted}
+                onDeleteButtonClick={() => setDeleteDialogOpen(true)}
                 onSaveButtonClick={() => saveApartmentApplication(applicationDetails)}
                 onShowApplication={() => setApplicationCardsOpen(true)}
                 onSubmitAppAccepted={() => submitApplication()}
