@@ -305,8 +305,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
         handleCloseDialog();
       }
     } else {
+      console.debug(
+        'Error: Invalid StudentProfileInfo object set for newEditorProfile when calling handleChangeEditor.',
+      );
       createSnackbar(
-        'Something went wrong while trying to save the new application editor.',
+        'Something went wrong while trying to change the editor: Could not find Profile or Username. Please contact CTS, or refresh the page and try again.',
         'error',
       );
       setSaving('error');
