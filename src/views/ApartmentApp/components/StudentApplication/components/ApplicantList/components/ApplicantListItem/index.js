@@ -89,7 +89,11 @@ const ApplicantListItem = ({
         </ListItemAvatar>
         <Grid container alignItems="center" spacing={1}>
           <Grid item xs={8} sm>
-            <ListItemText primary={displayName} secondary={personClass} className={'list-item'} />
+            <ListItemText
+              primary={displayName}
+              secondary={profile.Class ?? ''}
+              className={'list-item'}
+            />
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
@@ -98,11 +102,7 @@ const ApplicantListItem = ({
               <IconButton
                 aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
                 disabled={isApplicationEditor || disabled}
-                onClick={
-                  typeof OnChangeEditor === 'function' && profile
-                    ? onChangeEditor(profile)
-                    : undefined
-                }
+                onClick={onChangeEditor && profile && onChangeEditor(profile)}
               >
                 {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
               </IconButton>
@@ -112,9 +112,9 @@ const ApplicantListItem = ({
                 aria-label="remove-applicant"
                 disabled={isApplicationEditor || disabled}
                 onClick={
-                  typeof onApplicantRemove === 'function' && profile?.AD_Username
-                    ? onApplicantRemove(profile.AD_Username)
-                    : undefined
+                  onApplicantRemove &&
+                  profile?.AD_Username &&
+                  onApplicantRemove(profile.AD_Username)
                 }
               >
                 <ClearIcon />
