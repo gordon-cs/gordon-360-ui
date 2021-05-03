@@ -503,12 +503,12 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @async
    * @function saveApartmentApplication
    * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
-   * @returns {Promise.<Number>} Indicates whether saving succeeded or failed
+   * @returns {Promise.<Boolean>} Indicates whether saving succeeded or failed
    */
   const saveApartmentApplication = async (applicationDetails) => {
     setSaving(true);
     setSaveButtonAlertTimeout(null);
-    let result = null;
+    let result = false;
     try {
       if (applicationDetails.Applicants.length < 1) {
         createSnackbar(
@@ -523,9 +523,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
         );
         // No additional `else` is needed for this, since `isApplicantValid` handles the `createSnackbar` internally
         if (validApplicants.every((v) => v)) {
-          result = await housing.saveApartmentApplication(applicationDetails);
-          console.debug('result of saving: ' + result); //! DEBUG
-          if (result) {
+          const saveResult = await housing.saveApartmentApplication(applicationDetails);
+          if (saveResult) {
             setApplicationDetails((prevApplicationDetails) => ({
               ...prevApplicationDetails,
               ApplicationID: result ?? prevApplicationDetails.ApplicationID,
@@ -533,6 +532,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
             setSaving('success');
             setUnsavedChanges(false);
             await loadApplication();
+            result = true;
           } else {
             throw new Error(
               `Did not receive an http error code, but received the response ${result}`,
@@ -581,6 +581,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         );
         setSaving('failed');
       } else {
+        // The checking of valid applicants is performed inside `saveApartmentApplication()` function
         const saveResult = await saveApartmentApplication(applicationDetails);
         if (saveResult) {
           const result = await housing.submitApplication(applicationDetails.ApplicationID);
@@ -590,6 +591,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
           } else {
             throw new Error('Failed to submit application');
           }
+        } else {
+          throw new Error('Failed to save application');
         }
       }
     } catch (e) {
