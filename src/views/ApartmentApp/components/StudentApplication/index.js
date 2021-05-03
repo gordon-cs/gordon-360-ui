@@ -494,14 +494,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
-   * Callback for agreements card
-   * @param {Boolean} newAgreementsState The new state of the agreements
-   */
-  const handleAgreementsStateChange = (newAgreementsState) => {
-    setAgreements(newAgreementsState);
-  };
-
-  /**
    * Callback for apartment application save button
    */
   const handleSaveButtonClick = () => {
@@ -794,7 +786,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   <Grid container item md direction="column" spacing={2}>
                     {canEditApplication && (
                       <Grid item>
-                        <Agreements onChange={handleAgreementsStateChange} />
+                        <Agreements onChange={(newState) => setAgreements(newState)} />
                       </Grid>
                     )}
                     {applicationDetails.ApplicationID > 0 && (
