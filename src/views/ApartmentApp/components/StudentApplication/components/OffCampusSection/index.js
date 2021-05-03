@@ -22,15 +22,6 @@ const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInp
     }
   }, [authentication]);
 
-  /**
-   * Callback for changes to off-campus program info
-   * @param {String} offCampusListItemValue The program that the applicant is doing an OC program for
-   * @param {Number} index The index of the applicant in the list
-   */
-  const handleInputChange = (offCampusListItemValue, index) => {
-    onOffCampusInputChange(offCampusListItemValue, index);
-  };
-
   return (
     <Card>
       <CardHeader title="Off-Campus Work Study" className="apartment-card-header" />
@@ -51,7 +42,7 @@ const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInp
                     applicantProfile={applicant.Profile}
                     offCampusProgram={applicant.OffCampusProgram}
                     departments={departments}
-                    onOffCampusInputChange={handleInputChange}
+                    onOffCampusInputChange={onOffCampusInputChange}
                   />
                 ))}
             </List>
