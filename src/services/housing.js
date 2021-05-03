@@ -199,7 +199,7 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  *
  * @function formatApplicantInfo
  * @param {ApartmentApplicant} applicant an object representing an apartment applicant
- * @return {ApartmentApplicant} Application details
+ * @return {ApartmentApplicant} Applicant object after formatting
  */
 function formatApplicantInfo(applicant) {
   // //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
