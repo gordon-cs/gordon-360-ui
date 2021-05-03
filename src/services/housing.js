@@ -35,7 +35,7 @@ import user from './user';
  * @property {DateTime} [BirthDate] The birthday of this applicant (only visible to housing admin)
  * @property {Number} [Age] The age of the student (in years) (only visible to housing admin)
  * @property {String} [Class] Class
- * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or '' (empty string)
+ * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or an empty string
  * @property {String} Probation Indicates whether the student has a disiplinary probation (visble only to housing admin)
  * @property {Number} Points The number of application points for this student (only visible to housing admin)
  */
@@ -103,7 +103,7 @@ const deleteHousingAdmin = (username) => {
  */
 const getApartmentSelectionDate = async () => {
   return 'Apr. 27';
-  // return http.get('housing/apartment/selection-date); // Not yet implemented in the API
+  // return await http.get('housing/apartment/selection-date); // Not yet implemented in the API
 };
 
 /**
@@ -114,7 +114,7 @@ const getApartmentSelectionDate = async () => {
  * @return {Promise.<ApartmentHall[]>} List of halls
  */
 const getApartmentHalls = async () => {
-  return http.get('housing/halls/apartments');
+  return await http.get('housing/halls/apartments');
 };
 
 /**
@@ -159,6 +159,22 @@ const saveApartmentApplication = async (applicationDetails) => {
 };
 
 /**
+ * Delete the current application in the database
+ *
+ * @async
+ * @function deleteApartmentApplication
+ * @param {Number} applicationID the application ID number
+ * @return {Promise.<Boolean>} Status of whether or not the operation was successful
+ */
+const deleteApartmentApplication = async (applicationID) => {
+  if (applicationID > 0) {
+    return await http.del(`housing/apartment/applications/${applicationID}/`);
+  } else {
+    throw new Error(`Invalid applicationID: ${applicationID}`);
+  }
+};
+
+/**
  * Update the application editor of the application to the database
  *
  * @async
@@ -183,7 +199,7 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  *
  * @function formatApplicantInfo
  * @param {ApartmentApplicant} applicant an object representing an apartment applicant
- * @return {ApartmentApplicant} Application details
+ * @return {ApartmentApplicant} Applicant object after formatting
  */
 function formatApplicantInfo(applicant) {
   // //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
@@ -205,7 +221,13 @@ function formatApplicantInfo(applicant) {
 
   return applicant;
 }
-
+/**
+ * Helper function to fill in any missing or implied properties of an ApplicationDetails object, including properties required for the data table on the staff page
+ *
+ * @function formatApplicationDetails
+ * @param {ApplicationDetails} applicationDetails an object representing all of the details of a given apartment applications
+ * @return {ApplicationDetails} Application details after formatting
+ */
 function formatApplicationDetails(applicationDetails) {
   console.debug(`formatting application # ${applicationDetails.ApplicationID}`);
   applicationDetails.EditorProfile.PersonType = 'stu';
@@ -258,7 +280,7 @@ const getSubmittedApartmentApplications = async () => {
  * @return {Promise.<Boolean>} Status of whether the application was successfully marked as submitted
  */
 const submitApplication = async (applicationID) => {
-  return http.put(`housing/apartment/applications/${applicationID}/submit`);
+  return await http.put(`housing/apartment/applications/${applicationID}/submit`);
 };
 
 export default {
@@ -269,6 +291,7 @@ export default {
   getApartmentHalls,
   getCurrentApplicationID,
   saveApartmentApplication,
+  deleteApartmentApplication,
   changeApartmentAppEditor,
   getApartmentApplication,
   getSubmittedApartmentApplications,
