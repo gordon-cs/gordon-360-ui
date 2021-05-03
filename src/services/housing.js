@@ -221,7 +221,13 @@ function formatApplicantInfo(applicant) {
 
   return applicant;
 }
-
+/**
+ * Helper function to fill in any missing or implied properties of an ApplicationDetails object, including properties required for the data table on the staff page
+ *
+ * @function formatApplicationDetails
+ * @param {ApplicationDetails} applicationDetails an object representing all of the details of a given apartment applications
+ * @return {ApplicationDetails} Application details after formatting
+ */
 function formatApplicationDetails(applicationDetails) {
   console.debug(`formatting application # ${applicationDetails.ApplicationID}`);
   applicationDetails.EditorProfile.PersonType = 'stu';
