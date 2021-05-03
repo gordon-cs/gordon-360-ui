@@ -833,6 +833,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       ) : (
                         <HallSelection
                           disabled
+                          authentication
                           apartmentChoices={applicationDetails.ApartmentChoices ?? []}
                         />
                       )}

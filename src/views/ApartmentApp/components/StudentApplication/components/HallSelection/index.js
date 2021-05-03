@@ -34,8 +34,10 @@ const HallSelection = ({
       setHalls(await housing.getApartmentHalls());
     };
 
-    loadApartmentHalls();
-  }, []);
+    if (authentication) {
+      loadApartmentHalls();
+    }
+  }, [authentication]);
 
   /**
    * Callback for changes to hall list item name and/or rank
