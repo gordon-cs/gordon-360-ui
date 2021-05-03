@@ -494,14 +494,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
-   * Callback for apartment application save button
-   */
-  const handleSaveButtonClick = () => {
-    // The method is separated from callback because the housing API service must be handled inside an async method
-    saveApartmentApplication(applicationDetails);
-  };
-
-  /**
    * Save the current state of the application to the database
    *
    * @async
@@ -725,7 +717,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           }
                           onChangeEditor={handleChangeEditor}
                           onApplicantRemove={handleApplicantRemove}
-                          onSaveButtonClick={handleSaveButtonClick}
                           authentication={authentication}
                         />
                       ) : (
@@ -758,7 +749,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           onHallAdd={handleHallAdd}
                           onHallInputChange={handleHallInputChange}
                           onHallRemove={handleHallRemove}
-                          onSaveButtonClick={handleSaveButtonClick}
                         />
                       ) : (
                         <HallSelection
@@ -822,7 +812,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 unsavedChanges={unsavedChanges}
                 onCloseDialog={handleCloseDialog}
                 onCloseOkay={handleCloseOkay}
-                onSaveButtonClick={handleSaveButtonClick}
+                onSaveButtonClick={() => saveApartmentApplication(applicationDetails)}
                 onShowApplication={() => setApplicationCardsOpen(true)}
                 onSubmitAppAccepted={handleSubmitAppAccepted}
                 onSubmitButtonClick={handleSubmitButtonClick}
