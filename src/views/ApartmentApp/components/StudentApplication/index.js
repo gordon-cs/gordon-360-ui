@@ -297,7 +297,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         changeApplicationEditor(newEditorProfile); //! Will be deprecated eventually...
       } finally {
         setCanEditApplication(false);
-        handleCloseOkay();
+        handleCloseDialog();
       }
     } else {
       createSnackbar(
@@ -570,7 +570,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    handleCloseOkay();
+    handleCloseDialog();
     setSubmitStatus(true);
     setSubmitButtonAlertTimeout(null);
     try {
@@ -615,9 +615,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
-   * Callback for the alert dialog box "Okay" button
+   * Callback for closing the alert dialog
    */
-  const handleCloseOkay = () => {
+  const handleCloseDialog = () => {
     setChangeEditorDialogOpen(false);
     setSubmitDialogOpen(false);
     setNewEditorProfile(null);
@@ -699,14 +699,14 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       )}
                       <GordonDialogBox
                         open={changeEditorDialogOpen}
-                        onClose={(_event, reason) => reason !== 'clickaway' && handleCloseOkay()}
+                        onClose={(_event, reason) => reason !== 'clickaway' && handleCloseDialog()}
                         labelledby={'applicant-warning-dialog'}
                         describedby={'changing-application-editor'}
                         title={'Change application editor?'}
                         text={changeEditorAlertText}
                         buttonClicked={handleChangeEditorAccepted}
                         buttonName={'Accept'}
-                        cancelButtonClicked={handleCloseOkay}
+                        cancelButtonClicked={handleCloseDialog}
                         cancelButtonName={'Cancel'}
                         severity={'warning'}
                       />
@@ -780,8 +780,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 submitStatus={submitStatus}
                 submitDialogOpen={submitDialogOpen}
                 unsavedChanges={unsavedChanges}
-                onCloseDialog={(_event, reason) => reason !== 'clickaway' && handleCloseOkay()}
-                onCloseOkay={handleCloseOkay}
+                onCloseDialog={(_event, reason) => reason !== 'clickaway' && handleCloseDialog()}
+                onCloseOkay={handleCloseDialog}
                 onSaveButtonClick={() => saveApartmentApplication(applicationDetails)}
                 onShowApplication={() => setApplicationCardsOpen(true)}
                 onSubmitAppAccepted={() => submitApplication()}
