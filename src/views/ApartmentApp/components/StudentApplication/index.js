@@ -799,22 +799,28 @@ const StudentApplication = ({ userProfile, authentication }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Backdrop open={saving === true || submitStatus === true}>
+        <Backdrop open={deleting === true || saving === true || submitStatus === true}>
           <GordonLoader />
         </Backdrop>
+        <GordonDialogBox
+          open={changeEditorDialogOpen}
+          onClose={(_event, reason) => reason !== 'clickaway' && setChangeEditorDialogOpen(null)}
+          labelledby={'applicant-warning-dialog'}
+          describedby={'changing-application-editor'}
+          title={'Change application editor?'}
+          text={changeEditorAlertText}
+          buttonClicked={handleChangeEditorAccepted}
+          buttonName={'Accept'}
+          cancelButtonClicked={() => setChangeEditorDialogOpen(null)}
+          severity={'warning'}
+        />
         <GordonDialogBox
           open={deleteDialogOpen}
           onClose={(_event, reason) => reason !== 'clickaway' && setDeleteDialogOpen(null)}
           labelledby={'delete-application-dialog'}
           describedby={'delete-application'}
           title={'Delete apartment application?'}
-          text={
-            <span>
-              Are you sure you want to delete this application?
-              <br />
-              This action cannot be undone.
-            </span>
-          }
+          text={deleteAlertText}
           buttonClicked={() => {
             setDeleteDialogOpen(null);
             deleteApartmentApplication();
@@ -829,14 +835,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
           labelledby={'submit-application-dialog'}
           describedby={'confirm-application'}
           title={'Submit apartment application?'}
-          text={
-            <span>
-              Please confirm that all the information you have entered is valid before submitting
-              the application
-              <br />
-              Click "Accept" below to submit this application
-            </span>
-          }
+          text={submitAlertText}
           buttonClicked={() => {
             setSubmitDialogOpen(null);
             submitApplication();
