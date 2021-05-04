@@ -25,7 +25,7 @@ import {
  * @param {String} props.offCampusProgram The name of the department of the off-campus program
  * @param {String[]} props.departments Array of departments available
  * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
- * @returns {JSX.Element} JSX Element for the hall list item
+ * @returns {JSX.Element} JSX Element for the off-campus program list
  */
 const OffCampusListItem = ({
   disabled,

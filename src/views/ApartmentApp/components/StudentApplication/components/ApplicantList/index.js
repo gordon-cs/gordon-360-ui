@@ -36,7 +36,7 @@ import ApplicantListItem from './components/ApplicantListItem';
  * @param {CallbackFcn} props.onSearchSubmit Callback for apartment people search submission
  * @param {CallbackFcn} props.onChangeEditor Callback for change editor button
  * @param {CallbackFcn} props.onApplicantRemove Callback for remove applicant button
- * @returns {JSX.Element} JSX Element for the hall list item
+ * @returns {JSX.Element} JSX Element for the applicant list
  */
 const ApplicantList = ({
   disabled,

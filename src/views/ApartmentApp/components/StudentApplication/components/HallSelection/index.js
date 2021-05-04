@@ -19,7 +19,7 @@ import housing from 'services/housing';
  * @param {CallbackFcn} props.onHallAdd Callback for "Add Hall" button
  * @param {CallbackFcn} props.onHallInputChange Callback for dropdown menu change
  * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
- * @returns {JSX.Element} JSX Element for the hall list item
+ * @returns {JSX.Element} JSX Element for the hall list
  */
 const HallChoiceList = ({
   disabled,

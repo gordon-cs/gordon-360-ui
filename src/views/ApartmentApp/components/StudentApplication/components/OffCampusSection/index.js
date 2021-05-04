@@ -16,7 +16,7 @@ import goStalk from 'services/goStalk';
  * @param {*} props.authentication The user authentication
  * @param {ApartmentApplicant[]} props.applicants Array of applicant info
  * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
- * @returns {JSX.Element} JSX Element for the hall list item
+ * @returns {JSX.Element} JSX Element for the off-campus program list
  */
 const OffCampusList = ({ disabled, authentication, applicants, onOffCampusInputChange }) => {
   const [departments, setDepartments] = useState([]);

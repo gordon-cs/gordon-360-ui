@@ -28,7 +28,7 @@ import user from 'services/user';
  * @param {Boolean} props.isApplicationEditor Boolean indicating whether this list item corresponds to the application editor
  * @param {CallbackFcn} props.onChangeEditor Callback for change editor button
  * @param {CallbackFcn} props.onApplicantRemove Callback for remove applicant button
- * @returns {JSX.Element} JSX Element for the hall list item
+ * @returns {JSX.Element} JSX Element for the applicant list item
  */
 const ApplicantListItem = ({
   disabled,
