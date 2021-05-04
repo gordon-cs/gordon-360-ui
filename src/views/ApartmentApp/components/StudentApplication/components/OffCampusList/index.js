@@ -52,7 +52,8 @@ const OffCampusList = ({ disabled, authentication, applicants, onOffCampusInputC
                     key={applicant.Profile.AD_Username}
                     disabled={disabled}
                     index={index}
-                    applicant={applicant}
+                    profile={applicant.Profile}
+                    offCampusProgram={applicant.OffCampusProgram}
                     departments={departments}
                     onOffCampusInputChange={onOffCampusInputChange}
                   />

@@ -30,8 +30,8 @@ import ApplicantListItem from './components/ApplicantListItem';
  * Renders the list of applicants, displayed by name, username, and class standing.
  * @param {Object} props The React component props
  * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
- * @param {Boolean} props.authentication The user authentication
- * @param {ApplicationDetails} props.applicationDetails Object containing the details of this application
+ * @param {StudentProfileInfo} props.editorProfile The StudentProfileInfo of the application editor
+ * @param {ApartmentApplicant[]} props.applicants Array of applicant info
  * @param {Number} props.maxNumApplicants The maximum number of applicants allowed on an apartment application
  * @param {CallbackFcn} props.onSearchSubmit Callback for apartment people search submission
  * @param {CallbackFcn} props.onChangeEditor Callback for change editor button
@@ -40,8 +40,8 @@ import ApplicantListItem from './components/ApplicantListItem';
  */
 const ApplicantList = ({
   disabled,
-  authentication,
-  applicationDetails: { EditorProfile, Applicants },
+  editorProfile,
+  applicants,
   maxNumApplicants,
   onSearchSubmit,
   onChangeEditor,
@@ -93,14 +93,14 @@ const ApplicantList = ({
                 </List>
               </Collapse>
               <Divider />
-              {Applicants?.length > 0 ? (
-                Applicants.map((applicant) => (
+              {applicants?.length > 0 ? (
+                applicants.map((applicant) => (
                   <ApplicantListItem
                     key={applicant.Profile.AD_Username}
                     disabled={disabled}
                     profile={applicant.Profile}
                     isApplicationEditor={
-                      applicant.Profile.AD_Username === EditorProfile.AD_Username
+                      applicant.Profile.AD_Username === editorProfile.AD_Username
                     }
                     onChangeEditor={onChangeEditor}
                     onApplicantRemove={onApplicantRemove}
@@ -120,13 +120,13 @@ const ApplicantList = ({
             <Grid item xs={9} sm={5} className={'people-search-parent'}>
               <GordonPeopleSearch
                 disableLink
-                disabled={disabled || Applicants?.length > maxNumApplicants}
+                disabled={disabled || applicants?.length > maxNumApplicants}
                 icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={(selectedUsername) =>
                   selectedUsername && onSearchSubmit(selectedUsername)
                 }
-                authentication={authentication}
+                authentication
               />
             </Grid>
           </Grid>

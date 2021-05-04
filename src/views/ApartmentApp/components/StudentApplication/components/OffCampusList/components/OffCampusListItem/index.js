@@ -21,7 +21,7 @@ import {
  * @param {Object} props The React component props
  * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
  * @param {Number} props.index The index of this list item
- * @param {StudentProfileInfo} props.applicantProfile The StudentProfileInfo on the applicant
+ * @param {StudentProfileInfo} props.profile The StudentProfileInfo of the applicant
  * @param {String} props.offCampusProgram The name of the department of the off-campus program
  * @param {String[]} props.departments Array of departments available
  * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change

@@ -725,8 +725,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     <Grid item>
                       <ApplicantList
                         disabled={!canEditApplication}
+                        editorProfile={applicationDetails.EditorProfile}
+                        applicants={applicationDetails.Applicants ?? []}
                         maxNumApplicants={MAX_NUM_APPLICANTS}
-                        applicationDetails={applicationDetails}
                         onSearchSubmit={(searchSelection) =>
                           searchSelection && addApplicant(searchSelection)
                         }
