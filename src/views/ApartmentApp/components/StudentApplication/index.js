@@ -294,7 +294,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for applying the new application editor
    */
   const handleChangeEditorAccepted = () => {
-    setChangeEditorDialogOpen(false);
+    setChangeEditorDialogOpen(null);
     if (newEditorProfile?.AD_Username) {
       try {
         saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
@@ -728,7 +728,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       <GordonDialogBox
                         open={changeEditorDialogOpen}
                         onClose={(_event, reason) =>
-                          reason !== 'clickaway' && setChangeEditorDialogOpen(false)
+                          reason !== 'clickaway' && setChangeEditorDialogOpen(null)
                         }
                         labelledby={'applicant-warning-dialog'}
                         describedby={'changing-application-editor'}
@@ -736,7 +736,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         text={changeEditorAlertText}
                         buttonClicked={handleChangeEditorAccepted}
                         buttonName={'Accept'}
-                        cancelButtonClicked={() => setChangeEditorDialogOpen(false)}
+                        cancelButtonClicked={() => setChangeEditorDialogOpen(null)}
                         cancelButtonName={'Cancel'}
                         severity={'warning'}
                       />
@@ -827,7 +827,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
         </Backdrop>
         <GordonDialogBox
           open={deleteDialogOpen}
-          onClose={(_event, reason) => reason !== 'clickaway' && setDeleteDialogOpen(false)}
+          onClose={(_event, reason) => reason !== 'clickaway' && setDeleteDialogOpen(null)}
           labelledby={'delete-application-dialog'}
           describedby={'delete-application'}
           title={'Delete apartment application?'}
@@ -839,16 +839,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
             </span>
           }
           buttonClicked={() => {
-            setDeleteDialogOpen(false);
+            setDeleteDialogOpen(null);
             deleteApartmentApplication();
           }}
           buttonName={'Accept'}
-          cancelButtonClicked={() => setDeleteDialogOpen(false)}
+          cancelButtonClicked={() => setDeleteDialogOpen(null)}
           severity={'warning'}
         />
         <GordonDialogBox
           open={submitDialogOpen}
-          onClose={(_event, reason) => reason !== 'clickaway' && setSubmitDialogOpen(false)}
+          onClose={(_event, reason) => reason !== 'clickaway' && setSubmitDialogOpen(null)}
           labelledby={'submit-application-dialog'}
           describedby={'confirm-application'}
           title={'Submit apartment application?'}
@@ -861,11 +861,11 @@ const StudentApplication = ({ userProfile, authentication }) => {
             </span>
           }
           buttonClicked={() => {
-            setSubmitDialogOpen(false);
+            setSubmitDialogOpen(null);
             submitApplication();
           }}
           buttonName={'Accept'}
-          cancelButtonClicked={() => setSubmitDialogOpen(false)}
+          cancelButtonClicked={() => setSubmitDialogOpen(null)}
           severity={'warning'}
         />
         <GordonSnackbar
