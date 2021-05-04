@@ -24,9 +24,8 @@ import ClearIcon from '@material-ui/icons/Clear';
  * @param {Object} props The React component props
  * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
  * @param {Number} props.index The index of this list item
- * @param {Number} props.hallRank The rank assigned to this hall by the user
- * @param {String} props.hallName The name of the apartment hall
- * @param {ApartmentChoice[]} props.apartmentChoices Array of apartment choices
+ * @param {ApartmentChoice} props.apartmentChoice The ApartmentChoice object of this list item
+ * @param {ApartmentChoice[]} props.apartmentChoiceArray Array of apartment choices
  * @param {ApartmentHall[]} props.halls Array of apartment halls available
  * @param {CallbackFcn} props.onHallInputChange Callback for dropdown menu change
  * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
@@ -35,9 +34,8 @@ import ClearIcon from '@material-ui/icons/Clear';
 const HallChoiceListItem = ({
   disabled,
   index,
-  hallRank,
-  hallName,
-  apartmentChoices,
+  apartmentChoice: { HallRank, HallName },
+  apartmentChoiceArray,
   halls,
   onHallInputChange,
   onHallRemove,
@@ -45,41 +43,9 @@ const HallChoiceListItem = ({
   const [isHallNameValid, setIsHallNameValid] = useState(false);
 
   useEffect(
-    () => setIsHallNameValid(hallName === '' || halls.some((hall) => hall.Name === hallName)),
-    [hallName, halls],
+    () => setIsHallNameValid(HallName === '' || halls.some((hall) => hall.Name === HallName)),
+    [HallName, halls],
   );
-
-  /**
-   * Callback for changes to hall rank input field
-   * @param {*} event change event to be handled by callback
-   */
-  const handleRankInputChange = (event) => {
-    if (event.target.value !== null) {
-      let newHallRankValue = event.target.value;
-      onHallInputChange(newHallRankValue, hallName, index);
-    }
-  };
-
-  /**
-   * Callback for changes to hall name dropdown
-   * @param {*} event change event to be handled by callback
-   */
-  const handleNameInputChange = (event) => {
-    if (event.target.value !== null) {
-      let newHallNameValue = event.target.value;
-      onHallInputChange(hallRank, newHallNameValue, index);
-    }
-  };
-
-  /**
-   * Callback for hall list remove button
-   */
-  const handleRemove = () => {
-    if (index !== null) {
-      // Send this list item's index to the parent component
-      onHallRemove(index);
-    }
-  };
 
   const hallOptions = halls.map((hall) => (
     <MenuItem value={hall.Name} key={hall.Name}>
@@ -87,7 +53,7 @@ const HallChoiceListItem = ({
     </MenuItem>
   ));
 
-  const rankOptions = apartmentChoices.map((_hall, i) => (
+  const rankOptions = apartmentChoiceArray.map((_hall, i) => (
     <MenuItem value={i + 1} key={i + 1}>
       {i + 1}
     </MenuItem>
@@ -102,8 +68,11 @@ const HallChoiceListItem = ({
               <InputLabel>Rank</InputLabel>
               <Select
                 disabled={disabled}
-                value={hallRank}
-                onChange={handleRankInputChange}
+                value={HallRank}
+                onChange={(event) =>
+                  event.target.value !== null &&
+                  onHallInputChange?.(String(event.target.value), HallName, index)
+                }
                 input={<Input id={'rank' + index} />}
               >
                 {rankOptions}
@@ -115,8 +84,11 @@ const HallChoiceListItem = ({
               <InputLabel>Hall</InputLabel>
               <Select
                 disabled={disabled}
-                value={isHallNameValid ? hallName : ''}
-                onChange={handleNameInputChange}
+                value={isHallNameValid ? HallName : ''}
+                onChange={(event) =>
+                  event.target.value !== null &&
+                  onHallInputChange?.(HallRank, String(event.target.value), index)
+                }
                 input={<Input id={'hall' + index} />}
               >
                 {hallOptions}
@@ -130,7 +102,12 @@ const HallChoiceListItem = ({
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete" disabled={disabled} onClick={handleRemove}>
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            disabled={disabled}
+            onClick={() => index && onHallRemove?.(index)}
+          >
             <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>

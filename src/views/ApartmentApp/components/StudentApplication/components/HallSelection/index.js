@@ -49,28 +49,6 @@ const HallChoiceList = ({
     }
   }, [authentication]);
 
-  /**
-   * Callback for changes to hall list item name and/or rank
-   * @param {Number} hallRankValue The rank value that the user assigned to this hall
-   * @param {String} hallNameValue The name of the hall that was selected
-   * @param {Number} index The index of the hall in the list
-   */
-  const handleInputChange = (hallRankValue, hallNameValue, index) => {
-    onHallInputChange(hallRankValue, hallNameValue, index);
-  };
-
-  /**
-   * Callback for hall list remove button
-   * @param {Number} index The index of the hall to be removed from the list of perferred halls
-   */
-  const handleRemove = (index) => {
-    // Make sure the chosen index was not null
-    if (index !== null) {
-      // Send the selected index to the parent component
-      onHallRemove(index);
-    }
-  };
-
   return (
     <Card>
       <CardHeader title="Preferred Halls" className="apartment-card-header" />
@@ -84,12 +62,11 @@ const HallChoiceList = ({
                     key={index + hallInfo.HallRank + hallInfo.HallName}
                     disabled={disabled}
                     index={index}
-                    hallRank={hallInfo.HallRank}
-                    hallName={hallInfo.HallName}
-                    apartmentChoices={apartmentChoices}
+                    apartmentChoice={hallInfo}
+                    apartmentChoiceArray={apartmentChoices}
                     halls={halls}
-                    onHallInputChange={handleInputChange}
-                    onHallRemove={handleRemove}
+                    onHallInputChange={onHallInputChange}
+                    onHallRemove={() => index && onHallRemove?.(index)}
                   />
                 ))}
             </List>
