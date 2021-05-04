@@ -692,20 +692,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
   );
 
   if (loading) {
-    return (
-      <div className="apartment-application">
-        <Grid container justify="center">
-          <Grid container item xs={12} lg={10} xl={8} justify="center" spacing={2}>
-            <Grid item xs={12}>
-              <GordonLoader />
-            </Grid>
-            <Grid item xs={12}>
-              <InstructionsCard />
-            </Grid>
-          </Grid>
-        </Grid>
-      </div>
-    );
+    return <GordonLoader />;
   } else {
     return (
       <div className="apartment-application">
