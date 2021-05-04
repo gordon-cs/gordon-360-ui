@@ -32,7 +32,7 @@ import ClearIcon from '@material-ui/icons/Clear';
  * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
  * @returns {JSX.Element} JSX Element for the hall list item
  */
-const HallListItem = ({
+const HallChoiceListItem = ({
   disabled,
   index,
   hallRank,
@@ -140,4 +140,4 @@ const HallListItem = ({
   );
 };
 
-export default HallListItem;
+export default HallChoiceListItem;

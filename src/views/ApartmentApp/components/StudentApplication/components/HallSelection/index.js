@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import HallListItem from './components/HallListItem';
+import HallChoiceListItem from './components/HallListItem';
 import housing from 'services/housing';
 
 /**
@@ -10,8 +10,18 @@ import housing from 'services/housing';
  * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
  */
 
-// Create a list of selection boxes to choosing preferred halls
-const HallSelection = ({
+/**
+ * Renders a list of selection boxes to choosing preferred halls
+ * @param {Object} props The React component props
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {*} props.authentication The user authentication
+ * @param {ApartmentChoice[]} props.apartmentChoices Array of apartment choices
+ * @param {CallbackFcn} props.onHallAdd Callback for "Add Hall" button
+ * @param {CallbackFcn} props.onHallInputChange Callback for dropdown menu change
+ * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
+ * @returns {JSX.Element} JSX Element for the hall list item
+ */
+const HallChoiceList = ({
   disabled,
   authentication,
   apartmentChoices,
@@ -70,7 +80,7 @@ const HallSelection = ({
             <List className="hall-list" aria-label="apartment preferred halls" disablePadding>
               {apartmentChoices?.length > 0 &&
                 apartmentChoices.map((hallInfo, index) => (
-                  <HallListItem
+                  <HallChoiceListItem
                     key={index + hallInfo.HallRank + hallInfo.HallName}
                     disabled={disabled}
                     index={index}
@@ -101,7 +111,7 @@ const HallSelection = ({
   );
 };
 
-HallSelection.propTypes = {
+HallChoiceList.propTypes = {
   disabled: PropTypes.bool,
   authentication: PropTypes.any,
   apartmentChoices: PropTypes.array.isRequired,
@@ -110,4 +120,4 @@ HallSelection.propTypes = {
   onHallRemove: PropTypes.func,
 };
 
-export default HallSelection;
+export default HallChoiceList;
