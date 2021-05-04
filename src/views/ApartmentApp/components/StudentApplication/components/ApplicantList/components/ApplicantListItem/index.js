@@ -20,9 +20,16 @@ import user from 'services/user';
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
 
-// Based off src/views/PeopleSearch/components/PeopleSearchResult
-// but using props.profile of type StudentProfileInfo
-// rather than using Person of type PeopleSearchResult
+/**
+ * Renders the list item for the apartment applicant list
+ * @param {Object} props The React component props
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {StudentProfileInfo} props.profile The StudentProfileInfo of the applicant
+ * @param {Boolean} props.isApplicationEditor Boolean indicating whether this list item corresponds to the application editor
+ * @param {CallbackFcn} props.onChangeEditor Callback for change editor button
+ * @param {CallbackFcn} props.onApplicantRemove Callback for remove applicant button
+ * @returns {JSX.Element} JSX Element for the hall list item
+ */
 const ApplicantListItem = ({
   disabled,
   profile,
