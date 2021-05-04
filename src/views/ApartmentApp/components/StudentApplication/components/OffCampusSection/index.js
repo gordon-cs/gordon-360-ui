@@ -4,8 +4,21 @@ import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
 import OffCampusListItem from './components/OffCampusListItem';
 import goStalk from 'services/goStalk';
 
-// Create a list of selection boxes to choosing which applicants are doing off campus programs.
-const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInputChange }) => {
+/**
+ * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
+ * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
+/**
+ * Renders the list of selection boxes to choosing which applicants are doing off campus programs.
+ * @param {Object} props The React component props
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {*} props.authentication The user authentication
+ * @param {ApartmentApplicant[]} props.applicants Array of applicant info
+ * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
+ * @returns {JSX.Element} JSX Element for the hall list item
+ */
+const OffCampusList = ({ disabled, authentication, applicants, onOffCampusInputChange }) => {
   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
@@ -53,11 +66,11 @@ const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInp
   );
 };
 
-OffCampusSection.propTypes = {
+OffCampusList.propTypes = {
   disabled: PropTypes.bool,
   authentication: PropTypes.any,
   applicants: PropTypes.array.isRequired,
   onOffCampusInputChange: PropTypes.func,
 };
 
-export default OffCampusSection;
+export default OffCampusList;
