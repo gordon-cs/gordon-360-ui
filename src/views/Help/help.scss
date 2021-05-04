@@ -1,7 +1,6 @@
 @import '../../vars';
 
 strong {
-  font-size: 15px;
   font-weight: bold;
   margin-top: 20px;
 }
@@ -13,8 +12,13 @@ strong {
     list-style-type: '⮞ ';
   }
 
-  & .MuiCard-root {
-    box-shadow: none;
+  li li {
+    list-style-type: '⮚ ';
+  }
+
+  //TODO: Remove this when timesheets bugs are resolved
+  ul {
+    text-align: start;
   }
 
   &-title {
@@ -22,17 +26,8 @@ strong {
     padding: 1rem;
   }
 
-  &-contributors.MuiTypography-root {
-    white-space: pre-wrap;
-    margin-left: 1rem;
-  }
-
   &-header {
     background-color: $primary-blue;
     color: $neutral-white;
-  }
-  //TODO Issue #1098 - remove when timeshets.scss stops centering grid items
-  &-content {
-    text-align: start;
   }
 }
