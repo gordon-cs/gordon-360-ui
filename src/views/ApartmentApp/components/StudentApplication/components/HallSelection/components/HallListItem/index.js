@@ -106,7 +106,7 @@ const HallChoiceListItem = ({
             edge="end"
             aria-label="delete"
             disabled={disabled}
-            onClick={() => index && onHallRemove?.(index)}
+            onClick={index && onHallRemove?.(index)}
           >
             <ClearIcon />
           </IconButton>
