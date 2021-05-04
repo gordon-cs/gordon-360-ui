@@ -723,72 +723,32 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 <Grid container direction="row" justify="center" spacing={2}>
                   <Grid container item md={7} xl={6} direction="column" spacing={2}>
                     <Grid item>
-                      {canEditApplication ? (
-                        <ApplicantList
-                          maxNumApplicants={MAX_NUM_APPLICANTS}
-                          applicationDetails={applicationDetails}
-                          onSearchSubmit={(searchSelection) =>
-                            searchSelection && addApplicant(searchSelection)
-                          }
-                          onChangeEditor={handleChangeEditor}
-                          onApplicantRemove={handleApplicantRemove}
-                          authentication={authentication}
-                        />
-                      ) : (
-                        <ApplicantList
-                          disabled
-                          maxNumApplicants={MAX_NUM_APPLICANTS}
-                          applicationDetails={applicationDetails}
-                          authentication={authentication}
-                        />
-                      )}
-                      <GordonDialogBox
-                        open={changeEditorDialogOpen}
-                        onClose={(_event, reason) =>
-                          reason !== 'clickaway' && setChangeEditorDialogOpen(null)
+                      <ApplicantList
+                        disabled={!canEditApplication}
+                        maxNumApplicants={MAX_NUM_APPLICANTS}
+                        applicationDetails={applicationDetails}
+                        onSearchSubmit={(searchSelection) =>
+                          searchSelection && addApplicant(searchSelection)
                         }
-                        labelledby={'applicant-warning-dialog'}
-                        describedby={'changing-application-editor'}
-                        title={'Change application editor?'}
-                        text={changeEditorAlertText}
-                        buttonClicked={handleChangeEditorAccepted}
-                        buttonName={'Accept'}
-                        cancelButtonClicked={() => setChangeEditorDialogOpen(null)}
-                        cancelButtonName={'Cancel'}
-                        severity={'warning'}
+                        onChangeEditor={handleChangeEditor}
+                        onApplicantRemove={handleApplicantRemove}
                       />
                     </Grid>
                     <Grid item>
-                      {canEditApplication ? (
-                        <HallChoiceList
-                          authentication
-                          apartmentChoices={applicationDetails.ApartmentChoices ?? []}
-                          onHallAdd={handleHallAdd}
-                          onHallInputChange={handleHallInputChange}
-                          onHallRemove={handleHallRemove}
-                        />
-                      ) : (
-                        <HallChoiceList
-                          disabled
-                          authentication
-                          apartmentChoices={applicationDetails.ApartmentChoices ?? []}
-                        />
-                      )}
+                      <HallChoiceList
+                        disabled={!canEditApplication}
+                        apartmentChoices={applicationDetails.ApartmentChoices ?? []}
+                        onHallAdd={handleHallAdd}
+                        onHallInputChange={handleHallInputChange}
+                        onHallRemove={handleHallRemove}
+                      />
                     </Grid>
                     <Grid item>
-                      {canEditApplication ? (
-                        <OffCampusList
-                          authentication
-                          applicants={applicationDetails.Applicants ?? []}
-                          onOffCampusInputChange={handleOffCampusInputChange}
-                        />
-                      ) : (
-                        <OffCampusList
-                          disabled
-                          authentication
-                          applicants={applicationDetails.Applicants ?? []}
-                        />
-                      )}
+                      <OffCampusList
+                        disabled={!canEditApplication}
+                        applicants={applicationDetails.Applicants ?? []}
+                        onOffCampusInputChange={handleOffCampusInputChange}
+                      />
                     </Grid>
                   </Grid>
                   <Grid container item md direction="column" spacing={2}>
