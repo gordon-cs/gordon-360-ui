@@ -72,7 +72,7 @@ const StaffMenu = ({ userProfile }) => {
       const filteredApplications =
         applications
           ?.filter((applicationDetails) => applicationDetails?.DateSubmitted) // Only add the applications that have been submitted
-          ?.map(({ Applicants, ApartmentChoices, ...applicationDetails }) => {
+          ?.map(({ EditorProfile, Applicants, ApartmentChoices, ...applicationDetails }) => {
             // Filter out the Applicants and ApartmentChoices arrays from the applicationDetails so that they may be added to the corresponding CSV files
 
             /**
