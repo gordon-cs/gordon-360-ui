@@ -22,18 +22,30 @@ import GordonPeopleSearch from 'components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
 
 /**
+ * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
 
-// Create a list of applicants, displayed by name, username, and class standing.
+/**
+ * Renders the list of applicants, displayed by name, username, and class standing.
+ * @param {Object} props The React component props
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {*} props.authentication The user authentication
+ * @param {ApplicationDetails} props.applicationDetails Object containing the details of this application
+ * @param {Number} props.maxNumApplicants The maximum number of applicants allowed on an apartment application
+ * @param {CallbackFcn} props.onSearchSubmit Callback for apartment people search submission
+ * @param {CallbackFcn} props.onChangeEditor Callback for change editor button
+ * @param {CallbackFcn} props.onApplicantRemove Callback for remove applicant button
+ * @returns {JSX.Element} JSX Element for the hall list item
+ */
 const ApplicantList = ({
   disabled,
+  authentication,
+  applicationDetails: { EditorProfile, Applicants },
   maxNumApplicants,
-  applicationDetails,
   onSearchSubmit,
   onChangeEditor,
   onApplicantRemove,
-  authentication,
 }) => {
   const [showHelp, setShowHelp] = useState(false);
 
