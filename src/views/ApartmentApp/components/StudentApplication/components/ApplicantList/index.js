@@ -93,14 +93,14 @@ const ApplicantList = ({
                 </List>
               </Collapse>
               <Divider />
-              {applicationDetails.Applicants?.length > 0 ? (
-                applicationDetails.Applicants.map((applicant) => (
+              {Applicants?.length > 0 ? (
+                Applicants.map((applicant) => (
                   <ApplicantListItem
                     key={applicant.Profile.AD_Username}
                     disabled={disabled}
                     profile={applicant.Profile}
                     isApplicationEditor={
-                      applicant.Profile.AD_Username === applicationDetails.EditorProfile.AD_Username
+                      applicant.Profile.AD_Username === EditorProfile.AD_Username
                     }
                     onChangeEditor={onChangeEditor}
                     onApplicantRemove={onApplicantRemove}
@@ -120,7 +120,7 @@ const ApplicantList = ({
             <Grid item xs={9} sm={5} className={'people-search-parent'}>
               <GordonPeopleSearch
                 disableLink
-                disabled={disabled || applicationDetails.Applicants?.length > maxNumApplicants}
+                disabled={disabled || Applicants?.length > maxNumApplicants}
                 icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={(selectedUsername) =>
