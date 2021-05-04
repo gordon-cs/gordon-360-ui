@@ -14,7 +14,7 @@ import housing from 'services/housing';
  * Renders a list of selection boxes to choosing preferred halls
  * @param {Object} props The React component props
  * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
- * @param {*} props.authentication The user authentication
+ * @param {Boolean} props.authentication The user authentication
  * @param {ApartmentChoice[]} props.apartmentChoices Array of apartment choices
  * @param {CallbackFcn} props.onHallAdd Callback for "Add Hall" button
  * @param {CallbackFcn} props.onHallInputChange Callback for dropdown menu change

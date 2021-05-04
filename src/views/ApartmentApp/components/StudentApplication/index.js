@@ -37,7 +37,7 @@ const BLANK_APPLICATION_DETAILS = {
 /**
  * Renders the page for the student apartment application
  * @param {Object} props The React component props
- * @param {*} props.authentication The user authentication
+ * @param {Boolean} props.authentication The user authentication
  * @param {StudentProfileInfo} props.userProfile The student profile info of the current user
  * @returns {JSX.Element} JSX Element for the student application web page
  */

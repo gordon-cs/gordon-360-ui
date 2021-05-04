@@ -30,7 +30,7 @@ import ApplicantListItem from './components/ApplicantListItem';
  * Renders the list of applicants, displayed by name, username, and class standing.
  * @param {Object} props The React component props
  * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
- * @param {*} props.authentication The user authentication
+ * @param {Boolean} props.authentication The user authentication
  * @param {ApplicationDetails} props.applicationDetails Object containing the details of this application
  * @param {Number} props.maxNumApplicants The maximum number of applicants allowed on an apartment application
  * @param {CallbackFcn} props.onSearchSubmit Callback for apartment people search submission
