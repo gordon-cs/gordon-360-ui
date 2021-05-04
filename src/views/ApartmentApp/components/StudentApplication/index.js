@@ -400,7 +400,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {Number} index The index of the hall in the list
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
-    if (index !== null && index >= 0) {
+    if ((index ?? -1) > -1) {
       // Error checking on the hallNameValue before modifying the newHallInfo object
       if (
         hallNameValue !== applicationDetails.ApartmentChoices[index].HallName &&
@@ -485,7 +485,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @param {Number} index The index of the applicant in the list
    */
   const handleOffCampusInputChange = (offCampusProgramValue, index) => {
-    if (index !== null && index >= 0) {
+    if ((index ?? -1) > -1) {
       let newApplicant = {
         ...applicationDetails.Applicants[index],
         OffCampusProgram: offCampusProgramValue,

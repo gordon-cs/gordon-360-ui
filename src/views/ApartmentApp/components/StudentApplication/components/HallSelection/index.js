@@ -66,7 +66,7 @@ const HallChoiceList = ({
                     apartmentChoiceArray={apartmentChoices}
                     halls={halls}
                     onHallInputChange={onHallInputChange}
-                    onHallRemove={() => index && onHallRemove?.(index)}
+                    onHallRemove={onHallRemove}
                   />
                 ))}
             </List>
