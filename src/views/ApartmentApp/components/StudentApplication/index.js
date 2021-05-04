@@ -8,8 +8,8 @@ import GordonSnackbar from 'components/Snackbar';
 import InstructionsCard from './components/InstructionsCard';
 import ApplicationDataTable from './components/ApplicationDataTable';
 import ApplicantList from './components/ApplicantList';
-import HallSelection from './components/HallSelection';
-import OffCampusSection from './components/OffCampusSection';
+import HallChoiceList from './components/HallSelection';
+import OffCampusList from './components/OffCampusSection';
 import Agreements from './components/Agreements';
 import BottomBar from './components/BottomBar';
 import { AuthError, createError, NotFoundError } from 'services/error';
@@ -765,7 +765,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Grid>
                     <Grid item>
                       {canEditApplication ? (
-                        <HallSelection
+                        <HallChoiceList
                           authentication
                           apartmentChoices={applicationDetails.ApartmentChoices ?? []}
                           onHallAdd={handleHallAdd}
@@ -773,7 +773,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                           onHallRemove={handleHallRemove}
                         />
                       ) : (
-                        <HallSelection
+                        <HallChoiceList
                           disabled
                           authentication
                           apartmentChoices={applicationDetails.ApartmentChoices ?? []}
@@ -782,13 +782,13 @@ const StudentApplication = ({ userProfile, authentication }) => {
                     </Grid>
                     <Grid item>
                       {canEditApplication ? (
-                        <OffCampusSection
+                        <OffCampusList
                           authentication
                           applicants={applicationDetails.Applicants ?? []}
                           onOffCampusInputChange={handleOffCampusInputChange}
                         />
                       ) : (
-                        <OffCampusSection
+                        <OffCampusList
                           disabled
                           authentication
                           applicants={applicationDetails.Applicants ?? []}
