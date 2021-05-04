@@ -21,7 +21,8 @@ import {
  * @param {Object} props The React component props
  * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
  * @param {Number} props.index The index of this list item
- * @param {ApartmentApplicant} props.applicants Object containing the applicant info for this list item
+ * @param {StudentProfileInfo} props.applicantProfile The StudentProfileInfo on the applicant
+ * @param {String} props.offCampusProgram The name of the department of the off-campus program
  * @param {String[]} props.departments Array of departments available
  * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
  * @returns {JSX.Element} JSX Element for the off-campus program list
@@ -29,7 +30,8 @@ import {
 const OffCampusListItem = ({
   disabled,
   index,
-  applicant: { Profile, OffCampusProgram },
+  profile,
+  offCampusProgram,
   departments,
   onOffCampusInputChange,
 }) => {
@@ -37,17 +39,17 @@ const OffCampusListItem = ({
   const [isSelectionValid, setIsSelectionValid] = useState(false);
 
   useEffect(
-    () => setHasNickname(Profile.FirstName !== Profile.NickName && Profile.NickName !== ''),
-    [Profile],
+    () => setHasNickname(profile.FirstName !== profile.NickName && profile.NickName !== ''),
+    [profile],
   );
 
   useEffect(
     () =>
       setIsSelectionValid(
-        OffCampusProgram === '' ||
-          departments.some((departmentName) => departmentName === OffCampusProgram),
+        offCampusProgram === '' ||
+          departments.some((departmentName) => departmentName === offCampusProgram),
       ),
-    [OffCampusProgram, departments],
+    [offCampusProgram, departments],
   );
 
   const departmentOptions = departments.map((departmentName) => (
@@ -57,22 +59,22 @@ const OffCampusListItem = ({
   ));
 
   const displayName = hasNickName
-    ? `${Profile.FirstName} ${Profile.LastName} (${Profile.NickName})`
-    : `${Profile.FirstName} ${Profile.LastName}`;
+    ? `${profile.FirstName} ${profile.LastName} (${profile.NickName})`
+    : `${profile.FirstName} ${profile.LastName}`;
 
   return (
     <React.Fragment>
-      <ListItem key={Profile.AD_Username} className={'list-item'}>
+      <ListItem key={profile.AD_Username} className={'list-item'}>
         <Grid container alignItems="flex-end" spacing={1}>
           <Grid item xs={12} sm={4}>
-            <ListItemText primary={displayName ?? Profile.AD_Username} className={'list-item'} />
+            <ListItemText primary={displayName ?? profile.AD_Username} className={'list-item'} />
           </Grid>
           <Grid item xs={12} sm={8}>
             <FormControl fullWidth error={!isSelectionValid}>
               <InputLabel shrink>Department</InputLabel>
               <Select
                 disabled={disabled}
-                value={isSelectionValid ? OffCampusProgram : ''}
+                value={isSelectionValid ? offCampusProgram : ''}
                 onChange={(event) =>
                   event.target.value !== null &&
                   (index ?? -1) > -1 &&
