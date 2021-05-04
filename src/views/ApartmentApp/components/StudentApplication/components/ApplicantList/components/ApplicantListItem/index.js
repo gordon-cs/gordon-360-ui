@@ -95,7 +95,7 @@ const ApplicantListItem = ({
               <IconButton
                 aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
                 disabled={isApplicationEditor || disabled}
-                onClick={onChangeEditor && profile && onChangeEditor(profile)}
+                onClick={profile && onChangeEditor?.(profile)}
               >
                 {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
               </IconButton>
@@ -104,11 +104,7 @@ const ApplicantListItem = ({
               <IconButton
                 aria-label="remove-applicant"
                 disabled={isApplicationEditor || disabled}
-                onClick={
-                  onApplicantRemove &&
-                  profile?.AD_Username &&
-                  onApplicantRemove(profile.AD_Username)
-                }
+                onClick={profile?.AD_Username && onApplicantRemove?.(profile.AD_Username)}
               >
                 <ClearIcon />
               </IconButton>
