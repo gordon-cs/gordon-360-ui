@@ -680,6 +680,23 @@ const StudentApplication = ({ userProfile, authentication }) => {
     </span>
   );
 
+  const deleteAlertText = (
+    <span>
+      Are you sure you want to delete this application?
+      <br />
+      This action cannot be undone.
+    </span>
+  );
+
+  // TODO: Improve this text for the users
+  const submitAlertText = (
+    <span>
+      Please confirm that all the information you have entered is valid
+      <br />
+      Click "Accept" below to submit this application
+    </span>
+  );
+
   if (loading) {
     return <GordonLoader />;
   } else {
