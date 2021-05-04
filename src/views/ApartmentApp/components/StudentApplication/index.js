@@ -506,6 +506,46 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
+   * Delete the current application in the database
+   *
+   * @async
+   * @function deleteApartmentApplication
+   */
+  const deleteApartmentApplication = async () => {
+    setDeleting(true);
+    setDeleteButtonAlertTimeout(null);
+    try {
+      const result = await housing.deleteApartmentApplication(applicationDetails.ApplicationID);
+      if (result) {
+        setDeleting('success');
+        loadApplication();
+        setApplicationCardsOpen(false);
+      } else {
+        throw new Error('Failed to delete application');
+      }
+    } catch (e) {
+      if (e instanceof AuthError) {
+        createSnackbar('You are not authorized to make changes to this application.', 'error');
+      } else if (e instanceof NotFoundError) {
+        createSnackbar('Error: This application was not found in the database.', 'error');
+      } else {
+        createSnackbar('Something went wrong while trying to delete the application.', 'error');
+      }
+      setDeleting('error');
+    } finally {
+      if (deleteButtonAlertTimeout === null) {
+        // Shows the success icon for 6 seconds and then returns back to normal button
+        setDeleteButtonAlertTimeout(
+          setTimeout(() => {
+            setDeleteButtonAlertTimeout(null);
+            setDeleting(false);
+          }, DYNAMIC_ICON_TIMEOUT),
+        );
+      }
+    }
+  };
+
+  /**
    * Save the current state of the application to the database
    *
    * @async
@@ -568,46 +608,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         );
       }
       return result;
-    }
-  };
-
-  /**
-   * Delete the current application in the database
-   *
-   * @async
-   * @function deleteApartmentApplication
-   */
-  const deleteApartmentApplication = async () => {
-    setDeleting(true);
-    setDeleteButtonAlertTimeout(null);
-    try {
-      const result = await housing.deleteApartmentApplication(applicationDetails.ApplicationID);
-      if (result) {
-        setDeleting('success');
-        loadApplication();
-        setApplicationCardsOpen(false);
-      } else {
-        throw new Error('Failed to delete application');
-      }
-    } catch (e) {
-      if (e instanceof AuthError) {
-        createSnackbar('You are not authorized to make changes to this application.', 'error');
-      } else if (e instanceof NotFoundError) {
-        createSnackbar('Error: This application was not found in the database.', 'error');
-      } else {
-        createSnackbar('Something went wrong while trying to delete the application.', 'error');
-      }
-      setDeleting('error');
-    } finally {
-      if (deleteButtonAlertTimeout === null) {
-        // Shows the success icon for 6 seconds and then returns back to normal button
-        setDeleteButtonAlertTimeout(
-          setTimeout(() => {
-            setDeleteButtonAlertTimeout(null);
-            setDeleting(false);
-          }, DYNAMIC_ICON_TIMEOUT),
-        );
-      }
     }
   };
 
