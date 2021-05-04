@@ -1,7 +1,7 @@
 //Student apartment application page
 import React, { useState, useEffect, useCallback } from 'react';
 import { sortBy } from 'lodash';
-import { Collapse, Grid } from '@material-ui/core/';
+import { Backdrop, Collapse, Grid } from '@material-ui/core/';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
@@ -294,6 +294,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * Callback for applying the new application editor
    */
   const handleChangeEditorAccepted = () => {
+    setChangeEditorDialogOpen(false);
     if (newEditorProfile?.AD_Username) {
       try {
         saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
@@ -302,7 +303,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         changeApplicationEditor(newEditorProfile); //! Will be deprecated eventually...
       } finally {
         setCanEditApplication(false);
-        handleCloseDialog();
       }
     } else {
       console.debug(
@@ -578,7 +578,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function deleteApartmentApplication
    */
   const deleteApartmentApplication = async () => {
-    handleCloseDialog();
     setDeleting(true);
     setDeleteButtonAlertTimeout(null);
     try {
@@ -619,7 +618,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
    * @function submitApplication
    */
   const submitApplication = async () => {
-    handleCloseDialog();
     setSubmitStatus(true);
     setSubmitButtonAlertTimeout(null);
     try {
@@ -664,15 +662,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
         );
       }
     }
-  };
-
-  /**
-   * Callback for closing the alert dialog
-   */
-  const handleCloseDialog = () => {
-    setChangeEditorDialogOpen(false);
-    setDeleteDialogOpen(false);
-    setSubmitDialogOpen(false);
   };
 
   const createSnackbar = (message, severity) => {
@@ -738,14 +727,16 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       )}
                       <GordonDialogBox
                         open={changeEditorDialogOpen}
-                        onClose={(_event, reason) => reason !== 'clickaway' && handleCloseDialog()}
+                        onClose={(_event, reason) =>
+                          reason !== 'clickaway' && setChangeEditorDialogOpen(false)
+                        }
                         labelledby={'applicant-warning-dialog'}
                         describedby={'changing-application-editor'}
                         title={'Change application editor?'}
                         text={changeEditorAlertText}
                         buttonClicked={handleChangeEditorAccepted}
                         buttonName={'Accept'}
-                        cancelButtonClicked={handleCloseDialog}
+                        cancelButtonClicked={() => setChangeEditorDialogOpen(false)}
                         cancelButtonName={'Cancel'}
                         severity={'warning'}
                       />
@@ -806,7 +797,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                 applicationCardsOpen={applicationCardsOpen}
                 applicationID={applicationDetails.ApplicationID}
                 canEditApplication={canEditApplication}
-                deleteDialogOpen={deleteDialogOpen}
                 deleting={deleting}
                 disableSubmit={
                   applicationDetails?.DateSubmitted ||
@@ -820,21 +810,64 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   )
                 }
                 saving={saving}
-                submitDialogOpen={submitDialogOpen}
                 submitStatus={applicationDetails.DateSubmitted ? 'success' : submitStatus}
                 unsavedChanges={unsavedChanges}
-                onCloseDialog={(_event, reason) => reason !== 'clickaway' && handleCloseDialog()}
-                onCloseOkay={handleCloseDialog}
-                onDeleteAppAccepted={() => deleteApartmentApplication()}
                 onDeleteButtonClick={() => setDeleteDialogOpen(true)}
-                onSaveButtonClick={() => saveApartmentApplication(applicationDetails)}
+                onSaveButtonClick={() => {
+                  saveApartmentApplication(applicationDetails);
+                }}
                 onShowApplication={() => setApplicationCardsOpen(true)}
-                onSubmitAppAccepted={() => submitApplication()}
                 onSubmitButtonClick={() => setSubmitDialogOpen(true)}
               />
             </Grid>
           </Grid>
         </Grid>
+        <Backdrop open={saving === true || submitStatus === true}>
+          <GordonLoader />
+        </Backdrop>
+        <GordonDialogBox
+          open={deleteDialogOpen}
+          onClose={(_event, reason) => reason !== 'clickaway' && setDeleteDialogOpen(false)}
+          labelledby={'delete-application-dialog'}
+          describedby={'delete-application'}
+          title={'Delete apartment application?'}
+          text={
+            <span>
+              Are you sure you want to delete this application?
+              <br />
+              This action cannot be undone.
+            </span>
+          }
+          buttonClicked={() => {
+            setDeleteDialogOpen(false);
+            deleteApartmentApplication();
+          }}
+          buttonName={'Accept'}
+          cancelButtonClicked={() => setDeleteDialogOpen(false)}
+          severity={'warning'}
+        />
+        <GordonDialogBox
+          open={submitDialogOpen}
+          onClose={(_event, reason) => reason !== 'clickaway' && setSubmitDialogOpen(false)}
+          labelledby={'submit-application-dialog'}
+          describedby={'confirm-application'}
+          title={'Submit apartment application?'}
+          text={
+            <span>
+              Please confirm that all the information you have entered is valid before submitting
+              the application
+              <br />
+              Click "Accept" below to submit this application
+            </span>
+          }
+          buttonClicked={() => {
+            setSubmitDialogOpen(false);
+            submitApplication();
+          }}
+          buttonName={'Accept'}
+          cancelButtonClicked={() => setSubmitDialogOpen(false)}
+          severity={'warning'}
+        />
         <GordonSnackbar
           open={snackbar.open}
           text={snackbar.message}

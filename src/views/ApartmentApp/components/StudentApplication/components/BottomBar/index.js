@@ -1,47 +1,22 @@
 import React from 'react';
-import { Backdrop, Card, CardContent, Grid, Typography } from '@material-ui/core/';
+import { Card, CardContent, Grid, Typography } from '@material-ui/core/';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PublishIcon from '@material-ui/icons/Publish';
 import SaveIcon from '@material-ui/icons/Save';
 import DynamicButton from 'components/DynamicButton';
-import GordonDialogBox from 'components/GordonDialogBox';
-import GordonLoader from 'components/Loader';
-
-const deleteAlertText = (
-  <span>
-    Are you sure you want to delete this application?
-    <br />
-    This action cannot be undone.
-  </span>
-);
-
-// TODO: Improve this text for the users
-const submitAlertText = (
-  <span>
-    Please confirm that all the information you have entered is valid
-    <br />
-    Click "Accept" below to submit this application
-  </span>
-);
 
 const BottomBar = ({
   applicationCardsOpen,
   applicationID,
   canEditApplication,
-  deleteDialogOpen,
   deleting,
   disableSubmit,
   saving,
-  submitDialogOpen,
   submitStatus,
   unsavedChanges,
-  onCloseDialog,
-  onCloseOkay,
-  onDeleteAppAccepted,
   onDeleteButtonClick,
   onSaveButtonClick,
   onShowApplication,
-  onSubmitAppAccepted,
   onSubmitButtonClick,
 }) => {
   let dynamicContent = {
@@ -163,35 +138,6 @@ const BottomBar = ({
               </>
             )}
           </Grid>
-          <Backdrop open={saving === true || submitStatus === true}>
-            <GordonLoader />
-          </Backdrop>
-          <GordonDialogBox
-            open={deleteDialogOpen}
-            onClose={onCloseDialog}
-            labelledby={'submit-application-dialog'}
-            describedby={'confirm-application'}
-            title={'Delete apartment application?'}
-            text={deleteAlertText}
-            buttonClicked={onDeleteAppAccepted}
-            buttonName={'Accept'}
-            cancelButtonClicked={onCloseOkay}
-            cancelButtonName={'Cancel'}
-            severity={'warning'}
-          />
-          <GordonDialogBox
-            open={submitDialogOpen}
-            onClose={onCloseDialog}
-            labelledby={'submit-application-dialog'}
-            describedby={'confirm-application'}
-            title={'Submit apartment application?'}
-            text={submitAlertText}
-            buttonClicked={onSubmitAppAccepted}
-            buttonName={'Accept'}
-            cancelButtonClicked={onCloseOkay}
-            cancelButtonName={'Cancel'}
-            severity={'warning'}
-          />
         </Grid>
       </CardContent>
     </Card>
