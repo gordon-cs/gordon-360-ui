@@ -394,6 +394,21 @@ const StudentApplication = ({ userProfile, authentication }) => {
   };
 
   /**
+   * Callback for hall list add button
+   */
+  const handleHallAdd = () => {
+    const newPlaceholderHall = {
+      ApplicationID: applicationDetails.ApplicationID,
+      HallRank: (applicationDetails.ApartmentChoices?.length ?? 0) + 1,
+      HallName: '',
+    };
+    setApplicationDetails((prevApplicationDetails) => ({
+      ...prevApplicationDetails,
+      ApartmentChoices: [...(prevApplicationDetails.ApartmentChoices ?? []), newPlaceholderHall],
+    }));
+  };
+
+  /**
    * Callback for changes to hall list item name and/or rank
    * @param {Number} hallRankValue The rank value that the user assigned to this hall
    * @param {String} hallNameValue The name of the hall that was selected
@@ -462,21 +477,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
       }));
       setUnsavedChanges(true);
     }
-  };
-
-  /**
-   * Callback for hall list add button
-   */
-  const handleHallAdd = () => {
-    const newPlaceholderHall = {
-      ApplicationID: applicationDetails.ApplicationID,
-      HallRank: (applicationDetails.ApartmentChoices?.length ?? 0) + 1,
-      HallName: '',
-    };
-    setApplicationDetails((prevApplicationDetails) => ({
-      ...prevApplicationDetails,
-      ApartmentChoices: [...(prevApplicationDetails.ApartmentChoices ?? []), newPlaceholderHall],
-    }));
   };
 
   /**
