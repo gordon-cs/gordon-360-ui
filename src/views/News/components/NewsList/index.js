@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import NewsItem from '../NewsItem';
-import { gordonColors } from '../../../../theme';
+import { gordonColors } from 'theme';
 import './newsList.scss';
 
 import { Grid, Typography, Card, List } from '@material-ui/core';

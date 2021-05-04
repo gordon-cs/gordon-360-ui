@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import InvolvementsStatus from './components/InvolvementsStatus';
 import SuperAdmin from './components/SuperAdmins';
-import user from '../../services/user';
+import user from 'services/user';
 import { Button, Grid, Card, CardContent } from '@material-ui/core';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 
 export default class Admin extends Component {
   constructor(props) {
@@ -15,7 +16,7 @@ export default class Admin extends Component {
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     if (this.props.authentication) {
       const college_role = await user.getLocalInfo().college_role;
       this.setState({ isSuperAdmin: college_role === 'god' ? true : false });
@@ -94,10 +95,7 @@ export default class Admin extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
+                    <NoConnectionImage />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>

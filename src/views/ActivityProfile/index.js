@@ -2,18 +2,19 @@ import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import activity from '../../services/activity';
+import activity from 'services/activity';
 import './activity-profile.css';
 import Cropper from 'react-cropper';
 import Advisors from './components/Advisors';
 import GroupContacts from './components/GroupContacts';
-import GordonLoader from '../../components/Loader';
+import GordonLoader from 'components/Loader';
 import Membership from './components/Membership';
-import membership from '../../services/membership';
-import emails from '../../services/emails';
-import session from '../../services/session';
-import { gordonColors } from '../../theme';
-import user from '../../services/user';
+import membership from 'services/membership';
+import emails from 'services/emails';
+import session from 'services/session';
+import { gordonColors } from 'theme';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
+import user from 'services/user';
 import {
   CardHeader,
   Button,
@@ -28,7 +29,6 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-//import '../../app.js';
 
 const CROP_DIM = 320; // pixels
 
@@ -57,6 +57,7 @@ class ActivityProfile extends Component {
       activityStatus: '',
       sessionInfo: null,
       id: '', // User's id
+      loading: true,
       tempActivityBlurb: '', // For editing activity
       tempActivityJoinInfo: '', // For editing activity
       tempActivityURL: '', // For editing activity
@@ -71,7 +72,7 @@ class ActivityProfile extends Component {
     this.cropperRef = React.createRef();
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.setState({ loading: true });
     const { sessionCode, activityCode } = this.props.match.params;
     if (this.props.authentication) {
@@ -100,10 +101,8 @@ class ActivityProfile extends Component {
         membership.checkAdmin(user.getLocalInfo().id, sessionCode, activityCode),
         membership.search(user.getLocalInfo().id, sessionCode, activityCode),
       ]);
-      if (this.state.isAdmin) {
-        const emailList = await emails.get(activityCode);
-        this.setState({ emailList });
-      }
+      const emailList = isAdmin ? await emails.get(activityCode) : null;
+      const isSuperAdmin = college_role === 'god';
       this.setState({
         activityInfo,
         activityAdvisors,
@@ -113,28 +112,26 @@ class ActivityProfile extends Component {
         activityStatus,
         sessionInfo,
         id,
-        isAdmin: isAdmin || college_role === 'god',
-        isSuperAdmin: college_role === 'god' ? true : false,
+        isAdmin: isAdmin || isSuperAdmin,
+        isSuperAdmin,
         participationDescription,
         tempActivityBlurb: activityInfo.ActivityBlurb,
         tempActivityJoinInfo: activityInfo.ActivityJoinInfo,
         tempActivityURL: activityInfo.ActivityURL,
+        emailList,
+        loading: false,
       });
-      if (this.state.isAdmin) {
-        const [emailList] = await Promise.all([emails.get(activityCode)]);
-        this.setState({ emailList });
-      }
+
       if (
-        (this.state.participationDescription[0] &&
-          this.state.participationDescription[1] !== 'Guest') ||
-        this.state.isSuperAdmin
+        (participationDescription[0] && participationDescription[1] !== 'Guest') ||
+        isSuperAdmin
       ) {
         // Only if the user is in the activity and not a guest can this get called (unless user is
         // a superadmin [god mode])
         // else Unauthorized error
         const activityMembers = await membership.get(
-          this.state.activityInfo.ActivityCode,
-          this.state.sessionInfo.SessionCode,
+          activityInfo.ActivityCode,
+          sessionInfo.SessionCode,
         );
         this.setState({ activityMembers });
       }
@@ -148,9 +145,9 @@ class ActivityProfile extends Component {
         activityInfo,
         activityStatus,
         sessionInfo,
+        loading: false,
       });
     }
-    this.setState({ loading: false });
   }
 
   onDropAccepted(fileList) {
@@ -339,7 +336,7 @@ class ActivityProfile extends Component {
     // Creates the content of an activity's profile depending on the status of the network found in local storage
     if (networkStatus === 'online') {
       if (this.props.authentication) {
-        if (this.state.loading === true) {
+        if (this.state.loading) {
           content = <GordonLoader />;
         } else {
           let editActivity;
@@ -348,13 +345,6 @@ class ActivityProfile extends Component {
             color: 'white',
           };
 
-          const {
-            ActivityDescription: activityDescription,
-            ActivityBlurb: activityBlurb,
-            ActivityJoinInfo: activityJoinInfo,
-            ActivityURL: activityURL,
-            ActivityImagePath: activityImagePath,
-          } = this.state.activityInfo;
           const { preview } = this.state;
 
           if (this.state.isAdmin) {
@@ -380,12 +370,12 @@ class ActivityProfile extends Component {
                 </CardContent>
 
                 <Dialog open={this.state.openEditActivity} fullWidth>
-                  <DialogTitle> Edit {activityDescription}</DialogTitle>
+                  <DialogTitle> Edit {this.state.activityInfo?.ActivityDescription}</DialogTitle>
                   <DialogContent>
                     <Grid align="center" className="activity-image" item>
                       <img
                         alt={activity.activityDescription}
-                        src={this.state.image || activityImagePath}
+                        src={this.state.image || this.state.activityInfo?.ActivityImagePath}
                         className="rounded-corners"
                       />
                     </Grid>
@@ -436,7 +426,7 @@ class ActivityProfile extends Component {
                                     <input {...getInputProps()} />
                                     <img
                                       className="rounded-corners"
-                                      src={activityImagePath}
+                                      src={this.state.activityInfo?.ActivityImagePath}
                                       alt=""
                                       style={{ 'max-width': '320px', 'max-height': '320px' }}
                                     />
@@ -538,7 +528,7 @@ class ActivityProfile extends Component {
                             margin="dense"
                             multiline
                             fullWidth
-                            defaultValue={activityBlurb}
+                            defaultValue={this.state.activityInfo?.ActivityBlurb}
                             onChange={this.handleChange('tempActivityBlurb')}
                           />
                         </Grid>
@@ -549,7 +539,7 @@ class ActivityProfile extends Component {
                             margin="dense"
                             multiline
                             fullWidth
-                            defaultValue={activityJoinInfo}
+                            defaultValue={this.state.activityInfo?.ActivityJoinInfo}
                             onChange={this.handleChange('tempActivityJoinInfo')}
                           />
                         </Grid>
@@ -560,7 +550,7 @@ class ActivityProfile extends Component {
                             margin="dense"
                             multiline
                             fullWidth
-                            defaultValue={activityURL}
+                            defaultValue={this.state.activityInfo?.ActivityURL}
                             onChange={this.handleChange('tempActivityURL')}
                           />
                         </Grid>
@@ -582,16 +572,21 @@ class ActivityProfile extends Component {
           }
           const { SessionDescription: sessionDescription } = this.state.sessionInfo;
           let description;
-          if (activityBlurb.length !== 0) {
-            description = <Typography variant="body2">{activityBlurb}</Typography>;
+          if (this.state.activityInfo?.ActivityBlurb?.length !== 0) {
+            description = (
+              <Typography variant="body2">{this.state.activityInfo?.ActivityBlurb}</Typography>
+            );
           }
           let website;
-          if (activityURL.length !== 0) {
+          if (this.state.activityInfo?.ActivityURL?.length !== 0) {
             website = (
               <Typography variant="body2">
-                <a href={activityURL} className="gc360-text-link" style={{ fontWeight: 'bold' }}>
-                  {' '}
-                  {activityURL}
+                <a
+                  href={this.state.activityInfo?.ActivityURL}
+                  className="gc360-text-link"
+                  style={{ fontWeight: 'bold' }}
+                >
+                  {this.state.activityInfo?.ActivityURL}
                 </a>
               </Typography>
             );
@@ -628,11 +623,14 @@ class ActivityProfile extends Component {
             <section className="gordon-activity-profile">
               <Card>
                 <CardContent>
-                  <CardHeader title={activityDescription} subheader={sessionDescription} />
+                  <CardHeader
+                    title={this.state.activityInfo?.ActivityDescription}
+                    subheader={sessionDescription}
+                  />
                   <Grid align="center" className="activity-image" item>
                     <img
                       alt={activity.activityDescription}
-                      src={activityImagePath}
+                      src={this.state.activityInfo?.ActivityImagePath}
                       className="rounded-corners"
                     />
                   </Grid>
@@ -674,29 +672,25 @@ class ActivityProfile extends Component {
         } else {
           let editActivity;
 
-          const {
-            ActivityDescription: activityDescription,
-            ActivityBlurb: activityBlurb,
-            ActivityURL: activityURL,
-            ActivityImagePath: activityImagePath,
-          } = this.state.activityInfo;
-
           const { SessionDescription: sessionDescription } = this.state.sessionInfo;
           let description;
-          if (activityBlurb.length !== 0) {
+          if (this.state.activityInfo?.ActivityBlurb?.length !== 0) {
             description = (
               <Typography variant="body1">
                 <strong>Description: </strong>
-                {activityBlurb}
+                {this.state.activityInfo?.ActivityBlurb}
               </Typography>
             );
           }
           let website;
-          if (activityURL.length !== 0) {
+          if (this.state.activityinfo?.ActivityURL?.length !== 0) {
             website = (
               <Typography variant="body2">
                 <strong>Website: </strong>
-                <a href={activityURL}> {activityURL}</a>
+                <a href={this.state.activityinfo?.ActivityURL}>
+                  {' '}
+                  {this.state.activityinfo?.ActivityURL}
+                </a>
               </Typography>
             );
           }
@@ -705,12 +699,12 @@ class ActivityProfile extends Component {
               <Card>
                 <CardContent>
                   <Typography align="center" variant="display1">
-                    {activityDescription}
+                    {this.state.activityInfo?.ActivityDescription}
                   </Typography>
                   <Grid align="center" className="activity-image" item>
                     <img
                       alt={activity.activityDescription}
-                      src={activityImagePath}
+                      src={this.state.activityInfo?.ActivityImagePath}
                       className="rounded-corners"
                     />
                   </Grid>
@@ -748,10 +742,7 @@ class ActivityProfile extends Component {
                     marginRight: 'auto',
                   }}
                 >
-                  <img
-                    src={require(`${'../../NoConnection.svg'}`)}
-                    alt="Internet Connection Lost"
-                  />
+                  <NoConnectionImage />
                 </Grid>
                 <br />
                 <h1>Please Re-establish Connection</h1>

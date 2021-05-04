@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Doughnut, defaults } from 'react-chartjs-2';
-import { Button, Grid, Typography, Card, CardHeader } from '@material-ui/core';
-import GordonLoader from '../../../../components/Loader';
-import { gordonColors } from '../../../../theme';
-import user from '../../../../services/user';
-import session from '../../../../services/session';
-import { CardContent } from '../../../../../node_modules/@material-ui/core';
+import { Button, Grid, Typography, Card, CardContent, CardHeader } from '@material-ui/core';
+import GordonLoader from 'components/Loader';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import session from 'services/session';
 
 import './DiningBalance.css';
 
@@ -23,7 +22,7 @@ export default class DiningBalance extends Component {
     this.balanceTypes = ['Dining Dollars', 'Swipes', 'Guest Swipes'];
     this.facStaffBalance = '';
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadData();
   }
 
@@ -112,7 +111,7 @@ export default class DiningBalance extends Component {
             // Allow different tooltips for different datasets within the same pie;
             callbacks: {
               // Code taken from https://github.com/chartjs/Chart.js/issues/1417
-              label: function(item, data) {
+              label: function (item, data) {
                 return (
                   data.datasets[item.datasetIndex].label[item.index] +
                   ': ' +

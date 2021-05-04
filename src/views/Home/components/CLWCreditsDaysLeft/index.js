@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Doughnut, defaults } from 'react-chartjs-2';
+import {Link} from "react-router-dom";
 
-import { gordonColors } from '../../../../theme';
-import user from '../../../../services/user';
-import session from '../../../../services/session';
-import GordonLoader from '../../../../components/Loader';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import session from 'services/session';
+import GordonLoader from 'components/Loader';
 
 import './CLWChart.css';
 
@@ -25,7 +26,7 @@ export default class CLWCreditsDaysLeft extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadData();
   }
 
@@ -78,7 +79,7 @@ export default class CLWCreditsDaysLeft extends Component {
           // Allow different tooltips for different datasets within the same pie;
           callbacks: {
             // Code taken from https://github.com/chartjs/Chart.js/issues/1417
-            label: function(item, data) {
+            label: function (item, data) {
               return (
                 data.datasets[item.datasetIndex].label[item.index] +
                 ': ' +
@@ -187,14 +188,25 @@ export default class CLWCreditsDaysLeft extends Component {
       <Card>
         <CardContent>
           <Grid container direction="row" alignItems="center">
-            <Grid item xs={7} align="left">
-              <CardHeader title={this.state.currSessionDescription} />
-            </Grid>
-            <Grid item xs={5} align="right">
+            <Grid item xs={4} align="left">
               <Button
                 variant="contained"
                 style={style.button}
-                onClick={(event) => (window.location.href = '/events?CLW')}
+                component={Link}
+                to="/attended"
+              >
+                ATTENDED EVENTS
+              </Button>
+            </Grid>
+            <Grid item xs={4} align="center">
+              <CardHeader title={this.state.currSessionDescription} />
+            </Grid>
+            <Grid item xs={4} align="right">
+              <Button
+                variant="contained"
+                style={style.button}
+                component={Link}
+                to="/events?CLW%20Credits"
               >
                 MORE CREDITS
               </Button>

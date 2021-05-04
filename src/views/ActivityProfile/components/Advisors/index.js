@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Email from '@material-ui/icons/Email';
 
-import GordonLoader from '../../../../components/Loader';
+import GordonLoader from 'components/Loader';
 
 import { IconButton, List, ListItem, Typography } from '@material-ui/core';
 
@@ -13,7 +13,7 @@ export default class Advisors extends Component {
       activityAdvisors: [],
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadAdvisors();
   }
   async loadAdvisors() {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { gordonColors } from '../../theme';
-import storage from '../../services/storage';
+import { gordonColors } from 'theme';
+import storage from 'services/storage';
 
 import { Grid, Typography } from '@material-ui/core';
 

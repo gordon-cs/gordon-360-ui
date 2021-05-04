@@ -5,9 +5,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import Error from '@material-ui/icons/Error';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
-import { gordonColors } from '../../../../../../theme';
-import user from '../../../../../../services/user';
-import membership from '../../../../../../services/membership';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import membership from 'services/membership';
 
 import {
   Button,
@@ -56,7 +56,7 @@ export default class MemberList extends Component {
     this.breakpointWidth = 810;
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.setState({
       admin: this.props.admin,
       groupAdmin: this.props.groupAdmin,

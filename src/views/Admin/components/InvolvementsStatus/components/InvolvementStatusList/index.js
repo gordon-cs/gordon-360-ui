@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import session from '../../../../../../services/session';
-
-import '../../../../../../app.css';
+import session from 'services/session';
 
 import { Typography, Grid } from '@material-ui/core';
 
@@ -13,7 +11,7 @@ export default class InvolvementStatusList extends Component {
     this.state = { currentSession: '' };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     const { SessionCode: sessionCode } = await session.getCurrent();
     this.setState({ currentSession: sessionCode });
   }

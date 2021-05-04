@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import GordonLoader from '../../components/Loader';
-import WellnessQuestion from '../../components/WellnessQuestion';
+import GordonLoader from 'components/Loader';
+import WellnessQuestion from 'components/WellnessQuestion';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
-import user from '../../services/user';
-import wellness from '../../services/wellness';
-import storage from '../../services/storage';
-import Login from '../Login';
+import user from 'services/user';
+import wellness from 'services/wellness';
+import storage from 'services/storage';
+import GuestWelcome from './components/GuestWelcome';
 import './home.css';
 import { Grid } from '@material-ui/core';
 
@@ -74,11 +74,7 @@ const Home = ({ authentication, onLogIn }) => {
   if (loading) {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
-    return (
-      <div className="gordon-login">
-        <Login onLogIn={onLogIn} />
-      </div>
-    );
+    return <GuestWelcome onLogIn={onLogIn} />;
   } else if (networkStatus === 'online' && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else {

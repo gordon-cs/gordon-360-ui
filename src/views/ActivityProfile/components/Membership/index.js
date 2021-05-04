@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import activity from '../../../../services/activity';
-import '../../activity-profile.css';
-import GordonLoader from '../../../../components/Loader';
+import activity from 'services/activity';
+import GordonLoader from 'components/Loader';
 import MemberList from './components/MemberList';
-import membership from '../../../../services/membership';
+import membership from 'services/membership';
 import RequestDetail from './components/RequestDetail';
 import CloseIcon from '@material-ui/icons/Close';
-import user from '../../../../services/user';
-import { gordonColors } from '../../../../theme';
+import user from 'services/user';
+import { gordonColors } from 'theme';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Error from '@material-ui/icons/Error';
-//import RequestsReceived from '../../../Home/components/Requests/components/RequestsReceived';
 import AddPersonIcon from '@material-ui/icons/PersonAdd';
 
 import {
@@ -62,7 +60,6 @@ export default class Membership extends Component {
       isAdmin: this.props.isAdmin,
       isSuperAdmin: this.props.isSuperAdmin,
       participationDetail: [],
-      id: this.props.id,
       addEmail: '',
       addGordonID: '',
       requests: [],
@@ -71,9 +68,11 @@ export default class Membership extends Component {
     this.breakpointWidth = 810;
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.getMembership();
     this.loadMembers();
+
+    window.addEventListener('resize', this.resize);
   }
 
   //Has to rerender on screen resize in order for table to switch to the mobile view
@@ -90,10 +89,6 @@ export default class Membership extends Component {
     if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
     if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
     else return false;
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
   }
 
   componentWillUnmount() {
@@ -129,7 +124,7 @@ export default class Membership extends Component {
   }
 
   async getMembership() {
-    let memberships = await user.getCurrentMemberships(this.state.id);
+    let memberships = await user.getCurrentMemberships(this.props.id);
     let membership;
     for (let i = 0; i < memberships.length; i += 1) {
       if (memberships[i].ActivityCode === this.props.activityCode) {
@@ -176,7 +171,7 @@ export default class Membership extends Component {
 
       // Try to add member
       try {
-        let addID = await membership.getEmailAccount(memberEmail).then(function(result) {
+        let addID = await membership.getEmailAccount(memberEmail).then(function (result) {
           return result.GordonID;
         });
         let data = {
@@ -217,7 +212,7 @@ export default class Membership extends Component {
     let data = {
       ACT_CDE: this.props.activityCode,
       SESS_CDE: this.state.sessionInfo.SessionCode,
-      ID_NUM: user.getLocalInfo().id,
+      ID_NUM: this.props.id,
       PART_CDE: this.state.participationCode,
       DATE_SENT: date.toLocaleString(),
       COMMENT_TXT: this.state.titleComment,
@@ -234,7 +229,7 @@ export default class Membership extends Component {
     let data = {
       ACT_CDE: this.props.activityCode,
       SESS_CDE: this.state.sessionInfo.SessionCode,
-      ID_NUM: user.getLocalInfo().id,
+      ID_NUM: this.props.id,
       PART_CDE: 'GUEST',
       COMMENT_TXT: 'Subscriber',
       GRP_ADMIN: false,
@@ -253,16 +248,12 @@ export default class Membership extends Component {
   async loadMembers() {
     this.setState({ loading: true });
     try {
-      const [id, participationDetail] = await Promise.all([
-        user.getLocalInfo().id,
-        membership.search(
-          this.state.id,
-          this.props.sessionInfo.SessionCode,
-          this.props.activityCode,
-        ),
-      ]);
+      const participationDetail = await membership.search(
+        this.props.id,
+        this.props.sessionInfo.SessionCode,
+        this.props.activityCode,
+      );
       this.setState({
-        id,
         participationDetail,
         activityDescription: this.props.activityDescription,
         participationCode: '',

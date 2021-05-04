@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import { gordonColors } from '../../../../../../theme';
-import membership from '../../../../../../services/membership';
+import { gordonColors } from 'theme';
+import membership from 'services/membership';
 
 import { Button, Grid, Typography, Divider } from '@material-ui/core';
 
@@ -17,7 +17,7 @@ export default class RequestReceived extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadRequests();
   }
 

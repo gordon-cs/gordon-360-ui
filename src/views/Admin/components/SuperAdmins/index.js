@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import SuperAdminList from './components/SuperAdminList';
-import GordonLoader from '../../../../components/Loader';
-import admin from '../../../../services/admin';
-import { gordonColors } from '../../../../theme';
-import membership from '../../../../services/membership';
+import GordonLoader from 'components/Loader';
+import admin from 'services/admin';
+import { gordonColors } from 'theme';
+import membership from 'services/membership';
 
 import {
   Typography,
@@ -30,7 +30,7 @@ export default class SuperAdmin extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadAdmins();
   }
 
@@ -52,7 +52,7 @@ export default class SuperAdmin extends Component {
     if (!adminEmail.toLowerCase().includes('@gordon.edu')) {
       adminEmail = adminEmail + '@gordon.edu';
     }
-    let addID = await membership.getEmailAccount(adminEmail).then(function(result) {
+    let addID = await membership.getEmailAccount(adminEmail).then(function (result) {
       return result.GordonID;
     });
     let data = {

@@ -15,9 +15,9 @@ import Select from 'material-ui/Select';
 import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 
-import { gordonColors } from '../../../../../../theme';
-import user from '../../../../../../services/user';
-import membership from '../../../../../../services/membership';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import membership from 'services/membership';
 
 export default class MemberDetail extends Component {
   constructor(props) {
@@ -43,7 +43,7 @@ export default class MemberDetail extends Component {
     this.onRemove = this.onRemove.bind(this);
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.setState({
       admin: this.props.admin,
       groupAdmin: this.props.groupAdmin,
