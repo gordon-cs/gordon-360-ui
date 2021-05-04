@@ -724,7 +724,10 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   <Grid container item md={7} xl={6} direction="column" spacing={2}>
                     <Grid item>
                       <ApplicantList
-                        disabled={!canEditApplication}
+                        disabled={
+                          !canEditApplication ||
+                          applicationDetails.Applicants?.length > MAX_NUM_APPLICANTS
+                        }
                         editorProfile={applicationDetails.EditorProfile}
                         applicants={applicationDetails.Applicants ?? []}
                         maxNumApplicants={MAX_NUM_APPLICANTS}

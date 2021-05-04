@@ -120,12 +120,10 @@ const ApplicantList = ({
             <Grid item xs={9} sm={5} className={'people-search-parent'}>
               <GordonPeopleSearch
                 disableLink
-                disabled={disabled || applicants?.length > maxNumApplicants}
+                disabled={disabled}
                 icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
-                onSearchSubmit={(selectedUsername) =>
-                  selectedUsername && onSearchSubmit(selectedUsername)
-                }
+                onSearchSubmit={(selectedUsername) => disabled || onSearchSubmit(selectedUsername)}
                 authentication
               />
             </Grid>
