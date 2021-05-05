@@ -13,7 +13,6 @@ import goStalk from 'services/goStalk';
  * Renders the list of selection boxes to choosing which applicants are doing off campus programs.
  * @param {Object} props The React component props
  * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
- * @param {Boolean} props.authentication The user authentication
  * @param {ApartmentApplicant[]} props.applicants Array of applicant info
  * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
  * @returns {JSX.Element} JSX Element for the off-campus program list
@@ -30,10 +29,8 @@ const OffCampusList = ({ disabled, authentication, applicants, onOffCampusInputC
       setDepartments(availableDepartments);
     };
 
-    if (authentication) {
-      loadDepartments();
-    }
-  }, [authentication]);
+    loadDepartments();
+  }, []);
 
   return (
     <Card>
@@ -64,13 +61,6 @@ const OffCampusList = ({ disabled, authentication, applicants, onOffCampusInputC
       </CardContent>
     </Card>
   );
-};
-
-OffCampusList.propTypes = {
-  disabled: PropTypes.bool,
-  authentication: PropTypes.any,
-  applicants: PropTypes.array.isRequired,
-  onOffCampusInputChange: PropTypes.func,
 };
 
 export default OffCampusList;
