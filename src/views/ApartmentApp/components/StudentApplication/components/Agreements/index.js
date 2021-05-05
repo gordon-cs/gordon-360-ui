@@ -16,67 +16,68 @@ import housing from 'services/housing';
 /**
  * Renders a card displaying the apartment application instructions
  * @param {Object} props The React component props
+ * @param {Boolean | String} props.deleting Status of delete operation
  * @param {CallbackFcn} props.onChange Callback for change of the checkbox state
  * @returns {JSX.Element} JSX Element for the instructions card
  */
-const Agreements = ({ onChange }) => {
+const Agreements = ({ deleting, onChange }) => {
   const [checkboxes, setCheckboxes] = useState([]);
 
-  useEffect(() => {
-    const loadAgreements = async () => {
-      const currentYear = new Date().getFullYear();
-      const selectionDate = await housing.getApartmentSelectionDate();
+  const loadAgreements = async () => {
+    const currentYear = new Date().getFullYear();
+    const selectionDate = await housing.getApartmentSelectionDate();
 
-      let newCheckboxes = [
-        {
-          checked: false,
-          label: 'Each individual on the application has agreed to be on the application',
-        },
-        {
-          checked: false,
-          label:
-            'We understand that if someone on this application has not agreed to be on the application, our application will be disqualified',
-        },
-        {
-          checked: false,
-          label: 'Each individual on this application appears ONLY on this application',
-        },
-        {
-          checked: false,
-          label:
-            "We understand that if an individual on this application also appears on another group's application, our application could be disqualified",
-        },
-        {
-          checked: false,
-          label: `Any individual on this application who has been on disciplinary probation at any point during the ${
-            currentYear - 1
-          }-${currentYear} academic year has been approved to apply by the Dean of Student Care or the Director of Residence Life`,
-        },
-        {
-          checked: false,
-          label: `Each individual on this application intends to register as a full-time student by apartment selection night (${selectionDate})`,
-        },
-        {
-          checked: false,
-          label: `We understand that if any member of our application fails to register as a full-time student by ${selectionDate}, our application could be disqualified`,
-        },
-        {
-          checked: false,
-          label:
-            'We have read and understand all of the information and guidelines listed in the Instructions section',
-        },
-        {
-          checked: false,
-          label:
-            'We certify that all information provided on this application is accurate, to the best of our knowledge',
-        },
-      ];
+    let newCheckboxes = [
+      {
+        checked: false,
+        label: 'Each individual on the application has agreed to be on the application',
+      },
+      {
+        checked: false,
+        label:
+          'We understand that if someone on this application has not agreed to be on the application, our application will be disqualified',
+      },
+      {
+        checked: false,
+        label: 'Each individual on this application appears ONLY on this application',
+      },
+      {
+        checked: false,
+        label:
+          "We understand that if an individual on this application also appears on another group's application, our application could be disqualified",
+      },
+      {
+        checked: false,
+        label: `Any individual on this application who has been on disciplinary probation at any point during the ${
+          currentYear - 1
+        }-${currentYear} academic year has been approved to apply by the Dean of Student Care or the Director of Residence Life`,
+      },
+      {
+        checked: false,
+        label: `Each individual on this application intends to register as a full-time student by apartment selection night (${selectionDate})`,
+      },
+      {
+        checked: false,
+        label: `We understand that if any member of our application fails to register as a full-time student by ${selectionDate}, our application could be disqualified`,
+      },
+      {
+        checked: false,
+        label:
+          'We have read and understand all of the information and guidelines listed in the Instructions section',
+      },
+      {
+        checked: false,
+        label:
+          'We certify that all information provided on this application is accurate, to the best of our knowledge',
+      },
+    ];
 
-      setCheckboxes(newCheckboxes);
-    };
+    setCheckboxes(newCheckboxes);
+  };
 
-    loadAgreements();
-  }, []);
+  useEffect(() => loadAgreements(), []);
+
+  useEffect(() => deleting === 'success' && loadAgreements(), [deleting]);
 
   const handleChange = (event, index) => {
     setCheckboxes((prevCheckboxes) => {

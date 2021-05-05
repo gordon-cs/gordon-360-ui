@@ -584,6 +584,8 @@ const StudentApplication = ({ userProfile }) => {
       const result = await housing.deleteApartmentApplication(applicationDetails.ApplicationID);
       if (result) {
         setDeleting('success');
+        setSaving((s) => (s === 'success' ? false : s));
+        setSubmitStatus((s) => (s === 'success' ? false : s));
         loadApplication();
         setApplicationCardsOpen(false);
       } else {
@@ -791,7 +793,10 @@ const StudentApplication = ({ userProfile }) => {
                   <Grid container item md direction="column" spacing={2}>
                     {canEditApplication && (
                       <Grid item>
-                        <Agreements onChange={(newState) => setAgreements(newState)} />
+                        <Agreements
+                          deleting={deleting}
+                          onChange={(newState) => setAgreements(newState)}
+                        />
                       </Grid>
                     )}
                     {applicationDetails.ApplicationID > 0 && (
