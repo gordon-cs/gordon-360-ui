@@ -67,7 +67,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
 
   function debugPrintApplicationDetails(applicationDetails) {
     //! DEBUG
-    console.debug('Array state variable. Printing contents:');
+    console.debug('Application state variable. Printing contents:');
     //! DEBUG
     console.debug('ApplicationID:');
     console.debug(applicationDetails?.ApplicationID);
@@ -294,9 +294,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
           (applicant) => applicant.Profile.AD_Username === profile.AD_Username,
         )
       ) {
-        if (unsavedChanges) {
-          saveApartmentApplication(applicationDetails);
-        }
         setNewEditorProfile(profile);
         setChangeEditorDialogOpen(true);
       }
@@ -311,6 +308,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       try {
         saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
       } catch {
+        console.debug('Using old method to change application editor.');
         changeApplicationEditor(newEditorProfile); //! Will be deprecated eventually...
       } finally {
         setCanEditApplication(false);
@@ -328,6 +326,9 @@ const StudentApplication = ({ userProfile, authentication }) => {
   /**
    * Update the application editor of the application to the database
    *
+   * This function will be deprecated in the future
+   * It will be replaced with `saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile })`
+   *
    * @async
    * @function changeApplicationEditor
    * @param {StudentProfileInfo} newEditorProfile the StudentProfileInfo object for the person who will be allowed to edit this application
@@ -343,7 +344,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       if (result) {
         try {
           const loadingResult = loadApplication();
-          if (!loadingResult ) {
+          if (!loadingResult) {
             throw new Error('Failed to load apartment application.');
           }
         } catch {
@@ -612,6 +613,8 @@ const StudentApplication = ({ userProfile, authentication }) => {
       const result = await housing.deleteApartmentApplication(applicationDetails.ApplicationID);
       if (result) {
         setDeleting('success');
+        setSaving((s) => (s === 'success' ? false : s));
+        setSubmitStatus((s) => (s === 'success' ? false : s));
         loadApplication();
         setApplicationCardsOpen(false);
       } else {
@@ -742,7 +745,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
       {newEditorProfile?.LastName}
       <br />
       If you change the application editor, you will no longer be able to edit this application
-      yourself.
+      yourself. All unsaved changes will be saved automatically.
       <br />
       Are you sure you want to change the application editor?
     </span>
@@ -790,7 +793,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       {canEditApplication ? (
                         <ApplicantList
                           maxNumApplicants={MAX_NUM_APPLICANTS}
-                          userProfile={userProfile}
                           applicationDetails={applicationDetails}
                           onSearchSubmit={handleSearchSubmit}
                           onChangeEditor={handleChangeEditor}
@@ -802,7 +804,6 @@ const StudentApplication = ({ userProfile, authentication }) => {
                         <ApplicantList
                           disabled
                           maxNumApplicants={MAX_NUM_APPLICANTS}
-                          userProfile={userProfile}
                           applicationDetails={applicationDetails}
                           authentication={authentication}
                         />
@@ -834,6 +835,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                       ) : (
                         <HallSelection
                           disabled
+                          authentication
                           apartmentChoices={applicationDetails.ApartmentChoices ?? []}
                         />
                       )}
@@ -857,7 +859,7 @@ const StudentApplication = ({ userProfile, authentication }) => {
                   <Grid container item md direction="column" spacing={2}>
                     {canEditApplication && (
                       <Grid item>
-                        <Agreements onChange={handleAgreementsStateChange} />
+                        <Agreements deleting={deleting} onChange={handleAgreementsStateChange} />
                       </Grid>
                     )}
                     {applicationDetails.ApplicationID > 0 && (
