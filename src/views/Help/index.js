@@ -16,7 +16,7 @@ export default class Help extends Component {
                 titleTypographyProps={{ variant: 'h4' }}
               />
               <CardContent>
-                <Card>
+                <Card className="help-section">
                   <CardHeader
                     className="help-header"
                     title="LOGIN INSTRUCTIONS"
@@ -30,7 +30,7 @@ export default class Help extends Component {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="help-section">
                   <CardHeader
                     className="help-header"
                     title="SITE NAVIGATION"
@@ -94,7 +94,7 @@ export default class Help extends Component {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="help-section">
                   <CardHeader
                     className="help-header"
                     title="INVOLVEMENT USER LEVELS"
@@ -136,7 +136,7 @@ export default class Help extends Component {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="help-section">
                   <CardHeader
                     className="help-header"
                     title="MANAGEMENT & EDITING INVOLVEMENTS"
@@ -186,7 +186,7 @@ export default class Help extends Component {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="help-section">
                   <CardHeader
                     className="help-header"
                     title="ISSUES & TROUBLESHOOTING"
@@ -208,7 +208,7 @@ export default class Help extends Component {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="help-section">
                   <CardHeader
                     className="help-header"
                     title="SUPPORTED PLATFORMS"
@@ -227,7 +227,7 @@ export default class Help extends Component {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="help-section">
                   <CardHeader
                     className="help-header"
                     title="FAQ"

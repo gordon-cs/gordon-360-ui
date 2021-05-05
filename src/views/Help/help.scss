@@ -28,4 +28,8 @@
     background-color: $primary-blue;
     color: $neutral-white;
   }
+
+  &-section {
+      box-shadow: none!important;
+  }
 }
