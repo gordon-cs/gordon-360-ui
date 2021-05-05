@@ -16,7 +16,7 @@ import goStalk from 'services/goStalk';
  * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
  * @returns {JSX.Element} JSX Element for the off-campus program list
  */
-const OffCampusList = ({ disabled, authentication, applicants, onOffCampusInputChange }) => {
+const OffCampusList = ({ disabled, applicants, onOffCampusInputChange }) => {
   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {

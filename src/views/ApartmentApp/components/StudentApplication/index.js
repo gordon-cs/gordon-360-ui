@@ -37,11 +37,10 @@ const BLANK_APPLICATION_DETAILS = {
 /**
  * Renders the page for the student apartment application
  * @param {Object} props The React component props
- * @param {Boolean} props.authentication The user authentication
  * @param {StudentProfileInfo} props.userProfile The student profile info of the current user
  * @returns {JSX.Element} JSX Element for the student application web page
  */
-const StudentApplication = ({ userProfile, authentication }) => {
+const StudentApplication = ({ userProfile }) => {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
