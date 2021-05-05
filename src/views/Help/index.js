@@ -48,14 +48,14 @@ export default class Help extends Component {
                           </li>
                           <li>
                             <strong>Faculty/Staff:</strong> Includes days remaining wheel and a separate Dining Dollars tracker.
-                            Also view your pending join requests for Involvements you’ve requested, as well
-                            as the requests that are pending for you approve if you are a Group Leader/Advisor.
                           </li>
                         </Typography>
                       </li>
                       <li>
                         <strong>Involvements</strong> &ndash; A list of available groups, clubs and organizations for the current
                         Academic Session. Change Academic Sessions in the drop down menu to view involvements in other sessions.
+                        You can view your pending join requests for Involvements you’ve requested, as well
+                        as the requests that are pending for you approve if you are a Group Leader/Advisor.
                       </li>
                       <li>
                         <strong>Events</strong> &ndash; A live list of events drawn from the campus master calendar including
