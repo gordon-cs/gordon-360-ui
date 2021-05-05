@@ -16,7 +16,7 @@ import housing from 'services/housing';
 /**
  * Renders a card displaying the apartment application instructions
  * @param {Object} props The React component props
- * @param {*} props.onChange Callback for change of the checkbox state
+ * @param {CallbackFcn} props.onChange Callback for change of the checkbox state
  * @returns {JSX.Element} JSX Element for the instructions card
  */
 const Agreements = ({ onChange }) => {
