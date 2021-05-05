@@ -7,7 +7,6 @@ import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@materi
 export default class Help extends Component {
   render() {
     return (
-      <section>
         <Grid container justify="center">
           <Grid item xs={12} lg={8}>
             <Card className="help">
@@ -218,11 +217,11 @@ export default class Help extends Component {
                   <CardContent>
                     <Typography variant="body1" component="ul">
                       <li>
-                        360 has been successfully tested on Windows (Firefox, Chrome), Mac (Safari,
+                        360 has been successfully tested on Windows (Edge, Firefox, Chrome), Mac (Safari,
                         Firefox, Chrome), and on Android and iPhone default browsers.
                       </li>
                       <li>
-                        Currently, Gordon 360 is not supported on Microsoft Edge or Internet Explorer.
+                        Currently, Gordon 360 is not supported on Internet Explorer.
                       </li>
                     </Typography>
                   </CardContent>
@@ -283,7 +282,6 @@ export default class Help extends Component {
             </Typography>
           </Grid>
         </Grid>
-      </section>
     );
   }
 }
