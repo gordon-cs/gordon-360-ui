@@ -1,11 +1,14 @@
 @import '../../vars';
 
-strong {
-  font-weight: bold;
-  margin-top: 20px;
-}
+
 
 .help {
+  
+  strong {
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
   margin: 1rem;
 
   li {
