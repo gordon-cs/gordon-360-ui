@@ -128,7 +128,7 @@ const BottomBar = ({
                 <Grid item xs>
                   <DynamicButton
                     color={'primary'}
-                    disabled={!canEditApplication || disableSubmit}
+                    disabled={!canEditApplication || Boolean(disableSubmit)}
                     buttonText={'Submit'}
                     startIcon={<PublishIcon />}
                     status={submitStatus}

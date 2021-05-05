@@ -26,6 +26,12 @@ const BLANK_APPLICATION_DETAILS = {
   Applicants: [],
   ApartmentChoices: [],
 };
+const INITIAL_DIALOG_PROPS = {
+  labelledby: 'default-dialog',
+  describedby: 'dialog-undefined',
+  title: 'How did you get here?',
+  text: 'This text should not be displayed.',
+};
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -56,10 +62,9 @@ const StudentApplication = ({ userProfile }) => {
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
-  const [changeEditorDialogOpen, setChangeEditorDialogOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [dialog, setDialog] = useState('');
+  const [dynamicDialogProps, setDynamicDialogProps] = useState(INITIAL_DIALOG_PROPS);
   const [deleteButtonAlertTimeout, setDeleteButtonAlertTimeout] = useState(null);
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
   const [submitButtonAlertTimeout, setSubmitButtonAlertTimeout] = useState(null);
@@ -108,7 +113,6 @@ const StudentApplication = ({ userProfile }) => {
         Gender: userProfile.Gender,
         Applicants: initialApplicants,
       });
-      setCanEditApplication(true);
       setUnsavedChanges(true);
     };
 
@@ -120,9 +124,6 @@ const StudentApplication = ({ userProfile }) => {
         const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
         setApplicationDetails(newApplicationDetails);
         debugPrintApplicationDetails(newApplicationDetails);
-        setCanEditApplication(
-          userProfile.AD_Username === newApplicationDetails.EditorProfile.AD_Username ?? false,
-        );
         setUnsavedChanges(false);
         result = true;
       } else {
@@ -143,7 +144,6 @@ const StudentApplication = ({ userProfile }) => {
       setNewEditorProfile(null);
       return result;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userProfile]);
 
   useEffect(() => {
@@ -151,6 +151,77 @@ const StudentApplication = ({ userProfile }) => {
     loadApplication();
     setLoading(false);
   }, [userProfile, loadApplication]);
+
+  useEffect(
+    () =>
+      setCanEditApplication(
+        userProfile?.AD_Username === applicationDetails?.EditorProfile?.AD_Username ?? false,
+      ),
+    [applicationDetails?.EditorProfile?.AD_Username, userProfile?.AD_Username],
+  );
+
+  useEffect(() => {
+    const changeEditorAlertText = (
+      <span>
+        You are about to change the editor to {newEditorProfile?.FirstName}{' '}
+        {newEditorProfile?.LastName}
+        <br />
+        If you change the application editor, you will no longer be able to edit this application
+        yourself. All unsaved changes will be saved automatically.
+        <br />
+        Are you sure you want to change the application editor?
+      </span>
+    );
+
+    const deleteAlertText = (
+      <span>
+        Are you sure you want to delete this application?
+        <br />
+        This action cannot be undone.
+      </span>
+    );
+
+    // TODO: Improve this text for the users
+    const submitAlertText = (
+      <span>
+        Please confirm that all the information you have entered is valid
+        <br />
+        Click "Accept" below to submit this application
+      </span>
+    );
+
+    setDynamicDialogProps((prevDialogProps) => {
+      switch (dialog) {
+        case 'changeEditor':
+          return {
+            labelledby: 'applicant-warning-dialog',
+            describedby: 'changing-application-editor',
+            title: 'Change application editor?',
+            text: changeEditorAlertText,
+          };
+        case 'delete':
+          return {
+            labelledby: 'delete-application-dialog',
+            describedby: 'delete-application',
+            title: 'Delete apartment application?',
+            text: deleteAlertText,
+          };
+        case 'submit':
+          return {
+            labelledby: 'submit-application-dialog',
+            describedby: 'submit-application',
+            title: 'Submit apartment application?',
+            text: submitAlertText,
+          };
+        default:
+          return prevDialogProps;
+      }
+    });
+  }, [dialog, newEditorProfile]);
+
+  const createSnackbar = (message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  };
 
   /**
    * Check whether a given applicant is valid for this current application
@@ -284,7 +355,7 @@ const StudentApplication = ({ userProfile }) => {
         )
       ) {
         setNewEditorProfile(profile);
-        setChangeEditorDialogOpen(true);
+        setDialog('changeEditor');
       }
     }
   };
@@ -293,15 +364,12 @@ const StudentApplication = ({ userProfile }) => {
    * Callback for applying the new application editor
    */
   const handleChangeEditorAccepted = () => {
-    setChangeEditorDialogOpen(null);
     if (newEditorProfile?.AD_Username) {
       try {
         saveApartmentApplication({ ...applicationDetails, EditorProfile: newEditorProfile }); //* Ideal solution
       } catch {
         console.debug('Using old method to change application editor.');
         changeApplicationEditor(newEditorProfile); //! Will be deprecated eventually...
-      } finally {
-        setCanEditApplication(false);
       }
     } else {
       console.debug(
@@ -347,7 +415,6 @@ const StudentApplication = ({ userProfile }) => {
           }));
         } finally {
           setSaving('success');
-          setCanEditApplication(false);
           setUnsavedChanges(false);
         }
       }
@@ -663,39 +730,6 @@ const StudentApplication = ({ userProfile }) => {
     }
   };
 
-  const createSnackbar = (message, severity) => {
-    setSnackbar({ message, severity, open: true });
-  };
-
-  const changeEditorAlertText = (
-    <span>
-      You are about to change the editor to {newEditorProfile?.FirstName}{' '}
-      {newEditorProfile?.LastName}
-      <br />
-      If you change the application editor, you will no longer be able to edit this application
-      yourself. All unsaved changes will be saved automatically.
-      <br />
-      Are you sure you want to change the application editor?
-    </span>
-  );
-
-  const deleteAlertText = (
-    <span>
-      Are you sure you want to delete this application?
-      <br />
-      This action cannot be undone.
-    </span>
-  );
-
-  // TODO: Improve this text for the users
-  const submitAlertText = (
-    <span>
-      Please confirm that all the information you have entered is valid
-      <br />
-      Click "Accept" below to submit this application
-    </span>
-  );
-
   if (loading) {
     return <GordonLoader />;
   } else {
@@ -792,12 +826,12 @@ const StudentApplication = ({ userProfile }) => {
                 saving={saving}
                 submitStatus={applicationDetails.DateSubmitted ? 'success' : submitStatus}
                 unsavedChanges={unsavedChanges}
-                onDeleteButtonClick={() => setDeleteDialogOpen(true)}
+                onDeleteButtonClick={() => setDialog('delete')}
                 onSaveButtonClick={() => {
                   saveApartmentApplication(applicationDetails);
                 }}
                 onShowApplication={() => setApplicationCardsOpen(true)}
-                onSubmitButtonClick={() => setSubmitDialogOpen(true)}
+                onSubmitButtonClick={() => setDialog('submit')}
               />
             </Grid>
           </Grid>
@@ -805,48 +839,6 @@ const StudentApplication = ({ userProfile }) => {
         <Backdrop open={deleting === true || saving === true || submitStatus === true}>
           <GordonLoader />
         </Backdrop>
-        <GordonDialogBox
-          open={changeEditorDialogOpen}
-          onClose={(_event, reason) => reason !== 'clickaway' && setChangeEditorDialogOpen(null)}
-          labelledby={'applicant-warning-dialog'}
-          describedby={'changing-application-editor'}
-          title={'Change application editor?'}
-          text={changeEditorAlertText}
-          buttonClicked={handleChangeEditorAccepted}
-          buttonName={'Accept'}
-          cancelButtonClicked={() => setChangeEditorDialogOpen(null)}
-          severity={'warning'}
-        />
-        <GordonDialogBox
-          open={deleteDialogOpen}
-          onClose={(_event, reason) => reason !== 'clickaway' && setDeleteDialogOpen(null)}
-          labelledby={'delete-application-dialog'}
-          describedby={'delete-application'}
-          title={'Delete apartment application?'}
-          text={deleteAlertText}
-          buttonClicked={() => {
-            setDeleteDialogOpen(null);
-            deleteApartmentApplication();
-          }}
-          buttonName={'Accept'}
-          cancelButtonClicked={() => setDeleteDialogOpen(null)}
-          severity={'warning'}
-        />
-        <GordonDialogBox
-          open={submitDialogOpen}
-          onClose={(_event, reason) => reason !== 'clickaway' && setSubmitDialogOpen(null)}
-          labelledby={'submit-application-dialog'}
-          describedby={'confirm-application'}
-          title={'Submit apartment application?'}
-          text={submitAlertText}
-          buttonClicked={() => {
-            setSubmitDialogOpen(null);
-            submitApplication();
-          }}
-          buttonName={'Accept'}
-          cancelButtonClicked={() => setSubmitDialogOpen(null)}
-          severity={'warning'}
-        />
         <GordonSnackbar
           open={snackbar.open}
           text={snackbar.message}
@@ -854,6 +846,32 @@ const StudentApplication = ({ userProfile }) => {
           onClose={(_event, reason) =>
             reason !== 'clickaway' && setSnackbar((s) => ({ ...s, open: false }))
           }
+        />
+        <GordonDialogBox
+          open={dialog ? true : false}
+          onClose={(_event, reason) => reason !== 'clickaway' && setDialog(null)}
+          buttonClicked={() => {
+            setDialog((prevDialogState) => {
+              switch (prevDialogState) {
+                case 'changeEditor':
+                  handleChangeEditorAccepted();
+                  break;
+                case 'delete':
+                  deleteApartmentApplication();
+                  break;
+                case 'submit':
+                  submitApplication();
+                  break;
+                default:
+                  console.error('Invalid dialog state');
+              }
+              return null;
+            });
+          }}
+          buttonName={'Accept'}
+          cancelButtonClicked={() => setDialog(null)}
+          severity={'warning'}
+          {...dynamicDialogProps}
         />
       </div>
     );
