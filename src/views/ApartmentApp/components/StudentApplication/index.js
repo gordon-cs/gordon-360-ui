@@ -811,7 +811,7 @@ const StudentApplication = ({ userProfile }) => {
                 </Grid>
               </Collapse>
             </Grid>
-            <Grid item xs={12} className={'sticky-page-bottom-bar'}>
+            <Grid item xs={12} className="sticky-page-bottom-bar">
               <BottomBar
                 applicationCardsOpen={applicationCardsOpen}
                 applicationID={applicationDetails.ApplicationID}

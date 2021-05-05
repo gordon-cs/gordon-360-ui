@@ -59,7 +59,7 @@ const ApplicantList = ({
               <ListItem
                 button
                 alignItems="center"
-                className={'list-item'}
+                className="list-item"
                 onClick={() => setShowHelp((prev) => !prev)}
               >
                 <ListItemIcon>
@@ -69,22 +69,22 @@ const ApplicantList = ({
                 {showHelp ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={showHelp} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding className={'bordered-list-item'}>
-                  <ListItem disableGutters className={'nested-list-item'}>
+                <List component="div" disablePadding className="bordered-list-item">
+                  <ListItem disableGutters className="nested-list-item">
                     <ListItemIcon>
                       <AddIcon />
                     </ListItemIcon>
                     <ListItemText primary="Use the search bar below this list to add more applicants." />
                   </ListItem>
                   <Divider />
-                  <ListItem disableGutters className={'nested-list-item'}>
+                  <ListItem disableGutters className="nested-list-item">
                     <ListItemIcon>
                       <StarBorder />
                     </ListItemIcon>
                     <ListItemText primary="Use the star button to change the editor of this applicant, if necessary." />
                   </ListItem>
                   <Divider />
-                  <ListItem disableGutters className={'nested-list-item'}>
+                  <ListItem disableGutters className="nested-list-item">
                     <ListItemIcon>
                       <ClearIcon />
                     </ListItemIcon>
@@ -107,17 +107,17 @@ const ApplicantList = ({
                   />
                 ))
               ) : (
-                <ListItem key={'applicant-list-placeholder'} className={'list-item'}>
+                <ListItem key={'applicant-list-placeholder'} className="list-item">
                   <ListItemText
                     primary={'If you are reading this, something went wrong. Please contact CTS'}
-                    className={'list-item'}
+                    className="list-item"
                   />
                 </ListItem>
               )}
             </List>
           </Grid>
           <Grid container item justify="center" xs={12}>
-            <Grid item xs={9} sm={5} className={'people-search-parent'}>
+            <Grid item xs={9} sm={5} className="people-search-parent">
               <GordonPeopleSearch
                 disableLink
                 disabled={disabled}
