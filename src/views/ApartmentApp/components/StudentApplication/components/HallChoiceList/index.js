@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import HallChoiceListItem from './components/HallListItem';
+import HallChoiceListItem from './components/HallChoiceListItem';
 import housing from 'services/housing';
 
 /**
@@ -82,15 +82,6 @@ const HallChoiceList = ({
       </CardContent>
     </Card>
   );
-};
-
-HallChoiceList.propTypes = {
-  disabled: PropTypes.bool,
-  authentication: PropTypes.any,
-  apartmentChoices: PropTypes.array.isRequired,
-  onHallAdd: PropTypes.func,
-  onHallInputChange: PropTypes.func,
-  onHallRemove: PropTypes.func,
 };
 
 export default HallChoiceList;
