@@ -3,7 +3,6 @@
 
 
 .help {
-  
   margin: 1rem;
 
   li {
@@ -13,7 +12,6 @@
   li li {
     list-style-type: '⮚ ';
   }
-
   //TODO: Remove this when timesheets bugs are resolved
   ul {
     text-align: start;
@@ -29,7 +27,7 @@
     color: $neutral-white;
   }
 
-  &-section {
-      box-shadow: none!important;
+  &-section.MuiCard-root {
+    box-shadow: none;
   }
 }
