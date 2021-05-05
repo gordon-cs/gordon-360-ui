@@ -24,8 +24,9 @@ import ClearIcon from '@material-ui/icons/Clear';
  * @param {Object} props The React component props
  * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
  * @param {Number} props.index The index of this list item
- * @param {ApartmentChoice} props.apartmentChoice The ApartmentChoice object of this list item
- * @param {ApartmentChoice[]} props.apartmentChoiceArray Array of apartment choices
+ * @param {Number} props.hallRank The rank assigned to this hall by the user
+ * @param {String} props.hallName The name of the apartment hall
+ * @param {ApartmentChoice[]} props.apartmentChoices Array of apartment choices
  * @param {ApartmentHall[]} props.halls Array of apartment halls available
  * @param {CallbackFcn} props.onHallInputChange Callback for dropdown menu change
  * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
@@ -34,7 +35,8 @@ import ClearIcon from '@material-ui/icons/Clear';
 const HallChoiceListItem = ({
   disabled,
   index,
-  apartmentChoice: { HallRank, HallName },
+  hallRank,
+  hallName,
   apartmentChoiceArray,
   halls,
   onHallInputChange,
@@ -43,8 +45,8 @@ const HallChoiceListItem = ({
   const [isHallNameValid, setIsHallNameValid] = useState(false);
 
   useEffect(
-    () => setIsHallNameValid(HallName === '' || halls.some((hall) => hall.Name === HallName)),
-    [HallName, halls],
+    () => setIsHallNameValid(hallName === '' || halls.some((hall) => hall.Name === hallName)),
+    [hallName, halls],
   );
 
   const hallOptions = halls.map((hall) => (
@@ -68,10 +70,10 @@ const HallChoiceListItem = ({
               <InputLabel>Rank</InputLabel>
               <Select
                 disabled={disabled}
-                value={HallRank}
+                value={hallRank}
                 onChange={(event) =>
                   event.target.value !== null &&
-                  onHallInputChange?.(String(event.target.value), HallName, index)
+                  onHallInputChange?.(String(event.target.value), hallName, index)
                 }
                 input={<Input id={'rank' + index} />}
               >
@@ -84,10 +86,10 @@ const HallChoiceListItem = ({
               <InputLabel>Hall</InputLabel>
               <Select
                 disabled={disabled}
-                value={isHallNameValid ? HallName : ''}
+                value={isHallNameValid ? hallName : ''}
                 onChange={(event) =>
                   event.target.value !== null &&
-                  onHallInputChange?.(HallRank, String(event.target.value), index)
+                  onHallInputChange?.(hallRank, String(event.target.value), index)
                 }
                 input={<Input id={'hall' + index} />}
               >
