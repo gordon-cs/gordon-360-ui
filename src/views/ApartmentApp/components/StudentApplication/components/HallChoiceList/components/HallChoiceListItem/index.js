@@ -37,7 +37,7 @@ const HallChoiceListItem = ({
   index,
   hallRank,
   hallName,
-  apartmentChoiceArray,
+  apartmentChoices,
   halls,
   onHallInputChange,
   onHallRemove,
@@ -55,7 +55,7 @@ const HallChoiceListItem = ({
     </MenuItem>
   ));
 
-  const rankOptions = apartmentChoiceArray.map((_hall, i) => (
+  const rankOptions = apartmentChoices.map((_hall, i) => (
     <MenuItem value={i + 1} key={i + 1}>
       {i + 1}
     </MenuItem>
