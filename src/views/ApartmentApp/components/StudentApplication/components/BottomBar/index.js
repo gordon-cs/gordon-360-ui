@@ -77,7 +77,7 @@ const BottomBar = ({
     } else if (unsavedChanges) {
       dynamicContent = { primaryText: 'You have unsaved changes.' };
     } else {
-      dynamicContent = { primaryText: 'All changes to be saved.' };
+      dynamicContent = { primaryText: 'All changes have been saved.' };
     }
   }
 
