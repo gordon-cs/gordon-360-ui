@@ -347,7 +347,7 @@ const StudentApplication = ({ userProfile }) => {
 
         let insertText = '';
         if (profile.fullName) {
-          insertText = ` to${profile.fullName}`;
+          insertText = ` to ${profile.fullName}`;
         } else if (profile?.FirstName && profile?.LastName) {
           insertText = ` to ${profile.FirstName} ${profile.LastName}`;
         }
