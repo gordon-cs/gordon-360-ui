@@ -334,6 +334,12 @@ const processMultipleOccurences = (events) => {
   return splitEvents;
 }
 
+/**
+* Removes recurring events from the events list
+* 
+* @param (Object[]) events the list of events to be filtered
+* @return (Object[]) the list of non-recurring events
+*/
 const removeRecurring = (events) => {
   var filteredEvents = [];
   for (let i = 0; i < events.length; i++) {
