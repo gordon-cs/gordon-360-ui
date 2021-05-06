@@ -6,6 +6,7 @@
 import { DateTime } from 'luxon';
 import http from './http';
 import session from './session';
+import moment from 'moment';
 
 /**
  * The first element is the start time of the event, the second element is the end time of the
@@ -121,8 +122,8 @@ function formatevent(event) {
  * @returns {int} the sort order of the two events. -1 if a is first, 1 if b is first, 0 otherwise
  */
 function sortEventsByTime(a, b) {
-  const timeA = a.Occurrences[0].StartDate;
-  const timeB = b.Occurrences[0].StartDate;
+  const timeA = a.startDateTime;
+  const timeB = b.startDateTime;
 
   if (timeA < timeB) return -1;
   if (timeA > timeB) return 1;
@@ -139,8 +140,8 @@ function sortEventsByTime(a, b) {
  * @returns {int} -1 if a's time is less than b's, 1 if it's more, 0 if they're equal
  */
 function sortAtndEventsByTime(a, b) {
-  const timeA = a.Occurrences?.[0]?.StartDate || a.CHDate;
-  const timeB = b.Occurrences?.[0]?.StartDate || b.CHDate;
+  const timeA = a.startDateTime || a.CHDate;
+  const timeB = b.startDateTime || b.CHDate;
 
   if (timeA < timeB) return -1;
   if (timeA > timeB) return 1;
@@ -155,7 +156,7 @@ function sortAtndEventsByTime(a, b) {
 const getFutureEvents = (allEvents) => {
   const now = Date.now();
   return allEvents
-    .filter((e) => new Date(e.Occurrences[0].StartDate).getTime() > now)
+    .filter((e) => new Date(e.startDateTime).getTime() > now)
     .sort(sortEventsByTime);
 };
 
@@ -273,6 +274,61 @@ const makeMatchesFilters = (filters) => (event) => {
   return false;
 };
 
+/**
+ * Splits up multiple occurrences of events into individual events
+ * and re-sorts the array
+ *
+ * @param {Object[]} events the array of events to process
+ * @returns {Object[]} the flattened array of events after splitting multiple occurrences
+*/
+const processMultipleOccurences = (events) => {
+
+  var splitEvents = [];
+
+  for (let i = 0; i < events.length; i++) {
+
+    let thisEvent = events[i];
+    // if the event has more than 1 occurrences, loop over them and create new events for each; otherwise add the event itself
+    if (thisEvent.Occurrences && thisEvent.Occurrences.length > 1) {
+
+      for (let j = 0; thisEvent.Occurrences && j < thisEvent.Occurrences.length; j++) {
+
+        var thisOccurrence = thisEvent.Occurrences[j];
+        var thisOccurrenceStartDateTime = Date.parse(thisOccurrence.StartDate);
+        var thisOccurrenceEndDateTime = Date.parse(thisOccurrence.EndDate);
+        var thisOccurrenceDate = moment(thisOccurrenceStartDateTime).format('MMMM D, YYYY');
+        var thisOccurrenceTimeRange = ("" + moment(thisOccurrenceStartDateTime).format('h:mm A') + " - " + moment(thisOccurrenceEndDateTime).format('h:mm A'));
+
+        var thisEventOccurrence = {
+          Description: thisEvent.Description,
+          Event_ID: ("" + thisEvent.Event_ID + "-" + j),
+          Event_Name: thisEvent.Event_Name,
+          Event_Title: thisEvent.Event_Title,
+          Event_Type_Name: thisEvent.Event_Type_Name,
+          HasCLAWCredit: thisEvent.HasCLAWCredit,
+          IsPublic: thisEvent.IsPublic,
+          Organization: thisEvent.Organization,
+          date: thisOccurrenceDate,
+          location: (thisOccurrence.location ? thisOccurrence.location : thisEvent.location),
+          timeRange: thisOccurrenceTimeRange,
+          title: thisEvent.title,
+          startDateTime: (thisOccurrenceStartDateTime ? thisOccurrenceStartDateTime : Date.parse(thisEvent.date + thisEvent.timeRange))
+        };
+
+        splitEvents.push(thisEventOccurrence);
+      }
+    } else {
+      thisEvent.startDateTime = Date.parse(thisEvent.date + thisEvent.timeRange);
+      splitEvents.push(thisEvent);
+    }
+  }
+
+  // re-sort events by datetime
+  splitEvents.sort((a, b) => (a.startDateTime > b.startDateTime) ? 1 : -1);
+
+  return splitEvents;
+}
+
 export default {
   getAllEvents,
   getFutureEvents,
@@ -280,4 +336,5 @@ export default {
   getFilteredEvents,
   getAllGuestEvents,
   getAttendedChapelEvents,
+  processMultipleOccurences,
 };

@@ -37,6 +37,8 @@ const Events = (props) => {
       } else {
         allEvents = await gordonEvent.getAllGuestEvents();
       }
+
+      allEvents = gordonEvent.processMultipleOccurences(allEvents);
       setAllEvents(allEvents);
 
       // Load filters from UrlParams if they exist
