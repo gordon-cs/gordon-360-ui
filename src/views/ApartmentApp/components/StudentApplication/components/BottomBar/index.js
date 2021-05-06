@@ -5,6 +5,24 @@ import PublishIcon from '@material-ui/icons/Publish';
 import SaveIcon from '@material-ui/icons/Save';
 import DynamicButton from 'components/DynamicButton';
 
+/**
+ * Renders the bottom bar for the apartment application page
+ *
+ * @param {Object} props The React component props
+ * @param {Boolean} props.applicationCardsOpen Indicates whether the application cards are open and visible
+ * @param {Number} props.applicationID Application ID number of this application
+ * @param {Boolean} props.canEditApplication Indicates whether the current using is authorized to edit the application
+ * @param {Boolean | String} props.deleting Status of delete operation
+ * @param {Object} props.disableSubmit Boolean to disable the submit button
+ * @param {Boolean | String} props.saving Status of save operation
+ * @param {Boolean | String} props.submitStatus Status of submit operation
+ * @param {Boolean} props.unsavedChanges Indicates whether the page currently contains unsaved changes
+ * @param {CallbackFcn} props.onDeleteButtonClick Callback
+ * @param {CallbackFcn} props.onSaveButtonClick Callback
+ * @param {CallbackFcn} props.onShowApplication Callback
+ * @param {CallbackFcn} props.onSubmitButtonClick Callback for the submit application button
+ * @returns {JSX.Element} JSX Element for the bottom bar
+ */
 const BottomBar = ({
   applicationCardsOpen,
   applicationID,
