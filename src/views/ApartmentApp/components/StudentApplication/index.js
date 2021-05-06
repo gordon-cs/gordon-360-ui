@@ -26,11 +26,37 @@ const BLANK_APPLICATION_DETAILS = {
   Applicants: [],
   ApartmentChoices: [],
 };
-const INITIAL_DIALOG_PROPS = {
-  labelledby: 'default-dialog',
-  describedby: 'dialog-undefined',
-  title: 'How did you get here?',
-  text: 'This text should not be displayed.',
+const DIALOG_PROPS = {
+  default: {
+    action: 'default',
+    labelledby: 'default-dialog',
+    describedby: 'dialog-undefined',
+    title: 'How did you get here?',
+    text: 'This text should not be displayed.',
+  },
+  changeEditor: {
+    action: 'changeEditor',
+    labelledby: 'applicant-warning-dialog',
+    describedby: 'changing-application-editor',
+    title: 'Change application editor?',
+    text:
+      'You are about to change the editor.\nIf you change the application editor, you will no longer be able to edit this application yourself. All unsaved changes will be saved automatically.\nAre you sure you want to change the application editor?',
+  },
+  delete: {
+    action: 'delete',
+    labelledby: 'delete-application-dialog',
+    describedby: 'delete-application',
+    title: 'Delete apartment application?',
+    text: 'Are you sure you want to delete this application?\nThis action cannot be undone.',
+  },
+  submit: {
+    action: 'submit',
+    labelledby: 'submit-application-dialog',
+    describedby: 'submit-application',
+    title: 'Submit apartment application?',
+    text:
+      'Please confirm that all the information you have entered is valid\nClick "Accept" below to submit this application', // TODO: Improve this text for the users
+  },
 };
 
 /**
@@ -63,8 +89,7 @@ const StudentApplication = ({ userProfile }) => {
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
-  const [dialog, setDialog] = useState('');
-  const [dynamicDialogProps, setDynamicDialogProps] = useState(INITIAL_DIALOG_PROPS);
+  const [dialogProps, setDialogProps] = useState(DIALOG_PROPS.default);
   const [deleteButtonAlertTimeout, setDeleteButtonAlertTimeout] = useState(null);
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
   const [submitButtonAlertTimeout, setSubmitButtonAlertTimeout] = useState(null);
@@ -160,67 +185,12 @@ const StudentApplication = ({ userProfile }) => {
     [applicationDetails?.EditorProfile?.AD_Username, userProfile?.AD_Username],
   );
 
-  useEffect(() => {
-    const changeEditorAlertText = (
-      <span>
-        You are about to change the editor to {newEditorProfile?.FirstName}{' '}
-        {newEditorProfile?.LastName}
-        <br />
-        If you change the application editor, you will no longer be able to edit this application
-        yourself. All unsaved changes will be saved automatically.
-        <br />
-        Are you sure you want to change the application editor?
-      </span>
-    );
-
-    const deleteAlertText = (
-      <span>
-        Are you sure you want to delete this application?
-        <br />
-        This action cannot be undone.
-      </span>
-    );
-
-    // TODO: Improve this text for the users
-    const submitAlertText = (
-      <span>
-        Please confirm that all the information you have entered is valid
-        <br />
-        Click "Accept" below to submit this application
-      </span>
-    );
-
-    setDynamicDialogProps((prevDialogProps) => {
-      switch (dialog) {
-        case 'changeEditor':
-          return {
-            labelledby: 'applicant-warning-dialog',
-            describedby: 'changing-application-editor',
-            title: 'Change application editor?',
-            text: changeEditorAlertText,
-          };
-        case 'delete':
-          return {
-            labelledby: 'delete-application-dialog',
-            describedby: 'delete-application',
-            title: 'Delete apartment application?',
-            text: deleteAlertText,
-          };
-        case 'submit':
-          return {
-            labelledby: 'submit-application-dialog',
-            describedby: 'submit-application',
-            title: 'Submit apartment application?',
-            text: submitAlertText,
-          };
-        default:
-          return prevDialogProps;
-      }
-    });
-  }, [dialog, newEditorProfile]);
-
   const createSnackbar = (message, severity) => {
     setSnackbar({ message, severity, open: true });
+  };
+
+  const createDialog = (newDialogProps) => {
+    setDialogProps({ ...newDialogProps, open: true });
   };
 
   /**
@@ -355,7 +325,20 @@ const StudentApplication = ({ userProfile }) => {
         )
       ) {
         setNewEditorProfile(profile);
-        setDialog('changeEditor');
+
+        let newDialogProps = DIALOG_PROPS.changeEditor;
+        let insertText = null;
+        if (profile.fullName) {
+          insertText = `to ${profile.fullName}`;
+        } else if (profile?.FirstName && profile?.LastName) {
+          insertText = `to ${profile.FirstName} ${profile.LastName}`;
+        }
+        newDialogProps.text = `You are about to change the editor ${insertText}.\n
+            If you change the application editor, you will no longer be able to edit this
+            application yourself. All unsaved changes will be saved automatically.\n
+            Are you sure you want to change the application editor?`;
+
+        createDialog(newDialogProps);
       }
     }
   };
@@ -765,7 +748,6 @@ const StudentApplication = ({ userProfile }) => {
                         }
                         editorProfile={applicationDetails.EditorProfile}
                         applicants={applicationDetails.Applicants ?? []}
-                        maxNumApplicants={MAX_NUM_APPLICANTS}
                         onSearchSubmit={(searchSelection) =>
                           searchSelection && addApplicant(searchSelection)
                         }
@@ -831,12 +813,12 @@ const StudentApplication = ({ userProfile }) => {
                 saving={saving}
                 submitStatus={applicationDetails.DateSubmitted ? 'success' : submitStatus}
                 unsavedChanges={unsavedChanges}
-                onDeleteButtonClick={() => setDialog('delete')}
+                onDeleteButtonClick={() => createDialog(DIALOG_PROPS.delete)}
                 onSaveButtonClick={() => {
                   saveApartmentApplication(applicationDetails);
                 }}
                 onShowApplication={() => setApplicationCardsOpen(true)}
-                onSubmitButtonClick={() => setDialog('submit')}
+                onSubmitButtonClick={() => createDialog(DIALOG_PROPS.submit)}
               />
             </Grid>
           </Grid>
@@ -853,11 +835,13 @@ const StudentApplication = ({ userProfile }) => {
           }
         />
         <GordonDialogBox
-          open={dialog ? true : false}
-          onClose={(_event, reason) => reason !== 'clickaway' && setDialog(null)}
+          open={dialogProps.open ?? false}
+          onClose={(_event, reason) =>
+            reason !== 'clickaway' && setDialogProps((s) => ({ ...s, open: false }))
+          }
           buttonClicked={() => {
-            setDialog((prevDialogState) => {
-              switch (prevDialogState) {
+            setDialogProps((prevProps) => {
+              switch (prevProps.action) {
                 case 'changeEditor':
                   handleChangeEditorAccepted();
                   break;
@@ -870,13 +854,13 @@ const StudentApplication = ({ userProfile }) => {
                 default:
                   console.error('Invalid dialog state');
               }
-              return null;
+              return { ...prevProps, open: false };
             });
           }}
           buttonName={'Accept'}
-          cancelButtonClicked={() => setDialog(null)}
+          cancelButtonClicked={() => setDialogProps((s) => ({ ...s, open: false }))}
           severity={'warning'}
-          {...dynamicDialogProps}
+          {...dialogProps}
         />
       </div>
     );
