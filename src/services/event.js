@@ -59,7 +59,7 @@ const getAllEvents = async () => {
  * @returns {Promise<Event[]>} upcoming CL&W events
  */
 const getCLWEvents = async () => {
-  const allEvents = await http.get('events/25Live/CLAW');
+  let allEvents = await http.get('events/25Live/CLAW');
   allEvents = allEvents.map((e) => formatevent(e));
   allEvents = getFutureEvents(allEvents);
   allEvents = processMultipleOccurences(allEvents);
