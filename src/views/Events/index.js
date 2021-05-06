@@ -24,6 +24,7 @@ const Events = (props) => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [includePast, setIncludePast] = useState(false);
+  const [includeRecurring, setIncludeRecurring] = useState(true);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
@@ -45,11 +46,14 @@ const Events = (props) => {
       if (props.location.search) {
         const urlParams = new URLSearchParams(props.location.search);
         let willIncludePast = false;
+        let willIncludeRecurring = true;
         const filtersFromURL = [];
 
         for (const key of urlParams.keys()) {
           if (key === 'Past') {
             willIncludePast = true;
+          } else if (key === 'notRecurring') {
+            willIncludeRecurring = false;
           } else {
             filtersFromURL.push(key);
           }
@@ -57,6 +61,7 @@ const Events = (props) => {
 
         setFilters(filtersFromURL);
         setIncludePast(willIncludePast);
+        setIncludeRecurring(willIncludeRecurring);
         setOpen(willIncludePast || filtersFromURL.length > 0);
       }
 
@@ -67,8 +72,8 @@ const Events = (props) => {
   }, [props.authentication, props.location.search]);
 
   useEffect(() => {
-    setEvents(includePast ? allEvents : futureEvents);
-  }, [includePast, allEvents, futureEvents]);
+    setEvents(includePast ? (includeRecurring ? allEvents : gordonEvent.removeRecurring(allEvents)) : (includeRecurring ? futureEvents : gordonEvent.removeRecurring(futureEvents)));
+  }, [includeRecurring,includePast, allEvents, futureEvents]);
 
   useEffect(() => {
     setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
@@ -76,7 +81,7 @@ const Events = (props) => {
 
   const handleChangeFilters = async (event) => {
     setFilters(event.target.value);
-    setURLParams(includePast, event.target.value);
+    setURLParams(includeRecurring,includePast, event.target.value);
   };
 
   const handleExpandClick = () => {
@@ -86,19 +91,27 @@ const Events = (props) => {
 
   const clearFilters = () => {
     setIncludePast(false);
+    setIncludeRecurring(true);
     setFilters([]);
-    setURLParams(false, []);
+    setURLParams(false, false, []);
   };
 
   const handleChangeIncludePast = () => {
     setIncludePast(!includePast);
-    setURLParams(!includePast, filters);
+    setURLParams(includeRecurring,!includePast, filters);
   };
 
-  const setURLParams = (includePast, filters) => {
-    if (includePast || filters.length > 0) {
+  const handleChangeIncludeRecurring = () => {
+    setIncludeRecurring(!includeRecurring);
+    setURLParams(!includeRecurring, includePast, filters);
+    console.log('changeRecurring');
+  };
+
+  const setURLParams = (includeRecurring, includePast, filters) => {
+    if (includeRecurring || includePast || filters.length > 0) {
       let url = '?';
       if (includePast) url += '&Past';
+      if (!includeRecurring) url += '&notRecurring';
       url = filters.reduce((url, filter) => (url += `&${encodeURIComponent(filter)}`), url);
       props.history.push(url);
     } else if (props.location.search) {
@@ -146,6 +159,10 @@ const Events = (props) => {
           control={<Checkbox checked={includePast} onChange={handleChangeIncludePast} />}
           label="Include Past"
         />
+        <FormControlLabel
+        control={<Checkbox checked={includeRecurring} onChange={handleChangeIncludeRecurring} />}
+        label="Include Recurring"
+      />
       </div>
     </Collapse>
   );

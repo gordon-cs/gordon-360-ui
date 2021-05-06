@@ -298,6 +298,8 @@ const processMultipleOccurences = (events) => {
         var thisOccurrenceEndDateTime = Date.parse(thisOccurrence.EndDate);
         var thisOccurrenceDate = moment(thisOccurrenceStartDateTime).format('MMMM D, YYYY');
         var thisOccurrenceTimeRange = ("" + moment(thisOccurrenceStartDateTime).format('h:mm A') + " - " + moment(thisOccurrenceEndDateTime).format('h:mm A'));
+        var allOccurrences = thisEvent.Occurrences.map((occurrence) => {return {start: occurrence.StartDate,
+          end: occurrence.EndDate}});
 
         var thisEventOccurrence = {
           Description: thisEvent.Description,
@@ -312,13 +314,16 @@ const processMultipleOccurences = (events) => {
           location: (thisOccurrence.location ? thisOccurrence.location : thisEvent.location),
           timeRange: thisOccurrenceTimeRange,
           title: thisEvent.title,
-          startDateTime: (thisOccurrenceStartDateTime ? thisOccurrenceStartDateTime : Date.parse(thisEvent.date + thisEvent.timeRange))
+          startDateTime: (thisOccurrenceStartDateTime ? thisOccurrenceStartDateTime : Date.parse(thisEvent.date + thisEvent.timeRange)),
+          allOccurrences: allOccurrences,
+          recurring: true
         };
 
         splitEvents.push(thisEventOccurrence);
       }
     } else {
       thisEvent.startDateTime = Date.parse(thisEvent.date + thisEvent.timeRange);
+      thisEvent.recurring = false;
       splitEvents.push(thisEvent);
     }
   }
@@ -329,6 +334,17 @@ const processMultipleOccurences = (events) => {
   return splitEvents;
 }
 
+const removeRecurring = (events) => {
+  var filteredEvents = [];
+  for (let i = 0; i < events.length; i++) {
+    console.log(events[i].recurring);
+    if (!events[i].recurring) {
+      filteredEvents.push(events[i]);
+    }
+  }
+  return filteredEvents;
+}
+
 export default {
   getAllEvents,
   getFutureEvents,
@@ -337,4 +353,5 @@ export default {
   getAllGuestEvents,
   getAttendedChapelEvents,
   processMultipleOccurences,
+  removeRecurring,
 };

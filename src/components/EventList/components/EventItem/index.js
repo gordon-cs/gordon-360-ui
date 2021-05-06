@@ -35,7 +35,7 @@ export default class GordonEventItem extends Component {
           <Grid item xs={2}>
             <Typography className="event-column">{event.timeRange}</Typography>
           </Grid>
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+          <Collapse in={this.state.open} timeout="auto" unmountOnExit className='event-details'>
             <CardContent>
               <Typography className="descriptionText">Description:</Typography>
               <Typography type="caption" className="descriptionText">
