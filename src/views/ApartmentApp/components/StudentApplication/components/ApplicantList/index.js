@@ -22,6 +22,7 @@ import GordonPeopleSearch from 'components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
 
 /**
+ * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */

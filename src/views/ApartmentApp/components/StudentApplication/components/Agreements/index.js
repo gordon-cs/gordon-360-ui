@@ -27,7 +27,7 @@ const Agreements = ({ deleting, onChange }) => {
     const currentYear = new Date().getFullYear();
     const selectionDate = await housing.getApartmentSelectionDate();
 
-    let newCheckboxes = [
+    const newCheckboxes = [
       {
         checked: false,
         label: 'Each individual on the application has agreed to be on the application',

@@ -44,6 +44,7 @@ const BottomBar = ({
     itemProps: {},
   };
 
+  //TODO: Refactor this to do something more compact like the dialogProps in StudentApplication
   if (submitStatus === 'success') {
     dynamicContent = {
       primaryText: 'The application was submitted successfully!',
