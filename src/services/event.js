@@ -342,7 +342,6 @@ const processMultipleOccurences = (events) => {
 * @returns {Object[]} the list of non-recurring events
 */
 const removeRecurring = (events) => {
-  console.log(events.filter((event) => !event.recurring));
   let filteredEvents = events.filter((event) => (!event.recurring));
   return filteredEvents;
 }
