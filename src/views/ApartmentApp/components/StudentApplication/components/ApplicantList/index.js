@@ -29,10 +29,9 @@ import ApplicantListItem from './components/ApplicantListItem';
 /**
  * Renders the list of applicants, displayed by name, username, and class standing.
  * @param {Object} props The React component props
- * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list
  * @param {StudentProfileInfo} props.editorProfile The StudentProfileInfo of the application editor
  * @param {ApartmentApplicant[]} props.applicants Array of applicant info
- * @param {Number} props.maxNumApplicants The maximum number of applicants allowed on an apartment application
  * @param {CallbackFcn} props.onSearchSubmit Callback for apartment people search submission
  * @param {CallbackFcn} props.onChangeEditor Callback for change editor button
  * @param {CallbackFcn} props.onApplicantRemove Callback for remove applicant button
@@ -42,7 +41,6 @@ const ApplicantList = ({
   disabled,
   editorProfile,
   applicants,
-  maxNumApplicants,
   onSearchSubmit,
   onChangeEditor,
   onApplicantRemove,
