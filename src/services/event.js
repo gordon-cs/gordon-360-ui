@@ -338,7 +338,7 @@ const processMultipleOccurences = (events) => {
 * Removes recurring events from the events list
 * 
 * @param (Object[]) events the list of events to be filtered
-* @return (Object[]) the list of non-recurring events
+* @returns (Object[]) the list of non-recurring events
 */
 const removeRecurring = (events) => {
   var filteredEvents = [];
