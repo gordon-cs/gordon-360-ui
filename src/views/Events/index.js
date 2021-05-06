@@ -38,8 +38,6 @@ const Events = (props) => {
       } else {
         allEvents = await gordonEvent.getAllGuestEvents();
       }
-
-      allEvents = gordonEvent.processMultipleOccurences(allEvents);
       setAllEvents(allEvents);
 
       // Load filters from UrlParams if they exist
@@ -62,7 +60,7 @@ const Events = (props) => {
         setFilters(filtersFromURL);
         setIncludePast(willIncludePast);
         setIncludeRecurring(willIncludeRecurring);
-        setOpen(willIncludePast || filtersFromURL.length > 0);
+        setOpen(!willIncludeRecurring || willIncludePast || filtersFromURL.length > 0);
       }
 
       setLoading(false);
@@ -72,7 +70,11 @@ const Events = (props) => {
   }, [props.authentication, props.location.search]);
 
   useEffect(() => {
-    setEvents(includePast ? (includeRecurring ? allEvents : gordonEvent.removeRecurring(allEvents)) : (includeRecurring ? futureEvents : gordonEvent.removeRecurring(futureEvents)));
+    if (includePast) {
+      setEvents(includeRecurring ? allEvents : gordonEvent.removeRecurring(allEvents));
+    } else {
+      setEvents(includeRecurring ? futureEvents : gordonEvent.removeRecurring(gordonEvent.getFutureEvents(allEvents)));
+    }
   }, [includeRecurring,includePast, allEvents, futureEvents]);
 
   useEffect(() => {
@@ -103,15 +105,14 @@ const Events = (props) => {
 
   const handleChangeIncludeRecurring = () => {
     setIncludeRecurring(!includeRecurring);
-    setURLParams(!includeRecurring, includePast, filters);
-    console.log('changeRecurring');
+    setURLParams(includeRecurring, includePast, filters);
   };
 
   const setURLParams = (includeRecurring, includePast, filters) => {
     if (includeRecurring || includePast || filters.length > 0) {
       let url = '?';
       if (includePast) url += '&Past';
-      if (!includeRecurring) url += '&notRecurring';
+      if (includeRecurring) url += '&notRecurring';
       url = filters.reduce((url, filter) => (url += `&${encodeURIComponent(filter)}`), url);
       props.history.push(url);
     } else if (props.location.search) {
@@ -162,7 +163,7 @@ const Events = (props) => {
         <FormControlLabel
         control={<Checkbox checked={includeRecurring} onChange={handleChangeIncludeRecurring} />}
         label="Include Recurring"
-      />
+      /> 
       </div>
     </Collapse>
   );

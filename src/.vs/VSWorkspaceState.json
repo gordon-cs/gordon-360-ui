@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\components",
+    "\\components\\EventList",
+    "\\components\\EventList\\components",
+    "\\components\\EventList\\components\\EventItem",
+    "\\services",
+    "\\views",
+    "\\views\\Events",
+    "\\views\\PeopleSearch"
+  ],
+  "SelectedNode": "\\services\\event.js",
+  "PreviewInSolutionExplorer": false
+}

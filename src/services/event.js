@@ -47,8 +47,10 @@ import moment from 'moment';
  * @returns {Promise<Event[]>} All events
  */
 const getAllEvents = async () => {
-  const allEvents = await http.get('events/25Live/All');
-  return allEvents.map((e) => formatevent(e)).sort(sortEventsByTime);
+  let allEvents = await http.get('events/25Live/All');
+  allEvents = allEvents.map((e) => formatevent(e));
+  allEvents = processMultipleOccurences(allEvents);
+  return allEvents.sort(sortEventsByTime);
 };
 
 /**
@@ -58,11 +60,10 @@ const getAllEvents = async () => {
  */
 const getCLWEvents = async () => {
   const allEvents = await http.get('events/25Live/CLAW');
-  const now = Date.now();
-  return allEvents
-    .filter((e) => new Date(e.Occurrences[0].StartDate).getTime() > now)
-    .map((e) => formatevent(e))
-    .sort(sortEventsByTime);
+  allEvents = allEvents.map((e) => formatevent(e));
+  allEvents = getFutureEvents(allEvents);
+  allEvents = processMultipleOccurences(allEvents);
+  return allEvents.sort(sortEventsByTime);
 };
 
 /**
@@ -70,8 +71,10 @@ const getCLWEvents = async () => {
  * @returns {Promise<Event[]>} All events
  */
 const getAllGuestEvents = async () => {
-  const allGuest = await http.get('events/25Live/Public');
-  return allGuest.map((e) => formatevent(e)).sort(sortEventsByTime);
+  let allGuest = await http.get('events/25Live/Public');
+  allGuest = allGuest.map((e) => formatevent(e));
+  allGuest = processMultipleOccurences(allGuest);
+  return allGuest.sort(sortEventsByTime);
 };
 
 /**
@@ -288,17 +291,18 @@ const processMultipleOccurences = (events) => {
   for (let i = 0; i < events.length; i++) {
 
     let thisEvent = events[i];
+
     // if the event has more than 1 occurrences, loop over them and create new events for each; otherwise add the event itself
     if (thisEvent.Occurrences && thisEvent.Occurrences.length > 1) {
 
       for (let j = 0; thisEvent.Occurrences && j < thisEvent.Occurrences.length; j++) {
 
-        var thisOccurrence = thisEvent.Occurrences[j];
-        var thisOccurrenceStartDateTime = Date.parse(thisOccurrence.StartDate);
-        var thisOccurrenceEndDateTime = Date.parse(thisOccurrence.EndDate);
-        var thisOccurrenceDate = moment(thisOccurrenceStartDateTime).format('MMMM D, YYYY');
-        var thisOccurrenceTimeRange = ("" + moment(thisOccurrenceStartDateTime).format('h:mm A') + " - " + moment(thisOccurrenceEndDateTime).format('h:mm A'));
-        var allOccurrences = thisEvent.Occurrences.map((occurrence) => {return {start: occurrence.StartDate,
+        const thisOccurrence = thisEvent.Occurrences[j];
+        const thisOccurrenceStartDateTime = DateTime.fromISO(thisOccurrence.StartDate).toJSDate();
+        const thisOccurrenceEndDateTime = DateTime.fromISO(thisOccurrence.EndDate).toJSDate();
+        const thisOccurrenceDate = moment(thisOccurrenceStartDateTime).format('MMMM D, YYYY');
+        const thisOccurrenceTimeRange = ("" + moment(thisOccurrenceStartDateTime).format('h:mm A') + " - " + moment(thisOccurrenceEndDateTime).format('h:mm A'));
+        const allOccurrences = thisEvent.Occurrences.map((occurrence) => {return {start: occurrence.StartDate,
           end: occurrence.EndDate}});
 
         var thisEventOccurrence = {
@@ -314,7 +318,7 @@ const processMultipleOccurences = (events) => {
           location: (thisOccurrence.location ? thisOccurrence.location : thisEvent.location),
           timeRange: thisOccurrenceTimeRange,
           title: thisEvent.title,
-          startDateTime: (thisOccurrenceStartDateTime ? thisOccurrenceStartDateTime : Date.parse(thisEvent.date + thisEvent.timeRange)),
+          startDateTime: thisOccurrenceStartDateTime,
           allOccurrences: allOccurrences,
           recurring: true
         };
@@ -322,14 +326,11 @@ const processMultipleOccurences = (events) => {
         splitEvents.push(thisEventOccurrence);
       }
     } else {
-      thisEvent.startDateTime = Date.parse(thisEvent.date + thisEvent.timeRange);
+      thisEvent.startDateTime = DateTime.fromISO(thisEvent.Occurrences[0].StartDate).toJSDate();
       thisEvent.recurring = false;
       splitEvents.push(thisEvent);
     }
   }
-
-  // re-sort events by datetime
-  splitEvents.sort((a, b) => (a.startDateTime > b.startDateTime) ? 1 : -1);
 
   return splitEvents;
 }
@@ -341,13 +342,8 @@ const processMultipleOccurences = (events) => {
 * @returns {Object[]} the list of non-recurring events
 */
 const removeRecurring = (events) => {
-  var filteredEvents = [];
-  for (let i = 0; i < events.length; i++) {
-    console.log(events[i].recurring);
-    if (!events[i].recurring) {
-      filteredEvents.push(events[i]);
-    }
-  }
+  console.log(events.filter((event) => !event.recurring));
+  let filteredEvents = events.filter((event) => (!event.recurring));
   return filteredEvents;
 }
 
