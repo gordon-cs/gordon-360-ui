@@ -39,23 +39,42 @@ const DIALOG_PROPS = {
     labelledby: 'applicant-warning-dialog',
     describedby: 'changing-application-editor',
     title: 'Change application editor?',
-    text:
-      'You are about to change the editor.\nIf you change the application editor, you will no longer be able to edit this application yourself. All unsaved changes will be saved automatically.\nAre you sure you want to change the application editor?',
+    text: (
+      <span>
+        You are about to change the editor.
+        <br />
+        If you change the application editor, you will no longer be able to edit this application
+        yourself. All unsaved changes will be saved automatically.
+        <br />
+        Are you sure you want to change the application editor?
+      </span>
+    ),
   },
   delete: {
     action: 'delete',
     labelledby: 'delete-application-dialog',
     describedby: 'delete-application',
     title: 'Delete apartment application?',
-    text: 'Are you sure you want to delete this application?\nThis action cannot be undone.',
+    text: (
+      <span>
+        Are you sure you want to delete this application?
+        <br />
+        This action cannot be undone.
+      </span>
+    ),
   },
   submit: {
     action: 'submit',
     labelledby: 'submit-application-dialog',
     describedby: 'submit-application',
     title: 'Submit apartment application?',
-    text:
-      'Please confirm that all the information you have entered is valid\nClick "Accept" below to submit this application', // TODO: Improve this text for the users
+    text: (
+      <span>
+        Please confirm that all the information you have entered is valid before submitting.
+        <br />
+        Click "Accept" below to submit this application.
+      </span>
+    ), // TODO: Improve this text for the users
   },
 };
 
@@ -189,8 +208,8 @@ const StudentApplication = ({ userProfile }) => {
     setSnackbar({ message, severity, open: true });
   };
 
-  const createDialog = (newDialogProps) => {
-    setDialogProps({ ...newDialogProps, open: true });
+  const createDialog = (itemProps, text = null) => {
+    setDialogProps({ ...itemProps, text: text ?? itemProps.text, open: true });
   };
 
   /**
@@ -326,19 +345,23 @@ const StudentApplication = ({ userProfile }) => {
       ) {
         setNewEditorProfile(profile);
 
-        let newDialogProps = DIALOG_PROPS.changeEditor;
-        let insertText = null;
+        let insertText = '';
         if (profile.fullName) {
-          insertText = `to ${profile.fullName}`;
+          insertText = ` to${profile.fullName}`;
         } else if (profile?.FirstName && profile?.LastName) {
-          insertText = `to ${profile.FirstName} ${profile.LastName}`;
+          insertText = ` to ${profile.FirstName} ${profile.LastName}`;
         }
-        newDialogProps.text = `You are about to change the editor ${insertText}.\n
+        const dialogText = (
+          <span>
+            You are about to change the editor{insertText}.
+            <br />
             If you change the application editor, you will no longer be able to edit this
-            application yourself. All unsaved changes will be saved automatically.\n
-            Are you sure you want to change the application editor?`;
-
-        createDialog(newDialogProps);
+            application yourself. All unsaved changes will be saved automatically.
+            <br />
+            Are you sure you want to change the application editor?
+          </span>
+        );
+        createDialog(DIALOG_PROPS.changeEditor, dialogText);
       }
     }
   };
