@@ -83,7 +83,7 @@ const Events = (props) => {
 
   const handleChangeFilters = async (event) => {
     setFilters(event.target.value);
-    setURLParams(includeRecurring,includePast, event.target.value);
+    setURLParams(includeRecurring, includePast, event.target.value);
   };
 
   const handleExpandClick = () => {
