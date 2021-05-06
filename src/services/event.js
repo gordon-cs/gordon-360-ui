@@ -281,33 +281,28 @@ const makeMatchesFilters = (filters) => (event) => {
  * Splits up multiple occurrences of events into individual events
  * and re-sorts the array
  *
- * @param {Object[]} events the array of events to process
- * @returns {Object[]} the flattened array of events after splitting multiple occurrences
+ * @param {Event[]} events the array of events to process
+ * @returns {Event[]} the flattened array of events after splitting multiple occurrences
 */
 const processMultipleOccurences = (events) => {
 
-  var splitEvents = [];
+  let splitEvents = [];
 
-  for (let i = 0; i < events.length; i++) {
-
-    let thisEvent = events[i];
+  for (let thisEvent of events) {
 
     // if the event has more than 1 occurrences, loop over them and create new events for each; otherwise add the event itself
     if (thisEvent.Occurrences && thisEvent.Occurrences.length > 1) {
+      let count = 0;
+      for (let thisOccurrence of thisEvent.Occurrences) {
 
-      for (let j = 0; thisEvent.Occurrences && j < thisEvent.Occurrences.length; j++) {
-
-        const thisOccurrence = thisEvent.Occurrences[j];
         const thisOccurrenceStartDateTime = DateTime.fromISO(thisOccurrence.StartDate).toJSDate();
         const thisOccurrenceEndDateTime = DateTime.fromISO(thisOccurrence.EndDate).toJSDate();
-        const thisOccurrenceDate = moment(thisOccurrenceStartDateTime).format('MMMM D, YYYY');
+        const thisOccurrenceDate = DateTime.fromISO(thisOccurrence.StartDate).toFormat('LLL dd, yyyy');
         const thisOccurrenceTimeRange = ("" + moment(thisOccurrenceStartDateTime).format('h:mm A') + " - " + moment(thisOccurrenceEndDateTime).format('h:mm A'));
-        const allOccurrences = thisEvent.Occurrences.map((occurrence) => {return {start: occurrence.StartDate,
-          end: occurrence.EndDate}});
 
-        var thisEventOccurrence = {
+        splitEvents.push({
           Description: thisEvent.Description,
-          Event_ID: ("" + thisEvent.Event_ID + "-" + j),
+          Event_ID: ("" + thisEvent.Event_ID + "-" + count),
           Event_Name: thisEvent.Event_Name,
           Event_Title: thisEvent.Event_Title,
           Event_Type_Name: thisEvent.Event_Type_Name,
@@ -319,11 +314,9 @@ const processMultipleOccurences = (events) => {
           timeRange: thisOccurrenceTimeRange,
           title: thisEvent.title,
           startDateTime: thisOccurrenceStartDateTime,
-          allOccurrences: allOccurrences,
           recurring: true
-        };
-
-        splitEvents.push(thisEventOccurrence);
+        });
+        count++;
       }
     } else {
       thisEvent.startDateTime = DateTime.fromISO(thisEvent.Occurrences[0].StartDate).toJSDate();
@@ -338,12 +331,11 @@ const processMultipleOccurences = (events) => {
 /**
 * Removes recurring events from the events list
 * 
-* @param {Object[]} events the list of events to be filtered
-* @returns {Object[]} the list of non-recurring events
+* @param {Event[]} events the list of events to be filtered
+* @returns {Event[]} the list of non-recurring events
 */
 const removeRecurring = (events) => {
-  let filteredEvents = events.filter((event) => (!event.recurring));
-  return filteredEvents;
+  return events.filter((event) => (!event.recurring));
 }
 
 export default {
