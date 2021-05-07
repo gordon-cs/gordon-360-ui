@@ -1,5 +1,5 @@
 import About from './views/About';
-import ActivitiesAll from './views/ActivitiesAll';
+import InvolvementsAll from './views/InvolvementsAll';
 //import ActivityEdit from './views/ActivityEdit';
 import ActivityProfile from './views/ActivityProfile';
 import Home from './views/Home';
@@ -52,7 +52,7 @@ export default [
   {
     name: 'Involvements',
     path: '/involvements',
-    component: ActivitiesAll,
+    component: InvolvementsAll,
   },
   {
     name: 'Help',
