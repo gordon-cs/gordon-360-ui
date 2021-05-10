@@ -30,7 +30,7 @@ export default class Advisors extends Component {
       throw this.state.error;
     }
 
-    let content;
+    let content = null;
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
