@@ -469,7 +469,7 @@ export default class StudentNews extends Component {
                 open={this.state.snackbarOpen}
                 message={this.state.snackbarMessage}
                 onClose={this.handleSnackbarClose}
-                autoHideDuration="5000"
+                autoHideDuration={5000}
                 anchorOrigin={{
                   vertical: 'bottom',
                   horizontal: 'left',
