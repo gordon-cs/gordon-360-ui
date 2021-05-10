@@ -571,6 +571,7 @@ class ActivityProfile extends Component {
             );
           }
           const { SessionDescription: sessionDescription } = this.state.sessionInfo;
+          const { ActivityBlurb: activityBlurb } = this.state.activityInfo;
           let website;
           if (this.state.activityInfo?.ActivityURL?.length !== 0) {
             website = (
@@ -665,6 +666,7 @@ class ActivityProfile extends Component {
           let editActivity;
 
           const { SessionDescription: sessionDescription } = this.state.sessionInfo;
+          const { ActivityDescription: activityDescription } = this.state.activityInfo;
           let description;
           if (this.state.activityInfo?.ActivityBlurb?.length !== 0) {
             description = (
