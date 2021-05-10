@@ -25,9 +25,4 @@
     background-color: $primary-blue;
     color: $neutral-white;
   }
-
-  //TODO Issue #1098 - remove when timeshets.scss stops centering grid items
-  &-content {
-    text-align: start;
-  }
 }
