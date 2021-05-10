@@ -367,16 +367,17 @@ class GordonSchedulePanel extends Component {
             <Typography>{panelTitle} the Schedule</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Grid container direction="row" xs={12} lg={12} justify="center">
+            <Grid container direction="row" justify="center">
               {this.props.network === 'online' && (
-                <Grid container direction="row" xs={12} lg={10}>
-                  <Grid container xs={12} lg={8} alignItems="center" justify="flex-start">
+                <Grid container direction="row" item xs={12} lg={10}>
+                  <Grid container item xs={12} lg={8} alignItems="center" justify="flex-start">
                     <Markup content={replaced} />
                   </Grid>
 
                   <Grid
                     container
                     direction="column"
+                    item
                     xs={12}
                     lg={4}
                     alignItems="flex-end"
@@ -396,6 +397,7 @@ class GordonSchedulePanel extends Component {
                   <Grid
                     container
                     direction="column"
+                    item
                     xs={12}
                     lg={8}
                     alignItems="flex-end"
@@ -422,11 +424,9 @@ class GordonSchedulePanel extends Component {
               </Grid>
             </Grid>
 
-            <Fragment>
-              {editDialog}
-              {myScheduleDialog}
-              {removeScheduleDialog}
-            </Fragment>
+            {editDialog}
+            {myScheduleDialog}
+            {removeScheduleDialog}
           </AccordionDetails>
         </Accordion>
       );
