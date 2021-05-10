@@ -531,14 +531,16 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               id="tooltip-submit"
               title="Crop to current region and submit"
             >
-              <Button
-                variant="contained"
-                onClick={handleCloseSubmit}
-                disabled={!showCropper}
-                style={showCropper ? style.button : style.button.hidden}
-              >
-                Submit
-              </Button>
+              <span>
+                <Button
+                  variant="contained"
+                  onClick={handleCloseSubmit}
+                  disabled={!showCropper}
+                  style={showCropper ? style.button : style.button.hidden}
+                >
+                  Submit
+                </Button>
+              </span>
             </Tooltip>
           </DialogActions>
         </div>
