@@ -32,23 +32,9 @@ export default class DiningBalance extends Component {
     console.log(diningInfo);
     this.daysLeft = daysLeft;
     if (typeof diningInfo === 'object') {
-      // this.diningInfo = diningInfo;
+      this.diningInfo = diningInfo;
     } else {
-      // this.facStaffBalance = diningInfo;
-      this.diningInfo = {
-        Swipes: {
-          InitialBalance: 120,
-          CurrentBalance: 32,
-        },
-        DiningDollars: {
-          InitialBalance: 400,
-          CurrentBalance: 165.5,
-        },
-        GuestSwipes: {
-          InitialBalance: 6,
-          CurrentBalance: 1,
-        },
-      };
+      this.facStaffBalance = diningInfo;
     }
     this.setState({ loading: false });
   }

@@ -92,8 +92,6 @@ export default class CLWCreditsDaysLeft extends Component {
       };
 
       const { current, required } = this.state.chapelCredits;
-      // const current = 15,
-      //   required = 30;
       const remaining = current > required ? 0 : required - current;
 
       const data = {
