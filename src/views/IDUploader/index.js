@@ -210,7 +210,6 @@ class IDUploader extends Component {
     const { preview } = this.state;
 
     const style = {
-
       button: {
         background: gordonColors.primary.cyan,
         color: 'white',
@@ -267,40 +266,34 @@ class IDUploader extends Component {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4} justify="center">
+          <Grid item xs={12} md={6} lg={4}>
             <Grid container justify="center">
               <Card raised={true}>
                 <Grid item style={{ margin: '10px' }}>
-                  <div>
-                    <img
-                      src={IdCardTop}
-                      alt="ID card top with Gordon College logo."
-                      className="placeholder-id"
-                      style={{ maxWidth: '100%', maxHeight: '100%' }}
-                    />
-                  </div>
+                  <img
+                    src={IdCardTop}
+                    alt="ID card top with Gordon College logo."
+                    className="placeholder-id"
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  />
                 </Grid>
                 <Grid item>
                   <Grid container style={{ width: '406px' }}>
                     <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
-                      <div>
-                        <img
-                          src={this.state.IdCardPlaceholder}
-                          alt="Placeholder ID."
-                          className="placeholder-id"
-                          style={{ maxWidth: '100%', maxHeight: '100%' }}
-                        />
-                      </div>
+                      <img
+                        src={this.state.IdCardPlaceholder}
+                        alt="Placeholder ID."
+                        className="placeholder-id"
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                      />
                     </Grid>
                     <Grid item style={{ marginLeft: '7px', width: '53px', marginBottom: '5px' }}>
-                      <div>
-                        <img
-                          src={IdCardGreen}
-                          alt="Colored bar with text 'student'."
-                          className="placeholder-id"
-                          style={{ maxWidth: '100%', maxHeight: '100%' }}
-                        />
-                      </div>
+                      <img
+                        src={IdCardGreen}
+                        alt="Colored bar with text 'student'."
+                        className="placeholder-id"
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -345,7 +338,7 @@ class IDUploader extends Component {
     }
 
     return (
-      <Grid container justify="center" spacing="2">
+      <Grid container justify="center" spacing={2}>
         {content}
 
         <Dialog
@@ -381,7 +374,7 @@ class IDUploader extends Component {
                           className="gc360-id-dialog_content_dropzone_img"
                           src={`data:image/jpg;base64,${this.state.image}`}
                           alt=""
-                          style={{ 'max-width': '140px', 'max-height': '140px' }}
+                          style={{ maxWidth: '140px', maxHeight: '140px' }}
                         />
                       </div>
                     </section>
@@ -394,8 +387,8 @@ class IDUploader extends Component {
                     ref={this.cropperRef}
                     src={preview}
                     style={{
-                      'max-width': this.maxCropPreviewWidth(),
-                      'max-height': this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
+                      maxWidth: this.maxCropPreviewWidth(),
+                      maxHeight: this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
                     }}
                     autoCropArea={1}
                     viewMode={3}
@@ -445,15 +438,17 @@ class IDUploader extends Component {
           keepMounted
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
-          maxWidth="false"
         >
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>
             <DialogContentText className="submittedText">
               We got your photo!
-              <br />You should now see it on your MyProfile page, but it may
-              <br />take a couple of days for it to be approved for public view.
-              <br />CTS will contact you if there’s an issue.
+              <br />
+              You should now see it on your MyProfile page, but it may
+              <br />
+              take a couple of days for it to be approved for public view.
+              <br />
+              CTS will contact you if there’s an issue.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -472,7 +467,6 @@ class IDUploader extends Component {
           keepMounted
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
-          maxWidth="false"
         >
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>

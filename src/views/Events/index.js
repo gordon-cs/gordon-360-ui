@@ -149,58 +149,36 @@ const Events = (props) => {
   );
 
   return (
-    <section>
-      <Grid container justify="center">
-        {/* Search Bar and Filters */}
-        <Grid
-          item
-          xs={10}
-          sm={12}
-          md={12}
-          lg={8}
-          alignContent="center"
-          justify="center"
-          className="event-buttons"
-        >
-          <Grid container alignItems="baseline" justify="center">
-            <Grid container xs={12} sm={5} md={8} lg={7}>
-              <TextField
-                id="search"
-                label="Search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                fullWidth
-              />
-            </Grid>
-            <Grid
-              container
-              justify="flex-end"
-              direction="row"
-              xs={12}
-              sm={6}
-              md={4}
-              lg={5}
-              className="buttonWrapper"
-            >
-              <Button variant="contained" onClick={handleExpandClick}>
-                {open && (includePast || filters.length > 0) ? 'CLEAR FILTERS' : 'FILTERS'}
-              </Button>
-              {props.authentication && (
-                <Button variant="contained" onClick={() => props.history.push('/attended')}>
-                  ATTENDED CL&amp;W
-                </Button>
-              )}
-            </Grid>
-          </Grid>
+    <Grid container justify="center" alignContent="flex-start">
+      {/* Search Bar and Filters */}
+      <Grid item xs={12} lg={8} className="event-buttons" container justify="center">
+        <Grid item xs={12} sm={6} md={8}>
+          <TextField
+            id="search"
+            label="Search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            fullWidth
+          />
         </Grid>
-
-        {/* List of Events */}
-        <Grid item xs={12} md={12} lg={8}>
-          {filter}
-          {content}
+        <Grid container justify="center" item xs={12} sm={6} md={4}>
+          <Button variant="contained" onClick={handleExpandClick}>
+            {open ? 'CLEAR FILTERS' : 'FILTERS'}
+          </Button>
+          {props.authentication && (
+            <Button variant="contained" onClick={() => props.history.push('/attended')}>
+              ATTENDED CL&amp;W
+            </Button>
+          )}
         </Grid>
+        <Grid item>{filter}</Grid>
       </Grid>
-    </section>
+
+      {/* List of Events */}
+      <Grid item xs={12} lg={8}>
+        {content}
+      </Grid>
+    </Grid>
   );
 };
 

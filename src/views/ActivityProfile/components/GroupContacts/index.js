@@ -48,7 +48,7 @@ export default class GroupContacts extends Component {
                     color="primary"
                     href={`mailto:${activityGroupAdmin.Email}`}
                     padding={0}
-                    edge
+                    edge="end"
                   >
                     <Email color="primary" style={{ width: 16, height: 16 }} />
                   </IconButton>
@@ -62,6 +62,6 @@ export default class GroupContacts extends Component {
         );
       }
     }
-    return <section>{content}</section>;
+    return content;
   }
 }

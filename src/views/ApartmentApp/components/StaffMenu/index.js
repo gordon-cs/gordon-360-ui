@@ -117,7 +117,7 @@ const StaffMenu = ({ userProfile }) => {
           <Card>
             <CardHeader title="Download Apartment Applications" className="apartment-card-header" />
             <CardContent>
-              <Grid container direction="row" spacing={2} padded>
+              <Grid container direction="row" spacing={2}>
                 <Grid item xs={12}>
                   <Typography variant="body1">
                     Use the buttons below to download a spreadsheet of the submitted applications
@@ -175,18 +175,14 @@ const StaffMenu = ({ userProfile }) => {
         <Grid item xs={12} sm={9} md={6} lg={3}>
           <Card>
             <CardContent>
-              <Grid container direction="row" spacing={2} padded>
-                <Grid item xs={12}>
-                  <Button
-                    variant="filled"
-                    color="primary"
-                    startIcon={<RefreshIcon />}
-                    onClick={loadAllCurrentApplications}
-                  >
-                    Refresh Application Data
-                  </Button>
-                </Grid>
-              </Grid>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<RefreshIcon />}
+                onClick={loadAllCurrentApplications}
+              >
+                Refresh Application Data
+              </Button>
             </CardContent>
           </Card>
         </Grid>

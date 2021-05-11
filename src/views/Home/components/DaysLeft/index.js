@@ -97,7 +97,7 @@ export default class DaysLeft extends Component {
               <div className="label-text" style={{ color: gordonColors.primary.blue }}>
                 {pastDays}
               </div>
-              <div class="entry-text">Days Finished</div>
+              <div className="entry-text">Days Finished</div>
             </div>
           </div>
         </div>

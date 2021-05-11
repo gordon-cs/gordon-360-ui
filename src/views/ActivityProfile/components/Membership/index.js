@@ -395,7 +395,7 @@ export default class Membership extends Component {
             );
           }
           adminView = (
-            <section>
+            <>
               <Grid item xs={12}>
                 <Card>
                   <div style={headerStyle}>
@@ -453,14 +453,14 @@ export default class Membership extends Component {
                               />
                             </Grid>
                           </Grid>
-                          <Grid item xs={12} sm={6} style={formControl} justifyContent="right">
-                            <Button variant="contained" color="primary" onClick={this.onAddMember}>
-                              Add member
+                          <Grid item xs={12} sm={6} style={formControl}>
+                            <Button variant="outlined" onClick={this.onClose}>
+                              CANCEL
                             </Button>
                           </Grid>
                           <Grid item xs={12} sm={6} style={formControl}>
-                            <Button variant="contained" color="primary" onClick={this.onClose}>
-                              CANCEL
+                            <Button variant="contained" color="primary" onClick={this.onAddMember}>
+                              Add member
                             </Button>
                           </Grid>
                         </Grid>
@@ -487,7 +487,7 @@ export default class Membership extends Component {
                 </CardContent>
               </Card>
               {ferpaAsterisks}
-            </section>
+            </>
           );
         } else {
           header = (
@@ -524,7 +524,7 @@ export default class Membership extends Component {
           );
         }
         content = (
-          <section>
+          <>
             {adminView}
             <Card>
               {header}
@@ -537,7 +537,7 @@ export default class Membership extends Component {
                 />
               ))}
             </Card>
-          </section>
+          </>
         );
       } else {
         // User is not in the activity or is a guest
@@ -632,7 +632,7 @@ export default class Membership extends Component {
       }
     }
     return (
-      <section>
+      <>
         {content}
 
         <div>
@@ -721,7 +721,7 @@ export default class Membership extends Component {
             ]}
           />
         </div>
-      </section>
+      </>
     );
   }
 }

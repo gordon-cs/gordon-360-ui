@@ -149,9 +149,9 @@ export default class PeopleSearchResult extends Component {
 }
 
 PeopleSearchResult.propTypes = {
-  person: PropTypes.shape({
-    First_Name: PropTypes.string.isRequired,
-    Last_Name: PropTypes.string.isRequired,
+  Person: PropTypes.shape({
+    FirstName: PropTypes.string.isRequired,
+    LastName: PropTypes.string.isRequired,
     Email: PropTypes.string.isRequired,
   }).isRequired,
 };

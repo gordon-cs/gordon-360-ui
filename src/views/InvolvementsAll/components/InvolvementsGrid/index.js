@@ -12,7 +12,7 @@ const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => 
     <Grid container direction="row" spacing={4} className="involvements-grid">
       {involvements?.length > 0 ? (
         involvements?.map((activity) => (
-          <Grid item xs={6} sm={4} md={3} lg={2}>
+          <Grid item xs={6} sm={4} md={3} lg={2} key={activity.ActivityCode}>
             <Card variant="outlined">
               <CardActionArea
                 onClick={() => {

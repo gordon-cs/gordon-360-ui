@@ -274,9 +274,11 @@ class PeopleSearch extends Component {
             <Media query="(min-width: 960px)">
               {(matches) =>
                 matches
-                  ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
+                  ? peopleSearchResults.map((person) => (
+                      <PeopleSearchResult key={person.AD_Username} Person={person} />
+                    ))
                   : peopleSearchResults.map((person) => (
-                      <MobilePeopleSearchResult Person={person} />
+                      <MobilePeopleSearchResult key={person.AD_Username} Person={person} />
                     ))
               }
             </Media>
@@ -400,9 +402,11 @@ class PeopleSearch extends Component {
                 <Media query="(min-width: 960px)">
                   {(matches) =>
                     matches
-                      ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
+                      ? peopleSearchResults.map((person) => (
+                          <PeopleSearchResult key={person.AD_Username} Person={person} />
+                        ))
                       : peopleSearchResults.map((person) => (
-                          <MobilePeopleSearchResult Person={person} />
+                          <MobilePeopleSearchResult key={person.AD_Username} Person={person} />
                         ))
                   }
                 </Media>
@@ -577,9 +581,11 @@ class PeopleSearch extends Component {
             <Media query="(min-width: 1025px)">
               {(matches) =>
                 matches
-                  ? peopleSearchResults.map((person) => <PeopleSearchResult Person={person} />)
+                  ? peopleSearchResults.map((person) => (
+                      <PeopleSearchResult key={person.AD_Username} Person={person} />
+                    ))
                   : peopleSearchResults.map((person) => (
-                      <MobilePeopleSearchResult Person={person} />
+                      <MobilePeopleSearchResult key={person.AD_Username} Person={person} />
                     ))
               }
             </Media>
@@ -688,7 +694,7 @@ class PeopleSearch extends Component {
     if (this.props.authentication) {
       if (this.state.personType && !this.state.personType.includes('stu')) {
         includeAlumniCheckbox = (
-          <Grid item xs={12} justify="left">
+          <Grid item xs={12}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -790,13 +796,13 @@ class PeopleSearch extends Component {
       if (networkStatus === 'online') {
         PeopleSearch = (
           <Grid container justify="center" spacing={6}>
-            <Grid item xs={12} md={8} direction="row">
+            <Grid item xs={12} md={8}>
               <Card style={{ padding: '0 3vw' }}>
                 <CardContent>
                   <CardHeader title={searchPageTitle} />
 
                   {/* Search Section 1: General Info */}
-                  <Grid container spacing={2} direction="row" padded>
+                  <Grid container spacing={2} direction="row">
                     {/* First Name */}
                     <Grid item xs={12} sm={6}>
                       <Grid container spacing={2} alignItems="flex-end">
@@ -1168,7 +1174,7 @@ class PeopleSearch extends Component {
                 </CardContent>
 
                 <CardActions>
-                  <Grid container xs={12} justify="center" spacing={2}>
+                  <Grid container justify="center" spacing={2}>
                     {/* Clear All Button */}
                     <Grid item xs={8} sm={'auto'}>
                       <Button

@@ -571,12 +571,7 @@ class ActivityProfile extends Component {
             );
           }
           const { SessionDescription: sessionDescription } = this.state.sessionInfo;
-          let description;
-          if (this.state.activityInfo?.ActivityBlurb?.length !== 0) {
-            description = (
-              <Typography variant="body2">{this.state.activityInfo?.ActivityBlurb}</Typography>
-            );
-          }
+          const { ActivityBlurb: activityBlurb } = this.state.activityInfo;
           let website;
           if (this.state.activityInfo?.ActivityURL?.length !== 0) {
             website = (
@@ -636,7 +631,7 @@ class ActivityProfile extends Component {
                   </Grid>
                   <Grid item>{editActivity}</Grid>
                   <Grid item style={{ padding: '16px' }}>
-                    <Typography variant="body2">{description}</Typography>
+                    {activityBlurb && <Typography variant="body2">{activityBlurb}</Typography>}
                     <Typography variant="subtitle1">{website}</Typography>
                   </Grid>
 
@@ -644,22 +639,20 @@ class ActivityProfile extends Component {
                   <br></br>
 
                   {/* Activity Description */}
-                  <Grid item justify="center" align="left">
-                    <Grid container lg={12} direction="column" align="left">
-                      <Typography variant="body2">{groupContacts}</Typography>
-                      <Typography variant="body2">{advisors}</Typography>
-                      <Typography variant="body2">
-                        <strong>Special Information for Joining: </strong>
-                        {this.state.activityInfo.ActivityJoinInfo}
-                      </Typography>
-                      <Typography variant="body2">
-                        <strong>Current Involvement Roster: </strong>
-                        {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
-                      </Typography>
-                      {/* negative margin necessary because of default padding on Membership */}
-                      {/* perhaps defaults can be changed eventually if all use cases checked */}
-                      <div style={{ marginLeft: '-8px', padding: '8px 0' }}>{membership}</div>
-                    </Grid>
+                  <Grid container direction="column" align="left">
+                    {groupContacts}
+                    {advisors}
+                    <Typography variant="body2">
+                      <strong>Special Information for Joining: </strong>
+                      {this.state.activityInfo.ActivityJoinInfo}
+                    </Typography>
+                    <Typography variant="body2">
+                      <strong>Current Involvement Roster: </strong>
+                      {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
+                    </Typography>
+                    {/* negative margin necessary because of default padding on Membership */}
+                    {/* perhaps defaults can be changed eventually if all use cases checked */}
+                    <div style={{ marginLeft: '-8px', padding: '8px 0' }}>{membership}</div>
                   </Grid>
                 </CardContent>
               </Card>
@@ -673,6 +666,7 @@ class ActivityProfile extends Component {
           let editActivity;
 
           const { SessionDescription: sessionDescription } = this.state.sessionInfo;
+          const { ActivityDescription: activityDescription } = this.state.activityInfo;
           let description;
           if (this.state.activityInfo?.ActivityBlurb?.length !== 0) {
             description = (
@@ -698,8 +692,8 @@ class ActivityProfile extends Component {
             <section className="gordon-activity-profile">
               <Card>
                 <CardContent>
-                  <Typography align="center" variant="display1">
-                    {this.state.activityInfo?.ActivityDescription}
+                  <Typography align="center" variant="h4">
+                    {activityDescription}
                   </Typography>
                   <Grid align="center" className="activity-image" item>
                     <img

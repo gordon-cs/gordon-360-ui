@@ -459,8 +459,8 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   ref={cropperRef}
                   src={showCropper}
                   style={{
-                    'max-width': maxCropPreviewWidth(),
-                    'max-height': maxCropPreviewWidth() / cropperData.aspectRatio,
+                    maxWidth: maxCropPreviewWidth(),
+                    maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
                   }}
                   autoCropArea={1}
                   viewMode={3}
@@ -526,20 +526,22 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
             >
               Cancel
             </Button>
-            <Tooltip
-              classes={{ tooltip: 'tooltip' }}
-              id="tooltip-submit"
-              title="Crop to current region and submit"
-            >
-              <Button
-                variant="contained"
-                onClick={handleCloseSubmit}
-                disabled={!showCropper}
-                style={showCropper ? style.button : style.button.hidden}
+            {showCropper && (
+              <Tooltip
+                classes={{ tooltip: 'tooltip' }}
+                id="tooltip-submit"
+                title="Crop to current region and submit"
               >
-                Submit
-              </Button>
-            </Tooltip>
+                <Button
+                  variant="contained"
+                  onClick={handleCloseSubmit}
+                  disabled={!showCropper}
+                  style={showCropper ? style.button : style.button.hidden}
+                >
+                  Submit
+                </Button>
+              </Tooltip>
+            )}
           </DialogActions>
         </div>
       </Dialog>
