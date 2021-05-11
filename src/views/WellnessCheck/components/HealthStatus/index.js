@@ -85,7 +85,7 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
               </Typography>
             )}
             {/* END */}
-            <Grid spacing={2} className="wellness-status">
+            <Grid className="wellness-status">
               <Card className={currentStatus}>
                 <CardContent className="status-box">
                   <div className="status-time">{time}</div>

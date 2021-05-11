@@ -44,10 +44,10 @@ export default class InvolvementsStatus extends Component {
       content = <GordonLoader />;
     } else if (this.state.InvolvementStatusList.length > 0) {
       content = this.state.InvolvementStatusList.map((activity) => (
-        <div>
+        <React.Fragment key={activity.ActivityCode}>
           <InvolvementStatusList Activity={activity} />
           <Divider />
-        </div>
+        </React.Fragment>
       ));
     } else {
       content = <Typography variant="h5">No {status} Involvements To Show</Typography>;
@@ -55,14 +55,12 @@ export default class InvolvementsStatus extends Component {
 
     return (
       <Card>
-        <div>
-          <div style={headerStyle}>
-            <Typography variant="body2" align="center" style={headerStyle}>
-              {status} Involvements
-            </Typography>
-          </div>
-          {content}
+        <div style={headerStyle}>
+          <Typography variant="body2" align="center" style={headerStyle}>
+            {status} Involvements
+          </Typography>
         </div>
+        {content}
       </Card>
     );
   }

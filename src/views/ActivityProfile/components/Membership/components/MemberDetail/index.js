@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
-import Button from 'material-ui/Button';
-import Checkbox from 'material-ui/Checkbox';
-import Dialog, { DialogContent, DialogTitle } from 'material-ui/Dialog';
-import ExpansionPanel, {
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-} from 'material-ui/ExpansionPanel';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Checkbox,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from 'material-ui/core';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import { FormControl, FormControlLabel } from 'material-ui/Form';
-import Grid from 'material-ui/Grid';
-import { MenuItem } from 'material-ui/Menu';
 import PropTypes from 'prop-types';
-import Select from 'material-ui/Select';
-import TextField from 'material-ui/TextField';
-import Typography from 'material-ui/Typography';
 
 import { gordonColors } from 'theme';
 import user from 'services/user';
@@ -300,8 +304,8 @@ export default class MemberDetail extends Component {
       );
     }
     return (
-      <ExpansionPanel defaultExpanded={showLeaveButton || this.state.admin}>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+      <Accordion defaultExpanded={showLeaveButton || this.state.admin}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Grid container>
             <Grid item xs={8} sm={9} md={10}>
               <Typography>
@@ -312,9 +316,9 @@ export default class MemberDetail extends Component {
               <Typography>{this.props.member.ParticipationDescription} </Typography>
             </Grid>
           </Grid>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>{options}</ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionSummary>
+        <AccordionDetails>{options}</AccordionDetails>
+      </Accordion>
     );
   }
 }

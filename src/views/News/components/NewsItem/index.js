@@ -120,7 +120,7 @@ export default class NewsItem extends Component {
     if (!this.state.network === 'online' || unapproved) {
       // offline or unapproved -> hide author profile link
       authorProfileLink = (
-        <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
+        <Typography variant="h6" className="news-column" style={{ textTransform: 'capitalize' }}>
           {posting.author}
         </Typography>
       );
@@ -128,7 +128,7 @@ export default class NewsItem extends Component {
       // online and approved -> show author profile link
       authorProfileLink = (
         <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
-          <Typography variant="h7" className="news-column" style={{ textTransform: 'capitalize' }}>
+          <Typography variant="h6" className="news-column" style={{ textTransform: 'capitalize' }}>
             {posting.author}
           </Typography>
         </Link>
