@@ -1,7 +1,6 @@
 @import '../../vars.scss';
 
 .event-buttons {
-
   padding-bottom: 1rem;
 
   button {
@@ -13,6 +12,14 @@
       background-color: $primary-cyan;
     }
   }
+
+  /* 'hard' coded because MUI is bad */
+  @media (max-width: 600px) {
+    div.buttonWrapper {
+      justify-content: center;
+      padding-top: 1rem;
+    }
+  }
 }
 
 .event-filters-wrapper {
@@ -21,7 +28,7 @@
   justify-content: center;
 
   .filter-chips {
-    display:flex;
+    display: flex;
     flex-wrap: wrap;
   }
 
@@ -35,12 +42,4 @@
 .event-filters-select {
   min-width: 200px;
   margin: 10px;
-}
-
-/* 'hard' coded because MUI is bad */
-@media (max-width: 600px) {
-  div.buttonWrapper {
-    justify-content: center;
-    padding-top: 1rem;
-  }
 }
