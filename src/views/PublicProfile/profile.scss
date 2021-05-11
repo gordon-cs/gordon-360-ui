@@ -4,38 +4,6 @@
   padding-top: 8%;
 }
 
-.rounded-corners {
-  border-radius: 0.5rem;
-}
-
-.gc360-profile {
-  &_icon {
-    font-size: 28px;
-    color: $neutral-black;
-    transition: color 200ms;
-    &:hover {
-      color: $primary-cyan !important;
-    }
-  }
-  &_email {
-    display: flex;
-    justify-content: space-around;
-    &_icon {
-      font-size: 28px;
-    }
-  }
-}
-
-.edit-icon {
-  color: $neutral-black;
-  transition: color 200ms;
-
-  &:hover {
-    color: $primary-cyan;
-    cursor: pointer;
-  }
-}
-
 .personal-office-grid {
   grid-row-gap: 100px;
 }
