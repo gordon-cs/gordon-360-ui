@@ -38,7 +38,6 @@ import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
 import GordonLoader from 'components/Loader';
-import './peopleSearch.css';
 
 const styles = {
   FontAwesome: {
