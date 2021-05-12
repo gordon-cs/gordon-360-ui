@@ -117,6 +117,13 @@ const theme = createMuiTheme({
   typography: {
     fontFamily: ['Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', 'sans-serif'].join(','),
   },
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        backgroundColor: gordonColors.neutral.darkGray,
+      },
+    },
+  },
 });
 
 export default theme;

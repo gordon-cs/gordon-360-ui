@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Doughnut, defaults } from 'react-chartjs-2';
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 import { gordonColors } from 'theme';
 import user from 'services/user';
@@ -130,20 +130,7 @@ export default class CLWCreditsDaysLeft extends Component {
               </Typography>
             </Grid>
           </Grid>
-          {/* <Grid container justify="center">
-            <Grid item>
-              <div class="legend">
-                <div class="entry">
-                  <span class="entry-label" style={{ background: daysColor }} />
-                  <span class="entry-text">Days Finished</span>
-                </div>
-                <div class="entry">
-                  <span class="entry-label" style={{ background: chapelColor }} />
-                  <span class="entry-text">CL&amp;W Credits</span>
-                </div>
-              </div>
-            </Grid>
-          </Grid> */}
+
           <Doughnut data={data} height={175} options={options} />
           <div
             style={{
@@ -187,16 +174,11 @@ export default class CLWCreditsDaysLeft extends Component {
     }
 
     return (
-      <Card>
+      <Card className="clw-credits-days-left">
         <CardContent>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={4} align="left">
-              <Button
-                variant="contained"
-                style={style.button}
-                component={Link}
-                to="/attended"
-              >
+              <Button variant="contained" style={style.button} component={Link} to="/attended">
                 ATTENDED EVENTS
               </Button>
             </Grid>

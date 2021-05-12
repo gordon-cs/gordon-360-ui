@@ -28,8 +28,7 @@ const About = () => {
             <Card>
               <CardHeader
                 className="about-header"
-                title={`${projectName}: THE SCOTTIE FAIRE IN YOUR HAND`}
-                titleTypographyProps={{ variant: 'body1' }}
+                title={`${projectName}: The Scottie Faire In Your Hand`}
               />
               <CardContent>
                 <Typography variant="body1" component="ul" style={{ textAlign: 'start' }}>
@@ -46,12 +45,8 @@ const About = () => {
             </Card>
 
             <Card>
-              <CardHeader
-                className="about-header"
-                title="INSTITUTIONAL BENEFITS"
-                titleTypographyProps={{ variant: 'body1' }}
-              />
-              <CardContent className="about-content">
+              <CardHeader className="about-header" title="Institutional Benefits" />
+              <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>In-house Student Record relationship</li>
                   <li>
@@ -66,12 +61,8 @@ const About = () => {
             </Card>
 
             <Card>
-              <CardHeader
-                className="about-header"
-                title="ORIGINS"
-                titleTypographyProps={{ variant: 'body1' }}
-              />
-              <CardContent className="about-content">
+              <CardHeader className="about-header" title="Origins" />
+              <CardContent>
                 {contributors.map((section) => {
                   return (
                     <React.Fragment key={section.title}>

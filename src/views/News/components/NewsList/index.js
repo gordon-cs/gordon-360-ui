@@ -124,45 +124,41 @@ export default class NewsList extends Component {
       ));
 
       header = (
-        <div style={headerStyle}>
-          <Grid container direction="row">
-            <Grid item xs={2}>
-              <Typography variant="body2" style={headerStyle}>
-                CATEGORY
-              </Typography>
-            </Grid>
-            <Grid item xs={5}>
-              <Typography variant="body2" style={headerStyle}>
-                SUBJECT
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography variant="body2" style={headerStyle}>
-                POSTED BY
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={headerStyle}>
-                POSTED
-              </Typography>
-            </Grid>
+        <Grid container direction="row" style={headerStyle}>
+          <Grid item xs={2}>
+            <Typography variant="body1" style={headerStyle}>
+              CATEGORY
+            </Typography>
           </Grid>
-        </div>
+          <Grid item xs={5}>
+            <Typography variant="body1" style={headerStyle}>
+              SUBJECT
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography variant="body1" style={headerStyle}>
+              POSTED BY
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" style={headerStyle}>
+              POSTED
+            </Typography>
+          </Grid>
+        </Grid>
       );
     }
 
     return (
-      <section>
-        <Card>
-          {header}
-          <Grid>
-            <List className="news-list" disablePadding>
-              {personalUnapprovedPostings}
-              {postings}
-            </List>
-          </Grid>
-        </Card>
-      </section>
+      <Card>
+        {header}
+        <Grid>
+          <List className="news-list" disablePadding>
+            {personalUnapprovedPostings}
+            {postings}
+          </List>
+        </Grid>
+      </Card>
     );
   }
 }

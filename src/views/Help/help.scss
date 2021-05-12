@@ -1,7 +1,5 @@
 @import '../../vars';
 
-
-
 .help {
   margin: 1rem;
 
@@ -11,10 +9,6 @@
 
   li li {
     list-style-type: '⮚ ';
-  }
-  //TODO: Remove this when timesheets bugs are resolved
-  ul {
-    text-align: start;
   }
 
   &-title {

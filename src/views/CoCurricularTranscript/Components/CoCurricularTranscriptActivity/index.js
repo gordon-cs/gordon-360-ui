@@ -126,7 +126,7 @@ export default class Activity extends Component {
     }
 
     return (
-      <div className="activities">
+      <div className="experience-transcript-activities">
         <div className="organization-role">{Activity.ActivityDescription}</div>
         <div className="date"> {duration} </div>
         {!(leaderDuration === undefined) && (

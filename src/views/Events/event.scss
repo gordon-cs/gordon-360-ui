@@ -12,6 +12,14 @@
       background-color: $primary-cyan;
     }
   }
+
+  /* 'hard' coded because MUI is bad */
+  @media (max-width: 600px) {
+    div.buttonWrapper {
+      justify-content: center;
+      padding-top: 1rem;
+    }
+  }
 }
 
 .event-filters-wrapper {

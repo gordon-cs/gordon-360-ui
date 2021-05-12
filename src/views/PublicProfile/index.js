@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import { Grid, Card, CardContent, Button } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import './profile.css';
 import Profile from 'components/Profile';
 
 const PublicProfile = ({ authentication }) => {

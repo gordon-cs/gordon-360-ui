@@ -311,9 +311,9 @@ export default class StudentNews extends Component {
         );
       } else {
         content = (
-          <Grid item>
-            <Typography variant="h4">No News To Show</Typography>
-          </Grid>
+          <Typography variant="h4" align="center">
+            No News To Show
+          </Typography>
         );
       }
 
@@ -345,7 +345,7 @@ export default class StudentNews extends Component {
         (networkStatus === 'offline' && this.props.authentication)
       ) {
         news = (
-          <section>
+          <>
             {/* Button to Create Posting */}
             <Fab
               variant="extended"
@@ -486,12 +486,12 @@ export default class StudentNews extends Component {
                 ]}
               ></Snackbar>
 
-              <Grid item xs={12} md={12} lg={8} style={{ marginBottom: '7rem' }}>
+              <Grid item xs={12} lg={8} style={{ marginBottom: '7rem' }}>
                 {/* list of news */}
                 {content}
               </Grid>
             </Grid>
-          </section>
+          </>
         );
       }
       // If the user is offline

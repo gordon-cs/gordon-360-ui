@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import user from 'services/user';
 import Profile from 'components/Profile';
-import './myProfile.css';
 
 import { Button, Card, CardContent, Grid } from '@material-ui/core';
 

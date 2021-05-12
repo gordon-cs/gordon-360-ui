@@ -101,7 +101,7 @@ export default class PeopleSearchResult extends Component {
     }
 
     return (
-      <section>
+      <>
         <Divider />
         <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
           <Grid
@@ -115,16 +115,16 @@ export default class PeopleSearchResult extends Component {
           >
             <Grid item xs={1}>
               <IMG
-                className="avatar"
+                className="people-search-avatar"
                 src={`data:image/jpg;base64,${this.state.avatar}`}
                 alt=""
                 noLazyLoad="true"
-                placeholderColor="#FFF"
+                placeholderColor="#eeeeee"
               />
             </Grid>
             <Grid item xs={2}>
               <Typography>
-                {Person.FirstName} {nickname}{' '}
+                {Person.FirstName} {nickname}
               </Typography>
             </Grid>
             <Grid item xs={2}>
@@ -143,7 +143,7 @@ export default class PeopleSearchResult extends Component {
           </Grid>
         </Link>
         <Divider />
-      </section>
+      </>
     );
   }
 }

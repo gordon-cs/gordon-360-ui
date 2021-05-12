@@ -27,10 +27,8 @@ export default class DiningBalance extends Component {
   }
 
   async loadData() {
-    const diningInfoPromise = user.getDiningInfo();
-    const daysLeftPromise = session.getDaysLeft();
-    const daysLeft = await daysLeftPromise;
-    const diningInfo = await diningInfoPromise;
+    const diningInfo = await user.getDiningInfo();
+    const daysLeft = await session.getDaysLeft();
     this.daysLeft = daysLeft;
     if (typeof diningInfo === 'object') {
       this.diningInfo = diningInfo;
@@ -167,28 +165,6 @@ export default class DiningBalance extends Component {
                 </Typography>
               </Grid>
             </Grid>
-            {/* <Grid container justify="center">
-              <Grid item>
-                <div class="legend">
-                  <div class="entry">
-                      <span class="entry-label" style={{ background: gordonColors.primary.blue }} />
-                      <span class="entry-text">Days Finished</span>
-                  </div>
-                  <div class="entry">
-                    <span class="entry-label" style={{ background: gordonColors.primary.cyan }} />
-                    <span class="entry-text">Swipes</span>
-                  </div>
-                  <div class="entry">
-                    <span class="entry-label" style={{ background: '#b2bb1c' }} />
-                    <span class="entry-text">Dining Dollars</span>
-                  </div>
-                  <div class="entry">
-                    <span class="entry-label" style={{ background: '#fdb913' }} />
-                    <span class="entry-text">Guest Swipes</span>
-                  </div>
-                </div>
-              </Grid>
-            </Grid> */}
             <Doughnut data={data} height={175} options={options} />
             <div
               style={{
@@ -243,7 +219,7 @@ export default class DiningBalance extends Component {
       }
     }
     return (
-      <Card>
+      <Card className="dining-balance">
         <CardContent>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={7} align="left">
