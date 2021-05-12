@@ -29,7 +29,6 @@ export default class DiningBalance extends Component {
   async loadData() {
     const diningInfo = await user.getDiningInfo();
     const daysLeft = await session.getDaysLeft();
-    console.log(diningInfo);
     this.daysLeft = daysLeft;
     if (typeof diningInfo === 'object') {
       this.diningInfo = diningInfo;
