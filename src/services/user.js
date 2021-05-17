@@ -415,9 +415,23 @@ const getAdvisors = async (username) => {
   return advisors;
 };
 
+const getCliftonStrengths = async (username) => {
+  let strengths;
+  // strengths = await http.get(`profiles/clifton/${username}/`);
+  // console.log(strengths);
+  return strengths;
+};
+
 async function setAdvisors(profile) {
   if (profile.AD_Username != null) {
     profile.Advisors = await getAdvisors(profile.AD_Username);
+  }
+}
+
+async function setCliftonStrengths(profile) {
+  if (profile.AD_Username != null) {
+    await getCliftonStrengths(profile.AD_Username);
+    // profile.CliftonStrengths = await getCliftonStrengths(profile.AD_Username);
   }
 }
 
@@ -589,6 +603,7 @@ const getProfileInfo = async (username) => {
   setOnOffCampus(profile);
   setMinorObject(profile);
   await setAdvisors(profile);
+  await setCliftonStrengths(profile);
   return profile;
 };
 
@@ -655,6 +670,7 @@ export default {
   getSentMembershipRequests,
   getProfileInfo,
   getAdvisors,
+  getCliftonStrengths,
   resetImage,
   postImage,
   postIDImage,
