@@ -35,7 +35,7 @@ Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtua
 - Download the latest release of nvm from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
   - Extract the file and run it.
   - The installer will ask you where to install nvm. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
-  - After this, go to https://nodejs.org/en/ and look for the version labeled "lts" (which indicates the latest stable version).
+  - After this, go to https://nodejs.org/en/ and look for the version labeled "LTS" (which indicates the latest stable version).
   - Finally, run `nvm install <version>` where <version> is the version you found.
 
 #### Linux:
@@ -399,8 +399,6 @@ In the unusual case that Train or Production have not been automatically deploye
 
 ## Known Issues
 
-- Cannot login to 360 from Edge due to an authentication error that is caused from http request failing to return a token to edge which causes "Invalid Argument" error to be displayed
-
 - Internet Explorer does not work with 360 and never will due to the fact that IE is too old to support features that 360 currently uses
 
 - There is a problem with the first login hanging after the backend starts up, this might be due to an authentication error but refreshing is currently the only fix
@@ -409,7 +407,7 @@ In the unusual case that Train or Production have not been automatically deploye
 
 - The 'edit involvement' and 'change image' dialog boxes, accessible through the admin view of an involvement profile, are messy. Refer to the CSS styling and replacement of Material UI Grid in views/IDUploader/IDUploader.scss and ''/index.js for a proven fix.
 
-- ID and photo uploader dialog boxes are a bit squished for screens as small as iPhone 5's.
+- ID and photo uploader dialog boxes are rather compressed for screens as small as iPhone 5's.
 
 - An admin is able to remove themselves (on admin view), which causes major issues.
 

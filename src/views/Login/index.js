@@ -256,7 +256,7 @@ export default class Login extends Component {
           message={
             <span id="message-id">
               Whoops! It looks like you're using Internet Explorer. Unfortunately, Gordon 360
-              doesn't support IE. Please use a modern browser like Chrome or Firefox.
+              doesn't support IE. Please use a modern browser like Chrome, Edge, or Firefox.
             </span>
           }
           action={[
@@ -266,6 +266,13 @@ export default class Login extends Component {
             >
               Get Chrome
             </Button>,
+            // NOTE: Please uncomment once someone can test that this functions properly
+            // <Button
+            //   onClick={() => (window.location.href = 'https://www.microsoft.com/en-us/edge')}
+            //   style={{ color: 'white' }}
+            // >
+            //   Get Edge
+            // </Button>,
             <Button
               onClick={() => (window.location.href = 'https://www.mozilla.org/en-US/firefox/new/')}
               style={{ color: 'white' }}
