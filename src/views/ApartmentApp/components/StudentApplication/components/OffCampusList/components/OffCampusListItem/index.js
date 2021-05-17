@@ -21,16 +21,16 @@ import {
  * @param {Object} props The React component props
  * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
  * @param {Number} props.index The index of this list item
- * @param {StudentProfileInfo} props.applicantProfile The StudentProfileInfo on the applicant
+ * @param {StudentProfileInfo} props.profile The StudentProfileInfo of the applicant
  * @param {String} props.offCampusProgram The name of the department of the off-campus program
  * @param {String[]} props.departments Array of departments available
  * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
- * @returns {JSX.Element} JSX Element for the hall list item
+ * @returns {JSX.Element} JSX Element for the off-campus program list
  */
 const OffCampusListItem = ({
   disabled,
   index,
-  applicantProfile,
+  profile,
   offCampusProgram,
   departments,
   onOffCampusInputChange,
@@ -39,12 +39,8 @@ const OffCampusListItem = ({
   const [isSelectionValid, setIsSelectionValid] = useState(false);
 
   useEffect(
-    () =>
-      setHasNickname(
-        applicantProfile.FirstName !== applicantProfile.NickName &&
-          applicantProfile.NickName !== '',
-      ),
-    [applicantProfile],
+    () => setHasNickname(profile.FirstName !== profile.NickName && profile.NickName !== ''),
+    [profile],
   );
 
   useEffect(
@@ -56,13 +52,6 @@ const OffCampusListItem = ({
     [offCampusProgram, departments],
   );
 
-  const handleDepartmentInputChange = (event) => {
-    if (event.target.value !== null) {
-      let newApplicantDepartmentValue = event.target.value;
-      onOffCampusInputChange(newApplicantDepartmentValue, index);
-    }
-  };
-
   const departmentOptions = departments.map((departmentName) => (
     <MenuItem value={departmentName} key={departmentName}>
       {departmentName}
@@ -70,18 +59,15 @@ const OffCampusListItem = ({
   ));
 
   const displayName = hasNickName
-    ? `${applicantProfile.FirstName} ${applicantProfile.LastName} (${applicantProfile.NickName})`
-    : `${applicantProfile.FirstName} ${applicantProfile.LastName}`;
+    ? `${profile.FirstName} ${profile.LastName} (${profile.NickName})`
+    : `${profile.FirstName} ${profile.LastName}`;
 
   return (
     <React.Fragment>
-      <ListItem key={applicantProfile.AD_Username} className={'list-item'}>
+      <ListItem key={profile.AD_Username} className="list-item">
         <Grid container alignItems="flex-end" spacing={1}>
           <Grid item xs={12} sm={4}>
-            <ListItemText
-              primary={displayName ?? applicantProfile.AD_Username}
-              className={'list-item'}
-            />
+            <ListItemText primary={displayName ?? profile.AD_Username} className="list-item" />
           </Grid>
           <Grid item xs={12} sm={8}>
             <FormControl fullWidth error={!isSelectionValid}>
@@ -89,7 +75,11 @@ const OffCampusListItem = ({
               <Select
                 disabled={disabled}
                 value={isSelectionValid ? offCampusProgram : ''}
-                onChange={handleDepartmentInputChange}
+                onChange={(event) =>
+                  event.target.value !== null &&
+                  (index ?? -1) > -1 &&
+                  onOffCampusInputChange?.(String(event.target.value), index)
+                }
                 input={<Input id={'department' + index} />}
                 displayEmpty
               >

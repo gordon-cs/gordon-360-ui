@@ -17,7 +17,7 @@ import housing from 'services/housing';
  * Renders a card displaying the apartment application instructions
  * @param {Object} props The React component props
  * @param {Boolean | String} props.deleting Status of delete operation
- * @param {*} props.onChange The user authentication
+ * @param {CallbackFcn} props.onChange Callback for change of the checkbox state
  * @returns {JSX.Element} JSX Element for the instructions card
  */
 const Agreements = ({ deleting, onChange }) => {
@@ -27,7 +27,7 @@ const Agreements = ({ deleting, onChange }) => {
     const currentYear = new Date().getFullYear();
     const selectionDate = await housing.getApartmentSelectionDate();
 
-    let newCheckboxes = [
+    const newCheckboxes = [
       {
         checked: false,
         label: 'Each individual on the application has agreed to be on the application',

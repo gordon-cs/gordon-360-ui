@@ -22,32 +22,31 @@ import GordonPeopleSearch from 'components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
 
 /**
+ * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
+ * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
 
-// Create a list of applicants, displayed by name, username, and class standing.
+/**
+ * Renders the list of applicants, displayed by name, username, and class standing.
+ * @param {Object} props The React component props
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list
+ * @param {StudentProfileInfo} props.editorProfile The StudentProfileInfo of the application editor
+ * @param {ApartmentApplicant[]} props.applicants Array of applicant info
+ * @param {CallbackFcn} props.onSearchSubmit Callback for apartment people search submission
+ * @param {CallbackFcn} props.onChangeEditor Callback for change editor button
+ * @param {CallbackFcn} props.onApplicantRemove Callback for remove applicant button
+ * @returns {JSX.Element} JSX Element for the applicant list
+ */
 const ApplicantList = ({
   disabled,
-  maxNumApplicants,
-  applicationDetails,
+  editorProfile,
+  applicants,
   onSearchSubmit,
   onChangeEditor,
   onApplicantRemove,
-  authentication,
 }) => {
   const [showHelp, setShowHelp] = useState(false);
-
-  /**
-   * Callback for apartment people search submission
-   * @param {String} selectedUsername Username for student selected via the people search
-   */
-  const handleSelection = (selectedUsername) => {
-    // Make sure the chosen username was not null
-    if (selectedUsername) {
-      // Send the selected username to the parent component
-      onSearchSubmit(selectedUsername);
-    }
-  };
 
   return (
     <Card>
@@ -59,7 +58,7 @@ const ApplicantList = ({
               <ListItem
                 button
                 alignItems="center"
-                className={'list-item'}
+                className="list-item"
                 onClick={() => setShowHelp((prev) => !prev)}
               >
                 <ListItemIcon>
@@ -69,22 +68,22 @@ const ApplicantList = ({
                 {showHelp ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={showHelp} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding className={'bordered-list-item'}>
-                  <ListItem disableGutters className={'nested-list-item'}>
+                <List component="div" disablePadding className="bordered-list-item">
+                  <ListItem disableGutters className="nested-list-item">
                     <ListItemIcon>
                       <AddIcon />
                     </ListItemIcon>
                     <ListItemText primary="Use the search bar below this list to add more applicants." />
                   </ListItem>
                   <Divider />
-                  <ListItem disableGutters className={'nested-list-item'}>
+                  <ListItem disableGutters className="nested-list-item">
                     <ListItemIcon>
                       <StarBorder />
                     </ListItemIcon>
                     <ListItemText primary="Use the star button to change the editor of this applicant, if necessary." />
                   </ListItem>
                   <Divider />
-                  <ListItem disableGutters className={'nested-list-item'}>
+                  <ListItem disableGutters className="nested-list-item">
                     <ListItemIcon>
                       <ClearIcon />
                     </ListItemIcon>
@@ -93,38 +92,38 @@ const ApplicantList = ({
                 </List>
               </Collapse>
               <Divider />
-              {applicationDetails.Applicants?.length > 0 ? (
-                applicationDetails.Applicants.map((applicant) => (
+              {applicants?.length > 0 ? (
+                applicants.map((applicant) => (
                   <ApplicantListItem
                     key={applicant.Profile.AD_Username}
                     disabled={disabled}
                     profile={applicant.Profile}
                     isApplicationEditor={
-                      applicant.Profile.AD_Username === applicationDetails.EditorProfile.AD_Username
+                      applicant.Profile.AD_Username === editorProfile.AD_Username
                     }
                     onChangeEditor={onChangeEditor}
                     onApplicantRemove={onApplicantRemove}
                   />
                 ))
               ) : (
-                <ListItem key={'applicant-list-placeholder'} className={'list-item'}>
+                <ListItem key={'applicant-list-placeholder'} className="list-item">
                   <ListItemText
                     primary={'If you are reading this, something went wrong. Please contact CTS'}
-                    className={'list-item'}
+                    className="list-item"
                   />
                 </ListItem>
               )}
             </List>
           </Grid>
           <Grid container item justify="center" xs={12}>
-            <Grid item xs={9} sm={5} className={'people-search-parent'}>
+            <Grid item xs={9} sm={5} className="people-search-parent">
               <GordonPeopleSearch
                 disableLink
-                disabled={disabled || applicationDetails.Applicants?.length > maxNumApplicants}
+                disabled={disabled}
                 icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
-                onSearchSubmit={handleSelection}
-                authentication={authentication}
+                onSearchSubmit={(selectedUsername) => disabled || onSearchSubmit(selectedUsername)}
+                authentication
               />
             </Grid>
           </Grid>

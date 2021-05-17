@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
 import OffCampusListItem from './components/OffCampusListItem';
 import goStalk from 'services/goStalk';
 
-// Create a list of selection boxes to choosing which applicants are doing off campus programs.
-const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInputChange }) => {
+/**
+ * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
+ * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
+ */
+
+/**
+ * Renders the list of selection boxes to choosing which applicants are doing off campus programs.
+ * @param {Object} props The React component props
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {ApartmentApplicant[]} props.applicants Array of applicant info
+ * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
+ * @returns {JSX.Element} JSX Element for the off-campus program list
+ */
+const OffCampusList = ({ disabled, applicants, onOffCampusInputChange }) => {
   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
@@ -17,19 +28,8 @@ const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInp
       setDepartments(availableDepartments);
     };
 
-    if (authentication) {
-      loadDepartments();
-    }
-  }, [authentication]);
-
-  /**
-   * Callback for changes to off-campus program info
-   * @param {String} offCampusListItemValue The program that the applicant is doing an OC program for
-   * @param {Number} index The index of the applicant in the list
-   */
-  const handleInputChange = (offCampusListItemValue, index) => {
-    onOffCampusInputChange(offCampusListItemValue, index);
-  };
+    loadDepartments();
+  }, []);
 
   return (
     <Card>
@@ -48,10 +48,10 @@ const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInp
                     key={applicant.Profile.AD_Username}
                     disabled={disabled}
                     index={index}
-                    applicantProfile={applicant.Profile}
+                    profile={applicant.Profile}
                     offCampusProgram={applicant.OffCampusProgram}
                     departments={departments}
-                    onOffCampusInputChange={handleInputChange}
+                    onOffCampusInputChange={onOffCampusInputChange}
                   />
                 ))}
             </List>
@@ -62,11 +62,4 @@ const OffCampusSection = ({ disabled, authentication, applicants, onOffCampusInp
   );
 };
 
-OffCampusSection.propTypes = {
-  disabled: PropTypes.bool,
-  authentication: PropTypes.any,
-  applicants: PropTypes.array.isRequired,
-  onOffCampusInputChange: PropTypes.func,
-};
-
-export default OffCampusSection;
+export default OffCampusList;

@@ -32,7 +32,7 @@ import ClearIcon from '@material-ui/icons/Clear';
  * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
  * @returns {JSX.Element} JSX Element for the hall list item
  */
-const HallListItem = ({
+const HallChoiceListItem = ({
   disabled,
   index,
   hallRank,
@@ -49,38 +49,6 @@ const HallListItem = ({
     [hallName, halls],
   );
 
-  /**
-   * Callback for changes to hall rank input field
-   * @param {*} event change event to be handled by callback
-   */
-  const handleRankInputChange = (event) => {
-    if (event.target.value !== null) {
-      let newHallRankValue = event.target.value;
-      onHallInputChange(newHallRankValue, hallName, index);
-    }
-  };
-
-  /**
-   * Callback for changes to hall name dropdown
-   * @param {*} event change event to be handled by callback
-   */
-  const handleNameInputChange = (event) => {
-    if (event.target.value !== null) {
-      let newHallNameValue = event.target.value;
-      onHallInputChange(hallRank, newHallNameValue, index);
-    }
-  };
-
-  /**
-   * Callback for hall list remove button
-   */
-  const handleRemove = () => {
-    if (index !== null) {
-      // Send this list item's index to the parent component
-      onHallRemove(index);
-    }
-  };
-
   const hallOptions = halls.map((hall) => (
     <MenuItem value={hall.Name} key={hall.Name}>
       {hall.Name}
@@ -95,7 +63,7 @@ const HallListItem = ({
 
   return (
     <React.Fragment>
-      <ListItem key={index} className={'list-item'}>
+      <ListItem key={index} className="list-item">
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={4} sm={2}>
             <FormControl fullWidth>
@@ -103,7 +71,10 @@ const HallListItem = ({
               <Select
                 disabled={disabled}
                 value={hallRank}
-                onChange={handleRankInputChange}
+                onChange={(event) =>
+                  event.target.value !== null &&
+                  onHallInputChange?.(String(event.target.value), hallName, index)
+                }
                 input={<Input id={'rank' + index} />}
               >
                 {rankOptions}
@@ -116,7 +87,10 @@ const HallListItem = ({
               <Select
                 disabled={disabled}
                 value={isHallNameValid ? hallName : ''}
-                onChange={handleNameInputChange}
+                onChange={(event) =>
+                  event.target.value !== null &&
+                  onHallInputChange?.(hallRank, String(event.target.value), index)
+                }
                 input={<Input id={'hall' + index} />}
               >
                 {hallOptions}
@@ -130,7 +104,12 @@ const HallListItem = ({
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          <IconButton edge="end" aria-label="delete" disabled={disabled} onClick={handleRemove}>
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            disabled={disabled}
+            onClick={() => (index ?? -1) > -1 && onHallRemove?.(index)}
+          >
             <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>
@@ -140,4 +119,4 @@ const HallListItem = ({
   );
 };
 
-export default HallListItem;
+export default HallChoiceListItem;
