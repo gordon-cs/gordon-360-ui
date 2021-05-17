@@ -4,6 +4,7 @@
  * @module membership
  */
 
+//import { ReorderRounded } from '@material-ui/icons';
 import http from './http';
 
 /**
@@ -208,6 +209,35 @@ const getIndividualMembership = (userID) =>
   });
 
 /**
+ * Group memberships by Activity code
+ * @param {String} id ID of user
+ * @return {grouped} array of activies containing arrays of each activitiy's instances
+ */
+
+const groupByActivityCode = async (id) => {
+  let memberships = await getIndividualMembership(id);
+  let grouped = [];
+  var ogLen = memberships.length;
+  for (var i = 0; i < ogLen; i++) {
+    var curMembership = memberships.pop();
+    var curAct = curMembership.ActivityCode;
+    var condition = false;
+    // eslint-disable-next-line
+    condition = grouped.some((item) => item[0].ActivityCode === curAct);
+    if (condition) {
+      // eslint-disable-next-line
+      grouped.find((element) => element[0].ActivityCode === curAct).push(curMembership);
+    } else {
+      let x = [];
+      x.push(curMembership);
+      grouped.push(x);
+    }
+  }
+  console.log(grouped);
+  return grouped;
+};
+
+/**
  * Get requests for specific activity and filtered by session code
  * @param {String} activityCode Identifier for an activity
  * @param {String} sessionCode Identifier for a session
@@ -331,4 +361,5 @@ export default {
   search,
   toggleGroupAdmin,
   toggleMembershipPrivacy,
+  groupByActivityCode,
 };

@@ -19,7 +19,7 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
       return (
         <Link
           className={linkClass}
-          to={`/activity/${membership.SessionCode}/${membership.ActivityCode}`}
+          to={`/activity/${membership[0].SessionCode}/${membership[0].ActivityCode}`}
         >
           {children}
         </Link>
@@ -48,9 +48,15 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
               <ListItem className="my-profile-info-card-description-text">
                 <OnlineOnlyLink>
                   <Typography fontWeight="fontWeightBold">
-                    {membership.ActivityDescription}
+                    {membership[0].ActivityDescription}
                   </Typography>
-                  <Typography>{membership.SessionDescription}</Typography>
+                  <List>
+                    {membership.map((element) => (
+                      <ListItem>
+                        {element.SessionDescription + ' (' + element.ParticipationDescription + ')'}
+                      </ListItem>
+                    ))}
+                  </List>
                   <Typography>{membership.ParticipationDescription}</Typography>
                 </OnlineOnlyLink>
               </ListItem>
@@ -59,22 +65,24 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
 
           {myProf && (
             <Grid container item xs={4} alignItems="center">
-              <Grid item xs={12}>
+              <Grid item xs={12} align="center">
                 {isOnline &&
-                  (membership.IsInvolvementPrivate ? (
+                  (membership[0].IsInvolvementPrivate ? (
                     <LockIcon className="lock-icon" />
                   ) : (
                     <Switch
                       onChange={() => {
-                        onTogglePrivacy(membership);
+                        onTogglePrivacy(membership[0]);
                       }}
-                      checked={!membership.Privacy}
+                      checked={!membership[0].Privacy}
                     />
                   ))}
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} align="center">
                 <Typography>
-                  {membership.Privacy || membership.IsInvolvementPrivate ? 'Private' : 'Public'}
+                  {membership[0].Privacy || membership[0].IsInvolvementPrivate
+                    ? 'Private'
+                    : 'Public'}
                 </Typography>
               </Grid>
             </Grid>
@@ -92,7 +100,11 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
           alignItems="center"
         >
           <OnlineOnlyLink>
-            <img src={membership.ActivityImagePath} alt="" className={isOnline ? 'active' : ''} />
+            <img
+              src={membership[0].ActivityImagePath}
+              alt=""
+              className={isOnline ? 'active' : ''}
+            />
           </OnlineOnlyLink>
         </Grid>
       </Grid>

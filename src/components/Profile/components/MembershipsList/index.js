@@ -23,10 +23,10 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
     async function loadMemberships() {
       setLoading(true);
       if (myProf) {
-        const myMemberships = await userService.getMembershipsAlphabetically(user);
+        const myMemberships = await membershipService.groupByActivityCode(user);
         await Promise.all(
           myMemberships.map(async (membership) => {
-            const involvement = await activity.get(membership.ActivityCode);
+            const involvement = await activity.get(membership[0].ActivityCode);
             membership.IsInvolvementPrivate = involvement.Privacy;
           }),
         );
