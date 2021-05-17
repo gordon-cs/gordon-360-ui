@@ -130,7 +130,7 @@ const InvolvementsAll = ({ authentication, history }) => {
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <FormControl fullWidth>
-              <InputLabel htmlFor="activity-session">Session</InputLabel>
+              <InputLabel htmlFor="activity-session">Term</InputLabel>
               <Select
                 value={selectedSession}
                 onChange={(e) => setSelectedSession(e.target.value)}
@@ -201,7 +201,7 @@ const InvolvementsAll = ({ authentication, history }) => {
 
       <Grid item xs={12} lg={8}>
         <Card>
-          <CardHeader title="All Involvements" className="involvements-header" />
+          <CardHeader title={`All ${myInvolvementsHeadingText} Involvements`} className="involvements-header" />
           <CardContent>
             {loading ? (
               <GordonLoader />
