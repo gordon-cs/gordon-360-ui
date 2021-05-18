@@ -111,7 +111,7 @@ const InvolvementsAll = ({ authentication, history }) => {
     let involvementDescription = sessions.find((s) => s.SessionCode === selectedSession)
       ?.SessionDescription;
     myInvolvementsHeadingText = involvementDescription;
-    myInvolvementsNoneText = 'No Involvements found for ' + involvementDescription;
+    myInvolvementsNoneText = 'No personal involvements found for this term';
   }
 
   return (
@@ -149,7 +149,7 @@ const InvolvementsAll = ({ authentication, history }) => {
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <FormControl fullWidth>
-              <InputLabel htmlFor="activity-type">Type of Involvement</InputLabel>
+              <InputLabel htmlFor="activity-type">Type</InputLabel>
               <Select
                 value={type}
                 onChange={(event) => setType(event.target.value)}
@@ -175,15 +175,13 @@ const InvolvementsAll = ({ authentication, history }) => {
         </Grid>
       )}
 
-      {authentication && (
-        <>
-          <Grid item xs={12} lg={8}>
-            <Card>
-              <CardHeader
-                title={`My ${myInvolvementsHeadingText} Involvements`}
-                className="involvements-header"
-              />
-              <CardContent>
+      <Grid item xs={12} lg={8}>
+        <Card>
+          <CardHeader title={`${myInvolvementsHeadingText} Involvements`} className="involvements-header" />
+          <CardContent>
+            {/* My Involvements (private) */}
+            {authentication && (
+              <>
                 {loading ? (
                   <GordonLoader />
                 ) : (
@@ -193,16 +191,14 @@ const InvolvementsAll = ({ authentication, history }) => {
                     noInvolvementsText={myInvolvementsNoneText}
                   />
                 )}
-              </CardContent>
-            </Card>
-          </Grid>
-        </>
-      )}
+              </>
+            )}
 
-      <Grid item xs={12} lg={8}>
-        <Card>
-          <CardHeader title={`All ${myInvolvementsHeadingText} Involvements`} className="involvements-header" />
-          <CardContent>
+            <br></br>
+            <hr width="70%"></hr>
+            <br></br>
+
+             {/* All Involvements (public) */}
             {loading ? (
               <GordonLoader />
             ) : (
