@@ -170,9 +170,7 @@ const InvolvementsAll = ({ authentication, history }) => {
       </Grid>
 
       {isOnline && authentication && (
-        <Grid item xs={12} lg={8}>
-          <Requests />
-        </Grid>
+        <Requests />
       )}
 
       <Grid item xs={12} lg={8}>
@@ -191,12 +189,11 @@ const InvolvementsAll = ({ authentication, history }) => {
                     noInvolvementsText={myInvolvementsNoneText}
                   />
                 )}
+                <br></br>
+                <hr width="70%"></hr>
+                <br></br>
               </>
             )}
-
-            <br></br>
-            <hr width="70%"></hr>
-            <br></br>
 
              {/* All Involvements (public) */}
             {loading ? (
