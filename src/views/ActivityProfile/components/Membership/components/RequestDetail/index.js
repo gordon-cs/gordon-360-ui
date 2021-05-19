@@ -1,129 +1,71 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { gordonColors } from 'theme';
 import membership from 'services/membership';
 
-import { Button, Grid, Typography, Divider } from '@material-ui/core';
+import {
+  Button,
+  Typography,
+  Divider,
+  List,
+  ListItemText,
+  ListItem,
+  ListItemSecondaryAction,
+} from '@material-ui/core';
 
-export default class RequestReceived extends Component {
-  constructor(props) {
-    super(props);
+const redButton = {
+  color: gordonColors.secondary.red,
+};
 
-    this.onApprove = this.onApprove.bind(this);
-    this.onDeny = this.onDeny.bind(this);
+const RequestsReceived = ({ involvement }) => {
+  const [requests, setRequests] = useState([]);
 
-    this.state = {
-      requests: [],
+  useEffect(() => {
+    const loadRequests = async () => {
+      setRequests(await membership.getRequests(involvement.ActivityCode, involvement.SessionCode));
     };
-  }
+    loadRequests();
+  }, [involvement.ActivityCode, involvement.SessionCode]);
 
-  componentDidMount() {
-    this.loadRequests();
-  }
-
-  async loadRequests() {
-    let requests;
-    let involvement = this.props.involvement;
-    requests = await membership.getRequests(involvement.ActivityCode, involvement.SessionCode);
-    this.setState({ requests });
-  }
-
-  // Approves request
-  // Changes state of requests instead of refreshing
-  async onApprove(request, id) {
-    let requests = this.state.requests;
-    let index = requests.indexOf(request);
-    requests.splice(index, 1);
-    this.setState({ requests });
-
+  const onApprove = async (id) => {
     await membership.approveRequest(id);
-  }
+    setRequests((prevRequests) => prevRequests.filter((r) => r.RequestID !== id));
+  };
 
-  // Denies request
-  // Changes state of requests instead of refreshing
-  async onDeny(request, id) {
-    let requests = this.state.requests;
-    let index = requests.indexOf(request);
-    requests.splice(index, 1);
-    this.setState({ requests });
-
+  const onDeny = async (id) => {
     await membership.denyRequest(id);
-  }
+    setRequests((prevRequests) => prevRequests.filter((r) => r.RequestID !== id));
+  };
 
-  render() {
-    let requests = this.state.requests;
-    const redButton = {
-      background: gordonColors.secondary.red,
-      color: 'white',
-    };
+  if (requests.length === 0) {
+    return <Typography>No requests to show</Typography>;
+  } else {
+    return (
+      <List>
+        {requests.reverse().map((request) => (
+          <React.Fragment key={request.RequestID}>
+            <ListItem key={request.RequestID}>
+              <ListItemText
+                primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
+                secondary={`${membership.getDiffDays(request.DateSent)} - ${request.CommentText}`}
+              />
 
-    //Requests and buttons
-    let content;
-    if (requests.length === 0) {
-      content = <Typography>No requests to show</Typography>;
-    } else {
-      content = requests
-        .slice(0)
-        .reverse()
-        .map((request) => (
-          <Grid item xs={12}>
-            <Grid container spacing={8}>
-              <Grid item xs={12}>
-                <Grid container direction="row">
-                  <Grid item xs={12} sm={12} md={6}>
-                    <Grid container direction="row">
-                      <Grid item xs={10}>
-                        <br />
-                        <Typography>
-                          {request.FirstName} {request.LastName}
-                          <span className="weak"> {membership.getDiffDays(request.DateSent)}</span>
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2} sm={2}>
-                        <Typography>{request.ParticipationDescription} </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={6}>
-                    <Grid container direction="row">
-                      <Grid item xs={6}>
-                        <Typography>{request.CommentText}</Typography>
-                      </Grid>
-                      <Grid item xs={6} sm={6} align="right">
-                        <Grid container direction="row" spacing={8} justify="flex-end">
-                          <Grid item>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={() => this.onApprove(request, request.RequestID)}
-                              size="small"
-                            >
-                              Approve
-                            </Button>
-                          </Grid>
-                          <Grid item>
-                            <Button
-                              variant="contained"
-                              style={redButton}
-                              onClick={() => this.onDeny(request, request.RequestID)}
-                              size="small"
-                            >
-                              Deny
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <Divider />
-              </Grid>
-            </Grid>
-          </Grid>
-        ));
-    }
-    return <Grid>{content}</Grid>;
+              <ListItemSecondaryAction>
+                <Button style={redButton} onClick={() => onDeny(request.RequestID)} size="small">
+                  Deny
+                </Button>
+                &emsp;
+                <Button color="primary" onClick={() => onApprove(request.RequestID)} size="small">
+                  Approve
+                </Button>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <Divider />
+          </React.Fragment>
+        ))}
+      </List>
+    );
   }
-}
+};
+
+export default RequestsReceived;
