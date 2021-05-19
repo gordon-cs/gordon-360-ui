@@ -79,10 +79,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
   useEffect(() => {
     const updateInvolvements = async () => {
       setLoading(true);
-      let allInvolvements;
-      allInvolvements = await involvementService.getAll(selectedSession);
-      
-      setAllInvolvements(allInvolvements);
+      setAllInvolvements(await involvementService.getAll(selectedSession));
       setTypes(await involvementService.getTypes(selectedSession));
       if (authentication) {
         const { id } = await userService.getLocalInfo();
@@ -107,6 +104,10 @@ const InvolvementsAll = ({ location, authentication, history }) => {
   let involvementSessionText = (selectedSession 
     ? sessions.find((s) => s.SessionCode === selectedSession)?.SessionDescription
     : '');
+  if(involvementSessionText.includes("Academic Year")) {
+    involvementSessionText = involvementSessionText.substring(0, 
+      involvementSessionText.indexOf("Academic Year"));
+  }
   if (selectedSession === currentAcademicSession && selectedSession !== '') {
     myInvolvementsHeadingText = 'Current';
     myInvolvementsNoneText = 
