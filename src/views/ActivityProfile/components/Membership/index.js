@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import activity from 'services/activity';
 import GordonLoader from 'components/Loader';
 import MemberList from './components/MemberList';
-import membership from 'services/membership';
-import RequestDetail from './components/RequestDetail';
+import membershipService from 'services/membership';
+import RequestsReceived from './components/RequestsReceived';
 import CloseIcon from '@material-ui/icons/Close';
 import user from 'services/user';
 import { gordonColors } from 'theme';
@@ -171,7 +171,7 @@ export default class Membership extends Component {
 
       // Try to add member
       try {
-        let addID = await membership.getEmailAccount(memberEmail).then(function (result) {
+        let addID = await membershipService.getEmailAccount(memberEmail).then(function (result) {
           return result.GordonID;
         });
         let data = {
@@ -184,7 +184,7 @@ export default class Membership extends Component {
         };
         // if a user is already a member of an involvement, attempting addMembership(data)
         //  will return 'undefined'. So, if this happens, alert the user
-        let alreadyIn = await membership.addMembership(data);
+        let alreadyIn = await membershipService.addMembership(data);
         if (typeof alreadyIn === 'undefined') {
           // User is already a member of this involvement
           this.setState({ isUserAlreadyMemberSnackBarOpen: true });
@@ -218,7 +218,7 @@ export default class Membership extends Component {
       COMMENT_TXT: this.state.titleComment,
       APPROVED: 'Pending',
     };
-    membership.requestMembership(data);
+    membershipService.requestMembership(data);
     this.onClose();
     this.setState({ isSnackBarOpen: true });
     //Used to call this.refresh() here, but it caused requests not to go through
@@ -234,21 +234,21 @@ export default class Membership extends Component {
       COMMENT_TXT: 'Subscriber',
       GRP_ADMIN: false,
     };
-    await membership.addMembership(data);
+    await membershipService.addMembership(data);
     this.refresh();
   }
 
   // Called when Unsubscribe button clicked
   async onUnsubscribe() {
     let participationDescription = this.state.participationDetail[2];
-    await membership.remove(participationDescription);
+    await membershipService.remove(participationDescription);
     this.setState({ participationDetail: [false, false, null] });
   }
 
   async loadMembers() {
     this.setState({ loading: true });
     try {
-      const participationDetail = await membership.search(
+      const participationDetail = await membershipService.search(
         this.props.id,
         this.props.sessionInfo.SessionCode,
         this.props.activityCode,
@@ -262,7 +262,7 @@ export default class Membership extends Component {
       });
       if (this.state.isAdmin) {
         // Not necessary, but good security to have
-        const requests = await membership.getRequests(
+        const requests = await membershipService.getRequests(
           this.props.activityCode,
           this.props.sessionInfo.SessionCode,
         );
@@ -368,7 +368,7 @@ export default class Membership extends Component {
           if (this.state.requests.length === 0) {
             requestList = <Typography>There are no pending requests</Typography>;
           } else {
-            requestList = <RequestDetail involvement={this.state.requests[0]} />;
+            requestList = <RequestsReceived involvement={this.state.requests[0]} />;
           }
           // Only advisors and superadmins can re-open the roster
 
@@ -467,22 +467,22 @@ export default class Membership extends Component {
                       </DialogContent>
                     </Dialog>
 
-                    <Grid item xs={6} sm={4} md={4} lg={4}>
+                    <Grid item>{requestList}</Grid>
+
+                    <Grid item align="right">
+                      {confirmRoster}
+                      &emsp;
                       <Button
                         variant="contained"
                         color="primary"
                         disabled={isActivityClosed}
                         onClick={this.openAddMemberDialog}
-                        style={{ marginBottom: 8 }}
                       >
                         <AddPersonIcon style={{ marginRight: 8 }} />
                         Add member
                       </Button>
                     </Grid>
-                    <Divider />
-                    <Grid item>{requestList}</Grid>
-
-                    <Grid item>{confirmRoster}</Grid>
+                    <Grid item xs={6} sm={4}></Grid>
                   </Grid>
                 </CardContent>
               </Card>
@@ -532,7 +532,6 @@ export default class Membership extends Component {
                 <MemberList
                   member={groupMember}
                   admin={this.state.isAdmin}
-                  groupAdmin={groupMember.GroupAdmin}
                   key={groupMember.MembershipID}
                 />
               ))}
