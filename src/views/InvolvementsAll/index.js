@@ -11,7 +11,6 @@ import {
   Select,
   TextField,
 } from '@material-ui/core';
-import { useParams } from 'react-router';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import GordonLoader from 'components/Loader';
 import Requests from './components/Requests';
@@ -21,7 +20,7 @@ import sessionService from 'services/session';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import './involvements-all.css';
 
-const InvolvementsAll = ({ authentication, history }) => {
+const InvolvementsAll = ({ location, authentication, history }) => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [involvements, setInvolvements] = useState([]);
   const [allInvolvements, setAllInvolvements] = useState([]);
@@ -34,17 +33,21 @@ const InvolvementsAll = ({ authentication, history }) => {
   const [types, setTypes] = useState([]);
   const isOnline = useNetworkStatus();
 
-  const { session: sessionFromURL } = useParams();
+  const sessionFromURL = new URLSearchParams(location.search).get('session');
 
+  console.log("loading: " + loading);
   useEffect(() => {
     const loadPage = async () => {
+      console.log("loadPage: " + currentAcademicSession + " " + authentication + " " + sessionFromURL);
       setSessions(await sessionService.getAll());
-
+      
+      const { SessionCode } = await sessionService.getCurrent();
+      setCurrentAcademicSession(currentAcademicSession || SessionCode);
+      
       if (sessionFromURL) {
+        console.log("setting session from URL");
         setSelectedSession(sessionFromURL);
       } else {
-        const { SessionCode } = await sessionService.getCurrent();
-        setCurrentAcademicSession(currentAcademicSession || SessionCode);
         const [involvements, sessions] = await Promise.all([
           involvementService.getAll(SessionCode),
           sessionService.getAll(),
@@ -72,11 +75,10 @@ const InvolvementsAll = ({ authentication, history }) => {
     loadPage();
   }, [currentAcademicSession, authentication, sessionFromURL]);
 
-  useEffect(() => {
-    if (selectedSession) {
-      history.push(`?session=${selectedSession}`);
-    }
-  }, [history, selectedSession]);
+  const handleSelectSession = async (value) => {
+    setSelectedSession(value);
+    history.push(`?session=${value}`);
+  };
 
   useEffect(() => {
     const updateInvolvements = async () => {
@@ -133,7 +135,7 @@ const InvolvementsAll = ({ authentication, history }) => {
               <InputLabel htmlFor="activity-session">Term</InputLabel>
               <Select
                 value={selectedSession}
-                onChange={(e) => setSelectedSession(e.target.value)}
+                onChange={(e) => handleSelectSession(e.target.value)}
                 input={<Input id="activity-session" />}
               >
                 {(isOnline

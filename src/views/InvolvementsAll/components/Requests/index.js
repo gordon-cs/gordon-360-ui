@@ -95,7 +95,7 @@ const Requests = () => {
     return (
       <Grid item xs={12} lg={8}>
         <Card className="requests">
-          <Accordion defaultExpanded="true">
+          <Accordion defaultExpanded>
             <AccordionSummary
               aria-controls="received-requests-content"
               expandIcon={<ExpandMore style={{ color: 'white' }} />}
@@ -131,7 +131,7 @@ const Requests = () => {
       </Grid>
     );
   }
-  // otherwise hide since we have no requests
+  // otherwise hide component entirely since we have no requests
   return null;
 };
 
