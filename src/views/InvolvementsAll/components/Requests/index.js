@@ -33,59 +33,106 @@ const Requests = () => {
     setRequestsSent((prevRequestsSent) => prevRequestsSent.filter((r) => r !== request));
   };
 
-  return (
-    <Card className="requests">
-      <CardHeader title="Membership Requests" className="requests-header" />
-
-      <CardContent>
-        {involvementsLeading?.length > 0 && (
-          <Accordion>
+  // if leading involvements, show two dropdowns for requests received/sent
+  if(involvementsLeading?.length > 0) {
+    return (
+      <Grid item xs={12} lg={8}>
+          <Card className="requests">
+            <CardHeader title="Membership Requests" className="requests-header" />
+            
+            <CardContent>
+              <Accordion>
+                <AccordionSummary
+                  aria-controls="received-requests-content"
+                  expandIcon={<ExpandMore style={{ color: 'white' }} />}
+                  className="requests-header"
+                >
+                  <Typography variant="h6">Requests Received</Typography>
+                </AccordionSummary>
+                <AccordionDetails style={{ flexDirection: 'column' }}>
+                  {involvementsLeading.map((involvement) => (
+                    <RequestReceived
+                      key={involvement.ActivityCode + involvement.SessioinCode}
+                      involvement={involvement}
+                    />
+                  ))}
+                </AccordionDetails>
+              </Accordion>
+    
+              <Accordion>
+                <AccordionSummary
+                  aria-controls="sent-requests-content"
+                  expandIcon={<ExpandMore style={{ color: 'white' }} />}
+                  className="requests-header"
+                >
+                  <Typography variant="h6">Requests Sent</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Grid container align="right" direction="row">
+                    {requestsSent?.length > 0 ? (
+                      requestsSent
+                        .sort((a, b) => parseISO(b.DateSent) - parseISO(a.DateSent))
+                        .map((request) => (
+                          <RequestSent
+                            member={request}
+                            key={request.RequestID}
+                            onCancel={handleCancelRequest}
+                          />
+                        ))
+                    ) : (
+                      <Typography variant="h6">You haven't sent any requests</Typography>
+                    )}
+                  </Grid>
+                </AccordionDetails>
+              </Accordion>
+            </CardContent>
+          </Card>
+      </Grid>
+    );
+  }
+  // otherwise just show the requests sent (if there are any)
+  else if(requestsSent?.length > 0) {
+    return (
+      <Grid item xs={12} lg={8}>
+        <Card className="requests">
+          <Accordion defaultExpanded>
             <AccordionSummary
               aria-controls="received-requests-content"
               expandIcon={<ExpandMore style={{ color: 'white' }} />}
               className="requests-header"
             >
-              <Typography variant="h6">Requests Received</Typography>
+              <CardHeader 
+                title="Membership Requests"
+                className="requests-header"
+                  style={{padding: 0}} 
+              />
             </AccordionSummary>
             <AccordionDetails style={{ flexDirection: 'column' }}>
-              {involvementsLeading.map((involvement) => (
-                <RequestReceived
-                  key={involvement.ActivityCode + involvement.SessioinCode}
-                  involvement={involvement}
-                />
-              ))}
+              <CardContent>
+                <Grid container align="right" direction="row">
+                  {requestsSent?.length > 0 ? (
+                    requestsSent
+                      .sort((a, b) => parseISO(b.DateSent) - parseISO(a.DateSent))
+                      .map((request) => (
+                        <RequestSent
+                          member={request}
+                          key={request.RequestID}
+                          onCancel={handleCancelRequest}
+                        />
+                      ))
+                  ) : (
+                    <Typography variant="h6">You haven't sent any requests</Typography>
+                  )}
+                </Grid>
+              </CardContent>
             </AccordionDetails>
           </Accordion>
-        )}
-        <Accordion>
-          <AccordionSummary
-            aria-controls="sent-requests-content"
-            expandIcon={<ExpandMore style={{ color: 'white' }} />}
-            className="requests-header"
-          >
-            <Typography variant="h6">Requests Sent</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid container align="right" direction="row">
-              {requestsSent?.length > 0 ? (
-                requestsSent
-                  .sort((a, b) => parseISO(b.DateSent) - parseISO(a.DateSent))
-                  .map((request) => (
-                    <RequestSent
-                      member={request}
-                      key={request.RequestID}
-                      onCancel={handleCancelRequest}
-                    />
-                  ))
-              ) : (
-                <Typography variant="h6">You haven't sent any requests</Typography>
-              )}
-            </Grid>
-          </AccordionDetails>
-        </Accordion>
-      </CardContent>
-    </Card>
-  );
+        </Card>
+      </Grid>
+    );
+  }
+  // otherwise hide component entirely since we have no requests
+  return null;
 };
 
 export default Requests;
