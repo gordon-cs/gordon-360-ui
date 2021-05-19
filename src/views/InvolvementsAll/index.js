@@ -104,7 +104,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
 
   let myInvolvementsHeadingText;
   let myInvolvementsNoneText;
-  if (selectedSession === currentAcademicSession) {
+  if (selectedSession === currentAcademicSession && selectedSession !== '') {
     myInvolvementsHeadingText = 'Current';
     myInvolvementsNoneText = 
       "It looks like you're not currently a member of any Involvements. Get connected below!";
