@@ -785,7 +785,7 @@ class PeopleSearch extends Component {
       // Creates the PeopleSearch page depending on the status of the network found in local storage
       let PeopleSearch;
       let searchPageTitle = (
-        <div>
+        <div align='center'>
           Search the
           <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
           Community
