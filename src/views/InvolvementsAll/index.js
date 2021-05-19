@@ -104,17 +104,15 @@ const InvolvementsAll = ({ location, authentication, history }) => {
 
   let myInvolvementsHeadingText;
   let myInvolvementsNoneText;
+  let involvementSessionText = (selectedSession 
+    ? sessions.find((s) => s.SessionCode === selectedSession)?.SessionDescription
+    : '');
   if (selectedSession === currentAcademicSession && selectedSession !== '') {
     myInvolvementsHeadingText = 'Current';
     myInvolvementsNoneText = 
-      "It looks like you're not currently a member of any Involvements. Get connected below!";
+      "It looks like you're not currently a member of any involvements. Get connected below!";
   } else {
-    let involvementDescription = (selectedSession ? 
-      sessions.find((s) => s.SessionCode === selectedSession)
-        ?.SessionDescription
-      : 
-        '');
-    myInvolvementsHeadingText = involvementDescription;
+    myInvolvementsHeadingText = involvementSessionText;
     myInvolvementsNoneText = 'No personal involvements found for this term';
   }
 
@@ -177,13 +175,12 @@ const InvolvementsAll = ({ location, authentication, history }) => {
         <Requests />
       )}
 
-      <Grid item xs={12} lg={8}>
-        <Card>
-          <CardHeader title={`${myInvolvementsHeadingText} Involvements`} className="involvements-header" />
-          <CardContent>
-            {/* My Involvements (private) */}
-            {authentication && (
-              <>
+      {/* My Involvements (private) */}
+      {authentication && (
+        <Grid item xs={12} lg={8}>
+          <Card>
+            <CardHeader title={`My ${myInvolvementsHeadingText} Involvements`} className="involvements-header" />
+            <CardContent>
                 {loading ? (
                   <GordonLoader />
                 ) : (
@@ -193,13 +190,16 @@ const InvolvementsAll = ({ location, authentication, history }) => {
                     noInvolvementsText={myInvolvementsNoneText}
                   />
                 )}
-                <br></br>
-                <hr width="70%"></hr>
-                <br></br>
-              </>
-            )}
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
 
-             {/* All Involvements (public) */}
+      {/* All Involvements (public) */}
+      <Grid item xs={12} lg={8}>
+        <Card>
+          <CardHeader title={`${involvementSessionText} Involvements`} className="involvements-header" />
+          <CardContent>
             {loading ? (
               <GordonLoader />
             ) : (
