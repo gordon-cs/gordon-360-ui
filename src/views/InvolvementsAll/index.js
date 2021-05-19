@@ -35,27 +35,24 @@ const InvolvementsAll = ({ location, authentication, history }) => {
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
-  console.log("loading: " + loading);
   useEffect(() => {
     const loadPage = async () => {
-      console.log("loadPage: " + currentAcademicSession + " " + authentication + " " + sessionFromURL);
       setSessions(await sessionService.getAll());
       
-      const { SessionCode } = await sessionService.getCurrent();
-      setCurrentAcademicSession(currentAcademicSession || SessionCode);
-      
       if (sessionFromURL) {
-        console.log("setting session from URL");
         setSelectedSession(sessionFromURL);
       } else {
+        const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
+        setCurrentAcademicSession(currentSessionCode);
+        
         const [involvements, sessions] = await Promise.all([
-          involvementService.getAll(SessionCode),
+          involvementService.getAll(currentSessionCode),
           sessionService.getAll(),
         ]);
 
         if (involvements.length === 0) {
           let IndexOfCurrentSession = sessions.findIndex(
-            (session) => session.SessionCode === SessionCode,
+            (session) => session.SessionCode === currentSessionCode,
           );
 
           for (let k = IndexOfCurrentSession + 1; k < sessions.length; k++) {
@@ -67,13 +64,12 @@ const InvolvementsAll = ({ location, authentication, history }) => {
             }
           }
         } else {
-          setSelectedSession(SessionCode);
+          setSelectedSession(currentSessionCode);
         }
       }
-      setLoading(false);
     };
     loadPage();
-  }, [currentAcademicSession, authentication, sessionFromURL]);
+  }, [authentication, sessionFromURL]);
 
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
@@ -83,8 +79,9 @@ const InvolvementsAll = ({ location, authentication, history }) => {
   useEffect(() => {
     const updateInvolvements = async () => {
       setLoading(true);
-      const allInvolvements = await involvementService.getAll(selectedSession);
-      setInvolvements(involvementService.filter(allInvolvements, type, search));
+      let allInvolvements;
+      allInvolvements = await involvementService.getAll(selectedSession);
+      
       setAllInvolvements(allInvolvements);
       setTypes(await involvementService.getTypes(selectedSession));
       if (authentication) {
@@ -96,8 +93,10 @@ const InvolvementsAll = ({ location, authentication, history }) => {
       setLoading(false);
     };
 
-    updateInvolvements();
-  }, [selectedSession, authentication, type, search]);
+    if(selectedSession) {
+      updateInvolvements();
+    }
+  }, [selectedSession, authentication]);
 
   useEffect(() => {
     setInvolvements(involvementService.filter(allInvolvements, type, search));
@@ -107,11 +106,14 @@ const InvolvementsAll = ({ location, authentication, history }) => {
   let myInvolvementsNoneText;
   if (selectedSession === currentAcademicSession) {
     myInvolvementsHeadingText = 'Current';
-    myInvolvementsNoneText =
+    myInvolvementsNoneText = 
       "It looks like you're not currently a member of any Involvements. Get connected below!";
   } else {
-    let involvementDescription = sessions.find((s) => s.SessionCode === selectedSession)
-      ?.SessionDescription;
+    let involvementDescription = (selectedSession ? 
+      sessions.find((s) => s.SessionCode === selectedSession)
+        ?.SessionDescription
+      : 
+        '');
     myInvolvementsHeadingText = involvementDescription;
     myInvolvementsNoneText = 'No personal involvements found for this term';
   }
