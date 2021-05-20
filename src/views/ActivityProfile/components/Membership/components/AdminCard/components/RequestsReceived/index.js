@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 import { gordonColors } from 'theme';
-import membership from 'services/membership';
+import membershipService from 'services/membership';
 
 import {
   Button,
-  Typography,
   Divider,
   List,
   ListItemText,
@@ -27,33 +26,36 @@ const useStyles = makeStyles(
   { name: 'MuiListItem' },
 );
 
-const RequestsReceived = ({ involvement }) => {
-  const [requests, setRequests] = useState([]);
+const RequestsReceived = ({ activityCode, sessionCode }) => {
   const classes = useStyles();
+  const [requests, setRequests] = useState([]);
 
   useEffect(() => {
     const loadRequests = async () => {
-      setRequests(await membership.getRequests(involvement.ActivityCode, involvement.SessionCode));
+      const requests = await membershipService.getRequests(activityCode, sessionCode);
+
+      setRequests(requests);
     };
+
     loadRequests();
-  }, [involvement.ActivityCode, involvement.SessionCode]);
+  }, [activityCode, sessionCode]);
 
   const onApprove = async (id) => {
-    await membership.approveRequest(id);
+    await membershipService.approveRequest(id);
     setRequests((prevRequests) => prevRequests.filter((r) => r.RequestID !== id));
   };
 
   const onDeny = async (id) => {
-    await membership.denyRequest(id);
+    await membershipService.denyRequest(id);
     setRequests((prevRequests) => prevRequests.filter((r) => r.RequestID !== id));
   };
 
   if (requests.length === 0) {
-    return <Typography>No requests to show</Typography>;
+    return null;
   } else {
     return (
       <List>
-        {requests.reverse().map((request) => (
+        {requests.map((request) => (
           <React.Fragment key={request.RequestID}>
             <ListItem
               key={request.RequestID}
@@ -61,7 +63,9 @@ const RequestsReceived = ({ involvement }) => {
             >
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
-                secondary={`${membership.getDiffDays(request.DateSent)} - ${request.CommentText}`}
+                secondary={`${membershipService.getDiffDays(request.DateSent)} - ${
+                  request.CommentText
+                }`}
               />
 
               <ListItemSecondaryAction>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
   Button,
@@ -21,7 +21,7 @@ import { PersonAdd as AddPersonIcon } from '@material-ui/icons';
 
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
-import RequestsReceived from '../RequestsReceived';
+import RequestsReceived from './components/RequestsReceived';
 import { gordonColors } from 'theme';
 
 const headerStyle = {
@@ -43,17 +43,6 @@ const AdminCard = ({
   const [addEmail, setAddEmail] = useState('');
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
-  const [requests, setRequests] = useState([]);
-
-  useEffect(() => {
-    const loadRequests = async () => {
-      const requests = await membershipService.getRequests(activityCode, sessionCode);
-
-      setRequests(requests);
-    };
-
-    loadRequests();
-  });
 
   const onConfirmRoster = async () => {
     await involvementService.closeActivity(activityCode, sessionCode);
@@ -109,6 +98,7 @@ const AdminCard = ({
       }
     }
   };
+
   // Only advisors and superadmins can re-open the roster
   const confirmRoster = !isActivityClosed ? (
     <Button variant="contained" color="primary" onClick={onConfirmRoster}>
@@ -126,13 +116,7 @@ const AdminCard = ({
         <CardHeader title="Membership Requests" style={headerStyle} />
         <CardContent>
           <Grid container spacing={2} direction="column">
-            <Grid item>
-              {requests.length === 0 ? (
-                <Typography>There are no pending requests</Typography>
-              ) : (
-                <RequestsReceived involvement={requests[0]} />
-              )}
-            </Grid>
+            <RequestsReceived activityCode={activityCode} sessionCode={sessionCode} />
 
             <Grid item align="right">
               {confirmRoster}
