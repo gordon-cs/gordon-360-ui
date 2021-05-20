@@ -21,6 +21,7 @@ import {
   TextField,
   InputLabel,
   CardHeader,
+  CardContent,
 } from '@material-ui/core';
 import AdminCard from './components/AdminCard';
 
@@ -142,7 +143,6 @@ const Membership = ({
 
   let content;
   let isActivityClosed = status === 'CLOSED';
-  let header;
   const headerStyle = {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
@@ -154,55 +154,52 @@ const Membership = ({
   } else {
     if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSuperAdmin) {
       // User is in activity and not a guest (unless user is superadmin [god mode])
-      if (isAdmin || isSuperAdmin) {
-        header = (
-          <CardHeader
-            title={
-              <Grid container direction="row">
-                <Grid item xs={2}>
-                  Name
-                </Grid>
-                <Grid item xs={2}>
-                  Participation
-                </Grid>
-                <Grid item xs={3}>
-                  Title/Comment
-                </Grid>
-                <Grid item xs={2}>
-                  Mail #
-                </Grid>
-                <Grid item xs={3}>
-                  Admin
-                </Grid>
+
+      const header = isMobileView ? (
+        <CardHeader title="Members" style={headerStyle} />
+      ) : isAdmin || isSuperAdmin ? (
+        <CardHeader
+          title={
+            <Grid container direction="row">
+              <Grid item xs={2}>
+                Name
               </Grid>
-            }
-            titleTypographyProps={{ variant: 'h6' }}
-            style={headerStyle}
-          />
-        );
-      } else {
-        header = (
-          <CardHeader
-            title={
-              <Grid container direction="row">
-                <Grid item xs={4}>
-                  Name
-                </Grid>
-                <Grid item xs={4}>
-                  Participation
-                </Grid>
-                <Grid item xs={4}>
-                  Mail #
-                </Grid>
+              <Grid item xs={2}>
+                Participation
               </Grid>
-            }
-            style={headerStyle}
-          />
-        );
-      }
-      if (isMobileView) {
-        header = <CardHeader title="Members" style={headerStyle} />;
-      }
+              <Grid item xs={3}>
+                Title/Comment
+              </Grid>
+              <Grid item xs={2}>
+                Mail #
+              </Grid>
+              <Grid item xs={3}>
+                Admin
+              </Grid>
+            </Grid>
+          }
+          titleTypographyProps={{ variant: 'h6' }}
+          style={headerStyle}
+        />
+      ) : (
+        <CardHeader
+          title={
+            <Grid container direction="row">
+              <Grid item xs={4}>
+                Name
+              </Grid>
+              <Grid item xs={4}>
+                Participation
+              </Grid>
+              <Grid item xs={4}>
+                Mail #
+              </Grid>
+            </Grid>
+          }
+          style={headerStyle}
+        />
+      );
+
       content = (
         <>
           {(isAdmin || isSuperAdmin) && (
@@ -218,11 +215,18 @@ const Membership = ({
           )}
           <Card>
             {header}
-            {members
-              .sort((a, b) => compareFunction(a, b))
-              .map((groupMember) => (
-                <MemberList member={groupMember} admin={isAdmin} key={groupMember.MembershipID} />
-              ))}
+            <CardContent>
+              {members
+                .sort((a, b) => compareFunction(a, b))
+                .map((groupMember) => (
+                  <MemberList
+                    member={groupMember}
+                    admin={isAdmin}
+                    key={groupMember.MembershipID}
+                    createSnackbar={createSnackbar}
+                  />
+                ))}
+            </CardContent>
           </Card>
         </>
       );
