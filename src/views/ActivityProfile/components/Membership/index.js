@@ -1,14 +1,12 @@
-import React, { Component } from 'react';
-import activity from 'services/activity';
-import GordonLoader from 'components/Loader';
-import MemberList from './components/MemberList';
+import React, { useState, useEffect } from 'react';
+
+import involvementService from 'services/activity';
 import membershipService from 'services/membership';
+import GordonLoader from 'components/Loader';
+import GordonSnackbar from 'components/Snackbar';
+import MemberList from './components/MemberList';
 import RequestsReceived from './components/RequestsReceived';
-import CloseIcon from '@material-ui/icons/Close';
-import user from 'services/user';
 import { gordonColors } from 'theme';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import Error from '@material-ui/icons/Error';
 import AddPersonIcon from '@material-ui/icons/PersonAdd';
 
 import {
@@ -26,263 +24,179 @@ import {
   Select,
   TextField,
   Typography,
-  Snackbar,
-  IconButton,
-  Divider,
+  InputLabel,
+  CardHeader,
 } from '@material-ui/core';
 
-export default class Membership extends Component {
-  constructor(props) {
-    super(props);
+const Membership = ({
+  status,
+  isAdmin,
+  isSuperAdmin,
+  activityCode,
+  id,
+  sessionInfo,
+  members,
+  activityDescription,
+}) => {
+  const [openAddMember, setOpenAddMember] = useState(false);
+  const [openJoin, setOpenJoin] = useState(false);
+  const [participationCode, setParticipationCode] = useState('');
+  const [titleComment, setTitleComment] = useState('');
+  const [participationDetail, setParticipationDetail] = useState([]);
+  const [addEmail, setAddEmail] = useState('');
+  const [requests, setRequests] = useState([]);
+  const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
+  const [loading, setLoading] = useState(true);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 810);
 
-    this.handleSelectParticipationLevel = this.handleSelectParticipationLevel.bind(this);
-    this.openJoinDialog = this.openJoinDialog.bind(this);
-    this.openAddMemberDialog = this.openAddMemberDialog.bind(this);
-    this.onAddMember = this.onAddMember.bind(this);
-    this.onConfirmRoster = this.onConfirmRoster.bind(this);
-    this.onClose = this.onClose.bind(this);
-    this.onReopenActivity = this.onReopenActivity.bind(this);
-    this.onRequest = this.onRequest.bind(this);
-    this.onSubscribe = this.onSubscribe.bind(this);
-    this.onUnsubscribe = this.onUnsubscribe.bind(this);
-
-    this.state = {
-      membership: [],
-      openAddMember: false,
-      addMemberDialogError: '',
-      openJoin: false,
-      status: this.props.status,
-      sessionInfo: null,
-      activityCode: '',
-      activityDescription: '',
-      participationCode: '',
-      titleComment: '',
-      isAdmin: this.props.isAdmin,
-      isSuperAdmin: this.props.isSuperAdmin,
-      participationDetail: [],
-      addEmail: '',
-      addGordonID: '',
-      requests: [],
-    };
-    this.isMobileView = false;
-    this.breakpointWidth = 810;
-  }
-
-  async componentDidMount() {
-    this.getMembership();
-    this.loadMembers();
-
-    window.addEventListener('resize', this.resize);
-  }
-
-  //Has to rerender on screen resize in order for table to switch to the mobile view
-  resize = () => {
-    if (this.breakpointPassed()) {
-      this.isMobileView = !this.isMobileView;
-      this.forceUpdate();
-    }
-  };
-
-  //checks if the screen has been resized past the mobile breakpoint
-  //allows for forceUpdate to only be called when necessary, improving resizing performance
-  breakpointPassed() {
-    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
-    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
-    else return false;
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
-  }
-
-  handleSelectParticipationLevel = (event) => {
-    this.setState({ participationCode: event.target.value });
-  };
-
-  openAddMemberDialog() {
-    this.setState({ openAddMember: true });
-  }
-
-  openJoinDialog() {
-    this.setState({ openJoin: true });
-  }
-
-  handleText = (name) => (event) => {
-    this.setState({ [name]: event.target.value });
-  };
-
-  // Called when Confirm Roster button clicked
-  async onConfirmRoster() {
-    await activity.closeActivity(this.props.activityCode, this.state.sessionInfo.SessionCode);
-    this.refresh();
-  }
-
-  // Called when Reopen Activity button clicked
-  async onReopenActivity() {
-    await activity.reopenActivity(this.props.activityCode, this.state.sessionInfo.SessionCode);
-    this.refresh();
-  }
-
-  async getMembership() {
-    let memberships = await user.getCurrentMemberships(this.props.id);
-    let membership;
-    for (let i = 0; i < memberships.length; i += 1) {
-      if (memberships[i].ActivityCode === this.props.activityCode) {
-        membership = memberships[i];
-      }
-    }
-    this.setState({ membership });
-    return membership;
-  }
-
-  handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    this.setState({
-      isSnackBarOpen: false,
-      isFailSnackBarOpen: false,
-      isUserAlreadyMemberSnackBarOpen: false,
-    });
-  };
-
-  onClose() {
-    this.setState({
-      openAddMember: false,
-      openJoin: false,
-      participationCode: '',
-      titleComment: '',
-    });
-  }
-
-  // Called when submitting new member details from Add Member dialog box
-  async onAddMember() {
-    if (this.state.addEmail === '' || this.state.participationCode === '') {
-      this.setState({ addMemberDialogError: 'Please resolve the errors below and try again.' });
-    } else {
-      this.setState({ addMemberDialogError: '' });
-      let memberEmail = this.state.addEmail;
-      // If only the Exchange username is entered without the email address, add "@gordon.edu" to the
-      // username
-      if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
-        memberEmail = memberEmail + '@gordon.edu';
-      }
-
-      // Try to add member
+  useEffect(() => {
+    const loadMembers = async () => {
+      setLoading(true);
       try {
-        let addID = await membershipService.getEmailAccount(memberEmail).then(function (result) {
-          return result.GordonID;
-        });
-        let data = {
-          ACT_CDE: this.props.activityCode,
-          SESS_CDE: this.state.sessionInfo.SessionCode,
-          ID_NUM: addID,
-          PART_CDE: this.state.participationCode,
-          COMMENT_TXT: this.state.titleComment,
-          GRP_ADMIN: false,
-        };
-        // if a user is already a member of an involvement, attempting addMembership(data)
-        //  will return 'undefined'. So, if this happens, alert the user
-        let alreadyIn = await membershipService.addMembership(data);
-        if (typeof alreadyIn === 'undefined') {
-          // User is already a member of this involvement
-          this.setState({ isUserAlreadyMemberSnackBarOpen: true });
-        } else {
-          this.setState({ isSnackBarOpen: true, openAddMember: false });
-          this.refresh();
-        }
-      } catch (error) {
-        switch (error.name) {
-          case 'NotFoundError':
-            this.setState({ isFailSnackBarOpen: true });
-            break;
+        const participationDetail = await membershipService.search(
+          id,
+          sessionInfo.SessionCode,
+          activityCode,
+        );
+        setParticipationDetail(participationDetail);
 
-          default:
-            console.log('Something went wrong');
-            break;
+        if (isAdmin) {
+          // Not necessary, but good security to have
+          const requests = await membershipService.getRequests(
+            activityCode,
+            sessionInfo.SessionCode,
+          );
+
+          setRequests(requests);
         }
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadMembers();
+  }, [activityCode, id, isAdmin, sessionInfo.SessionCode]);
+
+  useEffect(() => {
+    const resize = () => {
+      setIsMobileView(window.innerWidth < 810);
+    };
+
+    window.addEventListener('resize', resize);
+
+    return () => window.removeEventListener('resize', resize);
+  });
+
+  const onConfirmRoster = async () => {
+    await involvementService.closeActivity(activityCode, sessionInfo.SessionCode);
+    refresh();
+  };
+
+  const onReopenActivity = async () => {
+    await involvementService.reopenActivity(activityCode, sessionInfo.SessionCode);
+    refresh();
+  };
+
+  const onClose = () => {
+    setOpenAddMember(false);
+    setOpenJoin(false);
+    setParticipationCode('');
+    setTitleComment('');
+  };
+
+  const onAddMember = async () => {
+    let memberEmail = addEmail;
+    if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
+      memberEmail = memberEmail + '@gordon.edu';
+    }
+
+    try {
+      let addID = await membershipService.getEmailAccount(memberEmail).then(function (result) {
+        return result.GordonID;
+      });
+      let data = {
+        ACT_CDE: activityCode,
+        SESS_CDE: sessionInfo.SessionCode,
+        ID_NUM: addID,
+        PART_CDE: participationCode,
+        COMMENT_TXT: titleComment,
+        GRP_ADMIN: false,
+      };
+      // if a user is already a member of an involvement, attempting addMembership(data)
+      //  will return 'undefined'. So, if this happens, alert the user
+      let alreadyIn = await membershipService.addMembership(data);
+      if (typeof alreadyIn === 'undefined') {
+        // User is already a member of this involvement
+        setSnackbar({ open: true, text: `${addEmail} is already a member`, severity: 'info' });
+      } else {
+        setSnackbar({ open: true, text: `Successfully added ${addEmail}`, severity: 'success' });
+        refresh();
+      }
+    } catch (error) {
+      switch (error.name) {
+        case 'NotFoundError':
+          setSnackbar({
+            open: true,
+            text: 'Nobody with that username was found',
+            severity: 'error',
+          });
+          break;
+
+        default:
+          console.log('Something went wrong');
+          break;
       }
     }
-  }
+  };
 
-  // Called when submitting request details from Join dialog box
-  onRequest() {
+  const onRequest = async () => {
     let date = new Date();
     let data = {
-      ACT_CDE: this.props.activityCode,
-      SESS_CDE: this.state.sessionInfo.SessionCode,
-      ID_NUM: this.props.id,
-      PART_CDE: this.state.participationCode,
+      ACT_CDE: activityCode,
+      SESS_CDE: sessionInfo.SessionCode,
+      ID_NUM: id,
+      PART_CDE: participationCode,
       DATE_SENT: date.toLocaleString(),
-      COMMENT_TXT: this.state.titleComment,
+      COMMENT_TXT: titleComment,
       APPROVED: 'Pending',
     };
-    membershipService.requestMembership(data);
-    this.onClose();
-    this.setState({ isSnackBarOpen: true });
-    //Used to call this.refresh() here, but it caused requests not to go through
-  }
+    await membershipService.requestMembership(data);
+    onClose();
+    setSnackbar({
+      open: true,
+      text: 'Request sent, awaiting approval from a group leader',
+      severity: 'success',
+    });
+    //Used to call refresh() here, but it caused requests not to go through
+  };
 
-  // Called when Subscribe button clicked
-  async onSubscribe() {
+  const onSubscribe = async () => {
     let data = {
-      ACT_CDE: this.props.activityCode,
-      SESS_CDE: this.state.sessionInfo.SessionCode,
-      ID_NUM: this.props.id,
+      ACT_CDE: activityCode,
+      SESS_CDE: sessionInfo.SessionCode,
+      ID_NUM: id,
       PART_CDE: 'GUEST',
       COMMENT_TXT: 'Subscriber',
       GRP_ADMIN: false,
     };
     await membershipService.addMembership(data);
-    this.refresh();
-  }
+    refresh();
+  };
 
   // Called when Unsubscribe button clicked
-  async onUnsubscribe() {
-    let participationDescription = this.state.participationDetail[2];
+  const onUnsubscribe = async () => {
+    let participationDescription = participationDetail[2];
     await membershipService.remove(participationDescription);
-    this.setState({ participationDetail: [false, false, null] });
-  }
+    setParticipationDetail([false, false, null]);
+  };
 
-  async loadMembers() {
-    this.setState({ loading: true });
-    try {
-      const participationDetail = await membershipService.search(
-        this.props.id,
-        this.props.sessionInfo.SessionCode,
-        this.props.activityCode,
-      );
-      this.setState({
-        participationDetail,
-        activityDescription: this.props.activityDescription,
-        participationCode: '',
-        sessionInfo: this.props.sessionInfo,
-        titleComment: '',
-      });
-      if (this.state.isAdmin) {
-        // Not necessary, but good security to have
-        const requests = await membershipService.getRequests(
-          this.props.activityCode,
-          this.props.sessionInfo.SessionCode,
-        );
-        this.setState({
-          requests,
-          loading: false,
-        });
-      }
-      this.setState({ loading: false });
-    } catch (error) {
-      this.setState({ error });
-    }
-  }
-
-  refresh() {
+  const refresh = () => {
     window.location.reload();
-  }
+  };
 
   // Compare members initially by last name, then by first name, A-Z
-  compareFunction(a, b) {
+  const compareFunction = (a, b) => {
     if (a.LastName.toUpperCase() < b.LastName.toUpperCase()) {
       return -1;
     }
@@ -296,431 +210,280 @@ export default class Membership extends Component {
       return 1;
     }
     return 0;
-  }
+  };
 
-  render() {
-    if (this.state.error) {
-      throw this.state.error;
-    }
-    const formControl = {
-      padding: 10,
-    };
-    let content;
-    let requestList;
-    let confirmRoster;
-    let ferpaAsterisks;
-    let adminView;
-    const { members } = this.props;
-    members.sort((a, b) => this.compareFunction(a, b));
-    let subscribeButton;
-    let isActivityClosed;
-    let header;
-    const headerStyle = {
-      backgroundColor: gordonColors.primary.blue,
-      color: '#FFF',
-      padding: '10px',
-    };
-    if (this.state.status === 'CLOSED') {
-      isActivityClosed = true;
-    } else {
-      isActivityClosed = false;
-    }
-    if (this.state.loading === true) {
-      content = <GordonLoader />;
-    } else {
-      if (
-        (this.state.participationDetail[0] && this.state.participationDetail[1] !== 'Guest') ||
-        this.state.isSuperAdmin
-      ) {
-        // User is in activity and not a guest (unless user is superadmin [god mode])
-        if (this.state.isAdmin || this.state.isSuperAdmin) {
-          header = (
-            <div style={headerStyle}>
+  let content;
+  let adminView;
+  let isActivityClosed = status === 'CLOSED';
+  let header;
+  const headerStyle = {
+    backgroundColor: gordonColors.primary.blue,
+    color: '#FFF',
+    padding: '10px',
+  };
+
+  if (loading === true) {
+    return <GordonLoader />;
+  } else {
+    if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSuperAdmin) {
+      // User is in activity and not a guest (unless user is superadmin [god mode])
+      if (isAdmin || isSuperAdmin) {
+        header = (
+          <CardHeader
+            title={
               <Grid container direction="row">
+                <Grid item xs={2}>
+                  Name
+                </Grid>
+                <Grid item xs={2}>
+                  Participation
+                </Grid>
                 <Grid item xs={3}>
-                  <Typography variant="body2" className="header" style={headerStyle}>
-                    NAME
-                  </Typography>
+                  Title/Comment
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography variant="body2" className="header" style={headerStyle}>
-                    PARTICIPATION
-                  </Typography>
+                  Mail #
                 </Grid>
-                <Grid item xs={2}>
-                  <Typography variant="body2" className="header" style={headerStyle}>
-                    TITLE/COMMENT
-                  </Typography>
-                </Grid>
-                <Grid item xs={1}>
-                  <Typography variant="body2" className="header" style={headerStyle}>
-                    MAIL #
-                  </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography variant="body2" className="header" style={headerStyle}>
-                    ADMIN
-                  </Typography>
+                <Grid item xs={3}>
+                  Admin
                 </Grid>
               </Grid>
-            </div>
-          );
-          if (this.state.requests.length === 0) {
-            requestList = <Typography>There are no pending requests</Typography>;
-          } else {
-            requestList = <RequestsReceived involvement={this.state.requests[0]} />;
-          }
-          // Only advisors and superadmins can re-open the roster
-
-          if (this.state.status === 'OPEN') {
-            confirmRoster = (
-              <Button variant="contained" color="primary" onClick={this.onConfirmRoster}>
-                Confirm final roster
-              </Button>
-            );
-          } else if (this.state.participationDetail[1] === 'Advisor' || this.state.isSuperAdmin) {
-            confirmRoster = (
-              <Button variant="contained" color="primary" onClick={this.onReopenActivity}>
-                Reopen roster
-              </Button>
-            );
-          }
-          if (this.state.participationDetail[1] === 'Advisor' || this.state.isSuperAdmin) {
-            ferpaAsterisks = (
-              <Card>
-                <CardContent>
-                  <Typography>* FERPA protected student</Typography>
-                </CardContent>
-              </Card>
-            );
-          }
-          adminView = (
-            <>
-              <Grid item xs={12}>
-                <Card>
-                  <div style={headerStyle}>
-                    <Typography variant="body2" style={headerStyle}>
-                      MEMBERSHIP REQUESTS
-                    </Typography>
-                  </div>
-                </Card>
-              </Grid>
-              <Card>
-                <CardContent>
-                  <Grid container spacing={2} direction="column">
-                    <Dialog open={this.state.openAddMember} keepMounted align="center">
-                      <DialogTitle>Add person to {this.state.activityDescription}</DialogTitle>
-                      <Typography style={{ color: '#ff0000' }}>
-                        {this.state.addMemberDialogError}
-                      </Typography>
-                      <DialogContent>
-                        <Grid container align="center">
-                          <Grid item xs={12} align="center">
-                            <Typography>Username</Typography>
-                            <TextField
-                              error={this.state.addEmail === '' ? true : false}
-                              helperText={this.state.addEmail === '' ? 'Required' : ''}
-                              autoFocus
-                              fullWidth
-                              style={formControl}
-                              onChange={this.handleText('addEmail')}
-                            />
-                          </Grid>
-                          <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
-                            <Typography>Participation</Typography>
-                            <Grid item padding={6} align="center">
-                              <FormControl fullWidth style={formControl}>
-                                <Select
-                                  error={this.state.participationCode === '' ? true : false}
-                                  value={this.state.participationCode}
-                                  onChange={this.handleSelectParticipationLevel}
-                                  displayEmpty
-                                >
-                                  <MenuItem value="ADV">Advisor</MenuItem>
-                                  <MenuItem value="LEAD">Leader</MenuItem>
-                                  <MenuItem value="MEMBR">Member</MenuItem>
-                                  <MenuItem value="GUEST">Guest</MenuItem>
-                                </Select>
-                              </FormControl>
-                            </Grid>
-                            <Grid item align="center">
-                              <Typography>Title/Comment (Optional)</Typography>
-                              <TextField
-                                fullWidth
-                                onChange={this.handleText('titleComment')}
-                                style={formControl}
-                                value={this.state.titleComment}
-                              />
-                            </Grid>
-                          </Grid>
-                          <Grid item xs={12} sm={6} style={formControl}>
-                            <Button variant="outlined" onClick={this.onClose}>
-                              CANCEL
-                            </Button>
-                          </Grid>
-                          <Grid item xs={12} sm={6} style={formControl}>
-                            <Button variant="contained" color="primary" onClick={this.onAddMember}>
-                              Add member
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </DialogContent>
-                    </Dialog>
-
-                    <Grid item>{requestList}</Grid>
-
-                    <Grid item align="right">
-                      {confirmRoster}
-                      &emsp;
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        disabled={isActivityClosed}
-                        onClick={this.openAddMemberDialog}
-                      >
-                        <AddPersonIcon style={{ marginRight: 8 }} />
-                        Add member
-                      </Button>
-                    </Grid>
-                    <Grid item xs={6} sm={4}></Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-              {ferpaAsterisks}
-            </>
-          );
-        } else {
-          header = (
-            <div style={headerStyle}>
-              <Grid container direction="row">
-                <Grid item xs={4}>
-                  <Typography variant="body2" className="header" style={headerStyle}>
-                    NAME
-                  </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography variant="body2" className="header" style={headerStyle}>
-                    PARTICIPATION
-                  </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography variant="body2" className="header" style={headerStyle}>
-                    MAIL #
-                  </Typography>
-                </Grid>
-              </Grid>
-            </div>
-          );
-        }
-        if (window.innerWidth < this.breakpointWidth) {
-          header = (
-            <div style={headerStyle}>
-              <Grid>
-                <Typography variant="body2" className="header" style={headerStyle}>
-                  MEMBERS
-                </Typography>
-              </Grid>
-            </div>
-          );
-        }
-        content = (
-          <>
-            {adminView}
-            <Card>
-              {header}
-              {members.map((groupMember) => (
-                <MemberList
-                  member={groupMember}
-                  admin={this.state.isAdmin}
-                  key={groupMember.MembershipID}
-                />
-              ))}
-            </Card>
-          </>
+            }
+            titleTypographyProps={{ variant: 'h6' }}
+            style={headerStyle}
+          />
         );
-      } else {
-        // User is not in the activity or is a guest
-        if (this.state.participationDetail[1] === 'Guest') {
-          // User is a guest
-          subscribeButton = (
-            <Button variant="contained" color="primary" onClick={this.onUnsubscribe}>
-              Unsubscribe
-            </Button>
-          );
-        } else {
-          // User is not in the activity
-          subscribeButton = (
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={isActivityClosed}
-              onClick={this.onSubscribe}
-            >
-              Subscribe
-            </Button>
-          );
-        }
-        content = (
-          <CardActions>
-            {subscribeButton}
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={isActivityClosed}
-              onClick={this.openJoinDialog}
-            >
-              Join
-            </Button>
-            <Dialog open={this.state.openJoin} keepMounted align="center">
-              <DialogContent>
-                <Grid container align="center">
-                  <Grid item xs={12}>
-                    <DialogTitle>Join {this.state.activityDescription}</DialogTitle>
-                    <Typography>Participation (Required)</Typography>
-                    <Grid item align="center">
-                      <FormControl fullWidth style={formControl}>
-                        <Select
-                          value={this.state.participationCode}
-                          onChange={this.handleSelectParticipationLevel}
-                          displayEmpty
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value="ADV">Advisor</MenuItem>
-                          <MenuItem value="LEAD">Leader</MenuItem>
-                          <MenuItem value="MEMBR">Member</MenuItem>
-                          {/* <MenuItem value="GUEST">Subscriber</MenuItem> */}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item align="center">
-                      <TextField
-                        label="Title/Comment: (Optional)"
-                        fullWidth
-                        onChange={this.handleText('titleComment')}
-                        style={formControl}
-                      />
-                    </Grid>
 
-                    <DialogActions>
-                      <Button
-                        onClick={this.onClose}
-                        variant="contained"
-                        style={formControl}
-                        color="primary"
+        // Only advisors and superadmins can re-open the roster
+        const confirmRoster = !isActivityClosed ? (
+          <Button variant="contained" color="primary" onClick={onConfirmRoster}>
+            Confirm final roster
+          </Button>
+        ) : participationDetail[1] === 'Advisor' || isSuperAdmin ? (
+          <Button variant="contained" color="primary" onClick={onReopenActivity}>
+            Reopen roster
+          </Button>
+        ) : null;
+
+        adminView = (
+          <>
+            <Card>
+              <CardHeader title="Membership Requests" style={headerStyle} />
+              <CardContent>
+                <Grid container spacing={2} direction="column">
+                  <Grid item>
+                    {requests.length === 0 ? (
+                      <Typography>There are no pending requests</Typography>
+                    ) : (
+                      <RequestsReceived involvement={requests[0]} />
+                    )}
+                  </Grid>
+
+                  <Grid item align="right">
+                    {confirmRoster}
+                    &emsp;
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disabled={isActivityClosed}
+                      onClick={() => setOpenAddMember(true)}
+                      startIcon={<AddPersonIcon />}
+                    >
+                      Add member
+                    </Button>
+                  </Grid>
+                </Grid>
+                {(participationDetail[1] === 'Advisor' || isSuperAdmin) && (
+                  <Typography>* FERPA protected student</Typography>
+                )}
+              </CardContent>
+            </Card>
+
+            <Dialog open={openAddMember} keepMounted align="center">
+              <DialogTitle>Add a member to {activityDescription}</DialogTitle>
+              <DialogContent>
+                <Grid container direction="column" spacing={2}>
+                  <Grid item>
+                    <TextField
+                      required
+                      fullWidth
+                      onChange={(e) => setAddEmail(e.target.value)}
+                      label="Username"
+                      variant="filled"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <FormControl variant="filled" required fullWidth>
+                      <InputLabel id="involvement-profile-add-member-select-participation">
+                        Participation
+                      </InputLabel>
+                      <Select
+                        value={participationCode}
+                        onChange={(event) => setParticipationCode(event.target.value)}
+                        labelId="involvement-profile-add-member-select-participation"
                       >
-                        Cancel
-                      </Button>
-                      <Button
-                        color="primary"
-                        type="submit"
-                        variant="contained"
-                        style={formControl}
-                        onClick={this.onRequest}
-                      >
-                        Submit
-                      </Button>
-                    </DialogActions>
+                        <MenuItem value="ADV">Advisor</MenuItem>
+                        <MenuItem value="LEAD">Leader</MenuItem>
+                        <MenuItem value="MEMBR">Member</MenuItem>
+                        <MenuItem value="GUEST">Guest</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      variant="filled"
+                      label="Title/Comment"
+                      fullWidth
+                      onChange={(event) => setTitleComment(event.target.value)}
+                      value={titleComment}
+                    />
                   </Grid>
                 </Grid>
               </DialogContent>
+              <DialogActions>
+                <Button variant="outlined" onClick={onClose}>
+                  CANCEL
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={!addEmail || !participationCode}
+                  onClick={onAddMember}
+                >
+                  Add member
+                </Button>
+              </DialogActions>
             </Dialog>
-          </CardActions>
+          </>
+        );
+      } else {
+        header = (
+          <CardHeader
+            title={
+              <Grid container direction="row">
+                <Grid item xs={4}>
+                  Name
+                </Grid>
+                <Grid item xs={4}>
+                  Participation
+                </Grid>
+                <Grid item xs={4}>
+                  Mail #
+                </Grid>
+              </Grid>
+            }
+            style={headerStyle}
+          />
         );
       }
-    }
-    return (
-      <>
-        {content}
+      if (isMobileView) {
+        header = <CardHeader title="Members" style={headerStyle} />;
+      }
+      content = (
+        <>
+          {adminView}
+          <Card>
+            {header}
+            {members
+              .sort((a, b) => compareFunction(a, b))
+              .map((groupMember) => (
+                <MemberList member={groupMember} admin={isAdmin} key={groupMember.MembershipID} />
+              ))}
+          </Card>
+        </>
+      );
+    } else {
+      content = (
+        <>
+          <CardActions>
+            {participationDetail[1] === 'Guest' ? (
+              <Button variant="contained" color="primary" onClick={onUnsubscribe}>
+                Unsubscribe
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={isActivityClosed}
+                onClick={onSubscribe}
+              >
+                Subscribe
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={isActivityClosed}
+              onClick={() => setOpenJoin(true)}
+            >
+              Join
+            </Button>
+          </CardActions>
 
-        <div>
-          <Snackbar
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            open={this.state.isSnackBarOpen}
-            autoHideDuration={6000}
-            onClose={this.handleClose}
-            ContentProps={{
-              'aria-describedby': 'message-id',
-            }}
-            message={
-              <span id="message-id">
-                <CheckCircleIcon
-                  style={{
-                    marginBottom: '-4.5pt',
-                    marginRight: '1rem',
-                  }}
-                />
-                Success!
-              </span>
-            }
-            action={[
-              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
-                <CloseIcon />
-              </IconButton>,
-            ]}
-          />
-          <Snackbar
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            open={this.state.isFailSnackBarOpen}
-            autoHideDuration={6000}
-            onClose={this.handleClose}
-            ContentProps={{
-              'aria-describedby': 'message-id',
-            }}
-            message={
-              <span id="message-id">
-                <Error
-                  style={{
-                    marginBottom: '-4.5pt',
-                    marginRight: '1rem',
-                  }}
-                />
-                Nobody with that username found.
-              </span>
-            }
-            action={[
-              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
-                <CloseIcon />
-              </IconButton>,
-            ]}
-          />
-          <Snackbar
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-            open={this.state.isUserAlreadyMemberSnackBarOpen}
-            autoHideDuration={6000}
-            onClose={this.handleClose}
-            ContentProps={{
-              'aria-describedby': 'message-id',
-            }}
-            message={
-              <span id="message-id">
-                <Error
-                  style={{
-                    marginBottom: '-4.5pt',
-                    marginRight: '1rem',
-                  }}
-                />
-                User already in involvement.
-              </span>
-            }
-            action={[
-              <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
-                <CloseIcon />
-              </IconButton>,
-            ]}
-          />
-        </div>
-      </>
-    );
+          <Dialog open={openJoin} keepMounted>
+            <DialogTitle>Join {activityDescription}</DialogTitle>
+            <DialogContent>
+              <Grid container direction="column" spacing={2}>
+                <Grid item>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel id={`involvement-profile-join-${activityDescription}`}>
+                      Participation
+                    </InputLabel>
+                    <Select
+                      required
+                      value={participationCode}
+                      onChange={(event) => setParticipationCode(event.target.value)}
+                      labelId={`involvement-profile-join-${activityDescription}`}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="ADV">Advisor</MenuItem>
+                      <MenuItem value="LEAD">Leader</MenuItem>
+                      <MenuItem value="MEMBR">Member</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    variant="filled"
+                    label="Title/Comment"
+                    fullWidth
+                    onChange={(event) => setTitleComment(event.target.value)}
+                  />
+                </Grid>
+              </Grid>
+
+              <DialogActions>
+                <Button onClick={onClose} variant="contained" color="primary">
+                  Cancel
+                </Button>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disabled={!participationCode}
+                  onClick={onRequest}
+                >
+                  Submit
+                </Button>
+              </DialogActions>
+            </DialogContent>
+          </Dialog>
+        </>
+      );
+    }
   }
-}
+  return (
+    <>
+      {content}
+
+      <GordonSnackbar
+        {...snackbar}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+      />
+    </>
+  );
+};
+
+export default Membership;
