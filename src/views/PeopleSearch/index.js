@@ -1120,6 +1120,7 @@ class PeopleSearch extends Component {
                             header: '',
                             peopleSearchResults: null,
                           });
+                          this.props.history.push('?');
                         }}
                       >
                         Clear All
