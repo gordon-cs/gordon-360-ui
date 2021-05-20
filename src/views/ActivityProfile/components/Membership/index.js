@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
-import involvementService from 'services/activity';
 import membershipService from 'services/membership';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import MemberList from './components/MemberList';
-import RequestsReceived from './components/RequestsReceived';
 import { gordonColors } from 'theme';
-import AddPersonIcon from '@material-ui/icons/PersonAdd';
 
 import {
   Button,
   Card,
   CardActions,
-  CardContent,
   Dialog,
   DialogContent,
   DialogActions,
@@ -23,10 +19,10 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography,
   InputLabel,
   CardHeader,
 } from '@material-ui/core';
+import AdminCard from './components/AdminCard';
 
 const Membership = ({
   status,
@@ -38,13 +34,10 @@ const Membership = ({
   members,
   activityDescription,
 }) => {
-  const [openAddMember, setOpenAddMember] = useState(false);
   const [openJoin, setOpenJoin] = useState(false);
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
   const [participationDetail, setParticipationDetail] = useState([]);
-  const [addEmail, setAddEmail] = useState('');
-  const [requests, setRequests] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [loading, setLoading] = useState(true);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 810);
@@ -60,15 +53,6 @@ const Membership = ({
         );
         setParticipationDetail(participationDetail);
 
-        if (isAdmin) {
-          // Not necessary, but good security to have
-          const requests = await membershipService.getRequests(
-            activityCode,
-            sessionInfo.SessionCode,
-          );
-
-          setRequests(requests);
-        }
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -88,66 +72,14 @@ const Membership = ({
     return () => window.removeEventListener('resize', resize);
   });
 
-  const onConfirmRoster = async () => {
-    await involvementService.closeActivity(activityCode, sessionInfo.SessionCode);
-    refresh();
-  };
-
-  const onReopenActivity = async () => {
-    await involvementService.reopenActivity(activityCode, sessionInfo.SessionCode);
-    refresh();
+  const createSnackbar = (message, severity) => {
+    setSnackbar({ open: true, message, severity });
   };
 
   const onClose = () => {
-    setOpenAddMember(false);
     setOpenJoin(false);
     setParticipationCode('');
     setTitleComment('');
-  };
-
-  const onAddMember = async () => {
-    let memberEmail = addEmail;
-    if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
-      memberEmail = memberEmail + '@gordon.edu';
-    }
-
-    try {
-      let addID = await membershipService.getEmailAccount(memberEmail).then(function (result) {
-        return result.GordonID;
-      });
-      let data = {
-        ACT_CDE: activityCode,
-        SESS_CDE: sessionInfo.SessionCode,
-        ID_NUM: addID,
-        PART_CDE: participationCode,
-        COMMENT_TXT: titleComment,
-        GRP_ADMIN: false,
-      };
-      // if a user is already a member of an involvement, attempting addMembership(data)
-      //  will return 'undefined'. So, if this happens, alert the user
-      let alreadyIn = await membershipService.addMembership(data);
-      if (typeof alreadyIn === 'undefined') {
-        // User is already a member of this involvement
-        setSnackbar({ open: true, text: `${addEmail} is already a member`, severity: 'info' });
-      } else {
-        setSnackbar({ open: true, text: `Successfully added ${addEmail}`, severity: 'success' });
-        refresh();
-      }
-    } catch (error) {
-      switch (error.name) {
-        case 'NotFoundError':
-          setSnackbar({
-            open: true,
-            text: 'Nobody with that username was found',
-            severity: 'error',
-          });
-          break;
-
-        default:
-          console.log('Something went wrong');
-          break;
-      }
-    }
   };
 
   const onRequest = async () => {
@@ -163,11 +95,7 @@ const Membership = ({
     };
     await membershipService.requestMembership(data);
     onClose();
-    setSnackbar({
-      open: true,
-      text: 'Request sent, awaiting approval from a group leader',
-      severity: 'success',
-    });
+    createSnackbar('Request sent, awaiting approval from a group leader', 'success');
     //Used to call refresh() here, but it caused requests not to go through
   };
 
@@ -213,7 +141,6 @@ const Membership = ({
   };
 
   let content;
-  let adminView;
   let isActivityClosed = status === 'CLOSED';
   let header;
   const headerStyle = {
@@ -253,109 +180,6 @@ const Membership = ({
             style={headerStyle}
           />
         );
-
-        // Only advisors and superadmins can re-open the roster
-        const confirmRoster = !isActivityClosed ? (
-          <Button variant="contained" color="primary" onClick={onConfirmRoster}>
-            Confirm final roster
-          </Button>
-        ) : participationDetail[1] === 'Advisor' || isSuperAdmin ? (
-          <Button variant="contained" color="primary" onClick={onReopenActivity}>
-            Reopen roster
-          </Button>
-        ) : null;
-
-        adminView = (
-          <>
-            <Card>
-              <CardHeader title="Membership Requests" style={headerStyle} />
-              <CardContent>
-                <Grid container spacing={2} direction="column">
-                  <Grid item>
-                    {requests.length === 0 ? (
-                      <Typography>There are no pending requests</Typography>
-                    ) : (
-                      <RequestsReceived involvement={requests[0]} />
-                    )}
-                  </Grid>
-
-                  <Grid item align="right">
-                    {confirmRoster}
-                    &emsp;
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      disabled={isActivityClosed}
-                      onClick={() => setOpenAddMember(true)}
-                      startIcon={<AddPersonIcon />}
-                    >
-                      Add member
-                    </Button>
-                  </Grid>
-                </Grid>
-                {(participationDetail[1] === 'Advisor' || isSuperAdmin) && (
-                  <Typography>* FERPA protected student</Typography>
-                )}
-              </CardContent>
-            </Card>
-
-            <Dialog open={openAddMember} keepMounted align="center">
-              <DialogTitle>Add a member to {activityDescription}</DialogTitle>
-              <DialogContent>
-                <Grid container direction="column" spacing={2}>
-                  <Grid item>
-                    <TextField
-                      required
-                      fullWidth
-                      onChange={(e) => setAddEmail(e.target.value)}
-                      label="Username"
-                      variant="filled"
-                    />
-                  </Grid>
-                  <Grid item>
-                    <FormControl variant="filled" required fullWidth>
-                      <InputLabel id="involvement-profile-add-member-select-participation">
-                        Participation
-                      </InputLabel>
-                      <Select
-                        value={participationCode}
-                        onChange={(event) => setParticipationCode(event.target.value)}
-                        labelId="involvement-profile-add-member-select-participation"
-                      >
-                        <MenuItem value="ADV">Advisor</MenuItem>
-                        <MenuItem value="LEAD">Leader</MenuItem>
-                        <MenuItem value="MEMBR">Member</MenuItem>
-                        <MenuItem value="GUEST">Guest</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      variant="filled"
-                      label="Title/Comment"
-                      fullWidth
-                      onChange={(event) => setTitleComment(event.target.value)}
-                      value={titleComment}
-                    />
-                  </Grid>
-                </Grid>
-              </DialogContent>
-              <DialogActions>
-                <Button variant="outlined" onClick={onClose}>
-                  CANCEL
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={!addEmail || !participationCode}
-                  onClick={onAddMember}
-                >
-                  Add member
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </>
-        );
       } else {
         header = (
           <CardHeader
@@ -381,7 +205,17 @@ const Membership = ({
       }
       content = (
         <>
-          {adminView}
+          {(isAdmin || isSuperAdmin) && (
+            <AdminCard
+              activityCode={activityCode}
+              activityDescription={activityDescription}
+              createSnackbar={createSnackbar}
+              isActivityClosed={isActivityClosed}
+              sessionCode={sessionInfo.SessionCode}
+              participationLevel={participationDetail[1]}
+              isSuperAdmin={isSuperAdmin}
+            />
+          )}
           <Card>
             {header}
             {members
