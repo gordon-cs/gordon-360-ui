@@ -113,7 +113,7 @@ const AdminCard = ({
   return (
     <>
       <Card>
-        <CardHeader title="Membership Requests" style={headerStyle} />
+        <CardHeader title="Manage Roster" style={headerStyle} />
         <CardContent>
           <Grid container spacing={2} direction="column">
             <Grid item>
