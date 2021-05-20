@@ -55,7 +55,10 @@ const RequestsReceived = ({ involvement }) => {
       <List>
         {requests.reverse().map((request) => (
           <React.Fragment key={request.RequestID}>
-            <ListItem key={request.RequestID} classes={classes.secondaryAction}>
+            <ListItem
+              key={request.RequestID}
+              classes={{ secondaryAction: classes.secondaryAction }}
+            >
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
                 secondary={`${membership.getDiffDays(request.DateSent)} - ${request.CommentText}`}
