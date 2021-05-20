@@ -2,19 +2,19 @@ import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import activity from 'services/activity';
+import activityService from 'services/activity';
 import './activity-profile.css';
 import Cropper from 'react-cropper';
 import Advisors from './components/Advisors';
 import GroupContacts from './components/GroupContacts';
 import GordonLoader from 'components/Loader';
 import Membership from './components/Membership';
-import membership from 'services/membership';
-import emails from 'services/emails';
-import session from 'services/session';
+import membershipService from 'services/membership';
+import emailsService from 'services/emails';
+import sessionService from 'services/session';
 import { gordonColors } from 'theme';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
-import user from 'services/user';
+import userService from 'services/user';
 import {
   CardHeader,
   Button,
@@ -89,19 +89,19 @@ class ActivityProfile extends Component {
         isAdmin,
         participationDescription,
       ] = await Promise.all([
-        activity.get(activityCode),
-        activity.getAdvisors(activityCode, sessionCode),
-        membership.getFollowersNum(activityCode, sessionCode),
-        activity.getGroupAdmins(activityCode, sessionCode),
-        membership.getMembersNum(activityCode, sessionCode),
-        activity.getStatus(activityCode, sessionCode),
-        session.get(sessionCode),
-        user.getLocalInfo().id,
-        user.getLocalInfo().college_role,
-        membership.checkAdmin(user.getLocalInfo().id, sessionCode, activityCode),
-        membership.search(user.getLocalInfo().id, sessionCode, activityCode),
+        activityService.get(activityCode),
+        activityService.getAdvisors(activityCode, sessionCode),
+        membershipService.getFollowersNum(activityCode, sessionCode),
+        activityService.getGroupAdmins(activityCode, sessionCode),
+        membershipService.getMembersNum(activityCode, sessionCode),
+        activityService.getStatus(activityCode, sessionCode),
+        sessionService.get(sessionCode),
+        userService.getLocalInfo().id,
+        userService.getLocalInfo().college_role,
+        membershipService.checkAdmin(userService.getLocalInfo().id, sessionCode, activityCode),
+        membershipService.search(userService.getLocalInfo().id, sessionCode, activityCode),
       ]);
-      const emailList = isAdmin ? await emails.get(activityCode) : null;
+      const emailList = isAdmin ? await emailsService.get(activityCode) : null;
       const isSuperAdmin = college_role === 'god';
       this.setState({
         activityInfo,
@@ -129,7 +129,7 @@ class ActivityProfile extends Component {
         // Only if the user is in the activity and not a guest can this get called (unless user is
         // a superadmin [god mode])
         // else Unauthorized error
-        const activityMembers = await membership.get(
+        const activityMembers = await membershipService.get(
           activityInfo.ActivityCode,
           sessionInfo.SessionCode,
         );
@@ -137,9 +137,9 @@ class ActivityProfile extends Component {
       }
     } else {
       const [activityInfo, activityStatus, sessionInfo] = await Promise.all([
-        activity.get(activityCode),
-        activity.getStatus(activityCode, sessionCode),
-        session.get(sessionCode),
+        activityService.get(activityCode),
+        activityService.getStatus(activityCode, sessionCode),
+        sessionService.get(sessionCode),
       ]);
       this.setState({
         activityInfo,
@@ -232,10 +232,13 @@ class ActivityProfile extends Component {
       ACT_BLURB: this.state.tempActivityBlurb,
       ACT_JOIN_INFO: this.state.tempActivityJoinInfo,
     };
-    await activity.editActivity(this.state.activityInfo.ActivityCode, data);
+    await activityService.editActivity(this.state.activityInfo.ActivityCode, data);
 
     if (this.state.photoUpdated === true) {
-      await activity.setActivityImage(this.state.activityInfo.ActivityCode, this.state.image);
+      await activityService.setActivityImage(
+        this.state.activityInfo.ActivityCode,
+        this.state.image,
+      );
     }
     this.onClose();
     this.refresh();
@@ -243,7 +246,7 @@ class ActivityProfile extends Component {
 
   // Called when confirm remove image from the alert remove image dialog box
   async onRemoveImage() {
-    await activity.resetImage(this.state.activityInfo.ActivityCode);
+    await activityService.resetImage(this.state.activityInfo.ActivityCode);
     this.onClose();
     this.refresh();
   }
@@ -350,31 +353,29 @@ class ActivityProfile extends Component {
           if (this.state.isAdmin) {
             editActivity = (
               <section align="center" padding={6}>
-                <CardContent>
-                  <Grid container spacing={2} justify="center">
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.openEditActivityDialog}
-                      >
-                        Edit Involvement
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button variant="contained" color="primary" onClick={this.sendEmail}>
-                        Email Members/Subscribers
-                      </Button>
-                    </Grid>
+                <Grid container spacing={2} justify="center">
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={this.openEditActivityDialog}
+                    >
+                      Edit Involvement
+                    </Button>
                   </Grid>
-                </CardContent>
+                  <Grid item>
+                    <Button variant="contained" color="primary" onClick={this.sendEmail}>
+                      Email Members/Subscribers
+                    </Button>
+                  </Grid>
+                </Grid>
 
                 <Dialog open={this.state.openEditActivity} fullWidth>
                   <DialogTitle> Edit {this.state.activityInfo?.ActivityDescription}</DialogTitle>
                   <DialogContent>
                     <Grid align="center" className="activity-image" item>
                       <img
-                        alt={activity.activityDescription}
+                        alt={activityService.activityDescription}
                         src={this.state.image || this.state.activityInfo?.ActivityImagePath}
                         className="rounded-corners"
                       />
@@ -617,14 +618,14 @@ class ActivityProfile extends Component {
           content = (
             <section className="gordon-activity-profile">
               <Card>
+                <CardHeader
+                  title={this.state.activityInfo?.ActivityDescription}
+                  subheader={sessionDescription}
+                />
                 <CardContent>
-                  <CardHeader
-                    title={this.state.activityInfo?.ActivityDescription}
-                    subheader={sessionDescription}
-                  />
                   <Grid align="center" className="activity-image" item>
                     <img
-                      alt={activity.activityDescription}
+                      alt={activityService.activityDescription}
                       src={this.state.activityInfo?.ActivityImagePath}
                       className="rounded-corners"
                     />
@@ -652,7 +653,7 @@ class ActivityProfile extends Component {
                     </Typography>
                     {/* negative margin necessary because of default padding on Membership */}
                     {/* perhaps defaults can be changed eventually if all use cases checked */}
-                    <div style={{ marginLeft: '-8px', padding: '8px 0' }}>{membership}</div>
+                    {membership}
                   </Grid>
                 </CardContent>
               </Card>
@@ -697,7 +698,7 @@ class ActivityProfile extends Component {
                   </Typography>
                   <Grid align="center" className="activity-image" item>
                     <img
-                      alt={activity.activityDescription}
+                      alt={activityService.activityDescription}
                       src={this.state.activityInfo?.ActivityImagePath}
                       className="rounded-corners"
                     />
