@@ -11,14 +11,25 @@ import {
   ListItemText,
   ListItem,
   ListItemSecondaryAction,
+  makeStyles,
 } from '@material-ui/core';
 
 const redButton = {
   color: gordonColors.secondary.red,
 };
 
+const useStyles = makeStyles(
+  {
+    secondaryAction: {
+      paddingRight: 155,
+    },
+  },
+  { name: 'MuiListItem' },
+);
+
 const RequestsReceived = ({ involvement }) => {
   const [requests, setRequests] = useState([]);
+  const classes = useStyles();
 
   useEffect(() => {
     const loadRequests = async () => {
@@ -44,7 +55,7 @@ const RequestsReceived = ({ involvement }) => {
       <List>
         {requests.reverse().map((request) => (
           <React.Fragment key={request.RequestID}>
-            <ListItem key={request.RequestID}>
+            <ListItem key={request.RequestID} classes={classes.secondaryAction}>
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
                 secondary={`${membership.getDiffDays(request.DateSent)} - ${request.CommentText}`}
