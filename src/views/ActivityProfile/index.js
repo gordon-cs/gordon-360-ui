@@ -621,6 +621,7 @@ class ActivityProfile extends Component {
                   <CardHeader
                     title={this.state.activityInfo?.ActivityDescription}
                     subheader={sessionDescription}
+                    align='center'
                   />
                   <Grid align="center" className="activity-image" item>
                     <img
@@ -629,8 +630,8 @@ class ActivityProfile extends Component {
                       className="rounded-corners"
                     />
                   </Grid>
-                  <Grid item>{editActivity}</Grid>
-                  <Grid item style={{ padding: '16px' }}>
+                  <Grid item align='center'>{editActivity}</Grid>
+                  <Grid item align='center' style={{ padding: '16px' }}>
                     {activityBlurb && <Typography variant="body2">{activityBlurb}</Typography>}
                     <Typography variant="subtitle1">{website}</Typography>
                   </Grid>

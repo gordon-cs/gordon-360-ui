@@ -59,7 +59,7 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
 
           {myProf && (
             <Grid container item xs={4} alignItems="center">
-              <Grid item xs={12}>
+              <Grid item xs={12} align="center">
                 {isOnline &&
                   (membership.IsInvolvementPrivate ? (
                     <LockIcon className="lock-icon" />
@@ -72,7 +72,7 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
                     />
                   ))}
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} align="center">
                 <Typography>
                   {membership.Privacy || membership.IsInvolvementPrivate ? 'Private' : 'Public'}
                 </Typography>
