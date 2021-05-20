@@ -39,12 +39,10 @@ const ActivityProfile = (props) => {
   const [activityFollowers, setActivityFollowers] = useState(0);
   const [activityGroupAdmins, setActivityGroupAdmins] = useState([]);
   const [activityMembersNum, setActivityMembersNum] = useState(0);
-  const [activityMembers, setActivityMembers] = useState([]);
   const [photoOpen, setPhotoOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [photoUpdated, setPhotoUpdated] = useState(false);
-  const [activityStatus, setActivityStatus] = useState('');
   const [sessionInfo, setSessionInfo] = useState(null);
   const [id, setId] = useState(''); // User's id
   const [loading, setLoading] = useState(true);
@@ -52,11 +50,9 @@ const ActivityProfile = (props) => {
   const [tempActivityJoinInfo, setTempActivityJoinInfo] = useState(''); // For editing activity
   const [tempActivityURL, setTempActivityURL] = useState(''); // For editing activity
   const [isAdmin, setIsAdmin] = useState(false); // Boolean for current user
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false); // Boolean for current user
   const [openEditActivity, setOpenEditActivity] = useState(false);
   const [openRemoveImage, setOpenRemoveImage] = useState(false);
   const [emailList, setEmailList] = useState([]);
-  const [participationDescription, setParticipationDescription] = useState([]);
   const [cropperData, setCropperData] = useState({});
   const isOnline = useNetworkStatus();
   const cropperRef = useRef();
@@ -72,66 +68,42 @@ const ActivityProfile = (props) => {
           activityFollowers,
           activityGroupAdmins,
           activityMembersNum,
-          activityStatus,
           sessionInfo,
           id,
           college_role, // for testing purposes only, remove before push
           isAdmin,
-          participationDescription,
         ] = await Promise.all([
           activityService.get(activityCode),
           activityService.getAdvisors(activityCode, sessionCode),
           membershipService.getFollowersNum(activityCode, sessionCode),
           activityService.getGroupAdmins(activityCode, sessionCode),
           membershipService.getMembersNum(activityCode, sessionCode),
-          activityService.getStatus(activityCode, sessionCode),
           sessionService.get(sessionCode),
           userService.getLocalInfo().id,
           userService.getLocalInfo().college_role,
           membershipService.checkAdmin(userService.getLocalInfo().id, sessionCode, activityCode),
-          membershipService.search(userService.getLocalInfo().id, sessionCode, activityCode),
         ]);
         const emailList = isAdmin ? await emailsService.get(activityCode) : null;
-        const isSuperAdmin = college_role === 'god';
 
         setActivityInfo(activityInfo);
         setActivityAdvisors(activityAdvisors);
         setActivityFollowers(activityFollowers);
         setActivityGroupAdmins(activityGroupAdmins);
         setActivityMembersNum(activityMembersNum);
-        setActivityStatus(activityStatus);
         setSessionInfo(sessionInfo);
         setId(id);
-        setIsAdmin(isAdmin || isSuperAdmin);
-        setIsSuperAdmin(isSuperAdmin);
-        setParticipationDescription(participationDescription);
+        setIsAdmin(isAdmin || college_role === 'god');
         setTempActivityBlurb(activityInfo.ActivityBlurb);
         setTempActivityJoinInfo(activityInfo.ActivityJoinInfo);
         setTempActivityURL(activityInfo.ActivityURL);
         setEmailList(emailList);
         setLoading(false);
-
-        if (
-          (participationDescription[0] && participationDescription[1] !== 'Guest') ||
-          isSuperAdmin
-        ) {
-          // Only if the user is in the activity and not a guest can this get called (unless user is
-          // a superadmin [god mode])
-          // else Unauthorized error
-          const activityMembers = await membershipService.get(
-            activityInfo.ActivityCode,
-            sessionInfo.SessionCode,
-          );
-          setActivityMembers(activityMembers);
-        }
       } else {
-        const [activityInfo, activityStatus, sessionInfo] = await Promise.all([
+        const [activityInfo, sessionInfo] = await Promise.all([
           activityService.get(activityCode),
-          activityService.getStatus(activityCode, sessionCode),
           sessionService.get(sessionCode),
         ]);
         setActivityInfo(activityInfo);
-        setActivityStatus(activityStatus);
         setSessionInfo(sessionInfo);
         setLoading(false);
       }
@@ -526,15 +498,11 @@ const ActivityProfile = (props) => {
         }
         let membership = (
           <Membership
-            members={activityMembers}
-            sessionInfo={sessionInfo}
+            sessionCode={sessionInfo.SessionCode}
             activityCode={activityInfo.ActivityCode}
             activityDescription={activityInfo.ActivityDescription}
-            participationDetail={participationDescription}
             id={id}
             isAdmin={isAdmin}
-            isSuperAdmin={isSuperAdmin}
-            status={activityStatus}
           />
         );
         content = (

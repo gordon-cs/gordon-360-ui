@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import membershipService from 'services/membership';
+import involvementService from 'services/activity';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import MemberList from './components/MemberList';
@@ -24,18 +25,13 @@ import {
   CardContent,
 } from '@material-ui/core';
 import AdminCard from './components/AdminCard';
+import userService from 'services/user';
 
-const Membership = ({
-  status,
-  isAdmin,
-  isSuperAdmin,
-  activityCode,
-  id,
-  sessionInfo,
-  members,
-  activityDescription,
-}) => {
+const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescription }) => {
+  const [members, setMembers] = useState([]);
+  const [status, setStatus] = useState('');
   const [openJoin, setOpenJoin] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
   const [participationDetail, setParticipationDetail] = useState([]);
@@ -46,13 +42,21 @@ const Membership = ({
   useEffect(() => {
     const loadMembers = async () => {
       setLoading(true);
+
       try {
-        const participationDetail = await membershipService.search(
-          id,
-          sessionInfo.SessionCode,
-          activityCode,
-        );
+        const [participationDetail, status] = await Promise.all([
+          membershipService.search(id, sessionCode, activityCode),
+          involvementService.getStatus(activityCode, sessionCode),
+        ]);
         setParticipationDetail(participationDetail);
+        setStatus(status);
+
+        const isSuperAdmin = (await userService.getLocalInfo()).college_role === 'god';
+        setIsSuperAdmin(isSuperAdmin);
+
+        if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSuperAdmin) {
+          setMembers(await membershipService.get(activityCode, sessionCode));
+        }
 
         setLoading(false);
       } catch (error) {
@@ -61,7 +65,7 @@ const Membership = ({
     };
 
     loadMembers();
-  }, [activityCode, id, isAdmin, sessionInfo.SessionCode]);
+  }, [activityCode, id, isAdmin, sessionCode]);
 
   useEffect(() => {
     const resize = () => {
@@ -87,7 +91,7 @@ const Membership = ({
     let date = new Date();
     let data = {
       ACT_CDE: activityCode,
-      SESS_CDE: sessionInfo.SessionCode,
+      SESS_CDE: sessionCode,
       ID_NUM: id,
       PART_CDE: participationCode,
       DATE_SENT: date.toLocaleString(),
@@ -103,7 +107,7 @@ const Membership = ({
   const onSubscribe = async () => {
     let data = {
       ACT_CDE: activityCode,
-      SESS_CDE: sessionInfo.SessionCode,
+      SESS_CDE: sessionCode,
       ID_NUM: id,
       PART_CDE: 'GUEST',
       COMMENT_TXT: 'Subscriber',
@@ -142,7 +146,7 @@ const Membership = ({
   };
 
   let content;
-  let isActivityClosed = status === 'CLOSED';
+  const isActivityClosed = status === 'CLOSED';
   const headerStyle = {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
@@ -208,7 +212,7 @@ const Membership = ({
               activityDescription={activityDescription}
               createSnackbar={createSnackbar}
               isActivityClosed={isActivityClosed}
-              sessionCode={sessionInfo.SessionCode}
+              sessionCode={sessionCode}
               participationLevel={participationDetail[1]}
               isSuperAdmin={isSuperAdmin}
             />
