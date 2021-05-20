@@ -38,13 +38,13 @@ const InvolvementsAll = ({ location, authentication, history }) => {
   useEffect(() => {
     const loadPage = async () => {
       setSessions(await sessionService.getAll());
-      
+
       if (sessionFromURL) {
         setSelectedSession(sessionFromURL);
       } else {
         const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
         setCurrentAcademicSession(currentSessionCode);
-        
+
         const [involvements, sessions] = await Promise.all([
           involvementService.getAll(currentSessionCode),
           sessionService.getAll(),
@@ -90,7 +90,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
       setLoading(false);
     };
 
-    if(selectedSession) {
+    if (selectedSession) {
       updateInvolvements();
     }
   }, [selectedSession, authentication]);
@@ -101,16 +101,18 @@ const InvolvementsAll = ({ location, authentication, history }) => {
 
   let myInvolvementsHeadingText;
   let myInvolvementsNoneText;
-  let involvementSessionText = (selectedSession 
+  let involvementSessionText = selectedSession
     ? sessions.find((s) => s.SessionCode === selectedSession)?.SessionDescription
-    : '');
-  if(involvementSessionText.includes("Academic Year")) {
-    involvementSessionText = involvementSessionText.substring(0, 
-      involvementSessionText.indexOf("Academic Year"));
+    : '';
+  if (involvementSessionText.includes('Academic Year')) {
+    involvementSessionText = involvementSessionText.substring(
+      0,
+      involvementSessionText.indexOf('Academic Year'),
+    );
   }
   if (selectedSession === currentAcademicSession && selectedSession !== '') {
     myInvolvementsHeadingText = 'Current';
-    myInvolvementsNoneText = 
+    myInvolvementsNoneText =
       "It looks like you're not currently a member of any involvements. Get connected below!";
   } else {
     myInvolvementsHeadingText = involvementSessionText;
@@ -172,25 +174,26 @@ const InvolvementsAll = ({ location, authentication, history }) => {
         </Grid>
       </Grid>
 
-      {isOnline && authentication && (
-        <Requests />
-      )}
+      {isOnline && authentication && <Requests />}
 
       {/* My Involvements (private) */}
       {authentication && (
         <Grid item xs={12} lg={8}>
           <Card>
-            <CardHeader title={`My ${myInvolvementsHeadingText} Involvements`} className="involvements-header" />
+            <CardHeader
+              title={`My ${myInvolvementsHeadingText} Involvements`}
+              className="involvements-header"
+            />
             <CardContent>
-                {loading ? (
-                  <GordonLoader />
-                ) : (
-                  <InvolvementsGrid
-                    involvements={myInvolvements}
-                    sessionCode={selectedSession}
-                    noInvolvementsText={myInvolvementsNoneText}
-                  />
-                )}
+              {loading ? (
+                <GordonLoader />
+              ) : (
+                <InvolvementsGrid
+                  involvements={myInvolvements}
+                  sessionCode={selectedSession}
+                  noInvolvementsText={myInvolvementsNoneText}
+                />
+              )}
             </CardContent>
           </Card>
         </Grid>
@@ -199,7 +202,10 @@ const InvolvementsAll = ({ location, authentication, history }) => {
       {/* All Involvements (public) */}
       <Grid item xs={12} lg={8}>
         <Card>
-          <CardHeader title={`${involvementSessionText} Involvements`} className="involvements-header" />
+          <CardHeader
+            title={`${involvementSessionText} Involvements`}
+            className="involvements-header"
+          />
           <CardContent>
             {loading ? (
               <GordonLoader />
