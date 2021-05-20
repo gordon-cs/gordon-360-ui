@@ -469,11 +469,24 @@ class PeopleSearch extends Component {
         building,
       );
 
-      let searchParameters =
-        `?firstName=${firstName}&lastName=${lastName}` +
-        `&major=${major}&minor=${minor}&hall=${hall}&classType=${classType}` +
-        `&homeCity=${homeCity}&state=${state}&country=${country}` +
-        `&department=${department}&building=${building}&includeAlumni=${includeAlumni}`;
+      let searchParameters = '?';
+      searchParameters += (firstName ? `firstName=${firstName}&` : '');
+      searchParameters += (lastName ? `lastName=${lastName}&` : '');
+      searchParameters += (major ? `major=${major}&` : '');
+      searchParameters += (minor ? `minor=${minor}&` : '');
+      searchParameters += (hall ? `hall=${hall}&` : '');
+      searchParameters += (classType ? `classType=${classType}&` : '');
+      searchParameters += (homeCity ? `homeCity=${homeCity}&` : '');
+      searchParameters += (state ? `state=${state}&` : '');
+      searchParameters += (country ? `country=${country}&` : '');
+      searchParameters += (department ? `department=${department}&` : '');
+      searchParameters += (building ? `building=${building}&` : '');
+      searchParameters += (includeAlumni ? `includeAlumni=${includeAlumni}&` : '');
+
+      if(searchParameters[searchParameters.length-1] === '&') {
+        searchParameters = searchParameters.substring(0, searchParameters.length-1);
+      }
+
       this.props.history.push(searchParameters);
 
       if (peopleSearchResults.length === 0) {
