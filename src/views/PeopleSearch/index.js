@@ -193,25 +193,60 @@ class PeopleSearch extends Component {
       if (!window.location.href.includes('?')) {
         window.location.reload();
       } else {
-        this.goBackPage();
+        this.loadSearchParamsFromURL();
       }
     };
   }
 
-  async goBackPage() {
+  async componentDidMount() {
+    if (this.props.authentication) {
+      try {
+        const profile = await user.getProfileInfo();
+        const personType = profile.PersonType;
+        const [majors, minors, halls, states, countries, departments, buildings] =
+          await Promise.all([
+            goStalk.getMajors(),
+            goStalk.getMinors(),
+            goStalk.getHalls(),
+            goStalk.getStates(),
+            goStalk.getCountries(),
+            goStalk.getDepartments(),
+            goStalk.getBuildings(),
+          ]);
+        this.setState({
+          majors,
+          minors,
+          halls,
+          states,
+          countries,
+          departments,
+          buildings,
+          personType,
+        });
+      } catch (error) {
+        // error
+      }
+
+      if (window.location.href.includes('?')) {
+        this.loadSearchParamsFromURL();
+      }
+    }
+  }
+
+  async loadSearchParamsFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    var includeAlumni = urlParams.get('includeAlumni') || false;
-    var firstName = urlParams.get('firstName').trim() || '';
-    var lastName = urlParams.get('lastName').trim() || '';
-    var major = urlParams.get('major').trim() || '';
-    var minor = urlParams.get('minor').trim() || '';
-    var hall = urlParams.get('hall').trim() || '';
-    var classType = urlParams.get('classType').trim() || '';
-    var homeCity = urlParams.get('homeCity').trim() || '';
-    var state = urlParams.get('state').trim() || '';
-    var country = urlParams.get('country').trim() || '';
-    var department = urlParams.get('department').trim() || '';
-    var building = urlParams.get('building').trim() || '';
+    let includeAlumni = urlParams.get('includeAlumni') || false;
+    let firstName = urlParams.get('firstName')?.trim() || '';
+    let lastName = urlParams.get('lastName')?.trim() || '';
+    let major = urlParams.get('major')?.trim() || '';
+    let minor = urlParams.get('minor')?.trim() || '';
+    let hall = urlParams.get('hall')?.trim() || '';
+    let classType = urlParams.get('classType')?.trim() || '';
+    let homeCity = urlParams.get('homeCity')?.trim() || '';
+    let state = urlParams.get('state')?.trim() || '';
+    let country = urlParams.get('country')?.trim() || '';
+    let department = urlParams.get('department')?.trim() || '';
+    let building = urlParams.get('building')?.trim() || '';
 
     this.setState({
       firstNameSearchValue: firstName,
@@ -248,6 +283,7 @@ class PeopleSearch extends Component {
         peopleSearchResults: null,
       });
       let peopleSearchResults = [];
+
       peopleSearchResults = await goStalk.search(
         includeAlumni,
         firstName,
@@ -262,6 +298,7 @@ class PeopleSearch extends Component {
         department,
         building,
       );
+
       if (peopleSearchResults.length === 0) {
         this.setState({
           peopleSearchResults: noResultsCard,
@@ -284,136 +321,6 @@ class PeopleSearch extends Component {
           ),
           header: this.makeHeader(),
         });
-      }
-    }
-  }
-
-  async componentDidMount() {
-    if (this.props.authentication) {
-      try {
-        const profile = await user.getProfileInfo();
-        const personType = profile.PersonType;
-        const [
-          majors,
-          minors,
-          halls,
-          states,
-          countries,
-          departments,
-          buildings,
-        ] = await Promise.all([
-          goStalk.getMajors(),
-          goStalk.getMinors(),
-          goStalk.getHalls(),
-          goStalk.getStates(),
-          goStalk.getCountries(),
-          goStalk.getDepartments(),
-          goStalk.getBuildings(),
-        ]);
-        this.setState({
-          majors,
-          minors,
-          halls,
-          states,
-          countries,
-          departments,
-          buildings,
-          personType,
-        });
-      } catch (error) {
-        // error
-      }
-
-      if (window.location.href.includes('?')) {
-        const urlParams = new URLSearchParams(window.location.search);
-        var includeAlumni = urlParams.get('includeAlumni') || false;
-        let firstName = urlParams.get('firstName').trim() || '';
-        let lastName = urlParams.get('lastName').trim() || '';
-        let major = urlParams.get('major').trim() || '';
-        let minor = urlParams.get('minor').trim() || '';
-        let hall = urlParams.get('hall').trim() || '';
-        let classType = urlParams.get('classType').trim() || '';
-        let homeCity = urlParams.get('homeCity').trim() || '';
-        let state = urlParams.get('state').trim() || '';
-        let country = urlParams.get('country').trim() || '';
-        let department = urlParams.get('department').trim() || '';
-        let building = urlParams.get('building').trim() || '';
-
-        this.setState({
-          firstNameSearchValue: firstName,
-          lastNameSearchValue: lastName,
-          homeCitySearchValue: homeCity,
-          majorSearchValue: major,
-          minorSearchValue: minor,
-          hallSearchValue: hall,
-          classTypeSearchValue: classType,
-          stateSearchValue: state,
-          countrySearchValue: country,
-          departmentSearchValue: department,
-          buildingSearchValue: building,
-        });
-
-        if (
-          includeAlumni === false &&
-          firstName === '' &&
-          lastName === '' &&
-          major === '' &&
-          minor === '' &&
-          hall === '' &&
-          classType === '' &&
-          homeCity === '' &&
-          state === '' &&
-          country === '' &&
-          department === '' &&
-          building === ''
-        ) {
-          // do not search
-        } else {
-          this.setState({
-            header: <GordonLoader />,
-            peopleSearchResults: null,
-          });
-          let peopleSearchResults = [];
-
-          peopleSearchResults = await goStalk.search(
-            includeAlumni,
-            firstName,
-            lastName,
-            major,
-            minor,
-            hall,
-            classType,
-            homeCity,
-            state,
-            country,
-            department,
-            building,
-          );
-
-          if (peopleSearchResults.length === 0) {
-            this.setState({
-              peopleSearchResults: noResultsCard,
-              header: '',
-            });
-          } else {
-            this.setState({
-              peopleSearchResults: (
-                <Media query="(min-width: 960px)">
-                  {(matches) =>
-                    matches
-                      ? peopleSearchResults.map((person) => (
-                          <PeopleSearchResult key={person.AD_Username} Person={person} />
-                        ))
-                      : peopleSearchResults.map((person) => (
-                          <MobilePeopleSearchResult key={person.AD_Username} Person={person} />
-                        ))
-                  }
-                </Media>
-              ),
-              header: this.makeHeader(),
-            });
-          }
-        }
       }
     }
   }
@@ -785,7 +692,7 @@ class PeopleSearch extends Component {
       // Creates the PeopleSearch page depending on the status of the network found in local storage
       let PeopleSearch;
       let searchPageTitle = (
-        <div align='center'>
+        <div align="center">
           Search the
           <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
           Community
