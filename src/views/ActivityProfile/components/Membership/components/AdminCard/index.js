@@ -83,7 +83,7 @@ const AdminCard = ({
       } else {
         createSnackbar(`Successfully added ${addEmail}`, 'success');
 
-        // TODO: update 'status' when closing activity
+        // TODO: update members when closing activity
         // refresh();
       }
     } catch (error) {
@@ -116,11 +116,11 @@ const AdminCard = ({
         <CardHeader title="Membership Requests" style={headerStyle} />
         <CardContent>
           <Grid container spacing={2} direction="column">
-            <RequestsReceived activityCode={activityCode} sessionCode={sessionCode} />
+            <Grid item>
+              <RequestsReceived activityCode={activityCode} sessionCode={sessionCode} />
+            </Grid>
 
-            <Grid item align="right">
-              {confirmRoster}
-              &emsp;
+            <Grid item>
               <Button
                 variant="contained"
                 color="primary"
@@ -131,10 +131,13 @@ const AdminCard = ({
                 Add member
               </Button>
             </Grid>
+            <Grid item>{confirmRoster}</Grid>
+            {(participationLevel === 'Advisor' || isSuperAdmin) && (
+              <Grid item>
+                <Typography>* FERPA protected student</Typography>
+              </Grid>
+            )}
           </Grid>
-          {(participationLevel === 'Advisor' || isSuperAdmin) && (
-            <Typography>* FERPA protected student</Typography>
-          )}
         </CardContent>
       </Card>
 

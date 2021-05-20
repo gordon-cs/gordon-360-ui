@@ -11,6 +11,7 @@ import {
   ListItem,
   ListItemSecondaryAction,
   makeStyles,
+  Typography,
 } from '@material-ui/core';
 
 const redButton = {
@@ -51,7 +52,7 @@ const RequestsReceived = ({ activityCode, sessionCode }) => {
   };
 
   if (requests.length === 0) {
-    return null;
+    return <Typography variant="h6">No pending requests</Typography>;
   } else {
     return (
       <List>
