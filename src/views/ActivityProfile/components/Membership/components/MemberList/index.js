@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { gordonColors } from 'theme';
 import user from 'services/user';
 import membership from 'services/membership';
-import GordonSnackbar from 'components/Snackbar';
 
 import {
   Button,
@@ -48,7 +47,7 @@ const PARTICIPATION_LEVELS = {
   Guest: 'GUEST',
 };
 
-const MemberList = ({ member, admin }) => {
+const MemberList = ({ member, admin, createSnackbar }) => {
   const [openEdit, setOpenEdit] = useState(false);
   const [alertLeave, setAlertLeave] = useState(false);
   const [alertRemove, setAlertRemove] = useState(false);
@@ -60,8 +59,6 @@ const MemberList = ({ member, admin }) => {
   const [participation, setParticipation] = useState(member.Participation);
   const [titleComment, setTitleComment] = useState(member.Description);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < breakpointWidth);
-
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: '' });
 
   useEffect(() => {
     const resize = () => {
@@ -121,19 +118,12 @@ const MemberList = ({ member, admin }) => {
       member.ActivityCode,
     )[0];
     if (inInvolvement) {
-      setSnackbar({ open: true, message: 'Leaving involvement failed', severity: 'error' });
+      createSnackbar('Leaving involvement failed', 'error');
     } else {
-      setSnackbar({ open: true, message: 'Leaving involvement succeeded', severity: 'success' });
+      createSnackbar('Leaving involvement succeeded', 'success');
     }
     onClose();
     refresh();
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbar({ ...snackbar, open: false });
   };
 
   const refresh = () => {
@@ -366,17 +356,7 @@ const MemberList = ({ member, admin }) => {
     );
   }
 
-  return (
-    <>
-      {content}
-      <GordonSnackbar
-        open={snackbar.open}
-        text={snackbar.message}
-        severity={snackbar.severity}
-        onClose={handleClose}
-      />
-    </>
-  );
+  return content;
 };
 
 MemberList.propTypes = {
