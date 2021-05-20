@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
-import CloseIcon from '@material-ui/icons/Close';
-import Error from '@material-ui/icons/Error';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import { gordonColors } from 'theme';
 import user from 'services/user';
 import membership from 'services/membership';
+import GordonSnackbar from 'components/Snackbar';
 
 import {
   Button,
@@ -22,492 +20,364 @@ import {
   FormControlLabel,
   Grid,
   MenuItem,
-  Snackbar,
   Select,
   TextField,
   Typography,
   Divider,
-  IconButton,
+  DialogActions,
+  InputLabel,
 } from '@material-ui/core';
 
-export default class MemberList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      openEdit: false,
-      alertLeave: false,
-      admin: false,
-      groupAdmin: false,
-      participationDescription: '',
-      participation: '',
-      alertRemove: false,
-      titleComment: '',
-      leaveSnackbar: '',
+const breakpointWidth = 810;
+
+const rowStyle = {
+  padding: '10px',
+};
+const redButton = {
+  background: gordonColors.secondary.red,
+  color: 'white',
+};
+const outlinedRedButton = {
+  color: gordonColors.secondary.red,
+};
+
+const PARTICIPATION_LEVELS = {
+  Member: 'MEMBR',
+  Leader: 'LEAD',
+  Advisor: 'ADV',
+  Guest: 'GUEST',
+};
+
+const MemberList = ({ member, admin }) => {
+  const [openEdit, setOpenEdit] = useState(false);
+  const [alertLeave, setAlertLeave] = useState(false);
+  const [alertRemove, setAlertRemove] = useState(false);
+
+  const [groupAdmin, setGroupAdmin] = useState(member.GroupAdmin);
+  const [participationDescription, setParticipationDescription] = useState(
+    member.ParticipationDescription,
+  );
+  const [participation, setParticipation] = useState(member.Participation);
+  const [titleComment, setTitleComment] = useState(member.Description);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < breakpointWidth);
+
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: '' });
+
+  useEffect(() => {
+    const resize = () => {
+      setIsMobileView(window.innerWidth < breakpointWidth);
     };
-    this.confirmLeave = this.confirmLeave.bind(this);
-    this.handleToggleGroupAdmin = this.handleToggleGroupAdmin.bind(this);
-    this.openEditMember = this.openEditMember.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
-    this.handleText = this.handleText.bind(this);
-    this.onClose = this.onClose.bind(this);
-    this.onEditMember = this.onEditMember.bind(this);
-    this.alertLeave = this.alertLeave.bind(this);
-    this.onRemove = this.onRemove.bind(this);
-    this.breakpointWidth = 810;
-  }
 
-  async componentDidMount() {
-    this.setState({
-      admin: this.props.admin,
-      groupAdmin: this.props.groupAdmin,
-      participationDescription: this.props.member.ParticipationDescription,
-      participation: this.props.member.Participation,
-      titleComment: this.props.member.Description,
-    });
-  }
+    window.addEventListener('resize', resize);
 
-  // Called when checkbox for Group Admin clicked
-  async handleToggleGroupAdmin(event) {
-    this.setState({ groupAdmin: event.target.checked });
+    return () => window.removeEventListener('resize', resize);
+  });
+
+  const handleToggleGroupAdmin = async (event) => {
+    setGroupAdmin(event.target.checked);
     let data = {
-      MEMBERSHIP_ID: this.props.member.MembershipID,
-      ACT_CDE: this.props.member.ActivityCode,
-      SESS_CDE: this.props.member.SessionCode,
-      ID_NUM: this.props.member.IDNumber,
-      PART_CDE: this.props.member.Participation,
+      MEMBERSHIP_ID: member.MembershipID,
+      ACT_CDE: member.ActivityCode,
+      SESS_CDE: member.SessionCode,
+      ID_NUM: member.IDNumber,
+      PART_CDE: member.Participation,
     };
-    await membership.toggleGroupAdmin(this.props.member.MembershipID, data);
-    this.refresh();
-  }
-
-  openEditMember() {
-    this.setState({ openEdit: true });
-  }
-
-  // Updates participation level dropdown
-  handleSelect = (event) => {
-    this.setState({ participationDescription: event.target.value });
-    switch (event.target.value) {
-      case 'Member':
-        this.setState({ participation: 'MEMBR' });
-        break;
-      case 'Leader':
-        this.setState({ participation: 'LEAD' });
-        break;
-      case 'Advisor':
-        this.setState({ participation: 'ADV' });
-        break;
-      default:
-        this.setState({ participation: 'GUEST' });
-    }
+    await membership.toggleGroupAdmin(member.MembershipID, data);
+    refresh();
   };
 
-  handleText = (name) => (event) => {
-    this.setState({ [name]: event.target.value });
+  const handleSelect = (event) => {
+    setParticipationDescription(event.target.value);
+    setParticipation(PARTICIPATION_LEVELS[event.target.value]);
   };
 
-  // Closes dialog boxes and resets as if no changes were made
-  onClose() {
-    this.setState({
-      alertLeave: false,
-      alertRemove: false,
-      openEdit: false,
-      participationDescription: this.props.member.ParticipationDescription,
-      titleComment: this.props.member.Description,
-    });
-  }
+  const onClose = () => {
+    setAlertLeave(false);
+    setAlertRemove(false);
+    setOpenEdit(false);
+    setParticipationDescription(member.ParticipationDescription);
+    setTitleComment(member.Description);
+  };
 
-  // Called when updated details submitted in Edit Membership dialog box
-  async onEditMember() {
+  const onEditMember = async () => {
     let data = {
-      MEMBERSHIP_ID: this.props.member.MembershipID,
-      ACT_CDE: this.props.member.ActivityCode,
-      SESS_CDE: this.props.member.SessionCode,
-      ID_NUM: this.props.member.IDNumber,
-      PART_CDE: this.state.participation,
-      COMMENT_TXT: this.state.titleComment,
+      MEMBERSHIP_ID: member.MembershipID,
+      ACT_CDE: member.ActivityCode,
+      SESS_CDE: member.SessionCode,
+      ID_NUM: member.IDNumber,
+      PART_CDE: participation,
+      COMMENT_TXT: titleComment,
     };
-    await membership.editMembership(this.props.member.MembershipID, data);
-    this.onClose();
-    this.refresh();
-  }
+    await membership.editMembership(member.MembershipID, data);
+    onClose();
+    refresh();
+  };
 
-  // Opens dialog box asking if certain user wants to leave
-  alertLeave() {
-    this.setState({ alertLeave: true });
-  }
-
-  // Called when user confirms removal
-  async confirmLeave() {
-    await membership.remove(this.props.member.MembershipID);
-    // Search to see if the member is still in the involvement after removing
+  const confirmLeave = async () => {
+    await membership.remove(member.MembershipID);
     let inInvolvement = await membership.search(
-      this.props.member.IDNumber,
-      this.props.member.SessionCode,
-      this.props.member.ActivityCode,
+      member.IDNumber,
+      member.SessionCode,
+      member.ActivityCode,
     )[0];
     if (inInvolvement) {
-      this.setState({ leaveSnackbar: 'failure' });
+      setSnackbar({ open: true, message: 'Leaving involvement failed', severity: 'error' });
     } else {
-      this.setState({ leaveSnackbar: 'success' });
+      setSnackbar({ open: true, message: 'Leaving involvement succeeded', severity: 'success' });
     }
-    this.onClose();
-    this.refresh();
-  }
+    onClose();
+    refresh();
+  };
 
-  // Called when snackbar is closed
-  handleClose = (event, reason) => {
+  const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    this.setState({ leaveSnackbar: '' });
+    setSnackbar({ ...snackbar, open: false });
   };
 
-  // Opens dialog box asking if certain admin wants to remove member
-  onRemove() {
-    this.setState({ alertRemove: true });
-  }
-
-  refresh() {
+  const refresh = () => {
     window.location.reload();
-  }
+  };
 
-  render() {
-    // Only display mailLoc if they have a mailbox
-    let mailLoc = 'Box #' + this.props.member.Mail_Location;
-    mailLoc = mailLoc === 'Box #' ? '' : mailLoc;
+  let mailLoc = Number(member.Mail_Location)
+    ? `Box #${member.Mail_Location}`
+    : member.Mail_Location || null;
 
-    let content;
-    const rowStyle = {
-      padding: '10px',
-    };
-    const redButton = {
-      background: gordonColors.secondary.red,
-      color: 'white',
-    };
-    const outlinedRedButton = {
-      color: gordonColors.secondary.red,
-    };
-    let showLeaveButton = false;
-    if (this.props.member.IDNumber.toString() === user.getLocalInfo().id) {
-      showLeaveButton = true;
-    } else {
-      showLeaveButton = false;
-    }
-    let options;
-    if (showLeaveButton) {
-      options = (
-        <Grid container>
-          <Grid item>
-            <Button variant="contained" style={redButton} onClick={this.alertLeave}>
-              LEAVE
-            </Button>
-            <Dialog
-              open={this.state.alertLeave}
-              keepMounted
-              align="center"
-              onBackdropClick={this.onClose}
-            >
-              <DialogTitle>Are you sure you want to leave the activity?</DialogTitle>
-              <DialogContent>
-                <Grid container>
-                  <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button variant="contained" color="primary" onClick={this.onClose}>
-                      No, stay
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={6}>
-                    <Button variant="contained" onClick={this.confirmLeave} style={redButton}>
-                      Yes, leave
-                    </Button>
-                  </Grid>
-                </Grid>
-              </DialogContent>
-            </Dialog>
-          </Grid>
-        </Grid>
-      );
-    }
-    const formControl = {
-      padding: 10,
-    };
-    if (this.state.admin) {
-      let disabled = false;
-      if (
-        this.state.participationDescription === 'Guest' ||
-        this.state.participationDescription === 'Member'
-      ) {
-        disabled = true;
-        // Can't make guests or members a group admin
-      }
-      const buttons = (
+  let content;
+  let options;
+
+  if (admin) {
+    const disabled = participationDescription === 'Guest' || participationDescription === 'Member';
+    // Can't make guests or members a group admin
+    const buttons = (
+      <>
         <Grid item>
-          <Grid container spacing={8} justify="center">
-            <Grid item>
-              <Button color="primary" onClick={this.openEditMember} variant="outlined" size="small">
-                Edit
-              </Button>
-              <Dialog open={this.state.openEdit} keepMounted align="center">
-                <DialogTitle>
-                  Edit {this.props.member.FirstName} {this.props.member.LastName} (
-                  {this.props.member.ParticipationDescription})
-                </DialogTitle>
-                <DialogContent>
-                  <Grid container align="center" padding={6}>
-                    <Grid item xs={12} sm={12} md={12} lg={12} padding={6}>
-                      <Typography>Participation (Required)</Typography>
-                      <Grid item padding={6} align="center">
-                        <FormControl fullWidth style={formControl}>
-                          <Select
-                            value={this.state.participationDescription}
-                            onChange={this.handleSelect}
-                          >
-                            <MenuItem value="Advisor">Advisor</MenuItem>
-                            <MenuItem value="Leader">Leader</MenuItem>
-                            <MenuItem value="Member">Member</MenuItem>
-                            <MenuItem value="Guest">Guest</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item align="center">
-                        <Typography>Title/Comment: (Optional)</Typography>
-                        <TextField
-                          fullWidth
-                          onChange={this.handleText('titleComment')}
-                          style={formControl}
-                          defaultValue={this.props.member.Description}
-                        />
-                      </Grid>
-                      <Grid item style={formControl}>
-                        <Button variant="contained" color="primary" onClick={this.onEditMember}>
-                          SUBMIT CHANGES
-                        </Button>
-                      </Grid>
-                      <Grid item xs={12} sm={12} style={formControl}>
-                        <Button variant="contained" color="primary" onClick={this.onClose}>
-                          CANCEL
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </DialogContent>
-              </Dialog>
-            </Grid>
+          <Button color="primary" onClick={() => setOpenEdit(true)} variant="outlined" size="small">
+            Edit
+          </Button>
+        </Grid>
 
-            <Grid item>
-              <Button
-                style={outlinedRedButton}
-                onClick={this.onRemove}
-                variant="outlined"
-                size="small"
-              >
-                Remove
-              </Button>
-              <Dialog open={this.state.alertRemove} keepMounted align="center">
-                <DialogTitle>
-                  Are you sure you want to remove {this.props.member.FirstName}{' '}
-                  {this.props.member.LastName} ({this.props.member.ParticipationDescription}) from
-                  this activity?
-                </DialogTitle>
-                <DialogContent>
-                  <Grid container>
-                    <Grid item xs={6} sm={6} md={6} lg={6}>
-                      <Button variant="contained" color="primary" onClick={this.confirmLeave}>
-                        OK
-                      </Button>
-                    </Grid>
-                    <Grid item xs={6} sm={6} md={6} lg={6}>
-                      <Button variant="contained" onClick={this.onClose}>
-                        CANCEL
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </DialogContent>
-              </Dialog>
+        <Grid item>
+          <Button
+            style={outlinedRedButton}
+            onClick={() => setAlertRemove(true)}
+            variant="outlined"
+            size="small"
+          >
+            Remove
+          </Button>
+        </Grid>
+
+        <Dialog open={openEdit} keepMounted align="center">
+          <DialogTitle>
+            Edit {member.FirstName} {member.LastName} ({member.ParticipationDescription})
+          </DialogTitle>
+          <DialogContent>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel id="member-edit-select-participation">Participation</InputLabel>
+                  <Select
+                    required
+                    value={participationDescription}
+                    onChange={handleSelect}
+                    labelId="member-edit-select-participation"
+                  >
+                    <MenuItem value="Advisor">Advisor</MenuItem>
+                    <MenuItem value="Leader">Leader</MenuItem>
+                    <MenuItem value="Member">Member</MenuItem>
+                    <MenuItem value="Guest">Guest</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <TextField
+                  variant="filled"
+                  fullWidth
+                  onChange={(e) => setTitleComment(e.target.value)}
+                  defaultValue={member.Description}
+                  label="Title/Comment"
+                />
+              </Grid>
             </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" onClick={onClose}>
+              CANCEL
+            </Button>
+            <Button variant="contained" color="primary" onClick={onEditMember}>
+              SUBMIT CHANGES
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={alertRemove} keepMounted align="center">
+          <DialogTitle>
+            Are you sure you want to remove {member.FirstName} {member.LastName} (
+            {member.ParticipationDescription}) from this activity?
+          </DialogTitle>
+          <DialogActions>
+            <Button variant="contained" onClick={onClose}>
+              CANCEL
+            </Button>
+            <Button variant="contained" color="primary" onClick={confirmLeave}>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
+    );
+
+    options = (
+      <Grid container alignItems="center" justify="space-between">
+        <Grid item sm={3} align="center">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={groupAdmin}
+                color="primary"
+                disabled={disabled}
+                onChange={handleToggleGroupAdmin}
+              />
+            }
+          />
+        </Grid>
+        {buttons}
+      </Grid>
+    );
+
+    content = (
+      <>
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={2} style={rowStyle}>
+            <Typography>
+              {member.FirstName} {member.LastName}
+            </Typography>
+          </Grid>
+          <Grid item xs={2} style={rowStyle}>
+            <Typography>{participationDescription}</Typography>
+          </Grid>
+          <Grid item xs={3} style={rowStyle}>
+            <Typography>{titleComment}</Typography>
+          </Grid>
+          <Grid item xs={2} style={rowStyle}>
+            <Typography>{member.Mail_Location}</Typography>
+          </Grid>
+          <Grid item xs={3} style={rowStyle}>
+            {options}
           </Grid>
         </Grid>
-      );
+        <Divider />
+      </>
+    );
+
+    if (isMobileView) {
       options = (
-        <Grid container alignItems="center">
+        <Grid container alignItems="center" justify="flex-end" spacing={4}>
           <Grid item sm={3} align="center">
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={this.state.groupAdmin}
+                  checked={groupAdmin}
                   color="primary"
                   disabled={disabled}
-                  onChange={this.handleToggleGroupAdmin}
+                  onChange={handleToggleGroupAdmin}
                 />
               }
+              label="Group Admin"
             />
           </Grid>
           {buttons}
         </Grid>
       );
+
       content = (
-        <section>
-          <Grid container style={rowStyle} direction="row" alignItems="center">
-            <Grid item xs={3} style={rowStyle}>
-              <Typography>
-                {this.props.member.FirstName} {this.props.member.LastName}
-              </Typography>
-            </Grid>
-            <Grid item xs={2} style={rowStyle}>
-              <Typography>{this.state.participationDescription}</Typography>
-            </Grid>
-            <Grid item xs={2} style={rowStyle}>
-              <Typography>{this.state.titleComment}</Typography>
-            </Grid>
-            <Grid item xs={1} style={rowStyle}>
-              <Typography>{this.props.member.Mail_Location}</Typography>
-            </Grid>
-            <Grid item xs={4} style={rowStyle}>
-              {options}
-            </Grid>
-          </Grid>
-          <Grid>
-            <Divider />
-          </Grid>
-        </section>
-      );
-      if (window.innerWidth < this.breakpointWidth) {
-        options = (
-          <Grid container alignItems="center" spacing={8}>
-            <Grid item>{buttons}</Grid>
-            <Grid item sm={3} align="center">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.groupAdmin}
-                    color="primary"
-                    disabled={disabled}
-                    onChange={this.handleToggleGroupAdmin}
-                  />
-                }
-                label="Group Admin"
-              />
-            </Grid>
-          </Grid>
-        );
-        content = (
-          <Accordion
-            defaultExpanded={
-              (showLeaveButton || this.state.admin) && !(window.innerWidth < this.breakpointWidth)
-            }
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Grid container>
-                <Grid item xs={6} sm={7} md={8}>
-                  <Typography>
-                    {this.props.member.FirstName} {this.props.member.LastName}
-                  </Typography>
-                </Grid>
-                <Grid item xs={4} sm={3} md={2}>
-                  <Typography>{this.props.member.ParticipationDescription} </Typography>
-                </Grid>
-                <Grid item xs={2} sm={2} md={2}>
-                  <Typography>{mailLoc}</Typography>
-                </Grid>
+        <Accordion defaultExpanded={admin && !isMobileView}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Grid container>
+              <Grid item xs={6} sm={7} md={8}>
+                <Typography>
+                  {member.FirstName} {member.LastName}
+                </Typography>
               </Grid>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container direction="column">
-                <Grid item>{options}</Grid>
-                <Grid item>{this.state.titleComment}</Grid>
+              <Grid item xs={4} sm={3} md={2}>
+                <Typography>{member.ParticipationDescription} </Typography>
               </Grid>
-            </AccordionDetails>
-          </Accordion>
-        );
-      }
-    } else {
-      content = (
-        <section>
-          <Grid container style={rowStyle} direction="row" alignItems="center">
-            <Grid item xs={4} sm={4} style={rowStyle}>
-              <Typography>
-                {this.props.member.FirstName} {this.props.member.LastName}
-              </Typography>
+              <Grid item xs={2}>
+                <Typography>{mailLoc}</Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={4} sm={4} style={rowStyle}>
-              <Typography>{this.state.participationDescription}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container direction="column">
+              <Grid item>{options}</Grid>
+              <Grid item>{titleComment}</Grid>
             </Grid>
-            <Grid item xs={4} sm={2} style={rowStyle}>
-              <Typography>{mailLoc}</Typography>
-            </Grid>
-            <Grid item xs={2} sm={2} style={rowStyle}>
-              {options}
-            </Grid>
-          </Grid>
-          <Grid>
-            <Divider />
-          </Grid>
-        </section>
+          </AccordionDetails>
+        </Accordion>
       );
     }
-    return (
-      <section>
-        <Grid>{content}</Grid>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={this.state.leaveSnackbar === 'success'}
-          autoHideDuration={6000}
-          onClose={this.handleClose}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={
-            <span id="message-id">
-              <CheckCircleIcon
-                style={{
-                  marginBottom: '-4.5pt',
-                  marginRight: '1rem',
-                }}
-              />
-              You have left this involvement
-            </span>
-          }
-          action={[
-            <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
-              <CloseIcon />
-            </IconButton>,
-          ]}
-        />
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={this.state.leaveSnackbar === 'failure'}
-          autoHideDuration={6000}
-          onClose={this.handleClose}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={
-            <span id="message-id">
-              <Error
-                style={{
-                  marginBottom: '-4.5pt',
-                  marginRight: '1rem',
-                }}
-              />
-              Unable to leave involvement
-            </span>
-          }
-          action={[
-            <IconButton key="close" aria-label="Close" color="inherit" onClick={this.handleClose}>
-              <CloseIcon />
-            </IconButton>,
-          ]}
-        />
-      </section>
+  } else {
+    if (member.IDNumber.toString() === user.getLocalInfo().id) {
+      options = (
+        <Grid container>
+          <Grid item>
+            <Button variant="contained" style={redButton} onClick={() => setAlertLeave(true)}>
+              LEAVE
+            </Button>
+
+            <Dialog open={alertLeave} keepMounted align="center" onBackdropClick={onClose}>
+              <DialogTitle>Are you sure you want to leave the activity?</DialogTitle>
+              <DialogActions>
+                <Button variant="contained" color="primary" onClick={onClose}>
+                  No, stay
+                </Button>
+                <Button variant="contained" onClick={confirmLeave} style={redButton}>
+                  Yes, leave
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Grid>
+        </Grid>
+      );
+    }
+
+    content = (
+      <>
+        <Grid container style={rowStyle} direction="row" alignItems="center">
+          <Grid item xs={4} style={rowStyle}>
+            <Typography>
+              {member.FirstName} {member.LastName}
+            </Typography>
+          </Grid>
+          <Grid item xs={4} style={rowStyle}>
+            <Typography>{participationDescription}</Typography>
+          </Grid>
+          <Grid item xs={2} style={rowStyle}>
+            <Typography>{mailLoc}</Typography>
+          </Grid>
+          <Grid item xs={2} style={rowStyle}>
+            {options}
+          </Grid>
+        </Grid>
+        <Divider />
+      </>
     );
   }
-}
+
+  return (
+    <>
+      {content}
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={handleClose}
+      />
+    </>
+  );
+};
 
 MemberList.propTypes = {
   member: PropTypes.shape({
@@ -530,3 +400,5 @@ MemberList.propTypes = {
     StartDate: PropTypes.string,
   }).isRequired,
 };
+
+export default MemberList;
