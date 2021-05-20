@@ -470,21 +470,21 @@ class PeopleSearch extends Component {
       );
 
       let searchParameters = '?';
-      searchParameters += (firstName ? `firstName=${firstName}&` : '');
-      searchParameters += (lastName ? `lastName=${lastName}&` : '');
-      searchParameters += (major ? `major=${major}&` : '');
-      searchParameters += (minor ? `minor=${minor}&` : '');
-      searchParameters += (hall ? `hall=${hall}&` : '');
-      searchParameters += (classType ? `classType=${classType}&` : '');
-      searchParameters += (homeCity ? `homeCity=${homeCity}&` : '');
-      searchParameters += (state ? `state=${state}&` : '');
-      searchParameters += (country ? `country=${country}&` : '');
-      searchParameters += (department ? `department=${department}&` : '');
-      searchParameters += (building ? `building=${building}&` : '');
-      searchParameters += (includeAlumni ? `includeAlumni=${includeAlumni}&` : '');
+      searchParameters += firstName ? `firstName=${firstName}&` : '';
+      searchParameters += lastName ? `lastName=${lastName}&` : '';
+      searchParameters += major ? `major=${major}&` : '';
+      searchParameters += minor ? `minor=${minor}&` : '';
+      searchParameters += hall ? `hall=${hall}&` : '';
+      searchParameters += classType ? `classType=${classType}&` : '';
+      searchParameters += homeCity ? `homeCity=${homeCity}&` : '';
+      searchParameters += state ? `state=${state}&` : '';
+      searchParameters += country ? `country=${country}&` : '';
+      searchParameters += department ? `department=${department}&` : '';
+      searchParameters += building ? `building=${building}&` : '';
+      searchParameters += includeAlumni ? `includeAlumni=${includeAlumni}&` : '';
 
-      if(searchParameters[searchParameters.length-1] === '&') {
-        searchParameters = searchParameters.substring(0, searchParameters.length-1);
+      if (searchParameters[searchParameters.length - 1] === '&') {
+        searchParameters = searchParameters.substring(0, searchParameters.length - 1);
       }
 
       this.props.history.push(searchParameters);
