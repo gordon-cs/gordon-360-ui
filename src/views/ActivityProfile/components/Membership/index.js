@@ -72,8 +72,8 @@ const Membership = ({
     return () => window.removeEventListener('resize', resize);
   });
 
-  const createSnackbar = (message, severity) => {
-    setSnackbar({ open: true, message, severity });
+  const createSnackbar = (text, severity) => {
+    setSnackbar({ open: true, text, severity });
   };
 
   const onClose = () => {
